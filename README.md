@@ -1,34 +1,26 @@
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-
-
 # Emergency Management BC - Emergency Support Services Modernization
 The purpose of the system is to streamline processes so evacuated individuals can access services more easily and efficiently. 
 
 ## Technology Stack Used
+| Layer   | Technology | 
+| ------- | ------------ |
+| Presentation | Angular 8 |
+| Business Logic | C# - Dotnet Core 3.0 |
+| Web Server | Kestrel |
+| Data    | MS Dynamics v9|
+| Document Management    | MS SharePoint |   
+
 
 ## Third-Party Products/Libraries used and the licenses they are covered by
 
-## Project Status
-
 ## Documentation
 
-GitHub Pages (https://guides.github.com/features/pages/) are a neat way to document you application/project.
+Documentation and task information is found under the JAG Jira and Confluence applications (EMBCESSMOD project)
 
 ## Security
 
 Authentication, Authorization, Policies, etc
 
-## Files in this repository
-
-```
-docs/           - Project Documentation
-└── images        
-└── icons         
-
-openshift/      - OpenShift-specific files
-├── scripts     - helper scripts
-└── templates   - application templates
-```
 
 ## Deployment (Local Development)
 
@@ -56,10 +48,11 @@ To report bugs/issues/feature requests, please file an [issue](../../issues).
 
 If you would like to contribute, please see our [CONTRIBUTING](./CONTRIBUTING.md) guidelines.
 
-Please note that this project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). 
-By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 ## License
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
     Copyright 2018 Province of British Columbia
 
