@@ -5,7 +5,7 @@ The purpose of the system is to streamline processes so evacuated individuals ca
 | Layer   | Technology | 
 | ------- | ------------ |
 | Presentation | Angular 8 |
-| Business Logic | C# - Dotnet Core 3.0 |
+| Business Logic | C# - .NET Core 3.0 |
 | Web Server | Kestrel |
 | Data    | MS Dynamics v9|
 | Document Management    | MS SharePoint |   
