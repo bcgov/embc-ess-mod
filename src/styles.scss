@@ -1,1 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+$bcgov-font-path: "../node_modules/@bcgov/bootstrap-theme/dist/fonts/";
+@import "~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme";
+@import "~@bcgov/bootstrap-theme/dist/scss/common";
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
