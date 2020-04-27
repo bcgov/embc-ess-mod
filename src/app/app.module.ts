@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { LayoutModule } from './layout/layout.module';
-import { SupplierSubmissionModule } from './supplierSubmission/supplierSubmission.module'
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
@@ -16,8 +15,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserModule,
     AppRoutingModule,
     LayoutModule,
-    NgbModule,
-    SupplierSubmissionModule
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

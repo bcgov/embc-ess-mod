@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SupplierSubmissionComponent } from './supplierSubmission.component'
+import { SupplierRoutingModule } from './supplier-routing.module';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    SupplierRoutingModule
   ],
   declarations: [
     SupplierSubmissionComponent,
