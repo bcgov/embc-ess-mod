@@ -1,6 +1,8 @@
 # Emergency Management BC - Emergency Support Services Modernization
 The purpose of the system is to streamline processes so evacuated individuals can access services more easily and efficiently. 
 
+![Docker](https://github.com/ytqsl/embc-ess-mod/workflows/Docker/badge.svg)
+
 ## Technology Stack Used
 | Layer   | Technology | 
 | ------- | ------------ |
