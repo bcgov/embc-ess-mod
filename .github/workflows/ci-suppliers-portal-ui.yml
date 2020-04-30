@@ -11,7 +11,7 @@ on:
       - v*
     paths:
       - 'suppliers/src/UI'
-      - '.github/workflows/ci-suppliers-portal-api.yml'
+      - '.github/workflows/ci-suppliers-portal-ui.yml'
 
   # Run tests for any PRs.
   pull_request:
