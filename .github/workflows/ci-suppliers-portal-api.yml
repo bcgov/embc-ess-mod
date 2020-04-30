@@ -10,7 +10,7 @@ on:
     tags:
       - v*
     paths: 
-      - '/suppliers/src/API'
+      - 'suppliers/src/API'
 
   # Run tests for any PRs.
   pull_request:
