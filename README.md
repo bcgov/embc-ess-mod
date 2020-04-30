@@ -1,11 +1,14 @@
 # Emergency Management BC - Emergency Support Services Modernization
 The purpose of the system is to streamline processes so evacuated individuals can access services more easily and efficiently. 
 
+![suppliers-portal-ui](https://github.com/ytqsl/embc-ess-mod/workflows/suppliers-portal-ui/badge.svg)
+![suppliers-portal-api](https://github.com/ytqsl/embc-ess-mod/workflows/suppliers-portal-api/badge.svg)
+
 ## Technology Stack Used
 | Layer   | Technology | 
 | ------- | ------------ |
-| Presentation | Angular 8 |
-| Business Logic | C# - .NET Core 3.0 |
+| Presentation | Angular 9 |
+| Business Logic | C# - .NET Core 3.1 |
 | Web Server | Kestrel |
 | Data    | MS Dynamics v9|
 | Document Management    | MS SharePoint |   
