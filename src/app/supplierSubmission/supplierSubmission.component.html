@@ -1,5 +1,230 @@
-<div>
+<div class="row">
+  <div class="col-sm-12">
+    <h1>Evacuee Registration & Assistance (ERA)</h1>
+    <p style="font-size: 28px;">Supplier Invoice & Receipt Submission</p>
+    <hr>
 
-    <h1>hELLO</h1>
+    <div class="row">
+      <div class="col-sm-12 col-md-7">
+        <div>
+          <p>
+            Are you a registered supplier with Emergency Support Services (ESS) who has provided goods or
+            services to people affected by a disaster? ESS is making the way you invoice for services/goods
+            and submit
+            receipts simpler and more straightforward, by shifting to a digital invoice/receipt submission
+            experience.
+          </p>
+          <p>
+            Just fill in the form below, attach your scanned invoice/receipts & referral forms, and you're
+            good to go.
+          </p>
+          <p>
+            All required fields are maked with a red asterisk(*)
+          </p>
+        </div>
+        <div class="formHeading">
+          <h3>Supplier Information</h3>
+        </div>
+        <div>
+          <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="form-group col-lg-5">
+                <input type="text" class="form-control" formControlName="supplierLegalName"
+                  placeholder="Supplier Legal Name">
+              </div>
+            </div>
 
+            <div class="row">
+              <div class="form-group col-lg-5">
+                <input type="text" class="form-control" formControlName="supplierName" placeholder="Supplier Name">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-lg-5">
+                <input type="text" class="form-control" formControlName="location"
+                  placeholder="Store # /Site#/ Location">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-lg-5">
+                <input type="text" class="form-control" formControlName="gstNumber" placeholder="GST Number">
+              </div>
+            </div>
+            <div class="form-group form-check">
+              <input class="form-check-input" type="checkbox" value="" formControlName="remitToOtherBusiness">
+              <label class="form-check-label" for="remitToOtherBusiness">
+                Check this box if we must remit payment to a business other than the one listed above
+              </label>
+            </div>
+            <br>
+            <div formGroupName="address">
+              <p style="font-weight: bold">Address</p>
+
+              <div class="row">
+                <div class="form-group col-lg-8">
+                  <input type="text" class="form-control" formControlName="address1" placeholder="Address Line 1">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-8">
+                  <input type="text" class="form-control" formControlName="address2" placeholder="Address Line 2">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" class="form-control" formControlName="city" placeholder="City">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" readonly class="form-control" formControlName="province">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" class="form-control" formControlName="postalCode" placeholder="Postal Code">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" readonly class="form-control" formControlName="country">
+                </div>
+              </div>
+
+            </div>
+            <br>
+            <div formGroupName="contactPerson">
+              <p style="font-weight: bold">Contact Person</p>
+
+              <div class="row">
+                <div class="form-group col-lg-6">
+                  <input type="text" class="form-control" formControlName="firstName" placeholder="First Name">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-6">
+                  <input type="text" class="form-control" formControlName="lastName" placeholder="Last Name">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-6">
+                  <input type="email" class="form-control" formControlName="email" placeholder="Email Address">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" class="form-control" formControlName="phone" placeholder="Contact Number">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" class="form-control" formControlName="fax" placeholder="Fax">
+                </div>
+              </div>
+
+            </div>
+
+            <div>
+              <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done! Next</button>
+            </div>
+          </form>
+        </div>
+        <!-- <div class="formHeading">
+          <h3>Submit your Invoice and/or Receipts</h3>
+        </div>
+        <div>
+          <form>
+            Are you submitting an invoice OR receipts?
+            If you are submitting an invoice, this can also include uploading of receipts.
+            <div class="form-group form-check">
+              <input class="form-check-input" type="radio" id="invoice" value="invoice">
+              <label class="form-check-label" for="invoice">
+                Invoice
+              </label>
+            </div>
+            <div class="form-group form-check">
+              <input class="form-check-input" type="radio" id="receipt" value="receipt">
+              <label class="form-check-label" for="receipt">
+                Receipts
+              </label>
+            </div>
+          </form>
+        </div> -->
+
+
+      </div>
+
+      <div class="col-sm-12 col-md-5">
+
+        <div class="card sidebox-card-info text-white">
+          <div class="card-body">
+            <h3 class="card-title"><i class="material-icons"
+                style="font-size: 30px;">check_circle_outline</i>&nbsp;Supplier Invoice Checklist</h3>
+            <p class="card-text">The following checklist is provided for your convenience to ensure your invoice
+              documentation is
+              complete and accurate prior to submitting to Emergency Management BC (EMBC) for payment.
+            </p>
+            <ul>
+              <li>Charges for goods and services, including all applicable taxes, must not exceed the
+                Emergency
+                Support Services rates.
+              </li>
+              <li>Goods or services rendered only to those people listed on the Referral.</li>
+              <li>Goods or services rendered are eligible items as listed on the Referral.</li>
+              <li>Any exceptions have been authorized by Emergency Management BC & documented.</li>
+              <li>Make copies of invoices and receipts for your records.</li>
+            </ul>
+          </div>
+        </div>
+        <br>
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title"><i class="material-icons" style="font-size: 30px;">
+                live_help
+              </i>&nbsp;
+              Questions about submitting</h3>
+            <p class="card-text">If you have any questions or need assistance with this form, please contact Emergency
+              Management BC
+              on 1-800-585-9559.
+            </p>
+          </div>
+        </div>
+        <br>
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title"><i class="material-icons" style="font-size: 30px;">
+                list
+              </i>&nbsp;Receipt Processing Steps</h3>
+            <ul>
+              <li>Supplier submission of receipts</li>
+              <li>EMBC Finance Team to review submission</li>
+              <li>Receipts submitted to Corporate Accounting Services (CAS) for payment</li>
+              <li>Supplier receives payment from CAS</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
