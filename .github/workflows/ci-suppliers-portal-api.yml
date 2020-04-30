@@ -51,7 +51,7 @@ jobs:
           echo VERSION=$VERSION
 
       - name: Pull image
-        run: docker pull $IMAGE_ID:$VERSION || true
+        run: docker pull $IMAGE_ID || true
 
       - name: Build image
         working-directory: ./suppliers/src/API
