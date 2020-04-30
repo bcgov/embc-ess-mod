@@ -18,7 +18,7 @@ on:
 env:
   IMAGE_NAME: suppliers-portal-ui
   IMAGE_ID: docker.pkg.github.com/${{ github.repository }}/suppliers-portal-ui
-  key:  
+  
 jobs:
   build:
     runs-on: ubuntu-latest
