@@ -28,14 +28,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build image
-        working-directory: ./suppliers/src/API
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
-
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-      - name: Push image
+      
+      - name: Set version
         run: |
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
           
@@ -54,5 +50,14 @@ jobs:
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
 
+      - name: Pull image
+        run: docker pull $IMAGE_ID:$VERSION || true
+
+      - name: Build image
+        working-directory: ./suppliers/src/API
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID
+
+      - name: Push image
+        run: |  
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
