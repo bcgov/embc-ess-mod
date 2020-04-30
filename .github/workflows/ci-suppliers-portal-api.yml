@@ -9,6 +9,8 @@ on:
     # Publish `v1.2.3` tags as releases.
     tags:
       - v*
+    paths: 
+      - '/suppliers/src/API'
 
   # Run tests for any PRs.
   pull_request:
