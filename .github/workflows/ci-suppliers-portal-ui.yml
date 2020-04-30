@@ -9,6 +9,8 @@ on:
     # Publish `v1.2.3` tags as releases.
     tags:
       - v*
+    paths:
+      - 'suppliers/src/UI'
 
   # Run tests for any PRs.
   pull_request:
@@ -18,7 +20,7 @@ env:
   IMAGE_NAME: suppliers-portal-ui
 
 jobs:
-  build_supplier_api:
+  build_supplier_ui:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
