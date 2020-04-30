@@ -1,4 +1,4 @@
-name: suppliers-portal-api
+name: suppliers-portal-ui
 
 on:
   push:
