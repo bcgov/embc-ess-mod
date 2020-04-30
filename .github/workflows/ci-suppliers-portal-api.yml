@@ -13,12 +13,11 @@ on:
       - 'suppliers/src/API'
       - '.github/workflows/ci-suppliers-portal-api.yml'
 
-  # Run tests for any PRs.
   pull_request:
 
 env:
-  # TODO: Change variable to your image's name.
   IMAGE_NAME: suppliers-portal-api
+  IMAGE_ID: IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
 
 jobs:
   build:
@@ -30,11 +29,19 @@ jobs:
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-      
-      - name: Set version
+
+      - name: Pull image
         run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-          
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker pull $IMAGE_ID || true
+
+      - name: Build image
+        working-directory: ./suppliers/src/API
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID
+
+      - name: Push image
+        run: |          
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
 
@@ -49,18 +56,6 @@ jobs:
 
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
-
-      - name: Pull image
-        run: |
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          docker pull $IMAGE_ID || true
-
-      - name: Build image
-        working-directory: ./suppliers/src/API
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID
-
-      - name: Push image
-        run: |  
+          
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
