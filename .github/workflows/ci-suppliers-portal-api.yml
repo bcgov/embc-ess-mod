@@ -1,4 +1,4 @@
-name: Docker
+name: supplier_api
 
 on:
   push:
@@ -11,6 +11,7 @@ on:
       - v*
     paths: 
       - 'suppliers/src/API'
+      - '.github/workflows/ci-suppliers-portal-api.yml'
 
   # Run tests for any PRs.
   pull_request:
@@ -20,7 +21,7 @@ env:
   IMAGE_NAME: suppliers-portal-api
 
 jobs:
-  build_supplier_api:
+  build:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
