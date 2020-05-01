@@ -17,7 +17,7 @@ on:
 
 env:
   IMAGE_NAME: suppliers-portal-ui
-  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/suppliers-portal-api
+  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/suppliers-portal-ui
   
 jobs:
   build:
