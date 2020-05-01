@@ -1,8 +1,8 @@
 # Emergency Management BC - Emergency Support Services Modernization
 The purpose of the system is to streamline processes so evacuated individuals can access services more easily and efficiently. 
 
-![suppliers-portal-ui](https://github.com/ytqsl/embc-ess-mod/workflows/suppliers-portal-ui/badge.svg)
-![suppliers-portal-api](https://github.com/ytqsl/embc-ess-mod/workflows/suppliers-portal-api/badge.svg)
+![suppliers-portal-ui](https://github.com/bcgov/embc-ess-mod/workflows/suppliers-portal-ui/badge.svg)
+![suppliers-portal-api](https://github.com/bcgov/embc-ess-mod/workflows/suppliers-portal-api/badge.svg)
 
 ## Technology Stack Used
 | Layer   | Technology | 
