@@ -11,10 +11,7 @@ on:
       - v*
     paths:
       - 'suppliers/src/UI'
-      - '.github/workflows/ci-suppliers-portal-ui.yml'
-
-  pull_request:
-
+      - '.github/workflows/master-build-suppliers-portal-ui.yml'
 env:
   IMAGE_NAME: suppliers-portal-ui
   IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/suppliers-portal-ui
