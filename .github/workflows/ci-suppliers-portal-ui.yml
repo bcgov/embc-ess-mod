@@ -2,7 +2,7 @@ name: ci-suppliers-portal-ui
 
 on:
   pull_request:
-    types: [assigned, synchronize]
+    types: [synchronize]
     paths:
       - 'suppliers/src/UI'
       - '.github/workflows/ci-suppliers-portal-ui.yml'
@@ -14,8 +14,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
-
     steps:
       - uses: actions/checkout@v2
 
