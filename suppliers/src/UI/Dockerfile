@@ -5,10 +5,10 @@ RUN npm install
 COPY ./embc-supplier/ .
 RUN npm run build
 
-FROM caddy:builder AS caddy-builder
+FROM caddy:2-builder AS caddy-builder
 RUN caddy-builder
 
-FROM caddy:alpine as final
+FROM caddy:2-alpine as final
 COPY --from=caddy-builder /usr/bin/caddy /usr/bin/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=ng-builder /src/dist/embc-supplier/ /site
