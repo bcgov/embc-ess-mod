@@ -11,9 +11,7 @@ on:
       - v*
     paths: 
       - 'suppliers/src/API'
-      - '.github/workflows/ci-suppliers-portal-api.yml'
-
-  pull_request:
+      - '.github/workflows/master-build-suppliers-portal-api.yml'
 
 env:
   IMAGE_NAME: suppliers-portal-api
