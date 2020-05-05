@@ -2,9 +2,9 @@ name: ci-suppliers-portal-ui
 
 on:
   pull_request:
-    types: [synchronize]
+    types: [opened, reopened, edited, synchronize]
     paths:
-      - "suppliers/src/UI"
+      - "suppliers/src/UI/**"
       - ".github/workflows/ci-suppliers-portal-ui.yml"
 
 env:

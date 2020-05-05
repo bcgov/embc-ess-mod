@@ -1,4 +1,4 @@
-name: master-build-suppliers-portal-ui
+name: cd-suppliers-portal-api
 
 on:
   push:
@@ -10,11 +10,12 @@ on:
     tags:
       - v*
     paths:
-      - 'suppliers/src/UI'
-      - '.github/workflows/master-build-suppliers-portal-ui.yml'
+      - "suppliers/src/API/**"
+      - ".github/workflows/cd-suppliers-portal-api.yml"
+
 env:
-  IMAGE_NAME: suppliers-portal-ui
-  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/suppliers-portal-ui
+  IMAGE_NAME: suppliers-portal-api
+  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/suppliers-portal-api
 
 jobs:
   build:
@@ -31,7 +32,7 @@ jobs:
         run: docker pull $IMAGE_ID || true
 
       - name: Build image
-        working-directory: ./suppliers/src/UI
+        working-directory: ./suppliers/src/API
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID
 
       - name: Push image
