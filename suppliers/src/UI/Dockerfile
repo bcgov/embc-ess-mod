@@ -12,3 +12,4 @@ FROM caddy:alpine as final
 COPY --from=caddy-builder /usr/bin/caddy /usr/bin/caddy
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=ng-builder /src/dist/embc-supplier/ /site
+EXPOSE 2015
