@@ -4,12 +4,11 @@ on:
   pull_request:
     types: [synchronize]
     paths:
-      - 'suppliers/src/UI'
-      - '.github/workflows/ci-suppliers-portal-ui.yml'
+      - "suppliers/src/UI"
+      - ".github/workflows/ci-suppliers-portal-ui.yml"
 
 env:
   IMAGE_NAME: suppliers-portal-ui
-  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/suppliers-portal-ui
 
 jobs:
   build:
@@ -17,12 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Log into registry
-        run: echo "${{ secrets.OKD_Password }}" | docker login ${{ secrets.OKD_DockerRegistry }} -u ${{ secrets.OKD_UserName }} --password-stdin
-
-      - name: Pull image
-        run: docker pull $IMAGE_ID || true
-
       - name: Build image
         working-directory: ./suppliers/src/UI
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME
