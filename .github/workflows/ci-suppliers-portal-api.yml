@@ -2,10 +2,10 @@ name: ci-suppliers-portal-api
 
 on:
   pull_request:
-    types: [assigned, synchronize]
-    paths: 
-      - 'suppliers/src/API'
-      - '.github/workflows/ci-suppliers-portal-api.yml'
+    # types: [assigned, synchronize]
+    paths:
+      - "suppliers/src/API"
+      - ".github/workflows/ci-suppliers-portal-api.yml"
 
 env:
   IMAGE_NAME: suppliers-portal-api
