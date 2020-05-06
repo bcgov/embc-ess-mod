@@ -10,5 +10,6 @@ export class ReferralComponent {
 
     @Input() formGroupName: number;
     @Input() referralForm: FormGroup
+    @Input() index: number;
 
 }

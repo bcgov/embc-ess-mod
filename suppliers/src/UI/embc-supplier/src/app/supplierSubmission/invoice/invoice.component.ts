@@ -11,7 +11,8 @@ export class InvoiceComponent {
 
    // supplierForm: FormGroup;
     @Input() formGroupName: number;
-    @Input() invoiceForm: FormGroup
+    @Input() invoiceForm: FormGroup;
+    @Input() index: number;
 
     constructor(private builder: FormBuilder){ 
     }
