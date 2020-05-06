@@ -20,3 +20,7 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
          url('src/assets/LiberationMono-Regular.woff') format('woff'), /* Pretty Modern Browsers */
          url('src/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
   }
+
+.form-control {
+    border-radius:0
+}

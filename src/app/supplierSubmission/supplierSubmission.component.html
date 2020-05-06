@@ -26,80 +26,92 @@
           <h3>Supplier Information</h3>
         </div>
         <div>
+
           <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
+
+            <div class="row">
+              <div class="form-group required col-lg-6">
+                <!-- <div class="control-label"> -->
+                  <input type="text" class="form-control form-control-lg" placeholder="Supplier Legal Name"
+                  formControlName="supplierLegalName" required>
+                <!-- <label class="control-label" for="supplierLegalName">Supplier Legal Name</label> -->
+              <!-- </div> -->
+                </div>
+            </div>
+
             <div class="row">
               <div class="form-group col-lg-5">
-                <input type="text" class="form-control" formControlName="supplierLegalName"
-                  placeholder="Supplier Legal Name">
+                <input type="text" class="form-control form-control-lg" formControlName="supplierName"
+                  placeholder="Supplier Name">
               </div>
             </div>
 
             <div class="row">
               <div class="form-group col-lg-5">
-                <input type="text" class="form-control" formControlName="supplierName" placeholder="Supplier Name">
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="form-group col-lg-5">
-                <input type="text" class="form-control" formControlName="location"
+                <input type="text" class="form-control form-control-lg" formControlName="location"
                   placeholder="Store # /Site#/ Location">
               </div>
             </div>
 
             <div class="row">
               <div class="form-group col-lg-5">
-                <input type="text" class="form-control" formControlName="gstNumber" placeholder="GST Number">
+                <input type="text" class="form-control form-control-lg" formControlName="gstNumber"
+                  placeholder="GST Number" required>
               </div>
             </div>
+
             <div class="form-group form-check">
               <input class="form-check-input" type="checkbox" value="" formControlName="remitToOtherBusiness">
               <label class="form-check-label" for="remitToOtherBusiness">
                 Check this box if we must remit payment to a business other than the one listed above
               </label>
             </div>
+
             <br>
             <div formGroupName="address">
               <p style="font-weight: bold">Address</p>
 
               <div class="row">
                 <div class="form-group col-lg-8">
-                  <input type="text" class="form-control" formControlName="address1" placeholder="Address Line 1">
+                  <input type="text" class="form-control form-control-lg" formControlName="address1"
+                    placeholder="Address Line 1" required>
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-8">
-                  <input type="text" class="form-control" formControlName="address2" placeholder="Address Line 2">
+                  <input type="text" class="form-control form-control-lg" formControlName="address2"
+                    placeholder="Address Line 2">
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" class="form-control" formControlName="city" placeholder="City">
+                  <input type="text" class="form-control form-control-lg" formControlName="city" placeholder="City" required>
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" readonly class="form-control" formControlName="province">
+                  <input type="text" readonly class="form-control form-control-lg" formControlName="province">
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" class="form-control" formControlName="postalCode" placeholder="Postal Code">
+                  <input type="text" class="form-control form-control-lg" formControlName="postalCode"
+                    placeholder="Postal Code" required>
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" readonly class="form-control" formControlName="country">
+                  <input type="text" readonly class="form-control form-control-lg" formControlName="country">
                 </div>
               </div>
 
@@ -110,67 +122,113 @@
 
               <div class="row">
                 <div class="form-group col-lg-6">
-                  <input type="text" class="form-control" formControlName="firstName" placeholder="First Name">
+                  <input type="text" class="form-control form-control-lg" formControlName="firstName"
+                    placeholder="First Name" required>
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-6">
-                  <input type="text" class="form-control" formControlName="lastName" placeholder="Last Name">
+                  <input type="text" class="form-control form-control-lg" formControlName="lastName"
+                    placeholder="Last Name">
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-6">
-                  <input type="email" class="form-control" formControlName="email" placeholder="Email Address">
+                  <input type="email" class="form-control form-control-lg" formControlName="email"
+                    placeholder="Email Address">
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" class="form-control" formControlName="phone" placeholder="Contact Number">
+                  <input type="text" class="form-control form-control-lg" formControlName="phone"
+                    placeholder="Contact Number" required>
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" class="form-control" formControlName="fax" placeholder="Fax">
+                  <input type="text" class="form-control form-control-lg" formControlName="fax" placeholder="Fax">
                 </div>
               </div>
 
             </div>
 
+            <div class="formHeading">
+              <h3>Submit your Invoice and/or Receipts</h3>
+            </div>
+
+            <div>
+              <p>Are you <b>submitting an invoice</b> OR <b>receipts?</b></p>
+              <p>If you are submitting an invoice, this can also include uploading of receipts.</p>
+
+              <div class="form-group form-check">
+                <input class="form-check-input" formControlName="supplierSubmissionType" type="radio" id="invoice"
+                  value="invoice" (change)="onValueChange($event)">
+                <label class="form-check-label" for="invoice">
+                  Invoice
+                </label>
+              </div>
+              <div class="form-group form-check">
+                <input class="form-check-input" formControlName="supplierSubmissionType" type="radio" id="receipt"
+                  value="receipt" (change)="onValueChange($event)">
+                <label class="form-check-label" for="receipt">
+                  Receipts
+                </label>
+              </div>
+
+              <div>
+                <div class="box" *ngIf="supplierForm.get('supplierSubmissionType').value === 'invoice'">
+                  <p><b>Important Tips:</b></p>
+                  <ul>
+                    <li>Please list all referrals associated with a single invoice only.</li>
+                    <li>If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the page.
+                    </li>
+                    <li>Please complete all information regarding each referral separately.</li>
+                    <li>If a referral references more than 1 support or service provided, please separate the costs
+                      associated with each by clicking
+                      the "Add another line item" button.</li>
+                    <li>If you have receipts associated with a referral, please remember to attach them under that
+                      relevant referral.</li>
+                  </ul>
+                </div>
+                <div formArrayName="invoices" >
+                  <div *ngFor="let invoice of invoices.controls; let i = index">
+                    <!-- <ng-container [ngComponentOutletInjector]="invoiceInjector" [ngComponentOutlet]="invoiceComponent | async"></ng-container> -->
+                  <app-invoice [index]="i" [invoiceForm]="invoice" [formGroupName]="i"></app-invoice>
+                  </div>
+                </div>
+                
+                </div>
+
+              <div class="box" *ngIf="supplierForm.get('supplierSubmissionType').value === 'receipt'">
+                <p><b>Important Tips:</b></p>
+                <ul>
+                  <li>Please list all receipts associated with a single referral number only.</li>
+                  <li>If you have receipts against more than 1 referral, click "Add another referral" at the bottom of
+                    this page.</li>
+                  <li>To add another receipt to a referral, click the "Add another receipt" button.</li>
+                  <li>If a receipt references more than 1 support or service provided, please separate the costs
+                    associated with each by clicking
+                    the "Add another line item to this receipt" link.</li>
+                </ul>
+              </div>
+            </div>
+            <!-- {{supplierForm.value | json}} -->
+            <div>
+              <button type="button" (click)="addInvoiceTemplate()" class="btn btn-primary">Add Another Invoice</button>
+            </div>
             <div>
               <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done! Next</button>
             </div>
           </form>
         </div>
-        <!-- <div class="formHeading">
-          <h3>Submit your Invoice and/or Receipts</h3>
-        </div>
-        <div>
-          <form>
-            Are you submitting an invoice OR receipts?
-            If you are submitting an invoice, this can also include uploading of receipts.
-            <div class="form-group form-check">
-              <input class="form-check-input" type="radio" id="invoice" value="invoice">
-              <label class="form-check-label" for="invoice">
-                Invoice
-              </label>
-            </div>
-            <div class="form-group form-check">
-              <input class="form-check-input" type="radio" id="receipt" value="receipt">
-              <label class="form-check-label" for="receipt">
-                Receipts
-              </label>
-            </div>
-          </form>
-        </div> -->
-
 
       </div>
 

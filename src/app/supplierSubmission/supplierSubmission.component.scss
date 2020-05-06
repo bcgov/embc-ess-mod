@@ -4,11 +4,12 @@ hr {
     border: 0.75px solid;
 }
 
-// .box{
-//   background-color: lightgrey;
-//   padding: 50px;
-//   margin: 20px;
-// }
+.box{
+  //background-color: lightgrey;
+  padding: 10px;
+  margin: 20px;
+  border: 4px theme-color(bcgold) solid;
+}
 
 .formHeading{
   background-color: lightgrey;
@@ -24,3 +25,9 @@ hr {
   border: 0;
   //border-bottom: 4px theme-color(bcgold) solid;
 }
+
+.form-group.required .control-label:after {
+  content:"*";
+  color:red;
+}
+

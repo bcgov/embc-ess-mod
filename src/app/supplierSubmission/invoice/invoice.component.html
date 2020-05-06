@@ -1,0 +1,24 @@
+<div class="box">
+    {{formGroupName}}
+    <form [formGroup]="invoiceForm">
+
+        <div class="row">
+          <div class="form-group required col-lg-6">
+              <input type="text" class="form-control form-control-lg" placeholder="Invoice Number"
+              [formControlName]="'invoiceNumber'"
+              >
+            </div> 
+        </div>
+
+        <div formArrayName="referrals" >
+            <div *ngFor="let referral of referrals.controls; let j = index">
+                <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j"></app-referral>
+            </div>
+          </div>
+
+        <div>
+            <button type="button" (click)="addReferralTemplate()" class="btn btn-primary">Add Referral</button>
+          </div>
+        </form>
+
+</div>

@@ -1,0 +1,8 @@
+@import '../../../styles/styles.scss';
+
+.box{
+    background-color: lightgrey;
+    padding: 10px;
+    margin: 20px;
+    border: 4px theme-color(primary) solid;
+  }
