@@ -1,0 +1,288 @@
+<div class="row">
+  <div class="col-sm-12">
+    <h1>Evacuee Registration & Assistance (ERA)</h1>
+    <p style="font-size: 28px;">Supplier Invoice & Receipt Submission</p>
+    <hr>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-7">
+        <div>
+          <p>
+            Are you a registered supplier with Emergency Support Services (ESS) who has provided goods or
+            services to people affected by a disaster? ESS is making the way you invoice for services/goods
+            and submit
+            receipts simpler and more straightforward, by shifting to a digital invoice/receipt submission
+            experience.
+          </p>
+          <p>
+            Just fill in the form below, attach your scanned invoice/receipts & referral forms, and you're
+            good to go.
+          </p>
+          <p>
+            All required fields are maked with a red asterisk(*)
+          </p>
+        </div>
+        <div class="formHeading">
+          <h3>Supplier Information</h3>
+        </div>
+        <div>
+
+          <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
+
+            <div class="row">
+              <div class="form-group required col-lg-6">
+                <!-- <div class="control-label"> -->
+                  <input type="text" class="form-control form-control-lg" placeholder="Supplier Legal Name"
+                  formControlName="supplierLegalName" required>
+                <!-- <label class="control-label" for="supplierLegalName">Supplier Legal Name</label> -->
+              <!-- </div> -->
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-lg-5">
+                <input type="text" class="form-control form-control-lg" formControlName="supplierName"
+                  placeholder="Supplier Name">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-lg-5">
+                <input type="text" class="form-control form-control-lg" formControlName="location"
+                  placeholder="Store # /Site#/ Location">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-lg-5">
+                <input type="text" class="form-control form-control-lg" formControlName="gstNumber"
+                  placeholder="GST Number" required>
+              </div>
+            </div>
+
+            <div class="form-group form-check">
+              <input class="form-check-input" type="checkbox" value="" formControlName="remitToOtherBusiness">
+              <label class="form-check-label" for="remitToOtherBusiness">
+                Check this box if we must remit payment to a business other than the one listed above
+              </label>
+            </div>
+
+            <br>
+            <div formGroupName="address">
+              <p style="font-weight: bold">Address</p>
+
+              <div class="row">
+                <div class="form-group col-lg-8">
+                  <input type="text" class="form-control form-control-lg" formControlName="address1"
+                    placeholder="Address Line 1" required>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-8">
+                  <input type="text" class="form-control form-control-lg" formControlName="address2"
+                    placeholder="Address Line 2">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" class="form-control form-control-lg" formControlName="city" placeholder="City" required>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" readonly class="form-control form-control-lg" formControlName="province">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" class="form-control form-control-lg" formControlName="postalCode"
+                    placeholder="Postal Code" required>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" readonly class="form-control form-control-lg" formControlName="country">
+                </div>
+              </div>
+
+            </div>
+            <br>
+            <div formGroupName="contactPerson">
+              <p style="font-weight: bold">Contact Person</p>
+
+              <div class="row">
+                <div class="form-group col-lg-6">
+                  <input type="text" class="form-control form-control-lg" formControlName="firstName"
+                    placeholder="First Name" required>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-6">
+                  <input type="text" class="form-control form-control-lg" formControlName="lastName"
+                    placeholder="Last Name">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-6">
+                  <input type="email" class="form-control form-control-lg" formControlName="email"
+                    placeholder="Email Address">
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" class="form-control form-control-lg" formControlName="phone"
+                    placeholder="Contact Number" required>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <input type="text" class="form-control form-control-lg" formControlName="fax" placeholder="Fax">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="formHeading">
+              <h3>Submit your Invoice and/or Receipts</h3>
+            </div>
+
+            <div>
+              <p>Are you <b>submitting an invoice</b> OR <b>receipts?</b></p>
+              <p>If you are submitting an invoice, this can also include uploading of receipts.</p>
+
+              <div class="form-group form-check">
+                <input class="form-check-input" formControlName="supplierSubmissionType" type="radio" id="invoice"
+                  value="invoice" (change)="onValueChange($event)">
+                <label class="form-check-label" for="invoice">
+                  Invoice
+                </label>
+              </div>
+              <div class="form-group form-check">
+                <input class="form-check-input" formControlName="supplierSubmissionType" type="radio" id="receipt"
+                  value="receipt" (change)="onValueChange($event)">
+                <label class="form-check-label" for="receipt">
+                  Receipts
+                </label>
+              </div>
+
+              <div>
+                <div class="box" *ngIf="supplierForm.get('supplierSubmissionType').value === 'invoice'">
+                  <p><b>Important Tips:</b></p>
+                  <ul>
+                    <li>Please list all referrals associated with a single invoice only.</li>
+                    <li>If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the page.
+                    </li>
+                    <li>Please complete all information regarding each referral separately.</li>
+                    <li>If a referral references more than 1 support or service provided, please separate the costs
+                      associated with each by clicking
+                      the "Add another line item" button.</li>
+                    <li>If you have receipts associated with a referral, please remember to attach them under that
+                      relevant referral.</li>
+                  </ul>
+                </div>
+                <div formArrayName="invoices" >
+                  <div *ngFor="let invoice of invoices.controls; let i = index">
+                    <!-- <ng-container [ngComponentOutletInjector]="invoiceInjector" [ngComponentOutlet]="invoiceComponent | async"></ng-container> -->
+                  <app-invoice [index]="i" [invoiceForm]="invoice" [formGroupName]="i"></app-invoice>
+                  </div>
+                </div>
+                
+                </div>
+
+              <div class="box" *ngIf="supplierForm.get('supplierSubmissionType').value === 'receipt'">
+                <p><b>Important Tips:</b></p>
+                <ul>
+                  <li>Please list all receipts associated with a single referral number only.</li>
+                  <li>If you have receipts against more than 1 referral, click "Add another referral" at the bottom of
+                    this page.</li>
+                  <li>To add another receipt to a referral, click the "Add another receipt" button.</li>
+                  <li>If a receipt references more than 1 support or service provided, please separate the costs
+                    associated with each by clicking
+                    the "Add another line item to this receipt" link.</li>
+                </ul>
+              </div>
+            </div>
+            <!-- {{supplierForm.value | json}} -->
+            <div>
+              <button type="button" (click)="addInvoiceTemplate()" class="btn btn-primary">Add Another Invoice</button>
+            </div>
+            <div>
+              <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done! Next</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+      <div class="col-sm-12 col-md-5">
+
+        <div class="card sidebox-card-info text-white">
+          <div class="card-body">
+            <h3 class="card-title"><i class="material-icons"
+                style="font-size: 30px;">check_circle_outline</i>&nbsp;Supplier Invoice Checklist</h3>
+            <p class="card-text">The following checklist is provided for your convenience to ensure your invoice
+              documentation is
+              complete and accurate prior to submitting to Emergency Management BC (EMBC) for payment.
+            </p>
+            <ul>
+              <li>Charges for goods and services, including all applicable taxes, must not exceed the
+                Emergency
+                Support Services rates.
+              </li>
+              <li>Goods or services rendered only to those people listed on the Referral.</li>
+              <li>Goods or services rendered are eligible items as listed on the Referral.</li>
+              <li>Any exceptions have been authorized by Emergency Management BC & documented.</li>
+              <li>Make copies of invoices and receipts for your records.</li>
+            </ul>
+          </div>
+        </div>
+        <br>
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title"><i class="material-icons" style="font-size: 30px;">
+                live_help
+              </i>&nbsp;
+              Questions about submitting</h3>
+            <p class="card-text">If you have any questions or need assistance with this form, please contact Emergency
+              Management BC
+              on 1-800-585-9559.
+            </p>
+          </div>
+        </div>
+        <br>
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title"><i class="material-icons" style="font-size: 30px;">
+                list
+              </i>&nbsp;Receipt Processing Steps</h3>
+            <ul>
+              <li>Supplier submission of receipts</li>
+              <li>EMBC Finance Team to review submission</li>
+              <li>Receipts submitted to Corporate Accounting Services (CAS) for payment</li>
+              <li>Supplier receives payment from CAS</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

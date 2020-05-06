@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import './fonts';
+$bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
+@import "~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme";
+@import './defaults.scss';
+@import './variables';
+
+@import "~@bcgov/bootstrap-theme/dist/scss/common";
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
+
+// monospace font used for fixed-size text blocks (eg, referral comments)
+// NB: same font as PDF renderer service
+@font-face {
+    font-family: 'LiberationMono';
+    src: url('src/assets/LiberationMono-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('src/assets/LiberationMono-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+         url('src/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
+  }
+
+.form-control {
+    border-radius:0
+}
