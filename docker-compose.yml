@@ -6,13 +6,13 @@ services:
       context: ./suppliers/src/API
     image: embcess-suppliers-api:dev
     ports:
-    - 5000:80
+      - 8080:8080
 
   suppliers-portal-ui:
     build:
       context: ./suppliers/src/UI
     image: embcess-suppliers-ui:dev
     ports:
-    - 2015:2015
+      - 2015:2015
     depends_on:
-    - suppliers-portal-api
+      - suppliers-portal-api
