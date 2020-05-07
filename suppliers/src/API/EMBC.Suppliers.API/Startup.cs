@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Net;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,6 +24,23 @@ namespace EMBC.Suppliers.API
         {
             services.AddControllers();
             services.AddOpenApiDocument();
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.All;
+                var knownNetworks = Configuration.GetValue("KNOWN_NETWORKS", "::ffff:172.51.0.0/16").Split(';');
+                foreach (var knownNetwork in knownNetworks)
+                {
+                    options.KnownNetworks.Add(ParseNetworkFromString(knownNetwork));
+                }
+            });
+        }
+
+        private IPNetwork ParseNetworkFromString(string network)
+        {
+            var networkParts = network.Trim().Split('/');
+            var prefix = IPAddress.Parse(networkParts[0]);
+            var length = int.Parse(networkParts[1]);
+            return new IPNetwork(prefix, length);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,12 +51,10 @@ namespace EMBC.Suppliers.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseForwardedHeaders();
+
             app.UseOpenApi();
-            app.UseSwaggerUi3(config => config.TransformToExternalPath = (internalUiRoute, request) =>
-                internalUiRoute.StartsWith("/") && !internalUiRoute.StartsWith(request.PathBase)
-                    ? request.PathBase + internalUiRoute
-                    : internalUiRoute
-            );
+            app.UseSwaggerUi3();
 
             app.UseRouting();
 
