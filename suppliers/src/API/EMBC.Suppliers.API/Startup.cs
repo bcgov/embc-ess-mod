@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSwag.AspNetCore;
 
 namespace EMBC.Suppliers.API
 {
@@ -24,6 +25,15 @@ namespace EMBC.Suppliers.API
         {
             services.AddControllers();
             services.AddOpenApiDocument();
+            services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
+            {
+                options.Path = "/api/swagger/{documentName}/swagger.json";
+            });
+            services.Configure<SwaggerUi3Settings>(options =>
+            {
+                options.Path = "/api/swagger";
+                options.DocumentPath = "/api/swagger/{documentName}/swagger.json";
+            });
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.All;
