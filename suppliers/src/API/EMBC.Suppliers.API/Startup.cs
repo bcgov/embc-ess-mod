@@ -33,7 +33,10 @@ namespace EMBC.Suppliers.API
             }
 
             app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwaggerUi3(opts =>
+            {
+                opts.Path = "/api";
+            });
 
             app.UseRouting();
 
