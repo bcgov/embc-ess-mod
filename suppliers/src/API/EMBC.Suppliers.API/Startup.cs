@@ -6,6 +6,8 @@ using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Suppliers.API
 {
+#pragma warning disable CA1822 // Mark members as static
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -19,6 +21,7 @@ namespace EMBC.Suppliers.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -28,6 +31,9 @@ namespace EMBC.Suppliers.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseRouting();
 
@@ -39,4 +45,6 @@ namespace EMBC.Suppliers.API
             });
         }
     }
+
+#pragma warning restore CA1822 // Mark members as static
 }
