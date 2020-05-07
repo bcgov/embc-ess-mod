@@ -21,7 +21,7 @@ namespace EMBC.Suppliers.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerDocument();
+            services.AddOpenApiDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,10 +33,11 @@ namespace EMBC.Suppliers.API
             }
 
             app.UseOpenApi();
-            app.UseSwaggerUi3(opts =>
-            {
-                opts.Path = "/api";
-            });
+            app.UseSwaggerUi3(config => config.TransformToExternalPath = (internalUiRoute, request) =>
+                internalUiRoute.StartsWith("/") && !internalUiRoute.StartsWith(request.PathBase)
+                    ? request.PathBase + internalUiRoute
+                    : internalUiRoute
+            );
 
             app.UseRouting();
 
