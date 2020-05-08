@@ -13,6 +13,7 @@ namespace EMBC.Suppliers.API.Submissions.ViewModels
         public SupplierAddress Address { get; set; }
         public SupplierContact ContactPerson { get; set; }
         public IEnumerable<Receipt> Receipts { get; set; }
+        public IEnumerable<InvoiceSubmission> Invoices { get; set; }
     }
 
     public class SupplierAddress
