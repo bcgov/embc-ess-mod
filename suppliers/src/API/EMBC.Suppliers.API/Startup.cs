@@ -1,5 +1,7 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,13 @@ namespace EMBC.Suppliers.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            var dpBuilder = services.AddDataProtection();
+            var keyRingPath = Configuration.GetValue("KEY_RING_PATH", string.Empty);
+            if (!string.IsNullOrWhiteSpace(keyRingPath))
+            {
+                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
+            }
+
             services.AddOpenApiDocument();
             services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
             {
