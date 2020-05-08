@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net;
+using EMBC.Suppliers.API.Configuration.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -55,6 +56,11 @@ namespace EMBC.Suppliers.API
                     options.KnownNetworks.Add(ParseNetworkFromString(knownNetwork));
                 }
             });
+
+            services.AddTransient<ICountriesListProvider, CsvLoader>();
+            services.AddTransient<IStateProvincesListProvider, CsvLoader>();
+            services.AddTransient<IRegionsListProvider, CsvLoader>();
+            services.AddTransient<ICommunitiesListProvider, CsvLoader>();
         }
 
         private IPNetwork ParseNetworkFromString(string network)
