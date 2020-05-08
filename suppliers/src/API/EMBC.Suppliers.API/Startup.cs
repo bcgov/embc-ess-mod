@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSwag.AspNetCore;
+using Serilog;
 
 namespace EMBC.Suppliers.API
 {
@@ -15,19 +16,21 @@ namespace EMBC.Suppliers.API
 
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private readonly IWebHostEnvironment env;
+        private readonly IConfiguration configuration;
 
-        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        {
+            this.configuration = configuration;
+            this.env = env;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             var dpBuilder = services.AddDataProtection();
-            var keyRingPath = Configuration.GetValue("KEY_RING_PATH", string.Empty);
+            var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
             if (!string.IsNullOrWhiteSpace(keyRingPath))
             {
                 dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
@@ -46,7 +49,7 @@ namespace EMBC.Suppliers.API
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.All;
-                var knownNetworks = Configuration.GetValue("KNOWN_NETWORKS", "::ffff:172.51.0.0/16").Split(';');
+                var knownNetworks = configuration.GetValue("KNOWN_NETWORKS", "::ffff:172.51.0.0/16").Split(';');
                 foreach (var knownNetwork in knownNetworks)
                 {
                     options.KnownNetworks.Add(ParseNetworkFromString(knownNetwork));
@@ -63,13 +66,14 @@ namespace EMBC.Suppliers.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSerilogRequestLogging();
             app.UseForwardedHeaders();
 
             app.UseOpenApi();
