@@ -1,6 +1,5 @@
-import { Component, Inject, NgModule, Input } from '@angular/core';
+import { Component, Input, ChangeDetectorRef, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-invoice',
@@ -9,12 +8,37 @@ import { CommonModule } from '@angular/common';
 })
 export class InvoiceComponent {
 
-   // supplierForm: FormGroup;
-    @Input() formGroupName: number;
-    @Input() invoiceForm: FormGroup;
-    @Input() index: number;
+    @Input('formGroupName') formGroupName: number;
+    @Input('invoiceForm') invoiceForm: FormGroup;
+    @Input('index') index: number;
+    @Output() indexToRemove = new EventEmitter<number>();
+    referralList: any = ['1', '2', '3', '4', '5'];
 
-    constructor(private builder: FormBuilder){ 
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef){ 
+    }
+
+    createAttachmentObject(data: any) {
+        return this.builder.group(data);
+    }
+
+    get invoiceAttachments() {
+        return this.invoiceForm.get('invoiceAttachments') as FormArray;
+    }
+
+    setFileFormControl(event: any) {
+        const reader = new FileReader();
+        reader.readAsDataURL(event);
+        reader.onload = () => {
+            this.invoiceAttachments.push(this.createAttachmentObject({
+                fileName: event.name,
+                file: reader.result
+            }))
+        }
+        this.cd.markForCheck();
+    }
+
+    deleteFileFormControl(event: any) {
+        this.invoiceAttachments.removeAt(event);
     }
 
     get referrals() {
@@ -22,9 +46,9 @@ export class InvoiceComponent {
     }
 
     createReferralFormArray() {
-       return this.builder.group({
-            referralNumber : ['']
-        })
+        return this.builder.group({
+             referralNumber : ['']
+         })
     }
 
     injectTemplateReferral() {
@@ -35,16 +59,4 @@ export class InvoiceComponent {
         this.injectTemplateReferral();
     }
 
-
 }
-
-// @NgModule({
-//     imports: [
-//       CommonModule,
-//       ReactiveFormsModule
-//     ],
-//     declarations: [
-//         InvoiceComponent
-//       ]
-//   })
-//   class InvoiceModule { }

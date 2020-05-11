@@ -1,12 +1,35 @@
-<h1>Referral Component</h1>
+<div class="referral-template">
+  <form [formGroup]="referralForm">
 
-<form [formGroup]="referralForm">
+    <div class="row referral-border">
+      
+      <div class="col-12 referral-header">
+        <div class="form-group col-lg-6">
+          <label class="requiredField" for="referralNumber">Referral Number</label>
+          <input type="text" class="form-control form-control-lg" id="referralNumber"
+            [formControlName]="'referralNumber'">
+        </div>
+      </div>
 
-    <div class="row">
-      <div class="form-group required col-lg-6">
-          <input type="text" class="form-control form-control-lg" placeholder="Referral Number"
-          [formControlName]="'referralNumber'"
-          >
-        </div> 
+      <div class="table-responsive">
+        <table class="table table-header">
+          <thead>
+            <tr>
+              <th scope="col">Support Provided</th>
+              <th scope="col">Description</th>
+              <th scope="col">GST</th>
+              <th scope="col">Amount(excl. GST)</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+          </tbody>
+        </table>
+      </div>
     </div>
-    </form>
+    
+
+    
+
+  </form>
+</div>

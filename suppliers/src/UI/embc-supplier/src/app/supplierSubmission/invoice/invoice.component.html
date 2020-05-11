@@ -1,24 +1,50 @@
-<div class="box">
-    {{formGroupName}}
-    <form [formGroup]="invoiceForm">
+<div class="invoice-template">
+  <form [formGroup]="invoiceForm">
 
-        <div class="row">
-          <div class="form-group required col-lg-6">
-              <input type="text" class="form-control form-control-lg" placeholder="Invoice Number"
-              [formControlName]="'invoiceNumber'"
-              >
-            </div> 
+    <div class="row form-header" style="justify-content: space-between;">
+      <div class="form-group col-lg-6">
+        <label class="requiredField" for="invoiceNumber">Invoice Number</label>
+        <input type="text" class="form-control form-control-lg" id="invoiceNumber" [formControlName]="'invoiceNumber'"
+          required>
+      </div>
+      <i (click)="indexToRemove.emit(index)" class="fas fa-trash-alt"></i>
+    </div>
+
+    <div class="row form-body">
+      <div class="col-sm-12 col-md-6">
+        <div class="form-group">
+          <label class="requiredField" for="invoiceDate">Invoice Date</label>
+          <input type="text" class="form-control form-control-lg" id="invoiceDate" [formControlName]="'invoiceDate'"
+            required>
         </div>
 
-        <div formArrayName="referrals" >
-            <div *ngFor="let referral of referrals.controls; let j = index">
-                <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j"></app-referral>
-            </div>
-          </div>
+        <div class="form-group">
+          <label class="requiredField" for="invoiceDate">How many referrals are listed on your invoice?</label>
+          <select class="form-control form-control-lg" [formControlName]="'referralList'">
+            <option selected>Select...</option>
+            <option *ngFor="let no of referralList">{{no}}</option>
+          </select>
+        </div>
 
         <div>
-            <button type="button" (click)="addReferralTemplate()" class="btn btn-primary">Add Referral</button>
-          </div>
-        </form>
+          <button type="button" (click)="addReferralTemplate()" class="btn btn-primary referral-button">Next</button>
+        </div>
+      </div>
+
+      <div class="col-sm-12 col-md-6">
+        <div class="form-group">
+          <app-fileUpload (attachedFile)="setFileFormControl($event)" (deleteFile)="deleteFileFormControl($event)">
+          </app-fileUpload>
+        </div>
+      </div>
+
+    </div>
+
+    <div formArrayName="referrals">
+      <div *ngFor="let referral of referrals.controls; let j = index">
+        <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j"></app-referral>
+      </div>
+    </div>
+  </form>
 
 </div>
