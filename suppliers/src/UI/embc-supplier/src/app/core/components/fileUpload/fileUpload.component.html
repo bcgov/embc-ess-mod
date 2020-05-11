@@ -1,0 +1,11 @@
+<label class="requiredField" for="fileDrop">Attach a photo/scanned copy of your invoice</label>
+<div class="drag-drop" dragDrop (fileDropped)="onInvoiceDropped($event)">
+    <input type="file" #fileDrop multiple class="form-control form-control-lg" id="fileDrop"
+        (change)="onInvoiceDropped($event.target.files)" required>
+    <i class="far fa-clone" style="font-size: 35px;"></i>
+    <h3>Drag and drop or browse your file</h3>
+</div>
+<div class="row attach-list" *ngFor="let attach of invoiceAttachments; let fileIndex = index ">
+    <p> {{attach}}</p>
+    <i (click)="deleteAttachedInvoice(fileIndex)" class="fas fa-trash-alt"></i>
+</div>

@@ -24,3 +24,7 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
 .form-control {
     border-radius:0
 }
+
+.container {
+    max-width: 1370px;
+}

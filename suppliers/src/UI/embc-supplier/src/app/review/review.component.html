@@ -11,7 +11,24 @@
                 <h3 >Supplier Information</h3>
             </div>
             <div>
-                        test
+                <p><b>Supplier Information:</b></p>
+                <p>{{supplier?.supplierLegalName}}</p>
+                <p>{{supplier?.supplierName}}</p>
+                <p>{{supplier?.location}}</p>
+                <p>GST#:{{supplier?.gstNumber}}</p>
+                <br>
+                <p><b>Supplier Address:</b></p>
+                <p>{{supplier?.address?.address1}}&nbsp;{{supplier?.address?.address2}}</p>
+                <p>{{supplier?.address?.city}}</p>
+                <p>{{supplier?.address?.province}}</p>
+                <p>{{supplier?.address?.postalCode}}</p>
+                <p>{{supplier?.address?.country}}</p>
+                <br>
+                <p><b>Contact person:</b></p>
+                <p>{{supplier?.contactPerson?.firstName}}&nbsp;{{supplier?.contactPerson?.lastName}} </p>
+                <p>{{supplier?.contactPerson?.email}}</p>
+                <p>{{supplier?.contactPerson?.phone}}</p>
+                <p>{{supplier?.contactPerson?.fax}}</p>
             </div>
             <div class="formHeading">
                 <h3 *ngIf="supplierSubmissionType === 'I'">Invoice Submitted</h3>
