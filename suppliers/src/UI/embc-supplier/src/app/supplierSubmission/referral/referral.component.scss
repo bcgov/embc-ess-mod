@@ -1,0 +1,23 @@
+@import '../../../styles/styles.scss';
+
+// .referral-template{
+//     margin-top: 10px;
+//   }
+
+  .referral-header{
+    background-color: rgba(theme-color(info), 0.5);
+    padding: 10px;
+  }
+
+  .requiredField::after {
+    content: "*";
+    color: red;
+ }
+
+ .table-header{
+    background-color: rgba(theme-color(info), 0.3);
+ }
+
+ .referral-border {
+    border: 2px theme-color(info) solid;
+ }

@@ -1,0 +1,18 @@
+<div class="receipt-template">
+    <form [formGroup]="receiptForm">
+  
+      <div class="row form-header" style="justify-content: space-between;">
+        <div class="form-group col-lg-6">
+          <label class="requiredField" for="referralNumber">Referral Number</label>
+          <input type="text" class="form-control form-control-lg" id="referralNumber" [formControlName]="'referralNumber'"
+            required>
+        </div>
+        <i (click)="indexToRemove.emit(index)" class="fas fa-trash-alt"></i>
+      </div>
+      <div formArrayName="referrals">
+        <div *ngFor="let referral of referrals.controls; let j = index">
+          <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j"></app-referral>
+        </div>
+      </div>
+      </form>
+      </div>

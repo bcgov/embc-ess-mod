@@ -5,7 +5,7 @@
     <hr>
 
     <div class="row">
-      <div class="col-sm-12 col-md-7">
+      <div class="col-sm-12 col-md-8">
         <div>
           <p>
             Are you a registered supplier with Emergency Support Services (ESS) who has provided goods or
@@ -30,13 +30,13 @@
           <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
 
             <div class="row">
-              <div class="form-group required col-lg-6">
+              <div class="form-group col-lg-6">
                 <!-- <div class="control-label"> -->
-                  <input type="text" class="form-control form-control-lg" placeholder="Supplier Legal Name"
+                <input type="text" class="form-control form-control-lg" placeholder="Supplier Legal Name"
                   formControlName="supplierLegalName" required>
                 <!-- <label class="control-label" for="supplierLegalName">Supplier Legal Name</label> -->
-              <!-- </div> -->
-                </div>
+                <!-- </div> -->
+              </div>
             </div>
 
             <div class="row">
@@ -89,7 +89,8 @@
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" class="form-control form-control-lg" formControlName="city" placeholder="City" required>
+                  <input type="text" class="form-control form-control-lg" formControlName="city" placeholder="City"
+                    required>
                 </div>
               </div>
 
@@ -170,7 +171,7 @@
 
               <div class="form-group form-check">
                 <input class="form-check-input" formControlName="supplierSubmissionType" type="radio" id="invoice"
-                  value="invoice" (change)="onValueChange($event)">
+                  value="invoice" (change)="onValueChange($event)"> <!-- (change)="onValueChange($event)"-->
                 <label class="form-check-label" for="invoice">
                   Invoice
                 </label>
@@ -183,12 +184,13 @@
                 </label>
               </div>
 
-              <div>
-                <div class="box" *ngIf="supplierForm.get('supplierSubmissionType').value === 'invoice'">
+              <div *ngIf="supplierForm.get('supplierSubmissionType').value === 'invoice'">
+                <div class="row box">
                   <p><b>Important Tips:</b></p>
                   <ul>
                     <li>Please list all referrals associated with a single invoice only.</li>
-                    <li>If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the page.
+                    <li>If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the
+                      page.
                     </li>
                     <li>Please complete all information regarding each referral separately.</li>
                     <li>If a referral references more than 1 support or service provided, please separate the costs
@@ -198,46 +200,70 @@
                       relevant referral.</li>
                   </ul>
                 </div>
-                <div formArrayName="invoices" >
-                  <div *ngFor="let invoice of invoices.controls; let i = index">
-                    <!-- <ng-container [ngComponentOutletInjector]="invoiceInjector" [ngComponentOutlet]="invoiceComponent | async"></ng-container> -->
-                  <app-invoice [index]="i" [invoiceForm]="invoice" [formGroupName]="i"></app-invoice>
+
+                <div formArrayName="invoices">
+                  <div *ngFor="let invoic of invoices.controls; let i = index">      
+                      <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i" (indexToRemove)="deleteInvoice($event)"></app-invoice>   
                   </div>
                 </div>
+
+                <br>
+                <div class="row" style="justify-content: space-between;">
+                  <div>
+                    <button type="button" (click)="addInvoiceTemplate()" class="btn btn-primary">Add Another Invoice</button>
+                  </div>
+                  <div>
+                    <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done! Next</button>
+                  </div>
+                </div>
+               
                 
+              </div>
+
+              <div *ngIf="supplierForm.get('supplierSubmissionType').value === 'receipt'">
+                <div class="row box">
+                  <p><b>Important Tips:</b></p>
+                  <ul>
+                    <li>Please list all receipts associated with a single referral number only.</li>
+                    <li>If you have receipts against more than 1 referral, click "Add another referral" at the bottom of
+                      this page.</li>
+                    <li>To add another receipt to a referral, click the "Add another receipt" button.</li>
+                    <li>If a receipt references more than 1 support or service provided, please separate the costs
+                      associated with each by clicking
+                      the "Add another line item to this receipt" link.</li>
+                  </ul>
                 </div>
 
-              <div class="box" *ngIf="supplierForm.get('supplierSubmissionType').value === 'receipt'">
-                <p><b>Important Tips:</b></p>
-                <ul>
-                  <li>Please list all receipts associated with a single referral number only.</li>
-                  <li>If you have receipts against more than 1 referral, click "Add another referral" at the bottom of
-                    this page.</li>
-                  <li>To add another receipt to a referral, click the "Add another receipt" button.</li>
-                  <li>If a receipt references more than 1 support or service provided, please separate the costs
-                    associated with each by clicking
-                    the "Add another line item to this receipt" link.</li>
-                </ul>
+                <div formArrayName="receipts">
+                  <div *ngFor="let receipt of receipts.controls; let i = index">      
+                      <app-receipt [index]="i" [receiptForm]="receipt" [formGroupName]="i" (indexToRemove)="deleteReceipt($event)"></app-receipt>   
+                  </div>
+                </div>
+
+                <br>
+                <div class="row" style="justify-content: space-between;">
+                  <div>
+                    <button type="button" (click)="addReceiptTemplate()" class="btn btn-primary">Add Another Receipt</button>
+                  </div>
+                  <div>
+                    <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done! Next</button>
+                  </div>
+                </div>
+
               </div>
             </div>
+
             <!-- {{supplierForm.value | json}} -->
-            <div>
-              <button type="button" (click)="addInvoiceTemplate()" class="btn btn-primary">Add Another Invoice</button>
-            </div>
-            <div>
-              <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done! Next</button>
-            </div>
           </form>
         </div>
 
       </div>
 
-      <div class="col-sm-12 col-md-5">
+      <div class="col-sm-12 col-md-4">
 
         <div class="card sidebox-card-info text-white">
           <div class="card-body">
-            <h3 class="card-title"><i class="material-icons"
-                style="font-size: 30px;">check_circle_outline</i>&nbsp;Supplier Invoice Checklist</h3>
+            <h3 class="card-title"><i class="far fa-check-circle" style="font-size: 25px;"></i>&nbsp;Supplier Invoice Checklist</h3>
             <p class="card-text">The following checklist is provided for your convenience to ensure your invoice
               documentation is
               complete and accurate prior to submitting to Emergency Management BC (EMBC) for payment.
@@ -257,9 +283,7 @@
         <br>
         <div class="card">
           <div class="card-body">
-            <h3 class="card-title"><i class="material-icons" style="font-size: 30px;">
-                live_help
-              </i>&nbsp;
+            <h3 class="card-title"><i class="far fa-question-circle" style="font-size: 25px;"></i>&nbsp;
               Questions about submitting</h3>
             <p class="card-text">If you have any questions or need assistance with this form, please contact Emergency
               Management BC
@@ -270,9 +294,7 @@
         <br>
         <div class="card">
           <div class="card-body">
-            <h3 class="card-title"><i class="material-icons" style="font-size: 30px;">
-                list
-              </i>&nbsp;Receipt Processing Steps</h3>
+            <h3 class="card-title"><i class="fas fa-file-invoice-dollar" style="font-size: 25px;"></i>&nbsp;Receipt Processing Steps</h3>
             <ul>
               <li>Supplier submission of receipts</li>
               <li>EMBC Finance Team to review submission</li>

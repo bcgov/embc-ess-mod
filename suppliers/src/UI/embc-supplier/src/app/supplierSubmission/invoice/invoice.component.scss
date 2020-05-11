@@ -1,8 +1,39 @@
 @import '../../../styles/styles.scss';
 
+.invoice-template{
+  margin-top: 10px;
+}
+
 .box{
-    background-color: lightgrey;
     padding: 10px;
     margin: 20px;
     border: 4px theme-color(primary) solid;
   }
+
+.requiredField::after {
+    content: "*";
+    color: red;
+ }
+
+.form-header {
+  background-color: theme-color(primary);
+  border-bottom: 3px theme-color(bcgold) solid;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 10px;
+}
+
+.form-body {
+  background-color: $gray2;
+  border-left: 3px theme-color(primary) solid;
+  border-bottom: 3px theme-color(primary) solid;
+  border-right: 3px theme-color(primary) solid;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.referral-button {
+  padding-left: 30px;
+  padding-right: 30px;
+}
