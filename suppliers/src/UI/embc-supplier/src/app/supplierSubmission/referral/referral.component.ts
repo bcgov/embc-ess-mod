@@ -1,5 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { SupplierService } from 'src/app/service/supplier.service';
+import { TemplateModel } from 'src/app/model/templateModel';
 
 @Component({
     selector: 'app-referral',
@@ -12,9 +14,10 @@ export class ReferralComponent implements OnInit {
     @Input() referralForm: FormGroup
     @Input() index: number;
     @Input() component: string;
+    @Output() gstEvent = new EventEmitter<number>();
     supportList: any = ['Food - Groceries', 'Food - Restaurant Meals', 'Lodging - Hotel', 'Lodging - Group Lodging', 'Lodging - Billeting', 'Transportation - Taxi', 'Transportation - Other', 'Clothing', 'Incidentals'];
 
-    constructor(private builder: FormBuilder) { }
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private service: SupplierService) { }
 
     get referralRows() {
         return this.referralForm.get('referralRows') as FormArray;
@@ -30,6 +33,7 @@ export class ReferralComponent implements OnInit {
 
     ngOnInit() {
         this.referralRows.push(this.createRowForm());
+        this.onChanges();
     }
 
     createRowForm() {
@@ -41,12 +45,24 @@ export class ReferralComponent implements OnInit {
         })
     }
 
+    onChanges() {
+        this.referralForm.get('referralRows').valueChanges.subscribe(formrow =>{
+            let gstSum = formrow.reduce((prev, next) => prev + +next.gst, 0);
+            let amtSum = formrow.reduce((prev, next) => prev + +next.amount, 0);
+            this.referralForm.get('totalGst').setValue(gstSum);
+            this.referralForm.get('totalAmount').setValue(amtSum);
+            //his.service.createGstGrandTotal(new TemplateModel(this.index, gstSum));
+            //this.gstEvent.emit(gstSum);
+        });
+    }
+
     deleteRow(rowIndex: number) {
         this.referralRows.removeAt(rowIndex);
     }
 
     addRow() {
         this.referralRows.push(this.createRowForm());
+        this.cd.detectChanges();
     }
 
     setReferralFormControl(event: any) {

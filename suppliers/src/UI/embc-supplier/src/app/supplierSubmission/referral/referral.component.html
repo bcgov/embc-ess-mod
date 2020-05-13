@@ -39,13 +39,13 @@
                   <option *ngFor="let support of supportList">{{support}}</option>
                 </select>
               </td>
-              <td><input formControlName="description" class="form-control"></td>
+              <td><input type="text" formControlName="description" class="form-control"></td>
               <td>
                 <div class="input-group mb-2">
                   <div class="input-group-prepend">
                     <div class="input-group-text">$</div>
                   </div>
-                  <input formControlName="gst" class="form-control" required>
+                  <input type="number" formControlName="gst" class="form-control" required>
                 </div>
               </td>
               <td>
@@ -53,7 +53,7 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text">$</div>
                   </div>
-                  <input formControlName="amount" class="form-control" required>
+                  <input type="number" formControlName="amount" class="form-control" required>
                 </div>
               </td>
               <td><i (click)="deleteRow(j)" class="fas fa-trash-alt"></i></td>
@@ -73,7 +73,7 @@
       <div class="col-12">
         <div class="float-right">
           Total GST
-          <input type="text" formControlName="totalGst" class="form-control">
+          <input type="number" formControlName="totalGst" class="form-control" readonly>
         </div>
       </div>
       <br>
@@ -81,7 +81,7 @@
       <div class="col-12">
         <div class="float-right" style="margin-bottom: 6px;">
           Total Amount
-          <input type="text" formControlName="totalAmount" class="form-control">
+          <input type="number" formControlName="totalAmount" class="form-control" readonly>
         </div>
       </div>
 

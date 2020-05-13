@@ -50,14 +50,14 @@
       <div *ngIf="referrals.controls.length>0" class="row justify-content-end">
         <div class="col-3">
           Total GST
-          <input type="text" [formControlName]="'receiptTotalGst'" class="form-control form-control-lg">
+          <input type="number" [formControlName]="'receiptTotalGst'" class="form-control form-control-lg" readonly>
         </div>
       </div>
 
       <div *ngIf="referrals.controls.length> 0" class="row justify-content-end">
         <div class="col-3">
           Total Amount
-          <input type="text" [formControlName]="'receiptTotalAmount'" class="form-control form-control-lg">
+          <input type="number" [formControlName]="'receiptTotalAmount'" class="form-control form-control-lg" readonly>
         </div>
       </div>
 
