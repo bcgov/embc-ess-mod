@@ -71,7 +71,9 @@ export class SupplierSubmissionComponent implements OnInit {
             invoiceAttachments: this.builder.array([]),
             referralList: [''],
             referrals: this.builder.array([          
-            ])
+            ]),
+            invoiceTotalGst: [''],
+            invoiceTotalAmount: ['']
         }) 
     }
 
@@ -79,7 +81,11 @@ export class SupplierSubmissionComponent implements OnInit {
         return this.builder.group({
             referralNumber: [''],
             referrals: this.builder.array([          
-            ])
+            ]),
+            receiptTotalGst: [''],
+            receiptTotalAmount: [''],
+            referralAttachments: this.builder.array([]),
+            receiptAttachments: this.builder.array([])
         })
     }
 

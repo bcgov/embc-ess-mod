@@ -32,8 +32,8 @@
     margin-top: 10px;
     border: dashed 1px #979797;
     border-radius: 10px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
     padding-top: 10px;
     justify-content: space-between;
   }
@@ -82,4 +82,10 @@
     100% {
       transform: translate(1px, -2px) rotate(-1deg);
     }
+  }
+
+  .file-style {
+    justify-content: space-between;
+    padding-left: 9px;
+    padding-right: 9px;
   }

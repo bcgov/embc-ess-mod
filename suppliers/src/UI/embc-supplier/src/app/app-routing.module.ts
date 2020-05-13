@@ -5,11 +5,11 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/supplier',
+    redirectTo: '/submission',
     pathMatch: 'full'
   },
   {
-    path: 'supplier',
+    path: 'submission',
     loadChildren: () => import('./supplierSubmission/supplierSubmission.module').then(m => m.SupplierSubmissionModule)
   },
   {

@@ -37,3 +37,21 @@
   padding-left: 30px;
   padding-right: 30px;
 }
+
+.add-referral-button {
+  color: theme-color(primary) !important;
+  border: 1px theme-color(primary) solid;
+  background-color: white;
+  margin-top: 1rem;
+  &:hover,
+  &:focus {
+    color: white;
+  }
+  &:active {
+    border: 2px solid rgba(white, 0.8);
+  }
+}
+
+.remove-icon {
+  padding-left: 370px;
+}

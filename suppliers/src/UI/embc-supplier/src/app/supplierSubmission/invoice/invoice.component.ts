@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectorRef, Output, EventEmitter} from '@angular/core';
+import { Component, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component({
@@ -13,8 +13,9 @@ export class InvoiceComponent {
     @Input('index') index: number;
     @Output() indexToRemove = new EventEmitter<number>();
     referralList: any = ['1', '2', '3', '4', '5'];
+    component: string = "I";
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef){ 
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef) {
     }
 
     createAttachmentObject(data: any) {
@@ -47,16 +48,33 @@ export class InvoiceComponent {
 
     createReferralFormArray() {
         return this.builder.group({
-             referralNumber : ['']
-         })
+            referralNumber: [''],
+            referralRows: this.builder.array([
+            ]),
+            totalGst: [''],
+            totalAmount: [''],
+            referralAttachments: this.builder.array([]),
+            receiptAttachments: this.builder.array([])
+        })
     }
 
     injectTemplateReferral() {
         this.referrals.push(this.createReferralFormArray());
+        this.cd.detectChanges();
     }
 
-    addReferralTemplate() {
+    addReferralTemplate(templateNo: number) {
+        for (let i = 0; i < templateNo; i++) {
+            this.injectTemplateReferral();
+        }
+    }
+
+    addSingleReferralTemplate() {
         this.injectTemplateReferral();
+    }
+
+    cleanReferrals() {
+        this.referrals.clear()
     }
 
 }
