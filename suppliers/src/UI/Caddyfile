@@ -15,11 +15,12 @@
 		# Disallow the site to be rendered within a frame (clickjacking protection)
 		X-Frame-Options "DENY"
 		# Set CSP to support Angular
-		Content-Security-Policy "default-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';"
+		Content-Security-Policy "default-src 'self' 'unsafe-eval' https://use.fontawesome.com; style-src 'self' 'unsafe-inline' https://use.fontawesome.com; script-src 'self' 'unsafe-inline' 'unsafe-eval';"
 		# Set referrer policy
 		Referrer-Policy "same-origin"
 	}
-	file_server {
-		root /site
-	}
+
+	root * /site 
+	file_server 
+	try_files {path} {path}/ /index.html
 }
