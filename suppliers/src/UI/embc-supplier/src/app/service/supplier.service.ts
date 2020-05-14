@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class SupplierService {
 
-    supplierDetails: any;
+    private supplierDetails: any;
 
     setSupplierDetails(supplierDetails: any) {
         this.supplierDetails = supplierDetails;
@@ -14,6 +14,4 @@ export class SupplierService {
     getSupplierDetails() {
         return this.supplierDetails;
     }
-
-
 }

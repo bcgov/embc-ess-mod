@@ -1,35 +1,118 @@
 <div class="referral-template">
   <form [formGroup]="referralForm">
-
     <div class="row referral-border">
-      
       <div class="col-12 referral-header">
-        <div class="form-group col-lg-6">
-          <label class="requiredField" for="referralNumber">Referral Number</label>
-          <input type="text" class="form-control form-control-lg" id="referralNumber"
-            [formControlName]="'referralNumber'">
+        <div *ngIf="component === 'I'" class="row">
+          <div class="col-sm-12 col-md-6 mr-auto">
+            <div class="form-group">
+              <label class="requiredField" for="referralNumber">Referral Number</label>
+              <input type="text" class="form-control form-control-lg" id="referralNumber"
+                [formControlName]="'referralNumber'">
+            </div>
+          </div>
+          <div class="col-auto">
+            <i (click)="referralToRemove.emit(index)" class="far fa-times-circle"></i>
+          </div>
+        </div>
+
+        <div *ngIf="component === 'R'" class="row">
+          <div class="col-sm-12 col-md-6 mr-auto">
+            Receipt {{index+1}}
+            <div class="form-group">
+              <label class="requiredField" for="referralDate">Referral Date</label>
+              <input type="text" class="form-control form-control-lg" id="referralDate"
+                [formControlName]="'referralDate'">
+            </div>
+          </div>
+          <div class="col-auto">
+            <i  (click)="referralToRemove.emit(index)" class="far fa-times-circle"></i>
+          </div>
         </div>
       </div>
 
       <div class="table-responsive">
-        <table class="table table-header">
-          <thead>
+        <table class="table">
+          <thead class="table-header">
             <tr>
-              <th scope="col">Support Provided</th>
+              <th scope="col" class="requiredField">Support Provided</th>
               <th scope="col">Description</th>
-              <th scope="col">GST</th>
-              <th scope="col">Amount(excl. GST)</th>
+              <th scope="col" class="requiredField">GST</th>
+              <th scope="col" class="requiredField">Amount(excl. GST)</th>
+              <th scope="col"></th>
             </tr>
           </thead>
-          <tbody>
-            
+          <tbody formArrayName="referralRows">
+            <tr *ngFor="let row of referralRows.controls; let j = index" [formGroupName]="j">
+              <td>
+                <select class="form-control" formControlName="supportProvided" required>
+                  <option selected>Select...</option>
+                  <option *ngFor="let support of supportList">{{support}}</option>
+                </select>
+              </td>
+              <td><input type="text" formControlName="description" class="form-control"></td>
+              <td>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">$</div>
+                  </div>
+                  <input type="number" formControlName="gst" class="form-control" required>
+                </div>
+              </td>
+              <td>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">$</div>
+                  </div>
+                  <input type="number" formControlName="amount" class="form-control" required>
+                </div>
+              </td>
+              <td><i (click)="deleteRow(j)" class="fas fa-trash-alt"></i></td>
+            </tr>
+            <tr>
+              <td colspan="5">
+                <span class="d-inline-block" tabindex="0" data-toggle="tooltip"
+                  title="Add another line item to this referral">
+                  <i (click)="addRow()" class="fas fa-plus"></i>
+                </span>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
+
+      <div class="col-12">
+        <div class="float-right">
+          Total GST
+          <input type="number" formControlName="totalGst" class="form-control" readonly>
+        </div>
+      </div>
+      <br>
+      <br>
+      <div class="col-12">
+        <div class="float-right" style="margin-bottom: 6px;">
+          Total Amount
+          <input type="number" formControlName="totalAmount" class="form-control" readonly>
+        </div>
+      </div>
+
+      <div *ngIf="component === 'I'" class="col-6">
+        <div class="form-group">
+          <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
+          <app-fileUpload (attachedFile)="setReferralFormControl($event)"
+            (deleteFile)="deleteReferralFormControl($event)">
+          </app-fileUpload>
+        </div>
+      </div>
+
+      <div *ngIf="component === 'I'" class="col-6">
+        <div class="form-group">
+          <label class="requiredField attach-header">Attach any receipt related to this referral below</label>
+          <app-fileUpload (attachedFile)="setReceiptFormControl($event)"
+            (deleteFile)="deleteReceiptFormControl($event)">
+          </app-fileUpload>
+        </div>
+      </div>
+
     </div>
-    
-
-    
-
   </form>
 </div>

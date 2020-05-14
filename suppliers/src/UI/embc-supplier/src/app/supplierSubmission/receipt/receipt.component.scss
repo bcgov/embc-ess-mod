@@ -32,3 +32,17 @@
     font-weight: bold;
     padding: 10px;
   }
+
+  .add-referral-button {
+    color: theme-color(primary) !important;
+    border: 1px theme-color(primary) solid;
+    background-color: white;
+    margin-top: 1rem;
+    &:hover,
+    &:focus {
+      color: white;
+    }
+    &:active {
+      border: 2px solid rgba(white, 0.8);
+    }
+  }

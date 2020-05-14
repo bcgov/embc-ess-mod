@@ -185,68 +185,79 @@
               </div>
 
               <div *ngIf="supplierForm.get('supplierSubmissionType').value === 'invoice'">
-                <div class="row box">
-                  <p><b>Important Tips:</b></p>
-                  <ul>
-                    <li>Please list all referrals associated with a single invoice only.</li>
-                    <li>If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the
-                      page.
-                    </li>
-                    <li>Please complete all information regarding each referral separately.</li>
-                    <li>If a referral references more than 1 support or service provided, please separate the costs
-                      associated with each by clicking
-                      the "Add another line item" button.</li>
-                    <li>If you have receipts associated with a referral, please remember to attach them under that
-                      relevant referral.</li>
-                  </ul>
+                <div class="box">
+                  <div class="row tips-section">
+                    <p><b>Important Tips:</b></p>
+                    <ul>
+                      <li>Please list all referrals associated with a single invoice only.</li>
+                      <li>If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the
+                        page.
+                      </li>
+                      <li>Please complete all information regarding each referral separately.</li>
+                      <li>If a referral references more than 1 support or service provided, please separate the costs
+                        associated with each by clicking
+                        the "Add another line item" button.</li>
+                      <li>If you have receipts associated with a referral, please remember to attach them under that
+                        relevant referral.</li>
+                    </ul>
+                  </div>
                 </div>
 
                 <div formArrayName="invoices">
-                  <div *ngFor="let invoic of invoices.controls; let i = index">      
-                      <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i" (indexToRemove)="deleteInvoice($event)"></app-invoice>   
+                  <div *ngFor="let invoic of invoices.controls; let i = index">
+                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i"
+                      (indexToRemove)="deleteInvoice($event)"></app-invoice>
                   </div>
                 </div>
 
                 <br>
                 <div class="row" style="justify-content: space-between;">
                   <div>
-                    <button type="button" (click)="addInvoiceTemplate()" class="btn btn-primary">Add Another Invoice</button>
+                    <button type="button" (click)="addInvoiceTemplate()" class="btn btn-primary">Add Another
+                      Invoice</button>
                   </div>
                   <div>
-                    <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done! Next</button>
+                    <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done!
+                      Next</button>
                   </div>
                 </div>
-               
-                
+
+
               </div>
 
               <div *ngIf="supplierForm.get('supplierSubmissionType').value === 'receipt'">
-                <div class="row box">
-                  <p><b>Important Tips:</b></p>
-                  <ul>
-                    <li>Please list all receipts associated with a single referral number only.</li>
-                    <li>If you have receipts against more than 1 referral, click "Add another referral" at the bottom of
-                      this page.</li>
-                    <li>To add another receipt to a referral, click the "Add another receipt" button.</li>
-                    <li>If a receipt references more than 1 support or service provided, please separate the costs
-                      associated with each by clicking
-                      the "Add another line item to this receipt" link.</li>
-                  </ul>
+                <div class="box">
+                  <div class="row tips-section">
+                    <p><b>Important Tips:</b></p>
+                    <ul>
+                      <li>Please list all receipts associated with a single referral number only.</li>
+                      <li>If you have receipts against more than 1 referral, click "Add another referral" at the bottom
+                        of
+                        this page.</li>
+                      <li>To add another receipt to a referral, click the "Add another receipt" button.</li>
+                      <li>If a receipt references more than 1 support or service provided, please separate the costs
+                        associated with each by clicking
+                        the "Add another line item to this receipt" link.</li>
+                    </ul>
+                  </div>
                 </div>
 
                 <div formArrayName="receipts">
-                  <div *ngFor="let receipt of receipts.controls; let i = index">      
-                      <app-receipt [index]="i" [receiptForm]="receipt" [formGroupName]="i" (indexToRemove)="deleteReceipt($event)"></app-receipt>   
+                  <div *ngFor="let receipt of receipts.controls; let i = index">
+                    <app-receipt [index]="i" [receiptForm]="receipt" [formGroupName]="i"
+                      (indexToRemove)="deleteReceipt($event)"></app-receipt>
                   </div>
                 </div>
 
                 <br>
                 <div class="row" style="justify-content: space-between;">
                   <div>
-                    <button type="button" (click)="addReceiptTemplate()" class="btn btn-primary">Add Another Receipt</button>
+                    <button type="button" (click)="addReceiptTemplate()" class="btn btn-primary">Add Another
+                      Receipt</button>
                   </div>
                   <div>
-                    <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done! Next</button>
+                    <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done!
+                      Next</button>
                   </div>
                 </div>
 
@@ -263,7 +274,8 @@
 
         <div class="card sidebox-card-info text-white">
           <div class="card-body">
-            <h3 class="card-title"><i class="far fa-check-circle" style="font-size: 25px;"></i>&nbsp;Supplier Invoice Checklist</h3>
+            <h3 class="card-title"><i class="far fa-check-circle" style="font-size: 25px;"></i>&nbsp;Supplier Invoice
+              Checklist</h3>
             <p class="card-text">The following checklist is provided for your convenience to ensure your invoice
               documentation is
               complete and accurate prior to submitting to Emergency Management BC (EMBC) for payment.
@@ -294,7 +306,8 @@
         <br>
         <div class="card">
           <div class="card-body">
-            <h3 class="card-title"><i class="fas fa-file-invoice-dollar" style="font-size: 25px;"></i>&nbsp;Receipt Processing Steps</h3>
+            <h3 class="card-title"><i class="fas fa-file-invoice-dollar" style="font-size: 25px;"></i>&nbsp;Receipt
+              Processing Steps</h3>
             <ul>
               <li>Supplier submission of receipts</li>
               <li>EMBC Finance Team to review submission</li>

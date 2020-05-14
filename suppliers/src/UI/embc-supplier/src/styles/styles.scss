@@ -28,3 +28,8 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
 .container {
     max-width: 1370px;
 }
+
+.requiredField::after {
+    content: "*";
+    color: red;
+ }
