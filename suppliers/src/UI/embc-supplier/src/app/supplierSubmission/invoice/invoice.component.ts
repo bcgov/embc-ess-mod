@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ChangeDetectorRef, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
     templateUrl: './invoice.component.html',
     styleUrls: ['./invoice.component.scss']
 })
-export class InvoiceComponent {
+export class InvoiceComponent implements OnInit{
 
     @Input('formGroupName') formGroupName: number;
     @Input('invoiceForm') invoiceForm: FormGroup;
@@ -20,6 +20,10 @@ export class InvoiceComponent {
 
     createAttachmentObject(data: any) {
         return this.builder.group(data);
+    }
+
+    ngOnInit() {
+        this.onChanges();
     }
 
     get invoiceAttachments() {
@@ -36,6 +40,15 @@ export class InvoiceComponent {
             }))
         }
         this.cd.markForCheck();
+    }
+
+    onChanges() {
+        this.invoiceForm.get('referrals').valueChanges.subscribe(template =>{
+            let totalGst = template.reduce((prev, next) => prev + +next.totalGst, 0);
+            this.invoiceForm.get('invoiceTotalGst').setValue(totalGst);
+            let totalAmount = template.reduce((prev, next) => prev + +next.totalAmount, 0);
+            this.invoiceForm.get('invoiceTotalAmount').setValue(totalAmount);
+        });
     }
 
     deleteFileFormControl(event: any) {
@@ -75,6 +88,10 @@ export class InvoiceComponent {
 
     cleanReferrals() {
         this.referrals.clear()
+    }
+
+    removeReferral(event: any) {
+        this.referrals.removeAt(event);
     }
 
 }

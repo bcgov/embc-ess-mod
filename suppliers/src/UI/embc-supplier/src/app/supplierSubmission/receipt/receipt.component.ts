@@ -18,6 +18,7 @@ export class ReceiptComponent implements OnInit{
 
     ngOnInit() {
         this.addReferralTemplate();
+        this.onChanges();
     }
 
     get referrals() {
@@ -40,6 +41,15 @@ export class ReceiptComponent implements OnInit{
             totalGst: [''],
             totalAmount: ['']
          })
+    }
+
+    onChanges() {
+        this.receiptForm.get('referrals').valueChanges.subscribe(template =>{
+            let totalGst = template.reduce((prev, next) => prev + +next.totalGst, 0);
+            this.receiptForm.get('receiptTotalGst').setValue(totalGst);
+            let totalAmount = template.reduce((prev, next) => prev + +next.totalAmount, 0);
+            this.receiptForm.get('receiptTotalAmount').setValue(totalAmount);
+        });
     }
 
     injectTemplateReferral() {
@@ -89,6 +99,10 @@ export class ReceiptComponent implements OnInit{
 
     createAttachmentObject(data: any) {
         return this.builder.group(data);
+    }
+
+    removeReferral(event: any) {
+        this.referrals.removeAt(event);
     }
 
 }
