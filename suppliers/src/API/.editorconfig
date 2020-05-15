@@ -138,6 +138,9 @@ dotnet_diagnostic.CA1308.severity = suggestion
 # SecurityIntelliSenseCS: MS Security rules violation
 dotnet_diagnostic.SecurityIntelliSenseCS.severity = suggestion
 
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = suggestion
+
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion

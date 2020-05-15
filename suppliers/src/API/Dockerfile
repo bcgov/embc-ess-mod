@@ -18,4 +18,4 @@ RUN dotnet publish "EMBC.Suppliers.API/EMBC.Suppliers.API.csproj" -c Release -o 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "EMBC.Suppliers.API.dll"]  
+ENTRYPOINT ["dotnet", "EMBC.Suppliers.API.dll"]

@@ -1,4 +1,4 @@
-﻿namespace EMBC.Suppliers.API.Configuration.ViewModels
+﻿namespace EMBC.Suppliers.API.ConfigurationModule.ViewModels
 {
     public class Country
     {
