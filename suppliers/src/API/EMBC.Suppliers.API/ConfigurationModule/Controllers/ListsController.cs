@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using EMBC.Suppliers.API.Configuration.Models;
-using EMBC.Suppliers.API.Configuration.ViewModels;
+using EMBC.Suppliers.API.ConfigurationModule.Models;
+using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EMBC.Suppliers.API.Configuration.Controllers
+namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

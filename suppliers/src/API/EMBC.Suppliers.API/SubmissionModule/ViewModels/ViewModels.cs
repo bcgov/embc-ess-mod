@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EMBC.Suppliers.API.Submissions.ViewModels
+namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
 {
     public class Submission
     {

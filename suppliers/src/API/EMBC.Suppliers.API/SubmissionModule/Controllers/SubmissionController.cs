@@ -2,11 +2,11 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
-using EMBC.Suppliers.API.Submissions.ViewModels;
+using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace EMBC.Suppliers.API.Controllers
+namespace EMBC.Suppliers.API.SubmissionModule.Controllers
 {
     /// <summary>
     /// Handles suppliers receipt/invoice submissions
