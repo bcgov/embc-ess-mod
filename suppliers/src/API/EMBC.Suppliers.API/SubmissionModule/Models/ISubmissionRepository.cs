@@ -5,6 +5,8 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
 {
     public interface ISubmissionRepository
     {
-        Task<string> Submit(Submission submission);
+        Task<string> SaveAsync(Submission submission);
+
+        Task<Submission> GetAsync(string referenceNumber);
     }
 }

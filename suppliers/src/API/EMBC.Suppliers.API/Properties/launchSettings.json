@@ -4,7 +4,8 @@
     "EMBC.Suppliers.API": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Submission_Storage_Path": "%TEMP%"
       },
       "applicationUrl": "http://localhost:5000"
     },

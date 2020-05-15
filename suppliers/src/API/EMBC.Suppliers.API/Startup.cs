@@ -1,6 +1,8 @@
 ﻿using System.IO;
+using System.IO.Abstractions;
 using System.Net;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
+using EMBC.Suppliers.API.SubmissionModule.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -61,6 +63,8 @@ namespace EMBC.Suppliers.API
             services.AddTransient<IStateProvincesListProvider, CsvLoader>();
             services.AddTransient<IRegionsListProvider, CsvLoader>();
             services.AddTransient<ICommunitiesListProvider, CsvLoader>();
+            services.AddTransient<ISubmissionRepository, SubmissionRepository>();
+            services.AddSingleton<IFileSystem, FileSystem>();
         }
 
         private IPNetwork ParseNetworkFromString(string network)

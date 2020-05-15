@@ -1,7 +1,5 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,38 +14,25 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
     public class SubmissionController : ControllerBase
     {
         private readonly ILogger<SubmissionController> logger;
+        private readonly ISubmissionRepository submissionRepository;
 
-        /// <summary>
-        /// constructor
-        /// </summary>
-        /// <param name="logger"></param>
-        public SubmissionController(ILogger<SubmissionController> logger)
+        public SubmissionController(ILogger<SubmissionController> logger, ISubmissionRepository submissionRepository)
         {
             this.logger = logger;
+            this.submissionRepository = submissionRepository;
         }
 
         /// <summary>
         /// Post to create a new submission
         /// </summary>
         /// <param name="submission">Submission details</param>
-        /// <returns>unique idenfifier of the new submission</returns>
+        /// <returns>New submission's reference number</returns>
         [HttpPost]
         public async Task<ActionResult<string>> Create(Submission submission)
         {
-            await Task.CompletedTask;
-            var id = GetShortId();
-            var submissionJson = JsonSerializer.Serialize(submission);
-            logger.LogDebug(submissionJson);
+            var id = await submissionRepository.SaveAsync(submission);
 
             return new JsonResult(new { submissionId = id });
-        }
-
-        private static string GetShortId()
-        {
-            using var crypto = new RNGCryptoServiceProvider();
-            var bytes = new byte[4];
-            crypto.GetBytes(bytes);
-            return BitConverter.ToString(bytes).Replace("-", string.Empty, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
