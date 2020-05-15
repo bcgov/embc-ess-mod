@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Net;
-using EMBC.Suppliers.API.Configuration.Models;
+using EMBC.Suppliers.API.ConfigurationModule.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
