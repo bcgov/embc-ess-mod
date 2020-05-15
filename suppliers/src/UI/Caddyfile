@@ -2,9 +2,10 @@
 	admin off
 }
 
-:2015 {	
+:2015 {
 	log
-	encode zstd gzip
+	root * /site 
+
 	header / {
 		# Enable HTTP Strict Transport Security (HSTS) to force clients to always connect via HTTPS (do not use if only testing)
 		Strict-Transport-Security "max-age=31536000; includeSubDomains"
@@ -20,7 +21,12 @@
 		Referrer-Policy "same-origin"
 	}
 
-	root * /site 
-	file_server 
-	try_files {path} {path}/ /index.html
+	encode zstd gzip
+
+	route {
+		reverse_proxy /api* {$API_URL}
+		try_files {path} {path}/ /index.html?{query}
+	}
+	
+	file_server
 }

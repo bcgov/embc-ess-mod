@@ -4,20 +4,20 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class SupplierHttpService {
+  get headers(): HttpHeaders {
+    return new HttpHeaders({ 'Content-Type': 'application/json' });
+  }
 
-     get headers(): HttpHeaders {
-        return new HttpHeaders({ 'Content-Type': 'application/json' });
-      }
+  constructor(private http: HttpClient) {}
 
-    constructor(private http: HttpClient) {}
-
-    getListOfCities() {
-        this.http.get(`http://localhost:8080/api/Lists/communities`, {headers: this.headers}).subscribe((res) => {
-            console.log(res);
-        })
-    }
-
+  getListOfCities() {
+    this.http
+      .get(`/api/Lists/communities`, { headers: this.headers })
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
 }

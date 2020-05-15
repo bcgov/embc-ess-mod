@@ -14,5 +14,7 @@ services:
     image: embcess-suppliers-ui:dev
     ports:
       - 2015:2015
+    environment:
+      - "API_URL=suppliers-portal-api:8080"
     depends_on:
       - suppliers-portal-api
