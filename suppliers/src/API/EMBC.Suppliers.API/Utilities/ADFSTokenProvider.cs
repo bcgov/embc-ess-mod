@@ -1,0 +1,100 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+namespace EMBC.Suppliers.API.DynamicsModule
+{
+    public class ADFSTokenProvider : ITokenProvider
+    {
+        private ADFSTokenProviderOptions options;
+        private readonly IHttpClientFactory httpClientFactory;
+
+        public ADFSTokenProvider(IHttpClientFactory httpClientFactory, IOptionsMonitor<ADFSTokenProviderOptions> options)
+        {
+            this.options = options?.CurrentValue;
+            this.httpClientFactory = httpClientFactory;
+        }
+
+        public async Task<string> AcquireToken()
+        {
+            using var httpClient = httpClientFactory.CreateClient("adfs_token");
+
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            // Construct the body of the request
+            var pairs = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("resource", options.ResourceName),
+                    new KeyValuePair<string, string>("client_id", options.ClientId),
+                    new KeyValuePair<string, string>("client_secret", options.ClientSecret),
+                    new KeyValuePair<string, string>("username", $"{options.ServiceAccountDomain}\\{options.ServiceAccountName}"),
+                    new KeyValuePair<string, string>("password", options.ServiceAccountPassword),
+                    new KeyValuePair<string, string>("scope", "openid"),
+                    new KeyValuePair<string, string>("response_mode", "form_post"),
+                    new KeyValuePair<string, string>("grant_type", "password")
+                 };
+
+            try
+            {
+                // This will also set the content type of the request
+                using var content = new FormUrlEncodedContent(pairs);
+                // send the request to the ADFS server
+                using var response = await httpClient.PostAsync("", content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                // response should be in JSON format.
+                var result = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(responseContent);
+                string token = result["access_token"].GetString();
+                return token;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Failed to obtain access token from {options.OAuth2TokenEndpoint}: {e.Message}", e);
+            }
+        }
+    }
+
+    public class ADFSTokenProviderOptions
+    {
+        public string OAuth2TokenEndpoint { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+        public string ServiceAccountDomain { get; set; }
+        public string ServiceAccountName { get; set; }
+        public string ServiceAccountPassword { get; set; }
+        public string ResourceName { get; set; }
+
+        public static ADFSTokenProviderOptions Create(IConfiguration configuration)
+        {
+            return new ADFSTokenProviderOptions
+            {
+                OAuth2TokenEndpoint = configuration.GetValue<string>("Dynamics:ADFS:OAuth2TokenEndpoint"),
+                ClientId = configuration.GetValue<string>("Dynamics:ADFS:ClientId"),
+                ClientSecret = configuration.GetValue<string>("Dynamics:ADFS:ClientSecret"),
+                ResourceName = configuration.GetValue<string>("Dynamics:ADFS:ResourceName"),
+                ServiceAccountDomain = configuration.GetValue<string>("Dynamics:ADFS:ServiceAccountDomain"),
+                ServiceAccountName = configuration.GetValue<string>("Dynamics:ADFS:ServiceAccountName"),
+                ServiceAccountPassword = configuration.GetValue<string>("Dynamics:ADFS:ServiceAccountPassword")
+            };
+        }
+    }
+
+    public static class AccessTokenProviderEx
+    {
+        public static IServiceCollection AddADFSTokenProvider(this IServiceCollection services)
+        {
+            services.AddHttpClient("adfs_token", (sp, c) =>
+            {
+                var options = sp.GetRequiredService<IOptions<ADFSTokenProviderOptions>>().Value;
+                c.BaseAddress = new Uri(options.OAuth2TokenEndpoint);
+            });
+            services.AddTransient<ITokenProvider, ADFSTokenProvider>();
+
+            return services;
+        }
+    }
+}

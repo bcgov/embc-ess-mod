@@ -6,13 +6,13 @@ using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 
-namespace EMBC.Tests.Suppliers.API.SubmissionModule
+namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
 {
     public class SubmissionRepositoryTests
     {
         private readonly MockFileSystem fileSystem;
         private readonly IConfigurationRoot configuration;
-        private static string submissionPersistencePath = "/submissions/";
+        private static readonly string submissionPersistencePath = "/submissions/";
 
         public SubmissionRepositoryTests()
         {

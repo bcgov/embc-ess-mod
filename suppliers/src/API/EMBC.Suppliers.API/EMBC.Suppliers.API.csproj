@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UserSecretsId>d918d6f2-3448-4648-8add-12df38446e75</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,5 +39,6 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Splunk" Version="3.3.0" />
     <PackageReference Include="System.IO.Abstractions" Version="11.0.6" />
+    <PackageReference Include="Xrm.Tools.CRMWebAPI" Version="1.0.25" />
   </ItemGroup>
 </Project>
