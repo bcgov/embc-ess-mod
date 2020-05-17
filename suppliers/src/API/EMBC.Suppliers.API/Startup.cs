@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSwag.AspNetCore;
 using Serilog;
+using Xrm.Tools.WebAPI;
+using Xrm.Tools.WebAPI.Requests;
 
 namespace EMBC.Suppliers.API
 {
@@ -70,6 +72,16 @@ namespace EMBC.Suppliers.API
             services.AddTransient<ISubmissionService, SubmissionService>();
             services.AddTransient<ISubmissionRepository, SubmissionRepository>();
             services.AddTransient<ISubmissionDynamicsCustomActionHandler, SubmissionDynamicsCustomActionHandler>();
+            services.AddScoped(sp =>
+            {
+                var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
+                var tokenProvider = sp.GetRequiredService<ITokenProvider>();
+                return new CRMWebAPI(new CRMWebAPIConfig
+                {
+                    APIUrl = dynamicsApiEndpoint,
+                    GetAccessToken = async (s) => await tokenProvider.AcquireToken()
+                });
+            });
         }
 
         private IPNetwork ParseNetworkFromString(string network)
