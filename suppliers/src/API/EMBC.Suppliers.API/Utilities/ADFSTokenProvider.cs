@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -67,20 +66,6 @@ namespace EMBC.Suppliers.API.DynamicsModule
         public string ServiceAccountName { get; set; }
         public string ServiceAccountPassword { get; set; }
         public string ResourceName { get; set; }
-
-        public static ADFSTokenProviderOptions Create(IConfiguration configuration)
-        {
-            return new ADFSTokenProviderOptions
-            {
-                OAuth2TokenEndpoint = configuration.GetValue<string>("Dynamics:ADFS:OAuth2TokenEndpoint"),
-                ClientId = configuration.GetValue<string>("Dynamics:ADFS:ClientId"),
-                ClientSecret = configuration.GetValue<string>("Dynamics:ADFS:ClientSecret"),
-                ResourceName = configuration.GetValue<string>("Dynamics:ADFS:ResourceName"),
-                ServiceAccountDomain = configuration.GetValue<string>("Dynamics:ADFS:ServiceAccountDomain"),
-                ServiceAccountName = configuration.GetValue<string>("Dynamics:ADFS:ServiceAccountName"),
-                ServiceAccountPassword = configuration.GetValue<string>("Dynamics:ADFS:ServiceAccountPassword")
-            };
-        }
     }
 
     public static class AccessTokenProviderEx
