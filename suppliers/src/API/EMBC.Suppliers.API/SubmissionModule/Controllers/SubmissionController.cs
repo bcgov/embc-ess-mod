@@ -2,7 +2,6 @@
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace EMBC.Suppliers.API.SubmissionModule.Controllers
 {
@@ -13,13 +12,11 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
     [ApiController]
     public class SubmissionController : ControllerBase
     {
-        private readonly ILogger<SubmissionController> logger;
-        private readonly ISubmissionRepository submissionRepository;
+        private readonly ISubmissionService submissionService;
 
-        public SubmissionController(ILogger<SubmissionController> logger, ISubmissionRepository submissionRepository)
+        public SubmissionController(ISubmissionService submissionService)
         {
-            this.logger = logger;
-            this.submissionRepository = submissionRepository;
+            this.submissionService = submissionService;
         }
 
         /// <summary>
@@ -30,7 +27,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> Create(Submission submission)
         {
-            var id = await submissionRepository.SaveAsync(submission);
+            var id = await submissionService.Submit(submission);
 
             return new JsonResult(new { submissionId = id });
         }
