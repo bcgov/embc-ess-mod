@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
-using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Xrm.Tools.WebAPI;
 using Xrm.Tools.WebAPI.Requests;
 
 namespace EMBC.Suppliers.API.DynamicsModule.SubmissionModule
 {
-    public class SubmissionDynamicsCustomActionHandler
+    public class SubmissionDynamicsCustomActionHandler : ISubmissionDynamicsCustomActionHandler
     {
         private readonly ITokenProvider authenticationHandler;
         private readonly string dynamicsApiEndpoint;
@@ -17,7 +16,7 @@ namespace EMBC.Suppliers.API.DynamicsModule.SubmissionModule
             dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
         }
 
-        public async Task<string> Submit(Submission _)
+        public async Task<string> Submit(string referenceNumber)
         {
             var api = new CRMWebAPI(new CRMWebAPIConfig
             {
@@ -26,10 +25,10 @@ namespace EMBC.Suppliers.API.DynamicsModule.SubmissionModule
             });
             var result = await api.ExecuteAction("era_CreateSupplierContact", new
             {
-                firstname = "first",
-                lastname = "last",
-                contactnumber = "number",
-                email = "first.last"
+                firstname = $"first_{referenceNumber}",
+                lastname = $"last_{referenceNumber}",
+                contactnumber = $"number_{referenceNumber}",
+                email = $"email_{referenceNumber}"
             });
 
             return "OK";
