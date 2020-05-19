@@ -7,6 +7,13 @@
             <label class="requiredField" for="referralNumber">Referral Number</label>
             <input type="text" class="form-control form-control-lg" id="referralNumber"
               [formControlName]="'referralNumber'" required>
+              <div
+              *ngIf="receiptControl.referralNumber?.invalid && (receiptControl.referralNumber?.dirty || receiptControl.referralNumber?.touched)"
+              class="text-white">
+              <div *ngIf="receiptControl.referralNumber?.errors.required">
+                Referral Number is required
+              </div>
+            </div>
           </div>
         </div>
 

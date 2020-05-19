@@ -1,25 +1,31 @@
 <div class="row">
   <div class="col-sm-12">
-    <h1>Evacuee Registration & Assistance (ERA)</h1>
-    <p style="font-size: 28px;">Supplier Invoice & Receipt Submission</p>
+    <div class="row">
+      <div class="col-sm-1"><img src="/assets/images/logoBlueNew.png" style="width:80px"></div>
+      <div>
+        <p class="submissionHeader">Evacuee Registration & Assistance (ERA)</p>
+        <span style="font-size: 28px;">Supplier Invoice & Receipt Submission</span>
+      </div>
+    </div>
     <hr>
 
     <div class="row">
       <div class="col-sm-12 col-md-8">
         <div>
           <p>
-            Are you a registered supplier with Emergency Support Services (ESS) who has provided goods or
+            Are you a <b>registered supplier with Emergency Support Services (ESS)</b> who has provided goods or
             services to people affected by a disaster? ESS is making the way you invoice for services/goods
-            and submit
-            receipts simpler and more straightforward, by shifting to a digital invoice/receipt submission
+            and submit receipts simpler and more straightforward, by shifting to a <b>digital invoice/receipt
+              submission</b>
             experience.
           </p>
           <p>
-            Just fill in the form below, attach your scanned invoice/receipts & referral forms, and you're
-            good to go.
+            Just fill in the form below and attach electronic copies of your invoices/receipts & all referral forms. The
+            EMBC finance team will then review your submission. Payment turn around time is estimated at 30 days, if all
+            information received is correct.
           </p>
           <p>
-            All required fields are maked with a red asterisk(*)
+            All required fields are maked with a red asterisk(<span style="color: red;">*</span>)
           </p>
         </div>
         <div class="formHeading">
@@ -31,40 +37,52 @@
 
             <div class="row">
               <div class="form-group col-lg-6">
-                <!-- <div class="control-label"> -->
-                <input type="text" class="form-control form-control-lg" placeholder="Supplier Legal Name"
+                <label class="requiredField" for="supplierLegalName">Supplier Legal Name</label>
+                <input type="text" class="form-control form-control-lg" id="supplierLegalName"
                   formControlName="supplierLegalName" required>
-                <!-- <label class="control-label" for="supplierLegalName">Supplier Legal Name</label> -->
-                <!-- </div> -->
+                <div
+                  *ngIf="control.supplierLegalName?.invalid && (control.supplierLegalName?.dirty || control.supplierLegalName?.touched)"
+                  class="text-danger">
+                  <div *ngIf="control.supplierLegalName?.errors.required">
+                    Supplier Legal name is required
+                  </div>
+                </div>
               </div>
+              <!-- <div class="col-lg-6">
+                  <div class="form-label-group">
+                    <input type="email" id="inputEmail" class="requiredField form-control form-control-lg" placeholder="Email address" required="" autofocus="">
+                    <label for="inputEmail">Email address</label>
+                  </div>
+              </div> -->
             </div>
 
             <div class="row">
               <div class="form-group col-lg-5">
+                <label for="supplierName">Supplier Legal Name</label>
                 <input type="text" class="form-control form-control-lg" formControlName="supplierName"
-                  placeholder="Supplier Name">
+                  id="supplierName">
               </div>
             </div>
 
             <div class="row">
               <div class="form-group col-lg-5">
-                <input type="text" class="form-control form-control-lg" formControlName="location"
-                  placeholder="Store # /Site#/ Location">
+                <label for="location">Store # /Site#/ Location</label>
+                <input type="text" class="form-control form-control-lg" formControlName="location" id="location">
               </div>
             </div>
 
             <div class="row">
               <div class="form-group col-lg-5">
-                <input type="text" class="form-control form-control-lg" formControlName="gstNumber"
-                  placeholder="GST Number" required>
+                <label class="requiredField" for="gstNumber">GST Number</label>
+                <input type="text" class="form-control form-control-lg" formControlName="gstNumber" appGSTMask
+                  id="gstNumber" placeholder="123456789-RT-1234" required>
+                <div *ngIf="control.gstNumber?.invalid && (control.gstNumber?.dirty || control.gstNumber?.touched)"
+                  class="text-danger">
+                  <div *ngIf="control.gstNumber?.errors.required">
+                    GST number is required
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div class="form-group form-check">
-              <input class="form-check-input" type="checkbox" value="" formControlName="remitToOtherBusiness">
-              <label class="form-check-label" for="remitToOtherBusiness">
-                Check this box if we must remit payment to a business other than the one listed above
-              </label>
             </div>
 
             <br>
@@ -73,46 +91,74 @@
 
               <div class="row">
                 <div class="form-group col-lg-8">
-                  <input type="text" class="form-control form-control-lg" formControlName="address1"
-                    placeholder="Address Line 1" required>
+                  <label class="requiredField" for="address1">Address Line 1</label>
+                  <input type="text" class="form-control form-control-lg" formControlName="address1" id="address1"
+                    required>
+                  <div
+                    *ngIf="control.address['controls'].address1?.invalid && (control.address['controls'].address1?.dirty || control.address['controls'].address1?.touched)"
+                    class="text-danger">
+                    <div *ngIf="control.address['controls'].address1?.errors.required">
+                      Address is required
+                    </div>
+                  </div>
                 </div>
               </div>
-
 
               <div class="row">
                 <div class="form-group col-lg-8">
-                  <input type="text" class="form-control form-control-lg" formControlName="address2"
-                    placeholder="Address Line 2">
+                  <label for="address2">Address Line 2</label>
+                  <input type="text" class="form-control form-control-lg" formControlName="address2" id="address2">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <label class="requiredField" for="city">City</label>
+                  <input id="city" type="text" class="form-control form-control-lg" formControlName="city"
+                    [ngbTypeahead]="searchCity" [resultFormatter]="cityFormatter" [inputFormatter]="cityFormatter" required />
+                  <div
+                    *ngIf="control.address['controls'].city?.invalid && (control.address['controls'].city?.dirty || control.address['controls'].city?.touched)"
+                    class="text-danger">
+                    <div *ngIf="control.address['controls'].city?.errors.required">
+                      City is required
+                    </div>
+                  </div>
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" class="form-control form-control-lg" formControlName="city" placeholder="City"
-                    required>
+                  <label for="province">Province</label>
+                  <input type="text" id="province" readonly class="form-control form-control-lg"
+                    formControlName="province">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-lg-4">
+                  <label class="requiredField" for="postalCode">Postal Code</label>
+                  <input type="text" class="form-control form-control-lg" formControlName="postalCode" id="postalCode"
+                    [pattern]="postalPattern" required>
+                  <div
+                    *ngIf="control.address['controls'].postalCode?.invalid && (control.address['controls'].postalCode?.dirty || control.address['controls'].postalCode?.touched)"
+                    class="text-danger">
+                    <div *ngIf="control.address['controls'].postalCode?.errors.required">
+                      Postal Code is required
+                    </div>
+                    <div *ngIf="control.address['controls'].postalCode?.errors.pattern">
+                      Invalid postal code
+                    </div>
+                  </div>
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" readonly class="form-control form-control-lg" formControlName="province">
-                </div>
-              </div>
-
-
-              <div class="row">
-                <div class="form-group col-lg-4">
-                  <input type="text" class="form-control form-control-lg" formControlName="postalCode"
-                    placeholder="Postal Code" required>
-                </div>
-              </div>
-
-
-              <div class="row">
-                <div class="form-group col-lg-4">
-                  <input type="text" readonly class="form-control form-control-lg" formControlName="country">
+                  <label for="country">Country</label>
+                  <input type="text" id="country" readonly class="form-control form-control-lg"
+                    formControlName="country">
                 </div>
               </div>
 
@@ -123,42 +169,288 @@
 
               <div class="row">
                 <div class="form-group col-lg-6">
-                  <input type="text" class="form-control form-control-lg" formControlName="firstName"
-                    placeholder="First Name" required>
+                  <label class="requiredField" for="firstName">First Name</label>
+                  <input type="text" class="form-control form-control-lg" formControlName="firstName" id="firstName"
+                    required>
+                  <div
+                    *ngIf="control.contactPerson['controls'].firstName?.invalid && (control.contactPerson['controls'].firstName?.dirty || control.contactPerson['controls'].firstName?.touched)"
+                    class="text-danger">
+                    <div *ngIf="control.contactPerson['controls'].firstName?.errors.required">
+                      First Name is required
+                    </div>
+                  </div>
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-6">
-                  <input type="text" class="form-control form-control-lg" formControlName="lastName"
-                    placeholder="Last Name">
+                  <label class="requiredField" for="lastName">Last Name</label>
+                  <input type="text" class="form-control form-control-lg" formControlName="lastName" id="lastName"
+                    required>
+                  <div
+                    *ngIf="control.contactPerson['controls'].lastName?.invalid && (control.contactPerson['controls'].lastName?.dirty || control.contactPerson['controls'].lastName?.touched)"
+                    class="text-danger">
+                    <div *ngIf="control.contactPerson['controls'].lastName?.errors.required">
+                      Last Name is required
+                    </div>
+                  </div>
                 </div>
               </div>
-
 
               <div class="row">
                 <div class="form-group col-lg-6">
-                  <input type="email" class="form-control form-control-lg" formControlName="email"
-                    placeholder="Email Address">
+                  <label for="email">Email Address</label>
+                  <input type="email" class="form-control form-control-lg" formControlName="email" id="email">
+                  <div *ngIf="control.contactPerson['controls'].email?.errors?.email" class="text-danger">
+                    Email is not valid
+                  </div>
                 </div>
               </div>
 
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" class="form-control form-control-lg" formControlName="phone"
-                    placeholder="Contact Number" required>
+                  <label class="requiredField" for="phone">Contact Number</label>
+                  <input type="text" class="form-control form-control-lg" appPhoneMask formControlName="phone"
+                    placeholder="999-999-9999" id="phone" required>
+                  <div
+                    *ngIf="control.contactPerson['controls'].phone?.invalid && (control.contactPerson['controls'].phone?.dirty || control.contactPerson['controls'].phone?.touched)"
+                    class="text-danger">
+                    <div *ngIf="control.contactPerson['controls'].phone?.errors.required">
+                      Phone Number is required
+                    </div>
+                  </div>
                 </div>
               </div>
-
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <input type="text" class="form-control form-control-lg" formControlName="fax" placeholder="Fax">
+                  <label class="requiredField" for="fax">Fax</label>
+                  <input type="text" class="form-control form-control-lg" appPhoneMask formControlName="fax" id="fax"
+                    placeholder="999-999-9999">
+                  <div
+                    *ngIf="control.contactPerson['controls'].fax?.invalid && (control.contactPerson['controls'].fax?.dirty || control.contactPerson['controls'].fax?.touched)"
+                    class="text-danger">
+                    <div *ngIf="control.contactPerson['controls'].fax?.errors.required">
+                      Fax is required
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
 
+            <div class="remit-box">
+              <div class="form-group form-check">
+                <input class="form-check-input" type="checkbox" (change)="toggleVisibility($event)"
+                  formControlName="remitToOtherBusiness">
+                <label class="form-check-label" for="remitToOtherBusiness">
+                  Check this box if we must remit payment to a business other than the one listed above
+                </label>
+              </div>
+
+              <div *ngIf="remitDiv">
+                <p>Please enter the legal business name and address of the business we need to remit payment to.</p>
+                <div class="row">
+                  <div class="form-group col-lg-6">
+                    <label class="requiredField" for="businessName">Legal Business Name</label>
+                    <input type="text" class="form-control form-control-lg" id="businessName"
+                      formControlName="businessName">
+                    <div
+                      *ngIf="control.businessName?.invalid && (control.businessName?.dirty || control.businessName?.touched)"
+                      class="text-danger">
+                      <div *ngIf="control.businessName?.errors.required">
+                        Legal Business Name is required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="form-group col-lg-6">
+                    <label class="requiredField" for="businessCountry">What Country Is This Supplier Located
+                      In?</label>
+                    <select class="form-control form-control-lg" formControlName="businessCountry"
+                      (change)="remitVisibility($event.target.value)">
+                      <option selected>Country...</option>
+                      <option *ngFor="let country of countryList">{{country}}</option>
+                    </select>
+                    <div
+                      *ngIf="control.businessCountry?.invalid && (control.businessCountry?.dirty || control.businessCountry?.touched)"
+                      class="text-danger">
+                      <div *ngIf="control.businessCountry?.errors.required">
+                        Country required
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="selectedRemitCountry === 'Canada'">
+                  Is This Supplier Located In BC?
+                  <div class="form-group form-check">
+                    <input class="form-check-input" formControlName="supplierBC" type="radio" id="yes" value="yes"
+                      (change)="locatedChange($event)">
+                    <label class="form-check-label" for="yes">
+                      Yes
+                    </label>
+                  </div>
+                  <div class="form-group form-check">
+                    <input class="form-check-input" formControlName="supplierBC" type="radio" id="no" value="no"
+                      (change)="locatedChange($event)">
+                    <label class="form-check-label" for="no">
+                      No
+                    </label>
+                  </div>
+
+                </div>
+
+                <div *ngIf="addressDiv" formGroupName="remittanceAddress">
+                  <p style="font-weight: bold">Supplier Remittance Address</p>
+
+                  <div class="row">
+                    <div class="form-group col-lg-6">
+                      <label class="requiredField" for="address1">Address Line 1</label>
+                      <input type="text" class="form-control form-control-lg" formControlName="address1" id="address1">
+                      <div
+                        *ngIf="control.remittanceAddress['controls'].address1?.invalid && (control.remittanceAddress['controls'].address1?.dirty || control.remittanceAddress['controls'].address1?.touched)"
+                        class="text-danger">
+                        <div *ngIf="control.remittanceAddress['controls'].address1?.errors.required">
+                          Address is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="form-group col-lg-6">
+                      <label for="address2">Address Line 2</label>
+                      <input type="text" class="form-control form-control-lg" formControlName="address2" id="address2">
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="form-group col-lg-4">
+                      <label class="requiredField" for="city">City</label>
+                      <input type="text" class="form-control form-control-lg" formControlName="city" id="city">
+                      <div
+                        *ngIf="control.remittanceAddress['controls'].city?.invalid && (control.remittanceAddress['controls'].city?.dirty || control.remittanceAddress['controls'].city?.touched)"
+                        class="text-danger">
+                        <div *ngIf="control.remittanceAddress['controls'].city?.errors.required">
+                          City is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div *ngIf="selectedRemitCountry !== 'United States' && selectedRemitCountry !== 'Canada'"
+                    class="row">
+                    <div class="form-group col-lg-4">
+                      <label for="region">Region/Province/State</label>
+                      <input type="text" class="form-control form-control-lg" formControlName="region" id="region">
+                    </div>
+                  </div>
+
+                  <div *ngIf="selectedRemitCountry === 'United States'" class="row">
+                    <div class="form-group col-lg-4">
+                      <label class="requiredField" for="state">State</label>
+                      <input id="state" type="text" class="form-control form-control-lg" formControlName="state"
+                        [ngbTypeahead]="searchState" />
+                      <div
+                        *ngIf="control.remittanceAddress['controls'].state?.invalid && (control.remittanceAddress['controls'].state?.dirty || control.remittanceAddress['controls'].state?.touched)"
+                        class="text-danger">
+                        <div *ngIf="control.remittanceAddress['controls'].state?.errors.required">
+                          State is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="selectedRemitCountry === 'Canada' && locatedInBC ==='no'" class="row">
+                    <div class="form-group col-lg-4">
+                      <label class="requiredField" for="province">Province</label>
+                      <input id="province" type="text" class="form-control form-control-lg" formControlName="province"
+                        [ngbTypeahead]="searchProvince" [resultFormatter]="cityFormatter" [inputFormatter]="cityFormatter"/>
+                      <div
+                        *ngIf="control.remittanceAddress['controls'].province?.invalid && (control.remittanceAddress['controls'].province?.dirty || control.remittanceAddress['controls'].province?.touched)"
+                        class="text-danger">
+                        <div *ngIf="control.remittanceAddress['controls'].province?.errors.required">
+                          Province is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--
+                    Postal Code	Text	
+Visible and Required if user checks the "Check this box if we must remit payment to a business other than the one listed above." AND Country = Canada
+Cleared, hidden, and not required if user unchecks the "Check this box if we must remit payment to a business other than the one listed above." OR Country <> Canada
+Postal Code must in the correct format of a1a 1a1 OR a1a1a1
+
+Zip Code	Text	
+Visible and Required if user checks the "Check this box if we must remit payment to a business other than the one listed above." AND Country = US
+Cleared, hidden, and not required if user unchecks the "Check this box if we must remit payment to a business other than the one listed above." OR Country <> US
+Postal Code must in the correct format of NNNNN
+
+                  -->
+
+
+                  <div *ngIf="selectedRemitCountry === 'Canada'" class="row">
+                    <div class="form-group col-lg-4">
+                      <label class="requiredField" for="postalCode">Postal Code</label>
+                      <input type="text" class="form-control form-control-lg" formControlName="postalCode"
+                        pattern="postalPattern" id="postalCode">
+                      <div
+                        *ngIf="control.remittanceAddress['controls'].postalCode?.invalid && (control.remittanceAddress['controls'].postalCode?.dirty || control.remittanceAddress['controls'].postalCode?.touched)"
+                        class="text-danger">
+                        <div *ngIf="control.remittanceAddress['controls'].postalCode?.errors.required">
+                          Postal Code is required
+                        </div>
+                        <div *ngIf="control.remittanceAddress['controls'].postalCode?.errors.pattern">
+                          Invalid postal code
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="selectedRemitCountry === 'United States'" class="row">
+                    <div class="form-group col-lg-4">
+                      <label class="requiredField" for="zipCode">Zip Code</label>
+                      <input type="text" class="form-control form-control-lg" formControlName="zipCode"
+                        id="zipCode">
+                      <div
+                        *ngIf="control.remittanceAddress['controls'].zipCode?.invalid && (control.remittanceAddress['controls'].zipCode?.dirty || control.remittanceAddress['controls'].zipCode?.touched)"
+                        class="text-danger">
+                        <div *ngIf="control.remittanceAddress['controls'].zipCode?.errors.required">
+                          Zip Code is required
+                        </div>
+                        <div *ngIf="control.remittanceAddress['controls'].zipCode?.errors.pattern">
+                          Zip postal code
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="selectedRemitCountry !== 'United States' && selectedRemitCountry !== 'Canada'"
+                    class="row">
+                    <div class="form-group col-lg-4">
+                      <label class="requiredField" for="otherCode">Postal/Zip Code</label>
+                      <input type="text" class="form-control form-control-lg" formControlName="otherCode"
+                        id="otherCode">
+                      <div
+                        *ngIf="control.remittanceAddress['controls'].otherCode?.invalid && (control.remittanceAddress['controls'].otherCode?.dirty || control.remittanceAddress['controls'].otherCode?.touched)"
+                        class="text-danger">
+                        <div *ngIf="control.remittanceAddress['controls'].otherCode?.errors.required">
+                          Postal/Zip Code is required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
             </div>
 
             <div class="formHeading">
@@ -171,7 +463,7 @@
 
               <div class="form-group form-check">
                 <input class="form-check-input" formControlName="supplierSubmissionType" type="radio" id="invoice"
-                  value="invoice" (change)="onValueChange($event)"> <!-- (change)="onValueChange($event)"-->
+                  value="invoice" (change)="onValueChange($event)">
                 <label class="form-check-label" for="invoice">
                   Invoice
                 </label>
@@ -183,6 +475,15 @@
                   Receipts
                 </label>
               </div>
+
+              <!--	Form Structure	
+A user must be able to 'delete' an Invoice block as long as more then one Invoice block exists on the form.
+I.E. Users cannot delete the last invoice block on the form since at least one block must be present for a valid submission
+
+The system must provide a warning message if a user selects to delete an Invoice block with the option to continue or to cancel the delete action
+
+
+-->
 
               <div *ngIf="supplierForm.get('supplierSubmissionType').value === 'invoice'">
                 <div class="box">
@@ -221,8 +522,6 @@
                       Next</button>
                   </div>
                 </div>
-
-
               </div>
 
               <div *ngIf="supplierForm.get('supplierSubmissionType').value === 'receipt'">
@@ -231,7 +530,8 @@
                     <p><b>Important Tips:</b></p>
                     <ul>
                       <li>Please list all receipts associated with a single referral number only.</li>
-                      <li>If you have receipts against more than 1 referral, click "Add another referral" at the bottom
+                      <li>If you have receipts against more than 1 referral, click "Add another referral" at the
+                        bottom
                         of
                         this page.</li>
                       <li>To add another receipt to a referral, click the "Add another receipt" button.</li>

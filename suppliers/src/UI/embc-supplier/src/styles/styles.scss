@@ -10,7 +10,7 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
-
+//@import './floating-labels.scss';
 
 // monospace font used for fixed-size text blocks (eg, referral comments)
 // NB: same font as PDF renderer service
@@ -33,3 +33,5 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
     content: "*";
     color: red;
  }
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
