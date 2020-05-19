@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 
-namespace EMBC.Suppliers.API.DynamicsModule.SubmissionModule
+namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 {
     public interface ISubmissionDynamicsCustomActionHandler
     {
-        Task<string> Handle(SubmissionSavedEvent evt);
+        Task Handle(SubmissionSavedEvent evt);
     }
 }
