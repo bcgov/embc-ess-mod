@@ -1,7 +1,11 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, ComponentFactoryResolver, Injector, Type, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { SupplierService } from '../service/supplier.service';
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { Community } from '../model/community';
+import { Province } from '../model/province';
 
 @Component({
     selector: 'supplier-submission',
@@ -10,10 +14,46 @@ import { SupplierService } from '../service/supplier.service';
 })
 export class SupplierSubmissionComponent implements OnInit {
 
-    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private componentFactory: ComponentFactoryResolver, 
-        private injector: Injector, private cd: ChangeDetectorRef) { }
+    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef) { }
 
     supplierForm: FormGroup;
+    remitDiv: boolean = false;
+    addressDiv: boolean = false;
+    countryList = ['Canada', 'United States', 'Any other country'];
+    stateList = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado'];
+    provinceList: Province[];
+    cityList: Community[];
+    selectedRemitCountry: string;
+    locatedInBC: string;
+    postalPattern = "^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$";
+
+    searchCity = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged(),
+            map(term => term === '' ? []
+                : this.cityList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+        );
+
+    cityFormatter = (x: {name: string}) => x.name;
+
+    searchState = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged(),
+            map(term => term.length < 1 ? []
+                : this.stateList.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+        );
+
+    searchProvince = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(200),
+            distinctUntilChanged(),
+            map(term => term === '' ? []
+                : this.provinceList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+        );
+
+    provinceFormatter = (x: {name: string}) => x.name;
 
     ngOnInit() {
         this.initializeForm();
@@ -21,39 +61,60 @@ export class SupplierSubmissionComponent implements OnInit {
         if (storedSupplierDetails) {
             this.supplierForm.setValue(storedSupplierDetails);
         }
+        this.cityList = this.supplierService.getCityList();
+        this.provinceList = this.supplierService.getProvinceList();
     }
 
     initializeForm() {
-        this. supplierForm = this.builder.group({
-            supplierLegalName: [''],
+        this.supplierForm = this.builder.group({
+            supplierLegalName: ['', Validators.required],
             supplierName: [''],
             location: [''],
-            gstNumber: [''],
+            gstNumber: ['', [Validators.required]],
             remitToOtherBusiness: [''],
-    
+            businessName: [''],
+            businessCountry: [''],
+            supplierBC: [''],
+
             address: this.builder.group({
+                address1: ['', Validators.required],
+                address2: [''],
+                city: ['', Validators.required],
+                province: ['British Columbia'],
+                postalCode: ['', [Validators.required, Validators.pattern(this.postalPattern)]],
+                country: ['Canada'],
+            }),
+
+            contactPerson: this.builder.group({
+                firstName: ['', Validators.required],
+                lastName: ['', Validators.required],
+                email: ['', Validators.email], 
+                phone: ['', Validators.required],
+                fax: ['', Validators.required],
+            }),
+
+            remittanceAddress: this.builder.group({
                 address1: [''],
                 address2: [''],
                 city: [''],
-                province: ['British Columbia'],
+                province: [''],
+                state: [''],
+                region: [''],
                 postalCode: [''],
-                country: ['Canada'],
+                zipCode: [''],
+                otherCode: ['']
             }),
-    
-            contactPerson: this.builder.group({
-                firstName: [''],
-                lastName: [''],
-                email: [''],
-                phone: [''],
-                fax: [''],
-            }),
-    
+
             supplierSubmissionType: [''],
             invoices: this.builder.array([
             ]),
             receipts: this.builder.array([
             ])
         });
+    }
+
+    get control(){
+        return this.supplierForm.controls;
     }
 
     get invoices() {
@@ -64,23 +125,75 @@ export class SupplierSubmissionComponent implements OnInit {
         return this.supplierForm.get('receipts') as FormArray;
     }
 
+    toggleVisibility(event: any) {
+        this.remitDiv = event.target.checked;
+        if(this.remitDiv) {
+            this.supplierForm.get('businessName').setValidators(Validators.required);
+            this.supplierForm.get('businessCountry').setValidators(Validators.required);
+            this.supplierForm.get('remittanceAddress.address1').setValidators(Validators.required);
+            this.supplierForm.get('remittanceAddress.city').setValidators(Validators.required);
+        } else {
+            this.supplierForm.get('businessName').setValidators(null);
+            this.supplierForm.get('businessCountry').setValidators(null);
+            this.supplierForm.get('remittanceAddress.address1').setValidators(null);
+            this.supplierForm.get('remittanceAddress.city').setValidators(null);
+            this.supplierForm.get('remittanceAddress.state').setValidators(null);
+            this.supplierForm.get('remittanceAddress.province').setValidators(null);
+            this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
+            this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
+            this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
+        }
+        this.supplierForm.get('remittanceAddress').updateValueAndValidity();
+    }
+
+    remitVisibility(selectedValue: any) {
+        this.selectedRemitCountry = selectedValue;
+        if (selectedValue === 'Canada') {
+            this.supplierForm.get('remittanceAddress.state').setValidators(null);
+            this.supplierForm.get('remittanceAddress.province').setValidators(Validators.required);
+            this.supplierForm.get('remittanceAddress.postalCode').setValidators([Validators.required, Validators.pattern(this.postalPattern)]);
+            this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
+            this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
+            this.addressDiv = false;
+        } else if(selectedValue === 'United States'){
+            this.supplierForm.get('remittanceAddress.state').setValidators(Validators.required);
+            this.supplierForm.get('remittanceAddress.province').setValidators(null);
+            this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
+            this.supplierForm.get('remittanceAddress.zipCode').setValidators(Validators.required);
+            this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
+            this.addressDiv = true
+        } else {
+            this.supplierForm.get('remittanceAddress.state').setValidators(null);
+            this.supplierForm.get('remittanceAddress.province').setValidators(null);
+            this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
+            this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
+            this.supplierForm.get('remittanceAddress.otherCode').setValidators(Validators.required);
+        }
+        this.supplierForm.get('remittanceAddress').updateValueAndValidity();
+    }
+
+    locatedChange(event: any) {
+        this.locatedInBC = event.target.value;
+        this.addressDiv = true;
+    }
+
     createInvoiceFormArray() {
         return this.builder.group({
-            invoiceNumber: [''],
-            invoiceDate: [''],
+            invoiceNumber: ['', Validators.required],
+            invoiceDate: ['', Validators.required],
             invoiceAttachments: this.builder.array([]),
-            referralList: [''],
-            referrals: this.builder.array([          
+            referralList: ['', Validators.required],
+            referrals: this.builder.array([
             ]),
             invoiceTotalGst: [''],
             invoiceTotalAmount: ['']
-        }) 
+        })
     }
 
     createReceiptFormArray() {
         return this.builder.group({
-            referralNumber: [''],
-            referrals: this.builder.array([          
+            referralNumber: ['', Validators.required],
+            referrals: this.builder.array([
             ]),
             receiptTotalGst: [''],
             receiptTotalAmount: [''],
@@ -97,10 +210,10 @@ export class SupplierSubmissionComponent implements OnInit {
     }
 
     onValueChange(event: any) {
-        if(event.target.value === 'invoice') {
+        if (event.target.value === 'invoice') {
             this.cleanReceiptTemplate();
             this.injectInvoiceTemplate();
-        } else if(event.target.value === 'receipt') {
+        } else if (event.target.value === 'receipt') {
             this.cleanInvoiceTemplate();
             this.injectReceiptTemplate();
         }
@@ -126,10 +239,12 @@ export class SupplierSubmissionComponent implements OnInit {
     }
 
     cleanInvoiceTemplate() {
+        this.receipts.setValidators(null);
         this.invoices.clear();
     }
 
     cleanReceiptTemplate() {
+        this.receipts.setValidators(null);
         this.receipts.clear();
     }
 

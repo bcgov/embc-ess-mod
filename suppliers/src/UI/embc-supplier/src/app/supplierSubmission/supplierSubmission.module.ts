@@ -7,13 +7,15 @@ import { InvoiceComponent } from './invoice/invoice.component';
 import { ReferralComponent } from './referral/referral.component';
 import { CoreModule } from '../core/core.module';
 import { ReceiptComponent } from './receipt/receipt.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
     CommonModule,
     SupplierRoutingModule,
     ReactiveFormsModule,
-    CoreModule
+    CoreModule,
+    NgbModule
   ],
   declarations: [
     SupplierSubmissionComponent,

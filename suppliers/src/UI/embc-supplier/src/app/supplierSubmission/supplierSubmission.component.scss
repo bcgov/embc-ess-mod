@@ -5,14 +5,17 @@ hr {
 }
 
 .box{
-  //background-color: lightgrey;
   padding: 10px;
-  //margin: 20px;
   border: 4px theme-color(bcgold) solid;
 }
 
+.remit-box{
+  padding:10px;
+  border: 4px lightgray solid;
+}
+
 .formHeading{
-  background-color: lightgrey;
+  background-color: lightgray;
   margin: 20px 20px 20px 0px;
   h3 {
     padding: 13px
@@ -23,16 +26,21 @@ hr {
   background-color: theme-color(primary);
   border-radius: 0px;
   border: 0;
-  //border-bottom: 4px theme-color(bcgold) solid;
-}
-
-.form-group.required .control-label:after {
-  content:"*";
-  color:red;
 }
 
 .tips-section{
 padding: 10px
 
+}
+
+.required::after {
+  content: "*";
+  color: red;
+}
+
+.submissionHeader {
+  margin-bottom: 0 !important;
+  font-size: 36px;
+  font-weight: bold;
 }
 

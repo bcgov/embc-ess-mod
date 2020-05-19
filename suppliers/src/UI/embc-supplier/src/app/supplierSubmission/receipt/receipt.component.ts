@@ -1,10 +1,11 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-receipt',
     templateUrl: './receipt.component.html',
-    styleUrls: ['./receipt.component.scss']
+    styleUrls: ['./receipt.component.scss'],
+    
 })
 export class ReceiptComponent implements OnInit{
 
@@ -21,6 +22,10 @@ export class ReceiptComponent implements OnInit{
         this.onChanges();
     }
 
+    get receiptControl(){
+        return this.receiptForm.controls;
+    }
+
     get referrals() {
         return this.receiptForm.get('referrals') as FormArray;
     }
@@ -35,7 +40,7 @@ export class ReceiptComponent implements OnInit{
 
     createReferralFormArray() {
         return this.builder.group({
-             referralDate : [''],
+             referralDate : ['', Validators.required],
              referralRows: this.builder.array([
             ]),
             totalGst: [''],

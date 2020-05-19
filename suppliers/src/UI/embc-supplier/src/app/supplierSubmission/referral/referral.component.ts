@@ -1,10 +1,15 @@
 import { Component, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { DateParserService } from 'src/app/service/dateParser.service';
 
 @Component({
     selector: 'app-referral',
     templateUrl: './referral.component.html',
-    styleUrls: ['./referral.component.scss']
+    styleUrls: ['./referral.component.scss'],
+    providers: [
+        {provide: NgbDateParserFormatter, useClass: DateParserService}
+    ]
 })
 export class ReferralComponent implements OnInit {
 
@@ -15,7 +20,7 @@ export class ReferralComponent implements OnInit {
     supportList: any = ['Food - Groceries', 'Food - Restaurant Meals', 'Lodging - Hotel', 'Lodging - Group Lodging', 'Lodging - Billeting', 'Transportation - Taxi', 'Transportation - Other', 'Clothing', 'Incidentals'];
     @Output() referralToRemove = new EventEmitter<number>();
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef) { }
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>) { }
 
     get referralRows() {
         return this.referralForm.get('referralRows') as FormArray;
@@ -27,6 +32,10 @@ export class ReferralComponent implements OnInit {
 
     get receiptAttachments() {
         return this.referralForm.get('receiptAttachments') as FormArray;
+    }
+
+    get referralControl(){
+        return this.referralForm.controls;
     }
 
     ngOnInit() {
