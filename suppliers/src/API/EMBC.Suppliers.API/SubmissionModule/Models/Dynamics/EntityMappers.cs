@@ -12,7 +12,9 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             return submissions.Select(s =>
             {
                 var supplierInformation = s.Suppliers.First();
-                var remittanceInformation = s.Suppliers.SingleOrDefault(i => i.ForRemittance);
+                var remittanceInformation = s.Suppliers.Count() == 1
+                    ? null :
+                    s.Suppliers.SingleOrDefault(i => i.ForRemittance);
 
                 var receiptLineItems = s.Receipts.Select(r => (receipt: r, lineItems: s.LineItems.Where(li => li.ReceiptNumber == r.ReceiptNumber)));
                 var referralLineItems = s.Referrals.Select(r => (referral: r, lineItems: s.LineItems.Where(li => string.IsNullOrEmpty(li.ReceiptNumber) && li.ReferralNumber == r.ReferralNumber)));
@@ -41,7 +43,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         {
             if (!invoices.Any())
             {
-                //dummy invoice for Dynamics
+                //dummy invoice for Dynamics when no invoices in submission
                 invoices = new[]
                 {
                     new Invoice()
@@ -53,7 +55,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 era_invoicedate = i.Date,
                 era_invoiceref = i.InvoiceNumber,
                 era_referencenumber = referenceNumber,
-                era_remitpaymenttootherbusiness = false,
+                era_remitpaymenttootherbusiness = supplierRemittanceInformation != null,
                 era_totalgst = i.TotalGST,
                 era_totalinvoiceamount = i.TotalAmount,
                 era_invoicetype = 174360100, //fire and forget

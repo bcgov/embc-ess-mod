@@ -102,5 +102,39 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
             Assert.True(typeProperty.Attributes.Contains(new JsonPropertyAttribute("@odata.type")));
             Assert.Equal("Microsoft.Dynamics.CRM.era_supportlineitem", typeProperty.GetValue(mappedLineItem));
         }
+
+        [Fact]
+        public void Map_NoInvoice_SingleDummyInvoice()
+        {
+            var referenceNumber = "ref";
+            var supplier = new SupplierInformation
+            {
+                ForRemittance = true,
+                GstNumber = "gst123",
+                LegalBusinessName = "legal name of supplier 1",
+                Name = "supplier1",
+                Location = "location",
+                ContactPerson = new Contact
+                {
+                    FirstName = "first",
+                    LastName = "last",
+                    Email = "email@first.last",
+                    Fax = "1234",
+                    Phone = "2345"
+                },
+                Address = new Address
+                {
+                    AddressLine1 = "addr 1",
+                    AddressLine2 = "addr 2",
+                    City = "city",
+                    Country = "country",
+                    StateProvince = "state1"
+                }
+            };
+
+            var mappedInvoices = new Invoice[0].MapInvoices(referenceNumber, supplier, null);
+
+            Assert.Single(mappedInvoices);
+        }
     }
 }
