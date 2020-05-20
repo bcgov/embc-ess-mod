@@ -163,33 +163,37 @@ namespace EMBC.Tests.Suppliers.API
             var referenceNumber = $"reftestrec_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission
             {
-                Suppliers = new[]{
-                    new SupplierInformation{Name="name",
-                    LegalBusinessName = "legal name",
-                    ForRemittance = true,
-                    GstNumber = "gstnumber",
-                    Location = "location",
-                     Address = new Address
-                     {
-                         AddressLine1 = "addressline1",
-                         AddressLine2 = "addressline2",
-                         City = "city",
-                         Country = "country",
-                         PostalCode ="postalcode",
-                         StateProvince = "stateprovince"
-                     },
-                     ContactPerson = new Contact
-                     {
-                         FirstName = "first",
-                         LastName  = "last",
-                         Email="email",
-                         Fax = "fax",
-                         Phone = "phone"
-                     }
+                Suppliers = new[]
+                {
+                    new SupplierInformation
+                    {
+                        Name="name",
+                        LegalBusinessName = "legal name",
+                        ForRemittance = false,
+                        GstNumber = "gstnumber",
+                        Location = "location",
+                        Address = new Address
+                        {
+                             AddressLine1 = "addressline1",
+                             AddressLine2 = "addressline2",
+                             City = "city",
+                             Country = "country",
+                             PostalCode ="postalcode",
+                             StateProvince = "stateprovince"
+                        },
+                        ContactPerson = new Contact
+                        {
+                             FirstName = "first",
+                             LastName  = "last",
+                             Email="email",
+                             Fax = "fax",
+                             Phone = "phone"
+                        }
                     }
                 },
                 Invoices = Array.Empty<Invoice>(),
-                Receipts = new[]{
+                Receipts = new[]
+                {
                     new Receipt
                     {
                         Date = "2020-01-31",
@@ -199,7 +203,8 @@ namespace EMBC.Tests.Suppliers.API
                         TotalGST = 12.34m
                     }
                 },
-                LineItems = new[]{
+                LineItems = new[]
+                {
                     new LineItem
                     {
                         ReferralNumber = "ref123",
