@@ -4,6 +4,7 @@ using System.Net;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.DynamicsModule;
 using EMBC.Suppliers.API.SubmissionModule.Models;
+using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -69,6 +70,7 @@ namespace EMBC.Suppliers.API
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddADFSTokenProvider();
             services.AddTransient<ISubmissionRepository, SubmissionRepository>();
+            services.AddTransient<ISubmissionDynamicsCustomActionHandler, SubmissionDynamicsCustomActionHandler>();
             services.AddScoped(sp =>
             {
                 var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
