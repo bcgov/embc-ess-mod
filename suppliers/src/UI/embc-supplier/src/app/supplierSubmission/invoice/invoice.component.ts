@@ -1,10 +1,15 @@
 import { Component, Input, ChangeDetectorRef, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
+import {  DateParserService } from 'src/app/service/dateParser.service';
 
 @Component({
     selector: 'app-invoice',
     templateUrl: './invoice.component.html',
-    styleUrls: ['./invoice.component.scss']
+    styleUrls: ['./invoice.component.scss'],
+    providers: [
+        {provide: NgbDateParserFormatter, useClass: DateParserService}
+    ]
 })
 export class InvoiceComponent implements OnInit{
 
@@ -15,7 +20,12 @@ export class InvoiceComponent implements OnInit{
     referralList: any = ['1', '2', '3', '4', '5'];
     component: string = "I";
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef) {
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>) {
+       
+    }
+
+    get invoiceControl(){
+        return this.invoiceForm.controls;
     }
 
     createAttachmentObject(data: any) {
@@ -61,7 +71,7 @@ export class InvoiceComponent implements OnInit{
 
     createReferralFormArray() {
         return this.builder.group({
-            referralNumber: [''],
+            referralNumber: ['', Validators.required],
             referralRows: this.builder.array([
             ]),
             totalGst: [''],

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DragDropDirective } from './directives/DragDrop.directive';
 import { FileUploadComponent } from './components/fileUpload/fileUpload.component';
+import { PhoneMaskDirective } from './directives/PhoneMask.directive';
+import { GSTCodeDirective } from './directives/GSTCode.directive';
 
 @NgModule({
   imports: [
@@ -9,11 +11,15 @@ import { FileUploadComponent } from './components/fileUpload/fileUpload.componen
   ],
   declarations: [
       DragDropDirective,
-      FileUploadComponent
+      FileUploadComponent,
+      PhoneMaskDirective,
+      GSTCodeDirective
     ],
   exports: [
       DragDropDirective,
-      FileUploadComponent
+      FileUploadComponent,
+      PhoneMaskDirective,
+      GSTCodeDirective
     ]
 })
 export class CoreModule { }

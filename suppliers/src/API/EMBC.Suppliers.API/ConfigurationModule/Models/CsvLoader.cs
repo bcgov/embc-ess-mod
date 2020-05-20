@@ -13,7 +13,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         IRegionsListProvider,
         ICommunitiesListProvider
     {
-        private static string PathToCsvFiles = "./Configuration/Models/Data";
+        private static string PathToCsvFiles = "./ConfigurationModule/Models/Data";
 
         public async Task<IEnumerable<Community>> GetCommunitiesAsync(string stateProvinceCode, string countryCode)
         {
