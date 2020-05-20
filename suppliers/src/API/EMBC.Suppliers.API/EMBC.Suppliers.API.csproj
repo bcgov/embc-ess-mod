@@ -8,16 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="ConfigurationModule\Models\Data\communities_bc_ca.csv">
+    <Content Include="ConfigurationModule\Models\Data\communities_bc_can.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ConfigurationModule\Models\Data\countries.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ConfigurationModule\Models\Data\regions_bc_ca.csv">
+    <Content Include="ConfigurationModule\Models\Data\regions_bc_can.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ConfigurationModule\Models\Data\provinces_ca.csv">
+    <Content Include="ConfigurationModule\Models\Data\stateprovinces_can.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -41,5 +41,14 @@
     <PackageReference Include="Serilog.Sinks.Splunk" Version="3.3.0" />
     <PackageReference Include="System.IO.Abstractions" Version="11.0.6" />
     <PackageReference Include="Xrm.Tools.CRMWebAPI" Version="1.0.25" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ConfigurationModule\Models\Data\cities_bc_can.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ConfigurationModule\Models\Data\districts_bc_can.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@
     {
         public string Code { get; set; }
         public string Name { get; set; }
-        public string ProvinceCode { get; set; }
+        public string StateProvinceCode { get; set; }
         public string CountryCode { get; set; }
     }
 
@@ -26,7 +26,25 @@
         public string Code { get; set; }
         public string Name { get; set; }
         public string RegionCode { get; set; }
-        public string ProvinceCode { get; set; }
+        public string StateProvinceCode { get; set; }
+        public string CountryCode { get; set; }
+    }
+
+    public class City
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string DistrictCode { get; set; }
+        public string StateProvinceCode { get; set; }
+        public string CountryCode { get; set; }
+    }
+
+    public class District
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string RegionCode { get; set; }
+        public string StateProvinceCode { get; set; }
         public string CountryCode { get; set; }
     }
 }

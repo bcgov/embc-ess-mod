@@ -11,7 +11,9 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         ICountriesListProvider,
         IStateProvincesListProvider,
         IRegionsListProvider,
-        ICommunitiesListProvider
+        ICommunitiesListProvider,
+        ICitiesListProvider,
+        IDistrictsListProvider
     {
         public CsvLoader(IFileSystem fileSystem)
         {
@@ -20,6 +22,21 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 
         private static string PathToCsvFiles = "./ConfigurationModule/Models/Data";
         private readonly IFileSystem fileSystem;
+
+        public async Task<IEnumerable<City>> GetCitiesAsync(string stateProvinceCode, string countryCode)
+        {
+            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(PathToCsvFiles, $"./cities_{stateProvinceCode}_{countryCode}.csv".ToLowerInvariant())))
+                .ParseCsv((values, i) => new
+                {
+                    Code = values[0],
+                    Name = values[1],
+                    Type = values[2],
+                    District = values[3],
+                    Active = bool.Parse(values[4]),
+                })
+                .Where(c => c.Active)
+                .Select(c => new City { Code = c.Code, Name = c.Name, DistrictCode = c.District, CountryCode = countryCode, StateProvinceCode = stateProvinceCode });
+        }
 
         public async Task<IEnumerable<Community>> GetCommunitiesAsync(string stateProvinceCode, string countryCode)
         {
@@ -31,7 +48,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
                     RegionCode = values[2]
                 })
                 .Where(c => c.Active)
-                .Select(c => new Community { Code = c.Name, Name = c.Name, RegionCode = c.RegionCode, CountryCode = countryCode, ProvinceCode = stateProvinceCode });
+                .Select(c => new Community { Code = c.Name, Name = c.Name, RegionCode = c.RegionCode, CountryCode = countryCode, StateProvinceCode = stateProvinceCode });
         }
 
         public async Task<IEnumerable<Country>> GetCountriesAsync()
@@ -50,7 +67,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 
         public async Task<IEnumerable<StateProvince>> GetStateProvincesAsync(string countryCode)
         {
-            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(PathToCsvFiles, $"./provinces_{countryCode}.csv".ToLowerInvariant())))
+            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(PathToCsvFiles, $"./stateprovinces_{countryCode}.csv".ToLowerInvariant())))
                 .ParseCsv((values, i) => new
                 {
                     Code = values[0],
@@ -61,9 +78,9 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
                 .Select(c => new StateProvince { Code = c.Code, Name = c.Name, CountryCode = countryCode });
         }
 
-        public async Task<IEnumerable<Region>> GetRegionsAsync(string stateProviceCode, string countryCode)
+        public async Task<IEnumerable<Region>> GetRegionsAsync(string stateProvinceCode, string countryCode)
         {
-            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(PathToCsvFiles, $"./regions_{stateProviceCode}_{countryCode}.csv".ToLowerInvariant())))
+            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(PathToCsvFiles, $"./regions_{stateProvinceCode}_{countryCode}.csv".ToLowerInvariant())))
                 .ParseCsv((values, i) => new
                 {
                     Code = values[0],
@@ -71,7 +88,20 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
                     Active = bool.Parse(values[1])
                 }, quoteCharacter: '"')
                 .Where(c => c.Active)
-                .Select(c => new Region { Code = c.Code, Name = c.Name, ProvinceCode = stateProviceCode, CountryCode = countryCode });
+                .Select(c => new Region { Code = c.Code, Name = c.Name, StateProvinceCode = stateProvinceCode, CountryCode = countryCode });
+        }
+
+        public async Task<IEnumerable<District>> GetDistrictsAsync(string stateProvinceCode, string countryCode)
+        {
+            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(PathToCsvFiles, $"./districts_{stateProvinceCode}_{countryCode}.csv".ToLowerInvariant())))
+                .ParseCsv((values, i) => new
+                {
+                    Code = values[0],
+                    Region = values[1],
+                    Active = bool.Parse(values[2])
+                })
+                .Where(c => c.Active)
+                .Select(c => new District { Code = c.Code, Name = c.Code, RegionCode = c.Region, StateProvinceCode = stateProvinceCode, CountryCode = countryCode });
         }
     }
 
