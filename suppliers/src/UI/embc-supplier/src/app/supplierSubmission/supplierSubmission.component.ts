@@ -6,6 +6,9 @@ import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Community } from '../model/community';
 import { Province } from '../model/province';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { InvoiceModalContent } from '../core/components/modal/invoiceModal.component';
+import { ReceiptModalContent } from '../core/components/modal/receiptModal.component';
 
 @Component({
     selector: 'supplier-submission',
@@ -14,7 +17,7 @@ import { Province } from '../model/province';
 })
 export class SupplierSubmissionComponent implements OnInit {
 
-    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef) { }
+    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef, private modalService: NgbModal) { }
 
     supplierForm: FormGroup;
     remitDiv: boolean = false;
@@ -35,7 +38,7 @@ export class SupplierSubmissionComponent implements OnInit {
                 : this.cityList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
         );
 
-    cityFormatter = (x: {name: string}) => x.name;
+    cityFormatter = (x: { name: string }) => x.name;
 
     searchState = (text$: Observable<string>) =>
         text$.pipe(
@@ -53,7 +56,7 @@ export class SupplierSubmissionComponent implements OnInit {
                 : this.provinceList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
         );
 
-    provinceFormatter = (x: {name: string}) => x.name;
+    provinceFormatter = (x: { name: string }) => x.name;
 
     ngOnInit() {
         this.initializeForm();
@@ -88,7 +91,7 @@ export class SupplierSubmissionComponent implements OnInit {
             contactPerson: this.builder.group({
                 firstName: ['', Validators.required],
                 lastName: ['', Validators.required],
-                email: ['', Validators.email], 
+                email: ['', Validators.email],
                 phone: ['', Validators.required],
                 fax: ['', Validators.required],
             }),
@@ -113,7 +116,7 @@ export class SupplierSubmissionComponent implements OnInit {
         });
     }
 
-    get control(){
+    get control() {
         return this.supplierForm.controls;
     }
 
@@ -127,7 +130,7 @@ export class SupplierSubmissionComponent implements OnInit {
 
     toggleVisibility(event: any) {
         this.remitDiv = event.target.checked;
-        if(this.remitDiv) {
+        if (this.remitDiv) {
             this.supplierForm.get('businessName').setValidators(Validators.required);
             this.supplierForm.get('businessCountry').setValidators(Validators.required);
             this.supplierForm.get('remittanceAddress.address1').setValidators(Validators.required);
@@ -155,7 +158,7 @@ export class SupplierSubmissionComponent implements OnInit {
             this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
             this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
             this.addressDiv = false;
-        } else if(selectedValue === 'United States'){
+        } else if (selectedValue === 'United States') {
             this.supplierForm.get('remittanceAddress.state').setValidators(Validators.required);
             this.supplierForm.get('remittanceAddress.province').setValidators(null);
             this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
@@ -211,18 +214,39 @@ export class SupplierSubmissionComponent implements OnInit {
 
     onValueChange(event: any) {
         if (event.target.value === 'invoice') {
-            this.cleanReceiptTemplate();
-            this.injectInvoiceTemplate();
+            if (this.receipts.length > 0) {
+                const modalRef = this.modalService.open(InvoiceModalContent);
+                modalRef.componentInstance.clearIndicator.subscribe((e) => {
+                    if (e) {
+                        this.cleanReceiptTemplate();
+                        this.injectInvoiceTemplate();
+                    } else {
+                        this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+                    }
+                });
+            } else {
+                this.injectInvoiceTemplate();
+            }
         } else if (event.target.value === 'receipt') {
-            this.cleanInvoiceTemplate();
-            this.injectReceiptTemplate();
+            if (this.invoices.length > 0) {
+                const modalRef = this.modalService.open(ReceiptModalContent);
+                modalRef.componentInstance.clearIndicator.subscribe((e) => {
+                    if (e) {
+                        this.cleanInvoiceTemplate();
+                        this.injectReceiptTemplate();
+                    } else {
+                        this.supplierForm.get('supplierSubmissionType').setValue('invoice');
+                    }
+                });
+            } else {
+                this.injectReceiptTemplate();
+            }
         }
     }
 
     injectInvoiceTemplate() {
         this.invoices.push(this.createInvoiceFormArray());
         this.cd.detectChanges();
-
     }
 
     injectReceiptTemplate() {

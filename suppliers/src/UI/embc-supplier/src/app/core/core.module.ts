@@ -4,6 +4,8 @@ import { DragDropDirective } from './directives/DragDrop.directive';
 import { FileUploadComponent } from './components/fileUpload/fileUpload.component';
 import { PhoneMaskDirective } from './directives/PhoneMask.directive';
 import { GSTCodeDirective } from './directives/GSTCode.directive';
+import { InvoiceModalContent } from './components/modal/invoiceModal.component';
+import { ReceiptModalContent } from './components/modal/receiptModal.component';
 
 @NgModule({
   imports: [
@@ -13,7 +15,9 @@ import { GSTCodeDirective } from './directives/GSTCode.directive';
       DragDropDirective,
       FileUploadComponent,
       PhoneMaskDirective,
-      GSTCodeDirective
+      GSTCodeDirective,
+      InvoiceModalContent,
+      ReceiptModalContent
     ],
   exports: [
       DragDropDirective,
