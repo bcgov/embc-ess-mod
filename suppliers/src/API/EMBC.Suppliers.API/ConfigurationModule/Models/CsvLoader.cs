@@ -12,7 +12,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         IStateProvincesListProvider,
         IRegionsListProvider,
         ICommunitiesListProvider,
-        ICitiesListProvider,
+        IJurisdictionsListProvider,
         IDistrictsListProvider
     {
         public CsvLoader(IFileSystem fileSystem)
@@ -23,9 +23,9 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         private static string PathToCsvFiles = "./ConfigurationModule/Models/Data";
         private readonly IFileSystem fileSystem;
 
-        public async Task<IEnumerable<City>> GetCitiesAsync(string stateProvinceCode, string countryCode)
+        public async Task<IEnumerable<Jurisdiction>> GetJurisdictionsAsync(string[] types, string stateProvinceCode, string countryCode)
         {
-            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(PathToCsvFiles, $"./cities_{stateProvinceCode}_{countryCode}.csv".ToLowerInvariant())))
+            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(PathToCsvFiles, $"./jurisdictions_{stateProvinceCode}_{countryCode}.csv".ToLowerInvariant())))
                 .ParseCsv((values, i) => new
                 {
                     Code = values[0],
@@ -34,8 +34,8 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
                     District = values[3],
                     Active = bool.Parse(values[4]),
                 })
-                .Where(c => c.Active)
-                .Select(c => new City { Code = c.Code, Name = c.Name, DistrictCode = c.District, CountryCode = countryCode, StateProvinceCode = stateProvinceCode });
+                .Where(c => c.Active && (!types.Any() || types.Any(t => t.Equals(c.Type, StringComparison.OrdinalIgnoreCase))))
+                .Select(c => new Jurisdiction { Code = c.Code, Name = c.Name, Type = c.Type, DistrictCode = c.District, CountryCode = countryCode, StateProvinceCode = stateProvinceCode });
         }
 
         public async Task<IEnumerable<Community>> GetCommunitiesAsync(string stateProvinceCode, string countryCode)

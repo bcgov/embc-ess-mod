@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
@@ -14,7 +15,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
         private readonly IStateProvincesListProvider provincesListProvider;
         private readonly IRegionsListProvider regionsListProvider;
         private readonly ICommunitiesListProvider communitiesListProvider;
-        private readonly ICitiesListProvider citiesListProvider;
+        private readonly IJurisdictionsListProvider jurisdictionsListProvider;
         private readonly IDistrictsListProvider districtsListProvider;
 
         public ListsController(
@@ -22,14 +23,14 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             IStateProvincesListProvider provincesListProvider,
             IRegionsListProvider regionsListProvider,
             ICommunitiesListProvider communitiesListProvider,
-            ICitiesListProvider citiesListProvider,
+            IJurisdictionsListProvider jurisdictionsListProvider,
             IDistrictsListProvider districtsListProvider)
         {
             this.countriesListProvider = countriesListProvider;
             this.provincesListProvider = provincesListProvider;
             this.regionsListProvider = regionsListProvider;
             this.communitiesListProvider = communitiesListProvider;
-            this.citiesListProvider = citiesListProvider;
+            this.jurisdictionsListProvider = jurisdictionsListProvider;
             this.districtsListProvider = districtsListProvider;
         }
 
@@ -57,10 +58,11 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             return Ok(await regionsListProvider.GetRegionsAsync(stateProvinceCode, countryCode));
         }
 
-        [HttpGet("cities")]
-        public async Task<ActionResult<IEnumerable<City>>> GetCities([FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
+        [HttpGet("jurisdictions")]
+        public async Task<ActionResult<IEnumerable<Jurisdiction>>> GetJurisdictions([FromQuery] string[] types, [FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
         {
-            return Ok(await citiesListProvider.GetCitiesAsync(stateProvinceCode, countryCode));
+            if (types == null) types = Array.Empty<string>();
+            return Ok(await jurisdictionsListProvider.GetJurisdictionsAsync(types, stateProvinceCode, countryCode));
         }
 
         [HttpGet("districts")]

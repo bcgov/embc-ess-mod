@@ -4,8 +4,8 @@ using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models
 {
-    public interface ICitiesListProvider
+    public interface IJurisdictionsListProvider
     {
-        Task<IEnumerable<City>> GetCitiesAsync(string stateProvinceCode, string countryCode);
+        Task<IEnumerable<Jurisdiction>> GetJurisdictionsAsync(string[] type, string stateProvinceCode, string countryCode);
     }
 }

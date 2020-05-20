@@ -30,10 +30,11 @@
         public string CountryCode { get; set; }
     }
 
-    public class City
+    public class Jurisdiction
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public string Type { get; set; }
         public string DistrictCode { get; set; }
         public string StateProvinceCode { get; set; }
         public string CountryCode { get; set; }

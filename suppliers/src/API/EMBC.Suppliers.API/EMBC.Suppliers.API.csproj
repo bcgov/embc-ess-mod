@@ -44,7 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="ConfigurationModule\Models\Data\cities_bc_can.csv">
+    <None Update="ConfigurationModule\Models\Data\jurisdictions_bc_can.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="ConfigurationModule\Models\Data\districts_bc_can.csv">

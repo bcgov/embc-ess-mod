@@ -1,7 +1,7 @@
-﻿"Name","Active"
-"Vancouver Island","True"
-"South West","True"
-"Central","True"
-"South East","True"
-"North East","True"
-"North West","True"
+﻿Code,Name,Active
+CTL,Central,TRUE
+NEA,North East,TRUE
+NWE,North West,TRUE
+SEA,South East,TRUE
+SWE,South West,TRUE
+VIR,Vancouver Island,TRUE
