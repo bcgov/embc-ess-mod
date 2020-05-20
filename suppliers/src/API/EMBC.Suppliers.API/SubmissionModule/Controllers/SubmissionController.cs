@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
+using Jasper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Suppliers.API.SubmissionModule.Controllers
@@ -12,11 +13,11 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
     [ApiController]
     public class SubmissionController : ControllerBase
     {
-        private readonly ISubmissionService submissionService;
+        private readonly ICommandBus commandBus;
 
-        public SubmissionController(ISubmissionService submissionService)
+        public SubmissionController(ICommandBus commandBus)
         {
-            this.submissionService = submissionService;
+            this.commandBus = commandBus;
         }
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> Create(Submission submission)
         {
-            var id = await submissionService.Submit(submission);
+            var id = await commandBus.Invoke<string>(new PersistSupplierSubmissionCommand(submission));
 
             return new JsonResult(new { submissionId = id });
         }
