@@ -7,11 +7,50 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 {
     public static class EntityMappers
     {
+        public static IEnumerable<SubmissionEntity> MapSubmissions(this IEnumerable<Submission> submissions, string referenceNumber)
+        {
+            return submissions.Select(s =>
+            {
+                var supplierInformation = s.Suppliers.First();
+                var remittanceInformation = s.Suppliers.SingleOrDefault(i => i.ForRemittance);
+
+                var receiptLineItems = s.Receipts.Select(r => (receipt: r, lineItems: s.LineItems.Where(li => li.ReceiptNumber == r.ReceiptNumber)));
+                var referralLineItems = s.Referrals.Select(r => (referral: r, lineItems: s.LineItems.Where(li => string.IsNullOrEmpty(li.ReceiptNumber) && li.ReferralNumber == r.ReferralNumber)));
+
+                var receiptAttachments = s.Receipts.Select(r => (receipt: r, attachments: s.Attachments.Where(a => a.ReferralNumber == r.ReferralNumber && a.Type == AttachmentType.Receipt)));
+                var referralAttachments = s.Referrals.Select(r => (referral: r, attachments: s.Attachments.Where(a => a.ReferralNumber == r.ReferralNumber && a.Type == AttachmentType.Referral)));
+                var invoiceAttachments = s.Invoices.Select(i => (invoic: i, attachments: s.Attachments.Where(a => a.InvoiceNumber == i.InvoiceNumber && a.Type == AttachmentType.Invoice)));
+
+                return new SubmissionEntity
+                {
+                    isInvoice = s.Invoices.Any(),
+                    invoiceCollection = s.Invoices.MapInvoices(referenceNumber, supplierInformation, remittanceInformation),
+                    referralCollection = s.Referrals.MapReferrals(referenceNumber),
+                    lineItemCollection = receiptLineItems.SelectMany(rli => rli.lineItems.MapLineItems(referenceNumber, rli.receipt))
+                                             .Concat(referralLineItems.SelectMany(rli => rli.lineItems.MapLineItems(referenceNumber, rli.referral))),
+                    documentCollection = s.Attachments.Any()
+                                             ? receiptAttachments.SelectMany(ra => ra.attachments.MapAttachments())
+                                                 .Concat(referralAttachments.SelectMany(ra => ra.attachments.MapAttachments()))
+                                                 .Concat(invoiceAttachments.SelectMany(ra => ra.attachments.MapAttachments()))
+                                             : null
+                };
+            });
+        }
+
         public static IEnumerable<InvoiceEntity> MapInvoices(this IEnumerable<Invoice> invoices, string referenceNumber, SupplierInformation supplierInformation, SupplierInformation supplierRemittanceInformation)
         {
+            if (!invoices.Any())
+            {
+                //dummy invoice for Dynamics
+                invoices = new[]
+                {
+                    new Invoice()
+                };
+            }
+
             return invoices.Select((i, n) => new InvoiceEntity
             {
-                era_invoicedate = i.Date.ToString("yyyy-MM-dd"),
+                era_invoicedate = i.Date,
                 era_invoiceref = i.InvoiceNumber,
                 era_referencenumber = referenceNumber,
                 era_remitpaymenttootherbusiness = false,
@@ -65,7 +104,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 era_gst = l.GST,
                 era_amount = l.Amount,
                 era_receipt = receipt.ReceiptNumber,
-                era_receiptdate = receipt.Date.ToString("yyyy-MM-dd"),
+                era_receiptdate = receipt.Date,
                 era_referralreference = receipt.ReferralNumber,
                 era_submissionreference = referenceNumber
             });

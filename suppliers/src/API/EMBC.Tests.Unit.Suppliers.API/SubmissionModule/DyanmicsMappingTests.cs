@@ -41,7 +41,66 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
             var mappedInvoices = new[] { srcInvoice }.MapInvoices(referenceNumber, supplier, null);
 
             var mappedInvoice = Assert.Single(mappedInvoices);
-            Assert.True(TypeDescriptor.GetProperties(mappedInvoice).Find("type", true).Attributes.Contains(new JsonPropertyAttribute("@odata.type")));
+            var typeProperty = TypeDescriptor.GetProperties(mappedInvoice).Find("type", true);
+            Assert.True(typeProperty.Attributes.Contains(new JsonPropertyAttribute("@odata.type")));
+            Assert.Equal("Microsoft.Dynamics.CRM.era_supplierinvoice", typeProperty.GetValue(mappedInvoice));
+        }
+
+        [Fact]
+        public void CanMapLineItemInReceipt()
+        {
+            var referenceNumber = "ref";
+            var receipt = new Receipt
+            {
+                ReceiptNumber = "rec1",
+                ReferralNumber = "ref1",
+                Date = "2010-04-20",
+                TotalAmount = 10m,
+                TotalGST = 5m
+            };
+            var lineItem = new LineItem
+            {
+                Amount = 10m,
+                Description = "desc",
+                GST = 5m,
+                ReceiptNumber = receipt.ReceiptNumber,
+                ReferralNumber = receipt.ReferralNumber,
+                SupportProvided = "support"
+            };
+
+            var mappedLineItems = new[] { lineItem }.MapLineItems(referenceNumber, receipt);
+            var mappedLineItem = Assert.Single(mappedLineItems);
+            var typeProperty = TypeDescriptor.GetProperties(mappedLineItem).Find("type", true);
+            Assert.True(typeProperty.Attributes.Contains(new JsonPropertyAttribute("@odata.type")));
+            Assert.Equal("Microsoft.Dynamics.CRM.era_supportlineitem", typeProperty.GetValue(mappedLineItem));
+        }
+
+        [Fact]
+        public void CanMapLineItemInReferral()
+        {
+            var referenceNumber = "ref";
+            var receipt = new Referral
+            {
+                ReferralNumber = "ref1",
+                InvoiceNumber = "inv1",
+                TotalAmount = 10m,
+                TotalGST = 5m
+            };
+            var lineItem = new LineItem
+            {
+                Amount = 10m,
+                Description = "desc",
+                GST = 5m,
+                ReceiptNumber = null,
+                ReferralNumber = receipt.ReferralNumber,
+                SupportProvided = "support"
+            };
+
+            var mappedLineItems = new[] { lineItem }.MapLineItems(referenceNumber, receipt);
+            var mappedLineItem = Assert.Single(mappedLineItems);
+            var typeProperty = TypeDescriptor.GetProperties(mappedLineItem).Find("type", true);
+            Assert.True(typeProperty.Attributes.Contains(new JsonPropertyAttribute("@odata.type")));
+            Assert.Equal("Microsoft.Dynamics.CRM.era_supportlineitem", typeProperty.GetValue(mappedLineItem));
         }
     }
 }

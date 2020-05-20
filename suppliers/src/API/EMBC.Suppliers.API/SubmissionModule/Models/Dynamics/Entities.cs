@@ -1,7 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 {
+    public class SubmissionEntity
+    {
+        public bool isInvoice { get; set; }
+        public IEnumerable<InvoiceEntity> invoiceCollection { get; set; }
+        public IEnumerable<ReferralEntity> referralCollection { get; set; }
+        public IEnumerable<LineItemEntity> lineItemCollection { get; set; }
+        public IEnumerable<AttachmentEntity> documentCollection { get; set; }
+    }
+
     public class InvoiceEntity
     {
         [JsonProperty("@odata.type")]
