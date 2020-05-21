@@ -8,16 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="ConfigurationModule\Models\Data\communities_bc_ca.csv">
+    <Content Include="ConfigurationModule\Models\Data\communities_bc_can.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ConfigurationModule\Models\Data\countries.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ConfigurationModule\Models\Data\regions_bc_ca.csv">
+    <Content Include="ConfigurationModule\Models\Data\regions_bc_can.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ConfigurationModule\Models\Data\provinces_ca.csv">
+    <Content Include="ConfigurationModule\Models\Data\stateprovinces_can.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -27,11 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Jasper" Version="1.1.4" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NSwag.AspNetCore" Version="13.4.2" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.5.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
     <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.1" />
@@ -40,5 +41,14 @@
     <PackageReference Include="Serilog.Sinks.Splunk" Version="3.3.0" />
     <PackageReference Include="System.IO.Abstractions" Version="11.0.6" />
     <PackageReference Include="Xrm.Tools.CRMWebAPI" Version="1.0.25" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ConfigurationModule\Models\Data\jurisdictions_bc_can.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ConfigurationModule\Models\Data\districts_bc_can.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

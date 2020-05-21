@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
 {
@@ -49,7 +48,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
     public class Invoice
     {
         public string InvoiceNumber { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public decimal TotalGST { get; set; }
         public decimal TotalAmount { get; set; }
     }
@@ -65,7 +64,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
     public class Receipt
     {
         public string ReceiptNumber { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public decimal TotalGST { get; set; }
         public decimal TotalAmount { get; set; }
         public string ReferralNumber { get; set; }
