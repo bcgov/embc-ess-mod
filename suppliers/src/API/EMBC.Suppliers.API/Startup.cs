@@ -2,6 +2,7 @@
 using System.IO.Abstractions;
 using System.Net;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
+using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using EMBC.Suppliers.API.DynamicsModule;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
@@ -62,12 +63,13 @@ namespace EMBC.Suppliers.API
                 }
             });
 
-            services.AddTransient<ICountriesListProvider, CsvLoader>();
-            services.AddTransient<IStateProvincesListProvider, CsvLoader>();
-            services.AddTransient<IRegionsListProvider, CsvLoader>();
-            services.AddTransient<ICommunitiesListProvider, CsvLoader>();
-            services.AddTransient<IJurisdictionsListProvider, CsvLoader>();
-            services.AddTransient<IDistrictsListProvider, CsvLoader>();
+            services.AddTransient<ICountriesListProvider, DynamicsListProvider>();
+            services.AddTransient<IStateProvincesListProvider, DynamicsListProvider>();
+            services.AddTransient<IRegionsListProvider, CsvListProvider>();
+            services.AddTransient<ICommunitiesListProvider, CsvListProvider>();
+            services.AddTransient<IJurisdictionsListProvider, DynamicsListProvider>();
+            services.AddTransient<IDistrictsListProvider, CsvListProvider>();
+            services.AddTransient<IListsGateway, ListsGateway>();
             services.AddSingleton<IFileSystem, FileSystem>();
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddADFSTokenProvider();

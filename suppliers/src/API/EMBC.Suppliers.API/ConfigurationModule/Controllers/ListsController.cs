@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
+using Jasper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
@@ -11,64 +11,29 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
     [ApiController]
     public class ListsController : ControllerBase
     {
-        private readonly ICountriesListProvider countriesListProvider;
-        private readonly IStateProvincesListProvider provincesListProvider;
-        private readonly IRegionsListProvider regionsListProvider;
-        private readonly ICommunitiesListProvider communitiesListProvider;
-        private readonly IJurisdictionsListProvider jurisdictionsListProvider;
-        private readonly IDistrictsListProvider districtsListProvider;
+        private readonly ICommandBus commandBus;
 
-        public ListsController(
-            ICountriesListProvider countriesListProvider,
-            IStateProvincesListProvider provincesListProvider,
-            IRegionsListProvider regionsListProvider,
-            ICommunitiesListProvider communitiesListProvider,
-            IJurisdictionsListProvider jurisdictionsListProvider,
-            IDistrictsListProvider districtsListProvider)
+        public ListsController(ICommandBus commandBus)
         {
-            this.countriesListProvider = countriesListProvider;
-            this.provincesListProvider = provincesListProvider;
-            this.regionsListProvider = regionsListProvider;
-            this.communitiesListProvider = communitiesListProvider;
-            this.jurisdictionsListProvider = jurisdictionsListProvider;
-            this.districtsListProvider = districtsListProvider;
+            this.commandBus = commandBus;
         }
 
         [HttpGet("countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
-            return Ok(await countriesListProvider.GetCountriesAsync());
+            return Ok(await commandBus.Invoke<IEnumerable<Country>>(new CountriesQueryCommand()));
         }
 
         [HttpGet("stateprovinces")]
         public async Task<ActionResult<IEnumerable<StateProvince>>> GetStateProvinces([FromQuery] string countryCode = "CAN")
         {
-            return Ok(await provincesListProvider.GetStateProvincesAsync(countryCode));
-        }
-
-        [HttpGet("communities")]
-        public async Task<ActionResult<IEnumerable<Community>>> GetCommunities([FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
-        {
-            return Ok(await communitiesListProvider.GetCommunitiesAsync(stateProvinceCode, countryCode));
-        }
-
-        [HttpGet("regions")]
-        public async Task<ActionResult<IEnumerable<Region>>> GetRegions([FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
-        {
-            return Ok(await regionsListProvider.GetRegionsAsync(stateProvinceCode, countryCode));
+            return Ok(await commandBus.Invoke<IEnumerable<StateProvince>>(new StateProvincesQueryCommand(countryCode)));
         }
 
         [HttpGet("jurisdictions")]
         public async Task<ActionResult<IEnumerable<Jurisdiction>>> GetJurisdictions([FromQuery] string[] types, [FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
         {
-            if (types == null) types = Array.Empty<string>();
-            return Ok(await jurisdictionsListProvider.GetJurisdictionsAsync(types, stateProvinceCode, countryCode));
-        }
-
-        [HttpGet("districts")]
-        public async Task<ActionResult<IEnumerable<District>>> GetDistricts([FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
-        {
-            return Ok(await districtsListProvider.GetDistrictsAsync(stateProvinceCode, countryCode));
+            return Ok(await commandBus.Invoke<IEnumerable<Jurisdiction>>(new JurisdictionsQueryCommand(types, countryCode, stateProvinceCode)));
         }
     }
 }
