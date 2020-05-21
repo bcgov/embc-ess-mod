@@ -56,11 +56,6 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
                       });
         }
 
-        //public async Task<IEnumerable<JurisdictionEntity>> GetJurisdictionsAsync(string stateProvinceId)
-        //{
-        //    return (await GetJurisdictionsAsync()).Where(j => j._era_relatedprovincestate_value == stateProvinceId);
-        //}
-
         public async Task<IEnumerable<StateProvinceEntity>> GetStateProvincesAsync()
         {
             return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(path, $"./stateprovinces.csv")))
@@ -80,11 +75,6 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
                  });
         }
 
-        //public async Task<IEnumerable<StateProvinceEntity>> GetStateProvincesAsync(string countryId)
-        //{
-        //    return (await GetStateProvincesAsync()).Where(sp => sp._era_relatedcountry_value == countryId);
-        //}
-
         public async Task<IEnumerable<SupportEntity>> GetSupportsAsync()
         {
             return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(path, "./supports.csv")))
@@ -95,18 +85,6 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
                 }, quoteCharacter: '"')
                 .Select(c => new SupportEntity { era_name = c.era_name, era_supportid = c.era_supportid });
         }
-
-        //public async Task<IEnumerable> GetDistrictsAsync()
-        //{
-        //    await Task.CompletedTask;
-        //    return Array.Empty<object>();
-        //}
-
-        //public async Task<IEnumerable> GetRegionsAsync()
-        //{
-        //    await Task.CompletedTask;
-        //    return Array.Empty<object>();
-        //}
 
         public async Task SetCountriesAsync(IEnumerable<CountryEntity> countries)
         {

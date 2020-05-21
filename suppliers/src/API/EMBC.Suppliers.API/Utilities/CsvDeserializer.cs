@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EMBC.Suppliers.API.Utilities
 {
-    public static class CsvParser
+    public static class CsvDeserializer
     {
         public static IEnumerable<T> ParseCsv<T>(this IEnumerable<string> lines, Func<string[], int, T> map, string delimiter = ",", bool firstLineIsHeader = true)
         {
