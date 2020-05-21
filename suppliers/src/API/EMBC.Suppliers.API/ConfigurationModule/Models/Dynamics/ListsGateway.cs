@@ -6,18 +6,18 @@ using Xrm.Tools.WebAPI.Requests;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
-    public class ListsProvider
+    public class ListsGateway
     {
         private readonly CRMWebAPI api;
 
-        public ListsProvider(CRMWebAPI api)
+        public ListsGateway(CRMWebAPI api)
         {
             this.api = api;
         }
 
-        public async Task<IEnumerable> GetSupportsAsync()
+        public async Task<IEnumerable<SupportEntity>> GetSupportsAsync()
         {
-            var list = await api.GetList("era_supports", new CRMGetListOptions
+            var list = await api.GetList<SupportEntity>("era_supports", new CRMGetListOptions
             {
                 Select = new[] { "era_name", "era_supportid" }
             });
@@ -39,7 +39,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
         {
             var list = await api.GetList<StateProvinceEntity>("era_provinceterritorieses", new CRMGetListOptions
             {
-                Select = new[] { "era_code", "era_name", "era_provinceterritoriesid" },
+                Select = new[] { "era_code", "era_name", "era_provinceterritoriesid", "_era_relatedcountry_value" },
                 Filter = $"_era_relatedcountry_value eq {countryId}"
             });
 
@@ -56,11 +56,11 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             return list.List;
         }
 
-        public async Task<IEnumerable> GetJurisdictionsAsync(string stateProvinceId)
+        public async Task<IEnumerable<JurisdictionEntity>> GetJurisdictionsAsync(string stateProvinceId)
         {
-            var list = await api.GetList("era_jurisdictions", new CRMGetListOptions
+            var list = await api.GetList<JurisdictionEntity>("era_jurisdictions", new CRMGetListOptions
             {
-                Select = new[] { "era_jurisdictionid", "era_jurisdictionname", "era_type" },
+                Select = new[] { "era_jurisdictionid", "era_jurisdictionname", "era_type", "_era_relatedprovincestate_value" },
                 Filter = $"_era_relatedprovincestate_value eq {stateProvinceId}"
             });
 
