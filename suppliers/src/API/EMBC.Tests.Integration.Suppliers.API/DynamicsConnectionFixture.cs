@@ -218,7 +218,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfCountries()
         {
-            var gw = new ListsGateway(api);
+            var gw = new DynamicsListsGateway(api);
 
             var items = await gw.GetCountriesAsync();
 
@@ -228,7 +228,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfJurisdictions()
         {
-            var gw = new ListsGateway(api);
+            var gw = new DynamicsListsGateway(api);
             var canada = (await gw.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
             var bc = (await gw.GetStateProvincesAsync(canada.era_countryid)).Single(c => c.era_code == "BC");
 
@@ -240,7 +240,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfStateProvinces()
         {
-            var gw = new ListsGateway(api);
+            var gw = new DynamicsListsGateway(api);
             var canada = (await gw.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
 
             var items = await gw.GetStateProvincesAsync(canada.era_countryid);
@@ -251,7 +251,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfDistricts()
         {
-            var gw = new ListsGateway(api);
+            var gw = new DynamicsListsGateway(api);
 
             var items = await gw.GetDistrictsAsync();
 
@@ -261,7 +261,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfRegions()
         {
-            var gw = new ListsGateway(api);
+            var gw = new DynamicsListsGateway(api);
 
             var items = await gw.GetRegionsAsync();
 
@@ -271,7 +271,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfSupports()
         {
-            var gw = new ListsGateway(api);
+            var gw = new DynamicsListsGateway(api);
 
             var items = await gw.GetSupportsAsync();
 

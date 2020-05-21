@@ -6,11 +6,11 @@ using Xrm.Tools.WebAPI.Requests;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
-    public class ListsGateway : IListsGateway
+    public class DynamicsListsGateway : IListsGateway
     {
         private readonly CRMWebAPI api;
 
-        public ListsGateway(CRMWebAPI api)
+        public DynamicsListsGateway(CRMWebAPI api)
         {
             this.api = api;
         }
@@ -46,6 +46,16 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             return list.List;
         }
 
+        public async Task<IEnumerable<StateProvinceEntity>> GetStateProvincesAsync()
+        {
+            var list = await api.GetList<StateProvinceEntity>("era_provinceterritorieses", new CRMGetListOptions
+            {
+                Select = new[] { "era_code", "era_name", "era_provinceterritoriesid", "_era_relatedcountry_value" },
+            });
+
+            return list.List;
+        }
+
         public async Task<IEnumerable> GetDistrictsAsync()
         {
             var list = await api.GetList("era_regionaldistricts", new CRMGetListOptions
@@ -62,6 +72,16 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             {
                 Select = new[] { "era_jurisdictionid", "era_jurisdictionname", "era_type", "_era_relatedprovincestate_value" },
                 Filter = $"_era_relatedprovincestate_value eq {stateProvinceId}"
+            });
+
+            return list.List;
+        }
+
+        public async Task<IEnumerable<JurisdictionEntity>> GetJurisdictionsAsync()
+        {
+            var list = await api.GetList<JurisdictionEntity>("era_jurisdictions", new CRMGetListOptions
+            {
+                Select = new[] { "era_jurisdictionid", "era_jurisdictionname", "era_type", "_era_relatedprovincestate_value" },
             });
 
             return list.List;

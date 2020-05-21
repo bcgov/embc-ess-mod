@@ -7,35 +7,34 @@ using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models
 {
-    public class DynamicsListProvider :
+    public class ListsProvider :
         ICountriesListProvider,
         IStateProvincesListProvider,
         IJurisdictionsListProvider
     {
-        private readonly IListsGateway listsGateway;
+        private readonly ICachedListsProvider cache;
 
-        public DynamicsListProvider(IListsGateway listsGateway)
+        public ListsProvider(ICachedListsProvider cache)
         {
-            this.listsGateway = listsGateway;
+            this.cache = cache;
         }
 
         public async Task<IEnumerable<Country>> GetCountriesAsync()
         {
-            var countries = await listsGateway.GetCountriesAsync();
+            var countries = await cache.GetCountriesAsync();
             return countries.Select(c => new Country { Code = c.era_countrycode, Name = c.era_name });
         }
 
         public async Task<IEnumerable<Jurisdiction>> GetJurisdictionsAsync(string[] types, string stateProvinceCode, string countryCode)
         {
-            var countries = await listsGateway.GetCountriesAsync();
-            var country = countries.SingleOrDefault(c => c.era_countrycode == countryCode);
+            var country = (await cache.GetCountriesAsync()).SingleOrDefault(c => c.era_countrycode == countryCode);
             if (country == null) return Array.Empty<Jurisdiction>();
-            var stateProvinces = await listsGateway.GetStateProvincesAsync(country.era_countryid);
-            var stateProvince = stateProvinces.SingleOrDefault(sp => sp.era_code == stateProvinceCode);
+            var stateProvince = (await cache.GetStateProvincesAsync()).SingleOrDefault(sp => sp._era_relatedcountry_value == country.era_countryid && sp.era_code == stateProvinceCode);
             if (stateProvince == null) return Array.Empty<Jurisdiction>();
-            var jurisdictions = await listsGateway.GetJurisdictionsAsync(stateProvince.era_provinceterritoriesid);
-            return jurisdictions
-                .Where(j => !types.Any() || types.Any(t => t.Equals(j.era_type)))
+
+            return (await cache.GetJurisdictionsAsync())
+                .Where(j => j._era_relatedprovincestate_value == stateProvince.era_provinceterritoriesid &&
+                    (!types.Any() || types.Any(t => t.Equals(j.era_type))))
                 .Select(j => new Jurisdiction
                 {
                     Code = j.era_jurisdictionid,
@@ -48,11 +47,11 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 
         public async Task<IEnumerable<StateProvince>> GetStateProvincesAsync(string countryCode)
         {
-            var countries = await listsGateway.GetCountriesAsync();
-            var country = countries.SingleOrDefault(c => c.era_countrycode == countryCode);
+            var country = (await cache.GetCountriesAsync()).SingleOrDefault(c => c.era_countrycode == countryCode);
             if (country == null) return Array.Empty<StateProvince>();
-            var stateProvinces = await listsGateway.GetStateProvincesAsync(country.era_countryid);
-            return stateProvinces.Select(sp => new StateProvince { Code = sp.era_code, Name = sp.era_name, CountryCode = countryCode });
+            return (await cache.GetStateProvincesAsync())
+                .Where(sp => sp._era_relatedcountry_value == country.era_countryid)
+                .Select(sp => new StateProvince { Code = sp.era_code, Name = sp.era_name, CountryCode = countryCode });
         }
     }
 }

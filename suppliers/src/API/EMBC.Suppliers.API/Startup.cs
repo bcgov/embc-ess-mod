@@ -62,15 +62,15 @@ namespace EMBC.Suppliers.API
                     options.KnownNetworks.Add(ParseNetworkFromString(knownNetwork));
                 }
             });
+            services.AddDistributedMemoryCache();
 
-            services.AddTransient<ICountriesListProvider, DynamicsListProvider>();
-            services.AddTransient<IStateProvincesListProvider, DynamicsListProvider>();
-            services.AddTransient<IRegionsListProvider, CsvListProvider>();
-            services.AddTransient<ICommunitiesListProvider, CsvListProvider>();
-            services.AddTransient<IJurisdictionsListProvider, DynamicsListProvider>();
-            services.AddTransient<IDistrictsListProvider, CsvListProvider>();
-            services.AddTransient<IListsGateway, ListsGateway>();
             services.AddSingleton<IFileSystem, FileSystem>();
+            services.AddTransient<ICountriesListProvider, ListsProvider>();
+            services.AddTransient<IStateProvincesListProvider, ListsProvider>();
+            services.AddTransient<IJurisdictionsListProvider, ListsProvider>();
+            services.AddTransient<IListsGateway, DynamicsListsGateway>();
+            services.Configure<FileBasedCachedListsOptions>(configuration.GetSection("Dynamics:Lists:Cache"));
+            services.AddTransient<ICachedListsProvider, FileBasedCachedListsProvider>();
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddADFSTokenProvider();
             services.AddTransient<ISubmissionRepository, SubmissionRepository>();
