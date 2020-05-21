@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Net.Http;
+using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using Jasper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Debugging;
@@ -63,6 +65,9 @@ namespace EMBC.Suppliers.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                }).ConfigureServices((ctx, services) =>
+                {
+                    services.AddHostedService<ConfigurationServiceWorker>();
                 });
     }
 

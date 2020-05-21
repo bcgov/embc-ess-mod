@@ -20,7 +20,11 @@ namespace EMBC.Tests.Suppliers.API
     public class DynamicsConnectionFixture : IClassFixture<WebApplicationFactory<Startup>>
     {
         //set to null to run tests in this class, requires to be on VPN and Dynamics params configured in secrets.xml
+#if RELEASE
         private const string skip = "integration tests";
+#else
+        private const string skip = null;
+#endif
 
         private readonly ILoggerFactory loggerFactory;
         private readonly WebApplicationFactory<Startup> webApplicationFactory;
@@ -31,20 +35,7 @@ namespace EMBC.Tests.Suppliers.API
         {
             this.loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
             this.webApplicationFactory = webApplicationFactory;
-
-            //var dynamicsOdataUri = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
-            //api = new CRMWebAPI(new CRMWebAPIConfig
-            //{
-            //    APIUrl = dynamicsOdataUri,
-            //    GetAccessToken = async (s) => await GetToken()
-            //});
         }
-
-        //private async Task<string> GetToken()
-        //{
-        //    var authHandler = webApplicationFactory.Services.GetRequiredService<ITokenProvider>();
-        //    return await authHandler.AcquireToken();
-        //}
 
         [Fact(Skip = skip)]
         public async Task CanQuery()
@@ -227,9 +218,9 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfCountries()
         {
-            var listProvider = new ListsProvider(api);
+            var gw = new DynamicsListsGateway(api);
 
-            var items = await listProvider.GetCountriesAsync();
+            var items = await gw.GetCountriesAsync();
 
             Assert.NotEmpty(items);
         }
@@ -237,11 +228,11 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfJurisdictions()
         {
-            var listProvider = new ListsProvider(api);
-            var canada = (await listProvider.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
-            var bc = (await listProvider.GetStateProvincesAsync(canada.era_countryid)).Single(c => c.era_code == "BC");
+            var gw = new DynamicsListsGateway(api);
+            var canada = (await gw.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
+            var bc = (await gw.GetStateProvincesAsync(canada.era_countryid)).Single(c => c.era_code == "BC");
 
-            var items = await listProvider.GetJurisdictionsAsync(bc.era_provinceterritoriesid);
+            var items = await gw.GetJurisdictionsAsync(bc.era_provinceterritoriesid);
 
             Assert.NotEmpty(items);
         }
@@ -249,10 +240,10 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfStateProvinces()
         {
-            var listProvider = new ListsProvider(api);
-            var canada = (await listProvider.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
+            var gw = new DynamicsListsGateway(api);
+            var canada = (await gw.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
 
-            var items = await listProvider.GetStateProvincesAsync(canada.era_countryid);
+            var items = await gw.GetStateProvincesAsync(canada.era_countryid);
 
             Assert.NotEmpty(items);
         }
@@ -260,9 +251,9 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfDistricts()
         {
-            var listProvider = new ListsProvider(api);
+            var gw = new DynamicsListsGateway(api);
 
-            var items = await listProvider.GetDistrictsAsync();
+            var items = await gw.GetDistrictsAsync();
 
             Assert.NotEmpty(items);
         }
@@ -270,9 +261,19 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfRegions()
         {
-            var listProvider = new ListsProvider(api);
+            var gw = new DynamicsListsGateway(api);
 
-            var items = await listProvider.GetRegionsAsync();
+            var items = await gw.GetRegionsAsync();
+
+            Assert.NotEmpty(items);
+        }
+
+        [Fact(Skip = skip)]
+        public async Task CanGetListOfSupports()
+        {
+            var gw = new DynamicsListsGateway(api);
+
+            var items = await gw.GetSupportsAsync();
 
             Assert.NotEmpty(items);
         }
