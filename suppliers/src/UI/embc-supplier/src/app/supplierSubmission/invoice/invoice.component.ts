@@ -2,12 +2,14 @@ import { Component, Input, ChangeDetectorRef, Output, EventEmitter, OnInit } fro
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import {  DateParserService } from 'src/app/service/dateParser.service';
+import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.service';
 
 @Component({
     selector: 'app-invoice',
     templateUrl: './invoice.component.html',
     styleUrls: ['./invoice.component.scss'],
     providers: [
+        {provide: NgbDateAdapter, useClass: CustomDateAdapterService},
         {provide: NgbDateParserFormatter, useClass: DateParserService}
     ]
 })

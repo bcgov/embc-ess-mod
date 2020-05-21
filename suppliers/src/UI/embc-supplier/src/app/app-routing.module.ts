@@ -15,6 +15,10 @@ const routes: Routes = [
   {
     path: 'review',
     loadChildren: () => import('./review/review.module').then(m => m.ReviewModule)
+  },
+  {
+    path: 'thankyou',
+    loadChildren: () => import('./reference/reference.module').then(m => m.ReferenceModule)
   }
 ];
 

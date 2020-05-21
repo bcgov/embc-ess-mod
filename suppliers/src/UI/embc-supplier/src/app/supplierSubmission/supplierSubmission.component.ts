@@ -29,6 +29,8 @@ export class SupplierSubmissionComponent implements OnInit {
     selectedRemitCountry: string;
     locatedInBC: string;
     postalPattern = "^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$";
+    defaultProvince = {code: 'BC', name: 'British Columbia'};
+    defaultCountry = {code: 'CAN', name: 'Canada'};
 
     searchCity = (text$: Observable<string>) =>
         text$.pipe(
@@ -65,6 +67,7 @@ export class SupplierSubmissionComponent implements OnInit {
             this.supplierForm.setValue(storedSupplierDetails);
         }
         this.cityList = this.supplierService.getCityList();
+        console.log(this.cityList);
         this.provinceList = this.supplierService.getProvinceList();
     }
 
@@ -83,9 +86,9 @@ export class SupplierSubmissionComponent implements OnInit {
                 address1: ['', Validators.required],
                 address2: [''],
                 city: ['', Validators.required],
-                province: ['British Columbia'],
+                province: [this.defaultProvince.name],
                 postalCode: ['', [Validators.required, Validators.pattern(this.postalPattern)]],
-                country: ['Canada'],
+                country: [this.defaultCountry.name],
             }),
 
             contactPerson: this.builder.group({
@@ -130,49 +133,52 @@ export class SupplierSubmissionComponent implements OnInit {
 
     toggleVisibility(event: any) {
         this.remitDiv = event.target.checked;
+        console.log(this.remitDiv)
         if (this.remitDiv) {
+            console.log("inside if")
             this.supplierForm.get('businessName').setValidators(Validators.required);
-            this.supplierForm.get('businessCountry').setValidators(Validators.required);
-            this.supplierForm.get('remittanceAddress.address1').setValidators(Validators.required);
-            this.supplierForm.get('remittanceAddress.city').setValidators(Validators.required);
+            // this.supplierForm.get('businessCountry').setValidators(Validators.required);
+            // this.supplierForm.get('remittanceAddress.address1').setValidators(Validators.required);
+            // this.supplierForm.get('remittanceAddress.city').setValidators(Validators.required);
         } else {
-            this.supplierForm.get('businessName').setValidators(null);
-            this.supplierForm.get('businessCountry').setValidators(null);
-            this.supplierForm.get('remittanceAddress.address1').setValidators(null);
-            this.supplierForm.get('remittanceAddress.city').setValidators(null);
-            this.supplierForm.get('remittanceAddress.state').setValidators(null);
-            this.supplierForm.get('remittanceAddress.province').setValidators(null);
-            this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
+            console.log("inside else")
+            this.supplierForm.get('businessName').clearValidators();
+            // this.supplierForm.get('businessCountry').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.address1').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.city').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.state').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.province').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
         }
-        this.supplierForm.get('remittanceAddress').updateValueAndValidity();
+        //this.supplierForm.get('remittanceAddress').updateValueAndValidity();
     }
 
     remitVisibility(selectedValue: any) {
         this.selectedRemitCountry = selectedValue;
-        if (selectedValue === 'Canada') {
-            this.supplierForm.get('remittanceAddress.state').setValidators(null);
-            this.supplierForm.get('remittanceAddress.province').setValidators(Validators.required);
-            this.supplierForm.get('remittanceAddress.postalCode').setValidators([Validators.required, Validators.pattern(this.postalPattern)]);
-            this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
-            this.addressDiv = false;
-        } else if (selectedValue === 'United States') {
-            this.supplierForm.get('remittanceAddress.state').setValidators(Validators.required);
-            this.supplierForm.get('remittanceAddress.province').setValidators(null);
-            this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.zipCode').setValidators(Validators.required);
-            this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
-            this.addressDiv = true
-        } else {
-            this.supplierForm.get('remittanceAddress.state').setValidators(null);
-            this.supplierForm.get('remittanceAddress.province').setValidators(null);
-            this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.otherCode').setValidators(Validators.required);
-        }
-        this.supplierForm.get('remittanceAddress').updateValueAndValidity();
+        // if (selectedValue === 'Canada' && selectedValue !== 'Country') {
+        //     this.supplierForm.get('remittanceAddress.state').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.province').setValidators(Validators.required);
+        //     this.supplierForm.get('remittanceAddress.postalCode').setValidators([Validators.required, Validators.pattern(this.postalPattern)]);
+        //     this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
+        //     this.addressDiv = false;
+        // } else if (selectedValue === 'United States' && selectedValue !== 'Country') {
+        //     this.supplierForm.get('remittanceAddress.state').setValidators(Validators.required);
+        //     this.supplierForm.get('remittanceAddress.province').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.zipCode').setValidators(Validators.required);
+        //     this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
+        //     this.addressDiv = true
+        // } else if(selectedValue !== 'Country') {
+        //     this.supplierForm.get('remittanceAddress.state').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.province').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.otherCode').setValidators(Validators.required);
+        // }
+        //this.supplierForm.get('remittanceAddress').updateValueAndValidity();
     }
 
     locatedChange(event: any) {
@@ -206,9 +212,11 @@ export class SupplierSubmissionComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.supplierForm.value)
+        this.supplierForm.get('address.province').setValue(this.defaultProvince);
+        this.supplierForm.get('address.country').setValue(this.defaultCountry);
         let supplierDetails = this.supplierForm.value;
         this.supplierService.setSupplierDetails(supplierDetails);
+        this.supplierService.createPayload(supplierDetails);
         this.router.navigate(['/review']);
     }
 
