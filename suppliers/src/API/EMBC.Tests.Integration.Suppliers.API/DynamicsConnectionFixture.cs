@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API;
-using EMBC.Suppliers.API.DynamicsModule;
+using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xrm.Tools.WebAPI;
-using Xrm.Tools.WebAPI.Requests;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,44 +19,43 @@ namespace EMBC.Tests.Suppliers.API
 {
     public class DynamicsConnectionFixture : IClassFixture<WebApplicationFactory<Startup>>
     {
+        //set to null to run tests in this class, requires to be on VPN and Dynamics params configured in secrets.xml
+        private const string skip = "integration tests";
+
         private readonly ILoggerFactory loggerFactory;
         private readonly WebApplicationFactory<Startup> webApplicationFactory;
         private IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
+        private CRMWebAPI api => webApplicationFactory.Services.GetRequiredService<CRMWebAPI>();
 
         public DynamicsConnectionFixture(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
             this.loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
             this.webApplicationFactory = webApplicationFactory;
+
+            //var dynamicsOdataUri = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
+            //api = new CRMWebAPI(new CRMWebAPIConfig
+            //{
+            //    APIUrl = dynamicsOdataUri,
+            //    GetAccessToken = async (s) => await GetToken()
+            //});
         }
 
-        private async Task<string> GetToken()
-        {
-            var authHandler = webApplicationFactory.Services.GetRequiredService<ITokenProvider>();
-            return await authHandler.AcquireToken();
-        }
+        //private async Task<string> GetToken()
+        //{
+        //    var authHandler = webApplicationFactory.Services.GetRequiredService<ITokenProvider>();
+        //    return await authHandler.AcquireToken();
+        //}
 
-        [Fact(Skip = "integration test")]
+        [Fact(Skip = skip)]
         public async Task CanQuery()
         {
-            var dynamicsOdataUri = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
-            var api = new CRMWebAPI(new CRMWebAPIConfig
-            {
-                APIUrl = dynamicsOdataUri,
-                GetAccessToken = async (s) => await GetToken()
-            });
             var result = await api.GetList("era_supports");
             Assert.True(result.List.Count > 0);
         }
 
-        [Fact(Skip = "integration test")]
+        [Fact(Skip = skip)]
         public async Task CanPost()
         {
-            var dynamicsOdataUri = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
-            var api = new CRMWebAPI(new CRMWebAPIConfig
-            {
-                APIUrl = dynamicsOdataUri,
-                GetAccessToken = async (s) => await GetToken()
-            });
             var result = await api.ExecuteAction("era_CreateSupplierContact", new
             {
                 firstname = "first",
@@ -67,15 +66,9 @@ namespace EMBC.Tests.Suppliers.API
             Assert.NotNull(result);
         }
 
-        [Fact(Skip = "integration test")]
+        [Fact(Skip = skip)]
         public async Task CanSubmitUnauthInvoices()
         {
-            var dynamicsOdataUri = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
-            var api = new CRMWebAPI(new CRMWebAPIConfig
-            {
-                APIUrl = dynamicsOdataUri,
-                GetAccessToken = async (s) => await GetToken()
-            });
             var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>());
 
             var referenceNumber = $"reftestinv_{DateTime.Now.Ticks}";
@@ -149,15 +142,9 @@ namespace EMBC.Tests.Suppliers.API
             }));
         }
 
-        [Fact(Skip = "integration test")]
+        [Fact(Skip = skip)]
         public async Task CanSubmitUnauthReceipts()
         {
-            var dynamicsOdataUri = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
-            var api = new CRMWebAPI(new CRMWebAPIConfig
-            {
-                APIUrl = dynamicsOdataUri,
-                GetAccessToken = async (s) => await GetToken()
-            });
             var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>());
 
             var referenceNumber = $"reftestrec_{DateTime.Now.Ticks}";
@@ -235,6 +222,59 @@ namespace EMBC.Tests.Suppliers.API
                     }
                 }
             }));
+        }
+
+        [Fact(Skip = skip)]
+        public async Task CanGetListOfCountries()
+        {
+            var listProvider = new ListsProvider(api);
+
+            var items = await listProvider.GetCountriesAsync();
+
+            Assert.NotEmpty(items);
+        }
+
+        [Fact(Skip = skip)]
+        public async Task CanGetListOfJurisdictions()
+        {
+            var listProvider = new ListsProvider(api);
+            var canada = (await listProvider.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
+            var bc = (await listProvider.GetStateProvincesAsync(canada.era_countryid)).Single(c => c.era_code == "BC");
+
+            var items = await listProvider.GetJurisdictionsAsync(bc.era_provinceterritoriesid);
+
+            Assert.NotEmpty(items);
+        }
+
+        [Fact(Skip = skip)]
+        public async Task CanGetListOfStateProvinces()
+        {
+            var listProvider = new ListsProvider(api);
+            var canada = (await listProvider.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
+
+            var items = await listProvider.GetStateProvincesAsync(canada.era_countryid);
+
+            Assert.NotEmpty(items);
+        }
+
+        [Fact(Skip = skip)]
+        public async Task CanGetListOfDistricts()
+        {
+            var listProvider = new ListsProvider(api);
+
+            var items = await listProvider.GetDistrictsAsync();
+
+            Assert.NotEmpty(items);
+        }
+
+        [Fact(Skip = skip)]
+        public async Task CanGetListOfRegions()
+        {
+            var listProvider = new ListsProvider(api);
+
+            var items = await listProvider.GetRegionsAsync();
+
+            Assert.NotEmpty(items);
         }
     }
 }

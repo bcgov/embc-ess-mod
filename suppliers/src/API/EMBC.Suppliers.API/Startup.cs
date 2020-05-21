@@ -66,6 +66,8 @@ namespace EMBC.Suppliers.API
             services.AddTransient<IStateProvincesListProvider, CsvLoader>();
             services.AddTransient<IRegionsListProvider, CsvLoader>();
             services.AddTransient<ICommunitiesListProvider, CsvLoader>();
+            services.AddTransient<IJurisdictionsListProvider, CsvLoader>();
+            services.AddTransient<IDistrictsListProvider, CsvLoader>();
             services.AddSingleton<IFileSystem, FileSystem>();
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddADFSTokenProvider();

@@ -27,7 +27,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
 
         public async Task<string> SaveAsync(Submission submission)
         {
-            var referenceNumber = SubmissionReferenceNumberGenerator.CreateNew();
+            var referenceNumber = ReferenceNumberGenerator.CreateNew();
             var filePath = fileSystem.Path.Combine(submissionStoragePath, $"submission_{referenceNumber}.json");
 
             using var fs = fileSystem.File.OpenWrite(filePath);
