@@ -35,20 +35,7 @@ namespace EMBC.Tests.Suppliers.API
         {
             this.loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
             this.webApplicationFactory = webApplicationFactory;
-
-            //var dynamicsOdataUri = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
-            //api = new CRMWebAPI(new CRMWebAPIConfig
-            //{
-            //    APIUrl = dynamicsOdataUri,
-            //    GetAccessToken = async (s) => await GetToken()
-            //});
         }
-
-        //private async Task<string> GetToken()
-        //{
-        //    var authHandler = webApplicationFactory.Services.GetRequiredService<ITokenProvider>();
-        //    return await authHandler.AcquireToken();
-        //}
 
         [Fact(Skip = skip)]
         public async Task CanQuery()

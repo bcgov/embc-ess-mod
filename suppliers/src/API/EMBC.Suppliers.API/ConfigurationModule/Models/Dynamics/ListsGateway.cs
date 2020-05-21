@@ -6,7 +6,7 @@ using Xrm.Tools.WebAPI.Requests;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
-    public class ListsGateway
+    public class ListsGateway : IListsGateway
     {
         private readonly CRMWebAPI api;
 

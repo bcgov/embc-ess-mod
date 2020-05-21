@@ -7,7 +7,7 @@ using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models
 {
-    public class CsvLoader :
+    public class CsvListProvider :
         ICountriesListProvider,
         IStateProvincesListProvider,
         IRegionsListProvider,
@@ -15,7 +15,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         IJurisdictionsListProvider,
         IDistrictsListProvider
     {
-        public CsvLoader(IFileSystem fileSystem)
+        public CsvListProvider(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
         }
@@ -35,7 +35,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
                     Active = bool.Parse(values[4]),
                 })
                 .Where(c => c.Active && (!types.Any() || types.Any(t => t.Equals(c.Type, StringComparison.OrdinalIgnoreCase))))
-                .Select(c => new Jurisdiction { Code = c.Code, Name = c.Name, Type = c.Type, DistrictCode = c.District, CountryCode = countryCode, StateProvinceCode = stateProvinceCode });
+                .Select(c => new Jurisdiction { Code = c.Code, Name = c.Name, Type = c.Type, CountryCode = countryCode, StateProvinceCode = stateProvinceCode });
         }
 
         public async Task<IEnumerable<Community>> GetCommunitiesAsync(string stateProvinceCode, string countryCode)
