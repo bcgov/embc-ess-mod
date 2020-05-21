@@ -9,6 +9,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ResponseCache(Duration = 60 * 5)]
     public class ListsController : ControllerBase
     {
         private readonly ICommandBus commandBus;
