@@ -36,5 +36,11 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
         {
             return Ok(await commandBus.Invoke<IEnumerable<Jurisdiction>>(new JurisdictionsQueryCommand(types, countryCode, stateProvinceCode)));
         }
+
+        [HttpGet("supports")]
+        public async Task<ActionResult<IEnumerable<Support>>> GetSupports()
+        {
+            return Ok(await commandBus.Invoke<IEnumerable<Support>>(new SupportsQueryCommand()));
+        }
     }
 }

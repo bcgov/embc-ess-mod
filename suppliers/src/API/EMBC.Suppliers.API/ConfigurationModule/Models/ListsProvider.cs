@@ -10,7 +10,8 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
     public class ListsProvider :
         ICountriesListProvider,
         IStateProvincesListProvider,
-        IJurisdictionsListProvider
+        IJurisdictionsListProvider,
+        ISupportsListProvider
     {
         private readonly ICachedListsProvider cache;
 
@@ -52,6 +53,12 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
             return (await cache.GetStateProvincesAsync())
                 .Where(sp => sp._era_relatedcountry_value == country.era_countryid)
                 .Select(sp => new StateProvince { Code = sp.era_code, Name = sp.era_name, CountryCode = countryCode });
+        }
+
+        public async Task<IEnumerable<Support>> GetSupportsAsync()
+        {
+            var supports = await cache.GetSupportsAsync();
+            return supports.Select(c => new Support { Code = c.era_name, Name = c.era_name });
         }
     }
 }
