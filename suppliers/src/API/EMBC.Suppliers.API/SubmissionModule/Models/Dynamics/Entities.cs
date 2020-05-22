@@ -51,6 +51,9 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         [JsonProperty("era_Province@odata.bind")]
         public string era_province { get; set; }
 
+        [JsonProperty("era_RelatedJurisdiction@odata.bind")]
+        public string era_RelatedJurisdiction { get; internal set; }
+
 #pragma warning restore CA1707 // Identifiers should not contain underscores
     }
 
