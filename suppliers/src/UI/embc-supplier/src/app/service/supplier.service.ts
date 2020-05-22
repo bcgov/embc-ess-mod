@@ -6,7 +6,7 @@ import { Invoices } from '../model/invoices';
 import { LineItems } from '../model/lineItems';
 import { Referrals } from '../model/referrals';
 import { DataService } from './data.service';
-import { Country } from '../model/country';
+import { Country, SupportItems } from '../model/country';
 import { Receipts } from '../model/receipts';
 
 @Injectable({
@@ -21,6 +21,7 @@ export class SupplierService extends DataService{
     private stateList: Province[];
     private payLoad: Suppliers;
     private referenceNumber: string;
+    private supportItems: SupportItems[];
 
     setSupplierDetails(supplierDetails: any) {
         this.supplierDetails = supplierDetails;
@@ -62,6 +63,14 @@ export class SupplierService extends DataService{
         return this.provinceList;
     }
 
+    setSupportItems(supportItems: SupportItems[]) {
+        this.supportItems = supportItems;
+    }
+
+    getSupportItems() {
+        return this.supportItems;
+    }
+
     private setPayload(payLoad: Suppliers) {
         this.payLoad = payLoad
     }
@@ -96,9 +105,9 @@ export class SupplierService extends DataService{
         let lineItems = this.createLineItemsRecord(supplierDetails);
         let attachments = this.createAttachmentsRecord(supplierDetails);
         let referrals = this.createReferralsRecord(supplierDetails);
-        let suppliers: Suppliers = new Suppliers(supplierInformationArr, [], invoices, referrals, lineItems, [attachments]);
+        let receipts = this.createReceiptslRecord(supplierDetails);
+        let suppliers: Suppliers = new Suppliers(supplierInformationArr, receipts, invoices, referrals, lineItems, attachments);
         this.setPayload(suppliers);
-         console.log(suppliers);
          console.log(JSON.stringify(suppliers));
     }
 
@@ -126,7 +135,7 @@ export class SupplierService extends DataService{
 
     createSupplierRemitInformationRecord(supplierDetails: any, contact: ContactPerson, address: Address, remit: boolean) {
         return new SupplierInformation(supplierDetails.gstNumber, supplierDetails.supplierName, supplierDetails.supplierLegalName, 
-            supplierDetails.location, null, contact, remit);
+            supplierDetails.location, address, contact, remit);
     }
     
     createInvoiceRecord(supplierDetails: any){
@@ -141,7 +150,7 @@ export class SupplierService extends DataService{
     createReceiptslRecord(supplierDetails: any){
         let receipts = [];
         supplierDetails.receipts.forEach(element => {
-            receipts.push(new Receipts(null, '2020-01-30', element.receiptTotalGst, element.receiptTotalAmount, element.referralNumber))
+            receipts.push(new Receipts(element.receiptNumber, '2020-01-30', element.receiptTotalGst, element.receiptTotalAmount, element.referralNumber))
         });
       //  return new Invoices('string', '2020-01-30', 10, 300);
       return receipts;
@@ -154,6 +163,13 @@ export class SupplierService extends DataService{
             invoice.referrals.forEach(ref => {
                 ref.referralRows.forEach(element => {
                     lineItems.push(new LineItems(element.supportProvided, element.description, element.gst, element.amount, null, ref.referralNumber));
+                })
+            })
+        });
+        supplierDetails.receipts.forEach(receipt => {
+            receipt.referrals.forEach(ref => {
+                ref.referralRows.forEach(element => {
+                    lineItems.push(new LineItems(element.supportProvided, element.description, element.gst, element.amount, receipt.receiptNumber, receipt.referralNumber));
                 })
             })
         });
@@ -190,7 +206,7 @@ export class SupplierService extends DataService{
         }
 
         //return attachments;
-        return new Attachment("content", "test", "name", "string", "string", 1);
+        return [];
     }
 
     createReferralsRecord(supplierDetails: any) {
@@ -198,6 +214,11 @@ export class SupplierService extends DataService{
         supplierDetails.invoices.forEach(invoice => {
             invoice.referrals.forEach(element => {
                 referrals.push(new Referrals(element.referralNumber, element.totalGst, element.totalAmount, invoice.invoiceNumber));
+            })
+        });
+        supplierDetails.receipts.forEach(receipt => {
+            receipt.referrals.forEach(element => {
+                referrals.push(new Referrals(receipt.referralNumber, element.totalGst, element.totalAmount, null));
             })
         });
       return referrals;

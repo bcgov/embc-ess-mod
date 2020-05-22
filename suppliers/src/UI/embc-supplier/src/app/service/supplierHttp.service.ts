@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { Community } from '../model/community';
 import { catchError } from 'rxjs/operators';
 import { Suppliers } from '../model/suppliers';
-import { Country } from '../model/country';
+import { Country, SupportItems } from '../model/country';
 
 @Injectable({
   providedIn: 'root',
@@ -54,6 +54,15 @@ export class SupplierHttpService {
           return this.handleError(error);
         })
       ); 
+  }
+
+  getListOfSupportItems() {
+    return this.http
+      .get<SupportItems[]>(`/api/Lists/supports`, { headers: this.headers })
+      .pipe(
+        catchError(error => {
+          return this.handleError(error);
+        }));
   }
 
   submitForm(suppliers: Suppliers) {

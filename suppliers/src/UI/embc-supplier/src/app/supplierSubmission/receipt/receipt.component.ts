@@ -57,6 +57,7 @@ export class ReceiptComponent implements OnInit{
     createReferralFormArray() {
         return this.builder.group({
              referralDate : ['', Validators.required],
+             receiptNumber: [''],
              referralRows: this.builder.array([
             ]),
             totalGst: [''],

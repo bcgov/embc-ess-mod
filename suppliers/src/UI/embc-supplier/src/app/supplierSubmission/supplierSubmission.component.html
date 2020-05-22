@@ -58,7 +58,7 @@
 
             <div class="row">
               <div class="form-group col-lg-5">
-                <label for="supplierName">Supplier Legal Name</label>
+                <label for="supplierName">Supplier Name</label>
                 <input type="text" class="form-control form-control-lg" formControlName="supplierName"
                   id="supplierName">
               </div>
@@ -87,7 +87,7 @@
 
             <br>
             <div formGroupName="address">
-              <p style="font-weight: bold">Address</p>
+              <p style="font-weight: bold">Supplier Address</p>
 
               <div class="row">
                 <div class="form-group col-lg-8">
@@ -115,7 +115,8 @@
                 <div class="form-group col-lg-4">
                   <label class="requiredField" for="city">City</label>
                   <input id="city" type="text" class="form-control form-control-lg" formControlName="city"
-                    [ngbTypeahead]="searchCity" [resultFormatter]="cityFormatter" [inputFormatter]="cityFormatter" required />
+                    [ngbTypeahead]="searchCity" [resultFormatter]="cityFormatter" [inputFormatter]="cityFormatter"
+                    required />
                   <div
                     *ngIf="control.address['controls'].city?.invalid && (control.address['controls'].city?.dirty || control.address['controls'].city?.touched)"
                     class="text-danger">
@@ -226,16 +227,9 @@
 
               <div class="row">
                 <div class="form-group col-lg-4">
-                  <label class="requiredField" for="fax">Fax</label>
+                  <label for="fax">Fax</label>
                   <input type="text" class="form-control form-control-lg" appPhoneMask formControlName="fax" id="fax"
                     placeholder="999-999-9999">
-                  <div
-                    *ngIf="control.contactPerson['controls'].fax?.invalid && (control.contactPerson['controls'].fax?.dirty || control.contactPerson['controls'].fax?.touched)"
-                    class="text-danger">
-                    <div *ngIf="control.contactPerson['controls'].fax?.errors.required">
-                      Fax is required
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -245,7 +239,7 @@
                 <input class="form-check-input" type="checkbox" (change)="toggleVisibility($event)"
                   formControlName="remitToOtherBusiness">
                 <label class="form-check-label" for="remitToOtherBusiness">
-                  Check this box if we must remit payment to a business other than the one listed above
+                  <b>Check this box if we must remit payment to a business other than the one listed above.</b>
                 </label>
               </div>
 
@@ -253,7 +247,7 @@
                 <p>Please enter the legal business name and address of the business we need to remit payment to.</p>
                 <div class="row">
                   <div class="form-group col-lg-6">
-                    <label class="requiredField" for="businessName">Legal Business Name</label>
+                    <label class="requiredField" for="businessName"><b>Legal Business Name</b></label>
                     <input type="text" class="form-control form-control-lg" id="businessName"
                       formControlName="businessName">
                     <div
@@ -268,11 +262,11 @@
 
                 <div class="row">
                   <div class="form-group col-lg-6">
-                    <label class="requiredField" for="businessCountry">What Country Is This Supplier Located
+                    <label class="requiredField" for="businessCountry"><b>What Country Is This Supplier Located</b>
                       In?</label>
                     <select class="form-control form-control-lg" formControlName="businessCountry"
                       (change)="remitVisibility($event.target.value)">
-                      <option selected>Country</option>
+                      <option selected>Country/Region</option>
                       <option *ngFor="let country of countryList">{{country.name}}</option>
                     </select>
                     <div
@@ -286,7 +280,7 @@
                 </div>
 
                 <div *ngIf="selectedRemitCountry === 'Canada'">
-                  Is This Supplier Located In BC?
+                  Is Supplier Located in BC?
                   <div class="form-group form-check">
                     <input class="form-check-input" formControlName="supplierBC" type="radio" id="yes" value="yes"
                       (change)="locatedChange($event)">
@@ -357,7 +351,8 @@
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="state">State</label>
                       <input id="state" type="text" class="form-control form-control-lg" formControlName="state"
-                        [ngbTypeahead]="searchState" [resultFormatter]="stateFormatter" [inputFormatter]="stateFormatter"/>
+                        [ngbTypeahead]="searchState" [resultFormatter]="stateFormatter"
+                        [inputFormatter]="stateFormatter" />
                       <div
                         *ngIf="control.remittanceAddress['controls'].state?.invalid && (control.remittanceAddress['controls'].state?.dirty || control.remittanceAddress['controls'].state?.touched)"
                         class="text-danger">
@@ -372,7 +367,8 @@
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="province">Province</label>
                       <input id="province" type="text" class="form-control form-control-lg" formControlName="province"
-                        [ngbTypeahead]="searchProvince" [resultFormatter]="cityFormatter" [inputFormatter]="cityFormatter"/>
+                        [ngbTypeahead]="searchProvince" [resultFormatter]="cityFormatter"
+                        [inputFormatter]="cityFormatter" />
                       <div
                         *ngIf="control.remittanceAddress['controls'].province?.invalid && (control.remittanceAddress['controls'].province?.dirty || control.remittanceAddress['controls'].province?.touched)"
                         class="text-danger">
@@ -401,7 +397,7 @@ Postal Code must in the correct format of NNNNN
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="postalCode">Postal Code</label>
                       <input type="text" class="form-control form-control-lg" formControlName="postalCode"
-                        pattern="postalPattern" id="postalCode">
+                         id="postalCode">
                       <div
                         *ngIf="control.remittanceAddress['controls'].postalCode?.invalid && (control.remittanceAddress['controls'].postalCode?.dirty || control.remittanceAddress['controls'].postalCode?.touched)"
                         class="text-danger">
@@ -418,8 +414,7 @@ Postal Code must in the correct format of NNNNN
                   <div *ngIf="selectedRemitCountry === 'United States of America'" class="row">
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="zipCode">Zip Code</label>
-                      <input type="text" class="form-control form-control-lg" formControlName="zipCode"
-                        id="zipCode">
+                      <input type="text" class="form-control form-control-lg" formControlName="zipCode" id="zipCode">
                       <div
                         *ngIf="control.remittanceAddress['controls'].zipCode?.invalid && (control.remittanceAddress['controls'].zipCode?.dirty || control.remittanceAddress['controls'].zipCode?.touched)"
                         class="text-danger">
@@ -506,7 +501,7 @@ The system must provide a warning message if a user selects to delete an Invoice
 
                 <div formArrayName="invoices">
                   <div *ngFor="let invoic of invoices.controls; let i = index">
-                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i" [refArray] = "refArray"
+                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i" [refArray]="refArray"
                       (indexToRemove)="deleteInvoice($event)"></app-invoice>
                   </div>
                 </div>
@@ -576,18 +571,18 @@ The system must provide a warning message if a user selects to delete an Invoice
           <div class="card-body">
             <h3 class="card-title"><i class="far fa-check-circle" style="font-size: 25px;"></i>&nbsp;Supplier Invoice
               Checklist</h3>
-            <p class="card-text">The following checklist is provided for your convenience to ensure your invoice
-              documentation is
-              complete and accurate prior to submitting to Emergency Management BC (EMBC) for payment.
+            <p class="card-text">The following checklist is provided for your convenience to ensure your invoice &
+              receipt documentation is complete and accurate prior to submitting to Emergency Management BC (EMBC) for
+              payment.
             </p>
             <ul>
               <li>Charges for goods and services, including all applicable taxes, must not exceed the
                 Emergency
                 Support Services rates.
               </li>
-              <li>Goods or services rendered only to those people listed on the Referral.</li>
+              <li>Goods or services are rendered only to those listed on the referral.</li>
               <li>Goods or services rendered are eligible items as listed on the Referral.</li>
-              <li>Any exceptions have been authorized by Emergency Management BC & documented.</li>
+              <li>Exceptions or cost overages must be authorized by EMBC and supporting documentation must be attached to the submission.</li>
               <li>Make copies of invoices and receipts for your records.</li>
             </ul>
           </div>

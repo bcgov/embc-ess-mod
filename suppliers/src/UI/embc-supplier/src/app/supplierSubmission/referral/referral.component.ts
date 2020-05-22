@@ -18,7 +18,7 @@ export class ReferralComponent implements OnInit {
     @Input() referralForm: FormGroup
     @Input() index: number;
     @Input() component: string;
-    supportList: any = ['Food - Groceries', 'Food - Restaurant Meals', 'Lodging - Hotel', 'Lodging - Group Lodging', 'Lodging - Billeting', 'Transportation - Taxi', 'Transportation - Other', 'Clothing', 'Incidentals'];
+    supportList: any ;
     @Output() referralToRemove = new EventEmitter<number>();
     @Input() rowArr: any;
     @Input() recArr: any;
@@ -43,6 +43,8 @@ export class ReferralComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.supportList = this.supplierService.getSupportItems();
+        this.referralForm.get('receiptNumber').setValue(this.index);
         console.log(this.rowArr)
             if(this.rowArr !== [] && this.rowArr !== undefined) {
                 for(let i=0; i< this.rowArr.length; i++) {
@@ -67,6 +69,7 @@ export class ReferralComponent implements OnInit {
 
                 this.referralRows.push(this.createRowForm());
             }
+            this.referralRows.push(this.createRowForm());
             this.onChanges();
     }
 

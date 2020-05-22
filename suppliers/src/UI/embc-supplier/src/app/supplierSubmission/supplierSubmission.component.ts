@@ -106,7 +106,7 @@ export class SupplierSubmissionComponent implements OnInit {
                 lastName: ['', Validators.required],
                 email: ['', Validators.email],
                 phone: ['', Validators.required],
-                fax: ['', Validators.required],
+                fax: [''],
             }),
 
             remittanceAddress: this.builder.group({
