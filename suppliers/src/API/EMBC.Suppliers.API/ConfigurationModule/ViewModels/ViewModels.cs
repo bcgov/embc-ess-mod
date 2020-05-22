@@ -47,4 +47,10 @@
         public string StateProvinceCode { get; set; }
         public string CountryCode { get; set; }
     }
+
+    public class Support
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+    }
 }
