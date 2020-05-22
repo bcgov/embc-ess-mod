@@ -21,6 +21,14 @@ export class AppComponent{
 
     this.supplierHttp.getListOfProvinces().subscribe((data: any[]) => {
       this.supplierService.setProvinceList(data);
-    })
+    });
+
+    this.supplierHttp.getListOfCountries().subscribe((data: any[]) => {
+      this.supplierService.setCountryList(data);
+    });
+
+    this.supplierHttp.getListOfStates().subscribe((data: any[]) => {
+      this.supplierService.setStateList(data);
+    });
   }
 }

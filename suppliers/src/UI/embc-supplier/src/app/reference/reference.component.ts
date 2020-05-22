@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class ReferenceComponent implements OnInit{
 
-    referenceNumber: string;
+    referenceNumber: any;
    
     constructor(public supplierService: SupplierService, private router: Router) { }
 

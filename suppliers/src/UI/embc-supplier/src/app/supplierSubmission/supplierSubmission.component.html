@@ -272,8 +272,8 @@
                       In?</label>
                     <select class="form-control form-control-lg" formControlName="businessCountry"
                       (change)="remitVisibility($event.target.value)">
-                      <option selected>Country...</option>
-                      <option *ngFor="let country of countryList">{{country}}</option>
+                      <option selected>Country</option>
+                      <option *ngFor="let country of countryList">{{country.name}}</option>
                     </select>
                     <div
                       *ngIf="control.businessCountry?.invalid && (control.businessCountry?.dirty || control.businessCountry?.touched)"
@@ -345,7 +345,7 @@
                   </div>
 
 
-                  <div *ngIf="selectedRemitCountry !== 'United States' && selectedRemitCountry !== 'Canada'"
+                  <div *ngIf="selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada'"
                     class="row">
                     <div class="form-group col-lg-4">
                       <label for="region">Region/Province/State</label>
@@ -353,11 +353,11 @@
                     </div>
                   </div>
 
-                  <div *ngIf="selectedRemitCountry === 'United States'" class="row">
+                  <div *ngIf="selectedRemitCountry === 'United States of America'" class="row">
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="state">State</label>
                       <input id="state" type="text" class="form-control form-control-lg" formControlName="state"
-                        [ngbTypeahead]="searchState" />
+                        [ngbTypeahead]="searchState" [resultFormatter]="stateFormatter" [inputFormatter]="stateFormatter"/>
                       <div
                         *ngIf="control.remittanceAddress['controls'].state?.invalid && (control.remittanceAddress['controls'].state?.dirty || control.remittanceAddress['controls'].state?.touched)"
                         class="text-danger">
@@ -415,7 +415,7 @@ Postal Code must in the correct format of NNNNN
                     </div>
                   </div>
 
-                  <div *ngIf="selectedRemitCountry === 'United States'" class="row">
+                  <div *ngIf="selectedRemitCountry === 'United States of America'" class="row">
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="zipCode">Zip Code</label>
                       <input type="text" class="form-control form-control-lg" formControlName="zipCode"
@@ -433,7 +433,7 @@ Postal Code must in the correct format of NNNNN
                     </div>
                   </div>
 
-                  <div *ngIf="selectedRemitCountry !== 'United States' && selectedRemitCountry !== 'Canada'"
+                  <div *ngIf="selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada'"
                     class="row">
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="otherCode">Postal/Zip Code</label>
@@ -506,7 +506,7 @@ The system must provide a warning message if a user selects to delete an Invoice
 
                 <div formArrayName="invoices">
                   <div *ngFor="let invoic of invoices.controls; let i = index">
-                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i"
+                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i" [refArray] = "refArray"
                       (indexToRemove)="deleteInvoice($event)"></app-invoice>
                   </div>
                 </div>

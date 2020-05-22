@@ -79,7 +79,7 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
       <div formArrayName="referrals">
         <div *ngFor="let referral of referrals.controls; let j = index">
           <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j" [component]="component"
-            (referralToRemove)="removeReferral($event)"></app-referral>
+            (referralToRemove)="removeReferral($event)" [rowArr]="rowArr"></app-referral>
         </div>
       </div>
 
