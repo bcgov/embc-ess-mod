@@ -105,7 +105,7 @@
                     <h3>Attachments</h3>
                 </div>
                 <div *ngFor="let invoice of supplier?.invoices">
-                    <div class="attach-box" style="padding: 7px;">
+                    <div *ngIf="invoice.invoiceAttachments.length" class="attach-box" style="padding: 7px;">
                         <p><b>Invoice {{invoice.invoiceNumber }}</b></p>
                         <div *ngFor="let attach of invoice.invoiceAttachments">
                             <p>{{attach.fileName}}</p>
@@ -188,7 +188,7 @@
                     <h3>Attachments</h3>
                 </div>
                 <div *ngFor="let receipt of supplier?.receipts">
-                    <div class="box" style="padding: 7px;">
+                    <div *ngIf="receipt.receiptAttachments.length >0" class="box" style="padding: 7px;">
                         <p><b>Referral {{receipt.referralNumber }}</b></p>
                         <div *ngFor="let attach of receipt.receiptAttachments">
                             <p>{{attach.fileName}}</p>
