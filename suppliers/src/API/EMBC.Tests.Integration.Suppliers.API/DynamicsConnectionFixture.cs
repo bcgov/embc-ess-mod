@@ -20,31 +20,23 @@ namespace EMBC.Tests.Suppliers.API
     public class DynamicsConnectionFixture : IClassFixture<WebApplicationFactory<Startup>>
     {
         //set to null to run tests in this class, requires to be on VPN and Dynamics params configured in secrets.xml
+#if RELEASE
         private const string skip = "integration tests";
+#else
+        private const string skip = null;
+#endif
 
         private readonly ILoggerFactory loggerFactory;
         private readonly WebApplicationFactory<Startup> webApplicationFactory;
         private IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
         private CRMWebAPI api => webApplicationFactory.Services.GetRequiredService<CRMWebAPI>();
+        private ICachedListsProvider cachedListsProvider => webApplicationFactory.Services.GetRequiredService<ICachedListsProvider>();
 
         public DynamicsConnectionFixture(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
             this.loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
             this.webApplicationFactory = webApplicationFactory;
-
-            //var dynamicsOdataUri = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
-            //api = new CRMWebAPI(new CRMWebAPIConfig
-            //{
-            //    APIUrl = dynamicsOdataUri,
-            //    GetAccessToken = async (s) => await GetToken()
-            //});
         }
-
-        //private async Task<string> GetToken()
-        //{
-        //    var authHandler = webApplicationFactory.Services.GetRequiredService<ITokenProvider>();
-        //    return await authHandler.AcquireToken();
-        //}
 
         [Fact(Skip = skip)]
         public async Task CanQuery()
@@ -53,50 +45,52 @@ namespace EMBC.Tests.Suppliers.API
             Assert.True(result.List.Count > 0);
         }
 
-        [Fact(Skip = skip)]
-        public async Task CanPost()
-        {
-            var result = await api.ExecuteAction("era_CreateSupplierContact", new
-            {
-                firstname = "first",
-                lastname = "last",
-                contactnumber = "number",
-                email = "first.last"
-            });
-            Assert.NotNull(result);
-        }
+        //[Fact(Skip = skip)]
+        //public async Task CanPost()
+        //{
+        //    var result = await api.ExecuteAction("era_CreateSupplierContact", new
+        //    {
+        //        firstname = "first",
+        //        lastname = "last",
+        //        contactnumber = "number",
+        //        email = "first.last"
+        //    });
+        //    Assert.NotNull(result);
+        //}
 
         [Fact(Skip = skip)]
         public async Task CanSubmitUnauthInvoices()
         {
-            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>());
+            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), cachedListsProvider);
 
             var referenceNumber = $"reftestinv_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission
             {
-                Suppliers = new[]{
-                    new SupplierInformation{Name="name",
-                    LegalBusinessName = "legal name",
-                    ForRemittance = true,
-                    GstNumber = "gstnumber",
-                    Location = "location",
-                     Address = new Address
-                     {
-                         AddressLine1 = "addressline1",
-                         AddressLine2 = "addressline2",
-                         City = "city",
-                         Country = "country",
-                         PostalCode ="postalcode",
-                         StateProvince = "stateprovince"
-                     },
-                     ContactPerson = new Contact
-                     {
-                         FirstName = "first",
-                         LastName  = "last",
-                         Email="email",
-                         Fax = "fax",
-                         Phone = "phone"
-                     }
+                Suppliers = new[]
+                {
+                    new SupplierInformation{
+                        Name="name",
+                        LegalBusinessName = "legal name",
+                        ForRemittance = true,
+                        GstNumber = "gstnumber",
+                        Location = "location",
+                        Address = new Address
+                        {
+                            AddressLine1 = "addressline1",
+                            AddressLine2 = "addressline2",
+                            CityCode = "226adfaf-9f97-ea11-b813-005056830319",
+                            CountryCode = "CAN",
+                            PostalCode ="postalcode",
+                            StateProvinceCode = "BC"
+                        },
+                        ContactPerson = new Contact
+                        {
+                            FirstName = "first",
+                            LastName  = "last",
+                            Email="email",
+                            Fax = "fax",
+                            Phone = "phone"
+                        }
                     }
                 },
                 Invoices = new[]
@@ -113,6 +107,7 @@ namespace EMBC.Tests.Suppliers.API
                 LineItems = new[]{
                     new LineItem
                     {
+                        SupportProvided = "Clothing",
                         ReferralNumber = "ref123",
                         GST = 5,
                         Amount = 10,
@@ -145,7 +140,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanSubmitUnauthReceipts()
         {
-            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>());
+            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), cachedListsProvider);
 
             var referenceNumber = $"reftestrec_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission
@@ -161,12 +156,12 @@ namespace EMBC.Tests.Suppliers.API
                         Location = "location",
                         Address = new Address
                         {
-                             AddressLine1 = "addressline1",
-                             AddressLine2 = "addressline2",
-                             City = "city",
-                             Country = "country",
-                             PostalCode ="postalcode",
-                             StateProvince = "stateprovince"
+                            AddressLine1 = "addressline1",
+                            AddressLine2 = "addressline2",
+                            CityCode = "226adfaf-9f97-ea11-b813-005056830319",
+                            CountryCode = "CAN",
+                            PostalCode ="postalcode",
+                            StateProvinceCode = "BC"
                         },
                         ContactPerson = new Contact
                         {
@@ -194,6 +189,7 @@ namespace EMBC.Tests.Suppliers.API
                 {
                     new LineItem
                     {
+                        SupportProvided = "Lodging - Hotel",
                         ReferralNumber = "ref123",
                         ReceiptNumber = "rec1",
                         GST = 5,
@@ -227,9 +223,9 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfCountries()
         {
-            var listProvider = new ListsProvider(api);
+            var gw = new DynamicsListsGateway(api);
 
-            var items = await listProvider.GetCountriesAsync();
+            var items = await gw.GetCountriesAsync();
 
             Assert.NotEmpty(items);
         }
@@ -237,11 +233,11 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfJurisdictions()
         {
-            var listProvider = new ListsProvider(api);
-            var canada = (await listProvider.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
-            var bc = (await listProvider.GetStateProvincesAsync(canada.era_countryid)).Single(c => c.era_code == "BC");
+            var gw = new DynamicsListsGateway(api);
+            var canada = (await gw.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
+            var bc = (await gw.GetStateProvincesAsync(canada.era_countryid)).Single(c => c.era_code == "BC");
 
-            var items = await listProvider.GetJurisdictionsAsync(bc.era_provinceterritoriesid);
+            var items = await gw.GetJurisdictionsAsync(bc.era_provinceterritoriesid);
 
             Assert.NotEmpty(items);
         }
@@ -249,10 +245,10 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfStateProvinces()
         {
-            var listProvider = new ListsProvider(api);
-            var canada = (await listProvider.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
+            var gw = new DynamicsListsGateway(api);
+            var canada = (await gw.GetCountriesAsync()).Single(c => c.era_countrycode == "CAN");
 
-            var items = await listProvider.GetStateProvincesAsync(canada.era_countryid);
+            var items = await gw.GetStateProvincesAsync(canada.era_countryid);
 
             Assert.NotEmpty(items);
         }
@@ -260,9 +256,9 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfDistricts()
         {
-            var listProvider = new ListsProvider(api);
+            var gw = new DynamicsListsGateway(api);
 
-            var items = await listProvider.GetDistrictsAsync();
+            var items = await gw.GetDistrictsAsync();
 
             Assert.NotEmpty(items);
         }
@@ -270,9 +266,19 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanGetListOfRegions()
         {
-            var listProvider = new ListsProvider(api);
+            var gw = new DynamicsListsGateway(api);
 
-            var items = await listProvider.GetRegionsAsync();
+            var items = await gw.GetRegionsAsync();
+
+            Assert.NotEmpty(items);
+        }
+
+        [Fact(Skip = skip)]
+        public async Task CanGetListOfSupports()
+        {
+            var gw = new DynamicsListsGateway(api);
+
+            var items = await gw.GetSupportsAsync();
 
             Assert.NotEmpty(items);
         }

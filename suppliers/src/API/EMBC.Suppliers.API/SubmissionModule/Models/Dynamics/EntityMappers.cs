@@ -67,8 +67,9 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 era_addressline1 = supplierInformation.Address.AddressLine1,
                 era_addressline2 = supplierInformation.Address.AddressLine2,
                 era_city = supplierInformation.Address.City,
+                era_RelatedJurisdiction = supplierInformation.Address.CityCode.MapToDynamicsReferencedEntity("era_jurisdictions"),
                 era_postalcode = supplierInformation.Address.PostalCode,
-                era_province = "/era_provinceterritorieses(8262519F-0884-EA11-B813-005056830319)",
+                era_province = supplierInformation.Address.StateProvinceCode.MapToDynamicsReferencedEntity("era_provinceterritorieses"),
                 era_country = supplierInformation.Address.Country,
                 era_legalbusinessname = supplierRemittanceInformation?.LegalBusinessName,
                 era_remitcountry = supplierRemittanceInformation?.Address?.Country,
@@ -101,7 +102,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         {
             return lineItems.Select((l, n) => new LineItemEntity
             {
-                era_SupportsProvided = "/era_supports(541D48E3-BF85-EA11-B818-00505683FBF4)",
+                era_SupportsProvided = l.SupportProvided.MapToDynamicsReferencedEntity("era_supports"),
                 era_description = l.Description,
                 era_gst = l.GST,
                 era_amount = l.Amount,
@@ -116,7 +117,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         {
             return lineItems.Select((l, n) => new LineItemEntity
             {
-                era_SupportsProvided = "/era_supports(541D48E3-BF85-EA11-B818-00505683FBF4)",
+                era_SupportsProvided = l.SupportProvided.MapToDynamicsReferencedEntity("era_supports"),
                 era_description = l.Description,
                 era_gst = l.GST,
                 era_amount = l.Amount,
@@ -153,5 +154,8 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 subject = subjectMapper(a)
             });
         }
+
+        private static string MapToDynamicsReferencedEntity(this string value, string entityName)
+            => string.IsNullOrWhiteSpace(value) ? null : $"/{entityName}({value})";
     }
 }

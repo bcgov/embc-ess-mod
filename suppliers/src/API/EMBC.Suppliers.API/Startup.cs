@@ -2,6 +2,7 @@
 using System.IO.Abstractions;
 using System.Net;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
+using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using EMBC.Suppliers.API.DynamicsModule;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
@@ -61,14 +62,15 @@ namespace EMBC.Suppliers.API
                     options.KnownNetworks.Add(ParseNetworkFromString(knownNetwork));
                 }
             });
+            services.AddDistributedMemoryCache();
 
-            services.AddTransient<ICountriesListProvider, CsvLoader>();
-            services.AddTransient<IStateProvincesListProvider, CsvLoader>();
-            services.AddTransient<IRegionsListProvider, CsvLoader>();
-            services.AddTransient<ICommunitiesListProvider, CsvLoader>();
-            services.AddTransient<IJurisdictionsListProvider, CsvLoader>();
-            services.AddTransient<IDistrictsListProvider, CsvLoader>();
             services.AddSingleton<IFileSystem, FileSystem>();
+            services.AddTransient<ICountriesListProvider, ListsProvider>();
+            services.AddTransient<IStateProvincesListProvider, ListsProvider>();
+            services.AddTransient<IJurisdictionsListProvider, ListsProvider>();
+            services.AddTransient<IListsGateway, DynamicsListsGateway>();
+            services.Configure<FileBasedCachedListsOptions>(configuration.GetSection("Dynamics:Lists:Cache"));
+            services.AddTransient<ICachedListsProvider, FileBasedCachedListsProvider>();
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddADFSTokenProvider();
             services.AddTransient<ISubmissionRepository, SubmissionRepository>();
