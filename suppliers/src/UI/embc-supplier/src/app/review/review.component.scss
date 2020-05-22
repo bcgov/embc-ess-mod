@@ -1,7 +1,54 @@
+@import '../../styles/styles.scss';
+
 .formHeading{
-    background-color: lightgrey;
+  background-color: rgba(theme-color(info), 0.1);
     margin: 20px 20px 20px 0px;
     h3 {
       padding: 13px
     }
+  }
+
+  .box{
+    margin: 20px;
+    border: 4px lightgray solid;
+  }
+
+  .attach-box {
+    margin: 20px;
+    border: 4px lightgray solid;
+    background-color: rgba(theme-color(info), 0.1);
+  }
+
+  .header {
+    background-color: rgba(theme-color(info), 0.3);
+    height: 70px;
+    margin-right: 1px;
+    margin-left: 1px;
+  }
+
+  // .header p{
+  //   padding:0;
+  //   margin-left: 20px;
+  //   margin-right: 35%;
+  //   display: inline-block;
+  //   line-height: 80px;
+  //   vertical-align: top;
+  // }
+
+  .nestedHeader {
+    background-color: rgba(theme-color(info), 0.1);
+    height: 40px;
+    padding: 10px;
+  }
+
+  p{
+    margin-bottom: 0px !important;
+  }
+
+  .total {
+    padding: 10px;
+    background-color: rgba(theme-color(info), 0.3);
+    height: 50px;
+    margin-right: 1px;
+    margin-left: 1px;
   }

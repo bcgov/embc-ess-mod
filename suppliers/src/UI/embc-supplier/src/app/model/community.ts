@@ -1,7 +1,7 @@
 export class Community{
     code:string;
     name:string;
-    region:string;
-    provinceCode:string;
+    type:string;
+    stateProvinceCode:string;
     countryCode:string;
 }

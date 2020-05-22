@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } fro
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/service/dateParser.service';
+import { SupplierService } from 'src/app/service/supplier.service';
 
 @Component({
     selector: 'app-referral',
@@ -17,10 +18,13 @@ export class ReferralComponent implements OnInit {
     @Input() referralForm: FormGroup
     @Input() index: number;
     @Input() component: string;
-    supportList: any = ['Food - Groceries', 'Food - Restaurant Meals', 'Lodging - Hotel', 'Lodging - Group Lodging', 'Lodging - Billeting', 'Transportation - Taxi', 'Transportation - Other', 'Clothing', 'Incidentals'];
+    supportList: any ;
     @Output() referralToRemove = new EventEmitter<number>();
+    @Input() rowArr: any;
+    @Input() recArr: any;
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>) { }
+
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService) { }
 
     get referralRows() {
         return this.referralForm.get('referralRows') as FormArray;
@@ -39,8 +43,34 @@ export class ReferralComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.referralRows.push(this.createRowForm());
-        this.onChanges();
+        this.supportList = this.supplierService.getSupportItems();
+        this.referralForm.get('receiptNumber').setValue(this.index);
+        console.log(this.rowArr)
+            if(this.rowArr !== [] && this.rowArr !== undefined) {
+                for(let i=0; i< this.rowArr.length; i++) {
+                    let val = this.rowArr[i];
+                    for(let j =0; j< val.length; j++) {
+                        this.referralRows.push(this.createRowFormWithValues(val[j]));
+                    }
+                   
+                };
+                this.cd.detectChanges();
+            } else if(this.recArr !== [] && this.recArr !== undefined) {
+                for(let i=0; i< this.recArr.length; i++) {
+                    let val = this.recArr[i];
+                    for(let j =0; j< val.length; j++) {
+                        this.referralRows.push(this.createRowFormWithValues(val[j]));
+                    }
+                   
+                };
+                this.cd.detectChanges();
+            }
+            else {
+
+                this.referralRows.push(this.createRowForm());
+            }
+            this.referralRows.push(this.createRowForm());
+            this.onChanges();
     }
 
     createRowForm() {
@@ -104,6 +134,15 @@ export class ReferralComponent implements OnInit {
 
     createAttachmentObject(data: any) {
         return this.builder.group(data);
+    }
+
+    createRowFormWithValues(row: any) {
+        return this.builder.group({
+            supportProvided: [row.supportProvided],
+            description: [row.description],
+            gst: [row.gst],
+            amount: [row.amount]
+        })
     }
 
 }

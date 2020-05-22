@@ -6,6 +6,10 @@ import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Community } from '../model/community';
 import { Province } from '../model/province';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { InvoiceModalContent } from '../core/components/modal/invoiceModal.component';
+import { ReceiptModalContent } from '../core/components/modal/receiptModal.component';
+import { Country } from '../model/country';
 
 @Component({
     selector: 'supplier-submission',
@@ -14,55 +18,67 @@ import { Province } from '../model/province';
 })
 export class SupplierSubmissionComponent implements OnInit {
 
-    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef) { }
+    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef, private modalService: NgbModal) { }
 
     supplierForm: FormGroup;
     remitDiv: boolean = false;
     addressDiv: boolean = false;
-    countryList = ['Canada', 'United States', 'Any other country'];
-    stateList = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado'];
+    countryList: Country[];
+    stateList :Province[];
     provinceList: Province[];
     cityList: Community[];
     selectedRemitCountry: string;
     locatedInBC: string;
     postalPattern = "^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$";
+    defaultProvince = { code: 'BC', name: 'British Columbia' };
+    defaultCountry = { code: 'CAN', name: 'Canada' };
 
     searchCity = (text$: Observable<string>) =>
         text$.pipe(
             debounceTime(200),
             distinctUntilChanged(),
             map(term => term === '' ? []
-                : this.cityList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+                : this.cityList === [] ? [] : this.cityList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
         );
 
-    cityFormatter = (x: {name: string}) => x.name;
+    cityFormatter = (x: { name: string }) => x.name;
 
     searchState = (text$: Observable<string>) =>
         text$.pipe(
             debounceTime(200),
             distinctUntilChanged(),
-            map(term => term.length < 1 ? []
-                : this.stateList.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+            map(term => term === '' ? []
+                : this.stateList === [] ? [] : this.stateList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
         );
+
+    stateFormatter = (x: { name: string }) => x.name;
 
     searchProvince = (text$: Observable<string>) =>
         text$.pipe(
             debounceTime(200),
             distinctUntilChanged(),
             map(term => term === '' ? []
-                : this.provinceList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+                : this.provinceList === []? [] : this.provinceList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
         );
 
-    provinceFormatter = (x: {name: string}) => x.name;
+    provinceFormatter = (x: { name: string }) => x.name;
 
     ngOnInit() {
         this.initializeForm();
+        this.repopulateFormData();
+        this.cityList = this.supplierService.getCityList();
+        console.log(this.cityList);
+        this.provinceList = this.supplierService.getProvinceList();
+        this.countryList = this.supplierService.getCountryListt();
+        this.stateList = this.supplierService.getStateList();
+    }
+
+    repopulateFormData() {
         let storedSupplierDetails = this.supplierService.getSupplierDetails();
         if (storedSupplierDetails) {
-            this.supplierForm.setValue(storedSupplierDetails);
+            this.initializeForm();
+            this.mapFormValues(storedSupplierDetails);
         }
-        this.cityList = this.supplierService.getCityList();
-        this.provinceList = this.supplierService.getProvinceList();
     }
 
     initializeForm() {
@@ -80,17 +96,17 @@ export class SupplierSubmissionComponent implements OnInit {
                 address1: ['', Validators.required],
                 address2: [''],
                 city: ['', Validators.required],
-                province: ['British Columbia'],
+                province: [this.defaultProvince.name],
                 postalCode: ['', [Validators.required, Validators.pattern(this.postalPattern)]],
-                country: ['Canada'],
+                country: [this.defaultCountry.name],
             }),
 
             contactPerson: this.builder.group({
                 firstName: ['', Validators.required],
                 lastName: ['', Validators.required],
-                email: ['', Validators.email], 
+                email: ['', Validators.email],
                 phone: ['', Validators.required],
-                fax: ['', Validators.required],
+                fax: [''],
             }),
 
             remittanceAddress: this.builder.group({
@@ -113,7 +129,7 @@ export class SupplierSubmissionComponent implements OnInit {
         });
     }
 
-    get control(){
+    get control() {
         return this.supplierForm.controls;
     }
 
@@ -127,49 +143,54 @@ export class SupplierSubmissionComponent implements OnInit {
 
     toggleVisibility(event: any) {
         this.remitDiv = event.target.checked;
-        if(this.remitDiv) {
-            this.supplierForm.get('businessName').setValidators(Validators.required);
-            this.supplierForm.get('businessCountry').setValidators(Validators.required);
-            this.supplierForm.get('remittanceAddress.address1').setValidators(Validators.required);
-            this.supplierForm.get('remittanceAddress.city').setValidators(Validators.required);
+        console.log(this.remitDiv)
+        if (this.remitDiv) {
+            console.log("inside if")
+            //this.supplierForm.get('businessName').setValidators(Validators.required);
+            // this.supplierForm.get('businessCountry').setValidators(Validators.required);
+            // this.supplierForm.get('remittanceAddress.address1').setValidators(Validators.required);
+            // this.supplierForm.get('remittanceAddress.city').setValidators(Validators.required);
         } else {
-            this.supplierForm.get('businessName').setValidators(null);
-            this.supplierForm.get('businessCountry').setValidators(null);
-            this.supplierForm.get('remittanceAddress.address1').setValidators(null);
-            this.supplierForm.get('remittanceAddress.city').setValidators(null);
-            this.supplierForm.get('remittanceAddress.state').setValidators(null);
-            this.supplierForm.get('remittanceAddress.province').setValidators(null);
-            this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
+            console.log("inside else")
+            //this.supplierForm.get('businessName').clearValidators();
+            // this.supplierForm.get('businessCountry').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.address1').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.city').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.state').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.province').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
         }
-        this.supplierForm.get('remittanceAddress').updateValueAndValidity();
+        //this.supplierForm.get('remittanceAddress').updateValueAndValidity();
     }
 
     remitVisibility(selectedValue: any) {
+        console.log(selectedValue)
         this.selectedRemitCountry = selectedValue;
         if (selectedValue === 'Canada') {
-            this.supplierForm.get('remittanceAddress.state').setValidators(null);
-            this.supplierForm.get('remittanceAddress.province').setValidators(Validators.required);
-            this.supplierForm.get('remittanceAddress.postalCode').setValidators([Validators.required, Validators.pattern(this.postalPattern)]);
-            this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.state').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.province').setValidators(Validators.required);
+            // this.supplierForm.get('remittanceAddress.postalCode').setValidators([Validators.required, Validators.pattern(this.postalPattern)]);
+            // this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
             this.addressDiv = false;
-        } else if(selectedValue === 'United States'){
-            this.supplierForm.get('remittanceAddress.state').setValidators(Validators.required);
-            this.supplierForm.get('remittanceAddress.province').setValidators(null);
-            this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.zipCode').setValidators(Validators.required);
-            this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
-            this.addressDiv = true
         } else {
-            this.supplierForm.get('remittanceAddress.state').setValidators(null);
-            this.supplierForm.get('remittanceAddress.province').setValidators(null);
-            this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
-            this.supplierForm.get('remittanceAddress.otherCode').setValidators(Validators.required);
+            // this.supplierForm.get('remittanceAddress.state').setValidators(Validators.required);
+            // this.supplierForm.get('remittanceAddress.province').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
+            // this.supplierForm.get('remittanceAddress.zipCode').setValidators(Validators.required);
+            // this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
+            this.addressDiv = true;
         }
-        this.supplierForm.get('remittanceAddress').updateValueAndValidity();
+        // } else if(selectedValue !== 'Country') {
+        //     this.supplierForm.get('remittanceAddress.state').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.province').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
+        //     this.supplierForm.get('remittanceAddress.otherCode').setValidators(Validators.required);
+        // }
+        //this.supplierForm.get('remittanceAddress').updateValueAndValidity();
     }
 
     locatedChange(event: any) {
@@ -203,26 +224,49 @@ export class SupplierSubmissionComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.supplierForm.value)
+        this.supplierForm.get('address.province').setValue(this.defaultProvince);
+        this.supplierForm.get('address.country').setValue(this.defaultCountry);
         let supplierDetails = this.supplierForm.value;
         this.supplierService.setSupplierDetails(supplierDetails);
+        this.supplierService.createPayload(supplierDetails);
         this.router.navigate(['/review']);
     }
 
     onValueChange(event: any) {
-        if (event.target.value === 'invoice') {
-            this.cleanReceiptTemplate();
-            this.injectInvoiceTemplate();
-        } else if (event.target.value === 'receipt') {
-            this.cleanInvoiceTemplate();
-            this.injectReceiptTemplate();
-        }
+            if (event.target.value === 'invoice') {
+                if (this.receipts.length > 0) {
+                    const modalRef = this.modalService.open(InvoiceModalContent);
+                    modalRef.componentInstance.clearIndicator.subscribe((e) => {
+                        if (e) {
+                            this.cleanReceiptTemplate();
+                            this.injectInvoiceTemplate();
+                        } else {
+                            this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+                        }
+                    });
+                } else {
+                    this.injectInvoiceTemplate();
+                }
+            } else if (event.target.value === 'receipt') {
+                if (this.invoices.length > 0) {
+                    const modalRef = this.modalService.open(ReceiptModalContent);
+                    modalRef.componentInstance.clearIndicator.subscribe((e) => {
+                        if (e) {
+                            this.cleanInvoiceTemplate();
+                            this.injectReceiptTemplate();
+                        } else {
+                            this.supplierForm.get('supplierSubmissionType').setValue('invoice');
+                        }
+                    });
+                } else {
+                    this.injectReceiptTemplate();
+                }
+            }   
     }
 
     injectInvoiceTemplate() {
         this.invoices.push(this.createInvoiceFormArray());
         this.cd.detectChanges();
-
     }
 
     injectReceiptTemplate() {
@@ -256,5 +300,62 @@ export class SupplierSubmissionComponent implements OnInit {
         this.receipts.removeAt(event);
     }
 
+    refArray: any = [];
+
+    mapFormValues(storedSupplierDetails: any) {
+        console.log(storedSupplierDetails)
+        this.supplierService.isReload = true;
+        //this.supplierService.setGroupValues(this.supplierForm, storedSupplierDetails);
+        this.supplierForm.get('address.address1').setValue(storedSupplierDetails.address.address1);
+        this.supplierForm.get('address.address2').setValue(storedSupplierDetails.address.address2);
+        this.supplierForm.get('address.city').setValue(storedSupplierDetails.address.city);
+        this.supplierForm.get('address.postalCode').setValue(storedSupplierDetails.address.postalCode);
+        this.supplierForm.get('contactPerson').setValue(storedSupplierDetails.contactPerson);
+        this.supplierForm.get('supplierBC').setValue(storedSupplierDetails.supplierBC);
+        this.supplierForm.get('supplierLegalName').setValue(storedSupplierDetails.supplierLegalName);
+        this.supplierForm.get('supplierName').setValue(storedSupplierDetails.supplierName);
+        this.supplierForm.get('supplierSubmissionType').setValue(storedSupplierDetails.supplierSubmissionType);
+        this.supplierForm.get('businessCountry').setValue(storedSupplierDetails.businessCountry);
+        this.supplierForm.get('businessName').setValue(storedSupplierDetails.businessName);
+        this.supplierForm.get('gstNumber').setValue(storedSupplierDetails.gstNumber);
+        this.supplierForm.get('location').setValue(storedSupplierDetails.location);
+
+        storedSupplierDetails.invoices.forEach(invoice => {
+            this.invoices.push(this.createInvoiceFormArrayWithValues(invoice));
+            this.refArray.push(invoice.referrals);
+        });
+
+        storedSupplierDetails.receipts.forEach(rec => {
+            this.receipts.push(this.createReceiptFormArrayWithValues(rec));
+            this.refArray.push(rec.referrals);
+        });
+        this.cd.detectChanges();
+        console.log(this.supplierForm)
+    }
+
+    createInvoiceFormArrayWithValues(invoice: any) {
+        return this.builder.group({
+            invoiceNumber: [invoice.invoiceNumber, Validators.required],
+            invoiceDate: [invoice.invoiceDate, Validators.required],
+            invoiceAttachments: this.builder.array([]),
+            referralList: [invoice.referralList, Validators.required],
+            referrals: this.builder.array([
+            ]),
+            invoiceTotalGst: [invoice.invoiceTotalGst],
+            invoiceTotalAmount: [invoice.invoiceTotalAmount]
+        })
+    }
+
+    createReceiptFormArrayWithValues(receipt: any) {
+        return this.builder.group({
+            referralNumber: [receipt.referralNumber, Validators.required],
+            referrals: this.builder.array([
+            ]),
+            receiptTotalGst: [receipt.referralNumber],
+            receiptTotalAmount: [receipt.referralNumber],
+            referralAttachments: this.builder.array([]),
+            receiptAttachments: this.builder.array([])
+        })
+    }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SupplierHttpService } from './service/supplierHttp.service';
 import { SupplierService } from './service/supplier.service';
 
@@ -21,6 +21,18 @@ export class AppComponent{
 
     this.supplierHttp.getListOfProvinces().subscribe((data: any[]) => {
       this.supplierService.setProvinceList(data);
-    })
+    });
+
+    this.supplierHttp.getListOfCountries().subscribe((data: any[]) => {
+      this.supplierService.setCountryList(data);
+    });
+
+    this.supplierHttp.getListOfStates().subscribe((data: any[]) => {
+      this.supplierService.setStateList(data);
+    });
+
+    this.supplierHttp.getListOfSupportItems().subscribe((data: any[]) => {
+      this.supplierService.setSupportItems(data);
+    });
   }
 }

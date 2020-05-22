@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
+import { SupplierService } from 'src/app/service/supplier.service';
 
 @Component({
     selector: 'app-receipt',
@@ -14,11 +15,26 @@ export class ReceiptComponent implements OnInit{
     @Input('index') index: number;
     @Output() indexToRemove = new EventEmitter<number>();
     component: string = "R";
+    @Input() refArray: any;
+    recArr: any = [];
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef) {}
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private supplierService: SupplierService) {}
 
     ngOnInit() {
-        this.addReferralTemplate();
+        if(this.refArray) {
+            console.log(this.refArray);
+           for(let i=0; i< this.refArray.length; i++) {
+                let val = this.refArray[i];
+                for(let j =0; j< val.length; j++) {
+                    this.referrals.push(this.createReferralFormArrayWithValues(val[j]));
+                    this.recArr.push(val[j].referralRows);
+                }
+               
+            };
+            this.cd.detectChanges();
+        } else {
+            this.addReferralTemplate();
+        }
         this.onChanges();
     }
 
@@ -41,6 +57,7 @@ export class ReceiptComponent implements OnInit{
     createReferralFormArray() {
         return this.builder.group({
              referralDate : ['', Validators.required],
+             receiptNumber: [''],
              referralRows: this.builder.array([
             ]),
             totalGst: [''],
@@ -108,6 +125,16 @@ export class ReceiptComponent implements OnInit{
 
     removeReferral(event: any) {
         this.referrals.removeAt(event);
+    }
+
+    createReferralFormArrayWithValues(referral: any) {
+        return this.builder.group({
+             referralDate : [referral.referralDate, Validators.required],
+             referralRows: this.builder.array([
+            ]),
+            totalGst: [referral.totalGst],
+            totalAmount: [referral.totalAmount]
+         })
     }
 
 }

@@ -2,12 +2,15 @@ import { Component, Input, ChangeDetectorRef, Output, EventEmitter, OnInit } fro
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import {  DateParserService } from 'src/app/service/dateParser.service';
+import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.service';
+import { SupplierService } from 'src/app/service/supplier.service';
 
 @Component({
     selector: 'app-invoice',
     templateUrl: './invoice.component.html',
     styleUrls: ['./invoice.component.scss'],
     providers: [
+        {provide: NgbDateAdapter, useClass: CustomDateAdapterService},
         {provide: NgbDateParserFormatter, useClass: DateParserService}
     ]
 })
@@ -19,8 +22,10 @@ export class InvoiceComponent implements OnInit{
     @Output() indexToRemove = new EventEmitter<number>();
     referralList: any = ['1', '2', '3', '4', '5'];
     component: string = "I";
+    rowArr: any = [];
+    @Input() refArray: any;
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>) {
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService) {
        
     }
 
@@ -34,6 +39,18 @@ export class InvoiceComponent implements OnInit{
 
     ngOnInit() {
         this.onChanges();
+        if(this.refArray) {
+            console.log(this.refArray);
+           for(let i=0; i< this.refArray.length; i++) {
+                let val = this.refArray[i];
+                for(let j =0; j< val.length; j++) {
+                    this.referrals.push(this.createReferralFormArrayWithValues(val[j]));
+                    this.rowArr.push(val[j].referralRows);
+                }
+               
+            };
+            this.cd.detectChanges();
+        }
     }
 
     get invoiceAttachments() {
@@ -103,5 +120,20 @@ export class InvoiceComponent implements OnInit{
     removeReferral(event: any) {
         this.referrals.removeAt(event);
     }
+
+    
+    createReferralFormArrayWithValues(referral: any) {
+        return this.builder.group({
+            referralNumber: [referral.referralNumber, Validators.required],
+            referralRows: this.builder.array([
+            ]),
+            totalGst: [referral.totalGst],
+            totalAmount: [referral.totalAmount],
+            referralAttachments: this.builder.array([]),
+            receiptAttachments: this.builder.array([])
+        })
+    }
+
+
 
 }

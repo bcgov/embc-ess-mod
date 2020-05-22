@@ -8,6 +8,8 @@ import { ReferralComponent } from './referral/referral.component';
 import { CoreModule } from '../core/core.module';
 import { ReceiptComponent } from './receipt/receipt.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { InvoiceModalContent } from '../core/components/modal/invoiceModal.component';
+import { ReceiptModalContent } from '../core/components/modal/receiptModal.component';
 
 @NgModule({
   imports: [
@@ -23,7 +25,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ReferralComponent,
     ReceiptComponent
     ],
-  exports: [
+  entryComponents: [
+    InvoiceModalContent,
+    ReceiptModalContent
     ]
 })
 export class SupplierSubmissionModule { }
