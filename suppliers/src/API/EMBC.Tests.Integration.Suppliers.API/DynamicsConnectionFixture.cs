@@ -30,6 +30,7 @@ namespace EMBC.Tests.Suppliers.API
         private readonly WebApplicationFactory<Startup> webApplicationFactory;
         private IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
         private CRMWebAPI api => webApplicationFactory.Services.GetRequiredService<CRMWebAPI>();
+        private ICachedListsProvider cachedListsProvider => webApplicationFactory.Services.GetRequiredService<ICachedListsProvider>();
 
         public DynamicsConnectionFixture(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
@@ -44,50 +45,52 @@ namespace EMBC.Tests.Suppliers.API
             Assert.True(result.List.Count > 0);
         }
 
-        [Fact(Skip = skip)]
-        public async Task CanPost()
-        {
-            var result = await api.ExecuteAction("era_CreateSupplierContact", new
-            {
-                firstname = "first",
-                lastname = "last",
-                contactnumber = "number",
-                email = "first.last"
-            });
-            Assert.NotNull(result);
-        }
+        //[Fact(Skip = skip)]
+        //public async Task CanPost()
+        //{
+        //    var result = await api.ExecuteAction("era_CreateSupplierContact", new
+        //    {
+        //        firstname = "first",
+        //        lastname = "last",
+        //        contactnumber = "number",
+        //        email = "first.last"
+        //    });
+        //    Assert.NotNull(result);
+        //}
 
         [Fact(Skip = skip)]
         public async Task CanSubmitUnauthInvoices()
         {
-            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>());
+            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), cachedListsProvider);
 
             var referenceNumber = $"reftestinv_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission
             {
-                Suppliers = new[]{
-                    new SupplierInformation{Name="name",
-                    LegalBusinessName = "legal name",
-                    ForRemittance = true,
-                    GstNumber = "gstnumber",
-                    Location = "location",
-                     Address = new Address
-                     {
-                         AddressLine1 = "addressline1",
-                         AddressLine2 = "addressline2",
-                         City = "city",
-                         Country = "country",
-                         PostalCode ="postalcode",
-                         StateProvince = "stateprovince"
-                     },
-                     ContactPerson = new Contact
-                     {
-                         FirstName = "first",
-                         LastName  = "last",
-                         Email="email",
-                         Fax = "fax",
-                         Phone = "phone"
-                     }
+                Suppliers = new[]
+                {
+                    new SupplierInformation{
+                        Name="name",
+                        LegalBusinessName = "legal name",
+                        ForRemittance = true,
+                        GstNumber = "gstnumber",
+                        Location = "location",
+                        Address = new Address
+                        {
+                            AddressLine1 = "addressline1",
+                            AddressLine2 = "addressline2",
+                            CityCode = "226adfaf-9f97-ea11-b813-005056830319",
+                            CountryCode = "CAN",
+                            PostalCode ="postalcode",
+                            StateProvinceCode = "BC"
+                        },
+                        ContactPerson = new Contact
+                        {
+                            FirstName = "first",
+                            LastName  = "last",
+                            Email="email",
+                            Fax = "fax",
+                            Phone = "phone"
+                        }
                     }
                 },
                 Invoices = new[]
@@ -104,6 +107,7 @@ namespace EMBC.Tests.Suppliers.API
                 LineItems = new[]{
                     new LineItem
                     {
+                        SupportProvided = "Clothing",
                         ReferralNumber = "ref123",
                         GST = 5,
                         Amount = 10,
@@ -136,7 +140,7 @@ namespace EMBC.Tests.Suppliers.API
         [Fact(Skip = skip)]
         public async Task CanSubmitUnauthReceipts()
         {
-            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>());
+            var handler = new SubmissionDynamicsCustomActionHandler(api, loggerFactory.CreateLogger<SubmissionDynamicsCustomActionHandler>(), cachedListsProvider);
 
             var referenceNumber = $"reftestrec_{DateTime.Now.Ticks}";
             await handler.Handle(new SubmissionSavedEvent(referenceNumber, new Submission
@@ -152,12 +156,12 @@ namespace EMBC.Tests.Suppliers.API
                         Location = "location",
                         Address = new Address
                         {
-                             AddressLine1 = "addressline1",
-                             AddressLine2 = "addressline2",
-                             City = "city",
-                             Country = "country",
-                             PostalCode ="postalcode",
-                             StateProvince = "stateprovince"
+                            AddressLine1 = "addressline1",
+                            AddressLine2 = "addressline2",
+                            CityCode = "226adfaf-9f97-ea11-b813-005056830319",
+                            CountryCode = "CAN",
+                            PostalCode ="postalcode",
+                            StateProvinceCode = "BC"
                         },
                         ContactPerson = new Contact
                         {
@@ -185,6 +189,7 @@ namespace EMBC.Tests.Suppliers.API
                 {
                     new LineItem
                     {
+                        SupportProvided = "Lodging - Hotel",
                         ReferralNumber = "ref123",
                         ReceiptNumber = "rec1",
                         GST = 5,
