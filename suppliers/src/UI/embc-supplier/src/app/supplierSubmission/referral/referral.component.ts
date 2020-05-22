@@ -44,7 +44,7 @@ export class ReferralComponent implements OnInit {
 
     ngOnInit() {
         this.supportList = this.supplierService.getSupportItems();
-        this.referralForm.get('receiptNumber').setValue(this.index);
+        //this.referralForm.get('receiptNumber').setValue(this.index);
         console.log(this.rowArr)
             if(this.rowArr !== [] && this.rowArr !== undefined) {
                 for(let i=0; i< this.rowArr.length; i++) {
