@@ -68,6 +68,7 @@ namespace EMBC.Suppliers.API
             services.AddTransient<ICountriesListProvider, ListsProvider>();
             services.AddTransient<IStateProvincesListProvider, ListsProvider>();
             services.AddTransient<IJurisdictionsListProvider, ListsProvider>();
+            services.AddTransient<ISupportsListProvider, ListsProvider>();
             services.AddTransient<IListsGateway, DynamicsListsGateway>();
             services.Configure<FileBasedCachedListsOptions>(configuration.GetSection("Dynamics:Lists:Cache"));
             services.AddTransient<ICachedListsProvider, FileBasedCachedListsProvider>();
