@@ -12,14 +12,17 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         private readonly ICountriesListProvider countriesListProvider;
         private readonly IStateProvincesListProvider stateProvincesListProvider;
         private readonly IJurisdictionsListProvider jurisdictionsListProvider;
+        private readonly ISupportsListProvider supportsListProvider;
 
         public QueriesHandler(ICountriesListProvider countriesListProvider,
             IStateProvincesListProvider provincesListProvider,
-            IJurisdictionsListProvider jurisdictionsListProvider)
+            IJurisdictionsListProvider jurisdictionsListProvider,
+            ISupportsListProvider supportsListProvider)
         {
             this.countriesListProvider = countriesListProvider;
             this.stateProvincesListProvider = provincesListProvider;
             this.jurisdictionsListProvider = jurisdictionsListProvider;
+            this.supportsListProvider = supportsListProvider;
         }
 
         public async Task<IEnumerable<Country>> Handle(CountriesQueryCommand _)
@@ -36,6 +39,11 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         {
             var types = cmd.Types ?? Array.Empty<string>();
             return await jurisdictionsListProvider.GetJurisdictionsAsync(types.ToArray(), cmd.StateProvinceCode, cmd.CountryCode);
+        }
+
+        public async Task<IEnumerable<Support>> Handle(SupportsQueryCommand _)
+        {
+            return await supportsListProvider.GetSupportsAsync();
         }
     }
 
@@ -64,6 +72,10 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
     }
 
     public class CountriesQueryCommand
+    {
+    }
+
+    public class SupportsQueryCommand
     {
     }
 }

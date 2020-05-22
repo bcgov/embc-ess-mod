@@ -42,10 +42,10 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
         private async Task<Submission> ResolveEntitiesReferences(Submission submission)
         {
-            var countries = await cachedListsProvider.GetCountriesAsync();
-            var stateProvinces = await cachedListsProvider.GetStateProvincesAsync();
-            var jurisdictions = await cachedListsProvider.GetJurisdictionsAsync();
-            var supports = await cachedListsProvider.GetSupportsAsync();
+            var countries = (await cachedListsProvider.GetCountriesAsync()).ToArray();
+            var stateProvinces = (await cachedListsProvider.GetStateProvincesAsync()).ToArray();
+            var jurisdictions = (await cachedListsProvider.GetJurisdictionsAsync()).ToArray();
+            var supports = (await cachedListsProvider.GetSupportsAsync()).ToArray();
 
             foreach (var supplierInformation in submission.Suppliers)
             {
