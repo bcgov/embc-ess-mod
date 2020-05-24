@@ -10,6 +10,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InvoiceModalContent } from '../core/components/modal/invoiceModal.component';
 import { ReceiptModalContent } from '../core/components/modal/receiptModal.component';
 import { Country } from '../model/country';
+import * as globalConst from 'src/app/service/globalConstants';
 
 @Component({
     selector: 'supplier-submission',
@@ -24,7 +25,7 @@ export class SupplierSubmissionComponent implements OnInit {
     remitDiv: boolean = false;
     addressDiv: boolean = false;
     countryList: Country[];
-    stateList :Province[];
+    stateList: Province[];
     provinceList: Province[];
     cityList: Community[];
     selectedRemitCountry: string;
@@ -58,7 +59,7 @@ export class SupplierSubmissionComponent implements OnInit {
             debounceTime(200),
             distinctUntilChanged(),
             map(term => term === '' ? []
-                : this.provinceList === []? [] : this.provinceList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+                : this.provinceList === [] ? [] : this.provinceList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
         );
 
     provinceFormatter = (x: { name: string }) => x.name;
@@ -67,10 +68,10 @@ export class SupplierSubmissionComponent implements OnInit {
         this.initializeForm();
         this.repopulateFormData();
         this.cityList = this.supplierService.getCityList();
-        console.log(this.cityList);
         this.provinceList = this.supplierService.getProvinceList();
         this.countryList = this.supplierService.getCountryListt();
         this.stateList = this.supplierService.getStateList();
+        this.supplierService.isReload = false;
     }
 
     repopulateFormData() {
@@ -261,7 +262,7 @@ export class SupplierSubmissionComponent implements OnInit {
                 } else {
                     this.injectReceiptTemplate();
                 }
-            }   
+            }
     }
 
     injectInvoiceTemplate() {
@@ -303,9 +304,7 @@ export class SupplierSubmissionComponent implements OnInit {
     refArray: any = [];
 
     mapFormValues(storedSupplierDetails: any) {
-        console.log(storedSupplierDetails)
         this.supplierService.isReload = true;
-        //this.supplierService.setGroupValues(this.supplierForm, storedSupplierDetails);
         this.supplierForm.get('address.address1').setValue(storedSupplierDetails.address.address1);
         this.supplierForm.get('address.address2').setValue(storedSupplierDetails.address.address2);
         this.supplierForm.get('address.city').setValue(storedSupplierDetails.address.city);
@@ -319,18 +318,23 @@ export class SupplierSubmissionComponent implements OnInit {
         this.supplierForm.get('businessName').setValue(storedSupplierDetails.businessName);
         this.supplierForm.get('gstNumber').setValue(storedSupplierDetails.gstNumber);
         this.supplierForm.get('location').setValue(storedSupplierDetails.location);
+        let submissionType = this.supplierForm.get('supplierSubmissionType')
+        this.loadWithExistingValues(submissionType);
+    }
 
-        storedSupplierDetails.invoices.forEach(invoice => {
-            this.invoices.push(this.createInvoiceFormArrayWithValues(invoice));
-            this.refArray.push(invoice.referrals);
-        });
-
-        storedSupplierDetails.receipts.forEach(rec => {
-            this.receipts.push(this.createReceiptFormArrayWithValues(rec));
-            this.refArray.push(rec.referrals);
-        });
+    loadWithExistingValues(event: any) {
+        let storedSupplierDetails = this.supplierService.getSupplierDetails();
+        if (event.value === 'invoice') {
+            storedSupplierDetails.invoices.forEach(invoice => {
+                invoice.refferralList = globalConst.referralList.filter(val => val === invoice.refferralList);
+                this.invoices.push(this.createInvoiceFormArrayWithValues(invoice));
+            });
+        } else if (event.value === 'receipt') {
+            storedSupplierDetails.receipts.forEach(rec => {
+                this.receipts.push(this.createReceiptFormArrayWithValues(rec));
+            });
+        }
         this.cd.detectChanges();
-        console.log(this.supplierForm)
     }
 
     createInvoiceFormArrayWithValues(invoice: any) {

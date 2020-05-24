@@ -9,7 +9,7 @@ import { SupplierService } from 'src/app/service/supplier.service';
     templateUrl: './referral.component.html',
     styleUrls: ['./referral.component.scss'],
     providers: [
-        {provide: NgbDateParserFormatter, useClass: DateParserService}
+        { provide: NgbDateParserFormatter, useClass: DateParserService }
     ]
 })
 export class ReferralComponent implements OnInit {
@@ -18,10 +18,9 @@ export class ReferralComponent implements OnInit {
     @Input() referralForm: FormGroup
     @Input() index: number;
     @Input() component: string;
-    supportList: any ;
+    supportList: any;
     @Output() referralToRemove = new EventEmitter<number>();
-    @Input() rowArr: any;
-    @Input() recArr: any;
+    @Input() invoiceCurrentIndex: number;
 
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService) { }
@@ -38,39 +37,35 @@ export class ReferralComponent implements OnInit {
         return this.referralForm.get('receiptAttachments') as FormArray;
     }
 
-    get referralControl(){
+    get referralControl() {
         return this.referralForm.controls;
     }
 
     ngOnInit() {
         this.supportList = this.supplierService.getSupportItems();
-        //this.referralForm.get('receiptNumber').setValue(this.index);
-        console.log(this.rowArr)
-            if(this.rowArr !== [] && this.rowArr !== undefined) {
-                for(let i=0; i< this.rowArr.length; i++) {
-                    let val = this.rowArr[i];
-                    for(let j =0; j< val.length; j++) {
-                        this.referralRows.push(this.createRowFormWithValues(val[j]));
-                    }
-                   
-                };
-                this.cd.detectChanges();
-            } else if(this.recArr !== [] && this.recArr !== undefined) {
-                for(let i=0; i< this.recArr.length; i++) {
-                    let val = this.recArr[i];
-                    for(let j =0; j< val.length; j++) {
-                        this.referralRows.push(this.createRowFormWithValues(val[j]));
-                    }
-                   
-                };
-                this.cd.detectChanges();
-            }
-            else {
-
-                this.referralRows.push(this.createRowForm());
-            }
+        if (this.supplierService.isReload) {
+            this.loadWithExistingValues();
+            console.log("lastToLoad")
+        } else {
             this.referralRows.push(this.createRowForm());
             this.onChanges();
+        }
+    }
+
+    loadWithExistingValues() {
+        let storedSupplierDetails = this.supplierService.getSupplierDetails();
+        if (this.component === 'I') {
+            let rowList = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralRows;
+            rowList.forEach(row => {
+                this.referralRows.push(this.createRowFormWithValues(row));
+            });
+        } else if (this.component === 'R') {
+            let rowList = storedSupplierDetails.receipts[this.invoiceCurrentIndex].referrals[this.index].referralRows;
+            rowList.forEach(row => {
+                this.referralRows.push(this.createRowFormWithValues(row));
+            });
+        }
+        this.cd.detectChanges();
     }
 
     createRowForm() {
@@ -83,7 +78,7 @@ export class ReferralComponent implements OnInit {
     }
 
     onChanges() {
-        this.referralForm.get('referralRows').valueChanges.subscribe(formrow =>{
+        this.referralForm.get('referralRows').valueChanges.subscribe(formrow => {
             let gstSum = formrow.reduce((prev, next) => prev + +next.gst, 0);
             let amtSum = formrow.reduce((prev, next) => prev + +next.amount, 0);
             this.referralForm.get('totalGst').setValue(gstSum);
