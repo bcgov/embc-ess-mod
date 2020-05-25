@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Jasper;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
@@ -20,14 +21,14 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             ICachedListsProvider cache,
             IListsGateway listsGateway,
             IFileSystem fileSystem,
-            FileBasedCachedListsOptions options)
+            IOptions<FileBasedCachedListsOptions> options)
         {
             this.messageContext = messageContext;
             this.logger = logger;
             this.cache = cache;
             this.listsGateway = listsGateway;
             this.fileSystem = fileSystem;
-            this.options = options;
+            this.options = options.Value;
         }
 
         public async Task Handle(RefreshCacheCommand _)
@@ -44,7 +45,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             {
                 logger.LogError(e, "Failed to refresh cached lists from Dynamics");
             }
-            await messageContext.Schedule(new RefreshCacheCommand(), DateTime.Now.Add(options.UpdateFrequency));
+            await messageContext.Schedule(new RefreshCacheCommand(), DateTime.Now.AddMinutes(options.UpdateFrequency));
         }
     }
 
