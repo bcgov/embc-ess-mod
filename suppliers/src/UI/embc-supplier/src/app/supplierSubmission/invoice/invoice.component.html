@@ -49,8 +49,7 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
           <div class="form-group">
             <label class="requiredField" for="referralList">How many referrals are listed on your invoice?</label>
             <select class="form-control form-control-lg" id="referralList" [formControlName]="'referralList'">
-              <option selected>Select...</option>
-              <option *ngFor="let no of referralList">{{no}}</option>
+              <option *ngFor="let no of referralList" [ngValue]="no">{{no.name}}</option>
             </select>
             <div
               *ngIf="invoiceControl.referralList?.invalid && (invoiceControl.referralList?.dirty || invoiceControl.referralList?.touched)"
@@ -62,7 +61,7 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
           </div>
 
           <div>
-            <button type="button" (click)="addReferralTemplate(invoiceForm.get('referralList').value)"
+            <button type="button" (click)="addReferralTemplate(invoiceForm.get('referralList').value.id)"
               class="btn btn-primary referral-button">Next</button>
           </div>
         </div>

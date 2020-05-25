@@ -324,7 +324,6 @@ export class SupplierSubmissionComponent implements OnInit {
         let storedSupplierDetails = this.supplierService.getSupplierDetails();
         if (event.value === 'invoice') {
             storedSupplierDetails.invoices.forEach(invoice => {
-                invoice.refferralList = globalConst.referralList.filter(val => val === invoice.refferralList);
                 this.invoices.push(this.createInvoiceFormArrayWithValues(invoice));
             });
         } else if (event.value === 'receipt') {

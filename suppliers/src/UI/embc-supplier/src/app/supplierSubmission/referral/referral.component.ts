@@ -43,6 +43,9 @@ export class ReferralComponent implements OnInit {
 
     ngOnInit() {
         this.supportList = this.supplierService.getSupportItems();
+        if(this.component === 'R' && this.referralForm !== null) {
+            this.referralForm.get('receiptNumber').setValue(this.index+1);
+        }
         if (this.supplierService.isReload) {
             this.loadWithExistingValues();
             console.log("lastToLoad")

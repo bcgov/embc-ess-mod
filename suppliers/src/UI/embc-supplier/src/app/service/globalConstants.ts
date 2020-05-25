@@ -1,1 +1,6 @@
-export const referralList: any = ["1", "2", "3", "4", "5"];
+export const referralList: any = [
+    { id: 1, name: '1' },
+    { id: 2, name: '2' },
+    { id: 3, name: '3' },
+    { id: 1, name: '4' },
+    { id: 2, name: '5' }];

@@ -68,8 +68,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
             <tr *ngFor="let row of referralRows.controls; let j = index" [formGroupName]="j">
               <td>
                 <select class="form-control" formControlName="supportProvided" required>
-                  <option selected>Select...</option>
-                  <option *ngFor="let support of supportList">{{support.name}}</option>
+                  <option *ngFor="let support of supportList" [ngValue]="support">{{support.name}}</option>
                 </select>
               </td>
               <td><input type="text" formControlName="description" class="form-control"></td>

@@ -175,7 +175,7 @@ export class SupplierService extends DataService {
         supplierDetails.receipts.forEach(receipt => {
             receipt.referrals.forEach(ref => {
                 ref.referralRows.forEach(element => {
-                    lineItems.push(new LineItems(element.supportProvided, element.description, element.gst, element.amount, receipt.receiptNumber, receipt.referralNumber));
+                    lineItems.push(new LineItems(element.supportProvided, element.description, element.gst, element.amount, ref.receiptNumber, receipt.referralNumber));
                 })
             })
         });
