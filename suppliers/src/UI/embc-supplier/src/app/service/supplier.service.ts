@@ -8,17 +8,19 @@ import { Referrals } from '../model/referrals';
 import { DataService } from './data.service';
 import { Country, SupportItems } from '../model/country';
 import { Receipts } from '../model/receipts';
+import { DatePipe } from '@angular/common';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
-export class SupplierService extends DataService{
+export class SupplierService extends DataService {
 
     private supplierDetails: any;
-    private cityList: Community[];
-    private provinceList: Province[];
-    private countryList: Country [];
-    private stateList: Province[];
+    private cityList: Observable<Community[]>;
+    private provinceList: Observable<Province[]>;
+    private countryList: Country[];
+    private stateList:  Observable<Province[]>;
     private payLoad: Suppliers;
     private referenceNumber: string;
     private supportItems: SupportItems[];
@@ -31,7 +33,7 @@ export class SupplierService extends DataService{
         return this.supplierDetails;
     }
 
-    setCityList(cityList: Community[]) {
+    setCityList(cityList: Observable<Community[]>) {
         this.cityList = cityList;
     }
 
@@ -47,7 +49,7 @@ export class SupplierService extends DataService{
         return this.countryList;
     }
 
-    setStateList(stateList: Province[]) {
+    setStateList(stateList:  Observable<Province[]>) {
         this.stateList = stateList;
     }
 
@@ -55,7 +57,7 @@ export class SupplierService extends DataService{
         return this.stateList;
     }
 
-    setProvinceList(provinceList: Province[]) {
+    setProvinceList(provinceList:  Observable<Province[]>) {
         this.provinceList = provinceList;
     }
 
@@ -92,15 +94,15 @@ export class SupplierService extends DataService{
         let address = this.createAddressRecord(supplierDetails);
         let supplierInformation = this.createSupplierInformationRecord(supplierDetails, contact, address, false);
         let remitSupplierInformation = null;
-        if(supplierDetails.remitToOtherBusiness) {
+        if (supplierDetails.remitToOtherBusiness) {
             let remittanceAddress = this.createRemitAddressRecord(supplierDetails);
             remitSupplierInformation = this.createSupplierRemitInformationRecord(supplierDetails, contact, remittanceAddress, true);
         }
         let supplierInformationArr = [supplierInformation]
-        if(remitSupplierInformation) {
+        if (remitSupplierInformation) {
             supplierInformationArr.push(remitSupplierInformation);
         }
-        
+
         let invoices = this.createInvoiceRecord(supplierDetails);
         let lineItems = this.createLineItemsRecord(supplierDetails);
         let attachments = this.createAttachmentsRecord(supplierDetails);
@@ -108,11 +110,11 @@ export class SupplierService extends DataService{
         let receipts = this.createReceiptslRecord(supplierDetails);
         let suppliers: Suppliers = new Suppliers(supplierInformationArr, receipts, invoices, referrals, lineItems, attachments);
         this.setPayload(suppliers);
-         console.log(JSON.stringify(suppliers));
+        console.log(JSON.stringify(suppliers));
     }
 
     createContactRecord(supplierDetails: any) {
-        return new ContactPerson(supplierDetails.contactPerson.firstName, supplierDetails.contactPerson.lastName, 
+        return new ContactPerson(supplierDetails.contactPerson.firstName, supplierDetails.contactPerson.lastName,
             supplierDetails.contactPerson.email, supplierDetails.contactPerson.phone, supplierDetails.contactPerson.fax);
     }
 
@@ -129,31 +131,35 @@ export class SupplierService extends DataService{
     }
 
     createSupplierInformationRecord(supplierDetails: any, contact: ContactPerson, address: Address, remit: boolean) {
-        return new SupplierInformation(supplierDetails.gstNumber, supplierDetails.supplierName, supplierDetails.supplierLegalName, 
+        return new SupplierInformation(supplierDetails.gstNumber, supplierDetails.supplierName, supplierDetails.supplierLegalName,
             supplierDetails.location, address, contact, remit);
     }
 
     createSupplierRemitInformationRecord(supplierDetails: any, contact: ContactPerson, address: Address, remit: boolean) {
-        return new SupplierInformation(supplierDetails.gstNumber, supplierDetails.supplierName, supplierDetails.supplierLegalName, 
+        return new SupplierInformation(supplierDetails.gstNumber, supplierDetails.supplierName, supplierDetails.supplierLegalName,
             supplierDetails.location, address, contact, remit);
     }
-    
-    createInvoiceRecord(supplierDetails: any){
+
+    createInvoiceRecord(supplierDetails: any) {
         let invoices = [];
         supplierDetails.invoices.forEach(element => {
-            invoices.push(new Invoices(element.invoiceNumber, '2020-01-30', element.invoiceTotalGst, element.invoiceTotalAmount))
+            let formattedDate = new DatePipe('en-US').transform(element.invoiceDate, 'yyyy-MM-dd');
+            invoices.push(new Invoices(element.invoiceNumber, formattedDate, element.invoiceTotalGst, element.invoiceTotalAmount))
         });
-      //  return new Invoices('string', '2020-01-30', 10, 300);
-      return invoices;
+        //  return new Invoices('string', '2020-01-30', 10, 300);
+        return invoices;
     }
 
-    createReceiptslRecord(supplierDetails: any){
+    createReceiptslRecord(supplierDetails: any) {
         let receipts = [];
         supplierDetails.receipts.forEach(element => {
-            receipts.push(new Receipts(element.receiptNumber, '2020-01-30', element.receiptTotalGst, element.receiptTotalAmount, element.referralNumber))
+            console.log(new DatePipe('en-US').transform(element.referralDate, 'yyyy-MM-dd'));
+            console.log(element.referralDate)
+            let formattedDate = new DatePipe('en-US').transform(element.referralDate, 'yyyy-MM-dd');
+            receipts.push(new Receipts(element.receiptNumber, formattedDate, element.receiptTotalGst, element.receiptTotalAmount, element.referralNumber))
         });
-      //  return new Invoices('string', '2020-01-30', 10, 300);
-      return receipts;
+        //  return new Invoices('string', '2020-01-30', 10, 300);
+        return receipts;
     }
 
 
@@ -173,40 +179,40 @@ export class SupplierService extends DataService{
                 })
             })
         });
-      return lineItems;
+        return lineItems;
         //return new LineItems('string', 'string', 2, 100, null, 'string');
     }
 
     createAttachmentsRecord(supplierDetails: any) {
         let attachments = [];
-        if(supplierDetails.invoices) {
+        if (supplierDetails.invoices) {
             supplierDetails.invoices.forEach(invoice => {
                 invoice.invoiceAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, null, null))
+                    attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, null, 1))//referral number is null
                 })
                 invoice.referrals.forEach(ref => {
                     ref.referralAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, ref.referralNumber, null))
+                        attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, ref.referralNumber, 1))
                     });
                     ref.receiptAttachments.forEach(e => {
-                        attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, ref.referralNumber, null))
+                        attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, ref.referralNumber, 1))
                     })
+                })
             })
-        })
-        } else if(supplierDetails.receipts) {
+        } else if (supplierDetails.receipts) {
             supplierDetails.receipts.forEach(ref => {
                 ref.referralAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file, null, e.fileName, null, ref.referralNumber, null))
+                    attachments.push(new Attachment(e.file, null, e.fileName, null, ref.referralNumber, 1))
                 })
                 ref.receiptAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file, null, e.fileName, null, ref.referralNumber, null))
+                    attachments.push(new Attachment(e.file, null, e.fileName, null, ref.referralNumber, 1))
                 })
             });
 
         }
 
-        //return attachments;
-        return [];
+        return attachments;
+        // return [];
     }
 
     createReferralsRecord(supplierDetails: any) {
@@ -221,7 +227,7 @@ export class SupplierService extends DataService{
                 referrals.push(new Referrals(receipt.referralNumber, element.totalGst, element.totalAmount, null));
             })
         });
-      return referrals;
+        return referrals;
         //return new Referrals('string', 10, 100, 'string');
     }
 }

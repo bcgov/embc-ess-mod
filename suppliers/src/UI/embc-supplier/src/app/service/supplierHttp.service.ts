@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Community } from '../model/community';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Suppliers } from '../model/suppliers';
 import { Country, SupportItems } from '../model/country';
+import { SupplierService } from './supplier.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class SupplierHttpService {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private supplierService: SupplierService) { }
 
   getListOfCities() {
     return this.http
@@ -33,7 +34,7 @@ export class SupplierHttpService {
         catchError(error => {
           return this.handleError(error);
         })
-      ); 
+      );
   }
 
   getListOfCountries() {
@@ -46,14 +47,14 @@ export class SupplierHttpService {
   }
 
   getListOfStates() {
-    let params = {countryCode: 'US'}
+    let params = { countryCode: 'US' }
     return this.http
       .get<Community[]>(`/api/Lists/stateprovinces`, { headers: this.headers, params })
       .pipe(
         catchError(error => {
           return this.handleError(error);
         })
-      ); 
+      );
   }
 
   getListOfSupportItems() {
@@ -67,7 +68,7 @@ export class SupplierHttpService {
 
   submitForm(suppliers: Suppliers) {
     console.log("inside submit http")
-    return this.http.post(`/api/Submission`, suppliers, { headers: this.headers}).pipe(catchError(error => {
+    return this.http.post(`/api/Submission`, suppliers, { headers: this.headers }).pipe(catchError(error => {
       return this.handleError(error);
     }))
   }
