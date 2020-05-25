@@ -3,13 +3,15 @@ import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/service/dateParser.service';
 import { SupplierService } from 'src/app/service/supplier.service';
+import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.service';
 
 @Component({
     selector: 'app-referral',
     templateUrl: './referral.component.html',
     styleUrls: ['./referral.component.scss'],
     providers: [
-        { provide: NgbDateParserFormatter, useClass: DateParserService }
+        {provide: NgbDateAdapter, useClass: CustomDateAdapterService},
+        {provide: NgbDateParserFormatter, useClass: DateParserService}
     ]
 })
 export class ReferralComponent implements OnInit {
@@ -44,7 +46,7 @@ export class ReferralComponent implements OnInit {
     ngOnInit() {
         this.supportList = this.supplierService.getSupportItems();
         if(this.component === 'R' && this.referralForm !== null) {
-            this.referralForm.get('receiptNumber').setValue(this.index+1);
+            this.referralForm.get('receiptNumber').setValue(String(this.index+1));
         }
         if (this.supplierService.isReload) {
             this.loadWithExistingValues();
