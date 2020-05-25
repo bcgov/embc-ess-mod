@@ -12,6 +12,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
         private readonly IFileSystem fileSystem;
         private readonly FileBasedCachedListsOptions options;
         private string path => options.CachePath;
+        private const string sourceCsvFolder = "./ConfigurationModule/Models/Data";
 
         public FileBasedCachedListsProvider(IFileSystem fileSystem, IOptions<FileBasedCachedListsOptions> options)
         {
@@ -20,7 +21,10 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             if (!fileSystem.Directory.Exists(this.options.CachePath))
             {
                 fileSystem.Directory.CreateDirectory(this.options.CachePath);
-                fileSystem.File.Copy($"./ConfigurationModule/Models/Data/*.csv", this.options.CachePath);
+                foreach (var file in fileSystem.Directory.GetFiles(sourceCsvFolder, "*.csv"))
+                {
+                    fileSystem.File.Copy(file, fileSystem.Path.Combine(this.options.CachePath, fileSystem.Path.GetFileName(file)));
+                }
             }
         }
 
