@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.Utilities;
+using Microsoft.Extensions.Options;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
@@ -12,10 +13,15 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
         private readonly FileBasedCachedListsOptions options;
         private string path => options.CachePath;
 
-        public FileBasedCachedListsProvider(IFileSystem fileSystem, FileBasedCachedListsOptions options)
+        public FileBasedCachedListsProvider(IFileSystem fileSystem, IOptions<FileBasedCachedListsOptions> options)
         {
             this.fileSystem = fileSystem;
-            this.options = options;
+            this.options = options.Value;
+            if (!fileSystem.Directory.Exists(this.options.CachePath))
+            {
+                fileSystem.Directory.CreateDirectory(this.options.CachePath);
+                fileSystem.File.Copy($"./ConfigurationModule/Models/Data/*.csv", this.options.CachePath);
+            }
         }
 
         public async Task<IEnumerable<CountryEntity>> GetCountriesAsync()

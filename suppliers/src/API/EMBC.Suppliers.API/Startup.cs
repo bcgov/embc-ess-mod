@@ -70,7 +70,7 @@ namespace EMBC.Suppliers.API
             services.AddTransient<IJurisdictionsListProvider, ListsProvider>();
             services.AddTransient<ISupportsListProvider, ListsProvider>();
             services.AddTransient<IListsGateway, DynamicsListsGateway>();
-            services.Configure<FileBasedCachedListsOptions>(configuration.GetSection("Dynamics:Lists:Cache"));
+            services.Configure<FileBasedCachedListsOptions>(configuration.GetSection("Dynamics:Cache"));
             services.AddTransient<ICachedListsProvider, FileBasedCachedListsProvider>();
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddADFSTokenProvider();

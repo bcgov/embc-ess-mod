@@ -38,7 +38,7 @@ parameters:
   - description: Dynanics lookup cache persistant directory
     name: DYNAMICS_LISTS_CACHE_DIR
     value: /lookup_cache
-  - description: Dynanics lookup cache frequency refresh in seconds
+  - description: Dynanics lookup cache frequency refresh in minutes
     name: DYNAMICS_LISTS_CACHE_UPDATE_FREQUENCY
     value: "60"
   - description: Reverse proxy known network
@@ -56,8 +56,8 @@ objects:
       Dynamics__ADFS__OAuth2TokenEndpoint: ${OAUTH_ENDPOINT}
       Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
       Submission_Storage_Path: ${SUBMISSIONS_STORAGE_DIR}
-      DYNAMICS__LISTS__CACHE__CachePath: ${DYNAMICS_LISTS_CACHE_DIR}
-      DYNAMICS__LISTS__CACHE__UpdateFrequency: ${DYNAMICS_LISTS_CACHE_UPDATE_FREQUENCY}
+      Dynamics__Cache__CachePath: ${DYNAMICS_LISTS_CACHE_DIR}
+      Dynamics__Cache__UpdateFrequency: ${DYNAMICS_LISTS_CACHE_UPDATE_FREQUENCY}
   - kind: Secret
     apiVersion: v1
     type: Opaque

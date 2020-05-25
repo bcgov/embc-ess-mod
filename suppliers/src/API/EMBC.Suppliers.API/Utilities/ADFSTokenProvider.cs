@@ -13,9 +13,9 @@ namespace EMBC.Suppliers.API.DynamicsModule
         private ADFSTokenProviderOptions options;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public ADFSTokenProvider(IHttpClientFactory httpClientFactory, IOptionsMonitor<ADFSTokenProviderOptions> options)
+        public ADFSTokenProvider(IHttpClientFactory httpClientFactory, IOptions<ADFSTokenProviderOptions> options)
         {
-            this.options = options?.CurrentValue;
+            this.options = options.Value;
             this.httpClientFactory = httpClientFactory;
         }
 
