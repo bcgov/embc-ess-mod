@@ -67,7 +67,7 @@
                                     <tbody>
                                         <tr *ngFor="let row of referral.referralRows; let j = index">
                                             <td>
-                                                {{row.supportProvided}}
+                                                {{row.supportProvided.name}}
                                             </td>
                                             <td>{{row.description}}</td>
                                             <td>
@@ -148,7 +148,7 @@
                                     <tbody>
                                         <tr *ngFor="let row of referral.referralRows">
                                             <td>
-                                                {{row.supportProvided}}
+                                                {{row.supportProvided.name}}
                                             </td>
                                             <td>{{row.description}}</td>
                                             <td>

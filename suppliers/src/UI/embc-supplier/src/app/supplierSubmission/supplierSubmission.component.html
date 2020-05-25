@@ -501,7 +501,7 @@ The system must provide a warning message if a user selects to delete an Invoice
 
                 <div formArrayName="invoices">
                   <div *ngFor="let invoic of invoices.controls; let i = index">
-                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i" [refArray]="refArray"
+                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i"
                       (indexToRemove)="deleteInvoice($event)"></app-invoice>
                   </div>
                 </div>
