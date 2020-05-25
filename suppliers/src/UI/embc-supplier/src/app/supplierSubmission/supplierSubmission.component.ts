@@ -75,6 +75,7 @@ export class SupplierSubmissionComponent implements OnInit {
     repopulateFormData() {
         let storedSupplierDetails = this.supplierService.getSupplierDetails();
         if (storedSupplierDetails) {
+            this.supplierService.clearPayload();
             this.initializeForm();
             this.mapFormValues(storedSupplierDetails);
         }
@@ -142,54 +143,21 @@ export class SupplierSubmissionComponent implements OnInit {
 
     toggleVisibility(event: any) {
         this.remitDiv = event.target.checked;
-        console.log(this.remitDiv)
-        if (this.remitDiv) {
-            console.log("inside if")
-            //this.supplierForm.get('businessName').setValidators(Validators.required);
-            // this.supplierForm.get('businessCountry').setValidators(Validators.required);
-            // this.supplierForm.get('remittanceAddress.address1').setValidators(Validators.required);
-            // this.supplierForm.get('remittanceAddress.city').setValidators(Validators.required);
-        } else {
-            console.log("inside else")
-            //this.supplierForm.get('businessName').clearValidators();
-            // this.supplierForm.get('businessCountry').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.address1').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.city').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.state').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.province').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
-        }
-        //this.supplierForm.get('remittanceAddress').updateValueAndValidity();
     }
 
     remitVisibility(selectedValue: any) {
-        console.log(selectedValue)
-        this.selectedRemitCountry = selectedValue;
-        if (selectedValue === 'Canada') {
-            // this.supplierForm.get('remittanceAddress.state').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.province').setValidators(Validators.required);
-            // this.supplierForm.get('remittanceAddress.postalCode').setValidators([Validators.required, Validators.pattern(this.postalPattern)]);
-            // this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
+        console.log(selectedValue.name)
+        //this.selectedRemitCountry = selectedValue.name;
+
+       // let selectElement = $event.target;
+        var optionIndex = selectedValue.selectedIndex;
+        var optionText = selectedValue.options[optionIndex];
+        this.selectedRemitCountry = optionText.text;
+        if (optionText.text === 'Canada') {
             this.addressDiv = false;
         } else {
-            // this.supplierForm.get('remittanceAddress.state').setValidators(Validators.required);
-            // this.supplierForm.get('remittanceAddress.province').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
-            // this.supplierForm.get('remittanceAddress.zipCode').setValidators(Validators.required);
-            // this.supplierForm.get('remittanceAddress.otherCode').setValidators(null);
             this.addressDiv = true;
         }
-        // } else if(selectedValue !== 'Country') {
-        //     this.supplierForm.get('remittanceAddress.state').setValidators(null);
-        //     this.supplierForm.get('remittanceAddress.province').setValidators(null);
-        //     this.supplierForm.get('remittanceAddress.postalCode').setValidators(null);
-        //     this.supplierForm.get('remittanceAddress.zipCode').setValidators(null);
-        //     this.supplierForm.get('remittanceAddress.otherCode').setValidators(Validators.required);
-        // }
-        //this.supplierForm.get('remittanceAddress').updateValueAndValidity();
     }
 
     locatedChange(event: any) {
@@ -316,12 +284,29 @@ export class SupplierSubmissionComponent implements OnInit {
         this.supplierForm.get('businessName').setValue(storedSupplierDetails.businessName);
         this.supplierForm.get('gstNumber').setValue(storedSupplierDetails.gstNumber);
         this.supplierForm.get('location').setValue(storedSupplierDetails.location);
-        let submissionType = this.supplierForm.get('supplierSubmissionType')
+        this.supplierForm.get('remitToOtherBusiness').setValue(storedSupplierDetails.remitToOtherBusiness);
+        this.supplierForm.get('remittanceAddress').setValue(storedSupplierDetails.remittanceAddress);
+        let submissionType = this.supplierForm.get('supplierSubmissionType');
         this.loadWithExistingValues(submissionType);
+    }
+
+    loadExistingRemittanceValues() {
+        this.remitDiv = this.supplierForm.get('remitToOtherBusiness').value;
+        this.selectedRemitCountry = this.supplierForm.get('businessCountry').value.name;
+        if (this.selectedRemitCountry === 'Canada') {
+            this.addressDiv = false;
+        } else {
+            this.addressDiv = true;
+        }
+        this.locatedInBC = this.supplierForm.get('supplierBC').value;
+        if(this.locatedInBC === 'yes') {
+            this.addressDiv = true;
+        }
     }
 
     loadWithExistingValues(event: any) {
         let storedSupplierDetails = this.supplierService.getSupplierDetails();
+        console.log(storedSupplierDetails)
         if (event.value === 'invoice') {
             storedSupplierDetails.invoices.forEach(invoice => {
                 this.invoices.push(this.createInvoiceFormArrayWithValues(invoice));
@@ -352,8 +337,8 @@ export class SupplierSubmissionComponent implements OnInit {
             referralNumber: [receipt.referralNumber, Validators.required],
             referrals: this.builder.array([
             ]),
-            receiptTotalGst: [receipt.referralNumber],
-            receiptTotalAmount: [receipt.referralNumber],
+            receiptTotalGst: [receipt.receiptTotalGst],
+            receiptTotalAmount: [receipt.receiptTotalAmount],
             referralAttachments: this.builder.array([]),
             receiptAttachments: this.builder.array([])
         })

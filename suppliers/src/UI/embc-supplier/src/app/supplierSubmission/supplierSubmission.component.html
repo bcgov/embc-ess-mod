@@ -265,9 +265,9 @@
                     <label class="requiredField" for="businessCountry"><b>What Country Is This Supplier Located</b>
                       In?</label>
                     <select class="form-control form-control-lg" formControlName="businessCountry"
-                      (change)="remitVisibility($event.target.value)">
+                      (change)="remitVisibility($event.target)">
                       <option selected>Country/Region</option>
-                      <option *ngFor="let country of countryList">{{country.name}}</option>
+                      <option *ngFor="let country of countryList" [ngValue]="country">{{country.name}}</option>
                     </select>
                     <div
                       *ngIf="control.businessCountry?.invalid && (control.businessCountry?.dirty || control.businessCountry?.touched)"

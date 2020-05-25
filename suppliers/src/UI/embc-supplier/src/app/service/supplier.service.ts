@@ -20,7 +20,7 @@ export class SupplierService extends DataService {
     private cityList: Observable<Community[]>;
     private provinceList: Observable<Province[]>;
     private countryList: Country[];
-    private stateList:  Observable<Province[]>;
+    private stateList: Observable<Province[]>;
     private payLoad: Suppliers;
     private referenceNumber: string;
     private supportItems: SupportItems[];
@@ -49,7 +49,7 @@ export class SupplierService extends DataService {
         return this.countryList;
     }
 
-    setStateList(stateList:  Observable<Province[]>) {
+    setStateList(stateList: Observable<Province[]>) {
         this.stateList = stateList;
     }
 
@@ -57,7 +57,7 @@ export class SupplierService extends DataService {
         return this.stateList;
     }
 
-    setProvinceList(provinceList:  Observable<Province[]>) {
+    setProvinceList(provinceList: Observable<Province[]>) {
         this.provinceList = provinceList;
     }
 
@@ -113,6 +113,10 @@ export class SupplierService extends DataService {
         console.log(JSON.stringify(suppliers));
     }
 
+    clearPayload() {
+        this.setPayload(new Suppliers(null, null, null, null, null, null));
+    }
+
     createContactRecord(supplierDetails: any) {
         return new ContactPerson(supplierDetails.contactPerson.firstName, supplierDetails.contactPerson.lastName,
             supplierDetails.contactPerson.email, supplierDetails.contactPerson.phone, supplierDetails.contactPerson.fax);
@@ -152,11 +156,13 @@ export class SupplierService extends DataService {
 
     createReceiptslRecord(supplierDetails: any) {
         let receipts = [];
-        supplierDetails.receipts.forEach(element => {
-            console.log(new DatePipe('en-US').transform(element.referralDate, 'yyyy-MM-dd'));
-            console.log(element.referralDate)
-            let formattedDate = new DatePipe('en-US').transform(element.referralDate, 'yyyy-MM-dd');
-            receipts.push(new Receipts(element.receiptNumber, formattedDate, element.receiptTotalGst, element.receiptTotalAmount, element.referralNumber))
+        supplierDetails.receipts.forEach(element => { 
+            element.referrals.forEach(ref => {
+                let formattedDate = new DatePipe('en-US').transform(ref.referralDate, 'yyyy-MM-dd');
+                console.log(new DatePipe('en-US').transform(ref.referralDate, 'yyyy-MM-dd'));
+                console.log(ref.referralDate)
+                receipts.push(new Receipts(ref.receiptNumber, formattedDate, element.receiptTotalGst, element.receiptTotalAmount, element.referralNumber))
+            })
         });
         //  return new Invoices('string', '2020-01-30', 10, 300);
         return receipts;
@@ -185,21 +191,21 @@ export class SupplierService extends DataService {
 
     createAttachmentsRecord(supplierDetails: any) {
         let attachments = [];
-        if (supplierDetails.invoices) {
+        if (supplierDetails.invoices.length>0) {
             supplierDetails.invoices.forEach(invoice => {
                 invoice.invoiceAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, null, 1))//referral number is null
+                    attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, null, 2))
                 })
                 invoice.referrals.forEach(ref => {
                     ref.referralAttachments.forEach(e => {
                         attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, ref.referralNumber, 1))
                     });
                     ref.receiptAttachments.forEach(e => {
-                        attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, ref.referralNumber, 1))
+                        attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, ref.referralNumber, 0))
                     })
                 })
             })
-        } else if (supplierDetails.receipts) {
+        } else if (supplierDetails.receipts.length>0) {
             supplierDetails.receipts.forEach(ref => {
                 ref.referralAttachments.forEach(e => {
                     attachments.push(new Attachment(e.file, null, e.fileName, null, ref.referralNumber, 1))
