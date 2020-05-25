@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.Utilities;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
@@ -10,13 +12,15 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
     public class FileBasedCachedListsProvider : ICachedListsProvider
     {
         private readonly IFileSystem fileSystem;
+        private readonly IDistributedCache cache;
         private readonly FileBasedCachedListsOptions options;
         private string path => options.CachePath;
         private const string sourceCsvFolder = "./ConfigurationModule/Models/Data";
 
-        public FileBasedCachedListsProvider(IFileSystem fileSystem, IOptions<FileBasedCachedListsOptions> options)
+        public FileBasedCachedListsProvider(IFileSystem fileSystem, IDistributedCache cache, IOptions<FileBasedCachedListsOptions> options)
         {
             this.fileSystem = fileSystem;
+            this.cache = cache;
             this.options = options.Value;
             if (!fileSystem.Directory.Exists(this.options.CachePath))
             {
@@ -28,9 +32,21 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             }
         }
 
+        private async Task<string[]> GetOrAddAsync(string sourceFileName)
+        {
+            var cache_key = $"lists_{sourceFileName}";
+            var cachedContent = await cache.GetStringAsync(cache_key);
+            if (cachedContent == null)
+            {
+                cachedContent = await fileSystem.File.ReadAllTextAsync(fileSystem.Path.Combine(path, sourceFileName));
+                await cache.SetStringAsync(cache_key, cachedContent, new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(71) });
+            }
+            return cachedContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
         public async Task<IEnumerable<CountryEntity>> GetCountriesAsync()
         {
-            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(path, "./countries.csv")))
+            return (await GetOrAddAsync("./countries.csv"))
              .ParseCsv((values, i) => new
              {
                  era_countryid = values[0],
@@ -49,7 +65,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 
         public async Task<IEnumerable<JurisdictionEntity>> GetJurisdictionsAsync()
         {
-            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(path, $"./jurisdictions.csv")))
+            return (await GetOrAddAsync("./jurisdictions.csv"))
                       .ParseCsv((values, i) => new
                       {
                           era_jurisdictionid = values[0],
@@ -68,7 +84,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 
         public async Task<IEnumerable<StateProvinceEntity>> GetStateProvincesAsync()
         {
-            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(path, $"./stateprovinces.csv")))
+            return (await GetOrAddAsync("./stateprovinces.csv"))
                  .ParseCsv((values, i) => new
                  {
                      era_provinceterritoriesid = values[0],
@@ -87,7 +103,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 
         public async Task<IEnumerable<SupportEntity>> GetSupportsAsync()
         {
-            return (await fileSystem.File.ReadAllLinesAsync(fileSystem.Path.Combine(path, "./supports.csv")))
+            return (await GetOrAddAsync("./supports.csv"))
                 .ParseCsv((values, i) => new
                 {
                     era_supportid = values[0],
