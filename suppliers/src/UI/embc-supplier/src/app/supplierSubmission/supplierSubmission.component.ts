@@ -3,13 +3,13 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { SupplierService } from '../service/supplier.service';
 import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { Community } from '../model/community';
+import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { Province } from '../model/province';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InvoiceModalContent } from '../core/components/modal/invoiceModal.component';
 import { ReceiptModalContent } from '../core/components/modal/receiptModal.component';
 import { Country } from '../model/country';
+import * as globalConst from 'src/app/service/globalConstants';
 
 @Component({
     selector: 'supplier-submission',
@@ -24,21 +24,28 @@ export class SupplierSubmissionComponent implements OnInit {
     remitDiv: boolean = false;
     addressDiv: boolean = false;
     countryList: Country[];
-    stateList :Province[];
+    stateList: Province[];
     provinceList: Province[];
-    cityList: Community[];
     selectedRemitCountry: string;
     locatedInBC: string;
     postalPattern = "^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$";
     defaultProvince = { code: 'BC', name: 'British Columbia' };
     defaultCountry = { code: 'CAN', name: 'Canada' };
 
+    ngOnInit() {
+        this.initializeForm();
+        this.repopulateFormData();
+        this.countryList = this.supplierService.getCountryListt();
+        this.supplierService.isReload = false;
+    }
+
     searchCity = (text$: Observable<string>) =>
         text$.pipe(
             debounceTime(200),
             distinctUntilChanged(),
-            map(term => term === '' ? []
-                : this.cityList === [] ? [] : this.cityList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+            switchMap(term => this.supplierService.getCityList().pipe(
+                map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+            )
         );
 
     cityFormatter = (x: { name: string }) => x.name;
@@ -47,8 +54,9 @@ export class SupplierSubmissionComponent implements OnInit {
         text$.pipe(
             debounceTime(200),
             distinctUntilChanged(),
-            map(term => term === '' ? []
-                : this.stateList === [] ? [] : this.stateList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+            switchMap(term => this.supplierService.getStateList().pipe(
+                map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+            )
         );
 
     stateFormatter = (x: { name: string }) => x.name;
@@ -57,21 +65,12 @@ export class SupplierSubmissionComponent implements OnInit {
         text$.pipe(
             debounceTime(200),
             distinctUntilChanged(),
-            map(term => term === '' ? []
-                : this.provinceList === []? [] : this.provinceList.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+            switchMap(term => this.supplierService.getProvinceList().pipe(
+                map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+            )
         );
 
     provinceFormatter = (x: { name: string }) => x.name;
-
-    ngOnInit() {
-        this.initializeForm();
-        this.repopulateFormData();
-        this.cityList = this.supplierService.getCityList();
-        console.log(this.cityList);
-        this.provinceList = this.supplierService.getProvinceList();
-        this.countryList = this.supplierService.getCountryListt();
-        this.stateList = this.supplierService.getStateList();
-    }
 
     repopulateFormData() {
         let storedSupplierDetails = this.supplierService.getSupplierDetails();
@@ -233,35 +232,35 @@ export class SupplierSubmissionComponent implements OnInit {
     }
 
     onValueChange(event: any) {
-            if (event.target.value === 'invoice') {
-                if (this.receipts.length > 0) {
-                    const modalRef = this.modalService.open(InvoiceModalContent);
-                    modalRef.componentInstance.clearIndicator.subscribe((e) => {
-                        if (e) {
-                            this.cleanReceiptTemplate();
-                            this.injectInvoiceTemplate();
-                        } else {
-                            this.supplierForm.get('supplierSubmissionType').setValue('receipt');
-                        }
-                    });
-                } else {
-                    this.injectInvoiceTemplate();
-                }
-            } else if (event.target.value === 'receipt') {
-                if (this.invoices.length > 0) {
-                    const modalRef = this.modalService.open(ReceiptModalContent);
-                    modalRef.componentInstance.clearIndicator.subscribe((e) => {
-                        if (e) {
-                            this.cleanInvoiceTemplate();
-                            this.injectReceiptTemplate();
-                        } else {
-                            this.supplierForm.get('supplierSubmissionType').setValue('invoice');
-                        }
-                    });
-                } else {
-                    this.injectReceiptTemplate();
-                }
-            }   
+        if (event.target.value === 'invoice') {
+            if (this.receipts.length > 0) {
+                const modalRef = this.modalService.open(InvoiceModalContent);
+                modalRef.componentInstance.clearIndicator.subscribe((e) => {
+                    if (e) {
+                        this.cleanReceiptTemplate();
+                        this.injectInvoiceTemplate();
+                    } else {
+                        this.supplierForm.get('supplierSubmissionType').setValue('receipt');
+                    }
+                });
+            } else {
+                this.injectInvoiceTemplate();
+            }
+        } else if (event.target.value === 'receipt') {
+            if (this.invoices.length > 0) {
+                const modalRef = this.modalService.open(ReceiptModalContent);
+                modalRef.componentInstance.clearIndicator.subscribe((e) => {
+                    if (e) {
+                        this.cleanInvoiceTemplate();
+                        this.injectReceiptTemplate();
+                    } else {
+                        this.supplierForm.get('supplierSubmissionType').setValue('invoice');
+                    }
+                });
+            } else {
+                this.injectReceiptTemplate();
+            }
+        }
     }
 
     injectInvoiceTemplate() {
@@ -303,9 +302,7 @@ export class SupplierSubmissionComponent implements OnInit {
     refArray: any = [];
 
     mapFormValues(storedSupplierDetails: any) {
-        console.log(storedSupplierDetails)
         this.supplierService.isReload = true;
-        //this.supplierService.setGroupValues(this.supplierForm, storedSupplierDetails);
         this.supplierForm.get('address.address1').setValue(storedSupplierDetails.address.address1);
         this.supplierForm.get('address.address2').setValue(storedSupplierDetails.address.address2);
         this.supplierForm.get('address.city').setValue(storedSupplierDetails.address.city);
@@ -319,18 +316,22 @@ export class SupplierSubmissionComponent implements OnInit {
         this.supplierForm.get('businessName').setValue(storedSupplierDetails.businessName);
         this.supplierForm.get('gstNumber').setValue(storedSupplierDetails.gstNumber);
         this.supplierForm.get('location').setValue(storedSupplierDetails.location);
+        let submissionType = this.supplierForm.get('supplierSubmissionType')
+        this.loadWithExistingValues(submissionType);
+    }
 
-        storedSupplierDetails.invoices.forEach(invoice => {
-            this.invoices.push(this.createInvoiceFormArrayWithValues(invoice));
-            this.refArray.push(invoice.referrals);
-        });
-
-        storedSupplierDetails.receipts.forEach(rec => {
-            this.receipts.push(this.createReceiptFormArrayWithValues(rec));
-            this.refArray.push(rec.referrals);
-        });
+    loadWithExistingValues(event: any) {
+        let storedSupplierDetails = this.supplierService.getSupplierDetails();
+        if (event.value === 'invoice') {
+            storedSupplierDetails.invoices.forEach(invoice => {
+                this.invoices.push(this.createInvoiceFormArrayWithValues(invoice));
+            });
+        } else if (event.value === 'receipt') {
+            storedSupplierDetails.receipts.forEach(rec => {
+                this.receipts.push(this.createReceiptFormArrayWithValues(rec));
+            });
+        }
         this.cd.detectChanges();
-        console.log(this.supplierForm)
     }
 
     createInvoiceFormArrayWithValues(invoice: any) {

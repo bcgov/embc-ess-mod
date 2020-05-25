@@ -15,27 +15,25 @@ export class ReceiptComponent implements OnInit{
     @Input('index') index: number;
     @Output() indexToRemove = new EventEmitter<number>();
     component: string = "R";
-    @Input() refArray: any;
-    recArr: any = [];
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private supplierService: SupplierService) {}
 
     ngOnInit() {
-        if(this.refArray) {
-            console.log(this.refArray);
-           for(let i=0; i< this.refArray.length; i++) {
-                let val = this.refArray[i];
-                for(let j =0; j< val.length; j++) {
-                    this.referrals.push(this.createReferralFormArrayWithValues(val[j]));
-                    this.recArr.push(val[j].referralRows);
-                }
-               
-            };
-            this.cd.detectChanges();
+        if(this.supplierService.isReload){
+            this.loadWithExistingValues();
         } else {
             this.addReferralTemplate();
-        }
-        this.onChanges();
+            this.onChanges();
+        } 
+    }
+
+    loadWithExistingValues() {
+        let storedSupplierDetails = this.supplierService.getSupplierDetails();
+        let referralList = storedSupplierDetails.receipts[this.index].referrals;
+        referralList.forEach(rec => {
+                this.referrals.push(this.createReferralFormArrayWithValues(rec));
+            });
+        this.cd.detectChanges();
     }
 
     get receiptControl(){
@@ -130,6 +128,7 @@ export class ReceiptComponent implements OnInit{
     createReferralFormArrayWithValues(referral: any) {
         return this.builder.group({
              referralDate : [referral.referralDate, Validators.required],
+             receiptNumber: [referral.receiptNumber],
              referralRows: this.builder.array([
             ]),
             totalGst: [referral.totalGst],

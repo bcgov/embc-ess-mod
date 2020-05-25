@@ -4,6 +4,7 @@ import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter } from '@ng-bootstr
 import {  DateParserService } from 'src/app/service/dateParser.service';
 import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.service';
 import { SupplierService } from 'src/app/service/supplier.service';
+import * as globalConst from 'src/app/service/globalConstants'
 
 @Component({
     selector: 'app-invoice',
@@ -20,10 +21,8 @@ export class InvoiceComponent implements OnInit{
     @Input('invoiceForm') invoiceForm: FormGroup;
     @Input('index') index: number;
     @Output() indexToRemove = new EventEmitter<number>();
-    referralList: any = ['1', '2', '3', '4', '5'];
+    referralList = globalConst.referralList;
     component: string = "I";
-    rowArr: any = [];
-    @Input() refArray: any;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService) {
        
@@ -39,22 +38,22 @@ export class InvoiceComponent implements OnInit{
 
     ngOnInit() {
         this.onChanges();
-        if(this.refArray) {
-            console.log(this.refArray);
-           for(let i=0; i< this.refArray.length; i++) {
-                let val = this.refArray[i];
-                for(let j =0; j< val.length; j++) {
-                    this.referrals.push(this.createReferralFormArrayWithValues(val[j]));
-                    this.rowArr.push(val[j].referralRows);
-                }
-               
-            };
-            this.cd.detectChanges();
-        }
+        if(this.supplierService.isReload){
+            this.loadWithExistingValues();
+        } 
     }
 
     get invoiceAttachments() {
         return this.invoiceForm.get('invoiceAttachments') as FormArray;
+    }
+
+    loadWithExistingValues() {
+        let storedSupplierDetails = this.supplierService.getSupplierDetails();
+        let referralList = storedSupplierDetails.invoices[this.index].referrals;
+        referralList.forEach(referral => {
+                this.referrals.push(this.createReferralFormArrayWithValues(referral));
+            });
+        this.cd.detectChanges();
     }
 
     setFileFormControl(event: any) {

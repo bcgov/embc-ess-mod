@@ -15,20 +15,13 @@ export class AppComponent{
   }
 
   setUpData() {
-    this.supplierHttp.getListOfCities().subscribe((data: any[]) => {
-      this.supplierService.setCityList(data);
-    });
 
-    this.supplierHttp.getListOfProvinces().subscribe((data: any[]) => {
-      this.supplierService.setProvinceList(data);
-    });
+    this.supplierService.setCityList(this.supplierHttp.getListOfCities());
+    this.supplierService.setProvinceList(this.supplierHttp.getListOfProvinces());
+    this.supplierService.setStateList(this.supplierHttp.getListOfStates());
 
     this.supplierHttp.getListOfCountries().subscribe((data: any[]) => {
       this.supplierService.setCountryList(data);
-    });
-
-    this.supplierHttp.getListOfStates().subscribe((data: any[]) => {
-      this.supplierService.setStateList(data);
     });
 
     this.supplierHttp.getListOfSupportItems().subscribe((data: any[]) => {
