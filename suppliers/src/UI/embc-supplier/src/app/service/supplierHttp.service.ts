@@ -1,11 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Community } from '../model/community';
 import { catchError, map } from 'rxjs/operators';
 import { Suppliers } from '../model/suppliers';
 import { Country, SupportItems } from '../model/country';
 import { SupplierService } from './supplier.service';
+
+//
+// Ref: https://github.com/bcgov/MyGovBC-CAPTCHA-Widget
+//
+
+const BaseUrl = 'https://embcess-captcha.pathfinder.gov.bc.ca';
+
+// payload returned from the server
+@Injectable()
+export class ServerPayload {
+  nonce: string;
+  captcha: string;
+  validation: string;
+  expiry: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -47,7 +62,7 @@ export class SupplierHttpService {
   }
 
   getListOfStates() {
-    let params = { countryCode: 'US' }
+    let params = { countryCode: 'USA' }
     return this.http
       .get<Community[]>(`/api/Lists/stateprovinces`, { headers: this.headers, params })
       .pipe(
@@ -84,5 +99,33 @@ export class SupplierHttpService {
       errorMessage = `Backend returned code ${err.status}, body was: ${err.message}`;
     }
     return throwError(errorMessage);
+  }
+
+  fetchData(nonce: string): Observable<HttpResponse<ServerPayload>> {
+    return this.http.post<ServerPayload>(
+      BaseUrl + '/captcha',
+      { nonce },
+      { observe: 'response' }
+    );
+  }
+
+  verifyCaptcha(nonce: string, answer: string, encryptedAnswer: string): Observable<HttpResponse<ServerPayload>> {
+    return this.http.post<ServerPayload>(
+      BaseUrl + '/verify/captcha',
+      { nonce, answer, validation: encryptedAnswer },
+      { observe: 'response' }
+    );
+  }
+
+  fetchAudio(validation: string, translation?: string): Observable<HttpResponse<string>> {
+    const payload: any = { validation };
+    if (translation) {
+      payload.translation = translation;
+    }
+    return this.http.post<string>(
+      BaseUrl + '/captcha/audio',
+      payload,
+      { observe: 'response' }
+    );
   }
 }

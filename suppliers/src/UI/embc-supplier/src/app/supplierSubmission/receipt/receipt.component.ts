@@ -15,6 +15,8 @@ export class ReceiptComponent implements OnInit{
     @Input('index') index: number;
     @Output() indexToRemove = new EventEmitter<number>();
     component: string = "R";
+    reloadedFiles: any;
+    reloadedFiles2: any;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private supplierService: SupplierService) {}
 
@@ -30,6 +32,22 @@ export class ReceiptComponent implements OnInit{
     loadWithExistingValues() {
         let storedSupplierDetails = this.supplierService.getSupplierDetails();
         let referralList = storedSupplierDetails.receipts[this.index].referrals;
+
+        this.reloadedFiles = storedSupplierDetails.receipts[this.index].referralAttachments;
+        this.reloadedFiles.forEach(element => {
+            this.referralAttachments.push(this.createAttachmentObject({
+                fileName: element.fileName,
+                file: element.file
+            }))
+        });
+        this.reloadedFiles2 = storedSupplierDetails.receipts[this.index].receiptAttachments;
+        this.reloadedFiles2.forEach(element => {
+            this.receiptAttachments.push(this.createAttachmentObject({
+                fileName: element.fileName,
+                file: element.file
+            }))
+        });
+
         referralList.forEach(rec => {
                 this.referrals.push(this.createReferralFormArrayWithValues(rec));
             });

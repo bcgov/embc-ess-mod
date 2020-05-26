@@ -120,7 +120,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
       <div *ngIf="component === 'I'" class="col-6">
         <div class="form-group">
           <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
-          <app-fileUpload (attachedFile)="setReferralFormControl($event)"
+          <app-fileUpload [reloadedFiles] = "reloadedFiles" (attachedFile)="setReferralFormControl($event)"
             (deleteFile)="deleteReferralFormControl($event)">
           </app-fileUpload>
         </div>
@@ -129,7 +129,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
       <div *ngIf="component === 'I'" class="col-6">
         <div class="form-group">
           <label class="requiredField attach-header">Attach any receipt related to this referral below</label>
-          <app-fileUpload (attachedFile)="setReceiptFormControl($event)"
+          <app-fileUpload [reloadedFiles] = "reloadedFiles2" (attachedFile)="setReceiptFormControl($event)"
             (deleteFile)="deleteReceiptFormControl($event)">
           </app-fileUpload>
         </div>

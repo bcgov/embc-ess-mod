@@ -129,9 +129,32 @@ export class SupplierService extends DataService {
     }
 
     createRemitAddressRecord(supplierDetails: any) {
-        return new Address(supplierDetails.remittanceAddress.address1, supplierDetails.remittanceAddress.address2, supplierDetails.remittanceAddress.city, supplierDetails.remittanceAddress.city.name,
-            supplierDetails.remittanceAddress.province.code, supplierDetails.remittanceAddress.province.name, supplierDetails.remittanceAddress.country, supplierDetails.remittanceAddress.country,
-            supplierDetails.remittanceAddress.postalCode);
+        if (supplierDetails.businessCountry.code === 'CAN') {
+            let provinceName = '';
+            let provinceCode = '';
+
+            if (supplierDetails.remittanceAddress.province === '') {
+                provinceName = "British Columbia";
+                provinceCode = "BC"
+            } else {
+                provinceName = supplierDetails.remittanceAddress.province.name;
+                provinceCode = supplierDetails.remittanceAddress.province.code;
+            }
+
+            return new Address(supplierDetails.remittanceAddress.address1, supplierDetails.remittanceAddress.address2, null, supplierDetails.remittanceAddress.city,
+                provinceCode, provinceName, supplierDetails.businessCountry.code, supplierDetails.businessCountry.name,
+                supplierDetails.remittanceAddress.postalCode);
+
+        } else if (supplierDetails.businessCountry.code === 'USA') {
+            return new Address(supplierDetails.remittanceAddress.address1, supplierDetails.remittanceAddress.address2, null, supplierDetails.remittanceAddress.city,
+                supplierDetails.remittanceAddress.state.code, supplierDetails.remittanceAddress.state.name, supplierDetails.businessCountry.code, supplierDetails.businessCountry.name,
+                supplierDetails.remittanceAddress.zipCode);
+
+        } else {
+            return new Address(supplierDetails.remittanceAddress.address1, supplierDetails.remittanceAddress.address2, null, supplierDetails.remittanceAddress.city,
+                null, supplierDetails.remittanceAddress.region, supplierDetails.businessCountry.code, supplierDetails.businessCountry.name,
+                supplierDetails.remittanceAddress.otherCode);
+        }
     }
 
     createSupplierInformationRecord(supplierDetails: any, contact: ContactPerson, address: Address, remit: boolean) {
@@ -140,7 +163,7 @@ export class SupplierService extends DataService {
     }
 
     createSupplierRemitInformationRecord(supplierDetails: any, contact: ContactPerson, address: Address, remit: boolean) {
-        return new SupplierInformation(supplierDetails.gstNumber, supplierDetails.supplierName, supplierDetails.supplierLegalName,
+        return new SupplierInformation(supplierDetails.gstNumber, supplierDetails.supplierName, supplierDetails.businessName,
             supplierDetails.location, address, contact, remit);
     }
 
@@ -156,7 +179,7 @@ export class SupplierService extends DataService {
 
     createReceiptslRecord(supplierDetails: any) {
         let receipts = [];
-        supplierDetails.receipts.forEach(element => { 
+        supplierDetails.receipts.forEach(element => {
             element.referrals.forEach(ref => {
                 let formattedDate = new DatePipe('en-US').transform(ref.referralDate, 'yyyy-MM-dd');
                 console.log(new DatePipe('en-US').transform(ref.referralDate, 'yyyy-MM-dd'));
@@ -191,7 +214,7 @@ export class SupplierService extends DataService {
 
     createAttachmentsRecord(supplierDetails: any) {
         let attachments = [];
-        if (supplierDetails.invoices.length>0) {
+        if (supplierDetails.invoices.length > 0) {
             supplierDetails.invoices.forEach(invoice => {
                 invoice.invoiceAttachments.forEach(e => {
                     attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, null, 2))
@@ -205,7 +228,7 @@ export class SupplierService extends DataService {
                     })
                 })
             })
-        } else if (supplierDetails.receipts.length>0) {
+        } else if (supplierDetails.receipts.length > 0) {
             supplierDetails.receipts.forEach(ref => {
                 ref.referralAttachments.forEach(e => {
                     attachments.push(new Attachment(e.file, null, e.fileName, null, ref.referralNumber, 1))

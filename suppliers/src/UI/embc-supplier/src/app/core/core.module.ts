@@ -6,10 +6,13 @@ import { PhoneMaskDirective } from './directives/PhoneMask.directive';
 import { GSTCodeDirective } from './directives/GSTCode.directive';
 import { InvoiceModalContent } from './components/modal/invoiceModal.component';
 import { ReceiptModalContent } from './components/modal/receiptModal.component';
+import { CaptchaComponent } from './components/captcha/captcha.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   declarations: [
       DragDropDirective,
@@ -17,13 +20,15 @@ import { ReceiptModalContent } from './components/modal/receiptModal.component';
       PhoneMaskDirective,
       GSTCodeDirective,
       InvoiceModalContent,
-      ReceiptModalContent
+      ReceiptModalContent,
+      CaptchaComponent
     ],
   exports: [
       DragDropDirective,
       FileUploadComponent,
       PhoneMaskDirective,
-      GSTCodeDirective
+      GSTCodeDirective,
+      CaptchaComponent
     ]
 })
 export class CoreModule { }

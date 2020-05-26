@@ -116,7 +116,7 @@
                   <label class="requiredField" for="city">City</label>
                   <input id="city" type="text" class="form-control form-control-lg" formControlName="city"
                     [ngbTypeahead]="searchCity" [resultFormatter]="cityFormatter" [inputFormatter]="cityFormatter"
-                    required />
+                    required autocomplete="doNotAutoComplete" />
                   <div
                     *ngIf="control.address['controls'].city?.invalid && (control.address['controls'].city?.dirty || control.address['controls'].city?.touched)"
                     class="text-danger">
@@ -352,7 +352,7 @@
                       <label class="requiredField" for="state">State</label>
                       <input id="state" type="text" class="form-control form-control-lg" formControlName="state"
                         [ngbTypeahead]="searchState" [resultFormatter]="stateFormatter"
-                        [inputFormatter]="stateFormatter" />
+                        [inputFormatter]="stateFormatter" autocomplete="doNotAutoComplete"/>
                       <div
                         *ngIf="control.remittanceAddress['controls'].state?.invalid && (control.remittanceAddress['controls'].state?.dirty || control.remittanceAddress['controls'].state?.touched)"
                         class="text-danger">
@@ -368,7 +368,7 @@
                       <label class="requiredField" for="province">Province</label>
                       <input id="province" type="text" class="form-control form-control-lg" formControlName="province"
                         [ngbTypeahead]="searchProvince" [resultFormatter]="cityFormatter"
-                        [inputFormatter]="cityFormatter" />
+                        [inputFormatter]="cityFormatter" autocomplete="doNotAutoComplete"/>
                       <div
                         *ngIf="control.remittanceAddress['controls'].province?.invalid && (control.remittanceAddress['controls'].province?.dirty || control.remittanceAddress['controls'].province?.touched)"
                         class="text-danger">
