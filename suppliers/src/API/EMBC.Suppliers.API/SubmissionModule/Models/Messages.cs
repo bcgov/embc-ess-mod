@@ -23,4 +23,14 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
         public string ReferenceNumber { get; }
         public Submission Submission { get; }
     }
+
+    public class GetSupplierSubmissionCommand
+    {
+        public GetSupplierSubmissionCommand(string referenceNumber)
+        {
+            ReferenceNumber = referenceNumber;
+        }
+
+        public string ReferenceNumber { get; }
+    }
 }

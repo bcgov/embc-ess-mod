@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
+using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Jasper;
 
 namespace EMBC.Suppliers.API.SubmissionModule.Models
@@ -28,6 +29,15 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
             await submissionDynamicsCustomActionHandler.Handle(new SubmissionSavedEvent(referenceNumber, cmd.Submission));
 
             return referenceNumber;
+        }
+
+        public async Task<Submission> Handle(GetSupplierSubmissionCommand cmd)
+        {
+            if (cmd is null) throw new ArgumentNullException(nameof(cmd));
+
+            var submission = await submissionRepository.GetAsync(cmd.ReferenceNumber);
+
+            return submission;
         }
     }
 }

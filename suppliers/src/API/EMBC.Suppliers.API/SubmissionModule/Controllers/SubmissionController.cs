@@ -3,6 +3,7 @@ using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Jasper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Suppliers.API.SubmissionModule.Controllers
 {
@@ -14,10 +15,12 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
     public class SubmissionController : ControllerBase
     {
         private readonly ICommandBus commandBus;
+        private readonly IHostEnvironment env;
 
-        public SubmissionController(ICommandBus commandBus)
+        public SubmissionController(ICommandBus commandBus, IHostEnvironment env)
         {
             this.commandBus = commandBus;
+            this.env = env;
         }
 
         /// <summary>
@@ -28,9 +31,24 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> Create(Submission submission)
         {
-            var id = await commandBus.Invoke<string>(new PersistSupplierSubmissionCommand(submission));
+            var referenceNumber = await commandBus.Invoke<string>(new PersistSupplierSubmissionCommand(submission));
 
-            return new JsonResult(new { submissionId = id });
+            return new JsonResult(new { submissionId = referenceNumber, referenceNumber });
+        }
+
+        /// <summary>
+        /// GET to return a submission by reference number
+        /// </summary>
+        /// <param name="referenceNumber">The reference number to search</param>
+        /// <returns>Submission object</returns>
+        [HttpGet]
+        public async Task<ActionResult<Submission>> Get(string referenceNumber)
+        {
+            if (env.IsProduction()) return NotFound(new { referenceNumber });
+
+            var submission = await commandBus.Invoke<Submission>(new GetSupplierSubmissionCommand(referenceNumber));
+            if (submission == null) return NotFound(new { referenceNumber });
+            return new JsonResult(submission);
         }
     }
 }

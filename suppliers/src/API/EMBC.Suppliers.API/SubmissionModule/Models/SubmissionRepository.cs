@@ -21,6 +21,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
         public async Task<Submission> GetAsync(string referenceNumber)
         {
             var filePath = fileSystem.Path.Combine(submissionStoragePath, $"submission_{referenceNumber}.json");
+            if (!fileSystem.File.Exists(filePath)) return null;
             using var fs = fileSystem.File.OpenRead(filePath);
             return await JsonSerializer.DeserializeAsync<Submission>(fs);
         }
