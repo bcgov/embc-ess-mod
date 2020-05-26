@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 
@@ -11,7 +12,12 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         {
             return submissions.Select(s =>
             {
-                var supplierInformation = s.Suppliers.First();
+                var supplierInformation = s.Suppliers.FirstOrDefault();
+                if (supplierInformation == null) throw new ValidationException($"submission doesn't contain any supplier information");
+                if (supplierInformation.Address == null) throw new ValidationException($"supplier's address is missing");
+                if (supplierInformation.Address.CityCode == null) throw new ValidationException($"supplier's address doesn't have a city code");
+                if (supplierInformation.Address.StateProvinceCode == null) throw new ValidationException($"supplier's address doesn't have a state/province code");
+                if (supplierInformation.Address.CountryCode == null) throw new ValidationException($"supplier's address doesn't have a country code");
                 var remittanceInformation = s.Suppliers.Count() == 1
                     ? null :
                     s.Suppliers.SingleOrDefault(i => i.ForRemittance);

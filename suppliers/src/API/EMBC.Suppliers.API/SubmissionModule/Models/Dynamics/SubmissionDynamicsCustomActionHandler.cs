@@ -46,11 +46,11 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             }
             catch (ValidationException e)
             {
-                throw new Exception($"Submission {evt.ReferenceNumber} failed validation: {e.Message}", e);
+                throw new Exception($"Submission '{evt.ReferenceNumber}' validation error: {e.Message}", e);
             }
             catch (AggregateException e)
             {
-                throw new Exception($"Submission {evt.ReferenceNumber} failed validation: {e.Message}", e);
+                throw new Exception($"Submission '{evt.ReferenceNumber}' validation error: {e.Message}", e);
             }
         }
 
@@ -63,17 +63,29 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
             foreach (var supplierInformation in submission.Suppliers)
             {
-                var jurisdiction = jurisdictions.SingleOrDefault(j => j.era_jurisdictionid.Equals(supplierInformation?.Address?.CityCode, StringComparison.OrdinalIgnoreCase));
-                if (jurisdiction == null) throw new ValidationException($"City code '{supplierInformation?.Address?.CityCode}' is null or doesn't exists in Dynamics");
-                supplierInformation.Address.CityCode = jurisdiction.era_jurisdictionid;
+                var cityCode = supplierInformation?.Address?.CityCode;
+                if (cityCode != null)
+                {
+                    var jurisdiction = jurisdictions.SingleOrDefault(j => j.era_jurisdictionid.Equals(cityCode, StringComparison.OrdinalIgnoreCase));
+                    if (jurisdiction == null) throw new ValidationException($"City code '{cityCode}' doesn't exists in Dynamics");
+                    supplierInformation.Address.CityCode = jurisdiction.era_jurisdictionid;
+                }
 
-                var stateProvince = stateProvinces.SingleOrDefault(sp => sp.era_code.Equals(supplierInformation?.Address?.StateProvinceCode, StringComparison.OrdinalIgnoreCase));
-                if (stateProvince == null) throw new ValidationException($"StateProvinceCode '{supplierInformation?.Address?.StateProvinceCode}' is null or doesn't exists in Dynamics");
-                supplierInformation.Address.StateProvinceCode = stateProvince.era_provinceterritoriesid;
+                var stateProvinceCode = supplierInformation?.Address?.StateProvinceCode;
+                if (stateProvinceCode != null)
+                {
+                    var stateProvince = stateProvinces.SingleOrDefault(sp => sp.era_code.Equals(stateProvinceCode, StringComparison.OrdinalIgnoreCase));
+                    if (stateProvince == null) throw new ValidationException($"StateProvinceCode '{stateProvinceCode}' doesn't exists in Dynamics");
+                    supplierInformation.Address.StateProvinceCode = stateProvince.era_provinceterritoriesid;
+                }
 
-                var country = countries.SingleOrDefault(c => c.era_countrycode.Equals(supplierInformation.Address?.CountryCode, StringComparison.OrdinalIgnoreCase));
-                if (country == null) throw new ValidationException($"CountryCode '{supplierInformation?.Address?.CountryCode}' is null or doesn't exists in Dynamics");
-                supplierInformation.Address.CountryCode = country.era_countryid;
+                var countryCode = supplierInformation?.Address?.Country;
+                if (countryCode != null)
+                {
+                    var country = countries.SingleOrDefault(c => c.era_countrycode.Equals(supplierInformation.Address?.CountryCode, StringComparison.OrdinalIgnoreCase));
+                    if (country == null) throw new ValidationException($"CountryCode '{supplierInformation?.Address?.CountryCode}' doesn't exists in Dynamics");
+                    supplierInformation.Address.CountryCode = country.era_countryid;
+                }
             }
 
             foreach (var lineItem in submission.LineItems)
