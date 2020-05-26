@@ -22,7 +22,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                     ? null :
                     s.Suppliers.SingleOrDefault(i => i.ForRemittance);
 
-                var receiptLineItems = s.Receipts.Select(r => (receipt: r, lineItems: s.LineItems.Where(li => li.ReceiptNumber == r.ReceiptNumber)));
+                var receiptLineItems = s.Receipts.Select(r => (receipt: r, lineItems: s.LineItems.Where(li => li.ReceiptNumber == r.ReceiptNumber && li.ReferralNumber == r.ReferralNumber)));
                 var referralLineItems = s.Referrals.Select(r => (referral: r, lineItems: s.LineItems.Where(li => string.IsNullOrEmpty(li.ReceiptNumber) && li.ReferralNumber == r.ReferralNumber)));
 
                 var receiptAttachments = s.Receipts
