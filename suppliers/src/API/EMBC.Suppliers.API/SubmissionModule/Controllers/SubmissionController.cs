@@ -43,10 +43,17 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
             {
                 //Temporarily hand validation exceptions to the client - need to remove when Dynamics handler is async from submission
                 var referenceNumber = e.Value?.ToString();
+                var pd = new ProblemDetails()
+                {
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Detail = e.Message
+                };
+                pd.Extensions.Add("submissionReferenceNumber", referenceNumber);
+                pd.Extensions.Add("traceId", HttpContext.TraceIdentifier);
                 throw new HttpResponseException($"'{referenceNumber}' validation error: {e.Message}", e)
                 {
                     Status = (int)HttpStatusCode.BadRequest,
-                    Value = Problem(statusCode: (int)HttpStatusCode.BadRequest, instance: referenceNumber, detail: e.Message).Value
+                    Value = pd
                 };
             }
         }
