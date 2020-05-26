@@ -143,13 +143,15 @@ export class SupplierSubmissionComponent implements OnInit {
 
     toggleVisibility(event: any) {
         this.remitDiv = event.target.checked;
+        if(!event.target.checked) {
+            this.supplierForm.get('businessName').reset();
+            this.supplierForm.get('remittanceAddress').reset();
+            this.supplierForm.get('businessCountry').reset();
+            this.supplierForm.get('supplierBC').reset();
+        }
     }
 
     remitVisibility(selectedValue: any) {
-        console.log(selectedValue.name)
-        //this.selectedRemitCountry = selectedValue.name;
-
-       // let selectElement = $event.target;
         var optionIndex = selectedValue.selectedIndex;
         var optionText = selectedValue.options[optionIndex];
         this.selectedRemitCountry = optionText.text;
@@ -286,13 +288,14 @@ export class SupplierSubmissionComponent implements OnInit {
         this.supplierForm.get('location').setValue(storedSupplierDetails.location);
         this.supplierForm.get('remitToOtherBusiness').setValue(storedSupplierDetails.remitToOtherBusiness);
         this.supplierForm.get('remittanceAddress').setValue(storedSupplierDetails.remittanceAddress);
+        this.loadExistingRemittanceValues(storedSupplierDetails);
         let submissionType = this.supplierForm.get('supplierSubmissionType');
         this.loadWithExistingValues(submissionType);
     }
 
-    loadExistingRemittanceValues() {
-        this.remitDiv = this.supplierForm.get('remitToOtherBusiness').value;
-        this.selectedRemitCountry = this.supplierForm.get('businessCountry').value.name;
+    loadExistingRemittanceValues(storedSupplierDetails: any) {
+        this.remitDiv = storedSupplierDetails.remitToOtherBusiness;
+        this.selectedRemitCountry = storedSupplierDetails.businessCountry.name;
         if (this.selectedRemitCountry === 'Canada') {
             this.addressDiv = false;
         } else {

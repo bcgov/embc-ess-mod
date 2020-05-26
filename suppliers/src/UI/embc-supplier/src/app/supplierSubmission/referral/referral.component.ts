@@ -10,8 +10,8 @@ import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.serv
     templateUrl: './referral.component.html',
     styleUrls: ['./referral.component.scss'],
     providers: [
-        {provide: NgbDateAdapter, useClass: CustomDateAdapterService},
-        {provide: NgbDateParserFormatter, useClass: DateParserService}
+        { provide: NgbDateAdapter, useClass: CustomDateAdapterService },
+        { provide: NgbDateParserFormatter, useClass: DateParserService }
     ]
 })
 export class ReferralComponent implements OnInit {
@@ -23,7 +23,8 @@ export class ReferralComponent implements OnInit {
     supportList: any;
     @Output() referralToRemove = new EventEmitter<number>();
     @Input() invoiceCurrentIndex: number;
-
+    reloadedFiles: any;
+    reloadedFiles2: any;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService) { }
 
@@ -45,8 +46,8 @@ export class ReferralComponent implements OnInit {
 
     ngOnInit() {
         this.supportList = this.supplierService.getSupportItems();
-        if(this.component === 'R' && this.referralForm !== null) {
-            this.referralForm.get('receiptNumber').setValue(String(this.index+1));
+        if (this.component === 'R' && this.referralForm !== null) {
+            this.referralForm.get('receiptNumber').setValue(String(this.index + 1));
         }
         if (this.supplierService.isReload) {
             this.loadWithExistingValues();
@@ -56,11 +57,24 @@ export class ReferralComponent implements OnInit {
             this.onChanges();
         }
     }
-
     loadWithExistingValues() {
         let storedSupplierDetails = this.supplierService.getSupplierDetails();
         if (this.component === 'I') {
             let rowList = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralRows;
+            this.reloadedFiles = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralAttachments;
+            this.reloadedFiles.forEach(element => {
+                this.referralAttachments.push(this.createAttachmentObject({
+                    fileName: element.fileName,
+                    file: element.file
+                }))
+            });
+            this.reloadedFiles2 = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].receiptAttachments;
+            this.reloadedFiles2.forEach(element => {
+                this.receiptAttachments.push(this.createAttachmentObject({
+                    fileName: element.fileName,
+                    file: element.file
+                }))
+            });
             rowList.forEach(row => {
                 this.referralRows.push(this.createRowFormWithValues(row));
             });

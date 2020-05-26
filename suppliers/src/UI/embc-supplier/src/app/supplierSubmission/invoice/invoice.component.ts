@@ -23,6 +23,7 @@ export class InvoiceComponent implements OnInit{
     @Output() indexToRemove = new EventEmitter<number>();
     referralList = globalConst.referralList;
     component: string = "I";
+    reloadedFiles: any;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService) {
        
@@ -49,6 +50,13 @@ export class InvoiceComponent implements OnInit{
 
     loadWithExistingValues() {
         let storedSupplierDetails = this.supplierService.getSupplierDetails();
+        this.reloadedFiles = storedSupplierDetails.invoices[this.index].invoiceAttachments;
+        storedSupplierDetails.invoices[this.index].invoiceAttachments.forEach(element => {
+            this.invoiceAttachments.push(this.createAttachmentObject({
+                fileName: element.fileName,
+                file: element.file
+            }))
+        });
         let referralList = storedSupplierDetails.invoices[this.index].referrals;
         referralList.forEach(referral => {
                 this.referrals.push(this.createReferralFormArrayWithValues(referral));
