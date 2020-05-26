@@ -47,8 +47,19 @@ namespace EMBC.Suppliers.API.DynamicsModule
                 var responseContent = await response.Content.ReadAsStringAsync();
                 // response should be in JSON format.
                 var result = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(responseContent);
-                string token = result["access_token"].GetString();
-                return token;
+                if (result.ContainsKey("access_token"))
+                {
+                    string token = result["access_token"].GetString();
+                    return token;
+                }
+                else if (result.ContainsKey("error"))
+                {
+                    throw new Exception($"{result["error"].GetString()}: {result["error_description"].GetString()}");
+                }
+                else
+                {
+                    throw new Exception(responseContent);
+                }
             }
             catch (Exception e)
             {
