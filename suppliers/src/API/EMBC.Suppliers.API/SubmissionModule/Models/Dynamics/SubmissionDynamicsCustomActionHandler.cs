@@ -44,6 +44,11 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                     }
                 }
             }
+            catch (ValidationException e)
+            {
+                var validationError = new ValidationException($"Submission '{evt.ReferenceNumber}' validation errors: {e.Message}", null, evt.ReferenceNumber);
+                throw validationError;
+            }
             catch (AggregateException e)
             {
                 var validationErrors = e.Flatten().InnerExceptions.Where(e => e is ValidationException).Cast<ValidationException>().Select(e => e.Message);
