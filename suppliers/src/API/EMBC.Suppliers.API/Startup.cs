@@ -8,7 +8,6 @@ using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,10 +23,10 @@ namespace EMBC.Suppliers.API
 
     public class Startup
     {
-        private readonly IWebHostEnvironment env;
+        private readonly IHostEnvironment env;
         private readonly IConfiguration configuration;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration, IHostEnvironment env)
         {
             this.configuration = configuration;
             this.env = env;
@@ -35,7 +34,10 @@ namespace EMBC.Suppliers.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new HttpResponseExceptionFilter());
+            });
             var dpBuilder = services.AddDataProtection();
             var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
             if (!string.IsNullOrWhiteSpace(keyRingPath))
@@ -100,7 +102,11 @@ namespace EMBC.Suppliers.API
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/error-local-development");
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
             }
 
             app.UseSerilogRequestLogging();

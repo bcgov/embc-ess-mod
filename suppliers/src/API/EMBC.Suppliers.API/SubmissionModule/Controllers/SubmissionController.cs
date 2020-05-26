@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Threading.Tasks;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Jasper;
@@ -31,9 +33,22 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> Create(Submission submission)
         {
-            var referenceNumber = await commandBus.Invoke<string>(new PersistSupplierSubmissionCommand(submission));
+            try
+            {
+                var referenceNumber = await commandBus.Invoke<string>(new PersistSupplierSubmissionCommand(submission));
 
-            return new JsonResult(new { submissionId = referenceNumber, referenceNumber });
+                return new JsonResult(new { submissionId = referenceNumber, referenceNumber });
+            }
+            catch (ValidationException e)
+            {
+                //Temporarily hand validation exceptions to the client - need to remove when Dynamics handler is async from submission
+                var referenceNumber = e.Value?.ToString();
+                throw new HttpResponseException($"'{referenceNumber}' validation error: {e.Message}", e)
+                {
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Value = Problem(statusCode: (int)HttpStatusCode.BadRequest, instance: referenceNumber, detail: e.Message).Value
+                };
+            }
         }
 
         /// <summary>
