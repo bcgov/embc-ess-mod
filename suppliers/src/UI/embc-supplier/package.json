@@ -25,6 +25,7 @@
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "bootstrap": "^4.3.1",
     "jquery": "^1.9.1",
+    "mygovbc-captcha-widget": "git+https://github.com/bcgov/MyGovBC-CAPTCHA-Widget.git",
     "popper.js": "^1.14.7",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
