@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SupplierService } from '../service/supplier.service';
 import { Router } from '@angular/router';
 import { SupplierHttpService } from '../service/supplierHttp.service';
+import * as globalConst from 'src/app/service/globalConstants'
 
 @Component({
     selector: 'review',
@@ -12,6 +13,10 @@ export class ReviewComponent implements OnInit{
 
     supplierSubmissionType: string;
     supplier: any;
+    captchaVerified = false;
+    isError =false;
+    captchaFilled = false;
+    errorMessage: string;
    
     constructor(public supplierService: SupplierService, private router: Router, private httpService: SupplierHttpService) { }
 
@@ -26,12 +31,28 @@ export class ReviewComponent implements OnInit{
     }
 
     submit() {
-        console.log("on submit click")
-        this.httpService.submitForm(this.supplierService.getPayload()).subscribe((res: any) => {
-            console.log(res);
-            this.supplierService.setReferenceNumber(res);
-            this.router.navigate(['/thankyou']);
-        })
+        if(!this.captchaFilled) {
+            this.errorMessage = globalConst.captchaErr;
+            this.isError =true;
+        } else {
+            this.httpService.submitForm(this.supplierService.getPayload()).subscribe((res: any) => {
+                console.log(res);
+                this.supplierService.setReferenceNumber(res);
+                this.router.navigate(['/thankyou']);
+            })
+        }
     }
+
+    public onValidToken(token: any) {
+        console.log('Valid token received: ', token);
+        this.captchaVerified = true;
+        this.captchaFilled = true;
+      }
+    
+      public onServerError(error: any) {
+        console.log('Server error: ', error);
+        this.captchaVerified = true;
+        this.captchaFilled = true;
+      }
 
 }

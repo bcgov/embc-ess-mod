@@ -38,7 +38,7 @@
                 <p>{{supplier?.remittanceAddress?.city}}</p>
                 <p>{{supplier?.remittanceAddress?.province}}</p>
                 <p>{{supplier?.remittanceAddress?.postalCode}}</p>
-                <p>{{supplier?.businessCountry}}</p>
+                <p>{{supplier?.businessCountry.name}}</p>
             </div>
             <div *ngIf="supplierSubmissionType === 'invoice'">
                 <div class="formHeading">
@@ -197,6 +197,15 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col offset-1">
+                <captcha language="en" eagerFetchAudio="true" (validToken)="onValidToken($event)" (serverError)="onServerError($event)"></captcha>
+            </div>
+        </div>
+        <br>
+
+        <p *ngIf="isError" style="color: red;">{{errorMessage}}</p>
+        <br>
 
         <div class="row" style="justify-content: space-between;">
             <div>
