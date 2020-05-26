@@ -39,6 +39,11 @@ export class ReviewComponent implements OnInit{
                 console.log(res);
                 this.supplierService.setReferenceNumber(res);
                 this.router.navigate(['/thankyou']);
+            },
+            (error: any) => {
+                console.log(error);
+                this.isError =true;
+                this.errorMessage = globalConst.appSubmitErr;
             })
         }
     }
