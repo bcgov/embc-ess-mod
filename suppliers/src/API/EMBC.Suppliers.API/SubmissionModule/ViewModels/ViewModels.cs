@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
 {
@@ -87,7 +88,10 @@ namespace EMBC.Suppliers.API.SubmissionModule.ViewModels
         public string FileName { get; set; }
         public string InvoiceNumber { get; set; }
         public string ReferralNumber { get; set; }
-        public AttachmentType Type { get; set; }
+        public AttachmentType? Type { get; set; }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public AttachmentType? ReferenceType { get; set; }
     }
 
     public enum AttachmentType

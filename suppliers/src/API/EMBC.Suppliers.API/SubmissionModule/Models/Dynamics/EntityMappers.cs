@@ -19,9 +19,15 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 var receiptLineItems = s.Receipts.Select(r => (receipt: r, lineItems: s.LineItems.Where(li => li.ReceiptNumber == r.ReceiptNumber)));
                 var referralLineItems = s.Referrals.Select(r => (referral: r, lineItems: s.LineItems.Where(li => string.IsNullOrEmpty(li.ReceiptNumber) && li.ReferralNumber == r.ReferralNumber)));
 
-                var receiptAttachments = s.Receipts.Select(r => (receipt: r, attachments: s.Attachments.Where(a => a.ReferralNumber == r.ReferralNumber && a.Type == AttachmentType.Receipt)));
-                var referralAttachments = s.Referrals.Select(r => (referral: r, attachments: s.Attachments.Where(a => a.ReferralNumber == r.ReferralNumber && a.Type == AttachmentType.Referral)));
-                var invoiceAttachments = s.Invoices.Select(i => (invoic: i, attachments: s.Attachments.Where(a => a.InvoiceNumber == i.InvoiceNumber && a.Type == AttachmentType.Invoice)));
+                var receiptAttachments = s.Receipts
+                    .Select(r => (receipt: r, attachments: s.Attachments
+                        .Where(a => a.ReferralNumber == r.ReferralNumber && (a.Type == AttachmentType.Receipt || a.ReferenceType == AttachmentType.Receipt))));
+                var referralAttachments = s.Referrals
+                    .Select(r => (referral: r, attachments: s.Attachments
+                        .Where(a => a.ReferralNumber == r.ReferralNumber && (a.Type == AttachmentType.Referral || a.ReferenceType == AttachmentType.Referral))));
+                var invoiceAttachments = s.Invoices
+                    .Select(i => (invoic: i, attachments: s.Attachments
+                        .Where(a => a.InvoiceNumber == i.InvoiceNumber && (a.Type == AttachmentType.Invoice || a.ReferenceType == AttachmentType.Invoice))));
 
                 return new SubmissionEntity
                 {
