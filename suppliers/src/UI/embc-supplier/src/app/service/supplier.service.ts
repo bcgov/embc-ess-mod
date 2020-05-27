@@ -173,7 +173,6 @@ export class SupplierService extends DataService {
             let formattedDate = new DatePipe('en-US').transform(element.invoiceDate, 'yyyy-MM-dd');
             invoices.push(new Invoices(element.invoiceNumber, formattedDate, element.invoiceTotalGst, element.invoiceTotalAmount))
         });
-        //  return new Invoices('string', '2020-01-30', 10, 300);
         return invoices;
     }
 
@@ -182,12 +181,9 @@ export class SupplierService extends DataService {
         supplierDetails.receipts.forEach(element => {
             element.referrals.forEach(ref => {
                 let formattedDate = new DatePipe('en-US').transform(ref.referralDate, 'yyyy-MM-dd');
-                console.log(new DatePipe('en-US').transform(ref.referralDate, 'yyyy-MM-dd'));
-                console.log(ref.referralDate)
-                receipts.push(new Receipts(ref.receiptNumber, formattedDate, element.receiptTotalGst, element.receiptTotalAmount, element.referralNumber))
+                receipts.push(new Receipts(ref.receiptNumber, formattedDate, ref.totalGst, ref.totalAmount, element.referralNumber))
             })
         });
-        //  return new Invoices('string', '2020-01-30', 10, 300);
         return receipts;
     }
 
@@ -209,7 +205,6 @@ export class SupplierService extends DataService {
             })
         });
         return lineItems;
-        //return new LineItems('string', 'string', 2, 100, null, 'string');
     }
 
     createAttachmentsRecord(supplierDetails: any) {
@@ -241,7 +236,6 @@ export class SupplierService extends DataService {
         }
 
         return attachments;
-        // return [];
     }
 
     createReferralsRecord(supplierDetails: any) {
@@ -252,11 +246,8 @@ export class SupplierService extends DataService {
             })
         });
         supplierDetails.receipts.forEach(receipt => {
-            receipt.referrals.forEach(element => {
-                referrals.push(new Referrals(receipt.referralNumber, element.totalGst, element.totalAmount, null));
-            })
+                referrals.push(new Referrals(receipt.referralNumber, receipt.receiptTotalGst, receipt.receiptTotalAmount, null));
         });
         return referrals;
-        //return new Referrals('string', 10, 100, 'string');
     }
 }
