@@ -105,7 +105,8 @@
                     <h3>Attachments</h3>
                 </div>
                 <div *ngFor="let invoice of supplier?.invoices">
-                    <div *ngIf="invoice.invoiceAttachments.length" class="attach-box" style="padding: 7px;">
+                    <div *ngIf="invoice.invoiceAttachments.length > 0"
+                        class="attach-box" style="padding: 7px;">
                         <p><b>Invoice {{invoice.invoiceNumber }}</b></p>
                         <div *ngFor="let attach of invoice.invoiceAttachments">
                             <p>{{attach.fileName}}</p>
@@ -114,6 +115,9 @@
                         <div *ngFor="let ref of invoice.referrals">
                             <p><b>Referral {{ref.referralNumber }}</b></p>
                             <div *ngFor="let attach of ref.receiptAttachments">
+                                <p>{{attach.fileName}}</p>
+                            </div>
+                            <div *ngFor="let attach of ref.referralAttachments">
                                 <p>{{attach.fileName}}</p>
                             </div>
                         </div>
@@ -188,9 +192,13 @@
                     <h3>Attachments</h3>
                 </div>
                 <div *ngFor="let receipt of supplier?.receipts">
-                    <div *ngIf="receipt.receiptAttachments.length >0" class="box" style="padding: 7px;">
+                    <div *ngIf="receipt.receiptAttachments.length >0 || receipt.referralAttachments.length >0"
+                        class="box" style="padding: 7px;">
                         <p><b>Referral {{receipt.referralNumber }}</b></p>
                         <div *ngFor="let attach of receipt.receiptAttachments">
+                            <p>{{attach.fileName}}</p>
+                        </div>
+                        <div *ngFor="let attach of receipt.referralAttachments">
                             <p>{{attach.fileName}}</p>
                         </div>
                     </div>
@@ -199,7 +207,8 @@
         </div>
         <div class="row">
             <div class="col offset-1">
-                <captcha language="en" eagerFetchAudio="true" (validToken)="onValidToken($event)" (serverError)="onServerError($event)"></captcha>
+                <captcha language="en" eagerFetchAudio="true" (validToken)="onValidToken($event)"
+                    (serverError)="onServerError($event)"></captcha>
             </div>
         </div>
         <br>

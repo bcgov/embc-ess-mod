@@ -34,7 +34,8 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
               <input class="form-control form-control-lg" placeholder="mm/dd/yyyy" id="invoiceDate"
                 [formControlName]="'invoiceDate'" ngbDatepicker #d2="ngbDatepicker">
               <div class="input-group-append">
-                <button class="btn btn-outline-primary" (click)="d2.toggle()" type="button"><i class="far fa-calendar-alt"></i></button>
+                <button class="btn btn-outline-primary" (click)="d2.toggle()" type="button"><i
+                    class="far fa-calendar-alt"></i></button>
               </div>
             </div>
             <div
@@ -46,30 +47,37 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="requiredField" for="referralList">How many referrals are listed on your invoice?</label>
-            <select class="form-control form-control-lg" id="referralList" [formControlName]="'referralList'">
-              <option *ngFor="let no of referralList" [ngValue]="no">{{no.name}}</option>
-            </select>
-            <div
-              *ngIf="invoiceControl.referralList?.invalid && (invoiceControl.referralList?.dirty || invoiceControl.referralList?.touched)"
-              class="text-danger">
-              <div *ngIf="invoiceControl.referralList?.errors.required">
-                Number of referrals is required
+          <p *ngIf="hidden" class="note">Note: To add more referrals, click "Add another referral"
+            at the bottom of the page.</p>
+
+          <div *ngIf="!hidden">
+            <div class="form-group">
+              <label class="requiredField" for="referralList">How many referrals are listed on your invoice?</label>
+              <select class="form-control form-control-lg" id="referralList" [formControlName]="'referralList'">
+                <option *ngFor="let no of referralList" [ngValue]="no">{{no.name}}</option>
+              </select>
+              <div
+                *ngIf="invoiceControl.referralList?.invalid && (invoiceControl.referralList?.dirty || invoiceControl.referralList?.touched)"
+                class="text-danger">
+                <div *ngIf="invoiceControl.referralList?.errors.required">
+                  Number of referrals is required
+                </div>
               </div>
+            </div>
+
+            <div>
+              <button type="button" (click)="addReferralTemplate(invoiceForm.get('referralList').value.id)"
+                class="btn btn-primary referral-button">Next</button>
             </div>
           </div>
 
-          <div>
-            <button type="button" (click)="addReferralTemplate(invoiceForm.get('referralList').value.id)"
-              class="btn btn-primary referral-button">Next</button>
-          </div>
         </div>
 
         <div class="col-sm-12 col-md-6">
           <div class="form-group">
             <label class="requiredField">Attach a photo/scanned copy of your invoice</label>
-            <app-fileUpload [reloadedFiles]="reloadedFiles" (attachedFile)="setFileFormControl($event)" (deleteFile)="deleteFileFormControl($event)">
+            <app-fileUpload [reloadedFiles]="reloadedFiles" (attachedFile)="setFileFormControl($event)"
+              (deleteFile)="deleteFileFormControl($event)">
             </app-fileUpload>
           </div>
         </div>
@@ -77,8 +85,8 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
 
       <div formArrayName="referrals">
         <div *ngFor="let referral of referrals.controls; let j = index">
-          <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j" [component]="component" [invoiceCurrentIndex] = "index"
-            (referralToRemove)="removeReferral($event)"></app-referral>
+          <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j" [component]="component"
+            [invoiceCurrentIndex]="index" (referralToRemove)="removeReferral($event)"></app-referral>
         </div>
       </div>
 
@@ -88,18 +96,24 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
             this invoice</a>
         </div>
       </div>
-
-      <div *ngIf="referrals.controls.length>0" class="row justify-content-end">
-        <div class="col-3">
-          Total GST
+      <br>
+      <div *ngIf="referrals.controls.length>0" class="row">
+        <div class="col-12 form-inline" style="justify-content: flex-end;">
+          Total GST &nbsp;&nbsp;
           <input type="number" [formControlName]="'invoiceTotalGst'" class="form-control form-control-lg" readonly>
         </div>
       </div>
-
-      <div *ngIf="referrals.controls.length> 0" class="row justify-content-end">
-        <div class="col-3">
-          Total Amount
-          <input type="number" [formControlName]="'invoiceTotalAmount'" class="form-control form-control-lg" readonly>
+      <br>
+      <div *ngIf="referrals.controls.length> 0" class="row">
+        <div class="col-12 form-inline" style="justify-content: flex-end;">
+          Total Amount &nbsp;&nbsp;
+          <span class="input-help">
+            <input type="number" id="invoiceTotalAmount" [formControlName]="'invoiceTotalAmount'"
+              class="form-control form-control-lg" readonly>
+            <small id="invoiceTotalAmount" class="form-text text-muted">
+              (excluding GST)
+            </small>
+          </span>
         </div>
       </div>
 

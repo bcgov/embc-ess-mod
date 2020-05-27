@@ -24,6 +24,7 @@ export class InvoiceComponent implements OnInit{
     referralList = globalConst.referralList;
     component: string = "I";
     reloadedFiles: any;
+    hidden = false;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService) {
        
@@ -58,6 +59,9 @@ export class InvoiceComponent implements OnInit{
             }))
         });
         let referralList = storedSupplierDetails.invoices[this.index].referrals;
+        if(referralList.length > 0) {
+            this.hidden = true;
+        }
         referralList.forEach(referral => {
                 this.referrals.push(this.createReferralFormArrayWithValues(referral));
             });
@@ -111,6 +115,9 @@ export class InvoiceComponent implements OnInit{
     }
 
     addReferralTemplate(templateNo: number) {
+        if(templateNo !== undefined && templateNo !== 0) {
+            this.hidden = !this.hidden;
+        }
         for (let i = 0; i < templateNo; i++) {
             this.injectTemplateReferral();
         }
