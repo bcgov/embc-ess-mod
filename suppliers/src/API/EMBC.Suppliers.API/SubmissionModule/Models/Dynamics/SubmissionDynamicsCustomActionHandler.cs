@@ -46,11 +46,19 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             }
             catch (ValidationException e)
             {
-                throw new Exception($"Submission '{evt.ReferenceNumber}' validation error: {e.Message}", e);
+                var validationError = new ValidationException($"Submission '{evt.ReferenceNumber}' validation errors: {e.Message}", null, evt.ReferenceNumber);
+                throw validationError;
             }
             catch (AggregateException e)
             {
-                throw new Exception($"Submission '{evt.ReferenceNumber}' validation error: {e.Message}", e);
+                var validationErrors = e.Flatten().InnerExceptions.Where(e => e is ValidationException).Cast<ValidationException>().Select(e => e.Message);
+                if (validationErrors.Any())
+                {
+                    var aggregatedErrors = string.Join(';', validationErrors);
+                    var validationError = new ValidationException($"Submission '{evt.ReferenceNumber}' validation errors: {aggregatedErrors}", null, evt.ReferenceNumber);
+                    throw validationError;
+                }
+                throw;
             }
         }
 
@@ -79,7 +87,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                     supplierInformation.Address.StateProvinceCode = stateProvince.era_provinceterritoriesid;
                 }
 
-                var countryCode = supplierInformation?.Address?.Country;
+                var countryCode = supplierInformation?.Address?.CountryCode;
                 if (countryCode != null)
                 {
                     var country = countries.SingleOrDefault(c => c.era_countrycode.Equals(supplierInformation.Address?.CountryCode, StringComparison.OrdinalIgnoreCase));
@@ -91,7 +99,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             foreach (var lineItem in submission.LineItems)
             {
                 var support = supports.SingleOrDefault(s => s.era_name.Equals(lineItem?.SupportProvided, StringComparison.OrdinalIgnoreCase));
-                if (support == null) throw new ValidationException($"in line item referral {lineItem?.ReferralNumber}, SupportProvided '{lineItem?.SupportProvided}' is null or doesn't exists in Dynamics");
+                if (support == null) throw new ValidationException($"in line item referral '{lineItem?.ReferralNumber}', SupportProvided '{lineItem?.SupportProvided}' is null or doesn't exists in Dynamics");
                 lineItem.SupportProvided = support.era_supportid;
             }
 
