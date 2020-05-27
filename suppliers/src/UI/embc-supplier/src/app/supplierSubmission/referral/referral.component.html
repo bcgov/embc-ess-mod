@@ -12,13 +12,13 @@ Duplicate Referral Numbers should display an error message and remove the duplic
               <label class="requiredField" for="referralNumber">Referral Number</label>
               <input type="text" class="form-control form-control-lg" id="referralNumber"
                 [formControlName]="'referralNumber'">
-                <div
-              *ngIf="referralControl.referralNumber?.invalid && (referralControl.referralNumber?.dirty || referralControl.referralNumber?.touched)"
-              class="text-danger">
-              <div *ngIf="referralControl.referralNumber?.errors.required">
-                Referral Number is required
+              <div
+                *ngIf="referralControl.referralNumber?.invalid && (referralControl.referralNumber?.dirty || referralControl.referralNumber?.touched)"
+                class="text-danger">
+                <div *ngIf="referralControl.referralNumber?.errors.required">
+                  Referral Number is required
+                </div>
               </div>
-            </div>
             </div>
           </div>
           <div class="col-auto">
@@ -28,17 +28,18 @@ Duplicate Referral Numbers should display an error message and remove the duplic
 
         <div *ngIf="component === 'R'" class="row">
           <div class="col-sm-12 col-md-6 mr-auto">
-           <p style="font-weight: bold;">Receipt {{index+1}}</p>
+            <p style="font-weight: bold;">Receipt {{index+1}}</p>
             <div class="form-group">
               <label class="requiredField" for="referralDate">Referral Date</label>
-                <div class="input-group">
-                  <input class="form-control form-control-lg" placeholder="mm/dd/yyyy" id="referralDate"
-                    [formControlName]="'referralDate'" ngbDatepicker #d2="ngbDatepicker">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-primary" (click)="d2.toggle()" type="button"><i class="far fa-calendar-alt"></i></button>
-                  </div>
+              <div class="input-group">
+                <input class="form-control form-control-lg" placeholder="mm/dd/yyyy" id="referralDate"
+                  [formControlName]="'referralDate'" ngbDatepicker #d2="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" (click)="d2.toggle()" type="button"><i
+                      class="far fa-calendar-alt"></i></button>
                 </div>
-                <div
+              </div>
+              <div
                 *ngIf="referralControl.referralDate?.invalid && (referralControl.referralDate?.dirty || referralControl.referralDate?.touched)"
                 class="text-danger">
                 <div *ngIf="referralControl.referralDate?.errors.required">
@@ -48,7 +49,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
             </div>
           </div>
           <div class="col-auto">
-            <i  (click)="referralToRemove.emit(index)" class="far fa-times-circle"></i>
+            <i (click)="referralToRemove.emit(index)" class="far fa-times-circle"></i>
           </div>
         </div>
       </div>
@@ -102,25 +103,30 @@ Duplicate Referral Numbers should display an error message and remove the duplic
         </table>
       </div>
 
-      <div class="col-12">
-        <div class="float-right">
-          Total GST
+      <div class="col-12 form-inline" style="justify-content: flex-end;">
+        <div>
+          Total GST &nbsp;&nbsp;
           <input type="number" formControlName="totalGst" class="form-control" readonly>
         </div>
       </div>
       <br>
       <br>
-      <div class="col-12">
-        <div class="float-right" style="margin-bottom: 6px;">
-          Total Amount
-          <input type="number" formControlName="totalAmount" class="form-control" readonly>
+      <div class="col-12 form-inline" style="justify-content: flex-end;">
+        <div style="margin-bottom: 6px;">
+          Total Amount &nbsp;&nbsp;
+          <span class="input-help">
+            <input id="totalAmount" type="number" formControlName="totalAmount" class="form-control" readonly>
+            <small id="totalAmount" class="form-text text-muted">
+              (excluding GST)
+            </small>
+          </span>
         </div>
       </div>
 
       <div *ngIf="component === 'I'" class="col-6">
         <div class="form-group">
           <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
-          <app-fileUpload [reloadedFiles] = "reloadedFiles" (attachedFile)="setReferralFormControl($event)"
+          <app-fileUpload [reloadedFiles]="reloadedFiles" (attachedFile)="setReferralFormControl($event)"
             (deleteFile)="deleteReferralFormControl($event)">
           </app-fileUpload>
         </div>
@@ -129,7 +135,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
       <div *ngIf="component === 'I'" class="col-6">
         <div class="form-group">
           <label class="requiredField attach-header">Attach any receipt related to this referral below</label>
-          <app-fileUpload [reloadedFiles] = "reloadedFiles2" (attachedFile)="setReceiptFormControl($event)"
+          <app-fileUpload [reloadedFiles]="reloadedFiles2" (attachedFile)="setReceiptFormControl($event)"
             (deleteFile)="deleteReceiptFormControl($event)">
           </app-fileUpload>
         </div>

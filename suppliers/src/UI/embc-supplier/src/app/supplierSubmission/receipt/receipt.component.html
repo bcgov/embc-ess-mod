@@ -32,10 +32,10 @@
 
       <div class="row">
         <div class="col-12">
-          <a (click)="addSingleReferralTemplate()" class="btn btn-block add-referral-button">+ Add another receipt to this </a>
+          <a (click)="addSingleReferralTemplate()" class="btn btn-block add-referral-button">+ Add another receipt to this referral</a>
         </div>
       </div>
-
+      <br>
       <div class="row">
         <div class="col-6">
           <div class="form-group">
@@ -54,17 +54,22 @@
         </div>
       </div>
 
-      <div *ngIf="referrals.controls.length>0" class="row justify-content-end">
-        <div class="col-3">
-          Total GST
+      <div *ngIf="referrals.controls.length>0" class="row">
+        <div class="col-12 form-inline" style="justify-content: flex-end;">
+          Total GST &nbsp;&nbsp;
           <input type="number" [formControlName]="'receiptTotalGst'" class="form-control form-control-lg" readonly>
         </div>
       </div>
-
-      <div *ngIf="referrals.controls.length> 0" class="row justify-content-end">
-        <div class="col-3">
-          Total Amount
-          <input type="number" [formControlName]="'receiptTotalAmount'" class="form-control form-control-lg" readonly>
+      <br>
+      <div *ngIf="referrals.controls.length> 0" class="row">
+        <div class="col-12 form-inline" style="justify-content: flex-end;">
+          Total Amount &nbsp;&nbsp;
+          <span class="input-help">
+            <input type="number" id="receiptTotalAmount" [formControlName]="'receiptTotalAmount'" class="form-control form-control-lg" readonly>
+            <small id="receiptTotalAmount" class="form-text text-muted">
+              (excluding GST)
+            </small>
+          </span>
         </div>
       </div>
 
