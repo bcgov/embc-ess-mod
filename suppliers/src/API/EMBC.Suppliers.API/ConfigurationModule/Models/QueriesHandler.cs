@@ -37,7 +37,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 
         public async Task<IEnumerable<Jurisdiction>> Handle(JurisdictionsQueryCommand cmd)
         {
-            var types = cmd.Types ?? Array.Empty<string>();
+            var types = cmd.Types ?? Array.Empty<JurisdictionType>();
             return await jurisdictionsListProvider.GetJurisdictionsAsync(types.ToArray(), cmd.StateProvinceCode, cmd.CountryCode);
         }
 
@@ -49,11 +49,11 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 
     public class JurisdictionsQueryCommand
     {
-        public IEnumerable<string> Types { get; }
+        public IEnumerable<JurisdictionType> Types { get; }
         public string StateProvinceCode { get; }
         public string CountryCode { get; }
 
-        public JurisdictionsQueryCommand(IEnumerable<string> types, string countryCode, string stateProvinceCode)
+        public JurisdictionsQueryCommand(IEnumerable<JurisdictionType> types, string countryCode, string stateProvinceCode)
         {
             CountryCode = countryCode;
             Types = types;

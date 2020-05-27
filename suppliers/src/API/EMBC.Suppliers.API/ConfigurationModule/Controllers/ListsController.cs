@@ -34,7 +34,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
         }
 
         [HttpGet("jurisdictions")]
-        public async Task<ActionResult<IEnumerable<Jurisdiction>>> GetJurisdictions([FromQuery] string[] types, [FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
+        public async Task<ActionResult<IEnumerable<Jurisdiction>>> GetJurisdictions([FromQuery] JurisdictionType[] types = null, [FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
         {
             return Ok(await commandBus.Invoke<IEnumerable<Jurisdiction>>(new JurisdictionsQueryCommand(types, countryCode, stateProvinceCode)));
         }
