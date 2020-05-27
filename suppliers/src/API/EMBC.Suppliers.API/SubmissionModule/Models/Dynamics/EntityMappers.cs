@@ -144,25 +144,28 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         {
             Func<Attachment, string> subjectMapper = a =>
             {
-                switch (a.Type)
+                return a.Type switch
                 {
-                    case AttachmentType.Receipt:
-                        return $"inv-{a.InvoiceNumber}";
-
-                    case AttachmentType.Referral:
-                        return $"ref-{a.ReferralNumber}";
-
-                    case AttachmentType.Invoice:
-                        return $"rec-{a.ReferralNumber}";
-
-                    default:
-                        throw new NotSupportedException();
-                }
+                    AttachmentType.Receipt => $"ref{a.ReferralNumber}_receipt_{a.FileName}",
+                    AttachmentType.Referral => $"ref{a.ReferralNumber}_{a.FileName}",
+                    AttachmentType.Invoice => $"inv{a.InvoiceNumber}_{a.FileName}",
+                    _ => throw new NotSupportedException(),
+                };
+            };
+            Func<Attachment, string> fileNameMapper = a =>
+            {
+                return a.Type switch
+                {
+                    AttachmentType.Receipt => $"ref{a.ReferralNumber}_receipt_{a.FileName}",
+                    AttachmentType.Referral => $"ref{a.ReferralNumber}_{a.FileName}",
+                    AttachmentType.Invoice => $"inv{a.InvoiceNumber}_{a.FileName}",
+                    _ => throw new NotSupportedException(),
+                };
             };
             return attachments.Select((a, n) => new AttachmentEntity
             {
                 body = a.Content,
-                filename = a.FileName,
+                filename = fileNameMapper(a),
                 subject = subjectMapper(a)
             });
         }
