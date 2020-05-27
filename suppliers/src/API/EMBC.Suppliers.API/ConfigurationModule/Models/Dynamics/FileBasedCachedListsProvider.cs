@@ -22,13 +22,11 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             this.fileSystem = fileSystem;
             this.cache = cache;
             this.options = options.Value;
-            if (!fileSystem.Directory.Exists(this.options.CachePath))
+            if (!fileSystem.Directory.Exists(this.options.CachePath)) fileSystem.Directory.CreateDirectory(this.options.CachePath);
+            foreach (var file in fileSystem.Directory.GetFiles(sourceCsvFolder, "*.csv"))
             {
-                fileSystem.Directory.CreateDirectory(this.options.CachePath);
-                foreach (var file in fileSystem.Directory.GetFiles(sourceCsvFolder, "*.csv"))
-                {
-                    fileSystem.File.Copy(file, fileSystem.Path.Combine(this.options.CachePath, fileSystem.Path.GetFileName(file)));
-                }
+                var destFile = fileSystem.Path.Combine(this.options.CachePath, fileSystem.Path.GetFileName(file));
+                if (!fileSystem.File.Exists(destFile)) fileSystem.File.Copy(file, destFile);
             }
         }
 
