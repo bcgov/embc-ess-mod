@@ -24,6 +24,13 @@
   padding: 10px;
 }
 
+.note {
+  color: grey;
+  font-weight: lighter;
+  font-style: italic;
+  font-size: 15px;
+}
+
 .form-body {
   background-color: $gray2;
   border-left: 3px theme-color(primary) solid;
@@ -39,6 +46,7 @@
 }
 
 .add-referral-button {
+  font-weight: bold;
   color: theme-color(primary) !important;
   border: 1px theme-color(primary) solid;
   background-color: white;

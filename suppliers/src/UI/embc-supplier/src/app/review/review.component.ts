@@ -41,9 +41,12 @@ export class ReviewComponent implements OnInit{
                 this.router.navigate(['/thankyou']);
             },
             (error: any) => {
-                console.log(error);
                 this.isError =true;
-                this.errorMessage = globalConst.appSubmitErr;
+                if(error.detail && error.detail !== "") {
+                    this.errorMessage = error.detail
+                } else {
+                    this.errorMessage = globalConst.appSubmitErr;
+                }
             })
         }
     }

@@ -10,7 +10,7 @@
     <hr>
 
     <div class="row">
-      <div class="col-sm-12 col-md-8">
+      <div class="col-sm-12 col-md-9">
         <div>
           <p>
             Are you a <b>registered supplier with Emergency Support Services (ESS)</b> who has provided goods or
@@ -25,7 +25,7 @@
             information received is correct.
           </p>
           <p>
-            All required fields are maked with a red asterisk(<span style="color: red;">*</span>)
+            All required fields are marked with a red asterisk(<span style="color: red;">*</span>)
           </p>
         </div>
         <div class="formHeading">
@@ -116,12 +116,12 @@
                   <label class="requiredField" for="city">City</label>
                   <input id="city" type="text" class="form-control form-control-lg" formControlName="city"
                     [ngbTypeahead]="searchCity" [resultFormatter]="cityFormatter" [inputFormatter]="cityFormatter"
-                    required autocomplete="doNotAutoComplete" />
+                    required autocomplete="doNotAutoComplete" [editable]="false" />
                   <div
                     *ngIf="control.address['controls'].city?.invalid && (control.address['controls'].city?.dirty || control.address['controls'].city?.touched)"
                     class="text-danger">
                     <div *ngIf="control.address['controls'].city?.errors.required">
-                      City is required
+                      City is required or invalid
                     </div>
                   </div>
                 </div>
@@ -167,7 +167,8 @@
             <br>
             <div formGroupName="contactPerson">
               <p style="font-weight: bold">Contact Person</p>
-
+              <p>The contact person may be asked for additional information or clarification regarding this submission.
+              </p>
               <div class="row">
                 <div class="form-group col-lg-6">
                   <label class="requiredField" for="firstName">First Name</label>
@@ -262,8 +263,8 @@
 
                 <div class="row">
                   <div class="form-group col-lg-6">
-                    <label class="requiredField" for="businessCountry"><b>What Country Is This Supplier Located</b>
-                      In?</label>
+                    <label class="requiredField" for="businessCountry"><b>What Country Is This Supplier Located In?</b>
+                      </label>
                     <select class="form-control form-control-lg" formControlName="businessCountry"
                       (change)="remitVisibility($event.target)">
                       <option selected>Country/Region</option>
@@ -352,12 +353,12 @@
                       <label class="requiredField" for="state">State</label>
                       <input id="state" type="text" class="form-control form-control-lg" formControlName="state"
                         [ngbTypeahead]="searchState" [resultFormatter]="stateFormatter"
-                        [inputFormatter]="stateFormatter" autocomplete="doNotAutoComplete"/>
+                        [inputFormatter]="stateFormatter" autocomplete="doNotAutoComplete" [editable]="false" />
                       <div
                         *ngIf="control.remittanceAddress['controls'].state?.invalid && (control.remittanceAddress['controls'].state?.dirty || control.remittanceAddress['controls'].state?.touched)"
                         class="text-danger">
                         <div *ngIf="control.remittanceAddress['controls'].state?.errors.required">
-                          State is required
+                          State is required or invalid
                         </div>
                       </div>
                     </div>
@@ -368,12 +369,12 @@
                       <label class="requiredField" for="province">Province</label>
                       <input id="province" type="text" class="form-control form-control-lg" formControlName="province"
                         [ngbTypeahead]="searchProvince" [resultFormatter]="cityFormatter"
-                        [inputFormatter]="cityFormatter" autocomplete="doNotAutoComplete"/>
+                        [inputFormatter]="cityFormatter" autocomplete="doNotAutoComplete" [editable]="false" />
                       <div
                         *ngIf="control.remittanceAddress['controls'].province?.invalid && (control.remittanceAddress['controls'].province?.dirty || control.remittanceAddress['controls'].province?.touched)"
                         class="text-danger">
                         <div *ngIf="control.remittanceAddress['controls'].province?.errors.required">
-                          Province is required
+                          Province is required or invalid
                         </div>
                       </div>
                     </div>
@@ -397,7 +398,7 @@ Postal Code must in the correct format of NNNNN
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="postalCode">Postal Code</label>
                       <input type="text" class="form-control form-control-lg" formControlName="postalCode"
-                         id="postalCode">
+                        id="postalCode">
                       <div
                         *ngIf="control.remittanceAddress['controls'].postalCode?.invalid && (control.remittanceAddress['controls'].postalCode?.dirty || control.remittanceAddress['controls'].postalCode?.touched)"
                         class="text-danger">
@@ -485,7 +486,7 @@ The system must provide a warning message if a user selects to delete an Invoice
                   <div class="row tips-section">
                     <p><b>Important Tips:</b></p>
                     <ul>
-                      <li>Please list all referrals associated with a single invoice only.</li>
+                      <li>Please include an electronic copy of each referral associated to this invoice submission.</li>
                       <li>If you have more than 1 invoice to submit, click "Add another invoice" at the bottom of the
                         page.
                       </li>
@@ -548,7 +549,7 @@ The system must provide a warning message if a user selects to delete an Invoice
                 <div class="row" style="justify-content: space-between;">
                   <div>
                     <button type="button" (click)="addReceiptTemplate()" class="btn btn-primary">Add Another
-                      Receipt</button>
+                      Referral</button>
                   </div>
                   <div>
                     <button type="submit" [disabled]="!supplierForm.valid" class="btn btn-warning">I am Done!
@@ -565,7 +566,7 @@ The system must provide a warning message if a user selects to delete an Invoice
 
       </div>
 
-      <div class="col-sm-12 col-md-4">
+      <div class="col-sm-12 col-md-3">
 
         <div class="card sidebox-card-info text-white">
           <div class="card-body">
@@ -582,7 +583,8 @@ The system must provide a warning message if a user selects to delete an Invoice
               </li>
               <li>Goods or services are rendered only to those listed on the referral.</li>
               <li>Goods or services rendered are eligible items as listed on the Referral.</li>
-              <li>Exceptions or cost overages must be authorized by EMBC and supporting documentation must be attached to the submission.</li>
+              <li>Exceptions or cost overages must be authorized by EMBC and supporting documentation must be attached
+                to the submission.</li>
               <li>Make copies of invoices and receipts for your records.</li>
             </ul>
           </div>
@@ -592,9 +594,8 @@ The system must provide a warning message if a user selects to delete an Invoice
           <div class="card-body">
             <h3 class="card-title"><i class="far fa-question-circle" style="font-size: 25px;"></i>&nbsp;
               Questions about submitting</h3>
-            <p class="card-text">If you have any questions or need assistance with this form, please contact Emergency
-              Management BC
-              on 1-800-585-9559.
+            <p class="card-text">If you have any questions or need assistance regarding the navigation and submission of
+              this form, please contact the ERA Tool Support team at 1-844-537-7377.
             </p>
           </div>
         </div>
