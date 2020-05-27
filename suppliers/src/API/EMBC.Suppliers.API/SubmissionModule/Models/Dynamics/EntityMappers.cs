@@ -146,9 +146,9 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             {
                 return a.Type switch
                 {
-                    AttachmentType.Receipt => $"ref{a.ReferralNumber}_receipt_{a.FileName}",
-                    AttachmentType.Referral => $"ref{a.ReferralNumber}_{a.FileName}",
-                    AttachmentType.Invoice => $"inv{a.InvoiceNumber}_{a.FileName}",
+                    AttachmentType.Receipt => $"{a.ReferralNumber}",
+                    AttachmentType.Referral => $"{a.ReferralNumber}",
+                    AttachmentType.Invoice => $"{a.InvoiceNumber}",
                     _ => throw new NotSupportedException(),
                 };
             };
