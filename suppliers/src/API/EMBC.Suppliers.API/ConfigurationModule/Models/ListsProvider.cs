@@ -26,7 +26,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
             return countries.Select(c => new Country { Code = c.era_countrycode, Name = c.era_name });
         }
 
-        public async Task<IEnumerable<Jurisdiction>> GetJurisdictionsAsync(string[] types, string stateProvinceCode, string countryCode)
+        public async Task<IEnumerable<Jurisdiction>> GetJurisdictionsAsync(JurisdictionType[] types, string stateProvinceCode, string countryCode)
         {
             var country = (await cache.GetCountriesAsync()).SingleOrDefault(c => c.era_countrycode == countryCode);
             if (country == null) return Array.Empty<Jurisdiction>();
@@ -35,12 +35,12 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 
             return (await cache.GetJurisdictionsAsync())
                 .Where(j => j._era_relatedprovincestate_value == stateProvince.era_provinceterritoriesid &&
-                    (!types.Any() || types.Any(t => t.Equals(j.era_type))))
+                    (!types.Any() || types.Any(t => ((int)t).ToString().Equals(j.era_type))))
                 .Select(j => new Jurisdiction
                 {
                     Code = j.era_jurisdictionid,
                     Name = j.era_jurisdictionname,
-                    Type = j.era_type,
+                    Type = Enum.Parse<JurisdictionType>(j.era_type),
                     StateProvinceCode = stateProvinceCode,
                     CountryCode = countryCode
                 });
