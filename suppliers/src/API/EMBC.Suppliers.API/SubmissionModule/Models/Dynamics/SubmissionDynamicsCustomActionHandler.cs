@@ -60,6 +60,10 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 }
                 throw;
             }
+            catch (Exception e)
+            {
+                throw new Exception($"Failed to post submission '{evt.ReferenceNumber}' to Dynamics: {e.Message}", e);
+            }
         }
 
         private async Task<Submission> ResolveEntitiesReferences(Submission submission)
