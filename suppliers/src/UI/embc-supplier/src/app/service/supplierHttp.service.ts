@@ -96,7 +96,7 @@ export class SupplierHttpService {
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
-      errorMessage = `Backend returned code ${err.status}, body was: ${err.message}`;
+      errorMessage = err.error;
     }
     return throwError(errorMessage);
   }

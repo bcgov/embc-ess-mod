@@ -18,6 +18,9 @@ Duplicate Referral Numbers should display an error message and remove the duplic
                 <div *ngIf="referralControl.referralNumber?.errors.required">
                   Referral Number is required
                 </div>
+                <div *ngIf="referralControl.referralNumber?.errors.duplicateReferral">
+                  Referral Number is duplicate
+                </div>
               </div>
             </div>
           </div>
@@ -69,6 +72,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
             <tr *ngFor="let row of referralRows.controls; let j = index" [formGroupName]="j">
               <td>
                 <select class="form-control" formControlName="supportProvided" required>
+                  <option value="" disabled selected>Select Support</option>
                   <option *ngFor="let support of supportList" [ngValue]="support">{{support.name}}</option>
                 </select>
               </td>
@@ -78,7 +82,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
                   <div class="input-group-prepend">
                     <div class="input-group-text">$</div>
                   </div>
-                  <input type="number" formControlName="gst" class="form-control" required>
+                  <input type="number" min="0" formControlName="gst" class="form-control" required>
                 </div>
               </td>
               <td>
@@ -86,7 +90,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
                   <div class="input-group-prepend">
                     <div class="input-group-text">$</div>
                   </div>
-                  <input type="number" formControlName="amount" class="form-control" required>
+                  <input type="number" min="0" formControlName="amount" class="form-control" required>
                 </div>
               </td>
               <td><i (click)="deleteRow(j)" class="fas fa-trash-alt"></i></td>

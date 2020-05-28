@@ -15,6 +15,9 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
               <div *ngIf="invoiceControl.invoiceNumber?.errors.required">
                 Invoice Number is required
               </div>
+              <div *ngIf="invoiceControl.invoiceNumber?.errors.duplicateInvoice">
+                Invoice Number is duplicate
+              </div>
             </div>
           </div>
         </div>
