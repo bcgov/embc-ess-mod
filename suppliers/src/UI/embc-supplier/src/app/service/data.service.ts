@@ -148,24 +148,24 @@ export class DataService {
         if (supplierDetails.invoices.length > 0) {
             supplierDetails.invoices.forEach(invoice => {
                 invoice.invoiceAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, null, 2))
+                    attachments.push(new Attachment(e.file.substring(e.file.indexOf(",") + 1), e.contentType, e.fileName, invoice.invoiceNumber, null, 2))
                 })
                 invoice.referrals.forEach(ref => {
                     ref.referralAttachments.forEach(e => {
-                        attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, ref.referralNumber, 1))
+                        attachments.push(new Attachment(e.file.substring(e.file.indexOf(",") + 1), e.contentType, e.fileName, invoice.invoiceNumber, ref.referralNumber, 1))
                     });
                     ref.receiptAttachments.forEach(e => {
-                        attachments.push(new Attachment(e.file, null, e.fileName, invoice.invoiceNumber, ref.referralNumber, 0))
+                        attachments.push(new Attachment(e.file.substring(e.file.indexOf(",") + 1), e.contentType, e.fileName, invoice.invoiceNumber, ref.referralNumber, 0))
                     })
                 })
             })
         } else if (supplierDetails.receipts.length > 0) {
             supplierDetails.receipts.forEach(ref => {
                 ref.referralAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file, null, e.fileName, null, ref.referralNumber, 1))
+                    attachments.push(new Attachment(e.file.substring(e.file.indexOf(",") + 1), e.contentType, e.fileName, null, ref.referralNumber, 1))
                 })
                 ref.receiptAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file, null, e.fileName, null, ref.referralNumber, 1))
+                    attachments.push(new Attachment(e.file.substring(e.file.indexOf(",") + 1), e.contentType, e.fileName, null, ref.referralNumber, 1))
                 })
             });
 

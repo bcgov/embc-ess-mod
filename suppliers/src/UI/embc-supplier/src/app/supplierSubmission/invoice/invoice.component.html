@@ -82,6 +82,9 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
             <app-fileUpload [reloadedFiles]="reloadedFiles" (attachedFile)="setFileFormControl($event)"
               (deleteFile)="deleteFileFormControl($event)">
             </app-fileUpload>
+            <div *ngIf="!checkAttachmentLength(invoiceControl.invoiceAttachments.value)" style="color: red;">
+              Attachment is required
+            </div>
           </div>
         </div>
       </div>

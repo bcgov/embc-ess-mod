@@ -77,7 +77,8 @@ export class InvoiceComponent implements OnInit{
         reader.onload = () => {
             this.invoiceAttachments.push(this.createAttachmentObject({
                 fileName: event.name,
-                file: reader.result
+                file: reader.result,
+                contentType: event.type
             }))
         }
         this.cd.markForCheck();
@@ -107,7 +108,7 @@ export class InvoiceComponent implements OnInit{
             ]),
             totalGst: [''],
             totalAmount: [''],
-            referralAttachments: this.builder.array([]),
+            referralAttachments: this.builder.array([], [Validators.required]),
             receiptAttachments: this.builder.array([])
         })
     }
@@ -151,6 +152,9 @@ export class InvoiceComponent implements OnInit{
         })
     }
 
+    checkAttachmentLength(control: []) {
+        return (control.length > 0);
+    }
 
 
 }
