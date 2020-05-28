@@ -5,6 +5,7 @@ import {  DateParserService } from 'src/app/service/dateParser.service';
 import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.service';
 import { SupplierService } from 'src/app/service/supplier.service';
 import * as globalConst from 'src/app/service/globalConstants'
+import { CustomValidationService } from 'src/app/service/customValidation.service';
 
 @Component({
     selector: 'app-invoice',
@@ -12,7 +13,8 @@ import * as globalConst from 'src/app/service/globalConstants'
     styleUrls: ['./invoice.component.scss'],
     providers: [
         {provide: NgbDateAdapter, useClass: CustomDateAdapterService},
-        {provide: NgbDateParserFormatter, useClass: DateParserService}
+        {provide: NgbDateParserFormatter, useClass: DateParserService},
+        CustomValidationService
     ]
 })
 export class InvoiceComponent implements OnInit{
@@ -26,7 +28,8 @@ export class InvoiceComponent implements OnInit{
     reloadedFiles: any;
     hidden = false;
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService) {
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, 
+        private supplierService: SupplierService, private customValidator : CustomValidationService) {
        
     }
 
@@ -99,7 +102,7 @@ export class InvoiceComponent implements OnInit{
 
     createReferralFormArray() {
         return this.builder.group({
-            referralNumber: ['', Validators.required],
+            referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.referrals).bind(this.customValidator)]],
             referralRows: this.builder.array([
             ]),
             totalGst: [''],

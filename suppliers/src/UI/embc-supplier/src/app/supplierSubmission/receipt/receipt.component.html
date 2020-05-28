@@ -13,6 +13,9 @@
               <div *ngIf="receiptControl.referralNumber?.errors.required">
                 Referral Number is required
               </div>
+              <div *ngIf="receiptControl.referralNumber?.errors.duplicateReferral">
+                Referral Number is duplicate
+              </div>
             </div>
           </div>
         </div>
