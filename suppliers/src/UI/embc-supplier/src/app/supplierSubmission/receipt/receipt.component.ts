@@ -25,8 +25,8 @@ export class ReceiptComponent implements OnInit{
             this.loadWithExistingValues();
         } else {
             this.addReferralTemplate();
-            this.onChanges();
-        } 
+        }
+        this.onChanges();
     }
 
     loadWithExistingValues() {
@@ -109,7 +109,8 @@ export class ReceiptComponent implements OnInit{
         reader.onload = () => {
             this.referralAttachments.push(this.createAttachmentObject({
                 fileName: event.name,
-                file: reader.result
+                file: reader.result,
+                contentType: event.type
             }))
         }
         //this.cd.markForCheck();
@@ -125,7 +126,8 @@ export class ReceiptComponent implements OnInit{
         reader.onload = () => {
             this.receiptAttachments.push(this.createAttachmentObject({
                 fileName: event.name,
-                file: reader.result
+                file: reader.result,
+                contentType: event.type
             }))
         }
         //this.cd.markForCheck();
@@ -152,6 +154,10 @@ export class ReceiptComponent implements OnInit{
             totalGst: [referral.totalGst],
             totalAmount: [referral.totalAmount]
          })
+    }
+
+    checkAttachmentLength(control: []) {
+        return (control.length > 0);
     }
 
 }

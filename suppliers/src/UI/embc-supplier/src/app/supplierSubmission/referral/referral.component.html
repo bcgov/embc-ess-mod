@@ -133,12 +133,15 @@ Duplicate Referral Numbers should display an error message and remove the duplic
           <app-fileUpload [reloadedFiles]="reloadedFiles" (attachedFile)="setReferralFormControl($event)"
             (deleteFile)="deleteReferralFormControl($event)">
           </app-fileUpload>
+          <div *ngIf="!checkAttachmentLength(referralControl.referralAttachments.value)" style="color: red;">
+            Attachment is required
+          </div>
         </div>
       </div>
 
       <div *ngIf="component === 'I'" class="col-6">
         <div class="form-group">
-          <label class="requiredField attach-header">Attach any receipt related to this referral below</label>
+          <label class="attach-header">Attach any receipt related to this referral below</label>
           <app-fileUpload [reloadedFiles]="reloadedFiles2" (attachedFile)="setReceiptFormControl($event)"
             (deleteFile)="deleteReceiptFormControl($event)">
           </app-fileUpload>

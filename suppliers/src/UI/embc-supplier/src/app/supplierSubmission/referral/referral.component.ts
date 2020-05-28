@@ -54,8 +54,8 @@ export class ReferralComponent implements OnInit {
             console.log("lastToLoad")
         } else {
             this.referralRows.push(this.createRowForm());
-            this.onChanges();
         }
+        this.onChanges();
     }
     loadWithExistingValues() {
         let storedSupplierDetails = this.supplierService.getSupplierDetails();
@@ -120,7 +120,8 @@ export class ReferralComponent implements OnInit {
         reader.onload = () => {
             this.referralAttachments.push(this.createAttachmentObject({
                 fileName: event.name,
-                file: reader.result
+                file: reader.result,
+                contentType: event.type
             }))
         }
         //this.cd.markForCheck();
@@ -136,7 +137,8 @@ export class ReferralComponent implements OnInit {
         reader.onload = () => {
             this.receiptAttachments.push(this.createAttachmentObject({
                 fileName: event.name,
-                file: reader.result
+                file: reader.result,
+                contentType: event.type
             }))
         }
         //this.cd.markForCheck();
@@ -157,6 +159,10 @@ export class ReferralComponent implements OnInit {
             gst: [row.gst],
             amount: [row.amount]
         })
+    }
+
+    checkAttachmentLength(control: []) {
+        return (control.length > 0);
     }
 
 }
