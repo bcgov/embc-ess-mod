@@ -98,6 +98,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
         public string filename { get; set; }
         public string subject { get; set; }
+        public string activitysubject { get; set; }
         public string body { get; set; }
     }
 }
