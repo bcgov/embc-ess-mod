@@ -10,15 +10,18 @@ import { InvoiceModalContent } from '../core/components/modal/invoiceModal.compo
 import { ReceiptModalContent } from '../core/components/modal/receiptModal.component';
 import { Country } from '../model/country';
 import * as globalConst from 'src/app/service/globalConstants';
+import { CustomValidationService } from '../service/customValidation.service';
 
 @Component({
     selector: 'supplier-submission',
     templateUrl: './supplierSubmission.component.html',
-    styleUrls: ['./supplierSubmission.component.scss']
+    styleUrls: ['./supplierSubmission.component.scss'],
+    providers: [CustomValidationService]
 })
 export class SupplierSubmissionComponent implements OnInit {
 
-    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef, private modalService: NgbModal) { }
+    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef, 
+        private modalService: NgbModal, private customValidator : CustomValidationService) { }
 
     supplierForm: FormGroup;
     remitDiv: boolean = false;
@@ -143,7 +146,7 @@ export class SupplierSubmissionComponent implements OnInit {
 
     toggleVisibility(event: any) {
         this.remitDiv = event.target.checked;
-        if(!event.target.checked) {
+        if (!event.target.checked) {
             this.supplierForm.get('businessName').reset();
             this.supplierForm.get('remittanceAddress').reset();
             this.supplierForm.get('businessCountry').reset();
@@ -160,6 +163,12 @@ export class SupplierSubmissionComponent implements OnInit {
         } else {
             this.addressDiv = true;
         }
+        this.resetRemittanceFields();
+    }
+
+    resetRemittanceFields() {
+        this.supplierForm.get('supplierBC').reset();
+        this.supplierForm.get('remittanceAddress').reset();
     }
 
     locatedChange(event: any) {
@@ -169,7 +178,7 @@ export class SupplierSubmissionComponent implements OnInit {
 
     createInvoiceFormArray() {
         return this.builder.group({
-            invoiceNumber: ['', Validators.required],
+            invoiceNumber: ['', [Validators.required, this.customValidator.invoiceValidator(this.invoices).bind(this.customValidator)]],
             invoiceDate: ['', Validators.required],
             invoiceAttachments: this.builder.array([]),
             referralList: ['', Validators.required],
@@ -182,7 +191,7 @@ export class SupplierSubmissionComponent implements OnInit {
 
     createReceiptFormArray() {
         return this.builder.group({
-            referralNumber: ['', Validators.required],
+            referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.receipts).bind(this.customValidator)]],
             referrals: this.builder.array([
             ]),
             receiptTotalGst: [''],
@@ -295,15 +304,17 @@ export class SupplierSubmissionComponent implements OnInit {
 
     loadExistingRemittanceValues(storedSupplierDetails: any) {
         this.remitDiv = storedSupplierDetails.remitToOtherBusiness;
-        this.selectedRemitCountry = storedSupplierDetails.businessCountry.name;
-        if (this.selectedRemitCountry === 'Canada') {
-            this.addressDiv = false;
-        } else {
-            this.addressDiv = true;
-        }
-        this.locatedInBC = this.supplierForm.get('supplierBC').value;
-        if(this.locatedInBC === 'yes') {
-            this.addressDiv = true;
+        if (storedSupplierDetails.businessCountry !== null && storedSupplierDetails.businessCountry !== undefined) {
+            this.selectedRemitCountry = storedSupplierDetails.businessCountry.name;
+            if (this.selectedRemitCountry === 'Canada') {
+                this.addressDiv = false;
+            } else {
+                this.addressDiv = true;
+            }
+            this.locatedInBC = this.supplierForm.get('supplierBC').value;
+            if (this.locatedInBC !== "" || this.locatedInBC !== null) {
+                this.addressDiv = true;
+            }
         }
     }
 
