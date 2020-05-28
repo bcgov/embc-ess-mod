@@ -162,11 +162,23 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                     _ => throw new NotSupportedException(),
                 };
             };
+            Func<Attachment, string> activityMapper = a =>
+            {
+                return a.Type switch
+                {
+                    AttachmentType.Receipt => "referral",
+                    AttachmentType.Referral => "referral",
+                    AttachmentType.Invoice => "invoice",
+                    _ => throw new NotSupportedException(),
+                };
+            };
+
             return attachments.Select((a, n) => new AttachmentEntity
             {
                 body = a.Content,
                 filename = fileNameMapper(a),
-                subject = subjectMapper(a)
+                subject = subjectMapper(a),
+                activitysubject = activityMapper(a)
             });
         }
 
