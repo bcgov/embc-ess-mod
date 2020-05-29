@@ -40,7 +40,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
                 {
                     Code = j.era_jurisdictionid,
                     Name = j.era_jurisdictionname,
-                    Type = Enum.Parse<JurisdictionType>(j.era_type),
+                    Type = string.IsNullOrWhiteSpace(j.era_type) ? JurisdictionType.Undefined : Enum.Parse<JurisdictionType>(j.era_type, true),
                     StateProvinceCode = stateProvinceCode,
                     CountryCode = countryCode
                 });
