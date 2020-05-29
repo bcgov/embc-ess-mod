@@ -46,6 +46,11 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                                              ? receiptAttachments.SelectMany(ra => ra.attachments.MapAttachments())
                                                  .Concat(referralAttachments.SelectMany(ra => ra.attachments.MapAttachments()))
                                                  .Concat(invoiceAttachments.SelectMany(ra => ra.attachments.MapAttachments()))
+                                                 .Select((a, i) =>
+                                                 {
+                                                     a.filename = $"{i + 1}_{a.filename}";
+                                                     return a;
+                                                 })
                                              : null
                 };
             });
