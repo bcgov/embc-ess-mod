@@ -15,10 +15,10 @@ Duplicate Referral Numbers should display an error message and remove the duplic
               <div
                 *ngIf="referralControl.referralNumber?.invalid && (referralControl.referralNumber?.dirty || referralControl.referralNumber?.touched)"
                 class="text-danger">
-                <div *ngIf="referralControl.referralNumber?.errors.required">
+                <div *ngIf="referralControl.referralNumber?.errors.required" style="color: red;">
                   Referral Number is required
                 </div>
-                <div *ngIf="referralControl.referralNumber?.errors.duplicateReferral">
+                <div *ngIf="referralControl.referralNumber?.errors.duplicateReferral" style="color: red;">
                   Referral Number is duplicate
                 </div>
               </div>

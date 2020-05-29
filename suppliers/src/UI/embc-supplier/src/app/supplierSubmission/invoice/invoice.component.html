@@ -12,10 +12,10 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
             <div
               *ngIf="invoiceControl.invoiceNumber?.invalid && (invoiceControl.invoiceNumber?.dirty || invoiceControl.invoiceNumber?.touched)"
               class="text-white">
-              <div *ngIf="invoiceControl.invoiceNumber?.errors.required">
+              <div *ngIf="invoiceControl.invoiceNumber?.errors.required" style="color: red;">
                 Invoice Number is required
               </div>
-              <div *ngIf="invoiceControl.invoiceNumber?.errors.duplicateInvoice">
+              <div *ngIf="invoiceControl.invoiceNumber?.errors.duplicateInvoice" style="color: red;">
                 Invoice Number is duplicate
               </div>
             </div>
@@ -85,6 +85,9 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
             <div *ngIf="!checkAttachmentLength(invoiceControl.invoiceAttachments.value)" style="color: red;">
               Attachment is required
             </div>
+            <!-- <div *ngIf="sizeCheck()" style="color: red;">
+              Attachment size should be greater than zero
+            </div> -->
           </div>
         </div>
       </div>
