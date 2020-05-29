@@ -37,7 +37,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
                 return new SubmissionEntity
                 {
-                    isInvoice = s.Invoices.Any(),
+                    isInvoice = s.Invoices.Any(i => i.InvoiceNumber != null),
                     invoiceCollection = s.Invoices.MapInvoices(referenceNumber, supplierInformation, remittanceInformation),
                     referralCollection = s.Referrals.MapReferrals(referenceNumber),
                     lineItemCollection = receiptLineItems.SelectMany(rli => rli.lineItems.MapLineItems(referenceNumber, rli.receipt))
@@ -58,9 +58,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 //fake invoice for Dynamics when sending in receipts
                 invoices = new[]
                 {
-                    new Invoice(){
-                        InvoiceNumber = referenceNumber //Dynamics expected a unique 'era_invoiceref'
-                    }
+                    new Invoice()
                 };
             }
             if (invoices.Count() > invoices.Select(i => i.InvoiceNumber).Distinct().Count())
@@ -70,7 +68,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             return invoices.Select((i, n) => new InvoiceEntity
             {
                 era_invoicedate = i.Date,
-                era_invoiceref = i.InvoiceNumber,
+                era_invoiceref = i.InvoiceNumber ?? referenceNumber, //Dynamics expected a unique 'era_invoiceref'
                 era_referencenumber = referenceNumber,
                 era_remitpaymenttootherbusiness = supplierRemittanceInformation != null,
                 era_totalgst = i.TotalGST,
