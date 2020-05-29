@@ -15,10 +15,10 @@ Duplicate Referral Numbers should display an error message and remove the duplic
               <div
                 *ngIf="referralControl.referralNumber?.invalid && (referralControl.referralNumber?.dirty || referralControl.referralNumber?.touched)"
                 class="text-danger">
-                <div *ngIf="referralControl.referralNumber?.errors.required">
+                <div *ngIf="referralControl.referralNumber?.errors.required" style="color: red;">
                   Referral Number is required
                 </div>
-                <div *ngIf="referralControl.referralNumber?.errors.duplicateReferral">
+                <div *ngIf="referralControl.referralNumber?.errors.duplicateReferral" style="color: red;">
                   Referral Number is duplicate
                 </div>
               </div>
@@ -82,7 +82,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
                   <div class="input-group-prepend">
                     <div class="input-group-text">$</div>
                   </div>
-                  <input type="number" min="0" formControlName="gst" class="form-control" required>
+                  <input type="number" min="0" formControlName="gst" class="form-control" oninput="validity.valid||(value='')" required>
                 </div>
               </td>
               <td>
@@ -90,7 +90,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
                   <div class="input-group-prepend">
                     <div class="input-group-text">$</div>
                   </div>
-                  <input type="number" min="0" formControlName="amount" class="form-control" required>
+                  <input type="number" min="1" formControlName="amount" class="form-control" oninput="validity.valid||(value='')" required>
                 </div>
               </td>
               <td><i (click)="deleteRow(j)" class="fas fa-trash-alt"></i></td>
