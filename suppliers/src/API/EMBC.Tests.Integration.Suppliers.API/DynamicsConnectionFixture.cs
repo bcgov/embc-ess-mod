@@ -189,7 +189,7 @@ namespace EMBC.Tests.Suppliers.API
                 {
                     new LineItem
                     {
-                        SupportProvided = "Lodging - Hotel",
+                        SupportProvided = "Lodging - Hotel/Motel",
                         ReferralNumber = "ref123",
                         ReceiptNumber = "rec1",
                         GST = 5,
