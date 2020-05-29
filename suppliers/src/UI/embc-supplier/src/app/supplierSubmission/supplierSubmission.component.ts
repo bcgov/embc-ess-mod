@@ -26,9 +26,7 @@ export class SupplierSubmissionComponent implements OnInit {
     supplierForm: FormGroup;
     remitDiv: boolean = false;
     addressDiv: boolean = false;
-    countryList: Country[];
-    stateList: Province[];
-    provinceList: Province[];
+    countryList: Observable<Country[]>;
     selectedRemitCountry: string;
     locatedInBC: string;
     postalPattern = "^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$";
@@ -44,7 +42,7 @@ export class SupplierSubmissionComponent implements OnInit {
 
     searchCity = (text$: Observable<string>) =>
         text$.pipe(
-            debounceTime(200),
+            debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getCityList().pipe(
                 map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
@@ -55,7 +53,7 @@ export class SupplierSubmissionComponent implements OnInit {
 
     searchState = (text$: Observable<string>) =>
         text$.pipe(
-            debounceTime(200),
+            debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getStateList().pipe(
                 map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
@@ -66,7 +64,7 @@ export class SupplierSubmissionComponent implements OnInit {
 
     searchProvince = (text$: Observable<string>) =>
         text$.pipe(
-            debounceTime(200),
+            debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getProvinceList().pipe(
                 map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
@@ -302,6 +300,13 @@ export class SupplierSubmissionComponent implements OnInit {
         this.loadWithExistingValues(submissionType);
     }
 
+    compareCountry(c1: Country, c2: Country) {
+        if(c1 === null || c2 ===null || c1 === undefined || c2 === undefined) {
+            return null;
+        }
+        return c1.code === c2.code
+    }
+
     loadExistingRemittanceValues(storedSupplierDetails: any) {
         this.remitDiv = storedSupplierDetails.remitToOtherBusiness;
         if (storedSupplierDetails.businessCountry !== null && storedSupplierDetails.businessCountry !== undefined) {
@@ -337,10 +342,10 @@ export class SupplierSubmissionComponent implements OnInit {
         return this.builder.group({
             invoiceNumber: [invoice.invoiceNumber, Validators.required],
             invoiceDate: [invoice.invoiceDate, Validators.required],
-            invoiceAttachments: this.builder.array([]),
+            invoiceAttachments: this.builder.array([], [Validators.required]),
             referralList: [invoice.referralList, Validators.required],
             referrals: this.builder.array([
-            ]),
+            ], Validators.required),
             invoiceTotalGst: [invoice.invoiceTotalGst],
             invoiceTotalAmount: [invoice.invoiceTotalAmount]
         })
@@ -353,8 +358,8 @@ export class SupplierSubmissionComponent implements OnInit {
             ]),
             receiptTotalGst: [receipt.receiptTotalGst],
             receiptTotalAmount: [receipt.receiptTotalAmount],
-            referralAttachments: this.builder.array([]),
-            receiptAttachments: this.builder.array([])
+            referralAttachments: this.builder.array([], [Validators.required]),
+            receiptAttachments: this.builder.array([], [Validators.required])
         })
     }
 
