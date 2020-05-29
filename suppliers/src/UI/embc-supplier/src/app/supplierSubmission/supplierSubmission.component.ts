@@ -342,10 +342,10 @@ export class SupplierSubmissionComponent implements OnInit {
         return this.builder.group({
             invoiceNumber: [invoice.invoiceNumber, Validators.required],
             invoiceDate: [invoice.invoiceDate, Validators.required],
-            invoiceAttachments: this.builder.array([]),
+            invoiceAttachments: this.builder.array([], [Validators.required]),
             referralList: [invoice.referralList, Validators.required],
             referrals: this.builder.array([
-            ]),
+            ], Validators.required),
             invoiceTotalGst: [invoice.invoiceTotalGst],
             invoiceTotalAmount: [invoice.invoiceTotalAmount]
         })
@@ -358,8 +358,8 @@ export class SupplierSubmissionComponent implements OnInit {
             ]),
             receiptTotalGst: [receipt.receiptTotalGst],
             receiptTotalAmount: [receipt.receiptTotalAmount],
-            referralAttachments: this.builder.array([]),
-            receiptAttachments: this.builder.array([])
+            referralAttachments: this.builder.array([], [Validators.required]),
+            receiptAttachments: this.builder.array([], [Validators.required])
         })
     }
 
