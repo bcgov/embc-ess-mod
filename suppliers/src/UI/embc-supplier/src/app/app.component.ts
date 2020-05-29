@@ -19,11 +19,7 @@ export class AppComponent{
     this.supplierService.setCityList(this.supplierHttp.getListOfCities());
     this.supplierService.setProvinceList(this.supplierHttp.getListOfProvinces());
     this.supplierService.setStateList(this.supplierHttp.getListOfStates());
-
-    this.supplierHttp.getListOfCountries().subscribe((data: any[]) => {
-      this.supplierService.setCountryList(data);
-    });
-
+    this.supplierService.setCountryList(this.supplierHttp.getListOfCountries());
     this.supplierHttp.getListOfSupportItems().subscribe((data: any[]) => {
       this.supplierService.setSupportItems(data);
     });
