@@ -103,6 +103,10 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
         public static IEnumerable<ReferralEntity> MapReferrals(this IEnumerable<Referral> referrals, string referenceNumber)
         {
+            if (referrals.Count() > referrals.Select(r => r.ReferralNumber).Distinct().Count())
+            {
+                throw new ValidationException($"referral numbers must be unique");
+            }
             return referrals.Select((r, n) => new ReferralEntity
             {
                 era_referralnumber = r.ReferralNumber,
