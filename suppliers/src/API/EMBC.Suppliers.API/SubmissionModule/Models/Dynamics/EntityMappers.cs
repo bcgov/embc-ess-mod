@@ -55,13 +55,18 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         {
             if (!invoices.Any())
             {
-                //dummy invoice for Dynamics when no invoices in submission
+                //fake invoice for Dynamics when sending in receipts
                 invoices = new[]
                 {
-                    new Invoice()
+                    new Invoice(){
+                        InvoiceNumber = referenceNumber //Dynamics expected a unique 'era_invoiceref'
+                    }
                 };
             }
-
+            if (invoices.Count() > invoices.Select(i => i.InvoiceNumber).Distinct().Count())
+            {
+                throw new ValidationException($"invoice numbers must be unique");
+            }
             return invoices.Select((i, n) => new InvoiceEntity
             {
                 era_invoicedate = i.Date,
@@ -105,7 +110,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 era_referralnumber = r.ReferralNumber,
                 era_totalgst = r.TotalGST,
                 era_totalamount = r.TotalAmount,
-                era_invoicereference = r.InvoiceNumber,
+                era_invoicereference = r.InvoiceNumber ?? referenceNumber, //Dynamics expected a unique 'era_invoiceref' from the fake invoice
                 era_submissionreference = referenceNumber
             });
         }
