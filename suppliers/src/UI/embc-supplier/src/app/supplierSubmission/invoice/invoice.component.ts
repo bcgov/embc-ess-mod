@@ -38,7 +38,7 @@ export class InvoiceComponent implements OnInit{
     }
 
     createAttachmentObject(data: any) {
-        return this.builder.group(data);
+        return this.builder.group(data);//, {validator: [this.customValidator.attachmentSizeValidator] }
     }
 
     ngOnInit() {
@@ -78,7 +78,8 @@ export class InvoiceComponent implements OnInit{
             this.invoiceAttachments.push(this.createAttachmentObject({
                 fileName: event.name,
                 file: reader.result,
-                contentType: event.type
+                contentType: event.type,
+               // fileSize: event.size
             }))
         }
         this.cd.markForCheck();
@@ -105,7 +106,7 @@ export class InvoiceComponent implements OnInit{
         return this.builder.group({
             referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.referrals).bind(this.customValidator)]],
             referralRows: this.builder.array([
-            ]),
+            ], Validators.required),
             totalGst: [''],
             totalAmount: [''],
             referralAttachments: this.builder.array([], [Validators.required]),
@@ -144,10 +145,10 @@ export class InvoiceComponent implements OnInit{
         return this.builder.group({
             referralNumber: [referral.referralNumber, Validators.required],
             referralRows: this.builder.array([
-            ]),
+            ],Validators.required),
             totalGst: [referral.totalGst],
             totalAmount: [referral.totalAmount],
-            referralAttachments: this.builder.array([]),
+            referralAttachments: this.builder.array([], [Validators.required]),
             receiptAttachments: this.builder.array([])
         })
     }
@@ -156,5 +157,7 @@ export class InvoiceComponent implements OnInit{
         return (control.length > 0);
     }
 
-
-}
+//     sizeCheck() {
+//         console.log(this.invoiceAttachments.controls)
+//     }
+ }
