@@ -183,7 +183,7 @@ export class SupplierSubmissionComponent implements OnInit {
             invoiceAttachments: this.builder.array([], [Validators.required]),
             referralList: ['', Validators.required],
             referrals: this.builder.array([
-            ]),
+            ], Validators.required),
             invoiceTotalGst: [''],
             invoiceTotalAmount: ['']
         })
