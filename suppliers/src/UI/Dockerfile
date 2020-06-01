@@ -1,8 +1,10 @@
-FROM node:lts-alpine AS ng-builder
+FROM trion/ng-cli-karma AS ng-builder
 WORKDIR /src
 COPY ./embc-supplier/package*.json ./
 RUN npm install
 COPY ./embc-supplier/ .
+# RUN npm run lint (TODO: need to fix current linter issues before enabling in CI/CD)
+RUN npm run test -- --no-watch --no-progress
 RUN npm run build -- --prod
 
 #FROM caddy:builder AS caddy-builder
