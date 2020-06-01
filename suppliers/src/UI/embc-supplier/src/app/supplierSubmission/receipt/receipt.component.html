@@ -10,10 +10,10 @@
               <div
               *ngIf="receiptControl.referralNumber?.invalid && (receiptControl.referralNumber?.dirty || receiptControl.referralNumber?.touched)"
               class="text-white">
-              <div *ngIf="receiptControl.referralNumber?.errors.required">
+              <div *ngIf="receiptControl.referralNumber?.errors.required" style="color: red;">
                 Referral Number is required
               </div>
-              <div *ngIf="receiptControl.referralNumber?.errors.duplicateReferral">
+              <div *ngIf="receiptControl.referralNumber?.errors.duplicateReferral" style="color: red;">
                 Referral Number is duplicate
               </div>
             </div>

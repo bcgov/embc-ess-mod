@@ -75,7 +75,7 @@ export class ReceiptComponent implements OnInit{
              referralDate : ['', Validators.required],
              receiptNumber: [''],
              referralRows: this.builder.array([
-            ]),
+            ], Validators.required),
             totalGst: [''],
             totalAmount: ['']
          })
@@ -150,7 +150,7 @@ export class ReceiptComponent implements OnInit{
              referralDate : [referral.referralDate, Validators.required],
              receiptNumber: [referral.receiptNumber],
              referralRows: this.builder.array([
-            ]),
+            ],Validators.required),
             totalGst: [referral.totalGst],
             totalAmount: [referral.totalAmount]
          })

@@ -13,7 +13,7 @@ export class SupplierService extends DataService {
     private supplierDetails: any;
     private cityList: Observable<Community[]>;
     private provinceList: Observable<Province[]>;
-    private countryList: Country[];
+    private countryList: Observable<Country[]>;
     private stateList: Observable<Province[]>;
     private referenceNumber: string;
     private supportItems: SupportItems[];
@@ -34,7 +34,7 @@ export class SupplierService extends DataService {
         return this.cityList;
     }
 
-    setCountryList(countryList: Country[]) {
+    setCountryList(countryList: Observable<Country[]>) {
         this.countryList = countryList;
     }
 

@@ -25,8 +25,8 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 var receiptLineItems = s.Receipts.Select(r => (receipt: r, lineItems: s.LineItems.Where(li => li.ReceiptNumber == r.ReceiptNumber && li.ReferralNumber == r.ReferralNumber)));
                 var referralLineItems = s.Referrals.Select(r => (referral: r, lineItems: s.LineItems.Where(li => string.IsNullOrEmpty(li.ReceiptNumber) && li.ReferralNumber == r.ReferralNumber)));
 
-                var receiptAttachments = s.Receipts
-                    .Select(r => (receipt: r, attachments: s.Attachments
+                var receiptAttachments = s.Referrals
+                    .Select(r => (referral: r, attachments: s.Attachments
                         .Where(a => a.ReferralNumber == r.ReferralNumber && (a.Type == AttachmentType.Receipt || a.ReferenceType == AttachmentType.Receipt))));
                 var referralAttachments = s.Referrals
                     .Select(r => (referral: r, attachments: s.Attachments
@@ -37,7 +37,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
                 return new SubmissionEntity
                 {
-                    isInvoice = s.Invoices.Any(),
+                    isInvoice = s.Invoices.Any(i => i.InvoiceNumber != null),
                     invoiceCollection = s.Invoices.MapInvoices(referenceNumber, supplierInformation, remittanceInformation),
                     referralCollection = s.Referrals.MapReferrals(referenceNumber),
                     lineItemCollection = receiptLineItems.SelectMany(rli => rli.lineItems.MapLineItems(referenceNumber, rli.receipt))
@@ -46,6 +46,11 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                                              ? receiptAttachments.SelectMany(ra => ra.attachments.MapAttachments())
                                                  .Concat(referralAttachments.SelectMany(ra => ra.attachments.MapAttachments()))
                                                  .Concat(invoiceAttachments.SelectMany(ra => ra.attachments.MapAttachments()))
+                                                 .Select((a, i) =>
+                                                 {
+                                                     a.filename = $"{i + 1}_{a.filename}";
+                                                     return a;
+                                                 })
                                              : null
                 };
             });
@@ -58,9 +63,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 //fake invoice for Dynamics when sending in receipts
                 invoices = new[]
                 {
-                    new Invoice(){
-                        InvoiceNumber = referenceNumber //Dynamics expected a unique 'era_invoiceref'
-                    }
+                    new Invoice()
                 };
             }
             if (invoices.Count() > invoices.Select(i => i.InvoiceNumber).Distinct().Count())
@@ -70,7 +73,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             return invoices.Select((i, n) => new InvoiceEntity
             {
                 era_invoicedate = i.Date,
-                era_invoiceref = i.InvoiceNumber,
+                era_invoiceref = i.InvoiceNumber ?? referenceNumber, //Dynamics expected a unique 'era_invoiceref'
                 era_referencenumber = referenceNumber,
                 era_remitpaymenttootherbusiness = supplierRemittanceInformation != null,
                 era_totalgst = i.TotalGST,
@@ -105,6 +108,10 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
         public static IEnumerable<ReferralEntity> MapReferrals(this IEnumerable<Referral> referrals, string referenceNumber)
         {
+            if (referrals.Count() > referrals.Select(r => r.ReferralNumber).Distinct().Count())
+            {
+                throw new ValidationException($"referral numbers must be unique");
+            }
             return referrals.Select((r, n) => new ReferralEntity
             {
                 era_referralnumber = r.ReferralNumber,
