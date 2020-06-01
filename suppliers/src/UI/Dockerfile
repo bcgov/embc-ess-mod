@@ -3,6 +3,7 @@ WORKDIR /src
 COPY ./embc-supplier/package*.json ./
 RUN npm install
 COPY ./embc-supplier/ .
+# RUN npm run lint (TODO: need to fix current linter issues before enabling in CI/CD)
 RUN npm run test -- --no-watch --no-progress
 RUN npm run build -- --prod
 
