@@ -3,7 +3,7 @@ WORKDIR /src
 COPY ./embc-supplier/package*.json ./
 RUN npm install
 COPY ./embc-supplier/ .
-RUN npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+RUN npm run test -- --no-watch --no-progress
 RUN npm run build -- --prod
 
 #FROM caddy:builder AS caddy-builder
