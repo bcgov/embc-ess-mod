@@ -17,6 +17,7 @@ export class ReviewComponent implements OnInit{
     isError =false;
     captchaFilled = false;
     errorMessage: string;
+    isSubmitted: boolean = false;
    
     constructor(public supplierService: SupplierService, private router: Router, private httpService: SupplierHttpService) { }
 
@@ -31,17 +32,19 @@ export class ReviewComponent implements OnInit{
     }
 
     submit() {
+        this.isSubmitted = true;
         if(!this.captchaFilled) {
             this.errorMessage = globalConst.captchaErr;
             this.isError =true;
+            this.isSubmitted = false;
         } else {
             this.httpService.submitForm(this.supplierService.getPayload()).subscribe((res: any) => {
-                console.log(res);
                 this.supplierService.setReferenceNumber(res);
                 this.router.navigate(['/thankyou']);
             },
             (error: any) => {
                 this.isError =true;
+                this.isSubmitted = false;
                 if(error.detail && error.detail !== "") {
                     this.errorMessage = error.detail
                 } else {

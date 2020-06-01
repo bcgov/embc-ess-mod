@@ -232,7 +232,7 @@
                 <button type="submit" (click)="goback()" class="btn btn-primary">Go back & Edit</button>
             </div>
             <div>
-                <button type="submit" (click)="submit()" class="btn btn-warning">Submit</button>
+                <button type="submit" (click)="submit()" [disabled]="isSubmitted" class="btn btn-warning">Submit</button>
             </div>
         </div>
     </div>
