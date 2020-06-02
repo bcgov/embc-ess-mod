@@ -181,7 +181,7 @@ objects:
                     name: ${APP_NAME}-suppliers-api-config
                 - secretRef:
                     name: ${APP_NAME}-suppliers-api-secrets
-              image: docker-registry.default.svc:5000/pbiizm-tools/suppliers-portal-api@${TAG}
+              image: docker-registry.default.svc:5000/pbiizm-tools/suppliers-portal-api:${TAG}
               imagePullPolicy: Always
               volumeMounts:
                 - mountPath: ${SUBMISSIONS_STORAGE_DIR}
@@ -246,7 +246,7 @@ objects:
         spec:
           containers:
             - name: suppliers-portal-ui
-              image: docker-registry.default.svc:5000/pbiizm-tools/suppliers-portal-ui@${TAG}
+              image: docker-registry.default.svc:5000/pbiizm-tools/suppliers-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:
                 - containerPort: 2015
