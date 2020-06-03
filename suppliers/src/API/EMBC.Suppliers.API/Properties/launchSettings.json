@@ -5,7 +5,7 @@
       "commandName": "Project",
       "environmentVariables": {
         "Submission_Storage_Path": "%TEMP%",
-        "Dynamics__Cache__CachePath": "%TEMP%",
+        //"Dynamics__Cache__CachePath": "%TEMP%",
         "Dynamics__Cache__UpdateFrequency": "1",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

@@ -7,11 +7,36 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
     {
         private static readonly RandomNumberGenerator crypto = new RNGCryptoServiceProvider();
 
+        private static DateTime? now = null;
+
         public static string CreateNew()
         {
             var bytes = new byte[3];
             crypto.GetBytes(bytes);
-            return $"SUP-{DateTime.Today:yyyyMMdd}-{BitConverter.ToString(bytes).Replace("-", string.Empty, StringComparison.OrdinalIgnoreCase)}";
+            var today = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(now ?? DateTime.Today, GetPSTTimeZone());
+            return $"SUP-{today:yyyyMMdd}-{BitConverter.ToString(bytes).Replace("-", string.Empty, StringComparison.OrdinalIgnoreCase)}";
+        }
+
+        private static string GetPSTTimeZone()
+        {
+            return Environment.OSVersion.Platform switch
+            {
+                PlatformID.Win32NT => "Pacific Standard Time",
+                PlatformID.Unix => "Canada/Pacific",
+                _ => throw new NotSupportedException()
+            };
+
+            //return TimeZoneInfo.FindSystemTimeZoneById(timeZoneName);
+        }
+
+        public static void OverrideNow(DateTime now)
+        {
+            ReferenceNumberGenerator.now = now;
+        }
+
+        public static void ResetNow()
+        {
+            ReferenceNumberGenerator.now = null;
         }
     }
 }
