@@ -77,6 +77,7 @@ namespace EMBC.Suppliers.API
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddADFSTokenProvider();
             services.AddTransient<ISubmissionRepository, SubmissionRepository>();
+            services.AddTransient<IReferenceNumberGenerator, ReferenceNumberGenerator>();
             services.AddTransient<ISubmissionDynamicsCustomActionHandler, SubmissionDynamicsCustomActionHandler>();
             services.AddScoped(sp =>
             {
