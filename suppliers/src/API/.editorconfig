@@ -136,7 +136,7 @@ dotnet_diagnostic.CA1305.severity = suggestion
 dotnet_diagnostic.CA1308.severity = suggestion
 
 # SecurityIntelliSenseCS: MS Security rules violation
-dotnet_diagnostic.SecurityIntelliSenseCS.severity = warning
+dotnet_diagnostic.SecurityIntelliSenseCS.severity = suggestion
 
 # CA1822: Mark members as static
 dotnet_diagnostic.CA1822.severity = suggestion
