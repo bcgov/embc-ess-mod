@@ -32,9 +32,9 @@ The portal is accessible from EMBC-ESS landing page, follow the training materia
 **API**
 
 1. fork the main repository and checkout the fork to your local machine
-1. open `suppliers/src/API/EMBC.Suppliers.sln` in Visual Studio
-1. right click on `EMBC.Suppliers.API` project and select `Manage User Secrets`
-1. add the following configuration values:
+2. open `suppliers/src/API/EMBC.Suppliers.sln` in Visual Studio
+3. right click on `EMBC.Suppliers.API` project and select `Manage User Secrets`
+4. add the following configuration values:
 
 ```
 "Dynamics:ADFS:OAuth2TokenEndpoint": "<BC Gov ADFS OIDC token endpoint url>",
@@ -47,7 +47,7 @@ The portal is accessible from EMBC-ESS landing page, follow the training materia
 "Dynamics:DynamicsApiEndpoint": "https://<Dynamics host url>/api/data/v9.0/"
 ```
 
-1. The following envirnment variables can be set in `properties/launchSettings.json, these are the default, checked in to github:
+5. The following envirnment variables can be set in `properties/launchSettings.json, these are the default, checked in to github:
 
 ```
 "Submission_Storage_Path": "%TEMP%",
@@ -56,9 +56,9 @@ The portal is accessible from EMBC-ESS landing page, follow the training materia
 "ASPNETCORE_ENVIRONMENT": "Development"
 ```
 
-1. build and run
-1. to test the API, use swagger from `http://localhost:5000/api/swagger` or Postman
-1. to run the integration tests, make sure the solution is set to Debug, and that you're connected to the BC GOV VPN service
+6. build and run
+7. to test the API, use swagger from `http://localhost:5000/api/swagger` or Postman
+8. to run the integration tests, make sure the solution is set to Debug, and that you're connected to the BC GOV VPN service
 
 - To run the API in hot loading from the command line, execute the following command from the root folder of the repository
 
@@ -69,20 +69,20 @@ dotnet watch --project .\suppliers\src\API\EMBC.Suppliers.API\ run
 **UI**
 
 1. cd to `suppliers/src/UI/embc-supplier`
-1. run
+2. run
 
 ```
 npm install
 ```
 
-1. run the API
-1. to start the portal with hot loading, run
+3. run the API
+4. to start the portal with hot loading, run
 
 ```
 ng serve
 ```
 
-1. use `npm run test` and `npm run lint` to test and lint
+5. use `npm run test` and `npm run lint` to test and lint
 
 **Docker**
 
@@ -101,13 +101,13 @@ Dynamics__Cache__CachePath=/dynamics_cache
 Submission_Storage_Path=/submissions
 ```
 
-1. from the root repository folder, run
+2. from the root repository folder, run
 
 ```
 docker-compose up --build
 ```
 
-1. the API will be available at `http://localhost:8080/api` and the UI will be available at `http://localhost:2015`
+3. the API will be available at `http://localhost:8080/api` and the UI will be available at `http://localhost:2015`
 
 # CI/CD
 
