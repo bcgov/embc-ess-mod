@@ -1,7 +1,8 @@
-﻿namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
-{
-#pragma warning disable CA1707 // Identifiers should not contain underscores
+﻿#pragma warning disable CA1707 // Identifiers should not contain underscores
+#pragma warning disable SA1300 // Element should begin with upper-case letter
 
+namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
+{
     public class SupportEntity
     {
         public string era_supportid { get; set; }
@@ -31,6 +32,7 @@
         public string era_type { get; set; }
         public string _era_relatedprovincestate_value { get; set; }
     }
+}
 
 #pragma warning restore CA1707 // Identifiers should not contain underscores
-}
+#pragma warning restore SA1300 // Element should begin with upper-case letter

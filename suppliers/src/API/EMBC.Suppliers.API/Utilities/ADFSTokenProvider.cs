@@ -36,14 +36,14 @@ namespace EMBC.Suppliers.API.DynamicsModule
                     new KeyValuePair<string, string>("scope", "openid"),
                     new KeyValuePair<string, string>("response_mode", "form_post"),
                     new KeyValuePair<string, string>("grant_type", "password")
-                 };
+                };
 
             try
             {
                 // This will also set the content type of the request
                 using var content = new FormUrlEncodedContent(pairs);
                 // send the request to the ADFS server
-                using var response = await httpClient.PostAsync("", content);
+                using var response = await httpClient.PostAsync(string.Empty, content);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 // response should be in JSON format.
                 var result = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(responseContent);

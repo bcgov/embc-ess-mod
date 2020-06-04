@@ -41,7 +41,8 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
             }
             catch (ValidationException e)
             {
-                //Temporarily hand validation exceptions to the client - need to remove when Dynamics handler is async from submission
+                // Temporarily hand validation exceptions to the client - need to remove when
+                // Dynamics handler is async from submission
                 var referenceNumber = e.Value?.ToString();
                 var pd = new ProblemDetails()
                 {

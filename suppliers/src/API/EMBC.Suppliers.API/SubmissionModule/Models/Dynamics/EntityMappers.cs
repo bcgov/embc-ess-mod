@@ -60,7 +60,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
         {
             if (!invoices.Any())
             {
-                //fake invoice for Dynamics when sending in receipts
+                // fake invoice for Dynamics when sending in receipts
                 invoices = new[]
                 {
                     new Invoice()
@@ -73,12 +73,12 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             return invoices.Select((i, n) => new InvoiceEntity
             {
                 era_invoicedate = i.Date,
-                era_invoiceref = i.InvoiceNumber ?? referenceNumber, //Dynamics expected a unique 'era_invoiceref'
+                era_invoiceref = i.InvoiceNumber ?? referenceNumber, // Dynamics expected a unique 'era_invoiceref'
                 era_referencenumber = referenceNumber,
                 era_remitpaymenttootherbusiness = supplierRemittanceInformation != null,
                 era_totalgst = i.TotalGST,
                 era_totalinvoiceamount = i.TotalAmount,
-                era_invoicetype = 174360100, //fire and forget
+                era_invoicetype = 174360100, // fire and forget
                 era_supplierinvoicenumber = i.InvoiceNumber,
                 era_suppliername = supplierInformation.Name,
                 era_supplierlegalname = supplierInformation.LegalBusinessName,
@@ -117,7 +117,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
                 era_referralnumber = r.ReferralNumber,
                 era_totalgst = r.TotalGST,
                 era_totalamount = r.TotalAmount,
-                era_invoicereference = r.InvoiceNumber ?? referenceNumber, //Dynamics expected a unique 'era_invoiceref' from the fake invoice
+                era_invoicereference = r.InvoiceNumber ?? referenceNumber, // Dynamics expected a unique 'era_invoiceref' from the fake invoice
                 era_submissionreference = referenceNumber
             });
         }

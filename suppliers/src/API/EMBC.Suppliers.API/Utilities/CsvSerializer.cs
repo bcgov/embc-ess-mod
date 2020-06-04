@@ -8,14 +8,14 @@ namespace EMBC.Suppliers.API.Utilities
 {
     public static class CsvSerializer
     {
-        public async static Task ToCsv<T>(this IEnumerable<T> list, Stream stream)
+        public static async Task ToCsv<T>(this IEnumerable<T> list, Stream stream)
         {
             using var sw = new StreamWriter(stream, leaveOpen: true);
             await sw.WriteLineAsync(CreateHeader<T>());
             foreach (var row in CreateRows(list)) await sw.WriteLineAsync(row);
         }
 
-        public async static Task ToCsv<T>(this IEnumerable<T> list, Stream stream, char quoteCharacter)
+        public static async Task ToCsv<T>(this IEnumerable<T> list, Stream stream, char quoteCharacter)
         {
             using var sw = new StreamWriter(stream, leaveOpen: true);
             await sw.WriteLineAsync(CreateHeader<T>(quoteCharacter));

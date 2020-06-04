@@ -24,8 +24,8 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
             if (cmd == null) throw new ArgumentNullException(nameof(cmd));
             var referenceNumber = await submissionRepository.SaveAsync(cmd.Submission);
 
-            //Temporary submit to Dynamics before the end of the API call
-            //await publisher.Publish(new SubmissionSavedEvent(referenceNumber, cmd.Submission));
+            // Temporary submit to Dynamics before the end of the API call
+            // await publisher.Publish(new SubmissionSavedEvent(referenceNumber, cmd.Submission));
             await submissionDynamicsCustomActionHandler.Handle(new SubmissionSavedEvent(referenceNumber, cmd.Submission));
 
             return referenceNumber;
