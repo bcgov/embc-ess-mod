@@ -111,19 +111,30 @@ docker-compose up --build
 
 # CI/CD
 
-## Pull requests
+## Pull requests (CI)
 
 Every pull request to the main repository will trigger a the CI github workflow. There are 2 workflows, one for the API and one for the UI, and they are triggered only when the respective source changed. For example, a change to the UI will only trigger CI for the UI CI workflow.
 
 the CI pipeline is included in the dockerfile of each deployable unit. The pipeline itself only triggers `docker build` command, if an image can be built, the result is 'pass'.
 
-## Dev deployment
+## Dev deployment (CD)
 
 Once the PR is reviewed and merged to master, the CD workflows will start. The exact same build process is invoked as the CI, resulting in the built image being pushed to Openshift and tagged 'latest'. The image tag change will trigger the dev environment deployment and will deploy the latest build.
 
 ```
 commit to fork -> create PR -> CI build -> merge -> CD build -> automatic deployment in dev
 ```
+
+The CD workflow depends on the availability of Openshift docker registry, the credentials to access the registry are stored in Github secrets of the repository:
+
+| key                  | value                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| OKD_DOCKERREGISTRY   | url of the remote registry, for Pathfinder it is docker-registry.pathfinder.gov.bc.ca |
+| OKD_DOCKERREPOSITORY | name of the repository, usually the tools namespace/project                           |
+| OKD_USERNAME         | user which allows to push and pull images                                             |
+| OKD_PASSWORD         | the openshift token of the above user                                                 |
+
+Follow [Thor's instructions](https://gist.github.com/thorwolpert/3ed23bd1548346e1231611cee80d3bbe) how to set up a docker service account in Openshift. The token will be available in the tools namespace secrets
 
 ## Deployment to higher environments
 
@@ -137,3 +148,5 @@ Higher environment deployments are triggered within Openshift tools project pipe
 dev -> test --> training
             \-> production
 ```
+
+See [openshift readme](./openshift/README.md) for more details
