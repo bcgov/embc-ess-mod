@@ -1,47 +1,6 @@
 # Emergency Management BC - Emergency Support Services Modernization
-The purpose of the system is to streamline processes so evacuated individuals can access services more easily and efficiently. 
 
-![suppliers-portal-ui](https://github.com/bcgov/embc-ess-mod/workflows/master-build-suppliers-portal-ui/badge.svg)
-![suppliers-portal-api](https://github.com/bcgov/embc-ess-mod/workflows/master-build-suppliers-portal-api/badge.svg)
-
-## Technology Stack Used
-| Layer   | Technology | 
-| ------- | ------------ |
-| Presentation | Angular 9 |
-| Business Logic | C# - .NET Core 3.1 |
-| Web Server | Kestrel |
-| Data    | MS Dynamics v9|
-| Document Management    | MS SharePoint |   
-
-
-## Third-Party Products/Libraries used and the licenses they are covered by
-
-## Documentation
-
-Documentation and task information is found under the JAG Jira and Confluence applications (EMBCESSMOD project)
-
-## Security
-
-Authentication, Authorization, Policies, etc
-
-
-## Deployment (Local Development)
-
-### Developer Workstation Requirements/Setup
-**Recommended Configuration**
-- 16 GB RAM
-- NVME SSD
-- Core i7 7th generation or better
-- Windows 10 Pro
-- Docker
-- S2I
-- Git 
-
-Application Specific Setup
-
-## Deployment (OpenShift)
-
-See (openshift/Readme.md)
+The purpose of the system is to streamline processes so evacuated individuals can access services more easily and efficiently.
 
 ## Getting Help or Reporting an Issue
 
@@ -57,7 +16,7 @@ Please note that this project is released with a [Contributor Code of Conduct](.
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-    Copyright 2018 Province of British Columbia
+    Copyright 2020 Province of British Columbia
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

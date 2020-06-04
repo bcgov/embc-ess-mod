@@ -3,21 +3,28 @@ using System.Security.Cryptography;
 
 namespace EMBC.Suppliers.API.SubmissionModule.Models
 {
-    public static class ReferenceNumberGenerator
+    public interface IReferenceNumberGenerator
+    {
+        string CreateNew();
+    }
+
+    public class ReferenceNumberGenerator : IReferenceNumberGenerator
     {
         private static readonly RandomNumberGenerator crypto = new RNGCryptoServiceProvider();
 
-        private static DateTime? now = null;
+        private DateTime? now = null;
+        private string presetReferenceNumber = null;
 
-        public static string CreateNew()
+        public string CreateNew()
         {
+            if (presetReferenceNumber != null) return presetReferenceNumber;
             var bytes = new byte[3];
             crypto.GetBytes(bytes);
             var today = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(now ?? DateTime.Today, GetPSTTimeZone());
             return $"SUP-{today:yyyyMMdd}-{BitConverter.ToString(bytes).Replace("-", string.Empty, StringComparison.OrdinalIgnoreCase)}";
         }
 
-        private static string GetPSTTimeZone()
+        private string GetPSTTimeZone()
         {
             return Environment.OSVersion.Platform switch
             {
@@ -25,18 +32,26 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
                 PlatformID.Unix => "Canada/Pacific",
                 _ => throw new NotSupportedException()
             };
-
-            //return TimeZoneInfo.FindSystemTimeZoneById(timeZoneName);
         }
 
-        public static void OverrideNow(DateTime now)
+        public void OverrideNow(DateTime now)
         {
-            ReferenceNumberGenerator.now = now;
+            this.now = now;
         }
 
-        public static void ResetNow()
+        public void ResetNow()
         {
-            ReferenceNumberGenerator.now = null;
+            this.now = null;
+        }
+
+        public void PresetReferenceNumber(string presetReferenceNumber)
+        {
+            this.presetReferenceNumber = presetReferenceNumber;
+        }
+
+        public void ResetPresetReferenceNumber()
+        {
+            this.presetReferenceNumber = null;
         }
     }
 }
