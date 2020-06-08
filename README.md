@@ -2,6 +2,19 @@
 
 The purpose of the system is to streamline processes so evacuated individuals can access services more easily and efficiently.
 
+## Applications and services in this repository
+
+### [Suppliers portal](./suppliers)
+
+**Deployed environments:**
+
+| name       | purpose                               | url                                            |
+| ---------- | ------------------------------------- | ---------------------------------------------- |
+| dev1       | master branch development and testing | https://era-suppliers-dev.embc.gov.bc.ca/      |
+| test       | regression and UAT environment        | https://era-suppliers-test.embc.gov.bc.ca/     |
+| training   | training env for field users          | https://era-suppliers-training.embc.gov.bc.ca/ |
+| production | production environment                | https://era-suppliers.embc.gov.bc.ca/          |
+
 ## Getting Help or Reporting an Issue
 
 To report bugs/issues/feature requests, please file an [issue](../../issues).

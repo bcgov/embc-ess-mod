@@ -1,4 +1,20 @@
-﻿using System.Collections.Generic;
+﻿// -------------------------------------------------------------------------
+//  Copyright © 2020 Province of British Columbia
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  https://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+// -------------------------------------------------------------------------
+
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,14 +24,14 @@ namespace EMBC.Suppliers.API.Utilities
 {
     public static class CsvSerializer
     {
-        public async static Task ToCsv<T>(this IEnumerable<T> list, Stream stream)
+        public static async Task ToCsv<T>(this IEnumerable<T> list, Stream stream)
         {
             using var sw = new StreamWriter(stream, leaveOpen: true);
             await sw.WriteLineAsync(CreateHeader<T>());
             foreach (var row in CreateRows(list)) await sw.WriteLineAsync(row);
         }
 
-        public async static Task ToCsv<T>(this IEnumerable<T> list, Stream stream, char quoteCharacter)
+        public static async Task ToCsv<T>(this IEnumerable<T> list, Stream stream, char quoteCharacter)
         {
             using var sw = new StreamWriter(stream, leaveOpen: true);
             await sw.WriteLineAsync(CreateHeader<T>(quoteCharacter));
