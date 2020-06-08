@@ -42,22 +42,22 @@ describe('AppComponent', () => {
   //   service.getListOfCities().subscribe(data=> expect(data));
   //  });
 
-   it('should have getListOfProvinces function', () => {
+  it('should have getListOfProvinces function', () => {
     const service: SupplierHttpService = TestBed.get(SupplierHttpService);
     expect(service.getListOfProvinces).toBeTruthy();
    });
 
-   it('should have getListOfStates function', () => {
+  it('should have getListOfStates function', () => {
     const service: SupplierHttpService = TestBed.get(SupplierHttpService);
     expect(service.getListOfStates).toBeTruthy();
    });
 
-   it('should have getListOfCountries function', () => {
+  it('should have getListOfCountries function', () => {
     const service: SupplierHttpService = TestBed.get(SupplierHttpService);
     expect(service.getListOfCountries).toBeTruthy();
    });
 
-   it('should have getListOfSupportItems function', () => {
+  it('should have getListOfSupportItems function', () => {
     const service: SupplierHttpService = TestBed.get(SupplierHttpService);
     expect(service.getListOfSupportItems).toBeTruthy();
    });

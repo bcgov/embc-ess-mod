@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class ReferenceComponent implements OnInit{
 
     referenceNumber: any;
-   
+
     constructor(public supplierService: SupplierService, private router: Router) { }
 
     ngOnInit() {

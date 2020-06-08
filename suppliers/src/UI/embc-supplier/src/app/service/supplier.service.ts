@@ -17,7 +17,7 @@ export class SupplierService extends DataService {
     private stateList: Observable<Province[]>;
     private referenceNumber: string;
     private supportItems: SupportItems[];
-    
+
     setSupplierDetails(supplierDetails: any) {
         this.supplierDetails = supplierDetails;
     }
@@ -67,7 +67,7 @@ export class SupplierService extends DataService {
     }
 
     setReferenceNumber(referenceNumber: string) {
-        this.referenceNumber = referenceNumber
+        this.referenceNumber = referenceNumber;
     }
 
     getReferenceNumber() {

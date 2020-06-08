@@ -1,4 +1,4 @@
-import { Invoices } from './invoices'
+import { Invoices } from './invoices';
 import { Referrals } from './referrals';
 import { LineItems } from './lineItems';
 import { Receipts } from './receipts';
@@ -24,17 +24,17 @@ export class Suppliers {
 export class SupplierInformation {
     gstNumber: string;
     name: string;
-    legalBusinessName: string
+    legalBusinessName: string;
     location: string;
     address: Address;
     contactPerson: ContactPerson;
     forRemittance: boolean;
 
     constructor(gstNumber: string, name: string, legalBusinessName: string, location: string, address: Address, contactPerson: ContactPerson,
-        forRemittance: boolean) {
+                forRemittance: boolean) {
             this.gstNumber = gstNumber;
             this.name = name;
-            this.legalBusinessName = legalBusinessName
+            this.legalBusinessName = legalBusinessName;
             this.location = location;
             this.address = address;
             this.contactPerson = contactPerson;
@@ -54,7 +54,7 @@ export class Address{
     postalCode: string;
 
     constructor(addressLine1: string, addressLine2: string, cityCode: string, city: string, stateProvinceCode: string,
-        stateProvince: string, countryCode: string, country: string, postalCode: string) {
+                stateProvince: string, countryCode: string, country: string, postalCode: string) {
             this.addressLine1 = addressLine1;
             this.addressLine2 = addressLine2;
             this.cityCode = cityCode;
@@ -65,7 +65,7 @@ export class Address{
             this.country = country;
             this.postalCode = postalCode;
     }
-} 
+}
 
 export class ContactPerson {
     firstName: string;
@@ -81,8 +81,8 @@ export class ContactPerson {
         this.phone = phone;
         this.fax = fax;
     }
-} 
-    
+}
+
 export class Attachment {
     content: string;
     contentType: string;
@@ -92,12 +92,12 @@ export class Attachment {
     type: number;
 
     constructor(content: string, contentType: string, fileName: string, invoiceNumber: string, referralNumber: string, type: number) {
-        this.content= content;
-        this.contentType= contentType;
-        this.fileName= fileName;
-        this.invoiceNumber= invoiceNumber;
-        this.referralNumber= referralNumber;
-        this.type= type;
+        this.content = content;
+        this.contentType = contentType;
+        this.fileName = fileName;
+        this.invoiceNumber = invoiceNumber;
+        this.referralNumber = referralNumber;
+        this.type = type;
     }
 }
 

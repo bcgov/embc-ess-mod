@@ -8,7 +8,7 @@ export class DateParserService extends NgbDateParserFormatter {
 
   parse(value: string): NgbDateStruct | null {
     if (value) {
-      let date = value.split(this.DELIMITER);
+      const date = value.split(this.DELIMITER);
       return {
         month : parseInt(date[0], 10),
         day : parseInt(date[1], 10),
