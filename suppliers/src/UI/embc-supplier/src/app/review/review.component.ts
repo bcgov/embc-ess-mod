@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SupplierService } from '../service/supplier.service';
 import { Router } from '@angular/router';
 import { SupplierHttpService } from '../service/supplierHttp.service';
-import * as globalConst from 'src/app/service/globalConstants'
+import * as globalConst from 'src/app/service/globalConstants';
+import { AlertService } from '../service/alert.service';
 
 @Component({
     selector: 'review',
@@ -14,17 +15,15 @@ export class ReviewComponent implements OnInit{
     supplierSubmissionType: string;
     supplier: any;
     captchaVerified = false;
-    isError =false;
     captchaFilled = false;
-    errorMessage: string;
-    isSubmitted: boolean = false;
-   
-    constructor(public supplierService: SupplierService, private router: Router, private httpService: SupplierHttpService) { }
+    isSubmitted = false;
+    showLoader = false;
+
+    constructor(public supplierService: SupplierService, private router: Router, private httpService: SupplierHttpService, private alertService: AlertService) { }
 
     ngOnInit() {
         this.supplier = this.supplierService.getSupplierDetails();
         this.supplierSubmissionType = this.supplier.supplierSubmissionType;
-        console.log(this.supplier);
     }
 
     goback() {
@@ -32,25 +31,27 @@ export class ReviewComponent implements OnInit{
     }
 
     submit() {
-        this.isSubmitted = true;
-        if(!this.captchaFilled) {
-            this.errorMessage = globalConst.captchaErr;
-            this.isError =true;
-            this.isSubmitted = false;
+        this.isSubmitted = !this.isSubmitted;
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        if (!this.captchaFilled) {
+            this.alertService.setAlert('danger', globalConst.captchaErr);
+            this.isSubmitted = !this.isSubmitted;
+            this.showLoader = !this.showLoader;
         } else {
             this.httpService.submitForm(this.supplierService.getPayload()).subscribe((res: any) => {
                 this.supplierService.setReferenceNumber(res);
                 this.router.navigate(['/thankyou']);
             },
             (error: any) => {
-                this.isError =true;
-                this.isSubmitted = false;
-                if(error.detail && error.detail !== "") {
-                    this.errorMessage = error.detail
+                this.isSubmitted = !this.isSubmitted;
+                this.showLoader = !this.showLoader;
+                if (error.title && error.title !== '') {
+                    this.alertService.setAlert('danger', error.title);
                 } else {
-                    this.errorMessage = globalConst.appSubmitErr;
+                    this.alertService.setAlert('danger', globalConst.appSubmitErr);
                 }
-            })
+            });
         }
     }
 
@@ -58,8 +59,9 @@ export class ReviewComponent implements OnInit{
         console.log('Valid token received: ', token);
         this.captchaVerified = true;
         this.captchaFilled = true;
+        this.alertService.clearAlert();
       }
-    
+
       public onServerError(error: any) {
         console.log('Server error: ', error);
         this.captchaVerified = true;
