@@ -4,12 +4,10 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { SupplierService } from '../service/supplier.service';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { Province } from '../model/province';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InvoiceModalContent } from '../core/components/modal/invoiceModal.component';
 import { ReceiptModalContent } from '../core/components/modal/receiptModal.component';
 import { Country } from '../model/country';
-import * as globalConst from 'src/app/service/globalConstants';
 import { CustomValidationService } from '../service/customValidation.service';
 
 @Component({
@@ -20,18 +18,32 @@ import { CustomValidationService } from '../service/customValidation.service';
 })
 export class SupplierSubmissionComponent implements OnInit {
 
-    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef, 
-        private modalService: NgbModal, private customValidator : CustomValidationService) { }
+    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef,
+                private modalService: NgbModal, private customValidator: CustomValidationService) { }
+
+    get control() {
+        return this.supplierForm.controls;
+    }
+
+    get invoices() {
+        return this.supplierForm.get('invoices') as FormArray;
+    }
+
+    get receipts() {
+        return this.supplierForm.get('receipts') as FormArray;
+    }
 
     supplierForm: FormGroup;
-    remitDiv: boolean = false;
-    addressDiv: boolean = false;
+    remitDiv = false;
+    addressDiv = false;
     countryList: Observable<Country[]>;
     selectedRemitCountry: string;
     locatedInBC: string;
-    postalPattern = "^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$";
+    postalPattern = '^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$';
     defaultProvince = { code: 'BC', name: 'British Columbia' };
     defaultCountry = { code: 'CAN', name: 'Canada' };
+
+    refArray: any = [];
 
     ngOnInit() {
         this.initializeForm();
@@ -47,7 +59,7 @@ export class SupplierSubmissionComponent implements OnInit {
             switchMap(term => this.supplierService.getCityList().pipe(
                 map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
             )
-        );
+        )
 
     cityFormatter = (x: { name: string }) => x.name;
 
@@ -58,7 +70,7 @@ export class SupplierSubmissionComponent implements OnInit {
             switchMap(term => this.supplierService.getStateList().pipe(
                 map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
             )
-        );
+        )
 
     stateFormatter = (x: { name: string }) => x.name;
 
@@ -69,12 +81,12 @@ export class SupplierSubmissionComponent implements OnInit {
             switchMap(term => this.supplierService.getProvinceList().pipe(
                 map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
             )
-        );
+        )
 
     provinceFormatter = (x: { name: string }) => x.name;
 
     repopulateFormData() {
-        let storedSupplierDetails = this.supplierService.getSupplierDetails();
+        const storedSupplierDetails = this.supplierService.getSupplierDetails();
         if (storedSupplierDetails) {
             this.supplierService.clearPayload();
             this.initializeForm();
@@ -130,18 +142,6 @@ export class SupplierSubmissionComponent implements OnInit {
         });
     }
 
-    get control() {
-        return this.supplierForm.controls;
-    }
-
-    get invoices() {
-        return this.supplierForm.get('invoices') as FormArray;
-    }
-
-    get receipts() {
-        return this.supplierForm.get('receipts') as FormArray;
-    }
-
     toggleVisibility(event: any) {
         this.remitDiv = event.target.checked;
         if (!event.target.checked) {
@@ -153,8 +153,8 @@ export class SupplierSubmissionComponent implements OnInit {
     }
 
     remitVisibility(selectedValue: any) {
-        var optionIndex = selectedValue.selectedIndex;
-        var optionText = selectedValue.options[optionIndex];
+        const optionIndex = selectedValue.selectedIndex;
+        const optionText = selectedValue.options[optionIndex];
         this.selectedRemitCountry = optionText.text;
         if (optionText.text === 'Canada') {
             this.addressDiv = false;
@@ -184,7 +184,7 @@ export class SupplierSubmissionComponent implements OnInit {
             ], Validators.required),
             invoiceTotalGst: [''],
             invoiceTotalAmount: ['']
-        })
+        });
     }
 
     createReceiptFormArray() {
@@ -196,13 +196,13 @@ export class SupplierSubmissionComponent implements OnInit {
             receiptTotalAmount: [''],
             referralAttachments: this.builder.array([], [Validators.required]),
             receiptAttachments: this.builder.array([], [Validators.required])
-        })
+        });
     }
 
     onSubmit() {
         this.supplierForm.get('address.province').setValue(this.defaultProvince);
         this.supplierForm.get('address.country').setValue(this.defaultCountry);
-        let supplierDetails = this.supplierForm.value;
+        const supplierDetails = this.supplierForm.value;
         this.supplierService.setSupplierDetails(supplierDetails);
         this.supplierService.createPayload(supplierDetails);
         this.router.navigate(['/review']);
@@ -276,8 +276,6 @@ export class SupplierSubmissionComponent implements OnInit {
         this.receipts.removeAt(event);
     }
 
-    refArray: any = [];
-
     mapFormValues(storedSupplierDetails: any) {
         this.supplierService.isReload = true;
         this.supplierForm.get('address.address1').setValue(storedSupplierDetails.address.address1);
@@ -296,15 +294,15 @@ export class SupplierSubmissionComponent implements OnInit {
         this.supplierForm.get('remitToOtherBusiness').setValue(storedSupplierDetails.remitToOtherBusiness);
         this.supplierForm.get('remittanceAddress').setValue(storedSupplierDetails.remittanceAddress);
         this.loadExistingRemittanceValues(storedSupplierDetails);
-        let submissionType = this.supplierForm.get('supplierSubmissionType');
+        const submissionType = this.supplierForm.get('supplierSubmissionType');
         this.loadWithExistingValues(submissionType);
     }
 
     compareCountry(c1: Country, c2: Country) {
-        if(c1 === null || c2 ===null || c1 === undefined || c2 === undefined) {
+        if (c1 === null || c2 === null || c1 === undefined || c2 === undefined) {
             return null;
         }
-        return c1.code === c2.code
+        return c1.code === c2.code;
     }
 
     loadExistingRemittanceValues(storedSupplierDetails: any) {
@@ -317,15 +315,15 @@ export class SupplierSubmissionComponent implements OnInit {
                 this.addressDiv = true;
             }
             this.locatedInBC = this.supplierForm.get('supplierBC').value;
-            if (this.locatedInBC !== "" || this.locatedInBC !== null) {
+            if (this.locatedInBC !== '' || this.locatedInBC !== null) {
                 this.addressDiv = true;
             }
         }
     }
 
     loadWithExistingValues(event: any) {
-        let storedSupplierDetails = this.supplierService.getSupplierDetails();
-        console.log(storedSupplierDetails)
+        const storedSupplierDetails = this.supplierService.getSupplierDetails();
+        console.log(storedSupplierDetails);
         if (event.value === 'invoice') {
             storedSupplierDetails.invoices.forEach(invoice => {
                 this.invoices.push(this.createInvoiceFormArrayWithValues(invoice));
@@ -348,7 +346,7 @@ export class SupplierSubmissionComponent implements OnInit {
             ], Validators.required),
             invoiceTotalGst: [invoice.invoiceTotalGst],
             invoiceTotalAmount: [invoice.invoiceTotalAmount]
-        })
+        });
     }
 
     createReceiptFormArrayWithValues(receipt: any) {
@@ -360,7 +358,7 @@ export class SupplierSubmissionComponent implements OnInit {
             receiptTotalAmount: [receipt.receiptTotalAmount],
             referralAttachments: this.builder.array([], [Validators.required]),
             receiptAttachments: this.builder.array([], [Validators.required])
-        })
+        });
     }
 
 }
