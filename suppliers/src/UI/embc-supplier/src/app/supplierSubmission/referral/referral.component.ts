@@ -17,7 +17,7 @@ import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.serv
 export class ReferralComponent implements OnInit {
 
     @Input() formGroupName: number;
-    @Input() referralForm: FormGroup
+    @Input() referralForm: FormGroup;
     @Input() index: number;
     @Input() component: string;
     supportList: any;
@@ -51,35 +51,34 @@ export class ReferralComponent implements OnInit {
         }
         if (this.supplierService.isReload) {
             this.loadWithExistingValues();
-            console.log("lastToLoad")
         } else {
             this.referralRows.push(this.createRowForm());
         }
         this.onChanges();
     }
     loadWithExistingValues() {
-        let storedSupplierDetails = this.supplierService.getSupplierDetails();
+        const storedSupplierDetails = this.supplierService.getSupplierDetails();
         if (this.component === 'I') {
-            let rowList = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralRows;
+            const rowList = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralRows;
             this.reloadedFiles = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].referralAttachments;
             this.reloadedFiles.forEach(element => {
                 this.referralAttachments.push(this.createAttachmentObject({
                     fileName: element.fileName,
                     file: element.file
-                }))
+                }));
             });
             this.reloadedFiles2 = storedSupplierDetails.invoices[this.invoiceCurrentIndex].referrals[this.index].receiptAttachments;
             this.reloadedFiles2.forEach(element => {
                 this.receiptAttachments.push(this.createAttachmentObject({
                     fileName: element.fileName,
                     file: element.file
-                }))
+                }));
             });
             rowList.forEach(row => {
                 this.referralRows.push(this.createRowFormWithValues(row));
             });
         } else if (this.component === 'R') {
-            let rowList = storedSupplierDetails.receipts[this.invoiceCurrentIndex].referrals[this.index].referralRows;
+            const rowList = storedSupplierDetails.receipts[this.invoiceCurrentIndex].referrals[this.index].referralRows;
             rowList.forEach(row => {
                 this.referralRows.push(this.createRowFormWithValues(row));
             });
@@ -93,13 +92,13 @@ export class ReferralComponent implements OnInit {
             description: [''],
             gst: [''],
             amount: ['']
-        })
+        });
     }
 
     onChanges() {
         this.referralForm.get('referralRows').valueChanges.subscribe(formrow => {
-            let gstSum = formrow.reduce((prev, next) => prev + +next.gst, 0);
-            let amtSum = formrow.reduce((prev, next) => prev + +next.amount, 0);
+            const gstSum = formrow.reduce((prev, next) => prev + +next.gst, 0);
+            const amtSum = formrow.reduce((prev, next) => prev + +next.amount, 0);
             this.referralForm.get('totalGst').setValue(gstSum);
             this.referralForm.get('totalAmount').setValue(amtSum);
         });
@@ -122,9 +121,9 @@ export class ReferralComponent implements OnInit {
                 fileName: event.name,
                 file: reader.result,
                 contentType: event.type
-            }))
-        }
-        //this.cd.markForCheck();
+            }));
+        };
+        // this.cd.markForCheck();
     }
 
     deleteReferralFormControl(event: any) {
@@ -139,9 +138,9 @@ export class ReferralComponent implements OnInit {
                 fileName: event.name,
                 file: reader.result,
                 contentType: event.type
-            }))
-        }
-        //this.cd.markForCheck();
+            }));
+        };
+        // this.cd.markForCheck();
     }
 
     deleteReceiptFormControl(event: any) {
@@ -158,7 +157,7 @@ export class ReferralComponent implements OnInit {
             description: [row.description],
             gst: [row.gst],
             amount: [row.amount]
-        })
+        });
     }
 
     checkAttachmentLength(control: []) {

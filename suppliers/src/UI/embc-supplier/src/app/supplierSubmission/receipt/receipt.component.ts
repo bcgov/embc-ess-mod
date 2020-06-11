@@ -6,7 +6,7 @@ import { SupplierService } from 'src/app/service/supplier.service';
     selector: 'app-receipt',
     templateUrl: './receipt.component.html',
     styleUrls: ['./receipt.component.scss'],
-    
+
 })
 export class ReceiptComponent implements OnInit{
 
@@ -14,14 +14,14 @@ export class ReceiptComponent implements OnInit{
     @Input('receiptForm') receiptForm: FormGroup;
     @Input('index') index: number;
     @Output() indexToRemove = new EventEmitter<number>();
-    component: string = "R";
+    component = 'R';
     reloadedFiles: any;
     reloadedFiles2: any;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private supplierService: SupplierService) {}
 
     ngOnInit() {
-        if(this.supplierService.isReload){
+        if (this.supplierService.isReload){
             this.loadWithExistingValues();
         } else {
             this.addReferralTemplate();
@@ -30,22 +30,22 @@ export class ReceiptComponent implements OnInit{
     }
 
     loadWithExistingValues() {
-        let storedSupplierDetails = this.supplierService.getSupplierDetails();
-        let referralList = storedSupplierDetails.receipts[this.index].referrals;
+        const storedSupplierDetails = this.supplierService.getSupplierDetails();
+        const referralList = storedSupplierDetails.receipts[this.index].referrals;
 
         this.reloadedFiles = storedSupplierDetails.receipts[this.index].referralAttachments;
         this.reloadedFiles.forEach(element => {
             this.referralAttachments.push(this.createAttachmentObject({
                 fileName: element.fileName,
                 file: element.file
-            }))
+            }));
         });
         this.reloadedFiles2 = storedSupplierDetails.receipts[this.index].receiptAttachments;
         this.reloadedFiles2.forEach(element => {
             this.receiptAttachments.push(this.createAttachmentObject({
                 fileName: element.fileName,
                 file: element.file
-            }))
+            }));
         });
 
         referralList.forEach(rec => {
@@ -78,14 +78,14 @@ export class ReceiptComponent implements OnInit{
             ], Validators.required),
             totalGst: [''],
             totalAmount: ['']
-         })
+         });
     }
 
     onChanges() {
-        this.receiptForm.get('referrals').valueChanges.subscribe(template =>{
-            let totalGst = template.reduce((prev, next) => prev + +next.totalGst, 0);
+        this.receiptForm.get('referrals').valueChanges.subscribe(template => {
+            const totalGst = template.reduce((prev, next) => prev + +next.totalGst, 0);
             this.receiptForm.get('receiptTotalGst').setValue(totalGst);
-            let totalAmount = template.reduce((prev, next) => prev + +next.totalAmount, 0);
+            const totalAmount = template.reduce((prev, next) => prev + +next.totalAmount, 0);
             this.receiptForm.get('receiptTotalAmount').setValue(totalAmount);
         });
     }
@@ -111,9 +111,9 @@ export class ReceiptComponent implements OnInit{
                 fileName: event.name,
                 file: reader.result,
                 contentType: event.type
-            }))
-        }
-        //this.cd.markForCheck();
+            }));
+        };
+        // this.cd.markForCheck();
     }
 
     deleteReferralFormControl(event: any) {
@@ -128,9 +128,9 @@ export class ReceiptComponent implements OnInit{
                 fileName: event.name,
                 file: reader.result,
                 contentType: event.type
-            }))
-        }
-        //this.cd.markForCheck();
+            }));
+        };
+        // this.cd.markForCheck();
     }
 
     deleteReceiptFormControl(event: any) {
@@ -150,10 +150,10 @@ export class ReceiptComponent implements OnInit{
              referralDate : [referral.referralDate, Validators.required],
              receiptNumber: [referral.receiptNumber],
              referralRows: this.builder.array([
-            ],Validators.required),
+            ], Validators.required),
             totalGst: [referral.totalGst],
             totalAmount: [referral.totalAmount]
-         })
+         });
     }
 
     checkAttachmentLength(control: []) {

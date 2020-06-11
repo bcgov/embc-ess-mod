@@ -73,7 +73,6 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
                 class="btn btn-primary referral-button">Next</button>
             </div>
           </div>
-
         </div>
 
         <div class="col-sm-12 col-md-6">
@@ -85,7 +84,7 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
             <div *ngIf="!checkAttachmentLength(invoiceControl.invoiceAttachments.value)" style="color: red;">
               Attachment is required
             </div>
-            <!-- <div *ngIf="sizeCheck()" style="color: red;">
+            <!-- <div *ngIf="attachmentGroup?.errors?.zeroSize" style="color: red;">
               Attachment size should be greater than zero
             </div> -->
           </div>

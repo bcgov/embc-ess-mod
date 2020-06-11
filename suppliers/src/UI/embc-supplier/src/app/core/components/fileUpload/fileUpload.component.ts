@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import { ToastService } from 'src/app/service/toast.service';
 
 @Component({
     selector: 'app-fileUpload',
@@ -10,25 +11,33 @@ export class FileUploadComponent implements OnInit{
     invoiceAttachments: any = [];
     @Output() attachedFile = new EventEmitter<any>();
     @Output() deleteFile = new EventEmitter<any>();
-    @Input() reloadedFiles: any
+    @Input() reloadedFiles: any;
+    showToast = false;
 
-    constructor() {}
+    constructor(public toastService: ToastService) {}
 
     ngOnInit() {
-        if(this.reloadedFiles !== undefined) {
+        if (this.reloadedFiles !== undefined) {
             this.reloadedFiles.forEach(element => {
                 this.invoiceAttachments.push(element.fileName);
-                //this.attachedFile.emit(element);
             });
         }
     }
 
     onInvoiceDropped(event: any) {
+        if(this.showToast) {
+            this.showToast = !this.showToast
+        }
         for (let index = 0; index < event.length; index++) {
             const element = event[index];
-            this.invoiceAttachments.push(element.name);
-            this.attachedFile.emit(element);
-          } 
+            if(element.size > 0) {
+                this.invoiceAttachments.push(element.name);
+                this.attachedFile.emit(element);
+            } else {
+                this.showToast = !this.showToast;
+                this.toastService.show('Attachment size should be greater than zero', { delay: 9500 });
+            }
+          }
     }
 
     deleteAttachedInvoice(fileIndex: number) {

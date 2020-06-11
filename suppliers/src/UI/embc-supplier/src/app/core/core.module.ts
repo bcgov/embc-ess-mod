@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { LoaderComponent } from './components/loader/loader.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastsContainer } from './components/toasts/toasts.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
       ReceiptModalContent,
       CaptchaComponent,
       LoaderComponent,
-      AlertComponent
+      AlertComponent,
+      ToastsContainer
     ],
   exports: [
       DragDropDirective,
@@ -36,7 +38,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
       GSTCodeDirective,
       CaptchaComponent,
       LoaderComponent,
-      AlertComponent
+      AlertComponent,
+      ToastsContainer
     ]
 })
 export class CoreModule { }
