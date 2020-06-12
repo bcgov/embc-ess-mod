@@ -8,11 +8,15 @@ import { InvoiceModalContent } from './components/modal/invoiceModal.component';
 import { ReceiptModalContent } from './components/modal/receiptModal.component';
 import { CaptchaComponent } from './components/captcha/captcha.component';
 import { FormsModule } from '@angular/forms';
+import { LoaderComponent } from './components/loader/loader.component';
+import { AlertComponent } from './components/alert/alert.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   declarations: [
       DragDropDirective,
@@ -21,14 +25,18 @@ import { FormsModule } from '@angular/forms';
       GSTCodeDirective,
       InvoiceModalContent,
       ReceiptModalContent,
-      CaptchaComponent
+      CaptchaComponent,
+      LoaderComponent,
+      AlertComponent
     ],
   exports: [
       DragDropDirective,
       FileUploadComponent,
       PhoneMaskDirective,
       GSTCodeDirective,
-      CaptchaComponent
+      CaptchaComponent,
+      LoaderComponent,
+      AlertComponent
     ]
 })
 export class CoreModule { }

@@ -22,7 +22,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   })
   export class InvoiceModalContent {
     @Output() clearIndicator = new EventEmitter<boolean>();
-  
+
     constructor(public activeModal: NgbActiveModal) {}
 
     action(indicator: boolean) {

@@ -17,7 +17,7 @@ export class GSTCodeDirective {
   keydownBackspace(evt) {
     this.onInputChange(evt.target.value, true);
   }
-  
+
 
 //   Char 1-9 (Main Number): Must be whole number between 0 - 9
 

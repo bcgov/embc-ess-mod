@@ -222,17 +222,17 @@
                     (serverError)="onServerError($event)"></captcha>
             </div>
         </div>
-        <br>
-
-        <p *ngIf="isError" style="color: red;">{{errorMessage}}</p>
-        <br>
+        
+        <app-alert></app-alert>
 
         <div class="row" style="justify-content: space-between;">
             <div>
                 <button type="submit" (click)="goback()" class="btn btn-primary">Go back & Edit</button>
             </div>
             <div>
-                <button type="submit" (click)="submit()" [disabled]="isSubmitted" class="btn btn-warning">Submit</button>
+                <button type="submit" (click)="submit()" [disabled]="isSubmitted" class="btn btn-warning">Submit
+                    <loader [showLoader]="showLoader"></loader>
+                </button>
             </div>
         </div>
     </div>
