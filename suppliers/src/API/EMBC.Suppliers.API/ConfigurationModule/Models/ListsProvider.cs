@@ -39,7 +39,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         public async Task<IEnumerable<Country>> GetCountriesAsync()
         {
             var countries = await cache.GetCountriesAsync();
-            return countries.Select(c => new Country { Code = c.era_countrycode, Name = c.era_name });
+            return countries.Select(c => new Country { Code = c.era_countrycode, Name = c.era_name }).OrderBy(c => c.Name);
         }
 
         public async Task<IEnumerable<Jurisdiction>> GetJurisdictionsAsync(JurisdictionType[] types, string stateProvinceCode, string countryCode)
