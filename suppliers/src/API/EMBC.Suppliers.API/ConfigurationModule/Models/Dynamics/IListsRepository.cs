@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
-    public interface ICachedListsProvider
+    public interface IListsRepository
     {
         Task<IEnumerable<CountryEntity>> GetCountriesAsync();
 

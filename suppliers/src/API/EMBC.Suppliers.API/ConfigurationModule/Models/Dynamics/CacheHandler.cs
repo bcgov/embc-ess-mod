@@ -27,7 +27,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
     {
         private readonly IMessageContext messageContext;
         private readonly ILogger<CacheHandler> logger;
-        private readonly ICachedListsProvider cache;
+        private readonly IListsRepository listsRepository;
         private readonly IListsGateway listsGateway;
         private readonly IFileSystem fileSystem;
         private readonly FileBasedCachedListsOptions options;
@@ -35,14 +35,14 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 
         public CacheHandler(IMessageContext messageContext,
             ILogger<CacheHandler> logger,
-            ICachedListsProvider cache,
+            IListsRepository listsRepository,
             IListsGateway listsGateway,
             IFileSystem fileSystem,
             IOptions<FileBasedCachedListsOptions> options)
         {
             this.messageContext = messageContext;
             this.logger = logger;
-            this.cache = cache;
+            this.listsRepository = listsRepository;
             this.listsGateway = listsGateway;
             this.fileSystem = fileSystem;
             this.options = options.Value;
@@ -53,10 +53,10 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             try
             {
                 if (!fileSystem.Directory.Exists(options.CachePath)) fileSystem.Directory.CreateDirectory(options.CachePath);
-                await cache.SetCountriesAsync(await listsGateway.GetCountriesAsync());
-                await cache.SetStateProvincesAsync(await listsGateway.GetStateProvincesAsync());
-                await cache.SetJurisdictionsAsync(await listsGateway.GetJurisdictionsAsync());
-                await cache.SetSupportsAsync(await listsGateway.GetSupportsAsync());
+                await listsRepository.SetCountriesAsync(await listsGateway.GetCountriesAsync());
+                await listsRepository.SetStateProvincesAsync(await listsGateway.GetStateProvincesAsync());
+                await listsRepository.SetJurisdictionsAsync(await listsGateway.GetJurisdictionsAsync());
+                await listsRepository.SetSupportsAsync(await listsGateway.GetSupportsAsync());
             }
             catch (Exception e)
             {
