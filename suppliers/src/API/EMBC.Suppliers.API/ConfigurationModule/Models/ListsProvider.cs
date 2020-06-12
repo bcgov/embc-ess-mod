@@ -51,7 +51,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 
             return (await cache.GetJurisdictionsAsync())
                 .Where(j => j._era_relatedprovincestate_value == stateProvince.era_provinceterritoriesid &&
-                    (!types.Any() || types.Any(t => ((int)t).ToString().Equals(j.era_type))))
+                    (types == null || !types.Any() || types.Any(t => ((int)t).ToString().Equals(j.era_type))))
                 .Select(j => new Jurisdiction
                 {
                     Code = j.era_jurisdictionid,
@@ -59,7 +59,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
                     Type = string.IsNullOrWhiteSpace(j.era_type) ? JurisdictionType.Undefined : Enum.Parse<JurisdictionType>(j.era_type, true),
                     StateProvinceCode = stateProvinceCode,
                     CountryCode = countryCode
-                });
+                }).OrderBy(j => j.Name);
         }
 
         public async Task<IEnumerable<StateProvince>> GetStateProvincesAsync(string countryCode)
@@ -68,13 +68,15 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
             if (country == null) return Array.Empty<StateProvince>();
             return (await cache.GetStateProvincesAsync())
                 .Where(sp => sp._era_relatedcountry_value == country.era_countryid)
-                .Select(sp => new StateProvince { Code = sp.era_code, Name = sp.era_name, CountryCode = countryCode });
+                .Select(sp => new StateProvince { Code = sp.era_code, Name = sp.era_name, CountryCode = countryCode })
+                .OrderBy(sp => sp.Name);
         }
 
         public async Task<IEnumerable<Support>> GetSupportsAsync()
         {
             var supports = await cache.GetSupportsAsync();
-            return supports.Select(c => new Support { Code = c.era_name, Name = c.era_name });
+            return supports.Select(s => new Support { Code = s.era_name, Name = s.era_name })
+                .OrderBy(s => s.Name);
         }
     }
 }
