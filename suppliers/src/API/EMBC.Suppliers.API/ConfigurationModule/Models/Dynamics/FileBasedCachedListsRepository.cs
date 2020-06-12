@@ -25,7 +25,7 @@ using Microsoft.Extensions.Options;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
 {
-    public class FileBasedCachedListsProvider : ICachedListsProvider
+    public class FileBasedCachedListsRepository : IListsRepository
     {
         private readonly IFileSystem fileSystem;
         private readonly IDistributedCache cache;
@@ -33,7 +33,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
         private string path => options.CachePath;
         private const string sourceCsvFolder = "./ConfigurationModule/Models/Data";
 
-        public FileBasedCachedListsProvider(IFileSystem fileSystem, IDistributedCache cache, IOptions<FileBasedCachedListsOptions> options)
+        public FileBasedCachedListsRepository(IFileSystem fileSystem, IDistributedCache cache, IOptions<FileBasedCachedListsOptions> options)
         {
             this.fileSystem = fileSystem;
             this.cache = cache;

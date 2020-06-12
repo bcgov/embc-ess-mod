@@ -30,9 +30,9 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
     {
         private readonly CRMWebAPI api;
         private readonly ILogger<SubmissionDynamicsCustomActionHandler> logger;
-        private readonly ICachedListsProvider cachedListsProvider;
+        private readonly IListsRepository cachedListsProvider;
 
-        public SubmissionDynamicsCustomActionHandler(CRMWebAPI api, ILogger<SubmissionDynamicsCustomActionHandler> logger, ICachedListsProvider cachedListsProvider)
+        public SubmissionDynamicsCustomActionHandler(CRMWebAPI api, ILogger<SubmissionDynamicsCustomActionHandler> logger, IListsRepository cachedListsProvider)
         {
             this.api = api;
             this.logger = logger;

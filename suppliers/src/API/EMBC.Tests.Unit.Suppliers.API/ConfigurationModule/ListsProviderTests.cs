@@ -20,9 +20,9 @@ namespace EMBC.Tests.Unit.Suppliers.API.ConfigurationModule
                 new CountryEntity{era_countrycode = "c2", era_name = "c2", era_countryid = "2", era_isocountrycode = "c2"},
                 new CountryEntity{era_countrycode = "c3", era_name = "c3", era_countryid = "3", era_isocountrycode = "c3"}
             };
-            var mockedCachedListProvider = new Mock<ICachedListsProvider>();
-            mockedCachedListProvider.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(countries));
-            var provider = new ListsProvider(mockedCachedListProvider.Object);
+            var mockedListsRepo = new Mock<IListsRepository>();
+            mockedListsRepo.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(countries));
+            var provider = new ListsProvider(mockedListsRepo.Object);
 
             var result = await provider.GetCountriesAsync();
             Assert.Equal(countries.Count(), result.Count());
@@ -37,9 +37,9 @@ namespace EMBC.Tests.Unit.Suppliers.API.ConfigurationModule
                 new CountryEntity{era_countrycode = "c2", era_name = "c_a", era_countryid = "2", era_isocountrycode = "c2"},
                 new CountryEntity{era_countrycode = "c3", era_name = "c_b", era_countryid = "3", era_isocountrycode = "c3"}
             };
-            var mockedCachedListProvider = new Mock<ICachedListsProvider>();
-            mockedCachedListProvider.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(countries));
-            var provider = new ListsProvider(mockedCachedListProvider.Object);
+            var mockedListsRepo = new Mock<IListsRepository>();
+            mockedListsRepo.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(countries));
+            var provider = new ListsProvider(mockedListsRepo.Object);
 
             var result = await provider.GetCountriesAsync();
             Assert.Equal(countries.Select(c => c.era_name).OrderBy(c => c), result.Select(c => c.Name));
@@ -55,10 +55,10 @@ namespace EMBC.Tests.Unit.Suppliers.API.ConfigurationModule
                 new StateProvinceEntity { era_code = "s1", era_name = "s2", era_provinceterritoriesid = "2", _era_relatedcountry_value = country.era_countryid },
                 new StateProvinceEntity { era_code = "s1", era_name = "s2", era_provinceterritoriesid = "3", _era_relatedcountry_value = country.era_countryid },
                };
-            var mockedCachedListProvider = new Mock<ICachedListsProvider>();
-            mockedCachedListProvider.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country }.AsEnumerable()));
-            mockedCachedListProvider.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(stateProvinces));
-            var provider = new ListsProvider(mockedCachedListProvider.Object);
+            var mockedListsRepo = new Mock<IListsRepository>();
+            mockedListsRepo.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country }.AsEnumerable()));
+            mockedListsRepo.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(stateProvinces));
+            var provider = new ListsProvider(mockedListsRepo.Object);
 
             var result = await provider.GetStateProvincesAsync(country.era_isocountrycode);
             Assert.Equal(stateProvinces.Count(), result.Count());
@@ -74,10 +74,10 @@ namespace EMBC.Tests.Unit.Suppliers.API.ConfigurationModule
                 new StateProvinceEntity { era_code = "s1", era_name = "s_c", era_provinceterritoriesid = "2", _era_relatedcountry_value = country.era_countryid },
                 new StateProvinceEntity { era_code = "s1", era_name = "s_b", era_provinceterritoriesid = "3", _era_relatedcountry_value = country.era_countryid },
                };
-            var mockedCachedListProvider = new Mock<ICachedListsProvider>();
-            mockedCachedListProvider.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country }.AsEnumerable()));
-            mockedCachedListProvider.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(stateProvinces));
-            var provider = new ListsProvider(mockedCachedListProvider.Object);
+            var mockedListsRepo = new Mock<IListsRepository>();
+            mockedListsRepo.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country }.AsEnumerable()));
+            mockedListsRepo.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(stateProvinces));
+            var provider = new ListsProvider(mockedListsRepo.Object);
 
             var result = await provider.GetStateProvincesAsync(country.era_isocountrycode);
             Assert.Equal(stateProvinces.Select(c => c.era_name).OrderBy(c => c), result.Select(c => c.Name));
@@ -99,11 +99,11 @@ namespace EMBC.Tests.Unit.Suppliers.API.ConfigurationModule
                 new JurisdictionEntity{ era_jurisdictionid = "4", era_jurisdictionname = "j4", era_type = JurisdictionType.City.GetHashCode().ToString(), _era_relatedprovincestate_value = stateProvince1_1.era_provinceterritoriesid },
                 new JurisdictionEntity{ era_jurisdictionid = "5", era_jurisdictionname = "j5", era_type = JurisdictionType.City.GetHashCode().ToString(), _era_relatedprovincestate_value = stateProvince2_1.era_provinceterritoriesid },
             };
-            var mockedCachedListProvider = new Mock<ICachedListsProvider>();
-            mockedCachedListProvider.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country1, country2 }.AsEnumerable()));
-            mockedCachedListProvider.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(new[] { stateProvince1_1, stateProvince1_2, stateProvince2_1 }.AsEnumerable()));
-            mockedCachedListProvider.Setup(m => m.GetJurisdictionsAsync()).Returns(Task.FromResult(jurisdictions));
-            var provider = new ListsProvider(mockedCachedListProvider.Object);
+            var mockedListsRepo = new Mock<IListsRepository>();
+            mockedListsRepo.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country1, country2 }.AsEnumerable()));
+            mockedListsRepo.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(new[] { stateProvince1_1, stateProvince1_2, stateProvince2_1 }.AsEnumerable()));
+            mockedListsRepo.Setup(m => m.GetJurisdictionsAsync()).Returns(Task.FromResult(jurisdictions));
+            var provider = new ListsProvider(mockedListsRepo.Object);
 
             var result = await provider.GetJurisdictionsAsync(null, stateProvince1_1.era_code, country1.era_countrycode);
             Assert.Equal(jurisdictions.Count(j => j._era_relatedprovincestate_value == stateProvince1_1.era_provinceterritoriesid), result.Count());
@@ -120,11 +120,11 @@ namespace EMBC.Tests.Unit.Suppliers.API.ConfigurationModule
                 new JurisdictionEntity{ era_jurisdictionid = "2", era_jurisdictionname = "j3", era_type = JurisdictionType.District.GetHashCode().ToString(), _era_relatedprovincestate_value = stateProvince.era_provinceterritoriesid },
                 new JurisdictionEntity{ era_jurisdictionid = "3", era_jurisdictionname = "j1", era_type = JurisdictionType.DistrictMunicipality.GetHashCode().ToString(), _era_relatedprovincestate_value = stateProvince.era_provinceterritoriesid },
               };
-            var mockedCachedListProvider = new Mock<ICachedListsProvider>();
-            mockedCachedListProvider.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country }.AsEnumerable()));
-            mockedCachedListProvider.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(new[] { stateProvince }.AsEnumerable()));
-            mockedCachedListProvider.Setup(m => m.GetJurisdictionsAsync()).Returns(Task.FromResult(jurisdictions));
-            var provider = new ListsProvider(mockedCachedListProvider.Object);
+            var mockedListsRepo = new Mock<IListsRepository>();
+            mockedListsRepo.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country }.AsEnumerable()));
+            mockedListsRepo.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(new[] { stateProvince }.AsEnumerable()));
+            mockedListsRepo.Setup(m => m.GetJurisdictionsAsync()).Returns(Task.FromResult(jurisdictions));
+            var provider = new ListsProvider(mockedListsRepo.Object);
 
             var result = await provider.GetJurisdictionsAsync(null, stateProvince.era_code, country.era_countrycode);
             Assert.Equal(jurisdictions.Select(c => c.era_jurisdictionname).OrderBy(c => c), result.Select(c => c.Name));
@@ -141,11 +141,11 @@ namespace EMBC.Tests.Unit.Suppliers.API.ConfigurationModule
                 new JurisdictionEntity{ era_jurisdictionid = "j2", era_jurisdictionname = "j3", era_type = JurisdictionType.District.GetHashCode().ToString(), _era_relatedprovincestate_value = stateProvince.era_provinceterritoriesid },
                 new JurisdictionEntity{ era_jurisdictionid = "j3", era_jurisdictionname = "j1", era_type = JurisdictionType.DistrictMunicipality.GetHashCode().ToString(), _era_relatedprovincestate_value = stateProvince.era_provinceterritoriesid },
               };
-            var mockedCachedListProvider = new Mock<ICachedListsProvider>();
-            mockedCachedListProvider.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country }.AsEnumerable()));
-            mockedCachedListProvider.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(new[] { stateProvince }.AsEnumerable()));
-            mockedCachedListProvider.Setup(m => m.GetJurisdictionsAsync()).Returns(Task.FromResult(jurisdictions));
-            var provider = new ListsProvider(mockedCachedListProvider.Object);
+            var mockedListsRepo = new Mock<IListsRepository>();
+            mockedListsRepo.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country }.AsEnumerable()));
+            mockedListsRepo.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(new[] { stateProvince }.AsEnumerable()));
+            mockedListsRepo.Setup(m => m.GetJurisdictionsAsync()).Returns(Task.FromResult(jurisdictions));
+            var provider = new ListsProvider(mockedListsRepo.Object);
 
             var result = await provider.GetJurisdictionsAsync(new[] { JurisdictionType.City }, stateProvince.era_code, country.era_countrycode);
             Assert.Single(result);
@@ -162,11 +162,11 @@ namespace EMBC.Tests.Unit.Suppliers.API.ConfigurationModule
                 new JurisdictionEntity{ era_jurisdictionid = "j2", era_jurisdictionname = "j3", era_type = JurisdictionType.District.GetHashCode().ToString(), _era_relatedprovincestate_value = stateProvince.era_provinceterritoriesid },
                 new JurisdictionEntity{ era_jurisdictionid = "j3", era_jurisdictionname = "j1", era_type = JurisdictionType.DistrictMunicipality.GetHashCode().ToString(), _era_relatedprovincestate_value = stateProvince.era_provinceterritoriesid },
               };
-            var mockedCachedListProvider = new Mock<ICachedListsProvider>();
-            mockedCachedListProvider.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country }.AsEnumerable()));
-            mockedCachedListProvider.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(new[] { stateProvince }.AsEnumerable()));
-            mockedCachedListProvider.Setup(m => m.GetJurisdictionsAsync()).Returns(Task.FromResult(jurisdictions));
-            var provider = new ListsProvider(mockedCachedListProvider.Object);
+            var mockedListsRepo = new Mock<IListsRepository>();
+            mockedListsRepo.Setup(m => m.GetCountriesAsync()).Returns(Task.FromResult(new[] { country }.AsEnumerable()));
+            mockedListsRepo.Setup(m => m.GetStateProvincesAsync()).Returns(Task.FromResult(new[] { stateProvince }.AsEnumerable()));
+            mockedListsRepo.Setup(m => m.GetJurisdictionsAsync()).Returns(Task.FromResult(jurisdictions));
+            var provider = new ListsProvider(mockedListsRepo.Object);
 
             var result = await provider.GetJurisdictionsAsync(new[] { JurisdictionType.City, JurisdictionType.District }, stateProvince.era_code, country.era_countrycode);
             Assert.Equal(2, result.Count());
@@ -181,9 +181,9 @@ namespace EMBC.Tests.Unit.Suppliers.API.ConfigurationModule
                 new SupportEntity{ era_supportid = "2", era_name = "s2" },
                 new SupportEntity{ era_supportid = "3", era_name = "s3" }
             };
-            var mockedCachedListProvider = new Mock<ICachedListsProvider>();
-            mockedCachedListProvider.Setup(m => m.GetSupportsAsync()).Returns(Task.FromResult(supports));
-            var provider = new ListsProvider(mockedCachedListProvider.Object);
+            var mockedListsRepo = new Mock<IListsRepository>();
+            mockedListsRepo.Setup(m => m.GetSupportsAsync()).Returns(Task.FromResult(supports));
+            var provider = new ListsProvider(mockedListsRepo.Object);
 
             var result = await provider.GetSupportsAsync();
             Assert.Equal(supports.Count(), result.Count());
@@ -198,9 +198,9 @@ namespace EMBC.Tests.Unit.Suppliers.API.ConfigurationModule
                 new SupportEntity{ era_supportid = "1", era_name = "s1" },
                 new SupportEntity{ era_supportid = "3", era_name = "s3" }
             };
-            var mockedCachedListProvider = new Mock<ICachedListsProvider>();
-            mockedCachedListProvider.Setup(m => m.GetSupportsAsync()).Returns(Task.FromResult(supports));
-            var provider = new ListsProvider(mockedCachedListProvider.Object);
+            var mockedListsRepo = new Mock<IListsRepository>();
+            mockedListsRepo.Setup(m => m.GetSupportsAsync()).Returns(Task.FromResult(supports));
+            var provider = new ListsProvider(mockedListsRepo.Object);
 
             var result = await provider.GetSupportsAsync();
             Assert.Equal(supports.Select(s => s.era_name).OrderBy(c => c), result.Select(s => s.Name));

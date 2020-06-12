@@ -29,27 +29,27 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
         IJurisdictionsListProvider,
         ISupportsListProvider
     {
-        private readonly ICachedListsProvider cache;
+        private readonly IListsRepository listsRepository;
 
-        public ListsProvider(ICachedListsProvider cache)
+        public ListsProvider(IListsRepository listsRepository)
         {
-            this.cache = cache;
+            this.listsRepository = listsRepository;
         }
 
         public async Task<IEnumerable<Country>> GetCountriesAsync()
         {
-            var countries = await cache.GetCountriesAsync();
+            var countries = await listsRepository.GetCountriesAsync();
             return countries.Select(c => new Country { Code = c.era_countrycode, Name = c.era_name }).OrderBy(c => c.Name);
         }
 
         public async Task<IEnumerable<Jurisdiction>> GetJurisdictionsAsync(JurisdictionType[] types, string stateProvinceCode, string countryCode)
         {
-            var country = (await cache.GetCountriesAsync()).SingleOrDefault(c => c.era_countrycode == countryCode);
+            var country = (await listsRepository.GetCountriesAsync()).SingleOrDefault(c => c.era_countrycode == countryCode);
             if (country == null) return Array.Empty<Jurisdiction>();
-            var stateProvince = (await cache.GetStateProvincesAsync()).SingleOrDefault(sp => sp._era_relatedcountry_value == country.era_countryid && sp.era_code == stateProvinceCode);
+            var stateProvince = (await listsRepository.GetStateProvincesAsync()).SingleOrDefault(sp => sp._era_relatedcountry_value == country.era_countryid && sp.era_code == stateProvinceCode);
             if (stateProvince == null) return Array.Empty<Jurisdiction>();
 
-            return (await cache.GetJurisdictionsAsync())
+            return (await listsRepository.GetJurisdictionsAsync())
                 .Where(j => j._era_relatedprovincestate_value == stateProvince.era_provinceterritoriesid &&
                     (types == null || !types.Any() || types.Any(t => ((int)t).ToString().Equals(j.era_type))))
                 .Select(j => new Jurisdiction
@@ -64,9 +64,9 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 
         public async Task<IEnumerable<StateProvince>> GetStateProvincesAsync(string countryCode)
         {
-            var country = (await cache.GetCountriesAsync()).SingleOrDefault(c => c.era_countrycode == countryCode);
+            var country = (await listsRepository.GetCountriesAsync()).SingleOrDefault(c => c.era_countrycode == countryCode);
             if (country == null) return Array.Empty<StateProvince>();
-            return (await cache.GetStateProvincesAsync())
+            return (await listsRepository.GetStateProvincesAsync())
                 .Where(sp => sp._era_relatedcountry_value == country.era_countryid)
                 .Select(sp => new StateProvince { Code = sp.era_code, Name = sp.era_name, CountryCode = countryCode })
                 .OrderBy(sp => sp.Name);
@@ -74,7 +74,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 
         public async Task<IEnumerable<Support>> GetSupportsAsync()
         {
-            var supports = await cache.GetSupportsAsync();
+            var supports = await listsRepository.GetSupportsAsync();
             return supports.Select(s => new Support { Code = s.era_name, Name = s.era_name })
                 .OrderBy(s => s.Name);
         }
