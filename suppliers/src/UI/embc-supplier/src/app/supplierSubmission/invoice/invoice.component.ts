@@ -38,7 +38,7 @@ export class InvoiceComponent implements OnInit {
     }
 
     createAttachmentObject(data: any) {
-        return this.builder.group(data); // , {validator: [this.customValidator.attachmentSizeValidator] }
+        return this.builder.group(data);
     }
 
     ngOnInit() {
@@ -139,7 +139,6 @@ export class InvoiceComponent implements OnInit {
     removeReferral(event: any) {
         this.referrals.removeAt(event);
     }
-
 
     createReferralFormArrayWithValues(referral: any) {
         return this.builder.group({

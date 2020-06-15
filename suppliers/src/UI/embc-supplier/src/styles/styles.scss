@@ -34,12 +34,28 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
     color: red;
  }
 
- .input-help {
+.input-help {
     vertical-align: top;
     display: inline-block;
-  }
+}
 
 body {
     font-size: 15px;
 }
+
+.input-symbol-dollar {
+    position: relative;
+   // display: block;
+  }
+ 
+.input-symbol-dollar:after {
+    content: "$";
+    font-size: 16px !important;
+    font-weight: 400;
+    position: absolute;
+    //display: block;
+    height: 100%;
+    top: 0;
+    left: 4px;
+ }
 

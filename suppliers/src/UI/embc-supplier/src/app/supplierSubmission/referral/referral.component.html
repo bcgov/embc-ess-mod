@@ -72,26 +72,19 @@ Duplicate Referral Numbers should display an error message and remove the duplic
             <tr *ngFor="let row of referralRows.controls; let j = index" [formGroupName]="j">
               <td>
                 <select class="form-control" formControlName="supportProvided" required>
-                  <option value="" disabled selected>Select Support</option>
+                  <option value="" disabled selected>-- Select Support</option>
                   <option *ngFor="let support of supportList" [ngValue]="support">{{support.name}}</option>
                 </select>
               </td>
               <td><input type="text" formControlName="description" class="form-control"></td>
               <td>
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">$</div>
-                  </div>
-                  <input type="number" min="0" formControlName="gst" class="form-control" oninput="this.value = Math.abs(this.value)" required>
-                </div>
+                <span class="input-symbol-dollar items-dollar-line"><input type="number" min="0" formControlName="gst"
+                    class="form-control" oninput="this.value = Math.abs(this.value)" required></span>
               </td>
               <td>
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">$</div>
-                  </div>
-                  <input type="number" min="1" formControlName="amount" class="form-control" oninput="value!=0?(value = Math.abs(value)):(value='')" required>
-                </div>
+                <span class="input-symbol-dollar items-dollar-line"><input type="number" min="1"
+                    formControlName="amount" class="form-control"
+                    oninput="value!=0?(value = Math.abs(value)):(value='')" required></span>
               </td>
               <td><i (click)="deleteRow(j)" class="fas fa-trash-alt"></i></td>
             </tr>
@@ -107,7 +100,8 @@ Duplicate Referral Numbers should display an error message and remove the duplic
       <div class="col-12 form-inline" style="justify-content: flex-end;">
         <div>
           Total GST &nbsp;&nbsp;
-          <input type="number" formControlName="totalGst" class="form-control" readonly>
+          <span class="input-symbol-dollar dollar-line"><input type="number" formControlName="totalGst"
+              class="form-control" readonly></span>
         </div>
       </div>
       <br>
@@ -116,8 +110,9 @@ Duplicate Referral Numbers should display an error message and remove the duplic
         <div style="margin-bottom: 6px;">
           Total Amount &nbsp;&nbsp;
           <span class="input-help">
-            <input id="totalAmount" type="number" formControlName="totalAmount" class="form-control" readonly>
-            <small id="totalAmount" class="form-text text-muted">
+            <span class="input-symbol-dollar dollar-line"><input id="totalAmount" type="number"
+                formControlName="totalAmount" class="form-control" readonly></span>
+            <small class="form-text text-muted" style="margin-left: 50%;" id="totalAmount">
               (excluding GST)
             </small>
           </span>
