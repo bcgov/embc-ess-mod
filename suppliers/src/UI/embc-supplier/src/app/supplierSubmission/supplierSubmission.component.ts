@@ -42,6 +42,7 @@ export class SupplierSubmissionComponent implements OnInit {
     postalPattern = '^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$';
     defaultProvince = { code: 'BC', name: 'British Columbia' };
     defaultCountry = { code: 'CAN', name: 'Canada' };
+   // phonePattern = /^([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$/;//^([0-9]{3})-([0-9]{3})-([0-9]{4})$ 
 
     refArray: any = [];
 
@@ -118,8 +119,8 @@ export class SupplierSubmissionComponent implements OnInit {
                 firstName: ['', Validators.required],
                 lastName: ['', Validators.required],
                 email: ['', Validators.email],
-                phone: ['', Validators.required],
-                fax: [''],
+                phone: ['', [Validators.required, Validators.minLength(12)]],
+                fax: ['', Validators.minLength(12)],
             }),
 
             remittanceAddress: this.builder.group({

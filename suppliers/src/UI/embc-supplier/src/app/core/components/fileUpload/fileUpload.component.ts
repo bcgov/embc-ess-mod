@@ -35,7 +35,7 @@ export class FileUploadComponent implements OnInit{
                 this.attachedFile.emit(element);
             } else {
                 this.showToast = !this.showToast;
-                this.toastService.show('Attachment size should be greater than zero', { delay: 9500 });
+                this.toastService.show('Attachment file size should be greater than 0Kb', { delay: 9500 });
             }
           }
     }
