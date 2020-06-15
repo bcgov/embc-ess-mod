@@ -73,7 +73,6 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
                 class="btn btn-primary referral-button">Next</button>
             </div>
           </div>
-
         </div>
 
         <div class="col-sm-12 col-md-6">
@@ -85,9 +84,6 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
             <div *ngIf="!checkAttachmentLength(invoiceControl.invoiceAttachments.value)" style="color: red;">
               Attachment is required
             </div>
-            <!-- <div *ngIf="sizeCheck()" style="color: red;">
-              Attachment size should be greater than zero
-            </div> -->
           </div>
         </div>
       </div>
@@ -109,7 +105,7 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
       <div *ngIf="referrals.controls.length>0" class="row">
         <div class="col-12 form-inline" style="justify-content: flex-end;">
           Total GST &nbsp;&nbsp;
-          <input type="number" [formControlName]="'invoiceTotalGst'" class="form-control form-control-lg" readonly>
+          <span class="input-symbol-dollar total-dollar-line"><input type="number" [formControlName]="'invoiceTotalGst'" class="form-control form-control-lg" readonly></span>
         </div>
       </div>
       <br>
@@ -117,9 +113,9 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
         <div class="col-12 form-inline" style="justify-content: flex-end;">
           Total Amount &nbsp;&nbsp;
           <span class="input-help">
-            <input type="number" id="invoiceTotalAmount" [formControlName]="'invoiceTotalAmount'"
-              class="form-control form-control-lg" readonly>
-            <small id="invoiceTotalAmount" class="form-text text-muted">
+            <span class="input-symbol-dollar"><input type="number" id="invoiceTotalAmount" [formControlName]="'invoiceTotalAmount'"
+              class="form-control form-control-lg" readonly></span>
+            <small id="invoiceTotalAmount" class="form-text text-muted" style="margin-left: 60%;">
               (excluding GST)
             </small>
           </span>

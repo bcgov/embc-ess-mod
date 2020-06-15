@@ -11,7 +11,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
         </button>
       </div>
       <div class="modal-body">
-        <p>You are about to clear all invoice information.</p>
+        <p>You are about to <b>clear all invoice information</b>.</p>
         <p>Are you sure you want to do this?</p>
       </div>
       <div class="modal-footer">

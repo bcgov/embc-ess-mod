@@ -222,6 +222,9 @@
                     <div *ngIf="control.contactPerson['controls'].phone?.errors.required">
                       Phone Number is required
                     </div>
+                    <div *ngIf="control.contactPerson['controls'].phone?.errors.minlength">
+                      Phone number should have 10 digits
+                    </div>
                   </div>
                 </div>
               </div>
@@ -231,8 +234,16 @@
                   <label for="fax">Fax</label>
                   <input type="text" class="form-control form-control-lg" appPhoneMask formControlName="fax" id="fax"
                     placeholder="999-999-9999">
+                    <div
+                    *ngIf="control.contactPerson['controls'].fax?.invalid && (control.contactPerson['controls'].fax?.dirty || control.contactPerson['controls'].fax?.touched)"
+                    class="text-danger">
+                    <div *ngIf="control.contactPerson['controls'].fax?.errors.minlength">
+                      Fax number should have 10 digits
+                    </div>
+                  </div>
                 </div>
               </div>
+
             </div>
 
             <div class="remit-box">
@@ -281,7 +292,7 @@
                 </div>
 
                 <div *ngIf="selectedRemitCountry === 'Canada'">
-                  Is Supplier Located in BC?
+                  <b>Is This Supplier Located in BC?</b>
                   <div class="form-group form-check">
                     <input class="form-check-input" formControlName="supplierBC" type="radio" id="yes" value="yes"
                       (change)="locatedChange($event)">

@@ -62,7 +62,7 @@ export class SupplierHttpService {
   }
 
   getListOfStates() {
-    let params = { countryCode: 'USA' }
+    const params = { countryCode: 'USA' };
     return this.http
       .get<Community[]>(`/api/Lists/stateprovinces`, { headers: this.headers, params })
       .pipe(
@@ -82,10 +82,9 @@ export class SupplierHttpService {
   }
 
   submitForm(suppliers: Suppliers) {
-    console.log("inside submit http")
     return this.http.post(`/api/Submission`, suppliers, { headers: this.headers }).pipe(catchError(error => {
       return this.handleError(error);
-    }))
+    }));
   }
 
   protected handleError(err): Observable<never> {
