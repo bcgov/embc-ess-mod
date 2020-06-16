@@ -223,7 +223,7 @@
                       Phone Number is required
                     </div>
                     <div *ngIf="control.contactPerson['controls'].phone?.errors.minlength">
-                      Phone number should have 10 digits
+                      Phone number must have 10 digits
                     </div>
                   </div>
                 </div>
@@ -238,7 +238,7 @@
                     *ngIf="control.contactPerson['controls'].fax?.invalid && (control.contactPerson['controls'].fax?.dirty || control.contactPerson['controls'].fax?.touched)"
                     class="text-danger">
                     <div *ngIf="control.contactPerson['controls'].fax?.errors.minlength">
-                      Fax number should have 10 digits
+                      Fax number must have 10 digits
                     </div>
                   </div>
                 </div>

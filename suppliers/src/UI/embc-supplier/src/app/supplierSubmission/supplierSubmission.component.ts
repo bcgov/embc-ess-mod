@@ -19,7 +19,7 @@ import * as globalConst from 'src/app/service/globalConstants';
 export class SupplierSubmissionComponent implements OnInit {
 
     constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef,
-                private modalService: NgbModal, private customValidator: CustomValidationService) { }
+        private modalService: NgbModal, private customValidator: CustomValidationService) { }
 
     get control() {
         return this.supplierForm.controls;
@@ -221,7 +221,7 @@ export class SupplierSubmissionComponent implements OnInit {
             if (this.receipts.length > 0) {
                 const modalRef = this.modalService.open(ModalComponent);
                 modalRef.componentInstance.messageBody = globalConst.showInvoiceMsg;
-                modalRef.componentInstance.buttonText= globalConst.showInvoiceButton;
+                modalRef.componentInstance.buttonText = globalConst.showInvoiceButton;
                 modalRef.componentInstance.clearIndicator.subscribe((e) => {
                     if (e) {
                         this.cleanReceiptTemplate();
@@ -237,7 +237,7 @@ export class SupplierSubmissionComponent implements OnInit {
             if (this.invoices.length > 0) {
                 const modalRef = this.modalService.open(ModalComponent);
                 modalRef.componentInstance.messageBody = globalConst.showRefferalMsg;
-                modalRef.componentInstance.buttonText= globalConst.showReferalButton;
+                modalRef.componentInstance.buttonText = globalConst.showReferalButton;
                 modalRef.componentInstance.clearIndicator.subscribe((e) => {
                     if (e) {
                         this.cleanInvoiceTemplate();
@@ -281,11 +281,19 @@ export class SupplierSubmissionComponent implements OnInit {
     }
 
     deleteInvoice(event: any) {
-        this.invoices.removeAt(event);
+        this.supplierService.confirmModal(globalConst.deleteInvoiceMsg, globalConst.deleteInvoiceButton).subscribe((e) => {
+            if (e) {
+                this.invoices.removeAt(event);
+            }
+        });
     }
 
     deleteReceipt(event: any) {
-        this.receipts.removeAt(event);
+        this.supplierService.confirmModal(globalConst.deleteRefferalMsg, globalConst.deleteReferalButton).subscribe((e) => {
+            if (e) {
+                this.receipts.removeAt(event);
+            }
+        });
     }
 
     mapFormValues(storedSupplierDetails: any) {

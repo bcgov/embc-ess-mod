@@ -4,6 +4,8 @@ import { Province } from '../model/province';
 import { DataService } from './data.service';
 import { Country, SupportItems } from '../model/country';
 import { Observable } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalComponent } from '../core/components/modal/modal.component';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +19,10 @@ export class SupplierService extends DataService {
     private stateList: Observable<Province[]>;
     private referenceNumber: string;
     private supportItems: SupportItems[];
+
+    constructor(private modalService: NgbModal) {
+        super();
+    }
 
     setSupplierDetails(supplierDetails: any) {
         this.supplierDetails = supplierDetails;
@@ -72,5 +78,13 @@ export class SupplierService extends DataService {
 
     getReferenceNumber() {
         return this.referenceNumber;
+    }
+
+    confirmModal(message: string, button: string) : Observable<boolean> {
+        const modalRef = this.modalService.open(ModalComponent);
+        modalRef.componentInstance.messageBody = message;
+        modalRef.componentInstance.buttonText= button;
+        let modalButtonClick = modalRef.componentInstance.clearIndicator;
+        return modalButtonClick;
     }
 }
