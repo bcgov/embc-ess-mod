@@ -7,3 +7,7 @@ export const referralList: any = [
 
 export const captchaErr = 'Please complete the captcha above.';
 export const appSubmitErr = 'The service is temporarily unavailable. Please try again later';
+export const showInvoiceMsg = '<p>You are about to <b>clear all receipt information</b>.</p><p>Are you sure you want to do this?</p>';
+export const showInvoiceButton = 'Yes, Clear receipt information';
+export const showRefferalMsg = '<p>You are about to <b>clear all invoice information</b>.</p><p>Are you sure you want to do this?</p>';
+export const showReferalButton = 'Yes, Clear invoice information';

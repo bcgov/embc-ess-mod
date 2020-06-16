@@ -5,10 +5,10 @@ import { SupplierService } from '../service/supplier.service';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { InvoiceModalContent } from '../core/components/modal/invoiceModal.component';
-import { ReceiptModalContent } from '../core/components/modal/receiptModal.component';
+import { ModalComponent } from '../core/components/modal/modal.component';
 import { Country } from '../model/country';
 import { CustomValidationService } from '../service/customValidation.service';
+import * as globalConst from 'src/app/service/globalConstants';
 
 @Component({
     selector: 'supplier-submission',
@@ -219,7 +219,9 @@ export class SupplierSubmissionComponent implements OnInit {
     onValueChange(event: any) {
         if (event.target.value === 'invoice') {
             if (this.receipts.length > 0) {
-                const modalRef = this.modalService.open(InvoiceModalContent);
+                const modalRef = this.modalService.open(ModalComponent);
+                modalRef.componentInstance.messageBody = globalConst.showInvoiceMsg;
+                modalRef.componentInstance.buttonText= globalConst.showInvoiceButton;
                 modalRef.componentInstance.clearIndicator.subscribe((e) => {
                     if (e) {
                         this.cleanReceiptTemplate();
@@ -233,7 +235,9 @@ export class SupplierSubmissionComponent implements OnInit {
             }
         } else if (event.target.value === 'receipt') {
             if (this.invoices.length > 0) {
-                const modalRef = this.modalService.open(ReceiptModalContent);
+                const modalRef = this.modalService.open(ModalComponent);
+                modalRef.componentInstance.messageBody = globalConst.showRefferalMsg;
+                modalRef.componentInstance.buttonText= globalConst.showReferalButton;
                 modalRef.componentInstance.clearIndicator.subscribe((e) => {
                     if (e) {
                         this.cleanInvoiceTemplate();
