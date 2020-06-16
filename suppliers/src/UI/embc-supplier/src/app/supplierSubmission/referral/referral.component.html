@@ -111,14 +111,12 @@ Duplicate Referral Numbers should display an error message and remove the duplic
       <div class="col-12 form-inline" style="justify-content: flex-end;">
         <div style="margin-bottom: 6px;">
           Total Amount &nbsp;&nbsp;
-          <span class="input-help">
             <span class="input-symbol-dollar dollar-line"><input id="totalAmount" type="number"
                 formControlName="totalAmount" class="form-control" readonly></span>
-            <small class="form-text text-muted" style="margin-left: 50%;" id="totalAmount">
-              (excluding GST)
-            </small>
-          </span>
         </div>
+      </div>
+      <div class="col-12 form-inline" style="justify-content: flex-end;">
+        <p class="input-help">(excluding GST)</p>
       </div>
 
       <div *ngIf="component === 'I'" class="col-6">

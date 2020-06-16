@@ -77,13 +77,11 @@
       <div *ngIf="referrals.controls.length> 0" class="row">
         <div class="col-12 form-inline" style="justify-content: flex-end;">
           Total Amount &nbsp;&nbsp;
-          <span class="input-help">
-            <span class="input-symbol-dollar"><input type="number" id="receiptTotalAmount"
+            <span class="input-symbol-dollar total-dollar-line"><input type="number" id="receiptTotalAmount"
                 [formControlName]="'receiptTotalAmount'" class="form-control form-control-lg" readonly></span>
-            <small id="receiptTotalAmount" class="form-text text-muted" style="margin-left: 60%;">
-              (excluding GST)
-            </small>
-          </span>
+        </div>
+        <div class="col-12 form-inline" style="justify-content: flex-end;">
+          <p class="input-help">(excluding GST)</p>
         </div>
       </div>
 
