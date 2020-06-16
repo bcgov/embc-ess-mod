@@ -34,9 +34,15 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
     color: red;
  }
 
+// .input-help {
+//     vertical-align: top;
+//     display: inline-block;
+// }
+
 .input-help {
-    vertical-align: top;
-    display: inline-block;
+    font-size: small;
+    color: #6c757d !important;
+    font-weight: lighter;
 }
 
 body {
@@ -45,7 +51,6 @@ body {
 
 .input-symbol-dollar {
     position: relative;
-   // display: block;
   }
  
 .input-symbol-dollar:after {
@@ -53,7 +58,6 @@ body {
     font-size: 16px !important;
     font-weight: 400;
     position: absolute;
-    //display: block;
     height: 100%;
     top: 0;
     left: 4px;

@@ -42,14 +42,12 @@ export class SupplierSubmissionComponent implements OnInit {
     postalPattern = '^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$';
     defaultProvince = { code: 'BC', name: 'British Columbia' };
     defaultCountry = { code: 'CAN', name: 'Canada' };
-   // phonePattern = /^([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$/;//^([0-9]{3})-([0-9]{3})-([0-9]{4})$ 
 
     refArray: any = [];
 
     ngOnInit() {
         this.initializeForm();
         this.repopulateFormData();
-        this.countryList = this.supplierService.getCountryListt();
         this.supplierService.isReload = false;
     }
 
@@ -85,6 +83,17 @@ export class SupplierSubmissionComponent implements OnInit {
         )
 
     provinceFormatter = (x: { name: string }) => x.name;
+
+    searchCountry = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(100),
+            distinctUntilChanged(),
+            switchMap(term => this.supplierService.getCountryListt().pipe(
+                map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+            )
+        )
+
+    countryFormatter = (x: { name: string }) => x.name;
 
     repopulateFormData() {
         const storedSupplierDetails = this.supplierService.getSupplierDetails();
@@ -154,10 +163,8 @@ export class SupplierSubmissionComponent implements OnInit {
     }
 
     remitVisibility(selectedValue: any) {
-        const optionIndex = selectedValue.selectedIndex;
-        const optionText = selectedValue.options[optionIndex];
-        this.selectedRemitCountry = optionText.text;
-        if (optionText.text === 'Canada') {
+        this.selectedRemitCountry = selectedValue;
+        if (selectedValue === 'Canada') {
             this.addressDiv = false;
         } else {
             this.addressDiv = true;

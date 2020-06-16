@@ -276,16 +276,14 @@
                   <div class="form-group col-lg-6">
                     <label class="requiredField" for="businessCountry"><b>What Country Is This Supplier Located In?</b>
                       </label>
-                    <select class="form-control form-control-lg" formControlName="businessCountry"
-                      (change)="remitVisibility($event.target)" [compareWith]="compareCountry">
-                      <option selected>Country/Region</option>
-                      <option *ngFor="let country of (countryList | async)" [ngValue]="country">{{country.name}}</option>
-                    </select>
+                    <input id="businessCountry" type="text" class="form-control form-control-lg" formControlName="businessCountry"
+                      [ngbTypeahead]="searchCountry" [resultFormatter]="countryFormatter" [inputFormatter]="countryFormatter"
+                      required autocomplete="doNotAutoComplete" (selectItem)="remitVisibility($event.item.name)" [editable]="false" />
                     <div
                       *ngIf="control.businessCountry?.invalid && (control.businessCountry?.dirty || control.businessCountry?.touched)"
                       class="text-danger">
                       <div *ngIf="control.businessCountry?.errors.required">
-                        Country required
+                        Country required or invalid
                       </div>
                     </div>
                   </div>

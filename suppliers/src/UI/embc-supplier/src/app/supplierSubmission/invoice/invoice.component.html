@@ -105,20 +105,19 @@ Duplicate Invoice Numbers should display an error message and remove the duplica
       <div *ngIf="referrals.controls.length>0" class="row">
         <div class="col-12 form-inline" style="justify-content: flex-end;">
           Total GST &nbsp;&nbsp;
-          <span class="input-symbol-dollar total-dollar-line"><input type="number" [formControlName]="'invoiceTotalGst'" class="form-control form-control-lg" readonly></span>
+          <span class="input-symbol-dollar total-dollar-line"><input type="number" [formControlName]="'invoiceTotalGst'"
+              class="form-control form-control-lg" readonly></span>
         </div>
       </div>
       <br>
       <div *ngIf="referrals.controls.length> 0" class="row">
         <div class="col-12 form-inline" style="justify-content: flex-end;">
           Total Amount &nbsp;&nbsp;
-          <span class="input-help">
-            <span class="input-symbol-dollar"><input type="number" id="invoiceTotalAmount" [formControlName]="'invoiceTotalAmount'"
-              class="form-control form-control-lg" readonly></span>
-            <small id="invoiceTotalAmount" class="form-text text-muted" style="margin-left: 60%;">
-              (excluding GST)
-            </small>
-          </span>
+          <span class="input-symbol-dollar total-dollar-line"><input type="number" id="invoiceTotalAmount"
+              [formControlName]="'invoiceTotalAmount'" class="form-control form-control-lg" readonly></span>
+        </div>
+        <div class="col-12 form-inline" style="justify-content: flex-end;">
+          <p class="input-help">(excluding GST)</p>
         </div>
       </div>
 
