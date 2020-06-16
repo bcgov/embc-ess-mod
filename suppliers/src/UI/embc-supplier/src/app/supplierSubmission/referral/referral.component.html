@@ -61,6 +61,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
         <table class="table">
           <thead class="table-header">
             <tr>
+              <th scope="col"></th>
               <th scope="col" class="requiredField">Support Provided</th>
               <th scope="col">Description</th>
               <th scope="col" class="requiredField">GST</th>
@@ -70,6 +71,7 @@ Duplicate Referral Numbers should display an error message and remove the duplic
           </thead>
           <tbody formArrayName="referralRows">
             <tr *ngFor="let row of referralRows.controls; let j = index" [formGroupName]="j">
+              <td class="line-number">{{j+1}}.</td>
               <td>
                 <select class="form-control" formControlName="supportProvided" required>
                   <option value="" disabled selected>-- Select Support</option>
