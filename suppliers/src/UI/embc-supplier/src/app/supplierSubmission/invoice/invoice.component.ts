@@ -137,7 +137,11 @@ export class InvoiceComponent implements OnInit {
     }
 
     removeReferral(event: any) {
-        this.referrals.removeAt(event);
+        this.supplierService.confirmModal(globalConst.deleteRefferalMsg, globalConst.deleteReferalButton).subscribe((e) => {
+            if (e) {
+                this.referrals.removeAt(event);
+            }
+        });
     }
 
     createReferralFormArrayWithValues(referral: any) {

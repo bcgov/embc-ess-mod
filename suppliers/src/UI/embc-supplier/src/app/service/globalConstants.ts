@@ -15,4 +15,6 @@ export const deleteRefferalMsg = '<p>Are you sure you want to <b>remove this ref
 export const deleteReferalButton = 'Yes, Remove this Referral';
 export const deleteInvoiceMsg = '<p>Are you sure you want to <b>remove this invoice?</b></p><p>You will lose all the information you have entered.</p>';
 export const deleteInvoiceButton = 'Yes, Remove this Invoice';
+export const deleteReceiptsMsg = '<p>Are you sure you want to <b>remove this receipt?</b></p><p>You will lose all the information you have entered.</p>';
+export const deleteReceiptButton = 'Yes, Remove this Receipt';
 

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { SupplierService } from 'src/app/service/supplier.service';
+import * as globalConst from 'src/app/service/globalConstants';
 
 @Component({
     selector: 'app-receipt',
@@ -142,7 +143,11 @@ export class ReceiptComponent implements OnInit{
     }
 
     removeReferral(event: any) {
-        this.referrals.removeAt(event);
+        this.supplierService.confirmModal(globalConst.deleteReceiptsMsg, globalConst.deleteReceiptButton).subscribe((e) => {
+            if (e) {
+                this.referrals.removeAt(event);
+            }
+        });
     }
 
     createReferralFormArrayWithValues(referral: any) {
