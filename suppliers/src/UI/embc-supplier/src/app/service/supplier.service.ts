@@ -80,11 +80,11 @@ export class SupplierService extends DataService {
         return this.referenceNumber;
     }
 
-    confirmModal(message: string, button: string) : Observable<boolean> {
+    confirmModal(message: string, button: string): Observable<boolean> {
         const modalRef = this.modalService.open(ModalComponent);
         modalRef.componentInstance.messageBody = message;
-        modalRef.componentInstance.buttonText= button;
-        let modalButtonClick = modalRef.componentInstance.clearIndicator;
+        modalRef.componentInstance.buttonText = button;
+        const modalButtonClick = modalRef.componentInstance.clearIndicator;
         return modalButtonClick;
     }
 }

@@ -80,13 +80,23 @@ Duplicate Referral Numbers should display an error message and remove the duplic
               </td>
               <td><input type="text" formControlName="description" class="form-control"></td>
               <td>
-                <span class="input-symbol-dollar items-dollar-line"><input type="number" min="0" formControlName="gst"
-                    class="form-control" oninput="this.value = Math.abs(this.value)" required></span>
+                <span class="input-symbol-dollar items-dollar-line">
+                  <input type="number" min="0" formControlName="gst"
+                    class="form-control" oninput="this.value = Math.abs(this.value)" required>
+                    <div *ngIf="rowControl[j]['controls'].gst?.errors?.amountGreater" style="color: red;">
+                      GST must be less than Amount
+                    </div>
+                  </span>
               </td>
               <td>
-                <span class="input-symbol-dollar items-dollar-line"><input type="number" min="1"
+                <span class="input-symbol-dollar items-dollar-line">
+                  <input type="number" min="1"
                     formControlName="amount" class="form-control"
-                    oninput="value!=0?(value = Math.abs(value)):(value='')" required></span>
+                    oninput="value!=0?(value = Math.abs(value)):(value='')" required>
+                    <div *ngIf="rowControl[j]['controls'].amount?.errors?.amountGreater" style="color: red;">
+                      Amount must be greater than GST
+                    </div>
+                  </span>
               </td>
               <td><i (click)="deleteRow(j)" class="fas fa-trash-alt"></i></td>
             </tr>

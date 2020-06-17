@@ -3,7 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'invoice-modal-content',
-    templateUrl: './modal.component.html' 
+    templateUrl: './modal.component.html'
   })
   export class ModalComponent {
     @Output() clearIndicator = new EventEmitter<boolean>();

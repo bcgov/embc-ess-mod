@@ -25,12 +25,12 @@ export class FileUploadComponent implements OnInit{
     }
 
     onInvoiceDropped(event: any) {
-        if(this.showToast) {
-            this.showToast = !this.showToast
+        if (this.showToast) {
+            this.showToast = !this.showToast;
         }
         for (let index = 0; index < event.length; index++) {
             const element = event[index];
-            if(element.size > 0) {
+            if (element.size > 0) {
                 this.invoiceAttachments.push(element.name);
                 this.attachedFile.emit(element);
             } else {
