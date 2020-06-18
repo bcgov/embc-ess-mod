@@ -4,6 +4,7 @@ import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter } from '@ng-bootstr
 import { DateParserService } from 'src/app/service/dateParser.service';
 import { SupplierService } from 'src/app/service/supplier.service';
 import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.service';
+import { CustomValidationService } from 'src/app/service/customValidation.service';
 
 @Component({
     selector: 'app-referral',
@@ -26,7 +27,7 @@ export class ReferralComponent implements OnInit {
     reloadedFiles: any;
     reloadedFiles2: any;
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService) { }
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService, private customValidator: CustomValidationService) { }
 
     get referralRows() {
         return this.referralForm.get('referralRows') as FormArray;
@@ -42,6 +43,10 @@ export class ReferralComponent implements OnInit {
 
     get referralControl() {
         return this.referralForm.controls;
+    }
+
+    get rowControl() {
+        return (this.referralForm.controls.referralRows as FormArray).controls;
     }
 
     ngOnInit() {
@@ -90,8 +95,8 @@ export class ReferralComponent implements OnInit {
         return this.builder.group({
             supportProvided: [''],
             description: [''],
-            gst: [''],
-            amount: ['']
+            gst: ['', [this.customValidator.amountGreaterValidator().bind(this.customValidator)]],
+            amount: ['', [this.customValidator.amountGreaterValidator().bind(this.customValidator)]]
         });
     }
 

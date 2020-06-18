@@ -4,8 +4,7 @@ import {ToastService} from '../../../service/toast.service';
 
 @Component({
   selector: 'app-toasts',
-  templateUrl: './toasts.component.html',
-  //host: {'[class.ngb-toasts]': 'true'}
+  templateUrl: './toasts.component.html'
 })
 export class ToastsContainer {
   constructor(public toastService: ToastService) {}
