@@ -20,7 +20,7 @@
           </div>
         </div>
 
-        <div class="col-auto">
+        <div *ngIf="formArraySize > 1" class="col-auto">
           <i (click)="indexToRemove.emit(index)" class="fas fa-trash-alt"></i>
         </div>
       </div>

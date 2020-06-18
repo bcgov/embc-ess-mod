@@ -22,6 +22,7 @@ export class InvoiceComponent implements OnInit {
     @Input('formGroupName') formGroupName: number;
     @Input('invoiceForm') invoiceForm: FormGroup;
     @Input('index') index: number;
+    @Input() formArraySize: number;
     @Output() indexToRemove = new EventEmitter<number>();
     referralList = globalConst.referralList;
     component = 'I';
