@@ -1,4 +1,4 @@
-import { AbstractControl, FormArray, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidatorFn, FormControl, FormArray, FormGroup } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { SupplierService } from './supplier.service';
 
@@ -7,7 +7,11 @@ export class CustomValidationService {
 
     constructor(private supplierService: SupplierService) { }
 
-    invoiceValidator(invoices: any): ValidatorFn {
+    /**
+     * Validation for the invoice number to be always unique
+     * @param invoices Invoice Array
+     */
+    invoiceValidator(invoices: FormArray): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             const currentContrrol = control.value;
             let check = '';
@@ -21,7 +25,11 @@ export class CustomValidationService {
         };
     }
 
-    referralNumberValidator(referrals: any): ValidatorFn {
+    /**
+     * Validation for the referral number to be always unique
+     * @param referrals Referrals Array
+     */
+    referralNumberValidator(referrals: FormArray): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             const currentContrrol = control.value;
             let check = '';
@@ -39,9 +47,26 @@ export class CustomValidationService {
             if (control.value.fileSize == 0) {
                 return { zeroSize: true };
             }
-        return null;
+            return null;
         }
 
+    /**
+     * Validation for amount to be always greater than GST
+     */
+    amountGreaterValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            if (control.parent) {
+                const gst = control.parent.value.gst;
+                const amount = control.parent.value.amount;
+                if (gst !== '' && amount !== '') {
+                    if (gst > amount) {
+                        return { amountGreater: true };
+                    }
+                }
+            }
+            return null;
+        };
+    }
 
 }
 

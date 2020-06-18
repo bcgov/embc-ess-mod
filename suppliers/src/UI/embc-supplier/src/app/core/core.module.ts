@@ -4,8 +4,7 @@ import { DragDropDirective } from './directives/DragDrop.directive';
 import { FileUploadComponent } from './components/fileUpload/fileUpload.component';
 import { PhoneMaskDirective } from './directives/PhoneMask.directive';
 import { GSTCodeDirective } from './directives/GSTCode.directive';
-import { InvoiceModalContent } from './components/modal/invoiceModal.component';
-import { ReceiptModalContent } from './components/modal/receiptModal.component';
+import { ModalComponent } from './components/modal/modal.component';
 import { CaptchaComponent } from './components/captcha/captcha.component';
 import { FormsModule } from '@angular/forms';
 import { LoaderComponent } from './components/loader/loader.component';
@@ -24,8 +23,7 @@ import { ToastsContainer } from './components/toasts/toasts.component';
       FileUploadComponent,
       PhoneMaskDirective,
       GSTCodeDirective,
-      InvoiceModalContent,
-      ReceiptModalContent,
+      ModalComponent,
       CaptchaComponent,
       LoaderComponent,
       AlertComponent,

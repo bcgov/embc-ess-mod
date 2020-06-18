@@ -29,7 +29,7 @@ export class InvoiceComponent implements OnInit {
     hidden = false;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>,
-        private supplierService: SupplierService, private customValidator: CustomValidationService) {
+                private supplierService: SupplierService, private customValidator: CustomValidationService) {
 
     }
 
@@ -73,8 +73,8 @@ export class InvoiceComponent implements OnInit {
 
     setFileFormControl(event: any) {
         const reader = new FileReader();
-            reader.readAsDataURL(event);
-            reader.onload = () => {
+        reader.readAsDataURL(event);
+        reader.onload = () => {
                 this.invoiceAttachments.push(this.createAttachmentObject({
                     fileName: event.name,
                     file: reader.result,
@@ -82,7 +82,7 @@ export class InvoiceComponent implements OnInit {
                     fileSize: event.size
                 }));
             };
-            this.cd.markForCheck();
+        this.cd.markForCheck();
     }
 
     onChanges() {
@@ -137,7 +137,11 @@ export class InvoiceComponent implements OnInit {
     }
 
     removeReferral(event: any) {
-        this.referrals.removeAt(event);
+        this.supplierService.confirmModal(globalConst.deleteRefferalMsg, globalConst.deleteReferalButton).subscribe((e) => {
+            if (e) {
+                this.referrals.removeAt(event);
+            }
+        });
     }
 
     createReferralFormArrayWithValues(referral: any) {
