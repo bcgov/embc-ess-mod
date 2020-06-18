@@ -481,15 +481,6 @@ Postal Code must in the correct format of NNNNN
                 </label>
               </div>
 
-              <!--	Form Structure	
-A user must be able to 'delete' an Invoice block as long as more then one Invoice block exists on the form.
-I.E. Users cannot delete the last invoice block on the form since at least one block must be present for a valid submission
-
-The system must provide a warning message if a user selects to delete an Invoice block with the option to continue or to cancel the delete action
-
-
--->
-
               <div *ngIf="supplierForm.get('supplierSubmissionType').value === 'invoice'">
                 <div class="box">
                   <div class="row tips-section">
@@ -508,10 +499,9 @@ The system must provide a warning message if a user selects to delete an Invoice
                     </ul>
                   </div>
                 </div>
-
                 <div formArrayName="invoices">
                   <div *ngFor="let invoic of invoices.controls; let i = index">
-                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i"
+                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i" [formArraySize]="invoices.controls.length"
                       (indexToRemove)="deleteInvoice($event)"></app-invoice>
                   </div>
                 </div>
@@ -549,7 +539,7 @@ The system must provide a warning message if a user selects to delete an Invoice
 
                 <div formArrayName="receipts">
                   <div *ngFor="let receipt of receipts.controls; let i = index">
-                    <app-receipt [index]="i" [receiptForm]="receipt" [formGroupName]="i"
+                    <app-receipt [index]="i" [receiptForm]="receipt" [formGroupName]="i" [formArraySize]="receipts.controls.length"
                       (indexToRemove)="deleteReceipt($event)"></app-receipt>
                   </div>
                 </div>

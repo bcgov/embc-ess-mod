@@ -4,7 +4,7 @@
 </div>
 <div class="drag-drop" dragDrop (fileDropped)="onInvoiceDropped($event)">
     <input type="file" #fileDrop multiple class="form-control form-control-lg" id="fileDrop"
-        (change)="onInvoiceDropped($event.target.files)" required>
+        (change)="onInvoiceDropped($event.target.files)" (click)="fileDrop.value = null" required>
     <i class="far fa-clone" style="font-size: 35px;"></i>
     <h3>Drag and drop or browse your file</h3>
 </div>

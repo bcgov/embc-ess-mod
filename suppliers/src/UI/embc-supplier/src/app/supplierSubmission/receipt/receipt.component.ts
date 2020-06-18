@@ -14,6 +14,7 @@ export class ReceiptComponent implements OnInit{
     @Input('formGroupName') formGroupName: number;
     @Input('receiptForm') receiptForm: FormGroup;
     @Input('index') index: number;
+    @Input() formArraySize: number;
     @Output() indexToRemove = new EventEmitter<number>();
     component = 'R';
     reloadedFiles: any;
