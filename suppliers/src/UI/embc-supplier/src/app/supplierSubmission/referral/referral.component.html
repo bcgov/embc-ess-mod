@@ -128,9 +128,9 @@
       <div *ngIf="component === 'I'" class="col-6">
         <div class="form-group">
           <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
-          <app-fileUpload [reloadedFiles]="reloadedFiles" (attachedFile)="setReferralFormControl($event)"
+          <app-file-upload [reloadedFiles]="reloadedFiles" (attachedFile)="setReferralFormControl($event)"
             (deleteFile)="deleteReferralFormControl($event)">
-          </app-fileUpload>
+          </app-file-upload>
           <div *ngIf="!checkAttachmentLength(referralControl.referralAttachments.value)" style="color: red;">
             Attachment is required
           </div>
@@ -140,9 +140,9 @@
       <div *ngIf="component === 'I'" class="col-6">
         <div class="form-group">
           <label class="attach-header">Attach any receipt related to this referral below</label>
-          <app-fileUpload [reloadedFiles]="reloadedFiles2" (attachedFile)="setReceiptFormControl($event)"
+          <app-file-upload [reloadedFiles]="reloadedFiles2" (attachedFile)="setReceiptFormControl($event)"
             (deleteFile)="deleteReceiptFormControl($event)">
-          </app-fileUpload>
+          </app-file-upload>
         </div>
       </div>
 

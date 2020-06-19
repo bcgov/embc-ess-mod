@@ -15,7 +15,7 @@ export class DataService {
     isReload = false;
     private payLoad: Suppliers;
 
-    constructor() {}
+    constructor() { }
 
     private setPayload(payLoad: Suppliers) {
         this.payLoad = payLoad;
@@ -59,9 +59,9 @@ export class DataService {
     }
 
     createAddressRecord(supplierDetails: any) {
-        return new Address(supplierDetails.address.address1, supplierDetails.address.address2, supplierDetails.address.city.code, supplierDetails.address.city.name,
-            supplierDetails.address.province.code, supplierDetails.address.province.name, supplierDetails.address.country.code, supplierDetails.address.country.name,
-            supplierDetails.address.postalCode);
+        return new Address(supplierDetails.address.address1, supplierDetails.address.address2, supplierDetails.address.city.code,
+            supplierDetails.address.city.name, supplierDetails.address.province.code, supplierDetails.address.province.name,
+            supplierDetails.address.country.code, supplierDetails.address.country.name, supplierDetails.address.postalCode);
     }
 
     createRemitAddressRecord(supplierDetails: any) {
@@ -69,7 +69,7 @@ export class DataService {
             let provinceName = '';
             let provinceCode = '';
 
-            if (supplierDetails.remittanceAddress.province === '' || supplierDetails.remittanceAddress.province === null)  {
+            if (supplierDetails.remittanceAddress.province === '' || supplierDetails.remittanceAddress.province === null) {
                 provinceName = 'British Columbia';
                 provinceCode = 'BC';
             } else {
@@ -77,19 +77,20 @@ export class DataService {
                 provinceCode = supplierDetails.remittanceAddress.province.code;
             }
 
-            return new Address(supplierDetails.remittanceAddress.address1, supplierDetails.remittanceAddress.address2, null, supplierDetails.remittanceAddress.city,
-                provinceCode, provinceName, supplierDetails.businessCountry.code, supplierDetails.businessCountry.name,
-                supplierDetails.remittanceAddress.postalCode);
+            return new Address(supplierDetails.remittanceAddress.address1, supplierDetails.remittanceAddress.address2, null,
+                supplierDetails.remittanceAddress.city, provinceCode, provinceName, supplierDetails.businessCountry.code,
+                supplierDetails.businessCountry.name, supplierDetails.remittanceAddress.postalCode);
 
         } else if (supplierDetails.businessCountry.code === 'USA') {
-            return new Address(supplierDetails.remittanceAddress.address1, supplierDetails.remittanceAddress.address2, null, supplierDetails.remittanceAddress.city,
-                supplierDetails.remittanceAddress.state.code, supplierDetails.remittanceAddress.state.name, supplierDetails.businessCountry.code, supplierDetails.businessCountry.name,
+            return new Address(supplierDetails.remittanceAddress.address1, supplierDetails.remittanceAddress.address2, null,
+                supplierDetails.remittanceAddress.city, supplierDetails.remittanceAddress.state.code,
+                supplierDetails.remittanceAddress.state.name, supplierDetails.businessCountry.code, supplierDetails.businessCountry.name,
                 supplierDetails.remittanceAddress.zipCode);
 
         } else {
-            return new Address(supplierDetails.remittanceAddress.address1, supplierDetails.remittanceAddress.address2, null, supplierDetails.remittanceAddress.city,
-                null, supplierDetails.remittanceAddress.region, supplierDetails.businessCountry.code, supplierDetails.businessCountry.name,
-                supplierDetails.remittanceAddress.otherCode);
+            return new Address(supplierDetails.remittanceAddress.address1, supplierDetails.remittanceAddress.address2, null,
+                supplierDetails.remittanceAddress.city, null, supplierDetails.remittanceAddress.region,
+                supplierDetails.businessCountry.code, supplierDetails.businessCountry.name, supplierDetails.remittanceAddress.otherCode);
         }
     }
 
@@ -129,14 +130,16 @@ export class DataService {
         supplierDetails.invoices.forEach(invoice => {
             invoice.referrals.forEach(ref => {
                 ref.referralRows.forEach(element => {
-                    lineItems.push(new LineItems(element.supportProvided.name, element.description, element.gst, element.amount, null, ref.referralNumber));
+                    lineItems.push(new LineItems(element.supportProvided.name, element.description, element.gst, element.amount,
+                        null, ref.referralNumber));
                 });
             });
         });
         supplierDetails.receipts.forEach(receipt => {
             receipt.referrals.forEach(ref => {
                 ref.referralRows.forEach(element => {
-                    lineItems.push(new LineItems(element.supportProvided.name, element.description, element.gst, element.amount, ref.receiptNumber, receipt.referralNumber));
+                    lineItems.push(new LineItems(element.supportProvided.name, element.description, element.gst, element.amount,
+                        ref.receiptNumber, receipt.referralNumber));
                 });
             });
         });
@@ -148,24 +151,29 @@ export class DataService {
         if (supplierDetails.invoices.length > 0) {
             supplierDetails.invoices.forEach(invoice => {
                 invoice.invoiceAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, invoice.invoiceNumber, null, 2));
+                    attachments.push(new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName,
+                        invoice.invoiceNumber, null, 2));
                 });
                 invoice.referrals.forEach(ref => {
                     ref.referralAttachments.forEach(e => {
-                        attachments.push(new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, invoice.invoiceNumber, ref.referralNumber, 1));
+                        attachments.push(new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName,
+                            invoice.invoiceNumber, ref.referralNumber, 1));
                     });
                     ref.receiptAttachments.forEach(e => {
-                        attachments.push(new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, invoice.invoiceNumber, ref.referralNumber, 0));
+                        attachments.push(new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName,
+                            invoice.invoiceNumber, ref.referralNumber, 0));
                     });
                 });
             });
         } else if (supplierDetails.receipts.length > 0) {
             supplierDetails.receipts.forEach(ref => {
                 ref.referralAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, null, ref.referralNumber, 1));
+                    attachments.push(new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName,
+                        null, ref.referralNumber, 1));
                 });
                 ref.receiptAttachments.forEach(e => {
-                    attachments.push(new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName, null, ref.referralNumber, 1));
+                    attachments.push(new Attachment(e.file.substring(e.file.indexOf(',') + 1), e.contentType, e.fileName,
+                        null, ref.referralNumber, 1));
                 });
             });
 
@@ -182,7 +190,7 @@ export class DataService {
             });
         });
         supplierDetails.receipts.forEach(receipt => {
-                referrals.push(new Referrals(receipt.referralNumber, receipt.receiptTotalGst, receipt.receiptTotalAmount, null));
+            referrals.push(new Referrals(receipt.referralNumber, receipt.receiptTotalGst, receipt.receiptTotalAmount, null));
         });
         return referrals;
     }

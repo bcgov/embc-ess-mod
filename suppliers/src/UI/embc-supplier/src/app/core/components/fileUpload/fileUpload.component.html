@@ -2,7 +2,7 @@
 <div *ngIf="showToast">
     <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
 </div>
-<div class="drag-drop" dragDrop (fileDropped)="onInvoiceDropped($event)">
+<div class="drag-drop" appDragDrop (fileDropped)="onInvoiceDropped($event)">
     <input type="file" #fileDrop multiple class="form-control form-control-lg" id="fileDrop"
         (change)="onInvoiceDropped($event.target.files)" (click)="fileDrop.value = null" required>
     <i class="far fa-clone" style="font-size: 35px;"></i>

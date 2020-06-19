@@ -11,15 +11,15 @@ import { CustomValidationService } from '../service/customValidation.service';
 import * as globalConst from 'src/app/service/globalConstants';
 
 @Component({
-    selector: 'supplier-submission',
+    selector: 'app-supplier-submission',
     templateUrl: './supplierSubmission.component.html',
     styleUrls: ['./supplierSubmission.component.scss'],
     providers: [CustomValidationService]
 })
 export class SupplierSubmissionComponent implements OnInit {
 
-    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef,
-                private modalService: NgbModal, private customValidator: CustomValidationService) { }
+    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService,
+                private cd: ChangeDetectorRef, private modalService: NgbModal, private customValidator: CustomValidationService) { }
 
     get control() {
         return this.supplierForm.controls;
@@ -197,7 +197,8 @@ export class SupplierSubmissionComponent implements OnInit {
 
     createReceiptFormArray() {
         return this.builder.group({
-            referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.receipts).bind(this.customValidator)]],
+            referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.receipts)
+                .bind(this.customValidator)]],
             referrals: this.builder.array([
             ]),
             receiptTotalGst: [''],

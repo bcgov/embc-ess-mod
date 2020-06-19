@@ -6,11 +6,11 @@ import * as globalConst from 'src/app/service/globalConstants';
 import { AlertService } from '../service/alert.service';
 
 @Component({
-    selector: 'review',
+    selector: 'app-review',
     templateUrl: './review.component.html',
     styleUrls: ['./review.component.scss']
 })
-export class ReviewComponent implements OnInit{
+export class ReviewComponent implements OnInit {
 
     supplierSubmissionType: string;
     supplier: any;
@@ -19,7 +19,8 @@ export class ReviewComponent implements OnInit{
     isSubmitted = false;
     showLoader = false;
 
-    constructor(public supplierService: SupplierService, private router: Router, private httpService: SupplierHttpService, private alertService: AlertService) { }
+    constructor(public supplierService: SupplierService, private router: Router, private httpService: SupplierHttpService,
+                private alertService: AlertService) { }
 
     ngOnInit() {
         this.supplier = this.supplierService.getSupplierDetails();
@@ -43,15 +44,15 @@ export class ReviewComponent implements OnInit{
                 this.supplierService.setReferenceNumber(res);
                 this.router.navigate(['/thankyou']);
             },
-            (error: any) => {
-                this.isSubmitted = !this.isSubmitted;
-                this.showLoader = !this.showLoader;
-                if (error.title && error.title !== '') {
-                    this.alertService.setAlert('danger', error.title);
-                } else {
-                    this.alertService.setAlert('danger', globalConst.appSubmitErr);
-                }
-            });
+                (error: any) => {
+                    this.isSubmitted = !this.isSubmitted;
+                    this.showLoader = !this.showLoader;
+                    if (error.title && error.title !== '') {
+                        this.alertService.setAlert('danger', error.title);
+                    } else {
+                        this.alertService.setAlert('danger', globalConst.appSubmitErr);
+                    }
+                });
         }
     }
 
@@ -60,12 +61,12 @@ export class ReviewComponent implements OnInit{
         this.captchaVerified = true;
         this.captchaFilled = true;
         this.alertService.clearAlert();
-      }
+    }
 
-      public onServerError(error: any) {
+    public onServerError(error: any) {
         console.log('Server error: ', error);
         this.captchaVerified = true;
         this.captchaFilled = true;
-      }
+    }
 
 }

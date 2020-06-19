@@ -11,7 +11,8 @@ export class Suppliers {
     lineItems: LineItems[];
     attachments: Attachment[];
 
-    constructor(suppliers: SupplierInformation[], receipts: Receipts[], invoices: Invoices[], referrals: Referrals[], lineItems: LineItems[], attachments: Attachment[]) {
+    constructor(suppliers: SupplierInformation[], receipts: Receipts[], invoices: Invoices[], referrals: Referrals[],
+                lineItems: LineItems[], attachments: Attachment[]) {
         this.suppliers = suppliers;
         this.receipts = receipts;
         this.invoices = invoices;
@@ -30,19 +31,19 @@ export class SupplierInformation {
     contactPerson: ContactPerson;
     forRemittance: boolean;
 
-    constructor(gstNumber: string, name: string, legalBusinessName: string, location: string, address: Address, contactPerson: ContactPerson,
-                forRemittance: boolean) {
-            this.gstNumber = gstNumber;
-            this.name = name;
-            this.legalBusinessName = legalBusinessName;
-            this.location = location;
-            this.address = address;
-            this.contactPerson = contactPerson;
-            this.forRemittance = forRemittance;
+    constructor(gstNumber: string, name: string, legalBusinessName: string, location: string, address: Address,
+                contactPerson: ContactPerson, forRemittance: boolean) {
+        this.gstNumber = gstNumber;
+        this.name = name;
+        this.legalBusinessName = legalBusinessName;
+        this.location = location;
+        this.address = address;
+        this.contactPerson = contactPerson;
+        this.forRemittance = forRemittance;
     }
 }
 
-export class Address{
+export class Address {
     addressLine1: string;
     addressLine2: string;
     cityCode: string;
@@ -55,15 +56,15 @@ export class Address{
 
     constructor(addressLine1: string, addressLine2: string, cityCode: string, city: string, stateProvinceCode: string,
                 stateProvince: string, countryCode: string, country: string, postalCode: string) {
-            this.addressLine1 = addressLine1;
-            this.addressLine2 = addressLine2;
-            this.cityCode = cityCode;
-            this.city = city;
-            this.stateProvinceCode = stateProvinceCode;
-            this.stateProvince = stateProvince;
-            this.countryCode = countryCode;
-            this.country = country;
-            this.postalCode = postalCode;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.cityCode = cityCode;
+        this.city = city;
+        this.stateProvinceCode = stateProvinceCode;
+        this.stateProvince = stateProvince;
+        this.countryCode = countryCode;
+        this.country = country;
+        this.postalCode = postalCode;
     }
 }
 

@@ -1,4 +1,4 @@
-import { AbstractControl, ValidatorFn, FormControl, FormArray, FormGroup } from '@angular/forms';
+import { AbstractControl, ValidatorFn, FormArray } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { SupplierService } from './supplier.service';
 
@@ -16,7 +16,8 @@ export class CustomValidationService {
             const currentContrrol = control.value;
             let check = '';
             if (invoices.value.length > 0 && currentContrrol !== '') {
-                check = invoices.value.some(invoice => invoice.invoiceNumber.toLocaleLowerCase() === currentContrrol.toLocaleLowerCase());
+                check = invoices.value.some(invoice => invoice.invoiceNumber.toLocaleLowerCase() ===
+                    currentContrrol.toLocaleLowerCase());
                 if (check) {
                     return { duplicateInvoice: true };
                 }
@@ -34,7 +35,8 @@ export class CustomValidationService {
             const currentContrrol = control.value;
             let check = '';
             if (referrals.value.length > 0 && currentContrrol !== '') {
-                check = referrals.value.some(referral => referral.referralNumber.toLocaleLowerCase() === currentContrrol.toLocaleLowerCase());
+                check = referrals.value.some(referral => referral.referralNumber.toLocaleLowerCase() ===
+                    currentContrrol.toLocaleLowerCase());
                 if (check) {
                     return { duplicateReferral: true };
                 }
@@ -44,11 +46,11 @@ export class CustomValidationService {
     }
 
     attachmentSizeValidator(control: AbstractControl) {
-            if (control.value.fileSize == 0) {
-                return { zeroSize: true };
-            }
-            return null;
+        if (control.value.fileSize === 0) {
+            return { zeroSize: true };
         }
+        return null;
+    }
 
     /**
      * Validation for amount to be always greater than GST

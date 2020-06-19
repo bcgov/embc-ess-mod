@@ -11,9 +11,9 @@ import * as globalConst from 'src/app/service/globalConstants';
 })
 export class ReceiptComponent implements OnInit{
 
-    @Input('formGroupName') formGroupName: number;
-    @Input('receiptForm') receiptForm: FormGroup;
-    @Input('index') index: number;
+    @Input() formGroupName: number;
+    @Input() receiptForm: FormGroup;
+    @Input() index: number;
     @Input() formArraySize: number;
     @Output() indexToRemove = new EventEmitter<number>();
     component = 'R';

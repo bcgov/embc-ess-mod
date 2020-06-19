@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { LoaderComponent } from './components/loader/loader.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ToastsContainer } from './components/toasts/toasts.component';
+import { ToastsComponent } from './components/toasts/toasts.component';
 
 @NgModule({
   imports: [
@@ -27,7 +27,7 @@ import { ToastsContainer } from './components/toasts/toasts.component';
       CaptchaComponent,
       LoaderComponent,
       AlertComponent,
-      ToastsContainer
+      ToastsComponent
     ],
   exports: [
       DragDropDirective,
@@ -37,7 +37,7 @@ import { ToastsContainer } from './components/toasts/toasts.component';
       CaptchaComponent,
       LoaderComponent,
       AlertComponent,
-      ToastsContainer
+      ToastsComponent
     ]
 })
 export class CoreModule { }
