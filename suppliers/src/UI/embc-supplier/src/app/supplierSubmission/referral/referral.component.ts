@@ -27,7 +27,9 @@ export class ReferralComponent implements OnInit {
     reloadedFiles: any;
     reloadedFiles2: any;
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService, private customValidator: CustomValidationService) { }
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar,
+                private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,
+                private customValidator: CustomValidationService) { }
 
     get referralRows() {
         return this.referralForm.get('referralRows') as FormArray;

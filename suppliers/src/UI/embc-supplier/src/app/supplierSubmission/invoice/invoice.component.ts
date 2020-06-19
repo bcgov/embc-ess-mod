@@ -29,8 +29,8 @@ export class InvoiceComponent implements OnInit {
     reloadedFiles: any;
     hidden = false;
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar, private dateAdapter: NgbDateAdapter<string>,
-                private supplierService: SupplierService, private customValidator: CustomValidationService) {
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar,
+                private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService, private customValidator: CustomValidationService) {
 
     }
 
@@ -76,13 +76,13 @@ export class InvoiceComponent implements OnInit {
         const reader = new FileReader();
         reader.readAsDataURL(event);
         reader.onload = () => {
-                this.invoiceAttachments.push(this.createAttachmentObject({
-                    fileName: event.name,
-                    file: reader.result,
-                    contentType: event.type,
-                    fileSize: event.size
-                }));
-            };
+            this.invoiceAttachments.push(this.createAttachmentObject({
+                fileName: event.name,
+                file: reader.result,
+                contentType: event.type,
+                fileSize: event.size
+            }));
+        };
         this.cd.markForCheck();
     }
 
@@ -105,7 +105,8 @@ export class InvoiceComponent implements OnInit {
 
     createReferralFormArray() {
         return this.builder.group({
-            referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.referrals).bind(this.customValidator)]],
+            referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.referrals)
+                .bind(this.customValidator)]],
             referralRows: this.builder.array([
             ], Validators.required),
             totalGst: [''],

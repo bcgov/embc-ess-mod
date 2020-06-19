@@ -18,8 +18,8 @@ import * as globalConst from 'src/app/service/globalConstants';
 })
 export class SupplierSubmissionComponent implements OnInit {
 
-    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService, private cd: ChangeDetectorRef,
-                private modalService: NgbModal, private customValidator: CustomValidationService) { }
+    constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService,
+                private cd: ChangeDetectorRef, private modalService: NgbModal, private customValidator: CustomValidationService) { }
 
     get control() {
         return this.supplierForm.controls;
@@ -197,7 +197,8 @@ export class SupplierSubmissionComponent implements OnInit {
 
     createReceiptFormArray() {
         return this.builder.group({
-            referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.receipts).bind(this.customValidator)]],
+            referralNumber: ['', [Validators.required, this.customValidator.referralNumberValidator(this.receipts)
+                .bind(this.customValidator)]],
             referrals: this.builder.array([
             ]),
             receiptTotalGst: [''],
