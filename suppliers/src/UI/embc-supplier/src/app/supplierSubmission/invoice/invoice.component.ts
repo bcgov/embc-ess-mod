@@ -30,8 +30,8 @@ export class InvoiceComponent implements OnInit {
     hidden = false;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar,
-                private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService, private customValidator: CustomValidationService) {
-
+                private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,
+                private customValidator: CustomValidationService) {
     }
 
     get invoiceControl() {

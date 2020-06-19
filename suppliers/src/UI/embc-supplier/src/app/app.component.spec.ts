@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SupplierHttpService } from './service/supplierHttp.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -28,12 +28,12 @@ describe('AppComponent', () => {
   });
 
   it(`should be created`, () => {
-    const service: SupplierHttpService = TestBed.get(SupplierHttpService);
-    expect(service).toBeTruthy;
+    const service: SupplierHttpService = TestBed.inject(SupplierHttpService);
+    expect(service).toBeTruthy();
   });
 
   it('should have getListOfCities function', () => {
-    const service: SupplierHttpService = TestBed.get(SupplierHttpService);
+    const service: SupplierHttpService = TestBed.inject(SupplierHttpService);
     expect(service.getListOfCities).toBeTruthy();
    });
 
@@ -43,22 +43,22 @@ describe('AppComponent', () => {
   //  });
 
   it('should have getListOfProvinces function', () => {
-    const service: SupplierHttpService = TestBed.get(SupplierHttpService);
+    const service: SupplierHttpService = TestBed.inject(SupplierHttpService);
     expect(service.getListOfProvinces).toBeTruthy();
    });
 
   it('should have getListOfStates function', () => {
-    const service: SupplierHttpService = TestBed.get(SupplierHttpService);
+    const service: SupplierHttpService = TestBed.inject(SupplierHttpService);
     expect(service.getListOfStates).toBeTruthy();
    });
 
   it('should have getListOfCountries function', () => {
-    const service: SupplierHttpService = TestBed.get(SupplierHttpService);
+    const service: SupplierHttpService = TestBed.inject(SupplierHttpService);
     expect(service.getListOfCountries).toBeTruthy();
    });
 
   it('should have getListOfSupportItems function', () => {
-    const service: SupplierHttpService = TestBed.get(SupplierHttpService);
+    const service: SupplierHttpService = TestBed.inject(SupplierHttpService);
     expect(service.getListOfSupportItems).toBeTruthy();
    });
 
