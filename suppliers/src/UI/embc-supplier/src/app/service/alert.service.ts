@@ -13,7 +13,7 @@ export class AlertService {
 
     /**
      * Clear alert messages on route change unless 'keepAfterRouteChange' flag is true
-     * @param router
+     * @param router : navigation api
      */
     constructor(private router: Router) {
         this.router.events.subscribe(event => {

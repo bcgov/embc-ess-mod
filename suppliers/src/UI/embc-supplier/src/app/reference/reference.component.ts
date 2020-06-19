@@ -3,7 +3,7 @@ import { SupplierService } from '../service/supplier.service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'reference',
+    selector: 'app-reference',
     templateUrl: './reference.component.html',
     styleUrls: ['./reference.component.scss']
 })

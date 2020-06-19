@@ -6,7 +6,7 @@ import * as globalConst from 'src/app/service/globalConstants';
 import { AlertService } from '../service/alert.service';
 
 @Component({
-    selector: 'review',
+    selector: 'app-review',
     templateUrl: './review.component.html',
     styleUrls: ['./review.component.scss']
 })

@@ -44,7 +44,7 @@ export class CustomValidationService {
     }
 
     attachmentSizeValidator(control: AbstractControl) {
-            if (control.value.fileSize == 0) {
+            if (control.value.fileSize === 0) {
                 return { zeroSize: true };
             }
             return null;

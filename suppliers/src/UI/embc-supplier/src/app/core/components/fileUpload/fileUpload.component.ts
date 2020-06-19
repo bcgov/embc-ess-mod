@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { ToastService } from 'src/app/service/toast.service';
 
 @Component({
-    selector: 'app-fileUpload',
+    selector: 'app-file-upload',
     templateUrl: './fileUpload.component.html',
     styleUrls: ['./fileUpload.component.scss'],
 })

@@ -19,9 +19,9 @@ import { CustomValidationService } from 'src/app/service/customValidation.servic
 })
 export class InvoiceComponent implements OnInit {
 
-    @Input('formGroupName') formGroupName: number;
-    @Input('invoiceForm') invoiceForm: FormGroup;
-    @Input('index') index: number;
+    @Input() formGroupName: number;
+    @Input() invoiceForm: FormGroup;
+    @Input() index: number;
     @Input() formArraySize: number;
     @Output() indexToRemove = new EventEmitter<number>();
     referralList = globalConst.referralList;

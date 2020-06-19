@@ -11,7 +11,7 @@ import { CustomValidationService } from '../service/customValidation.service';
 import * as globalConst from 'src/app/service/globalConstants';
 
 @Component({
-    selector: 'supplier-submission',
+    selector: 'app-supplier-submission',
     templateUrl: './supplierSubmission.component.html',
     styleUrls: ['./supplierSubmission.component.scss'],
     providers: [CustomValidationService]

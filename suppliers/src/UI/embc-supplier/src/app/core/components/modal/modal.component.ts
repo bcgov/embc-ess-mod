@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'invoice-modal-content',
+    selector: 'app-modal-content',
     templateUrl: './modal.component.html'
   })
   export class ModalComponent {
