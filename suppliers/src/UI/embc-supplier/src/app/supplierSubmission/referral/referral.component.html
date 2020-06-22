@@ -20,7 +20,7 @@
               </div>
             </div>
           </div>
-          <div class="col-auto">
+          <div *ngIf="formArraySize > 1" class="col-auto">
             <i (click)="referralToRemove.emit(index)" class="far fa-times-circle"></i>
           </div>
         </div>
@@ -47,7 +47,7 @@
               </div>
             </div>
           </div>
-          <div class="col-auto">
+          <div *ngIf="formArraySize > 1" class="col-auto">
             <i (click)="referralToRemove.emit(index)" class="far fa-times-circle"></i>
           </div>
         </div>
