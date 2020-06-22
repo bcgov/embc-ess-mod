@@ -21,9 +21,10 @@ export class ReferralComponent implements OnInit {
     @Input() referralForm: FormGroup;
     @Input() index: number;
     @Input() component: string;
-    supportList: any;
     @Output() referralToRemove = new EventEmitter<number>();
     @Input() invoiceCurrentIndex: number;
+    @Input() formArraySize: number;
+    supportList: any;
     reloadedFiles: any;
     reloadedFiles2: any;
 
@@ -162,8 +163,8 @@ export class ReferralComponent implements OnInit {
         return this.builder.group({
             supportProvided: [row.supportProvided],
             description: [row.description],
-            gst: [row.gst],
-            amount: [row.amount]
+            gst: [row.gst, [this.customValidator.amountGreaterValidator().bind(this.customValidator)]],
+            amount: [row.amount, [this.customValidator.amountGreaterValidator().bind(this.customValidator)]]
         });
     }
 

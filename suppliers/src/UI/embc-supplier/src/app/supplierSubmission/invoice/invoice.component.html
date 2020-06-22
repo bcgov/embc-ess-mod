@@ -88,7 +88,7 @@
 
       <div formArrayName="referrals">
         <div *ngFor="let referral of referrals.controls; let j = index">
-          <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j" [component]="component"
+          <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j" [component]="component" [formArraySize]="referrals.controls.length"
             [invoiceCurrentIndex]="index" (referralToRemove)="removeReferral($event)"></app-referral>
         </div>
       </div>
