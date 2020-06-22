@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { SupplierService } from '../service/supplier.service';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTypeaheadConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../core/components/modal/modal.component';
 import { Country } from '../model/country';
 import { CustomValidationService } from '../service/customValidation.service';
@@ -14,12 +14,15 @@ import * as globalConst from 'src/app/service/globalConstants';
     selector: 'app-supplier-submission',
     templateUrl: './supplierSubmission.component.html',
     styleUrls: ['./supplierSubmission.component.scss'],
-    providers: [CustomValidationService]
+    providers: [CustomValidationService, NgbTypeaheadConfig]
 })
 export class SupplierSubmissionComponent implements OnInit {
 
     constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService,
-                private cd: ChangeDetectorRef, private modalService: NgbModal, private customValidator: CustomValidationService) { }
+        private cd: ChangeDetectorRef, private modalService: NgbModal, private customValidator: CustomValidationService,
+        private config: NgbTypeaheadConfig) {
+        config.showHint = true;
+    }
 
     get control() {
         return this.supplierForm.controls;
@@ -56,7 +59,7 @@ export class SupplierSubmissionComponent implements OnInit {
             debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getCityList().pipe(
-                map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).slice(0, 10)))
             )
         )
 
@@ -67,7 +70,7 @@ export class SupplierSubmissionComponent implements OnInit {
             debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getStateList().pipe(
-                map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).slice(0, 10)))
             )
         )
 
@@ -78,7 +81,7 @@ export class SupplierSubmissionComponent implements OnInit {
             debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getProvinceList().pipe(
-                map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).slice(0, 10)))
             )
         )
 
@@ -89,7 +92,7 @@ export class SupplierSubmissionComponent implements OnInit {
             debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getCountryListt().pipe(
-                map(resp => resp.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10)))
+                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).slice(0, 10)))
             )
         )
 
