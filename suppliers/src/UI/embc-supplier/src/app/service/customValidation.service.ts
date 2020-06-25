@@ -1,5 +1,5 @@
-import { AbstractControl, ValidatorFn, FormArray } from '@angular/forms';
-import { Injectable } from '@angular/core';
+import { AbstractControl, ValidatorFn, FormArray, FormGroup } from '@angular/forms';
+import { Injectable, Predicate } from '@angular/core';
 import { SupplierService } from './supplier.service';
 
 @Injectable()
@@ -64,6 +64,17 @@ export class CustomValidationService {
                     if (gst > amount) {
                         return { amountGreater: true };
                     }
+                }
+            }
+            return null;
+        };
+    }
+
+    conditionalValidation(predicate: () => boolean, validator: ValidatorFn, errorName?: string) {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            if(control.parent) {
+                if(predicate()) {
+                    return validator(control);
                 }
             }
             return null;

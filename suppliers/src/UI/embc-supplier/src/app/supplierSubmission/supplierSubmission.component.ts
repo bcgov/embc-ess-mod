@@ -42,14 +42,15 @@ export class SupplierSubmissionComponent implements OnInit {
     countryList: Observable<Country[]>;
     selectedRemitCountry: string;
     locatedInBC: string;
-    postalPattern = '^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$';
-    defaultProvince = { code: 'BC', name: 'British Columbia' };
-    defaultCountry = { code: 'CAN', name: 'Canada' };
 
     refArray: any = [];
 
     ngOnInit() {
         this.initializeForm();
+        this.supplierForm.get('remitToOtherBusiness').valueChanges
+            .subscribe(value => {
+                this.updateOnVisibility();
+            });
         this.repopulateFormData();
         this.supplierService.isReload = false;
     }
@@ -59,7 +60,7 @@ export class SupplierSubmissionComponent implements OnInit {
             debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getCityList().pipe(
-                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).slice(0, 10)))
+                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).splice(0, 10)))
             )
         )
 
@@ -70,7 +71,7 @@ export class SupplierSubmissionComponent implements OnInit {
             debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getStateList().pipe(
-                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).slice(0, 10)))
+                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).splice(0, 10)))
             )
         )
 
@@ -81,7 +82,7 @@ export class SupplierSubmissionComponent implements OnInit {
             debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getProvinceList().pipe(
-                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).slice(0, 10)))
+                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).splice(0, 10)))
             )
         )
 
@@ -92,7 +93,7 @@ export class SupplierSubmissionComponent implements OnInit {
             debounceTime(100),
             distinctUntilChanged(),
             switchMap(term => this.supplierService.getCountryListt().pipe(
-                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).slice(0, 10)))
+                map(resp => resp.filter(v => v.name.toLowerCase().startsWith(term.toLowerCase())).splice(0, 10)))
             )
         )
 
@@ -114,17 +115,23 @@ export class SupplierSubmissionComponent implements OnInit {
             location: [''],
             gstNumber: ['', [Validators.required]],
             remitToOtherBusiness: [''],
-            businessName: [''],
-            businessCountry: [''],
+            businessName: ['', [this.customValidator.conditionalValidation(
+                () => this.supplierForm.get('remitToOtherBusiness').value,
+                Validators.required
+            ).bind(this.customValidator)]],
+            businessCountry: ['', [this.customValidator.conditionalValidation(
+                () => this.supplierForm.get('remitToOtherBusiness').value,
+                Validators.required
+            ).bind(this.customValidator)]],
             supplierBC: [''],
 
             address: this.builder.group({
                 address1: ['', Validators.required],
                 address2: [''],
                 city: ['', Validators.required],
-                province: [this.defaultProvince.name],
-                postalCode: ['', [Validators.required, Validators.pattern(this.postalPattern)]],
-                country: [this.defaultCountry.name],
+                province: [globalConst.defaultProvince.name],
+                postalCode: ['', [Validators.required, Validators.pattern(globalConst.postalPattern)]],
+                country: [globalConst.defaultCountry.name],
             }),
 
             contactPerson: this.builder.group({
@@ -136,14 +143,38 @@ export class SupplierSubmissionComponent implements OnInit {
             }),
 
             remittanceAddress: this.builder.group({
-                address1: [''],
+                address1: ['', [this.customValidator.conditionalValidation(
+                    () => this.supplierForm.get('remitToOtherBusiness').value,
+                    Validators.required
+                ).bind(this.customValidator)]],
                 address2: [''],
-                city: [''],
-                province: [''],
-                state: [''],
+                city: ['', [this.customValidator.conditionalValidation(
+                    () => this.supplierForm.get('remitToOtherBusiness').value,
+                    Validators.required
+                ).bind(this.customValidator)]],
+                province: ['', [this.customValidator.conditionalValidation(
+                    () => this.supplierForm.get('remitToOtherBusiness').value &&
+                        this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.defaultCountry),
+                    Validators.required
+                ).bind(this.customValidator)]],
+                state: ['', [this.customValidator.conditionalValidation(
+                    () => this.supplierForm.get('remitToOtherBusiness').value &&
+                        this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.usDefaultObject),
+                    Validators.required
+                ).bind(this.customValidator)]],
                 region: [''],
-                postalCode: [''],
-                zipCode: [''],
+                postalCode: ['', [Validators.pattern(globalConst.postalPattern),
+                this.customValidator.conditionalValidation(
+                    () => this.supplierForm.get('remitToOtherBusiness').value &&
+                        this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.defaultCountry),
+                    Validators.required
+                ).bind(this.customValidator)]],
+                zipCode: ['', [Validators.pattern(globalConst.zipCodePattern),
+                this.customValidator.conditionalValidation(
+                    () => this.supplierForm.get('remitToOtherBusiness').value &&
+                        this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.usDefaultObject),
+                    Validators.required
+                ).bind(this.customValidator)]],
                 otherCode: ['']
             }),
 
@@ -212,8 +243,8 @@ export class SupplierSubmissionComponent implements OnInit {
     }
 
     onSubmit() {
-        this.supplierForm.get('address.province').setValue(this.defaultProvince);
-        this.supplierForm.get('address.country').setValue(this.defaultCountry);
+        this.supplierForm.get('address.province').setValue(globalConst.defaultProvince);
+        this.supplierForm.get('address.country').setValue(globalConst.defaultCountry);
         const supplierDetails = this.supplierForm.value;
         this.supplierService.setSupplierDetails(supplierDetails);
         this.supplierService.createPayload(supplierDetails);
@@ -383,6 +414,17 @@ export class SupplierSubmissionComponent implements OnInit {
             referralAttachments: this.builder.array([], [Validators.required]),
             receiptAttachments: this.builder.array([], [Validators.required])
         });
+    }
+
+    updateOnVisibility() {
+        this.supplierForm.get('remittanceAddress.postalCode').updateValueAndValidity();
+        this.supplierForm.get('remittanceAddress.zipCode').updateValueAndValidity();
+        this.supplierForm.get('businessCountry').updateValueAndValidity();
+        this.supplierForm.get('businessName').updateValueAndValidity();
+        this.supplierForm.get('remittanceAddress.address1').updateValueAndValidity();
+        this.supplierForm.get('remittanceAddress.city').updateValueAndValidity();
+        this.supplierForm.get('remittanceAddress.province').updateValueAndValidity();
+        this.supplierForm.get('remittanceAddress.state').updateValueAndValidity();
     }
 
 }
