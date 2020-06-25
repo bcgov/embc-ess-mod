@@ -8,7 +8,7 @@
       </div>
     </div>
     <hr>
-    
+
     <div class="row">
       <div class="col-sm-12 col-md-9">
         <div>
@@ -29,7 +29,7 @@
           </p>
         </div>
         <div class="formHeading">
-          <h3>Supplier Information</h3>
+          Supplier Information
         </div>
         <div>
 
@@ -140,7 +140,8 @@
                 <div class="form-group col-lg-4">
                   <label class="requiredField" for="postalCode">Postal Code</label>
                   <input type="text" class="form-control form-control-lg" formControlName="postalCode" id="postalCode"
-                    [pattern]="postalPattern" required>
+                    required>
+                  <!--[pattern]="globalConst.postalPattern"-->
                   <div
                     *ngIf="control.address['controls'].postalCode?.invalid && (control.address['controls'].postalCode?.dirty || control.address['controls'].postalCode?.touched)"
                     class="text-danger">
@@ -234,7 +235,7 @@
                   <label for="fax">Fax</label>
                   <input type="text" class="form-control form-control-lg" appPhoneMask formControlName="fax" id="fax"
                     placeholder="999-999-9999">
-                    <div
+                  <div
                     *ngIf="control.contactPerson['controls'].fax?.invalid && (control.contactPerson['controls'].fax?.dirty || control.contactPerson['controls'].fax?.touched)"
                     class="text-danger">
                     <div *ngIf="control.contactPerson['controls'].fax?.errors.minlength">
@@ -275,10 +276,12 @@
                 <div class="row">
                   <div class="form-group col-lg-6">
                     <label class="requiredField" for="businessCountry"><b>What Country Is This Supplier Located In?</b>
-                      </label>
-                    <input id="businessCountry" type="text" class="form-control form-control-lg" formControlName="businessCountry"
-                      [ngbTypeahead]="searchCountry" [resultFormatter]="countryFormatter" [inputFormatter]="countryFormatter"
-                      required autocomplete="doNotAutoComplete" (selectItem)="remitVisibility($event.item.name)" [editable]="false" />
+                    </label>
+                    <input id="businessCountry" type="text" class="form-control form-control-lg"
+                      formControlName="businessCountry" [ngbTypeahead]="searchCountry"
+                      [resultFormatter]="countryFormatter" [inputFormatter]="countryFormatter"
+                      autocomplete="doNotAutoComplete" (selectItem)="remitVisibility($event.item.name)"
+                      [editable]="false" />
                     <div
                       *ngIf="control.businessCountry?.invalid && (control.businessCountry?.dirty || control.businessCountry?.touched)"
                       class="text-danger">
@@ -389,20 +392,6 @@
                     </div>
                   </div>
 
-                  <!--
-                    Postal Code	Text	
-Visible and Required if user checks the "Check this box if we must remit payment to a business other than the one listed above." AND Country = Canada
-Cleared, hidden, and not required if user unchecks the "Check this box if we must remit payment to a business other than the one listed above." OR Country <> Canada
-Postal Code must in the correct format of a1a 1a1 OR a1a1a1
-
-Zip Code	Text	
-Visible and Required if user checks the "Check this box if we must remit payment to a business other than the one listed above." AND Country = US
-Cleared, hidden, and not required if user unchecks the "Check this box if we must remit payment to a business other than the one listed above." OR Country <> US
-Postal Code must in the correct format of NNNNN
-
-                  -->
-
-
                   <div *ngIf="selectedRemitCountry === 'Canada'" class="row">
                     <div class="form-group col-lg-4">
                       <label class="requiredField" for="postalCode">Postal Code</label>
@@ -432,7 +421,7 @@ Postal Code must in the correct format of NNNNN
                           Zip Code is required
                         </div>
                         <div *ngIf="control.remittanceAddress['controls'].zipCode?.errors.pattern">
-                          Zip postal code
+                          Invalid Zip Code
                         </div>
                       </div>
                     </div>
@@ -459,7 +448,7 @@ Postal Code must in the correct format of NNNNN
             </div>
 
             <div class="formHeading">
-              <h3>Submit your Invoice and/or Receipts</h3>
+              Submit your Invoice and/or Receipts
             </div>
 
             <div>
@@ -501,8 +490,8 @@ Postal Code must in the correct format of NNNNN
                 </div>
                 <div formArrayName="invoices">
                   <div *ngFor="let invoic of invoices.controls; let i = index">
-                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i" [formArraySize]="invoices.controls.length"
-                      (indexToRemove)="deleteInvoice($event)"></app-invoice>
+                    <app-invoice [index]="i" [invoiceForm]="invoic" [formGroupName]="i"
+                      [formArraySize]="invoices.controls.length" (indexToRemove)="deleteInvoice($event)"></app-invoice>
                   </div>
                 </div>
 
@@ -539,8 +528,8 @@ Postal Code must in the correct format of NNNNN
 
                 <div formArrayName="receipts">
                   <div *ngFor="let receipt of receipts.controls; let i = index">
-                    <app-receipt [index]="i" [receiptForm]="receipt" [formGroupName]="i" [formArraySize]="receipts.controls.length"
-                      (indexToRemove)="deleteReceipt($event)"></app-receipt>
+                    <app-receipt [index]="i" [receiptForm]="receipt" [formGroupName]="i"
+                      [formArraySize]="receipts.controls.length" (indexToRemove)="deleteReceipt($event)"></app-receipt>
                   </div>
                 </div>
 
@@ -569,46 +558,55 @@ Postal Code must in the correct format of NNNNN
 
         <div class="card sidebox-card-info text-white">
           <div class="card-body">
-            <h3 class="card-title"><i class="far fa-check-circle" style="font-size: 25px;"></i>&nbsp;Supplier Invoice
-              Checklist</h3>
-            <p class="card-text">The following checklist is provided for your convenience to ensure your invoice &
-              receipt documentation is complete and accurate prior to submitting to Emergency Management BC (EMBC) for
-              payment.
-            </p>
-            <ul>
-              <li>Charges for goods and services, including all applicable taxes, must not exceed the
-                Emergency
-                Support Services rates.
-              </li>
-              <li>Goods or services are rendered only to those listed on the referral.</li>
-              <li>Goods or services rendered are eligible items as listed on the Referral.</li>
-              <li>Exceptions or cost overages must be authorized by EMBC and supporting documentation must be attached
-                to the submission.</li>
-              <li>Make copies of invoices and receipts for your records.</li>
-            </ul>
+            <p class="card-title side-box-title"><i class="far fa-check-circle"
+                style="font-size: 25px;"></i>&nbsp;Supplier Invoice
+              Checklist</p>
+            <span class="side-box-body">
+              <p class="card-text">The following checklist is provided for your convenience to ensure your invoice &
+                receipt documentation is complete and accurate prior to submitting to Emergency Management BC (EMBC) for
+                payment.
+              </p>
+              <ul>
+                <li>Charges for goods and services, including all applicable taxes, must not exceed the
+                  Emergency
+                  Support Services rates.
+                </li>
+                <li>Goods or services are rendered only to those listed on the referral.</li>
+                <li>Goods or services rendered are eligible items as listed on the Referral.</li>
+                <li>Exceptions or cost overages must be authorized by EMBC and supporting documentation must be attached
+                  to the submission.</li>
+                <li>Make copies of invoices and receipts for your records.</li>
+              </ul>
+            </span>
           </div>
         </div>
         <br>
         <div class="card">
           <div class="card-body">
-            <h3 class="card-title"><i class="far fa-question-circle" style="font-size: 25px;"></i>&nbsp;
-              Questions about submitting</h3>
-            <p class="card-text">If you have any questions or need assistance regarding the navigation and submission of
-              this form, please contact the ERA Tool Support team at 1-844-537-7377.
-            </p>
+            <p class="card-title side-box-title"><i class="far fa-question-circle" style="font-size: 25px;"></i>&nbsp;
+              Questions about submitting</p>
+            <span class="side-box-body">
+              <p class="card-text">If you have any questions or need assistance regarding the navigation and submission
+                of
+                this form, please contact the ERA Tool Support team at 1-844-537-7377.
+              </p>
+            </span>
           </div>
         </div>
         <br>
         <div class="card">
           <div class="card-body">
-            <h3 class="card-title"><i class="fas fa-file-invoice-dollar" style="font-size: 25px;"></i>&nbsp;Receipt
-              Processing Steps</h3>
-            <ul>
-              <li>Supplier submission of receipts</li>
-              <li>EMBC Finance Team to review submission</li>
-              <li>Receipts submitted to Corporate Accounting Services (CAS) for payment</li>
-              <li>Supplier receives payment from CAS</li>
-            </ul>
+            <p class="card-title side-box-title"><i class="fas fa-file-invoice-dollar"
+                style="font-size: 25px;"></i>&nbsp;Receipt
+              Processing Steps</p>
+            <span class="side-box-body">
+              <ul>
+                <li>Supplier submission of receipts</li>
+                <li>EMBC Finance Team to review submission</li>
+                <li>Receipts submitted to Corporate Accounting Services (CAS) for payment</li>
+                <li>Supplier receives payment from CAS</li>
+              </ul>
+            </span>
           </div>
         </div>
       </div>

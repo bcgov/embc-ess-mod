@@ -15,7 +15,7 @@
             <p style="font-weight: bold;">Please print this page for your records.</p>
 
             <div class="formHeading">
-                <h3>Supplier Details</h3>
+                Supplier Details
             </div>
             <div>
                 <p><b>Supplier Information:</b></p>
@@ -52,7 +52,7 @@
             </div>
             <div *ngIf="supplierSubmissionType === 'invoice'">
                 <div class="formHeading">
-                    <h3>Invoice Submitted</h3>
+                    Invoice Submitted
                 </div>
                 <div>
                     <div class="box" *ngFor="let invoice of supplier?.invoices">
@@ -112,7 +112,7 @@
                 </div>
 
                 <div class="formHeading">
-                    <h3>Attachments</h3>
+                    Attachments
                 </div>
                 <div *ngFor="let invoice of supplier?.invoices">
                     <div *ngIf="invoice.invoiceAttachments.length > 0" class="attach-box" style="padding: 7px;">
@@ -137,7 +137,7 @@
 
             <div *ngIf="supplierSubmissionType === 'receipt'">
                 <div class="formHeading">
-                    <h3>Receipt Submitted</h3>
+                    Receipt Submitted
                 </div>
                 <div>
                     <div class="box" *ngFor="let receipt of supplier?.receipts">
@@ -200,7 +200,7 @@
                 </div>
 
                 <div class="formHeading">
-                    <h3>Attachments</h3>
+                    Attachments
                 </div>
                 <div *ngFor="let receipt of supplier?.receipts">
                     <div *ngIf="receipt.receiptAttachments.length >0 || receipt.referralAttachments.length >0"
