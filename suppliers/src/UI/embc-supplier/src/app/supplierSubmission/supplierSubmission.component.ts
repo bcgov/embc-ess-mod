@@ -19,8 +19,8 @@ import * as globalConst from 'src/app/service/globalConstants';
 export class SupplierSubmissionComponent implements OnInit {
 
     constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService,
-        private cd: ChangeDetectorRef, private modalService: NgbModal, private customValidator: CustomValidationService,
-        private config: NgbTypeaheadConfig) {
+                private cd: ChangeDetectorRef, private modalService: NgbModal, private customValidator: CustomValidationService,
+                private config: NgbTypeaheadConfig) {
         config.showHint = true;
     }
 

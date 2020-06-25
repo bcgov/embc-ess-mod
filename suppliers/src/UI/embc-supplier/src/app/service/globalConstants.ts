@@ -20,5 +20,5 @@ export const deleteReceiptButton = 'Yes, Remove this Receipt';
 export const postalPattern = '^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$';
 export const defaultProvince = { code: 'BC', name: 'British Columbia' };
 export const defaultCountry = { code: 'CAN', name: 'Canada' };
-export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$'; //'^([0-9]{5})(?:[-\s]*([0-9]{4}))?$';
-export const usDefaultObject= { code: 'USA', name: 'United States of America' };
+export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$'; // '^([0-9]{5})(?:[-\s]*([0-9]{4}))?$';
+export const usDefaultObject = { code: 'USA', name: 'United States of America' };

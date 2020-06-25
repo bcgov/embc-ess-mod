@@ -70,12 +70,27 @@ export class CustomValidationService {
         };
     }
 
+    /**
+     * Validition for the fields that are conditional
+     * @param predicate : condition to check
+     * @param validator : validtor to test again
+     * @param errorName : custom error name
+     */
     conditionalValidation(predicate: () => boolean, validator: ValidatorFn, errorName?: string) {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
-            if(control.parent) {
-                if(predicate()) {
-                    return validator(control);
+            if (control.parent) {
+                let validationError = null;
+                if (predicate()) {
+                    validationError = validator(control);
                 }
+
+                if (errorName && validationError) {
+                    const customError = {};
+                    customError[errorName] = validationError;
+                    validationError = customError;
+                }
+
+                return validationError;
             }
             return null;
         };
