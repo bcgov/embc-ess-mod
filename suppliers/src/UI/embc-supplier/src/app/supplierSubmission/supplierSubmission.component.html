@@ -1,8 +1,9 @@
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-md-12">
     <div class="row">
-      <div class="col-sm-1"><img src="/assets/images/logoBlueNew.png" style="width:80px"></div>
-      <div>
+      <img class="img-fluid d-none d-md-block" src="/assets/images/essIcon.svg" width="114" height="147">
+      <img class="img-fluid d-md-none" src="/assets/images/essIcon.svg" width="114" height="147">
+      <div class="app-heading">
         <p class="submissionHeader">Evacuee Registration & Assistance (ERA)</p>
         <span style="font-size: 28px;">Supplier Invoice & Receipt Submission</span>
       </div>
@@ -10,7 +11,7 @@
     <hr>
 
     <div class="row">
-      <div class="col-sm-12 col-md-9">
+      <div class="col-md-9">
         <div>
           <p>
             Are you a <b>registered supplier with Emergency Support Services (ESS)</b> who has provided goods or
@@ -506,6 +507,7 @@
                       Next</button>
                   </div>
                 </div>
+                <br>
               </div>
 
               <div *ngIf="supplierForm.get('supplierSubmissionType').value === 'receipt'">
@@ -544,7 +546,7 @@
                       Next</button>
                   </div>
                 </div>
-
+                <br>
               </div>
             </div>
 
@@ -554,7 +556,7 @@
 
       </div>
 
-      <div class="col-sm-12 col-md-3">
+      <div class="col-md-3">
 
         <div class="card sidebox-card-info text-white">
           <div class="card-body">

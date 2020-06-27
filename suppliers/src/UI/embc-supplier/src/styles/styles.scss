@@ -25,10 +25,6 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
     border-radius:0
 }
 
-.container {
-    max-width: 1450px;
-}
-
 .requiredField::after {
     content: "*";
     color: red;
@@ -74,9 +70,6 @@ hr {
 .formHeading {
     background-color: #E2E9F0;
     margin: 20px 20px 20px 0px;
-    // h3 {
-    //   padding: 13px
-    // }
     font-size: 25px;
     padding-left: 20px;
     font-weight: bold;
@@ -91,4 +84,15 @@ hr {
 .side-box-body {
     font-size: 15px;
 }
+
+.app-heading {
+    margin-top: 15px;
+    margin-left: 6px;
+}
+
+.submissionHeader {
+    margin-bottom: 0 !important;
+    font-size: 40px;
+    font-weight: bold;
+  }
 
