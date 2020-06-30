@@ -79,7 +79,7 @@
                 <span class="input-symbol-dollar items-dollar-line">
                   <input type="number" min="0" formControlName="gst"
                     class="form-control" oninput="this.value = Math.abs(this.value)" required>
-                    <div *ngIf="rowControl[j]['controls'].gst?.errors?.amountGreater" style="color: red;">
+                    <div *ngIf="rowControl[j].errors?.amountGreater" style="color: red;">
                       GST must be less than Amount
                     </div>
                   </span>
@@ -89,7 +89,7 @@
                   <input type="number" min="1"
                     formControlName="amount" class="form-control"
                     oninput="value!=0?(value = Math.abs(value)):(value='')" required>
-                    <div *ngIf="rowControl[j]['controls'].amount?.errors?.amountGreater" style="color: red;">
+                    <div *ngIf="rowControl[j].errors?.amountGreater" style="color: red;">
                       Amount must be greater than GST
                     </div>
                   </span>

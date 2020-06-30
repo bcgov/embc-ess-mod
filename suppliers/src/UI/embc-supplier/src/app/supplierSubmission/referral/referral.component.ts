@@ -98,9 +98,9 @@ export class ReferralComponent implements OnInit {
         return this.builder.group({
             supportProvided: [''],
             description: [''],
-            gst: ['', [this.customValidator.amountGreaterValidator().bind(this.customValidator)]],
-            amount: ['', [this.customValidator.amountGreaterValidator().bind(this.customValidator)]]
-        });
+            gst: [''],
+            amount: ['']
+        }, {validator: this.customValidator.amountGreaterValidator().bind(this.customValidator)});
     }
 
     onChanges() {
@@ -163,9 +163,10 @@ export class ReferralComponent implements OnInit {
         return this.builder.group({
             supportProvided: [row.supportProvided],
             description: [row.description],
-            gst: [row.gst, [this.customValidator.amountGreaterValidator().bind(this.customValidator)]],
-            amount: [row.amount, [this.customValidator.amountGreaterValidator().bind(this.customValidator)]]
-        });
+            gst: [row.gst],
+            amount: [row.amount]
+        },
+        {validator: this.customValidator.amountGreaterValidator().bind(this.customValidator)});
     }
 
     checkAttachmentLength(control: []) {

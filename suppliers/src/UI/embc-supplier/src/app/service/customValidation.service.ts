@@ -58,8 +58,8 @@ export class CustomValidationService {
     amountGreaterValidator(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             if (control.parent) {
-                const gst = control.parent.value.gst;
-                const amount = control.parent.value.amount;
+                const gst = control.get('gst').value;
+                const amount = control.get('amount').value;
                 if (gst !== '' && amount !== '') {
                     if (gst > amount) {
                         return { amountGreater: true };
