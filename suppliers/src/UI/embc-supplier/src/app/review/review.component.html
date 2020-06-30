@@ -1,21 +1,20 @@
 <div class="row">
-    <div class="col-sm-12">
-        <!-- <h1>Evacuee Registration & Assistance (ERA)</h1>
-        <p style="font-size: 28px;">Supplier Invoice Submission</p> -->
+    <div class="col-md-12">
         <div class="row">
-            <div class="col-sm-1"><img src="/assets/images/logoBlueNew.png" style="width:80px"></div>
-            <div>
-              <p class="submissionHeader">Evacuee Registration & Assistance (ERA)</p>
-              <span style="font-size: 28px;">Supplier Invoice Submission</span>
+            <img class="img-fluid d-none d-md-block" src="/assets/images/essIcon.svg" width="114" height="147">
+            <img class="img-fluid d-md-none" src="/assets/images/essIcon.svg" width="114" height="147">
+            <div class="app-heading">
+                <p class="submissionHeader">Evacuee Registration & Assistance (ERA)</p>
+                <span style="font-size: 28px;">Supplier Invoice & Receipt Submission</span>
             </div>
-          </div>
+        </div>
         <hr>
         <div>
             <p>Please read through this summary to make sure all your information is correct before submitting.</p>
             <p style="font-weight: bold;">Please print this page for your records.</p>
 
             <div class="formHeading">
-                <h3>Supplier Details</h3>
+                Supplier Details
             </div>
             <div>
                 <p><b>Supplier Information:</b></p>
@@ -52,7 +51,7 @@
             </div>
             <div *ngIf="supplierSubmissionType === 'invoice'">
                 <div class="formHeading">
-                    <h3>Invoice Submitted</h3>
+                    Invoice Submitted
                 </div>
                 <div>
                     <div class="box" *ngFor="let invoice of supplier?.invoices">
@@ -112,7 +111,7 @@
                 </div>
 
                 <div class="formHeading">
-                    <h3>Attachments</h3>
+                    Attachments
                 </div>
                 <div *ngFor="let invoice of supplier?.invoices">
                     <div *ngIf="invoice.invoiceAttachments.length > 0" class="attach-box" style="padding: 7px;">
@@ -137,12 +136,13 @@
 
             <div *ngIf="supplierSubmissionType === 'receipt'">
                 <div class="formHeading">
-                    <h3>Receipt Submitted</h3>
+                    Receipt Submitted
                 </div>
                 <div>
                     <div class="box" *ngFor="let receipt of supplier?.receipts">
                         <div class="row header align-items-center">
-                            <div class="col-12" style="font-size: 18px ;"><b>Referral# {{receipt.referralNumber}}</b></div>
+                            <div class="col-12" style="font-size: 18px ;"><b>Referral# {{receipt.referralNumber}}</b>
+                            </div>
                         </div>
                         <div *ngFor="let referral of receipt.referrals; let j = index">
                             <div class="row nestedHeader">
@@ -200,7 +200,7 @@
                 </div>
 
                 <div class="formHeading">
-                    <h3>Attachments</h3>
+                    Attachments
                 </div>
                 <div *ngFor="let receipt of supplier?.receipts">
                     <div *ngIf="receipt.receiptAttachments.length >0 || receipt.referralAttachments.length >0"
@@ -222,12 +222,13 @@
                     (serverError)="onServerError($event)"></captcha>
             </div>
         </div>
-        
+
         <app-alert></app-alert>
 
         <div class="row" style="justify-content: space-between;">
             <div>
-                <button type="submit" (click)="goback()" [disabled]="isSubmitted" class="btn btn-primary">Go back & Edit</button>
+                <button type="submit" (click)="goback()" [disabled]="isSubmitted" class="btn btn-primary">Go back &
+                    Edit</button>
             </div>
             <div>
                 <button type="submit" (click)="submit()" [disabled]="isSubmitted" class="btn btn-warning">Submit

@@ -60,3 +60,11 @@ $list-group-active-bg:      lighten(theme-color(secondary-nav), 10%);
 $list-group-active-border-color:  lighten(theme-color(secondary-nav), 8%);
 
 $btn-link-outline-color:    rgba(theme-color(primary), .5);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1500px
+);

@@ -25,10 +25,6 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
     border-radius:0
 }
 
-.container {
-    max-width: 1450px;
-}
-
 .requiredField::after {
     content: "*";
     color: red;
@@ -47,6 +43,9 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
 
 body {
     font-size: 15px;
+    // background: linear-gradient(theme-color(info) 5%, white);
+    // background-repeat: no-repeat;
+    // background-attachment: fixed;
 }
 
 .input-symbol-dollar {
@@ -62,4 +61,38 @@ body {
     top: 0;
     left: 4px;
  }
+
+/******** ESS Application Theme********/
+hr {
+     color: #BECDDB;
+ }
+
+.formHeading {
+    background-color: #E2E9F0;
+    margin: 20px 20px 20px 0px;
+    font-size: 25px;
+    padding-left: 20px;
+    font-weight: bold;
+  }
+
+/**Theme for Cards**/
+.side-box-title {
+    line-height: 21px;
+    font-size: 21px;
+  }
+
+.side-box-body {
+    font-size: 15px;
+}
+
+.app-heading {
+    margin-top: 15px;
+    margin-left: 6px;
+}
+
+.submissionHeader {
+    margin-bottom: 0 !important;
+    font-size: 40px;
+    font-weight: bold;
+  }
 
