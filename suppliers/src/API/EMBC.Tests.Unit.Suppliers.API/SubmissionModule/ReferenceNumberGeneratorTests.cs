@@ -36,10 +36,10 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
         [Fact]
         public void Generate_NextDay_DateIsInPST()
         {
-            var utcNow = DateTime.Parse("2020-01-02T00:00:00Z");
+            var utcNow = DateTime.Parse("2020-01-02T00:00:00Z").ToUniversalTime();
             referenceNumberGenerator.OverrideNow(utcNow);
             var referenceNumber = referenceNumberGenerator.CreateNew();
-            Assert.Contains("-20200101-", referenceNumber);
+            Assert.StartsWith("SUP-20200101-", referenceNumber);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
             var utcNow = DateTime.Parse("2020-01-02T06:00:00Z");
             referenceNumberGenerator.OverrideNow(utcNow);
             var referenceNumber = referenceNumberGenerator.CreateNew();
-            Assert.Contains("-20200101-", referenceNumber);
+            Assert.StartsWith("SUP-20200101-", referenceNumber);
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace EMBC.Tests.Unit.Suppliers.API.SubmissionModule
             var utcNow = DateTime.Parse("2020-01-02T08:00:00Z");
             referenceNumberGenerator.OverrideNow(utcNow);
             var referenceNumber = referenceNumberGenerator.CreateNew();
-            Assert.Contains("-20200102-", referenceNumber);
+            Assert.StartsWith("SUP-20200102-", referenceNumber);
         }
     }
 }
