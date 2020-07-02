@@ -36,7 +36,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
             if (presetReferenceNumber != null) return presetReferenceNumber;
             var bytes = new byte[3];
             crypto.GetBytes(bytes);
-            var today = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(now ?? DateTime.Today, GetPSTTimeZone());
+            var today = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(now ?? DateTime.Now.ToUniversalTime(), GetPSTTimeZone());
             return $"SUP-{today:yyyyMMdd}-{BitConverter.ToString(bytes).Replace("-", string.Empty, StringComparison.OrdinalIgnoreCase)}";
         }
 
