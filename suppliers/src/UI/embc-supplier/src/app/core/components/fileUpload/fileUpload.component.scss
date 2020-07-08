@@ -2,7 +2,7 @@
     height: 150px;
     padding: 2rem;
     text-align: center;
-    border: dashed 1px #979797;
+    border: dashed 1px #C4C4C4;
     position: relative;
     margin: 0 auto;
     background-color: white;
@@ -30,7 +30,7 @@
   
   .attach-list {
     margin-top: 10px;
-    border: dashed 1px #979797;
+    border: dashed 1px #C4C4C4;
     border-radius: 10px;
     padding-left: 8px;
     padding-right: 8px;
@@ -88,4 +88,12 @@
     justify-content: space-between;
     padding-left: 9px;
     padding-right: 9px;
+  }
+
+  .drag-text {
+    font-weight: lighter;
+  }
+
+  .browse-link {
+    color: #2F6699 !important;
   }
