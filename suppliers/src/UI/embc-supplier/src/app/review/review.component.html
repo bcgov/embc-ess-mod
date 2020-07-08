@@ -116,17 +116,23 @@
                 <div *ngFor="let invoice of supplier?.invoices">
                     <div *ngIf="invoice.invoiceAttachments.length > 0" class="attach-box" style="padding: 7px;">
                         <p><b>Invoice {{invoice.invoiceNumber }}</b></p>
-                        <div *ngFor="let attach of invoice.invoiceAttachments">
-                            <p>{{attach.fileName}}</p>
+                        <div *ngFor="let attach of invoice.invoiceAttachments" style="margin-bottom: 5px;">
+                            <span class="icon"><img src="/assets/images/docIcon.svg" width="23"
+                                    height="30">&nbsp;&nbsp;</span>
+                            <span class="icon-text">{{attach.fileName}}</span>
                         </div>
                         <br>
                         <div *ngFor="let ref of invoice.referrals">
                             <p><b>Referral {{ref.referralNumber }}</b></p>
-                            <div *ngFor="let attach of ref.receiptAttachments">
-                                <p>{{attach.fileName}}</p>
+                            <div *ngFor="let attach of ref.receiptAttachments" style="margin-bottom: 5px;">
+                                <span class="icon"><img src="/assets/images/docIcon.svg" width="23"
+                                        height="30">&nbsp;&nbsp;</span>
+                                <span class="icon-text">{{attach.fileName}}</span>
                             </div>
-                            <div *ngFor="let attach of ref.referralAttachments">
-                                <p>{{attach.fileName}}</p>
+                            <div *ngFor="let attach of ref.referralAttachments" style="margin-bottom: 5px;">
+                                <span class="icon"><img src="/assets/images/docIcon.svg" width="23"
+                                        height="30">&nbsp;&nbsp;</span>
+                                <span class="icon-text">{{attach.fileName}}</span>
                             </div>
                         </div>
                     </div>
@@ -204,20 +210,24 @@
                 </div>
                 <div *ngFor="let receipt of supplier?.receipts">
                     <div *ngIf="receipt.receiptAttachments.length >0 || receipt.referralAttachments.length >0"
-                        class="box" style="padding: 7px;">
+                        class="attach-box" style="padding: 7px;">
                         <p><b>Referral {{receipt.referralNumber }}</b></p>
-                        <div *ngFor="let attach of receipt.receiptAttachments">
-                            <p>{{attach.fileName}}</p>
+                        <div *ngFor="let attach of receipt.receiptAttachments" style="margin-bottom: 5px;">
+                            <span class="icon"><img src="/assets/images/docIcon.svg" width="23"
+                                    height="30">&nbsp;&nbsp;</span>
+                            <span class="icon-text">{{attach.fileName}}</span>
                         </div>
-                        <div *ngFor="let attach of receipt.referralAttachments">
-                            <p>{{attach.fileName}}</p>
+                        <div *ngFor="let attach of receipt.referralAttachments" style="margin-bottom: 5px;">
+                            <span class="icon"><img src="/assets/images/docIcon.svg" width="23"
+                                    height="30">&nbsp;&nbsp;</span>
+                            <span class="icon-text">{{attach.fileName}}</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col offset-1">
+        <div class="row" style="margin-top: 20px;">
+            <div class="col">
                 <captcha language="en" eagerFetchAudio="true" (validToken)="onValidToken($event)"
                     (serverError)="onServerError($event)"></captcha>
             </div>
@@ -226,12 +236,12 @@
         <app-alert></app-alert>
 
         <div class="row" style="justify-content: space-between;">
-            <div>
-                <button type="submit" (click)="goback()" [disabled]="isSubmitted" class="btn btn-primary">Go back &
+            <div style="padding-left: 13px;">
+                <button type="submit" (click)="goback()" [disabled]="isSubmitted" class="btn primary-button">Go back &
                     Edit</button>
             </div>
-            <div>
-                <button type="submit" (click)="submit()" [disabled]="isSubmitted" class="btn btn-warning">Submit
+            <div style="padding-right: 13px;">
+                <button type="submit" (click)="submit()" [disabled]="isSubmitted" class="btn secondary-button">Submit
                     <app-loader [showLoader]="showLoader"></app-loader>
                 </button>
             </div>

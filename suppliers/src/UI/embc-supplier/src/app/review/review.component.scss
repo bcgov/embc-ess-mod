@@ -1,25 +1,25 @@
 @import '../../styles/styles.scss';
 
   .box{
-    margin: 20px;
-    border: 4px lightgray solid;
+    //margin: 20px;
+    border: 3px #DFDFDF solid;
   }
 
   .attach-box {
-    margin: 20px;
-    border: 4px lightgray solid;
-    background-color: rgba(theme-color(info), 0.1);
+    //margin: 20px;
+    border: 3px #DFDFDF solid;
+    background-color: #F0F4F6;
   }
 
   .header {
-    background-color: rgba(theme-color(info), 0.3);
+    background-color: #E5EAEE;
     height: 70px;
     margin-right: 1px;
     margin-left: 1px;
   }
 
   .nestedHeader {
-    background-color: rgba(theme-color(info), 0.1);
+    background-color: #F0F4F6;
     height: 40px;
     padding: 10px;
     margin-left: 1px;
@@ -32,7 +32,7 @@
 
   .total {
     padding: 10px;
-    background-color: rgba(theme-color(info), 0.3);
+    background-color: #E5EAEE;
     height: 50px;
     margin-right: 1px;
     margin-left: 1px;
