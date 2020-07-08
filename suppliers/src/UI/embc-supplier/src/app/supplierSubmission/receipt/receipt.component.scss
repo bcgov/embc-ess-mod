@@ -14,29 +14,11 @@
       content: "*";
       color: red;
    }
-  
-  .form-header {
-    background-color: theme-color(primary);
-    border-bottom: 3px theme-color(bcgold) solid;
-    color: white;
-    font-weight: bold;
-    font-size: 1.2rem;
-    padding: 10px;
-  }
-  
-  .form-body {
-    background-color: $gray2;
-    border-left: 3px theme-color(primary) solid;
-    border-bottom: 3px theme-color(primary) solid;
-    border-right: 3px theme-color(primary) solid;
-    font-weight: bold;
-    padding: 10px;
-  }
 
   .add-referral-button {
     font-weight: bold;
-    color: theme-color(primary) !important;
-    border: 1px theme-color(primary) solid;
+    color: #2F6699 !important;
+    border: 1px #2F6699 solid;
     background-color: white;
     margin-top: 1rem;
     &:hover,

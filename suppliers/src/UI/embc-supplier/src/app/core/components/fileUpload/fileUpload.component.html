@@ -5,8 +5,8 @@
 <div class="drag-drop" appDragDrop (fileDropped)="onInvoiceDropped($event)">
     <input type="file" #fileDrop multiple class="form-control form-control-lg" id="fileDrop"
         (change)="onInvoiceDropped($event.target.files)" (click)="fileDrop.value = null" required>
-    <i class="far fa-clone" style="font-size: 35px;"></i>
-    <h3>Drag and drop or browse your file</h3>
+    <img src="/assets/images/attachIcon.svg" width="53" height="61">
+    <p class="drag-text">Drag and drop or <a class="browse-link"><u>browse</u></a> your files</p>
 </div>
 <div class="attach-list" *ngFor="let attach of invoiceAttachments; let fileIndex = index ">
     <div class="row file-style">

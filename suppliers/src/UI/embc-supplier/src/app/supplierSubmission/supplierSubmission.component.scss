@@ -1,12 +1,9 @@
 @import '../../styles/styles.scss';
 
-hr {
-    border: 0.75px solid;
-}
-
 .box{
-  padding: 10px;
-  border: 4px theme-color(bcgold) solid;
+  padding-left: 13px;
+  padding-top: 13px;
+  border: 3px #FCBA19 solid;
 }
 
 .remit-box{
@@ -28,5 +25,13 @@ padding: 10px
 .required::after {
   content: "*";
   color: red;
+}
+
+.add-button {
+  padding-left: 13px;
+}
+
+.next-button {
+
 }
 
