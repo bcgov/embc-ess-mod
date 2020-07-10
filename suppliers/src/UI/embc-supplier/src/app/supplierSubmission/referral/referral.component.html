@@ -125,7 +125,7 @@
         <p class="input-help">(excluding GST)</p>
       </div>
 
-      <div *ngIf="component === 'I'" class="col-6">
+      <div *ngIf="component === 'I'" class="col-md-6">
         <div class="form-group">
           <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
           <app-file-upload [reloadedFiles]="reloadedFiles" (attachedFile)="setReferralFormControl($event)"
@@ -137,7 +137,7 @@
         </div>
       </div>
 
-      <div *ngIf="component === 'I'" class="col-6">
+      <div *ngIf="component === 'I'" class="col-md-6">
         <div class="form-group">
           <label class="attach-header">Attach any receipt related to this referral below</label>
           <app-file-upload [reloadedFiles]="reloadedFiles2" (attachedFile)="setReceiptFormControl($event)"

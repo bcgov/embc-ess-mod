@@ -51,6 +51,11 @@ export class SupplierSubmissionComponent implements OnInit {
             .subscribe(value => {
                 this.updateOnVisibility();
             });
+            this.supplierForm.get('supplierBC').valueChanges.subscribe(
+                value => {
+                    this.updateRadioVisibility();
+                }
+            )
         this.repopulateFormData();
         this.supplierService.isReload = false;
     }
@@ -154,7 +159,8 @@ export class SupplierSubmissionComponent implements OnInit {
                 ).bind(this.customValidator)]],
                 province: ['', [this.customValidator.conditionalValidation(
                     () => this.supplierForm.get('remitToOtherBusiness').value &&
-                        this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.defaultCountry),
+                        this.compareCountry(this.supplierForm.get('businessCountry').value, globalConst.defaultCountry)
+                        && this.supplierForm.get('supplierBC').value === 'no',
                     Validators.required
                 ).bind(this.customValidator)]],
                 state: ['', [this.customValidator.conditionalValidation(
@@ -425,6 +431,10 @@ export class SupplierSubmissionComponent implements OnInit {
         this.supplierForm.get('remittanceAddress.city').updateValueAndValidity();
         this.supplierForm.get('remittanceAddress.province').updateValueAndValidity();
         this.supplierForm.get('remittanceAddress.state').updateValueAndValidity();
+    }
+
+    updateRadioVisibility () {
+        this.supplierForm.get('remittanceAddress.province').updateValueAndValidity();
     }
 
 }

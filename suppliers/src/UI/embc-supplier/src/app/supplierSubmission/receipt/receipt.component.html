@@ -42,7 +42,7 @@
       </div>
       <br>
       <div class="row">
-        <div class="col-6">
+        <div class="col-md-6">
           <div class="form-group">
             <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
             <app-file-upload [reloadedFiles]="reloadedFiles" (attachedFile)="setReferralFormControl($event)"
@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6">
+        <div class="col-md-6">
           <div class="form-group">
             <label class="requiredField attach-header">Attach any receipt related to this referral below</label>
             <app-file-upload [reloadedFiles]="reloadedFiles2" (attachedFile)="setReceiptFormControl($event)"
