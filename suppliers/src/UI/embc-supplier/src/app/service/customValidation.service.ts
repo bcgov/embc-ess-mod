@@ -61,7 +61,7 @@ export class CustomValidationService {
                 const gst = control.get('gst').value;
                 const amount = control.get('amount').value;
                 if (gst !== '' && amount !== '') {
-                    if (gst > amount) {
+                    if (gst >= amount) {
                         return { amountGreater: true };
                     }
                 }
