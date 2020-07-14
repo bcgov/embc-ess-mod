@@ -7,6 +7,7 @@
         (change)="onInvoiceDropped($event.target.files)" (click)="fileDrop.value = null" required>
     <img src="/assets/images/attachIcon.svg" width="53" height="61">
     <p class="drag-text">Drag and drop or <a class="browse-link"><u>browse</u></a> your files</p>
+    <p class="file-type">Allowed file types - pdf, jpg, jpeg, png</p>
 </div>
 <div class="attach-list" *ngFor="let attach of invoiceAttachments; let fileIndex = index ">
     <div class="row file-style">

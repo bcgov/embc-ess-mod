@@ -17,4 +17,9 @@ export class ReferenceComponent implements OnInit{
         this.referenceNumber = this.supplierService.getReferenceNumber();
     }
 
+    newSubmission() {
+        this.supplierService.setSupplierDetails(null);
+        this.router.navigate(['/submission']);
+    }
+
 }
