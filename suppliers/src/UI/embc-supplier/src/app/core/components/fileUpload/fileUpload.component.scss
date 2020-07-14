@@ -92,8 +92,14 @@
 
   .drag-text {
     font-weight: lighter;
+    margin-bottom: 0 !important;
   }
 
   .browse-link {
     color: #2F6699 !important;
+  }
+
+  .file-type {
+    font-size: 13px;
+    font-weight: lighter;
   }
