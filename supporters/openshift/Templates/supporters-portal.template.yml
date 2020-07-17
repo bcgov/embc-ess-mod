@@ -1,0 +1,230 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: supporters-portal-template
+
+parameters:
+  - description: app name
+    name: APP_NAME
+    required: true
+  - description: image tag for deployments
+    name: TAG
+    required: true
+  - description: Reverse proxy known network
+    name: KNOWN_NETWORKS
+    value: ::ffff:172.51.0.0/16
+  - description: ASPNET runtime environment (Development/Staging/Production)
+    name: RUNTIME_ENVIRONMENT
+    value: Staging
+
+objects:
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-supporters-api-config
+      labels:
+        app: ${APP_NAME}-supporters-portal
+    data:     
+      ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
+      KEY_RING_PATH: "/dpkeys"
+  - kind: Secret
+    apiVersion: v1
+    type: Opaque
+    metadata:
+      name: ${APP_NAME}-supporters-api-secrets
+      labels:
+        app: ${APP_NAME}-supporters-portal
+    stringData:
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-api
+    spec:
+      ports:
+        - name: 8080-tcp
+          port: 8080
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        deploymentconfig: ${APP_NAME}-supporters-portal-api
+      type: ClusterIP
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-ui
+    spec:
+      ports:
+        - name: 2015-tcp
+          port: 2015
+          protocol: TCP
+          targetPort: 2015
+      selector:
+        deploymentconfig: ${APP_NAME}-supporters-portal-ui
+      type: ClusterIP
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-api
+    spec:
+      host: ${APP_NAME}-embc-supporters.pathfinder.gov.bc.ca
+      path: /api
+      port:
+        targetPort: 8080-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: ${APP_NAME}-supporters-portal-api
+        weight: 100
+      wildcardPolicy: None
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-ui
+    spec:
+      host: ${APP_NAME}-embc-supporters.pathfinder.gov.bc.ca
+      path: /
+      port:
+        targetPort: 2015-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: ${APP_NAME}-supporters-portal-ui
+        weight: 100
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-api
+    spec:
+      replicas: 2
+      selector:
+        app: ${APP_NAME}-supporters-portal
+        deploymentconfig: ${APP_NAME}-supporters-portal-api
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}-supporters-portal
+            deploymentconfig: ${APP_NAME}-supporters-portal-api
+        spec:
+          containers:
+            - name: supporters-portal-api
+              envFrom:
+                - configMapRef:
+                    name: ${APP_NAME}-supporters-api-config
+                - secretRef:
+                    name: ${APP_NAME}-supporters-api-secrets
+              image: docker-registry.default.svc:5000/pbiizm-tools/supporters-portal-api:${TAG}
+              imagePullPolicy: Always
+              volumeMounts:
+                - mountPath: /dpkeys
+                  name: dp-keys
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - name: dp-keys
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-supporters-key-ring
+      test: false
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - supporters-portal-api
+            from:
+              kind: ImageStreamTag
+              name: supporters-portal-api:${TAG}
+              namespace: pbiizm-tools
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-ui
+    spec:
+      replicas: 2
+      selector:
+        app: ${APP_NAME}-supporters-portal
+        deploymentconfig: ${APP_NAME}-supporters-portal-ui
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}-supporters-portal
+            deploymentconfig: ${APP_NAME}-supporters-portal-ui
+        spec:
+          containers:
+            - name: supporters-portal-ui
+              image: docker-registry.default.svc:5000/pbiizm-tools/supporters-portal-ui:${TAG}
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 2015
+                  protocol: TCP
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+      test: false
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - supporters-portal-ui
+            from:
+              kind: ImageStreamTag
+              name: supporters-portal-ui:${TAG}
+              namespace: pbiizm-tools
+  - kind: "PersistentVolumeClaim"
+    apiVersion: "v1"
+    metadata:
+      name: ${APP_NAME}-supporters-key-ring
+      labels:
+        app: ${APP_NAME}-supporters-portal
+    spec:
+      accessModes:
+        - "ReadWriteMany"
+      resources:
+        requests:
+          storage: "100Mi"

@@ -115,24 +115,6 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
-      name: ${APP_NAME}-suppliers-portal-ui
-    spec:
-      host: ${APP_NAME}-embc-suppliers.pathfinder.gov.bc.ca
-      path: /
-      port:
-        targetPort: 2015-tcp
-      tls:
-        insecureEdgeTerminationPolicy: Redirect
-        termination: edge
-      to:
-        kind: Service
-        name: ${APP_NAME}-suppliers-portal-ui
-        weight: 100
-  - kind: Route
-    apiVersion: route.openshift.io/v1
-    metadata:
-      labels:
-        app: ${APP_NAME}-suppliers-portal
       name: ${APP_NAME}-suppliers-portal-api
     spec:
       host: ${APP_NAME}-embc-suppliers.pathfinder.gov.bc.ca
@@ -147,6 +129,24 @@ objects:
         name: ${APP_NAME}-suppliers-portal-api
         weight: 100
       wildcardPolicy: None
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-suppliers-portal
+      name: ${APP_NAME}-suppliers-portal-ui
+    spec:
+      host: ${APP_NAME}-embc-suppliers.pathfinder.gov.bc.ca
+      path: /
+      port:
+        targetPort: 2015-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: ${APP_NAME}-suppliers-portal-ui
+        weight: 100
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
@@ -198,13 +198,13 @@ objects:
           volumes:
             - name: submissions-storage
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-submissions
+                claimName: ${APP_NAME}-suppliers-submissions
             - name: dp-keys
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-key-ring
+                claimName: ${APP_NAME}-suppliers-key-ring
             - name: lists-cache
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-cache
+                claimName: ${APP_NAME}-suppliers-cache
       test: false
       triggers:
         - type: ConfigChange
@@ -274,7 +274,7 @@ objects:
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
-      name: "${APP_NAME}-submissions"
+      name: "${APP_NAME}-suppliers-submissions"
       labels:
         app: ${APP_NAME}-suppliers-portal
     spec:
@@ -286,7 +286,7 @@ objects:
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
-      name: "${APP_NAME}-key-ring"
+      name: "${APP_NAME}-suppliers-key-ring"
       labels:
         app: ${APP_NAME}-suppliers-portal
     spec:
@@ -298,7 +298,7 @@ objects:
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
-      name: "${APP_NAME}-cache"
+      name: "${APP_NAME}-suppliers-cache"
       labels:
         app: ${APP_NAME}-suppliers-portal
     spec:
