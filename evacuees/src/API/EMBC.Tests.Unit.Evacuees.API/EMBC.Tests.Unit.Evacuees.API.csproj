@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-
     <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,5 +16,4 @@
   <ItemGroup>
     <ProjectReference Include="..\EMBC.Evacuees.API\EMBC.Evacuees.API.csproj" />
   </ItemGroup>
-
 </Project>
