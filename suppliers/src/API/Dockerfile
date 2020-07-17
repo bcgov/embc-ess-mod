@@ -8,7 +8,7 @@ WORKDIR /src
 COPY ["EMBC.Suppliers.API/EMBC.Suppliers.API.csproj", "EMBC.Suppliers.API/"]
 COPY ["EMBC.Tests.Unit.Suppliers.API/EMBC.Tests.Unit.Suppliers.API.csproj", "EMBC.Tests.Unit.Suppliers.API/"]
 COPY ["EMBC.Tests.Integration.Suppliers.API/EMBC.Tests.Integration.Suppliers.API.csproj", "EMBC.Tests.Integration.Suppliers.API/"]
-COPY ["EMBC.Suppliers.sln", "."]
+COPY ["EMBC.Suppliers.sln", "stylecop.json", ".editorconfig", "./"]
 RUN dotnet restore .
 COPY . .
 RUN dotnet test -c Release
