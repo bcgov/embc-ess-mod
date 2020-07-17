@@ -22,7 +22,7 @@ using Serilog;
 using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
 
-namespace EMBC.Evacuees.API
+namespace EMBC.Supporters.API
 {
     public static class Program
     {
