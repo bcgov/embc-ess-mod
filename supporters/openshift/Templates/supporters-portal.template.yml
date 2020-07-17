@@ -1,7 +1,7 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: evacuees-portal-template
+  name: supporters-portal-template
 
 parameters:
   - description: app name
@@ -21,9 +21,9 @@ objects:
   - kind: ConfigMap
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-evacuees-api-config
+      name: ${APP_NAME}-supporters-api-config
       labels:
-        app: ${APP_NAME}-evacuees-portal
+        app: ${APP_NAME}-supporters-portal
     data:     
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
@@ -31,16 +31,16 @@ objects:
     apiVersion: v1
     type: Opaque
     metadata:
-      name: ${APP_NAME}-evacuees-api-secrets
+      name: ${APP_NAME}-supporters-api-secrets
       labels:
-        app: ${APP_NAME}-evacuees-portal
+        app: ${APP_NAME}-supporters-portal
     stringData:
   - kind: Service
     apiVersion: v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: ${APP_NAME}-evacuees-portal-api
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-api
     spec:
       ports:
         - name: 8080-tcp
@@ -48,14 +48,14 @@ objects:
           protocol: TCP
           targetPort: 8080
       selector:
-        deploymentconfig: ${APP_NAME}-evacuees-portal-api
+        deploymentconfig: ${APP_NAME}-supporters-portal-api
       type: ClusterIP
   - kind: Service
     apiVersion: v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: ${APP_NAME}-evacuees-portal-ui
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-ui
     spec:
       ports:
         - name: 2015-tcp
@@ -63,16 +63,16 @@ objects:
           protocol: TCP
           targetPort: 2015
       selector:
-        deploymentconfig: ${APP_NAME}-evacuees-portal-ui
+        deploymentconfig: ${APP_NAME}-supporters-portal-ui
       type: ClusterIP
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: ${APP_NAME}-evacuees-portal-api
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-api
     spec:
-      host: ${APP_NAME}-embc-evacuees.pathfinder.gov.bc.ca
+      host: ${APP_NAME}-embc-supporters.pathfinder.gov.bc.ca
       path: /api
       port:
         targetPort: 8080-tcp
@@ -81,17 +81,17 @@ objects:
         termination: edge
       to:
         kind: Service
-        name: ${APP_NAME}-evacuees-portal-api
+        name: ${APP_NAME}-supporters-portal-api
         weight: 100
       wildcardPolicy: None
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: ${APP_NAME}-evacuees-portal-ui
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-ui
     spec:
-      host: ${APP_NAME}-embc-evacuees.pathfinder.gov.bc.ca
+      host: ${APP_NAME}-embc-supporters.pathfinder.gov.bc.ca
       path: /
       port:
         targetPort: 2015-tcp
@@ -100,19 +100,19 @@ objects:
         termination: edge
       to:
         kind: Service
-        name: ${APP_NAME}-evacuees-portal-ui
+        name: ${APP_NAME}-supporters-portal-ui
         weight: 100
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: ${APP_NAME}-evacuees-portal-api
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-api
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-evacuees-portal
-        deploymentconfig: ${APP_NAME}-evacuees-portal-api
+        app: ${APP_NAME}-supporters-portal
+        deploymentconfig: ${APP_NAME}-supporters-portal-api
       strategy:
         activeDeadlineSeconds: 21600
         resources: {}
@@ -126,17 +126,17 @@ objects:
       template:
         metadata:
           labels:
-            app: ${APP_NAME}-evacuees-portal
-            deploymentconfig: ${APP_NAME}-evacuees-portal-api
+            app: ${APP_NAME}-supporters-portal
+            deploymentconfig: ${APP_NAME}-supporters-portal-api
         spec:
           containers:
-            - name: evacuees-portal-api
+            - name: supporters-portal-api
               envFrom:
                 - configMapRef:
-                    name: ${APP_NAME}-evacuees-api-config
+                    name: ${APP_NAME}-supporters-api-config
                 - secretRef:
-                    name: ${APP_NAME}-evacuees-api-secrets
-              image: docker-registry.default.svc:5000/pbiizm-tools/evacuees-portal-api:${TAG}
+                    name: ${APP_NAME}-supporters-api-secrets
+              image: docker-registry.default.svc:5000/pbiizm-tools/supporters-portal-api:${TAG}
               imagePullPolicy: Always
               volumeMounts:
                 - mountPath: /dpkeys
@@ -149,7 +149,7 @@ objects:
           volumes:
             - name: dp-keys
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-evacuees-key-ring
+                claimName: ${APP_NAME}-supporters-key-ring
       test: false
       triggers:
         - type: ConfigChange
@@ -157,22 +157,22 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - evacuees-portal-api
+              - supporters-portal-api
             from:
               kind: ImageStreamTag
-              name: evacuees-portal-api:${TAG}
+              name: supporters-portal-api:${TAG}
               namespace: pbiizm-tools
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: ${APP_NAME}-evacuees-portal-ui
+        app: ${APP_NAME}-supporters-portal
+      name: ${APP_NAME}-supporters-portal-ui
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-evacuees-portal
-        deploymentconfig: ${APP_NAME}-evacuees-portal-ui
+        app: ${APP_NAME}-supporters-portal
+        deploymentconfig: ${APP_NAME}-supporters-portal-ui
       strategy:
         activeDeadlineSeconds: 21600
         resources: {}
@@ -186,12 +186,12 @@ objects:
       template:
         metadata:
           labels:
-            app: ${APP_NAME}-evacuees-portal
-            deploymentconfig: ${APP_NAME}-evacuees-portal-ui
+            app: ${APP_NAME}-supporters-portal
+            deploymentconfig: ${APP_NAME}-supporters-portal-ui
         spec:
           containers:
-            - name: evacuees-portal-ui
-              image: docker-registry.default.svc:5000/pbiizm-tools/evacuees-portal-ui:${TAG}
+            - name: supporters-portal-ui
+              image: docker-registry.default.svc:5000/pbiizm-tools/supporters-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:
                 - containerPort: 2015
@@ -211,17 +211,17 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - evacuees-portal-ui
+              - supporters-portal-ui
             from:
               kind: ImageStreamTag
-              name: evacuees-portal-ui:${TAG}
+              name: supporters-portal-ui:${TAG}
               namespace: pbiizm-tools
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
-      name: ${APP_NAME}-evacuees-key-ring
+      name: ${APP_NAME}-supporters-key-ring
       labels:
-        app: ${APP_NAME}-evacuees-portal
+        app: ${APP_NAME}-supporters-portal
     spec:
       accessModes:
         - "ReadWriteMany"
