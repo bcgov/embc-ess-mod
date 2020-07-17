@@ -1,0 +1,230 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: evacuees-portal-template
+
+parameters:
+  - description: app name
+    name: APP_NAME
+    required: true
+  - description: image tag for deployments
+    name: TAG
+    required: true
+  - description: Reverse proxy known network
+    name: KNOWN_NETWORKS
+    value: ::ffff:172.51.0.0/16
+  - description: ASPNET runtime environment (Development/Staging/Production)
+    name: RUNTIME_ENVIRONMENT
+    value: Staging
+
+objects:
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-evacuees-api-config
+      labels:
+        app: ${APP_NAME}-evacuees-portal
+    data:     
+      ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
+      KEY_RING_PATH: "/dpkeys"
+  - kind: Secret
+    apiVersion: v1
+    type: Opaque
+    metadata:
+      name: ${APP_NAME}-evacuees-api-secrets
+      labels:
+        app: ${APP_NAME}-evacuees-portal
+    stringData:
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-evacuees-portal
+      name: ${APP_NAME}-evacuees-portal-api
+    spec:
+      ports:
+        - name: 8080-tcp
+          port: 8080
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        deploymentconfig: ${APP_NAME}-evacuees-portal-api
+      type: ClusterIP
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-evacuees-portal
+      name: ${APP_NAME}-evacuees-portal-ui
+    spec:
+      ports:
+        - name: 2015-tcp
+          port: 2015
+          protocol: TCP
+          targetPort: 2015
+      selector:
+        deploymentconfig: ${APP_NAME}-evacuees-portal-ui
+      type: ClusterIP
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-evacuees-portal
+      name: ${APP_NAME}-evacuees-portal-ui
+    spec:
+      host: ${APP_NAME}-embc-evacuees.pathfinder.gov.bc.ca
+      path: /
+      port:
+        targetPort: 2015-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: ${APP_NAME}-evacuees-portal-ui
+        weight: 100
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-evacuees-portal
+      name: ${APP_NAME}-evacuees-portal-api
+    spec:
+      host: ${APP_NAME}-embc-evacuees.pathfinder.gov.bc.ca
+      path: /api
+      port:
+        targetPort: 8080-tcp
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+      to:
+        kind: Service
+        name: ${APP_NAME}-evacuees-portal-api
+        weight: 100
+      wildcardPolicy: None
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-evacuees-portal
+      name: ${APP_NAME}-evacuees-portal-api
+    spec:
+      replicas: 2
+      selector:
+        app: ${APP_NAME}-evacuees-portal
+        deploymentconfig: ${APP_NAME}-evacuees-portal-api
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}-evacuees-portal
+            deploymentconfig: ${APP_NAME}-evacuees-portal-api
+        spec:
+          containers:
+            - name: evacuees-portal-api
+              envFrom:
+                - configMapRef:
+                    name: ${APP_NAME}-evacuees-api-config
+                - secretRef:
+                    name: ${APP_NAME}-evacuees-api-secrets
+              image: docker-registry.default.svc:5000/pbiizm-tools/evacuees-portal-api:${TAG}
+              imagePullPolicy: Always
+              volumeMounts:
+                - mountPath: /dpkeys
+                  name: dp-keys
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - name: dp-keys
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-evacuees-key-ring
+      test: false
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - evacuees-portal-api
+            from:
+              kind: ImageStreamTag
+              name: evacuees-portal-api:${TAG}
+              namespace: pbiizm-tools
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-evacuees-portal
+      name: ${APP_NAME}-evacuees-portal-ui
+    spec:
+      replicas: 2
+      selector:
+        app: ${APP_NAME}-evacuees-portal
+        deploymentconfig: ${APP_NAME}-evacuees-portal-ui
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}-evacuees-portal
+            deploymentconfig: ${APP_NAME}-evacuees-portal-ui
+        spec:
+          containers:
+            - name: evacuees-portal-ui
+              image: docker-registry.default.svc:5000/pbiizm-tools/evacuees-portal-ui:${TAG}
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 2015
+                  protocol: TCP
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+      test: false
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - evacuees-portal-ui
+            from:
+              kind: ImageStreamTag
+              name: evacuees-portal-ui:${TAG}
+              namespace: pbiizm-tools
+  - kind: "PersistentVolumeClaim"
+    apiVersion: "v1"
+    metadata:
+      name: ${APP_NAME}-evacuees-key-ring
+      labels:
+        app: ${APP_NAME}-evacuees-portal
+    spec:
+      accessModes:
+        - "ReadWriteMany"
+      resources:
+        requests:
+          storage: "100Mi"
