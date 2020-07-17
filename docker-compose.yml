@@ -20,3 +20,23 @@ services:
       - "API_URL=suppliers-portal-api:8080"
     depends_on:
       - suppliers-portal-api
+      
+  evacuees-portal-api:
+    build:
+      context: ./evacuees/src/API
+    image: embcess-evacuees-api:dev
+    ports:
+      - 8090:8080
+    env_file:
+      - .env
+
+  evacuees-portal-ui:
+    build:
+      context: ./evacuees/src/UI
+    image: embcess-evacuees-ui:dev
+    ports:
+      - 2025:2015
+    environment:
+      - "API_URL=evacuees-portal-api:8080"
+    depends_on:
+      - evacuees-portal-api
