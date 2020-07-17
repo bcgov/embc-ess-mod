@@ -6,7 +6,7 @@ services:
       context: ./suppliers/src/API
     image: embcess-suppliers-api:dev
     ports:
-      - 8080:8080
+      - 1010:8080
     env_file:
       - .env
 
@@ -15,8 +15,48 @@ services:
       context: ./suppliers/src/UI
     image: embcess-suppliers-ui:dev
     ports:
-      - 2015:2015
+      - 1015:2015
     environment:
       - "API_URL=suppliers-portal-api:8080"
     depends_on:
       - suppliers-portal-api
+      
+  evacuees-portal-api:
+    build:
+      context: ./evacuees/src/API
+    image: embcess-evacuees-api:dev
+    ports:
+      - 2010:8080
+    env_file:
+      - .env
+
+  evacuees-portal-ui:
+    build:
+      context: ./evacuees/src/UI
+    image: embcess-evacuees-ui:dev
+    ports:
+      - 2015:2015
+    environment:
+      - "API_URL=evacuees-portal-api:8080"
+    depends_on:
+      - evacuees-portal-api
+
+  supporters-portal-api:
+    build:
+      context: ./supporters/src/API
+    image: embcess-supporters-api:dev
+    ports:
+      - 3010:8080
+    env_file:
+      - .env
+
+  supporters-portal-ui:
+    build:
+      context: ./supporters/src/UI
+    image: embcess-supporters-ui:dev
+    ports:
+      - 3015:2015
+    environment:
+      - "API_URL=supporters-portal-api:8080"
+    depends_on:
+      - supporters-portal-api
