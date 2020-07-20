@@ -24,8 +24,8 @@ import { ModalComponent } from '../core/components/modal/modal.component';
     ReferralComponent,
     ReceiptComponent
     ],
-  entryComponents: [
-    ModalComponent
-    ]
+  // entryComponents: [
+  //   ModalComponent
+  //   ]
 })
 export class SupplierSubmissionModule { }

@@ -37,11 +37,6 @@ describe('AppComponent', () => {
     expect(service.getListOfCities).toBeTruthy();
    });
 
-  //  it('can get getListOfCities data', () => {
-  //   const service: SupplierHttpService = TestBed.get(SupplierHttpService);
-  //   service.getListOfCities().subscribe(data=> expect(data));
-  //  });
-
   it('should have getListOfProvinces function', () => {
     const service: SupplierHttpService = TestBed.inject(SupplierHttpService);
     expect(service.getListOfProvinces).toBeTruthy();

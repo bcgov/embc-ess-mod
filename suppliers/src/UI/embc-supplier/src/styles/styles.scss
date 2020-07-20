@@ -16,9 +16,9 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
 // NB: same font as PDF renderer service
 @font-face {
     font-family: 'LiberationMono';
-    src: url('src/assets/LiberationMono-Regular.woff2') format('woff2'), /* Super Modern Browsers */
-         url('src/assets/LiberationMono-Regular.woff') format('woff'), /* Pretty Modern Browsers */
-         url('src/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
+    src: url('/assets/LiberationMono-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('/assets/LiberationMono-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+         url('/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
   }
 
 .form-control {
