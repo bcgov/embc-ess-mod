@@ -220,6 +220,7 @@ export class SupplierSubmissionComponent implements OnInit {
     locatedChange(event: any) {
         this.locatedInBC = event.target.value;
         this.addressDiv = true;
+        this.supplierForm.get('remittanceAddress').reset();
     }
 
     createInvoiceFormArray() {
