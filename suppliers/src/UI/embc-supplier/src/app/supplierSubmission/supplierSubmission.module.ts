@@ -23,9 +23,6 @@ import { ModalComponent } from '../core/components/modal/modal.component';
     InvoiceComponent,
     ReferralComponent,
     ReceiptComponent
-    ],
-  // entryComponents: [
-  //   ModalComponent
-  //   ]
+    ]
 })
 export class SupplierSubmissionModule { }

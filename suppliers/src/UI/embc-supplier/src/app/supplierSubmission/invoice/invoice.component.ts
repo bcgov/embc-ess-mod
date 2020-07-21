@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectorRef, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/service/dateParser.service';
 import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.service';
 import { SupplierService } from 'src/app/service/supplier.service';
@@ -14,7 +14,8 @@ import { CustomValidationService } from 'src/app/service/customValidation.servic
     providers: [
         { provide: NgbDateAdapter, useClass: CustomDateAdapterService },
         { provide: NgbDateParserFormatter, useClass: DateParserService },
-        CustomValidationService
+        CustomValidationService,
+        NgbDatepickerConfig
     ]
 })
 export class InvoiceComponent implements OnInit {
@@ -30,8 +31,12 @@ export class InvoiceComponent implements OnInit {
     hidden = false;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar,
-                private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,
-                private customValidator: CustomValidationService) {
+        private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,
+        private customValidator: CustomValidationService, config: NgbDatepickerConfig) {
+        config.minDate = { year: 1900, month: 1, day: 1 };
+        config.maxDate = { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() };
+        config.outsideDays = 'hidden';
+        config.firstDayOfWeek = 7;
     }
 
     get invoiceControl() {

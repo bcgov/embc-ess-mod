@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
-import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DateParserService } from 'src/app/service/dateParser.service';
 import { SupplierService } from 'src/app/service/supplier.service';
 import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.service';
@@ -12,7 +12,8 @@ import { CustomValidationService } from 'src/app/service/customValidation.servic
     styleUrls: ['./referral.component.scss'],
     providers: [
         { provide: NgbDateAdapter, useClass: CustomDateAdapterService },
-        { provide: NgbDateParserFormatter, useClass: DateParserService }
+        { provide: NgbDateParserFormatter, useClass: DateParserService },
+        NgbDatepickerConfig
     ]
 })
 export class ReferralComponent implements OnInit {
@@ -29,8 +30,13 @@ export class ReferralComponent implements OnInit {
     reloadedFiles2: any;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar,
-                private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,
-                private customValidator: CustomValidationService) { }
+        private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,
+        private customValidator: CustomValidationService, config: NgbDatepickerConfig) {
+        config.minDate = { year: 1900, month: 1, day: 1 };
+        config.maxDate = { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() };
+        config.outsideDays = 'hidden';
+        config.firstDayOfWeek = 7;
+    }
 
     get referralRows() {
         return this.referralForm.get('referralRows') as FormArray;
@@ -100,7 +106,7 @@ export class ReferralComponent implements OnInit {
             description: [''],
             gst: [''],
             amount: ['']
-        }, {validator: this.customValidator.amountGreaterValidator().bind(this.customValidator)});
+        }, { validator: this.customValidator.amountGreaterValidator().bind(this.customValidator) });
     }
 
     onChanges() {
@@ -166,7 +172,7 @@ export class ReferralComponent implements OnInit {
             gst: [row.gst],
             amount: [row.amount]
         },
-        {validator: this.customValidator.amountGreaterValidator().bind(this.customValidator)});
+            { validator: this.customValidator.amountGreaterValidator().bind(this.customValidator) });
     }
 
     checkAttachmentLength(control: []) {
