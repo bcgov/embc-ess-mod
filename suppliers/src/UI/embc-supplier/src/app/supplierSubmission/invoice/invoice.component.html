@@ -45,6 +45,9 @@
               <div *ngIf="invoiceControl.invoiceDate?.errors.required">
                 Invoice Date is required
               </div>
+              <div *ngIf="invoiceControl.invoiceDate?.errors?.futureDate">
+                Future Date not allowed
+              </div>
             </div>
           </div>
 

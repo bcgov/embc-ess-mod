@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } fro
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { SupplierService } from 'src/app/service/supplier.service';
 import * as globalConst from 'src/app/service/globalConstants';
+import { CustomValidationService } from 'src/app/service/customValidation.service';
 
 @Component({
     selector: 'app-receipt',
@@ -20,7 +21,8 @@ export class ReceiptComponent implements OnInit{
     reloadedFiles: any;
     reloadedFiles2: any;
 
-    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private supplierService: SupplierService) {}
+    constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, 
+        private supplierService: SupplierService, private customValidator: CustomValidationService) {}
 
     ngOnInit() {
         if (this.supplierService.isReload){
@@ -74,7 +76,7 @@ export class ReceiptComponent implements OnInit{
 
     createReferralFormArray() {
         return this.builder.group({
-             referralDate : ['', Validators.required],
+             referralDate : ['', [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator)]],
              receiptNumber: [''],
              referralRows: this.builder.array([
             ], Validators.required),
@@ -153,7 +155,7 @@ export class ReceiptComponent implements OnInit{
 
     createReferralFormArrayWithValues(referral: any) {
         return this.builder.group({
-             referralDate : [referral.referralDate, Validators.required],
+             referralDate : [referral.referralDate, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator)]],
              receiptNumber: [referral.receiptNumber],
              referralRows: this.builder.array([
             ], Validators.required),

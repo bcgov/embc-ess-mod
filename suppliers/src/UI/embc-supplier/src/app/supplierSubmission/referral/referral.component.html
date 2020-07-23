@@ -41,8 +41,11 @@
               <div
                 *ngIf="referralControl.referralDate?.invalid && (referralControl.referralDate?.dirty || referralControl.referralDate?.touched)"
                 class="text-danger">
-                <div *ngIf="referralControl.referralDate?.errors.required">
+                <div *ngIf="referralControl.referralDate?.errors?.required">
                   Referral Date is required
+                </div>
+                <div *ngIf="referralControl.referralDate?.errors?.futureDate">
+                  Future Date not allowed
                 </div>
               </div>
             </div>
