@@ -41,8 +41,11 @@
               <div
                 *ngIf="referralControl.referralDate?.invalid && (referralControl.referralDate?.dirty || referralControl.referralDate?.touched)"
                 class="text-danger">
-                <div *ngIf="referralControl.referralDate?.errors.required">
+                <div *ngIf="referralControl.referralDate?.errors?.required">
                   Referral Date is required
+                </div>
+                <div *ngIf="referralControl.referralDate?.errors?.futureDate">
+                  Future Date not allowed
                 </div>
               </div>
             </div>
@@ -128,7 +131,7 @@
       <div *ngIf="component === 'I'" class="col-md-6">
         <div class="form-group">
           <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
-          <app-file-upload [reloadedFiles]="reloadedFiles" (attachedFile)="setReferralFormControl($event)"
+          <app-file-upload [reloadedFiles]="reloadedFiles" [noOfAttachments]="noOfAttachments" (attachedFile)="setReferralFormControl($event)"
             (deleteFile)="deleteReferralFormControl($event)">
           </app-file-upload>
           <div *ngIf="!checkAttachmentLength(referralControl.referralAttachments.value)" style="color: red;">

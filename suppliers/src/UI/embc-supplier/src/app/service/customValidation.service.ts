@@ -1,6 +1,7 @@
 import { AbstractControl, ValidatorFn, FormArray, FormGroup } from '@angular/forms';
 import { Injectable, Predicate } from '@angular/core';
 import { SupplierService } from './supplier.service';
+import { formatDate } from '@angular/common';
 
 @Injectable()
 export class CustomValidationService {
@@ -91,6 +92,20 @@ export class CustomValidationService {
                 }
 
                 return validationError;
+            }
+            return null;
+        };
+    }
+
+    /**
+     * Validation for date to be always be in the past
+     */
+    futureDateValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            if (control) {
+                if(Date.parse(control.value) > Date.parse(new Date().toISOString())) {
+                    return { futureDate: true };
+                }
             }
             return null;
         };

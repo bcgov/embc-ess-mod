@@ -226,7 +226,7 @@ export class SupplierSubmissionComponent implements OnInit {
     createInvoiceFormArray() {
         return this.builder.group({
             invoiceNumber: ['', [Validators.required, this.customValidator.invoiceValidator(this.invoices).bind(this.customValidator)]],
-            invoiceDate: ['', Validators.required],
+            invoiceDate: ['', [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator)]],
             invoiceAttachments: this.builder.array([], [Validators.required]),
             referralList: ['', Validators.required],
             referrals: this.builder.array([
@@ -401,7 +401,7 @@ export class SupplierSubmissionComponent implements OnInit {
     createInvoiceFormArrayWithValues(invoice: any) {
         return this.builder.group({
             invoiceNumber: [invoice.invoiceNumber, Validators.required],
-            invoiceDate: [invoice.invoiceDate, Validators.required],
+            invoiceDate: [invoice.invoiceDate, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator)]],
             invoiceAttachments: this.builder.array([], [Validators.required]),
             referralList: [invoice.referralList, Validators.required],
             referrals: this.builder.array([
