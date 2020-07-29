@@ -28,6 +28,7 @@ export class ReferralComponent implements OnInit {
     supportList: any;
     reloadedFiles: any;
     reloadedFiles2: any;
+    noOfAttachments: number = 1;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar,
         private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,

@@ -79,7 +79,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <label class="requiredField">Attach a photo/scanned copy of your invoice</label>
-            <app-file-upload [reloadedFiles]="reloadedFiles" (attachedFile)="setFileFormControl($event)"
+            <app-file-upload [reloadedFiles]="reloadedFiles" [noOfAttachments]="noOfAttachments" (attachedFile)="setFileFormControl($event)"
               (deleteFile)="deleteFileFormControl($event)">
             </app-file-upload>
             <div *ngIf="!checkAttachmentLength(invoiceControl.invoiceAttachments.value)" style="color: red;">

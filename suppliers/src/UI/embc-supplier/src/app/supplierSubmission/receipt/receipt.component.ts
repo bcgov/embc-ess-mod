@@ -20,6 +20,7 @@ export class ReceiptComponent implements OnInit{
     component = 'R';
     reloadedFiles: any;
     reloadedFiles2: any;
+    noOfAttachments: number = 1;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, 
         private supplierService: SupplierService, private customValidator: CustomValidationService) {}
@@ -33,6 +34,9 @@ export class ReceiptComponent implements OnInit{
         this.onChanges();
     }
 
+    /**
+     * Loads data for back/forward navigation
+     */
     loadWithExistingValues() {
         const storedSupplierDetails = this.supplierService.getSupplierDetails();
         const referralList = storedSupplierDetails.receipts[this.index].referrals;
@@ -58,22 +62,37 @@ export class ReceiptComponent implements OnInit{
         this.cd.detectChanges();
     }
 
+    /**
+     * Gets receipts form control
+     */
     get receiptControl(){
         return this.receiptForm.controls;
     }
 
+    /**
+     * Gets referrals as form array
+     */
     get referrals() {
         return this.receiptForm.get('referrals') as FormArray;
     }
 
+    /**
+     * Gets referral attachments as form array
+     */
     get referralAttachments() {
         return this.receiptForm.get('referralAttachments') as FormArray;
     }
 
+    /**
+     * Gets receipt attachments as form array
+     */
     get receiptAttachments() {
         return this.receiptForm.get('receiptAttachments') as FormArray;
     }
 
+    /**
+     *  Creates Referral form array
+     */
     createReferralFormArray() {
         return this.builder.group({
              referralDate : ['', [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator)]],
@@ -94,11 +113,17 @@ export class ReceiptComponent implements OnInit{
         });
     }
 
+     /**
+     * Injects referral tempate to the view
+     */
     injectTemplateReferral() {
         this.referrals.push(this.createReferralFormArray());
         this.cd.detectChanges();
     }
 
+    /**
+     * Adds referral to the referral form array
+     */
     addReferralTemplate() {
         this.injectTemplateReferral();
     }
@@ -107,6 +132,10 @@ export class ReceiptComponent implements OnInit{
         this.injectTemplateReferral();
     }
 
+    /**
+     * Reads the attachment content and encodes it as base64
+     * @param event : Attachment drop/browse event
+     */
     setReferralFormControl(event: any) {
         const reader = new FileReader();
         reader.readAsDataURL(event);
@@ -120,10 +149,18 @@ export class ReceiptComponent implements OnInit{
         // this.cd.markForCheck();
     }
 
+    /**
+     * Deletes attachments
+     * @param event : Output event for delete
+     */
     deleteReferralFormControl(event: any) {
         this.referralAttachments.removeAt(event);
     }
 
+    /**
+     * Reads the attachment content and encodes it as base64
+     * @param event : Attachment drop/browse event
+     */
     setReceiptFormControl(event: any) {
         const reader = new FileReader();
         reader.readAsDataURL(event);
@@ -145,6 +182,10 @@ export class ReceiptComponent implements OnInit{
         return this.builder.group(data);
     }
 
+    /**
+     * Open confirmation modal to delete referral from the form array
+     * @param event : Output event for delete
+     */
     removeReferral(event: any) {
         this.supplierService.confirmModal(globalConst.deleteReceiptsMsg, globalConst.deleteReceiptButton).subscribe((e) => {
             if (e) {
@@ -153,6 +194,10 @@ export class ReceiptComponent implements OnInit{
         });
     }
 
+    /**
+     * Populates existing referral form enteries to the array
+     * @param referral :Existing referral enteries
+     */
     createReferralFormArrayWithValues(referral: any) {
         return this.builder.group({
              referralDate : [referral.referralDate, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator)]],
