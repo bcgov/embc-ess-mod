@@ -9,11 +9,13 @@ import * as constant from 'src/app/service/globalConstants'
 })
 export class FileUploadComponent implements OnInit {
 
-    invoiceAttachments: any = [];
+    invoiceAttachments: string[] = [];
     @Output() attachedFile = new EventEmitter<any>();
     @Output() deleteFile = new EventEmitter<any>();
     @Input() reloadedFiles: any;
     showToast = false;
+    @Input() noOfAttachments: number;
+    attachSizeError: boolean = false;
 
     constructor(public toastService: ToastService) { }
 
@@ -34,6 +36,9 @@ export class FileUploadComponent implements OnInit {
         if (this.showToast) {
             this.showToast = !this.showToast;
         }
+        if(this.attachSizeError) {
+            this.attachSizeError = !this.attachSizeError;
+        }
         for (const e of event) {
             if (!(e.size > 0)) {
                 this.showToast = !this.showToast;
@@ -41,6 +46,11 @@ export class FileUploadComponent implements OnInit {
             } else if(!constant.allowedFileTypes.includes(e.type)) {
                 this.showToast = !this.showToast;
                 this.toastService.show(constant.fileTypeMessage, { delay: 9500 });
+            } else if(this.invoiceAttachments !== undefined && this.invoiceAttachments.length >= this.noOfAttachments) {
+                this.attachSizeError = true;
+                setTimeout(function() {
+                    this.attachSizeError = false;
+                }.bind(this), 4500);
             } else {
                 this.invoiceAttachments.push(e.name);
                 this.attachedFile.emit(e);

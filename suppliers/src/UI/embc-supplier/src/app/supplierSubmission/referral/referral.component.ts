@@ -28,12 +28,13 @@ export class ReferralComponent implements OnInit {
     supportList: any;
     reloadedFiles: any;
     reloadedFiles2: any;
+    noOfAttachments: number = 1;
 
     constructor(private builder: FormBuilder, private cd: ChangeDetectorRef, private ngbCalendar: NgbCalendar,
         private dateAdapter: NgbDateAdapter<string>, private supplierService: SupplierService,
         private customValidator: CustomValidationService, config: NgbDatepickerConfig) {
         config.minDate = { year: 1900, month: 1, day: 1 };
-        config.maxDate = { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() };
+        config.maxDate = { year: new Date().getFullYear(), month: new Date().getMonth()+1, day: new Date().getDate() };
         config.outsideDays = 'hidden';
         config.firstDayOfWeek = 7;
     }
