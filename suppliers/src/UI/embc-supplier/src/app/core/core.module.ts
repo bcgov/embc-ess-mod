@@ -11,6 +11,7 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastsComponent } from './components/toasts/toasts.component';
+import { DecimalCurrencyDirective } from './directives/DecimalCurrency.directive';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { ToastsComponent } from './components/toasts/toasts.component';
       CaptchaComponent,
       LoaderComponent,
       AlertComponent,
-      ToastsComponent
+      ToastsComponent,
+      DecimalCurrencyDirective
     ],
   exports: [
       DragDropDirective,
@@ -37,7 +39,8 @@ import { ToastsComponent } from './components/toasts/toasts.component';
       CaptchaComponent,
       LoaderComponent,
       AlertComponent,
-      ToastsComponent
+      ToastsComponent,
+      DecimalCurrencyDirective
     ]
 })
 export class CoreModule { }

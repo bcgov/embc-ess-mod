@@ -80,8 +80,8 @@
               <td><input type="text" formControlName="description" class="form-control"></td>
               <td>
                 <span class="input-symbol-dollar items-dollar-line">
-                  <input type="number" min="0" formControlName="gst"
-                    class="form-control" oninput="this.value = Math.abs(this.value)" required>
+                  <input type="text" formControlName="gst"
+                    class="form-control" appDecimalCurrency required>
                     <div *ngIf="rowControl[j].errors?.amountGreater" style="color: red;">
                       GST must be less than Amount
                     </div>
@@ -89,9 +89,8 @@
               </td>
               <td>
                 <span class="input-symbol-dollar items-dollar-line">
-                  <input type="number" min="1"
-                    formControlName="amount" class="form-control"
-                    oninput="value!=0?(value = Math.abs(value)):(value='')" required>
+                  <input type="text" formControlName="amount" class="form-control"
+                    appDecimalCurrency required>
                     <div *ngIf="rowControl[j].errors?.amountGreater" style="color: red;">
                       Amount must be greater than GST
                     </div>

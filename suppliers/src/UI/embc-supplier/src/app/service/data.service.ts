@@ -130,7 +130,7 @@ export class DataService {
         supplierDetails.invoices.forEach(invoice => {
             invoice.referrals.forEach(ref => {
                 ref.referralRows.forEach(element => {
-                    lineItems.push(new LineItems(element.supportProvided.name, element.description, element.gst, element.amount,
+                    lineItems.push(new LineItems(element.supportProvided.name, element.description, +element.gst, +element.amount,
                         null, ref.referralNumber));
                 });
             });
@@ -138,7 +138,7 @@ export class DataService {
         supplierDetails.receipts.forEach(receipt => {
             receipt.referrals.forEach(ref => {
                 ref.referralRows.forEach(element => {
-                    lineItems.push(new LineItems(element.supportProvided.name, element.description, element.gst, element.amount,
+                    lineItems.push(new LineItems(element.supportProvided.name, element.description, +element.gst, +element.amount,
                         ref.receiptNumber, receipt.referralNumber));
                 });
             });
