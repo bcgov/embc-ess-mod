@@ -108,7 +108,7 @@ export class DataService {
         const invoices = [];
         supplierDetails.invoices.forEach(element => {
             const formattedDate = new DatePipe('en-US').transform(element.invoiceDate, 'yyyy-MM-dd');
-            invoices.push(new Invoices(element.invoiceNumber, formattedDate, element.invoiceTotalGst, element.invoiceTotalAmount));
+            invoices.push(new Invoices(element.invoiceNumber, formattedDate, +element.invoiceTotalGst, +element.invoiceTotalAmount));
         });
         return invoices;
     }
@@ -118,7 +118,7 @@ export class DataService {
         supplierDetails.receipts.forEach(element => {
             element.referrals.forEach(ref => {
                 const formattedDate = new DatePipe('en-US').transform(ref.referralDate, 'yyyy-MM-dd');
-                receipts.push(new Receipts(ref.receiptNumber, formattedDate, ref.totalGst, ref.totalAmount, element.referralNumber));
+                receipts.push(new Receipts(ref.receiptNumber, formattedDate, +ref.totalGst, +ref.totalAmount, element.referralNumber));
             });
         });
         return receipts;
@@ -186,11 +186,11 @@ export class DataService {
         const referrals = [];
         supplierDetails.invoices.forEach(invoice => {
             invoice.referrals.forEach(element => {
-                referrals.push(new Referrals(element.referralNumber, element.totalGst, element.totalAmount, invoice.invoiceNumber));
+                referrals.push(new Referrals(element.referralNumber, +element.totalGst, +element.totalAmount, invoice.invoiceNumber));
             });
         });
         supplierDetails.receipts.forEach(receipt => {
-            referrals.push(new Referrals(receipt.referralNumber, receipt.receiptTotalGst, receipt.receiptTotalAmount, null));
+            referrals.push(new Referrals(receipt.referralNumber, +receipt.receiptTotalGst, +receipt.receiptTotalAmount, null));
         });
         return referrals;
     }
