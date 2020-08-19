@@ -112,8 +112,8 @@ export class ReferralComponent implements OnInit {
 
     onChanges() {
         this.referralForm.get('referralRows').valueChanges.subscribe(formrow => {
-            const gstSum = formrow.reduce((prev, next) => prev + +next.gst, 0);
-            const amtSum = formrow.reduce((prev, next) => prev + +next.amount, 0);
+            const gstSum = formrow.reduce((prev, next) => prev + +next.gst, 0).toFixed(2);
+            const amtSum = formrow.reduce((prev, next) => prev + +next.amount, 0).toFixed(2);
             this.referralForm.get('totalGst').setValue(gstSum);
             this.referralForm.get('totalAmount').setValue(amtSum);
         });

@@ -48,6 +48,9 @@
               <div *ngIf="invoiceControl.invoiceDate?.errors?.futureDate">
                 Future Date not allowed
               </div>
+              <div *ngIf="invoiceControl.invoiceDate?.status === 'INVALID' && invoiceControl.invoiceDate?.value !== null">
+                Invalid date
+              </div>
             </div>
           </div>
 
