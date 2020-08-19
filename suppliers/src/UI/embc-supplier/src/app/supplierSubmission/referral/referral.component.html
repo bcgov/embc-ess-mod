@@ -47,6 +47,9 @@
                 <div *ngIf="referralControl.referralDate?.errors?.futureDate">
                   Future Date not allowed
                 </div>
+                <div *ngIf="referralControl.referralDate?.status === 'INVALID' && referralControl.referralDate?.value !== null">
+                  Invalid date
+                </div>
               </div>
             </div>
           </div>
