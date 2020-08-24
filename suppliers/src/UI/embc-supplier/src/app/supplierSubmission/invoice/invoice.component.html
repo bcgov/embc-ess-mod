@@ -48,7 +48,9 @@
               <div *ngIf="invoiceControl.invoiceDate?.errors?.futureDate">
                 Future Date not allowed
               </div>
-              <div *ngIf="invoiceControl.invoiceDate?.status === 'INVALID' && invoiceControl.invoiceDate?.value !== null">
+              <div
+                *ngIf="(invoiceControl.invoiceDate?.status === 'INVALID' && invoiceControl.invoiceDate?.value !== null) || 
+                invoiceControl.invoiceDate?.errors.pattern">
                 Invalid date
               </div>
             </div>
@@ -82,8 +84,8 @@
         <div class="col-md-6">
           <div class="form-group">
             <label class="requiredField">Attach a photo/scanned copy of your invoice</label>
-            <app-file-upload [reloadedFiles]="reloadedFiles" [noOfAttachments]="noOfAttachments" (attachedFile)="setFileFormControl($event)"
-              (deleteFile)="deleteFileFormControl($event)">
+            <app-file-upload [reloadedFiles]="reloadedFiles" [noOfAttachments]="noOfAttachments"
+              (attachedFile)="setFileFormControl($event)" (deleteFile)="deleteFileFormControl($event)">
             </app-file-upload>
             <div *ngIf="!checkAttachmentLength(invoiceControl.invoiceAttachments.value)" style="color: red;">
               Attachment is required
@@ -94,8 +96,9 @@
 
       <div formArrayName="referrals">
         <div *ngFor="let referral of referrals.controls; let j = index">
-          <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j" [component]="component" [formArraySize]="referrals.controls.length"
-            [invoiceCurrentIndex]="index" (referralToRemove)="removeReferral($event)"></app-referral>
+          <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j" [component]="component"
+            [formArraySize]="referrals.controls.length" [invoiceCurrentIndex]="index"
+            (referralToRemove)="removeReferral($event)"></app-referral>
         </div>
       </div>
 
