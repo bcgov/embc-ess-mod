@@ -47,7 +47,8 @@
                 <div *ngIf="referralControl.referralDate?.errors?.futureDate">
                   Future Date not allowed
                 </div>
-                <div *ngIf="referralControl.referralDate?.status === 'INVALID' && referralControl.referralDate?.value !== null">
+                <div *ngIf="(referralControl.referralDate?.status === 'INVALID' && referralControl.referralDate?.value !== null) || 
+                referralControl.referralDate?.errors?.pattern">
                   Invalid date
                 </div>
               </div>
@@ -83,21 +84,19 @@
               <td><input type="text" formControlName="description" class="form-control"></td>
               <td>
                 <span class="input-symbol-dollar items-dollar-line">
-                  <input type="text" formControlName="gst"
-                    class="form-control" appDecimalCurrency required>
-                    <div *ngIf="rowControl[j].errors?.amountGreater" style="color: red;">
-                      GST must be less than Amount
-                    </div>
-                  </span>
+                  <input type="text" formControlName="gst" class="form-control" appDecimalCurrency required>
+                  <div *ngIf="rowControl[j].errors?.amountGreater" style="color: red;">
+                    GST must be less than Amount
+                  </div>
+                </span>
               </td>
               <td>
                 <span class="input-symbol-dollar items-dollar-line">
-                  <input type="text" formControlName="amount" class="form-control"
-                    appDecimalCurrency required>
-                    <div *ngIf="rowControl[j].errors?.amountGreater" style="color: red;">
-                      Amount must be greater than GST
-                    </div>
-                  </span>
+                  <input type="text" formControlName="amount" class="form-control" appDecimalCurrency required>
+                  <div *ngIf="rowControl[j].errors?.amountGreater" style="color: red;">
+                    Amount must be greater than GST
+                  </div>
+                </span>
               </td>
               <td *ngIf="referralRows.controls.length > 1"><i (click)="deleteRow(j)" class="fas fa-trash-alt"></i></td>
             </tr>
@@ -122,8 +121,8 @@
       <div class="col-12 form-inline" style="justify-content: flex-end;">
         <div style="margin-bottom: 6px;">
           Total Amount &nbsp;&nbsp;
-            <span class="input-symbol-dollar dollar-line"><input id="totalAmount" type="number"
-                formControlName="totalAmount" class="form-control" readonly></span>
+          <span class="input-symbol-dollar dollar-line"><input id="totalAmount" type="number"
+              formControlName="totalAmount" class="form-control" readonly></span>
         </div>
       </div>
       <div class="col-12 form-inline" style="justify-content: flex-end;">
@@ -133,8 +132,8 @@
       <div *ngIf="component === 'I'" class="col-md-6">
         <div class="form-group">
           <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
-          <app-file-upload [reloadedFiles]="reloadedFiles" [noOfAttachments]="noOfAttachments" (attachedFile)="setReferralFormControl($event)"
-            (deleteFile)="deleteReferralFormControl($event)">
+          <app-file-upload [reloadedFiles]="reloadedFiles" [noOfAttachments]="noOfAttachments"
+            (attachedFile)="setReferralFormControl($event)" (deleteFile)="deleteReferralFormControl($event)">
           </app-file-upload>
           <div *ngIf="!checkAttachmentLength(referralControl.referralAttachments.value)" style="color: red;">
             Attachment is required

@@ -25,3 +25,4 @@ export const usDefaultObject = { code: 'USA', name: 'United States of America' }
 export const allowedFileTypes = ["application/pdf", "image/jpg", "image/jpeg", "image/png"];
 export const zeroFileMessage = "Attachment file size must be greater than 0Kb";
 export const fileTypeMessage = "File type pdf, jpg, jpeg, png allowed";
+export const datePattern = '^([1-9]|1[0-2])\/([1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$';

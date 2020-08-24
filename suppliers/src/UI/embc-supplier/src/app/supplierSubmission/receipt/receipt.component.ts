@@ -95,7 +95,8 @@ export class ReceiptComponent implements OnInit{
      */
     createReferralFormArray() {
         return this.builder.group({
-             referralDate : ['', [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator)]],
+             referralDate : [null, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator), 
+                Validators.pattern(globalConst.datePattern)]],
              receiptNumber: [''],
              referralRows: this.builder.array([
             ], Validators.required),
@@ -200,7 +201,8 @@ export class ReceiptComponent implements OnInit{
      */
     createReferralFormArrayWithValues(referral: any) {
         return this.builder.group({
-             referralDate : [referral.referralDate, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator)]],
+             referralDate : [referral.referralDate, [Validators.required, this.customValidator.futureDateValidator().bind(this.customValidator),
+                Validators.pattern(globalConst.datePattern)]],
              receiptNumber: [referral.receiptNumber],
              referralRows: this.builder.array([
             ], Validators.required),
