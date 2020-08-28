@@ -21,6 +21,11 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
          url('/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
   }
 
+main {
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+}
+
 .form-control {
     border-radius:0
 }
@@ -152,3 +157,6 @@ hr {
     background-color: #174671;
   }
 
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
