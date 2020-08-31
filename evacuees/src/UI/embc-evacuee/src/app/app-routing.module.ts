@@ -10,6 +10,14 @@ const routes: Routes = [
   {
     path: 'evacuee',
     loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: 'pre-registration/:profile',
+    loadChildren: () => import('./pre-registration/pre-registration.module').then(m => m.PreRegistrationModule)
   }
 ];
 

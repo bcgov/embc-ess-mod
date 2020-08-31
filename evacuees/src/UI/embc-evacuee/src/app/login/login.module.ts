@@ -1,18 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HomeComponent } from './home.component';
-import { HomeRoutingModule } from './home-routing.module';
-import { MatGridListModule } from '@angular/material/grid-list';
+import { LoginComponent } from './login.component';
+import { LoginRoutingModule } from './login-routing.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [
     CommonModule,
-    HomeRoutingModule,
+    LoginRoutingModule,
     ReactiveFormsModule,
-    MatGridListModule,
     MatCardModule,
     MatButtonModule
   ],
@@ -20,7 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
    // MatGridListModule
   ],
   declarations: [
-    HomeComponent,
+    LoginComponent,
     ]
 })
-export class HomeModule { }
+export class LoginModule { }

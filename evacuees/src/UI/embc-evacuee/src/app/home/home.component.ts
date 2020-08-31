@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 export interface Tile {
@@ -22,9 +23,17 @@ export class HomeComponent implements OnInit {
     {text: 'Four', cols: 2, rows: 1, color: '#DDBDF1'},
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  registerEvacuee(): void {
+    this.router.navigate(['/collection-notice']);
+  }
+
+  login(): void {
+    this.router.navigate(['/login']);
   }
 
 }
