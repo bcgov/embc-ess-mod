@@ -118,7 +118,7 @@ export class SupplierSubmissionComponent implements OnInit {
             supplierLegalName: ['', Validators.required],
             supplierName: [''],
             location: [''],
-            gstNumber: ['', [Validators.required]],
+            gstNumber: ['', [Validators.required, Validators.minLength(17)]],
             remitToOtherBusiness: [''],
             businessName: ['', [this.customValidator.conditionalValidation(
                 () => this.supplierForm.get('remitToOtherBusiness').value,
