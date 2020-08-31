@@ -41,6 +41,7 @@ export class GSTCodeDirective {
     } else {
       newVal = newVal.substring(0, 13);
       newVal = newVal.replace(/^(\d{0,9})(\d{0,4})/, '$1-RT-$2');
+      this.ngControl.control.setValue(newVal);
     }
     this.ngControl.valueAccessor.writeValue(newVal);
   }

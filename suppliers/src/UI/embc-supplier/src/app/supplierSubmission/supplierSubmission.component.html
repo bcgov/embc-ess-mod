@@ -82,6 +82,9 @@
                   <div *ngIf="control.gstNumber?.errors.required">
                     GST number is required
                   </div>
+                  <div *ngIf="control.gstNumber?.errors.minlength">
+                    GST number is incomplete
+                  </div>
                 </div>
               </div>
             </div>
