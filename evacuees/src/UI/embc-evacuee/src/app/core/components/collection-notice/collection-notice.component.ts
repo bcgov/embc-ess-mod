@@ -2,6 +2,7 @@ import { Component, OnInit, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-collection-notice',
@@ -10,9 +11,13 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class CollectionNoticeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  submitNotice() :void {
+    this.router.navigate(['/restriction']);
   }
 
 }

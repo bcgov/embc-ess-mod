@@ -4,20 +4,32 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/evacuee',
+    redirectTo: '/login',
     pathMatch: 'full'
-  },
-  {
-    path: 'evacuee',
-    loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
   },
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
   },
   {
-    path: 'pre-registration/:profile',
+    path: 'collection-notice',
     loadChildren: () => import('./pre-registration/pre-registration.module').then(m => m.PreRegistrationModule)
+  },
+  {
+    path: 'restriction',
+    loadChildren: () => import('./restriction/restriction.module').then(m => m.RestrictionModule)
+  },
+  {
+    path: 'create-profile',
+    loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)
+  },
+  {
+    path: 'create-evac-file',
+    loadChildren: () => import('./evacuation-file/evacuation-file.module').then(m => m.EvacuationFileModule)
+  },
+  {
+    path: 'review',
+    loadChildren: () => import('./non-verified-review/non-verified-review.module').then(m => m.NonVerifiedReviewModule)
   }
 ];
 
@@ -26,3 +38,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+//pre-registration/:profile

@@ -14,7 +14,8 @@ export class LoginComponent implements OnInit {
   }
 
   guestRegister(): void {
-    this.router.navigate(['/pre-registration', 'non-auth']);
+    this.router.navigate(['/collection-notice']);
+    //this.router.navigate(['/pre-registration', 'non-auth']);
   }
 
 }
