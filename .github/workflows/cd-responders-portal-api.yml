@@ -1,4 +1,4 @@
-name: cd-supporters-portal-api
+name: cd-responders-portal-api
 
 on:
   push:
@@ -10,12 +10,12 @@ on:
     tags:
       - v*
     paths:
-      - "supporters/src/API/**"
-      - ".github/workflows/cd-supporters-portal-api.yml"
+      - "responders/src/API/**"
+      - ".github/workflows/cd-responders-portal-api.yml"
 
 env:
-  IMAGE_NAME: supporters-portal-api
-  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/supporters-portal-api
+  IMAGE_NAME: responders-portal-api
+  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/responders-portal-api
 
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
         run: docker pull $IMAGE_ID || true
 
       - name: Build image
-        working-directory: ./supporters/src/API
+        working-directory: ./responders/src/API
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID
 
       - name: Push image

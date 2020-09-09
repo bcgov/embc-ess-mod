@@ -1,14 +1,14 @@
-name: ci-supporters-portal-ui
+name: ci-responders-portal-ui
 
 on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
     paths:
-      - "supporters/src/UI/**"
-      - ".github/workflows/ci-supporters-portal-ui.yml"
+      - "responders/src/UI/**"
+      - ".github/workflows/ci-responders-portal-ui.yml"
 
 env:
-  IMAGE_NAME: supporters-portal-ui
+  IMAGE_NAME: responders-portal-ui
 
 jobs:
   build:
@@ -17,5 +17,5 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        working-directory: ./supporters/src/UI
+        working-directory: ./responders/src/UI
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
