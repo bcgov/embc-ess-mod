@@ -1,1 +1,11 @@
-<p>identify-needs works!</p>
+<mat-card class="card-align">
+    <mat-card-content>
+        <h1>Personal Details</h1>
+         <form [formGroup]="firstFormGroup">
+            <mat-form-field>
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="firstCtrl" placeholder="Last name, First name">
+            </mat-form-field>
+          </form>
+    </mat-card-content>
+</mat-card>

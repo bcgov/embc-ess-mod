@@ -9,6 +9,7 @@ import { from } from 'rxjs';
 export class ComponentWrapperComponent implements OnInit {
 
   @Input() componentName: string;
+  @Input() folderPath: string;
   loadedComponent: any;
 
   constructor() { }
@@ -20,7 +21,7 @@ export class ComponentWrapperComponent implements OnInit {
   }
 
   loadProfileComponent() : Promise<any> {
-    return Promise.resolve(import(`../evacuee-profile-forms/${this.componentName}/${this.componentName}.component`));
+    return Promise.resolve(import(`../${this.folderPath}/${this.componentName}/${this.componentName}.component`));
   }
 //../core/components/evacuee-profile-forms/${this.componentName}/${this.componentName}.component`
 }

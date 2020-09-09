@@ -19,6 +19,8 @@ export class ProfileComponent implements OnInit {
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
   needsSteps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
   showStep: boolean = false;
+  needsFolderPath: string = "needs-assessment-forms";
+  profileFolderPath: string = "evacuee-profile-forms"
   @ViewChildren('profileStepper') private profileStepper: QueryList<MatStepper>;
   @ViewChild('needsStepper') private needsStepper: MatStepper;
 

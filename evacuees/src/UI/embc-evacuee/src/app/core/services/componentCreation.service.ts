@@ -45,32 +45,40 @@ export class ComponentCreationService {
         needsAssessmentComponents: Array<any> =
         [
             {
-                component: 'personal-details',
-                nextButtonLabel: 'Next-1',
+                component: 'evac-address',
+                nextButtonLabel: 'Next-Family Information',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
                 lastStep: -1
             },
             {
-                component: 'address',
-                nextButtonLabel: 'Next-2',
+                component: 'family-information',
+                nextButtonLabel: 'Next-Pets',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
                 lastStep: 0
             },
             {
-                component: 'contact-info',
-                nextButtonLabel: 'Next-3',
+                component: 'pets',
+                nextButtonLabel: 'Next-Identify Needs',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
                 lastStep: 0
             },
             {
-                component: 'secret',
-                nextButtonLabel: 'Next-4',
+                component: 'identify-needs',
+                nextButtonLabel: 'Next-Review Submission',
+                backButtonLabel: 'Go Back & Edit',
+                isLast: false,
+                loadWrapperButton: false,
+                lastStep: 0
+            },
+            {
+                component: 'pets',
+                nextButtonLabel: 'Submit',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: true,
                 loadWrapperButton: false,
