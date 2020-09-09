@@ -41,22 +41,22 @@ services:
     depends_on:
       - evacuees-portal-api
 
-  supporters-portal-api:
+  responders-portal-api:
     build:
-      context: ./supporters/src/API
-    image: embcess-supporters-api:dev
+      context: ./responders/src/API
+    image: embcess-responders-api:dev
     ports:
       - 3010:8080
     env_file:
       - .env
 
-  supporters-portal-ui:
+  responders-portal-ui:
     build:
-      context: ./supporters/src/UI
-    image: embcess-supporters-ui:dev
+      context: ./responders/src/UI
+    image: embcess-responders-ui:dev
     ports:
       - 3015:2015
     environment:
-      - "API_URL=supporters-portal-api:8080"
+      - "API_URL=responders-portal-api:8080"
     depends_on:
-      - supporters-portal-api
+      - responders-portal-api
