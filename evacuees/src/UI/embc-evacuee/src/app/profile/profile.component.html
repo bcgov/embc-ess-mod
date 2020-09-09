@@ -1,59 +1,35 @@
 <div class="container container-frame">
-    <h1>Create Profile</h1>
+  <div class="row heading-container">
+    <div class="col-12">
+      <span class="page-heading">Create Profile</span>
+    </div>
+  </div>
 
-    <mat-horizontal-stepper linear #stepper>
-        <!-- #docregion editable -->
-          <mat-step [stepControl]="firstFormGroup" [editable]="isEditable">
-        <!-- #enddocregion editable -->
-            <form [formGroup]="firstFormGroup">
-        <!-- #docregion ng-template -->
-              <!-- <ng-template matStepLabel></ng-template> -->
-        <!-- #enddocregion ng-template -->
-              <mat-form-field>
-                <mat-label>Name</mat-label>
-                <input matInput formControlName="firstCtrl" placeholder="Last name, First name" required>
-              </mat-form-field>
-              <div>
-                <button mat-button matStepperNext>Next</button>
-              </div>
-            </form>
-          </mat-step>
-          <mat-step [stepControl]="secondFormGroup" [editable]="isEditable">
-            <form [formGroup]="secondFormGroup">
-              <ng-template matStepLabel></ng-template>
-              <mat-form-field>
-                <mat-label>Address</mat-label>
-                <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                       required>
-              </mat-form-field>
-              <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
-              </div>
-            </form>
-          </mat-step>
-          <mat-step [stepControl]="secondFormGroup" [editable]="isEditable">
-            <form [formGroup]="secondFormGroup">
-              <ng-template matStepLabel></ng-template>
-              <mat-form-field>
-                <mat-label>Address</mat-label>
-                <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                       required>
-              </mat-form-field>
-              <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
-              </div>
-            </form>
-          </mat-step>
-          <mat-step>
-            <ng-template matStepLabel></ng-template>
-            <p>You are now done.</p>
-            <div>
-              <button mat-button matStepperPrevious>Back</button>
-              <button mat-button (click)="createProfile()">Next-Create Evacuation File</button>
-            </div>
-          </mat-step>
-        </mat-horizontal-stepper>
+  <mat-horizontal-stepper *ngIf="!showStep" linear #profileStepper>
+    <!-- <mat-step *ngFor="let comp of profileComponents$ | async" [editable]="isEditable">
+      <ng-container [ngComponentOutlet]="comp.default"></ng-container>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step> -->
+    <mat-step *ngFor="let step of steps" [editable]="isEditable">
+      <app-component-wrapper [componentName] = "step.component"></app-component-wrapper>
+      <div>
+        <button mat-button type="button" (click)="goBack(profileStepper, step.lastStep)">{{step.backButtonLabel}}</button>
+        <button mat-button type="button" (click)="goForward(profileStepper, step.isLast)">{{step.nextButtonLabel}}</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+
+  <mat-horizontal-stepper *ngIf="showStep" linear #needsStepper>
+    <mat-step *ngFor="let step of needsSteps" [editable]="isEditable">
+      <app-component-wrapper [componentName] = "step.component"></app-component-wrapper>
+      <div>
+        <button mat-button type="button" (click)="goBack(needsStepper, step.lastStep)">{{step.backButtonLabel}}</button>
+        <button mat-button type="button" (click)="goForward(needsStepper, step.isLast)">{{step.nextButtonLabel}}</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
 
 </div>

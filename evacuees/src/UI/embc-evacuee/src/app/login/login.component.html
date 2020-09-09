@@ -1,11 +1,12 @@
 <div class="container container-frame">
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-6">
-            <mat-card>
+            <mat-card class="card-align">
                 <!-- <mat-card-header>
                     <mat-card-title>Preferred Method</mat-card-title>
                 </mat-card-header> -->
                 <mat-card-content>
+                    <h1>Register with BC Services Card</h1>
                     <p> Some Text</p>
                     <p> Some Text</p>
                     <p> Some Text</p>
@@ -13,19 +14,20 @@
                     <p> Some Text</p>
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-flat-button color="primary">Self-Register using your BC Services Card</button>
+                    <button class="card-button" mat-flat-button color="primary">Self-Register using your BC Services Card</button>
                 </mat-card-actions>
             </mat-card>
         </div>
         <div class="col-6">
-            <mat-card>
+            <mat-card class="card-align">
+                <h1>Register without BC Services Card</h1>
                 <p> Some Text</p>
                 <p> Some Text</p>
                 <p> Some Text</p>
                 <p> Some Text</p>
                 <p> Some Text</p>
                 <mat-card-actions>
-                    <button mat-flat-button color="primary" (click)="guestRegister()">Self-Register</button>
+                    <button class="card-button" mat-stroked-button (click)="guestRegister()">Self-Register</button>
                 </mat-card-actions>
             </mat-card>
         </div>

@@ -1,0 +1,35 @@
+<div class="container container-frame">
+    <div class="row heading-container">
+        <div class="col-12">
+            <span class="page-heading">Review & Submit</span>
+        </div>
+    </div>
+
+    <mat-card *ngIf="!hideCard else showPersonalPage">
+        <h1>Account Details</h1>
+        <!-- <mat-card-header>
+            <mat-card-title>Account Details</mat-card-title>
+        </mat-card-header> -->
+        <mat-card-content>
+            <div class="row justify-content-between">
+                <div class="col-6">
+                    Personal Details
+                </div>
+                <div class="col-2">
+                    <button mat-flat-button (click)="editPersonalDetails()">Edit</button>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <!-- <ng-template [ngComponentOutlet]="componentToLoad.default | async"></ng-template> -->
+    {{componentToLoad}}
+    <ng-container>
+        <ng-template [ngComponentOutlet]="cs"></ng-template>
+     </ng-container>
+    <ng-template #showPersonalPage>
+        <!-- <app-personal-details></app-personal-details> -->
+        <br>
+        <button mat-flat-button (click)="back()">Back</button>
+    </ng-template>
+
+</div>

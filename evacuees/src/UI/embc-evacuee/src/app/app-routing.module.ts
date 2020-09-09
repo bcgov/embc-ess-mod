@@ -29,7 +29,7 @@ const routes: Routes = [
   },
   {
     path: 'review',
-    loadChildren: () => import('./non-verified-review/non-verified-review.module').then(m => m.NonVerifiedReviewModule)
+    loadChildren: () => import('./review/review.module').then(m => m.ReviewModule)
   }
 ];
 
