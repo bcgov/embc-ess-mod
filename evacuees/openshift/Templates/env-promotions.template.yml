@@ -1,30 +1,30 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: evacuees-portal-env-promotions
+  name: registrants-portal-env-promotions
   annotations:
     description: "Pipelines to promote images to higher environments"
 objects:
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
-      name: "evacuees-portal-promote-test"
+      name: "registrants-portal-promote-test"
     spec:
       strategy:
         jenkinsPipelineStrategy:
           jenkinsfile: |-
             node {
               stage('tag image'){
-                openshiftTag(srcStream: 'evacuees-portal-api', srcTag: 'latest', destStream: 'evacuees-portal-api', destTag: 'test')
-                openshiftTag(srcStream: 'evacuees-portal-ui', srcTag: 'latest', destStream: 'evacuees-portal-ui', destTag: 'test')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'test-evacuees-portal-api')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'test-evacuees-portal-ui')
+                openshiftTag(srcStream: 'registrants-portal-api', srcTag: 'latest', destStream: 'registrants-portal-api', destTag: 'test')
+                openshiftTag(srcStream: 'registrants-portal-ui', srcTag: 'latest', destStream: 'registrants-portal-ui', destTag: 'test')
+                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'test-registrants-portal-api')
+                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'test-registrants-portal-ui')
               }
             }
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
-      name: "evacuees-portal-promote-training"
+      name: "registrants-portal-promote-training"
     spec:
       strategy:
         jenkinsPipelineStrategy:
@@ -36,16 +36,16 @@ objects:
                 }
               }
               stage('tag image'){
-                openshiftTag(srcStream: 'evacuees-portal-api', srcTag: 'test', destStream: 'evacuees-portal-api', destTag: 'training')
-                openshiftTag(srcStream: 'evacuees-portal-ui', srcTag: 'test', destStream: 'evacuees-portal-ui', destTag: 'training')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'training-evacuees-portal-api')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'training-evacuees-portal-ui')
+                openshiftTag(srcStream: 'registrants-portal-api', srcTag: 'test', destStream: 'registrants-portal-api', destTag: 'training')
+                openshiftTag(srcStream: 'registrants-portal-ui', srcTag: 'test', destStream: 'registrants-portal-ui', destTag: 'training')
+                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'training-registrants-portal-api')
+                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'training-registrants-portal-ui')
               }
             }
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
-      name: "evacuees-portal-promote-prod"
+      name: "registrants-portal-promote-prod"
     spec:
       strategy:
         jenkinsPipelineStrategy:
@@ -57,9 +57,9 @@ objects:
                 }    
               }
                stage('tag image'){
-                openshiftTag(srcStream: 'evacuees-portal-api', srcTag: 'test', destStream: 'evacuees-portal-api', destTag: 'prod')
-                openshiftTag(srcStream: 'evacuees-portal-ui', srcTag: 'test', destStream: 'evacuees-portal-ui', destTag: 'prod')
-                openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-evacuees-portal-api')
-                openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-evacuees-portal-ui')
+                openshiftTag(srcStream: 'registrants-portal-api', srcTag: 'test', destStream: 'registrants-portal-api', destTag: 'prod')
+                openshiftTag(srcStream: 'registrants-portal-ui', srcTag: 'test', destStream: 'registrants-portal-ui', destTag: 'prod')
+                openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-registrants-portal-api')
+                openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-registrants-portal-ui')
               }
             }

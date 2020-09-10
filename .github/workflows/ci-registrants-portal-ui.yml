@@ -1,14 +1,14 @@
-name: ci-evacuees-portal-api
+name: ci-registrants-portal-ui
 
 on:
   pull_request:
     types: [opened, reopened, edited, synchronize]
     paths:
-      - "evacuees/src/API/**"
-      - ".github/workflows/ci-evacuees-portal-api.yml"
+      - "evacuees/src/UI/**"
+      - ".github/workflows/ci-registrants-portal-ui.yml"
 
 env:
-  IMAGE_NAME: evacuees-portal-api
+  IMAGE_NAME: evacuees-portal-ui
 
 jobs:
   build:
@@ -17,5 +17,5 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        working-directory: ./evacuees/src/API
+        working-directory: ./evacuees/src/UI
         run: docker build . --file Dockerfile --tag $IMAGE_NAME

@@ -18,7 +18,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace EMBC.Evacuees.API
+namespace EMBC.Registrants.API
 {
     public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
     {

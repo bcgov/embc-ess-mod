@@ -11,10 +11,10 @@ on:
       - v*
     paths:
       - "evacuees/src/UI/**"
-      - ".github/workflows/cd-evacuees-portal-ui.yml"
+      - ".github/workflows/cd-registrants-portal-ui.yml"
 env:
-  IMAGE_NAME: evacuees-portal-ui
-  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/evacuees-portal-ui
+  IMAGE_NAME: registrants-portal-ui
+  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/registrants-portal-ui
 
 jobs:
   build:
