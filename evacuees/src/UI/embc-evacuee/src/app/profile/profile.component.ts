@@ -1,10 +1,8 @@
-import { Component, OnInit, Type, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Type, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../core/services/componentCreation.service';
-import { map, mergeMap } from 'rxjs/operators';
-import { ComponentMetaDataModel } from '../model/componentMetaData.model';
+import { ComponentMetaDataModel } from '../core/model/componentMetaData.model';
 import { MatStepper } from '@angular/material/stepper';
 
 @Component({
@@ -12,24 +10,38 @@ import { MatStepper } from '@angular/material/stepper';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
 
   secondFormGroup: FormGroup;
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
-  needsSteps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
   showStep: boolean = false;
-  needsFolderPath: string = "needs-assessment-forms";
   profileFolderPath: string = "evacuee-profile-forms"
-  @ViewChildren('profileStepper') private profileStepper: QueryList<MatStepper>;
-  @ViewChild('needsStepper') private needsStepper: MatStepper;
+  @ViewChild('profileStepper') profileStepper: MatStepper;
+  path: string;
 
-  constructor(private _formBuilder: FormBuilder, private router: Router, private componentService: ComponentCreationService) {}
+  constructor(private _formBuilder: FormBuilder, private router: Router, private componentService: ComponentCreationService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.steps = this.componentService.createProfileSteps();
-    console.log(this.componentService.createProfileSteps());
-    this.needsSteps = this.componentService.createEvacSteps();
+    this.route.paramMap.subscribe(params => {
+      console.log(params.get('stepPos'));
+      if(params.get('stepPos') === "last") {
+        this.path = params.get('stepPos')
+      }
+    })
+  }
+
+  ngAfterViewInit() {
+    if(this.path === "last") {
+      console.log("heeeeeeeeeeeere");
+      console.log(this.profileStepper);
+     // this.profileStepper.selectedIndex = 2;
+     setTimeout(()=>{
+       console.log(this.steps.length - 1)
+      this.profileStepper.selectedIndex = 3; 
+    },0);
+    }
   }
 
   createProfile(lastStep: boolean): void {
@@ -47,12 +59,11 @@ export class ProfileComponent implements OnInit {
     } else if(lastStep == -1) {
       this.showStep = !this.showStep;
       //stepper.selectedIndex
-      this.profileStepper.changes.subscribe(x=> {
-        console.log(x)
-        x.first._selectedIndex = 3
-      console.log(this.steps.length)
-      //this.profileStepper.selectedIndex = 3;//this.steps.length;
-      })
+      // this.profileStepper.changes.subscribe(x=> {
+      //   console.log(x)
+      //   x.first._selectedIndex = 3
+      // console.log(this.steps.length)
+      // })
       
     } else if(lastStep = -2) {
       this.router.navigate(['/restriction'])
@@ -61,7 +72,8 @@ export class ProfileComponent implements OnInit {
 
   goForward(stepper: MatStepper, isLast: boolean): void {
     if(isLast) {
-      this.showStep = !this.showStep;
+      //this.showStep = !this.showStep;
+      this.router.navigate(['/loader/needs-assessment']);
     }
     stepper.next();
   }

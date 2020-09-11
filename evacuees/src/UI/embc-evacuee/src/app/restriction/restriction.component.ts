@@ -14,7 +14,7 @@ export class RestrictionComponent implements OnInit {
   }
 
   submitRestriction(): void {
-    this.router.navigate(['/create-profile']);
+    this.router.navigate(['/loader/registration/first']);
   }
 
 }

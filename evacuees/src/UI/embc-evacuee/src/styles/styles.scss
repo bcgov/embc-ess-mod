@@ -30,8 +30,15 @@ mat-card {
   border-radius: 0px !important;
 }
 
-button {
-  border-radius: 0px !important;
+.mat-button, 
+.mat-flat-button, 
+.mat-icon-button, 
+.mat-stroked-button { 
+  border-radius: 0px !important; 
+}
+
+.stepper-style {
+  background-color: transparent !important;
 }
 
 .container-frame {
@@ -46,10 +53,54 @@ button {
  font-size: 45px;
 }
 
-.mat-step-label {
-  min-width: 0px !important;
+// .mat-step-label {
+//   min-width: 0px !important;
+// }
+
+.button-style {
+  height: 55px;
+  font-weight: lighter;
+}
+.button-p {
+  @extend .button-style;
+  background-color: #234075;
+  color: #FFFFFF ;
 }
 
+.button-s {
+  @extend .button-style;
+  border: 1px solid #B5B5B5 !important;
+  color: #606060;
+  background-color: #FFFFFF !important;
+  float: right;
+}
+
+.button-p:hover {
+  background-color: #169BD5;
+}
+
+.button-s:hover {
+  background-color: #E5E5E5;
+}
+
+@media screen and (max-width: 768px) {
+  .resp-style .button-p {
+    margin-bottom: 10px;
+    width: 100%;
+    float: none;
+  }
+
+  .resp-style .button-s {
+    width: 100% !important;
+  }
+}
+
+// @media screen and (max-width: 768px) {
+
+//   .resp-style .button-s {
+//     background-color: pink !important;
+//   }
+// }
 // .vertical {
 //   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
 //   min-height: 100vh; /* These two lines are counted as one :-)       */
