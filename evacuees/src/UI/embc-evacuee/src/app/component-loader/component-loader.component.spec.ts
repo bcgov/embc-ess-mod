@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CollectionNoticeComponent } from './collection-notice.component';
+import { ComponentLoaderComponent } from './component-loader.component';
 
-describe('CollectionNoticeComponent', () => {
-  let component: CollectionNoticeComponent;
-  let fixture: ComponentFixture<CollectionNoticeComponent>;
+describe('ComponentLoaderComponent', () => {
+  let component: ComponentLoaderComponent;
+  let fixture: ComponentFixture<ComponentLoaderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CollectionNoticeComponent ]
+      declarations: [ ComponentLoaderComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CollectionNoticeComponent);
+    fixture = TestBed.createComponent(ComponentLoaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
