@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EvacuationFileComponent } from './evacuation-file.component';
+import { FileSubmissionComponent } from './file-submission.component';
 
-describe('EvacuationFileComponent', () => {
-  let component: EvacuationFileComponent;
-  let fixture: ComponentFixture<EvacuationFileComponent>;
+describe('FileSubmissionComponent', () => {
+  let component: FileSubmissionComponent;
+  let fixture: ComponentFixture<FileSubmissionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EvacuationFileComponent ]
+      declarations: [ FileSubmissionComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EvacuationFileComponent);
+    fixture = TestBed.createComponent(FileSubmissionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
