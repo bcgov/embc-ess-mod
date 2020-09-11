@@ -13,24 +13,28 @@ const routes: Routes = [
   },
   {
     path: 'collection-notice',
-    loadChildren: () => import('./pre-registration/pre-registration.module').then(m => m.PreRegistrationModule)
+    loadChildren: () => import('./collection-notice/collection-notice.module').then(m => m.CollectionNoticeModule)
   },
   {
     path: 'restriction',
     loadChildren: () => import('./restriction/restriction.module').then(m => m.RestrictionModule)
   },
   {
-    path: 'create-profile',
-    loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)
+    path: 'loader',
+    loadChildren: () => import('./component-loader/component-loader.module').then(m => m.ComponentLoaderModule)
   },
   {
-    path: 'create-evac-file',
-    loadChildren: () => import('./evacuation-file/evacuation-file.module').then(m => m.EvacuationFileModule)
+    path: 'fileSubmission',
+    loadChildren: () => import('./file-submission/file-submission.module').then(m => m.FileSubmissionModule)
   },
-  {
-    path: 'review',
-    loadChildren: () => import('./review/review.module').then(m => m.ReviewModule)
-  }
+  // {
+  //   path: 'create-profile/:type',//
+  //   loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)
+  // },
+  // {
+  //   path: 'needs-assessment',//
+  //   loadChildren: () => import('./evacuation-file/evacuation-file.module').then(m => m.EvacuationFileModule)
+  // }
 ];
 
 @NgModule({
