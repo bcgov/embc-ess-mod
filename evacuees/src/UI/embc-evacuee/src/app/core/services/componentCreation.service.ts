@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ComponentMetaDataModel } from 'src/app/model/componentMetaData.model';
+import { ComponentMetaDataModel } from '../model/componentMetaData.model';
 
 @Injectable({ providedIn: 'root' })
 export class ComponentCreationService {
@@ -14,7 +14,8 @@ export class ComponentCreationService {
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: -2
+                lastStep: -2,
+                stepName: 'Personal Details'
             },
             {
                 component: 'address',
@@ -22,7 +23,8 @@ export class ComponentCreationService {
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: 0
+                lastStep: 0,
+                stepName: 'Address'
             },
             {
                 component: 'contact-info',
@@ -30,7 +32,8 @@ export class ComponentCreationService {
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: 0
+                lastStep: 0,
+                stepName: 'Contact'
             },
             {
                 component: 'secret',
@@ -38,7 +41,8 @@ export class ComponentCreationService {
                 backButtonLabel: 'Go Back & Edit',
                 isLast: true,
                 loadWrapperButton: false,
-                lastStep: 0
+                lastStep: 0,
+                stepName: 'Security Question'
             }
         ];
 
@@ -76,14 +80,14 @@ export class ComponentCreationService {
                 loadWrapperButton: false,
                 lastStep: 0
             },
-            {
-                component: 'pets',
-                nextButtonLabel: 'Submit',
-                backButtonLabel: 'Go Back & Edit',
-                isLast: true,
-                loadWrapperButton: false,
-                lastStep: 0
-            }
+            // {
+            //     component: 'pets',
+            //     nextButtonLabel: 'Submit',
+            //     backButtonLabel: 'Go Back & Edit',
+            //     isLast: false,
+            //     loadWrapperButton: false,
+            //     lastStep: 0
+            // }
         ];
 
     getProfileComponents(): Observable<any> {
