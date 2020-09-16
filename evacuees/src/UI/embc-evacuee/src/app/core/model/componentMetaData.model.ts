@@ -8,4 +8,5 @@ export class ComponentMetaDataModel {
     isLast: boolean;
     loadWrapperButton: boolean;
     lastStep: number;
+    stepName: string;
 }

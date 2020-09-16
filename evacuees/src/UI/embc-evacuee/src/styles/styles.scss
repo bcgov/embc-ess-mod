@@ -26,8 +26,48 @@ main {
     padding-top: 0px !important;
 }
 
-mat-card {
-  border-radius: 0px !important;
+.mat-step-icon {
+  height: 38px !important;
+  width: 38px !important;
+  border: 4px solid #169BD5;
+}
+
+.mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-edit, .mat-step-header .mat-step-icon {
+    background-color: #FFFFFF !important;
+    color: #169BD5 !important;
+}
+
+.mat-step-header .mat-step-icon-state-done {
+  background-color: #169BD5 !important;
+  color: #FFFFFF !important;
+}
+
+.mat-step-header .mat-step-label {
+  color: #606060 !important;
+}
+
+.mat-step-header .mat-step-label.mat-step-label-active {
+    color: #169BD5 !important;
+}
+
+.mat-step-label-selected {
+  font-weight: normal !important;
+}
+
+.mat-stepper-horizontal-line {
+  border-top-width: 2px !important;
+}
+
+.mat-stepper-label-position-bottom .mat-stepper-horizontal-line {
+  top: 40px !important;
+}
+
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before, [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before, .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after, [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after {
+  border-top-width: 2px !important;
+}
+
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header::after, .mat-stepper-label-position-bottom .mat-horizontal-stepper-header::before {
+  top: 40px !important;
 }
 
 .mat-button, 
@@ -47,6 +87,8 @@ mat-card {
 
 .heading-container {
   padding-bottom: 25px;
+  font-size: 50px;
+  color: #234075;
 }
 
 .page-heading {
@@ -89,6 +131,15 @@ mat-card {
   .resp-style .button-s {
     width: 100% !important;
   }
+}
+
+mat-card {
+  border-radius: 0px !important;
+}
+
+.card-heading {
+  font-size: 21px;
+  color: #169BD5;
 }
 
 // @media screen and (max-width: 768px) {
