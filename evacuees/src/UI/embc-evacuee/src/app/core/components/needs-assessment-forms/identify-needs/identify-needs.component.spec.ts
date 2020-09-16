@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import IdentifyNeedsComponent from './identify-needs.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('IdentifyNeedsComponent', () => {
   let component: IdentifyNeedsComponent;
@@ -8,7 +9,8 @@ describe('IdentifyNeedsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IdentifyNeedsComponent ]
+      declarations: [ IdentifyNeedsComponent ],
+      imports: [ ReactiveFormsModule ]
     })
     .compileComponents();
   }));

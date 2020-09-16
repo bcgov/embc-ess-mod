@@ -17,7 +17,7 @@ export class NeedsAssessmentComponent implements OnInit {
   needsFolderPath = 'needs-assessment-forms';
   isEditable = true;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private componentService: ComponentCreationService) {}
+  constructor(private router: Router, private componentService: ComponentCreationService) {}
 
   ngOnInit(): void {
     this.needsSteps = this.componentService.createEvacSteps();

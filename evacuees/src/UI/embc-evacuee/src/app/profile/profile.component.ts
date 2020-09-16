@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   @ViewChild('profileStepper') profileStepper: MatStepper;
   path: string;
 
-  constructor(private formBuilder: FormBuilder, private router: Router,
+  constructor(private router: Router,
               private componentService: ComponentCreationService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {

@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NonVerifiedRegistrationComponent } from './non-verified-registration.component';
 
-describe('ComponentLoaderComponent', () => {
+describe('NonVerifiedRegistrationComponent', () => {
   let component: NonVerifiedRegistrationComponent;
   let fixture: ComponentFixture<NonVerifiedRegistrationComponent>;
 

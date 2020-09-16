@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import ContactInfoComponent from './contact-info.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('ContactInfoComponent', () => {
   let component: ContactInfoComponent;
@@ -8,7 +9,8 @@ describe('ContactInfoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContactInfoComponent ]
+      declarations: [ ContactInfoComponent ],
+      imports: [ ReactiveFormsModule ]
     })
     .compileComponents();
   }));

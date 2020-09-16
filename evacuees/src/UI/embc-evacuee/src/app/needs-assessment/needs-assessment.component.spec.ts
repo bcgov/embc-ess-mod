@@ -1,14 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NeedsAssessmentComponent } from './needs-assessment.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentCreationService } from '../core/services/componentCreation.service';
 
-describe('EvacuationFileComponent', () => {
+describe('NeedsAssessmentComponent', () => {
   let component: NeedsAssessmentComponent;
   let fixture: ComponentFixture<NeedsAssessmentComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NeedsAssessmentComponent ]
+      declarations: [ NeedsAssessmentComponent ],
+      imports: [ RouterTestingModule ],
+      providers: [ ComponentCreationService ]
     })
     .compileComponents();
   }));
