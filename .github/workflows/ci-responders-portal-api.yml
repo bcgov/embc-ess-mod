@@ -1,0 +1,21 @@
+name: ci-responders-portal-api
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+    paths:
+      - "responders/src/API/**"
+      - ".github/workflows/ci-responders-portal-api.yml"
+
+env:
+  IMAGE_NAME: responders-portal-api
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        working-directory: ./responders/src/API
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME
