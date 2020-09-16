@@ -37,7 +37,7 @@ export default class AddressComponent implements OnInit {
   ],
   declarations: [
     AddressComponent,
-    ]
+  ],
 })
 class AddressModule {
 

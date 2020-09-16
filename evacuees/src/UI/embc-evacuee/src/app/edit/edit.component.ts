@@ -18,9 +18,9 @@ export class EditComponent implements OnInit {
     });
   }
 
-  // save() {
+  save(): void {
 
-  // }
+  }
 
   cancel(): void {
     this.router.navigate(['/loader/needs-assessment']);

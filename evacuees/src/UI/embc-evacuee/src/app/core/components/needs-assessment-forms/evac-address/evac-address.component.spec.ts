@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EvacAddressComponent } from './evac-address.component';
+import  EvacAddressComponent  from './evac-address.component';
 
 describe('EvacAddressComponent', () => {
   let component: EvacAddressComponent;
