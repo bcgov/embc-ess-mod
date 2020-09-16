@@ -13,7 +13,7 @@ export class CollectionNoticeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  submitNotice() :void {
+  submitNotice(): void {
     this.router.navigate(['/restriction']);
   }
 

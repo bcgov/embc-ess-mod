@@ -40,5 +40,5 @@ export default class AddressComponent implements OnInit {
     ]
 })
 class AddressModule {
-  
+
 }

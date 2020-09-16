@@ -14,7 +14,7 @@ export class NeedsAssessmentComponent implements OnInit {
 
   needsSteps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
   @ViewChild('needsStepper') private needsStepper: MatStepper;
-  needsFolderPath: string = "needs-assessment-forms";
+  needsFolderPath = 'needs-assessment-forms';
   isEditable = true;
 
   constructor(private _formBuilder: FormBuilder, private router: Router, private componentService: ComponentCreationService) {}
@@ -24,16 +24,16 @@ export class NeedsAssessmentComponent implements OnInit {
   }
 
   goBack(stepper: MatStepper, lastStep): void {
-    if(lastStep == 0) {
+    if (lastStep == 0) {
       stepper.previous();
-    } else if(lastStep == -1) {
-      this.router.navigate(['/loader/registration/last'])
-    } 
+    } else if (lastStep == -1) {
+      this.router.navigate(['/loader/registration/last']);
+    }
   }
 
   goForward(stepper: MatStepper, isLast: boolean): void {
-    if(isLast) {
-      //this.showStep = !this.showStep;
+    if (isLast) {
+      // this.showStep = !this.showStep;
       this.router.navigate(['/fileSubmission']);
     }
     stepper.next();

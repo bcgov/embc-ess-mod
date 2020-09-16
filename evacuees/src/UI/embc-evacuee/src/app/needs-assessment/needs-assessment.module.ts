@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { EvacueeProfileFormsModule } from '../core/components/evacuee-profile-forms.module';
-import { ReviewModule } from '../core/components/review/review.module'
+import { ReviewModule } from '../core/components/review/review.module';
 
 @NgModule({
   declarations: [

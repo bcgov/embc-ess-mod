@@ -15,8 +15,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   secondFormGroup: FormGroup;
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
-  showStep: boolean = false;
-  profileFolderPath: string = "evacuee-profile-forms"
+  showStep = false;
+  profileFolderPath = 'evacuee-profile-forms';
   @ViewChild('profileStepper') profileStepper: MatStepper;
   path: string;
 
@@ -26,53 +26,53 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.steps = this.componentService.createProfileSteps();
     this.route.paramMap.subscribe(params => {
       console.log(params.get('stepPos'));
-      if(params.get('stepPos') === "last") {
-        this.path = params.get('stepPos')
+      if (params.get('stepPos') === 'last') {
+        this.path = params.get('stepPos');
       }
-    })
+    });
   }
 
   ngAfterViewInit() {
-    if(this.path === "last") {
-      console.log("heeeeeeeeeeeere");
+    if (this.path === 'last') {
+      console.log('heeeeeeeeeeeere');
       console.log(this.profileStepper);
      // this.profileStepper.selectedIndex = 2;
-     setTimeout(()=>{
-       console.log(this.steps.length - 1)
-      this.profileStepper.selectedIndex = 3; 
-    },0);
+      setTimeout(() => {
+       console.log(this.steps.length - 1);
+       this.profileStepper.selectedIndex = 3;
+    }, 0);
     }
   }
 
   createProfile(lastStep: boolean): void {
-    if(lastStep) {
+    if (lastStep) {
       this.showStep = !this.showStep;
-      //this.router.navigate(['/create-evac-file']);
-      //this.steps = this.componentService.createEvacSteps();
+      // this.router.navigate(['/create-evac-file']);
+      // this.steps = this.componentService.createEvacSteps();
     }
   }
 
   goBack(stepper: MatStepper, lastStep): void {
-    if(lastStep == 0) {
+    if (lastStep == 0) {
       stepper.previous();
-      console.log(this.profileStepper)
-    } else if(lastStep == -1) {
+      console.log(this.profileStepper);
+    } else if (lastStep == -1) {
       this.showStep = !this.showStep;
-      //stepper.selectedIndex
+      // stepper.selectedIndex
       // this.profileStepper.changes.subscribe(x=> {
       //   console.log(x)
       //   x.first._selectedIndex = 3
       // console.log(this.steps.length)
       // })
-      
-    } else if(lastStep = -2) {
-      this.router.navigate(['/restriction'])
+
+    } else if (lastStep = -2) {
+      this.router.navigate(['/restriction']);
     }
   }
 
   goForward(stepper: MatStepper, isLast: boolean): void {
-    if(isLast) {
-      //this.showStep = !this.showStep;
+    if (isLast) {
+      // this.showStep = !this.showStep;
       this.router.navigate(['/loader/needs-assessment']);
     }
     stepper.next();

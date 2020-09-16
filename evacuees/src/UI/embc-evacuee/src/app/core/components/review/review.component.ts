@@ -17,7 +17,7 @@ export class ReviewComponent implements OnInit {
 
   constructor(private router: Router) { }
 
-  hideCard: boolean = false;
+  hideCard = false;
 
   ngOnInit(): void {
     this.loadComponent();
@@ -40,8 +40,8 @@ export class ReviewComponent implements OnInit {
     // if(!this.componentToLoad) {
     //  this.componentToLoad = this.componentService.getProfileComponents().pipe(
     //    map(comps => comps.filter( v => v.type === 'personal-details')[0])
-       
-    //    ).pipe(mergeMap((x) => { 
+
+    //    ).pipe(mergeMap((x) => {
     //   console.log(x)
     //   console.log(x.type)
     //   console.log((`../core/components/evacuee-profile-forms/${x.type}/${x.type}.component`))
@@ -56,12 +56,12 @@ export class ReviewComponent implements OnInit {
       // compName.subscribe(v => console.log(v))
 
 /**
- * console.log(comp) 
+ * console.log(comp)
       console.log(comp.type === "personal-details")
       return comp.type === 'personal-details'}));
  */
 
-    //  this.componentToLoad = Promise.resolve(compName => { 
+    //  this.componentToLoad = Promise.resolve(compName => {
     //    return import(`../core/components/evacuee-profile-forms/${compName}/${compName}.component`);
     //   })
     // }

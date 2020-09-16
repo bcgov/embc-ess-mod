@@ -40,5 +40,5 @@ export default class ContactInfoComponent implements OnInit {
     ]
 })
 class ContactInfoModule {
-  
+
 }

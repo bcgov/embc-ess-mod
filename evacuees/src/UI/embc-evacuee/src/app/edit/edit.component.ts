@@ -8,14 +8,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class EditComponent implements OnInit {
   componentToLoad: string;
-  profileFolderPath: string = "evacuee-profile-forms"
+  profileFolderPath = 'evacuee-profile-forms';
 
   constructor(private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.componentToLoad = params.get('type');
-    })
+    });
   }
 
   save() {
@@ -23,7 +23,7 @@ export class EditComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/loader/needs-assessment'])
+    this.router.navigate(['/loader/needs-assessment']);
   }
 
 }

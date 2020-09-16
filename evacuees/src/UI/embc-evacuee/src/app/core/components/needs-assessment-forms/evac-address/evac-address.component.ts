@@ -40,5 +40,5 @@ export default class EvacAddressComponent implements OnInit {
     ]
 })
 class EvacAddressModule {
-  
+
 }

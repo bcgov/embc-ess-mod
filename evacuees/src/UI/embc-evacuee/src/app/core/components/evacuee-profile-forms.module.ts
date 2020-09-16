@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ComponentWrapperComponent } from './component-wrapper/component-wrapper.component'
+import { ComponentWrapperComponent } from './component-wrapper/component-wrapper.component';
 
 @NgModule({
   declarations: [

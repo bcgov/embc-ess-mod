@@ -20,8 +20,8 @@ export class ComponentWrapperComponent implements OnInit {
     });
   }
 
-  loadProfileComponent() : Promise<any> {
+  loadProfileComponent(): Promise<any> {
     return Promise.resolve(import(`../${this.folderPath}/${this.componentName}/${this.componentName}.component`));
   }
-//../core/components/evacuee-profile-forms/${this.componentName}/${this.componentName}.component`
+// ../core/components/evacuee-profile-forms/${this.componentName}/${this.componentName}.component`
 }

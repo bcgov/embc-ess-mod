@@ -16,7 +16,7 @@ export default class PersonalDetailsComponent implements OnInit {
 
   firstFormGroup: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) { } 
+  constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.firstFormGroup = this.formBuilder.group({
@@ -39,5 +39,5 @@ export default class PersonalDetailsComponent implements OnInit {
     ]
 })
 class PersonalDetailsModule {
-  
+
 }

@@ -34,5 +34,5 @@ export default class SecretComponent implements OnInit {
     ]
 })
 class SecretModule {
-  
+
 }

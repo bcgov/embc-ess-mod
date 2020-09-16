@@ -16,7 +16,7 @@ export default class PetsComponent implements OnInit {
 
   firstFormGroup: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) { } 
+  constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.firstFormGroup = this.formBuilder.group({
@@ -40,5 +40,5 @@ export default class PetsComponent implements OnInit {
     ]
 })
 class PetsModule {
-  
+
 }

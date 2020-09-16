@@ -40,5 +40,5 @@ export default class FamilyInformationComponent implements OnInit {
     ]
 })
 class FamilyInformationModule {
-  
+
 }

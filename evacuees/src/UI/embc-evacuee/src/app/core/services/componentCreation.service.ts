@@ -94,21 +94,21 @@ export class ComponentCreationService {
         const profile = new Observable((observer) => {
             observer.next(this.dynamicComponents);
             observer.complete();
-        })
+        });
         return profile;
     }
 
     createProfileSteps(): Array<ComponentMetaDataModel> {
-        let componentArr: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
-        for (let comp of this.profileComponents) {
+        const componentArr: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
+        for (const comp of this.profileComponents) {
             componentArr.push(Object.assign(new ComponentMetaDataModel(), comp));
         }
         return componentArr;
     }
 
     createEvacSteps(): Array<ComponentMetaDataModel> {
-        let componentArr: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
-        for (let comp of this.needsAssessmentComponents) {
+        const componentArr: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
+        for (const comp of this.needsAssessmentComponents) {
             componentArr.push(Object.assign(new ComponentMetaDataModel(), comp));
         }
         return componentArr;
