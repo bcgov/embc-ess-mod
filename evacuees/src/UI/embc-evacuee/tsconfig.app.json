@@ -10,6 +10,8 @@
     "src/polyfills.ts"
   ],
   "include": [
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "src/app/core/components/evacuee-profile-forms/**/*.component.ts",
+    "src/app/core/components/needs-assessment-forms/**/*.component.ts"
   ]
 }
