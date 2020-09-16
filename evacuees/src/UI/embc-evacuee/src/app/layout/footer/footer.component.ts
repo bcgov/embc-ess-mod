@@ -10,7 +10,7 @@ export class FooterComponent implements OnInit{
 
     appVersion: string;
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.appVersion = environment.version;
     }
 

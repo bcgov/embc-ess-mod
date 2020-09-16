@@ -17,16 +17,16 @@ export class NeedsAssessmentComponent implements OnInit {
   needsFolderPath = 'needs-assessment-forms';
   isEditable = true;
 
-  constructor(private _formBuilder: FormBuilder, private router: Router, private componentService: ComponentCreationService) {}
+  constructor(private formBuilder: FormBuilder, private router: Router, private componentService: ComponentCreationService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.needsSteps = this.componentService.createEvacSteps();
   }
 
   goBack(stepper: MatStepper, lastStep): void {
-    if (lastStep == 0) {
+    if (lastStep === 0) {
       stepper.previous();
-    } else if (lastStep == -1) {
+    } else if (lastStep === -1) {
       this.router.navigate(['/loader/registration/last']);
     }
   }

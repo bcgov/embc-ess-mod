@@ -1,5 +1,5 @@
 import { Component, OnInit, Type, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../core/services/componentCreation.service';
 import { ComponentMetaDataModel } from '../core/model/componentMetaData.model';
@@ -20,9 +20,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   @ViewChild('profileStepper') profileStepper: MatStepper;
   path: string;
 
-  constructor(private _formBuilder: FormBuilder, private router: Router, private componentService: ComponentCreationService, private route: ActivatedRoute) {}
+  constructor(private formBuilder: FormBuilder, private router: Router,
+              private componentService: ComponentCreationService, private route: ActivatedRoute) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.steps = this.componentService.createProfileSteps();
     this.route.paramMap.subscribe(params => {
       console.log(params.get('stepPos'));
@@ -32,15 +33,15 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (this.path === 'last') {
       console.log('heeeeeeeeeeeere');
       console.log(this.profileStepper);
-     // this.profileStepper.selectedIndex = 2;
+      // this.profileStepper.selectedIndex = 2;
       setTimeout(() => {
-       console.log(this.steps.length - 1);
-       this.profileStepper.selectedIndex = 3;
-    }, 0);
+        console.log(this.steps.length - 1);
+        this.profileStepper.selectedIndex = 3;
+      }, 0);
     }
   }
 
@@ -53,10 +54,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
   goBack(stepper: MatStepper, lastStep): void {
-    if (lastStep == 0) {
+    if (lastStep === 0) {
       stepper.previous();
       console.log(this.profileStepper);
-    } else if (lastStep == -1) {
+    } else if (lastStep === -1) {
       this.showStep = !this.showStep;
       // stepper.selectedIndex
       // this.profileStepper.changes.subscribe(x=> {
@@ -65,7 +66,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       // console.log(this.steps.length)
       // })
 
-    } else if (lastStep = -2) {
+    } else if (lastStep === -2) {
       this.router.navigate(['/restriction']);
     }
   }

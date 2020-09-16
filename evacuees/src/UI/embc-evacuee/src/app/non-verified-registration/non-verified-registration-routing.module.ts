@@ -7,16 +7,20 @@ const routes: Routes = [
     path: '', component: NonVerifiedRegistrationComponent,
     children: [
       {
-        path: 'collection-notice', loadChildren: () => import('../collection-notice/collection-notice.module').then(m => m.CollectionNoticeModule)
+        path: 'collection-notice',
+        loadChildren: () => import('../collection-notice/collection-notice.module').then(m => m.CollectionNoticeModule)
       },
       {
-        path: 'restriction', loadChildren: () => import('../restriction/restriction.module').then(m => m.RestrictionModule)
+        path: 'restriction',
+        loadChildren: () => import('../restriction/restriction.module').then(m => m.RestrictionModule)
       },
       {
-        path: 'registration', loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)
+        path: 'registration',
+        loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)
       }, /// :stepPos
       {
-        path: 'needs-assessment', loadChildren: () => import('../needs-assessment/needs-assessment.module').then(m => m.NeedsAssessmentModule)
+        path: 'needs-assessment',
+        loadChildren: () => import('../needs-assessment/needs-assessment.module').then(m => m.NeedsAssessmentModule)
       },
       {
         path: '',
@@ -24,7 +28,8 @@ const routes: Routes = [
         pathMatch: 'full',
       },
       {
-        path: 'edit/:type', loadChildren: () => import('../edit/edit.module').then(m => m.EditModule)
+        path: 'edit/:type',
+        loadChildren: () => import('../edit/edit.module').then(m => m.EditModule)
       }
     ]
   }

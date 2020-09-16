@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
 
-homeButton() {
+homeButton(): void {
 
 }
 

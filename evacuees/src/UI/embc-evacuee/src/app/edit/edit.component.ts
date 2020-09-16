@@ -18,11 +18,11 @@ export class EditComponent implements OnInit {
     });
   }
 
-  save() {
+  // save() {
 
-  }
+  // }
 
-  cancel() {
+  cancel(): void {
     this.router.navigate(['/loader/needs-assessment']);
   }
 
