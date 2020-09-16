@@ -1,0 +1,48 @@
+<mat-horizontal-stepper linear #stepper>
+    <!-- #docregion editable -->
+    <mat-step [editable]="isEditable"> <!--[stepControl]="firstFormGroup"-->
+      <!-- #enddocregion editable -->
+      <!-- <app-personal-details></app-personal-details> -->
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step [editable]="isEditable"> <!--[stepControl]="secondFormGroup"-->
+      <app-address></app-address>
+      <!-- <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel></ng-template>
+        <mat-form-field>
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
+        </mat-form-field>
+        
+      </form> -->
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step [editable]="isEditable"> <!--[stepControl]="secondFormGroup"-->
+      <app-contact-info></app-contact-info>
+      <!-- <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel></ng-template>
+        <mat-form-field>
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
+        </mat-form-field>
+        
+      </form> -->
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel></ng-template>
+      <app-secret></app-secret>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="createProfile()">Next-Create Evacuation File</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>

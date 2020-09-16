@@ -1,0 +1,292 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import './fonts';
+$bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
+@import "~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme";
+@import './defaults.scss';
+@import './variables';
+
+@import "~@bcgov/bootstrap-theme/dist/scss/common";
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+//@import './floating-labels.scss';
+
+// monospace font used for fixed-size text blocks (eg, referral comments)
+// NB: same font as PDF renderer service
+@font-face {
+    font-family: 'LiberationMono';
+    src: url('/assets/LiberationMono-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('/assets/LiberationMono-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+         url('/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
+  }
+
+main {
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+}
+
+.mat-step-icon {
+  height: 38px !important;
+  width: 38px !important;
+  border: 4px solid #169BD5;
+}
+
+.mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-edit, .mat-step-header .mat-step-icon {
+    background-color: #FFFFFF !important;
+    color: #169BD5 !important;
+}
+
+.mat-step-header .mat-step-icon-state-done {
+  background-color: #169BD5 !important;
+  color: #FFFFFF !important;
+}
+
+.mat-step-header .mat-step-label {
+  color: #606060 !important;
+}
+
+.mat-step-header .mat-step-label.mat-step-label-active {
+    color: #169BD5 !important;
+}
+
+.mat-step-label-selected {
+  font-weight: normal !important;
+}
+
+.mat-stepper-horizontal-line {
+  border-top-width: 2px !important;
+}
+
+.mat-stepper-label-position-bottom .mat-stepper-horizontal-line {
+  top: 40px !important;
+}
+
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before, [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before, .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after, [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after {
+  border-top-width: 2px !important;
+}
+
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header::after, .mat-stepper-label-position-bottom .mat-horizontal-stepper-header::before {
+  top: 40px !important;
+}
+
+.mat-button, 
+.mat-flat-button, 
+.mat-icon-button, 
+.mat-stroked-button { 
+  border-radius: 0px !important; 
+}
+
+.stepper-style {
+  background-color: transparent !important;
+}
+
+.container-frame {
+  padding-top: 75px ;
+}
+
+.heading-container {
+  padding-bottom: 25px;
+  font-size: 50px;
+  color: #234075;
+}
+
+.page-heading {
+ font-size: 45px;
+}
+
+.button-style {
+  height: 55px;
+  font-weight: lighter;
+}
+.button-p {
+  @extend .button-style;
+  background-color: #234075;
+  color: #FFFFFF ;
+}
+
+.button-s {
+  @extend .button-style;
+  border: 1px solid #B5B5B5 !important;
+  color: #606060;
+  background-color: #FFFFFF !important;
+  float: right;
+}
+
+.button-p:hover {
+  background-color: #169BD5;
+}
+
+.button-s:hover {
+  background-color: #E5E5E5;
+}
+
+@media screen and (max-width: 768px) {
+  .resp-style .button-p {
+    margin-bottom: 10px;
+    width: 100%;
+    float: none;
+  }
+
+  .resp-style .button-s {
+    width: 100% !important;
+  }
+}
+
+mat-card {
+  border-radius: 0px !important;
+}
+
+.card-heading {
+  font-size: 21px;
+  color: #169BD5;
+}
+
+// @media screen and (max-width: 768px) {
+
+//   .resp-style .button-s {
+//     background-color: pink !important;
+//   }
+// }
+// .vertical {
+//   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+//   min-height: 100vh; /* These two lines are counted as one :-)       */
+
+//   display: flex;
+//   align-items: center;
+// }
+
+// .form-control {
+//     border-radius:0
+// }
+
+// .requiredField::after {
+//     content: "*";
+//     color: red;
+//  }
+
+// // .input-help {
+// //     vertical-align: top;
+// //     display: inline-block;
+// // }
+
+// .input-help {
+//     font-size: small;
+//     color: #6c757d !important;
+//     font-weight: lighter;
+// }
+
+// body {
+//     font-size: 15px;
+//     // background: linear-gradient(theme-color(info) 5%, white);
+//     // background-repeat: no-repeat;
+//     // background-attachment: fixed;
+// }
+
+// .input-symbol-dollar {
+//     position: relative;
+//   }
+ 
+// .input-symbol-dollar:after {
+//     content: "$";
+//     font-size: 16px !important;
+//     font-weight: 400;
+//     position: absolute;
+//     height: 100%;
+//     top: 0;
+//     left: 4px;
+//  }
+
+// /******** ESS Application Theme********/
+// hr {
+//      color: #BECDDB;
+//      border: 0.75px solid;
+//  }
+
+// .formHeading {
+//     background-color: #E2E9F0;
+//     margin: 20px 0px 20px 0px;
+//     font-size: 25px;
+//     padding-left: 20px;
+//     font-weight: bold;
+//   }
+
+// //  p {
+// //      line-height: 21px;
+// //  } 
+
+// /**START - Theme for Cards**/
+// .side-box-title {
+//     line-height: 21px;
+//     font-size: 21px;
+//   }
+
+// .side-box-body {
+//     font-size: 15px;
+// }
+
+// .app-heading {
+//     margin-top: 15px;
+//     margin-left: 6px;
+// }
+
+// .submissionHeader {
+//     margin-bottom: 0 !important;
+//     font-size: 40px;
+//     font-weight: bold;
+//   }
+// /**END - Theme for Cards**/
+
+// .icon,
+// .icon-text {
+//   vertical-align: middle;
+//   display: inline-block;
+// }
+
+// .form-header {
+//     background-color: #2F6699;
+//     border-bottom: 3px #FCBA19 solid;
+//     color: white;
+//     font-weight: bold;
+//     font-size: 21px;
+//     padding: 10px;
+//   }
+
+//   .form-body {
+//     background-color: #F0F0F0;
+//     border-left: 3px #2F6699 solid;
+//     border-bottom: 3px #2F6699 solid;
+//     border-right: 3px #2F6699 solid;
+//     font-weight: bold;
+//     padding: 10px;
+//   }
+
+//   .button-style {
+//       border-radius: 0 !important;
+//       height: 40px;
+//       font-size: 15px;
+//       color: #FFFFFF !important;
+//   }
+
+//   .primary-button {
+//       @extend .button-style;
+//       background-color: #2F6699;
+//   } 
+  
+//   .secondary-button {
+//     @extend .button-style;
+//     background-color: #FCBA19;
+//   }
+
+//   .disable-button {
+//     @extend .button-style;
+//     background-color: #8c8c8c;
+//   }
+
+//   .primary-button:hover, .secondary-button:hover, .disable-button:hover {
+//     background-color: #174671;
+//   }
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
