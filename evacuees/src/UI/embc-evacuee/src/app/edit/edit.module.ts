@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { EditRoutingModule } from './edit-routing.module';
-import { EvacueeProfileFormsModule } from '../core/components/evacuee-profile-forms.module';
+import { ComponentWrapperModule } from '../core/components/component-wrapper/component-wrapper.module';
 import { EditComponent } from './edit.component';
 
 
@@ -14,7 +14,7 @@ import { EditComponent } from './edit.component';
   imports: [
     CommonModule,
     EditRoutingModule,
-    EvacueeProfileFormsModule,
+    ComponentWrapperModule,
     ReactiveFormsModule
   ]
 })

@@ -1,11 +1,15 @@
-import { Component, OnInit, NgModule } from '@angular/core';
+import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule } from '@angular/forms';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { ReactiveFormsModule, AbstractControl, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormCreationService } from '../../../services/formCreation.service';
+import { Observable, Subscription } from 'rxjs';
+import { DirectiveModule } from '../../../directives/directives.module';
 
 @Component({
   selector: 'app-personal-details',
@@ -14,16 +18,45 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export default class PersonalDetailsComponent implements OnInit {
 
-  firstFormGroup: FormGroup;
+  personalDetailsForm: FormGroup;
+  gender: Array<string> = new Array<string>();
+  formBuilder: FormBuilder;
+  personalDetailsForm$: Subscription;
+  formCreationService: FormCreationService;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
+    this.formBuilder = formBuilder;
+    this.formCreationService = formCreationService;
+  }
 
   ngOnInit(): void {
-    this.firstFormGroup = this.formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
+
+    this.personalDetailsForm$ = this.formCreationService.getPeronalDetailsForm().subscribe(
+      personalDetails => {
+        this.personalDetailsForm = personalDetails;
+      }
+    );
+
+
+    // this.personalDetailsForm = this.formBuilder.group({
+    //   firstName: ['', Validators.required],
+    //   lastName: ['', Validators.required],
+    //   preferredName: [''],
+    //   initials: [''],
+    //   gender: ['', Validators.required],
+    //   dateOfBirth: ['', Validators.required],
+    // });
+
+    this.gender = ['Male', 'Female', 'X'];
   }
+
+  get personalFormControl(): { [key: string]: AbstractControl; } {
+    return this.personalDetailsForm.controls;
+  }
+
+
 }
+
 
 @NgModule({
   imports: [
@@ -31,12 +64,14 @@ export default class PersonalDetailsComponent implements OnInit {
     MatCardModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatSelectModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DirectiveModule
   ],
   declarations: [
     PersonalDetailsComponent,
-    ]
+  ]
 })
 class PersonalDetailsModule {
 

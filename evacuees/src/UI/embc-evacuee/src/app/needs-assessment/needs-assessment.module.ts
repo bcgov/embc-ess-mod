@@ -7,7 +7,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { EvacueeProfileFormsModule } from '../core/components/evacuee-profile-forms.module';
+import { ComponentWrapperModule } from '../core/components/component-wrapper/component-wrapper.module';
 import { ReviewModule } from '../core/components/review/review.module';
 
 @NgModule({
@@ -22,7 +22,7 @@ import { ReviewModule } from '../core/components/review/review.module';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    EvacueeProfileFormsModule,
+    ComponentWrapperModule,
     ReviewModule
   ]
 })

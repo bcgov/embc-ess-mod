@@ -7,7 +7,9 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { EvacueeProfileFormsModule } from '../core/components/evacuee-profile-forms.module';
+
+import { MatSelectModule } from '@angular/material/select';
+import { ComponentWrapperModule } from '../core/components/component-wrapper/component-wrapper.module';
 
 @NgModule({
   declarations: [
@@ -18,10 +20,11 @@ import { EvacueeProfileFormsModule } from '../core/components/evacuee-profile-fo
     ProfileRoutingModule,
     ReactiveFormsModule,
     MatStepperModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    EvacueeProfileFormsModule
+    // MatFormFieldModule,
+    // MatInputModule,
+    // MatButtonModule,
+    MatSelectModule,
+    ComponentWrapperModule
   ]
 })
 export class ProfileModule { }

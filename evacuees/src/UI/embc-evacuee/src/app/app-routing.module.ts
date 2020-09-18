@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/non-verified-registration',
+    redirectTo: 'non-verified-registration',
     pathMatch: 'full'
   },
   // {
