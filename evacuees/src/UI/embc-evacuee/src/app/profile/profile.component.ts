@@ -4,6 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../core/services/componentCreation.service';
 import { ComponentMetaDataModel } from '../core/model/componentMetaData.model';
 import { MatStepper } from '@angular/material/stepper';
+import { Subscription } from 'rxjs';
+import { FormCreationService } from '../core/services/formCreation.service';
 
 @Component({
   selector: 'app-profile',
@@ -12,37 +14,43 @@ import { MatStepper } from '@angular/material/stepper';
 })
 export class ProfileComponent implements OnInit, AfterViewInit {
 
-  secondFormGroup: FormGroup;
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
   showStep = false;
   profileFolderPath = 'evacuee-profile-forms';
   @ViewChild('profileStepper') profileStepper: MatStepper;
   path: string;
+  form$: Subscription;
+  form: FormGroup;
 
-  constructor(private router: Router,
-              private componentService: ComponentCreationService, private route: ActivatedRoute) { }
+  constructor(private router: Router, private componentService: ComponentCreationService,
+              private route: ActivatedRoute, private formCreationService: FormCreationService) { }
 
   ngOnInit(): void {
     this.steps = this.componentService.createProfileSteps();
-    this.route.paramMap.subscribe(params => {
-      console.log(params.get('stepPos'));
-      if (params.get('stepPos') === 'last') {
-        this.path = params.get('stepPos');
+    this.form$ = this.formCreationService.getPeronalDetailsForm().subscribe(
+      personalDetails => {
+        this.form = personalDetails;
       }
-    });
+    );
+    // this.route.paramMap.subscribe(params => {
+    //   console.log(params.get('stepPos'));
+    //   if (params.get('stepPos') === 'last') {
+    //     this.path = params.get('stepPos');
+    //   }
+    // });
   }
 
   ngAfterViewInit(): void {
-    if (this.path === 'last') {
-      console.log('heeeeeeeeeeeere');
-      console.log(this.profileStepper);
-      // this.profileStepper.selectedIndex = 2;
-      setTimeout(() => {
-        console.log(this.steps.length - 1);
-        this.profileStepper.selectedIndex = 3;
-      }, 0);
-    }
+    // if (this.path === 'last') {
+    //   console.log('heeeeeeeeeeeere');
+    //   console.log(this.profileStepper);
+    //   // this.profileStepper.selectedIndex = 2;
+    //   setTimeout(() => {
+    //     console.log(this.steps.length - 1);
+    //     this.profileStepper.selectedIndex = 3;
+    //   }, 0);
+    // }
   }
 
   createProfile(lastStep: boolean): void {
@@ -71,14 +79,23 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     }
   }
 
-  goForward(stepper: MatStepper, isLast: boolean): void {
-    if (isLast) {
-      // this.showStep = !this.showStep;
-      this.router.navigate(['/loader/needs-assessment']);
+  goForward(stepper: MatStepper, isLast: boolean, component: string): void {
+    if (this.form.status === 'VALID') {
+      if (isLast) {
+        this.router.navigate(['/loader/needs-assessment']);
+      }
+      this.setData(component);
+      stepper.next();
+    } else {
+      this.form.markAllAsTouched();
     }
-    stepper.next();
   }
 
+  setData(component: string): void {
+    if (component === 'personal-details') {
+      this.formCreationService.setPersonDetailsForm(this.form);
+    }
+  }
 }
 
 

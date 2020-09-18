@@ -1,36 +1,22 @@
-<mat-card class="card-align">
-    <!-- <mat-card-header>
-        <mat-card-title>Preferred Method</mat-card-title>
-    </mat-card-header> -->
+<form [formGroup]="firstFormGroup">
+  <mat-card class="card-align">
     <mat-card-content>
-        <h1>Primary Residence</h1>
-         <form [formGroup]="firstFormGroup">
-            <!-- #docregion ng-template -->
-            <!-- <ng-template matStepLabel></ng-template> -->
-            <!-- #enddocregion ng-template -->
-            <mat-form-field>
-              <mat-label>Name</mat-label>
-              <input matInput formControlName="firstCtrl" placeholder="Last name, First name">
-            </mat-form-field>
-          </form>
+      <p class="card-heading">Primary Residence</p>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="firstCtrl" placeholder="Last name, First name">
+      </mat-form-field>
     </mat-card-content>
-</mat-card>
-<br>
-<br>
-<mat-card class="card-align">
-    <!-- <mat-card-header>
-        <mat-card-title>Preferred Method</mat-card-title>
-    </mat-card-header> -->
+  </mat-card>
+  <br>
+  <br>
+  <mat-card class="card-align">
     <mat-card-content>
-        <h1>Mailing Address</h1>
-         <form [formGroup]="firstFormGroup">
-            <!-- #docregion ng-template -->
-            <!-- <ng-template matStepLabel></ng-template> -->
-            <!-- #enddocregion ng-template -->
-            <mat-form-field>
-              <mat-label>Name</mat-label>
-              <input matInput formControlName="firstCtrl" placeholder="Last name, First name">
-            </mat-form-field>
-          </form>
+      <p class="card-heading">Mailing Address</p>
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="firstCtrl" placeholder="Last name, First name">
+      </mat-form-field>
     </mat-card-content>
-</mat-card>
+  </mat-card>
+</form>

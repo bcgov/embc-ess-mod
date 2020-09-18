@@ -62,12 +62,21 @@ main {
   top: 40px !important;
 }
 
-.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before, [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before, .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after, [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after {
+.mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before,
+ [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before,
+  .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after,
+   [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after {
   border-top-width: 2px !important;
 }
 
 .mat-stepper-label-position-bottom .mat-horizontal-stepper-header::after, .mat-stepper-label-position-bottom .mat-horizontal-stepper-header::before {
   top: 40px !important;
+}
+
+@media screen and (max-width: 768px) {
+  .mat-step-label {
+    display: none !important;
+  }
 }
 
 .mat-button, 
@@ -97,12 +106,13 @@ main {
 
 .button-style {
   height: 55px;
-  font-weight: lighter;
+  font-weight: normal;
 }
 .button-p {
   @extend .button-style;
   background-color: #234075;
   color: #FFFFFF ;
+  float: right;
 }
 
 .button-s {
@@ -110,7 +120,6 @@ main {
   border: 1px solid #B5B5B5 !important;
   color: #606060;
   background-color: #FFFFFF !important;
-  float: right;
 }
 
 .button-p:hover {
@@ -123,17 +132,18 @@ main {
 
 @media screen and (max-width: 768px) {
   .resp-style .button-p {
-    margin-bottom: 10px;
     width: 100%;
     float: none;
   }
 
   .resp-style .button-s {
+    margin-bottom: 10px;
     width: 100% !important;
   }
 }
 
 mat-card {
+  @extend .mat-card-left, .mat-card-right, .mat-card-top;
   border-radius: 0px !important;
 }
 
@@ -141,6 +151,68 @@ mat-card {
   font-size: 21px;
   color: #169BD5;
 }
+
+.mat-card-left {
+    border-left-color: #B5B5B5;
+    border-left-style: solid;
+    border-left-width: 1px;
+}
+
+.mat-card-right {
+  border-right-color: #B5B5B5;
+  border-right-style: solid;
+  border-right-width: 1px;
+}
+
+.mat-card-top {
+  border-top-color: #B5B5B5;
+  border-top-style: solid;
+  border-top-width: 1px;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-start {
+  border-radius: 0px !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-end {
+  border-radius: 0px !important;
+}
+.mat-form-field-appearance-outline .mat-form-field-outline-gap {
+   border-radius: 0px !important;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start,
+ .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
+  .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {
+  border-width: 1px !important;
+}
+
+.mat-form-field-required-marker {
+  color: red !important;
+}
+
+.sub-heading {
+  font-size: 16px;
+  font-weight: 500;
+  color: #169BD5;
+}
+
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background, .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: #169BD5 !important;
+}
+
+.mat-checkbox-inner-container {
+  height: 20px !important;
+  width: 20px !important;
+}
+
+.mat-checkbox-layout {
+  white-space: normal !important;
+}
+
+// .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+//    color: rgba(0,0,0,.12) !important; 
+// }
 
 // @media screen and (max-width: 768px) {
 

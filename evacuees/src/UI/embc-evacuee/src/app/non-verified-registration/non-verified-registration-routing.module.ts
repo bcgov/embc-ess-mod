@@ -7,6 +7,11 @@ const routes: Routes = [
     path: '', component: NonVerifiedRegistrationComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'create-profile',
+        pathMatch: 'full',
+      },
+      {
         path: 'collection-notice',
         loadChildren: () => import('../collection-notice/collection-notice.module').then(m => m.CollectionNoticeModule)
       },
@@ -15,17 +20,12 @@ const routes: Routes = [
         loadChildren: () => import('../restriction/restriction.module').then(m => m.RestrictionModule)
       },
       {
-        path: 'registration',
+        path: 'create-profile',
         loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)
       }, /// :stepPos
       {
         path: 'needs-assessment',
         loadChildren: () => import('../needs-assessment/needs-assessment.module').then(m => m.NeedsAssessmentModule)
-      },
-      {
-        path: '',
-        redirectTo: 'registration',
-        pathMatch: 'full',
       },
       {
         path: 'edit/:type',
