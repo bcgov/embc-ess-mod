@@ -9,7 +9,7 @@ import { ReactiveFormsModule, AbstractControl, FormControl } from '@angular/form
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormCreationService } from '../../../services/formCreation.service';
 import { Observable, Subscription } from 'rxjs';
-import { DirectiveModule } from '../../../directives/directives.module';
+import { DirectivesModule } from '../../../directives/directives.module';
 
 @Component({
   selector: 'app-personal-details',
@@ -36,20 +36,12 @@ export default class PersonalDetailsComponent implements OnInit {
         this.personalDetailsForm = personalDetails;
       }
     );
-
-
-    // this.personalDetailsForm = this.formBuilder.group({
-    //   firstName: ['', Validators.required],
-    //   lastName: ['', Validators.required],
-    //   preferredName: [''],
-    //   initials: [''],
-    //   gender: ['', Validators.required],
-    //   dateOfBirth: ['', Validators.required],
-    // });
-
     this.gender = ['Male', 'Female', 'X'];
   }
 
+  /**
+   * Returns the control of the form
+   */
   get personalFormControl(): { [key: string]: AbstractControl; } {
     return this.personalDetailsForm.controls;
   }
@@ -67,7 +59,7 @@ export default class PersonalDetailsComponent implements OnInit {
     MatSelectModule,
     MatInputModule,
     ReactiveFormsModule,
-    DirectiveModule
+    DirectivesModule
   ],
   declarations: [
     PersonalDetailsComponent,
