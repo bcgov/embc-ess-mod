@@ -28,11 +28,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.steps = this.componentService.createProfileSteps();
-    this.form$ = this.formCreationService.getPeronalDetailsForm().subscribe(
-      personalDetails => {
-        this.form = personalDetails;
-      }
-    );
     // this.route.paramMap.subscribe(params => {
     //   console.log(params.get('stepPos'));
     //   if (params.get('stepPos') === 'last') {
@@ -51,6 +46,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     //     this.profileStepper.selectedIndex = 3;
     //   }, 0);
     // }
+  }
+
+  currentStep(index: number): void {
+    this.loadStepForm(index);
   }
 
   createProfile(lastStep: boolean): void {
@@ -84,19 +83,58 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       if (isLast) {
         this.router.navigate(['/loader/needs-assessment']);
       }
-      this.setData(component);
+      this.setFormData(component);
+      this.form$.unsubscribe();
       stepper.next();
     } else {
       this.form.markAllAsTouched();
     }
   }
 
-  setData(component: string): void {
-    if (component === 'personal-details') {
-      this.formCreationService.setPersonDetailsForm(this.form);
+  setFormData(component: string): void {
+    switch (component) {
+      case 'personal-details':
+        this.formCreationService.setPersonDetailsForm(this.form);
+        break;
+      case 'contact-info':
+        this.formCreationService.setContactDetailsForm(this.form);
+    }
+    // if (component === 'personal-details') {
+    //   this.formCreationService.setPersonDetailsForm(this.form);
+    // }
+  }
+
+  /**
+   * Loads appropriate forms based on the current step
+   * @param index Step index
+   */
+  loadStepForm(index: number): void {
+    switch (index) {
+      case 0:
+        this.form$ = this.formCreationService.getPeronalDetailsForm().subscribe(
+          personalDetails => {
+            this.form = personalDetails;
+          }
+        );
+        break;
+      case 1:
+
+      case 2:
+        this.form$ = this.formCreationService.getContactDetailsForm().subscribe(
+          contactDetails => {
+            this.form = contactDetails;
+          }
+        );
+        break;
+      case 3:
+
+      case 4:
     }
   }
+
 }
+
+
 
 
 // firstFormGroup: FormGroup;

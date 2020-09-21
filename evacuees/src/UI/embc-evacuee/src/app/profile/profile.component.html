@@ -4,8 +4,8 @@
   </div>
 </div>
 
-<mat-horizontal-stepper class="stepper-style" [linear]="false" labelPosition="bottom" #profileStepper>
-  <mat-step *ngFor="let step of steps" [editable]="isEditable">
+<mat-horizontal-stepper class="stepper-style" [linear]="true" labelPosition="bottom" (animationDone)="currentStep(profileStepper?.selectedIndex)" #profileStepper>
+  <mat-step *ngFor="let step of steps" [editable]="isEditable"><!--[stepControl]="form"-->
     <ng-template matStepLabel>{{step.stepName}}</ng-template>
     <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
     <br>
@@ -24,4 +24,4 @@
   </mat-step>
 </mat-horizontal-stepper>
 
-<!-- {{personalDetailsForm.status}} -->
+<!-- {{form?.status}} -->
