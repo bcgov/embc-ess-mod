@@ -41,3 +41,38 @@ export class PersonDetailsForm {
         // Validators.pattern(globalConst.datePattern),
     }
 }
+
+export class ContactDetails {
+    email: string;
+    phone: string;
+    hidePhoneRequired = false;
+    hideEmailRequired = false;
+    confirmEmail: string;
+
+    constructor() { }
+}
+
+export class ContactDetailsForm {
+
+    email = new FormControl();
+    phone = new FormControl();
+    hidePhoneRequired = new FormControl();
+    hideEmailRequired = new FormControl();
+    confirmEmail = new FormControl();
+
+    constructor(contactDetails: ContactDetails, customValidator: CustomValidationService) {
+
+        this.hideEmailRequired.setValue(contactDetails.hideEmailRequired);
+        this.hidePhoneRequired.setValue(contactDetails.hidePhoneRequired);
+
+        this.email.setValue(contactDetails.email);
+        this.email.setValidators([Validators.required, Validators.email]);
+
+        this.confirmEmail.setValue(contactDetails.confirmEmail);
+        this.confirmEmail.setValidators([Validators.required, Validators.email,
+        customValidator.confirmEmailValidator().bind(customValidator)]);
+
+        this.phone.setValue(contactDetails.phone);
+        this.phone.setValidators([Validators.required, Validators.minLength(12)]);
+    }
+}
