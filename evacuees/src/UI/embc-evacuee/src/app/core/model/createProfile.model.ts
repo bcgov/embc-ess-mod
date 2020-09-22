@@ -76,3 +76,18 @@ export class ContactDetailsForm {
         this.phone.setValidators([Validators.required, Validators.minLength(12)]);
     }
 }
+
+export class Secret {
+    secretPhrase: string;
+
+    constructor() {}
+}
+
+export class SecretForm {
+    secretPhrase = new FormControl();
+
+    constructor(secret: Secret) {
+        this.secretPhrase.setValue(secret.secretPhrase);
+        this.secretPhrase.setValidators([Validators.required]);
+    }
+}

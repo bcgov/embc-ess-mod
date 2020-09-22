@@ -98,6 +98,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         break;
       case 'contact-info':
         this.formCreationService.setContactDetailsForm(this.form);
+        break;
+      case 'secret':
+        this.formCreationService.setSecretForm(this.form);
+        break;
+      default:
     }
     // if (component === 'personal-details') {
     //   this.formCreationService.setPersonDetailsForm(this.form);
@@ -127,8 +132,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         );
         break;
       case 3:
-
-      case 4:
+        this.form$ = this.formCreationService.getSecretForm().subscribe(
+          secret => {
+            this.form = secret;
+          }
+        );
+        break;
     }
   }
 

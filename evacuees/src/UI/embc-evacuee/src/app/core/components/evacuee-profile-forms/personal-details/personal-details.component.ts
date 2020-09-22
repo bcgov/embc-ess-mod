@@ -5,10 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { ReactiveFormsModule, AbstractControl, FormControl } from '@angular/forms';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormCreationService } from '../../../services/formCreation.service';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DirectivesModule } from '../../../directives/directives.module';
 
 @Component({
@@ -30,7 +30,6 @@ export default class PersonalDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.personalDetailsForm$ = this.formCreationService.getPeronalDetailsForm().subscribe(
       personalDetails => {
         this.personalDetailsForm = personalDetails;
