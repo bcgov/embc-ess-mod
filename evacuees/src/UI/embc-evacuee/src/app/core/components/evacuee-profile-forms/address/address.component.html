@@ -11,7 +11,7 @@
             their personal time.</mat-hint>
           <br>
           <mat-hint class="radio-hint">A person can only have one primary residence at any moment in time.</mat-hint>
-          <mat-radio-group formControlName="isBcAddress" aria-labelledby="primary-radio-group-label"
+          <mat-radio-group formControlName="isBcAddress" aria-labelledby="primary-radio-group-label" (change)="primaryAddressChange($event)"
             class="primary-radio-group">
             <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
               {{option}}
@@ -20,35 +20,39 @@
         </div>
       </div>
 
-      <div *ngIf="primaryAddressFormControl?.isBcAddress.value ==='Yes'" class="row">
-        <div class="col-md-12">
-          <app-bc-address [addressForm]="primaryAddressForm"></app-bc-address>
-        </div>
-      </div>
-
-      <div *ngIf="primaryAddressFormControl?.isBcAddress.value ==='No'">
-        <div class="row">
-          <div class="col-md-5">
-            <p>In what <b>country</b> is your primary residence located?</p>
-            <mat-form-field appearance="outline">
-              <input type="text" placeholder="Start Typing" aria-label="Country" matInput formControlName="country"
-                [matAutocomplete]="auto">
-              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.desc">
-                  {{option.desc}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
+      
+        <div *ngIf="primaryAddressFormControl?.isBcAddress.value ==='Yes'" class="row">
+          <div class="col-md-12">
+            <app-bc-address [addressForm]="primaryAddressForm"></app-bc-address>
           </div>
         </div>
 
-        <div [ngSwitch]="primaryAddressFormControl?.countryCode.value">
-          <app-can-address *ngSwitchCase="'Canada'" [addressForm]="primaryAddressForm"></app-can-address>
-          <app-usa-address *ngSwitchCase="'United States of America'" [addressForm]="primaryAddressForm">
-          </app-usa-address>
-          <app-other-address *ngSwitchCase="'Other'" [addressForm]="primaryAddressForm"></app-other-address>
+        <div *ngIf="primaryAddressFormControl?.isBcAddress.value ==='No'">
+          <div formGroupName="address">
+            <div class="row">
+              <div class="col-md-5">
+                <p>In what <b>country</b> is your primary residence located?</p>
+                <mat-form-field appearance="outline">
+                  <input type="text" placeholder="Start Typing" aria-label="Country" matInput formControlName="country"
+                    [matAutocomplete]="auto">
+                  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.desc">
+                      {{option.desc}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          
+          <div [ngSwitch]="primaryAddressFormControl?.address?.controls?.country?.value">
+            <app-can-address *ngSwitchCase="'Canada'" [addressForm]="primaryAddressForm"></app-can-address>
+            <app-usa-address *ngSwitchCase="'United States of America'" [addressForm]="primaryAddressForm">
+            </app-usa-address>
+            <app-other-address *ngSwitchCase="'Other'" [addressForm]="primaryAddressForm"></app-other-address>
+          </div>
         </div>
-      </div>
+
     </form>
   </mat-card-content>
 </mat-card>
@@ -77,7 +81,7 @@
         <div class="row">
           <div class="col-md-12">
             <label id="primary-radio-group-label">Is your <b>mailing address</b> within British Columbia?</label>
-            <mat-radio-group formControlName="isBcMailingAddress" aria-labelledby="primary-radio-group-label"
+            <mat-radio-group formControlName="isBcMailingAddress" aria-labelledby="primary-radio-group-label" (change)="mailingAddressChange($event)"
               class="primary-radio-group">
               <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
                 {{option}}
@@ -93,22 +97,26 @@
         </div>
 
         <div *ngIf="mailingAddressFormControl?.isBcMailingAddress.value ==='No'">
-          <div class="row">
-            <div class="col-md-5">
-              <p>In what <b>country</b> is your primary residence located?</p>
-              <mat-form-field appearance="outline">
-                <input type="text" placeholder="Start Typing" aria-label="Country" matInput
-                  formControlName="country" [matAutocomplete]="auto">
-                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option.desc">
-                    {{option.desc}}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-            </div>
-          </div>
+          <div formGroupName="address">
 
-          <div [ngSwitch]="mailingAddressFormControl?.countryCode.value">
+            <div class="row">
+              <div class="col-md-5">
+                <p>In what <b>country</b> is your primary residence located?</p>
+                <mat-form-field appearance="outline">
+                  <input type="text" placeholder="Start Typing" aria-label="Country" matInput
+                    formControlName="country" [matAutocomplete]="auto">
+                  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.desc">
+                      {{option.desc}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+
+          </div>
+          
+          <div [ngSwitch]="mailingAddressFormControl?.address?.controls?.country.value">
             <app-can-address *ngSwitchCase="'Canada'" [addressForm]="mailingAddressForm"></app-can-address>
             <app-usa-address *ngSwitchCase="'United States of America'" [addressForm]="mailingAddressForm">
             </app-usa-address>

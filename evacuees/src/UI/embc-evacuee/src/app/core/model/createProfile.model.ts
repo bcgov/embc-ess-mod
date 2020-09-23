@@ -1,4 +1,4 @@
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import * as globalConst from '../services/globalConstants';
 import { CustomValidationService } from '../services/customValidation.service';
 
@@ -109,17 +109,29 @@ export class Address {
 }
 
 export class AddressForm {
+    address: FormGroup;
+
     isBcAddress = new FormControl();
-    addressLine1 = new FormControl();
-    addressLine2 = new FormControl();
-    jurisdiction = new FormControl();
-    stateProvince = new FormControl();
-    country = new FormControl();
-    postalCode = new FormControl();
     isNewMailingAddress = new FormControl();
     isBcMailingAddress = new FormControl();
 
-    constructor(address: Address) {
+    // addressLine1 = new FormControl();
+    // addressLine2 = new FormControl();
+    // jurisdiction = new FormControl();
+    // stateProvince = new FormControl();
+    // country = new FormControl();
+    // postalCode = new FormControl();
+
+
+    constructor(address: Address, builder: FormBuilder) {
+        this.address = builder.group({
+            addressLine1: [''],
+            addressLine2: [''],
+            jurisdiction: [''],
+            stateProvince: [''],
+            country: [''],
+            postalCode: [''],
+        });
         this.isBcAddress.setValue(address.isBcAddress);
         // this.isBcAddress.setValidators([Validators.required]);
     }
