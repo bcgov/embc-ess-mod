@@ -91,3 +91,36 @@ export class SecretForm {
         this.secretPhrase.setValidators([Validators.required]);
     }
 }
+
+export class Address {
+    isBcAddress: string;
+    addressLine1: string;
+    addressLine2: string;
+    jurisdictionCode: string;
+    jurisdictionName: string;
+    stateProvinceCode: string;
+    stateProvinceName: string;
+    countryCode: string;
+    postalCode: string;
+    isNewMailingAddress: string;
+    isBcMailingAddress: string;
+
+    constructor() {}
+}
+
+export class AddressForm {
+    isBcAddress = new FormControl();
+    addressLine1 = new FormControl();
+    addressLine2 = new FormControl();
+    jurisdiction = new FormControl();
+    stateProvince = new FormControl();
+    country = new FormControl();
+    postalCode = new FormControl();
+    isNewMailingAddress = new FormControl();
+    isBcMailingAddress = new FormControl();
+
+    constructor(address: Address) {
+        this.isBcAddress.setValue(address.isBcAddress);
+        // this.isBcAddress.setValidators([Validators.required]);
+    }
+}
