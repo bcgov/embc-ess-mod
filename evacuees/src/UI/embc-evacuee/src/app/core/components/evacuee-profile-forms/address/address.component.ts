@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, AbstractControl} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,9 +29,9 @@ export default class AddressComponent implements OnInit {
   formCreationService: FormCreationService;
 
   options: Array<any> = [
-    {code:'CAN', desc: 'Canada'},
-    {code:'USA', desc: 'United States of America'},
-    {code:'OTH', desc: 'Other'}
+    {code: 'CAN', desc: 'Canada'},
+    {code: 'USA', desc: 'United States of America'},
+    {code: 'OTH', desc: 'Other'}
   ];
   filteredOptions: Observable<string[]>;
 
@@ -41,19 +41,13 @@ export default class AddressComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    // this.addressForm = this.formBuilder.group({
-    //   isBcAddress: ['', Validators.required],
-    //   primaryAddress: this.formBuilder.group({
-
-    //   })
-    // });
     this.primaryAddressForm$ = this.formCreationService.getPrimaryAddressForm().subscribe(primaryAddress => {
       this.primaryAddressForm = primaryAddress;
     });
 
     this.mailingAddressForm$ = this.formCreationService.getMailingAddressForm().subscribe(mailingAddress => {
       this.mailingAddressForm = mailingAddress;
-    })
+    });
 
     this.filteredOptions = this.primaryAddressForm.get('country').valueChanges.pipe(
       startWith(''),
@@ -61,17 +55,26 @@ export default class AddressComponent implements OnInit {
     );
   }
 
+  /**
+   * Filters the coutry list for autocomplete field
+   * @param value : User typed value
+   */
   private filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
     return this.options.filter(option => option.desc.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  get primaryAddressFormControl() {
+  /**
+   * Returns the control of the form
+   */
+  get primaryAddressFormControl(): { [key: string]: AbstractControl; } {
     return this.primaryAddressForm.controls;
   }
 
-  get mailingAddressFormControl() {
+  /**
+   * Returns the control of the form
+   */
+  get mailingAddressFormControl(): { [key: string]: AbstractControl; } {
     return this.mailingAddressForm.controls;
   }
 
