@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ComponentWrapperModule } from '../core/components/component-wrapper/component-wrapper.module';
 
 @NgModule({
@@ -24,6 +25,7 @@ import { ComponentWrapperModule } from '../core/components/component-wrapper/com
     // MatInputModule,
     // MatButtonModule,
     MatSelectModule,
+    MatAutocompleteModule,
     ComponentWrapperModule
   ]
 })

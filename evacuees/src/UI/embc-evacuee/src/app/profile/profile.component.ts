@@ -96,6 +96,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       case 'personal-details':
         this.formCreationService.setPersonDetailsForm(this.form);
         break;
+      case 'address':
+        this.formCreationService.setPrimaryAddressForm(this.form);
+        break;
       case 'contact-info':
         this.formCreationService.setContactDetailsForm(this.form);
         break;
@@ -123,7 +126,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         );
         break;
       case 1:
-
+          this.form$ = this.formCreationService.getPrimaryAddressForm().subscribe(
+            address => {
+              this.form = address;
+            }
+          );
+          break;
       case 2:
         this.form$ = this.formCreationService.getContactDetailsForm().subscribe(
           contactDetails => {
