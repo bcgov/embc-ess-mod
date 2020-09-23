@@ -13,11 +13,11 @@ export class BcAddressComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.addressForm.get('stateProvince').setValue('British Columbia');
-    this.addressForm.get('stateProvince').disable();
+    this.addressForm.get('address.stateProvince').setValue('British Columbia');
+    this.addressForm.get('address.stateProvince').disable();
 
-    this.addressForm.get('country').setValue('Canada');
-    this.addressForm.get('country').disable();
+    this.addressForm.get('address.country').setValue('Canada');
+    this.addressForm.get('address.country').disable();
   }
 
 }

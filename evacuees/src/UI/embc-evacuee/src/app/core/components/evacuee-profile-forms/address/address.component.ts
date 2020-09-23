@@ -1,12 +1,12 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
-import {FormBuilder, FormGroup, Validators, AbstractControl} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatRadioModule } from '@angular/material/radio';
+import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
 import { AddressFormsModule } from '../../address-forms/address-forms.module';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription, Observable } from 'rxjs';
@@ -29,16 +29,16 @@ export default class AddressComponent implements OnInit {
   formCreationService: FormCreationService;
 
   options: Array<any> = [
-    {code: 'CAN', desc: 'Canada'},
-    {code: 'USA', desc: 'United States of America'},
-    {code: 'OTH', desc: 'Other'}
+    { code: 'CAN', desc: 'Canada' },
+    { code: 'USA', desc: 'United States of America' },
+    { code: 'OTH', desc: 'Other' }
   ];
   filteredOptions: Observable<string[]>;
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
-   }
+  }
 
   ngOnInit(): void {
     this.primaryAddressForm$ = this.formCreationService.getPrimaryAddressForm().subscribe(primaryAddress => {
@@ -49,7 +49,7 @@ export default class AddressComponent implements OnInit {
       this.mailingAddressForm = mailingAddress;
     });
 
-    this.filteredOptions = this.primaryAddressForm.get('country').valueChanges.pipe(
+    this.filteredOptions = this.primaryAddressForm.get('address.country').valueChanges.pipe(
       startWith(''),
       map(value => this.filter(value))
     );
@@ -59,9 +59,11 @@ export default class AddressComponent implements OnInit {
    * Filters the coutry list for autocomplete field
    * @param value : User typed value
    */
-  private filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.options.filter(option => option.desc.toLowerCase().indexOf(filterValue) === 0);
+  private filter(value?: string): string[] {
+    if (value !== null && value !== undefined) {
+      const filterValue = value.toLowerCase();
+      return this.options.filter(option => option.desc.toLowerCase().indexOf(filterValue) === 0);
+    }
   }
 
   /**
@@ -76,6 +78,22 @@ export default class AddressComponent implements OnInit {
    */
   get mailingAddressFormControl(): { [key: string]: AbstractControl; } {
     return this.mailingAddressForm.controls;
+  }
+
+  primaryAddressChange(event: MatRadioChange): void {
+    this.primaryAddressForm.get('address').reset();
+    if (event.value === 'No') {
+      this.primaryAddressForm.get('address.country').enable();
+      this.primaryAddressForm.get('address.stateProvince').enable();
+    }
+  }
+
+  mailingAddressChange(event: MatRadioChange): void {
+    this.mailingAddressForm.get('address').reset();
+    if (event.value === 'No') {
+      this.mailingAddressForm.get('address.country').enable();
+      this.mailingAddressForm.get('address.stateProvince').enable();
+    }
   }
 
 }
