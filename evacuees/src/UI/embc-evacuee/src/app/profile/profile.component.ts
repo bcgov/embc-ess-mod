@@ -24,7 +24,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   form: FormGroup;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
-    private route: ActivatedRoute, private formCreationService: FormCreationService) { }
+              private route: ActivatedRoute, private formCreationService: FormCreationService) { }
 
   ngOnInit(): void {
     this.steps = this.componentService.createProfileSteps();
@@ -105,7 +105,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       case 'secret':
         this.formCreationService.setSecretForm(this.form);
         break;
-      default:  
+      default:
     }
     // if (component === 'personal-details') {
     //   this.formCreationService.setPersonDetailsForm(this.form);
@@ -142,7 +142,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       case 3:
         this.form$ = this.formCreationService.getSecretForm().subscribe(
           secret => {
-            this.form = secret
+            this.form = secret;
           }
         );
         break;
