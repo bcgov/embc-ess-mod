@@ -10,7 +10,7 @@ export class ComponentCreationService {
         [
             {
                 component: 'personal-details',
-                nextButtonLabel: 'Next-Primary & Mailing Address',
+                nextButtonLabel: 'Next - Primary & Mailing Address',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
@@ -19,7 +19,7 @@ export class ComponentCreationService {
             },
             {
                 component: 'address',
-                nextButtonLabel: 'Next-Contact Information',
+                nextButtonLabel: 'Next - Contact Information',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
@@ -28,7 +28,7 @@ export class ComponentCreationService {
             },
             {
                 component: 'contact-info',
-                nextButtonLabel: 'Next-Security Question',
+                nextButtonLabel: 'Next - Security Question',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
@@ -37,7 +37,7 @@ export class ComponentCreationService {
             },
             {
                 component: 'secret',
-                nextButtonLabel: 'Next-Create Evacuation File',
+                nextButtonLabel: 'Next - Create Evacuation File',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: true,
                 loadWrapperButton: false,
