@@ -57,8 +57,8 @@ objects:
                 }    
               }
                stage('tag image'){
-                openshiftTag(srcStream: 'evacuees-portal-api', srcTag: 'test', destStream: 'evacuees-portal-api', destTag: 'prod')
-                openshiftTag(srcStream: 'evacuees-portal-ui', srcTag: 'test', destStream: 'evacuees-portal-ui', destTag: 'prod')
+                openshiftTag(srcStream: 'evacuees-portal-api', srcTag: 'training', destStream: 'evacuees-portal-api', destTag: 'prod')
+                openshiftTag(srcStream: 'evacuees-portal-ui', srcTag: 'training', destStream: 'evacuees-portal-ui', destTag: 'prod')
                 openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-evacuees-portal-api')
                 openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-evacuees-portal-ui')
               }
