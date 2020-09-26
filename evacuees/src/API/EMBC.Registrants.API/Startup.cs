@@ -26,7 +26,7 @@ using Microsoft.Extensions.Hosting;
 using NSwag.AspNetCore;
 using Serilog;
 
-namespace EMBC.Evacuees.API
+namespace EMBC.Registrants.API
 {
     public class Startup
     {

@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "EMBC.Evacuees.API": {
+    "EMBC.Registrants.API": {
       "commandName": "Project",
       "applicationUrl": " http://localhost:5000",
       "environmentVariables": {

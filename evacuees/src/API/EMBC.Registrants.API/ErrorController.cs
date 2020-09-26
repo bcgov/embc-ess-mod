@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 
-namespace EMBC.Evacuees.API
+namespace EMBC.Registrants.API
 {
     [ApiController]
     public class ErrorController : ControllerBase

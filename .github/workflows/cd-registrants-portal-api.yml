@@ -1,4 +1,4 @@
-name: cd-evacuees-portal-api
+name: cd-registrants-portal-api
 
 on:
   push:
@@ -11,11 +11,11 @@ on:
       - v*
     paths:
       - "evacuees/src/API/**"
-      - ".github/workflows/cd-evacuees-portal-api.yml"
+      - ".github/workflows/cd-registrants-portal-api.yml"
 
 env:
-  IMAGE_NAME: evacuees-portal-api
-  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/evacuees-portal-api
+  IMAGE_NAME: registrants-portal-api
+  IMAGE_ID: ${{ secrets.OKD_DockerRegistry }}/${{ secrets.OKD_DockerRepository }}/registrants-portal-api
 
 jobs:
   build:
