@@ -16,10 +16,15 @@
 
 using System.IO;
 using System.Net;
+using System.Text.Json.Serialization;
+using EMBC.Registrants.API.Dynamics;
+using EMBC.Registrants.API.LocationModule;
+using EMBC.Registrants.API.RegistrationsModule;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -52,16 +57,27 @@ namespace EMBC.Registrants.API
                 dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
             }
 
-            services.AddOpenApiDocument();
-            services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
+            if (!env.IsProduction())
             {
-                options.Path = "/api/swagger/{documentName}/swagger.json";
-            });
-            services.Configure<SwaggerUi3Settings>(options =>
-            {
-                options.Path = "/api/swagger";
-                options.DocumentPath = "/api/swagger/{documentName}/swagger.json";
-            });
+                services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
+                {
+                    options.Path = "/api/openapi/{documentName}/openapi.json";
+                    options.DocumentName = "Registrants Portal API";
+                    options.PostProcess = (document, req) =>
+                    {
+                        document.Info.Title = "Registrants Portal API";
+                    };
+                });
+                services.Configure<SwaggerUi3Settings>(options =>
+                {
+                    options.Path = "/api/openapi";
+                    options.DocumentTitle = "Registrants Portal API Documentation";
+                    options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
+                });
+
+                services.AddOpenApiDocument();
+            }
+
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.All;
@@ -71,7 +87,16 @@ namespace EMBC.Registrants.API
                     options.KnownNetworks.Add(ParseNetworkFromString(knownNetwork));
                 }
             });
+            services.Configure<JsonOptions>(opts =>
+            {
+                opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
             services.AddDistributedMemoryCache();
+
+            services.AddRegistrationModule();
+            services.AddLocationModule();
+            services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
+            services.AddDynamics();
         }
 
         private IPNetwork ParseNetworkFromString(string network)
