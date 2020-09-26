@@ -4,7 +4,8 @@
       "commandName": "Project",
       "applicationUrl": "http://localhost:2010",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "location__cache__AutoRefreshEnabled": "false"
       }
     }
   }

@@ -91,11 +91,13 @@ namespace EMBC.Registrants.API
             {
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+            services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
+            services.Configure<LocationCacheHostedServiceOptions>(configuration.GetSection("Location:Cache"));
+
             services.AddDistributedMemoryCache();
 
             services.AddRegistrationModule();
             services.AddLocationModule();
-            services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddDynamics();
         }
 

@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EMBC.Registrants.API.LocationModule
 {
@@ -29,40 +30,52 @@ namespace EMBC.Registrants.API.LocationModule
         private readonly IDistributedCache cache;
         private readonly IListsRepository listsRepository;
         private readonly ILogger logger;
+        private readonly LocationCacheHostedServiceOptions options;
         private Timer timer;
         private bool disposedValue;
 
-        private TimeSpan refreshInterval = TimeSpan.FromSeconds(300);
-
-        public LocationCacheHostedService(IDistributedCache cache, IListsRepository listsRepository, ILogger<LocationCacheHostedService> logger)
+        public LocationCacheHostedService(IDistributedCache cache, IListsRepository listsRepository, ILogger<LocationCacheHostedService> logger, IOptions<LocationCacheHostedServiceOptions> options)
         {
             this.cache = cache;
             this.listsRepository = listsRepository;
             this.logger = logger;
+            this.options = options.Value;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            logger.LogInformation("{0} starting", nameof(LocationCacheHostedService));
+            if (!options.AutoRefreshEnabled)
+            {
+                logger.LogWarning("{0} will not auto refresh the cache and will attempt to load the cache only once", nameof(LocationCacheHostedService));
+                await RefreshCache(cancellationToken);
+                return;
+            }
+
+            logger.LogInformation("{0} starting and will auto refresh the cache every {1} seconds", nameof(LocationCacheHostedService), options.RefreshInterval.TotalSeconds);
             timer = new Timer(async (s) =>
                 {
-                    logger.LogInformation("{0} starting location cache refresh", nameof(LocationCacheHostedService));
-                    try
-                    {
-                        await cache.SetAsync(LocationCacheNames.Countries, JsonSerializer.SerializeToUtf8Bytes(await listsRepository.GetCountries()), cancellationToken);
-                        await cache.SetAsync(LocationCacheNames.StateProvinces, JsonSerializer.SerializeToUtf8Bytes(await listsRepository.GetStateProvinces()), cancellationToken);
-                        await cache.SetAsync(LocationCacheNames.Jurisdictions, JsonSerializer.SerializeToUtf8Bytes(await listsRepository.GetJurisdictions()), cancellationToken);
-                        logger.LogInformation("{0} finished location cache refresh", nameof(LocationCacheHostedService));
-                    }
-                    catch (Exception e)
-                    {
-                        logger.LogError(e, "{0} finished location cache refresh with error", nameof(LocationCacheHostedService));
-                    }
+                    await RefreshCache(cancellationToken);
                 }, null,
                 TimeSpan.Zero,
-                refreshInterval);
+                options.RefreshInterval);
 
             await Task.CompletedTask;
+        }
+
+        private async Task RefreshCache(CancellationToken cancellationToken)
+        {
+            try
+            {
+                logger.LogInformation("{0} starting location cache refresh", nameof(LocationCacheHostedService));
+                await cache.SetAsync(LocationCacheNames.Countries, JsonSerializer.SerializeToUtf8Bytes(await listsRepository.GetCountries()), cancellationToken);
+                await cache.SetAsync(LocationCacheNames.StateProvinces, JsonSerializer.SerializeToUtf8Bytes(await listsRepository.GetStateProvinces()), cancellationToken);
+                await cache.SetAsync(LocationCacheNames.Jurisdictions, JsonSerializer.SerializeToUtf8Bytes(await listsRepository.GetJurisdictions()), cancellationToken);
+                logger.LogInformation("{0} finished location cache refresh", nameof(LocationCacheHostedService));
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "{0} finished location cache refresh with error", nameof(LocationCacheHostedService));
+            }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
@@ -90,5 +103,11 @@ namespace EMBC.Registrants.API.LocationModule
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+    }
+
+    public class LocationCacheHostedServiceOptions
+    {
+        public TimeSpan RefreshInterval { get; set; } = TimeSpan.FromSeconds(60);
+        public bool AutoRefreshEnabled { get; set; } = true;
     }
 }
