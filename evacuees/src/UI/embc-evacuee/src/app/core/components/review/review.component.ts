@@ -1,0 +1,88 @@
+import { Component, OnInit, Type } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, mergeMap, filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
+
+
+@Component({
+  selector: 'app-review',
+  templateUrl: './review.component.html',
+  styleUrls: ['./review.component.scss']
+})
+export class ReviewComponent implements OnInit {
+
+  componentToLoad: Observable<any>;
+  cs: any;
+
+  constructor(private router: Router) { }
+
+  hideCard = false;
+
+  ngOnInit(): void {
+   // this.loadComponent();
+
+    // this.componentToLoad.subscribe(x => {
+    //   console.log(x)
+    //   this.cs = x.default;
+    // })
+  }
+
+  editPersonalDetails(): void {
+    this.router.navigate(['/loader/edit/personal-details']);
+  }
+
+  back(): void {
+    this.hideCard = false;
+  }
+
+  // loadComponent() {
+  // if(!this.componentToLoad) {
+  //  this.componentToLoad = this.componentService.getProfileComponents().pipe(
+  //    map(comps => comps.filter( v => v.type === 'personal-details')[0])
+
+  //    ).pipe(mergeMap((x) => {
+  //   console.log(x)
+  //   console.log(x.type)
+  //   console.log((`../core/components/evacuee-profile-forms/${x.type}/${x.type}.component`))
+  //   return Promise.resolve(import(`../core/components/evacuee-profile-forms/${x.type}/${x.type}.component`));
+  //  return Promise.resolve(x => {
+  //    console.log("here")
+  //   console.log(x)
+  //    return import(`../core/components/evacuee-profile-forms/${x.type}/${x.type}.component`);
+  //  }
+  //  }));
+
+  // compName.subscribe(v => console.log(v))
+
+
+    // console.log(comp)
+    //     console.log(comp.type === "personal-details")
+    //     return comp.type === 'personal-details'}));
+
+
+  //  this.componentToLoad = Promise.resolve(compName => {
+  //    return import(`../core/components/evacuee-profile-forms/${compName}/${compName}.component`);
+  //   })
+  // }
+  // }
+
+}
+
+
+  // this.profileComponents$ = this.componentService.getProfileComponents().pipe(mergeMap((components) => {
+  //     return Promise.all(components.map(comp => {
+  //       console.log((`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`));
+  //       return import(`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`);
+  //     }))
+  //   }));
+
+
+
+  // mergeMap((components) => {
+  //       return Promise.all(components.map(comp => {
+  //         console.log((`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`));
+  //         return import(`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`);
+  //       }))
+  //     }));
+
