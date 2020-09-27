@@ -80,7 +80,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
         [Required]
         public Address PrimaryAddress { get; set; }
 
-        [Required]
         public Address MailingAddress { get; set; }
 
         [Required]
@@ -88,6 +87,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         [Required]
         public bool RestrictedAccess { get; set; }
+
+        [Required]
+        public string SecretPhrase { get; set; }
     }
 
     /// <summary>
@@ -102,6 +104,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public string LastName { get; set; }
 
         public string Initials { get; set; }
+        public string PreferredName { get; set; }
 
         [Required]
         public string Gender { get; set; }
