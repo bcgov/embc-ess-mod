@@ -24,12 +24,12 @@ UI
 
 To create an environment:
 
-1. create a new file named `evacuee-portal.yml.<app name>.params` in the templates directory
-2. copy the content from `evacuees-portal.yml.params.template` into the file and fill in the values, these are the parameters supplied later to the template
+1. create a new file named `registrants-portal.yml.<app name>.params` in the templates directory
+2. copy the content from `registrants-portal.yml.params.template` into the file and fill in the values, these are the parameters supplied later to the template
 3. run the following command from cmd/powershell console (modify the Openshift project to the one you want to deploy to):
 
 ```cmd
-oc process -f .\evacuees-portal.template.yml --param-file .\evacuees-portal.yml.<app name>.params | oc -n <openshift project name> apply -f -
+oc process -f .\registrants-portal.template.yml --param-file .\registrants-portal.yml.<app name>.params | oc -n <openshift project name> apply -f -
 ```
 
 4. to update an existing environment, modify the templates and params, then execute the same command.
@@ -52,7 +52,7 @@ oc process -f .\env-promotions.template.yml | oc -n <openshift namespace>-tools 
 
 | name       | namespace   | purpose                                                          | url                                                                                                   |
 | ---------- | ----------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| dev1       | pbiizm-dev  | continiuous deployment from master branch for QA and integration | https://dev1-embc-evacuees.pathfinder.gov.bc.ca/, https://era-evacuees-dev.embc.gov.bc.ca/          |
-| test       | pbiizm-test | regression and UAT environment                                   | https://test-embc-evacuees.pathfinder.gov.bc.ca/, https://era-evacuees-test.embc.gov.bc.ca/         |
-| training   | pbiizm-test | training env for field users                                     | https://training-embc-evacuees.pathfinder.gov.bc.ca/, https://era-evacuees-training.embc.gov.bc.ca/ |
-| production | pbiizm-prod | production environment                                           | https://production-embc-evacuees.pathfinder.gov.bc.ca/, https://era-evacuees.embc.gov.bc.ca/        |
+| dev1       | pbiizm-dev  | continiuous deployment from master branch for QA and integration | https://dev1-embc-registrants.pathfinder.gov.bc.ca/, https://era-registrants-dev.embc.gov.bc.ca/          |
+| test       | pbiizm-test | regression and UAT environment                                   | https://test-embc-registrants.pathfinder.gov.bc.ca/, https://era-registrants-test.embc.gov.bc.ca/         |
+| training   | pbiizm-test | training env for field users                                     | https://training-embc-registrants.pathfinder.gov.bc.ca/, https://era-registrants-training.embc.gov.bc.ca/ |
+| production | pbiizm-prod | production environment                                           | https://production-embc-registrants.pathfinder.gov.bc.ca/, https://era-registrants.embc.gov.bc.ca/        |

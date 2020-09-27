@@ -1,7 +1,7 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: evacuees-portal-template
+  name: registrants-portal-template
 
 parameters:
   - description: app name
@@ -16,31 +16,70 @@ parameters:
   - description: ASPNET runtime environment (Development/Staging/Production)
     name: RUNTIME_ENVIRONMENT
     value: Staging
+    name: OAUTH_ENDPOINT
+    required: true
+  - description: Dynamics ADFS client ID
+    name: OAUTH_CLIENT_ID
+    required: true
+  - description: Dynamics ADFS client secret
+    name: OAUTH_CLIENT_SECRET
+    required: true
+  - description: Dynamics ADFS resource name
+    name: OAUTH_RESOURCE
+    required: true
+  - description: Dynamics API endpoint
+    name: DYNAMICS_ENDPOINT
+    required: true
+  - description: Dynamics service account domain
+    name: DYNAMICS_SERVICE_ACCOUNT_DOMAIN
+    required: true
+  - description: Dynamics service account name
+    name: OAUTH_DYNAMICS_SERVICE_ACCOUNT_NAME
+    required: true
+  - description: Dynamics service account password
+    name: OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD
+    required: true
+  - description: Dynanics location lists - enable cache auto refresh
+    name: LOCATION_CACHE_REFRESH_ENABLED
+    value: true
+  - description: Dynanics locations list - cache frequency refresh in minutes
+    name: LOCATION_CACHE_REFRESH_INTERVAL
+    value: "00:01:00"
 
 objects:
   - kind: ConfigMap
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-evacuees-api-config
+      name: ${APP_NAME}-registrants-api-config
       labels:
-        app: ${APP_NAME}-evacuees-portal
+        app: ${APP_NAME}-registrants-portal
     data:     
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
-  - kind: Secret
+      Dynamics__ADFS__OAuth2TokenEndpoint: ${OAUTH_ENDPOINT}
+      Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
+      location__cache__AutoRefreshEnabled: ${LOCATION_CACHE_REFRESH_ENABLED}
+      location__cache__RefreshInterval: ${LOCATION_CACHE_REFRESH_INTERVAL}
+ - kind: Secret
     apiVersion: v1
     type: Opaque
     metadata:
-      name: ${APP_NAME}-evacuees-api-secrets
+      name: ${APP_NAME}-registrants-api-secrets
       labels:
-        app: ${APP_NAME}-evacuees-portal
+        app: ${APP_NAME}-registrants-portal
     stringData:
-  - kind: Service
+      Dynamics__ADFS__ClientId: ${OAUTH_CLIENT_ID}
+      Dynamics__ADFS__ClientSecret: ${OAUTH_CLIENT_SECRET}
+      Dynamics__ADFS__ResourceName: ${OAUTH_RESOURCE}
+      Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
+      Dynamics__ADFS__serviceAccountName: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_NAME}
+      Dynamics__ADFS__serviceAccountPassword: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
+ - kind: Service
     apiVersion: v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: ${APP_NAME}-evacuees-portal-api
+        app: ${APP_NAME}-registrants-portal
+      name: ${APP_NAME}-registrants-portal-api
     spec:
       ports:
         - name: 8080-tcp
@@ -48,14 +87,14 @@ objects:
           protocol: TCP
           targetPort: 8080
       selector:
-        deploymentconfig: ${APP_NAME}-evacuees-portal-api
+        deploymentconfig: ${APP_NAME}-registrants-portal-api
       type: ClusterIP
   - kind: Service
     apiVersion: v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: ${APP_NAME}-evacuees-portal-ui
+        app: ${APP_NAME}-registrants-portal
+      name: ${APP_NAME}-registrants-portal-ui
     spec:
       ports:
         - name: 2015-tcp
@@ -63,16 +102,16 @@ objects:
           protocol: TCP
           targetPort: 2015
       selector:
-        deploymentconfig: ${APP_NAME}-evacuees-portal-ui
+        deploymentconfig: ${APP_NAME}-registrants-portal-ui
       type: ClusterIP
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: era-evacuees-${APP_NAME}-portal-api-pathfinder
+        app: ${APP_NAME}-registrants-portal
+      name: era-registrants-${APP_NAME}-portal-api-pathfinder
     spec:
-      host: era-evacuees-${APP_NAME}.pathfinder.gov.bc.ca
+      host: era-registrants-${APP_NAME}.pathfinder.gov.bc.ca
       path: /api
       port:
         targetPort: 8080-tcp
@@ -81,17 +120,17 @@ objects:
         termination: edge
       to:
         kind: Service
-        name: ${APP_NAME}-evacuees-portal-api
+        name: ${APP_NAME}-registrants-portal-api
         weight: 100
       wildcardPolicy: None
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: era-evacuees-${APP_NAME}-portal-ui-pathfinder
+        app: ${APP_NAME}-registrants-portal
+      name: era-registrants-${APP_NAME}-portal-ui-pathfinder
     spec:
-      host: era-evacuees-${APP_NAME}.pathfinder.gov.bc.ca
+      host: era-registrants-${APP_NAME}.pathfinder.gov.bc.ca
       path: /
       port:
         targetPort: 2015-tcp
@@ -100,19 +139,19 @@ objects:
         termination: edge
       to:
         kind: Service
-        name: ${APP_NAME}-evacuees-portal-ui
+        name: ${APP_NAME}-registrants-portal-ui
         weight: 100
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: ${APP_NAME}-evacuees-portal-api
+        app: ${APP_NAME}-registrants-portal
+      name: ${APP_NAME}-registrants-portal-api
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-evacuees-portal
-        deploymentconfig: ${APP_NAME}-evacuees-portal-api
+        app: ${APP_NAME}-registrants-portal
+        deploymentconfig: ${APP_NAME}-registrants-portal-api
       strategy:
         activeDeadlineSeconds: 21600
         resources: {}
@@ -126,17 +165,17 @@ objects:
       template:
         metadata:
           labels:
-            app: ${APP_NAME}-evacuees-portal
-            deploymentconfig: ${APP_NAME}-evacuees-portal-api
+            app: ${APP_NAME}-registrants-portal
+            deploymentconfig: ${APP_NAME}-registrants-portal-api
         spec:
           containers:
-            - name: evacuees-portal-api
+            - name: registrants-portal-api
               envFrom:
                 - configMapRef:
-                    name: ${APP_NAME}-evacuees-api-config
+                    name: ${APP_NAME}-registrants-api-config
                 - secretRef:
-                    name: ${APP_NAME}-evacuees-api-secrets
-              image: docker-registry.default.svc:5000/pbiizm-tools/evacuees-portal-api:${TAG}
+                    name: ${APP_NAME}-registrants-api-secrets
+              image: docker-registry.default.svc:5000/pbiizm-tools/registrants-portal-api:${TAG}
               imagePullPolicy: Always
               volumeMounts:
                 - mountPath: /dpkeys
@@ -149,7 +188,7 @@ objects:
           volumes:
             - name: dp-keys
               persistentVolumeClaim:
-                claimName: ${APP_NAME}-evacuees-key-ring
+                claimName: ${APP_NAME}-registrants-key-ring
       test: false
       triggers:
         - type: ConfigChange
@@ -157,22 +196,22 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - evacuees-portal-api
+              - registrants-portal-api
             from:
               kind: ImageStreamTag
-              name: evacuees-portal-api:${TAG}
+              name: registrants-portal-api:${TAG}
               namespace: pbiizm-tools
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
-        app: ${APP_NAME}-evacuees-portal
-      name: ${APP_NAME}-evacuees-portal-ui
+        app: ${APP_NAME}-registrants-portal
+      name: ${APP_NAME}-registrants-portal-ui
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-evacuees-portal
-        deploymentconfig: ${APP_NAME}-evacuees-portal-ui
+        app: ${APP_NAME}-registrants-portal
+        deploymentconfig: ${APP_NAME}-registrants-portal-ui
       strategy:
         activeDeadlineSeconds: 21600
         resources: {}
@@ -186,12 +225,12 @@ objects:
       template:
         metadata:
           labels:
-            app: ${APP_NAME}-evacuees-portal
-            deploymentconfig: ${APP_NAME}-evacuees-portal-ui
+            app: ${APP_NAME}-registrants-portal
+            deploymentconfig: ${APP_NAME}-registrants-portal-ui
         spec:
           containers:
-            - name: evacuees-portal-ui
-              image: docker-registry.default.svc:5000/pbiizm-tools/evacuees-portal-ui:${TAG}
+            - name: registrants-portal-ui
+              image: docker-registry.default.svc:5000/pbiizm-tools/registrants-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:
                 - containerPort: 2015
@@ -211,17 +250,17 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - evacuees-portal-ui
+              - registrants-portal-ui
             from:
               kind: ImageStreamTag
-              name: evacuees-portal-ui:${TAG}
+              name: registrants-portal-ui:${TAG}
               namespace: pbiizm-tools
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
-      name: ${APP_NAME}-evacuees-key-ring
+      name: ${APP_NAME}-registrants-key-ring
       labels:
-        app: ${APP_NAME}-evacuees-portal
+        app: ${APP_NAME}-registrants-portal
     spec:
       accessModes:
         - "ReadWriteMany"

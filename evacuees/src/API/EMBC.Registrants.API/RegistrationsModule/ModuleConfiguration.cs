@@ -14,27 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.Evacuees.API
+namespace EMBC.Registrants.API.RegistrationsModule
 {
-    [ApiController]
-    public class ErrorController : ControllerBase
+    public static class ModuleConfiguration
     {
-        [Route("/error-local-development")]
-        public IActionResult ErrorLocalDevelopment([FromServices] IHostEnvironment hostEnvironment)
+        public static IServiceCollection AddRegistrationModule(this IServiceCollection services)
         {
-            if (!hostEnvironment.IsDevelopment()) throw new InvalidOperationException("This shouldn't be invoked in non-development environments.");
-
-            var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            return Problem(detail: context.Error.StackTrace, title: context.Error.Message);
+            services.AddSingleton(new RegistrationReferenceNumberGenerator());
+            return services;
         }
-
-        [Route("/error")]
-        public IActionResult Error() => Problem();
     }
 }
