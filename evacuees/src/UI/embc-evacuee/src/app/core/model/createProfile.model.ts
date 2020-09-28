@@ -116,6 +116,8 @@ export class AddressForm {
     isNewMailingAddress = new FormControl();
     isBcMailingAddress = new FormControl();
 
+    mailingAddress: FormGroup;
+
     // addressLine1 = new FormControl();
     // addressLine2 = new FormControl();
     // jurisdiction = new FormControl();
@@ -133,8 +135,20 @@ export class AddressForm {
             country: ['', [Validators.required]],
             postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
         });
+        this.mailingAddress = builder.group({
+            addressLine1: ['', [Validators.required]],
+            addressLine2: [''],
+            jurisdiction: ['', [Validators.required]],
+            stateProvince: ['', [Validators.required]],
+            country: ['', [Validators.required]],
+            postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
+        });
+
         this.isBcAddress.setValue(address.isBcAddress);
         this.isBcAddress.setValidators([Validators.required]);
+
+        this.isNewMailingAddress.setValue(address.isNewMailingAddress);
+        this.isNewMailingAddress.setValidators([Validators.required]);
 
         // addressLine1: ['', [customValidator.conditionalValidation(
         //     () => this.isBcAddress.value,

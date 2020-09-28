@@ -22,8 +22,8 @@ export default class AddressComponent implements OnInit {
 
   primaryAddressForm: FormGroup;
   primaryAddressForm$: Subscription;
-  mailingAddressForm: FormGroup;
-  mailingAddressForm$: Subscription;
+  // mailingAddressForm: FormGroup;
+  // mailingAddressForm$: Subscription;
   radioOption: string[] = ['Yes', 'No'];
   formBuilder: FormBuilder;
   formCreationService: FormCreationService;
@@ -41,12 +41,8 @@ export default class AddressComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.primaryAddressForm$ = this.formCreationService.getPrimaryAddressForm().subscribe(primaryAddress => {
+    this.primaryAddressForm$ = this.formCreationService.getAddressForm().subscribe(primaryAddress => {
       this.primaryAddressForm = primaryAddress;
-    });
-
-    this.mailingAddressForm$ = this.formCreationService.getMailingAddressForm().subscribe(mailingAddress => {
-      this.mailingAddressForm = mailingAddress;
     });
 
     this.filteredOptions = this.primaryAddressForm.get('address.country').valueChanges.pipe(
@@ -80,9 +76,9 @@ export default class AddressComponent implements OnInit {
   /**
    * Returns the control of the form
    */
-  get mailingAddressFormControl(): { [key: string]: AbstractControl; } {
-    return this.mailingAddressForm.controls;
-  }
+  // get mailingAddressFormControl(): { [key: string]: AbstractControl; } {
+  //   return this.mailingAddressForm.controls;
+  // }
 
   primaryAddressChange(event: MatRadioChange): void {
     this.primaryAddressForm.get('address').reset();
@@ -92,17 +88,23 @@ export default class AddressComponent implements OnInit {
     } else {
       this.primaryAddressForm.get('address.stateProvince').setValue('British Columbia');
       this.primaryAddressForm.get('address.stateProvince').disable();
-  
+
       this.primaryAddressForm.get('address.country').setValue('Canada');
       this.primaryAddressForm.get('address.country').disable();
     }
   }
 
   mailingAddressChange(event: MatRadioChange): void {
-    this.mailingAddressForm.get('address').reset();
+    this.primaryAddressForm.get('mailingAddress').reset();
     if (event.value === 'No') {
-      this.mailingAddressForm.get('address.country').enable();
-      this.mailingAddressForm.get('address.stateProvince').enable();
+      this.primaryAddressForm.get('mailingAddress.country').enable();
+      this.primaryAddressForm.get('mailingAddress.stateProvince').enable();
+    } else {
+      this.primaryAddressForm.get('mailingAddress.stateProvince').patchValue('British Columbia');
+      this.primaryAddressForm.get('mailingAddress.stateProvince').disable();
+
+      this.primaryAddressForm.get('mailingAddress.country').setValue('Canada');
+      this.primaryAddressForm.get('mailingAddress.country').disable();
     }
   }
 
@@ -112,7 +114,17 @@ export default class AddressComponent implements OnInit {
     this.primaryAddressForm.get('address.stateProvince').updateValueAndValidity();
     this.primaryAddressForm.get('address.country').updateValueAndValidity();
     this.primaryAddressForm.get('address.postalCode').updateValueAndValidity();
-}
+  }
+
+  sameAsPrimary(event: MatRadioChange): void {
+    if(event.value === 'Yes') {
+      let primaryAddress = this.primaryAddressForm.getRawValue().address;
+      console.log(primaryAddress)
+      this.primaryAddressForm.get('mailingAddress').setValue(primaryAddress);
+    } else {
+      this.primaryAddressForm.get('mailingAddress').reset();
+    }
+  }
 
 }
 

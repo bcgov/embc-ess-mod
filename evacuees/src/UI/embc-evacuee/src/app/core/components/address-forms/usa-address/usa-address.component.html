@@ -1,13 +1,11 @@
 <form [formGroup]="addressForm">
-    <div formGroupName="address">
-
         <div class="row">
             <div class="col-md-5">
                 <mat-form-field appearance="outline">
                     <mat-label>Address Line 1</mat-label>
-                    <input [formControlName]="'addressLine1'" matInput placeholder="Address Line 1">
+                    <input [formControlName]="'addressLine1'" matInput placeholder="Address Line 1" required>
                     <mat-error
-                        *ngIf="addressFormControl?.address?.controls?.addressLine1.invalid && addressFormControl?.address?.controls?.addressLine1.hasError('required')">
+                        *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')">
                         Address Line 1 is required</mat-error>
                 </mat-form-field>
             </div>
@@ -26,9 +24,9 @@
             <div class="col-md-4">
                 <mat-form-field appearance="outline">
                     <mat-label>City</mat-label>
-                    <input [formControlName]="'jurisdiction'" matInput placeholder="City">
+                    <input [formControlName]="'jurisdiction'" matInput placeholder="City" required>
                     <mat-error
-                        *ngIf="addressFormControl?.address?.controls?.jurisdiction.invalid && addressFormControl?.address?.controls?.jurisdiction.hasError('required')">
+                        *ngIf="addressFormControl?.jurisdiction.invalid && addressFormControl?.jurisdiction.hasError('required')">
                         City is required</mat-error>
                 </mat-form-field>
             </div>
@@ -38,12 +36,12 @@
             <div class="col-md-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Zip Code</mat-label>
-                    <input [formControlName]="'postalCode'" matInput placeholder="Zip Code">
+                    <input [formControlName]="'postalCode'" matInput placeholder="Zip Code" required>
                     <mat-error
-                        *ngIf="addressFormControl?.address?.controls?.postalCode.invalid && addressFormControl?.address?.controls?.postalCode.hasError('required')">
+                        *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
                         Zip Code is required</mat-error>
                     <mat-error
-                        *ngIf="addressFormControl?.address?.controls?.postalCode.invalid && addressFormControl?.address?.controls?.postalCode.hasError('pattern')">
+                        *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')">
                         Zip Code is invalid</mat-error>
                 </mat-form-field>
             </div>
@@ -53,14 +51,11 @@
             <div class="col-md-3">
                 <mat-form-field appearance="outline">
                     <mat-label>State</mat-label>
-                    <input [formControlName]="'stateProvince'" matInput placeholder="State">
+                    <input [formControlName]="'stateProvince'" matInput placeholder="State" required>
                     <mat-error
-                        *ngIf="addressFormControl?.address?.controls?.stateProvince.invalid && addressFormControl?.address?.controls?.stateProvince.hasError('required')">
+                        *ngIf="addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')">
                         State is required</mat-error>
                 </mat-form-field>
             </div>
         </div>
-
-    </div>
-
 </form>

@@ -1,5 +1,4 @@
 <div [formGroup]="addressForm">
-    <div formGroupName="address">
         <div class="row">
             <div class="col-md-5">
                 <mat-form-field appearance="outline">
@@ -7,7 +6,7 @@
                     <input [formControlName]="'addressLine1'" matInput placeholder="Address Line 1" maxlength="100"
                         required>
                     <mat-error
-                        *ngIf="addressFormControl?.address?.controls?.addressLine1.invalid && addressFormControl?.address?.controls?.addressLine1.hasError('required')">
+                        *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')">
                         Address Line 1 is required</mat-error>
                 </mat-form-field>
             </div>
@@ -28,7 +27,7 @@
                     <mat-label>City</mat-label>
                     <input [formControlName]="'jurisdiction'" matInput placeholder="City" required>
                     <mat-error
-                        *ngIf="addressFormControl?.address?.controls?.jurisdiction.invalid && addressFormControl?.address?.controls?.jurisdiction.hasError('required')">
+                        *ngIf="addressFormControl?.jurisdiction.invalid && addressFormControl?.jurisdiction.hasError('required')">
                         City is required</mat-error>
                 </mat-form-field>
             </div>
@@ -49,10 +48,10 @@
                     <mat-label>Postal Code</mat-label>
                     <input [formControlName]="'postalCode'" matInput placeholder="Postal Code" required>
                     <mat-error
-                        *ngIf="addressFormControl?.address?.controls?.postalCode.invalid && addressFormControl?.address?.controls?.postalCode.hasError('required')">
+                        *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
                         Postal Code is required</mat-error>
                     <mat-error
-                        *ngIf="addressFormControl?.address?.controls?.postalCode.invalid && addressFormControl?.address?.controls?.postalCode.hasError('pattern')">
+                        *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')">
                         Postal Code is invalid</mat-error>
                 </mat-form-field>
             </div>
@@ -66,6 +65,4 @@
                 </mat-form-field>
             </div>
         </div>
-    </div>
-
 </div>

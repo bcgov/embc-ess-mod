@@ -75,7 +75,6 @@ export class CustomValidationService {
     postalValidation(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             if (control.parent) {
-                console.log(control.parent.get('country').value)
                 if (control.parent.get('country').value === 'Canada') {
                     return Validators.pattern(globalConst.postalPattern)(control);
                 } else if (control.parent.get('country').value === 'United States of America') {
