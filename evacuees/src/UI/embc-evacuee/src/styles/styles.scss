@@ -225,6 +225,11 @@ mat-card {
   background-color: #169BD5 !important;
 }
 
+.requiredField::after {
+    content: "*";
+    color: red;
+ }
+
 // .mat-form-field-appearance-outline .mat-form-field-outline-thick {
 //    color: rgba(0,0,0,.12) !important; 
 // }
@@ -246,11 +251,6 @@ mat-card {
 // .form-control {
 //     border-radius:0
 // }
-
-// .requiredField::after {
-//     content: "*";
-//     color: red;
-//  }
 
 // // .input-help {
 // //     vertical-align: top;

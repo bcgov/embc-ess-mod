@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-usa-address',
@@ -13,6 +13,10 @@ export class UsaAddressComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  get addressFormControl(): { [key: string]: AbstractControl; } {
+    return this.addressForm.controls;
   }
 
 }

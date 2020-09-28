@@ -1,3 +1,5 @@
+{{primaryAddressForm.status }}
+{{primaryAddressForm.value | json}}
 <mat-card class="card-align">
   <mat-card-content>
     <p class="card-heading">Primary Residence</p>
@@ -5,14 +7,14 @@
 
       <div class="row">
         <div class="col-md-12">
-          <label id="primary-radio-group-label">Is your <b>primary residence</b> within British Columbia?</label>
+          <label class="requiredField" id="primary-radio-group-label">Is your <b>primary residence</b> within British Columbia?</label>
           <br>
           <mat-hint class="radio-hint">Primary residence: The dwelling where an individual or family spends most of
             their personal time.</mat-hint>
           <br>
           <mat-hint class="radio-hint">A person can only have one primary residence at any moment in time.</mat-hint>
           <mat-radio-group formControlName="isBcAddress" aria-labelledby="primary-radio-group-label" (change)="primaryAddressChange($event)"
-            class="primary-radio-group">
+            class="primary-radio-group" required>
             <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
               {{option}}
             </mat-radio-button>
@@ -34,7 +36,7 @@
                 <p>In what <b>country</b> is your primary residence located?</p>
                 <mat-form-field appearance="outline">
                   <input type="text" placeholder="Start Typing" aria-label="Country" matInput formControlName="country"
-                    [matAutocomplete]="auto">
+                    [matAutocomplete]="auto" required>
                   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option.desc">
                       {{option.desc}}
@@ -129,6 +131,3 @@
 
   </mat-card-content>
 </mat-card>
-
-<!-- {{primaryAddressForm.status}}
-{{primaryAddressForm.value | json}} -->

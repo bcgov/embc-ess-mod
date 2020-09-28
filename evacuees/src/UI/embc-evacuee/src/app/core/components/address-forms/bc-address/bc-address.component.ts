@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { FormGroup, AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-bc-address',
@@ -12,12 +12,12 @@ export class BcAddressComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-    this.addressForm.get('address.stateProvince').setValue('British Columbia');
-    this.addressForm.get('address.stateProvince').disable();
+  ngOnInit(): void { 
+   
+  }
 
-    this.addressForm.get('address.country').setValue('Canada');
-    this.addressForm.get('address.country').disable();
+  get addressFormControl(): { [key: string]: AbstractControl; } {
+    return this.addressForm.controls;
   }
 
 }

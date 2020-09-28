@@ -53,6 +53,10 @@ export default class AddressComponent implements OnInit {
       startWith(''),
       map(value => this.filter(value))
     );
+
+    this.primaryAddressForm.get('isBcAddress').valueChanges.subscribe(value => {
+      this.updateOnVisibility();
+    })
   }
 
   /**
@@ -85,6 +89,12 @@ export default class AddressComponent implements OnInit {
     if (event.value === 'No') {
       this.primaryAddressForm.get('address.country').enable();
       this.primaryAddressForm.get('address.stateProvince').enable();
+    } else {
+      this.primaryAddressForm.get('address.stateProvince').setValue('British Columbia');
+      this.primaryAddressForm.get('address.stateProvince').disable();
+  
+      this.primaryAddressForm.get('address.country').setValue('Canada');
+      this.primaryAddressForm.get('address.country').disable();
     }
   }
 
@@ -95,6 +105,14 @@ export default class AddressComponent implements OnInit {
       this.mailingAddressForm.get('address.stateProvince').enable();
     }
   }
+
+  updateOnVisibility() {
+    this.primaryAddressForm.get('address.addressLine1').updateValueAndValidity();
+    this.primaryAddressForm.get('address.jurisdiction').updateValueAndValidity();
+    this.primaryAddressForm.get('address.stateProvince').updateValueAndValidity();
+    this.primaryAddressForm.get('address.country').updateValueAndValidity();
+    this.primaryAddressForm.get('address.postalCode').updateValueAndValidity();
+}
 
 }
 
