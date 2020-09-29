@@ -1,4 +1,4 @@
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import * as globalConst from '../services/globalConstants';
 import { CustomValidationService } from '../services/customValidation.service';
 
@@ -89,5 +89,50 @@ export class SecretForm {
     constructor(secret: Secret) {
         this.secretPhrase.setValue(secret.secretPhrase);
         this.secretPhrase.setValidators([Validators.required]);
+    }
+}
+
+export class Address {
+    isBcAddress: string;
+    addressLine1: string;
+    addressLine2: string;
+    jurisdictionCode: string;
+    jurisdictionName: string;
+    stateProvinceCode: string;
+    stateProvinceName: string;
+    countryCode: string;
+    postalCode: string;
+    isNewMailingAddress: string;
+    isBcMailingAddress: string;
+
+    constructor() {}
+}
+
+export class AddressForm {
+    address: FormGroup;
+
+    isBcAddress = new FormControl();
+    isNewMailingAddress = new FormControl();
+    isBcMailingAddress = new FormControl();
+
+    // addressLine1 = new FormControl();
+    // addressLine2 = new FormControl();
+    // jurisdiction = new FormControl();
+    // stateProvince = new FormControl();
+    // country = new FormControl();
+    // postalCode = new FormControl();
+
+
+    constructor(address: Address, builder: FormBuilder) {
+        this.address = builder.group({
+            addressLine1: [''],
+            addressLine2: [''],
+            jurisdiction: [''],
+            stateProvince: [''],
+            country: [''],
+            postalCode: [''],
+        });
+        this.isBcAddress.setValue(address.isBcAddress);
+        // this.isBcAddress.setValidators([Validators.required]);
     }
 }

@@ -1,3 +1,0 @@
-APP_NAME=<app name>
-TAG=<image stream tag to deploy from>
-RUNTIME_ENVIRONMENT=<ASP.Net core environment development|staging|production>

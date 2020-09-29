@@ -1,0 +1,21 @@
+name: ci-registrants-portal-ui
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+    paths:
+      - "evacuees/src/UI/**"
+      - ".github/workflows/ci-registrants-portal-ui.yml"
+
+env:
+  IMAGE_NAME: evacuees-portal-ui
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        working-directory: ./evacuees/src/UI
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME

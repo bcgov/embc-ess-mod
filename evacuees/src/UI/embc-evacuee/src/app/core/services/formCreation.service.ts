@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { PersonDetailsForm, PersonDetails, ContactDetailsForm, ContactDetails, Secret, SecretForm } from '../model/createProfile.model';
+import { PersonDetailsForm, PersonDetails, ContactDetailsForm, ContactDetails, Secret, SecretForm, AddressForm, Address } from '../model/createProfile.model';
 import { CustomValidationService } from './customValidation.service';
 
 @Injectable({ providedIn: 'root' })
@@ -21,6 +21,16 @@ export class FormCreationService {
         this.formBuilder.group(new SecretForm(new Secret())));
 
     private secretForm$: Observable<FormGroup> = this.secretForm.asObservable();
+
+    private primaryAddressForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
+        this.formBuilder.group(new AddressForm(new Address(), this.formBuilder)));
+
+    private primaryAddressForm$: Observable<FormGroup> = this.primaryAddressForm.asObservable();
+
+    private mailingAddressForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
+        this.formBuilder.group(new AddressForm(new Address(), this.formBuilder)));
+
+    private mailingAddressForm$: Observable<FormGroup> = this.mailingAddressForm.asObservable();
 
     constructor(private formBuilder: FormBuilder, private customValidator: CustomValidationService) { }
 
@@ -46,6 +56,22 @@ export class FormCreationService {
 
     setSecretForm(secretForm: FormGroup): void {
         this.secretForm.next(secretForm);
+    }
+
+    getPrimaryAddressForm(): Observable<FormGroup> {
+        return this.primaryAddressForm$;
+    }
+
+    setPrimaryAddressForm(addressForm: FormGroup): void {
+        this.primaryAddressForm.next(addressForm);
+    }
+
+    getMailingAddressForm(): Observable<FormGroup> {
+        return this.mailingAddressForm$;
+    }
+
+    setMailingAddressForm(addressForm: FormGroup): void {
+        this.mailingAddressForm.next(addressForm);
     }
 
 }
