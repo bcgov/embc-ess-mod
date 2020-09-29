@@ -21,25 +21,25 @@ services:
     depends_on:
       - suppliers-portal-api
       
-  evacuees-portal-api:
+  registrants-portal-api:
     build:
       context: ./evacuees/src/API
-    image: embcess-evacuees-api:dev
+    image: embcess-registrants-api:dev
     ports:
       - 2010:8080
     env_file:
       - .env
 
-  evacuees-portal-ui:
+  registrants-portal-ui:
     build:
       context: ./evacuees/src/UI
-    image: embcess-evacuees-ui:dev
+    image: embcess-registrants-ui:dev
     ports:
       - 2015:2015
     environment:
-      - "API_URL=evacuees-portal-api:8080"
+      - "API_URL=registrants-portal-api:8080"
     depends_on:
-      - evacuees-portal-api
+      - registrants-portal-api
 
   responders-portal-api:
     build:

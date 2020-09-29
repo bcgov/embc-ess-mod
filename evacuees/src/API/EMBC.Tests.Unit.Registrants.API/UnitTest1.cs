@@ -1,7 +1,6 @@
-using System;
-using Xunit;
+﻿using Xunit;
 
-namespace EMBC.Tests.Unit.Evacuees.API
+namespace EMBC.Tests.Unit.Registrants.API
 {
     public class UnitTest1
     {
