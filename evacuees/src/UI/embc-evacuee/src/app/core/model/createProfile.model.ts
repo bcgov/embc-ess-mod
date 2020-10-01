@@ -150,6 +150,12 @@ export class AddressForm {
         this.isNewMailingAddress.setValue(address.isNewMailingAddress);
         this.isNewMailingAddress.setValidators([Validators.required]);
 
+        this.isBcMailingAddress.setValue(address.isBcMailingAddress);
+        this.isBcMailingAddress.setValidators([customValidator.conditionalValidation(
+            () => this.isNewMailingAddress.value === 'No',
+            Validators.required
+        ).bind(customValidator)]);
+
         // addressLine1: ['', [customValidator.conditionalValidation(
         //     () => this.isBcAddress.value,
         //     Validators.required

@@ -52,12 +52,16 @@
             <div class="col-md-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Province</mat-label>
-                    <input [formControlName]="'stateProvince'" matInput placeholder="Province" required>
+                    <input type="text" [formControlName]="'stateProvince'" matInput placeholder="Province" [matAutocomplete]="auto" required>
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="provinceDisplayFn">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                          {{option.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                     <mat-error
                         *ngIf="addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')">
                         Province is required</mat-error>
                 </mat-form-field>
             </div>
         </div>
-
 </form>

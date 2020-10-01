@@ -35,11 +35,10 @@ export class CustomValidationService {
      * @param validator : validtor to test again
      * @param errorName : custom error name
      */
-    conditionalValidation(predicate: () => boolean, validator: ValidatorFn, errorName?: string) {
+    conditionalValidation(predicate: () => boolean, validator: ValidatorFn, errorName?: string): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             if (control.parent) {
                 let validationError = null;
-                console.log(predicate());
                 if (predicate()) {
                     validationError = validator(control);
                 }
@@ -78,7 +77,7 @@ export class CustomValidationService {
                 if (control.parent.get('country').value === 'Canada') {
                     return Validators.pattern(globalConst.postalPattern)(control);
                 } else if (control.parent.get('country').value === 'United States of America') {
-                    return Validators.pattern(globalConst.zipCodePattern)(control)
+                    return Validators.pattern(globalConst.zipCodePattern)(control);
                 }
             }
             return null;

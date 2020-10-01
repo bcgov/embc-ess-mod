@@ -51,7 +51,12 @@
             <div class="col-md-3">
                 <mat-form-field appearance="outline">
                     <mat-label>State</mat-label>
-                    <input [formControlName]="'stateProvince'" matInput placeholder="State" required>
+                    <input type="text" [formControlName]="'stateProvince'" matInput placeholder="State" [matAutocomplete]="auto" required>
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="stateDisplayFn">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                          {{option.name}}
+                        </mat-option>
+                    </mat-autocomplete>
                     <mat-error
                         *ngIf="addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')">
                         State is required</mat-error>
