@@ -1,13 +1,13 @@
 <form [formGroup]="addressForm">
-    <div formGroupName="address">
-
         <div class="row">
             <div class="col-md-5">
                 <mat-form-field appearance="outline">
                     <mat-label>Address Line 1</mat-label>
-                    <input [formControlName]="'addressLine1'" matInput placeholder="Address Line 1">
-                    <!-- <mat-error *ngIf="personalFormControl.firstName.invalid && personalFormControl.firstName.hasError('required')">First Name is required</mat-error> -->
-                  </mat-form-field>
+                    <input [formControlName]="'addressLine1'" matInput placeholder="Address Line 1" required>
+                    <mat-error
+                        *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')">
+                        Address Line 1 is required</mat-error>
+                   </mat-form-field>
             </div>
         </div>
         
@@ -16,7 +16,6 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Address Line 2</mat-label>
                     <input [formControlName]="'addressLine2'" matInput placeholder="Address Line 2">
-                    <!-- <mat-error *ngIf="personalFormControl.firstName.invalid && personalFormControl.firstName.hasError('required')">First Name is required</mat-error> -->
                   </mat-form-field>
             </div>
         </div>
@@ -25,9 +24,10 @@
             <div class="col-md-4">
                 <mat-form-field appearance="outline">
                     <mat-label>City/Jurisdiction</mat-label>
-                    <input [formControlName]="'jurisdiction'" matInput placeholder="Address Line 2">
-                    <!-- <mat-error *ngIf="personalFormControl.firstName.invalid && personalFormControl.firstName.hasError('required')">First Name is required</mat-error> -->
-                  </mat-form-field>
+                    <input [formControlName]="'jurisdiction'" matInput placeholder="City/Jurisdiction" required>
+                    <mat-error
+                        *ngIf="addressFormControl?.jurisdiction.invalid && addressFormControl?.jurisdiction.hasError('required')">
+                        City/Jurisdiction is required</mat-error></mat-form-field>
             </div>
         </div>
     
@@ -35,14 +35,12 @@
             <div class="col-md-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Postal Code</mat-label>
-                    <input [formControlName]="'postalCode'" matInput placeholder="Address Line 2">
-                    <!-- <mat-error *ngIf="personalFormControl.firstName.invalid && personalFormControl.firstName.hasError('required')">First Name is required</mat-error> -->
+                    <input [formControlName]="'postalCode'" matInput placeholder="Postal Code" required>
+                    <mat-error
+                        *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
+                        Postal Code is required</mat-error>
                   </mat-form-field>
             </div>
         </div>
-        
-    </div>
-    
-
 </form>
 

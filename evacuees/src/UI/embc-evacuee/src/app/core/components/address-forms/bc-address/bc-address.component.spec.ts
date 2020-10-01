@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BcAddressComponent } from './bc-address.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('BcAddressComponent', () => {
   let component: BcAddressComponent;
@@ -8,6 +9,7 @@ describe('BcAddressComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ HttpClientTestingModule ],
       declarations: [ BcAddressComponent ]
     })
     .compileComponents();

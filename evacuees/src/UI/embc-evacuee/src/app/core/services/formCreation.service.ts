@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { PersonDetailsForm, PersonDetails, ContactDetailsForm, ContactDetails, Secret, SecretForm, AddressForm, Address } from '../model/createProfile.model';
 import { CustomValidationService } from './customValidation.service';
 
@@ -22,15 +22,10 @@ export class FormCreationService {
 
     private secretForm$: Observable<FormGroup> = this.secretForm.asObservable();
 
-    private primaryAddressForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
-        this.formBuilder.group(new AddressForm(new Address(), this.formBuilder)));
+    private addressForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
+        this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator)));
 
-    private primaryAddressForm$: Observable<FormGroup> = this.primaryAddressForm.asObservable();
-
-    private mailingAddressForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
-        this.formBuilder.group(new AddressForm(new Address(), this.formBuilder)));
-
-    private mailingAddressForm$: Observable<FormGroup> = this.mailingAddressForm.asObservable();
+    private addressForm$: Observable<FormGroup> = this.addressForm.asObservable();
 
     constructor(private formBuilder: FormBuilder, private customValidator: CustomValidationService) { }
 
@@ -58,20 +53,12 @@ export class FormCreationService {
         this.secretForm.next(secretForm);
     }
 
-    getPrimaryAddressForm(): Observable<FormGroup> {
-        return this.primaryAddressForm$;
+    getAddressForm(): Observable<FormGroup> {
+        return this.addressForm$;
     }
 
-    setPrimaryAddressForm(addressForm: FormGroup): void {
-        this.primaryAddressForm.next(addressForm);
-    }
-
-    getMailingAddressForm(): Observable<FormGroup> {
-        return this.mailingAddressForm$;
-    }
-
-    setMailingAddressForm(addressForm: FormGroup): void {
-        this.mailingAddressForm.next(addressForm);
+    setAddressForm(addressForm: FormGroup): void {
+        this.addressForm.next(addressForm);
     }
 
 }

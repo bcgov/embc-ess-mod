@@ -1,6 +1,7 @@
-import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, Validators, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import * as globalConst from '../services/globalConstants';
 import { CustomValidationService } from '../services/customValidation.service';
+import { LocationModel } from './location.model';
 
 export class PersonDetails {
     firstName: string;
@@ -80,7 +81,7 @@ export class ContactDetailsForm {
 export class Secret {
     secretPhrase: string;
 
-    constructor() {}
+    constructor() { }
 }
 
 export class SecretForm {
@@ -105,7 +106,7 @@ export class Address {
     isNewMailingAddress: string;
     isBcMailingAddress: string;
 
-    constructor() {}
+    constructor() { }
 }
 
 export class AddressForm {
@@ -115,6 +116,8 @@ export class AddressForm {
     isNewMailingAddress = new FormControl();
     isBcMailingAddress = new FormControl();
 
+    mailingAddress: FormGroup;
+
     // addressLine1 = new FormControl();
     // addressLine2 = new FormControl();
     // jurisdiction = new FormControl();
@@ -123,16 +126,46 @@ export class AddressForm {
     // postalCode = new FormControl();
 
 
-    constructor(address: Address, builder: FormBuilder) {
+    constructor(address: Address, builder: FormBuilder, customValidator: CustomValidationService) {
         this.address = builder.group({
-            addressLine1: [''],
+            addressLine1: ['', [Validators.required]],
             addressLine2: [''],
-            jurisdiction: [''],
-            stateProvince: [''],
-            country: [''],
-            postalCode: [''],
+            jurisdiction: ['', [Validators.required]],
+            stateProvince: ['', [Validators.required]],
+            country: ['', [Validators.required]],
+            postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
         });
+        this.mailingAddress = builder.group({
+            addressLine1: ['', [Validators.required]],
+            addressLine2: [''],
+            jurisdiction: ['', [Validators.required]],
+            stateProvince: ['', [Validators.required]],
+            country: ['', [Validators.required]],
+            postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
+        });
+
         this.isBcAddress.setValue(address.isBcAddress);
-        // this.isBcAddress.setValidators([Validators.required]);
+        this.isBcAddress.setValidators([Validators.required]);
+
+        this.isNewMailingAddress.setValue(address.isNewMailingAddress);
+        this.isNewMailingAddress.setValidators([Validators.required]);
+
+        this.isBcMailingAddress.setValue(address.isBcMailingAddress);
+        this.isBcMailingAddress.setValidators([customValidator.conditionalValidation(
+            () => this.isNewMailingAddress.value === 'No',
+            Validators.required
+        ).bind(customValidator)]);
+
+        // addressLine1: ['', [customValidator.conditionalValidation(
+        //     () => this.isBcAddress.value,
+        //     Validators.required
+        // ).bind(customValidator)]],
+    }
+
+    compareObjects<T extends LocationModel>(c1: T, c2: T): boolean {
+        if (c1 === null || c2 === null || c1 === undefined || c2 === undefined) {
+            return null;
+        }
+        return c1.code === c2.code;
     }
 }
