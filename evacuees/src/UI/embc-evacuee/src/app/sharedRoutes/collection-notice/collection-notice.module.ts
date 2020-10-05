@@ -7,7 +7,7 @@ import { CollectionNoticeRoutingModule } from './collection-notice-routing.modul
 import { CollectionNoticeComponent } from './collection-notice.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { DialogModule } from '../../core/components/dialog/dialog.module'
+import { DialogModule } from '../../core/components/dialog/dialog.module';
 
 @NgModule({
   declarations: [

@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -11,7 +11,7 @@ export class DialogComponent {
     constructor(public dialogRef: MatDialogRef<DialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     buttonAction(action: string): void {
-        if(action !== 'close') {
+        if (action !== 'close') {
             this.dialogRef.close(action);
         }
         this.dialogRef.close();

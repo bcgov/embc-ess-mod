@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { Registration } from '../model/registration.model';
 
 @Injectable({ providedIn: 'root' })
@@ -8,11 +8,11 @@ export class DataService {
 
     public updateRegistartion(value): void {
        // Object.assign(value, this.registration)
-       this.registration = { ...this.registration, ...value}
-       console.log(this.registration)
+       this.registration = { ...this.registration, ...value};
+       console.log(this.registration);
     }
 
-    public getRegistration() {
+    public getRegistration(): Partial<Registration> {
         return this.registration;
     }
 }

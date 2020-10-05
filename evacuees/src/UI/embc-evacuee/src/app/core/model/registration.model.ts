@@ -9,7 +9,7 @@ export interface Registration {
     restrictedAccess: boolean;
   }
 
-  export class RegistrationUpdate {
+export class RegistrationUpdate {
 
     // contactDetails: ContactDetails;
     // informationCollectionConsent: boolean;
@@ -21,5 +21,5 @@ export interface Registration {
     // constructor(init?: Partial<RegistrationUpdate>) {
     //   Object.assign(this, init);
     // }
-    //updateRegistration()
+    // updateRegistration()
   }

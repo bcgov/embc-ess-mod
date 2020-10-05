@@ -14,31 +14,31 @@ export class CollectionNoticeComponent implements OnInit {
 
   collectionForm: FormGroup;
 
-  //informationCollectionConsent = new FormControl(false);
+  // informationCollectionConsent = new FormControl(false);
   body = {
-    body: "To register with the Evacuee Registration & Assistance (ERA) tool, you must select 'I agree'.",
+    body: 'To register with the Evacuee Registration & Assistance (ERA) tool, you must select \'I agree\'.',
     buttons:
       [
         {
-          name: "Close",
-          class: "button-p",
+          name: 'Close',
+          class: 'button-p',
           function: 'close'
         }
       ]
-  }
+  };
 
   constructor(private router: Router, public dialog: MatDialog, private builder: FormBuilder, public dataService: DataService) { }
 
   ngOnInit(): void {
     this.collectionForm = this.builder.group({
       informationCollectionConsent: [false]
-    })
+    });
     this.mapData();
   }
 
   mapData(): void {
-    let existingValues = this.dataService.getRegistration();
-    if(existingValues !== null) {
+    const existingValues = this.dataService.getRegistration();
+    if (existingValues !== null) {
       this.collectionForm.get('informationCollectionConsent').setValue(existingValues.informationCollectionConsent);
     }
   }
@@ -49,7 +49,7 @@ export class CollectionNoticeComponent implements OnInit {
         data: this.body,
         height: '198px',
         width: '500px'
-      })
+      });
     } else {
       this.dataService.updateRegistartion(this.collectionForm.value);
       this.router.navigate(['/non-verified-registration/restriction']);

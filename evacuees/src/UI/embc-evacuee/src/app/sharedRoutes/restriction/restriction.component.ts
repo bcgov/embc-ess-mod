@@ -11,14 +11,14 @@ import { setClassMetadata } from '@angular/core/src/r3_symbols';
 })
 export class RestrictionComponent implements OnInit {
 
-  restrictionForm: FormGroup
+  restrictionForm: FormGroup;
 
   constructor(private router: Router, private builder: FormBuilder, private dataService: DataService ) { }
 
   ngOnInit(): void {
     this.restrictionForm = this.builder.group({
       restrictedAccess: ['', [Validators.required]]
-    })
+    });
 
     this.mapData();
   }
@@ -31,14 +31,14 @@ export class RestrictionComponent implements OnInit {
   }
 
   mapData(): void {
-    let existingValues = this.dataService.getRegistration();
-    if(existingValues !== null) {
+    const existingValues = this.dataService.getRegistration();
+    if (existingValues !== null) {
       this.restrictionForm.get('restrictedAccess').setValue(existingValues.restrictedAccess);
     }
   }
 
   submitRestriction(): void {
-    if(this.restrictionForm.status === 'VALID') {
+    if (this.restrictionForm.status === 'VALID') {
       this.dataService.updateRegistartion(this.restrictionForm.value);
       this.router.navigate(['/non-verified-registration/create-profile']);
     } else {
