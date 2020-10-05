@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   path: string;
   form$: Subscription;
   form: FormGroup;
+  isComplete: boolean = false;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
               private route: ActivatedRoute, private formCreationService: FormCreationService) { }
@@ -74,17 +75,18 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       // })
 
     } else if (lastStep === -2) {
-      this.router.navigate(['/restriction']);
+      this.router.navigate(['/non-verified-registration/restriction']);
     }
   }
 
   goForward(stepper: MatStepper, isLast: boolean, component: string): void {
     if (this.form.status === 'VALID') {
       if (isLast) {
-        this.router.navigate(['/loader/needs-assessment']);
+        this.router.navigate(['/non-verified-registration/needs-assessment']);
       }
       this.setFormData(component);
       this.form$.unsubscribe();
+      this.isComplete = !this.isComplete;
       stepper.next();
     } else {
       this.form.markAllAsTouched();
