@@ -1,0 +1,49 @@
+<div class="heading-container">
+    <div class="row">
+        <div class="col-md-12">
+            <span class="page-heading">Restriction</span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 content-container">
+        <form [formGroup]="restrictionForm">
+            <div class="row">
+                <div class="col-12">
+                    <mat-card>
+                        <p>In the event of an emergency, concerned family and friends may inquire about you and your family.
+                        </p>
+                        <p>Do you consent to have your location and contact information <b>shared with concerned family or
+                                friends</b> who ask about your wellbeing?
+                        </p>
+                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-radio-group formControlName="restrictedAccess"
+                                    aria-labelledby="primary-radio-group-label" class="primary-radio-group" required>
+                                    <mat-radio-button value="true"><span class="radio-text"><b>Yes</b></span> - You may disclose my location and contact
+                                        information with family or friends</mat-radio-button>
+                                    <mat-radio-button value="false"><span class="radio-text"><b>No</b></span> - You may not disclose my location or contact
+                                        information</mat-radio-button>
+                                    <mat-error class="custom-mat-error field-error"
+                                        *ngIf="restrFormControl?.restrictedAccess.touched && restrFormControl?.restrictedAccess.invalid && restrFormControl?.restrictedAccess.hasError('required')">
+                                        Required</mat-error>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+        </form>
+        
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-12">
+                <button class="button-p notice-button" mat-button type="button"
+                    (click)="submitRestriction()">Next - Create
+                    Account</button>
+            </div>
+        </div>
+    </div>
+</div>

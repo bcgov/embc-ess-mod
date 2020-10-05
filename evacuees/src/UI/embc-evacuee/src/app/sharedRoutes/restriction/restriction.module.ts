@@ -4,7 +4,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { RestrictionRoutingModule } from './restriction-routing.module';
 import { RestrictionComponent } from './restriction.component';
-
+import { MatRadioModule } from '@angular/material/radio';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,9 @@ import { RestrictionComponent } from './restriction.component';
     CommonModule,
     RestrictionRoutingModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatRadioModule,
+    ReactiveFormsModule
   ]
 })
 export class RestrictionModule { }
