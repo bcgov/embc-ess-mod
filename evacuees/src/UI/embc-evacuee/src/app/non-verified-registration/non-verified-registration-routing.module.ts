@@ -8,16 +8,16 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'create-profile',
+        redirectTo: 'collection-notice',
         pathMatch: 'full',
       },
       {
         path: 'collection-notice',
-        loadChildren: () => import('../collection-notice/collection-notice.module').then(m => m.CollectionNoticeModule)
+        loadChildren: () => import('../sharedRoutes/collection-notice/collection-notice.module').then(m => m.CollectionNoticeModule)
       },
       {
         path: 'restriction',
-        loadChildren: () => import('../restriction/restriction.module').then(m => m.RestrictionModule)
+        loadChildren: () => import('../sharedRoutes/restriction/restriction.module').then(m => m.RestrictionModule)
       },
       {
         path: 'create-profile',

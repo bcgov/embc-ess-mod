@@ -141,6 +141,14 @@ body { margin: 0; }
   background-color: #E5E5E5;
 }
 
+button {
+  border-width: 0px !important;
+}
+
+button:focus {
+  outline: 0px !important;
+}
+
 @media screen and (max-width: 768px) {
   .resp-style .button-p {
     width: 100%;
@@ -243,6 +251,14 @@ mat-card {
 
  .custom-mat-error {
    font-size: 75%;
+ }
+
+ .mat-dialog-container {
+   border-radius: 0px !important;
+ }
+
+ .mat-radio-label {
+   white-space: normal !important;
  }
 
 // .mat-form-field-appearance-outline .mat-form-field-outline-thick {
