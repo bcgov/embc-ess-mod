@@ -1,0 +1,19 @@
+<div class="row justify-content-between">
+    <div class="col-md-10">
+        <h1 *ngIf="data?.title !== undefined" mat-dialog-title>{{data.title}}</h1>
+    </div>
+    <div class="col-md-1">
+        <img mat-dialog-close src="/assets/images/close.svg" height="20" width="20">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12" mat-dialog-content>
+        {{data.body}}
+    </div>
+</div>
+<br>
+<div *ngFor="let b of data.buttons" mat-dialog-actions class="row">
+    <button class="col-md-6" [ngClass]="{'button-p': b.class === 'button-p'}" (click)="buttonAction(b.function)"
+        mat-button>{{b.name}}</button>
+</div>
