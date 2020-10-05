@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   path: string;
   form$: Subscription;
   form: FormGroup;
-  isComplete: boolean = false;
+  isComplete: boolean;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
               private route: ActivatedRoute, private formCreationService: FormCreationService) { }
@@ -97,15 +97,19 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     switch (component) {
       case 'personal-details':
         this.formCreationService.setPersonDetailsForm(this.form);
+        this.isComplete = false;
         break;
       case 'address':
         this.formCreationService.setAddressForm(this.form);
+        this.isComplete = false;
         break;
       case 'contact-info':
         this.formCreationService.setContactDetailsForm(this.form);
+        this.isComplete = false;
         break;
       case 'secret':
         this.formCreationService.setSecretForm(this.form);
+        this.isComplete = false;
         break;
       default:
     }
