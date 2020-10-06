@@ -122,16 +122,39 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public string AddressLine1 { get; set; }
 
         public string AddressLine2 { get; set; }
-        public string JurisdictionCode { get; set; }
-        public string JurisdictionName { get; set; }
-        public string StateProvinceCode { get; set; }
-        public string StateProvinceName { get; set; }
 
         [Required]
-        public string CountryCode { get; set; }
+        public Jurisdiction Jurisdiction { get; set; }
+
+        public StateProvince StateProvince { get; set; }
+
+        [Required]
+        public Country Country { get; set; }
 
         [Required]
         public string PostalCode { get; set; }
+    }
+
+    public class Jurisdiction
+    {
+        public string JurisdictionCode { get; set; }
+
+        [Required]
+        public string JurisdictionName { get; set; }
+    }
+
+    public class StateProvince
+    {
+        public string StateProvinceCode { get; set; }
+        public string StateProvinceName { get; set; }
+    }
+
+    public class Country
+    {
+        [Required]
+        public string CountryCode { get; set; }
+
+        public string CountryName { get; set; }
     }
 
     /// <summary>
