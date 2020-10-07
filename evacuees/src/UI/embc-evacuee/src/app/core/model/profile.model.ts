@@ -1,5 +1,4 @@
-import { FormControl, Validators, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
-import * as globalConst from '../services/globalConstants';
+import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { CustomValidationService } from '../services/customValidation.service';
 import { LocationModel } from './location.model';
 
@@ -95,14 +94,8 @@ export class SecretForm {
 
 export class Address {
     isBcAddress: string;
-    addressLine1: string;
-    addressLine2: string;
-    jurisdictionCode: string;
-    jurisdictionName: string;
-    stateProvinceCode: string;
-    stateProvinceName: string;
-    countryCode: string;
-    postalCode: string;
+    address: Address;
+    mailingAddress: Address;
     isNewMailingAddress: string;
     isBcMailingAddress: string;
 
@@ -111,20 +104,10 @@ export class Address {
 
 export class AddressForm {
     address: FormGroup;
-
     isBcAddress = new FormControl();
     isNewMailingAddress = new FormControl();
     isBcMailingAddress = new FormControl();
-
     mailingAddress: FormGroup;
-
-    // addressLine1 = new FormControl();
-    // addressLine2 = new FormControl();
-    // jurisdiction = new FormControl();
-    // stateProvince = new FormControl();
-    // country = new FormControl();
-    // postalCode = new FormControl();
-
 
     constructor(address: Address, builder: FormBuilder, customValidator: CustomValidationService) {
         this.address = builder.group({
@@ -155,11 +138,6 @@ export class AddressForm {
             () => this.isNewMailingAddress.value === 'No',
             Validators.required
         ).bind(customValidator)]);
-
-        // addressLine1: ['', [customValidator.conditionalValidation(
-        //     () => this.isBcAddress.value,
-        //     Validators.required
-        // ).bind(customValidator)]],
     }
 
     compareObjects<T extends LocationModel>(c1: T, c2: T): boolean {

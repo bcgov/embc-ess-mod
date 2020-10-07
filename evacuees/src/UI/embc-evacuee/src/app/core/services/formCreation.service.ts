@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { PersonDetailsForm, PersonDetails, ContactDetailsForm, ContactDetails, Secret, SecretForm, AddressForm, Address } from '../model/createProfile.model';
+import { PersonDetailsForm, PersonDetails, ContactDetailsForm, ContactDetails, Secret, SecretForm, AddressForm, Address } from '../model/profile.model';
 import { CustomValidationService } from './customValidation.service';
+import { Evacuated, EvacuatedForm } from '../model/needs.model';
 
 @Injectable({ providedIn: 'root' })
 export class FormCreationService {
@@ -26,6 +27,11 @@ export class FormCreationService {
         this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator)));
 
     private addressForm$: Observable<FormGroup> = this.addressForm.asObservable();
+
+    private evacuatedForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
+        this.formBuilder.group(new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator)));
+
+    private evacuatedForm$: Observable<FormGroup> = this.evacuatedForm.asObservable();
 
     constructor(private formBuilder: FormBuilder, private customValidator: CustomValidationService) { }
 
@@ -59,6 +65,14 @@ export class FormCreationService {
 
     setAddressForm(addressForm: FormGroup): void {
         this.addressForm.next(addressForm);
+    }
+
+    getEvacuatedForm(): Observable<FormGroup> {
+        return this.evacuatedForm$;
+    }
+
+    setEvacuatedForm(evacuatedForm: FormGroup): void {
+        this.evacuatedForm.next(evacuatedForm);
     }
 
 }

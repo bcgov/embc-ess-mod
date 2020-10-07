@@ -14,6 +14,7 @@ import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { LocationService } from '../../../services/api/services/location.service';
 import { Country } from 'src/app/core/services/api/models/country';
+import * as globalConst from '../../../services/globalConstants';
 
 @Component({
   selector: 'app-address',
@@ -64,7 +65,6 @@ export default class AddressComponent implements OnInit {
 
     this.primaryAddressForm.get('isNewMailingAddress').valueChanges.subscribe(value => {
       this.primaryAddressForm.get('isBcMailingAddress').updateValueAndValidity();
-      console.log(this.primaryAddressForm);
     });
 
     this.primaryAddressForm.get('address').valueChanges.subscribe(value => {
@@ -103,28 +103,28 @@ export default class AddressComponent implements OnInit {
   primaryAddressChange(event: MatRadioChange): void {
     this.primaryAddressForm.get('address').reset();
     if (event.value === 'No') {
-      this.primaryAddressForm.get('address.country').enable();
-      this.primaryAddressForm.get('address.stateProvince').enable();
+      //this.primaryAddressForm.get('address.country').enable();
+      //this.primaryAddressForm.get('address.stateProvince').enable();
     } else {
-      this.primaryAddressForm.get('address.stateProvince').setValue('British Columbia');
-      this.primaryAddressForm.get('address.stateProvince').disable();
+      this.primaryAddressForm.get('address.stateProvince').setValue(globalConst.defaultProvince);
+      //this.primaryAddressForm.get('address.stateProvince').disable();
 
-      this.primaryAddressForm.get('address.country').setValue('Canada');
-      this.primaryAddressForm.get('address.country').disable();
+      this.primaryAddressForm.get('address.country').setValue(globalConst.defaultCountry);
+      //this.primaryAddressForm.get('address.country').disable();
     }
   }
 
   mailingAddressChange(event: MatRadioChange): void {
     this.primaryAddressForm.get('mailingAddress').reset();
     if (event.value === 'No') {
-      this.primaryAddressForm.get('mailingAddress.country').enable();
-      this.primaryAddressForm.get('mailingAddress.stateProvince').enable();
+     // this.primaryAddressForm.get('mailingAddress.country').enable();
+      //this.primaryAddressForm.get('mailingAddress.stateProvince').enable();
     } else {
-      this.primaryAddressForm.get('mailingAddress.stateProvince').patchValue('British Columbia');
-      this.primaryAddressForm.get('mailingAddress.stateProvince').disable();
+      this.primaryAddressForm.get('mailingAddress.stateProvince').setValue(globalConst.defaultProvince);
+     // this.primaryAddressForm.get('mailingAddress.stateProvince').disable();
 
-      this.primaryAddressForm.get('mailingAddress.country').setValue('Canada');
-      this.primaryAddressForm.get('mailingAddress.country').disable();
+      this.primaryAddressForm.get('mailingAddress.country').setValue(globalConst.defaultCountry);
+      //this.primaryAddressForm.get('mailingAddress.country').disable();
     }
   }
 

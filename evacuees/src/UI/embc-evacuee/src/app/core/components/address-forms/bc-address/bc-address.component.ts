@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Jurisdiction } from 'src/app/core/services/api/models/jurisdiction';
 import { LocationService } from 'src/app/core/services/api/services/location.service';
 import { startWith, map } from 'rxjs/operators';
+import * as globalConst from '../../../services/globalConstants';
 
 @Component({
   selector: 'app-bc-address',
@@ -15,6 +16,7 @@ export class BcAddressComponent implements OnInit {
   @Input() addressForm: FormGroup;
   filteredOptions: Observable<Jurisdiction[]>;
   city: Jurisdiction[] = [];
+  province = [globalConst.defaultProvince];
 
   constructor(private service: LocationService) { }
 

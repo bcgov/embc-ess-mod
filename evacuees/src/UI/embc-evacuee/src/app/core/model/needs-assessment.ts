@@ -1,12 +1,8 @@
-/* tslint:disable */
 import { Address } from './address';
 import { InsuranceOption } from './insurance-option';
-import { PersonDetails } from './person-details';
-import { Pet } from './pet';
+import { PersonDetails } from '../services/api/models/person-details';
+import { Pet } from '../services/api/models/pet';
 
-/**
- * Needs assessment form
- */
 export interface NeedsAssessment {
   evacuatedFromAddress: Address;
   familyMembers?: null | Array<PersonDetails>;
