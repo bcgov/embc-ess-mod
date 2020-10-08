@@ -31,12 +31,30 @@ export class BcAddressComponent implements OnInit {
     );
   }
 
+  /**
+   * Returns the control of the form
+   */
   get addressFormControl(): { [key: string]: AbstractControl; } {
     return this.addressForm.controls;
   }
 
   /**
-   * Filters the coutry list for autocomplete field
+   * Checks if the city value exists in the list
+   */
+  validateCity(): boolean {
+    const currentCity = this.addressForm.get('jurisdiction').value;
+    let invalidCity = false;
+    if (currentCity) {
+      if (this.city.indexOf(currentCity) === -1) {
+        invalidCity = !invalidCity;
+        this.addressForm.get('jurisdiction').setErrors({ invalidCity: true });
+      }
+    }
+    return invalidCity;
+  }
+
+  /**
+   * Filters the city list for autocomplete field
    * @param value : User typed value
    */
   private filter(value?: string): Jurisdiction[] {
@@ -46,6 +64,10 @@ export class BcAddressComponent implements OnInit {
     }
   }
 
+  /**
+   * Returns the display value of autocomplete
+   * @param city : Selected city object
+   */
   cityDisplayFn(city: Jurisdiction): string {
     if (city) { return city.name; }
   }

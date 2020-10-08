@@ -24,7 +24,7 @@
             <div class="col-md-4">
                 <mat-form-field appearance="outline">
                     <mat-label>City</mat-label>
-                    <input [formControlName]="'jurisdiction'" matInput placeholder="City" required>
+                    <input  maxlength="100" [formControlName]="'jurisdiction'" matInput placeholder="City" required>
                     <mat-error
                         *ngIf="addressFormControl?.jurisdiction.invalid && addressFormControl?.jurisdiction.hasError('required')">
                         City is required</mat-error>
@@ -60,6 +60,8 @@
                     <mat-error
                         *ngIf="addressFormControl?.stateProvince.invalid && addressFormControl?.stateProvince.hasError('required')">
                         State is required</mat-error>
+                        <mat-error *ngIf="validateState()">
+                            State is invalid</mat-error>
                 </mat-form-field>
             </div>
         </div>

@@ -15,7 +15,7 @@ export class CanAddressComponent implements OnInit {
   @Input() addressForm: FormGroup;
   filteredOptions: Observable<StateProvince[]>;
   provinces: StateProvince[] = [];
-  country = {countryCode: 'CAN'};
+  country = { countryCode: 'CAN' };
 
   constructor(private service: LocationService) { }
 
@@ -30,12 +30,31 @@ export class CanAddressComponent implements OnInit {
     );
   }
 
+  /**
+   * Returns the control of the form
+   */
   get addressFormControl(): { [key: string]: AbstractControl; } {
     return this.addressForm.controls;
   }
 
   /**
-   * Filters the coutry list for autocomplete field
+   * Checks if the province value exists in the list
+   */
+  validateProvince(): boolean {
+    const currentProvince = this.addressForm.get('stateProvince').value;
+    let invalidProvince = false;
+    if (currentProvince) {
+      if (this.provinces.indexOf(currentProvince) === -1) {
+        invalidProvince = !invalidProvince;
+        this.addressForm.get('stateProvince').setErrors({ invalidProvince: true });
+      }
+    }
+    return invalidProvince;
+  }
+
+
+  /**
+   * Filters the province list for autocomplete field
    * @param value : User typed value
    */
   private filter(value?: string): StateProvince[] {
@@ -45,6 +64,10 @@ export class CanAddressComponent implements OnInit {
     }
   }
 
+  /**
+   * Returns the display value of autocomplete
+   * @param province : Selected state province object
+   */
   provinceDisplayFn(province: StateProvince): string {
     if (province) { return province.name; }
   }

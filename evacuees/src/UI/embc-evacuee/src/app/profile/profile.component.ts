@@ -66,7 +66,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   goBack(stepper: MatStepper, lastStep): void {
     if (lastStep === 0) {
       stepper.previous();
-      console.log(this.profileStepper);
     } else if (lastStep === -1) {
       this.showStep = !this.showStep;
       // stepper.selectedIndex
@@ -99,18 +98,18 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     switch (component) {
       case 'personal-details':
         this.formCreationService.setPersonDetailsForm(this.form);
-        this.dataService.updateRegistartion({'personalDetails': this.form.value});
+        this.dataService.updateRegistartion({personalDetails: this.form.value});
         this.isComplete = false;
         break;
       case 'address':
         this.formCreationService.setAddressForm(this.form);
-        this.dataService.updateRegistartion({'mailingAddress': this.form.get('mailingAddress').value});
-        this.dataService.updateRegistartion({'primaryAddress': this.form.get('address').value});
+        this.dataService.updateRegistartion({mailingAddress: this.form.get('mailingAddress').value});
+        this.dataService.updateRegistartion({primaryAddress: this.form.get('address').value});
         this.isComplete = false;
         break;
       case 'contact-info':
         this.formCreationService.setContactDetailsForm(this.form);
-        this.dataService.updateRegistartion({'contactDetails': this.form.value});
+        this.dataService.updateRegistartion({contactDetails: this.form.value});
         this.isComplete = false;
         break;
       case 'secret':

@@ -24,7 +24,7 @@ export class NeedsAssessmentComponent implements OnInit {
   isComplete: boolean;
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private dataService: DataService) {}
+              private dataService: DataService) { }
 
   ngOnInit(): void {
     this.needsSteps = this.componentService.createEvacSteps();
@@ -34,10 +34,10 @@ export class NeedsAssessmentComponent implements OnInit {
     this.loadStepForm(index);
   }
 
-    /**
-   * Loads appropriate forms based on the current step
-   * @param index Step index
-   */
+ /**
+  * Loads appropriate forms based on the current step
+  * @param index index of the step
+  */
   loadStepForm(index: number): void {
     switch (index) {
       case 0:
@@ -48,13 +48,13 @@ export class NeedsAssessmentComponent implements OnInit {
         );
         break;
       case 1:
-         
-          break;
+
+        break;
       case 2:
-        
+
         break;
       case 3:
-        
+
         break;
     }
   }
@@ -85,17 +85,17 @@ export class NeedsAssessmentComponent implements OnInit {
     switch (component) {
       case 'evac-address':
         this.formCreationService.setEvacuatedForm(this.form);
-        //this.dataService.updateRegistartion({'personalDetails': this.form.value});
+        // this.dataService.updateRegistartion({'personalDetails': this.form.value});
         this.isComplete = false;
         break;
       case 'family-information':
-       
+
         break;
       case 'pets':
-       
+
         break;
       case 'identify-needs':
-      
+
         break;
       default:
     }

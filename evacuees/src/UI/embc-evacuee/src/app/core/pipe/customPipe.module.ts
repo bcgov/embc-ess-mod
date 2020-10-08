@@ -8,7 +8,7 @@ import { EnumToArrayPipe } from './EnumToArray.pipe';
   ],
   imports: [
     CommonModule
-  ], 
+  ],
   exports: [
     EnumToArrayPipe
   ]

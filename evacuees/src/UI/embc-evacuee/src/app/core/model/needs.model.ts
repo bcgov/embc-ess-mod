@@ -1,6 +1,6 @@
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { CustomValidationService } from "../services/customValidation.service";
-import { Address } from "./address";
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { CustomValidationService } from '../services/customValidation.service';
+import { Address } from './address';
 
 export class Evacuated {
     evacuatedFromAddress: Address;

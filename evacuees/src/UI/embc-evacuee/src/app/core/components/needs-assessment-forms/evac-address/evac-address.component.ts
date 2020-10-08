@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject, ɵConsole } from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,14 +31,14 @@ export default class EvacAddressComponent implements OnInit {
   insuranceOption = InsuranceOption;
   registration: Partial<Registration>;
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService, public dataService: DataService) {
+  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+              public dataService: DataService) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
-   }
+  }
 
   ngOnInit(): void {
     this.registration = this.dataService.getRegistration();
-    console.log(this.registration);
     this.evacuatedForm$ = this.formCreationService.getEvacuatedForm().subscribe(
       evacuatedForm => {
         this.evacuatedForm = evacuatedForm;
@@ -47,7 +47,6 @@ export default class EvacAddressComponent implements OnInit {
   }
 
   primaryAddressChange(event: MatRadioChange): void {
-    console.log(event.value)
     if (event.value === 'No') {
       this.evacuatedForm.get('evacuatedFromAddress').reset();
       this.evacuatedForm.get('evacuatedFromAddress.stateProvince').setValue(globalConst.defaultProvince);
@@ -57,7 +56,7 @@ export default class EvacAddressComponent implements OnInit {
     }
   }
 
-    /**
+  /**
    * Returns the control of the form
    */
   get evacuatedFormControl(): { [key: string]: AbstractControl; } {
@@ -80,7 +79,7 @@ export default class EvacAddressComponent implements OnInit {
   ],
   declarations: [
     EvacAddressComponent,
-    ]
+  ]
 })
 class EvacAddressModule {
 

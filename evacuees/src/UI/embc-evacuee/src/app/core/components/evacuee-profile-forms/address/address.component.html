@@ -48,6 +48,8 @@
                 <mat-error
                   *ngIf="primaryAddressFormControl?.address?.controls?.country.invalid && primaryAddressFormControl?.address?.controls?.country.hasError('required')">
                   Country is required</mat-error>
+                <mat-error *ngIf="validateCountry(primaryAddressFormControl?.address?.controls?.country)">
+                  Country is invalid</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -136,6 +138,8 @@
                   <mat-error
                     *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country.invalid && primaryAddressFormControl?.mailingAddress?.controls?.country.hasError('required')">
                     Country is required</mat-error>
+                  <mat-error *ngIf="validateCountry(primaryAddressFormControl?.mailingAddress?.controls?.country)">
+                      Country is invalid</mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -157,16 +161,6 @@
               [addressForm]="primaryAddressFormControl?.mailingAddress">
             </app-other-address>
           </ng-template>
-
-          <!-- <div [ngSwitch]="primaryAddressFormControl?.mailingAddress?.controls?.country.value">
-            <app-can-address *ngSwitchCase="'Canada'" [addressForm]="primaryAddressFormControl?.mailingAddress">
-            </app-can-address>
-            <app-usa-address *ngSwitchCase="'United States of America'"
-              [addressForm]="primaryAddressFormControl?.mailingAddress">
-            </app-usa-address>
-            <app-other-address *ngSwitchCase="'Other'" [addressForm]="primaryAddressFormControl?.mailingAddress">
-            </app-other-address>
-          </div> -->
         </div>
       </div>
     </mat-card-content>
