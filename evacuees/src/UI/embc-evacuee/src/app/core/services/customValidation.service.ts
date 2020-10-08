@@ -74,10 +74,12 @@ export class CustomValidationService {
     postalValidation(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             if (control.parent) {
-                if (control.parent.get('country').value === 'Canada') {
-                    return Validators.pattern(globalConst.postalPattern)(control);
-                } else if (control.parent.get('country').value === 'United States of America') {
-                    return Validators.pattern(globalConst.zipCodePattern)(control);
+                if (control.parent.get('country').value !== undefined && control.parent.get('country').value !== null) {
+                     if (control.parent.get('country').value.code === 'CAN') {
+                        return Validators.pattern(globalConst.postalPattern)(control);
+                    } else if (control.parent.get('country').value.code === 'USA') {
+                        return Validators.pattern(globalConst.zipCodePattern)(control);
+                    }
                 }
             }
             return null;

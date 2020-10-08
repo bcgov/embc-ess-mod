@@ -24,7 +24,7 @@
             <div class="col-md-4">
                 <mat-form-field appearance="outline">
                     <mat-label>City/Jurisdiction</mat-label>
-                    <input [formControlName]="'jurisdiction'" matInput placeholder="City/Jurisdiction" required>
+                    <input maxlength="100" [formControlName]="'jurisdiction'" matInput placeholder="City/Jurisdiction" required>
                     <mat-error
                         *ngIf="addressFormControl?.jurisdiction.invalid && addressFormControl?.jurisdiction.hasError('required')">
                         City/Jurisdiction is required</mat-error></mat-form-field>
@@ -34,8 +34,8 @@
         <div class="row">
             <div class="col-md-3">
                 <mat-form-field appearance="outline">
-                    <mat-label>Postal Code</mat-label>
-                    <input [formControlName]="'postalCode'" matInput placeholder="Postal Code" required>
+                    <mat-label>Postal/Zip Code</mat-label>
+                    <input [formControlName]="'postalCode'" matInput placeholder="Postal/Zip Code" required>
                     <mat-error
                         *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
                         Postal Code is required</mat-error>

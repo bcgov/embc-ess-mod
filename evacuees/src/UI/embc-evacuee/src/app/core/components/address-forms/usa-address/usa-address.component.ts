@@ -30,10 +30,32 @@ export class UsaAddressComponent implements OnInit {
     );
   }
 
+  /**
+   * Checks if the state value exists in the list
+   */
+  validateState(): boolean {
+    const currentState = this.addressForm.get('stateProvince').value;
+    let invalidState = false;
+    if (currentState) {
+      if (this.states.indexOf(currentState) === -1) {
+        invalidState = !invalidState;
+        this.addressForm.get('stateProvince').setErrors({ invalidState: true });
+      }
+    }
+    return invalidState;
+  }
+
+  /**
+   * Returns the control of the form
+   */
   get addressFormControl(): { [key: string]: AbstractControl; } {
     return this.addressForm.controls;
   }
 
+  /**
+   * Filters the states list for autocomplete field
+   * @param value : User typed value
+   */
   private filter(value?: string): StateProvince[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
@@ -41,6 +63,10 @@ export class UsaAddressComponent implements OnInit {
     }
   }
 
+  /**
+   * Returns the display value of autocomplete
+   * @param state : Selected state province object
+   */
   stateDisplayFn(state: StateProvince): string {
     if (state) { return state.name; }
   }

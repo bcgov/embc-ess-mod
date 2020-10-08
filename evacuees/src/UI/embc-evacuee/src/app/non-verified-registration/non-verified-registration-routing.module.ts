@@ -25,7 +25,7 @@ const routes: Routes = [
       }, /// :stepPos
       {
         path: 'needs-assessment',
-        loadChildren: () => import('../needs-assessment/needs-assessment.module').then(m => m.NeedsAssessmentModule)
+        loadChildren: () => import('../sharedRoutes/needs-assessment/needs-assessment.module').then(m => m.NeedsAssessmentModule)
       },
       {
         path: 'edit/:type',

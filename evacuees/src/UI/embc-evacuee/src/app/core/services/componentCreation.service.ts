@@ -54,7 +54,8 @@ export class ComponentCreationService {
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: -1
+                lastStep: -1,
+                stepName: 'Evacuated From'
             },
             {
                 component: 'family-information',
@@ -62,7 +63,8 @@ export class ComponentCreationService {
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: 0
+                lastStep: 0,
+                stepName: 'Family Members'
             },
             {
                 component: 'pets',
@@ -70,7 +72,8 @@ export class ComponentCreationService {
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: 0
+                lastStep: 0,
+                stepName: 'Pets'
             },
             {
                 component: 'identify-needs',
@@ -78,7 +81,8 @@ export class ComponentCreationService {
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: 0
+                lastStep: 0,
+                stepName: 'Needs'
             },
             // {
             //     component: 'pets',

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Registration } from '../model/registration.model';
+import { Registration } from '../model/registration';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {

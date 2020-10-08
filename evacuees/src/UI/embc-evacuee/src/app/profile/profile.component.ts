@@ -6,6 +6,8 @@ import { ComponentMetaDataModel } from '../core/model/componentMetaData.model';
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../core/services/formCreation.service';
+import { DataService } from '../core/services/data.service';
+import { PersonDetails } from '../core/model/profile.model';
 
 @Component({
   selector: 'app-profile',
@@ -25,7 +27,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   isComplete: boolean;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService) { }
+              private route: ActivatedRoute, private formCreationService: FormCreationService, public dataService: DataService) { }
 
   ngOnInit(): void {
     this.steps = this.componentService.createProfileSteps();
@@ -64,7 +66,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   goBack(stepper: MatStepper, lastStep): void {
     if (lastStep === 0) {
       stepper.previous();
-      console.log(this.profileStepper);
     } else if (lastStep === -1) {
       this.showStep = !this.showStep;
       // stepper.selectedIndex
@@ -97,25 +98,27 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     switch (component) {
       case 'personal-details':
         this.formCreationService.setPersonDetailsForm(this.form);
+        this.dataService.updateRegistartion({personalDetails: this.form.value});
         this.isComplete = false;
         break;
       case 'address':
         this.formCreationService.setAddressForm(this.form);
+        this.dataService.updateRegistartion({mailingAddress: this.form.get('mailingAddress').value});
+        this.dataService.updateRegistartion({primaryAddress: this.form.get('address').value});
         this.isComplete = false;
         break;
       case 'contact-info':
         this.formCreationService.setContactDetailsForm(this.form);
+        this.dataService.updateRegistartion({contactDetails: this.form.value});
         this.isComplete = false;
         break;
       case 'secret':
         this.formCreationService.setSecretForm(this.form);
+        this.dataService.updateRegistartion(this.form.value);
         this.isComplete = false;
         break;
       default:
     }
-    // if (component === 'personal-details') {
-    //   this.formCreationService.setPersonDetailsForm(this.form);
-    // }
   }
 
   /**
@@ -156,29 +159,4 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
 }
-
-
-
-
-// firstFormGroup: FormGroup;
-  // profileComponents$: Observable<any>;
-  // profileComponents1: ComponentMetaDataModel;
-    // this.profileComponents$ = this.componentService.getProfileComponents().pipe(mergeMap((components) => {
-    //   return Promise.all(components.map(comp => {
-    //     console.log((`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`));
-    //     return import(`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`);
-    //   }))
-    // }));
-
-    // this.profileComponents$.subscribe(x => {
-    //   console.log(x)
-    // })
-
-
-    // this.profileComponents1 = this.componentService.getProfileComponents1().pipe(mergeMap((components) => {
-    //   return Promise.all(components.map((comp) => {
-    //     console.log((`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`));
-    //      import(`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`);
-    //   }))
-    // }));
 

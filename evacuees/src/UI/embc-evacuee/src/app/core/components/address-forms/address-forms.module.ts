@@ -8,6 +8,7 @@ import { CanAddressComponent } from './can-address/can-address.component';
 import { UsaAddressComponent } from './usa-address/usa-address.component';
 import { OtherAddressComponent } from './other-address/other-address.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import {MatSelectModule} from '@angular/material/select';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatSelectModule
   ],
   exports: [
     BcAddressComponent,
