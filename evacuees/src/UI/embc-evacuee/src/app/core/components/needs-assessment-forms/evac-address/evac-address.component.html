@@ -26,7 +26,7 @@
 
         <div class="row" *ngIf="evacuatedFormControl?.evacuatedFromPrimary.value ==='No'">
           <div class="col-md-12">
-            <p class="card-heading">Where are you being evacuated from?</p>
+            <p>Where are you being evacuated from?</p>
             <app-bc-address [addressForm]="evacuatedFormControl?.evacuatedFromAddress">
             </app-bc-address>
           </div>
@@ -39,7 +39,7 @@
   <ng-template #otherAddress>
     <div class="row">
       <div class="col-md-12">
-        <label class="requiredField" id="primary-radio-group-label">Where are you being evacuated from?</label>
+        <label class="card-heading requiredField" id="primary-radio-group-label">Where are you being evacuated from?</label>
         <p>Please identify where in <b>BC</b> you have been <b>evacuated from</b>?</p>
         <app-bc-address [addressForm]="evacuatedFormControl?.evacuatedFromAddress">
         </app-bc-address>
