@@ -1,11 +1,11 @@
-
 <form [formGroup]="evacuatedForm">
   <mat-card class="card-align">
     <mat-card-content>
       <div *ngIf="registration?.primaryAddress?.stateProvince?.code === 'BC' else otherAddress;">
         <div class="row">
           <div class="col-md-12">
-            <label class="card-heading requiredField" id="primary-radio-group-label">Are you being evacuated from your primary
+            <label class="card-heading requiredField" id="primary-radio-group-label">Are you being evacuated from your
+              primary
               address that you listed when you created your profile?</label>
             <br>
             <mat-radio-group formControlName="evacuatedFromPrimary" aria-labelledby="primary-radio-group-label"
@@ -39,7 +39,8 @@
   <ng-template #otherAddress>
     <div class="row">
       <div class="col-md-12">
-        <label class="card-heading requiredField" id="primary-radio-group-label">Where are you being evacuated from?</label>
+        <label class="card-heading requiredField" id="primary-radio-group-label">Where are you being evacuated
+          from?</label>
         <p>Please identify where in <b>BC</b> you have been <b>evacuated from</b>?</p>
         <app-bc-address [addressForm]="evacuatedFormControl?.evacuatedFromAddress">
         </app-bc-address>
@@ -50,7 +51,7 @@
   <mat-card class="card-align">
     <mat-card-content>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
           <label class="card-heading requiredField" id="primary-radio-group-label">Do you have insurance?</label>
           <br>
           <mat-radio-group formControlName="insurance" aria-labelledby="primary-radio-group-label"
@@ -63,6 +64,16 @@
               *ngIf="evacuatedFormControl?.insurance.touched && evacuatedFormControl?.insurance.invalid && evacuatedFormControl?.insurance.hasError('required')">
               Insurance is required</mat-error>
           </mat-radio-group>
+        </div>
+        <div class="col-md-4">
+          <div class="note-box">
+            <p><b>Notes:</b></p>
+            <p>
+              If you have insurance, please keep all of your receipts, and contact your insurance provider as soon as
+              possible.If you are having difficulty contacting your insurance provider, please contact the Insurance
+              Bureau of Canada at 1-844-227-5422.
+            </p>
+          </div>
         </div>
       </div>
     </mat-card-content>
