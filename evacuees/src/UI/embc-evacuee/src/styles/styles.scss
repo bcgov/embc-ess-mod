@@ -37,6 +37,15 @@ main {
 html, body { height: 100%; }
 body { margin: 0; }
 
+.navbar-dark .navbar-nav .nav-link {
+  color: #333333;
+}
+
+footer nav {
+  background-color: #DCE2F0;
+  border-top: 2px solid #fcba19;
+}
+
 .mat-step-icon {
   height: 38px !important;
   width: 38px !important;
@@ -259,6 +268,13 @@ mat-card {
 
  .mat-radio-label {
    white-space: normal !important;
+ }
+
+ .note-box {
+  background-color: #F2F2F2;
+  padding: 8px;
+  font-family: 'BC Sans', sans-serif;
+  font-weight: 400;
  }
 
 // .mat-form-field-appearance-outline .mat-form-field-outline-thick {

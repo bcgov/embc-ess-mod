@@ -35,6 +35,10 @@
       <button mat-button type="button" (click)="goForward(needsStepper, true, '')">Save & Submit</button>
     </div>
   </mat-step>
+
+  <ng-template matStepperIcon="edit" let-index="index">
+    {{index + 1}}
+  </ng-template>
 </mat-horizontal-stepper>
 
 <!-- {{form?.status}} -->
