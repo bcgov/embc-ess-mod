@@ -12,9 +12,9 @@
               class="primary-radio-group" (change)="primaryAddressChange($event)" required>
               <mat-radio-button value="Yes">Yes
                 <br>
-                {{registration?.primaryAddress?.addressLine1}}
-                {{registration?.primaryAddress?.addressLine2}}
-                {{registration?.primaryAddress?.jurisdiction.name}} , {{registration?.primaryAddress?.postalCode}}
+                <p><b>{{registration?.primaryAddress?.addressLine1}}</b></p>
+                <p><b>{{registration?.primaryAddress?.addressLine2}}</b></p>
+                <p><b>{{registration?.primaryAddress?.jurisdiction.name}} , {{registration?.primaryAddress?.postalCode}}</b></p>
               </mat-radio-button>
               <mat-radio-button value="No">No</mat-radio-button>
               <mat-error class="custom-mat-error"
