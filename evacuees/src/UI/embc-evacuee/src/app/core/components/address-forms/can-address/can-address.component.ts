@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { StateProvince } from 'src/app/core/services/api/models/state-province';
-import { LocationService } from 'src/app/core/services/api/services/location.service';
+import { StateProvince } from '../../../services/api/models/state-province';
+import { LocationService } from '../../../services/api/services/location.service';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({
@@ -40,14 +40,24 @@ export class CanAddressComponent implements OnInit {
   /**
    * Checks if the province value exists in the list
    */
+  // validateProvince(): boolean {
+  //   const currentProvince = this.addressForm.get('stateProvince').value;
+  //   let invalidProvince = false;
+  //   if (currentProvince) {
+  //     if (this.provinces.indexOf(currentProvince) === -1) {
+  //       invalidProvince = !invalidProvince;
+  //       this.addressForm.get('stateProvince').setErrors({ invalidProvince: true });
+  //     }
+  //   }
+  //   return invalidProvince;
+  // }
+
   validateProvince(): boolean {
     const currentProvince = this.addressForm.get('stateProvince').value;
     let invalidProvince = false;
-    if (currentProvince) {
-      if (this.provinces.indexOf(currentProvince) === -1) {
-        invalidProvince = !invalidProvince;
-        this.addressForm.get('stateProvince').setErrors({ invalidProvince: true });
-      }
+    if (currentProvince !== null && currentProvince.name === undefined) {
+      invalidProvince = !invalidProvince;
+      this.addressForm.get('stateProvince').setErrors({ invalidProvince: true });
     }
     return invalidProvince;
   }

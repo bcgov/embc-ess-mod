@@ -79,16 +79,26 @@ export default class AddressComponent implements OnInit, AfterViewChecked {
     this.cd.detectChanges();
   }
 
+  // validateCountry(control: AbstractControl): boolean {
+  //   const currentCountry = control.value;
+  //   let invalidCountry = false;
+  //   if (currentCountry) {
+  //     if (this.countries.indexOf(currentCountry) === -1) {
+  //       invalidCountry = !invalidCountry;
+  //       control.setErrors({ invalidCountry: true });
+  //     }
+  //   }
+  //   // this.cd.detectChanges();
+  //   return invalidCountry;
+  // }
+
   validateCountry(control: AbstractControl): boolean {
     const currentCountry = control.value;
     let invalidCountry = false;
-    if (currentCountry) {
-      if (this.countries.indexOf(currentCountry) === -1) {
-        invalidCountry = !invalidCountry;
-        control.setErrors({ invalidCountry: true });
-      }
+    if (currentCountry !== null && currentCountry.name === undefined) {
+      invalidCountry = !invalidCountry;
+      control.setErrors({ invalidCountry: true });
     }
-    // this.cd.detectChanges();
     return invalidCountry;
   }
 

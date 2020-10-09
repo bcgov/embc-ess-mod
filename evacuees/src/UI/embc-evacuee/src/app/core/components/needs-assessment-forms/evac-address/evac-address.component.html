@@ -11,11 +11,12 @@
             <mat-radio-group formControlName="evacuatedFromPrimary" aria-labelledby="primary-radio-group-label"
               class="primary-radio-group" (change)="primaryAddressChange($event)" required>
               <mat-radio-button value="Yes">Yes
-                <br>
-                <p><b>{{registration?.primaryAddress?.addressLine1}}</b></p>
-                <p><b>{{registration?.primaryAddress?.addressLine2}}</b></p>
-                <p><b>{{registration?.primaryAddress?.jurisdiction.name}} , {{registration?.primaryAddress?.postalCode}}</b></p>
               </mat-radio-button>
+              <div class="prim-address">
+                <p class="allign"><b>{{registration?.primaryAddress?.addressLine1}}</b></p>
+                <p class="allign" *ngIf="registration?.primaryAddress?.addressLine2"><b>{{registration?.primaryAddress?.addressLine2}}</b></p>
+                <p class="allign"><b>{{registration?.primaryAddress?.jurisdiction.name}} , {{registration?.primaryAddress?.postalCode}}</b></p>
+              </div>
               <mat-radio-button value="No">No</mat-radio-button>
               <mat-error class="custom-mat-error"
                 *ngIf="evacuatedFormControl?.evacuatedFromPrimary.touched && evacuatedFormControl?.evacuatedFromPrimary.invalid && evacuatedFormControl?.evacuatedFromPrimary.hasError('required')">
