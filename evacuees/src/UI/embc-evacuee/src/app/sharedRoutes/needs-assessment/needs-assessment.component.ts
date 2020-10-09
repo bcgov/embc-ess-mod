@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
 import { ComponentCreationService } from '../../core/services/componentCreation.service';
 import { MatStepper } from '@angular/material/stepper';
@@ -22,6 +22,7 @@ export class NeedsAssessmentComponent implements OnInit {
   form$: Subscription;
   form: FormGroup;
   isComplete: boolean;
+  navigationExtras: NavigationExtras = {state: {stepIndex: 3}};
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
               private dataService: DataService) { }
@@ -63,7 +64,7 @@ export class NeedsAssessmentComponent implements OnInit {
     if (lastStep === 0) {
       stepper.previous();
     } else if (lastStep === -1) {
-      this.router.navigate(['/loader/registration/last']);
+      this.router.navigate(['/non-verified-registration/create-profile'], this.navigationExtras);
     }
   }
 

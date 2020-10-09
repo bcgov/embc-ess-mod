@@ -1,24 +1,24 @@
-import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Jurisdiction } from 'src/app/core/services/api/models/jurisdiction';
 import { LocationService } from 'src/app/core/services/api/services/location.service';
 import { startWith, map } from 'rxjs/operators';
 import * as globalConst from '../../../services/globalConstants';
+import { Jurisdiction } from '../../../services/api/models/jurisdiction';
 
 @Component({
   selector: 'app-bc-address',
   templateUrl: './bc-address.component.html',
   styleUrls: ['./bc-address.component.scss']
 })
-export class BcAddressComponent implements OnInit {
+export class BcAddressComponent implements OnInit, AfterViewChecked {
 
   @Input() addressForm: FormGroup;
   filteredOptions: Observable<Jurisdiction[]>;
   city: Jurisdiction[] = [];
   province = [globalConst.defaultProvince];
 
-  constructor(private service: LocationService) { }
+  constructor(private service: LocationService, private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.service.locationGetJurisdictions().subscribe(juris => {
@@ -29,6 +29,10 @@ export class BcAddressComponent implements OnInit {
       startWith(''),
       map(value => value ? this.filter(value) : this.city.slice())
     );
+  }
+
+  ngAfterViewChecked(): void {
+    this.cd.detectChanges();
   }
 
   /**
@@ -44,14 +48,35 @@ export class BcAddressComponent implements OnInit {
   validateCity(): boolean {
     const currentCity = this.addressForm.get('jurisdiction').value;
     let invalidCity = false;
-    if (currentCity) {
-      if (this.city.indexOf(currentCity) === -1) {
-        invalidCity = !invalidCity;
-        this.addressForm.get('jurisdiction').setErrors({ invalidCity: true });
-      }
+    if (currentCity !== null && currentCity.name === undefined) {
+      invalidCity = !invalidCity;
+      this.addressForm.get('jurisdiction').setErrors({ invalidCity: true });
     }
     return invalidCity;
   }
+
+  // validateCity(): boolean {
+  //   const currentCity = this.addressForm.get('jurisdiction').value;
+  //   let invalidCity = false;
+  //   if (currentCity && this.city.length > 0) {
+  //    //this.city.findIndex()
+  //    console.log(currentCity.name)
+  //    // this.compareObjects(currentCity, )
+  //     if (this.city.indexOf(currentCity) === -1) {
+  //       console.log('owlman')
+  //       invalidCity = !invalidCity;
+  //       this.addressForm.get('jurisdiction').setErrors({ invalidCity: true });
+  //     }
+  //   }
+  //   return invalidCity;
+  // }
+
+  compareObjects<T extends Jurisdiction>(c1: T, c2: T): boolean {
+    if (c1 === null || c2 === null || c1 === undefined || c2 === undefined) {
+        return null;
+    }
+    return c1.code === c2.code;
+}
 
   /**
    * Filters the city list for autocomplete field

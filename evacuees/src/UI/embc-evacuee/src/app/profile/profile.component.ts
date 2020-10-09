@@ -1,4 +1,4 @@
-import { Component, OnInit, Type, ViewChild, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Type, ViewChild, ViewChildren, QueryList, AfterViewInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../core/services/componentCreation.service';
@@ -14,7 +14,7 @@ import { PersonDetails } from '../core/model/profile.model';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit, AfterViewInit {
+export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
@@ -25,12 +25,27 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   form$: Subscription;
   form: FormGroup;
   isComplete: boolean;
+  stepToDisplay: number;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService, public dataService: DataService) { }
+              private route: ActivatedRoute, private formCreationService: FormCreationService,
+              public dataService: DataService, private cd: ChangeDetectorRef) {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation.extras.state !== undefined) {
+      const state = navigation.extras.state as { stepIndex: number };
+      this.stepToDisplay = state.stepIndex;
+    }
+  }
 
   ngOnInit(): void {
     this.steps = this.componentService.createProfileSteps();
+    // console.log(this.router.getCurrentNavigation())
+    // let navigation = this.router.getCurrentNavigation();
+    // console.log(navigation);
+    // if (navigation) {
+    //   let state = navigation.extras.state as { stepIndex: number };
+    //   this.stepToDisplay = state.stepIndex;
+    // }
     // this.route.paramMap.subscribe(params => {
     //   console.log(params.get('stepPos'));
     //   if (params.get('stepPos') === 'last') {
@@ -39,16 +54,17 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     // });
   }
 
+  ngAfterViewChecked(): void {
+    this.cd.detectChanges();
+  }
+
   ngAfterViewInit(): void {
-    // if (this.path === 'last') {
-    //   console.log('heeeeeeeeeeeere');
-    //   console.log(this.profileStepper);
-    //   // this.profileStepper.selectedIndex = 2;
-    //   setTimeout(() => {
-    //     console.log(this.steps.length - 1);
-    //     this.profileStepper.selectedIndex = 3;
-    //   }, 0);
-    // }
+    if (this.stepToDisplay === 3) {
+      this.isComplete = true;
+      setTimeout(() => {
+        this.profileStepper.selectedIndex = this.stepToDisplay;
+      }, 0);
+    }
   }
 
   currentStep(index: number): void {
@@ -98,18 +114,18 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     switch (component) {
       case 'personal-details':
         this.formCreationService.setPersonDetailsForm(this.form);
-        this.dataService.updateRegistartion({personalDetails: this.form.value});
+        this.dataService.updateRegistartion({ personalDetails: this.form.value });
         this.isComplete = false;
         break;
       case 'address':
         this.formCreationService.setAddressForm(this.form);
-        this.dataService.updateRegistartion({mailingAddress: this.form.get('mailingAddress').value});
-        this.dataService.updateRegistartion({primaryAddress: this.form.get('address').value});
+        this.dataService.updateRegistartion({ mailingAddress: this.form.get('mailingAddress').value });
+        this.dataService.updateRegistartion({ primaryAddress: this.form.get('address').value });
         this.isComplete = false;
         break;
       case 'contact-info':
         this.formCreationService.setContactDetailsForm(this.form);
-        this.dataService.updateRegistartion({contactDetails: this.form.value});
+        this.dataService.updateRegistartion({ contactDetails: this.form.value });
         this.isComplete = false;
         break;
       case 'secret':
@@ -135,12 +151,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         );
         break;
       case 1:
-          this.form$ = this.formCreationService.getAddressForm().subscribe(
-            address => {
-              this.form = address;
-            }
-          );
-          break;
+        this.form$ = this.formCreationService.getAddressForm().subscribe(
+          address => {
+            this.form = address;
+          }
+        );
+        break;
       case 2:
         this.form$ = this.formCreationService.getContactDetailsForm().subscribe(
           contactDetails => {

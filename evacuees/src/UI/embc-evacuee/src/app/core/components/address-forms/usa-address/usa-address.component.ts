@@ -33,14 +33,24 @@ export class UsaAddressComponent implements OnInit {
   /**
    * Checks if the state value exists in the list
    */
+  // validateState(): boolean {
+  //   const currentState = this.addressForm.get('stateProvince').value;
+  //   let invalidState = false;
+  //   if (currentState) {
+  //     if (this.states.indexOf(currentState) === -1) {
+  //       invalidState = !invalidState;
+  //       this.addressForm.get('stateProvince').setErrors({ invalidState: true });
+  //     }
+  //   }
+  //   return invalidState;
+  // }
+
   validateState(): boolean {
     const currentState = this.addressForm.get('stateProvince').value;
     let invalidState = false;
-    if (currentState) {
-      if (this.states.indexOf(currentState) === -1) {
-        invalidState = !invalidState;
-        this.addressForm.get('stateProvince').setErrors({ invalidState: true });
-      }
+    if (currentState !== null && currentState.name === undefined) {
+      invalidState = !invalidState;
+      this.addressForm.get('stateProvince').setErrors({ invalidState: true });
     }
     return invalidState;
   }
