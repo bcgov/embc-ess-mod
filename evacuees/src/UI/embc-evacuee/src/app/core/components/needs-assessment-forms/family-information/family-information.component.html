@@ -1,11 +1,139 @@
-<mat-card class="card-align">
+<form [formGroup]="familyMemberForm">
+  <mat-card class="card-align">
     <mat-card-content>
-        <h1>Contact Information</h1>
-         <form [formGroup]="firstFormGroup">
-            <mat-form-field>
-              <mat-label>Telephone Number</mat-label>
-              <input matInput formControlName="firstCtrl" placeholder="Last name, First name">
-            </mat-form-field>
-          </form>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="card-heading requiredField" id="primary-radio-group-label">If you have any family members
+            (including dependents) who live in the same household with you,
+            please add them below.</label>
+          <p><i>Please note:</i> Roommates & tenants need to register separately.</p>
+          <mat-table *ngIf="dataSource.getValue().length > 0" [dataSource]="dataSource">
+
+            <ng-container matColumnDef="firstName">
+              <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span class="mobile-label">First Name</span>
+                {{element.firstName}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="lastName">
+              <mat-header-cell *matHeaderCellDef> Last Name </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span class="mobile-label">Last Name:</span>
+                {{element.lastName}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="initials">
+              <mat-header-cell *matHeaderCellDef> Initials </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span class="mobile-label">Initials:</span>
+                {{element.initials}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="gender">
+              <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span class="mobile-label">Gender:</span>
+                {{element.gender}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="dateOfBirth">
+              <mat-header-cell *matHeaderCellDef> Date of Birth </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span class="mobile-label">Date of Birth:</span>
+                {{element.dateOfBirth}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="buttons">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell *matCellDef="let element; let index = index">
+                <!-- <span class="mobile-label">11</span> -->
+                <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(element, index)">
+                  <img src="/assets/images/edit.svg" height="35" width="35">
+                  <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                </button>
+
+                <button class="delete-image" mat-icon-button aria-label="Remove" (click)="deleteRow(index)">
+                  <img src="/assets/images/delete.svg" height="35" width="35">
+                  <img src="/assets/images/delete_onhover.svg" height="35" width="35">
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+
+          <br>
+
+          <button *ngIf="!showFamilyForm" class="family-button" mat-button type="button" (click)="addMembers()">+ Add
+            Family Member</button>
+          <div *ngIf="showFamilyForm">
+            <app-person-detail-form [personalDetailsForm]="familyFormControl?.member"></app-person-detail-form>
+            <div class="row">
+              <div class="col-md-3">
+                <button class="button-s details-button" mat-button type="button" (click)="cancel()">Cancel</button>
+              </div>
+              <div class="col-md-3">
+                <button class="family-button details-button save-button" mat-button type="button"
+                  (click)="save()">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- <mat-error class="custom-mat-error"
+              *ngIf="evacuatedFormControl?.evacuatedFromPrimary.touched && evacuatedFormControl?.evacuatedFromPrimary.invalid && evacuatedFormControl?.evacuatedFromPrimary.hasError('required')">
+              Evacaution Address is required</mat-error> -->
+
+        </div>
+      </div>
     </mat-card-content>
-</mat-card>
+  </mat-card>
+  <br>
+  <br>
+
+  <mat-card class="card-align">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="card-heading requiredField" id="primary-radio-group-label">Do you or any of your family members
+            have any dietary requirements?</label>
+          <br>
+          <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="haveSpecialDiet"
+            class="primary-radio-group" required>
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
+              {{option}}
+            </mat-radio-button>
+            <!-- <mat-error class="custom-mat-error"
+              *ngIf="evacuatedFormControl?.insurance.touched && evacuatedFormControl?.insurance.invalid && evacuatedFormControl?.insurance.hasError('required')">
+              Insurance is required</mat-error> -->
+          </mat-radio-group>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br>
+  <br>
+  <mat-card class="card-align">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="card-heading requiredField" id="primary-radio-group-label">Do you or any of your family members
+            take any medication?</label>
+          <br>
+          <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="haveMedication"
+            class="primary-radio-group" required>
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
+              {{option}}
+            </mat-radio-button>
+            <!-- <mat-error class="custom-mat-error"
+              *ngIf="evacuatedFormControl?.insurance.touched && evacuatedFormControl?.insurance.invalid && evacuatedFormControl?.insurance.hasError('required')">
+              Insurance is required</mat-error> -->
+          </mat-radio-group>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

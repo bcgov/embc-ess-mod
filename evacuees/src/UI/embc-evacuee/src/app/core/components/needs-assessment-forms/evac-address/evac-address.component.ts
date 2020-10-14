@@ -24,7 +24,6 @@ import { AddressFormsModule } from '../../address-forms/address-forms.module';
 export default class EvacAddressComponent implements OnInit {
 
   evacuatedForm: FormGroup;
-  gender: Array<string> = new Array<string>();
   formBuilder: FormBuilder;
   evacuatedForm$: Subscription;
   formCreationService: FormCreationService;
