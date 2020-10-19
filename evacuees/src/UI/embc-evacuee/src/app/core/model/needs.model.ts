@@ -45,26 +45,31 @@ export class FamilyMembersForm {
     haveSpecialDiet = new FormControl();
     member: FormGroup;
     familyMember = new FormControl();
-    // familyMember: FormArray;
+    addFamilyMemberIndicator = new FormControl(false);
 
-    constructor(familyMembers: FamilyMembers, customValidator: CustomValidationService, builder: FormBuilder, ) {
+    constructor(familyMembers: FamilyMembers, customValidator: CustomValidationService, builder: FormBuilder,) {
         this.member = builder.group({
-            firstName: ['', [Validators.required]],
-            lastName: ['', [Validators.required]],
+            firstName: ['', [customValidator.conditionalValidation(
+                () => this.addFamilyMemberIndicator.value,
+                Validators.required
+            ).bind(customValidator)]],
+            lastName: ['', [customValidator.conditionalValidation(
+                () => this.addFamilyMemberIndicator.value,
+                Validators.required
+            ).bind(customValidator)]],
             initials: [''],
-            gender: ['', [Validators.required]],
-            dateOfBirth: ['', [Validators.required, customValidator.dateOfBirthValidator().bind(customValidator)]]
+            gender: ['', [customValidator.conditionalValidation(
+                () => this.addFamilyMemberIndicator.value,
+                Validators.required
+            ).bind(customValidator)]],
+            dateOfBirth: ['', [customValidator.conditionalValidation(
+                () => this.addFamilyMemberIndicator.value,
+                Validators.required
+            ).bind(customValidator),
+            customValidator.conditionalValidation(
+                () => this.addFamilyMemberIndicator.value,
+                customValidator.dateOfBirthValidator().bind(customValidator)
+            ).bind(customValidator)]]
         });
-        // this.familyMember = builder.array([
-        //     builder.group({
-        //         firstName: ['', [Validators.required]],
-        //         lastName: ['', [Validators.required]],
-        //         initials: [''],
-        //         gender: ['', [Validators.required]],
-        //         dateOfBirth: ['', [Validators.required, customValidator.dateOfBirthValidator().bind(customValidator)]],
-        //     })
-        // ]);
     }
-
-
 }

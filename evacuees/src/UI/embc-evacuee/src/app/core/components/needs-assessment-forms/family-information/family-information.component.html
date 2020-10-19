@@ -82,11 +82,6 @@
               </div>
             </div>
           </div>
-
-          <!-- <mat-error class="custom-mat-error"
-              *ngIf="evacuatedFormControl?.evacuatedFromPrimary.touched && evacuatedFormControl?.evacuatedFromPrimary.invalid && evacuatedFormControl?.evacuatedFromPrimary.hasError('required')">
-              Evacaution Address is required</mat-error> -->
-
         </div>
       </div>
     </mat-card-content>
@@ -106,9 +101,9 @@
             <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
               {{option}}
             </mat-radio-button>
-            <!-- <mat-error class="custom-mat-error"
-              *ngIf="evacuatedFormControl?.insurance.touched && evacuatedFormControl?.insurance.invalid && evacuatedFormControl?.insurance.hasError('required')">
-              Insurance is required</mat-error> -->
+            <mat-error class="custom-mat-error"
+              *ngIf="familyFormControl?.haveSpecialDiet.touched && familyFormControl?.haveSpecialDiet.invalid && familyFormControl?.haveSpecialDiet.hasError('required')">
+              Dietary Requirement is required</mat-error>
           </mat-radio-group>
         </div>
       </div>
@@ -128,9 +123,9 @@
             <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
               {{option}}
             </mat-radio-button>
-            <!-- <mat-error class="custom-mat-error"
-              *ngIf="evacuatedFormControl?.insurance.touched && evacuatedFormControl?.insurance.invalid && evacuatedFormControl?.insurance.hasError('required')">
-              Insurance is required</mat-error> -->
+            <mat-error class="custom-mat-error"
+              *ngIf="familyFormControl?.haveMedication.touched && familyFormControl?.haveMedication.invalid && familyFormControl?.haveMedication.hasError('required')">
+              Medication is required</mat-error>
           </mat-radio-group>
         </div>
       </div>
