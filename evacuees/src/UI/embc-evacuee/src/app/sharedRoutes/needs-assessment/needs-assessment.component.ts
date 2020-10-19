@@ -98,7 +98,7 @@ export class NeedsAssessmentComponent implements OnInit {
         this.formCreationService.setFamilyMembersForm(this.form);
         this.dataService.updateNeedsAssessment({ haveMedication: this.form.get('haveMedication').value });
         this.dataService.updateNeedsAssessment({ haveSpecialDiet: this.form.get('haveSpecialDiet').value });
-        this.dataService.updateNeedsAssessment({ familyMembers: this.form.get('familyMembers').value });
+        this.dataService.updateNeedsAssessment({ familyMembers: this.form.get('familyMember').value });
         this.isComplete = false;
         break;
       case 'pets':
