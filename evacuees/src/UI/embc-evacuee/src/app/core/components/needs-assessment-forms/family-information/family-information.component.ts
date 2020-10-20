@@ -12,8 +12,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { PersonDetailFormModule } from '../../person-detail-form/person-detail-form.module';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-family-information',
@@ -46,11 +44,14 @@ export default class FamilyInformationComponent implements OnInit {
         this.familyMemberForm = familyMemberForm;
       }
     );
+    this.familyMemberForm.get('addFamilyMemberIndicator').valueChanges.subscribe(value =>
+      this.updateOnVisibility())
   }
 
   addMembers(): void {
     this.familyMemberForm.get('member').reset();
     this.showFamilyForm = !this.showFamilyForm;
+    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
   }
 
   save(): void {
@@ -71,6 +72,9 @@ export default class FamilyInformationComponent implements OnInit {
 
   cancel(): void {
     this.showFamilyForm = !this.showFamilyForm;
+    if (this.data.length === 0) {
+      this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
+    }
   }
 
   /**
@@ -83,6 +87,9 @@ export default class FamilyInformationComponent implements OnInit {
   deleteRow(index: number): void {
     this.data.splice(index, 1);
     this.dataSource.next(this.data);
+    if (this.data.length === 0) {
+      this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
+    }
   }
 
   editRow(element, index): void {
@@ -92,6 +99,12 @@ export default class FamilyInformationComponent implements OnInit {
     this.showFamilyForm = !this.showFamilyForm;
   }
 
+  updateOnVisibility() {
+    this.familyMemberForm.get('member.firstName').updateValueAndValidity();
+    this.familyMemberForm.get('member.lastName').updateValueAndValidity();
+    this.familyMemberForm.get('member.gender').updateValueAndValidity();
+    this.familyMemberForm.get('member.dateOfBirth').updateValueAndValidity();
+  }
 }
 
 @NgModule({

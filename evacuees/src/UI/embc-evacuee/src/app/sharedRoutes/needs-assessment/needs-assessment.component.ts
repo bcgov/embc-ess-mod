@@ -22,10 +22,10 @@ export class NeedsAssessmentComponent implements OnInit {
   form$: Subscription;
   form: FormGroup;
   isComplete: boolean;
-  navigationExtras: NavigationExtras = {state: {stepIndex: 3}};
+  navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-              private dataService: DataService) { }
+    private dataService: DataService) { }
 
   ngOnInit(): void {
     this.needsSteps = this.componentService.createEvacSteps();
@@ -35,10 +35,10 @@ export class NeedsAssessmentComponent implements OnInit {
     this.loadStepForm(index);
   }
 
- /**
-  * Loads appropriate forms based on the current step
-  * @param index index of the step
-  */
+  /**
+   * Loads appropriate forms based on the current step
+   * @param index index of the step
+   */
   loadStepForm(index: number): void {
     switch (index) {
       case 0:
@@ -49,7 +49,11 @@ export class NeedsAssessmentComponent implements OnInit {
         );
         break;
       case 1:
-
+        this.form$ = this.formCreationService.getFamilyMembersForm().subscribe(
+          memberForm => {
+            this.form = memberForm;
+          }
+        );
         break;
       case 2:
 
@@ -86,11 +90,16 @@ export class NeedsAssessmentComponent implements OnInit {
     switch (component) {
       case 'evac-address':
         this.formCreationService.setEvacuatedForm(this.form);
-        // this.dataService.updateRegistartion({'personalDetails': this.form.value});
+        this.dataService.updateNeedsAssessment({ evacuatedFromAddress: this.form.get('evacuatedFromAddress').value });
+        this.dataService.updateNeedsAssessment({ insurance: this.form.get('insurance').value });
         this.isComplete = false;
         break;
       case 'family-information':
-
+        this.formCreationService.setFamilyMembersForm(this.form);
+        this.dataService.updateNeedsAssessment({ haveMedication: this.form.get('haveMedication').value });
+        this.dataService.updateNeedsAssessment({ haveSpecialDiet: this.form.get('haveSpecialDiet').value });
+        this.dataService.updateNeedsAssessment({ familyMembers: this.form.get('familyMember').value });
+        this.isComplete = false;
         break;
       case 'pets':
 

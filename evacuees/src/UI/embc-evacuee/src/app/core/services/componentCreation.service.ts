@@ -50,7 +50,7 @@ export class ComponentCreationService {
         [
             {
                 component: 'evac-address',
-                nextButtonLabel: 'Next-Family Information',
+                nextButtonLabel: 'Next - Family Information',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
@@ -59,7 +59,7 @@ export class ComponentCreationService {
             },
             {
                 component: 'family-information',
-                nextButtonLabel: 'Next-Pets',
+                nextButtonLabel: 'Next - Pets',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
@@ -68,7 +68,7 @@ export class ComponentCreationService {
             },
             {
                 component: 'pets',
-                nextButtonLabel: 'Next-Identify Needs',
+                nextButtonLabel: 'Next - Identify Needs',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
@@ -77,7 +77,7 @@ export class ComponentCreationService {
             },
             {
                 component: 'identify-needs',
-                nextButtonLabel: 'Next-Review Submission',
+                nextButtonLabel: 'Next - Review Submission',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
