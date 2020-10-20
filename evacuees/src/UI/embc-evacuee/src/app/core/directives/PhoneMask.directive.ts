@@ -23,8 +23,8 @@ export class PhoneMaskDirective {
     onInputChange(evt, backspace): void {
         if (evt !== null && evt !== undefined) {
             const current: string = this.el.nativeElement.value;
-            let start = this.el.nativeElement.selectionStart;
-            let end = this.el.nativeElement.selectionEnd;
+            const start = this.el.nativeElement.selectionStart;
+            const end = this.el.nativeElement.selectionEnd;
             let newVal = evt.replace(/\D/g, '');
             if (backspace && newVal.length <= 6) {
                 newVal = newVal.substring(0, newVal.length - 1);
@@ -39,7 +39,7 @@ export class PhoneMaskDirective {
             } else if (newVal.length <= 10) {
                 newVal = newVal.replace(/^(\d{0,3})(\d{0,3})(\d{0,4})/, '$1-$2-$3');
             } else {
-                console.log('else')
+                console.log('else');
                 newVal = newVal.substring(0, 10);
                 newVal = newVal.replace(/^(\d{0,3})(\d{0,3})(\d{0,4})/, '$1-$2-$3');
                 this.ngControl.control.setValue(newVal);

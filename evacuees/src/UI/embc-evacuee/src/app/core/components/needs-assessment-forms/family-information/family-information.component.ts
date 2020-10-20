@@ -45,7 +45,7 @@ export default class FamilyInformationComponent implements OnInit {
       }
     );
     this.familyMemberForm.get('addFamilyMemberIndicator').valueChanges.subscribe(value =>
-      this.updateOnVisibility())
+      this.updateOnVisibility());
   }
 
   addMembers(): void {
@@ -99,7 +99,7 @@ export default class FamilyInformationComponent implements OnInit {
     this.showFamilyForm = !this.showFamilyForm;
   }
 
-  updateOnVisibility() {
+  updateOnVisibility(): void {
     this.familyMemberForm.get('member.firstName').updateValueAndValidity();
     this.familyMemberForm.get('member.lastName').updateValueAndValidity();
     this.familyMemberForm.get('member.gender').updateValueAndValidity();

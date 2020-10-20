@@ -47,7 +47,7 @@ export class FamilyMembersForm {
     familyMember = new FormControl();
     addFamilyMemberIndicator = new FormControl(false);
 
-    constructor(familyMembers: FamilyMembers, customValidator: CustomValidationService, builder: FormBuilder,) {
+    constructor(familyMembers: FamilyMembers, customValidator: CustomValidationService, builder: FormBuilder, ) {
         this.member = builder.group({
             firstName: ['', [customValidator.conditionalValidation(
                 () => this.addFamilyMemberIndicator.value,
