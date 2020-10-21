@@ -104,6 +104,6 @@ export class PetForm {
         this.havePetFood.setValidators([customValidator.conditionalValidation(
             () => this.addPetIndicator.value,
             Validators.required
-        ).bind(customValidator)])
+        ).bind(customValidator)]);
     }
 }

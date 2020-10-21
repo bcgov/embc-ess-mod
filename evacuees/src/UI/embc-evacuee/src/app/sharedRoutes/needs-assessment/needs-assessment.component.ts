@@ -25,7 +25,7 @@ export class NeedsAssessmentComponent implements OnInit {
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private dataService: DataService) { }
+              private dataService: DataService) { }
 
   ngOnInit(): void {
     this.needsSteps = this.componentService.createEvacSteps();
@@ -60,7 +60,7 @@ export class NeedsAssessmentComponent implements OnInit {
           petsForm => {
             this.form = petsForm;
           }
-        )
+        );
         break;
       case 3:
 
