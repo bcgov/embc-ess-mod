@@ -5,7 +5,7 @@
 </div>
 
 <mat-horizontal-stepper class="stepper-style" linear labelPosition="bottom" (animationDone)="currentStep(profileStepper?.selectedIndex)" #profileStepper>
-  <mat-step *ngFor="let step of steps" [completed]="isComplete" [editable]="true"> <!--[stepControl]="form"-->
+  <mat-step *ngFor="let step of steps" [completed]="true" [editable]="true"> <!--[stepControl]="form" [completed]="isComplete"-->
     <ng-template matStepLabel>{{step.stepName}}</ng-template>
     <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
     <br>
