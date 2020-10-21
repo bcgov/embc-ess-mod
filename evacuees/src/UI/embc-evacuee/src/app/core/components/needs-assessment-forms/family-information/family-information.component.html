@@ -7,7 +7,7 @@
             (including dependents) who live in the same household with you,
             please add them below.</label>
           <p><i>Please note:</i> Roommates & tenants need to register separately.</p>
-          <mat-table *ngIf="dataSource.getValue().length > 0" [dataSource]="dataSource">
+          <mat-table *ngIf="dataSource.getValue().length > 0 && showTable" [dataSource]="dataSource">
 
             <ng-container matColumnDef="firstName">
               <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>

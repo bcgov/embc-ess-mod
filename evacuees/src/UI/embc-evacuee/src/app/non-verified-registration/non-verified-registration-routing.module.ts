@@ -21,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: 'create-profile',
-        loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)
+        loadChildren: () => import('../sharedRoutes/profile/profile.module').then(m => m.ProfileModule)
       }, /// :stepPos
       {
         path: 'needs-assessment',

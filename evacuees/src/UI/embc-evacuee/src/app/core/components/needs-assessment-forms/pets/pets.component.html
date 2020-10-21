@@ -1,11 +1,87 @@
-<mat-card class="card-align">
+<form [formGroup]="petsForm">
+  <mat-card class="card-align">
     <mat-card-content>
-        <h1>Personal Details</h1>
-         <form [formGroup]="firstFormGroup">
-            <mat-form-field>
-              <mat-label>Name</mat-label>
-              <input matInput formControlName="firstCtrl" placeholder="Last name, First name">
-            </mat-form-field>
-          </form>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="card-heading requiredField">If you have any pets who live in the same household with you, please add them below.</label>
+          
+          <mat-table *ngIf="dataSource.getValue().length > 0 && showTable" [dataSource]="dataSource">
+
+            <ng-container matColumnDef="type">
+              <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span class="mobile-label">Pet Type</span>
+                {{element.type}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="quantity">
+              <mat-header-cell *matHeaderCellDef> How Many </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span class="mobile-label">How Many:</span>
+                {{element.quantity}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="buttons">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell *matCellDef="let element; let index = index">
+                <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(element, index)">
+                  <img src="/assets/images/edit.svg" height="35" width="35">
+                  <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                </button>
+
+                <button class="delete-image" mat-icon-button aria-label="Remove" (click)="deleteRow(index)">
+                  <img src="/assets/images/delete.svg" height="35" width="35">
+                  <img src="/assets/images/delete_onhover.svg" height="35" width="35">
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+
+          <br>
+
+          <button *ngIf="!showPetsForm" class="family-button" mat-button type="button" (click)="addPets()">+ Add
+            Pets</button>
+          <div *ngIf="showPetsForm">
+            <app-pet-form [petForm]="petsFormControl?.pet"></app-pet-form>
+            <div class="row">
+              <div class="col-md-3">
+                <button class="button-s details-button" mat-button type="button" (click)="cancel()">Cancel</button>
+              </div>
+              <div class="col-md-3">
+                <button class="family-button details-button save-button" mat-button type="button"
+                  (click)="save()">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </mat-card-content>
-</mat-card>
+  </mat-card>
+  <br>
+  <br>
+
+  <mat-card *ngIf="dataSource.getValue().length > 0" class="card-align">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <label class="card-heading requiredField" id="primary-radio-group-label">Do you have sufficient food for your pet(s)?</label>
+          <br>
+          <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="havePetFood"
+            class="primary-radio-group">
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
+              {{option}}
+            </mat-radio-button>
+            <mat-error class="custom-mat-error"
+              *ngIf="petsFormControl?.havePetFood.touched && petsFormControl?.havePetFood.invalid && petsFormControl?.havePetFood.hasError('required')">
+              Pet food is required</mat-error>
+          </mat-radio-group>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

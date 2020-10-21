@@ -8,6 +8,7 @@ export interface NeedsAssessment {
   familyMembers?: null | Array<PersonDetails>;
   haveMedication?: boolean;
   haveSpecialDiet?: boolean;
+  havePetFood?: boolean;
   insurance: InsuranceOption;
   pets?: null | Array<Pet>;
   requiresClothing?: null | boolean;

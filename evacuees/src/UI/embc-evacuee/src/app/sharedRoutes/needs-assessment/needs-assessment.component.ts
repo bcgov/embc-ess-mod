@@ -56,7 +56,11 @@ export class NeedsAssessmentComponent implements OnInit {
         );
         break;
       case 2:
-
+        this.form$ = this.formCreationService.getPetsForm().subscribe(
+          petsForm => {
+            this.form = petsForm;
+          }
+        );
         break;
       case 3:
 
@@ -102,7 +106,9 @@ export class NeedsAssessmentComponent implements OnInit {
         this.isComplete = false;
         break;
       case 'pets':
-
+        this.formCreationService.setPetsForm(this.form);
+        this.dataService.updateNeedsAssessment({ pets: this.form.get('pets').value });
+        this.isComplete = false;
         break;
       case 'identify-needs':
 

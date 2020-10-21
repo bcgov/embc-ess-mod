@@ -39,7 +39,7 @@
               {{gen}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="personalFormControl.lastName.invalid && personalFormControl.gender.hasError('required')">Gender is required</mat-error>
+          <mat-error *ngIf="personalFormControl.gender.invalid && personalFormControl.gender.hasError('required')">Gender is required</mat-error>
         </mat-form-field>
       </div>
     </div>
