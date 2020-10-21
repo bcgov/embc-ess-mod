@@ -47,7 +47,7 @@ export class FamilyMembersForm {
     familyMember = new FormControl();
     addFamilyMemberIndicator = new FormControl(false);
 
-    constructor(familyMembers: FamilyMembers, customValidator: CustomValidationService, builder: FormBuilder, ) {
+    constructor(familyMembers: FamilyMembers, customValidator: CustomValidationService, builder: FormBuilder) {
         this.member = builder.group({
             firstName: ['', [customValidator.conditionalValidation(
                 () => this.addFamilyMemberIndicator.value,
@@ -71,5 +71,39 @@ export class FamilyMembersForm {
                 customValidator.dateOfBirthValidator().bind(customValidator)
             ).bind(customValidator)]]
         });
+    }
+}
+
+export class Pet {
+    quantity: string;
+    type: string;
+    havePetFood: boolean;
+
+    constructor() { }
+}
+
+export class PetForm {
+    pets = new FormControl();
+    pet: FormGroup;
+    addPetIndicator = new FormControl(false);
+    havePetFood = new FormControl();
+
+    constructor(pet: Pet, customValidator: CustomValidationService, builder: FormBuilder) {
+        this.pet = builder.group({
+            quantity: ['', [customValidator.conditionalValidation(
+                () => this.addPetIndicator.value,
+                Validators.required
+            ).bind(customValidator)]],
+            type: ['', [customValidator.conditionalValidation(
+                () => this.addPetIndicator.value,
+                Validators.required
+            ).bind(customValidator)]]
+        });
+
+        this.havePetFood.setValue(pet.havePetFood);
+        this.havePetFood.setValidators([customValidator.conditionalValidation(
+            () => this.addPetIndicator.value,
+            Validators.required
+        ).bind(customValidator)])
     }
 }
