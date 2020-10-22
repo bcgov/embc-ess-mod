@@ -77,7 +77,7 @@ export class FamilyMembersForm {
 export class Pet {
     quantity: string;
     type: string;
-    havePetFood: boolean;
+    hasPetsFood: boolean;
 
     constructor() { }
 }
@@ -86,7 +86,7 @@ export class PetForm {
     pets = new FormControl();
     pet: FormGroup;
     addPetIndicator = new FormControl(false);
-    havePetFood = new FormControl();
+    hasPetsFood = new FormControl();
 
     constructor(pet: Pet, customValidator: CustomValidationService, builder: FormBuilder) {
         this.pet = builder.group({
@@ -100,10 +100,43 @@ export class PetForm {
             ).bind(customValidator)]]
         });
 
-        this.havePetFood.setValue(pet.havePetFood);
-        this.havePetFood.setValidators([customValidator.conditionalValidation(
+        this.hasPetsFood.setValue(pet.hasPetsFood);
+        this.hasPetsFood.setValidators([customValidator.conditionalValidation(
             () => this.addPetIndicator.value,
             Validators.required
         ).bind(customValidator)]);
+    }
+}
+
+export class IdentifyNeeds {
+    requiresClothing: boolean;
+    requiresFood: boolean;
+    requiresIncidentals: boolean;
+    requiresLodging: boolean;
+    requiresTransportation: boolean;
+}
+
+export class IdentifyNeedsForm {
+    requiresClothing = new FormControl();
+    requiresFood = new FormControl();
+    requiresIncidentals = new FormControl();
+    requiresLodging = new FormControl();
+    requiresTransportation = new FormControl();
+
+    constructor(identifyNeeds: IdentifyNeeds) {
+        this.requiresClothing.setValue(identifyNeeds.requiresClothing);
+        this.requiresClothing.setValidators([Validators.required]);
+
+        this.requiresFood.setValue(identifyNeeds.requiresFood);
+        this.requiresFood.setValidators([Validators.required]);
+
+        this.requiresIncidentals.setValue(identifyNeeds.requiresIncidentals);
+        this.requiresIncidentals.setValidators([Validators.required]);
+
+        this.requiresLodging.setValue(identifyNeeds.requiresLodging);
+        this.requiresLodging.setValidators([Validators.required]);
+
+        this.requiresTransportation.setValue(identifyNeeds.requiresTransportation);
+        this.requiresTransportation.setValidators([Validators.required]);
     }
 }

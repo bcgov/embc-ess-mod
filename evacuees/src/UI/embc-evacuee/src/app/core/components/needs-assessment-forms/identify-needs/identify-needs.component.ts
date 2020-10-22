@@ -1,11 +1,14 @@
-import { Component, OnInit, NgModule } from '@angular/core';
+import { Component, OnInit, NgModule, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormCreationService } from '../../../services/formCreation.service';
+import { Subscription } from 'rxjs';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-identify-needs',
@@ -14,14 +17,26 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export default class IdentifyNeedsComponent implements OnInit {
 
-  firstFormGroup: FormGroup;
+  identifyNeedsForm: FormGroup;
+  formBuilder: FormBuilder;
+  identifyNeedsForm$: Subscription;
+  formCreationService: FormCreationService;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
+    this.formBuilder = formBuilder;
+    this.formCreationService = formCreationService;
+   }
 
   ngOnInit(): void {
-    this.firstFormGroup = this.formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
+    this.identifyNeedsForm$ = this.formCreationService.getIndentifyNeedsForm().subscribe(
+      identifyNeedsForm => {
+        this.identifyNeedsForm = identifyNeedsForm;
+      }
+    );
+  }
+
+  get needsFormControl(): { [key: string]: AbstractControl; } {
+    return this.identifyNeedsForm.controls;
   }
 
 }
@@ -33,7 +48,8 @@ export default class IdentifyNeedsComponent implements OnInit {
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatRadioModule
   ],
   declarations: [
     IdentifyNeedsComponent,
