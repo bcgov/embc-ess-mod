@@ -63,7 +63,11 @@ export class NeedsAssessmentComponent implements OnInit {
         );
         break;
       case 3:
-
+        this.form$ = this.formCreationService.getIndentifyNeedsForm().subscribe(
+          identifyNeedsForm => {
+            this.form = identifyNeedsForm;
+          }
+        );
         break;
     }
   }
@@ -111,7 +115,12 @@ export class NeedsAssessmentComponent implements OnInit {
         this.isComplete = false;
         break;
       case 'identify-needs':
-
+        this.formCreationService.setIdentifyNeedsForm(this.form);
+        this.dataService.updateNeedsAssessment({ requiresClothing: this.form.get('requiresClothing').value });
+        this.dataService.updateNeedsAssessment({ requiresFood: this.form.get('requiresFood').value });
+        this.dataService.updateNeedsAssessment({ requiresIncidentals: this.form.get('requiresIncidentals').value });
+        this.dataService.updateNeedsAssessment({ requiresLodging: this.form.get('requiresLodging').value });
+        this.dataService.updateNeedsAssessment({ requiresTransportation: this.form.get('requiresTransportation').value });
         break;
       default:
     }

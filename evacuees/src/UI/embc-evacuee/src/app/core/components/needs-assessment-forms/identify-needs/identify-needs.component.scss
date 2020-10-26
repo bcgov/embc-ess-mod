@@ -1,0 +1,25 @@
+.row-tile-style {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+.row-tile {
+    @extend .row-tile-style;
+    background-color: rgba(242, 242, 242, 0.682352941176471);
+}
+mat-form-field {
+    width: 100%;
+}
+
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 90px;
+}
+
+@media(max-width: 600px) {
+    .mat-radio-button ~ .mat-radio-button {
+        margin-left: 16px;
+    }
+}
+
+.question {
+    color: #606060;
+}

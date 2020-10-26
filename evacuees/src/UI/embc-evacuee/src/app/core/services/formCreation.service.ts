@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { PersonDetailsForm, PersonDetails, ContactDetailsForm, ContactDetails, Secret, SecretForm, AddressForm, Address } from '../model/profile.model';
 import { CustomValidationService } from './customValidation.service';
-import { Evacuated, EvacuatedForm, FamilyMembers, FamilyMembersForm, Pet, PetForm } from '../model/needs.model';
+import { Evacuated, EvacuatedForm, FamilyMembers, FamilyMembersForm, IdentifyNeeds, IdentifyNeedsForm, Pet, PetForm } from '../model/needs.model';
 
 @Injectable({ providedIn: 'root' })
 export class FormCreationService {
@@ -42,6 +42,11 @@ export class FormCreationService {
         this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder)));
 
     private petsForm$: Observable<FormGroup> = this.petsForm.asObservable();
+
+    private identifyNeedsForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
+        this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds())));
+
+    private identifyNeedsForm$: Observable<FormGroup> = this.identifyNeedsForm.asObservable();
 
     constructor(private formBuilder: FormBuilder, private customValidator: CustomValidationService) { }
 
@@ -99,6 +104,14 @@ export class FormCreationService {
 
     setPetsForm(petsForm: FormGroup): void {
         this.petsForm.next(petsForm);
+    }
+
+    getIndentifyNeedsForm(): Observable<FormGroup> {
+        return this.identifyNeedsForm$;
+    }
+
+    setIdentifyNeedsForm(identifyNeedsForm: FormGroup): void {
+        this.personalDetailsForm.next(identifyNeedsForm);
     }
 
 }

@@ -94,7 +94,7 @@ export default class PetsComponent implements OnInit {
     this.dataSource.next(this.data);
     if (this.data.length === 0) {
       this.petsForm.get('addPetIndicator').setValue(false);
-      this.petsForm.get('havePetFood').reset();
+      this.petsForm.get('hasPetsFood').reset();
     }
   }
 
@@ -109,7 +109,7 @@ export default class PetsComponent implements OnInit {
   updateOnVisibility(): void {
     this.petsForm.get('pet.type').updateValueAndValidity();
     this.petsForm.get('pet.quantity').updateValueAndValidity();
-    this.petsForm.get('havePetFood').updateValueAndValidity();
+    this.petsForm.get('hasPetsFood').updateValueAndValidity();
   }
 
 }

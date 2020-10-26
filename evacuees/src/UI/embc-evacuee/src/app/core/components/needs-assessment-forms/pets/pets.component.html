@@ -71,13 +71,13 @@
         <div class="col-md-12">
           <label class="card-heading requiredField" id="primary-radio-group-label">Do you have sufficient food for your pet(s)?</label>
           <br>
-          <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="havePetFood"
+          <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="hasPetsFood"
             class="primary-radio-group">
             <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
               {{option}}
             </mat-radio-button>
             <mat-error class="custom-mat-error"
-              *ngIf="petsFormControl?.havePetFood.touched && petsFormControl?.havePetFood.invalid && petsFormControl?.havePetFood.hasError('required')">
+              *ngIf="petsFormControl?.hasPetsFood.touched && petsFormControl?.hasPetsFood.invalid && petsFormControl?.hasPetsFood.hasError('required')">
               Pet food is required</mat-error>
           </mat-radio-group>
         </div>
