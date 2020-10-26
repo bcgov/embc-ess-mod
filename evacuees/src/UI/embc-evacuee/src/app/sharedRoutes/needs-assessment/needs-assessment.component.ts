@@ -67,7 +67,7 @@ export class NeedsAssessmentComponent implements OnInit {
           identifyNeedsForm => {
             this.form = identifyNeedsForm;
           }
-        )
+        );
         break;
     }
   }
