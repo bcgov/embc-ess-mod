@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, AfterViewInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { LocationService } from 'src/app/core/services/api/services/location.service';
+import { LocationService } from '../../../services/api/location.service';
 import { startWith, map } from 'rxjs/operators';
 import * as globalConst from '../../../services/globalConstants';
 import { Jurisdiction } from '../../../services/api/models/jurisdiction';

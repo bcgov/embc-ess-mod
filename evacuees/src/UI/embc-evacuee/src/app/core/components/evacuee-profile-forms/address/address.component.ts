@@ -12,7 +12,7 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { LocationService } from '../../../services/api/services/location.service';
+import { LocationService } from '../../../services/api/location.service';
 import { Country } from 'src/app/core/services/api/models/country';
 import * as globalConst from '../../../services/globalConstants';
 

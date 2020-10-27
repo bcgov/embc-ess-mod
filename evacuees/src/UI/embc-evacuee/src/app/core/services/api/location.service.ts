@@ -1,29 +1,23 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { BaseService } from '../base-service';
-import { ApiConfiguration } from '../api-configuration';
-import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
+import { StrictHttpResponse } from './strict-http-response';
+import { RequestBuilder } from './request-builder';
 import { Observable, throwError } from 'rxjs';
 import { map, filter, catchError } from 'rxjs/operators';
 
-import { Country } from '../models/country';
-import { Jurisdiction } from '../models/jurisdiction';
-import { JurisdictionType } from '../models/jurisdiction-type';
-import { StateProvince } from '../models/state-province';
+import { Country } from './models/country';
+import { Jurisdiction } from './models/jurisdiction';
+import { JurisdictionType } from './models/jurisdiction-type';
+import { StateProvince } from './models/state-province';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LocationService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
-    super(config, http);
-  }
+export class LocationService {
 
+  constructor(private http: HttpClient) {}
+ 
   get headers(): HttpHeaders {
     return new HttpHeaders({ 'Content-Type': 'application/json', 'Accept': 'application/json' });
   }
@@ -157,27 +151,27 @@ export class LocationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  locationGetStateProvinces$Response(params?: {
-    countryCode?: null | string;
+  // locationGetStateProvinces$Response(params?: {
+  //   countryCode?: null | string;
 
-  }): Observable<StrictHttpResponse<Array<StateProvince>>> {
+  // }): Observable<StrictHttpResponse<Array<StateProvince>>> {
 
-    const rb = new RequestBuilder(this.rootUrl, this.locationGetStateProvincesPath, 'get');
-    if (params) {
+  //   const rb = new RequestBuilder(this.rootUrl, this.locationGetStateProvincesPath, 'get');
+  //   if (params) {
 
-      rb.query('countryCode', params.countryCode, {});
+  //     rb.query('countryCode', params.countryCode, {});
 
-    }
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<StateProvince>>;
-      })
-    );
-  }
+  //   }
+  //   return this.http.request(rb.build({
+  //     responseType: 'json',
+  //     accept: 'application/json'
+  //   })).pipe(
+  //     filter((r: any) => r instanceof HttpResponse),
+  //     map((r: HttpResponse<any>) => {
+  //       return r as StrictHttpResponse<Array<StateProvince>>;
+  //     })
+  //   );
+  // }
 
   /**
    * This method provides access to only to the response body.
@@ -206,31 +200,31 @@ export class LocationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  locationGetJurisdictions$Response(params?: {
-    types?: null | Array<JurisdictionType>;
-    countryCode?: null | string;
-    stateProvinceCode?: null | string;
+  // locationGetJurisdictions$Response(params?: {
+  //   types?: null | Array<JurisdictionType>;
+  //   countryCode?: null | string;
+  //   stateProvinceCode?: null | string;
 
-  }): Observable<StrictHttpResponse<Array<Jurisdiction>>> {
+  // }): Observable<StrictHttpResponse<Array<Jurisdiction>>> {
 
-    const rb = new RequestBuilder(this.rootUrl, this.locationGetJurisdictionsPath, 'get');
-    if (params) {
+  //   const rb = new RequestBuilder(this.rootUrl, this.locationGetJurisdictionsPath, 'get');
+  //   if (params) {
 
-      rb.query('types', params.types, { "style": "form", "explode": true });
-      rb.query('countryCode', params.countryCode, {});
-      rb.query('stateProvinceCode', params.stateProvinceCode, {});
+  //     rb.query('types', params.types, { "style": "form", "explode": true });
+  //     rb.query('countryCode', params.countryCode, {});
+  //     rb.query('stateProvinceCode', params.stateProvinceCode, {});
 
-    }
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Jurisdiction>>;
-      })
-    );
-  }
+  //   }
+  //   return this.http.request(rb.build({
+  //     responseType: 'json',
+  //     accept: 'application/json'
+  //   })).pipe(
+  //     filter((r: any) => r instanceof HttpResponse),
+  //     map((r: HttpResponse<any>) => {
+  //       return r as StrictHttpResponse<Array<Jurisdiction>>;
+  //     })
+  //   );
+  // }
 
   /**
    * This method provides access to only to the response body.

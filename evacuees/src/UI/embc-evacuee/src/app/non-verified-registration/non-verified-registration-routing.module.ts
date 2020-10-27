@@ -30,6 +30,10 @@ const routes: Routes = [
       {
         path: 'edit/:type',
         loadChildren: () => import('../edit/edit.module').then(m => m.EditModule)
+      },
+      {
+        path: 'fileSubmission',
+        loadChildren: () => import('../sharedRoutes/file-submission/file-submission.module').then(m => m.FileSubmissionModule)
       }
     ]
   }
