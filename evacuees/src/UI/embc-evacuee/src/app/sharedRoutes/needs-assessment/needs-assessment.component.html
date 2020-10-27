@@ -4,13 +4,16 @@
   </div>
 </div>
 
-<mat-horizontal-stepper class="stepper-style" linear labelPosition="bottom" (animationDone)="currentStep(needsStepper?.selectedIndex)" #needsStepper>
-  <mat-step *ngFor="let step of needsSteps" [completed]="isComplete" [editable]="isEditable">
+<mat-horizontal-stepper class="stepper-style" linear labelPosition="bottom"
+  (animationDone)="currentStep(needsStepper?.selectedIndex)" #needsStepper>
+  <mat-step *ngFor="let step of needsSteps" [completed]="true" [editable]="isEditable">
+    <!--[completed]="isComplete"-->
     <ng-template matStepLabel>{{step.stepName}}</ng-template>
-    <p>The purpose of the <b>Evacuation File</b> is to help determine how the evacuation has impacted you and your family in
+    <p>The purpose of the <b>Evacuation File</b> is to help determine how the evacuation has impacted you and your
+      family in
       order for Emergency Support Services (ESS) to coordinate or provide you with assistance to support you in your
       recovery.</p>
-      <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
+    <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
     <br>
     <app-component-wrapper [componentName]="step.component" [folderPath]="needsFolderPath"></app-component-wrapper>
     <br>
@@ -27,15 +30,17 @@
   </mat-step>
 
   <mat-step>
+    <p>Please read through and confirm that your details are all correct before submitting.</p>
+    <p>Once you have submitted this form you will only be able to edit your details with the assistance of an Emergency
+      Support Services volunteer.</p>
     <ng-template matStepLabel>Review & Submit</ng-template>
-    <!--<app-secret></app-secret> -->
     <app-review></app-review>
-    <div>
-      <!-- <button mat-button matStepperPrevious>Back</button> -->
-      <button mat-button type="button" (click)="goForward(needsStepper, true, '')">Save & Submit</button>
+    <br>
+    <div class="col-md-12">
+      <button class="button-p save-button" mat-stroked-button type="button" (click)="goForward(needsStepper, true, '')">Save &
+        Submit</button>
     </div>
   </mat-step>
-
   <ng-template matStepperIcon="edit" let-index="index">
     {{index + 1}}
   </ng-template>

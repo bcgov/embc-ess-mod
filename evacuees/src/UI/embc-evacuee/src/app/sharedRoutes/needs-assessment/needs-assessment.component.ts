@@ -6,7 +6,7 @@ import { ComponentCreationService } from '../../core/services/componentCreation.
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
-import { DataService } from '../../core/services/data.service';
+import { DataUpdationService } from '../../core/services/dataUpdation.service';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -25,7 +25,7 @@ export class NeedsAssessmentComponent implements OnInit {
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-              private dataService: DataService) { }
+    private updateService: DataUpdationService) { }
 
   ngOnInit(): void {
     this.needsSteps = this.componentService.createEvacSteps();
@@ -81,48 +81,43 @@ export class NeedsAssessmentComponent implements OnInit {
   }
 
   goForward(stepper: MatStepper, isLast: boolean, component: string): void {
-    if (this.form.status === 'VALID') {
-      if (isLast) {
-        this.router.navigate(['/fileSubmission']);
-      }
-      this.setFormData(component);
-      this.form$.unsubscribe();
-      this.isComplete = !this.isComplete;
-      stepper.next();
+    if (isLast) {
+      this.submitFile();
+      this.router.navigate(['/non-verified-registration/fileSubmission']);
     } else {
-      this.form.markAllAsTouched();
+      if (this.form.status === 'VALID') {
+        this.setFormData(component);
+        this.form$.unsubscribe();
+        this.isComplete = !this.isComplete;
+        stepper.next();
+      } else {
+        this.form.markAllAsTouched();
+      }
     }
   }
 
   setFormData(component: string): void {
     switch (component) {
       case 'evac-address':
-        this.formCreationService.setEvacuatedForm(this.form);
-        this.dataService.updateNeedsAssessment({ evacuatedFromAddress: this.form.get('evacuatedFromAddress').value });
-        this.dataService.updateNeedsAssessment({ insurance: this.form.get('insurance').value });
+        this.updateService.updateEvacuationDetails(this.form);
         this.isComplete = false;
         break;
       case 'family-information':
-        this.formCreationService.setFamilyMembersForm(this.form);
-        this.dataService.updateNeedsAssessment({ haveMedication: this.form.get('haveMedication').value });
-        this.dataService.updateNeedsAssessment({ haveSpecialDiet: this.form.get('haveSpecialDiet').value });
-        this.dataService.updateNeedsAssessment({ familyMembers: this.form.get('familyMember').value });
+        this.updateService.updateFamilyMemberDetails(this.form);
         this.isComplete = false;
         break;
       case 'pets':
-        this.formCreationService.setPetsForm(this.form);
-        this.dataService.updateNeedsAssessment({ pets: this.form.get('pets').value });
+        this.updateService.updatePetsDetails(this.form);
         this.isComplete = false;
         break;
       case 'identify-needs':
-        this.formCreationService.setIdentifyNeedsForm(this.form);
-        this.dataService.updateNeedsAssessment({ requiresClothing: this.form.get('requiresClothing').value });
-        this.dataService.updateNeedsAssessment({ requiresFood: this.form.get('requiresFood').value });
-        this.dataService.updateNeedsAssessment({ requiresIncidentals: this.form.get('requiresIncidentals').value });
-        this.dataService.updateNeedsAssessment({ requiresLodging: this.form.get('requiresLodging').value });
-        this.dataService.updateNeedsAssessment({ requiresTransportation: this.form.get('requiresTransportation').value });
+        this.updateService.updateNeedsDetails(this.form);
         break;
       default:
     }
+  }
+
+  submitFile() {
+
   }
 }

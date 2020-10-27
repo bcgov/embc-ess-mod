@@ -6,7 +6,7 @@ import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
-import { DataService } from '../../core/services/data.service';
+import { DataUpdationService } from '../../core/services/dataUpdation.service';
 
 @Component({
   selector: 'app-profile',
@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   constructor(private router: Router, private componentService: ComponentCreationService,
               private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public dataService: DataService, private cd: ChangeDetectorRef) {
+              public updateService: DataUpdationService, private cd: ChangeDetectorRef) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -112,24 +112,19 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   setFormData(component: string): void {
     switch (component) {
       case 'personal-details':
-        this.formCreationService.setPersonDetailsForm(this.form);
-        this.dataService.updateRegistartion({ personalDetails: this.form.value });
+        this.updateService.updatePersonalDetails(this.form);
         this.isComplete = false;
         break;
       case 'address':
-        this.formCreationService.setAddressForm(this.form);
-        this.dataService.updateRegistartion({ mailingAddress: this.form.get('mailingAddress').value });
-        this.dataService.updateRegistartion({ primaryAddress: this.form.get('address').value });
+        this.updateService.updateAddressDetails(this.form);
         this.isComplete = false;
         break;
       case 'contact-info':
-        this.formCreationService.setContactDetailsForm(this.form);
-        this.dataService.updateRegistartion({ contactDetails: this.form.value });
+        this.updateService.updateContactDetails(this.form);
         this.isComplete = false;
         break;
       case 'secret':
-        this.formCreationService.setSecretForm(this.form);
-        this.dataService.updateRegistartion(this.form.value);
+        this.updateService.updateSecretDetails(this.form);
         this.isComplete = false;
         break;
       default:
