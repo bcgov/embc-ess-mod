@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DataService } from '../../core/services/data.service';
-import { setClassMetadata } from '@angular/core/src/r3_symbols';
 
 @Component({
   selector: 'app-restriction',
@@ -17,7 +16,7 @@ export class RestrictionComponent implements OnInit {
 
   ngOnInit(): void {
     this.restrictionForm = this.builder.group({
-      restrictedAccess: ['', [Validators.required]]
+      restrictedAccess: [false, [Validators.required]]
     });
 
     this.mapData();

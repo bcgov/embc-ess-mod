@@ -21,9 +21,9 @@
                             <div class="col-md-12">
                                 <mat-radio-group formControlName="restrictedAccess"
                                     aria-labelledby="primary-radio-group-label" class="primary-radio-group" required>
-                                    <mat-radio-button value="true"><span class="radio-text"><b>Yes</b></span> - You may disclose my location and contact
+                                    <mat-radio-button [value]="true"><span class="radio-text"><b>Yes</b></span> - You may disclose my location and contact
                                         information with family or friends</mat-radio-button>
-                                    <mat-radio-button value="false"><span class="radio-text"><b>No</b></span> - You may not disclose my location or contact
+                                    <mat-radio-button [value]="false"><span class="radio-text"><b>No</b></span> - You may not disclose my location or contact
                                         information</mat-radio-button>
                                     <mat-error class="custom-mat-error field-error"
                                         *ngIf="restrFormControl?.restrictedAccess.touched && restrFormControl?.restrictedAccess.invalid && restrFormControl?.restrictedAccess.hasError('required')">

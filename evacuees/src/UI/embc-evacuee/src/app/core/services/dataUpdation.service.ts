@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { RegAddress } from '../model/address';
 import { DataService } from './data.service';
 import { FormCreationService } from './formCreation.service';
 
@@ -15,8 +16,8 @@ export class DataUpdationService {
 
     updateAddressDetails(formGroup: FormGroup) {
         this.formCreationService.setAddressForm(formGroup);
-        this.dataService.updateRegistartion({ mailingAddress: formGroup.get('mailingAddress').value });
-        this.dataService.updateRegistartion({ primaryAddress: formGroup.get('address').value });
+        this.dataService.updateRegistartion({ mailingAddress: this.setAddressObject(formGroup.get('mailingAddress').value) });
+        this.dataService.updateRegistartion({ primaryAddress: this.setAddressObject(formGroup.get('address').value) });
     }
 
     updateContactDetails(formGroup: FormGroup) {
@@ -45,14 +46,37 @@ export class DataUpdationService {
     updatePetsDetails(formGroup: FormGroup){
         this.formCreationService.setPetsForm(formGroup);
         this.dataService.updateNeedsAssessment({ pets: formGroup.get('pets').value });
+        this.dataService.updateNeedsAssessment({ hasPetsFood: formGroup.get('hasPetsFood').value })
     }
 
     updateNeedsDetails(formGroup: FormGroup) {
         this.formCreationService.setIdentifyNeedsForm(formGroup);
-        this.dataService.updateNeedsAssessment({ requiresClothing: formGroup.get('requiresClothing').value });
-        this.dataService.updateNeedsAssessment({ requiresFood: formGroup.get('requiresFood').value });
-        this.dataService.updateNeedsAssessment({ requiresIncidentals: formGroup.get('requiresIncidentals').value });
-        this.dataService.updateNeedsAssessment({ requiresLodging: formGroup.get('requiresLodging').value });
-        this.dataService.updateNeedsAssessment({ requiresTransportation: formGroup.get('requiresTransportation').value });
+        this.dataService.updateNeedsAssessment({ requiresClothing: formGroup.get('requiresClothing').value === "null" ? null : formGroup.get('requiresClothing').value });
+        this.dataService.updateNeedsAssessment({ requiresFood: formGroup.get('requiresFood').value === "null" ? null : formGroup.get('requiresFood').value });
+        this.dataService.updateNeedsAssessment({ requiresIncidentals: formGroup.get('requiresIncidentals').value === "null" ? null : formGroup.get('requiresIncidentals').value });
+        this.dataService.updateNeedsAssessment({ requiresLodging: formGroup.get('requiresLodging').value === "null" ? null : formGroup.get('requiresLodging').value });
+        this.dataService.updateNeedsAssessment({ requiresTransportation: formGroup.get('requiresTransportation').value === "null" ? null : formGroup.get('requiresTransportation').value });
+    }
+
+    private setAddressObject(addressObject): RegAddress {
+        let address: RegAddress = {
+            addressLine1: addressObject.addressLine1,
+            addressLine2: addressObject.addressLine2,
+            country: {
+                countryCode: addressObject.country.code,
+                countryName: addressObject.country.name
+            },
+            jurisdiction: {
+                jurisdictionCode: addressObject.jurisdiction.code === undefined ? null : addressObject.jurisdiction.code,
+                jurisdictionName: addressObject.jurisdiction.name === undefined ? addressObject.jurisdiction : addressObject.jurisdiction.name
+            },
+            postalCode: addressObject.postalCode,
+            stateProvince: {
+                stateProvinceCode: addressObject.stateProvince.code === undefined ? null : addressObject.stateProvince.code,
+                stateProvinceName: addressObject.stateProvince.name === undefined ? addressObject.stateProvince : addressObject.stateProvince.name
+            }
+        }
+
+        return address;
     }
 }

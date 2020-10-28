@@ -12,6 +12,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { PersonDetailFormModule } from '../../person-detail-form/person-detail-form.module';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import * as globalConst from '../../../services/globalConstants';
 
 @Component({
   selector: 'app-family-information',
@@ -21,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 export default class FamilyInformationComponent implements OnInit {
 
   familyMemberForm: FormGroup;
-  radioOption: string[] = ['Yes', 'No'];
+  radioOption = globalConst.radioButton1;
   formBuilder: FormBuilder;
   familyMemberForm$: Subscription;
   formCreationService: FormCreationService;
@@ -66,6 +67,7 @@ export default class FamilyInformationComponent implements OnInit {
         this.data.push(this.familyMemberForm.get('member').value);
       }
       this.dataSource.next(this.data);
+      this.familyMemberForm.get('familyMember').setValue(this.data);
       this.showFamilyForm = !this.showFamilyForm;
       this.showTable = !this.showTable;
     } else {
@@ -91,6 +93,7 @@ export default class FamilyInformationComponent implements OnInit {
   deleteRow(index: number): void {
     this.data.splice(index, 1);
     this.dataSource.next(this.data);
+    this.familyMemberForm.get('familyMember').setValue(this.data);
     if (this.data.length === 0) {
       this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
     }

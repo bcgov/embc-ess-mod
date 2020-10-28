@@ -7,6 +7,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { DataUpdationService } from '../../core/services/dataUpdation.service';
+import { DataSubmissionService } from '../../core/services/dataSubmission.service';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -25,7 +26,7 @@ export class NeedsAssessmentComponent implements OnInit {
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private updateService: DataUpdationService) { }
+    private updateService: DataUpdationService, private submissionService: DataSubmissionService) { }
 
   ngOnInit(): void {
     this.needsSteps = this.componentService.createEvacSteps();
@@ -83,7 +84,6 @@ export class NeedsAssessmentComponent implements OnInit {
   goForward(stepper: MatStepper, isLast: boolean, component: string): void {
     if (isLast) {
       this.submitFile();
-      this.router.navigate(['/non-verified-registration/fileSubmission']);
     } else {
       if (this.form.status === 'VALID') {
         this.setFormData(component);
@@ -118,6 +118,7 @@ export class NeedsAssessmentComponent implements OnInit {
   }
 
   submitFile() {
-
+    this.submissionService.submitRegistrationFile();
+    //this.router.navigate(['/non-verified-registration/fileSubmission']);
   }
 }

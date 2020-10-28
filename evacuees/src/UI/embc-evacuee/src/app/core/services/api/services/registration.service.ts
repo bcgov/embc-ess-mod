@@ -1,8 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { BaseService } from '../base-service';
-import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
@@ -14,14 +12,10 @@ import { RegistrationResult } from '../models/registration-result';
 @Injectable({
   providedIn: 'root',
 })
-export class RegistrationService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
-    super(config, http);
-  }
+export class RegistrationService  {
 
+  constructor(private http: HttpClient) {}
+  
   /**
    * Path part for operation registrationCreate
    */
