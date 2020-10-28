@@ -10,7 +10,8 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
-//@import './floating-labels.scss';
+
+@import '~@angular/material/theming';
 
 // monospace font used for fixed-size text blocks (eg, referral comments)
 // NB: same font as PDF renderer service
@@ -21,9 +22,28 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
          url('/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
   }
 
+$custom-typography: mat-typography-config(
+  $font-family: $font-family-sans-serif,
+  $body-1: mat-typography-level(15px, 1.6, 400)
+);
+
+@include angular-material-typography($custom-typography);
+
 main {
     padding-bottom: 0px !important;
     padding-top: 0px !important;
+}
+
+html, body { height: 100%; }
+body { margin: 0; }
+
+.navbar-dark .navbar-nav .nav-link {
+  color: #333333;
+}
+
+footer nav {
+  background-color: #DCE2F0;
+  border-top: 2px solid #fcba19;
 }
 
 .mat-step-icon {
@@ -91,11 +111,11 @@ main {
 }
 
 .container-frame {
-  padding-top: 75px ;
+  padding-top: 60px ;
 }
 
 .heading-container {
-  padding-bottom: 25px;
+  // padding-bottom: 25px;
   font-size: 50px;
   color: #234075;
 }
@@ -128,6 +148,14 @@ main {
 
 .button-s:hover {
   background-color: #E5E5E5;
+}
+
+button {
+  border-width: 0px !important;
+}
+
+button:focus {
+  outline: 0px !important;
 }
 
 @media screen and (max-width: 768px) {
@@ -197,7 +225,7 @@ mat-card {
 
 .sub-heading {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: bold;
   color: #169BD5;
 }
 
@@ -225,6 +253,30 @@ mat-card {
   background-color: #169BD5 !important;
 }
 
+.requiredField::after {
+    content: "*";
+    color: red;
+ }
+
+ .custom-mat-error {
+   font-size: 75%;
+ }
+
+ .mat-dialog-container {
+   border-radius: 0px !important;
+ }
+
+ .mat-radio-label {
+   white-space: normal !important;
+ }
+
+ .note-box {
+  background-color: #F2F2F2;
+  padding: 8px;
+  font-family: 'BC Sans', sans-serif;
+  font-weight: 400;
+ }
+
 // .mat-form-field-appearance-outline .mat-form-field-outline-thick {
 //    color: rgba(0,0,0,.12) !important; 
 // }
@@ -246,11 +298,6 @@ mat-card {
 // .form-control {
 //     border-radius:0
 // }
-
-// .requiredField::after {
-//     content: "*";
-//     color: red;
-//  }
 
 // // .input-help {
 // //     vertical-align: top;
@@ -375,5 +422,4 @@ mat-card {
 //   }
 
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+

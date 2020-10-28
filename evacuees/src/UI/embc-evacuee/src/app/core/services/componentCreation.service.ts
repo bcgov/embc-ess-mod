@@ -50,35 +50,39 @@ export class ComponentCreationService {
         [
             {
                 component: 'evac-address',
-                nextButtonLabel: 'Next-Family Information',
+                nextButtonLabel: 'Next - Family Information',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: -1
+                lastStep: -1,
+                stepName: 'Evacuated From'
             },
             {
                 component: 'family-information',
-                nextButtonLabel: 'Next-Pets',
+                nextButtonLabel: 'Next - Pets',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: 0
+                lastStep: 0,
+                stepName: 'Family Members'
             },
             {
                 component: 'pets',
-                nextButtonLabel: 'Next-Identify Needs',
+                nextButtonLabel: 'Next - Identify Needs',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: 0
+                lastStep: 0,
+                stepName: 'Pets'
             },
             {
                 component: 'identify-needs',
-                nextButtonLabel: 'Next-Review Submission',
+                nextButtonLabel: 'Next - Review Submission',
                 backButtonLabel: 'Go Back & Edit',
                 isLast: false,
                 loadWrapperButton: false,
-                lastStep: 0
+                lastStep: 0,
+                stepName: 'Needs'
             },
             // {
             //     component: 'pets',

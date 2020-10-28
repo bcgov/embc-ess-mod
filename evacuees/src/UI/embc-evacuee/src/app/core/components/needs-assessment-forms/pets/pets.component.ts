@@ -1,11 +1,17 @@
-import { Component, OnInit, NgModule } from '@angular/core';
+import { Component, OnInit, NgModule, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule } from '@angular/forms';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormCreationService } from '../../../services/formCreation.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { PetFormModule } from '../../pet-form/pet-form.module';
 
 @Component({
   selector: 'app-pets',
@@ -14,14 +20,96 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export default class PetsComponent implements OnInit {
 
-  firstFormGroup: FormGroup;
+  petsForm: FormGroup;
+  radioOption: string[] = ['Yes', 'No'];
+  formBuilder: FormBuilder;
+  petsForm$: Subscription;
+  formCreationService: FormCreationService;
+  showPetsForm = false;
+  displayedColumns: string[] = ['type', 'quantity', 'buttons'];
+  dataSource = new BehaviorSubject([]);
+  data = [];
+  editIndex: number;
+  rowEdit = false;
+  showTable = true;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+  ) {
+    this.formBuilder = formBuilder;
+    this.formCreationService = formCreationService;
+  }
 
   ngOnInit(): void {
-    this.firstFormGroup = this.formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
+    this.petsForm$ = this.formCreationService.getPetsForm().subscribe(
+      petsForm => {
+        this.petsForm = petsForm;
+      }
+    );
+
+    this.petsForm.get('addPetIndicator').valueChanges.subscribe(value =>
+      this.updateOnVisibility());
+  }
+
+  addPets(): void {
+    this.petsForm.get('pet').reset();
+    this.showPetsForm = !this.showPetsForm;
+    this.showTable = !this.showTable;
+    this.petsForm.get('addPetIndicator').setValue(true);
+  }
+
+  save(): void {
+    if (this.petsForm.get('pet').status === 'VALID') {
+      if (this.editIndex !== undefined && this.rowEdit) {
+        this.data[this.editIndex] = this.petsForm.get('pet').value;
+        this.rowEdit = !this.rowEdit;
+        this.editIndex = undefined;
+      } else {
+        this.data.push(this.petsForm.get('pet').value);
+      }
+      this.dataSource.next(this.data);
+      this.showPetsForm = !this.showPetsForm;
+      this.showTable = !this.showTable;
+    } else {
+      this.petsForm.get('pet').markAllAsTouched();
+    }
+  }
+
+  cancel(): void {
+    this.showPetsForm = !this.showPetsForm;
+    this.showTable = !this.showTable;
+    if (this.data.length === 0) {
+      this.petsForm.get('addPetIndicator').setValue(false);
+    }
+  }
+
+  /**
+   * Returns the control of the form
+   */
+  get petsFormControl(): { [key: string]: AbstractControl; } {
+    return this.petsForm.controls;
+  }
+
+  deleteRow(index: number): void {
+    this.data.splice(index, 1);
+    this.dataSource.next(this.data);
+    if (this.data.length === 0) {
+      this.petsForm.get('addPetIndicator').setValue(false);
+      this.petsForm.get('hasPetsFood').reset();
+    }
+  }
+
+  editRow(element, index): void {
+    this.editIndex = index;
+    this.rowEdit = !this.rowEdit;
+    this.petsForm.get('pet').setValue(element);
+    this.showPetsForm = !this.showPetsForm;
+    this.showTable = !this.showTable;
+  }
+
+  updateOnVisibility(): void {
+    this.petsForm.get('pet.type').updateValueAndValidity();
+    this.petsForm.get('pet.quantity').updateValueAndValidity();
+    this.petsForm.get('hasPetsFood').updateValueAndValidity();
   }
 
 }
@@ -33,7 +121,11 @@ export default class PetsComponent implements OnInit {
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatRadioModule,
+    MatTableModule,
+    MatIconModule,
+    PetFormModule
   ],
   declarations: [
     PetsComponent,

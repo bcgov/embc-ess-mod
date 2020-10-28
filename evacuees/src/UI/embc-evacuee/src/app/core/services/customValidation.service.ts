@@ -1,6 +1,7 @@
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
+import * as globalConst from '../services/globalConstants';
 
 @Injectable({ providedIn: 'root' })
 export class CustomValidationService {
@@ -34,26 +35,25 @@ export class CustomValidationService {
      * @param validator : validtor to test again
      * @param errorName : custom error name
      */
-    // conditionalValidation(predicate: () => boolean, validator: ValidatorFn, errorName?: string) {
-    //     return (control: AbstractControl): { [key: string]: boolean } | null => {
-    //         if (control.parent) {
-    //             let validationError = null;
-    //             console.log(predicate());
-    //             if (predicate()) {
-    //                 validationError = validator(control);
-    //             }
+    conditionalValidation(predicate: () => boolean, validator: ValidatorFn, errorName?: string): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            if (control.parent) {
+                let validationError = null;
+                if (predicate()) {
+                    validationError = validator(control);
+                }
 
-    //             if (errorName && validationError) {
-    //                 const customError = {};
-    //                 customError[errorName] = validationError;
-    //                 validationError = customError;
-    //             }
+                if (errorName && validationError) {
+                    const customError = {};
+                    customError[errorName] = validationError;
+                    validationError = customError;
+                }
 
-    //             return validationError;
-    //         }
-    //         return null;
-    //     };
-    // }
+                return validationError;
+            }
+            return null;
+        };
+    }
 
     /**
      * Checks if the email and confirm email field matches
@@ -63,8 +63,23 @@ export class CustomValidationService {
             if (control.value !== null && control.value !== undefined) {
                 const email = control.parent.get('email').value;
                 const confirmEmail = control.value;
-                if (email !== confirmEmail) {
+                if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
                     return { emailMatch: true };
+                }
+            }
+            return null;
+        };
+    }
+
+    postalValidation(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            if (control.parent) {
+                if (control.parent.get('country').value !== undefined && control.parent.get('country').value !== null) {
+                     if (control.parent.get('country').value.code === 'CAN') {
+                        return Validators.pattern(globalConst.postalPattern)(control);
+                    } else if (control.parent.get('country').value.code === 'USA') {
+                        return Validators.pattern(globalConst.zipCodePattern)(control);
+                    }
                 }
             }
             return null;

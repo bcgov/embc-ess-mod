@@ -1,0 +1,44 @@
+<div class="row heading-container">
+  <div class="col-12">
+    <span class="page-heading">Create Evacuation File</span>
+  </div>
+</div>
+
+<mat-horizontal-stepper class="stepper-style" linear labelPosition="bottom" (animationDone)="currentStep(needsStepper?.selectedIndex)" #needsStepper>
+  <mat-step *ngFor="let step of needsSteps" [completed]="isComplete" [editable]="isEditable">
+    <ng-template matStepLabel>{{step.stepName}}</ng-template>
+    <p>The purpose of the <b>Evacuation File</b> is to help determine how the evacuation has impacted you and your family in
+      order for Emergency Support Services (ESS) to coordinate or provide you with assistance to support you in your
+      recovery.</p>
+      <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
+    <br>
+    <app-component-wrapper [componentName]="step.component" [folderPath]="needsFolderPath"></app-component-wrapper>
+    <br>
+    <div class="row justify-content-between resp-style">
+      <div class="col-md-6">
+        <button class="button-s" mat-button type="button"
+          (click)="goBack(needsStepper, step.lastStep)">{{step.backButtonLabel}}</button>
+      </div>
+      <div class="col-md-6">
+        <button class="button-p" mat-stroked-button type="button"
+          (click)="goForward(needsStepper, step.isLast, step.component)">{{step.nextButtonLabel}}</button>
+      </div>
+    </div>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Review & Submit</ng-template>
+    <!--<app-secret></app-secret> -->
+    <app-review></app-review>
+    <div>
+      <!-- <button mat-button matStepperPrevious>Back</button> -->
+      <button mat-button type="button" (click)="goForward(needsStepper, true, '')">Save & Submit</button>
+    </div>
+  </mat-step>
+
+  <ng-template matStepperIcon="edit" let-index="index">
+    {{index + 1}}
+  </ng-template>
+</mat-horizontal-stepper>
+
+<!-- {{form?.status}} -->

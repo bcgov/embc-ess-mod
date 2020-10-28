@@ -1,134 +1,168 @@
-<mat-card class="card-align">
-  <mat-card-content>
-    <p class="card-heading">Primary Residence</p>
-    <form [formGroup]="primaryAddressForm">
-
+<!-- {{primaryAddressForm.status }}
+{{primaryAddressForm.value | json}} -->
+<form [formGroup]="primaryAddressForm">
+  <mat-card class="card-align">
+    <mat-card-content>
+      <p class="card-heading">Primary Residence</p>
       <div class="row">
         <div class="col-md-12">
-          <label id="primary-radio-group-label">Is your <b>primary residence</b> within British Columbia?</label>
+          <label class="requiredField" id="primary-radio-group-label">Is your <b>primary residence</b> within British
+            Columbia?</label>
           <br>
           <mat-hint class="radio-hint">Primary residence: The dwelling where an individual or family spends most of
             their personal time.</mat-hint>
           <br>
           <mat-hint class="radio-hint">A person can only have one primary residence at any moment in time.</mat-hint>
-          <mat-radio-group formControlName="isBcAddress" aria-labelledby="primary-radio-group-label" (change)="primaryAddressChange($event)"
-            class="primary-radio-group">
+          <mat-radio-group formControlName="isBcAddress" aria-labelledby="primary-radio-group-label"
+            (change)="primaryAddressChange($event)" class="primary-radio-group" required>
             <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
               {{option}}
             </mat-radio-button>
+            <mat-error class="custom-mat-error"
+              *ngIf="primaryAddressFormControl?.isBcAddress.touched && primaryAddressFormControl?.isBcAddress.invalid && primaryAddressFormControl?.isBcAddress.hasError('required')">
+              Primary residence is required</mat-error>
           </mat-radio-group>
         </div>
       </div>
 
-      
-        <div *ngIf="primaryAddressFormControl?.isBcAddress.value ==='Yes'" class="row">
-          <div class="col-md-12">
-            <app-bc-address [addressForm]="primaryAddressForm"></app-bc-address>
+
+      <div *ngIf="primaryAddressFormControl?.isBcAddress.value ==='Yes'" class="row">
+        <div class="col-md-12">
+          <app-bc-address [addressForm]="primaryAddressFormControl?.address"></app-bc-address>
+        </div>
+      </div>
+
+      <div *ngIf="primaryAddressFormControl?.isBcAddress.value ==='No'">
+        <div formGroupName="address">
+          <div class="row">
+            <div class="col-md-5">
+              <p class="requiredField">In what <b>country</b> is your primary residence located?</p>
+              <mat-form-field appearance="outline">
+                <input type="text" placeholder="Start Typing" aria-label="Country" matInput formControlName="country"
+                  [matAutocomplete]="auto" required>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="countryDisplayFn">
+                  <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                    {{option.name}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                  *ngIf="primaryAddressFormControl?.address?.controls?.country.invalid && primaryAddressFormControl?.address?.controls?.country.hasError('required')">
+                  Country is required</mat-error>
+                <mat-error *ngIf="validateCountry(primaryAddressFormControl?.address?.controls?.country)">
+                  Country is invalid</mat-error>
+              </mat-form-field>
+            </div>
           </div>
         </div>
 
-        <div *ngIf="primaryAddressFormControl?.isBcAddress.value ==='No'">
-          <div formGroupName="address">
+        <app-can-address *ngIf="primaryAddressFormControl?.address?.controls?.country?.value?.code === 'CAN'; else usa"
+          [addressForm]="primaryAddressFormControl?.address">
+        </app-can-address>
+        <ng-template #usa>
+          <app-usa-address
+            *ngIf="primaryAddressFormControl?.address?.controls?.country?.value?.code === 'USA'; else other"
+            [addressForm]="primaryAddressFormControl?.address">
+          </app-usa-address>
+        </ng-template>
+        <ng-template #other>
+          <app-other-address
+            *ngIf="primaryAddressFormControl?.address?.controls?.country?.value?.code !== 'USA' && primaryAddressFormControl?.address?.controls?.country?.value?.code !== 'CAN' && primaryAddressFormControl?.address?.controls?.country?.value !== null"
+            [addressForm]="primaryAddressFormControl?.address">
+          </app-other-address>
+        </ng-template>
+
+      </div>
+      <!-- </form> -->
+    </mat-card-content>
+  </mat-card>
+  <br>
+  <br>
+
+  <mat-card class="card-align">
+    <mat-card-content>
+      <p class="card-heading">Mailing Address</p>
+      <!-- <form [formGroup]="mailingAddressForm"> -->
+
+      <div class="row">
+        <div class="col-md-12">
+          <label id="primary-radio-group-label" class="requiredField">Is your <b>mailing address</b> the same as their
+            primary residence
+            above?</label>
+          <mat-radio-group formControlName="isNewMailingAddress" aria-labelledby="primary-radio-group-label"
+            class="primary-radio-group" (change)="sameAsPrimary($event)" required>
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
+              {{option}}
+            </mat-radio-button>
+            <mat-error class="custom-mat-error"
+              *ngIf="primaryAddressFormControl?.isNewMailingAddress.touched && primaryAddressFormControl?.isNewMailingAddress.invalid && primaryAddressFormControl?.isNewMailingAddress.hasError('required')">
+              Required</mat-error>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div *ngIf="primaryAddressFormControl?.isNewMailingAddress.value ==='No'">
+        <div class="row">
+          <div class="col-md-12">
+            <label id="primary-radio-group-label">Is your <b>mailing address</b> within British Columbia?</label>
+            <mat-radio-group formControlName="isBcMailingAddress" aria-labelledby="primary-radio-group-label"
+              (change)="mailingAddressChange($event)" class="primary-radio-group">
+              <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
+                {{option}}
+              </mat-radio-button>
+              <mat-error class="custom-mat-error"
+                *ngIf="primaryAddressFormControl?.isBcMailingAddress.touched && primaryAddressFormControl?.isBcMailingAddress.invalid && primaryAddressFormControl?.isBcMailingAddress.hasError('required')">
+                Mailing Address is required</mat-error>
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div *ngIf="primaryAddressFormControl?.isBcMailingAddress.value ==='Yes'" class="row">
+          <div class="col-md-12">
+            <app-bc-address [addressForm]="primaryAddressFormControl?.mailingAddress"></app-bc-address>
+          </div>
+        </div>
+
+        <div *ngIf="primaryAddressFormControl?.isBcMailingAddress.value ==='No'">
+          <div formGroupName="mailingAddress">
             <div class="row">
               <div class="col-md-5">
                 <p>In what <b>country</b> is your primary residence located?</p>
                 <mat-form-field appearance="outline">
                   <input type="text" placeholder="Start Typing" aria-label="Country" matInput formControlName="country"
                     [matAutocomplete]="auto">
-                  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.desc">
-                      {{option.desc}}
+                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="countryDisplayFn">
+                    <mat-option *ngFor="let option of mailingFilteredOptions | async" [value]="option">
+                      {{option.name}}
                     </mat-option>
                   </mat-autocomplete>
+                  <mat-error
+                    *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country.invalid && primaryAddressFormControl?.mailingAddress?.controls?.country.hasError('required')">
+                    Country is required</mat-error>
+                  <mat-error *ngIf="validateCountry(primaryAddressFormControl?.mailingAddress?.controls?.country)">
+                      Country is invalid</mat-error>
                 </mat-form-field>
               </div>
             </div>
           </div>
-          
-          <div [ngSwitch]="primaryAddressFormControl?.address?.controls?.country?.value">
-            <app-can-address *ngSwitchCase="'Canada'" [addressForm]="primaryAddressForm"></app-can-address>
-            <app-usa-address *ngSwitchCase="'United States of America'" [addressForm]="primaryAddressForm">
+
+          <app-can-address
+            *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code === 'CAN'; else usa"
+            [addressForm]="primaryAddressFormControl?.mailingAddress">
+          </app-can-address>
+          <ng-template #usa>
+            <app-usa-address
+              *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code === 'USA'; else other"
+              [addressForm]="primaryAddressFormControl?.mailingAddress">
             </app-usa-address>
-            <app-other-address *ngSwitchCase="'Other'" [addressForm]="primaryAddressForm"></app-other-address>
-          </div>
-        </div>
-
-    </form>
-  </mat-card-content>
-</mat-card>
-<br>
-<br>
-
-<mat-card class="card-align">
-  <mat-card-content>
-    <p class="card-heading">Mailing Address</p>
-    <form [formGroup]="mailingAddressForm">
-
-      <div class="row">
-        <div class="col-md-12">
-          <label id="primary-radio-group-label">Is your <b>mailing address</b> the same as their primary residence
-            above?</label>
-          <mat-radio-group formControlName="isNewMailingAddress" aria-labelledby="primary-radio-group-label"
-            class="primary-radio-group">
-            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
-              {{option}}
-            </mat-radio-button>
-          </mat-radio-group>
+          </ng-template>
+          <ng-template #other>
+            <app-other-address
+              *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code !== 'USA' && primaryAddressFormControl?.mailingAddress?.controls?.country?.value?.code !== 'CAN' && primaryAddressFormControl?.mailingAddress?.controls?.country?.value !== null"
+              [addressForm]="primaryAddressFormControl?.mailingAddress">
+            </app-other-address>
+          </ng-template>
         </div>
       </div>
-
-      <div *ngIf="mailingAddressFormControl?.isNewMailingAddress.value ==='No'">
-        <div class="row">
-          <div class="col-md-12">
-            <label id="primary-radio-group-label">Is your <b>mailing address</b> within British Columbia?</label>
-            <mat-radio-group formControlName="isBcMailingAddress" aria-labelledby="primary-radio-group-label" (change)="mailingAddressChange($event)"
-              class="primary-radio-group">
-              <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
-                {{option}}
-              </mat-radio-button>
-            </mat-radio-group>
-          </div>
-        </div>
-
-        <div *ngIf="mailingAddressFormControl?.isBcMailingAddress.value ==='Yes'" class="row">
-          <div class="col-md-12">
-            <app-bc-address [addressForm]="mailingAddressForm"></app-bc-address>
-          </div>
-        </div>
-
-        <div *ngIf="mailingAddressFormControl?.isBcMailingAddress.value ==='No'">
-          <div formGroupName="address">
-
-            <div class="row">
-              <div class="col-md-5">
-                <p>In what <b>country</b> is your primary residence located?</p>
-                <mat-form-field appearance="outline">
-                  <input type="text" placeholder="Start Typing" aria-label="Country" matInput
-                    formControlName="country" [matAutocomplete]="auto">
-                  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.desc">
-                      {{option.desc}}
-                    </mat-option>
-                  </mat-autocomplete>
-                </mat-form-field>
-              </div>
-            </div>
-
-          </div>
-          
-          <div [ngSwitch]="mailingAddressFormControl?.address?.controls?.country.value">
-            <app-can-address *ngSwitchCase="'Canada'" [addressForm]="mailingAddressForm"></app-can-address>
-            <app-usa-address *ngSwitchCase="'United States of America'" [addressForm]="mailingAddressForm">
-            </app-usa-address>
-            <app-other-address *ngSwitchCase="'Other'" [addressForm]="mailingAddressForm"></app-other-address>
-          </div>
-        </div>
-
-      </div>
-    </form>
-
-  </mat-card-content>
-</mat-card>
-
-<!-- {{primaryAddressForm.status}}
-{{primaryAddressForm.value | json}} -->
+    </mat-card-content>
+  </mat-card>
+</form>

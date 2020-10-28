@@ -8,24 +8,24 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'create-profile',
+        redirectTo: 'collection-notice',
         pathMatch: 'full',
       },
       {
         path: 'collection-notice',
-        loadChildren: () => import('../collection-notice/collection-notice.module').then(m => m.CollectionNoticeModule)
+        loadChildren: () => import('../sharedRoutes/collection-notice/collection-notice.module').then(m => m.CollectionNoticeModule)
       },
       {
         path: 'restriction',
-        loadChildren: () => import('../restriction/restriction.module').then(m => m.RestrictionModule)
+        loadChildren: () => import('../sharedRoutes/restriction/restriction.module').then(m => m.RestrictionModule)
       },
       {
         path: 'create-profile',
-        loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)
+        loadChildren: () => import('../sharedRoutes/profile/profile.module').then(m => m.ProfileModule)
       }, /// :stepPos
       {
         path: 'needs-assessment',
-        loadChildren: () => import('../needs-assessment/needs-assessment.module').then(m => m.NeedsAssessmentModule)
+        loadChildren: () => import('../sharedRoutes/needs-assessment/needs-assessment.module').then(m => m.NeedsAssessmentModule)
       },
       {
         path: 'edit/:type',

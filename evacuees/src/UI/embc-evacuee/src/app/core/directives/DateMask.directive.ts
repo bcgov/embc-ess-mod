@@ -1,4 +1,4 @@
-import { Directive, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
@@ -6,7 +6,7 @@ import { NgControl } from '@angular/forms';
 })
 export class DateMaskDirective {
 
-  constructor(public ngControl: NgControl) { }
+  constructor(public ngControl: NgControl, private el: ElementRef, private renderer: Renderer2) { }
 
   @HostListener('ngModelChange', ['$event'])
   onModelChange(evt): void {
@@ -19,6 +19,9 @@ export class DateMaskDirective {
   }
 
   onInputChange(evt, backspace): void {
+    const current: string = this.el.nativeElement.value;
+    const start = this.el.nativeElement.selectionStart;
+    const end = this.el.nativeElement.selectionEnd;
     let newVal = evt.replace(/\D/g, '');
     if (backspace && newVal.length <= 4) {
       newVal = newVal.substring(0, newVal.length - 1);
@@ -37,5 +40,8 @@ export class DateMaskDirective {
       this.ngControl.control.setValue(newVal);
     }
     this.ngControl.valueAccessor.writeValue(newVal);
+    if (current.length > start) {
+      this.renderer.selectRootElement(this.el).nativeElement.setSelectionRange(start, end);
+    }
   }
 }

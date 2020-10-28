@@ -1,17 +1,82 @@
-<mat-card class="card-align">
-    <!-- <mat-card-header>
-        <mat-card-title>Preferred Method</mat-card-title>
-    </mat-card-header> -->
+<form [formGroup]="evacuatedForm">
+  <mat-card class="card-align">
     <mat-card-content>
-        <h1>Primary Residence</h1>
-         <form [formGroup]="firstFormGroup">
-            <!-- #docregion ng-template -->
-            <!-- <ng-template matStepLabel></ng-template> -->
-            <!-- #enddocregion ng-template -->
-            <mat-form-field>
-              <mat-label>Name</mat-label>
-              <input matInput formControlName="firstCtrl" placeholder="Last name, First name">
-            </mat-form-field>
-          </form>
+      <div *ngIf="registration?.primaryAddress?.stateProvince?.code === 'BC' else otherAddress;">
+        <div class="row">
+          <div class="col-md-12">
+            <label class="card-heading requiredField" id="primary-radio-group-label">Are you being evacuated from your
+              primary
+              address that you listed when you created your profile?</label>
+            <br>
+            <mat-radio-group formControlName="evacuatedFromPrimary" aria-labelledby="primary-radio-group-label"
+              class="primary-radio-group" (change)="primaryAddressChange($event)" required>
+              <mat-radio-button value="Yes">Yes
+              </mat-radio-button>
+              <div class="prim-address">
+                <p class="allign"><b>{{registration?.primaryAddress?.addressLine1}}</b></p>
+                <p class="allign" *ngIf="registration?.primaryAddress?.addressLine2"><b>{{registration?.primaryAddress?.addressLine2}}</b></p>
+                <p class="allign"><b>{{registration?.primaryAddress?.jurisdiction.name}} , {{registration?.primaryAddress?.postalCode}}</b></p>
+              </div>
+              <mat-radio-button value="No">No</mat-radio-button>
+              <mat-error class="custom-mat-error"
+                *ngIf="evacuatedFormControl?.evacuatedFromPrimary.touched && evacuatedFormControl?.evacuatedFromPrimary.invalid && evacuatedFormControl?.evacuatedFromPrimary.hasError('required')">
+                Evacaution Address is required</mat-error>
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div class="row" *ngIf="evacuatedFormControl?.evacuatedFromPrimary.value ==='No'">
+          <div class="col-md-12">
+            <p>Where are you being evacuated from?</p>
+            <app-bc-address [addressForm]="evacuatedFormControl?.evacuatedFromAddress">
+            </app-bc-address>
+          </div>
+        </div>
+      </div>
     </mat-card-content>
-</mat-card>
+  </mat-card>
+  <br>
+  <br>
+  <ng-template #otherAddress>
+    <div class="row">
+      <div class="col-md-12">
+        <label class="card-heading requiredField" id="primary-radio-group-label">Where are you being evacuated
+          from?</label>
+        <p>Please identify where in <b>BC</b> you have been <b>evacuated from</b>?</p>
+        <app-bc-address [addressForm]="evacuatedFormControl?.evacuatedFromAddress">
+        </app-bc-address>
+      </div>
+    </div>
+  </ng-template>
+
+  <mat-card class="card-align">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-8">
+          <label class="card-heading requiredField" id="primary-radio-group-label">Do you have insurance?</label>
+          <br>
+          <mat-radio-group formControlName="insurance" aria-labelledby="primary-radio-group-label"
+            class="primary-radio-group" required>
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of insuranceOption | enumToArray"
+              [value]="option">
+              {{option}}
+            </mat-radio-button>
+            <mat-error class="custom-mat-error"
+              *ngIf="evacuatedFormControl?.insurance.touched && evacuatedFormControl?.insurance.invalid && evacuatedFormControl?.insurance.hasError('required')">
+              Insurance is required</mat-error>
+          </mat-radio-group>
+        </div>
+        <div class="col-md-4">
+          <div class="note-box">
+            <p><b>Notes:</b></p>
+            <p>
+              If you have insurance, please keep all of your receipts, and contact your insurance provider as soon as
+              possible.If you are having difficulty contacting your insurance provider, please contact the Insurance
+              Bureau of Canada at 1-844-227-5422.
+            </p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>

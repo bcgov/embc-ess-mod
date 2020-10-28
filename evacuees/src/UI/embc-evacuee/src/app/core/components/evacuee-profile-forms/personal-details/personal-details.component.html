@@ -27,7 +27,7 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline">
             <mat-label>Preferred Name</mat-label>
-            <input formControlName="preferredName" matInput placeholder="Preferred Name">
+            <input maxlength="100" formControlName="preferredName" matInput placeholder="Preferred Name">
           </mat-form-field>
         </div>
       </div>
@@ -36,7 +36,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline">
             <mat-label>Initials</mat-label>
-            <input formControlName="initials" matInput placeholder="Initials">
+            <input maxlength="100" formControlName="initials" matInput placeholder="Initials">
           </mat-form-field>
         </div>
       </div>
@@ -51,7 +51,7 @@
                 {{gen}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="personalFormControl.lastName.invalid && personalFormControl.gender.hasError('required')">Gender is required</mat-error>
+            <mat-error *ngIf="personalFormControl.gender.invalid && personalFormControl.gender.hasError('required')">Gender is required</mat-error>
           </mat-form-field>
         </div>
       </div>
