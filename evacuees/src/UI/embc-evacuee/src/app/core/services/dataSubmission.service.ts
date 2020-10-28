@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { NeedsAssessment } from '../model/needs-assessment';
-import { Registration } from '../model/registration';
 import { AnonymousRegistration } from './api/models/anonymous-registration';
+import { RegistrationService } from './api/registration.service';
 import { DataService } from './data.service';
 
 @Injectable({ providedIn: 'root' })
@@ -9,7 +8,7 @@ export class DataSubmissionService {
 
     private anonymousRegistration: AnonymousRegistration;
 
-    constructor(public dataService: DataService) {}
+    constructor(public dataService: DataService, private registrationService: RegistrationService) {}
 
     submitRegistrationFile() {
         this.anonymousRegistration = {
@@ -17,10 +16,10 @@ export class DataSubmissionService {
             registrationDetails: this.mergeData({}, this.dataService.getRegistration()),
             captcha: "abc"
         }
-        //this.anonymousRegistration.registrationDetails = this.mergeData({}, this.dataService.getRegistration());
-        //this.anonymousRegistration.perliminaryNeedsAssessment = this.mergeData({}, this.dataService.getNeedsAssessment());
-        console.log(this.anonymousRegistration);
         console.log(JSON.stringify(this.anonymousRegistration))
+        this.registrationService.registrationCreate(this.anonymousRegistration).subscribe(result => {
+            console.log(result);
+        })
     }
 
     private mergeData(finalValue, incomingValue) {

@@ -32,7 +32,7 @@ export class DataUpdationService {
 
     updateEvacuationDetails(formGroup: FormGroup) {
         this.formCreationService.setEvacuatedForm(formGroup);
-        this.dataService.updateNeedsAssessment({ evacuatedFromAddress: formGroup.get('evacuatedFromAddress').value });
+        this.dataService.updateNeedsAssessment({ evacuatedFromAddress: this.setAddressObject(formGroup.get('evacuatedFromAddress').value) });
         this.dataService.updateNeedsAssessment({ insurance: formGroup.get('insurance').value });
     }
 

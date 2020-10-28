@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { map, mergeMap, filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
+import { FormCreationService } from '../../services/formCreation.service';
 
 
 @Component({
@@ -11,11 +12,11 @@ import { FormBuilder } from '@angular/forms';
   styleUrls: ['./review.component.scss']
 })
 export class ReviewComponent implements OnInit {
-
+  
   componentToLoad: Observable<any>;
   cs: any;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, public formCreationService: FormCreationService) { }
 
   hideCard = false;
 

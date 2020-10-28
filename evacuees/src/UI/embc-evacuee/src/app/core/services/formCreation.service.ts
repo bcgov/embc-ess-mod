@@ -111,7 +111,7 @@ export class FormCreationService {
     }
 
     setIdentifyNeedsForm(identifyNeedsForm: FormGroup): void {
-        this.personalDetailsForm.next(identifyNeedsForm);
+        this.identifyNeedsForm.next(identifyNeedsForm);
     }
 
 }
