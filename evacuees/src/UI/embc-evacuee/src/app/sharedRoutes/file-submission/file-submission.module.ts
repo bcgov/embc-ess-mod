@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { FileSubmissionRoutingModule } from './file-submission-routing.module';
 import { FileSubmissionComponent } from './file-submission.component';
-
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,9 @@ import { FileSubmissionComponent } from './file-submission.component';
   ],
   imports: [
     CommonModule,
-    FileSubmissionRoutingModule
+    FileSubmissionRoutingModule,
+    MatCardModule,
+    MatExpansionModule
   ]
 })
 export class FileSubmissionModule { }

@@ -282,6 +282,21 @@ mat-card {
   font-weight: 400;
  }
 
+ .mat-expansion-panel {
+   border-radius: 0 !important;
+ }
+
+ .mat-expansion-panel-header-title {
+  margin-right: 0px !important;
+  font-size: 16px;
+  font-weight: 400;
+  justify-content: center;
+ }
+
+ .mat-expansion-panel-header-description, .mat-expansion-indicator::after {
+  color: black !important;
+ }
+
 // .mat-form-field-appearance-outline .mat-form-field-outline-thick {
 //    color: rgba(0,0,0,.12) !important; 
 // }
