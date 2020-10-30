@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AnonymousRegistration } from './api/models/anonymous-registration';
+import { RegistrationResult } from './api/models/registration-result';
 import { RegistrationService } from './api/registration.service';
 import { DataService } from './data.service';
 
@@ -10,16 +12,14 @@ export class DataSubmissionService {
 
     constructor(public dataService: DataService, private registrationService: RegistrationService) {}
 
-    submitRegistrationFile() {
+    submitRegistrationFile(): Observable<RegistrationResult | Object> {
         this.anonymousRegistration = {
             perliminaryNeedsAssessment: this.mergeData({}, this.dataService.getNeedsAssessment()),
             registrationDetails: this.mergeData({}, this.dataService.getRegistration()),
             captcha: "abc"
         }
         console.log(JSON.stringify(this.anonymousRegistration))
-        this.registrationService.registrationCreate(this.anonymousRegistration).subscribe(result => {
-            console.log(result);
-        })
+        return this.registrationService.registrationCreate(this.anonymousRegistration);
     }
 
     private mergeData(finalValue, incomingValue) {

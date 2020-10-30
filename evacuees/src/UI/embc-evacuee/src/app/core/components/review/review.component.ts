@@ -1,4 +1,4 @@
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Type } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap, filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -12,16 +12,19 @@ import { FormCreationService } from '../../services/formCreation.service';
   styleUrls: ['./review.component.scss']
 })
 export class ReviewComponent implements OnInit {
-  
+
   componentToLoad: Observable<any>;
   cs: any;
 
   constructor(private router: Router, public formCreationService: FormCreationService) { }
 
   hideCard = false;
+  captchaVerified = false;
+  captchaFilled = false;
+  @Output() captchaPassed = new EventEmitter<boolean>(false);
 
   ngOnInit(): void {
-   // this.loadComponent();
+    // this.loadComponent();
 
     // this.componentToLoad.subscribe(x => {
     //   console.log(x)
@@ -35,6 +38,19 @@ export class ReviewComponent implements OnInit {
 
   back(): void {
     this.hideCard = false;
+  }
+
+  public onValidToken(token: any) {
+    console.log('Valid token received: ', token);
+    this.captchaVerified = true;
+    this.captchaFilled = true;
+    this.captchaPassed.emit(true);
+  }
+
+  public onServerError(error: any) {
+    console.log('Server error: ', error);
+    this.captchaVerified = true;
+    this.captchaFilled = true;
   }
 
   // loadComponent() {
@@ -57,9 +73,9 @@ export class ReviewComponent implements OnInit {
   // compName.subscribe(v => console.log(v))
 
 
-    // console.log(comp)
-    //     console.log(comp.type === "personal-details")
-    //     return comp.type === 'personal-details'}));
+  // console.log(comp)
+  //     console.log(comp.type === "personal-details")
+  //     return comp.type === 'personal-details'}));
 
 
   //  this.componentToLoad = Promise.resolve(compName => {

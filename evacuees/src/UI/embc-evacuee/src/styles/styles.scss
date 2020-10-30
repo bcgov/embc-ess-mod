@@ -150,6 +150,11 @@ footer nav {
   background-color: #E5E5E5;
 }
 
+.button-p:disabled  {
+  background-color: #234075;
+  color: #FFFFFF !important;
+}
+
 button {
   border-width: 0px !important;
 }

@@ -68,7 +68,7 @@ export class RegistrationService  {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationCreate(params:  AnonymousRegistration) {
+  registrationCreate(params:  AnonymousRegistration): Observable<RegistrationResult | Object> {
     return this.http.post(this.registrationCreatePath, params, {headers: this.headers }).pipe(catchError(error => {
       return this.handleError(error);
     }))

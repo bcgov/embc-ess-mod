@@ -24,6 +24,7 @@ export class NeedsAssessmentComponent implements OnInit {
   form: FormGroup;
   isComplete: boolean;
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
+  captchaPassed = false;
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
     private updateService: DataUpdationService, private submissionService: DataSubmissionService) { }
@@ -118,7 +119,20 @@ export class NeedsAssessmentComponent implements OnInit {
   }
 
   submitFile() {
-    this.submissionService.submitRegistrationFile();
-    //this.router.navigate(['/non-verified-registration/fileSubmission']);
+    this.submissionService.submitRegistrationFile().subscribe((response) => {
+      console.log(response);
+      this.updateService.updateRegisrationResult("1234567");
+      this.router.navigate(['/non-verified-registration/fileSubmission']);
+    }, (error) => {
+      console.log('error')
+      this.updateService.updateRegisrationResult("1234567");
+      this.router.navigate(['/non-verified-registration/fileSubmission']);
+    });
+
+  }
+
+  allowSubmit($event: boolean) {
+    console.log($event)
+    this.captchaPassed = $event;
   }
 }

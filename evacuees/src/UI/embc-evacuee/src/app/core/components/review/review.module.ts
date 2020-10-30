@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CustomPipeModule } from '../../pipe/customPipe.module';
+import { CoreModule } from '../../core.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { CustomPipeModule } from '../../pipe/customPipe.module';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    CustomPipeModule
+    CustomPipeModule,
+    CoreModule
   ],
   exports: [
     ReviewComponent

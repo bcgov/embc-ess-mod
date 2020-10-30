@@ -58,6 +58,10 @@ export class DataUpdationService {
         this.dataService.updateNeedsAssessment({ requiresTransportation: formGroup.get('requiresTransportation').value === "null" ? null : formGroup.get('requiresTransportation').value });
     }
 
+    updateRegisrationResult(referenceNumber: string) {
+        this.dataService.setRegistrationResult(referenceNumber);
+    }
+
     private setAddressObject(addressObject): RegAddress {
         let address: RegAddress = {
             addressLine1: addressObject.addressLine1,

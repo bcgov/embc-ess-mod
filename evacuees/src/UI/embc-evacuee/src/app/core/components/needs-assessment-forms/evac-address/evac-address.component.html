@@ -14,7 +14,7 @@
               </mat-radio-button>
               <div class="prim-address">
                 <p class="allign"><b>{{(formCreationService.addressForm$ | async).value.address.addressLine1}}</b></p>
-                <p class="allign" *ngIf="registration?.primaryAddress?.addressLine2">
+                <p class="allign" *ngIf="(formCreationService.addressForm$ | async).value.address?.addressLine2">
                   <b>{{(formCreationService.addressForm$ | async).value.address.addressLine2}}</b></p>
                 <p class="allign"><b>{{(formCreationService.addressForm$ | async).value.address.jurisdiction.name}} ,
                     {{(formCreationService.addressForm$ | async).value.address.postalCode}}</b></p>

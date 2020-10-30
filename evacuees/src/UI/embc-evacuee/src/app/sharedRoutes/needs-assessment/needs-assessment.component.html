@@ -34,10 +34,10 @@
     <p>Once you have submitted this form you will only be able to edit your details with the assistance of an Emergency
       Support Services volunteer.</p>
     <ng-template matStepLabel>Review & Submit</ng-template>
-    <app-review></app-review>
+    <app-review (captchaPassed)="allowSubmit($event)"></app-review>
     <br>
     <div class="col-md-12">
-      <button class="button-p save-button" mat-stroked-button type="button" (click)="goForward(needsStepper, true, '')">Save &
+      <button class="button-p save-button" mat-stroked-button type="button" [disabled]="!captchaPassed" (click)="goForward(needsStepper, true, '')">Save &
         Submit</button>
     </div>
   </mat-step>
