@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
-import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
-import { ComponentCreationService } from '../../core/services/componentCreation.service';
+import { ComponentMetaDataModel } from '../../../core/model/componentMetaData.model';
+import { ComponentCreationService } from '../../../core/services/componentCreation.service';
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
-import { FormCreationService } from '../../core/services/formCreation.service';
-import { DataUpdationService } from '../../core/services/dataUpdation.service';
-import { DataSubmissionService } from '../../core/services/dataSubmission.service';
+import { FormCreationService } from '../../../core/services/formCreation.service';
+import { DataUpdationService } from '../../../core/services/dataUpdation.service';
+import { DataSubmissionService } from '../../../core/services/dataSubmission.service';
 
 @Component({
   selector: 'app-needs-assessment',

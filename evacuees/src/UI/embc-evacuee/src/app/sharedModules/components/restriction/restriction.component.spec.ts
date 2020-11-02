@@ -3,9 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RestrictionComponent } from './restriction.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { provideRoutes } from '@angular/router';
-import { ProviderAst } from '@angular/compiler';
-import { DataService } from '../../core/services/data.service';
+import { DataService } from '../../../core/services/data.service';
 
 describe('RestrictionComponent', () => {
   let component: RestrictionComponent;

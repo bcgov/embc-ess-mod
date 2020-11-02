@@ -6,7 +6,7 @@ import { ProfileComponent } from './profile.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ComponentWrapperModule } from '../../core/components/component-wrapper/component-wrapper.module';
+import { ComponentWrapperModule } from '../../../core/components/component-wrapper/component-wrapper.module';
 
 @NgModule({
   declarations: [

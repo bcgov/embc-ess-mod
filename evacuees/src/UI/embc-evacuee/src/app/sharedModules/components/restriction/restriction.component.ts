@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DataService } from '../../core/services/data.service';
+import { DataService } from '../../../core/services/data.service';
 
 @Component({
   selector: 'app-restriction',

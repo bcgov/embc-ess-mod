@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ComponentCreationService } from '../../core/services/componentCreation.service';
-import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
+import { ComponentCreationService } from '../../../core/services/componentCreation.service';
+import { ComponentMetaDataModel } from '../../../core/model/componentMetaData.model';
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
-import { FormCreationService } from '../../core/services/formCreation.service';
-import { DataUpdationService } from '../../core/services/dataUpdation.service';
+import { FormCreationService } from '../../../core/services/formCreation.service';
+import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 
 @Component({
   selector: 'app-profile',

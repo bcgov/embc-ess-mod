@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
-import { DataService } from '../../core/services/data.service';
+import { DataService } from '../../../core/services/data.service';
 
 @Component({
   selector: 'app-collection-notice',

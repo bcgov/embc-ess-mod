@@ -13,19 +13,19 @@ const routes: Routes = [
       },
       {
         path: 'collection-notice',
-        loadChildren: () => import('../sharedModules/collection-notice/collection-notice.module').then(m => m.CollectionNoticeModule)
+        loadChildren: () => import('../sharedModules/components/collection-notice/collection-notice.module').then(m => m.CollectionNoticeModule)
       },
       {
         path: 'restriction',
-        loadChildren: () => import('../sharedModules/restriction/restriction.module').then(m => m.RestrictionModule)
+        loadChildren: () => import('../sharedModules/components/restriction/restriction.module').then(m => m.RestrictionModule)
       },
       {
         path: 'create-profile',
-        loadChildren: () => import('../sharedModules/profile/profile.module').then(m => m.ProfileModule)
+        loadChildren: () => import('../sharedModules/components/profile/profile.module').then(m => m.ProfileModule)
       }, /// :stepPos
       {
         path: 'needs-assessment',
-        loadChildren: () => import('../sharedModules/needs-assessment/needs-assessment.module').then(m => m.NeedsAssessmentModule)
+        loadChildren: () => import('../sharedModules/components/needs-assessment/needs-assessment.module').then(m => m.NeedsAssessmentModule)
       },
       {
         path: 'edit/:type',
@@ -33,7 +33,7 @@ const routes: Routes = [
       },
       {
         path: 'fileSubmission',
-        loadChildren: () => import('../sharedModules/file-submission/file-submission.module').then(m => m.FileSubmissionModule)
+        loadChildren: () => import('../sharedModules/components/file-submission/file-submission.module').then(m => m.FileSubmissionModule)
       }
     ]
   }
