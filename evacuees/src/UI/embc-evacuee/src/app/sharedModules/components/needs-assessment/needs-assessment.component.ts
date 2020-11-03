@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../../core/model/componentMetaData.model';
@@ -14,7 +14,7 @@ import { DataSubmissionService } from '../../../core/services/dataSubmission.ser
   templateUrl: './needs-assessment.component.html',
   styleUrls: ['./needs-assessment.component.scss']
 })
-export class NeedsAssessmentComponent implements OnInit {
+export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   needsSteps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
   @ViewChild('needsStepper') private needsStepper: MatStepper;
@@ -25,12 +25,33 @@ export class NeedsAssessmentComponent implements OnInit {
   isComplete: boolean;
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
   captchaPassed = false;
+  stepToDisplay: number;
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private updateService: DataUpdationService, private submissionService: DataSubmissionService) { }
+    private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef) {
+      const navigation = this.router.getCurrentNavigation();
+      if (navigation.extras.state !== undefined) {
+        const state = navigation.extras.state as { stepIndex: number };
+        this.stepToDisplay = state.stepIndex;
+      }
+     }
 
   ngOnInit(): void {
     this.needsSteps = this.componentService.createEvacSteps();
+  }
+
+  
+  ngAfterViewChecked(): void {
+    this.cd.detectChanges();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.stepToDisplay === 4) {
+      this.isComplete = true;
+      setTimeout(() => {
+        this.needsStepper.selectedIndex = this.stepToDisplay;
+      }, 0);
+    }
   }
 
   currentStep(index: number): void {

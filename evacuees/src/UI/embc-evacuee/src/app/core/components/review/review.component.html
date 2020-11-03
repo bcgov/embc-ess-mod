@@ -7,7 +7,7 @@
                     Personal Details
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('personal-details')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -47,7 +47,7 @@
                     Primary Address
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -89,7 +89,7 @@
                     Mailing Address
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -134,7 +134,7 @@
                     Contact Details
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('contact-info')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -158,10 +158,10 @@
         <mat-card-content>
             <div class="row justify-content-between">
                 <div class="col-md-6 card-heading">
-                    Contact Details
+                    Secret Word / Phrase
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('secret')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -183,7 +183,7 @@
                     Evacuation Details
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -208,7 +208,7 @@
                     Insurance
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -227,7 +227,7 @@
                     Family Members
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('family-information')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -268,7 +268,7 @@
                     Family Medication & Dietary Requirements
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('family-information')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -291,7 +291,7 @@
                     Pets
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('pets')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -320,7 +320,7 @@
                     Needs Identified
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editPersonalDetails()">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('identify-needs')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>

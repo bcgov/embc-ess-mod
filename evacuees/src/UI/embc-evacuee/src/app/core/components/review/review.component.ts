@@ -32,8 +32,9 @@ export class ReviewComponent implements OnInit {
     // })
   }
 
-  editPersonalDetails(): void {
-    this.router.navigate(['/loader/edit/personal-details']);
+  editDetails(componentToEdit: string): void {
+    let route = '/non-verified-registration/edit/' + componentToEdit;
+    this.router.navigate([route]);
   }
 
   back(): void {

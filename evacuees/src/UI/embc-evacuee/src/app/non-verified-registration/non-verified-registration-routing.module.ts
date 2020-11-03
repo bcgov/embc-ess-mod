@@ -29,7 +29,7 @@ const routes: Routes = [
       },
       {
         path: 'edit/:type',
-        loadChildren: () => import('../edit/edit.module').then(m => m.EditModule)
+        loadChildren: () => import('../sharedModules/components/edit/edit.module').then(m => m.EditModule)
       },
       {
         path: 'fileSubmission',
