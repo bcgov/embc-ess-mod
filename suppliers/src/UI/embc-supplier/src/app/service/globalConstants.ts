@@ -26,3 +26,5 @@ export const allowedFileTypes = ["application/pdf", "image/jpg", "image/jpeg", "
 export const zeroFileMessage = "Attachment file size must be greater than 0Kb";
 export const fileTypeMessage = "File type pdf, jpg, jpeg, png allowed";
 export const datePattern = '^([1-9]|1[0-2])\/([1-9]|[1-2][0-9]|3[0-1])\/[0-9]{4}$';
+export const invalidCharacters = /([~"#%&*:<>?/\\{|}])+/;
+export const invalidFileNameMessage = "File name must not contain the following characters: ~ \" # % & * : < > ? / \ { | }.";
