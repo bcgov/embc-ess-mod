@@ -12,17 +12,17 @@ export class DataSubmissionService {
 
     constructor(public dataService: DataService, private registrationService: RegistrationService) {}
 
-    submitRegistrationFile(): Observable<RegistrationResult | Object> {
+    submitRegistrationFile(): Observable<RegistrationResult | object> {
         this.anonymousRegistration = {
             perliminaryNeedsAssessment: this.mergeData({}, this.dataService.getNeedsAssessment()),
             registrationDetails: this.mergeData({}, this.dataService.getRegistration()),
-            captcha: "abc"
-        }
-        console.log(JSON.stringify(this.anonymousRegistration))
+            captcha: 'abc'
+        };
+        console.log(JSON.stringify(this.anonymousRegistration));
         return this.registrationService.registrationCreate(this.anonymousRegistration);
     }
 
-    private mergeData(finalValue, incomingValue) {
+    private mergeData(finalValue, incomingValue): any {
         return  {...finalValue, ...incomingValue};
     }
 }

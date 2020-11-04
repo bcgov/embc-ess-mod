@@ -18,7 +18,7 @@ export class CaptchaService {
     constructor(private http: HttpClient) { }
 
     get headers(): HttpHeaders {
-        return new HttpHeaders({ 'Content-Type': 'application/json', 'Accept': 'application/json' });
+        return new HttpHeaders({ 'Content-Type': 'application/json', Accept: 'application/json' });
     }
 
     private readonly baseUrl = 'https://embcess-captcha.pathfinder.gov.bc.ca';

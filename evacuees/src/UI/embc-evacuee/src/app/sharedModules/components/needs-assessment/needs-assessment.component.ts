@@ -28,7 +28,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   stepToDisplay: number;
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef) {
+              private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef) {
       const navigation = this.router.getCurrentNavigation();
       if (navigation.extras.state !== undefined) {
         const state = navigation.extras.state as { stepIndex: number };
@@ -40,7 +40,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.needsSteps = this.componentService.createEvacSteps();
   }
 
-  
+
   ngAfterViewChecked(): void {
     this.cd.detectChanges();
   }
@@ -139,21 +139,21 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     }
   }
 
-  submitFile() {
+  submitFile(): void {
     this.submissionService.submitRegistrationFile().subscribe((response) => {
       console.log(response);
-      this.updateService.updateRegisrationResult("1234567");
+      this.updateService.updateRegisrationResult('1234567');
       this.router.navigate(['/non-verified-registration/fileSubmission']);
     }, (error) => {
-      console.log('error')
-      this.updateService.updateRegisrationResult("1234567");
+      console.log('error');
+      this.updateService.updateRegisrationResult('1234567');
       this.router.navigate(['/non-verified-registration/fileSubmission']);
     });
 
   }
 
-  allowSubmit($event: boolean) {
-    console.log($event)
+  allowSubmit($event: boolean): void {
+    console.log($event);
     this.captchaPassed = $event;
   }
 }

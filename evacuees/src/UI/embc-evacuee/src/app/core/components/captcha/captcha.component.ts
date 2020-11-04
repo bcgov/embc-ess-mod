@@ -149,7 +149,7 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
     private ngZone: NgZone
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.forceRefresh.bind(this);
     window['ca.bcgov.captchaRefresh'] = this.publicForceRefresh.bind(this);
 
@@ -158,11 +158,11 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
     // }
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.forceRefresh();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     // when changing language, if audio is empty then no need to refresh
     if (!changes.language || !this.audio || this.audio.length === 0) {
       if (!(changes.reloadCaptcha && (true === changes.reloadCaptcha.previousValue
@@ -174,22 +174,22 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
     this.getNewCaptcha(false);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     // trigger all observables to complete
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
 
-  forceRefresh() {
+  forceRefresh(): void {
     this.getNewCaptcha(false);
     this.cd.detectChanges();
   }
 
-  publicForceRefresh() {
+  publicForceRefresh(): void {
     this.ngZone.run(() => this.forceRefresh());
   }
 
-  answerChanged(event: any) {
+  answerChanged(event: any): void {
     if (this.answer.length < 6) {
       this.incorrectAnswer = null;
     }
@@ -224,7 +224,7 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
   }
 
   // check if our answer is correct
-  private handleVerify(payload: any) {
+  private handleVerify(payload: any): void {
     // ensure valid payload response is received
     if (payload.valid === true) {
       this.state = CAPTCHA_STATE.SUCCESS_VERIFY_ANSWER_CORRECT;
@@ -243,7 +243,7 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
    * Case where HTTP 200 response code is received by the payload is incorrect or corrupt.
    * The occurance of this type of case should be rare.
    */
-  private isValidPayload(payload: any) {
+  private isValidPayload(payload: any): boolean {
     // console.debug('Response payload: ', payload);
     if (!payload) {
       console.error('Payload cannot be null or undefined or 0');
@@ -259,7 +259,7 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
     }
   }
 
-  playAudio() {
+  playAudio(): void {
     if (this.audio && this.audio.length > 0) {
       this.audioElement.nativeElement.play();
     } else {
@@ -267,7 +267,7 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
     }
   }
 
-  private fetchAudio(playImmediately: boolean = false) {
+  private fetchAudio(playImmediately: boolean = false): void {
     this.fetchingAudioInProgress = true;
 
     // pre-empt existing observable execution
@@ -293,7 +293,7 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
       });
   }
 
-  getNewCaptcha(errorCase: boolean) {
+  getNewCaptcha(errorCase: boolean): void {
     this.state = CAPTCHA_STATE.FETCHING_CAPTCHA_IMG;
     this.audio = '';
 
@@ -334,7 +334,7 @@ export class CaptchaComponent implements AfterViewInit, OnInit, OnChanges, OnDes
       });
   }
 
-  private createErrorTextLine(error: any) {
+  private createErrorTextLine(error: any): string {
     let line = 'Error status: ' + error.status;
     if (error.statusText) {
       line = line + ', status text: ' + error.statusText;

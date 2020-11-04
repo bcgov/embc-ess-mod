@@ -30,8 +30,8 @@ export class DataService {
 
     public setRegistrationResult(referenceNumber: string): void {
         this.registrationResult = {
-            referenceNumber: referenceNumber
-        }
+            referenceNumber
+        };
     }
 
     public getRegistrationResult(): RegistrationResult {

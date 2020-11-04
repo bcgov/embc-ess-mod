@@ -18,7 +18,7 @@ export class EditComponent implements OnInit {
   form: FormGroup;
 
   constructor(private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
-    private formCreationService: FormCreationService) { }
+              private formCreationService: FormCreationService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {

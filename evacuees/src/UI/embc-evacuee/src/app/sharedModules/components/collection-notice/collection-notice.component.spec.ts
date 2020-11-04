@@ -3,9 +3,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollectionNoticeComponent } from './collection-notice.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { DataService } from '../../core/services/data.service';
+import { DataService } from '../../../core/services/data.service';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { DialogModule } from '../../core/components/dialog/dialog.module';
+import { DialogModule } from '../../../core/components/dialog/dialog.module';
 
 describe('CollectionNoticeComponent', () => {
   let component: CollectionNoticeComponent;
