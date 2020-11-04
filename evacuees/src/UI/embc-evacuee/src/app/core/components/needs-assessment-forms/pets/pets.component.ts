@@ -12,6 +12,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { PetFormModule } from '../../pet-form/pet-form.module';
+import * as globalConst from '../../../services/globalConstants';
 
 @Component({
   selector: 'app-pets',
@@ -21,7 +22,7 @@ import { PetFormModule } from '../../pet-form/pet-form.module';
 export default class PetsComponent implements OnInit {
 
   petsForm: FormGroup;
-  radioOption: string[] = ['Yes', 'No'];
+  radioOption = globalConst.radioButton1;
   formBuilder: FormBuilder;
   petsForm$: Subscription;
   formCreationService: FormCreationService;
@@ -67,6 +68,7 @@ export default class PetsComponent implements OnInit {
         this.data.push(this.petsForm.get('pet').value);
       }
       this.dataSource.next(this.data);
+      this.petsForm.get('pets').setValue(this.data);
       this.showPetsForm = !this.showPetsForm;
       this.showTable = !this.showTable;
     } else {
@@ -92,6 +94,7 @@ export default class PetsComponent implements OnInit {
   deleteRow(index: number): void {
     this.data.splice(index, 1);
     this.dataSource.next(this.data);
+    this.petsForm.get('pets').setValue(this.data);
     if (this.data.length === 0) {
       this.petsForm.get('addPetIndicator').setValue(false);
       this.petsForm.get('hasPetsFood').reset();

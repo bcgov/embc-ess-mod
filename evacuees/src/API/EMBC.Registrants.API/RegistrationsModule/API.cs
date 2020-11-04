@@ -189,6 +189,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public bool HaveMedication { get; set; }
         public IEnumerable<PersonDetails> FamilyMembers { get; set; } = Array.Empty<PersonDetails>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
+        public bool? HasPetsFood { get; set; }
 
         public enum InsuranceOption
         {
