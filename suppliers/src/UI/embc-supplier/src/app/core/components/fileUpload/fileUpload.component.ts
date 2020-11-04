@@ -40,7 +40,6 @@ export class FileUploadComponent implements OnInit {
             this.attachSizeError = !this.attachSizeError;
         }
         for (const e of event) {
-            console.log(typeof e.name);
             if (!(e.size > 0)) {
                 this.showToast = !this.showToast;
                 this.toastService.show(constant.zeroFileMessage, { delay: 9500 });
