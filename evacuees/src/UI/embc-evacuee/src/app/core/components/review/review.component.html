@@ -7,14 +7,15 @@
                     Personal Details
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('personal-details')">
+                    <button class="edit-image" mat-icon-button aria-label="Edit"
+                        (click)="editDetails('personal-details')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
                 </div>
             </div>
             <hr>
-            
+
             <div class="row info-detail">
                 <div class="col-md-3">Last Name:</div>
                 <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value.lastName}}</div>
@@ -227,7 +228,8 @@
                     Family Members
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('family-information')">
+                    <button class="edit-image" mat-icon-button aria-label="Edit"
+                        (click)="editDetails('family-information')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -268,7 +270,8 @@
                     Family Medication & Dietary Requirements
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('family-information')">
+                    <button class="edit-image" mat-icon-button aria-label="Edit"
+                        (click)="editDetails('family-information')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -320,7 +323,8 @@
                     Needs Identified
                 </div>
                 <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('identify-needs')">
+                    <button class="edit-image" mat-icon-button aria-label="Edit"
+                        (click)="editDetails('identify-needs')">
                         <img src="/assets/images/edit.svg" height="35" width="35">
                         <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                     </button>
@@ -329,23 +333,33 @@
             <hr>
             <div class="row info-detail">
                 <div class="col-md-3">Food:</div>
-                <div class="col-md-3">{{(formCreationService.identifyNeedsForm$ | async).value.requiresFood}}</div>
+                <div class="col-md-3">
+                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresFood === 'null' ? 'I\'m not sure' : (formCreationService.identifyNeedsForm$ | async).value.requiresFood}}
+                </div>
             </div>
             <div class="row info-detail">
                 <div class="col-md-3">Lodging:</div>
-                <div class="col-md-3">{{(formCreationService.identifyNeedsForm$ | async).value.requiresLodging}}</div>
+                <div class="col-md-3">
+                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresLodging === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresLodging}}
+                </div>
             </div>
             <div class="row info-detail">
                 <div class="col-md-3">Clothing:</div>
-                <div class="col-md-3">{{(formCreationService.identifyNeedsForm$ | async).value.requiresClothing}}</div>
+                <div class="col-md-3">
+                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresClothing === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresClothing}}
+                </div>
             </div>
             <div class="row info-detail">
                 <div class="col-md-3">Transportation:</div>
-                <div class="col-md-3">{{(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation}}</div>
+                <div class="col-md-3">
+                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation}}
+                </div>
             </div>
             <div class="row info-detail">
                 <div class="col-md-3">Incidentals:</div>
-                <div class="col-md-3">{{(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals}}</div>
+                <div class="col-md-3">
+                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals}}
+                </div>
             </div>
         </mat-card-content>
     </div>
