@@ -11,8 +11,8 @@
             evacuated?</label>
           <br>
           <mat-radio-group formControlName="requiresFood" required>
-            <mat-radio-button value="true">Yes</mat-radio-button>
-            <mat-radio-button value="false">No</mat-radio-button>
+            <mat-radio-button [value]="true">Yes</mat-radio-button>
+            <mat-radio-button [value]="false">No</mat-radio-button>
             <mat-radio-button value="null">I'm not sure</mat-radio-button>
             <mat-error class="custom-mat-error"
               *ngIf="needsFormControl?.requiresFood.touched && needsFormControl?.requiresFood.invalid && needsFormControl?.requiresFood.hasError('required')">
@@ -27,8 +27,8 @@
             you are evacuated?</label>
           <br>
           <mat-radio-group formControlName="requiresLodging" required>
-            <mat-radio-button value="true">Yes</mat-radio-button>
-            <mat-radio-button value="false">No</mat-radio-button>
+            <mat-radio-button [value]="true">Yes</mat-radio-button>
+            <mat-radio-button [value]="false">No</mat-radio-button>
             <mat-radio-button value="null">I'm not sure</mat-radio-button>
             <mat-error class="custom-mat-error"
               *ngIf="needsFormControl?.requiresLodging.touched && needsFormControl?.requiresLodging.invalid && needsFormControl?.requiresLodging.hasError('required')">
@@ -44,8 +44,8 @@
             evacuated?<br>This includes warm clothing should there be extreme winter conditions.</label>
           <br>
           <mat-radio-group formControlName="requiresClothing" required>
-            <mat-radio-button value="true">Yes</mat-radio-button>
-            <mat-radio-button value="false">No</mat-radio-button>
+            <mat-radio-button [value]="true">Yes</mat-radio-button>
+            <mat-radio-button [value]="false">No</mat-radio-button>
             <mat-radio-button value="null">I'm not sure</mat-radio-button>
             <mat-error class="custom-mat-error"
               *ngIf="needsFormControl?.requiresClothing.touched && needsFormControl?.requiresClothing.invalid && needsFormControl?.requiresClothing.hasError('required')">
@@ -60,8 +60,8 @@
             immediate needs?</label>
           <br>
           <mat-radio-group formControlName="requiresTransportation" required>
-            <mat-radio-button value="true">Yes</mat-radio-button>
-            <mat-radio-button value="false">No</mat-radio-button>
+            <mat-radio-button [value]="true">Yes</mat-radio-button>
+            <mat-radio-button [value]="false">No</mat-radio-button>
             <mat-radio-button value="null">I'm not sure</mat-radio-button>
             <mat-error class="custom-mat-error"
               *ngIf="needsFormControl?.requiresTransportation.touched && needsFormControl?.requiresTransportation.invalid && needsFormControl?.requiresTransportation.hasError('required')">
@@ -78,8 +78,8 @@
             and/or pet food.</label>
           <br>
           <mat-radio-group formControlName="requiresIncidentals" required>
-            <mat-radio-button value="true">Yes</mat-radio-button>
-            <mat-radio-button value="false">No</mat-radio-button>
+            <mat-radio-button [value]="true">Yes</mat-radio-button>
+            <mat-radio-button [value]="false">No</mat-radio-button>
             <mat-radio-button value="null">I'm not sure</mat-radio-button>
             <mat-error class="custom-mat-error"
               *ngIf="needsFormControl?.requiresIncidentals.touched && needsFormControl?.requiresIncidentals.invalid && needsFormControl?.requiresIncidentals.hasError('required')">

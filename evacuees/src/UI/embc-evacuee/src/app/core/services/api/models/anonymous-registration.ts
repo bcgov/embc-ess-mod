@@ -1,10 +1,6 @@
-/* tslint:disable */
-import { NeedsAssessment } from './needs-assessment';
-import { Registration } from './registration';
+import { NeedsAssessment } from '../../../model/needs-assessment';
+import { Registration } from '../../../model/registration';
 
-/**
- * Registration form for anonymous registrants
- */
 export interface AnonymousRegistration {
   captcha: string;
   perliminaryNeedsAssessment: NeedsAssessment;

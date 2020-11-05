@@ -1,0 +1,22 @@
+.review-heading {
+    font-weight: 700;
+    font-style: normal;
+    font-size: 30px;
+    color: #169BD5;
+}
+
+.edit-image img:last-child {
+    display: none;
+}
+  
+.edit-image:hover img:last-child {
+    display: block;
+}
+  
+.edit-image:hover img:first-child {
+    display: none;
+}
+
+.info-detail {
+    padding: 10px;
+}

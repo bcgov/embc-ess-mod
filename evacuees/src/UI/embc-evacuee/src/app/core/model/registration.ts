@@ -1,12 +1,12 @@
-import { Address } from './address';
+import { RegAddress } from './address';
 import { ContactDetails, PersonDetails } from './profile.model';
 
 export interface Registration {
     contactDetails: ContactDetails;
     informationCollectionConsent: boolean;
-    mailingAddress: Address;
+    mailingAddress: RegAddress;
     personalDetails: PersonDetails;
-    primaryAddress: Address;
+    primaryAddress: RegAddress;
     restrictedAccess: boolean;
     secretPhrase: string;
   }

@@ -1,5 +1,6 @@
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { CustomValidationService } from '../services/customValidation.service';
+import { RegAddress } from './address';
 import { LocationModel } from './location.model';
 
 export class PersonDetails {
@@ -94,8 +95,8 @@ export class SecretForm {
 
 export class Address {
     isBcAddress: string;
-    address: Address;
-    mailingAddress: Address;
+    address: RegAddress;
+    mailingAddress: RegAddress;
     isNewMailingAddress: string;
     isBcMailingAddress: string;
 

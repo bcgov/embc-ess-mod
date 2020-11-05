@@ -73,8 +73,8 @@
           <br>
           <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="hasPetsFood"
             class="primary-radio-group">
-            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
-              {{option}}
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option.value">
+              {{option.name}}
             </mat-radio-button>
             <mat-error class="custom-mat-error"
               *ngIf="petsFormControl?.hasPetsFood.touched && petsFormControl?.hasPetsFood.invalid && petsFormControl?.hasPetsFood.hasError('required')">

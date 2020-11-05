@@ -28,7 +28,7 @@ export default class EvacAddressComponent implements OnInit {
   evacuatedForm$: Subscription;
   formCreationService: FormCreationService;
   insuranceOption = InsuranceOption;
-  registration: Partial<Registration>;
+  // registrationAddress: Partial<Registration>;
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
               public dataService: DataService) {
@@ -37,7 +37,7 @@ export default class EvacAddressComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.registration = this.dataService.getRegistration();
+    // this.registration = this.dataService.getRegistration();
     this.evacuatedForm$ = this.formCreationService.getEvacuatedForm().subscribe(
       evacuatedForm => {
         this.evacuatedForm = evacuatedForm;
@@ -51,7 +51,12 @@ export default class EvacAddressComponent implements OnInit {
       this.evacuatedForm.get('evacuatedFromAddress.stateProvince').setValue(globalConst.defaultProvince);
       this.evacuatedForm.get('evacuatedFromAddress.country').setValue(globalConst.defaultCountry);
     } else {
-      this.evacuatedForm.get('evacuatedFromAddress').setValue(this.registration.primaryAddress);
+      this.formCreationService.getAddressForm().subscribe(
+        registrationAddress => {
+          console.log(registrationAddress);
+          this.evacuatedForm.get('evacuatedFromAddress').setValue(registrationAddress.get('address').value);
+        }
+      );
     }
   }
 

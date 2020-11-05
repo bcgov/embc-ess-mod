@@ -1,4 +1,4 @@
-export interface Address {
+export interface RegAddress {
   addressLine1: string;
   addressLine2?: null | string;
   jurisdiction: Partial<Jurisdiction>;

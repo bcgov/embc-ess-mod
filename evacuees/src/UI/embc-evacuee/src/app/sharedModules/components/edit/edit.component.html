@@ -1,0 +1,25 @@
+<div class="container container-frame">
+    <div class="row heading-container">
+        <div class="col-12">
+            <span class="page-heading">Edit Details</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 content-container">
+            <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
+            <app-component-wrapper [componentName]="componentToLoad" [folderPath]="profileFolderPath">
+            </app-component-wrapper>
+            <br>
+            <br>
+            <div class="row justify-content-between resp-style">
+                <div class="col-md-6">
+                    <button class="button-s edit-button" mat-button type="button" (click)="cancel()">Cancel</button>
+                </div>
+                <div class="col-md-6">
+                    <button class="button-p edit-button" mat-stroked-button type="button" (click)="save()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
