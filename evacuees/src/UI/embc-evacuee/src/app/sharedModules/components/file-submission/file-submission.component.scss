@@ -13,16 +13,17 @@
     font-size: 60px;
 }
 
+@media screen and (max-width: 768px) {
+    .ref-number {
+        color: #169BD5;
+        font-weight: 400;
+        font-size: 40px;
+    }
+}
+
 .bottom-panel {
-    //bottom: 6vh;
-    //top: 90vh;
-    //margin-top: 25vh;
-    //position: fixed;
-    //z-index: 1;
     width: 100%;
-    margin-top: 30vh
-   // height: 40px;
-    //margin-top: auto;
+    margin-top: 24vh
 }
 
 .open-panel-heading {
@@ -35,6 +36,23 @@
         height: auto;
     }
   }
+
+.services-info {
+    background-color: rgba(255, 223, 37, 1);
+    border-color: #ffdf25;
+    box-shadow: none;
+}
+
+.edit-button {
+    width: 100%;
+}
+
+.content-container {
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-bottom: 24px;
+    padding-left: 24px;
+}
 
 // .mat-expansion-panel {
 //     display: flex !important;
