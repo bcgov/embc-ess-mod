@@ -1,0 +1,45 @@
+.sub-heading {
+    font-weight: 700;
+    font-size: 21px;
+}
+
+.sub-info {
+    color: #169BD5;
+}
+
+.ref-number {
+    color: #169BD5;
+    font-weight: 400;
+    font-size: 60px;
+}
+
+.bottom-panel {
+    //bottom: 6vh;
+    //top: 90vh;
+    //margin-top: 25vh;
+    //position: fixed;
+    //z-index: 1;
+    width: 100%;
+    margin-top: 30vh
+   // height: 40px;
+    //margin-top: auto;
+}
+
+.open-panel-heading {
+    font-size: 25px;
+    font-weight: 400;
+}
+
+@media screen and (max-width: 768px) {
+    .mat-expansion-panel-header.mat-expanded {
+        height: auto;
+    }
+  }
+
+// .mat-expansion-panel {
+//     display: flex !important;
+//     flex-direction: column;
+//   }
+//   .mat-expansion-panel-header {
+//     order: 2;
+//   }

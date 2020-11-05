@@ -150,6 +150,11 @@ footer nav {
   background-color: #E5E5E5;
 }
 
+.button-p:disabled  {
+  background-color: #234075;
+  color: #FFFFFF !important;
+}
+
 button {
   border-width: 0px !important;
 }
@@ -275,6 +280,21 @@ mat-card {
   padding: 8px;
   font-family: 'BC Sans', sans-serif;
   font-weight: 400;
+ }
+
+ .mat-expansion-panel {
+   border-radius: 0 !important;
+ }
+
+ .mat-expansion-panel-header-title {
+  margin-right: 0px !important;
+  font-size: 16px;
+  font-weight: 400;
+  justify-content: center;
+ }
+
+ .mat-expansion-panel-header-description, .mat-expansion-indicator::after {
+  color: black !important;
  }
 
 // .mat-form-field-appearance-outline .mat-form-field-outline-thick {

@@ -1,16 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EnumToArrayPipe } from './EnumToArray.pipe';
+import { MaskTextPipe } from './maskText.pipe';
 
 @NgModule({
   declarations: [
-    EnumToArrayPipe
+    EnumToArrayPipe,
+    MaskTextPipe
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    EnumToArrayPipe
+    EnumToArrayPipe,
+    MaskTextPipe
   ]
 })
 export class CustomPipeModule { }

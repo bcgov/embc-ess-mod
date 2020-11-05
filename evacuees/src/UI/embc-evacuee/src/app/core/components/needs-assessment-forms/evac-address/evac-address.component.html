@@ -1,7 +1,7 @@
 <form [formGroup]="evacuatedForm">
   <mat-card class="card-align">
     <mat-card-content>
-      <div *ngIf="registration?.primaryAddress?.stateProvince?.code === 'BC' else otherAddress;">
+      <div *ngIf="(formCreationService.addressForm$ | async).value.address.stateProvince.code === 'BC' else otherAddress;">
         <div class="row">
           <div class="col-md-12">
             <label class="card-heading requiredField" id="primary-radio-group-label">Are you being evacuated from your
@@ -13,9 +13,11 @@
               <mat-radio-button value="Yes">Yes
               </mat-radio-button>
               <div class="prim-address">
-                <p class="allign"><b>{{registration?.primaryAddress?.addressLine1}}</b></p>
-                <p class="allign" *ngIf="registration?.primaryAddress?.addressLine2"><b>{{registration?.primaryAddress?.addressLine2}}</b></p>
-                <p class="allign"><b>{{registration?.primaryAddress?.jurisdiction.name}} , {{registration?.primaryAddress?.postalCode}}</b></p>
+                <p class="allign"><b>{{(formCreationService.addressForm$ | async).value.address.addressLine1}}</b></p>
+                <p class="allign" *ngIf="(formCreationService.addressForm$ | async).value.address?.addressLine2">
+                  <b>{{(formCreationService.addressForm$ | async).value.address.addressLine2}}</b></p>
+                <p class="allign"><b>{{(formCreationService.addressForm$ | async).value.address.jurisdiction.name}} ,
+                    {{(formCreationService.addressForm$ | async).value.address.postalCode}}</b></p>
               </div>
               <mat-radio-button value="No">No</mat-radio-button>
               <mat-error class="custom-mat-error"

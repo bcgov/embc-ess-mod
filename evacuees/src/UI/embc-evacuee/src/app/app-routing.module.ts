@@ -19,10 +19,10 @@ const routes: Routes = [
   //   path: 'loader',
   //   loadChildren: () => import('./component-loader/component-loader.module').then(m => m.ComponentLoaderModule)
   // },
-  {
-    path: 'fileSubmission',
-    loadChildren: () => import('./file-submission/file-submission.module').then(m => m.FileSubmissionModule)
-  },
+  // {
+  //   path: 'fileSubmission',
+  //   loadChildren: () => import('./file-submission/file-submission.module').then(m => m.FileSubmissionModule)
+  // },
   // {
   //   path: 'create-profile/:type',//
   //   loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)

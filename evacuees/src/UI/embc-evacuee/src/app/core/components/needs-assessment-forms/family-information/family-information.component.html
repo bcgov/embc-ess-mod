@@ -98,8 +98,8 @@
           <br>
           <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="haveSpecialDiet"
             class="primary-radio-group" required>
-            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
-              {{option}}
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option.value">
+              {{option.name}}
             </mat-radio-button>
             <mat-error class="custom-mat-error"
               *ngIf="familyFormControl?.haveSpecialDiet.touched && familyFormControl?.haveSpecialDiet.invalid && familyFormControl?.haveSpecialDiet.hasError('required')">
@@ -120,8 +120,8 @@
           <br>
           <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="haveMedication"
             class="primary-radio-group" required>
-            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
-              {{option}}
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option.value">
+              {{option.name}}
             </mat-radio-button>
             <mat-error class="custom-mat-error"
               *ngIf="familyFormControl?.haveMedication.touched && familyFormControl?.haveMedication.invalid && familyFormControl?.haveMedication.hasError('required')">

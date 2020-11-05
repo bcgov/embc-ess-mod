@@ -1,0 +1,39 @@
+<div class="container container-frame">
+  <div class="row heading-container">
+    <div class="col-12">
+      <span class="page-heading">Create Profile</span>
+    </div>
+  </div>
+
+  <mat-horizontal-stepper class="stepper-style" linear labelPosition="bottom"
+    (animationDone)="currentStep(profileStepper?.selectedIndex)" #profileStepper>
+    <mat-step *ngFor="let step of steps" [completed]="true" [editable]="true">
+      <!--[stepControl]="form" [completed]="isComplete"-->
+      <ng-template matStepLabel>{{step.stepName}}</ng-template>
+      <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
+      <br>
+      <app-component-wrapper [componentName]="step.component" [folderPath]="profileFolderPath"></app-component-wrapper>
+      <br>
+      <div class="row justify-content-between resp-style">
+        <div class="col-md-6">
+          <button class="button-s" mat-button type="button"
+            (click)="goBack(profileStepper, step.lastStep)">{{step.backButtonLabel}}</button>
+        </div>
+        <div class="col-md-6">
+          <button class="button-p" mat-stroked-button type="button"
+            (click)="goForward(profileStepper, step.isLast, step.component)">{{step.nextButtonLabel}}</button>
+        </div>
+      </div>
+    </mat-step>
+    <ng-template matStepperIcon="edit" let-index="index">
+      {{index + 1}}
+    </ng-template>
+    <!-- <ng-template matStepperIcon="done">
+       {{index + 10}}
+      {{profileStepper?.selectedIndex + 1}}
+    </ng-template> -->
+  </mat-horizontal-stepper>
+
+</div>
+
+<!-- {{form?.status}} -->
