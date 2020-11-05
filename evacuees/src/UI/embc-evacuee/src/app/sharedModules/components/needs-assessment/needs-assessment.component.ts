@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { DataSubmissionService } from '../../../core/services/dataSubmission.service';
+import { RegistrationResult } from 'src/app/core/services/api/models/registration-result';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -140,14 +141,12 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   }
 
   submitFile(): void {
-    this.submissionService.submitRegistrationFile().subscribe((response) => {
+    this.submissionService.submitRegistrationFile().subscribe((response: RegistrationResult) => {
       console.log(response);
-      this.updateService.updateRegisrationResult('1234567');
+      this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/non-verified-registration/fileSubmission']);
     }, (error) => {
-      console.log('error');
-      this.updateService.updateRegisrationResult('1234567');
-      this.router.navigate(['/non-verified-registration/fileSubmission']);
+      console.log(error);
     });
 
   }

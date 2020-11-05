@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { RegAddress } from '../model/address';
+import { RegistrationResult } from './api/models/registration-result';
 import { DataService } from './data.service';
 import { FormCreationService } from './formCreation.service';
 
@@ -71,8 +72,8 @@ export class DataUpdationService {
         });
     }
 
-    updateRegisrationResult(referenceNumber: string): void {
-        this.dataService.setRegistrationResult(referenceNumber);
+    updateRegisrationResult(registrationResult: RegistrationResult): void {
+        this.dataService.setRegistrationResult(registrationResult);
     }
 
     private setAddressObject(addressObject): RegAddress {

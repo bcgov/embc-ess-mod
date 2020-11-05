@@ -12,10 +12,10 @@ import { RegistrationResult } from './models/registration-result';
 @Injectable({
   providedIn: 'root',
 })
-export class RegistrationService  {
+export class RegistrationService {
 
-  constructor(private http: HttpClient) {}
-  
+  constructor(private http: HttpClient) { }
+
   /**
    * Path part for operation registrationCreate
    */
@@ -36,8 +36,8 @@ export class RegistrationService  {
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   // registrationCreate$Response(params: {
-  
-  
+
+
   //   body: AnonymousRegistration
   // }): Observable<StrictHttpResponse<RegistrationResult>> {
 
@@ -68,10 +68,12 @@ export class RegistrationService  {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationCreate(params:  AnonymousRegistration): Observable<RegistrationResult | Object> {
-    return this.http.post(this.registrationCreatePath, params, {headers: this.headers }).pipe(catchError(error => {
-      return this.handleError(error);
-    }))
+  registrationCreate(params: AnonymousRegistration): Observable<RegistrationResult> {
+    return this.http.post<RegistrationResult>(this.registrationCreatePath, params, { headers: this.headers }).pipe(
+      catchError(error => {
+        return this.handleError(error);
+      })
+    );
   }
 
   protected handleError(err): Observable<never> {
