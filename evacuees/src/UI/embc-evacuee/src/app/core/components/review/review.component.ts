@@ -33,7 +33,7 @@ export class ReviewComponent implements OnInit {
   }
 
   editDetails(componentToEdit: string): void {
-    let route = '/non-verified-registration/edit/' + componentToEdit;
+    const route = '/non-verified-registration/edit/' + componentToEdit;
     this.router.navigate([route]);
   }
 
@@ -41,14 +41,14 @@ export class ReviewComponent implements OnInit {
     this.hideCard = false;
   }
 
-  public onValidToken(token: any) {
+  public onValidToken(token: any): void {
     console.log('Valid token received: ', token);
     this.captchaVerified = true;
     this.captchaFilled = true;
     this.captchaPassed.emit(true);
   }
 
-  public onServerError(error: any) {
+  public onServerError(error: any): void {
     console.log('Server error: ', error);
     this.captchaVerified = true;
     this.captchaFilled = true;

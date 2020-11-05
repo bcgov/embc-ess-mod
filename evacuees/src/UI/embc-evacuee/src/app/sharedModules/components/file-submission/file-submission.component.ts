@@ -14,8 +14,8 @@ export class FileSubmissionComponent implements OnInit {
   constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
-    let registrationResult = this.dataService.getRegistrationResult();
-    if(registrationResult) {
+    const registrationResult = this.dataService.getRegistrationResult();
+    if (registrationResult) {
       this.referenceNumber = registrationResult.referenceNumber;
     }
   }
