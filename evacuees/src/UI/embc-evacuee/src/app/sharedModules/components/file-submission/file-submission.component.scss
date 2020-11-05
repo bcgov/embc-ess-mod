@@ -37,6 +37,23 @@
     }
   }
 
+.services-info {
+    background-color: rgba(255, 223, 37, 1);
+    border-color: #ffdf25;
+    box-shadow: none;
+}
+
+.edit-button {
+    width: 100%;
+}
+
+.content-container {
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-bottom: 24px;
+    padding-left: 24px;
+}
+
 // .mat-expansion-panel {
 //     display: flex !important;
 //     flex-direction: column;
