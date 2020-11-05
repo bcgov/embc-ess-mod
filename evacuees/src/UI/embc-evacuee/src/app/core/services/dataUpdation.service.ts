@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { RegAddress } from '../model/address';
+import { RegistrationResult } from './api/models/registration-result';
 import { DataService } from './data.service';
 import { FormCreationService } from './formCreation.service';
 
@@ -58,8 +59,8 @@ export class DataUpdationService {
         this.dataService.updateNeedsAssessment({ requiresTransportation: formGroup.get('requiresTransportation').value === "null" ? null : formGroup.get('requiresTransportation').value });
     }
 
-    updateRegisrationResult(referenceNumber: string) {
-        this.dataService.setRegistrationResult(referenceNumber);
+    updateRegisrationResult(registrationResult: RegistrationResult): void {
+        this.dataService.setRegistrationResult(registrationResult);
     }
 
     private setAddressObject(addressObject): RegAddress {

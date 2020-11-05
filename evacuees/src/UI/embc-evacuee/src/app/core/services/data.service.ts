@@ -28,10 +28,8 @@ export class DataService {
         return this.perliminaryNeedsAssessment;
     }
 
-    public setRegistrationResult(referenceNumber: string): void {
-        this.registrationResult = {
-            referenceNumber: referenceNumber
-        }
+    public setRegistrationResult(registrationResult: RegistrationResult): void {
+        this.registrationResult = registrationResult;
     }
 
     public getRegistrationResult(): RegistrationResult {
