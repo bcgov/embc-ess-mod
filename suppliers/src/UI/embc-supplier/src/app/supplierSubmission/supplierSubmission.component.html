@@ -74,9 +74,9 @@
 
             <div class="row">
               <div class="form-group col-lg-5">
-                <label class="requiredField" for="gstNumber">GST Number</label>
+                <label class="requiredField" for="gstNumber">GST Number (999999999-RT-9999)</label>
                 <input type="text" class="form-control form-control-lg" formControlName="gstNumber" appGSTMask
-                  id="gstNumber" placeholder="123456789-RT-1234" required>
+                  id="gstNumber" required>
                 <div *ngIf="control.gstNumber?.invalid && (control.gstNumber?.dirty || control.gstNumber?.touched)"
                   class="text-danger">
                   <div *ngIf="control.gstNumber?.errors.required">
