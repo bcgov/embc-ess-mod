@@ -1,5 +1,5 @@
 .drag-drop {
-    height: 150px;
+    height: 230px;
     padding: 2rem;
     text-align: center;
     border: dashed 1px #C4C4C4;
@@ -99,7 +99,13 @@
     color: #2F6699 !important;
   }
 
-  .file-type {
+  .file-format {
+    font-size: 13px;
+    font-weight: lighter;
+    margin-bottom: 0;
+  }
+
+  .invalid-characters {
     font-size: 13px;
     font-weight: lighter;
   }
