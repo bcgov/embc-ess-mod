@@ -1,0 +1,83 @@
+<div class="container container-frame">
+    <div class="row heading-container">
+        <div class="col-12">
+            <span class="page-heading">Profile Created Successfully</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 content-container">
+
+    <mat-card class="card-align">
+        <mat-card-content>
+            <p class="sub-heading">Your Emergency Support Services (ESS) File Number is:</p>
+            <p><span class="ref-number">{{referenceNumber}}</span></p>
+            <p>If you are under <b>evacuation order</b> and have identified that you require food, clothing, lodging,
+                transportation, incidentals or other emergency supports, proceed to your nearest Reception Centre where
+                one
+                of the ESS volunteers on site will be able to assist you with completing your registration.</p>
+            <br>
+            <p>A list of open Reception Centres can be found at <span class="sub-info"><u>EmergencyInfoBC.</u></span>
+            </p>
+            <br>
+            <p>Please bring your ESS File Number (listed above) & government-issued ID with you to the Reception Centre.
+            </p>
+            <p>Click here to view a full list of accepted ID.</p>
+            <br>
+            <p>If you <b>do not require supports</b>, or are under alert, no further actions are required.</p>
+        </mat-card-content>
+    </mat-card>
+    <br>
+    <br>
+    <mat-card class="card-align services-info">
+        <mat-card-content>
+            <div class="row">
+                <div class="col-md-12 open-panel-heading">
+                    <img mat-dialog-close src="/assets/images/exclaimation.svg" height="30" width="30"> Register using your <b>BC Services Card</b> 
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-8">
+                    <p>With BC Services Card you'll be able to log back in to your profile to view your evacuation
+                        history, supports received as well as keep your profile details up-to-date.</p>
+                </div>
+                <div class="col-md-4">
+                    <button class="button-p edit-button" mat-stroked-button type="button">Find out more</button>
+                </div>
+            </div>
+            <br>
+        </mat-card-content>
+    </mat-card>
+</div>
+</div>
+</div>
+
+<!-- <div class="bottom-panel">
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="true" (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+            style="background-color: rgba(255, 223, 37, 1)">
+            <mat-expansion-panel-header>
+                <mat-panel-title style="justify-content: center;">
+                    <span *ngIf="!panelOpenState">Register using your <b>BC Services Card</b></span>
+                    <span *ngIf="panelOpenState" class="open-panel-heading">Register with <b>BC Services Card</b></span>
+                </mat-panel-title>
+                <mat-panel-description style="justify-content: flex-end;">
+                    {{panelOpenState ? 'Collapse' : 'Expand'}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div>
+                
+                <div style="text-align: center;">
+                    <p>With BC Services Card you'll be able to log back in to your profile to view your evacuation
+                        history, supports received as well as keep your profile details up-to-date.</p>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div> -->
+
+<!-- bottom: 0;
+    position: fixed;
+    z-index: 1;
+    width: 100%; -->

@@ -1,8 +1,9 @@
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Type } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap, filter } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
+import { FormCreationService } from '../../services/formCreation.service';
 
 
 @Component({
@@ -15,12 +16,15 @@ export class ReviewComponent implements OnInit {
   componentToLoad: Observable<any>;
   cs: any;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, public formCreationService: FormCreationService) { }
 
   hideCard = false;
+  captchaVerified = false;
+  captchaFilled = false;
+  @Output() captchaPassed = new EventEmitter<boolean>(false);
 
   ngOnInit(): void {
-   // this.loadComponent();
+    // this.loadComponent();
 
     // this.componentToLoad.subscribe(x => {
     //   console.log(x)
@@ -28,12 +32,26 @@ export class ReviewComponent implements OnInit {
     // })
   }
 
-  editPersonalDetails(): void {
-    this.router.navigate(['/loader/edit/personal-details']);
+  editDetails(componentToEdit: string): void {
+    const route = '/non-verified-registration/edit/' + componentToEdit;
+    this.router.navigate([route]);
   }
 
   back(): void {
     this.hideCard = false;
+  }
+
+  public onValidToken(token: any): void {
+    console.log('Valid token received: ', token);
+    this.captchaVerified = true;
+    this.captchaFilled = true;
+    this.captchaPassed.emit(true);
+  }
+
+  public onServerError(error: any): void {
+    console.log('Server error: ', error);
+    this.captchaVerified = true;
+    this.captchaFilled = true;
   }
 
   // loadComponent() {
@@ -56,9 +74,9 @@ export class ReviewComponent implements OnInit {
   // compName.subscribe(v => console.log(v))
 
 
-    // console.log(comp)
-    //     console.log(comp.type === "personal-details")
-    //     return comp.type === 'personal-details'}));
+  // console.log(comp)
+  //     console.log(comp.type === "personal-details")
+  //     return comp.type === 'personal-details'}));
 
 
   //  this.componentToLoad = Promise.resolve(compName => {

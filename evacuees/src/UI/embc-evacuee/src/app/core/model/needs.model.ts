@@ -1,10 +1,10 @@
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomValidationService } from '../services/customValidation.service';
-import { Address } from './address';
+import { RegAddress } from './address';
 import { PersonDetails } from './profile.model';
 
 export class Evacuated {
-    evacuatedFromAddress: Address;
+    evacuatedFromAddress: RegAddress;
     insurance: string;
 
     constructor() { }

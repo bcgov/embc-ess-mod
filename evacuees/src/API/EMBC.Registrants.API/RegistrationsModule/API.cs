@@ -27,11 +27,11 @@ namespace EMBC.Registrants.API.RegistrationsModule
     [ApiController]
     public class RegistrationController : ControllerBase
     {
-        private readonly RegistrationReferenceNumberGenerator registrationReferenceNumberGenerator;
+        private readonly IRegistrationManager registrationManager;
 
-        public RegistrationController(RegistrationReferenceNumberGenerator registrationReferenceNumberGenerator)
+        public RegistrationController(IRegistrationManager registrationManager)
         {
-            this.registrationReferenceNumberGenerator = registrationReferenceNumberGenerator;
+            this.registrationManager = registrationManager;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public async Task<ActionResult<RegistrationResult>> Create(AnonymousRegistration registration)
         {
             if (registration == null) return BadRequest();
-            var referenceNumber = await registrationReferenceNumberGenerator.GenerateNext();
+            var referenceNumber = await registrationManager.RegisterNew(registration);
 
             return CreatedAtAction(nameof(Create), new RegistrationResult { ReferenceNumber = referenceNumber });
         }
@@ -189,6 +189,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public bool HaveMedication { get; set; }
         public IEnumerable<PersonDetails> FamilyMembers { get; set; } = Array.Empty<PersonDetails>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
+        public bool? HasPetsFood { get; set; }
 
         public enum InsuranceOption
         {

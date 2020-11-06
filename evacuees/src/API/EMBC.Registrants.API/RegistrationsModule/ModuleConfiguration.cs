@@ -23,6 +23,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public static IServiceCollection AddRegistrationModule(this IServiceCollection services)
         {
             services.AddSingleton(new RegistrationReferenceNumberGenerator());
+            services.AddTransient<IRegistrationManager, RegistrationManager>();
             return services;
         }
     }

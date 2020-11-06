@@ -16,8 +16,10 @@
 
 using System;
 using EMBC.Registrants.API.LocationModule;
+using EMBC.ResourceAccess.Dynamics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Xrm.Tools.WebAPI;
 using Xrm.Tools.WebAPI.Requests;
@@ -47,6 +49,15 @@ namespace EMBC.Registrants.API.Dynamics
                     GetAccessToken = async (s) => await tokenProvider.AcquireToken()
                 });
             });
+
+            services.AddSingleton(sp =>
+           {
+               var configuration = sp.GetRequiredService<IConfiguration>();
+               var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
+               var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
+               var logger = sp.GetRequiredService<ILogger<DynamicsClientContext>>();
+               return new DynamicsClientContext(new Uri(dynamicsApiEndpoint), tokenProvider.AcquireToken().GetAwaiter().GetResult, logger);
+           });
             return services;
         }
     }
