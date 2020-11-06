@@ -103,7 +103,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_secrettext = registration.RegistrationDetails.SecretPhrase,
             };
 
-            var members = registration.PerliminaryNeedsAssessment.FamilyMembers.Select(fm => new contact
+            var members = (registration.PerliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
             {
                 era_registranttype = 174360001,
                 firstname = fm.FirstName,
@@ -128,7 +128,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_insurancecoverage = Lookup(registration.PerliminaryNeedsAssessment.Insurance)
             };
 
-            var pets = registration.PerliminaryNeedsAssessment.Pets.Select(p => new era_evacuee
+            var pets = (registration.PerliminaryNeedsAssessment.Pets ?? Array.Empty<Pet>()).Select(p => new era_evacuee
             {
                 era_needsassessment = needsAssessment,
                 //era_amountofpets = p.Quantity,
