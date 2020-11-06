@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EMBC.Tests.Integration.Registrants
+namespace EMBC.Tests.Integration.Registrants.API
 {
     public class DynamicsRegistrationPersistenceTests : WebAppTestBase
     {

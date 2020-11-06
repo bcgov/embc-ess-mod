@@ -6,8 +6,11 @@ ENV ASPNETCORE_URLS=http://*:8080
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["EMBC.Registrants.API/EMBC.Registrants.API.csproj", "EMBC.Registrants.API/"]
+COPY ["EMBC.ResourceAccess.Dynamics/EMBC.ResourceAccess.Dynamics.csproj", "EMBC.ResourceAccess.Dynamics/"]
 COPY ["EMBC.Tests.Unit.Registrants.API/EMBC.Tests.Unit.Registrants.API.csproj", "EMBC.Tests.Unit.Registrants.API/"]
+COPY ["EMBC.Tests.Integration.Registrants/EMBC.Tests.Integration.Registrants.API.csproj", "EMBC.Tests.Integration.Registrants.API/"]
 COPY ["EMBC.Registrants.sln", "stylecop.json", ".editorconfig", "./"]
+
 RUN dotnet restore .
 COPY . .
 RUN dotnet test -c Release

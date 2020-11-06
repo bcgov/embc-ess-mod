@@ -1,4 +1,4 @@
-﻿namespace EMBC.Tests.Integration.Registrants
+﻿namespace EMBC.Tests.Integration.Registrants.API
 {
     using System;
     using Microsoft.Extensions.Logging;
