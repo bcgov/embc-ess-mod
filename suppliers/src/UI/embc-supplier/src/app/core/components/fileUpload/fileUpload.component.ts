@@ -41,14 +41,17 @@ export class FileUploadComponent implements OnInit {
         }
         for (const e of event) {
             if (!(e.size > 0)) {
-                this.showToast = !this.showToast;
-                this.toastService.show(constant.zeroFileMessage, { delay: 9500 });
+                alert(constant.zeroFileMessage);
+                // this.showToast = !this.showToast;
+                // this.toastService.show(constant.zeroFileMessage, { delay: 9500 });
             } else if(!constant.allowedFileTypes.includes(e.type)) {
-                this.showToast = !this.showToast;
-                this.toastService.show(constant.fileTypeMessage, { delay: 9500 });
+                alert(constant.fileTypeMessage);
+                // this.showToast = !this.showToast;
+                // this.toastService.show(constant.fileTypeMessage, { delay: 9500 });
             } else if(!constant.fileNameFormat.test(e.name)) {
-                this.showToast = !this.showToast;
-                this.toastService.show(constant.invalidFileNameMessage, { delay: 9500 });
+                alert(constant.invalidFileNameMessage);
+                //this.showToast = !this.showToast;
+                //this.toastService.show(constant.invalidFileNameMessage, { delay: 9500 });
             } else if(this.invoiceAttachments !== undefined && this.invoiceAttachments.length >= this.noOfAttachments) {
                 this.attachSizeError = true;
                 setTimeout(function() {
