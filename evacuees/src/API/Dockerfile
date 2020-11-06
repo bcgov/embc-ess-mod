@@ -8,7 +8,7 @@ WORKDIR /src
 COPY ["EMBC.Registrants.API/EMBC.Registrants.API.csproj", "EMBC.Registrants.API/"]
 COPY ["EMBC.ResourceAccess.Dynamics/EMBC.ResourceAccess.Dynamics.csproj", "EMBC.ResourceAccess.Dynamics/"]
 COPY ["EMBC.Tests.Unit.Registrants.API/EMBC.Tests.Unit.Registrants.API.csproj", "EMBC.Tests.Unit.Registrants.API/"]
-COPY ["EMBC.Tests.Integration.Registrants/EMBC.Tests.Integration.Registrants.API.csproj", "EMBC.Tests.Integration.Registrants.API/"]
+COPY ["EMBC.Tests.Integration.Registrants.API/EMBC.Tests.Integration.Registrants.API.csproj", "EMBC.Tests.Integration.Registrants.API/"]
 COPY ["EMBC.Registrants.sln", "stylecop.json", ".editorconfig", "./"]
 
 RUN dotnet restore .

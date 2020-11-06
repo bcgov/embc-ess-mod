@@ -18,9 +18,9 @@ namespace EMBC.Tests.Integration.Registrants.API
         protected const string RequiresDynamics = "Integration tests that requires Dynamics connection via VPN";
 #else
         protected const string RequiresDynamics = null;
-        private readonly LoggerFactory loggerFactory;
 #endif
 
+        private readonly LoggerFactory loggerFactory;
         protected readonly WebApplicationFactory<Startup> webApplicationFactory;
 
         protected IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();

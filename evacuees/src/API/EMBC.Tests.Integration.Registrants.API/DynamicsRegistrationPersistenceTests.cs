@@ -107,7 +107,7 @@ namespace EMBC.Tests.Integration.Registrants.API
             Assert.Equal(10, result.Length);
         }
 
-        [Fact]
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanGetListOfJurisdictions()
         {
             var gw = services.GetRequiredService<IDynamicsListsGateway>();
