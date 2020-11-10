@@ -12,6 +12,7 @@ import { AlertComponent } from './components/alert/alert.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastsComponent } from './components/toasts/toasts.component';
 import { DecimalCurrencyDirective } from './directives/DecimalCurrency.directive';
+import { WarningModalComponent } from './components/warningModal/warningModal.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { DecimalCurrencyDirective } from './directives/DecimalCurrency.directive
       LoaderComponent,
       AlertComponent,
       ToastsComponent,
-      DecimalCurrencyDirective
+      DecimalCurrencyDirective,
+      WarningModalComponent
     ],
   exports: [
       DragDropDirective,
