@@ -153,7 +153,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 });
             }
 
-            var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+            //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
+            //var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+            var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.None);
 
             //var newEvacuationFileId = ((era_evacuationfile)results
             //    .Select(r => (EntityDescriptor)((ChangeOperationResponse)r).Descriptor)
