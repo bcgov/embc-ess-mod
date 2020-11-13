@@ -6,13 +6,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FormCreationService } from '../../../services/formCreation.service';
+import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { PetFormModule } from '../../pet-form/pet-form.module';
-import * as globalConst from '../../../services/globalConstants';
+import * as globalConst from '../../../../core/services/globalConstants';
 
 @Component({
   selector: 'app-pets',

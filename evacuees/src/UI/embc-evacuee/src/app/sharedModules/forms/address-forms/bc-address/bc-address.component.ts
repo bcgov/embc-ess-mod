@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, AfterViewInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { LocationService } from '../../../services/api/location.service';
+import { LocationService } from '../../../../core/services/api/location.service';
 import { startWith, map } from 'rxjs/operators';
-import * as globalConst from '../../../services/globalConstants';
-import { Jurisdiction } from '../../../services/api/models/jurisdiction';
+import * as globalConst from '../../../../core/services/globalConstants';
+import { Jurisdiction } from '../../../../core/services/api/models/jurisdiction';
 
 @Component({
   selector: 'app-bc-address',

@@ -8,12 +8,11 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
-import { FormCreationService } from '../../../services/formCreation.service';
-import { CustomPipeModule } from '../../../pipe/customPipe.module';
-import { InsuranceOption } from '../../../model/insurance-option';
-import { DataService } from '../../../services/data.service';
-import { Registration } from '../../../model/registration';
-import * as globalConst from '../../../services/globalConstants';
+import { FormCreationService } from '../../../../core/services/formCreation.service';
+import { CustomPipeModule } from '../../../../core/pipe/customPipe.module';
+import { InsuranceOption } from '../../../../core/model/insurance-option';
+import { DataService } from '../../../../core/services/data.service';
+import * as globalConst from '../../../../core/services/globalConstants';
 import { AddressFormsModule } from '../../address-forms/address-forms.module';
 
 @Component({

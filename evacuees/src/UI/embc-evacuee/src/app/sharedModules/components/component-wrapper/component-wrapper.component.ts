@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Injector } from '@angular/core';
 import { from } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
-import { FormCreationService } from '../../services/formCreation.service';
+import { FormCreationService } from '../../../core/services/formCreation.service';
 
 @Component({
   selector: 'app-component-wrapper',
@@ -37,7 +37,7 @@ export class ComponentWrapperComponent implements OnInit {
   }
 
   loadComponent(): Promise<any> {
-    return Promise.resolve(import(`../${this.folderPath}/${this.componentName}/${this.componentName}.component`));
+    return Promise.resolve(import(`../../forms/${this.folderPath}/${this.componentName}/${this.componentName}.component`));
   }
   // ../core/components/evacuee-profile-forms/${this.componentName}/${this.componentName}.component`
 }

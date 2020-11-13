@@ -7,9 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FormCreationService } from '../../../services/formCreation.service';
+import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription } from 'rxjs';
-import { DirectivesModule } from '../../../directives/directives.module';
+import { DirectivesModule } from '../../../../core/directives/directives.module';
 
 @Component({
   selector: 'app-personal-details',

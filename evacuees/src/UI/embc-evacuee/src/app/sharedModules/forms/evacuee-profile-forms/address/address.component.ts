@@ -8,13 +8,13 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule, MatRadioChange } from '@angular/material/radio';
 import { AddressFormsModule } from '../../address-forms/address-forms.module';
-import { FormCreationService } from '../../../services/formCreation.service';
+import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { LocationService } from '../../../services/api/location.service';
-import { Country } from '../../../services/api/models/country';
-import * as globalConst from '../../../services/globalConstants';
+import { LocationService } from '../../../../core/services/api/location.service';
+import { Country } from '../../../../core/services/api/models/country';
+import * as globalConst from '../../../../core/services/globalConstants';
 
 @Component({
   selector: 'app-address',

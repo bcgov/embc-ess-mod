@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
-import { DirectivesModule } from '../../../directives/directives.module';
+import { DirectivesModule } from '../../../../core/directives/directives.module';
 
 @Component({
   selector: 'app-contact-info',

@@ -7,12 +7,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
-import { FormCreationService } from '../../../services/formCreation.service';
+import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { PersonDetailFormModule } from '../../person-detail-form/person-detail-form.module';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import * as globalConst from '../../../services/globalConstants';
+import * as globalConst from '../../../../core/services/globalConstants';
 
 @Component({
   selector: 'app-family-information',
