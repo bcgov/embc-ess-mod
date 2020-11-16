@@ -25,10 +25,11 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   form: FormGroup;
   isComplete: boolean;
   stepToDisplay: number;
+  currentFlow: string;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public updateService: DataUpdationService, private cd: ChangeDetectorRef) {
+    private route: ActivatedRoute, private formCreationService: FormCreationService,
+    public updateService: DataUpdationService, private cd: ChangeDetectorRef) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -37,20 +38,8 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   ngOnInit(): void {
+    this.currentFlow = this.route.snapshot.data.flow;
     this.steps = this.componentService.createProfileSteps();
-    // console.log(this.router.getCurrentNavigation())
-    // let navigation = this.router.getCurrentNavigation();
-    // console.log(navigation);
-    // if (navigation) {
-    //   let state = navigation.extras.state as { stepIndex: number };
-    //   this.stepToDisplay = state.stepIndex;
-    // }
-    // this.route.paramMap.subscribe(params => {
-    //   console.log(params.get('stepPos'));
-    //   if (params.get('stepPos') === 'last') {
-    //     this.path = params.get('stepPos');
-    //   }
-    // });
   }
 
   ngAfterViewChecked(): void {
@@ -70,35 +59,24 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.loadStepForm(index);
   }
 
-  createProfile(lastStep: boolean): void {
-    if (lastStep) {
-      this.showStep = !this.showStep;
-      // this.router.navigate(['/create-evac-file']);
-      // this.steps = this.componentService.createEvacSteps();
-    }
-  }
-
   goBack(stepper: MatStepper, lastStep): void {
     if (lastStep === 0) {
       stepper.previous();
     } else if (lastStep === -1) {
       this.showStep = !this.showStep;
-      // stepper.selectedIndex
-      // this.profileStepper.changes.subscribe(x=> {
-      //   console.log(x)
-      //   x.first._selectedIndex = 3
-      // console.log(this.steps.length)
-      // })
-
     } else if (lastStep === -2) {
-      this.router.navigate(['/non-verified-registration/restriction']);
+      let navigationPath = '/' + this.currentFlow + '/restriction'
+      this.router.navigate([navigationPath]);
     }
   }
 
   goForward(stepper: MatStepper, isLast: boolean, component: string): void {
     if (this.form.status === 'VALID') {
       if (isLast) {
-        this.router.navigate(['/non-verified-registration/needs-assessment']);
+        if (this.currentFlow === 'non-verified-registration') {
+          let navigationPath = '/' + this.currentFlow + '/needs-assessment'
+          this.router.navigate([navigationPath]);
+        }
       }
       this.setFormData(component);
       this.form$.unsubscribe();
