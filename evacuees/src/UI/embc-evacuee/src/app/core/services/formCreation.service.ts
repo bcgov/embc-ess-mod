@@ -11,42 +11,42 @@ export class FormCreationService {
     private personalDetailsForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
         this.formBuilder.group(new PersonDetailsForm(new PersonDetails(), this.customValidator)));
 
-     personalDetailsForm$: Observable<FormGroup> = this.personalDetailsForm.asObservable();
+    personalDetailsForm$: Observable<FormGroup> = this.personalDetailsForm.asObservable();
 
     private contactDetailsForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
         this.formBuilder.group(new ContactDetailsForm(new ContactDetails(), this.customValidator)));
 
-     contactDetailsForm$: Observable<FormGroup> = this.contactDetailsForm.asObservable();
+    contactDetailsForm$: Observable<FormGroup> = this.contactDetailsForm.asObservable();
 
     private secretForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
         this.formBuilder.group(new SecretForm(new Secret())));
 
-     secretForm$: Observable<FormGroup> = this.secretForm.asObservable();
+    secretForm$: Observable<FormGroup> = this.secretForm.asObservable();
 
     private addressForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
         this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator)));
 
-     addressForm$: Observable<FormGroup> = this.addressForm.asObservable();
+    addressForm$: Observable<FormGroup> = this.addressForm.asObservable();
 
     private evacuatedForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
         this.formBuilder.group(new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator)));
 
-     evacuatedForm$: Observable<FormGroup> = this.evacuatedForm.asObservable();
+    evacuatedForm$: Observable<FormGroup> = this.evacuatedForm.asObservable();
 
     private familyMembersForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
         this.formBuilder.group(new FamilyMembersForm(new FamilyMembers(), this.customValidator, this.formBuilder)));
 
-     familyMembersForm$: Observable<FormGroup> = this.familyMembersForm.asObservable();
+    familyMembersForm$: Observable<FormGroup> = this.familyMembersForm.asObservable();
 
     private petsForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
         this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder)));
 
-     petsForm$: Observable<FormGroup> = this.petsForm.asObservable();
+    petsForm$: Observable<FormGroup> = this.petsForm.asObservable();
 
     private identifyNeedsForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
         this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds())));
 
-     identifyNeedsForm$: Observable<FormGroup> = this.identifyNeedsForm.asObservable();
+    identifyNeedsForm$: Observable<FormGroup> = this.identifyNeedsForm.asObservable();
 
     constructor(private formBuilder: FormBuilder, private customValidator: CustomValidationService) { }
 
@@ -112,6 +112,18 @@ export class FormCreationService {
 
     setIdentifyNeedsForm(identifyNeedsForm: FormGroup): void {
         this.identifyNeedsForm.next(identifyNeedsForm);
+    }
+
+    clearData(): void {
+        this.personalDetailsForm.next(this.formBuilder.group(new PersonDetailsForm(new PersonDetails(), this.customValidator)));
+        this.contactDetailsForm.next(this.formBuilder.group(new ContactDetailsForm(new ContactDetails(), this.customValidator)));
+        this.secretForm.next(this.formBuilder.group(new SecretForm(new Secret())));
+        this.addressForm.next(this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator)));
+        this.evacuatedForm.next(this.formBuilder.group(new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator)));
+        this.familyMembersForm.next(this.formBuilder.group(new FamilyMembersForm(new FamilyMembers(),
+            this.customValidator, this.formBuilder)));
+        this.petsForm.next(this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder)));
+        this.identifyNeedsForm.next(this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds())));
     }
 
 }

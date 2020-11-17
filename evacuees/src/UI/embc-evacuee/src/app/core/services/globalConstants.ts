@@ -7,3 +7,15 @@ export const radioButton1 = [
     {name: 'Yes', value: true},
     {name: 'No', value: false}
 ];
+
+export const noticeBody = {
+    body: 'To register with the Evacuee Registration & Assistance (ERA) tool, you must select \'I agree\'.',
+    buttons:
+      [
+        {
+          name: 'Close',
+          class: 'button-p',
+          function: 'close'
+        }
+      ]
+  };

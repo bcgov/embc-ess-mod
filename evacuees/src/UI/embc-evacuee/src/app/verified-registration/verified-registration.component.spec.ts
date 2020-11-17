@@ -1,15 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NonVerifiedRegistrationComponent } from './non-verified-registration.component';
+import { VerifiedRegistrationComponent } from './verified-registration.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
-describe('NonVerifiedRegistrationComponent', () => {
-  let component: NonVerifiedRegistrationComponent;
-  let fixture: ComponentFixture<NonVerifiedRegistrationComponent>;
+describe('VerifiedRegistrationComponent', () => {
+  let component: VerifiedRegistrationComponent;
+  let fixture: ComponentFixture<VerifiedRegistrationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NonVerifiedRegistrationComponent ],
+      declarations: [ VerifiedRegistrationComponent ],
       imports: [ ReactiveFormsModule ],
       providers: [ FormBuilder]
     })
@@ -17,7 +17,7 @@ describe('NonVerifiedRegistrationComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NonVerifiedRegistrationComponent);
+    fixture = TestBed.createComponent(VerifiedRegistrationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
