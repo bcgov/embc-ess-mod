@@ -36,7 +36,7 @@ export class DataService {
         return this.registrationResult;
     }
 
-    clearData() {
+    clearData(): void {
         this.registrationDetails = {};
         this.perliminaryNeedsAssessment = {};
         this.registrationResult = {

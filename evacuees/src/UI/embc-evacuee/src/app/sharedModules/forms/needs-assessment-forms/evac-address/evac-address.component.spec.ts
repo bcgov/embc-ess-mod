@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import EvacAddressComponent from './evac-address.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { FormCreationService } from '../../../services/formCreation.service';
+import { FormCreationService } from '../../../../core/services/formCreation.service';
 
 describe('EvacAddressComponent', () => {
   let component: EvacAddressComponent;

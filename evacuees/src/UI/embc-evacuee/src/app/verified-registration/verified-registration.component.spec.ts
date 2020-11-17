@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VerifiedRegistrationComponent } from './verified-registration.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 describe('VerifiedRegistrationComponent', () => {
   let component: VerifiedRegistrationComponent;
@@ -8,7 +9,9 @@ describe('VerifiedRegistrationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ VerifiedRegistrationComponent ]
+      declarations: [ VerifiedRegistrationComponent ],
+      imports: [ ReactiveFormsModule ],
+      providers: [ FormBuilder]
     })
     .compileComponents();
   }));

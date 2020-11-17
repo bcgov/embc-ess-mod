@@ -28,8 +28,8 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   currentFlow: string;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
-    private route: ActivatedRoute, private formCreationService: FormCreationService,
-    public updateService: DataUpdationService, private cd: ChangeDetectorRef) {
+              private route: ActivatedRoute, private formCreationService: FormCreationService,
+              public updateService: DataUpdationService, private cd: ChangeDetectorRef) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -65,7 +65,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     } else if (lastStep === -1) {
       this.showStep = !this.showStep;
     } else if (lastStep === -2) {
-      let navigationPath = '/' + this.currentFlow + '/restriction'
+      const navigationPath = '/' + this.currentFlow + '/restriction';
       this.router.navigate([navigationPath]);
     }
   }
@@ -74,7 +74,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     if (this.form.status === 'VALID') {
       if (isLast) {
         if (this.currentFlow === 'non-verified-registration') {
-          let navigationPath = '/' + this.currentFlow + '/needs-assessment'
+          const navigationPath = '/' + this.currentFlow + '/needs-assessment';
           this.router.navigate([navigationPath]);
         }
       }

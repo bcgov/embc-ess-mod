@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import PetsComponent from './pets.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { FormCreationService } from '../../../services/formCreation.service';
+import { FormCreationService } from '../../../../core/services/formCreation.service';
 
 describe('PetsComponent', () => {
   let component: PetsComponent;

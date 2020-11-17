@@ -114,13 +114,14 @@ export class FormCreationService {
         this.identifyNeedsForm.next(identifyNeedsForm);
     }
 
-    clearData() {
+    clearData(): void {
         this.personalDetailsForm.next(this.formBuilder.group(new PersonDetailsForm(new PersonDetails(), this.customValidator)));
         this.contactDetailsForm.next(this.formBuilder.group(new ContactDetailsForm(new ContactDetails(), this.customValidator)));
         this.secretForm.next(this.formBuilder.group(new SecretForm(new Secret())));
         this.addressForm.next(this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator)));
         this.evacuatedForm.next(this.formBuilder.group(new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator)));
-        this.familyMembersForm.next(this.formBuilder.group(new FamilyMembersForm(new FamilyMembers(), this.customValidator, this.formBuilder)));
+        this.familyMembersForm.next(this.formBuilder.group(new FamilyMembersForm(new FamilyMembers(),
+            this.customValidator, this.formBuilder)));
         this.petsForm.next(this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder)));
         this.identifyNeedsForm.next(this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds())));
     }

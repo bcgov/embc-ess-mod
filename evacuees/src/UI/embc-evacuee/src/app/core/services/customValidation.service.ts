@@ -20,7 +20,7 @@ export class CustomValidationService {
                 if (dateOfBirth !== '') {
                     if (!moment(dateOfBirth, 'MM/DD/YYYY', true).isValid()) {
                         validationError = { invalidDate: true };
-                    } else if(moment().diff(moment(dateOfBirth, "MM-DD-YYYY")) <= 0) {
+                    } else if (moment().diff(moment(dateOfBirth, 'MM-DD-YYYY')) <= 0) {
                         validationError = { futureDate: true };
                     } else if (year !== '' && (year < 1800 || year > 2100)) {
                         validationError = { invalidYear: true };

@@ -17,7 +17,7 @@ export class CollectionNoticeComponent implements OnInit {
   currentFlow: string;
 
   constructor(private router: Router, public dialog: MatDialog, private builder: FormBuilder, public dataService: DataService,
-    private route: ActivatedRoute) { }
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
@@ -43,7 +43,7 @@ export class CollectionNoticeComponent implements OnInit {
       });
     } else {
       this.dataService.updateRegistartion(this.collectionForm.value);
-      let navigationPath = '/' + this.currentFlow + '/restriction'
+      const navigationPath = '/' + this.currentFlow + '/restriction';
       this.router.navigate([navigationPath]);
     }
   }

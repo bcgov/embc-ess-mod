@@ -13,8 +13,8 @@ export class RestrictionComponent implements OnInit {
   restrictionForm: FormGroup;
   currentFlow: string;
 
-  constructor(private router: Router, private builder: FormBuilder, private dataService: DataService, 
-    private route: ActivatedRoute) { }
+  constructor(private router: Router, private builder: FormBuilder, private dataService: DataService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
@@ -42,7 +42,7 @@ export class RestrictionComponent implements OnInit {
   submitRestriction(): void {
     if (this.restrictionForm.status === 'VALID') {
       this.dataService.updateRegistartion(this.restrictionForm.value);
-      let navigationPath = '/' + this.currentFlow + '/create-profile'
+      const navigationPath = '/' + this.currentFlow + '/create-profile';
       this.router.navigate([navigationPath]);
     } else {
       this.restrictionForm.markAllAsTouched();
