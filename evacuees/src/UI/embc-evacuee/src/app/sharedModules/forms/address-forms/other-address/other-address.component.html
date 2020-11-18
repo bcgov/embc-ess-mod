@@ -38,7 +38,7 @@
                     <input [formControlName]="'postalCode'" matInput placeholder="Postal/Zip Code" required>
                     <mat-error
                         *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
-                        Postal Code is required</mat-error>
+                        Postal/Zip Code is required</mat-error>
                   </mat-form-field>
             </div>
         </div>

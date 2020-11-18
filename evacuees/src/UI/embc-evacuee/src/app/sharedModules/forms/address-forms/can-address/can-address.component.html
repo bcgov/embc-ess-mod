@@ -51,9 +51,9 @@
     <div class="row">
         <div class="col-md-3">
             <mat-form-field appearance="outline">
-                <mat-label>Province</mat-label>
+                <mat-label class="requiredField">Province</mat-label>
                 <input type="text" [formControlName]="'stateProvince'" matInput placeholder="Province"
-                    [matAutocomplete]="auto" required>
+                    [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="provinceDisplayFn">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                         {{option.name}}
