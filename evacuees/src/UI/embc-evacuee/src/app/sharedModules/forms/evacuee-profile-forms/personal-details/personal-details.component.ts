@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { DirectivesModule } from '../../../../core/directives/directives.module';
+import { TextMaskModule } from 'angular2-text-mask';
 
 @Component({
   selector: 'app-personal-details',
@@ -23,6 +24,7 @@ export default class PersonalDetailsComponent implements OnInit {
   formBuilder: FormBuilder;
   personalDetailsForm$: Subscription;
   formCreationService: FormCreationService;
+  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]; // yyyy-mm-dd -- mm/dd/yyyy
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
     this.formBuilder = formBuilder;
@@ -58,7 +60,8 @@ export default class PersonalDetailsComponent implements OnInit {
     MatSelectModule,
     MatInputModule,
     ReactiveFormsModule,
-    DirectivesModule
+    DirectivesModule,
+    TextMaskModule
   ],
   declarations: [
     PersonalDetailsComponent,
