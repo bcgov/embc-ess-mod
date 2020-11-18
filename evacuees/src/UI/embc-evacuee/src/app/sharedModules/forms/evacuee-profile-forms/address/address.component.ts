@@ -34,7 +34,7 @@ export default class AddressComponent implements OnInit, AfterViewChecked {
   countries: Country[] = [];
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-    private service: LocationService, private cd: ChangeDetectorRef) {
+              private service: LocationService, private cd: ChangeDetectorRef) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
@@ -129,7 +129,7 @@ export default class AddressComponent implements OnInit, AfterViewChecked {
     return this.primaryAddressForm.controls;
   }
 
-  setCountryConfig(event: MatAutocompleteSelectedEvent) {
+  setCountryConfig(event: MatAutocompleteSelectedEvent): void {
     this.primaryAddressForm.get('address.addressLine1').reset();
     this.primaryAddressForm.get('address.addressLine2').reset();
     this.primaryAddressForm.get('address.jurisdiction').reset();
@@ -138,7 +138,7 @@ export default class AddressComponent implements OnInit, AfterViewChecked {
     this.updateOnVisibility();
   }
 
-  setMailingCountryConfig(event: MatAutocompleteSelectedEvent) {
+  setMailingCountryConfig(event: MatAutocompleteSelectedEvent): void {
     this.primaryAddressForm.get('mailingAddress.addressLine1').reset();
     this.primaryAddressForm.get('mailingAddress.addressLine2').reset();
     this.primaryAddressForm.get('mailingAddress.jurisdiction').reset();

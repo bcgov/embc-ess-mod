@@ -125,7 +125,7 @@ export class AddressForm {
             country: ['', [Validators.required]],
             postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
         });
-        
+
         this.mailingAddress = builder.group({
             addressLine1: ['', [Validators.required]],
             addressLine2: [''],
