@@ -10,6 +10,7 @@ import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { DirectivesModule } from '../../../../core/directives/directives.module';
+import { TextMaskModule } from 'angular2-text-mask';
 
 @Component({
   selector: 'app-contact-info',
@@ -22,6 +23,7 @@ export default class ContactInfoComponent implements OnInit {
   formBuilder: FormBuilder;
   contactInfoForm$: Subscription;
   formCreationService: FormCreationService;
+  readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
     this.formBuilder = formBuilder;
@@ -86,7 +88,8 @@ export default class ContactInfoComponent implements OnInit {
     MatInputModule,
     ReactiveFormsModule,
     MatCheckboxModule,
-    DirectivesModule
+    DirectivesModule,
+    TextMaskModule
   ],
   declarations: [
     ContactInfoComponent,

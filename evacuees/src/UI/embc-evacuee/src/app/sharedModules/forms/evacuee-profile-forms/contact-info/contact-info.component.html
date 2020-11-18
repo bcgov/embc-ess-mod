@@ -18,10 +18,10 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline" [hideRequiredMarker]="contactFormControl?.hidePhoneRequired?.value">
             <mat-label>Telephone Number</mat-label>
-            <input formControlName="phone" matInput placeholder="Telephone Number" appPhoneMask required>
+            <input formControlName="phone" matInput placeholder="Telephone Number" [textMask]="{mask: phoneMask, keepCharPositions: true}" required>
             <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('required')">
               Telephone Number is required</mat-error>
-            <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('minlength')">
+            <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')">
               Telephone number must have 10 digits</mat-error>
           </mat-form-field>
         </div>
@@ -38,7 +38,7 @@
 
       <div class="row">
         <div class="col-md-12">
-          <p class="sub-heading">Email address</p>
+          <p class="sub-heading">Email Address</p>
         </div>
       </div>
 
