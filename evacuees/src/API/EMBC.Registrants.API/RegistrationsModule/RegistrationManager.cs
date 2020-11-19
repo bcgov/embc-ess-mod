@@ -104,7 +104,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
                 era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
                 era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email),
-                era_secrettext = registration.RegistrationDetails.SecretPhrase,
+                era_secrettext = registration.RegistrationDetails.SecretPhrase
             };
 
             // members
@@ -112,12 +112,42 @@ namespace EMBC.Registrants.API.RegistrationsModule
             {
                 contactid = Guid.NewGuid(),
                 era_registranttype = 174360001,
+                era_authenticated = false,
+                era_verified = false,
+                era_registrationdate = now,
                 firstname = fm.FirstName,
                 lastname = fm.LastName,
                 era_preferredname = fm.PreferredName,
                 era_initials = fm.Initials,
                 gendercode = LookupGender(fm.Gender),
                 birthdate = FromDateTime(DateTime.Parse(fm.DateOfBirth)),
+                era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
+                era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
+
+                address1_line1 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
+                address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
+                address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.JurisdictionName,
+                address1_country = registration.RegistrationDetails.PrimaryAddress.Country.CountryCode,
+                era_City = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
+                era_ProvinceState = Lookup(registration.RegistrationDetails.PrimaryAddress.StateProvince),
+                era_Country = Lookup(registration.RegistrationDetails.PrimaryAddress.Country),
+                address1_postalcode = registration.RegistrationDetails.PrimaryAddress.PostalCode,
+
+                address2_line1 = registration.RegistrationDetails.MailingAddress.AddressLine1,
+                address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine1,
+                address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.JurisdictionName,
+                address2_country = registration.RegistrationDetails.MailingAddress.Country.CountryName,
+                era_MailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
+                era_MailingProvinceState = Lookup(registration.RegistrationDetails.MailingAddress.StateProvince),
+                era_MailingCountry = Lookup(registration.RegistrationDetails.MailingAddress.Country),
+                address2_postalcode = registration.RegistrationDetails.MailingAddress.PostalCode,
+
+                emailaddress1 = registration.RegistrationDetails.ContactDetails.Email,
+                telephone1 = registration.RegistrationDetails.ContactDetails.Phone,
+
+                era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
+                era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email),
+                era_secrettext = registration.RegistrationDetails.SecretPhrase
             });
 
             // needs assessment
@@ -128,12 +158,17 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_EvacuationFile = file,
                 era_needsassessmenttype = 174360000,
                 era_foodrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresFood),
-                era_clothingrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresFood),
-                era_dietaryrequirement = registration.PerliminaryNeedsAssessment.RequiresFood,
-                era_incidentalrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresFood),
-                era_lodgingrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresFood),
-                era_medicationrequirement = registration.PerliminaryNeedsAssessment.RequiresFood,
-                era_insurancecoverage = Lookup(registration.PerliminaryNeedsAssessment.Insurance)
+                era_clothingrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresClothing),
+                era_dietaryrequirement = registration.PerliminaryNeedsAssessment.HaveSpecialDiet,
+                era_incidentalrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresIncidentals),
+                era_lodgingrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresLodging),
+                era_transportationrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresTransportation),
+                era_medicationrequirement = registration.PerliminaryNeedsAssessment.HaveMedication,
+                era_insurancecoverage = Lookup(registration.PerliminaryNeedsAssessment.Insurance),
+                era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
+                era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
+                era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
+                era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email)
             };
 
             // pets
@@ -141,7 +176,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             {
                 era_evacueeid = Guid.NewGuid(),
                 era_needsassessment = needsAssessment,
-                //era_amountofpets = p.Quantity,
+                era_amountofpets = Convert.ToInt32(p.Quantity),
                 era_typeofpet = p.Type
             });
 

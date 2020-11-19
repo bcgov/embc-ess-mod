@@ -24,7 +24,7 @@ namespace EMBC.ResourceAccess.Dynamics
             };
             ReceivingResponse += delegate (object sender, ReceivingResponseEventArgs args)
             {
-                logger.LogDebug("{0} received {1} response", nameof(DynamicsClientContext), args.ResponseMessage.StatusCode);
+                logger.LogDebug("{0} received {1} response", nameof(DynamicsClientContext), args.ResponseMessage?.StatusCode);
             };
             Configurations.RequestPipeline.OnEntryStarting((arg) =>
             {
