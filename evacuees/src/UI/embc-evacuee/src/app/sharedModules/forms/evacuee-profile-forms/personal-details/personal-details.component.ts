@@ -24,7 +24,7 @@ export default class PersonalDetailsComponent implements OnInit {
   formBuilder: FormBuilder;
   personalDetailsForm$: Subscription;
   formCreationService: FormCreationService;
-  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]; // yyyy-mm-dd -- mm/dd/yyyy
+  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
     this.formBuilder = formBuilder;

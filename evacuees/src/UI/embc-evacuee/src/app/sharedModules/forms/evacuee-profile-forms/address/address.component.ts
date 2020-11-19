@@ -11,7 +11,7 @@ import { AddressFormsModule } from '../../address-forms/address-forms.module';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { LocationService } from '../../../../core/services/api/location.service';
 import { Country } from '../../../../core/services/api/models/country';
 import * as globalConst from '../../../../core/services/globalConstants';
@@ -58,6 +58,14 @@ export default class AddressComponent implements OnInit, AfterViewChecked {
       startWith(''),
       map(value => value ? this.filter(value) : this.countries.slice())
     );
+
+    this.primaryAddressForm.get('address.country').valueChanges.subscribe(value => {
+      this.primaryAddressForm.get('address.stateProvince').updateValueAndValidity();
+    });
+
+    this.primaryAddressForm.get('mailingAddress.country').valueChanges.subscribe(value => {
+      this.primaryAddressForm.get('mailingAddress.stateProvince').updateValueAndValidity();
+    });
 
     this.primaryAddressForm.get('isBcAddress').valueChanges.subscribe(value => {
       this.updateOnVisibility();
@@ -119,6 +127,24 @@ export default class AddressComponent implements OnInit, AfterViewChecked {
    */
   get primaryAddressFormControl(): { [key: string]: AbstractControl; } {
     return this.primaryAddressForm.controls;
+  }
+
+  setCountryConfig(event: MatAutocompleteSelectedEvent): void {
+    this.primaryAddressForm.get('address.addressLine1').reset();
+    this.primaryAddressForm.get('address.addressLine2').reset();
+    this.primaryAddressForm.get('address.jurisdiction').reset();
+    this.primaryAddressForm.get('address.stateProvince').reset();
+    this.primaryAddressForm.get('address.postalCode').reset();
+    this.updateOnVisibility();
+  }
+
+  setMailingCountryConfig(event: MatAutocompleteSelectedEvent): void {
+    this.primaryAddressForm.get('mailingAddress.addressLine1').reset();
+    this.primaryAddressForm.get('mailingAddress.addressLine2').reset();
+    this.primaryAddressForm.get('mailingAddress.jurisdiction').reset();
+    this.primaryAddressForm.get('mailingAddress.stateProvince').reset();
+    this.primaryAddressForm.get('mailingAddress.postalCode').reset();
+    this.updateOnVisibility();
   }
 
   primaryAddressChange(event: MatRadioChange): void {

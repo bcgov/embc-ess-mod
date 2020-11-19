@@ -74,6 +74,9 @@ export class CustomValidationService {
         };
     }
 
+    /**
+     * Checks the postal address pattern for Canada and USA
+     */
     postalValidation(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             if (control.parent) {
@@ -83,6 +86,20 @@ export class CustomValidationService {
                     } else if (control.parent.get('country').value.code === 'USA') {
                         return Validators.pattern(globalConst.zipCodePattern)(control);
                     }
+                }
+            }
+            return null;
+        };
+    }
+
+    /**
+     * Checks length of masked fields
+     */
+    maskedNumberLengthValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            if (control.value !== null && control.value !== undefined) {
+                if (control.value.indexOf('_') !== -1) {
+                    return { incorrectLength: true };
                 }
             }
             return null;
