@@ -85,8 +85,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
                 address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.JurisdictionName,
                 address1_country = registration.RegistrationDetails.PrimaryAddress.Country.CountryCode,
-                era_RelatedCity = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
-                era_RelatedProvince = Lookup(registration.RegistrationDetails.PrimaryAddress.StateProvince),
+                era_City = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
+                era_ProvinceState = Lookup(registration.RegistrationDetails.PrimaryAddress.StateProvince),
                 era_Country = Lookup(registration.RegistrationDetails.PrimaryAddress.Country),
                 address1_postalcode = registration.RegistrationDetails.PrimaryAddress.PostalCode,
 
@@ -94,9 +94,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine1,
                 address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.JurisdictionName,
                 address2_country = registration.RegistrationDetails.MailingAddress.Country.CountryName,
-                era_RelatedMailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
-                era_RelatedMailingProvince = Lookup(registration.RegistrationDetails.MailingAddress.StateProvince),
-                era_RelatedMailingCountry = Lookup(registration.RegistrationDetails.MailingAddress.Country),
+                era_MailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
+                era_MailingProvinceState = Lookup(registration.RegistrationDetails.MailingAddress.StateProvince),
+                era_MailingCountry = Lookup(registration.RegistrationDetails.MailingAddress.Country),
                 address2_postalcode = registration.RegistrationDetails.MailingAddress.PostalCode,
 
                 emailaddress1 = registration.RegistrationDetails.ContactDetails.Email,
