@@ -1,14 +1,18 @@
 <div class="container container-frame">
     <div class="row heading-container">
         <div class="col-12">
-            <span class="page-heading">Edit Details</span>
+            <span class="page-heading">{{editHeading}}</span>
         </div>
     </div>
 
     <div class="row">
         <div class="col-12 content-container">
-            <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
-            <app-component-wrapper [componentName]="componentToLoad" [folderPath]="profileFolderPath">
+            <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red
+                asterisk.</p>
+            <app-restriction-form *ngIf="componentToLoad === 'restriction'" [restrictionForm]='form'>
+            </app-restriction-form>
+            <app-component-wrapper *ngIf="componentToLoad !== 'restriction'" [componentName]="componentToLoad"
+                [folderPath]="profileFolderPath">
             </app-component-wrapper>
             <br>
             <br>

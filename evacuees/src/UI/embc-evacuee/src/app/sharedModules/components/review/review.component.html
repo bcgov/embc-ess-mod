@@ -1,6 +1,30 @@
 <mat-card>
     <div id="personalDetail">
         <p class="review-heading">Account Details</p>
+
+        <mat-card-content>
+            <div class="row justify-content-between">
+                <div class="col-md-6 card-heading">
+                    Restriction
+                </div>
+                <div class="col-md-2">
+                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('restriction')">
+                        <img src="/assets/images/edit.svg" height="35" width="35">
+                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                    </button>
+                </div>
+            </div>
+            <hr>
+            {{(formCreationService.restrictionForm$ | async).value |  json}}
+            <div class="row info-detail">
+                <div class="col-md-9">
+                    <mat-checkbox [checked]="(formCreationService.restrictionForm$ | async).value?.checked">You have given your consent to have
+                        your location and contact information shared with concerned family or friends
+                        who enquire about your wellbeing.</mat-checkbox>
+                </div>
+            </div>
+        </mat-card-content>
+
         <mat-card-content>
             <div class="row justify-content-between">
                 <div class="col-md-6 card-heading">
@@ -195,7 +219,7 @@
                 <div class="col-md-3">Evacuated From:</div>
                 <div class="col-md-3">
                     <span>{{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.addressLine1}}
-                        {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.addressLine2}}</span>
+                        {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.addressLine2}} </span>
                     <span>{{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.jurisdiction.name}},
                         {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.stateProvince.name}},
                         {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.postalCode}}</span>
@@ -280,11 +304,15 @@
             <hr>
             <div class="row info-detail">
                 <div class="col-md-3">Family Medication Requirements:</div>
-                <div class="col-md-3">{{(formCreationService.familyMembersForm$ | async).value.haveMedication}}</div>
+                <div class="col-md-3">
+                    {{(formCreationService.familyMembersForm$ | async).value.haveMedication === true ? 'Yes' : 'No'}}
+                </div>
             </div>
             <div class="row info-detail">
                 <div class="col-md-3">Family Dietary Requirements:</div>
-                <div class="col-md-3">{{(formCreationService.familyMembersForm$ | async).value.haveSpecialDiet}}</div>
+                <div class="col-md-3">
+                    {{(formCreationService.familyMembersForm$ | async).value.haveSpecialDiet === true ? 'Yes': 'No'}}
+                </div>
             </div>
         </mat-card-content>
 
@@ -311,9 +339,10 @@
                     <div class="col-md-3">{{pet.quantity}}</div>
                 </div>
             </div>
-            <div class="row info-detail">
+            <div *ngIf="(formCreationService.petsForm$ | async).value?.pets?.length > 0" class="row info-detail">
                 <div class="col-md-3">Has sufficient pet food?</div>
-                <div class="col-md-3">{{(formCreationService.petsForm$ | async).value.hasPetsFood}}</div>
+                <div class="col-md-3">
+                    {{(formCreationService.petsForm$ | async).value.hasPetsFood === true ? 'Yes' : 'No'}}</div>
             </div>
         </mat-card-content>
 
@@ -334,55 +363,45 @@
             <div class="row info-detail">
                 <div class="col-md-3">Food:</div>
                 <div class="col-md-3">
-                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresFood === 'null' ? 'I\'m not sure' : (formCreationService.identifyNeedsForm$ | async).value.requiresFood}}
+                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresFood === 'null' ? 'I\'m not sure' : (formCreationService.identifyNeedsForm$ | async).value.requiresFood === true ? 'Yes' : 'No'}}
                 </div>
             </div>
             <div class="row info-detail">
                 <div class="col-md-3">Lodging:</div>
                 <div class="col-md-3">
-                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresLodging === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresLodging}}
+                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresLodging === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresLodging === true ? 'Yes' : 'No'}}
                 </div>
             </div>
             <div class="row info-detail">
                 <div class="col-md-3">Clothing:</div>
                 <div class="col-md-3">
-                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresClothing === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresClothing}}
+                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresClothing === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresClothing === true ? 'Yes' : 'No'}}
                 </div>
             </div>
             <div class="row info-detail">
                 <div class="col-md-3">Transportation:</div>
                 <div class="col-md-3">
-                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation}}
+                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation === true ? 'Yes' : 'No'}}
                 </div>
             </div>
             <div class="row info-detail">
                 <div class="col-md-3">Incidentals:</div>
                 <div class="col-md-3">
-                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals}}
+                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals === true ? 'Yes' : 'No'}}
                 </div>
             </div>
         </mat-card-content>
     </div>
 </mat-card>
-
+<br>
+<div class="row">
+    <div class="col">
+        <p>Please complete the CAPTCHA below. This helps us prevent automated registrations.</p>
+    </div>
+</div>
 <div class="row" style="margin-top: 20px;">
     <div class="col">
         <captcha language="en" eagerFetchAudio="true" (validToken)="onValidToken($event)"
             (serverError)="onServerError($event)"></captcha>
     </div>
 </div>
-<!-- <ng-template [ngComponentOutlet]="componentToLoad.default | async"></ng-template> -->
-<!-- {{componentToLoad}}
-    <ng-container>
-        <ng-template [ngComponentOutlet]="cs"></ng-template>
-     </ng-container>
-    <ng-template #showPersonalPage>
-         <app-personal-details></app-personal-details> -->
-<!-- <br>
-        <button mat-flat-button (click)="back()">Back</button>
-    </ng-template> -->
-
-<!-- <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(element, index)">
-    <img src="/assets/images/edit.svg" height="35" width="35">
-    <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-</button> -->

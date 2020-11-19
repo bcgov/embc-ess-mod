@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { PersonDetailsForm, PersonDetails, ContactDetailsForm, ContactDetails, Secret, SecretForm, AddressForm, Address } from '../model/profile.model';
+import { PersonDetailsForm, PersonDetails, ContactDetailsForm, ContactDetails, Secret, SecretForm, AddressForm, Address, RestrictionForm, Restriction } from '../model/profile.model';
 import { CustomValidationService } from './customValidation.service';
 import { Evacuated, EvacuatedForm, FamilyMembers, FamilyMembersForm, IdentifyNeeds, IdentifyNeedsForm, Pet, PetForm } from '../model/needs.model';
 
 @Injectable({ providedIn: 'root' })
 export class FormCreationService {
+
+    private restrictionForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
+        this.formBuilder.group(new RestrictionForm(new Restriction())));
+
+    restrictionForm$: Observable<FormGroup> = this.restrictionForm.asObservable();
 
     private personalDetailsForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
         this.formBuilder.group(new PersonDetailsForm(new PersonDetails(), this.customValidator)));
@@ -49,6 +54,14 @@ export class FormCreationService {
     identifyNeedsForm$: Observable<FormGroup> = this.identifyNeedsForm.asObservable();
 
     constructor(private formBuilder: FormBuilder, private customValidator: CustomValidationService) { }
+
+    getRestrictionForm(): Observable<FormGroup> {
+        return this.restrictionForm$;
+    }
+
+    setRestrictionForm(restrictionForm: FormGroup): void {
+        this.restrictionForm.next(restrictionForm);
+    }
 
     getPeronalDetailsForm(): Observable<FormGroup> {
         return this.personalDetailsForm$;
@@ -115,6 +128,7 @@ export class FormCreationService {
     }
 
     clearData(): void {
+        this.restrictionForm.next(this.formBuilder.group(new RestrictionForm(new Restriction())));
         this.personalDetailsForm.next(this.formBuilder.group(new PersonDetailsForm(new PersonDetails(), this.customValidator)));
         this.contactDetailsForm.next(this.formBuilder.group(new ContactDetailsForm(new ContactDetails(), this.customValidator)));
         this.secretForm.next(this.formBuilder.group(new SecretForm(new Secret())));

@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CustomPipeModule } from '../../../core/pipe/customPipe.module';
 import { CoreModule } from '../../../core/core.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CoreModule } from '../../../core/core.module';
     MatButtonModule,
     MatIconModule,
     CustomPipeModule,
-    CoreModule
+    CoreModule,
+    MatCheckboxModule
   ],
   exports: [
     ReviewComponent
