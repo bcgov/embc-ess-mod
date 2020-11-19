@@ -45,8 +45,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
             var essFileNumber = new Random().Next(999999999); //temporary ESS file number random generator
 #pragma warning restore CA5394 // Do not use insecure randomness
 
+            // evacuation file
             var file = new era_evacuationfile
             {
+                era_evacuationfileid = Guid.NewGuid(),
                 era_essfilenumber = essFileNumber,
                 era_evacuationfiledate = now,
                 era_addressline1 = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
@@ -62,8 +64,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_secrettext = registration.RegistrationDetails.SecretPhrase,
             };
 
+            // registrant
             var registrant = new contact
             {
+                contactid = Guid.NewGuid(),
                 era_registranttype = 174360000,
                 era_authenticated = false,
                 era_verified = false,
@@ -103,8 +107,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_secrettext = registration.RegistrationDetails.SecretPhrase,
             };
 
+            // members
             var members = (registration.PerliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
             {
+                contactid = Guid.NewGuid(),
                 era_registranttype = 174360001,
                 firstname = fm.FirstName,
                 lastname = fm.LastName,
@@ -114,8 +120,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 birthdate = FromDateTime(DateTime.Parse(fm.DateOfBirth)),
             });
 
+            // needs assessment
             var needsAssessment = new era_needassessment
             {
+                era_needassessmentid = Guid.NewGuid(),
                 era_needsassessmentdate = now,
                 era_EvacuationFile = file,
                 era_needsassessmenttype = 174360000,
@@ -128,29 +136,66 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_insurancecoverage = Lookup(registration.PerliminaryNeedsAssessment.Insurance)
             };
 
+            // pets
             var pets = (registration.PerliminaryNeedsAssessment.Pets ?? Array.Empty<Pet>()).Select(p => new era_evacuee
             {
+                era_evacueeid = Guid.NewGuid(),
                 era_needsassessment = needsAssessment,
                 //era_amountofpets = p.Quantity,
                 era_typeofpet = p.Type
             });
 
+            // set enity data and entity links in Dynamics
+
+            // save evacuation file to dynamics
             dynamicsClient.AddToera_evacuationfiles(file);
+            // save needs assessment to dynamics
             dynamicsClient.AddToera_needassessments(needsAssessment);
+            // link evacuation file to needs assessment
+            dynamicsClient.AddLink(file, nameof(file.era_needsassessment_EvacuationFile), needsAssessment);
+
+            // save registrant to dynamics
             dynamicsClient.AddTocontacts(registrant);
-            dynamicsClient.AddToera_evacuees(new era_evacuee
+            var evacueeRegistrant = new era_evacuee
             {
+                era_evacueeid = Guid.NewGuid(),
                 era_needsassessment = needsAssessment,
                 era_Registrant = registrant
-            });
+            };
+            dynamicsClient.AddToera_evacuees(evacueeRegistrant);
+            // link registrant and needs assessment to evacuee record
+            dynamicsClient.AddLink(registrant, nameof(registrant.era_contact_evacuee_Registrant), evacueeRegistrant);
+            dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), evacueeRegistrant);
+
+            // save members to dynamics
             foreach (var member in members)
             {
                 dynamicsClient.AddTocontacts(member);
-                dynamicsClient.AddToera_evacuees(new era_evacuee
+                var evacueeMember = new era_evacuee
                 {
+                    era_evacueeid = Guid.NewGuid(),
                     era_needsassessment = needsAssessment,
                     era_Registrant = member
-                });
+                };
+                dynamicsClient.AddToera_evacuees(evacueeMember);
+                // link members and needs assessment to evacuee record
+                dynamicsClient.AddLink(member, nameof(member.era_contact_evacuee_Registrant), evacueeMember);
+                dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), evacueeMember);
+            }
+
+            // save pets to dynamics
+            foreach (var pet in pets)
+            {
+                var petMember = new era_evacuee
+                {
+                    era_evacueeid = Guid.NewGuid(),
+                    era_needsassessment = needsAssessment,
+                    era_typeofpet = pet.era_typeofpet,
+                    era_amountofpets = pet.era_amountofpets
+                };
+                dynamicsClient.AddToera_evacuees(petMember);
+                // link pet to evacuee record
+                dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), petMember);
             }
 
             //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
