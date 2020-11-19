@@ -35,4 +35,12 @@ export class DataService {
     public getRegistrationResult(): RegistrationResult {
         return this.registrationResult;
     }
+
+    clearData(): void {
+        this.registrationDetails = {};
+        this.perliminaryNeedsAssessment = {};
+        this.registrationResult = {
+            referenceNumber: null
+        };
+    }
 }

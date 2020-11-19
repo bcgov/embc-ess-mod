@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DataService } from '../../../core/services/data.service';
 
@@ -11,10 +11,13 @@ import { DataService } from '../../../core/services/data.service';
 export class RestrictionComponent implements OnInit {
 
   restrictionForm: FormGroup;
+  currentFlow: string;
 
-  constructor(private router: Router, private builder: FormBuilder, private dataService: DataService ) { }
+  constructor(private router: Router, private builder: FormBuilder, private dataService: DataService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.currentFlow = this.route.snapshot.data.flow;
     this.restrictionForm = this.builder.group({
       restrictedAccess: [false, [Validators.required]]
     });
@@ -39,7 +42,8 @@ export class RestrictionComponent implements OnInit {
   submitRestriction(): void {
     if (this.restrictionForm.status === 'VALID') {
       this.dataService.updateRegistartion(this.restrictionForm.value);
-      this.router.navigate(['/non-verified-registration/create-profile']);
+      const navigationPath = '/' + this.currentFlow + '/create-profile';
+      this.router.navigate([navigationPath]);
     } else {
       this.restrictionForm.markAllAsTouched();
     }

@@ -92,9 +92,9 @@ export class DataUpdationService {
             },
             postalCode: addressObject.postalCode,
             stateProvince: {
-                stateProvinceCode: addressObject.stateProvince.code === undefined ?
-                    null : addressObject.stateProvince.code,
-                stateProvinceName: addressObject.stateProvince.name === undefined ?
+                stateProvinceCode: addressObject.stateProvince === null ?
+                    addressObject.stateProvince : addressObject.stateProvince.code,
+                stateProvinceName: addressObject.stateProvince === null ?
                     addressObject.stateProvince : addressObject.stateProvince.name
             }
         };
