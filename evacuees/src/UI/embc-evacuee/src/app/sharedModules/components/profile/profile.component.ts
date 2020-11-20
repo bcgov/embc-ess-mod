@@ -7,6 +7,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
+import { DataSubmissionService } from 'src/app/core/services/dataSubmission.service';
+import { RegistrationResult } from 'src/app/core/services/api/models/registration-result';
 
 @Component({
   selector: 'app-profile',
@@ -26,10 +28,13 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   isComplete: boolean;
   stepToDisplay: number;
   currentFlow: string;
+  type="profile";
+  profileHeading: string;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
               private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public updateService: DataUpdationService, private cd: ChangeDetectorRef) {
+              public updateService: DataUpdationService, private cd: ChangeDetectorRef,
+              private submissionService: DataSubmissionService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -39,6 +44,11 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
+    if(this.currentFlow ==="non-verified-registration") {
+      this.profileHeading = "Create Profile";
+    } else {
+      this.profileHeading = "Create Your ERA Profile";
+    }
     this.steps = this.componentService.createProfileSteps();
   }
 
@@ -76,6 +86,11 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
         if (this.currentFlow === 'non-verified-registration') {
           const navigationPath = '/' + this.currentFlow + '/needs-assessment';
           this.router.navigate([navigationPath]);
+        } else {
+          if(component === 'review') {
+            console.log('profile-submit')
+            this.submitFile();
+          }
         }
       }
       this.setFormData(component);
@@ -144,6 +159,18 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
         );
         break;
     }
+  }
+
+  submitFile(): void {
+    this.router.navigate(['/verified-registration/view-profile']);
+    // this.submissionService.submitRegistrationFile().subscribe((response: RegistrationResult) => {
+    //   console.log(response);
+    //   this.updateService.updateRegisrationResult(response);
+    //   this.router.navigate(['/verified-registration/view-profile']);
+    // }, (error) => {
+    //   console.log(error);
+    // });
+
   }
 
 }

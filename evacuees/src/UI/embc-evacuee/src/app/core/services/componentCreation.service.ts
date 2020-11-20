@@ -83,15 +83,7 @@ export class ComponentCreationService {
                 loadWrapperButton: false,
                 lastStep: 0,
                 stepName: 'Needs'
-            },
-            // {
-            //     component: 'pets',
-            //     nextButtonLabel: 'Submit',
-            //     backButtonLabel: 'Go Back & Edit',
-            //     isLast: false,
-            //     loadWrapperButton: false,
-            //     lastStep: 0
-            // }
+            }
         ];
 
     getProfileComponents(): Observable<any> {

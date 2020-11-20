@@ -1,407 +1,436 @@
 <mat-card>
-    <div id="personalDetail">
-        <p class="review-heading">Account Details</p>
-
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Restriction
-                </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('restriction')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
-                </div>
+    <div *ngIf="type === 'profile'">
+        <ng-container *ngTemplateOutlet="profile"></ng-container>
+    </div>
+    <div *ngIf="type === 'need'">
+        <ng-container *ngTemplateOutlet="need"></ng-container>
+    </div>
+    <div *ngIf="type === 'both'">
+        <ng-container *ngTemplateOutlet="profile"></ng-container>
+        <ng-container *ngTemplateOutlet="need"></ng-container>
+        <br>
+        <div class="row">
+            <div class="col">
+                <p>Please complete the CAPTCHA below. This helps us prevent automated registrations.</p>
             </div>
-            <hr>
-            {{(formCreationService.restrictionForm$ | async).value |  json}}
-            <div class="row info-detail">
-                <div class="col-md-9">
-                    <mat-checkbox [checked]="(formCreationService.restrictionForm$ | async).value?.checked">You have given your consent to have
-                        your location and contact information shared with concerned family or friends
-                        who enquire about your wellbeing.</mat-checkbox>
-                </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col">
+                <captcha language="en" eagerFetchAudio="true" (validToken)="onValidToken($event)"
+                    (serverError)="onServerError($event)"></captcha>
             </div>
-        </mat-card-content>
-
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Personal Details
-                </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit"
-                        (click)="editDetails('personal-details')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
-                </div>
-            </div>
-            <hr>
-
-            <div class="row info-detail">
-                <div class="col-md-3">Last Name:</div>
-                <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value.lastName}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">First Name:</div>
-                <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value.firstName}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Preferred Name:</div>
-                <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value.preferredName}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Initials:</div>
-                <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value.initials}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Date of Birth:</div>
-                <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value.dateOfBirth}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Gender:</div>
-                <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value.gender}}</div>
-            </div>
-        </mat-card-content>
-
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Primary Address
-                </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
-                </div>
-            </div>
-            <hr>
-
-            <div class="row info-detail">
-                <div class="col-md-3">Address line 1:</div>
-                <div class="col-md-3">{{(formCreationService.addressForm$ | async).value.address.addressLine1}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Address line 2:</div>
-                <div class="col-md-3">{{(formCreationService.addressForm$ | async).value.address.addressLine2}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">City:</div>
-                <div class="col-md-3">{{(formCreationService.addressForm$ | async).value.address.jurisdiction.name}}
-                </div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Postal Code:</div>
-                <div class="col-md-3">{{(formCreationService.addressForm$ | async).value.address.postalCode}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Province:</div>
-                <div class="col-md-3">{{(formCreationService.addressForm$ | async).value.address.stateProvince.name}}
-                </div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Country:</div>
-                <div class="col-md-3">{{(formCreationService.addressForm$ | async).value.address.country.name}}</div>
-            </div>
-        </mat-card-content>
-
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Mailing Address
-                </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
-                </div>
-            </div>
-            <hr>
-            <div class="row info-detail">
-                <div class="col-md-3">Address line 1:</div>
-                <div class="col-md-3">{{(formCreationService.addressForm$ | async).value.mailingAddress.addressLine1}}
-                </div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Address line 2:</div>
-                <div class="col-md-3">{{(formCreationService.addressForm$ | async).value.mailingAddress.addressLine2}}
-                </div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">City:</div>
-                <div class="col-md-3">
-                    {{(formCreationService.addressForm$ | async).value.mailingAddress.jurisdiction.name}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Postal Code:</div>
-                <div class="col-md-3">{{(formCreationService.addressForm$ | async).value.mailingAddress.postalCode}}
-                </div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Province:</div>
-                <div class="col-md-3">
-                    {{(formCreationService.addressForm$ | async).value.mailingAddress.stateProvince.name}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Country:</div>
-                <div class="col-md-3">{{(formCreationService.addressForm$ | async).value.mailingAddress.country.name}}
-                </div>
-            </div>
-        </mat-card-content>
-
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Contact Details
-                </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('contact-info')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
-                </div>
-            </div>
-            <hr>
-            <div class="row info-detail">
-                <div class="col-md-3">Telephone/Mobile:</div>
-                <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async).value.phone}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Alternative Telephone/Mobile:</div>
-                <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async).value.phone}}</div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Email Address:</div>
-                <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async).value.email}}</div>
-            </div>
-        </mat-card-content>
-
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Secret Word / Phrase
-                </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('secret')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
-                </div>
-            </div>
-            <hr>
-            <div class="row info-detail">
-                <div class="col-md-3">Secret Word / Phrase:</div>
-                <div class="col-md-3">{{(formCreationService.secretForm$ | async).value.secretPhrase | maskText}}</div>
-            </div>
-        </mat-card-content>
+        </div>
     </div>
 
-    <div id="needsAssessment">
-        <p class="review-heading">Evacuation File</p>
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Evacuation Details
-                </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
-                </div>
-            </div>
-            <hr>
-            <div class="row info-detail">
-                <div class="col-md-3">Evacuated From:</div>
-                <div class="col-md-3">
-                    <span>{{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.addressLine1}}
-                        {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.addressLine2}} </span>
-                    <span>{{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.jurisdiction.name}},
-                        {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.stateProvince.name}},
-                        {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.postalCode}}</span>
-                </div>
-            </div>
-        </mat-card-content>
+    <ng-template #profile>
+        <div id="personalDetail">
+            <p class="review-heading">Account Details</p>
 
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Insurance
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Restriction
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit"
+                            (click)="editDetails('restriction')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('evac-address')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
+                <hr>
+                {{(formCreationService.restrictionForm$ | async).value |  json}}
+                <div class="row info-detail">
+                    <div class="col-md-9">
+                        <mat-checkbox [checked]="(formCreationService.restrictionForm$ | async).value?.checked">You have
+                            given your consent to have
+                            your location and contact information shared with concerned family or friends
+                            who enquire about your wellbeing.</mat-checkbox>
+                    </div>
                 </div>
-            </div>
-            <hr>
-            <div class="row info-detail">
-                <div class="col-md-3">Insurance:</div>
-                <div class="col-md-3">{{(formCreationService.evacuatedForm$ | async).value.insurance}}</div>
-            </div>
-        </mat-card-content>
+            </mat-card-content>
 
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Family Members
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Personal Details
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit"
+                            (click)="editDetails('personal-details')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit"
-                        (click)="editDetails('family-information')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
-                </div>
-            </div>
-            <hr>
-            <div *ngFor="let member of (formCreationService.familyMembersForm$ | async).value.familyMember">
+                <hr>
+
                 <div class="row info-detail">
                     <div class="col-md-3">Last Name:</div>
-                    <div class="col-md-3">{{member.lastName}}</div>
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.lastName}}</div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">First Name:</div>
-                    <div class="col-md-3">{{member.firstName}}</div>
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.firstName}}</div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Preferred Name:</div>
-                    <div class="col-md-3">{{member.preferredName}}</div>
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.preferredName}}
+                    </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Initials:</div>
-                    <div class="col-md-3">{{member.initials}}</div>
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.initials}}</div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Date of Birth:</div>
-                    <div class="col-md-3">{{member.dateOfBirth}}</div>
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.dateOfBirth}}</div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Gender:</div>
-                    <div class="col-md-3">{{member.gender}}</div>
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.gender}}</div>
                 </div>
-            </div>
-        </mat-card-content>
+            </mat-card-content>
 
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Family Medication & Dietary Requirements
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Primary Address
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit"
-                        (click)="editDetails('family-information')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
-                </div>
-            </div>
-            <hr>
-            <div class="row info-detail">
-                <div class="col-md-3">Family Medication Requirements:</div>
-                <div class="col-md-3">
-                    {{(formCreationService.familyMembersForm$ | async).value.haveMedication === true ? 'Yes' : 'No'}}
-                </div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Family Dietary Requirements:</div>
-                <div class="col-md-3">
-                    {{(formCreationService.familyMembersForm$ | async).value.haveSpecialDiet === true ? 'Yes': 'No'}}
-                </div>
-            </div>
-        </mat-card-content>
+                <hr>
 
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Pets
-                </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('pets')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
-                </div>
-            </div>
-            <hr>
-            <div *ngFor="let pet of (formCreationService.petsForm$ | async).value.pets">
                 <div class="row info-detail">
-                    <div class="col-md-3">Pet Type:</div>
-                    <div class="col-md-3">{{pet.type}}</div>
+                    <div class="col-md-3">Address line 1:</div>
+                    <div class="col-md-3">{{(formCreationService.addressForm$ | async).value?.address?.addressLine1}}
+                    </div>
                 </div>
                 <div class="row info-detail">
-                    <div class="col-md-3">Quantity:</div>
-                    <div class="col-md-3">{{pet.quantity}}</div>
+                    <div class="col-md-3">Address line 2:</div>
+                    <div class="col-md-3">{{(formCreationService.addressForm$ | async).value?.address?.addressLine2}}
+                    </div>
                 </div>
-            </div>
-            <div *ngIf="(formCreationService.petsForm$ | async).value?.pets?.length > 0" class="row info-detail">
-                <div class="col-md-3">Has sufficient pet food?</div>
-                <div class="col-md-3">
-                    {{(formCreationService.petsForm$ | async).value.hasPetsFood === true ? 'Yes' : 'No'}}</div>
-            </div>
-        </mat-card-content>
+                <div class="row info-detail">
+                    <div class="col-md-3">City:</div>
+                    <div class="col-md-3">{{(formCreationService.addressForm$ | async).value?.address?.jurisdiction?.name}}
+                    </div>
+                </div>
+                <div class="row info-detail">
+                    <div class="col-md-3">Postal Code:</div>
+                    <div class="col-md-3">{{(formCreationService.addressForm$ | async).value?.address?.postalCode}}</div>
+                </div>
+                <div class="row info-detail">
+                    <div class="col-md-3">Province:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.addressForm$ | async).value?.address?.stateProvince?.name}}
+                    </div>
+                </div>
+                <div class="row info-detail">
+                    <div class="col-md-3">Country:</div>
+                    <div class="col-md-3">{{(formCreationService.addressForm$ | async).value?.address?.country?.name}}
+                    </div>
+                </div>
+            </mat-card-content>
 
-        <mat-card-content>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Needs Identified
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Mailing Address
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('address')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <button class="edit-image" mat-icon-button aria-label="Edit"
-                        (click)="editDetails('identify-needs')">
-                        <img src="/assets/images/edit.svg" height="35" width="35">
-                        <img src="/assets/images/edit_onhover.svg" height="35" width="35">
-                    </button>
+                <hr>
+                <div class="row info-detail">
+                    <div class="col-md-3">Address line 1:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.addressLine1}}
+                    </div>
                 </div>
-            </div>
-            <hr>
-            <div class="row info-detail">
-                <div class="col-md-3">Food:</div>
-                <div class="col-md-3">
-                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresFood === 'null' ? 'I\'m not sure' : (formCreationService.identifyNeedsForm$ | async).value.requiresFood === true ? 'Yes' : 'No'}}
+                <div class="row info-detail">
+                    <div class="col-md-3">Address line 2:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.addressLine2}}
+                    </div>
                 </div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Lodging:</div>
-                <div class="col-md-3">
-                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresLodging === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresLodging === true ? 'Yes' : 'No'}}
+                <div class="row info-detail">
+                    <div class="col-md-3">City:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.jurisdiction?.name}}</div>
                 </div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Clothing:</div>
-                <div class="col-md-3">
-                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresClothing === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresClothing === true ? 'Yes' : 'No'}}
+                <div class="row info-detail">
+                    <div class="col-md-3">Postal Code:</div>
+                    <div class="col-md-3">{{(formCreationService.addressForm$ | async).value?.mailingAddress?.postalCode}}
+                    </div>
                 </div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Transportation:</div>
-                <div class="col-md-3">
-                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation === true ? 'Yes' : 'No'}}
+                <div class="row info-detail">
+                    <div class="col-md-3">Province:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.stateProvince?.name}}</div>
                 </div>
-            </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Incidentals:</div>
-                <div class="col-md-3">
-                    {{(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals === true ? 'Yes' : 'No'}}
+                <div class="row info-detail">
+                    <div class="col-md-3">Country:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.country?.name}}
+                    </div>
                 </div>
-            </div>
-        </mat-card-content>
-    </div>
+            </mat-card-content>
+
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Contact Details
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit"
+                            (click)="editDetails('contact-info')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row info-detail">
+                    <div class="col-md-3">Telephone/Mobile:</div>
+                    <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async).value?.phone}}</div>
+                </div>
+                <div class="row info-detail">
+                    <div class="col-md-3">Alternative Telephone/Mobile:</div>
+                    <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async).value?.phone}}</div>
+                </div>
+                <div class="row info-detail">
+                    <div class="col-md-3">Email Address:</div>
+                    <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async).value?.email}}</div>
+                </div>
+            </mat-card-content>
+
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Secret Word / Phrase
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('secret')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row info-detail">
+                    <div class="col-md-3">Secret Word / Phrase:</div>
+                    <div class="col-md-3">{{(formCreationService.secretForm$ | async).value?.secretPhrase | maskText}}
+                    </div>
+                </div>
+            </mat-card-content>
+        </div>
+    </ng-template>
+    <ng-template #need>
+        <div id="needsAssessment">
+            <p class="review-heading">Evacuation File</p>
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Evacuation Details
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit"
+                            (click)="editDetails('evac-address')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row info-detail">
+                    <div class="col-md-3">Evacuated From:</div>
+                    <div class="col-md-3">
+                        <span>{{(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.addressLine1}}
+                            {{(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.addressLine2}}
+                        </span>
+                        <span>{{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.jurisdiction.name}},
+                            {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.stateProvince.name}},
+                            {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.postalCode}}</span>
+                    </div>
+                </div>
+            </mat-card-content>
+
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Insurance
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit"
+                            (click)="editDetails('evac-address')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row info-detail">
+                    <div class="col-md-3">Insurance:</div>
+                    <div class="col-md-3">{{(formCreationService.evacuatedForm$ | async).value.insurance}}</div>
+                </div>
+            </mat-card-content>
+
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Family Members
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit"
+                            (click)="editDetails('family-information')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div *ngFor="let member of (formCreationService.familyMembersForm$ | async).value.familyMember">
+                    <div class="row info-detail">
+                        <div class="col-md-3">Last Name:</div>
+                        <div class="col-md-3">{{member.lastName}}</div>
+                    </div>
+                    <div class="row info-detail">
+                        <div class="col-md-3">First Name:</div>
+                        <div class="col-md-3">{{member.firstName}}</div>
+                    </div>
+                    <div class="row info-detail">
+                        <div class="col-md-3">Preferred Name:</div>
+                        <div class="col-md-3">{{member.preferredName}}</div>
+                    </div>
+                    <div class="row info-detail">
+                        <div class="col-md-3">Initials:</div>
+                        <div class="col-md-3">{{member.initials}}</div>
+                    </div>
+                    <div class="row info-detail">
+                        <div class="col-md-3">Date of Birth:</div>
+                        <div class="col-md-3">{{member.dateOfBirth}}</div>
+                    </div>
+                    <div class="row info-detail">
+                        <div class="col-md-3">Gender:</div>
+                        <div class="col-md-3">{{member.gender}}</div>
+                    </div>
+                </div>
+            </mat-card-content>
+
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Family Medication & Dietary Requirements
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit"
+                            (click)="editDetails('family-information')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row info-detail">
+                    <div class="col-md-3">Family Medication Requirements:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.familyMembersForm$ | async).value.haveMedication === true ? 'Yes' : 'No'}}
+                    </div>
+                </div>
+                <div class="row info-detail">
+                    <div class="col-md-3">Family Dietary Requirements:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.familyMembersForm$ | async).value.haveSpecialDiet === true ? 'Yes': 'No'}}
+                    </div>
+                </div>
+            </mat-card-content>
+
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Pets
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('pets')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div *ngFor="let pet of (formCreationService.petsForm$ | async).value.pets">
+                    <div class="row info-detail">
+                        <div class="col-md-3">Pet Type:</div>
+                        <div class="col-md-3">{{pet.type}}</div>
+                    </div>
+                    <div class="row info-detail">
+                        <div class="col-md-3">Quantity:</div>
+                        <div class="col-md-3">{{pet.quantity}}</div>
+                    </div>
+                </div>
+                <div *ngIf="(formCreationService.petsForm$ | async).value?.pets?.length > 0" class="row info-detail">
+                    <div class="col-md-3">Has sufficient pet food?</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.petsForm$ | async).value.hasPetsFood === true ? 'Yes' : 'No'}}</div>
+                </div>
+            </mat-card-content>
+
+            <mat-card-content>
+                <div class="row justify-content-between">
+                    <div class="col-md-6 card-heading">
+                        Needs Identified
+                    </div>
+                    <div class="col-md-2">
+                        <button class="edit-image" mat-icon-button aria-label="Edit"
+                            (click)="editDetails('identify-needs')">
+                            <img src="/assets/images/edit.svg" height="35" width="35">
+                            <img src="/assets/images/edit_onhover.svg" height="35" width="35">
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row info-detail">
+                    <div class="col-md-3">Food:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.identifyNeedsForm$ | async).value.requiresFood === 'null' ? 'I\'m not sure' : (formCreationService.identifyNeedsForm$ | async).value.requiresFood === true ? 'Yes' : 'No'}}
+                    </div>
+                </div>
+                <div class="row info-detail">
+                    <div class="col-md-3">Lodging:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.identifyNeedsForm$ | async).value.requiresLodging === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresLodging === true ? 'Yes' : 'No'}}
+                    </div>
+                </div>
+                <div class="row info-detail">
+                    <div class="col-md-3">Clothing:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.identifyNeedsForm$ | async).value.requiresClothing === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresClothing === true ? 'Yes' : 'No'}}
+                    </div>
+                </div>
+                <div class="row info-detail">
+                    <div class="col-md-3">Transportation:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation === true ? 'Yes' : 'No'}}
+                    </div>
+                </div>
+                <div class="row info-detail">
+                    <div class="col-md-3">Incidentals:</div>
+                    <div class="col-md-3">
+                        {{(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals === true ? 'Yes' : 'No'}}
+                    </div>
+                </div>
+            </mat-card-content>
+        </div>
+    </ng-template>
 </mat-card>
-<br>
-<div class="row">
-    <div class="col">
-        <p>Please complete the CAPTCHA below. This helps us prevent automated registrations.</p>
-    </div>
-</div>
-<div class="row" style="margin-top: 20px;">
-    <div class="col">
-        <captcha language="en" eagerFetchAudio="true" (validToken)="onValidToken($event)"
-            (serverError)="onServerError($event)"></captcha>
-    </div>
-</div>
