@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using System.IO;
-using System.Net;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using EMBC.Registrants.API.Dynamics;
@@ -24,7 +23,6 @@ using EMBC.Registrants.API.RegistrationsModule;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -93,14 +91,6 @@ namespace EMBC.Registrants.API
             services.AddDynamics();
         }
 
-        private IPNetwork ParseNetworkFromString(string network)
-        {
-            var networkParts = network.Trim().Split('/');
-            var prefix = IPAddress.Parse(networkParts[0]);
-            var length = int.Parse(networkParts[1]);
-            return new IPNetwork(prefix, length);
-        }
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -125,6 +115,7 @@ namespace EMBC.Registrants.API
                     diagCtx.Set("X-Forwarded-Host", httpCtx.Request.Headers["X-Forwarded-Host"].ToString());
                     diagCtx.Set("X-Forwarded-For", httpCtx.Request.Headers["X-Forwarded-For"].ToString());
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
+                    if (!env.IsProduction()) diagCtx.Set("Raw_Headers", httpCtx.Request.Headers, true);
                 };
             });
 
