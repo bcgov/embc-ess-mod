@@ -19,6 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.Dynamics.CRM;
+using Microsoft.Extensions.Logging;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 
@@ -32,6 +33,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
     public class RegistrationManager : IRegistrationManager
     {
         private readonly DynamicsClientContext dynamicsClient;
+#pragma warning disable 0649
+        private readonly ILogger logger;
+#pragma warning restore 0649
 
         public RegistrationManager(DynamicsClientContext dynamicsClient)
         {
@@ -51,12 +55,12 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_evacuationfileid = Guid.NewGuid(),
                 era_essfilenumber = essFileNumber,
                 era_evacuationfiledate = now,
-                era_addressline1 = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
-                era_addressline2 = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
-                era_city = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
-                era_Jurisdiction = Lookup(registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction),
-                era_province = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.StateProvinceCode,
-                era_country = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.Country.CountryCode,
+                era_addressline1 = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
+                era_addressline2 = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
+                era_city = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
+                era_Jurisdiction = Lookup(registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction),
+                era_province = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.StateProvinceCode,
+                era_country = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.CountryCode,
                 era_collectionandauthorization = true,
                 era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
                 era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
@@ -108,7 +112,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             };
 
             // members
-            var members = (registration.PerliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
+            var members = (registration.PreliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
             {
                 contactid = Guid.NewGuid(),
                 era_registranttype = 174360001,
@@ -157,14 +161,14 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_needsassessmentdate = now,
                 era_EvacuationFile = file,
                 era_needsassessmenttype = 174360000,
-                era_foodrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresFood),
-                era_clothingrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresClothing),
-                era_dietaryrequirement = registration.PerliminaryNeedsAssessment.HaveSpecialDiet,
-                era_incidentalrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresIncidentals),
-                era_lodgingrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresLodging),
-                era_transportationrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresTransportation),
-                era_medicationrequirement = registration.PerliminaryNeedsAssessment.HaveMedication,
-                era_insurancecoverage = Lookup(registration.PerliminaryNeedsAssessment.Insurance),
+                era_foodrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresFood),
+                era_clothingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresClothing),
+                era_dietaryrequirement = registration.PreliminaryNeedsAssessment.HaveSpecialDiet,
+                era_incidentalrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresIncidentals),
+                era_lodgingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresLodging),
+                era_transportationrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresTransportation),
+                era_medicationrequirement = registration.PreliminaryNeedsAssessment.HaveMedication,
+                era_insurancecoverage = Lookup(registration.PreliminaryNeedsAssessment.Insurance),
                 era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
                 era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
                 era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
@@ -172,7 +176,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             };
 
             // pets
-            var pets = (registration.PerliminaryNeedsAssessment.Pets ?? Array.Empty<Pet>()).Select(p => new era_evacuee
+            var pets = (registration.PreliminaryNeedsAssessment.Pets ?? Array.Empty<Pet>()).Select(p => new era_evacuee
             {
                 era_evacueeid = Guid.NewGuid(),
                 era_needsassessment = needsAssessment,
@@ -229,8 +233,22 @@ namespace EMBC.Registrants.API.RegistrationsModule
                     era_amountofpets = pet.era_amountofpets
                 };
                 dynamicsClient.AddToera_evacuees(petMember);
-                // link pet to evacuee record
-                dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), petMember);
+
+                try
+                {
+                    // link pet to evacuee record
+                    dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), petMember);
+                }
+                catch (ArgumentNullException)
+                {
+                    logger.LogError("ArgumentNullException linking entities");
+                    throw;
+                }
+                catch (InvalidOperationException)
+                {
+                    logger.LogError("InvalidOperationException linking entities");
+                    throw;
+                }
             }
 
             //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)

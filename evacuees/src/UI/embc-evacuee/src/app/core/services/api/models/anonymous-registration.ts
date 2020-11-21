@@ -3,6 +3,6 @@ import { Registration } from '../../../model/registration';
 
 export interface AnonymousRegistration {
   captcha: string;
-  perliminaryNeedsAssessment: NeedsAssessment;
+  preliminaryNeedsAssessment: NeedsAssessment;
   registrationDetails: Registration;
 }
