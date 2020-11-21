@@ -16,6 +16,7 @@
 
 using System.IO;
 using System.Net;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using EMBC.Registrants.API.Dynamics;
 using EMBC.Registrants.API.LocationModule;
@@ -78,15 +79,6 @@ namespace EMBC.Registrants.API
                 services.AddOpenApiDocument();
             }
 
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders = ForwardedHeaders.All;
-                var knownNetworks = configuration.GetValue("KNOWN_NETWORKS", "::ffff:172.51.0.0/16").Split(';');
-                foreach (var knownNetwork in knownNetworks)
-                {
-                    options.KnownNetworks.Add(ParseNetworkFromString(knownNetwork));
-                }
-            });
             services.Configure<JsonOptions>(opts =>
             {
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -120,8 +112,21 @@ namespace EMBC.Registrants.API
                 app.UseExceptionHandler("/error");
             }
 
-            app.UseSerilogRequestLogging();
-            app.UseForwardedHeaders();
+            app.UseSerilogRequestLogging(opts =>
+            {
+                opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
+                {
+                    diagCtx.Set("User", httpCtx.User.FindFirst(ClaimTypes.Upn)?.Value);
+                    diagCtx.Set("Host", httpCtx.Request.Host);
+                    diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
+                    diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
+                    diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
+                    diagCtx.Set("X-Forwarded-Proto", httpCtx.Request.Headers["X-Forwarded-Proto"].ToString());
+                    diagCtx.Set("X-Forwarded-Host", httpCtx.Request.Headers["X-Forwarded-Host"].ToString());
+                    diagCtx.Set("X-Forwarded-For", httpCtx.Request.Headers["X-Forwarded-For"].ToString());
+                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
+                };
+            });
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
