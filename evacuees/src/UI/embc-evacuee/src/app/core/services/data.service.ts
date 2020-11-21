@@ -38,7 +38,7 @@ export class DataService {
 
     clearData(): void {
         this.registrationDetails = {};
-      this.preliminaryNeedsAssessment = {};
+        this.preliminaryNeedsAssessment = {};
         this.registrationResult = {
             referenceNumber: null
         };
