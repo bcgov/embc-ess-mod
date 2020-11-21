@@ -115,7 +115,7 @@ namespace EMBC.Registrants.API
                     diagCtx.Set("X-Forwarded-Host", httpCtx.Request.Headers["X-Forwarded-Host"].ToString());
                     diagCtx.Set("X-Forwarded-For", httpCtx.Request.Headers["X-Forwarded-For"].ToString());
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
-                    diagCtx.Set("Headers", httpCtx.Request.Headers, true);
+                    if (!env.IsProduction()) diagCtx.Set("Raw_Headers", httpCtx.Request.Headers, true);
                 };
             });
 
