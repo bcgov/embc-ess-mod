@@ -111,9 +111,7 @@ namespace EMBC.Registrants.API
                     diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
                     diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
                     diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
-                    diagCtx.Set("X-Forwarded-Proto", httpCtx.Request.Headers["X-Forwarded-Proto"].ToString());
-                    diagCtx.Set("X-Forwarded-Host", httpCtx.Request.Headers["X-Forwarded-Host"].ToString());
-                    diagCtx.Set("X-Forwarded-For", httpCtx.Request.Headers["X-Forwarded-For"].ToString());
+                    diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
                     if (!env.IsProduction()) diagCtx.Set("Raw_Headers", httpCtx.Request.Headers, true);
                 };
