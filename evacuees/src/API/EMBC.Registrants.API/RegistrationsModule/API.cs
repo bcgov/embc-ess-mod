@@ -60,7 +60,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public Registration RegistrationDetails { get; set; }
 
         [Required]
-        public NeedsAssessment PerliminaryNeedsAssessment { get; set; }
+        public NeedsAssessment PreliminaryNeedsAssessment { get; set; }
 
         [Required]
         public string Captcha { get; set; }
@@ -167,6 +167,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         [Phone]
         public string Phone { get; set; }
+
+        public bool HidePhoneRequired { get; set; }
+
+        public bool HideEmailRequired { get; set; }
     }
 
     /// <summary>

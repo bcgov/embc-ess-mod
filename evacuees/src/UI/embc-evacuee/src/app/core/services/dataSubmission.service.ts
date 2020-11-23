@@ -14,7 +14,7 @@ export class DataSubmissionService {
 
     submitRegistrationFile(): Observable<RegistrationResult> {
         this.anonymousRegistration = {
-            perliminaryNeedsAssessment: this.mergeData({}, this.dataService.getNeedsAssessment()),
+          preliminaryNeedsAssessment: this.mergeData({}, this.dataService.getNeedsAssessment()),
             registrationDetails: this.mergeData({}, this.dataService.getRegistration()),
             captcha: 'abc'
         };
