@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ResourceAccess.Dynamics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Dynamics.CRM;
 using Microsoft.Extensions.Logging;
 using Microsoft.OData.Client;
@@ -27,7 +28,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
 {
     public interface IRegistrationManager
     {
-        Task<string> RegisterNew(AnonymousRegistration registration);
+        Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration);
+        Task<OkResult> CreateProfile(Registration profileRegistration);
     }
 
     public class RegistrationManager : IRegistrationManager
@@ -42,7 +44,62 @@ namespace EMBC.Registrants.API.RegistrationsModule
             this.dynamicsClient = dynamicsClient;
         }
 
-        public async Task<string> RegisterNew(AnonymousRegistration registration)
+        public async Task<OkResult> CreateProfile(Registration profileRegistration)
+        {
+            var now = DateTimeOffset.Now;
+
+            // registrant
+            var registrant = new contact
+            {
+                contactid = Guid.NewGuid(),
+                era_registranttype = 174360000,
+                era_authenticated = false,
+                era_verified = false,
+                era_registrationdate = now,
+                firstname = profileRegistration.PersonalDetails.FirstName,
+                lastname = profileRegistration.PersonalDetails.LastName,
+                era_preferredname = profileRegistration.PersonalDetails.PreferredName,
+                era_initials = profileRegistration.PersonalDetails.Initials,
+                gendercode = LookupGender(profileRegistration.PersonalDetails.Gender),
+                birthdate = FromDateTime(DateTime.Parse(profileRegistration.PersonalDetails.DateOfBirth)),
+                era_collectionandauthorization = profileRegistration.InformationCollectionConsent,
+                era_sharingrestriction = profileRegistration.RestrictedAccess,
+
+                address1_line1 = profileRegistration.PrimaryAddress.AddressLine1,
+                address1_line2 = profileRegistration.PrimaryAddress.AddressLine1,
+                address1_city = profileRegistration.PrimaryAddress.Jurisdiction.JurisdictionName,
+                address1_country = profileRegistration.PrimaryAddress.Country.CountryCode,
+                era_City = Lookup(profileRegistration.PrimaryAddress.Jurisdiction),
+                era_ProvinceState = Lookup(profileRegistration.PrimaryAddress.StateProvince),
+                era_Country = Lookup(profileRegistration.PrimaryAddress.Country),
+                address1_postalcode = profileRegistration.PrimaryAddress.PostalCode,
+
+                address2_line1 = profileRegistration.MailingAddress.AddressLine1,
+                address2_line2 = profileRegistration.MailingAddress.AddressLine1,
+                address2_city = profileRegistration.MailingAddress.Jurisdiction.JurisdictionName,
+                address2_country = profileRegistration.MailingAddress.Country.CountryName,
+                era_MailingCity = Lookup(profileRegistration.MailingAddress.Jurisdiction),
+                era_MailingProvinceState = Lookup(profileRegistration.MailingAddress.StateProvince),
+                era_MailingCountry = Lookup(profileRegistration.MailingAddress.Country),
+                address2_postalcode = profileRegistration.MailingAddress.PostalCode,
+
+                emailaddress1 = profileRegistration.ContactDetails.Email,
+                telephone1 = profileRegistration.ContactDetails.Phone,
+
+                era_phonenumberrefusal = string.IsNullOrEmpty(profileRegistration.ContactDetails.Phone),
+                era_emailrefusal = string.IsNullOrEmpty(profileRegistration.ContactDetails.Email),
+                era_secrettext = profileRegistration.SecretPhrase
+            };
+
+            // save registrant to dynamics
+            dynamicsClient.AddTocontacts(registrant);
+
+            var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.ContinueOnError);
+
+            return new OkResult();
+        }
+
+        public async Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration)
         {
             var now = DateTimeOffset.Now;
 #pragma warning disable CA5394 // Do not use insecure randomness

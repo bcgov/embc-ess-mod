@@ -107,7 +107,7 @@ namespace EMBC.Tests.Integration.Registrants.API
             };
 
             var regManager = services.GetRequiredService<IRegistrationManager>();
-            var result = await regManager.RegisterNew(registration);
+            var result = await regManager.CreateRegistrationAnonymous(registration);
             Assert.StartsWith("E", result);
             Assert.Equal(10, result.Length);
         }
