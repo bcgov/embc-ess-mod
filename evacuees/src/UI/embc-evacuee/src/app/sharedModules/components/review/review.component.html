@@ -24,7 +24,7 @@
 
     <ng-template #profile>
         <div id="personalDetail">
-            <p class="review-heading">Account Details</p>
+            <p *ngIf="showHeading" class="review-heading">Account Details</p>
 
             <mat-card-content>
                 <div class="row justify-content-between">
@@ -40,13 +40,21 @@
                     </div>
                 </div>
                 <hr>
-                {{(formCreationService.restrictionForm$ | async).value |  json}}
+                
                 <div class="row info-detail">
+                    <div class="col-md-1">
+                        <span *ngIf="(formCreationService.restrictionForm$ | async).value.restrictedAccess">
+                            <img src="/assets/images/restriction-on.svg" height="20" width="20">
+                        </span>
+                        <span *ngIf="!(formCreationService.restrictionForm$ | async).value.restrictedAccess">
+                            <img src="/assets/images/restriction-off.svg" height="20" width="20">
+                        </span>
+                    </div>
                     <div class="col-md-9">
-                        <mat-checkbox [checked]="(formCreationService.restrictionForm$ | async).value?.checked">You have
+                        <p>You have
                             given your consent to have
                             your location and contact information shared with concerned family or friends
-                            who enquire about your wellbeing.</mat-checkbox>
+                            who enquire about your wellbeing.</p>
                     </div>
                 </div>
             </mat-card-content>

@@ -20,6 +20,7 @@ export class ReviewComponent implements OnInit {
   captchaFilled = false;
   @Output() captchaPassed = new EventEmitter<boolean>(false);
   @Input() type: string;
+  @Input() showHeading: boolean;
 
   ngOnInit(): void {
     // this.loadComponent();

@@ -1,0 +1,64 @@
+<div style="background-color: #F2F2F2;">
+    <div class="container container-frame">
+        <div class="row heading-container">
+            <div class="col-md-12">
+                <span class="page-heading"><b>SMITH</b>, John</span>
+            </div>
+        </div>
+
+        <div class="row align-banner">
+            <div class="col-md-12">
+                <mat-card class="view-banner">
+                    <mat-card-content>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <p class="top-detail">If you are currently <b>evacuated</b>, please start an
+                                    <b>Evacuation File</b>.</p>
+                                <p>
+                                    Completing this now will save you time when you meet with an Emergency Support
+                                    Services
+                                    (ESS) Volunteer.</p>
+                            </div>
+                            <div class="col-md-3 button-align">
+                                <button class="button-p start-button" mat-stroked-button type="button">Get
+                                    Started</button>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <mat-tab-group class="test-tab">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <img class="inactive-curr" src="/assets/images/curr-evac.svg" height="15" width="15">
+                <img class="active-curr" src="/assets/images/curr-evac-active.svg" height="15" width="15">
+                &nbsp;&nbsp;Current Evacuations (0)
+            </ng-template>
+            <span class="profile-headers">Current Evacuations (0)</span>
+            <p>There are no current evacuations.</p>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <img class="inactive-curr" src="/assets/images/past-evac.svg" height="15" width="15">
+                <img class="active-curr" src="/assets/images/past-evac-active.svg" height="15" width="15">
+                &nbsp;&nbsp;Past Evacuations (0)
+            </ng-template>
+            <span class="profile-headers">Past Evacuations (0)</span>
+            <p>There are no past evacuations.</p>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <img class="inactive-curr" src="/assets/images/profile.svg" height="15" width="15">
+                <img class="active-curr" src="/assets/images/profile-active.svg" height="15" width="15">
+                &nbsp;&nbsp;User Profile</ng-template>
+            <span class="profile-headers">User Profile</span>
+            <app-review [type]="type" [showHeading]="false"></app-review>
+            <br>
+            <br>
+        </mat-tab>
+    </mat-tab-group>
+</div>

@@ -297,6 +297,32 @@ mat-card {
   color: black !important;
  }
 
+ .mat-tab-label {
+  opacity: 10 !important;
+  background-color: #CCCCCC !important;
+  min-width: 250px !important;
+}
+ .mat-tab-label, .mat-tab-link {
+  color: black !important;
+  font-size: 16px;
+  font-weight: 700 !important;
+}
+
+.mat-tab-label.mat-tab-label-active {
+  background-color: white !important;
+  min-width: 250px !important;
+  color: #169BD5 !important;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+   background-color: transparent !important; 
+}
+
+.profile-headers {
+  font-size: 36px;
+  color: #234075;
+}
+
 // .mat-form-field-appearance-outline .mat-form-field-outline-thick {
 //    color: rgba(0,0,0,.12) !important; 
 // }
