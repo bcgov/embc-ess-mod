@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-auth-profile',
@@ -8,10 +9,13 @@ import { Component, OnInit } from '@angular/core';
 export class ViewAuthProfileComponent implements OnInit {
 
   type = 'profile';
+  currentFlow: string;
+  parentPageName = 'view-profile';
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.currentFlow = this.route.snapshot.data.flow;
   }
 
 }

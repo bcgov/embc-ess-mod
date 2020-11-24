@@ -30,11 +30,12 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   currentFlow: string;
   type = 'profile';
   profileHeading: string;
+  parentPageName = 'create-profile';
 
   constructor(private router: Router, private componentService: ComponentCreationService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public updateService: DataUpdationService, private cd: ChangeDetectorRef,
-              private submissionService: DataSubmissionService) {
+    private route: ActivatedRoute, private formCreationService: FormCreationService,
+    public updateService: DataUpdationService, private cd: ChangeDetectorRef,
+    private submissionService: DataSubmissionService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -63,6 +64,12 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.profileStepper.selectedIndex = this.stepToDisplay;
       }, 0);
     }
+    if (this.stepToDisplay === 4) {
+      this.isComplete = true;
+      setTimeout(() => {
+        this.profileStepper.selectedIndex = this.stepToDisplay;
+      }, 0);
+    }
   }
 
   currentStep(index: number): void {
@@ -81,17 +88,15 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   goForward(stepper: MatStepper, isLast: boolean, component: string): void {
-    if (this.form.status === 'VALID') {
+    if (isLast && component === 'review') {
+      console.log('profile-submit');
+      this.submitFile();
+    } else if (this.form.status === 'VALID') {
       if (isLast) {
         if (this.currentFlow === 'non-verified-registration') {
           const navigationPath = '/' + this.currentFlow + '/needs-assessment';
           this.router.navigate([navigationPath]);
-        } else {
-          if (component === 'review') {
-            console.log('profile-submit');
-            this.submitFile();
-          }
-        }
+        } 
       }
       this.setFormData(component);
       this.form$.unsubscribe();
