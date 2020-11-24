@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { FormCreationService } from '../../../core/services/formCreation.service';
@@ -19,6 +19,8 @@ export class ReviewComponent implements OnInit {
   captchaVerified = false;
   captchaFilled = false;
   @Output() captchaPassed = new EventEmitter<boolean>(false);
+  @Input() type: string;
+  @Input() showHeading: boolean;
 
   ngOnInit(): void {
     // this.loadComponent();

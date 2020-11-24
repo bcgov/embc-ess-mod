@@ -27,6 +27,12 @@ const routes: Routes = [
         loadChildren: () => import('../sharedModules/components/profile/profile.module').then(m => m.ProfileModule),
         data: { flow: 'verified-registration' }
       },
+      {
+        path: 'view-profile',
+        loadChildren: () => import('../sharedModules/components/view-auth-profile/view-auth-profile.module')
+          .then(m => m.ViewAuthProfileModule),
+        data: { flow: 'verified-registration' }
+      },
     ]
   }
 ];

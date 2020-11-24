@@ -3,7 +3,7 @@
             <div class="col-md-5">
                 <mat-form-field appearance="outline">
                     <mat-label>Address Line 1</mat-label>
-                    <input [formControlName]="'addressLine1'" matInput placeholder="Address Line 1" required>
+                    <input [formControlName]="'addressLine1'" matInput maxlength="100" placeholder="Address Line 1" required>
                     <mat-error
                         *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')">
                         Address Line 1 is required</mat-error>
@@ -15,7 +15,7 @@
             <div class="col-md-5">
                 <mat-form-field appearance="outline">
                     <mat-label>Address Line 2</mat-label>
-                    <input [formControlName]="'addressLine2'" matInput placeholder="Address Line 2">
+                    <input [formControlName]="'addressLine2'" matInput maxlength="100" placeholder="Address Line 2">
                   </mat-form-field>
             </div>
         </div>

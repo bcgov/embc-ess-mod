@@ -7,6 +7,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ComponentWrapperModule } from '../../components/component-wrapper/component-wrapper.module';
+import { ReviewModule } from '../../components/review/review.module';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ComponentWrapperModule } from '../../components/component-wrapper/compo
     MatStepperModule,
     MatSelectModule,
     MatAutocompleteModule,
-    ComponentWrapperModule
+    ComponentWrapperModule,
+    ReviewModule
   ]
 })
 export class ProfileModule { }

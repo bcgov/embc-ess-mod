@@ -4,6 +4,19 @@ import { CustomValidationService } from '../services/customValidation.service';
 import { RegAddress } from './address';
 import * as globalConst from '../services/globalConstants';
 
+export class Restriction {
+    restrictedAccess: boolean;
+}
+
+export class RestrictionForm {
+    restrictedAccess = new FormControl();
+
+    constructor(restriction: Restriction) {
+        this.restrictedAccess.setValue(restriction.restrictedAccess);
+        this.restrictedAccess.setValidators([Validators.required]);
+    }
+}
+
 export class PersonDetails {
     firstName: string;
     lastName: string;
