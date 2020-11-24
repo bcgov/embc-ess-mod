@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   isComplete: boolean;
   stepToDisplay: number;
   currentFlow: string;
-  type="profile";
+  type = 'profile';
   profileHeading: string;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
@@ -44,10 +44,10 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    if(this.currentFlow ==="non-verified-registration") {
-      this.profileHeading = "Create Profile";
+    if (this.currentFlow === 'non-verified-registration') {
+      this.profileHeading = 'Create Profile';
     } else {
-      this.profileHeading = "Create Your ERA Profile";
+      this.profileHeading = 'Create Your ERA Profile';
     }
     this.steps = this.componentService.createProfileSteps();
   }
@@ -87,8 +87,8 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
           const navigationPath = '/' + this.currentFlow + '/needs-assessment';
           this.router.navigate([navigationPath]);
         } else {
-          if(component === 'review') {
-            console.log('profile-submit')
+          if (component === 'review') {
+            console.log('profile-submit');
             this.submitFile();
           }
         }

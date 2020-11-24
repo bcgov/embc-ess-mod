@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { PersonDetailsForm, PersonDetails, ContactDetailsForm, ContactDetails, Secret, SecretForm, AddressForm, Address, RestrictionForm, Restriction } from '../model/profile.model';
+import {
+    PersonDetailsForm, PersonDetails, ContactDetailsForm, ContactDetails, Secret, SecretForm,
+    AddressForm, Address, RestrictionForm, Restriction
+} from '../model/profile.model';
 import { CustomValidationService } from './customValidation.service';
 import { Evacuated, EvacuatedForm, FamilyMembers, FamilyMembersForm, IdentifyNeeds, IdentifyNeedsForm, Pet, PetForm } from '../model/needs.model';
 

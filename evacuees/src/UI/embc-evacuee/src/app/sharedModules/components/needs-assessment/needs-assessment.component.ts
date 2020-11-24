@@ -27,7 +27,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
   captchaPassed = false;
   stepToDisplay: number;
-  type="both";
+  type = 'both';
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
               private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef) {

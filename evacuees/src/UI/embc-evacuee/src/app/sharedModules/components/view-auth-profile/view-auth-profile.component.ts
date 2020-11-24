@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewAuthProfileComponent implements OnInit {
 
-  type="profile";
+  type = 'profile';
 
   constructor() { }
 

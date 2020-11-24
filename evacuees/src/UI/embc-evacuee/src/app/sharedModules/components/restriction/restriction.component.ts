@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { DataService } from '../../../core/services/data.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
@@ -17,8 +17,9 @@ export class RestrictionComponent implements OnInit {
   restrictionForm$: Subscription;
   currentFlow: string;
 
-  constructor(private router: Router, private builder: FormBuilder, private dataService: DataService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService, public updateService: DataUpdationService) { }
+  constructor(private router: Router, private dataService: DataService,
+              private route: ActivatedRoute, private formCreationService: FormCreationService,
+              public updateService: DataUpdationService) { }
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
@@ -26,12 +27,7 @@ export class RestrictionComponent implements OnInit {
       restrictionForm => {
         this.restrictionForm = restrictionForm;
       }
-    )
-    // this.restrictionForm = this.builder.group({
-    //   restrictedAccess: [false, [Validators.required]]
-    // });
-
-    //this.mapData();
+    );
   }
 
   mapData(): void {

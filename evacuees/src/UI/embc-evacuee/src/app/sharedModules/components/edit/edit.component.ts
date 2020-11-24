@@ -19,7 +19,7 @@ export class EditComponent implements OnInit {
   editHeading: string;
 
   constructor(private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
-    private formCreationService: FormCreationService) { }
+              private formCreationService: FormCreationService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -78,7 +78,7 @@ export class EditComponent implements OnInit {
             this.form = restriction;
           }
         );
-        this.editHeading = 'Edit Restriction'
+        this.editHeading = 'Edit Restriction';
         break;
       case 'personal-details':
         this.form$ = this.formCreationService.getPeronalDetailsForm().subscribe(
@@ -86,7 +86,7 @@ export class EditComponent implements OnInit {
             this.form = personalDetails;
           }
         );
-        this.editHeading = 'Edit Profile'
+        this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'address':
@@ -95,7 +95,7 @@ export class EditComponent implements OnInit {
             this.form = address;
           }
         );
-        this.editHeading = 'Edit Profile'
+        this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'contact-info':
@@ -104,7 +104,7 @@ export class EditComponent implements OnInit {
             this.form = contactDetails;
           }
         );
-        this.editHeading = 'Edit Profile'
+        this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'secret':
@@ -113,7 +113,7 @@ export class EditComponent implements OnInit {
             this.form = secret;
           }
         );
-        this.editHeading = 'Edit Profile'
+        this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'evac-address':
@@ -122,7 +122,7 @@ export class EditComponent implements OnInit {
             this.form = evacuatedForm;
           }
         );
-        this.editHeading = 'Edit Evacuation File'
+        this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'family-information':
@@ -131,7 +131,7 @@ export class EditComponent implements OnInit {
             this.form = memberForm;
           }
         );
-        this.editHeading = 'Edit Evacuation File'
+        this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'pets':
@@ -140,7 +140,7 @@ export class EditComponent implements OnInit {
             this.form = petsForm;
           }
         );
-        this.editHeading = 'Edit Evacuation File'
+        this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'identify-needs':
@@ -149,7 +149,7 @@ export class EditComponent implements OnInit {
             this.form = identifyNeedsForm;
           }
         );
-        this.editHeading = 'Edit Evacuation File'
+        this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       default:
