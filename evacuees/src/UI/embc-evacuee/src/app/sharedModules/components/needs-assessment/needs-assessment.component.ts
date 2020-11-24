@@ -29,7 +29,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   stepToDisplay: number;
   type = 'both';
   currentFlow: string;
-  parentPageName = 'needs-assessment'
+  parentPageName = 'needs-assessment';
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
               private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
