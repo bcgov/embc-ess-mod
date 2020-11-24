@@ -9,6 +9,7 @@ import { FormCreationService } from '../../../core/services/formCreation.service
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { DataSubmissionService } from 'src/app/core/services/dataSubmission.service';
 import { RegistrationResult } from 'src/app/core/services/api/models/registration-result';
+import { ProblemDetail } from 'src/app/core/model/problemDetail';
 
 @Component({
   selector: 'app-profile',
@@ -167,14 +168,14 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   submitFile(): void {
-    this.router.navigate(['/verified-registration/view-profile']);
-    // this.submissionService.submitRegistrationFile().subscribe((response: RegistrationResult) => {
-    //   console.log(response);
-    //   this.updateService.updateRegisrationResult(response);
-    //   this.router.navigate(['/verified-registration/view-profile']);
-    // }, (error) => {
-    //   console.log(error);
-    // });
+    //this.router.navigate(['/verified-registration/view-profile']);
+    this.submissionService.submitProfile().subscribe((response: ProblemDetail) => {
+      console.log(response);
+      //this.updateService.updateRegisrationResult(response);
+      this.router.navigate(['/verified-registration/view-profile']);
+    }, (error) => {
+      console.log(error);
+    });
 
   }
 
