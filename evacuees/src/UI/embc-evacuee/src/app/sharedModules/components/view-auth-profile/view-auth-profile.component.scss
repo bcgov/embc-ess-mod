@@ -1,0 +1,51 @@
+.view-banner {
+    background-color: #FCBA19;
+    border-color: #ffdf25;
+    box-shadow: none;
+}
+
+.align-banner {
+    padding-top: 10px;
+    padding-bottom: 40px;
+}
+
+.start-button {
+    width: 100%;
+}
+
+.top-detail {
+    font-size: 21px;
+}
+
+.button-align {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+:host ::ng-deep .mat-tab-label-active {
+    .inactive-curr{
+        display: none !important;
+    }
+    .active-curr{
+        display: block !important;
+    }
+}
+
+.active-curr{
+    display: none;
+}
+
+:host ::ng-deep app-review {
+    .mat-card {
+        box-shadow: none;
+    }
+    .mat-card-top, mat-card {
+     border-top-style: none !important; 
+    }
+    .mat-card-left, mat-card {
+        border-left-style: none !important; 
+    }
+    .mat-card-right, mat-card {
+        border-right-style: none !important; 
+    }   
+}

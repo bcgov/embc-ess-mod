@@ -44,7 +44,7 @@ export class FamilyMembersForm {
     haveMedication = new FormControl();
     haveSpecialDiet = new FormControl();
     member: FormGroup;
-    familyMember = new FormControl();
+    familyMember = new FormControl([]);
     addFamilyMemberIndicator = new FormControl(false);
 
     constructor(familyMembers: FamilyMembers, customValidator: CustomValidationService, builder: FormBuilder) {
@@ -83,7 +83,7 @@ export class Pet {
 }
 
 export class PetForm {
-    pets = new FormControl();
+    pets = new FormControl([]);
     pet: FormGroup;
     addPetIndicator = new FormControl(false);
     hasPetsFood = new FormControl();

@@ -10,6 +10,11 @@ export class DataUpdationService {
 
     constructor(public dataService: DataService, public formCreationService: FormCreationService) { }
 
+    updateRestriction(formGroup: FormGroup): void {
+        this.formCreationService.setRestrictionForm(formGroup);
+        this.dataService.updateRegistartion({ restrictedAccess: formGroup.get('restrictedAccess').value });
+    }
+
     updatePersonalDetails(formGroup: FormGroup): void {
         this.formCreationService.setPersonDetailsForm(formGroup);
         this.dataService.updateRegistartion({ personalDetails: formGroup.value });

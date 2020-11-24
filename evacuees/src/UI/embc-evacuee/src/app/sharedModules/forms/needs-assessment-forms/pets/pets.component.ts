@@ -49,6 +49,7 @@ export default class PetsComponent implements OnInit {
 
     this.petsForm.get('addPetIndicator').valueChanges.subscribe(value =>
       this.updateOnVisibility());
+    this.dataSource.next(this.petsForm.get('pets').value);
   }
 
   addPets(): void {
@@ -132,7 +133,7 @@ export default class PetsComponent implements OnInit {
   ],
   declarations: [
     PetsComponent,
-    ]
+  ]
 })
 class PetsModule {
 
