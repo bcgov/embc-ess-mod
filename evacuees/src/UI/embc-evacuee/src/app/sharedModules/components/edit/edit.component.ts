@@ -17,11 +17,23 @@ export class EditComponent implements OnInit {
   form$: Subscription;
   form: FormGroup;
   editHeading: string;
+  currentFlow: string;
+  parentPageName: string;
+  nonVerfiedRoute = '/non-verified-registration/needs-assessment';
+  verifiedRoute = '/verified-registration/create-profile';
 
   constructor(private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
-              private formCreationService: FormCreationService) { }
+              private formCreationService: FormCreationService) {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation.extras.state !== undefined) {
+      const state = navigation.extras.state as { parentPageName: string };
+      this.parentPageName = state.parentPageName;
+      console.log(this.parentPageName);
+    }
+  }
 
   ngOnInit(): void {
+    this.currentFlow = this.route.snapshot.data.flow;
     this.route.paramMap.subscribe(params => {
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
@@ -30,11 +42,27 @@ export class EditComponent implements OnInit {
 
   save(): void {
     this.setFormData(this.componentToLoad);
-    this.router.navigate(['/non-verified-registration/needs-assessment'], this.navigationExtras);
+    if (this.currentFlow === 'non-verified-registration') {
+      this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
+    } else {
+      if (this.parentPageName === 'create-profile') {
+        this.router.navigate([this.verifiedRoute], this.navigationExtras);
+      } else if (this.parentPageName === 'view-profile') {
+        this.router.navigate(['/verified-registration/view-profile']);
+      }
+    }
   }
 
   cancel(): void {
-    this.router.navigate(['/non-verified-registration/needs-assessment'], this.navigationExtras);
+    if (this.currentFlow === 'non-verified-registration') {
+      this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
+    } else {
+      if (this.parentPageName === 'create-profile') {
+        this.router.navigate([this.verifiedRoute], this.navigationExtras);
+      } else if (this.parentPageName === 'view-profile') {
+        this.router.navigate(['/verified-registration/view-profile']);
+      }
+    }
   }
 
   setFormData(component: string): void {

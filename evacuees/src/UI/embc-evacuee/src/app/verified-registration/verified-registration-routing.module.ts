@@ -33,6 +33,11 @@ const routes: Routes = [
           .then(m => m.ViewAuthProfileModule),
         data: { flow: 'verified-registration' }
       },
+      {
+        path: 'edit/:type',
+        loadChildren: () => import('../sharedModules/components/edit/edit.module').then(m => m.EditModule),
+        data: { flow: 'verified-registration' }
+      },
     ]
   }
 ];
