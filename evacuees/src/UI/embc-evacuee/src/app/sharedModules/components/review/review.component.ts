@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 
 @Component({
@@ -18,22 +18,25 @@ export class ReviewComponent implements OnInit {
   hideCard = false;
   captchaVerified = false;
   captchaFilled = false;
+  navigationExtras: NavigationExtras;
   @Output() captchaPassed = new EventEmitter<boolean>(false);
   @Input() type: string;
   @Input() showHeading: boolean;
+  @Input() currentFlow: string;
+  @Input() parentPageName: string;
 
   ngOnInit(): void {
-    // this.loadComponent();
-
-    // this.componentToLoad.subscribe(x => {
-    //   console.log(x)
-    //   this.cs = x.default;
-    // })
+    this.navigationExtras = { state: { parentPageName: this.parentPageName } };
   }
 
   editDetails(componentToEdit: string): void {
-    const route = '/non-verified-registration/edit/' + componentToEdit;
-    this.router.navigate([route]);
+    let route: string;
+    if (this.currentFlow === 'non-verified-registration') {
+      route = '/non-verified-registration/edit/' + componentToEdit;
+    } else {
+      route = '/verified-registration/edit/' + componentToEdit;
+    }
+    this.router.navigate([route], this.navigationExtras);
   }
 
   back(): void {
@@ -52,54 +55,4 @@ export class ReviewComponent implements OnInit {
     this.captchaVerified = true;
     this.captchaFilled = true;
   }
-
-  // loadComponent() {
-  // if(!this.componentToLoad) {
-  //  this.componentToLoad = this.componentService.getProfileComponents().pipe(
-  //    map(comps => comps.filter( v => v.type === 'personal-details')[0])
-
-  //    ).pipe(mergeMap((x) => {
-  //   console.log(x)
-  //   console.log(x.type)
-  //   console.log((`../core/components/evacuee-profile-forms/${x.type}/${x.type}.component`))
-  //   return Promise.resolve(import(`../core/components/evacuee-profile-forms/${x.type}/${x.type}.component`));
-  //  return Promise.resolve(x => {
-  //    console.log("here")
-  //   console.log(x)
-  //    return import(`../core/components/evacuee-profile-forms/${x.type}/${x.type}.component`);
-  //  }
-  //  }));
-
-  // compName.subscribe(v => console.log(v))
-
-
-  // console.log(comp)
-  //     console.log(comp.type === "personal-details")
-  //     return comp.type === 'personal-details'}));
-
-
-  //  this.componentToLoad = Promise.resolve(compName => {
-  //    return import(`../core/components/evacuee-profile-forms/${compName}/${compName}.component`);
-  //   })
-  // }
-  // }
-
 }
-
-
-  // this.profileComponents$ = this.componentService.getProfileComponents().pipe(mergeMap((components) => {
-  //     return Promise.all(components.map(comp => {
-  //       console.log((`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`));
-  //       return import(`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`);
-  //     }))
-  //   }));
-
-
-
-  // mergeMap((components) => {
-  //       return Promise.all(components.map(comp => {
-  //         console.log((`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`));
-  //         return import(`../core/components/evacuee-profile-forms/${comp.type}/${comp.type}.component`);
-  //       }))
-  //     }));
-

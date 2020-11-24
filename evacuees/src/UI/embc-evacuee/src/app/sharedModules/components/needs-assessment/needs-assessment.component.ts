@@ -1,6 +1,6 @@
 import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../../core/model/componentMetaData.model';
 import { ComponentCreationService } from '../../../core/services/componentCreation.service';
 import { MatStepper } from '@angular/material/stepper';
@@ -28,9 +28,12 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   captchaPassed = false;
   stepToDisplay: number;
   type = 'both';
+  currentFlow: string;
+  parentPageName = 'needs-assessment'
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-              private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef) {
+              private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
+              private route: ActivatedRoute) {
       const navigation = this.router.getCurrentNavigation();
       if (navigation.extras.state !== undefined) {
         const state = navigation.extras.state as { stepIndex: number };
@@ -39,6 +42,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
      }
 
   ngOnInit(): void {
+    this.currentFlow = this.route.snapshot.data.flow;
     this.needsSteps = this.componentService.createEvacSteps();
   }
 

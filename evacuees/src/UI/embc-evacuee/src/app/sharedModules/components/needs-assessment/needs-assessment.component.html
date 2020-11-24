@@ -36,7 +36,7 @@
         Emergency
         Support Services volunteer.</p>
       <ng-template matStepLabel>Review & Submit</ng-template>
-      <app-review [type]="type" [showHeading]="true" (captchaPassed)="allowSubmit($event)"></app-review>
+      <app-review [type]="type" [showHeading]="true" (captchaPassed)="allowSubmit($event)" [parentPageName]="parentPageName" [currentFlow]="currentFlow"></app-review>
       <br>
       <div class="col-md-12">
         <button class="button-p save-button" mat-stroked-button type="button" [disabled]="!captchaPassed"
