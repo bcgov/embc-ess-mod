@@ -21,7 +21,7 @@ export class ReviewComponent implements OnInit {
   navigationExtras: NavigationExtras;
   @Output() captchaPassed = new EventEmitter<boolean>(false);
   @Input() type: string;
-  @Input() showHeading: boolean;
+  @Input() showHeading: string;
   @Input() currentFlow: string;
   @Input() parentPageName: string;
 
