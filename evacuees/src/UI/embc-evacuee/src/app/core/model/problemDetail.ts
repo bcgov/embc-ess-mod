@@ -4,5 +4,5 @@ export interface ProblemDetail {
     status: number;
     detail: string;
     instance: string;
-    extensions: {}
+    extensions: {};
 }

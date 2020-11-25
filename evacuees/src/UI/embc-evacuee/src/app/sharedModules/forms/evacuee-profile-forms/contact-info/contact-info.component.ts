@@ -35,7 +35,7 @@ export default class ContactInfoComponent implements OnInit {
   matcher = new CustomErrorStateMatcher();
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-  public customValidator: CustomValidationService) {
+              public customValidator: CustomValidationService) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
@@ -44,7 +44,7 @@ export default class ContactInfoComponent implements OnInit {
     this.contactInfoForm$ = this.formCreationService.getContactDetailsForm().subscribe(
       contactInfo => {
         this.contactInfoForm = contactInfo;
-        this.contactInfoForm.setValidators([this.customValidator.confirmEmailValidator().bind(this.customValidator)])
+        this.contactInfoForm.setValidators([this.customValidator.confirmEmailValidator().bind(this.customValidator)]);
       }
     );
   }

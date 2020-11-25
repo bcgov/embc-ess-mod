@@ -32,7 +32,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   type = 'profile';
   profileHeading: string;
   parentPageName = 'create-profile';
-  showHeading = "Review & Submit"
+  showHeading = 'Review & Submit';
 
   constructor(private router: Router, private componentService: ComponentCreationService,
               private route: ActivatedRoute, private formCreationService: FormCreationService,
@@ -169,10 +169,10 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   submitFile(): void {
-    //this.router.navigate(['/verified-registration/view-profile']);
+    // this.router.navigate(['/verified-registration/view-profile']);
     this.submissionService.submitProfile().subscribe((response: ProblemDetail) => {
       console.log(response);
-      //this.updateService.updateRegisrationResult(response);
+      // this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/verified-registration/view-profile']);
     }, (error) => {
       console.log(error);

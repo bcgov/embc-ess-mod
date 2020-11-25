@@ -30,7 +30,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   type = 'both';
   currentFlow: string;
   parentPageName = 'needs-assessment';
-  showHeading = "Account Details";
+  showHeading = 'Account Details';
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
               private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
