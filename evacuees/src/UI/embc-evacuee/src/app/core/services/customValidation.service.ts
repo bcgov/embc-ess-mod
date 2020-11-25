@@ -63,11 +63,13 @@ export class CustomValidationService {
      */
     confirmEmailValidator(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
-            if (control.value !== null && control.value !== undefined) {
-                const email = control.parent.get('email').value;
-                const confirmEmail = control.value;
-                if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
-                    return { emailMatch: true };
+            if (control) {
+                const email = control.get('email').value;
+                const confirmEmail = control.get('confirmEmail').value;
+                if(email !== undefined && confirmEmail !== undefined) {
+                    if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
+                        return { emailMatch: true };
+                    }
                 }
             }
             return null;

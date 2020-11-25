@@ -84,8 +84,7 @@ export class ContactDetailsForm {
         this.email.setValidators([Validators.required, Validators.email]);
 
         this.confirmEmail.setValue(contactDetails.confirmEmail);
-        this.confirmEmail.setValidators([Validators.required, Validators.email,
-        customValidator.confirmEmailValidator().bind(customValidator)]);
+        this.confirmEmail.setValidators([Validators.required, Validators.email]);
 
         this.phone.setValue(contactDetails.phone);
         this.phone.setValidators([Validators.required, customValidator.maskedNumberLengthValidator().bind(customValidator)]);

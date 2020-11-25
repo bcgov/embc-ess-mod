@@ -54,12 +54,12 @@
           </mat-form-field>
         </div>
       </div>
-
+     
       <div class="row">
         <div class="col-md-5">
           <mat-form-field appearance="outline" [hideRequiredMarker]="contactFormControl?.hideEmailRequired?.value">
             <mat-label>Confirm Email Address</mat-label>
-            <input formControlName="confirmEmail" matInput placeholder="Confirm Email Address" required>
+            <input formControlName="confirmEmail" matInput placeholder="Confirm Email Address" [errorStateMatcher]="matcher" required>
             <mat-error
               *ngIf="contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('required')">
               Confirm Email is required</mat-error>
@@ -67,7 +67,7 @@
               *ngIf="contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('email')">
               Invalid email</mat-error>
             <mat-error
-              *ngIf="contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('emailMatch')">
+              *ngIf="!contactFormControl.confirmEmail.invalid && contactFormControl?.confirmEmail?.parent?.errors?.emailMatch">
               Email address mismatch</mat-error>
           </mat-form-field>
         </div>

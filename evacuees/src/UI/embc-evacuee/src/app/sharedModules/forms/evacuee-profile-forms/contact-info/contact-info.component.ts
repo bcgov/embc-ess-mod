@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, NgForm, FormGroupDirective } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,14 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import { Subscription } from 'rxjs';
 import { DirectivesModule } from '../../../../core/directives/directives.module';
 import { TextMaskModule } from 'angular2-text-mask';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export class CustomErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null): boolean {
+    return !!(control && control.parent.hasError('emailMatch'));
+  }
+}
 
 @Component({
   selector: 'app-contact-info',
@@ -24,8 +32,10 @@ export default class ContactInfoComponent implements OnInit {
   contactInfoForm$: Subscription;
   formCreationService: FormCreationService;
   readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  matcher = new CustomErrorStateMatcher();
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
+  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+  public customValidator: CustomValidationService) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
@@ -34,6 +44,7 @@ export default class ContactInfoComponent implements OnInit {
     this.contactInfoForm$ = this.formCreationService.getContactDetailsForm().subscribe(
       contactInfo => {
         this.contactInfoForm = contactInfo;
+        this.contactInfoForm.setValidators([this.customValidator.confirmEmailValidator().bind(this.customValidator)])
       }
     );
   }
