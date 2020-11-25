@@ -11,11 +11,13 @@
       <!--[stepControl]="form" [completed]="isComplete"-->
       <ng-template matStepLabel>{{step.stepName}}</ng-template>
       <div *ngIf="step.stepName === 'Personal Details' && currentFlow === 'verified-registration'; else altText">
-        <p>Please review and complete the form below. As this account is linked to your BC Services Card, certain fields are not editable.</p>
+        <p>Please review and complete the form below. As this account is linked to your BC Services Card, certain fields
+          are not editable.</p>
         <p>Required fields are marked with a red asterisk.</p>
       </div>
       <ng-template #altText>
-        <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.</p>
+        <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.
+        </p>
       </ng-template>
       <br>
       <app-component-wrapper [componentName]="step.component" [folderPath]="profileFolderPath"></app-component-wrapper>
@@ -26,15 +28,22 @@
             (click)="goBack(profileStepper, step.lastStep)">{{step.backButtonLabel}}</button>
         </div>
         <div class="col-md-6">
-          <button class="button-p" mat-stroked-button type="button"
-            (click)="goForward(profileStepper, step.isLast, step.component)">{{step.nextButtonLabel}}</button>
+          <button *ngIf="currentFlow === 'verified-registration' && step.component === 'secret'; else normalButton"
+            class="button-p" mat-stroked-button type="button"
+            (click)="goForward(profileStepper, step.isLast, step.component)">Review Submission</button>
+          <ng-template #normalButton>
+            <button class="button-p"
+              mat-stroked-button type="button"
+              (click)="goForward(profileStepper, step.isLast, step.component)">{{step.nextButtonLabel}}</button>
+          </ng-template>
         </div>
       </div>
     </mat-step>
     <mat-step *ngIf="currentFlow === 'verified-registration'">
       <p>Please read through and confirm that your details are all correct before submitting.</p>
       <ng-template matStepLabel>Review & Submit</ng-template>
-      <app-review [type]="type" [showHeading]="showHeading" [parentPageName]="parentPageName" [currentFlow]="currentFlow"></app-review>
+      <app-review [type]="type" [showHeading]="showHeading" [parentPageName]="parentPageName"
+        [currentFlow]="currentFlow"></app-review>
       <br>
       <div class="col-md-12">
         <button class="button-p save-button" mat-stroked-button type="button"
