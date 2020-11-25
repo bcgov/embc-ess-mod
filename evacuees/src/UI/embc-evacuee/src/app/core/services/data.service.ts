@@ -7,7 +7,7 @@ import { RegistrationResult } from './api/models/registration-result';
 export class DataService {
 
     private registrationDetails: Partial<Registration> = {};
-    private perliminaryNeedsAssessment: Partial<NeedsAssessment> = {};
+    private preliminaryNeedsAssessment: Partial<NeedsAssessment> = {};
     private registrationResult: RegistrationResult;
 
     public updateRegistartion(value): void {
@@ -20,12 +20,12 @@ export class DataService {
     }
 
     public updateNeedsAssessment(value): void {
-        this.perliminaryNeedsAssessment = { ...this.perliminaryNeedsAssessment, ...value};
-        console.log(this.perliminaryNeedsAssessment);
+      this.preliminaryNeedsAssessment = { ...this.preliminaryNeedsAssessment, ...value};
+      console.log(this.preliminaryNeedsAssessment);
     }
 
     public getNeedsAssessment(): Partial<NeedsAssessment> {
-        return this.perliminaryNeedsAssessment;
+      return this.preliminaryNeedsAssessment;
     }
 
     public setRegistrationResult(registrationResult: RegistrationResult): void {
@@ -34,5 +34,13 @@ export class DataService {
 
     public getRegistrationResult(): RegistrationResult {
         return this.registrationResult;
+    }
+
+    clearData(): void {
+        this.registrationDetails = {};
+        this.preliminaryNeedsAssessment = {};
+        this.registrationResult = {
+            referenceNumber: null
+        };
     }
 }

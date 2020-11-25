@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroup } from '@angular/forms';
 import { DataService } from '../../../core/services/data.service';
+import { FormCreationService } from 'src/app/core/services/formCreation.service';
+import { Subscription } from 'rxjs';
+import { DataUpdationService } from 'src/app/core/services/dataUpdation.service';
 
 @Component({
   selector: 'app-restriction',
@@ -11,22 +14,20 @@ import { DataService } from '../../../core/services/data.service';
 export class RestrictionComponent implements OnInit {
 
   restrictionForm: FormGroup;
+  restrictionForm$: Subscription;
+  currentFlow: string;
 
-  constructor(private router: Router, private builder: FormBuilder, private dataService: DataService ) { }
+  constructor(private router: Router, private dataService: DataService,
+              private route: ActivatedRoute, private formCreationService: FormCreationService,
+              public updateService: DataUpdationService) { }
 
   ngOnInit(): void {
-    this.restrictionForm = this.builder.group({
-      restrictedAccess: [false, [Validators.required]]
-    });
-
-    this.mapData();
-  }
-
-  /**
-   * Returns the control of the form
-   */
-  get restrFormControl(): { [key: string]: AbstractControl; } {
-    return this.restrictionForm.controls;
+    this.currentFlow = this.route.snapshot.data.flow;
+    this.restrictionForm$ = this.formCreationService.getRestrictionForm().subscribe(
+      restrictionForm => {
+        this.restrictionForm = restrictionForm;
+      }
+    );
   }
 
   mapData(): void {
@@ -38,8 +39,9 @@ export class RestrictionComponent implements OnInit {
 
   submitRestriction(): void {
     if (this.restrictionForm.status === 'VALID') {
-      this.dataService.updateRegistartion(this.restrictionForm.value);
-      this.router.navigate(['/non-verified-registration/create-profile']);
+      this.updateService.updateRestriction(this.restrictionForm);
+      const navigationPath = '/' + this.currentFlow + '/create-profile';
+      this.router.navigate([navigationPath]);
     } else {
       this.restrictionForm.markAllAsTouched();
     }

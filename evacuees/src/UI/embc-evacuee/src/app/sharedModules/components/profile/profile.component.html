@@ -1,7 +1,7 @@
 <div class="container container-frame">
   <div class="row heading-container">
     <div class="col-12">
-      <span class="page-heading">Create Profile</span>
+      <span class="page-heading">{{profileHeading}}</span>
     </div>
   </div>
 
@@ -25,6 +25,17 @@
         </div>
       </div>
     </mat-step>
+    <mat-step *ngIf="currentFlow === 'verified-registration'">
+      <p>Please read through and confirm that your details are all correct before submitting.</p>
+      <ng-template matStepLabel>Review & Submit</ng-template>
+      <app-review [type]="type" [showHeading]="showHeading" [parentPageName]="parentPageName" [currentFlow]="currentFlow"></app-review>
+      <br>
+      <div class="col-md-12">
+        <button class="button-p save-button" mat-stroked-button type="button"
+          (click)="goForward(profileStepper, true, 'review')">Save &
+          Submit</button>
+      </div>
+    </mat-step>
     <ng-template matStepperIcon="edit" let-index="index">
       {{index + 1}}
     </ng-template>
@@ -33,7 +44,4 @@
       {{profileStepper?.selectedIndex + 1}}
     </ng-template> -->
   </mat-horizontal-stepper>
-
 </div>
-
-<!-- {{form?.status}} -->

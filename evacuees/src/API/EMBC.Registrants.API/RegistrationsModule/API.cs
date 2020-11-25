@@ -27,27 +27,43 @@ namespace EMBC.Registrants.API.RegistrationsModule
     [ApiController]
     public class RegistrationController : ControllerBase
     {
-        private readonly RegistrationReferenceNumberGenerator registrationReferenceNumberGenerator;
+        private readonly IRegistrationManager registrationManager;
 
-        public RegistrationController(RegistrationReferenceNumberGenerator registrationReferenceNumberGenerator)
+        public RegistrationController(IRegistrationManager registrationManager)
         {
-            this.registrationReferenceNumberGenerator = registrationReferenceNumberGenerator;
+            this.registrationManager = registrationManager;
         }
 
         /// <summary>
-        /// Register a new anonymous registrant and preliminary needs assessment
+        /// Anonymously Create a Registrant Profile and Evacuation File
         /// </summary>
         /// <param name="registration">Anonymous registration form</param>
-        /// <returns>New registration number</returns>
-        [HttpPost]
+        /// <returns>ESS number</returns>
+        [HttpPost("create-registration-anonymous")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<RegistrationResult>> Create(AnonymousRegistration registration)
         {
             if (registration == null) return BadRequest();
-            var referenceNumber = await registrationReferenceNumberGenerator.GenerateNext();
+            var referenceNumber = await registrationManager.CreateRegistrationAnonymous(registration);
 
             return CreatedAtAction(nameof(Create), new RegistrationResult { ReferenceNumber = referenceNumber });
+        }
+
+        /// <summary>
+        /// Create a Registrant Profile
+        /// </summary>
+        /// <param name="profleRegistration">Profile Registration Form</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        [HttpPost("create-profile")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> CreateProfile(Registration profleRegistration)
+        {
+            if (profleRegistration == null) return BadRequest();
+            var result = await registrationManager.CreateProfile(profleRegistration);
+
+            return CreatedAtAction(nameof(CreateProfile), result);
         }
     }
 
@@ -60,7 +76,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public Registration RegistrationDetails { get; set; }
 
         [Required]
-        public NeedsAssessment PerliminaryNeedsAssessment { get; set; }
+        public NeedsAssessment PreliminaryNeedsAssessment { get; set; }
 
         [Required]
         public string Captcha { get; set; }
@@ -167,6 +183,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         [Phone]
         public string Phone { get; set; }
+
+        public bool HidePhoneRequired { get; set; }
+
+        public bool HideEmailRequired { get; set; }
     }
 
     /// <summary>

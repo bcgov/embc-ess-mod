@@ -7,6 +7,9 @@ import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
+import { DataSubmissionService } from 'src/app/core/services/dataSubmission.service';
+import { RegistrationResult } from 'src/app/core/services/api/models/registration-result';
+import { ProblemDetail } from 'src/app/core/model/problemDetail';
 
 @Component({
   selector: 'app-profile',
@@ -25,10 +28,16 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   form: FormGroup;
   isComplete: boolean;
   stepToDisplay: number;
+  currentFlow: string;
+  type = 'profile';
+  profileHeading: string;
+  parentPageName = 'create-profile';
+  showHeading = 'Review & Submit';
 
   constructor(private router: Router, private componentService: ComponentCreationService,
               private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public updateService: DataUpdationService, private cd: ChangeDetectorRef) {
+              public updateService: DataUpdationService, private cd: ChangeDetectorRef,
+              private submissionService: DataSubmissionService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -37,20 +46,13 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   ngOnInit(): void {
+    this.currentFlow = this.route.snapshot.data.flow;
+    if (this.currentFlow === 'non-verified-registration') {
+      this.profileHeading = 'Create Profile';
+    } else {
+      this.profileHeading = 'Create Your ERA Profile';
+    }
     this.steps = this.componentService.createProfileSteps();
-    // console.log(this.router.getCurrentNavigation())
-    // let navigation = this.router.getCurrentNavigation();
-    // console.log(navigation);
-    // if (navigation) {
-    //   let state = navigation.extras.state as { stepIndex: number };
-    //   this.stepToDisplay = state.stepIndex;
-    // }
-    // this.route.paramMap.subscribe(params => {
-    //   console.log(params.get('stepPos'));
-    //   if (params.get('stepPos') === 'last') {
-    //     this.path = params.get('stepPos');
-    //   }
-    // });
   }
 
   ngAfterViewChecked(): void {
@@ -64,18 +66,16 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.profileStepper.selectedIndex = this.stepToDisplay;
       }, 0);
     }
+    if (this.stepToDisplay === 4) {
+      this.isComplete = true;
+      setTimeout(() => {
+        this.profileStepper.selectedIndex = this.stepToDisplay;
+      }, 0);
+    }
   }
 
   currentStep(index: number): void {
     this.loadStepForm(index);
-  }
-
-  createProfile(lastStep: boolean): void {
-    if (lastStep) {
-      this.showStep = !this.showStep;
-      // this.router.navigate(['/create-evac-file']);
-      // this.steps = this.componentService.createEvacSteps();
-    }
   }
 
   goBack(stepper: MatStepper, lastStep): void {
@@ -83,22 +83,22 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
       stepper.previous();
     } else if (lastStep === -1) {
       this.showStep = !this.showStep;
-      // stepper.selectedIndex
-      // this.profileStepper.changes.subscribe(x=> {
-      //   console.log(x)
-      //   x.first._selectedIndex = 3
-      // console.log(this.steps.length)
-      // })
-
     } else if (lastStep === -2) {
-      this.router.navigate(['/non-verified-registration/restriction']);
+      const navigationPath = '/' + this.currentFlow + '/restriction';
+      this.router.navigate([navigationPath]);
     }
   }
 
   goForward(stepper: MatStepper, isLast: boolean, component: string): void {
-    if (this.form.status === 'VALID') {
+    if (isLast && component === 'review') {
+      console.log('profile-submit');
+      this.submitFile();
+    } else if (this.form.status === 'VALID') {
       if (isLast) {
-        this.router.navigate(['/non-verified-registration/needs-assessment']);
+        if (this.currentFlow === 'non-verified-registration') {
+          const navigationPath = '/' + this.currentFlow + '/needs-assessment';
+          this.router.navigate([navigationPath]);
+        }
       }
       this.setFormData(component);
       this.form$.unsubscribe();
@@ -166,6 +166,18 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
         );
         break;
     }
+  }
+
+  submitFile(): void {
+    // this.router.navigate(['/verified-registration/view-profile']);
+    this.submissionService.submitProfile().subscribe((response: ProblemDetail) => {
+      console.log(response);
+      // this.updateService.updateRegisrationResult(response);
+      this.router.navigate(['/verified-registration/view-profile']);
+    }, (error) => {
+      console.log(error);
+    });
+
   }
 
 }

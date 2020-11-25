@@ -1,0 +1,15 @@
+.close-image img:last-child {
+    display: none;
+  }
+  
+  .close-image:hover img:last-child {
+    display: block;
+  }
+  
+  .close-image:hover img:first-child {
+    display: none;
+  }
+
+  .close-button-style {
+    background-color: white;
+  }

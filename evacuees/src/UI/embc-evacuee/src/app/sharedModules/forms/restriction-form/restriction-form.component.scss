@@ -1,0 +1,32 @@
+.primary-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+  
+  .primary-radio-button {
+    margin: 5px;
+  }
+
+.field-error {
+ color: red;
+}
+
+.notice-button {
+    width: 100%;
+}
+
+.content-container {
+  padding-top: 24px;
+  padding-right: 24px;
+  padding-bottom: 24px;
+  padding-left: 24px;
+}
+
+.mat-card {
+  padding: 20px !important;
+}
+
+.radio-text {
+  color: #169BD5
+}
