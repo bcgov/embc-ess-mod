@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NonVerifiedRegistrationComponent } from './non-verified-registration.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 describe('NonVerifiedRegistrationComponent', () => {
   let component: NonVerifiedRegistrationComponent;
@@ -8,7 +9,9 @@ describe('NonVerifiedRegistrationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NonVerifiedRegistrationComponent ]
+      declarations: [ NonVerifiedRegistrationComponent ],
+      imports: [ ReactiveFormsModule ],
+      providers: [ FormBuilder]
     })
     .compileComponents();
   }));

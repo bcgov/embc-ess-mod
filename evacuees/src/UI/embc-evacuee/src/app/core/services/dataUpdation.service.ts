@@ -10,6 +10,11 @@ export class DataUpdationService {
 
     constructor(public dataService: DataService, public formCreationService: FormCreationService) { }
 
+    updateRestriction(formGroup: FormGroup): void {
+        this.formCreationService.setRestrictionForm(formGroup);
+        this.dataService.updateRegistartion({ restrictedAccess: formGroup.get('restrictedAccess').value });
+    }
+
     updatePersonalDetails(formGroup: FormGroup): void {
         this.formCreationService.setPersonDetailsForm(formGroup);
         this.dataService.updateRegistartion({ personalDetails: formGroup.value });
@@ -92,9 +97,9 @@ export class DataUpdationService {
             },
             postalCode: addressObject.postalCode,
             stateProvince: {
-                stateProvinceCode: addressObject.stateProvince.code === undefined ?
-                    null : addressObject.stateProvince.code,
-                stateProvinceName: addressObject.stateProvince.name === undefined ?
+                stateProvinceCode: addressObject.stateProvince === null ?
+                    addressObject.stateProvince : addressObject.stateProvince.code,
+                stateProvinceName: addressObject.stateProvince === null ?
                     addressObject.stateProvince : addressObject.stateProvince.name
             }
         };

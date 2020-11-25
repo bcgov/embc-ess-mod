@@ -33,19 +33,23 @@ namespace EMBC.Tests.Integration.Registrants.API
                 RegistrationDetails = new Registration
                 {
                     InformationCollectionConsent = true,
+                    RestrictedAccess = true,
+                    SecretPhrase = "secret phrase",
                     PersonalDetails = new PersonDetails
                     {
-                        FirstName = $"first1{textContextIdentifier}",
-                        LastName = "last1",
+                        FirstName = $"RegistrantFirst1{textContextIdentifier}",
+                        LastName = "RegistrantLast1",
                         DateOfBirth = "2000/01/01",
-                        Gender = "none",
+                        Gender = "Male",
                         Initials = "initials1",
                         PreferredName = "preferred1"
                     },
                     ContactDetails = new ContactDetails
                     {
                         Email = "email@org.com",
-                        Phone = "999-999-9999"
+                        Phone = "999-999-9999",
+                        HidePhoneRequired = false,
+                        HideEmailRequired = false
                     },
                     PrimaryAddress = new Address
                     {
@@ -66,43 +70,44 @@ namespace EMBC.Tests.Integration.Registrants.API
                         Jurisdiction = new Jurisdiction { JurisdictionCode = null, JurisdictionName = "Seattle" }
                     }
                 },
-                PerliminaryNeedsAssessment = new NeedsAssessment
+                PreliminaryNeedsAssessment = new NeedsAssessment
                 {
                     EvacuatedFromAddress = new Address
                     {
                         AddressLine1 = "addr1",
                         Country = new Country { CountryCode = "CA" },
-                        Jurisdiction = new Jurisdiction { JurisdictionCode = "" },
-                        StateProvince = new StateProvince { StateProvinceCode = "BC" },
+                        Jurisdiction = new Jurisdiction { JurisdictionCode = "226adfaf-9f97-ea11-b813-005056830319" },
+                        StateProvince = new StateProvince { StateProvinceCode = "BC", StateProvinceName = "British Columbia" },
                         PostalCode = "v1v 1v1"
                     },
                     FamilyMembers = new[]
                     {
                         new PersonDetails
                         {
-                            FirstName=$"fm1{textContextIdentifier}",
-                            LastName = "fmlast",
+                            FirstName = $"MemberFirst1{textContextIdentifier}",
+                            LastName = "MemberLast1",
                             Gender = "M",
                             DateOfBirth = "2010-01-01"
                         }
                     },
                     HaveMedication = false,
                     Insurance = NeedsAssessment.InsuranceOption.Yes,
-                    HaveSpecialDiet = false,
+                    HaveSpecialDiet = true,
+                    HasPetsFood = true,
                     RequiresClothing = true,
                     RequiresFood = true,
                     RequiresLodging = true,
+                    RequiresIncidentals = true,
+                    RequiresTransportation = true,
                     Pets = new[]
                     {
                         new Pet{ Type = $"dog{textContextIdentifier}", Quantity = "4" }
                     },
-                    RequiresIncidentals = null,
-                    RequiresTransportation = null
                 }
             };
 
             var regManager = services.GetRequiredService<IRegistrationManager>();
-            var result = await regManager.RegisterNew(registration);
+            var result = await regManager.CreateRegistrationAnonymous(registration);
             Assert.StartsWith("E", result);
             Assert.Equal(10, result.Length);
         }

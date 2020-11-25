@@ -4872,7 +4872,7 @@
         <Property Name="exchangerate" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="annualincome_base" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="address2_longitude" Type="Edm.Double" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="address2_primarycontactname" Type="Edm.String" Unicode="false" />
         <Property Name="address1_latitude" Type="Edm.Double" />
         <Property Name="address1_addresstypecode" Type="Edm.Int32" />
         <Property Name="emailaddress2" Type="Edm.String" Unicode="false" />
@@ -4896,6 +4896,7 @@
         <Property Name="aging90" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="address3_line3" Type="Edm.String" Unicode="false" />
         <Property Name="_transactioncurrencyid_value" Type="Edm.Guid" />
+        <Property Name="_era_city_value" Type="Edm.Guid" />
         <Property Name="address3_telephone3" Type="Edm.String" Unicode="false" />
         <Property Name="address2_freighttermscode" Type="Edm.Int32" />
         <Property Name="versionnumber" Type="Edm.Int64" />
@@ -4914,12 +4915,11 @@
         <Property Name="address3_latitude" Type="Edm.Double" />
         <Property Name="address2_utcoffset" Type="Edm.Int32" />
         <Property Name="websiteurl" Type="Edm.String" Unicode="false" />
-        <Property Name="_era_relatedprovince_value" Type="Edm.Guid" />
         <Property Name="employeeid" Type="Edm.String" Unicode="false" />
         <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="_era_relatedcity_value" Type="Edm.Guid" />
         <Property Name="entityimage_url" Type="Edm.String" Unicode="false" />
         <Property Name="address3_shippingmethodcode" Type="Edm.Int32" />
+        <Property Name="_era_provincestate_value" Type="Edm.Guid" />
         <Property Name="ftpsiteurl" Type="Edm.String" Unicode="false" />
         <Property Name="address1_name" Type="Edm.String" Unicode="false" />
         <Property Name="educationcode" Type="Edm.Int32" />
@@ -4930,12 +4930,13 @@
         <Property Name="yomifirstname" Type="Edm.String" Unicode="false" />
         <Property Name="callback" Type="Edm.String" Unicode="false" />
         <Property Name="address3_fax" Type="Edm.String" Unicode="false" />
+        <Property Name="address1_composite" Type="Edm.String" Unicode="false" />
         <Property Name="era_initial" Type="Edm.String" Unicode="false" />
-        <Property Name="_era_relatedmailingprovince_value" Type="Edm.Guid" />
         <Property Name="address2_line1" Type="Edm.String" Unicode="false" />
         <Property Name="address3_primarycontactname" Type="Edm.String" Unicode="false" />
         <Property Name="_parentcontactid_value" Type="Edm.Guid" />
         <Property Name="mobilephone" Type="Edm.String" Unicode="false" />
+        <Property Name="era_authenticated" Type="Edm.Boolean" />
         <Property Name="aging30" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="_accountid_value" Type="Edm.Guid" />
         <Property Name="address1_telephone1" Type="Edm.String" Unicode="false" />
@@ -4959,7 +4960,7 @@
         <Property Name="_owninguser_value" Type="Edm.Guid" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="donotemail" Type="Edm.Boolean" />
-        <Property Name="leadsourcecode" Type="Edm.Int32" />
+        <Property Name="_era_mailingcity_value" Type="Edm.Guid" />
         <Property Name="address1_freighttermscode" Type="Edm.Int32" />
         <Property Name="address1_city" Type="Edm.String" Unicode="false" />
         <Property Name="customertypecode" Type="Edm.Int32" />
@@ -4979,13 +4980,14 @@
         <Property Name="era_collectionandauthorization" Type="Edm.Boolean" />
         <Property Name="address2_shippingmethodcode" Type="Edm.Int32" />
         <Property Name="address2_stateorprovince" Type="Edm.String" Unicode="false" />
-        <Property Name="_era_relatedmailingcountry_value" Type="Edm.Guid" />
+        <Property Name="accountrolecode" Type="Edm.Int32" />
         <Property Name="assistantphone" Type="Edm.String" Unicode="false" />
         <Property Name="address1_county" Type="Edm.String" Unicode="false" />
         <Property Name="donotpostalmail" Type="Edm.Boolean" />
         <Property Name="firstname" Type="Edm.String" Unicode="false" />
         <Property Name="era_initials" Type="Edm.String" Unicode="false" />
         <Property Name="era_registranttype" Type="Edm.Int32" />
+        <Property Name="yomifullname" Type="Edm.String" Unicode="false" />
         <Property Name="address3_name" Type="Edm.String" Unicode="false" />
         <Property Name="address2_country" Type="Edm.String" Unicode="false" />
         <Property Name="address1_upszone" Type="Edm.String" Unicode="false" />
@@ -4996,16 +4998,15 @@
         <Property Name="address1_telephone3" Type="Edm.String" Unicode="false" />
         <Property Name="fax" Type="Edm.String" Unicode="false" />
         <Property Name="gendercode" Type="Edm.Int32" />
+        <Property Name="_era_mailingprovincestate_value" Type="Edm.Guid" />
         <Property Name="address3_telephone1" Type="Edm.String" Unicode="false" />
         <Property Name="era_isbcmailingaddress" Type="Edm.Boolean" />
         <Property Name="era_phonenumberrefusaldate" Type="Edm.DateTimeOffset" />
         <Property Name="merged" Type="Edm.Boolean" />
-        <Property Name="address1_composite" Type="Edm.String" Unicode="false" />
         <Property Name="address2_postofficebox" Type="Edm.String" Unicode="false" />
         <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
         <Property Name="telephone3" Type="Edm.String" Unicode="false" />
         <Property Name="paymenttermscode" Type="Edm.Int32" />
-        <Property Name="era_emailrefusal" Type="Edm.Boolean" />
         <Property Name="emailaddress1" Type="Edm.String" Unicode="false" />
         <Property Name="era_governmentidprovided" Type="Edm.Boolean" />
         <Property Name="lastonholdtime" Type="Edm.DateTimeOffset" />
@@ -5015,7 +5016,7 @@
         <Property Name="territorycode" Type="Edm.Int32" />
         <Property Name="_preferredsystemuserid_value" Type="Edm.Guid" />
         <Property Name="address3_county" Type="Edm.String" Unicode="false" />
-        <Property Name="_era_relatedmailingcity_value" Type="Edm.Guid" />
+        <Property Name="leadsourcecode" Type="Edm.Int32" />
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
         <Property Name="externaluseridentifier" Type="Edm.String" Unicode="false" />
         <Property Name="_era_country_value" Type="Edm.Guid" />
@@ -5025,12 +5026,11 @@
         <Property Name="donotfax" Type="Edm.Boolean" />
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="address2_fax" Type="Edm.String" Unicode="false" />
-        <Property Name="yomifullname" Type="Edm.String" Unicode="false" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
         <Property Name="importsequencenumber" Type="Edm.Int32" />
         <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
         <Property Name="_slainvokedid_value" Type="Edm.Guid" />
         <Property Name="lastname" Type="Edm.String" Unicode="false" />
-        <Property Name="address2_primarycontactname" Type="Edm.String" Unicode="false" />
         <Property Name="address1_primarycontactname" Type="Edm.String" Unicode="false" />
         <Property Name="managername" Type="Edm.String" Unicode="false" />
         <Property Name="telephone1" Type="Edm.String" Unicode="false" />
@@ -5052,18 +5052,18 @@
         <Property Name="era_verified" Type="Edm.Boolean" />
         <Property Name="address2_telephone3" Type="Edm.String" Unicode="false" />
         <Property Name="era_secrettext" Type="Edm.String" Unicode="false" />
-        <Property Name="accountrolecode" Type="Edm.Int32" />
         <Property Name="entityimage_timestamp" Type="Edm.Int64" />
         <Property Name="address3_freighttermscode" Type="Edm.Int32" />
         <Property Name="shippingmethodcode" Type="Edm.Int32" />
         <Property Name="address3_city" Type="Edm.String" Unicode="false" />
         <Property Name="address1_postofficebox" Type="Edm.String" Unicode="false" />
+        <Property Name="_era_mailingcountry_value" Type="Edm.Guid" />
         <Property Name="era_issamemailingaddress" Type="Edm.Boolean" />
         <Property Name="era_registrationdate" Type="Edm.DateTimeOffset" />
         <Property Name="_createdbyexternalparty_value" Type="Edm.Guid" />
         <Property Name="donotbulkemail" Type="Edm.Boolean" />
         <Property Name="creditonhold" Type="Edm.Boolean" />
-        <Property Name="era_authenticated" Type="Edm.Boolean" />
+        <Property Name="era_emailrefusal" Type="Edm.Boolean" />
         <Property Name="address3_upszone" Type="Edm.String" Unicode="false" />
         <Property Name="home2" Type="Edm.String" Unicode="false" />
         <Property Name="address3_postalcode" Type="Edm.String" Unicode="false" />
@@ -5121,22 +5121,23 @@
         <NavigationProperty Name="era_Country" Type="mscrm.era_country" Nullable="false" Partner="era_contact_Country">
           <ReferentialConstraint Property="_era_country_value" ReferencedProperty="era_countryid" />
         </NavigationProperty>
-        <NavigationProperty Name="era_RelatedCity" Type="mscrm.era_jurisdiction" Nullable="false" Partner="era_jurisdiction_contact_RelatedCity">
-          <ReferentialConstraint Property="_era_relatedcity_value" ReferencedProperty="era_jurisdictionid" />
-        </NavigationProperty>
-        <NavigationProperty Name="era_RelatedProvince" Type="mscrm.era_provinceterritories" Nullable="false" Partner="era_contact_RelatedProvince">
-          <ReferentialConstraint Property="_era_relatedprovince_value" ReferencedProperty="era_provinceterritoriesid" />
-        </NavigationProperty>
-        <NavigationProperty Name="era_RelatedMailingCity" Type="mscrm.era_jurisdiction" Nullable="false" Partner="era_contact_RelatedMailingCity">
-          <ReferentialConstraint Property="_era_relatedmailingcity_value" ReferencedProperty="era_jurisdictionid" />
-        </NavigationProperty>
-        <NavigationProperty Name="era_RelatedMailingProvince" Type="mscrm.era_provinceterritories" Nullable="false" Partner="era_contact_RelatedMailingProvince">
-          <ReferentialConstraint Property="_era_relatedmailingprovince_value" ReferencedProperty="era_provinceterritoriesid" />
-        </NavigationProperty>
-        <NavigationProperty Name="era_RelatedMailingCountry" Type="mscrm.era_country" Nullable="false" Partner="era_contact_RelatedMailingCountry">
-          <ReferentialConstraint Property="_era_relatedmailingcountry_value" ReferencedProperty="era_countryid" />
-        </NavigationProperty>
         <NavigationProperty Name="era_contact_evacuee_Registrant" Type="Collection(mscrm.era_evacuee)" Partner="era_Registrant" />
+        <NavigationProperty Name="era_City" Type="mscrm.era_jurisdiction" Nullable="false" Partner="era_jurisdiction_contact_City">
+          <ReferentialConstraint Property="_era_city_value" ReferencedProperty="era_jurisdictionid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_ProvinceState" Type="mscrm.era_provinceterritories" Nullable="false" Partner="era_provinceterritories_contact_ProvinceState">
+          <ReferentialConstraint Property="_era_provincestate_value" ReferencedProperty="era_provinceterritoriesid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_MailingCity" Type="mscrm.era_jurisdiction" Nullable="false" Partner="era_jurisdiction_contact_MailingCity">
+          <ReferentialConstraint Property="_era_mailingcity_value" ReferencedProperty="era_jurisdictionid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_MailingProvinceState" Type="mscrm.era_provinceterritories" Nullable="false" Partner="era_provinceterritories_contact_MailingProvinceState">
+          <ReferentialConstraint Property="_era_mailingprovincestate_value" ReferencedProperty="era_provinceterritoriesid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_MailingCountry" Type="mscrm.era_country" Nullable="false" Partner="era_country_contact_MailingCountry">
+          <ReferentialConstraint Property="_era_mailingcountry_value" ReferencedProperty="era_countryid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_evacuationfile_Registrant" Type="Collection(mscrm.era_evacuationfile)" Partner="era_Registrant" />
         <NavigationProperty Name="contact_connections1" Type="Collection(mscrm.connection)" Partner="record1id_contact" />
         <NavigationProperty Name="Contact_Feedback" Type="Collection(mscrm.feedback)" Partner="ContactId" />
         <NavigationProperty Name="Contact_ProcessSessions" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_contact" />
@@ -7556,7 +7557,7 @@
         <NavigationProperty Name="era_supplier_RelatedCountry" Type="Collection(mscrm.era_supplier)" Partner="era_RelatedCountry" />
         <NavigationProperty Name="era_provinceterritories_RelatedCountry" Type="Collection(mscrm.era_provinceterritories)" Partner="era_RelatedCountry" />
         <NavigationProperty Name="era_contact_Country" Type="Collection(mscrm.contact)" Partner="era_Country" />
-        <NavigationProperty Name="era_contact_RelatedMailingCountry" Type="Collection(mscrm.contact)" Partner="era_RelatedMailingCountry" />
+        <NavigationProperty Name="era_country_contact_MailingCountry" Type="Collection(mscrm.contact)" Partner="era_MailingCountry" />
       </EntityType>
       <EntityType Name="era_embcregion" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -7620,13 +7621,13 @@
         <Property Name="_modifiedby_value" Type="Edm.Guid" />
         <Property Name="era_addressline2" Type="Edm.String" Unicode="false" />
         <Property Name="era_addressline1" Type="Edm.String" Unicode="false" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="era_country" Type="Edm.String" Unicode="false" />
         <Property Name="importsequencenumber" Type="Edm.Int32" />
         <Property Name="era_city" Type="Edm.String" Unicode="false" />
         <Property Name="era_essfilenumber" Type="Edm.Int32" />
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="statuscode" Type="Edm.Int32" />
         <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="era_phonenumberrefusal" Type="Edm.Boolean" />
@@ -7637,13 +7638,14 @@
         <Property Name="_era_autonumberid_value" Type="Edm.Guid" />
         <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
         <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
-        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="_ownerid_value" Type="Edm.Guid" />
         <Property Name="era_emailrefusal" Type="Edm.Boolean" />
         <Property Name="era_evacuationfileid" Type="Edm.Guid" />
+        <Property Name="_era_registrant_value" Type="Edm.Guid" />
         <Property Name="era_collectionandauthorization" Type="Edm.Boolean" />
         <Property Name="era_evacuationfiledate" Type="Edm.DateTimeOffset" />
         <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_evacuationfile_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -7683,35 +7685,39 @@
         <NavigationProperty Name="era_AutoNumberId" Type="mscrm.era_autonumber" Nullable="false" Partner="era_autonumber_evacuationfile">
           <ReferentialConstraint Property="_era_autonumberid_value" ReferencedProperty="era_autonumberid" />
         </NavigationProperty>
+        <NavigationProperty Name="era_Registrant" Type="mscrm.contact" Nullable="false" Partner="era_evacuationfile_Registrant">
+          <ReferentialConstraint Property="_era_registrant_value" ReferencedProperty="contactid" />
+        </NavigationProperty>
       </EntityType>
       <EntityType Name="era_evacuee" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="era_evacueeid" />
         </Key>
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="_owningteam_value" Type="Edm.Guid" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
-        <Property Name="_era_needsassessment_value" Type="Edm.Guid" />
-        <Property Name="era_primaryregistrant" Type="Edm.Boolean" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
-        <Property Name="era_typeofpet" Type="Edm.String" Unicode="false" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
-        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
         <Property Name="statuscode" Type="Edm.Int32" />
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="era_primaryregistrant" Type="Edm.Boolean" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="era_amountofpets" Type="Edm.Int32" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="_era_registrant_value" Type="Edm.Guid" />
         <Property Name="versionnumber" Type="Edm.Int64" />
-        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
         <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="era_amountofpets" Type="Edm.Int32" />
+        <Property Name="_era_needsassessment_value" Type="Edm.Guid" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_typeofpet" Type="Edm.String" Unicode="false" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="era_evacueeid" Type="Edm.Guid" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="era_evacueetype" Type="Edm.Boolean" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="statecode" Type="Edm.Int32" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_evacuee_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -7831,15 +7837,18 @@
         </NavigationProperty>
         <NavigationProperty Name="era_supplier_RelatedCity" Type="Collection(mscrm.era_supplier)" Partner="era_RelatedCity" />
         <NavigationProperty Name="era_supplierinvoice_RelatedJurisdiction" Type="Collection(mscrm.era_supplierinvoice)" Partner="era_RelatedJurisdiction" />
-        <NavigationProperty Name="era_jurisdiction_contact_RelatedCity" Type="Collection(mscrm.contact)" Partner="era_RelatedCity" />
-        <NavigationProperty Name="era_contact_RelatedMailingCity" Type="Collection(mscrm.contact)" Partner="era_RelatedMailingCity" />
         <NavigationProperty Name="era_evacuationfile_Jurisdiction" Type="Collection(mscrm.era_evacuationfile)" Partner="era_Jurisdiction" />
+        <NavigationProperty Name="era_jurisdiction_contact_City" Type="Collection(mscrm.contact)" Partner="era_City" />
+        <NavigationProperty Name="era_jurisdiction_contact_MailingCity" Type="Collection(mscrm.contact)" Partner="era_MailingCity" />
       </EntityType>
       <EntityType Name="era_needassessment" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="era_needassessmentid" />
         </Key>
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_sharingrestriction" Type="Edm.Boolean" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="era_phonenumberrefusal" Type="Edm.Boolean" />
         <Property Name="statuscode" Type="Edm.Int32" />
         <Property Name="era_incidentalrequirement" Type="Edm.Int32" />
         <Property Name="era_insurancecoverage" Type="Edm.Int32" />
@@ -7849,23 +7858,24 @@
         <Property Name="era_needassessmentid" Type="Edm.Guid" />
         <Property Name="era_transportationrequirement" Type="Edm.Int32" />
         <Property Name="era_clothingrequirement" Type="Edm.Int32" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="era_emailrefusal" Type="Edm.Boolean" />
         <Property Name="_modifiedby_value" Type="Edm.Guid" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
         <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_lodgingrequirement" Type="Edm.Int32" />
         <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
         <Property Name="versionnumber" Type="Edm.Int64" />
-        <Property Name="era_medicationrequirement" Type="Edm.Boolean" />
+        <Property Name="era_collectionandauthorization" Type="Edm.Boolean" />
         <Property Name="statecode" Type="Edm.Int32" />
         <Property Name="era_foodrequirement" Type="Edm.Int32" />
         <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="era_needsassessmentdate" Type="Edm.DateTimeOffset" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
-        <Property Name="era_lodgingrequirement" Type="Edm.Int32" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
         <Property Name="era_dietaryrequirement" Type="Edm.Boolean" />
+        <Property Name="era_medicationrequirement" Type="Edm.Boolean" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
         <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="era_needsassessmenttype" Type="Edm.Int32" />
         <Property Name="_owninguser_value" Type="Edm.Guid" />
@@ -7970,8 +7980,8 @@
           <ReferentialConstraint Property="_era_relatedcountry_value" ReferencedProperty="era_countryid" />
         </NavigationProperty>
         <NavigationProperty Name="era_supplier_RelatedProvinceState" Type="Collection(mscrm.era_supplier)" Partner="era_RelatedProvinceState" />
-        <NavigationProperty Name="era_contact_RelatedProvince" Type="Collection(mscrm.contact)" Partner="era_RelatedProvince" />
-        <NavigationProperty Name="era_contact_RelatedMailingProvince" Type="Collection(mscrm.contact)" Partner="era_RelatedMailingProvince" />
+        <NavigationProperty Name="era_provinceterritories_contact_ProvinceState" Type="Collection(mscrm.contact)" Partner="era_ProvinceState" />
+        <NavigationProperty Name="era_provinceterritories_contact_MailingProvinceState" Type="Collection(mscrm.contact)" Partner="era_MailingProvinceState" />
       </EntityType>
       <EntityType Name="era_referral" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -29901,12 +29911,13 @@
           <NavigationPropertyBinding Path="contactquotes_association" Target="quotes" />
           <NavigationPropertyBinding Path="opportunity_parent_contact" Target="opportunities" />
           <NavigationPropertyBinding Path="era_Country" Target="era_countries" />
-          <NavigationPropertyBinding Path="era_RelatedCity" Target="era_jurisdictions" />
-          <NavigationPropertyBinding Path="era_RelatedProvince" Target="era_provinceterritorieses" />
-          <NavigationPropertyBinding Path="era_RelatedMailingCity" Target="era_jurisdictions" />
-          <NavigationPropertyBinding Path="era_RelatedMailingProvince" Target="era_provinceterritorieses" />
-          <NavigationPropertyBinding Path="era_RelatedMailingCountry" Target="era_countries" />
           <NavigationPropertyBinding Path="era_contact_evacuee_Registrant" Target="era_evacuees" />
+          <NavigationPropertyBinding Path="era_City" Target="era_jurisdictions" />
+          <NavigationPropertyBinding Path="era_ProvinceState" Target="era_provinceterritorieses" />
+          <NavigationPropertyBinding Path="era_MailingCity" Target="era_jurisdictions" />
+          <NavigationPropertyBinding Path="era_MailingProvinceState" Target="era_provinceterritorieses" />
+          <NavigationPropertyBinding Path="era_MailingCountry" Target="era_countries" />
+          <NavigationPropertyBinding Path="era_evacuationfile_Registrant" Target="era_evacuationfiles" />
           <NavigationPropertyBinding Path="contact_connections1" Target="connections" />
           <NavigationPropertyBinding Path="Contact_Feedback" Target="feedback" />
           <NavigationPropertyBinding Path="Contact_ProcessSessions" Target="processsessions" />
@@ -30666,7 +30677,7 @@
           <NavigationPropertyBinding Path="era_supplier_RelatedCountry" Target="era_suppliers" />
           <NavigationPropertyBinding Path="era_provinceterritories_RelatedCountry" Target="era_provinceterritorieses" />
           <NavigationPropertyBinding Path="era_contact_Country" Target="contacts" />
-          <NavigationPropertyBinding Path="era_contact_RelatedMailingCountry" Target="contacts" />
+          <NavigationPropertyBinding Path="era_country_contact_MailingCountry" Target="contacts" />
         </EntitySet>
         <EntitySet Name="era_embcregions" EntityType="Microsoft.Dynamics.CRM.era_embcregion">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -30704,6 +30715,7 @@
           <NavigationPropertyBinding Path="era_Jurisdiction" Target="era_jurisdictions" />
           <NavigationPropertyBinding Path="era_needsassessment_EvacuationFile" Target="era_needassessments" />
           <NavigationPropertyBinding Path="era_AutoNumberId" Target="era_autonumbers" />
+          <NavigationPropertyBinding Path="era_Registrant" Target="contacts" />
         </EntitySet>
         <EntitySet Name="era_evacuees" EntityType="Microsoft.Dynamics.CRM.era_evacuee">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -30760,9 +30772,9 @@
           <NavigationPropertyBinding Path="era_RelatedProvinceState" Target="era_provinceterritorieses" />
           <NavigationPropertyBinding Path="era_supplier_RelatedCity" Target="era_suppliers" />
           <NavigationPropertyBinding Path="era_supplierinvoice_RelatedJurisdiction" Target="era_supplierinvoices" />
-          <NavigationPropertyBinding Path="era_jurisdiction_contact_RelatedCity" Target="contacts" />
-          <NavigationPropertyBinding Path="era_contact_RelatedMailingCity" Target="contacts" />
           <NavigationPropertyBinding Path="era_evacuationfile_Jurisdiction" Target="era_evacuationfiles" />
+          <NavigationPropertyBinding Path="era_jurisdiction_contact_City" Target="contacts" />
+          <NavigationPropertyBinding Path="era_jurisdiction_contact_MailingCity" Target="contacts" />
         </EntitySet>
         <EntitySet Name="era_needassessments" EntityType="Microsoft.Dynamics.CRM.era_needassessment">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -30806,8 +30818,8 @@
           <NavigationPropertyBinding Path="era_jurisdiction_RelatedProvinceState" Target="era_jurisdictions" />
           <NavigationPropertyBinding Path="era_RelatedCountry" Target="era_countries" />
           <NavigationPropertyBinding Path="era_supplier_RelatedProvinceState" Target="era_suppliers" />
-          <NavigationPropertyBinding Path="era_contact_RelatedProvince" Target="contacts" />
-          <NavigationPropertyBinding Path="era_contact_RelatedMailingProvince" Target="contacts" />
+          <NavigationPropertyBinding Path="era_provinceterritories_contact_ProvinceState" Target="contacts" />
+          <NavigationPropertyBinding Path="era_provinceterritories_contact_MailingProvinceState" Target="contacts" />
         </EntitySet>
         <EntitySet Name="era_referrals" EntityType="Microsoft.Dynamics.CRM.era_referral">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />

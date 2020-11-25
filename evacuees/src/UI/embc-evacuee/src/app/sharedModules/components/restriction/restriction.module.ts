@@ -6,6 +6,7 @@ import { RestrictionRoutingModule } from './restriction-routing.module';
 import { RestrictionComponent } from './restriction.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RestrictionFormModule } from '../../forms/restriction-form/restriction-form.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatCardModule,
     MatButtonModule,
     MatRadioModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RestrictionFormModule
   ]
 })
 export class RestrictionModule { }

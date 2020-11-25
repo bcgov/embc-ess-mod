@@ -1,13 +1,13 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { StrictHttpResponse } from './strict-http-response';
-import { RequestBuilder } from './request-builder';
 import { Observable, throwError } from 'rxjs';
-import { map, filter, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import { AnonymousRegistration } from './models/anonymous-registration';
 import { RegistrationResult } from './models/registration-result';
+import { Registration } from '../../model/registration';
+import { ProblemDetail } from '../../model/problemDetail';
 
 @Injectable({
   providedIn: 'root',
@@ -19,44 +19,12 @@ export class RegistrationService {
   /**
    * Path part for operation registrationCreate
    */
-  private readonly registrationCreatePath = `/api/registration`;
+  private readonly registrationCreatePath = `/api/registration/create-registration-anonymous`;
+  private readonly createProfilePath = `/api/registration/create-profile`
 
   get headers(): HttpHeaders {
     return new HttpHeaders({ 'Content-Type': 'application/json', 'Accept': 'application/json' });
   }
-
-  /**
-   * Register a new anonymous registrant and preliminary needs assessment.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationCreate()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  // registrationCreate$Response(params: {
-
-
-  //   body: AnonymousRegistration
-  // }): Observable<StrictHttpResponse<RegistrationResult>> {
-
-  //   const rb = new RequestBuilder(this.rootUrl, RegistrationService.RegistrationCreatePath, 'post');
-  //   if (params) {
-
-
-  //     rb.body(params.body, 'application/json');
-  //   }
-  //   return this.http.request(rb.build({
-  //     responseType: 'json',
-  //     accept: 'application/json'
-  //   })).pipe(
-  //     filter((r: any) => r instanceof HttpResponse),
-  //     map((r: HttpResponse<any>) => {
-  //       return r as StrictHttpResponse<RegistrationResult>;
-  //     })
-  //   );
-  // }
 
   /**
    * Register a new anonymous registrant and preliminary needs assessment.
@@ -70,6 +38,14 @@ export class RegistrationService {
    */
   registrationCreate(params: AnonymousRegistration): Observable<RegistrationResult> {
     return this.http.post<RegistrationResult>(this.registrationCreatePath, params, { headers: this.headers }).pipe(
+      catchError(error => {
+        return this.handleError(error);
+      })
+    );
+  }
+
+  registrationCreateProfile(params: Registration): Observable<ProblemDetail> {
+    return this.http.post<ProblemDetail>(this.createProfilePath, params, { headers: this.headers }).pipe(
       catchError(error => {
         return this.handleError(error);
       })

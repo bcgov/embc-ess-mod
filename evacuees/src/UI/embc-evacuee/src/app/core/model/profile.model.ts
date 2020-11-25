@@ -1,7 +1,21 @@
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Country } from '../services/api/models/country';
 import { CustomValidationService } from '../services/customValidation.service';
 import { RegAddress } from './address';
-import { LocationModel } from './location.model';
+import * as globalConst from '../services/globalConstants';
+
+export class Restriction {
+    restrictedAccess: boolean;
+}
+
+export class RestrictionForm {
+    restrictedAccess = new FormControl();
+
+    constructor(restriction: Restriction) {
+        this.restrictedAccess.setValue(restriction.restrictedAccess);
+        this.restrictedAccess.setValidators([Validators.required]);
+    }
+}
 
 export class PersonDetails {
     firstName: string;
@@ -70,11 +84,10 @@ export class ContactDetailsForm {
         this.email.setValidators([Validators.required, Validators.email]);
 
         this.confirmEmail.setValue(contactDetails.confirmEmail);
-        this.confirmEmail.setValidators([Validators.required, Validators.email,
-        customValidator.confirmEmailValidator().bind(customValidator)]);
+        this.confirmEmail.setValidators([Validators.required, Validators.email]);
 
         this.phone.setValue(contactDetails.phone);
-        this.phone.setValidators([Validators.required, Validators.minLength(12)]);
+        this.phone.setValidators([Validators.required, customValidator.maskedNumberLengthValidator().bind(customValidator)]);
     }
 }
 
@@ -115,15 +128,26 @@ export class AddressForm {
             addressLine1: ['', [Validators.required]],
             addressLine2: [''],
             jurisdiction: ['', [Validators.required]],
-            stateProvince: ['', [Validators.required]],
+            stateProvince: ['', [customValidator.conditionalValidation(
+                () => this.address.get('country').value !== null &&
+                    (this.compareObjects(this.address.get('country').value, globalConst.defaultCountry) ||
+                        this.compareObjects(this.address.get('country').value.code, globalConst.usDefaultObject)),
+                Validators.required
+            ).bind(customValidator)]],
             country: ['', [Validators.required]],
             postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
         });
+
         this.mailingAddress = builder.group({
             addressLine1: ['', [Validators.required]],
             addressLine2: [''],
             jurisdiction: ['', [Validators.required]],
-            stateProvince: ['', [Validators.required]],
+            stateProvince: ['', [customValidator.conditionalValidation(
+                () => this.mailingAddress.get('country').value !== null &&
+                    (this.compareObjects(this.mailingAddress.get('country').value, globalConst.defaultCountry) ||
+                        this.compareObjects(this.mailingAddress.get('country').value, globalConst.usDefaultObject)),
+                Validators.required
+            ).bind(customValidator)]],
             country: ['', [Validators.required]],
             postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
         });
@@ -141,7 +165,7 @@ export class AddressForm {
         ).bind(customValidator)]);
     }
 
-    compareObjects<T extends LocationModel>(c1: T, c2: T): boolean {
+    compareObjects<T extends Country>(c1: T, c2: T): boolean {
         if (c1 === null || c2 === null || c1 === undefined || c2 === undefined) {
             return null;
         }

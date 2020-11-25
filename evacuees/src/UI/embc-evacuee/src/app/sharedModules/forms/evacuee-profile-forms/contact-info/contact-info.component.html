@@ -1,0 +1,90 @@
+<mat-card class="card-align">
+  <mat-card-content>
+    <p class="card-heading">Contact Information</p>
+    <p>Your phone number and email address will <b>ONLY</b> be used to follow up on your registration and communicate
+      emergency
+      information
+      if required.</p>
+    <form [formGroup]="contactInfoForm">
+
+      <div class="row">
+        <div class="col-md-12">
+          <p class="sub-heading">Contact Telephone Number</p>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="contactFormControl?.hidePhoneRequired?.value">
+            <mat-label>Telephone Number</mat-label>
+            <input formControlName="phone" matInput placeholder="Telephone Number" [textMask]="{mask: phoneMask, keepCharPositions: true}" required>
+            <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('required')">
+              Telephone Number is required</mat-error>
+            <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')">
+              Telephone number must have 10 digits</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-9">
+          <mat-checkbox formControlName="hidePhoneRequired" (change)="hidePhone($event)">I am not willing or able to
+            provide a telephone/mobile
+            number.</mat-checkbox>
+        </div>
+      </div>
+      <br>
+
+      <div class="row">
+        <div class="col-md-12">
+          <p class="sub-heading">Email Address</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-5">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="contactFormControl?.hideEmailRequired?.value">
+            <mat-label>Email Address</mat-label>
+            <input formControlName="email" matInput placeholder="Email Address" required>
+            <mat-error *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('required')">Email
+              is required</mat-error>
+            <mat-error *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('email')">Invalid
+              email</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+     
+      <div class="row">
+        <div class="col-md-5">
+          <mat-form-field appearance="outline" [hideRequiredMarker]="contactFormControl?.hideEmailRequired?.value">
+            <mat-label>Confirm Email Address</mat-label>
+            <input formControlName="confirmEmail" matInput placeholder="Confirm Email Address" [errorStateMatcher]="matcher" required>
+            <mat-error
+              *ngIf="contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('required')">
+              Confirm Email is required</mat-error>
+            <mat-error
+              *ngIf="contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('email')">
+              Invalid email</mat-error>
+            <mat-error
+              *ngIf="!contactFormControl.confirmEmail.invalid && contactFormControl?.confirmEmail?.parent?.errors?.emailMatch">
+              Email address mismatch</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <mat-checkbox formControlName="hideEmailRequired" (change)="hideEmail($event)">I am not willing or able to
+            provide an email address.
+          </mat-checkbox>
+        </div>
+      </div>
+    </form>
+
+    <p *ngIf="contactFormControl.hideEmailRequired.value && contactFormControl.hidePhoneRequired.value">
+      <span style="color: red"><b>Please Note:</b></span> if you are not able to provide an email address or contact telephone number, should you be eligible
+      for emergency supports due to an evacuation, you will not be able to receive an e-Transfer.
+    </p>
+  </mat-card-content>
+</mat-card>

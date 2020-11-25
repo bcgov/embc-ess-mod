@@ -18,7 +18,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ResourceAccess.Dynamics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Dynamics.CRM;
+using Microsoft.Extensions.Logging;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 
@@ -26,35 +28,96 @@ namespace EMBC.Registrants.API.RegistrationsModule
 {
     public interface IRegistrationManager
     {
-        Task<string> RegisterNew(AnonymousRegistration registration);
+        Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration);
+        Task<OkResult> CreateProfile(Registration profileRegistration);
     }
 
     public class RegistrationManager : IRegistrationManager
     {
         private readonly DynamicsClientContext dynamicsClient;
+#pragma warning disable 0649
+        private readonly ILogger logger;
+#pragma warning restore 0649
 
         public RegistrationManager(DynamicsClientContext dynamicsClient)
         {
             this.dynamicsClient = dynamicsClient;
         }
 
-        public async Task<string> RegisterNew(AnonymousRegistration registration)
+        public async Task<OkResult> CreateProfile(Registration profileRegistration)
+        {
+            var now = DateTimeOffset.Now;
+
+            // registrant
+            var registrant = new contact
+            {
+                contactid = Guid.NewGuid(),
+                era_registranttype = 174360000,
+                era_authenticated = false,
+                era_verified = false,
+                era_registrationdate = now,
+                firstname = profileRegistration.PersonalDetails.FirstName,
+                lastname = profileRegistration.PersonalDetails.LastName,
+                era_preferredname = profileRegistration.PersonalDetails.PreferredName,
+                era_initials = profileRegistration.PersonalDetails.Initials,
+                gendercode = LookupGender(profileRegistration.PersonalDetails.Gender),
+                birthdate = FromDateTime(DateTime.Parse(profileRegistration.PersonalDetails.DateOfBirth)),
+                era_collectionandauthorization = profileRegistration.InformationCollectionConsent,
+                era_sharingrestriction = profileRegistration.RestrictedAccess,
+
+                address1_line1 = profileRegistration.PrimaryAddress.AddressLine1,
+                address1_line2 = profileRegistration.PrimaryAddress.AddressLine1,
+                address1_city = profileRegistration.PrimaryAddress.Jurisdiction.JurisdictionName,
+                address1_country = profileRegistration.PrimaryAddress.Country.CountryCode,
+                era_City = Lookup(profileRegistration.PrimaryAddress.Jurisdiction),
+                era_ProvinceState = Lookup(profileRegistration.PrimaryAddress.StateProvince),
+                era_Country = Lookup(profileRegistration.PrimaryAddress.Country),
+                address1_postalcode = profileRegistration.PrimaryAddress.PostalCode,
+
+                address2_line1 = profileRegistration.MailingAddress.AddressLine1,
+                address2_line2 = profileRegistration.MailingAddress.AddressLine1,
+                address2_city = profileRegistration.MailingAddress.Jurisdiction.JurisdictionName,
+                address2_country = profileRegistration.MailingAddress.Country.CountryName,
+                era_MailingCity = Lookup(profileRegistration.MailingAddress.Jurisdiction),
+                era_MailingProvinceState = Lookup(profileRegistration.MailingAddress.StateProvince),
+                era_MailingCountry = Lookup(profileRegistration.MailingAddress.Country),
+                address2_postalcode = profileRegistration.MailingAddress.PostalCode,
+
+                emailaddress1 = profileRegistration.ContactDetails.Email,
+                telephone1 = profileRegistration.ContactDetails.Phone,
+
+                era_phonenumberrefusal = string.IsNullOrEmpty(profileRegistration.ContactDetails.Phone),
+                era_emailrefusal = string.IsNullOrEmpty(profileRegistration.ContactDetails.Email),
+                era_secrettext = profileRegistration.SecretPhrase
+            };
+
+            // save registrant to dynamics
+            dynamicsClient.AddTocontacts(registrant);
+
+            var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.ContinueOnError);
+
+            return new OkResult();
+        }
+
+        public async Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration)
         {
             var now = DateTimeOffset.Now;
 #pragma warning disable CA5394 // Do not use insecure randomness
             var essFileNumber = new Random().Next(999999999); //temporary ESS file number random generator
 #pragma warning restore CA5394 // Do not use insecure randomness
 
+            // evacuation file
             var file = new era_evacuationfile
             {
+                era_evacuationfileid = Guid.NewGuid(),
                 era_essfilenumber = essFileNumber,
                 era_evacuationfiledate = now,
-                era_addressline1 = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
-                era_addressline2 = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
-                era_city = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
-                era_Jurisdiction = Lookup(registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction),
-                era_province = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.StateProvinceCode,
-                era_country = registration.PerliminaryNeedsAssessment.EvacuatedFromAddress.Country.CountryCode,
+                era_addressline1 = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
+                era_addressline2 = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
+                era_city = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
+                era_Jurisdiction = Lookup(registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction),
+                era_province = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.StateProvinceCode,
+                era_country = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.CountryCode,
                 era_collectionandauthorization = true,
                 era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
                 era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
@@ -62,8 +125,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_secrettext = registration.RegistrationDetails.SecretPhrase,
             };
 
+            // registrant
             var registrant = new contact
             {
+                contactid = Guid.NewGuid(),
                 era_registranttype = 174360000,
                 era_authenticated = false,
                 era_verified = false,
@@ -81,8 +146,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
                 address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.JurisdictionName,
                 address1_country = registration.RegistrationDetails.PrimaryAddress.Country.CountryCode,
-                era_RelatedCity = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
-                era_RelatedProvince = Lookup(registration.RegistrationDetails.PrimaryAddress.StateProvince),
+                era_City = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
+                era_ProvinceState = Lookup(registration.RegistrationDetails.PrimaryAddress.StateProvince),
                 era_Country = Lookup(registration.RegistrationDetails.PrimaryAddress.Country),
                 address1_postalcode = registration.RegistrationDetails.PrimaryAddress.PostalCode,
 
@@ -90,9 +155,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine1,
                 address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.JurisdictionName,
                 address2_country = registration.RegistrationDetails.MailingAddress.Country.CountryName,
-                era_RelatedMailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
-                era_RelatedMailingProvince = Lookup(registration.RegistrationDetails.MailingAddress.StateProvince),
-                era_RelatedMailingCountry = Lookup(registration.RegistrationDetails.MailingAddress.Country),
+                era_MailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
+                era_MailingProvinceState = Lookup(registration.RegistrationDetails.MailingAddress.StateProvince),
+                era_MailingCountry = Lookup(registration.RegistrationDetails.MailingAddress.Country),
                 address2_postalcode = registration.RegistrationDetails.MailingAddress.PostalCode,
 
                 emailaddress1 = registration.RegistrationDetails.ContactDetails.Email,
@@ -100,60 +165,152 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
                 era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
                 era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email),
-                era_secrettext = registration.RegistrationDetails.SecretPhrase,
+                era_secrettext = registration.RegistrationDetails.SecretPhrase
             };
 
-            var members = (registration.PerliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
+            // members
+            var members = (registration.PreliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
             {
+                contactid = Guid.NewGuid(),
                 era_registranttype = 174360001,
+                era_authenticated = false,
+                era_verified = false,
+                era_registrationdate = now,
                 firstname = fm.FirstName,
                 lastname = fm.LastName,
                 era_preferredname = fm.PreferredName,
                 era_initials = fm.Initials,
                 gendercode = LookupGender(fm.Gender),
                 birthdate = FromDateTime(DateTime.Parse(fm.DateOfBirth)),
+                era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
+                era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
+
+                address1_line1 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
+                address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
+                address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.JurisdictionName,
+                address1_country = registration.RegistrationDetails.PrimaryAddress.Country.CountryCode,
+                era_City = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
+                era_ProvinceState = Lookup(registration.RegistrationDetails.PrimaryAddress.StateProvince),
+                era_Country = Lookup(registration.RegistrationDetails.PrimaryAddress.Country),
+                address1_postalcode = registration.RegistrationDetails.PrimaryAddress.PostalCode,
+
+                address2_line1 = registration.RegistrationDetails.MailingAddress.AddressLine1,
+                address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine1,
+                address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.JurisdictionName,
+                address2_country = registration.RegistrationDetails.MailingAddress.Country.CountryName,
+                era_MailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
+                era_MailingProvinceState = Lookup(registration.RegistrationDetails.MailingAddress.StateProvince),
+                era_MailingCountry = Lookup(registration.RegistrationDetails.MailingAddress.Country),
+                address2_postalcode = registration.RegistrationDetails.MailingAddress.PostalCode,
+
+                emailaddress1 = registration.RegistrationDetails.ContactDetails.Email,
+                telephone1 = registration.RegistrationDetails.ContactDetails.Phone,
+
+                era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
+                era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email),
+                era_secrettext = registration.RegistrationDetails.SecretPhrase
             });
 
+            // needs assessment
             var needsAssessment = new era_needassessment
             {
+                era_needassessmentid = Guid.NewGuid(),
                 era_needsassessmentdate = now,
                 era_EvacuationFile = file,
                 era_needsassessmenttype = 174360000,
-                era_foodrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresFood),
-                era_clothingrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresFood),
-                era_dietaryrequirement = registration.PerliminaryNeedsAssessment.RequiresFood,
-                era_incidentalrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresFood),
-                era_lodgingrequirement = Lookup(registration.PerliminaryNeedsAssessment.RequiresFood),
-                era_medicationrequirement = registration.PerliminaryNeedsAssessment.RequiresFood,
-                era_insurancecoverage = Lookup(registration.PerliminaryNeedsAssessment.Insurance)
+                era_foodrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresFood),
+                era_clothingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresClothing),
+                era_dietaryrequirement = registration.PreliminaryNeedsAssessment.HaveSpecialDiet,
+                era_incidentalrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresIncidentals),
+                era_lodgingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresLodging),
+                era_transportationrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresTransportation),
+                era_medicationrequirement = registration.PreliminaryNeedsAssessment.HaveMedication,
+                era_insurancecoverage = Lookup(registration.PreliminaryNeedsAssessment.Insurance),
+                era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
+                era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
+                era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
+                era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email)
             };
 
-            var pets = (registration.PerliminaryNeedsAssessment.Pets ?? Array.Empty<Pet>()).Select(p => new era_evacuee
+            // pets
+            var pets = (registration.PreliminaryNeedsAssessment.Pets ?? Array.Empty<Pet>()).Select(p => new era_evacuee
             {
+                era_evacueeid = Guid.NewGuid(),
                 era_needsassessment = needsAssessment,
-                //era_amountofpets = p.Quantity,
+                era_amountofpets = Convert.ToInt32(p.Quantity),
                 era_typeofpet = p.Type
             });
 
+            // set enity data and entity links in Dynamics
+
+            // save evacuation file to dynamics
             dynamicsClient.AddToera_evacuationfiles(file);
+            // save needs assessment to dynamics
             dynamicsClient.AddToera_needassessments(needsAssessment);
+            // link evacuation file to needs assessment
+            dynamicsClient.AddLink(file, nameof(file.era_needsassessment_EvacuationFile), needsAssessment);
+
+            // save registrant to dynamics
             dynamicsClient.AddTocontacts(registrant);
-            dynamicsClient.AddToera_evacuees(new era_evacuee
+            var evacueeRegistrant = new era_evacuee
             {
+                era_evacueeid = Guid.NewGuid(),
                 era_needsassessment = needsAssessment,
                 era_Registrant = registrant
-            });
+            };
+            dynamicsClient.AddToera_evacuees(evacueeRegistrant);
+            // link registrant and needs assessment to evacuee record
+            dynamicsClient.AddLink(registrant, nameof(registrant.era_contact_evacuee_Registrant), evacueeRegistrant);
+            dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), evacueeRegistrant);
+
+            // save members to dynamics
             foreach (var member in members)
             {
                 dynamicsClient.AddTocontacts(member);
-                dynamicsClient.AddToera_evacuees(new era_evacuee
+                var evacueeMember = new era_evacuee
                 {
+                    era_evacueeid = Guid.NewGuid(),
                     era_needsassessment = needsAssessment,
                     era_Registrant = member
-                });
+                };
+                dynamicsClient.AddToera_evacuees(evacueeMember);
+                // link members and needs assessment to evacuee record
+                dynamicsClient.AddLink(member, nameof(member.era_contact_evacuee_Registrant), evacueeMember);
+                dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), evacueeMember);
             }
 
-            var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+            // save pets to dynamics
+            foreach (var pet in pets)
+            {
+                var petMember = new era_evacuee
+                {
+                    era_evacueeid = Guid.NewGuid(),
+                    era_needsassessment = needsAssessment,
+                    era_typeofpet = pet.era_typeofpet,
+                    era_amountofpets = pet.era_amountofpets
+                };
+                dynamicsClient.AddToera_evacuees(petMember);
+
+                try
+                {
+                    // link pet to evacuee record
+                    dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), petMember);
+                }
+                catch (ArgumentNullException)
+                {
+                    logger.LogError("ArgumentNullException linking entities");
+                    throw;
+                }
+                catch (InvalidOperationException)
+                {
+                    logger.LogError("InvalidOperationException linking entities");
+                    throw;
+                }
+            }
+
+            //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
+            //var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+            var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.ContinueOnError);
 
             //var newEvacuationFileId = ((era_evacuationfile)results
             //    .Select(r => (EntityDescriptor)((ChangeOperationResponse)r).Descriptor)

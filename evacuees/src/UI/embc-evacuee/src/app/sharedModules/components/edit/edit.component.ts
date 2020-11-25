@@ -16,11 +16,24 @@ export class EditComponent implements OnInit {
   navigationExtras: NavigationExtras = { state: { stepIndex: 4 } };
   form$: Subscription;
   form: FormGroup;
+  editHeading: string;
+  currentFlow: string;
+  parentPageName: string;
+  nonVerfiedRoute = '/non-verified-registration/needs-assessment';
+  verifiedRoute = '/verified-registration/create-profile';
 
   constructor(private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
-              private formCreationService: FormCreationService) { }
+              private formCreationService: FormCreationService) {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation.extras.state !== undefined) {
+      const state = navigation.extras.state as { parentPageName: string };
+      this.parentPageName = state.parentPageName;
+      console.log(this.parentPageName);
+    }
+  }
 
   ngOnInit(): void {
+    this.currentFlow = this.route.snapshot.data.flow;
     this.route.paramMap.subscribe(params => {
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
@@ -29,15 +42,34 @@ export class EditComponent implements OnInit {
 
   save(): void {
     this.setFormData(this.componentToLoad);
-    this.router.navigate(['/non-verified-registration/needs-assessment'], this.navigationExtras);
+    if (this.currentFlow === 'non-verified-registration') {
+      this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
+    } else {
+      if (this.parentPageName === 'create-profile') {
+        this.router.navigate([this.verifiedRoute], this.navigationExtras);
+      } else if (this.parentPageName === 'view-profile') {
+        this.router.navigate(['/verified-registration/view-profile']);
+      }
+    }
   }
 
   cancel(): void {
-    this.router.navigate(['/non-verified-registration/needs-assessment'], this.navigationExtras);
+    if (this.currentFlow === 'non-verified-registration') {
+      this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
+    } else {
+      if (this.parentPageName === 'create-profile') {
+        this.router.navigate([this.verifiedRoute], this.navigationExtras);
+      } else if (this.parentPageName === 'view-profile') {
+        this.router.navigate(['/verified-registration/view-profile']);
+      }
+    }
   }
 
   setFormData(component: string): void {
     switch (component) {
+      case 'restriction':
+        this.updateService.updateRestriction(this.form);
+        break;
       case 'personal-details':
         this.updateService.updatePersonalDetails(this.form);
         break;
@@ -68,12 +100,21 @@ export class EditComponent implements OnInit {
 
   loadForm(component: string): void {
     switch (component) {
+      case 'restriction':
+        this.form$ = this.formCreationService.getRestrictionForm().subscribe(
+          restriction => {
+            this.form = restriction;
+          }
+        );
+        this.editHeading = 'Edit Restriction';
+        break;
       case 'personal-details':
         this.form$ = this.formCreationService.getPeronalDetailsForm().subscribe(
           personalDetails => {
             this.form = personalDetails;
           }
         );
+        this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'address':
@@ -82,6 +123,7 @@ export class EditComponent implements OnInit {
             this.form = address;
           }
         );
+        this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'contact-info':
@@ -90,6 +132,7 @@ export class EditComponent implements OnInit {
             this.form = contactDetails;
           }
         );
+        this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'secret':
@@ -98,6 +141,7 @@ export class EditComponent implements OnInit {
             this.form = secret;
           }
         );
+        this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'evac-address':
@@ -106,6 +150,7 @@ export class EditComponent implements OnInit {
             this.form = evacuatedForm;
           }
         );
+        this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'family-information':
@@ -114,6 +159,7 @@ export class EditComponent implements OnInit {
             this.form = memberForm;
           }
         );
+        this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'pets':
@@ -122,6 +168,7 @@ export class EditComponent implements OnInit {
             this.form = petsForm;
           }
         );
+        this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'identify-needs':
@@ -130,6 +177,7 @@ export class EditComponent implements OnInit {
             this.form = identifyNeedsForm;
           }
         );
+        this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       default:
