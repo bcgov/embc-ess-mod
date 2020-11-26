@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
+import * as globalConst from '../../../core/services/globalConstants';
 
 @Component({
   selector: 'app-person-detail-form',
@@ -9,12 +10,12 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 export class PersonDetailFormComponent implements OnInit {
 
   @Input() personalDetailsForm: FormGroup;
-  gender: Array<string> = new Array<string>();
+  gender = globalConst.gender;
 
   constructor() { }
 
   ngOnInit(): void {
-    this.gender = ['Male', 'Female', 'X'];
+
   }
 
  /**
