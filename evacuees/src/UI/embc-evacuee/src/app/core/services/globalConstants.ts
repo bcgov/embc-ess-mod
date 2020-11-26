@@ -5,18 +5,24 @@ export const defaultCountry = { code: 'CAN', name: 'Canada' };
 export const usDefaultObject = { code: 'USA', name: 'United States of America' };
 export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
 export const radioButton1 = [
-    {name: 'Yes', value: true},
-    {name: 'No', value: false}
+  { name: 'Yes', value: true },
+  { name: 'No', value: false }
 ];
 
 export const noticeBody = {
-    body: 'To register with the Evacuee Registration & Assistance (ERA) tool, you must select \'I agree\'.',
-    buttons:
-      [
-        {
-          name: 'Close',
-          class: 'button-p',
-          function: 'close'
-        }
-      ]
-  };
+  body: 'To register with the Evacuee Registration & Assistance (ERA) tool, you must select \'I agree\'.',
+  buttons:
+    [
+      {
+        name: 'Close',
+        class: 'button-p',
+        function: 'close'
+      }
+    ]
+};
+
+export const gender = [
+  { name: 'Male', value: 'M' },
+  { name: 'Female', value: 'F' },
+  { name: 'X', value: 'X' }
+]
