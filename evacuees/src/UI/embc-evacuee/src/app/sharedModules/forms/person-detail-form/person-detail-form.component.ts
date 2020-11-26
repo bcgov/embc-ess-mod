@@ -15,7 +15,7 @@ export class PersonDetailFormComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    
+
   }
 
  /**
