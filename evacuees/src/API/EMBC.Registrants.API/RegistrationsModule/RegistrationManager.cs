@@ -46,27 +46,27 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         public async Task<OkResult> CreateProfile(Registration profileRegistration)
         {
-            var now = DateTimeOffset.Now;
+            var now = DateTimeOffset.UtcNow;
 
             // registrant
             var registrant = new contact
             {
                 contactid = Guid.NewGuid(),
                 era_registranttype = 174360000,
-                era_authenticated = false,
+                era_authenticated = true,
                 era_verified = false,
                 era_registrationdate = now,
                 firstname = profileRegistration.PersonalDetails.FirstName,
                 lastname = profileRegistration.PersonalDetails.LastName,
                 era_preferredname = profileRegistration.PersonalDetails.PreferredName,
-                era_initials = profileRegistration.PersonalDetails.Initials,
+                era_initial = profileRegistration.PersonalDetails.Initials,
                 gendercode = LookupGender(profileRegistration.PersonalDetails.Gender),
                 birthdate = FromDateTime(DateTime.Parse(profileRegistration.PersonalDetails.DateOfBirth)),
                 era_collectionandauthorization = profileRegistration.InformationCollectionConsent,
                 era_sharingrestriction = profileRegistration.RestrictedAccess,
 
                 address1_line1 = profileRegistration.PrimaryAddress.AddressLine1,
-                address1_line2 = profileRegistration.PrimaryAddress.AddressLine1,
+                address1_line2 = profileRegistration.PrimaryAddress.AddressLine2,
                 address1_city = profileRegistration.PrimaryAddress.Jurisdiction.JurisdictionName,
                 address1_country = profileRegistration.PrimaryAddress.Country.CountryCode,
                 era_City = Lookup(profileRegistration.PrimaryAddress.Jurisdiction),
@@ -75,7 +75,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 address1_postalcode = profileRegistration.PrimaryAddress.PostalCode,
 
                 address2_line1 = profileRegistration.MailingAddress.AddressLine1,
-                address2_line2 = profileRegistration.MailingAddress.AddressLine1,
+                address2_line2 = profileRegistration.MailingAddress.AddressLine2,
                 address2_city = profileRegistration.MailingAddress.Jurisdiction.JurisdictionName,
                 address2_country = profileRegistration.MailingAddress.Country.CountryName,
                 era_MailingCity = Lookup(profileRegistration.MailingAddress.Jurisdiction),
@@ -84,7 +84,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 address2_postalcode = profileRegistration.MailingAddress.PostalCode,
 
                 emailaddress1 = profileRegistration.ContactDetails.Email,
-                telephone1 = profileRegistration.ContactDetails.Phone,
+                address1_telephone1 = profileRegistration.ContactDetails.Phone,
 
                 era_phonenumberrefusal = string.IsNullOrEmpty(profileRegistration.ContactDetails.Phone),
                 era_emailrefusal = string.IsNullOrEmpty(profileRegistration.ContactDetails.Email),
@@ -113,12 +113,12 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_essfilenumber = essFileNumber,
                 era_evacuationfiledate = now,
                 era_addressline1 = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
-                era_addressline2 = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
+                era_addressline2 = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine2,
                 era_city = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
                 era_Jurisdiction = Lookup(registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction),
                 era_province = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.StateProvinceCode,
                 era_country = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.CountryCode,
-                era_collectionandauthorization = true,
+                era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
                 era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
                 era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
                 era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email),
@@ -136,14 +136,14 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 firstname = registration.RegistrationDetails.PersonalDetails.FirstName,
                 lastname = registration.RegistrationDetails.PersonalDetails.LastName,
                 era_preferredname = registration.RegistrationDetails.PersonalDetails.PreferredName,
-                era_initials = registration.RegistrationDetails.PersonalDetails.Initials,
+                era_initial = registration.RegistrationDetails.PersonalDetails.Initials,
                 gendercode = LookupGender(registration.RegistrationDetails.PersonalDetails.Gender),
                 birthdate = FromDateTime(DateTime.Parse(registration.RegistrationDetails.PersonalDetails.DateOfBirth)),
                 era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
                 era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
 
                 address1_line1 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
-                address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
+                address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine2,
                 address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.JurisdictionName,
                 address1_country = registration.RegistrationDetails.PrimaryAddress.Country.CountryCode,
                 era_City = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
@@ -152,7 +152,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 address1_postalcode = registration.RegistrationDetails.PrimaryAddress.PostalCode,
 
                 address2_line1 = registration.RegistrationDetails.MailingAddress.AddressLine1,
-                address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine1,
+                address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine2,
                 address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.JurisdictionName,
                 address2_country = registration.RegistrationDetails.MailingAddress.Country.CountryName,
                 era_MailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
@@ -161,7 +161,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 address2_postalcode = registration.RegistrationDetails.MailingAddress.PostalCode,
 
                 emailaddress1 = registration.RegistrationDetails.ContactDetails.Email,
-                telephone1 = registration.RegistrationDetails.ContactDetails.Phone,
+                address1_telephone1 = registration.RegistrationDetails.ContactDetails.Phone,
 
                 era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
                 era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email),
@@ -179,14 +179,14 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 firstname = fm.FirstName,
                 lastname = fm.LastName,
                 era_preferredname = fm.PreferredName,
-                era_initials = fm.Initials,
+                era_initial = fm.Initials,
                 gendercode = LookupGender(fm.Gender),
                 birthdate = FromDateTime(DateTime.Parse(fm.DateOfBirth)),
                 era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
                 era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
 
                 address1_line1 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
-                address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
+                address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine2,
                 address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.JurisdictionName,
                 address1_country = registration.RegistrationDetails.PrimaryAddress.Country.CountryCode,
                 era_City = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
@@ -195,7 +195,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 address1_postalcode = registration.RegistrationDetails.PrimaryAddress.PostalCode,
 
                 address2_line1 = registration.RegistrationDetails.MailingAddress.AddressLine1,
-                address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine1,
+                address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine2,
                 address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.JurisdictionName,
                 address2_country = registration.RegistrationDetails.MailingAddress.Country.CountryName,
                 era_MailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
@@ -204,7 +204,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 address2_postalcode = registration.RegistrationDetails.MailingAddress.PostalCode,
 
                 emailaddress1 = registration.RegistrationDetails.ContactDetails.Email,
-                telephone1 = registration.RegistrationDetails.ContactDetails.Phone,
+                address1_telephone1 = registration.RegistrationDetails.ContactDetails.Phone,
 
                 era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
                 era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email),
