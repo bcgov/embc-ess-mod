@@ -11,6 +11,7 @@ import { FormCreationService } from '../../../../core/services/formCreation.serv
 import { Subscription } from 'rxjs';
 import { DirectivesModule } from '../../../../core/directives/directives.module';
 import { TextMaskModule } from 'angular2-text-mask';
+import * as globalConst from '../../../../core/services/globalConstants';
 
 @Component({
   selector: 'app-personal-details',
@@ -20,7 +21,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 export default class PersonalDetailsComponent implements OnInit {
 
   personalDetailsForm: FormGroup;
-  gender: Array<string> = new Array<string>();
+  gender = globalConst.gender;
   formBuilder: FormBuilder;
   personalDetailsForm$: Subscription;
   formCreationService: FormCreationService;
@@ -37,7 +38,6 @@ export default class PersonalDetailsComponent implements OnInit {
         this.personalDetailsForm = personalDetails;
       }
     );
-    this.gender = ['Male', 'Female', 'X'];
   }
 
   /**
