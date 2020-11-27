@@ -38,6 +38,24 @@ const routes: Routes = [
         loadChildren: () => import('../sharedModules/components/edit/edit.module').then(m => m.EditModule),
         data: { flow: 'verified-registration' }
       },
+      {
+        path: 'confirm-restriction',
+        loadChildren: () => import('../sharedModules/components/confirm-restriction/confirm-restriction.module')
+          .then(m => m.ConfirmRestrictionModule),
+        data: { flow: 'verified-registration' }
+      },
+      {
+        path: 'needs-assessment',
+        loadChildren: () => import('../sharedModules/components/needs-assessment/needs-assessment.module')
+          .then(m => m.NeedsAssessmentModule),
+        data: { flow: 'verified-registration' }
+      },
+      {
+        path: 'fileSubmission',
+        loadChildren: () => import('../sharedModules/components/file-submission/file-submission.module')
+          .then(m => m.FileSubmissionModule),
+        data: { flow: 'verified-registration' }
+      }
     ]
   }
 ];
