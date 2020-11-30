@@ -42,4 +42,4 @@ export const gender = [
   { name: 'Male', value: 'M' },
   { name: 'Female', value: 'F' },
   { name: 'X', value: 'X' }
-]
+];
