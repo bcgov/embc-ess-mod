@@ -29,7 +29,12 @@
     </mat-card>
     <br>
     <br>
-    <mat-card class="card-align services-info">
+    <div *ngIf="currentFlow === 'verified-registration'" class="row">
+        <div class="col-md-12">
+            <button class="button-p notice-button" mat-button type="button" (click)="goToProfile()">Return to my Profile</button>
+        </div>
+    </div>
+    <mat-card *ngIf="currentFlow === 'non-verified-registration'" class="card-align services-info">
         <mat-card-content>
             <div class="row">
                 <div class="col-md-12 open-panel-heading">

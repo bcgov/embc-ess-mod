@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { DirectivesModule } from '../../../core/directives/directives.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TextMaskModule } from 'angular2-text-mask';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { DirectivesModule } from '../../../core/directives/directives.module';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    DirectivesModule
+    DirectivesModule,
+    MatCheckboxModule,
+    TextMaskModule
   ],
   exports: [
     PersonDetailFormComponent

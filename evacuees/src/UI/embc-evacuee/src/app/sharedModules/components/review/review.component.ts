@@ -21,12 +21,15 @@ export class ReviewComponent implements OnInit {
   navigationExtras: NavigationExtras;
   @Output() captchaPassed = new EventEmitter<boolean>(false);
   @Input() type: string;
-  @Input() showHeading: string;
+  @Input() showHeading: boolean;
   @Input() currentFlow: string;
   @Input() parentPageName: string;
 
   ngOnInit(): void {
     this.navigationExtras = { state: { parentPageName: this.parentPageName } };
+    if (this.currentFlow === 'verified-registration') {
+      this.captchaPassed.emit(true);
+    }
   }
 
   editDetails(componentToEdit: string): void {

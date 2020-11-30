@@ -3,11 +3,11 @@
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <label class="card-heading requiredField" id="primary-radio-group-label">If you have any family members
+          <label class="card-heading requiredField" id="primary-radio-group-label">If you have any <b>family members</b>
             (including dependents) who live in the same household with you,
             please add them below.</label>
           <p><i>Please note:</i> Roommates & tenants need to register separately.</p>
-          <mat-table *ngIf="dataSource.getValue().length > 0 && showTable" [dataSource]="dataSource">
+          <mat-table *ngIf="dataSource.getValue().length > 0" [dataSource]="dataSource"> <!--&& showTable-->
 
             <ng-container matColumnDef="firstName">
               <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
@@ -50,12 +50,12 @@
               <mat-header-cell *matHeaderCellDef></mat-header-cell>
               <mat-cell *matCellDef="let element; let index = index">
                 <!-- <span class="mobile-label">11</span> -->
-                <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(element, index)">
+                <button *ngIf="!editFlag" class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(element, index)">
                   <img src="/assets/images/edit.svg" height="35" width="35">
                   <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                 </button>
 
-                <button class="delete-image" mat-icon-button aria-label="Remove" (click)="deleteRow(index)">
+                <button *ngIf="!editFlag" class="delete-image" mat-icon-button aria-label="Remove" (click)="deleteRow(index)">
                   <img src="/assets/images/delete.svg" height="35" width="35">
                   <img src="/assets/images/delete_onhover.svg" height="35" width="35">
                 </button>
