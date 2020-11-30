@@ -110,7 +110,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     if (lastStep === 0) {
       stepper.previous();
     } else if (lastStep === -1) {
-      if(this.currentFlow === 'non-verified-registration') {
+      if (this.currentFlow === 'non-verified-registration') {
         this.router.navigate(['/non-verified-registration/create-profile'], this.navigationExtras);
       } else {
         this.router.navigate(['/verified-registration/confirm-restriction']);
@@ -155,7 +155,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   }
 
   submitFile(): void {
-    if(this.currentFlow === 'non-verified-registration') {
+    if (this.currentFlow === 'non-verified-registration') {
       this.submitNonVerified();
     } else {
       this.submitVerified();

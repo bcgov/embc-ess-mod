@@ -20,8 +20,8 @@ export class FileSubmissionComponent implements OnInit {
     const registrationResult = this.dataService.getRegistrationResult();
     if (registrationResult) {
       this.referenceNumber = registrationResult.referenceNumber;
-      if(!this.referenceNumber) {
-        this.referenceNumber = "XXX";
+      if (!this.referenceNumber) {
+        this.referenceNumber = 'XXX';
       }
     }
   }

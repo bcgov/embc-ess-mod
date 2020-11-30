@@ -35,11 +35,11 @@ export default class FamilyInformationComponent implements OnInit {
   data = [];
   editIndex: number;
   rowEdit = false;
-  //showTable = true;
+  // showTable = true;
   editFlag = false;
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-    public dialog: MatDialog) {
+              public dialog: MatDialog) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
@@ -58,7 +58,7 @@ export default class FamilyInformationComponent implements OnInit {
   addMembers(): void {
     this.familyMemberForm.get('member').reset();
     this.showFamilyForm = !this.showFamilyForm;
-    //this.showTable = !this.showTable;
+    // this.showTable = !this.showTable;
     this.editFlag = !this.editFlag;
     this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
   }
@@ -76,7 +76,7 @@ export default class FamilyInformationComponent implements OnInit {
       this.familyMemberForm.get('familyMember').setValue(this.data);
       this.showFamilyForm = !this.showFamilyForm;
       this.editFlag = !this.editFlag;
-      //this.showTable = !this.showTable;
+      // this.showTable = !this.showTable;
     } else {
       this.familyMemberForm.get('member').markAllAsTouched();
     }
@@ -85,7 +85,7 @@ export default class FamilyInformationComponent implements OnInit {
   cancel(): void {
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
-    //this.showTable = !this.showTable;
+    // this.showTable = !this.showTable;
     if (this.data.length === 0) {
       this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
     }
@@ -104,8 +104,8 @@ export default class FamilyInformationComponent implements OnInit {
       height: '210px',
       width: '500px'
     }).afterClosed().subscribe(result => {
-      if (result === "remove") {
-        console.log(result)
+      if (result === 'remove') {
+        console.log(result);
         this.data.splice(index, 1);
         this.dataSource.next(this.data);
         this.familyMemberForm.get('familyMember').setValue(this.data);
@@ -122,7 +122,7 @@ export default class FamilyInformationComponent implements OnInit {
     this.familyMemberForm.get('member').setValue(element);
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
-    //this.showTable = !this.showTable;
+    // this.showTable = !this.showTable;
   }
 
   updateOnVisibility(): void {

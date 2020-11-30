@@ -34,10 +34,10 @@ export class PersonDetailFormComponent implements OnInit {
   }
 
   sameLastNameEvent(event: MatCheckboxChange): void {
-    if(event.checked) {
-      this.personalDetailsForm.get('lastName').setValue(this.primaryApplicantLastName)
+    if (event.checked) {
+      this.personalDetailsForm.get('lastName').setValue(this.primaryApplicantLastName);
     } else {
-      this.personalDetailsForm.get('lastName').setValue("")
+      this.personalDetailsForm.get('lastName').setValue('');
     }
   }
 
