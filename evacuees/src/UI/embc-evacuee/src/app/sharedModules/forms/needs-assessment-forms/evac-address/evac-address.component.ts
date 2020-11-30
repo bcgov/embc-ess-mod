@@ -63,12 +63,11 @@ export default class EvacAddressComponent implements OnInit {
   }
 
   otherAddressTemplate(): void {
-      if(this.evacuatedForm.get('evacuatedFromAddress.stateProvince').value == ""){
+      if (this.evacuatedForm.get('evacuatedFromAddress.stateProvince').value === '') {
         this.evacuatedForm.get('evacuatedFromAddress').reset();
         this.evacuatedForm.get('evacuatedFromAddress.stateProvince').setValue(globalConst.defaultProvince);
         this.evacuatedForm.get('evacuatedFromAddress.country').setValue(globalConst.defaultCountry);
       }
-      
   }
 
   /**
