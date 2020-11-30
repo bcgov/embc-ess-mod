@@ -9,6 +9,13 @@ export const radioButton1 = [
     {name: 'No', value: false}
 ];
 
+export const insuranceOptions = [
+  {name: 'Yes', value: "Yes"},
+  {name: 'Unsure', value: "Yes, but I am unsure if I have coverage for this event."},
+  {name: 'No', value: "No"},
+  {name: 'Unknown', value: "I don't know"}
+];
+
 export const noticeBody = {
     body: 'To register with the Evacuee Registration & Assistance (ERA) tool, you must select \'I agree\'.',
     buttons:
