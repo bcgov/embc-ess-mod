@@ -11,10 +11,7 @@ export class DialogComponent {
     constructor(public dialogRef: MatDialogRef<DialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     buttonAction(action: string): void {
-        if (action !== 'close') {
-            this.dialogRef.close(action);
-        }
-        this.dialogRef.close();
+        this.dialogRef.close(action);
     }
 
 }

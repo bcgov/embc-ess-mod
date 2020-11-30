@@ -11,6 +11,7 @@ import { ComponentWrapperModule } from '../../components/component-wrapper/compo
 import { ReviewModule } from '../../components/review/review.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     ComponentWrapperModule,
     ReviewModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatDialogModule
   ]
 })
 export class NeedsAssessmentModule { }

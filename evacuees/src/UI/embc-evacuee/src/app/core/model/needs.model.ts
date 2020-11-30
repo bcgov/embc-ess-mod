@@ -57,6 +57,7 @@ export class FamilyMembersForm {
                 () => this.addFamilyMemberIndicator.value,
                 Validators.required
             ).bind(customValidator)]],
+            sameLastNameCheck: [''],
             initials: [''],
             gender: ['', [customValidator.conditionalValidation(
                 () => this.addFamilyMemberIndicator.value,

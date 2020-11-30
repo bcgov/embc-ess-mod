@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule, Inject } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,6 +13,9 @@ import { PersonDetailFormModule } from '../../person-detail-form/person-detail-f
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import * as globalConst from '../../../../core/services/globalConstants';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
+import { DialogModule } from '../../../../core/components/dialog/dialog.module';
 
 @Component({
   selector: 'app-family-information',
@@ -32,10 +35,11 @@ export default class FamilyInformationComponent implements OnInit {
   data = [];
   editIndex: number;
   rowEdit = false;
-  showTable = true;
+  //showTable = true;
+  editFlag = false;
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-  ) {
+    public dialog: MatDialog) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
@@ -54,7 +58,8 @@ export default class FamilyInformationComponent implements OnInit {
   addMembers(): void {
     this.familyMemberForm.get('member').reset();
     this.showFamilyForm = !this.showFamilyForm;
-    this.showTable = !this.showTable;
+    //this.showTable = !this.showTable;
+    this.editFlag = !this.editFlag;
     this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
   }
 
@@ -70,7 +75,8 @@ export default class FamilyInformationComponent implements OnInit {
       this.dataSource.next(this.data);
       this.familyMemberForm.get('familyMember').setValue(this.data);
       this.showFamilyForm = !this.showFamilyForm;
-      this.showTable = !this.showTable;
+      this.editFlag = !this.editFlag;
+      //this.showTable = !this.showTable;
     } else {
       this.familyMemberForm.get('member').markAllAsTouched();
     }
@@ -78,7 +84,8 @@ export default class FamilyInformationComponent implements OnInit {
 
   cancel(): void {
     this.showFamilyForm = !this.showFamilyForm;
-    this.showTable = !this.showTable;
+    this.editFlag = !this.editFlag;
+    //this.showTable = !this.showTable;
     if (this.data.length === 0) {
       this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
     }
@@ -92,12 +99,21 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   deleteRow(index: number): void {
-    this.data.splice(index, 1);
-    this.dataSource.next(this.data);
-    this.familyMemberForm.get('familyMember').setValue(this.data);
-    if (this.data.length === 0) {
-      this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
-    }
+    this.dialog.open(DialogComponent, {
+      data: globalConst.deleteMemberInfoBody,
+      height: '210px',
+      width: '500px'
+    }).afterClosed().subscribe(result => {
+      if (result === "remove") {
+        console.log(result)
+        this.data.splice(index, 1);
+        this.dataSource.next(this.data);
+        this.familyMemberForm.get('familyMember').setValue(this.data);
+        if (this.data.length === 0) {
+          this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
+        }
+      }
+    });
   }
 
   editRow(element, index): void {
@@ -105,7 +121,8 @@ export default class FamilyInformationComponent implements OnInit {
     this.rowEdit = !this.rowEdit;
     this.familyMemberForm.get('member').setValue(element);
     this.showFamilyForm = !this.showFamilyForm;
-    this.showTable = !this.showTable;
+    this.editFlag = !this.editFlag;
+    //this.showTable = !this.showTable;
   }
 
   updateOnVisibility(): void {
@@ -128,6 +145,7 @@ export default class FamilyInformationComponent implements OnInit {
     PersonDetailFormModule,
     MatTableModule,
     MatIconModule,
+    DialogModule
   ],
   declarations: [
     FamilyInformationComponent,

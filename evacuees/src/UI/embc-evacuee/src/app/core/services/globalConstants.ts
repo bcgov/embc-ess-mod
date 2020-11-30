@@ -21,6 +21,23 @@ export const noticeBody = {
     ]
 };
 
+export const deleteMemberInfoBody = {
+  body: 'Are you sure you want to remove this family member from your evacuation file?',
+  buttons:
+    [
+      {
+        name: 'No, Cancel',
+        class: 'button-s',
+        function: 'close'
+      },
+      {
+        name: 'Yes, remove this family member',
+        class: 'button-p',
+        function: 'remove'
+      }
+    ]
+};
+
 export const gender = [
   { name: 'Male', value: 'M' },
   { name: 'Female', value: 'F' },
