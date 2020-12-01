@@ -24,6 +24,7 @@ export class PersonDetails {
     initials: string;
     gender: string;
     dateOfBirth: string;
+    sameLastNameCheck ?: boolean;
 
     constructor() { }
 }

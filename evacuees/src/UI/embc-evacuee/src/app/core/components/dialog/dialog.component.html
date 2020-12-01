@@ -16,7 +16,9 @@
     </div>
 </div>
 <br>
-<div *ngFor="let b of data.buttons" mat-dialog-actions class="row">
-    <button class="col-md-6" [ngClass]="{'button-p': b.class === 'button-p'}" (click)="buttonAction(b.function)"
+<div class="row justify-content-between"> <!--mat-dialog-actions-->
+    <div *ngFor="let b of data.buttons" class="col-md-6">
+        <button style="width: 100%;" [ngClass]="{'button-p': b.class === 'button-p', 'button-s': b.class === 'button-s'}" (click)="buttonAction(b.function)"
         mat-button>{{b.name}}</button>
+    </div>
 </div>
