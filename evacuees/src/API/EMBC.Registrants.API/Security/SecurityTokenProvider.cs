@@ -23,7 +23,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace EMBC.Registrants.API.Dynamics
+namespace EMBC.Registrants.API.Security
 {
     public interface ISecurityTokenProvider
     {
@@ -95,7 +95,7 @@ namespace EMBC.Registrants.API.Dynamics
                 var result = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(responseContent);
                 if (result.ContainsKey("access_token"))
                 {
-                    string token = result["access_token"].GetString();
+                    var token = result["access_token"].GetString();
                     return token;
                 }
                 else if (result.ContainsKey("error"))
@@ -134,7 +134,7 @@ namespace EMBC.Registrants.API.Dynamics
                 var options = sp.GetRequiredService<IOptions<ADFSTokenProviderOptions>>().Value;
                 c.BaseAddress = new Uri(options.OAuth2TokenEndpoint);
             });
-            services.AddTransient<ISecurityTokenProvider, ADFSSecurityTokenProvider>();
+            services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
 
             return services;
         }
