@@ -51,7 +51,7 @@ namespace EMBC.Registrants.API.LocationModule
                 return;
             }
 
-            logger.LogInformation("{0} starting and will auto refresh the cache every {1} seconds", nameof(LocationCacheHostedService), options.RefreshInterval.TotalSeconds);
+            logger.LogInformation("{0} starting and will auto refresh the cache every {1} minutes", nameof(LocationCacheHostedService), options.RefreshInterval.TotalMinutes);
             timer = new Timer(async (s) =>
                 {
                     await RefreshCache(cancellationToken);
