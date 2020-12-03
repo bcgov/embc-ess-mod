@@ -21,12 +21,12 @@ namespace EMBC.ResourceAccess.Dynamics
                 args.Headers.Add("Authorization", $"Bearer {tokenFactory().GetAwaiter().GetResult()}");
                 if (args.RequestUri.IsAbsoluteUri)
                 {
-                    args.RequestUri = new Uri(url, url.AbsolutePath + args.RequestUri.AbsolutePath);
+                    args.RequestUri = new Uri(url, url.AbsolutePath + args.RequestUri.AbsolutePath + args.RequestUri.Query);
                 }
                 else
                 {
                     args.RequestUri = new Uri(url, url.AbsolutePath + uri.AbsolutePath + args.RequestUri.ToString());
-                }     
+                }
                 logger.LogDebug("{0} BuildingRequest {1}", nameof(DynamicsClientContext), args.RequestUri);
             };
             SendingRequest2 += delegate (object sender, SendingRequest2EventArgs args)

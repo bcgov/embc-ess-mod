@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
-using EMBC.Registrants.API.Dynamics;
 using EMBC.Registrants.API.RegistrationsModule;
+using EMBC.Registrants.API.Security;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -115,8 +115,8 @@ namespace EMBC.Tests.Integration.Registrants.API
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetListOfJurisdictions()
         {
-            var gw = services.GetRequiredService<IDynamicsListsGateway>();
-            var jurisdictions = await gw.GetJurisdictionsAsync();
+            var repo = services.GetRequiredService<EMBC.Registrants.API.LocationModule.IListsRepository>();
+            var jurisdictions = await repo.GetJurisdictions();
 
             Assert.NotEmpty(jurisdictions);
         }
