@@ -32,7 +32,7 @@ namespace EMBC.Registrants.API.Dynamics
         {
             services.AddTransient<IListsRepository, ListsRepository>();
             services.AddTransient<IDynamicsListsGateway, DynamicsListsGateway>();
-            services.AddTransient<ISecurityTokenProvider, ADFSSecurityTokenProvider>();
+            services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
             services.AddHttpClient("adfs_token", (sp, c) =>
             {
                 var options = sp.GetRequiredService<IOptions<ADFSTokenProviderOptions>>().Value;

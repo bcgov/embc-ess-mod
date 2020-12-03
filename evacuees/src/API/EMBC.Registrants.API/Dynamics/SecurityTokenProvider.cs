@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -27,6 +28,30 @@ namespace EMBC.Registrants.API.Dynamics
     public interface ISecurityTokenProvider
     {
         Task<string> AcquireToken();
+    }
+
+    public class CachedADFSSecurityTokenProvider : ISecurityTokenProvider
+    {
+        private readonly string cacheKey = $"{nameof(CachedADFSSecurityTokenProvider)}_token";
+        private readonly ADFSSecurityTokenProvider internalSecurityProvider;
+        private readonly IDistributedCache cache;
+
+        public CachedADFSSecurityTokenProvider(IHttpClientFactory httpClientFactory, IOptions<ADFSTokenProviderOptions> options, IDistributedCache cache)
+        {
+            internalSecurityProvider = new ADFSSecurityTokenProvider(httpClientFactory, options);
+            this.cache = cache;
+        }
+
+        public async Task<string> AcquireToken()
+        {
+            var token = await cache.GetStringAsync(cacheKey);
+            if (string.IsNullOrEmpty(token))
+            {
+                token = await internalSecurityProvider.AcquireToken();
+                await cache.SetStringAsync(cacheKey, token, new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
+            }
+            return token;
+        }
     }
 
     public class ADFSSecurityTokenProvider : ISecurityTokenProvider

@@ -84,6 +84,7 @@ namespace EMBC.Registrants.API
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.Configure<LocationCacheHostedServiceOptions>(configuration.GetSection("Location:Cache"));
 
+            // TODO: consider setting a distributed cache in the future
             services.AddDistributedMemoryCache();
 
             services.AddRegistrationModule();

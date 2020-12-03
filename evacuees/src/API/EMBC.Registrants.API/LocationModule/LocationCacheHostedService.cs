@@ -107,7 +107,7 @@ namespace EMBC.Registrants.API.LocationModule
 
     public class LocationCacheHostedServiceOptions
     {
-        public TimeSpan RefreshInterval { get; set; } = TimeSpan.FromSeconds(60);
+        public TimeSpan RefreshInterval { get; set; } = TimeSpan.FromMinutes(60);
         public bool AutoRefreshEnabled { get; set; } = true;
     }
 }
