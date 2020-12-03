@@ -27,10 +27,9 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
   captchaPassed = false;
   stepToDisplay: number;
-  type = 'both';
+  type: string;
   currentFlow: string;
   parentPageName = 'needs-assessment';
-  showHeading = 'Account Details';
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
               private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
@@ -44,6 +43,11 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
+    if (this.currentFlow === 'non-verified-registration') {
+      this.type = 'both';
+    } else {
+      this.type = 'need';
+    }
     this.needsSteps = this.componentService.createEvacSteps();
   }
 
@@ -106,7 +110,11 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     if (lastStep === 0) {
       stepper.previous();
     } else if (lastStep === -1) {
-      this.router.navigate(['/non-verified-registration/create-profile'], this.navigationExtras);
+      if (this.currentFlow === 'non-verified-registration') {
+        this.router.navigate(['/non-verified-registration/create-profile'], this.navigationExtras);
+      } else {
+        this.router.navigate(['/verified-registration/confirm-restriction']);
+      }
     }
   }
 
@@ -147,6 +155,14 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   }
 
   submitFile(): void {
+    if (this.currentFlow === 'non-verified-registration') {
+      this.submitNonVerified();
+    } else {
+      this.submitVerified();
+    }
+  }
+
+  submitNonVerified(): void {
     this.submissionService.submitRegistrationFile().subscribe((response: RegistrationResult) => {
       console.log(response);
       this.updateService.updateRegisrationResult(response);
@@ -154,7 +170,10 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     }, (error) => {
       console.log(error);
     });
+  }
 
+  submitVerified(): void {
+    this.router.navigate(['/verified-registration/fileSubmission']);
   }
 
   allowSubmit($event: boolean): void {

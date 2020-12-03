@@ -30,6 +30,9 @@ parameters:
   - description: Dynamics API endpoint
     name: DYNAMICS_ENDPOINT
     required: true
+  - description: Dynamics entities base URI
+    name: DYNAMICS_URI
+    required: true
   - description: Dynamics service account domain
     name: DYNAMICS_SERVICE_ACCOUNT_DOMAIN
     required: true
@@ -58,6 +61,7 @@ objects:
       KEY_RING_PATH: "/dpkeys"
       Dynamics__ADFS__OAuth2TokenEndpoint: ${OAUTH_ENDPOINT}
       Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
+      Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
       location__cache__AutoRefreshEnabled: ${LOCATION_CACHE_REFRESH_ENABLED}
       location__cache__RefreshInterval: ${LOCATION_CACHE_REFRESH_INTERVAL}
   - kind: Secret

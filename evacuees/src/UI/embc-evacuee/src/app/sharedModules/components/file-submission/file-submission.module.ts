@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FileSubmissionRoutingModule } from './file-submission-routing.module';
 import { FileSubmissionComponent } from './file-submission.component';
 import { MatCardModule } from '@angular/material/card';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -14,7 +14,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     CommonModule,
     FileSubmissionRoutingModule,
     MatCardModule,
-    MatExpansionModule
+    MatButtonModule
   ]
 })
 export class FileSubmissionModule { }

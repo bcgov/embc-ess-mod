@@ -47,8 +47,8 @@
             <mat-label>Gender</mat-label>
             <mat-select formControlName="gender" required>
               <mat-option>--Gender</mat-option>
-              <mat-option *ngFor="let gen of gender" [value]="gen">
-                {{gen}}
+              <mat-option *ngFor="let gen of gender" [value]="gen.value">
+                {{gen.name}}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="personalFormControl.gender.invalid && personalFormControl.gender.hasError('required')">Gender is required</mat-error>

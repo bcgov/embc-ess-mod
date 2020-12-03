@@ -14,11 +14,10 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EMBC.Registrants.API.Dynamics;
+using EMBC.ResourceAccess.Dynamics;
 
 namespace EMBC.Registrants.API.LocationModule
 {
@@ -33,41 +32,41 @@ namespace EMBC.Registrants.API.LocationModule
 
     public class ListsRepository : IListsRepository
     {
-        private readonly IDynamicsListsGateway dynamicsListsGateway;
+        private readonly DynamicsClientContext dynamicsClient;
 
-        public ListsRepository(IDynamicsListsGateway dynamicsListsGateway)
+        public ListsRepository(DynamicsClientContext dynamicsClient)
         {
-            this.dynamicsListsGateway = dynamicsListsGateway;
+            this.dynamicsClient = dynamicsClient;
         }
 
         public async Task<IEnumerable<Country>> GetCountries()
         {
-            return (await dynamicsListsGateway.GetCountriesAsync()).Select(c => new Country { Code = c.era_countrycode, Name = c.era_name });
-        }
-
-        public async Task<IEnumerable<Jurisdiction>> GetJurisdictions()
-        {
-            var countries = (await dynamicsListsGateway.GetCountriesAsync()).ToArray();
-            var stateProvinces = (await dynamicsListsGateway.GetStateProvincesAsync()).ToArray();
-            // TODO: optimize state/province and country mapping
-            return (await dynamicsListsGateway.GetJurisdictionsAsync()).Select(j => new Jurisdiction
-            {
-                Code = j.era_jurisdictionid,
-                Name = j.era_jurisdictionname,
-                Type = string.IsNullOrWhiteSpace(j.era_type) ? JurisdictionType.Undefined : Enum.Parse<JurisdictionType>(j.era_type, true),
-                StateProvinceCode = stateProvinces.Single(sp => sp.era_provinceterritoriesid == j._era_relatedprovincestate_value).era_code,
-                CountryCode = countries.Single(c => c.era_countryid == stateProvinces.Single(sp => sp.era_provinceterritoriesid == j._era_relatedprovincestate_value)._era_relatedcountry_value).era_countrycode
-            });
+            var countries = await dynamicsClient.era_countries.GetAllPagesAsync();
+            return countries.Select(c => new Country { Code = c.era_countrycode, Name = c.era_name }).ToArray();
         }
 
         public async Task<IEnumerable<StateProvince>> GetStateProvinces()
         {
-            var countries = (await dynamicsListsGateway.GetCountriesAsync()).ToArray();
-            return (await dynamicsListsGateway.GetStateProvincesAsync()).Select(sp => new StateProvince
+            var provinces = await dynamicsClient.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync();
+            return provinces.Select(sp => new StateProvince
             {
-                Code = sp.era_provinceterritoriesid,
+                Code = sp.era_provinceterritoriesid.ToString(),
                 Name = sp.era_name,
-                CountryCode = countries.Single(c => c.era_countryid == sp._era_relatedcountry_value).era_countrycode
+                CountryCode = sp.era_RelatedCountry.era_countrycode
+            }).ToArray();
+        }
+
+        public async Task<IEnumerable<Jurisdiction>> GetJurisdictions()
+        {
+            await GetStateProvinces();  // temporary solution to populate the client's cache with entities, otherwise era_RelatedCountry will be null
+            var jurisdictions = await dynamicsClient.era_jurisdictions.Expand(j => j.era_RelatedProvinceState).GetAllPagesAsync();
+            return jurisdictions.Select(j => new Jurisdiction
+            {
+                Code = j.era_jurisdictionid.ToString(),
+                Name = j.era_jurisdictionname,
+                Type = !j.era_type.HasValue ? JurisdictionType.Undefined : (JurisdictionType)j.era_type.Value,
+                StateProvinceCode = j.era_RelatedProvinceState.era_code,
+                CountryCode = j.era_RelatedProvinceState.era_RelatedCountry.era_countrycode
             });
         }
     }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 
 @Component({
@@ -13,10 +13,14 @@ export class ViewAuthProfileComponent implements OnInit {
   currentFlow: string;
   parentPageName = 'view-profile';
 
-  constructor(private route: ActivatedRoute, public formCreationService: FormCreationService) { }
+  constructor(private route: ActivatedRoute, public formCreationService: FormCreationService, private router: Router) { }
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
+  }
+
+  startAssessment(): void {
+    this.router.navigate(['/verified-registration/confirm-restriction']);
   }
 
 }

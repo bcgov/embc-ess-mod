@@ -32,7 +32,6 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   type = 'profile';
   profileHeading: string;
   parentPageName = 'create-profile';
-  showHeading = 'Review & Submit';
 
   constructor(private router: Router, private componentService: ComponentCreationService,
               private route: ActivatedRoute, private formCreationService: FormCreationService,
