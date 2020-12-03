@@ -41,11 +41,13 @@ namespace EMBC.Registrants.API.Dynamics
             services.AddSingleton(sp =>
             {
                 var configuration = sp.GetRequiredService<IConfiguration>();
-                var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
+                var dynamicsApiEndpoint = configuration.GetValue<Uri>("Dynamics:DynamicsApiEndpoint");
+                var dynamicsApiBaseUri = configuration.GetValue<Uri>("Dynamics:DynamicsApiBaseUri");
+                var dynamicsUrl = new Uri(dynamicsApiEndpoint, dynamicsApiEndpoint.AbsolutePath + dynamicsApiBaseUri.AbsolutePath);
                 var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
                 return new CRMWebAPI(new CRMWebAPIConfig
                 {
-                    APIUrl = dynamicsApiEndpoint,
+                    APIUrl = dynamicsUrl.ToString(),
                     GetAccessToken = async (s) => await tokenProvider.AcquireToken()
                 });
             });
@@ -54,9 +56,10 @@ namespace EMBC.Registrants.API.Dynamics
            {
                var configuration = sp.GetRequiredService<IConfiguration>();
                var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
+               var dynamicsApiBaseUri = configuration.GetValue<string>("Dynamics:DynamicsApiBaseUri");
                var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
                var logger = sp.GetRequiredService<ILogger<DynamicsClientContext>>();
-               return new DynamicsClientContext(new Uri(dynamicsApiEndpoint), tokenProvider.AcquireToken().GetAwaiter().GetResult, logger);
+               return new DynamicsClientContext(new Uri(dynamicsApiBaseUri), new Uri(dynamicsApiEndpoint), async () => await tokenProvider.AcquireToken(), logger);
            });
             return services;
         }

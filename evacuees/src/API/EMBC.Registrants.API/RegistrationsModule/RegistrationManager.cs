@@ -326,7 +326,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         private era_country Lookup(Country country) =>
             string.IsNullOrEmpty(country.CountryCode)
             ? null
-            : dynamicsClient.era_countries.Where(c => c.era_countrycode == country.CountryCode).SingleOrDefault();
+            : dynamicsClient.era_countries.Where(c => c.era_countrycode == country.CountryCode).FirstOrDefault();
 
         private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
 
@@ -350,12 +350,12 @@ namespace EMBC.Registrants.API.RegistrationsModule
         private era_provinceterritories Lookup(StateProvince stateProvince) =>
         string.IsNullOrEmpty(stateProvince.StateProvinceCode)
             ? null
-            : dynamicsClient.era_provinceterritorieses.Where(p => p.era_code == stateProvince.StateProvinceCode).SingleOrDefault();
+            : dynamicsClient.era_provinceterritorieses.Where(p => p.era_code == stateProvince.StateProvinceCode).FirstOrDefault();
 
         private era_jurisdiction Lookup(Jurisdiction jurisdiction) =>
             string.IsNullOrEmpty(jurisdiction.JurisdictionCode)
             ? null
-            : dynamicsClient.era_jurisdictions.Where(j => j.era_jurisdictionid == Guid.Parse(jurisdiction.JurisdictionCode)).SingleOrDefault();
+            : dynamicsClient.era_jurisdictions.Where(j => j.era_jurisdictionid == Guid.Parse(jurisdiction.JurisdictionCode)).FirstOrDefault();
 
         //private int Lookup(string entityName, string optionSetName, string label) =>
         //    dynamicsClient.Execute<AttributeMetadata>(new Uri($"EntityDefinitions(LogicalName='{entityName}')/Attributes(LogicalName='{optionSetName}')"))
