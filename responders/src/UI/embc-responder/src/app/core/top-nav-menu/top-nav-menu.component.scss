@@ -1,0 +1,24 @@
+.divider {
+    color: rgb(96, 96, 96);
+}
+
+a:hover {
+    color: rgb(96, 96, 96) !important;
+    text-decoration: underline;
+}
+
+a:active {
+    color: red !important;
+}
+
+a:visited {
+    color: yellowgreen !important;
+}
+
+// a:not(:visited) {
+//     color: green !important;
+// }
+
+.menu-spacer {
+    flex: 1 1 auto;
+  }

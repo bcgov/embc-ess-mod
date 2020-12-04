@@ -1,0 +1,72 @@
+
+    <mat-toolbar class="custom-toolbar">
+        <!-- <mat-toolbar-row> -->
+            <button mat-icon-button (click)="onToggle()" fxShow="true" fxHide.gt-sm>
+                <mat-icon>menu</mat-icon>
+            </button>
+            <div fxShow="true" fxHide.lt-md>
+                <a class="top-nav" mat-button [routerLink]="'/responder-access/responder-dashboard'"> Dashboard </a>
+                <span class="divider">|</span>
+                <a class="top-nav" mat-button [routerLink]="'/responder-access/evacuee-search'"> Evacuee Search & Registration </a>
+                <span class="divider">|</span>
+                <a class="top-nav" mat-button [routerLink]="'/contacts'"> ERA User Management </a>
+                <span class="divider">|</span>
+                <a class="top-nav" mat-button [routerLink]="'/create-contact'"> Supplier Management </a>
+                <span class="divider">|</span>
+                <a class="top-nav" mat-button [routerLink]="'/activities'"> Community Management </a>
+                <span class="divider">|</span>
+                <a class="top-nav" mat-button [routerLink]="'/create-activity'"> Reporting </a>
+            </div>
+        <!-- </mat-toolbar-row> -->
+    </mat-toolbar>
+
+    <!-- <mat-sidenav-container fxFlexFill>
+        <mat-sidenav #sidenav fxLayout="column" mode="over"  opened="false" fxHide.gt-sm>
+            <mat-nav-list>
+                <a mat-list-item [routerLink]="'/responder-dashboard'"> Dashboard </a>
+                <a mat-list-item [routerLink]="'/evacuee-search'"> Evacuee Search & Registration </a>
+                <a mat-list-item [routerLink]="'/contacts'"> ERA User Management </a>
+                <a mat-list-item [routerLink]="'/create-contact'"> Supplier Management </a>
+                <a mat-list-item [routerLink]="'/activities'"> Community Management </a>
+                <a mat-list-item [routerLink]="'/create-activity'"> Reporting </a>
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content fxFlexFill>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container> -->
+
+<!-- <div style="height: 80vh;">
+    <mat-toolbar color="primary">
+      <mat-toolbar-row>
+        <button mat-icon-button (click)="sidenav.toggle()" fxShow="true" fxHide.gt-sm>
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span>Responsive Navigation</span>
+        <span class="menu-spacer"></span>
+        <div fxShow="true" fxHide.lt-md>
+          <a href="#" mat-button>Menu Item 1</a>
+          <a href="#" mat-button>Menu Item 2</a>
+          <a href="#" mat-button>Menu Item 3</a>
+          <a href="#" mat-button>Menu Item 4</a>
+          <a href="#" mat-button>Menu Item 5</a>
+          <a href="#" mat-button>Menu Item 6</a>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  
+    <mat-sidenav-container fxFlexFill>
+      <mat-sidenav #sidenav>
+        <mat-nav-list>
+          <a (click)="sidenav.toggle()" href="" mat-list-item>Close</a>
+          <a href="#" mat-list-item>Menu Item 1</a>
+          <a href="#" mat-list-item>Menu Item 2</a>
+          <a href="#" mat-list-item>Menu Item 3</a>
+          <a href="#" mat-list-item>Menu Item 4</a>
+          <a href="#" mat-list-item>Menu Item 5</a>
+          <a href="#"mat-list-item>Menu Item 6</a>
+        </mat-nav-list>
+      </mat-sidenav>
+      <mat-sidenav-content fxFlexFill>Main content</mat-sidenav-content>
+    </mat-sidenav-container>
+  </div> -->
