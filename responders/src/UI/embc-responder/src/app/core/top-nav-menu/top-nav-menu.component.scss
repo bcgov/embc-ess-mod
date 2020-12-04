@@ -7,18 +7,6 @@ a:hover {
     text-decoration: underline;
 }
 
-a:active {
-    color: red !important;
+a:focus {
+    color: #169BD5 !important;
 }
-
-a:visited {
-    color: yellowgreen !important;
-}
-
-// a:not(:visited) {
-//     color: green !important;
-// }
-
-.menu-spacer {
-    flex: 1 1 auto;
-  }
