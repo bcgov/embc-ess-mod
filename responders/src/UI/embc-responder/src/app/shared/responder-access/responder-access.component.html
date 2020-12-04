@@ -1,10 +1,10 @@
-<mat-sidenav-container>
+<mat-sidenav-container class="background fill-body">
     <mat-sidenav #sidenav>
         <app-toggle-side-nav (sidenavClose)="sidenav.close()"></app-toggle-side-nav>
     </mat-sidenav>
     <mat-sidenav-content>
         <app-top-nav-menu (sidenavToggle)="sidenav.toggle()"></app-top-nav-menu>
-        <div class="container container-frame background">
+        <div class="container container-frame">
             <router-outlet></router-outlet>
         </div>
     </mat-sidenav-content>

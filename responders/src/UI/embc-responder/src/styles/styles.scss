@@ -37,6 +37,10 @@ main {
 html, body { height: 100%; }
 body { margin: 0; }
 
+.background {
+  background-color: rgb(242, 242, 242);
+}
+
 .navbar-dark .navbar-nav .nav-link {
   color: #333333;
 }
