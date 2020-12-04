@@ -12,4 +12,8 @@ export class ElectronicAgreementComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  submitEAA(): void {
+    
+  }
+
 }
