@@ -25,6 +25,14 @@ table {
   max-height: 500px;
 }
 
+.mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
+  padding-left: unset;
+}
+
+.mat-cell {
+  margin-right:24px;
+}
+
 .mobile-label {
   display: none;
 }
