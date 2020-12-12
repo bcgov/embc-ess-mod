@@ -35,6 +35,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
     public class RegistrationManager : IRegistrationManager
     {
         private readonly DynamicsClientContext dynamicsClient;
+        private DateTimeOffset now;
 #pragma warning disable 0649
         private readonly ILogger logger;
 #pragma warning restore 0649
@@ -42,66 +43,33 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public RegistrationManager(DynamicsClientContext dynamicsClient)
         {
             this.dynamicsClient = dynamicsClient;
+            this.now = DateTimeOffset.UtcNow;
         }
 
+        /// <summary>
+        /// Create a Profile Registration (dynamics contact)
+        /// </summary>
+        /// <param name="profileRegistration">Registration</param>
+        /// <returns>OkResult</returns>
         public async Task<OkResult> CreateProfile(Registration profileRegistration)
         {
-            var now = DateTimeOffset.UtcNow;
+            // Create New Contact (Primary Registrant)
+            var newRegistrant = CreateNewContact(profileRegistration, true);
 
-            // registrant
-            var registrant = new contact
-            {
-                contactid = Guid.NewGuid(),
-                era_registranttype = 174360000,
-                era_authenticated = true,
-                era_verified = false,
-                era_registrationdate = now,
-                firstname = profileRegistration.PersonalDetails.FirstName,
-                lastname = profileRegistration.PersonalDetails.LastName,
-                era_preferredname = profileRegistration.PersonalDetails.PreferredName,
-                era_initial = profileRegistration.PersonalDetails.Initials,
-                gendercode = LookupGender(profileRegistration.PersonalDetails.Gender),
-                birthdate = FromDateTime(DateTime.Parse(profileRegistration.PersonalDetails.DateOfBirth)),
-                era_collectionandauthorization = profileRegistration.InformationCollectionConsent,
-                era_sharingrestriction = profileRegistration.RestrictedAccess,
-
-                address1_line1 = profileRegistration.PrimaryAddress.AddressLine1,
-                address1_line2 = profileRegistration.PrimaryAddress.AddressLine2,
-                address1_city = profileRegistration.PrimaryAddress.Jurisdiction.JurisdictionName,
-                address1_country = profileRegistration.PrimaryAddress.Country.CountryCode,
-                era_City = Lookup(profileRegistration.PrimaryAddress.Jurisdiction),
-                era_ProvinceState = Lookup(profileRegistration.PrimaryAddress.StateProvince),
-                era_Country = Lookup(profileRegistration.PrimaryAddress.Country),
-                address1_postalcode = profileRegistration.PrimaryAddress.PostalCode,
-
-                address2_line1 = profileRegistration.MailingAddress.AddressLine1,
-                address2_line2 = profileRegistration.MailingAddress.AddressLine2,
-                address2_city = profileRegistration.MailingAddress.Jurisdiction.JurisdictionName,
-                address2_country = profileRegistration.MailingAddress.Country.CountryName,
-                era_MailingCity = Lookup(profileRegistration.MailingAddress.Jurisdiction),
-                era_MailingProvinceState = Lookup(profileRegistration.MailingAddress.StateProvince),
-                era_MailingCountry = Lookup(profileRegistration.MailingAddress.Country),
-                address2_postalcode = profileRegistration.MailingAddress.PostalCode,
-
-                emailaddress1 = profileRegistration.ContactDetails.Email,
-                address1_telephone1 = profileRegistration.ContactDetails.Phone,
-
-                era_phonenumberrefusal = string.IsNullOrEmpty(profileRegistration.ContactDetails.Phone),
-                era_emailrefusal = string.IsNullOrEmpty(profileRegistration.ContactDetails.Email),
-                era_secrettext = profileRegistration.SecretPhrase
-            };
-
-            // save registrant to dynamics
-            dynamicsClient.AddTocontacts(registrant);
-
-            var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.ContinueOnError);
+            // save changes to dynamics
+            var results = await dynamicsClient.SaveChangesAsync();
+            //var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
 
             return new OkResult();
         }
 
+        /// <summary>
+        /// Create an Anonymous Registration (evacuation file, self needs assessment, primary registrant and household members)
+        /// </summary>
+        /// <param name="registration">AnonymousRegistration</param>
+        /// <returns>string</returns>
         public async Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration)
         {
-            var now = DateTimeOffset.Now;
 #pragma warning disable CA5394 // Do not use insecure randomness
             var essFileNumber = new Random().Next(999999999); //temporary ESS file number random generator
 #pragma warning restore CA5394 // Do not use insecure randomness
@@ -118,55 +86,11 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_Jurisdiction = Lookup(registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction),
                 era_province = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.StateProvinceCode,
                 era_country = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.CountryCode,
-                era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
-                era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
-                era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
-                era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email),
                 era_secrettext = registration.RegistrationDetails.SecretPhrase,
             };
 
-            // registrant
-            var registrant = new contact
-            {
-                contactid = Guid.NewGuid(),
-                era_registranttype = 174360000,
-                era_authenticated = false,
-                era_verified = false,
-                era_registrationdate = now,
-                firstname = registration.RegistrationDetails.PersonalDetails.FirstName,
-                lastname = registration.RegistrationDetails.PersonalDetails.LastName,
-                era_preferredname = registration.RegistrationDetails.PersonalDetails.PreferredName,
-                era_initial = registration.RegistrationDetails.PersonalDetails.Initials,
-                gendercode = LookupGender(registration.RegistrationDetails.PersonalDetails.Gender),
-                birthdate = FromDateTime(DateTime.Parse(registration.RegistrationDetails.PersonalDetails.DateOfBirth)),
-                era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
-                era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
-
-                address1_line1 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
-                address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine2,
-                address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.JurisdictionName,
-                address1_country = registration.RegistrationDetails.PrimaryAddress.Country.CountryCode,
-                era_City = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
-                era_ProvinceState = Lookup(registration.RegistrationDetails.PrimaryAddress.StateProvince),
-                era_Country = Lookup(registration.RegistrationDetails.PrimaryAddress.Country),
-                address1_postalcode = registration.RegistrationDetails.PrimaryAddress.PostalCode,
-
-                address2_line1 = registration.RegistrationDetails.MailingAddress.AddressLine1,
-                address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine2,
-                address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.JurisdictionName,
-                address2_country = registration.RegistrationDetails.MailingAddress.Country.CountryName,
-                era_MailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
-                era_MailingProvinceState = Lookup(registration.RegistrationDetails.MailingAddress.StateProvince),
-                era_MailingCountry = Lookup(registration.RegistrationDetails.MailingAddress.Country),
-                address2_postalcode = registration.RegistrationDetails.MailingAddress.PostalCode,
-
-                emailaddress1 = registration.RegistrationDetails.ContactDetails.Email,
-                address1_telephone1 = registration.RegistrationDetails.ContactDetails.Phone,
-
-                era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
-                era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email),
-                era_secrettext = registration.RegistrationDetails.SecretPhrase
-            };
+            // Create New Contact (Primary Registrant)
+            var newPrimaryRegistrant = CreateNewContact(registration.RegistrationDetails, true);
 
             // members
             var members = (registration.PreliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
@@ -251,16 +175,16 @@ namespace EMBC.Registrants.API.RegistrationsModule
             dynamicsClient.AddLink(file, nameof(file.era_needsassessment_EvacuationFile), needsAssessment);
 
             // save registrant to dynamics
-            dynamicsClient.AddTocontacts(registrant);
+            //dynamicsClient.AddTocontacts(newRegistrant);
             var evacueeRegistrant = new era_evacuee
             {
                 era_evacueeid = Guid.NewGuid(),
                 era_needsassessment = needsAssessment,
-                era_Registrant = registrant
+                era_Registrant = newPrimaryRegistrant
             };
             dynamicsClient.AddToera_evacuees(evacueeRegistrant);
             // link registrant and needs assessment to evacuee record
-            dynamicsClient.AddLink(registrant, nameof(registrant.era_contact_evacuee_Registrant), evacueeRegistrant);
+            dynamicsClient.AddLink(newPrimaryRegistrant, nameof(newPrimaryRegistrant.era_contact_evacuee_Registrant), evacueeRegistrant);
             dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), evacueeRegistrant);
 
             // save members to dynamics
@@ -347,21 +271,119 @@ namespace EMBC.Registrants.API.RegistrationsModule
             _ => null
         };
 
-        private era_provinceterritories Lookup(StateProvince stateProvince) =>
-        string.IsNullOrEmpty(stateProvince.StateProvinceCode)
-            ? null
-            : dynamicsClient.era_provinceterritorieses.Where(p => p.era_code == stateProvince.StateProvinceCode).FirstOrDefault();
+        private era_provinceterritories Lookup(StateProvince stateProvince)
+        {
+            if (stateProvince == null || string.IsNullOrEmpty(stateProvince.StateProvinceCode))
+                return null;
 
-        private era_jurisdiction Lookup(Jurisdiction jurisdiction) =>
-            string.IsNullOrEmpty(jurisdiction.JurisdictionCode)
-            ? null
-            : dynamicsClient.era_jurisdictions.Where(j => j.era_jurisdictionid == Guid.Parse(jurisdiction.JurisdictionCode)).FirstOrDefault();
+            return dynamicsClient.era_provinceterritorieses.Where(p => p.era_code == stateProvince.StateProvinceCode).FirstOrDefault();
+        }
 
-        //private int Lookup(string entityName, string optionSetName, string label) =>
-        //    dynamicsClient.Execute<AttributeMetadata>(new Uri($"EntityDefinitions(LogicalName='{entityName}')/Attributes(LogicalName='{optionSetName}')"))
-        //    .Cast<OptionSetMetadata>()
-        //    .Single().Options.Single(o => o.ExternalValue == label).Value.Value;
+        private era_jurisdiction Lookup(Jurisdiction jurisdiction)
+        {
+            if (jurisdiction == null || string.IsNullOrEmpty(jurisdiction.JurisdictionCode))
+                return null;
+
+            return dynamicsClient.era_jurisdictions.Where(j => j.era_jurisdictionid == Guid.Parse(jurisdiction.JurisdictionCode)).FirstOrDefault();
+        }
 
         private Date? FromDateTime(DateTime? dateTime) => dateTime.HasValue ? new Date(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day) : (Date?)null;
+
+        /// <summary>
+        /// Create a new Dynamics Contact (Profile)
+        /// </summary>
+        /// <param name="profileRegistration">Registration values</param>
+        /// <param name="isPrimary">Primary or Member Registrant</param>
+        /// <returns>Contact</returns>
+        private contact CreateNewContact(Registration profileRegistration, bool isPrimary)
+        {
+            var contact = new contact();
+            contact.contactid = Guid.NewGuid();
+            if (isPrimary)
+                contact.era_registranttype = 174360000; // Primary
+            else
+                contact.era_registranttype = 174360001; // Memeber
+            contact.era_authenticated = true;
+            contact.era_verified = false;
+            contact.era_registrationdate = now;
+            contact.firstname = profileRegistration.PersonalDetails.FirstName;
+            contact.lastname = profileRegistration.PersonalDetails.LastName;
+            contact.era_preferredname = profileRegistration.PersonalDetails.PreferredName;
+            contact.era_initial = profileRegistration.PersonalDetails.Initials;
+            contact.gendercode = LookupGender(profileRegistration.PersonalDetails.Gender);
+            contact.birthdate = FromDateTime(DateTime.Parse(profileRegistration.PersonalDetails.DateOfBirth));
+            contact.era_collectionandauthorization = profileRegistration.InformationCollectionConsent;
+            contact.era_sharingrestriction = profileRegistration.RestrictedAccess;
+
+            contact.address1_line1 = profileRegistration.PrimaryAddress.AddressLine1;
+            contact.address1_line2 = profileRegistration.PrimaryAddress.AddressLine2;
+            contact.address1_postalcode = profileRegistration.PrimaryAddress.PostalCode;
+
+            contact.address2_line1 = profileRegistration.MailingAddress.AddressLine1;
+            contact.address2_line2 = profileRegistration.MailingAddress.AddressLine2;
+            contact.address2_postalcode = profileRegistration.MailingAddress.PostalCode;
+
+            contact.emailaddress1 = profileRegistration.ContactDetails.Email;
+            contact.address1_telephone1 = profileRegistration.ContactDetails.Phone;
+
+            contact.era_phonenumberrefusal = string.IsNullOrEmpty(profileRegistration.ContactDetails.Phone);
+            contact.era_emailrefusal = string.IsNullOrEmpty(profileRegistration.ContactDetails.Email);
+            contact.era_secrettext = profileRegistration.SecretPhrase;
+
+            // add contact to dynamics client
+            dynamicsClient.AddTocontacts(contact);
+
+            // add links to dynamics client
+
+            /* NOTES:
+             * There are 2 city fields in dynamics, one mapping to a jurisdiction and another set as free text. If the city
+             * doesn't exist as a jurisdiction then it shoudl be stored in the free text field, otherwise as jurisdiction.
+             * The province/state field is only captured by the front end when country is Canada or USA
+             */
+
+            // link registrant primary and mailing address city, province, country
+            var primaryAddressCountry = Lookup(profileRegistration.PrimaryAddress.Country);
+            var primaryAddressProvince = Lookup(profileRegistration.PrimaryAddress.StateProvince);
+            var primaryAddressCity = Lookup(profileRegistration.PrimaryAddress.Jurisdiction);
+            // country
+            dynamicsClient.AddLink(primaryAddressCountry, nameof(primaryAddressCountry.era_contact_Country), contact);
+            // province
+            if (primaryAddressProvince != null && !string.IsNullOrEmpty(primaryAddressProvince.era_code))
+            {
+                dynamicsClient.AddLink(primaryAddressProvince, nameof(primaryAddressProvince.era_provinceterritories_contact_ProvinceState), contact);
+            }
+            // city
+            if (primaryAddressCity == null || !primaryAddressCity.era_jurisdictionid.HasValue)
+            {
+                contact.address1_city = profileRegistration.PrimaryAddress.Jurisdiction.JurisdictionName;
+            }
+            else
+            {
+                dynamicsClient.AddLink(primaryAddressCity, nameof(primaryAddressCity.era_jurisdiction_contact_City), contact);
+            }
+
+            var mailingAddressCountry = Lookup(profileRegistration.MailingAddress.Country);
+            var mailingAddressProvince = Lookup(profileRegistration.MailingAddress.StateProvince);
+            var mailingAddressCity = Lookup(profileRegistration.MailingAddress.Jurisdiction);
+            // country
+            dynamicsClient.AddLink(mailingAddressCountry, nameof(mailingAddressCountry.era_country_contact_MailingCountry), contact);
+            // province
+            if (mailingAddressProvince != null && !string.IsNullOrEmpty(mailingAddressProvince.era_code))
+            {
+                dynamicsClient.AddLink(mailingAddressProvince, nameof(mailingAddressProvince.era_provinceterritories_contact_MailingProvinceState), contact);
+            }
+            // city
+            if (mailingAddressCity == null || !mailingAddressCity.era_jurisdictionid.HasValue)
+            {
+                contact.address2_city = profileRegistration.MailingAddress.Jurisdiction.JurisdictionName;
+            }
+            else
+            {
+                dynamicsClient.AddLink(mailingAddressCity, nameof(mailingAddressCity.era_jurisdiction_contact_MailingCity), contact);
+            }
+
+            //return the new contact created
+            return contact;
+        }
     }
 }
