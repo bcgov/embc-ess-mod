@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class ElectronicAgreementComponent implements OnInit {
 
-  agreementAccepted=false;
+  agreementAccepted = false;
 
   constructor(private router: Router) { }
 
@@ -17,7 +17,7 @@ export class ElectronicAgreementComponent implements OnInit {
   }
 
   submitEAA(): void {
-    this.router.navigate(['/responder-access/responder-dashboard'])
+    this.router.navigate(['/responder-access/responder-dashboard']);
   }
 
   agreementChangeEvent(event: MatCheckboxChange): void {

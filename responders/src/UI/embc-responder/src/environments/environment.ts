@@ -7,7 +7,7 @@ export const environment = {
   version: '1.0.0',
   keycloak: {
     issuer: 'https://dev.oidc.gov.bc.ca/auth/realms/udb1ycga',
-    redirectUri: window.location.origin + "/",
+    redirectUri: window.location.origin + '/',
     clientId: 'responder-portal',
     scope: 'openid profile email offline_access',
     responseType: 'code',

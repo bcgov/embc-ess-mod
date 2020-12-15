@@ -6,10 +6,10 @@ import { filter } from 'rxjs/operators';
 export class AuthService {
 
 
-    private _decodedAccessToken: any;
-    private _decodedIDToken: any;
-    get decodedAccessToken() { return this._decodedAccessToken; }
-    get decodedIDToken() { return this._decodedIDToken; }
+    private decodedAccessToken: any;
+    private decodedIDToken: any;
+    get accessToken(): any { return this.decodedAccessToken; }
+    get iDToken(): any { return this.decodedIDToken; }
 
     constructor(private oauthService: OAuthService, private authConfig: AuthConfig) { }
 
@@ -20,7 +20,7 @@ export class AuthService {
             this.oauthService.tokenValidationHandler = new NullValidationHandler();
             this.oauthService.events.pipe(filter((e: any) => {
                 return e.type === 'token_received';
-            })).subscribe(() => this.handleNewToken())
+            })).subscribe(() => this.handleNewToken());
             this.oauthService.loadDiscoveryDocumentAndLogin().then(isLoggedIn => {
                 if (isLoggedIn) {
                     alert(isLoggedIn ? 'authenticated' : 'not authenticated');
@@ -32,12 +32,12 @@ export class AuthService {
                     rejectFn();
                 }
             });
-        })
+        });
     }
 
-    private handleNewToken() {
-        this._decodedAccessToken = this.oauthService.getAccessToken();
-        this._decodedIDToken = this.oauthService.getIdToken();
+    private handleNewToken(): void {
+        this.decodedAccessToken = this.oauthService.getAccessToken();
+        this.decodedIDToken = this.oauthService.getIdToken();
     }
 
 }

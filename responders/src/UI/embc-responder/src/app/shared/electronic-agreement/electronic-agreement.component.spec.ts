@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ElectronicAgreementComponent } from './electronic-agreement.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ElectronicAgreementComponent', () => {
   let component: ElectronicAgreementComponent;
@@ -8,7 +9,8 @@ describe('ElectronicAgreementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ElectronicAgreementComponent ]
+      declarations: [ ElectronicAgreementComponent ],
+      imports: [ RouterTestingModule ]
     })
     .compileComponents();
   });
@@ -17,9 +19,5 @@ describe('ElectronicAgreementComponent', () => {
     fixture = TestBed.createComponent(ElectronicAgreementComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
   });
 });

@@ -10,7 +10,7 @@ import { AuthConfig, OAuthModule } from 'angular-oauth2-oidc';
 import { AuthService } from './core/services/auth.service';
 import { authConfig, OAuthModuleConfig } from './core/services/authConfig';
 
-export function initialize(authService: AuthService) {
+export function initialize(authService: AuthService): () => Promise<any> {
   return () => authService.initiateAuthentication();
 }
 

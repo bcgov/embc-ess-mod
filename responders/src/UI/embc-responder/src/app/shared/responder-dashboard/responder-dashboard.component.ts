@@ -14,7 +14,7 @@ export class ResponderDashboardComponent implements OnInit {
   }
 
   signinTask(): void {
-    this.router.navigate(['/responder-access/search'])
+    this.router.navigate(['/responder-access/search']);
   }
 
 }
