@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <mat-card class="view-banner">
                     <mat-card-content>
-                        <div class="row">
+                        <div class="row" *ngIf="dataSourceActive.length === 0; else activeFileBanner">
                             <div class="col-md-9">
                                 <p class="top-detail">If you are currently <b>evacuated</b>, please start an
                                     <b>Evacuation File</b>.</p>
@@ -22,11 +22,24 @@
                                     (ESS) Volunteer.</p>
                             </div>
                             <div class="col-md-3 button-align">
-                                <button class="button-p start-button" mat-stroked-button type="button" (click)="startAssessment()">Get
+                                <button class="button-p start-button" mat-stroked-button type="button"
+                                    (click)="startAssessment()">Get
                                     Started</button>
                             </div>
                         </div>
                     </mat-card-content>
+
+                    <ng-template #activeFileBanner>
+
+                        <div class="col-md-12">
+                            <p class="top-detail"><b>Please connect with an Emergency Support Services Volunteer or
+                                    proceed to your closest Reception Center.</b></p>
+                            <p><b>Please remember to bring government-issued identification with you if you have it.</b>
+                            </p>
+                            <p>All details pertaining to your evacuation can be found below, under the "Current
+                                Evacuations" tab.</p>
+                        </div>
+                    </ng-template>
                 </mat-card>
             </div>
         </div>
@@ -34,30 +47,72 @@
 </div>
 <div class="container">
     <mat-tab-group class="test-tab">
-        <mat-tab>
+        <mat-tab (click)="actionTest()">
             <ng-template mat-tab-label>
                 <img class="inactive-curr" src="/assets/images/curr-evac.svg" height="15" width="15">
                 <img class="active-curr" src="/assets/images/curr-evac-active.svg" height="15" width="15">
-                &nbsp;&nbsp;Current Evacuations (0)
+                &nbsp;&nbsp;Current Evacuations ({{dataSourceActive.length}})
             </ng-template>
-            <span class="profile-headers">Current Evacuations (0)</span>
-            <p>There are no current evacuations.</p>
+            <div *ngIf="dataSourceActive.length === 0; else activeFiles">
+                <br>
+                <span class="profile-headers">Current Evacuations (0)</span>
+                <p>There are no current evacuations.</p>
+            </div>
+
+            <ng-template #activeFiles>
+                <div class="col-md-12 content-container">
+                    <br>
+                    <div *ngIf="showHeader" class="row">
+                        <div class="col-md-9">
+                            <span class="profile-headers">Current Evacuations ({{dataSourceActive.length}})</span>
+                        </div>
+                        <div class="col-md-3 button-tab-align">
+                            <button class="button-s start-button" mat-stroked-button type="button"
+                                (click)="startAssessment()">Add Another Evacuation</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-container">
+                    <app-evacuation-card *ngFor="let card of dataSourceActive" (showCardHeading)="setHeaders($event)"
+                        [evacuationFileCard]="card" [content]="activeFileDetails"></app-evacuation-card>
+                </div>
+            </ng-template>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
                 <img class="inactive-curr" src="/assets/images/past-evac.svg" height="15" width="15">
                 <img class="active-curr" src="/assets/images/past-evac-active.svg" height="15" width="15">
-                &nbsp;&nbsp;Past Evacuations (0)
+                &nbsp;&nbsp;Past Evacuations ({{dataSourceInactive.length}})
             </ng-template>
-            <span class="profile-headers">Past Evacuations (0)</span>
-            <p>There are no past evacuations.</p>
+            <div *ngIf="dataSourceInactive.length === 0; else inactiveFiles">
+                <br>
+                <span class="profile-headers">Past Evacuations (0)</span>
+                <p>There are no past evacuations.</p>
+            </div>
+
+            <ng-template #inactiveFiles>
+                <div class="col-md-12 content-container">
+                    <br>
+                    <div class="col-md-12 titleDiv">
+                        <span class="profile-headers">Past Evacuations ({{dataSourceInactive.length}})</span>
+                    </div>
+                </div>
+                <div class="card-container">
+                    <app-evacuation-card *ngFor="let card of dataSourceInactive" [evacuationFileCard]="card">
+                    </app-evacuation-card>
+                </div>
+            </ng-template>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
                 <img class="inactive-curr" src="/assets/images/profile.svg" height="15" width="15">
                 <img class="active-curr" src="/assets/images/profile-active.svg" height="15" width="15">
                 &nbsp;&nbsp;User Profile</ng-template>
-            <span class="profile-headers">User Profile</span>
+                <br>
+            <div class="col-md-12 titleDiv">
+                <span class="profile-headers">User Profile</span>
+            </div>
+            
             <app-review [type]="type" [showHeading]="false" [currentFlow]="currentFlow"
                 [parentPageName]="parentPageName"></app-review>
             <br>
