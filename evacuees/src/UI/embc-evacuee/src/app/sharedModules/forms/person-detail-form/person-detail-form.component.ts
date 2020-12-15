@@ -15,6 +15,7 @@ export class PersonDetailFormComponent implements OnInit {
   gender = globalConst.gender;
   primaryApplicantLastName: string;
   readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
+  readOnlyInput = false;
 
   constructor(private formCreationService: FormCreationService) { }
 
@@ -36,8 +37,10 @@ export class PersonDetailFormComponent implements OnInit {
   sameLastNameEvent(event: MatCheckboxChange): void {
     if (event.checked) {
       this.personalDetailsForm.get('lastName').setValue(this.primaryApplicantLastName);
+      this.readOnlyInput = true;
     } else {
       this.personalDetailsForm.get('lastName').setValue('');
+      this.readOnlyInput = false;
     }
   }
 

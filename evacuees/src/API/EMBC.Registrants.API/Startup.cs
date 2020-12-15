@@ -14,12 +14,14 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.IO;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
-using EMBC.Registrants.API.Dynamics;
 using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.RegistrationsModule;
+using EMBC.Registrants.API.Security;
+using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +29,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NSwag.AspNetCore;
 using Serilog;
 
@@ -84,11 +87,21 @@ namespace EMBC.Registrants.API
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.Configure<LocationCacheHostedServiceOptions>(configuration.GetSection("Location:Cache"));
 
+            // TODO: consider setting a distributed cache in the future
             services.AddDistributedMemoryCache();
 
             services.AddRegistrationModule();
             services.AddLocationModule();
-            services.AddDynamics();
+            services.AddADFSTokenProvider();
+            services.AddSingleton(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
+                var dynamicsApiBaseUri = configuration.GetValue<string>("Dynamics:DynamicsApiBaseUri");
+                var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
+                var logger = sp.GetRequiredService<ILogger<DynamicsClientContext>>();
+                return new DynamicsClientContext(new Uri(dynamicsApiBaseUri), new Uri(dynamicsApiEndpoint), async () => await tokenProvider.AcquireToken(), logger);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -111,9 +124,7 @@ namespace EMBC.Registrants.API
                     diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
                     diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
                     diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
-                    diagCtx.Set("X-Forwarded-Proto", httpCtx.Request.Headers["X-Forwarded-Proto"].ToString());
-                    diagCtx.Set("X-Forwarded-Host", httpCtx.Request.Headers["X-Forwarded-Host"].ToString());
-                    diagCtx.Set("X-Forwarded-For", httpCtx.Request.Headers["X-Forwarded-For"].ToString());
+                    diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
                     if (!env.IsProduction()) diagCtx.Set("Raw_Headers", httpCtx.Request.Headers, true);
                 };

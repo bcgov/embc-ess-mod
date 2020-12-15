@@ -5,7 +5,7 @@
         <div class="col-md-12">
           <label class="card-heading requiredField">If you have any pets who live in the same household with you, please add them below.</label>
           
-          <mat-table *ngIf="dataSource.getValue().length > 0 && showTable" [dataSource]="dataSource">
+          <mat-table *ngIf="dataSource.getValue().length > 0" [dataSource]="dataSource"> <!--&& showTable-->
 
             <ng-container matColumnDef="type">
               <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>

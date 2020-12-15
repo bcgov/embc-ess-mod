@@ -25,9 +25,9 @@ namespace EMBC.Registrants.API.LocationModule
     [ApiController]
     public class LocationController : ControllerBase
     {
-        private readonly ILocationQueriesService locationQueriesService;
+        private readonly ILocationManager locationQueriesService;
 
-        public LocationController(ILocationQueriesService locationQueriesService)
+        public LocationController(ILocationManager locationQueriesService)
         {
             this.locationQueriesService = locationQueriesService;
         }

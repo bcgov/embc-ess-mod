@@ -14,7 +14,7 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline">
           <mat-label class="requiredField">Last Name</mat-label>
-          <input [formControlName]="'lastName'" matInput placeholder="Last Name">
+          <input [formControlName]="'lastName'" matInput placeholder="Last Name" [readonly]="readOnlyInput">
           <mat-error *ngIf="personalFormControl.lastName.invalid && personalFormControl.lastName.hasError('required')">Last Name is required</mat-error>
         </mat-form-field>
       </div>
