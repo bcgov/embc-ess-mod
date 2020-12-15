@@ -20,14 +20,14 @@ export class TaskSearchComponent implements OnInit {
   
   submitTask(): void {
     this.showSearch = !this.showSearch;
-    //this.isActive = !this.isActive;
-    this.isExpired = !this.isExpired;
+    this.isActive = !this.isActive;
+    //this.isExpired = !this.isExpired;
   }
 
   searchTask(): void {
     this.showSearch = !this.showSearch;
-    //this.isActive = !this.isActive;
-    this.isExpired = !this.isExpired;
+    this.isActive = !this.isActive;
+    //this.isExpired = !this.isExpired;
   }
 
   signInTask(): void {
