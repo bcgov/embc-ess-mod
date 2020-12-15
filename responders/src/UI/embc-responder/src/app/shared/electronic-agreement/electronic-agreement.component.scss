@@ -1,0 +1,33 @@
+.mat-body p, .mat-body-1 p, .mat-typography p {
+     margin: 0; 
+}
+
+p {
+    margin: 0;
+}
+
+.scroll-box {
+    overflow: auto;
+    height: 370px;
+    padding: 35px;
+    margin-bottom: 30px;
+  }
+
+  .mat-card {
+      width: 75%;
+  }
+
+  .accept-box {
+      padding-left: 35px;
+  }
+
+  .submit-eaa {
+      width: 20%;
+      font-size: 16px;
+  }
+
+  @media screen and (max-width: 833px) {
+    .mat-card {
+        width: 100%;
+    }
+ }

@@ -1,0 +1,18 @@
+<mat-toolbar class="custom-toolbar">
+  <button mat-icon-button (click)="onToggle()" fxShow="true" fxHide.gt-sm>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <div fxShow="true" fxHide.lt-md>
+    <a class="top-nav" mat-button routerLinkActive="active-list-item" [routerLink]="'/responder-access/responder-dashboard'"> Dashboard </a>
+    <span class="divider">|</span>
+    <a class="top-nav" mat-button routerLinkActive="active-list-item" [routerLink]="'/responder-access/search'"> Evacuee Search & Registration </a>
+    <span class="divider">|</span>
+    <a class="top-nav" mat-button [routerLink]="'/contacts'"> Responder Management </a>
+    <span class="divider">|</span>
+    <a class="top-nav" mat-button [routerLink]="'/create-contact'"> Supplier Management </a>
+    <span class="divider">|</span>
+    <a class="top-nav" mat-button [routerLink]="'/activities'"> Community Management </a>
+    <span class="divider">|</span>
+    <a class="top-nav" mat-button [routerLink]="'/create-activity'"> Reporting </a>
+  </div>
+</mat-toolbar>
