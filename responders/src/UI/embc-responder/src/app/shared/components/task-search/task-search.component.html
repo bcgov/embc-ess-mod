@@ -1,0 +1,113 @@
+<div class="container">
+    <div class="row heading-container">
+        <div class="col-md-12">
+            <span class="page-heading">Evacuee Search & Registration</span>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-8">
+            <mat-card *ngIf="showSearch">
+                <p class="heading">Sign in to a Task Number</p>
+                <p>All Evacuee Registration & Assistance (ERA) Responders are required to <b>sign in to a task
+                        number</b>
+                    before accessing the Evacuee Search and Registration pages.</p>
+                <br>
+                <p>Please enter the task number that you are working under below and click "<b>Submit</b>".</p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Enter Task #</mat-label>
+                            <input matInput placeholder="Enter Task #">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <button class="button-p submit" mat-button (click)="submitTask()">Submit</button>
+                    </div>
+                </div>
+            </mat-card>
+            <div *ngIf="isActive">
+                <ng-container *ngTemplateOutlet="activeTask"></ng-container>
+            </div>
+            <div *ngIf="isExpired">
+                <ng-container *ngTemplateOutlet="expiredTask"></ng-container>
+            </div>
+            <!-- <div *ngIf="isIncorrect">
+                <ng-container *ngTemplateOutlet="incorrectTask"></ng-container>
+            </div> -->
+        </div>
+
+        <div class="col-md-3">
+            <mat-card class="tips-card">
+                <div>
+                    <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62">
+                    <span class="tips-heading"><b>Tips: </b>Task Numbers</span>
+                </div>
+                <p class="tips-info">If you have not been provided with a task number, please contact your supervisor.
+                </p>
+            </mat-card>
+
+        </div>
+    </div>
+</div>
+
+<ng-template #activeTask>
+    <mat-card>
+        <p class="heading">Sign in to a Task Number</p>
+        <p>Please confirm that the task number you are about to sign in under is <b>correct</b> by checking it against
+            the support community listed below.</p>
+
+        <div class="row">
+            <div class="col-md-2 task-details">Task Number:
+            </div>
+            <div class="col-md-4 task-details"><b>123456 - Kamloops</b>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 task-details">Task Status:
+            </div>
+            <div class="col-md-4 status-active">Active
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <button class="button-p submit" mat-button (click)="signInTask()">Sign in to Task</button>
+            </div>
+            <div class="col-md-4">
+                <button mat-button class="link-button" (click)="searchTask()">Incorrect Task?</button>
+            </div>
+        </div>
+    </mat-card>
+</ng-template>
+<ng-template #expiredTask>
+    <mat-card>
+        <p class="heading">Sign in to a Task Number</p>
+        <p>The task number entered is <b>expired</b>.</p>
+        <p>Please contact your supervisor or Local Government to have the task number extended if required.</p>
+
+        <div class="row">
+            <div class="col-md-2 task-details">Task Number:
+            </div>
+            <div class="col-md-4 task-details"><b>123456 - Kamloops</b>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 task-details">Task Status:
+            </div>
+            <div class="col-md-4 status-expired">Expired
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <button class="button-p submit" mat-button (click)="searchTask()">Go Back & Search Again</button>
+            </div>
+        </div>
+    </mat-card>
+</ng-template>
