@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-header',
@@ -7,8 +8,14 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
 
-homeButton(): void {
+    constructor(private router: Router) {}
 
-}
+    homeButton(): void {
+
+    }
+
+    openUserProfile(): void {
+        this.router.navigate(['/responder-access/user-profile']);
+    }
 
 }

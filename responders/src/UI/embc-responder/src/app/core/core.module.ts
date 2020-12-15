@@ -12,6 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ToggleSideNavComponent } from './toggle-side-nav/toggle-side-nav.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatIconModule,
     MatListModule,
     FlexLayoutModule,
-    MatDividerModule
+    MatDividerModule,
+    MatMenuModule
   ],
   exports: [
     HeaderComponent,

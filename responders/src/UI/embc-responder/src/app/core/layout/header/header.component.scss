@@ -1,5 +1,5 @@
 .header-style {
-    justify-content: normal;
+    justify-content: space-between;
 }
 
 .app-heading {
@@ -26,4 +26,28 @@
     .divider {
         width: 0px;
     }
+}
+
+ ::ng-deep .mat-menu-panel {
+    border-radius: 0px !important;
+    background: #036 !important;
+    min-width: 320px !important;
+}
+
+.mat-menu-item {
+    color: #FFFFFF !important;
+}
+
+.text{
+    color:white;
+    padding-left: 10px;
+}
+
+.img-align {
+    margin-right: 5px;
+}
+
+.align-content {
+    display: inline-block;
+    line-height: 0;
 }
