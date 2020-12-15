@@ -82,12 +82,7 @@ export default class PetsComponent implements OnInit {
     //this.showTable = !this.showTable;
     if (this.data.length === 0) {
       this.petsForm.get('addPetIndicator').setValue(false);
-      
     }
-
-    console.log('PETS');
-    console.log(this.petsForm);
-    console.log(this.data);
   }
 
   /**
