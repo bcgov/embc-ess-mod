@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-electronic-agreement',
@@ -7,13 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ElectronicAgreementComponent implements OnInit {
 
-  constructor() { }
+  agreementAccepted=false;
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
 
   submitEAA(): void {
-    
+    this.router.navigate(['/responder-access/responder-dashboard'])
+  }
+
+  agreementChangeEvent(event: MatCheckboxChange): void {
+    this.agreementAccepted = event.checked;
   }
 
 }

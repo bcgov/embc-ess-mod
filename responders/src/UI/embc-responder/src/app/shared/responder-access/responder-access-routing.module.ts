@@ -16,9 +16,13 @@ const routes: Routes = [
         loadChildren: () => import('../responder-dashboard/responder-dashboard.module').then(m => m.ResponderDashboardModule)
       },
       {
-        path: 'evacuee-search',
-        loadChildren: () => import('../evacuee-search/evacuee-search.module').then(m => m.EvacueeSearchModule)
+        path: 'search',
+        loadChildren: () => import('../search-registartion/search-registartion.module').then(m => m.SearchRegistartionModule)
       },
+      {
+        path: 'user-profile',
+        loadChildren: () => import('../user-profile/user-profile.module').then(m => m.UserProfileModule)
+      }
     ]
   }
 ];

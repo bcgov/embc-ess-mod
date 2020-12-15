@@ -79,13 +79,13 @@
                 </section>
                 <br>
                 <div class="accept-box">
-                    <mat-checkbox>I have read and accept the above electronic access agreement</mat-checkbox>
+                    <mat-checkbox (change)="agreementChangeEvent($event)">I have read and accept the above electronic access agreement</mat-checkbox>
                 </div>
             </mat-card>
             <br>
             <div class="row">
                 <div class="col-12">
-                    <button class="button-p submit-eaa" mat-button (click)="submitEAA()">Next</button>
+                    <button class="button-p submit-eaa" [disabled]="!agreementAccepted" mat-button (click)="submitEAA()">Next</button>
                 </div>
             </div>
         </div>
