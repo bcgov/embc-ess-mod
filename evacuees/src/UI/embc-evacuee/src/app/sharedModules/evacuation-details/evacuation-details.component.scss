@@ -1,0 +1,72 @@
+.detailsCard{
+    padding: 0;
+}
+
+.evacFileHeader{
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 118px;
+    background-color: rgba(229, 229, 229, 0.690196078431373);
+    border: none;
+    border-radius: 0px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    margin:0;
+    font-family: 'BC Sans', sans-serif;
+    font-style: normal;
+}
+
+.titleDetailHeader {
+    padding-top: 20px;
+    font-size: 36px;
+    color: #234075;
+    font-weight: 400;
+}
+
+.backButton {
+    mat-icon {
+        font-size: 36px;
+    }
+}
+
+.backButton:hover{
+    color: #169BD5;
+}
+
+.detailsCard{
+    padding: 0;
+}
+
+.evacFileSpan {
+    padding: 20px;
+}
+
+.statusDetailHeader{
+    display: block;
+    padding-top: 40px;
+    padding-right: 30px;
+}
+
+.statusDetailHeaderElements {
+    float: right;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 15px;
+    line-height: 35px;
+}
+
+.supportReceived{
+    padding: 30px 30px 100px;
+}
+
+.supportReceivedBoldSpan{
+    font-weight: 700;
+    line-height: 35px;
+}
+
+.supportReceivedRegSpan{
+    font-weight: 400;
+    line-height: 24px;
+}

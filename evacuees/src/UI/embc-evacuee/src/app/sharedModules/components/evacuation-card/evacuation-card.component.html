@@ -1,4 +1,4 @@
-<mat-card *ngIf="!showDetails">
+<mat-card>
     <mat-card-content>
         <span class="evacuatedSecondary">Evacuated From</span>
         <mat-card-title class="evacuatedTitle">Community</mat-card-title>
@@ -31,30 +31,4 @@
             </div>
         </div>
     </mat-card-content>
-</mat-card>
-
-<mat-card class="detailsCard" *ngIf="showDetails">
-    <div class="row evacFileHeader">
-            <div class="col-md-9 titleDetailHeader">
-                <button class="backButton" mat-icon-button (click)="goToCurrent()">
-                  <mat-icon>arrow_back</mat-icon>
-                </button>
-                <span class="evacFileSpan">Evacuation File #{{evacuationFileCard.code}}</span>
-            </div>
-            <div class="col-md-3 statusDetailHeader">
-                <div class="statusDetailHeaderElements">
-                    <span>Status: </span>
-                    <span [ngStyle]="{'color': changeStatusColor()}">{{evacuationFileCard.status}}</span>
-                </div>
-            </div>
-    </div>
-    <div>
-        <app-review [type]="type" [showHeading]="false" [currentFlow]="currentFlow"
-                [parentPageName]="parentPageName"></app-review>
-        <div class="supportReceived">
-            <p class="titleDetailHeader">Supports Received</p>
-            <p class="supportReceivedBoldSpan">We do not have any records of supports issued within our system.</p>
-            <p class="supportReceivedRegSpan">Please proceed to an ESS volunteer or your nearest reception center where you will be assisted.</p>
-        </div>
-    </div>
 </mat-card>

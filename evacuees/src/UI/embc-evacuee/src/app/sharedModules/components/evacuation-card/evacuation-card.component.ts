@@ -1,6 +1,4 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
 import { evacuationCard } from 'src/app/sharedModules/components/view-auth-profile/view-auth-profile.component'
 
 @Component({
@@ -10,19 +8,16 @@ import { evacuationCard } from 'src/app/sharedModules/components/view-auth-profi
 })
 
 export class EvacuationCardComponent implements OnInit {
-
-  showDetails = false;
-  type = 'need'
-  currentFlow: string;
-  parentPageName = 'needs-assessment';
+ 
   
   @Input() evacuationFileCard: evacuationCard;
-  @Output() showCardHeading = new EventEmitter<boolean>();
+  @Output() showEvacuationList = new EventEmitter<boolean>();
+  @Output() evacuationFile = new EventEmitter<evacuationCard>();
 
-  constructor(private route: ActivatedRoute) { }
+  constructor() { }
   
   ngOnInit(): void {
-    this.currentFlow = this.route.snapshot.data.flow;
+    
   }
 
   changeStatusColor(): string {
@@ -34,13 +29,8 @@ export class EvacuationCardComponent implements OnInit {
   }
 
   goToDetails(){
-    this.showDetails = !this.showDetails;
-    this.showCardHeading.emit(false);
-  }
-
-  goToCurrent(): void {
-    this.showDetails = !this.showDetails;
-    this.showCardHeading.emit(true);
+    this.showEvacuationList.emit(false);
+    this.evacuationFile.emit(this.evacuationFileCard);
   }
 
 }

@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ReviewModule } from '../../components/review/review.module';
 import { EvacuationCardComponent } from '../../components/evacuation-card/evacuation-card.component';
+import { EvacuationDetailsComponent } from '../../evacuation-details/evacuation-details.component';
 
 import { MatIconModule } from '@angular/material/icon';
 
@@ -16,7 +17,8 @@ import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     ViewAuthProfileComponent,
-    EvacuationCardComponent
+    EvacuationCardComponent,
+    EvacuationDetailsComponent
   ],
   imports: [
     CommonModule,
