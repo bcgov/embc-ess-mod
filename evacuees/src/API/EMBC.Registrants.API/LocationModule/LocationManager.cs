@@ -23,7 +23,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace EMBC.Registrants.API.LocationModule
 {
-    public interface ILocationQueriesService
+    public interface ILocationManager
     {
         Task<IEnumerable<Country>> GetCountries();
 
@@ -32,11 +32,11 @@ namespace EMBC.Registrants.API.LocationModule
         Task<IEnumerable<StateProvince>> GetStateProvinces(string countryCode);
     }
 
-    public class LocationQueriesService : ILocationQueriesService
+    public class LocationManager : ILocationManager
     {
         private readonly IDistributedCache cache;
 
-        public LocationQueriesService(IDistributedCache cache)
+        public LocationManager(IDistributedCache cache)
         {
             this.cache = cache;
         }
