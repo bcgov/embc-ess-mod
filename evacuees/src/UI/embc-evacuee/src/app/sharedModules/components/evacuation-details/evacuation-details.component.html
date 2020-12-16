@@ -1,8 +1,8 @@
 <mat-card class="detailsCard">
     <div class="row evacFileHeader">
             <div class="col-md-9 titleDetailHeader">
-                <button class="backButton" mat-icon-button (click)="goToCurrent()">
-                  <mat-icon>arrow_back</mat-icon>
+                <button class="backButton" (click)="goToCurrent()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
+                    <img [src]="backArrowImgSrc" height="28" width="31">
                 </button>
                 <span class="evacFileSpan">Evacuation File #{{evacuationFileCard.code}}</span>
             </div>

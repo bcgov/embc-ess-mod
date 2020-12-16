@@ -9,9 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ReviewModule } from '../../components/review/review.module';
 import { EvacuationCardComponent } from '../../components/evacuation-card/evacuation-card.component';
-import { EvacuationDetailsComponent } from '../../evacuation-details/evacuation-details.component';
+import { EvacuationDetailsComponent } from './../evacuation-details/evacuation-details.component';
+import { DialogModule } from '../../../core/components/dialog/dialog.module';
 
-import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatTabsModule,
     ReviewModule,
-    MatIconModule
+    DialogModule
   ]
 })
 export class ViewAuthProfileModule { }
