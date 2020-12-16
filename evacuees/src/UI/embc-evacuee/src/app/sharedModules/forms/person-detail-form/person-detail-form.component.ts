@@ -46,8 +46,8 @@ export class PersonDetailFormComponent implements OnInit {
     }
   }
 
-  sameLastNameEditForm(){
-    if(this.personalDetailsForm.get('sameLastNameCheck').value) {
+  sameLastNameEditForm(): void {
+    if (this.personalDetailsForm.get('sameLastNameCheck').value) {
       this.readOnlyInput = true;
     } else {
       this.readOnlyInput = false;

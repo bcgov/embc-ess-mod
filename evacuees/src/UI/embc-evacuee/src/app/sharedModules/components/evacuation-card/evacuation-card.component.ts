@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { evacuationCard } from 'src/app/sharedModules/components/view-auth-profile/view-auth-profile.component'
+import { EvacuationCard } from 'src/app/sharedModules/components/view-auth-profile/view-auth-profile.component';
 
 @Component({
   selector: 'app-evacuation-card',
@@ -8,27 +8,26 @@ import { evacuationCard } from 'src/app/sharedModules/components/view-auth-profi
 })
 
 export class EvacuationCardComponent implements OnInit {
- 
-  
-  @Input() evacuationFileCard: evacuationCard;
+
+  @Input() evacuationFileCard: EvacuationCard;
   @Output() showEvacuationList = new EventEmitter<boolean>();
-  @Output() evacuationFile = new EventEmitter<evacuationCard>();
+  @Output() evacuationFile = new EventEmitter<EvacuationCard>();
 
   constructor() { }
-  
+
   ngOnInit(): void {
-    
-  }
+
+ }
 
   changeStatusColor(): string {
-    if(this.evacuationFileCard.status == 'Active'){
+    if (this.evacuationFileCard.status === 'Active') {
       return '#26B378';
     } else {
       return '#8B0000';
     }
   }
 
-  goToDetails(){
+  goToDetails(): void {
     this.showEvacuationList.emit(false);
     this.evacuationFile.emit(this.evacuationFileCard);
   }
