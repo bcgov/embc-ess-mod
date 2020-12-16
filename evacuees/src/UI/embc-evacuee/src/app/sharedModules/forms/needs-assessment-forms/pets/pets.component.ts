@@ -79,7 +79,7 @@ export default class PetsComponent implements OnInit {
 
   cancel(): void {
     this.showPetsForm = !this.showPetsForm;
-    / /this.showTable = !this.showTable;
+    // this.showTable = !this.showTable;
     if (this.data.length === 0) {
       this.petsForm.get('addPetIndicator').setValue(false);
     }
