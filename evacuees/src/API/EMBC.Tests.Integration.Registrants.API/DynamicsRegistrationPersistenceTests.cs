@@ -223,5 +223,16 @@ namespace EMBC.Tests.Integration.Registrants.API
             Assert.NotEmpty(jurisdictions);
         }
 
+        [Fact(Skip = RequiresDynamics)]
+        public async Task GeProfileById()
+        {
+            var regManager = services.GetRequiredService<IRegistrationManager>();
+            var result = await regManager.GetProfileById(new Guid("8f4b00f0-8e9e-4439-b996-787468a1bedf"));
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.PersonalDetails.FirstName);
+            testLogger.LogDebug("First Name: " + result.PersonalDetails.FirstName);
+        }
+
+
     }
 }

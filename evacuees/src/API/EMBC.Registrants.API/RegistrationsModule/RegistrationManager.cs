@@ -30,15 +30,13 @@ namespace EMBC.Registrants.API.RegistrationsModule
     {
         Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration);
         Task<OkResult> CreateProfile(Registration profileRegistration);
+        Task<Registration> GetProfileById(Guid contactId);
     }
 
     public class RegistrationManager : IRegistrationManager
     {
         private readonly DynamicsClientContext dynamicsClient;
         private DateTimeOffset now;
-#pragma warning disable 0649
-        private readonly ILogger logger;
-#pragma warning restore 0649
 
         public RegistrationManager(DynamicsClientContext dynamicsClient)
         {
@@ -74,8 +72,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
             var essFileNumber = new Random().Next(999999999); //temporary ESS file number random generator
 #pragma warning restore CA5394 // Do not use insecure randomness
 
-            // evacuation file
-            var file = new era_evacuationfile
+            // New evacuation file
+            var evacuationFile = new era_evacuationfile
             {
                 era_evacuationfileid = Guid.NewGuid(),
                 era_essfilenumber = essFileNumber,
@@ -89,10 +87,31 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_secrettext = registration.RegistrationDetails.SecretPhrase,
             };
 
-            // Create New Contact (Primary Registrant)
+            // New needs assessment
+            var needsAssessment = new era_needassessment
+            {
+                era_needassessmentid = Guid.NewGuid(),
+                era_needsassessmentdate = now,
+                era_EvacuationFile = evacuationFile,
+                era_needsassessmenttype = 174360000,
+                era_foodrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresFood),
+                era_clothingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresClothing),
+                era_dietaryrequirement = registration.PreliminaryNeedsAssessment.HaveSpecialDiet,
+                era_incidentalrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresIncidentals),
+                era_lodgingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresLodging),
+                era_transportationrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresTransportation),
+                era_medicationrequirement = registration.PreliminaryNeedsAssessment.HaveMedication,
+                era_insurancecoverage = Lookup(registration.PreliminaryNeedsAssessment.Insurance),
+                era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
+                era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
+                era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
+                era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email)
+            };
+
+            // New Contact (Primary Registrant)
             var newPrimaryRegistrant = CreateNewContact(registration.RegistrationDetails, true);
 
-            // members
+            // New Contacts (Household Members)
             var members = (registration.PreliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
             {
                 contactid = Guid.NewGuid(),
@@ -135,101 +154,68 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_secrettext = registration.RegistrationDetails.SecretPhrase
             });
 
-            // needs assessment
-            var needsAssessment = new era_needassessment
+            // New needs assessment evacuee as pet
+            var pets = (registration.PreliminaryNeedsAssessment.Pets ?? Array.Empty<Pet>()).Select(p => new era_needsassessmentevacuee
             {
-                era_needassessmentid = Guid.NewGuid(),
-                era_needsassessmentdate = now,
-                era_EvacuationFile = file,
-                era_needsassessmenttype = 174360000,
-                era_foodrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresFood),
-                era_clothingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresClothing),
-                era_dietaryrequirement = registration.PreliminaryNeedsAssessment.HaveSpecialDiet,
-                era_incidentalrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresIncidentals),
-                era_lodgingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresLodging),
-                era_transportationrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresTransportation),
-                era_medicationrequirement = registration.PreliminaryNeedsAssessment.HaveMedication,
-                era_insurancecoverage = Lookup(registration.PreliminaryNeedsAssessment.Insurance),
-                era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
-                era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
-                era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
-                era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email)
-            };
-
-            // pets
-            var pets = (registration.PreliminaryNeedsAssessment.Pets ?? Array.Empty<Pet>()).Select(p => new era_evacuee
-            {
-                era_evacueeid = Guid.NewGuid(),
-                era_needsassessment = needsAssessment,
-                era_amountofpets = Convert.ToInt32(p.Quantity),
-                era_typeofpet = p.Type
+                era_needsassessmentevacueeid = Guid.NewGuid(),
+                //era_NeedsAssessmentID = needsAssessment,
+                era_numberofpets = Convert.ToInt32(p.Quantity),
+                era_typeofpet = p.Type,
+                era_evacueetype = LookupEvacueeType("Pet")
             });
 
-            // set enity data and entity links in Dynamics
-
-            // save evacuation file to dynamics
-            dynamicsClient.AddToera_evacuationfiles(file);
-            // save needs assessment to dynamics
+            // add evacuation file to dynamics context
+            dynamicsClient.AddToera_evacuationfiles(evacuationFile);
+            // add needs assessment to dynamics context
             dynamicsClient.AddToera_needassessments(needsAssessment);
             // link evacuation file to needs assessment
-            dynamicsClient.AddLink(file, nameof(file.era_needsassessment_EvacuationFile), needsAssessment);
+            dynamicsClient.AddLink(evacuationFile, nameof(evacuationFile.era_needsassessment_EvacuationFile), needsAssessment);
 
-            // save registrant to dynamics
-            //dynamicsClient.AddTocontacts(newRegistrant);
-            var evacueeRegistrant = new era_evacuee
+            // New needs assessment evacuee as primary registrant
+            var evacueeRegistrant = new era_needsassessmentevacuee
             {
-                era_evacueeid = Guid.NewGuid(),
-                era_needsassessment = needsAssessment,
-                era_Registrant = newPrimaryRegistrant
+                era_needsassessmentevacueeid = Guid.NewGuid(),
+                //era_needsassessment = needsAssessment,
+                //era_RegistrantID = newPrimaryRegistrant,
+                era_isprimaryregistrant = true,
+                era_evacueetype = LookupEvacueeType("Person")
             };
-            dynamicsClient.AddToera_evacuees(evacueeRegistrant);
+            dynamicsClient.AddToera_needsassessmentevacuees(evacueeRegistrant);
             // link registrant and needs assessment to evacuee record
-            dynamicsClient.AddLink(newPrimaryRegistrant, nameof(newPrimaryRegistrant.era_contact_evacuee_Registrant), evacueeRegistrant);
-            dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), evacueeRegistrant);
+            dynamicsClient.AddLink(newPrimaryRegistrant, nameof(newPrimaryRegistrant.era_NeedsAssessmentEvacuee_RegistrantID), evacueeRegistrant);
+            dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), evacueeRegistrant);
 
             // save members to dynamics
             foreach (var member in members)
             {
                 dynamicsClient.AddTocontacts(member);
-                var evacueeMember = new era_evacuee
+                var evacueeMember = new era_needsassessmentevacuee
                 {
-                    era_evacueeid = Guid.NewGuid(),
-                    era_needsassessment = needsAssessment,
-                    era_Registrant = member
+                    era_needsassessmentevacueeid = Guid.NewGuid(),
+                    //era_needsassessment = needsAssessment,
+                    era_isprimaryregistrant = false,
+                    era_evacueetype = LookupEvacueeType("Person")
                 };
-                dynamicsClient.AddToera_evacuees(evacueeMember);
+                dynamicsClient.AddToera_needsassessmentevacuees(evacueeMember);
                 // link members and needs assessment to evacuee record
-                dynamicsClient.AddLink(member, nameof(member.era_contact_evacuee_Registrant), evacueeMember);
-                dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), evacueeMember);
+                dynamicsClient.AddLink(member, nameof(member.era_NeedsAssessmentEvacuee_RegistrantID), evacueeMember);
+                dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), evacueeMember);
             }
 
             // save pets to dynamics
             foreach (var pet in pets)
             {
-                var petMember = new era_evacuee
+                var petMember = new era_needsassessmentevacuee
                 {
-                    era_evacueeid = Guid.NewGuid(),
-                    era_needsassessment = needsAssessment,
+                    era_needsassessmentevacueeid = Guid.NewGuid(),
+                    //era_needsassessment = needsAssessment,
                     era_typeofpet = pet.era_typeofpet,
-                    era_amountofpets = pet.era_amountofpets
+                    era_numberofpets = pet.era_numberofpets
                 };
-                dynamicsClient.AddToera_evacuees(petMember);
+                dynamicsClient.AddToera_needsassessmentevacuees(petMember);
 
-                try
-                {
-                    // link pet to evacuee record
-                    dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_era_needassessment_era_evacuee_needsassessment), petMember);
-                }
-                catch (ArgumentNullException)
-                {
-                    logger.LogError("ArgumentNullException linking entities");
-                    throw;
-                }
-                catch (InvalidOperationException)
-                {
-                    logger.LogError("InvalidOperationException linking entities");
-                    throw;
-                }
+                // link pet to evacuee record
+                dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), petMember);
             }
 
             //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
@@ -245,6 +231,27 @@ namespace EMBC.Registrants.API.RegistrationsModule
             //    .Single().era_essfilenumber;
 
             return $"E{essFileNumber:D9}";
+        }
+
+        public Task<Registration> GetProfileById(Guid contactId)
+        {
+            var profile = newRegistrationObject();
+            var queryResult = dynamicsClient.contacts.Where(c => c.contactid == contactId).FirstOrDefault();
+            profile.PersonalDetails.FirstName = queryResult.firstname;
+            profile.PersonalDetails.LastName = queryResult.lastname;
+            //profile.PersonalDetails.DateOfBirth = queryResult.birthdate;
+            return Task.FromResult(profile);
+        }
+
+        private Registration newRegistrationObject()
+        {
+            var registration = new Registration();
+            registration.PersonalDetails = new PersonDetails();
+            registration.ContactDetails = new ContactDetails();
+            registration.PrimaryAddress = new Address();
+            registration.MailingAddress = new Address();
+
+            return registration;
         }
 
         private era_country Lookup(Country country) =>
@@ -268,6 +275,13 @@ namespace EMBC.Registrants.API.RegistrationsModule
             "M" => 1,
             "F" => 2,
             "X" => 3,
+            _ => null
+        };
+
+        private int? LookupEvacueeType(string value) => value switch
+        {
+            "Person" => 174360000,
+            "Pet" => 174360001,
             _ => null
         };
 
