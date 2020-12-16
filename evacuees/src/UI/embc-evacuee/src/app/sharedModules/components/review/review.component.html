@@ -249,7 +249,7 @@
             <p *ngIf="type === 'both'" class="review-heading">Evacuation File</p>
 
             <mat-card-content *ngIf="type === 'need'">
-                <p class="review-heading">Review & Submit</p>
+                <p *ngIf="showHeading" class="review-heading">Review & Submit</p>
                 <div class="row justify-content-between">
                     <div class="col-md-6 card-heading">
                         Restriction
