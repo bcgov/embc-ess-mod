@@ -65,6 +65,15 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             return CreatedAtAction(nameof(CreateProfile), result);
         }
+
+        [HttpGet("get-profile")]
+        public async Task<Registration> GetProfileById(Guid contactId)
+        {
+            if (contactId == null) return null;
+            var result = await registrationManager.GetProfileById(contactId);
+
+            return result;
+        }
     }
 
     /// <summary>

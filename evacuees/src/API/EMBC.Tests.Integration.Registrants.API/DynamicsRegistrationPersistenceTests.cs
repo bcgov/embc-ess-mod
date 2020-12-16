@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
-using EMBC.Registrants.API.Dynamics;
 using EMBC.Registrants.API.RegistrationsModule;
+using EMBC.Registrants.API.Security;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -25,7 +25,109 @@ namespace EMBC.Tests.Integration.Registrants.API
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task Register_Anonymous_NewReferenceNumber()
+        public async Task Profile_Registration()
+        {
+            var textContextIdentifier = DateTime.Now.ToShortTimeString();
+            var registration = new Registration
+                {
+                    InformationCollectionConsent = true,
+                    RestrictedAccess = true,
+                    SecretPhrase = $"secret phrase {textContextIdentifier}",
+                    PersonalDetails = new PersonDetails
+                    {
+                        FirstName = $"PriRegTestFirst-{textContextIdentifier}",
+                        LastName = $"PriRegTestLast-{textContextIdentifier}",
+                        DateOfBirth = "2000/01/01",
+                        Gender = "M",
+                        Initials = "initials1",
+                        PreferredName = "preferred1"
+                    },
+                    ContactDetails = new ContactDetails
+                    {
+                        Email = "prireg@org.com",
+                        Phone = "999-999-9999",
+                        HidePhoneRequired = false,
+                        HideEmailRequired = false
+                    },
+                    PrimaryAddress = new Address
+                    {
+                        AddressLine1 = "100 Primary Address L1",
+                        AddressLine2 = "Address L2",
+                        Country = new Country { CountryCode = "CAN", CountryName = "Canada" },
+                        StateProvince = new StateProvince { StateProvinceCode = "BC", StateProvinceName = "British Columbia" },
+                        PostalCode = "V1V 1V1",
+                        Jurisdiction = new Jurisdiction { JurisdictionCode = "226adfaf-9f97-ea11-b813-005056830319", JurisdictionName = "North Vancouver" }
+                    },
+                    MailingAddress = new Address
+                    {
+                        AddressLine1 = "100 Mailing Address L1",
+                        AddressLine2 = "Address L2",
+                        Country = new Country { CountryCode = "USA", CountryName = "USA" },
+                        StateProvince = new StateProvince { StateProvinceCode = "WA", StateProvinceName = "Washington" },
+                        PostalCode = "12345",
+                        Jurisdiction = new Jurisdiction { JurisdictionCode = null, JurisdictionName = "Seattle" }
+                    }
+                };
+
+            var regManager = services.GetRequiredService<IRegistrationManager>();
+            var result = await regManager.CreateProfile(registration);
+            //Assert.StartsWith("E", result);
+            Assert.Equal(200, result.StatusCode);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Profile_Registration_ForeignAddress()
+        {
+            var textContextIdentifier = DateTime.Now.ToShortTimeString();
+            var registration = new Registration
+            {
+                InformationCollectionConsent = true,
+                RestrictedAccess = true,
+                SecretPhrase = $"secret phrase {textContextIdentifier}",
+                PersonalDetails = new PersonDetails
+                {
+                    FirstName = $"PriRegTestFirst-{textContextIdentifier}",
+                    LastName = $"PriRegTestLast-{textContextIdentifier}",
+                    DateOfBirth = "2000/01/01",
+                    Gender = "F",
+                    Initials = "initials1",
+                    PreferredName = "preferred1"
+                },
+                ContactDetails = new ContactDetails
+                {
+                    Email = "prireg@org.com",
+                    Phone = "999-999-9999",
+                    HidePhoneRequired = false,
+                    HideEmailRequired = false
+                },
+                PrimaryAddress = new Address
+                {
+                    AddressLine1 = "100 Primary Address L1",
+                    AddressLine2 = "Address L2",
+                    Country = new Country { CountryCode = "AFG", CountryName = "Afghanistan" },
+                    //StateProvince = new StateProvince { StateProvinceCode = "BC", StateProvinceName = "British Columbia" },
+                    PostalCode = "XX99",
+                    Jurisdiction = new Jurisdiction { JurisdictionCode = null, JurisdictionName = "Afghanistan City" }
+                },
+                MailingAddress = new Address
+                {
+                    AddressLine1 = "100 Mailing Address L1",
+                    AddressLine2 = "Address L2",
+                    Country = new Country { CountryCode = "DZA", CountryName = "Algeria" },
+                    //StateProvince = new StateProvince { StateProvinceCode = "WA", StateProvinceName = "Washington" },
+                    PostalCode = "999Z",
+                    Jurisdiction = new Jurisdiction { JurisdictionCode = null, JurisdictionName = "Algeria City" }
+                }
+            };
+
+            var regManager = services.GetRequiredService<IRegistrationManager>();
+            var result = await regManager.CreateProfile(registration);
+            //Assert.StartsWith("E", result);
+            Assert.Equal(200, result.StatusCode);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Anonymous_Registration()
         {
             var textContextIdentifier = DateTime.Now.ToShortTimeString();
             var registration = new AnonymousRegistration
@@ -37,10 +139,10 @@ namespace EMBC.Tests.Integration.Registrants.API
                     SecretPhrase = "secret phrase",
                     PersonalDetails = new PersonDetails
                     {
-                        FirstName = $"RegistrantFirst1{textContextIdentifier}",
-                        LastName = "RegistrantLast1",
+                        FirstName = $"PriRegTestFirst-{textContextIdentifier}",
+                        LastName = $"PriRegTestLast-{textContextIdentifier}",
                         DateOfBirth = "2000/01/01",
-                        Gender = "Male",
+                        Gender = "F",
                         Initials = "initials1",
                         PreferredName = "preferred1"
                     },
@@ -84,9 +186,9 @@ namespace EMBC.Tests.Integration.Registrants.API
                     {
                         new PersonDetails
                         {
-                            FirstName = $"MemberFirst1{textContextIdentifier}",
-                            LastName = "MemberLast1",
-                            Gender = "M",
+                            FirstName = $"MemRegTestFirst-{textContextIdentifier}",
+                            LastName = $"MemRegTestLast-{textContextIdentifier}",
+                            Gender = "X",
                             DateOfBirth = "2010-01-01"
                         }
                     },
@@ -115,10 +217,22 @@ namespace EMBC.Tests.Integration.Registrants.API
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetListOfJurisdictions()
         {
-            var gw = services.GetRequiredService<IDynamicsListsGateway>();
-            var jurisdictions = await gw.GetJurisdictionsAsync();
+            var repo = services.GetRequiredService<EMBC.Registrants.API.LocationModule.IListsRepository>();
+            var jurisdictions = await repo.GetJurisdictions();
 
             Assert.NotEmpty(jurisdictions);
         }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task GeProfileById()
+        {
+            var regManager = services.GetRequiredService<IRegistrationManager>();
+            var result = await regManager.GetProfileById(new Guid("8f4b00f0-8e9e-4439-b996-787468a1bedf"));
+            Assert.NotNull(result);
+            Assert.NotEmpty(result.PersonalDetails.FirstName);
+            testLogger.LogDebug("First Name: " + result.PersonalDetails.FirstName);
+        }
+
+
     }
 }

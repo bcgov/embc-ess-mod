@@ -14,7 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using EMBC.Registrants.API.Dynamics;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.Registrants.API.LocationModule
@@ -23,9 +22,8 @@ namespace EMBC.Registrants.API.LocationModule
     {
         public static IServiceCollection AddLocationModule(this IServiceCollection services)
         {
-            services.AddTransient<ILocationQueriesService, LocationQueriesService>();
+            services.AddTransient<ILocationManager, LocationManager>();
             services.AddTransient<IListsRepository, ListsRepository>();
-            services.AddTransient<IDynamicsListsGateway, DynamicsListsGateway>();
             services.AddHostedService<LocationCacheHostedService>();
             return services;
         }
