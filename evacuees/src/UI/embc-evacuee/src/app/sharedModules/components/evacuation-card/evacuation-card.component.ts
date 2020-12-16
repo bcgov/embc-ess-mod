@@ -13,17 +13,19 @@ export class EvacuationCardComponent implements OnInit {
   @Output() showEvacuationList = new EventEmitter<boolean>();
   @Output() evacuationFile = new EventEmitter<EvacuationCard>();
 
+  imageIcon: string;
+
   constructor() { }
 
   ngOnInit(): void {
-
+    this.changeStatusColor();
  }
 
-  changeStatusColor(): string {
+  changeStatusColor(): void {
     if (this.evacuationFileCard.status === 'Active') {
-      return '#26B378';
+      this.imageIcon = '/assets/images/active_status.svg';
     } else {
-      return '#8B0000';
+      this.imageIcon = '/assets/images/inactive_status.svg';
     }
   }
 

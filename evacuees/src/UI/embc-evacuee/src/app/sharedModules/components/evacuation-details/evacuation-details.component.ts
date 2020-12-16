@@ -14,6 +14,7 @@ export class EvacuationDetailsComponent implements OnInit {
 
   constructor(private route: ActivatedRoute) { }
 
+  backArrowImgSrc = '/assets/images/back_arrow.svg';
   type = 'need';
   currentFlow: string;
   parentPageName = 'needs-assessment';
@@ -32,6 +33,14 @@ export class EvacuationDetailsComponent implements OnInit {
 
   goToCurrent(): void {
     this.showEvacuationList.emit(true);
+  }
+
+  onMouseOver(): void {
+    this.backArrowImgSrc = '/assets/images/back_arrow_hover.svg';
+  }
+
+  onMouseOut(): void {
+    this.backArrowImgSrc = '/assets/images/back_arrow.svg';
   }
 
 }

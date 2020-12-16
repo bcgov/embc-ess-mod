@@ -1,6 +1,3 @@
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
-
 .content-container {
     padding-top: 24px;
     padding-right: 24px;
@@ -48,27 +45,5 @@
 
 .dataSpan{ 
     font-weight: 700;
-    font-size: 15px;
-}
-
-.button-p {
-    height: 55px;
-    font-weight: normal;
-    background-color: #234075;
-    color: #FFFFFF ;
-    float: right;
-}
-
-.button-p:hover{
-    background-color: #169BD5;
-}
-  
-.button-p:disabled  {
-    background-color: #234075;
-    color: #FFFFFF !important;
-}
-
-mat-icon {
-    font-family: 'Material Icons' !important;
     font-size: 15px;
 }
