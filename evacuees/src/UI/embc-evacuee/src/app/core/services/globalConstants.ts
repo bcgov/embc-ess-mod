@@ -10,14 +10,14 @@ export const radioButton1 = [
 ];
 
 export const insuranceOptions = [
-  {name: 'Yes', value: 'Yes'},
-  {name: 'Unsure', value: 'Yes, but I am unsure if I have coverage for this event.'},
-  {name: 'No', value: 'No'},
-  {name: 'Unknown', value: 'I don\'t know'}
+  { name: 'Yes', value: 'Yes' },
+  { name: 'Unsure', value: 'Yes, but I am unsure if I have coverage for this event.' },
+  { name: 'No', value: 'No' },
+  { name: 'Unknown', value: 'I don\'t know' }
 ];
 
 export const noticeBody = {
-  body: 'To register with the Evacuee Registration & Assistance (ERA) tool, you must select \'I agree\'.',
+  body: '<p>To register with the Evacuee Registration & Assistance (ERA) tool, you must select \'I agree\'.</p>',
   buttons:
     [
       {
@@ -29,7 +29,7 @@ export const noticeBody = {
 };
 
 export const deleteMemberInfoBody = {
-  body: 'Are you sure you want to remove this family member from your evacuation file?',
+  body: '<p>Are you sure you want to remove this family member from your evacuation file?</p>',
   buttons:
     [
       {

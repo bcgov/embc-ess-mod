@@ -13,3 +13,23 @@
   .close-button-style {
     background-color: white;
   }
+
+  .mat-title {
+    font-weight: 700 !important;
+    font-size: 33px !important;
+    line-height: 21px;
+    padding: 10px 5px;
+    text-align: center;
+  }
+
+  .mainBody {
+    display: block;
+    font-weight: 400;
+    margin: 0 5px;
+    padding: 0 20px;
+  }
+
+  .highlight {
+    font-weight: 700;
+    color: #169BD5
+  }

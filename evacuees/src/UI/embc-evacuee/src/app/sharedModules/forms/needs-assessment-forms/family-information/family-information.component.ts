@@ -101,7 +101,7 @@ export default class FamilyInformationComponent implements OnInit {
   deleteRow(index: number): void {
     this.dialog.open(DialogComponent, {
       data: globalConst.deleteMemberInfoBody,
-      height: '210px',
+      height: '220px',
       width: '500px'
     }).afterClosed().subscribe(result => {
       if (result === 'remove') {
