@@ -5,6 +5,9 @@ module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
+    proxies: {
+      '/assets/': '/base/src/assets/'
+    },
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
