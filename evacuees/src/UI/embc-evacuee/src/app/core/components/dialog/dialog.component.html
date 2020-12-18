@@ -1,6 +1,6 @@
 <div class="row justify-content-between">
     <div class="col-md-10">
-        <h1 *ngIf="data?.title !== undefined" mat-dialog-title>{{data.title}}</h1>
+        <h1 class="mat-title" *ngIf="data?.title !== undefined" mat-dialog-title [innerHTML]="data.title"></h1>
     </div>
     <div class="col-md-2">
         <button class="close-image close-button-style" mat-icon-button aria-label="Close" (click)="buttonAction('close')">
@@ -10,10 +10,8 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-11" mat-dialog-content>
-        {{data.body}}
-    </div>
+<div class="row mainBody">
+    <div class="col-md-12" mat-dialog-content [innerHTML]="data.body"></div>
 </div>
 <br>
 <div class="row justify-content-between"> <!--mat-dialog-actions-->
