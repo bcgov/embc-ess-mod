@@ -14,6 +14,7 @@ export class PersonDetailFormComponent implements OnInit {
   @Input() personalDetailsForm: FormGroup;
   gender = globalConst.gender;
   primaryApplicantLastName: string;
+  sameLastNameOption: any;
   readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
   readOnlyInput = false;
 
@@ -25,6 +26,7 @@ export class PersonDetailFormComponent implements OnInit {
         this.primaryApplicantLastName = personalDetails.get('lastName').value;
       }
     );
+    this.sameLastNameEditForm();
   }
 
  /**
@@ -40,6 +42,14 @@ export class PersonDetailFormComponent implements OnInit {
       this.readOnlyInput = true;
     } else {
       this.personalDetailsForm.get('lastName').setValue('');
+      this.readOnlyInput = false;
+    }
+  }
+
+  sameLastNameEditForm(): void {
+    if (this.personalDetailsForm.get('sameLastNameCheck').value) {
+      this.readOnlyInput = true;
+    } else {
       this.readOnlyInput = false;
     }
   }
