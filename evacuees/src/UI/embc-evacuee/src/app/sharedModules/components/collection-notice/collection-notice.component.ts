@@ -38,7 +38,7 @@ export class CollectionNoticeComponent implements OnInit {
     if (!this.collectionForm.get('informationCollectionConsent').value) {
       this.dialog.open(DialogComponent, {
         data: globalConst.noticeBody,
-        height: '210px',
+        height: '220px',
         width: '500px'
       });
     } else {

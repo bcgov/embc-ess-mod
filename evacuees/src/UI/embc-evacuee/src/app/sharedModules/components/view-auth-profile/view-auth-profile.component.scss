@@ -22,6 +22,10 @@
     padding-bottom: 20px;
 }
 
+.button-tab-align {
+    padding-bottom: 20px;
+}
+
 :host ::ng-deep .mat-tab-label-active {
     .inactive-curr{
         display: none !important;
@@ -48,4 +52,25 @@
     .mat-card-right, mat-card {
         border-right-style: none !important; 
     }   
+}
+
+.breadCrumb { 
+    font-family: 'BC Sans', sans-serif;
+    padding: 10px 50px;
+}
+
+.goBackLink {
+    color: rgba(0, 0, 0, 0.35);
+    text-decoration: none;
+}
+
+.goBackLink:hover {
+    color: #169BD5;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.card-container {
+    margin: 2em 0;
+    box-shadow:  8px 5px 5px -1px rgba(0, 0, 0, 0.101960784313725);
 }

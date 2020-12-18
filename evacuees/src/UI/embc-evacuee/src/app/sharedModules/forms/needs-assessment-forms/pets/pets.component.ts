@@ -55,7 +55,7 @@ export default class PetsComponent implements OnInit {
   addPets(): void {
     this.petsForm.get('pet').reset();
     this.showPetsForm = !this.showPetsForm;
-    this.showTable = !this.showTable;
+    // this.showTable = !this.showTable;
     this.petsForm.get('addPetIndicator').setValue(true);
   }
 
@@ -71,7 +71,7 @@ export default class PetsComponent implements OnInit {
       this.dataSource.next(this.data);
       this.petsForm.get('pets').setValue(this.data);
       this.showPetsForm = !this.showPetsForm;
-      this.showTable = !this.showTable;
+      // this.showTable = !this.showTable;
     } else {
       this.petsForm.get('pet').markAllAsTouched();
     }
@@ -79,7 +79,7 @@ export default class PetsComponent implements OnInit {
 
   cancel(): void {
     this.showPetsForm = !this.showPetsForm;
-    this.showTable = !this.showTable;
+    // this.showTable = !this.showTable;
     if (this.data.length === 0) {
       this.petsForm.get('addPetIndicator').setValue(false);
     }
@@ -107,7 +107,7 @@ export default class PetsComponent implements OnInit {
     this.rowEdit = !this.rowEdit;
     this.petsForm.get('pet').setValue(element);
     this.showPetsForm = !this.showPetsForm;
-    this.showTable = !this.showTable;
+    // this.showTable = !this.showTable;
   }
 
   updateOnVisibility(): void {
