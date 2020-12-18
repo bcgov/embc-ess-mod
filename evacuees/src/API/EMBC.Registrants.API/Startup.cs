@@ -21,6 +21,7 @@ using System.Text.Json.Serialization;
 using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
+using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -102,6 +103,8 @@ namespace EMBC.Registrants.API
                 var logger = sp.GetRequiredService<ILogger<DynamicsClientContext>>();
                 return new DynamicsClientContext(new Uri(dynamicsApiBaseUri), new Uri(dynamicsApiEndpoint), async () => await tokenProvider.AcquireToken(), logger);
             });
+            services.AddSingleton<IEmailConfiguration>(configuration.GetSection("SMTPSettings").Get<EmailConfiguration>());
+            services.AddTransient<IEmailSender, EmailSender>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
