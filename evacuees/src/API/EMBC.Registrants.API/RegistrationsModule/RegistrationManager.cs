@@ -226,8 +226,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 //.Expand(f => f.era_country)
                 .Where(f => f.era_evacuationfileid == evacuationFile.era_evacuationfileid).FirstOrDefault();
 
-            //return $"E{essFileNumber:D9}";
-            return queryResult.era_essfilenumber.ToString();
+            return $"{essFileNumber:D9}";
+            //return queryResult.era_essfilenumber.ToString();
         }
 
         public Task<Registration> GetProfileById(Guid contactId)
@@ -237,6 +237,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 .Expand(c => c.era_City)
                 .Expand(c => c.era_ProvinceState)
                 .Expand(c => c.era_Country)
+                .Expand(c => c.era_MailingCity)
+                .Expand(c => c.era_MailingProvinceState)
+                .Expand(c => c.era_MailingCountry)
                 .Where(c => c.contactid == contactId).FirstOrDefault();
 
             // Personal Details
@@ -259,13 +262,13 @@ namespace EMBC.Registrants.API.RegistrationsModule
             profile.PrimaryAddress.StateProvince.StateProvinceCode = queryResult.era_ProvinceState?.era_code;
             profile.PrimaryAddress.StateProvince.StateProvinceName = queryResult.era_ProvinceState?.era_name;
             profile.PrimaryAddress.Country.CountryCode = queryResult.era_Country?.era_countrycode;
-            profile.PrimaryAddress.Country.CountryCode = queryResult.era_Country?.era_name;
+            profile.PrimaryAddress.Country.CountryName = queryResult.era_Country?.era_name;
             profile.PrimaryAddress.PostalCode = queryResult.address1_postalcode;
             // Mailing Address
             profile.MailingAddress.AddressLine1 = queryResult.address2_line1;
             profile.MailingAddress.AddressLine2 = queryResult.address2_line2;
-            profile.MailingAddress.Jurisdiction.JurisdictionCode = "TBD"; // queryResult.;
-            profile.MailingAddress.Jurisdiction.JurisdictionName = "TBD"; // queryResult.;
+            profile.MailingAddress.Jurisdiction.JurisdictionCode = queryResult.era_MailingCity?.era_jurisdictionid.ToString();
+            profile.MailingAddress.Jurisdiction.JurisdictionName = queryResult.era_MailingCity?.era_jurisdictionname;
             profile.MailingAddress.StateProvince.StateProvinceCode = queryResult.era_MailingProvinceState?.era_code;
             profile.MailingAddress.StateProvince.StateProvinceName = queryResult.era_MailingProvinceState?.era_name;
             profile.MailingAddress.Country.CountryCode = queryResult.era_MailingCountry?.era_countrycode;
@@ -273,7 +276,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             profile.MailingAddress.PostalCode = queryResult.address2_postalcode;
             // Other
             profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
-            profile.RestrictedAccess = queryResult.era_restriction.HasValue ? queryResult.era_restriction.Value : false;
+            profile.RestrictedAccess = queryResult.era_sharingrestriction.HasValue ? queryResult.era_sharingrestriction.Value : false;
             profile.SecretPhrase = queryResult.era_secrettext;
             return Task.FromResult(profile);
         }
