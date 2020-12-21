@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Alert } from '../model/alert';
 import { Router, NavigationStart } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -32,15 +32,15 @@ export class AlertService {
      * @param message : Alert message to be displayed
      * @param type : valid values => 'success', 'info', 'warning', 'danger'
      */
-    setAlert(message: string, type: string) {
+    setAlert(message: string, type: string): void {
         this.alertSubject.next(new Alert(message, type));
     }
 
-    getAlerts() {
+    getAlerts(): Observable<Alert> {
         return this.alertSubject.asObservable();
     }
 
-    clearAlert() {
+    clearAlert(): void {
         this.alertSubject.next();
     }
 

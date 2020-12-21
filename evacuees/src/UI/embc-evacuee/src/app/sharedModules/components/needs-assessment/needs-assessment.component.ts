@@ -33,8 +33,8 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   showLoader = false;
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
-    private route: ActivatedRoute) {
+              private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
+              private route: ActivatedRoute) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
