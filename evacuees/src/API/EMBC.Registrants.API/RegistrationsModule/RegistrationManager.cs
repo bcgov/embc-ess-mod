@@ -31,6 +31,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration);
         Task<OkResult> CreateProfile(Registration profileRegistration);
         Task<Registration> GetProfileById(Guid contactId);
+        Task<Registration> PatchProfileById(Registration profileRegistration);
     }
 
     public class RegistrationManager : IRegistrationManager
@@ -230,6 +231,11 @@ namespace EMBC.Registrants.API.RegistrationsModule
             //return queryResult.era_essfilenumber.ToString();
         }
 
+        /// <summary>
+        /// Get a Registrant Profile
+        /// </summary>
+        /// <param name="contactId">Contact Id</param>
+        /// <returns>Registration</returns>
         public Task<Registration> GetProfileById(Guid contactId)
         {
             var profile = newRegistrationObject();
@@ -241,6 +247,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 .Expand(c => c.era_MailingProvinceState)
                 .Expand(c => c.era_MailingCountry)
                 .Where(c => c.contactid == contactId).FirstOrDefault();
+
+            if (queryResult == null) return Task.FromResult(profile);
 
             // Personal Details
             profile.PersonalDetails.FirstName = queryResult.firstname;
@@ -278,6 +286,18 @@ namespace EMBC.Registrants.API.RegistrationsModule
             profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
             profile.RestrictedAccess = queryResult.era_sharingrestriction.HasValue ? queryResult.era_sharingrestriction.Value : false;
             profile.SecretPhrase = queryResult.era_secrettext;
+            return Task.FromResult(profile);
+        }
+
+        public Task<Registration> PatchProfileById(Registration profileRegistration)
+        {
+            var contactIdGuid = Guid.Parse(profileRegistration.ContactId);
+            // search for contact
+            var queryResult = dynamicsClient.contacts
+                .Where(c => c.contactid == contactIdGuid).FirstOrDefault();
+            //if (queryResult == null) return NotFoundResult;
+
+            var profile = newRegistrationObject();
             return Task.FromResult(profile);
         }
 
