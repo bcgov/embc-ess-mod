@@ -11,6 +11,9 @@ import { ReviewModule } from '../../components/review/review.module';
 import { EvacuationCardComponent } from '../../components/evacuation-card/evacuation-card.component';
 import { EvacuationDetailsComponent } from './../evacuation-details/evacuation-details.component';
 import { DialogModule } from '../../../core/components/dialog/dialog.module';
+import { ReferralDetailsComponent } from '../../components/referral-details/referral-details.component';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 
 
 
@@ -18,7 +21,8 @@ import { DialogModule } from '../../../core/components/dialog/dialog.module';
   declarations: [
     ViewAuthProfileComponent,
     EvacuationCardComponent,
-    EvacuationDetailsComponent
+    EvacuationDetailsComponent,
+    ReferralDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +32,8 @@ import { DialogModule } from '../../../core/components/dialog/dialog.module';
     MatButtonModule,
     MatTabsModule,
     ReviewModule,
-    DialogModule
+    DialogModule,
+    MatExpansionModule
   ]
 })
 export class ViewAuthProfileModule { }

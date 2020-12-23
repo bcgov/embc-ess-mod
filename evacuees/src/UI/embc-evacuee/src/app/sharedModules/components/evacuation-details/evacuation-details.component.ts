@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EvacuationCard } from 'src/app/sharedModules/components/view-auth-profile/view-auth-profile.component';
+import { EvacuationCard, Referral} from 'src/app/sharedModules/components/view-auth-profile/view-auth-profile.component';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -18,6 +18,8 @@ export class EvacuationDetailsComponent implements OnInit {
   type = 'need';
   currentFlow: string;
   parentPageName = 'needs-assessment';
+  referralDetailsText = 'expand all';
+  expandDetailsFlag = false;
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
@@ -41,6 +43,15 @@ export class EvacuationDetailsComponent implements OnInit {
 
   onMouseOut(): void {
     this.backArrowImgSrc = '/assets/images/back_arrow.svg';
+  }
+
+  expandDetails(){
+    this.expandDetailsFlag = !this.expandDetailsFlag;
+    if(this.expandDetailsFlag) {
+      this.referralDetailsText = 'close all';
+    } else {
+      this.referralDetailsText = 'expand all';
+    }
   }
 
 }

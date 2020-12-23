@@ -1,25 +1,73 @@
 <mat-card class="detailsCard">
     <div class="row evacFileHeader">
-            <div class="col-md-9 titleDetailHeader">
-                <button class="backButton" (click)="goToCurrent()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
-                    <img [src]="backArrowImgSrc" height="28" width="31">
-                </button>
-                <span class="evacFileSpan">Evacuation File #{{evacuationFileCard.code}}</span>
+        <div class="col-md-9 titleDetailHeader">
+            <button class="backButton" (click)="goToCurrent()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
+                <img [src]="backArrowImgSrc" height="28" width="31">
+            </button>
+            <span class="evacFileSpan">Evacuation File #{{evacuationFileCard.code}}</span>
+        </div>
+        <div class="col-md-3 statusDetailHeader">
+            <div class="statusDetailHeaderElements">
+                <span>Status: </span>
+                <span [ngStyle]="{'color': changeStatusColor()}">{{evacuationFileCard.status}}</span>
             </div>
-            <div class="col-md-3 statusDetailHeader">
-                <div class="statusDetailHeaderElements">
-                    <span>Status: </span>
-                    <span [ngStyle]="{'color': changeStatusColor()}">{{evacuationFileCard.status}}</span>
-                </div>
-            </div>
+        </div>
     </div>
-    <div>
-        <app-review [type]="type" [showHeading]='false' [currentFlow]="currentFlow"
-                [parentPageName]="parentPageName"></app-review>
+    <div *ngIf="evacuationFileCard.referral === false; else referrals">
+        <app-review [type]="type" [showHeading]='false' [currentFlow]="currentFlow" [parentPageName]="parentPageName">
+        </app-review>
         <div class="supportReceived">
             <p class="titleDetailHeader">Supports Received</p>
             <p class="supportReceivedBoldSpan">We do not have any records of supports issued within our system.</p>
-            <p class="supportReceivedRegSpan">Please proceed to an ESS volunteer or your nearest reception center where you will be assisted.</p>
+            <p class="supportReceivedRegSpan">Please proceed to an ESS volunteer or your nearest reception center where
+                you will be assisted.</p>
         </div>
     </div>
+    <ng-template #referrals>
+        <mat-card-content class="contentCard">
+            <div class="row justify-content-between">
+                <div class="col-md-6 card-heading">
+                    Evacuation Details
+                </div>
+            </div>
+            <hr>
+
+            <div class="row info-detail">
+                <div class="col-md-3">Evacuated From:</div>
+                <div class="col-md-3 evacuatedAddress">
+                    <span>addressLine1
+                        addressLine2
+                    </span>
+                    <span>jurisdiction.name,
+                        stateProvince.name,
+                        postalCode</span>
+                </div>
+            </div>
+            <div class="row info-detail">
+                <div class="col-md-3">Evacuated File Created:</div>
+                <div class="col-md-3">
+                    <span><b>03-Sep-2020</b></span>
+                </div>
+            </div>
+            <br><br>
+            <div class="row justify-content-between">
+                <div class="col-md-6 card-heading">
+                    Support Received
+                </div>
+            </div>
+            <hr>
+            <div class="row info-detail">
+                <div class="col-md-10">Click on the dates that you received supports below to view full support details.</div>
+                <div class="col-md-2 row mainReferralsLink" (click)="expandDetails()">
+                    <div class="col-md-6" style="padding: 3px 0"><a>{{referralDetailsText}}</a></div>
+                    <div class="col-md-6 row" >
+                        <div class="col-md-9" style="height: 6px;"><img [ngClass]="expandDetailsFlag? 'rotate180':'none'" src="../../../../assets/images/expand_arrow.svg" height="10" width="18"></div>
+                        <div class="col-md-3" style="height: auto;"><img [ngClass]="expandDetailsFlag? 'rotate180':'none'" src="../../../../assets/images/expand_arrow.svg" height="10" width="18"></div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <app-referral-details *ngFor= "let referral of evacuationFileCard.referrals" [evacuationReferral]="referral"></app-referral-details>
+        </mat-card-content>
+    </ng-template>
 </mat-card>

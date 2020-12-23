@@ -2,6 +2,10 @@
     padding: 0;
 }
 
+.contentCard {
+    padding: 20px;
+}
+
 .evacFileHeader{
     left: 0px;
     top: 0px;
@@ -27,10 +31,6 @@
 
 .backButton:hover{
     color: #169BD5;
-}
-
-.detailsCard{
-    padding: 0;
 }
 
 .evacFileSpan {
@@ -63,4 +63,17 @@
 .supportReceivedRegSpan{
     font-weight: 400;
     line-height: 24px;
+}
+
+.evacuatedAddress {
+    font-weight: 700;
+    color: #169BD5;
+}
+
+.mainReferralsLink{
+    text-align: right;
+    //padding: 3px 0;
+    color: #169BD5;
+    padding: 0 0 0 45px;
+    cursor: pointer;
 }
