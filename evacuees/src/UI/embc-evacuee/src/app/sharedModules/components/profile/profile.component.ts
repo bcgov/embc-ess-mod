@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { DataSubmissionService } from 'src/app/core/services/dataSubmission.service';
-import { RegistrationResult } from 'src/app/core/services/api/models/registration-result';
 import { ProblemDetail } from 'src/app/core/model/problemDetail';
 
 @Component({
@@ -32,6 +31,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   type = 'profile';
   profileHeading: string;
   parentPageName = 'create-profile';
+  showLoader = false;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
               private route: ActivatedRoute, private formCreationService: FormCreationService,

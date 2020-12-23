@@ -48,7 +48,9 @@
       <div class="col-md-12">
         <button class="button-p save-button" mat-stroked-button type="button" [disabled]="!captchaPassed"
           (click)="goForward(needsStepper, true, '')">Save &
-          Submit</button>
+          Submit
+          <app-loader [showLoader]="showLoader"></app-loader>
+        </button>
       </div>
     </mat-step>
     <ng-template matStepperIcon="edit" let-index="index">

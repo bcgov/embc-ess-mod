@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
 using EMBC.Registrants.API.RegistrationsModule;
@@ -155,7 +156,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                     },
                     PrimaryAddress = new Address
                     {
-                        AddressLine1 = "paddr1",
+                        AddressLine1 = $"paddr1-{textContextIdentifier}",
                         AddressLine2 = "paddr2",
                         Country = new Country { CountryCode = "CAN", CountryName = "Canada" },
                         StateProvince = new StateProvince { StateProvinceCode = "BC", StateProvinceName = "British Columbia" },
@@ -164,7 +165,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                     },
                     MailingAddress = new Address
                     {
-                        AddressLine1 = "maddr1",
+                        AddressLine1 = $"maddr1-{textContextIdentifier}",
                         AddressLine2 = "maddr2",
                         Country = new Country { CountryCode = "USA", CountryName = "USA" },
                         StateProvince = new StateProvince { StateProvinceCode = "WA", StateProvinceName = "Washington" },
@@ -176,7 +177,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                 {
                     EvacuatedFromAddress = new Address
                     {
-                        AddressLine1 = "addr1",
+                        AddressLine1 = $"addr1-{textContextIdentifier}",
                         Country = new Country { CountryCode = "CA" },
                         Jurisdiction = new Jurisdiction { JurisdictionCode = "226adfaf-9f97-ea11-b813-005056830319" },
                         StateProvince = new StateProvince { StateProvinceCode = "BC", StateProvinceName = "British Columbia" },
@@ -210,8 +211,10 @@ namespace EMBC.Tests.Integration.Registrants.API
 
             var regManager = services.GetRequiredService<IRegistrationManager>();
             var result = await regManager.CreateRegistrationAnonymous(registration);
-            Assert.StartsWith("E", result);
-            Assert.Equal(10, result.Length);
+
+            testLogger.LogDebug("ESS File #: " + result);
+            Assert.NotNull(result);
+            Assert.True(int.Parse(result)>0);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -227,10 +230,10 @@ namespace EMBC.Tests.Integration.Registrants.API
         public async Task GeProfileById()
         {
             var regManager = services.GetRequiredService<IRegistrationManager>();
-            var result = await regManager.GetProfileById(new Guid("8f4b00f0-8e9e-4439-b996-787468a1bedf"));
-            Assert.NotNull(result);
-            Assert.NotEmpty(result.PersonalDetails.FirstName);
-            testLogger.LogDebug("First Name: " + result.PersonalDetails.FirstName);
+            var profile = await regManager.GetProfileById(new Guid("91d6f457-b8b5-4fd4-ac71-0e45bd7e989d"));
+            Assert.NotNull(profile);
+            Assert.NotEmpty(profile.PersonalDetails.FirstName);
+            testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
         }
 
 

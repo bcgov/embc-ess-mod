@@ -40,6 +40,7 @@
       </div>
     </mat-step>
     <mat-step *ngIf="currentFlow === 'verified-registration'">
+      
       <p>Please read through and confirm that your details are all correct before submitting.</p>
       <ng-template matStepLabel>Review & Submit</ng-template>
       <app-review [type]="type" [showHeading]="true" [parentPageName]="parentPageName"
@@ -48,7 +49,9 @@
       <div class="col-md-12">
         <button class="button-p save-button" mat-stroked-button type="button"
           (click)="goForward(profileStepper, true, 'review')">Save &
-          Submit</button>
+          Submit
+          <app-loader [showLoader]="showLoader"></app-loader>
+        </button>
       </div>
     </mat-step>
     <ng-template matStepperIcon="edit" let-index="index">

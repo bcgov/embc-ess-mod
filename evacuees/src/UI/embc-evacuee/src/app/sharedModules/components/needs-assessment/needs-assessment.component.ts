@@ -30,16 +30,17 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   type: string;
   currentFlow: string;
   parentPageName = 'needs-assessment';
+  showLoader = false;
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
               private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
               private route: ActivatedRoute) {
-      const navigation = this.router.getCurrentNavigation();
-      if (navigation.extras.state !== undefined) {
-        const state = navigation.extras.state as { stepIndex: number };
-        this.stepToDisplay = state.stepIndex;
-      }
-     }
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation.extras.state !== undefined) {
+      const state = navigation.extras.state as { stepIndex: number };
+      this.stepToDisplay = state.stepIndex;
+    }
+  }
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
@@ -163,12 +164,14 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   }
 
   submitNonVerified(): void {
+    this.showLoader = !this.showLoader;
     this.submissionService.submitRegistrationFile().subscribe((response: RegistrationResult) => {
       console.log(response);
       this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/non-verified-registration/fileSubmission']);
     }, (error) => {
       console.log(error);
+      this.showLoader = !this.showLoader;
     });
   }
 

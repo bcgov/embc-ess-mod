@@ -60,17 +60,45 @@ namespace EMBC.Registrants.API.RegistrationsModule
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> CreateProfile(Registration profleRegistration)
         {
-            if (profleRegistration == null) return BadRequest();
+            if (profleRegistration == null)
+                return BadRequest();
+
             var result = await registrationManager.CreateProfile(profleRegistration);
 
             return CreatedAtAction(nameof(CreateProfile), result);
         }
 
-        [HttpGet("get-profile")]
-        public async Task<Registration> GetProfileById(Guid contactId)
+        /// <summary>
+        /// Get a Registrant Profile
+        /// </summary>
+        /// <param name="id">Contact Id</param>
+        /// <returns>Registration</returns>
+        [HttpGet("get-profile/{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Registration>> GetProfileById(string id)
         {
-            if (contactId == null) return null;
-            var result = await registrationManager.GetProfileById(contactId);
+            if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out Guid contactId))
+                return BadRequest();
+
+            var profile = await registrationManager.GetProfileById(contactId);
+
+            if (string.IsNullOrEmpty(profile.ContactId))
+                return NotFound();
+
+            return CreatedAtAction(nameof(GetProfileById), profile);
+        }
+
+        /// <summary>
+        /// Update a Registrant Profile
+        /// </summary>
+        /// <param name="profileRegistration">Contact Id</param>
+        /// <returns>Registration</returns>
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPatch("patch-profile")]
+        public async Task<Registration> PatchProfileById(Registration profileRegistration)
+        {
+            //if (profileRegistration == null) return StatusCodes.Status404NotFound;
+            var result = await registrationManager.PatchProfileById(profileRegistration);
 
             return result;
         }
@@ -96,6 +124,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
     /// </summary>
     public class Registration
     {
+        public string ContactId { get; set; }
+
+        public string BCServicesCardId { get; set; }
+
         [Required]
         public PersonDetails PersonalDetails { get; set; }
 
