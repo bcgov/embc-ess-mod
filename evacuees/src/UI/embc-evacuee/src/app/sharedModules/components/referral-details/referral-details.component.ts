@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { Referral, ReferralDetails} from 'src/app/sharedModules/components/view-auth-profile/view-auth-profile.component';
 
@@ -18,9 +18,9 @@ import { Referral, ReferralDetails} from 'src/app/sharedModules/components/view-
 export class ReferralDetailsComponent implements OnInit {
 
   @Input() evacuationReferral: Referral;
+  @Input() allExpandState: boolean;
 
   panelOpenState = false;
-  detailRowState = false;
   columnsToDisplay = ['provider', 'type', 'issuedTo', 'expiry', 'referral', 'amount'];
   expandedElement: ReferralDetails | null;
 
@@ -30,8 +30,4 @@ export class ReferralDetailsComponent implements OnInit {
     console.log(this.evacuationReferral);
   }
 
-  detailRowDisplayState() {
-    this.detailRowState = !this.detailRowState;
-    console.log(this.detailRowState);
-  }
 }

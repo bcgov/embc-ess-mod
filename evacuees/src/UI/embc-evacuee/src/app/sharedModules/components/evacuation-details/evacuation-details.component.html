@@ -67,7 +67,7 @@
                 </div>
             </div>
             <br>
-            <app-referral-details *ngFor= "let referral of evacuationFileCard.referrals" [evacuationReferral]="referral"></app-referral-details>
+            <app-referral-details *ngFor= "let referral of evacuationFileCard.referrals" [evacuationReferral]="referral" [allExpandState]="allExpandState"></app-referral-details>
         </mat-card-content>
     </ng-template>
 </mat-card>

@@ -6,7 +6,7 @@
   padding-bottom: 5px;
 }
 
-.mat-expansion-panel:not([class*=mat-elevation-z]){
+.mat-expansion-panel:not([class*="mat-elevation-z"]) {
   box-shadow: none !important;
 }
 
@@ -85,4 +85,12 @@ tr.example-element-row:not(.example-expanded-row):hover {
 
 .example-expanded-row {
   background-color: rgba(0, 0, 0, 0.047);
+
+  img {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
 }
