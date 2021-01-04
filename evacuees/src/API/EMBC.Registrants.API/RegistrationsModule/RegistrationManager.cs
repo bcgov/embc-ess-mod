@@ -17,10 +17,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Dynamics.CRM;
-using Microsoft.Extensions.Logging;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 
@@ -31,17 +31,20 @@ namespace EMBC.Registrants.API.RegistrationsModule
         Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration);
         Task<OkResult> CreateProfile(Registration profileRegistration);
         Task<Registration> GetProfileById(Guid contactId);
+        Task<Registration> PatchProfileById(Registration profileRegistration);
     }
 
     public class RegistrationManager : IRegistrationManager
     {
         private readonly DynamicsClientContext dynamicsClient;
+        private readonly IEmailSender emailSender;
         private DateTimeOffset now;
 
-        public RegistrationManager(DynamicsClientContext dynamicsClient)
+        public RegistrationManager(DynamicsClientContext dynamicsClient, IEmailSender emailSender)
         {
             this.dynamicsClient = dynamicsClient;
             this.now = DateTimeOffset.UtcNow;
+            this.emailSender = emailSender;
         }
 
         /// <summary>
@@ -57,6 +60,14 @@ namespace EMBC.Registrants.API.RegistrationsModule
             // save changes to dynamics
             var results = await dynamicsClient.SaveChangesAsync();
             //var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+
+            // Send email notification of new registrant record created
+            EmailAddress registrantEmailAddress = new EmailAddress
+            {
+                Name = profileRegistration.PersonalDetails.FirstName + " " + profileRegistration.PersonalDetails.LastName,
+                Address = profileRegistration.ContactDetails.Email
+            };
+            SendRegistrationNotificationEmail(registrantEmailAddress);
 
             return new OkResult();
         }
@@ -158,7 +169,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
             var pets = (registration.PreliminaryNeedsAssessment.Pets ?? Array.Empty<Pet>()).Select(p => new era_needsassessmentevacuee
             {
                 era_needsassessmentevacueeid = Guid.NewGuid(),
-                //era_NeedsAssessmentID = needsAssessment,
                 era_numberofpets = Convert.ToInt32(p.Quantity),
                 era_typeofpet = p.Type,
                 era_evacueetype = LookupEvacueeType("Pet")
@@ -172,74 +182,122 @@ namespace EMBC.Registrants.API.RegistrationsModule
             dynamicsClient.AddLink(evacuationFile, nameof(evacuationFile.era_needsassessment_EvacuationFile), needsAssessment);
 
             // New needs assessment evacuee as primary registrant
-            var evacueeRegistrant = new era_needsassessmentevacuee
+            var newNeedsAssessmentEvacueeRegistrant = new era_needsassessmentevacuee
             {
                 era_needsassessmentevacueeid = Guid.NewGuid(),
-                //era_needsassessment = needsAssessment,
-                //era_RegistrantID = newPrimaryRegistrant,
                 era_isprimaryregistrant = true,
                 era_evacueetype = LookupEvacueeType("Person")
             };
-            dynamicsClient.AddToera_needsassessmentevacuees(evacueeRegistrant);
+            dynamicsClient.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeRegistrant);
             // link registrant and needs assessment to evacuee record
-            dynamicsClient.AddLink(newPrimaryRegistrant, nameof(newPrimaryRegistrant.era_NeedsAssessmentEvacuee_RegistrantID), evacueeRegistrant);
-            dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), evacueeRegistrant);
+            dynamicsClient.AddLink(newPrimaryRegistrant, nameof(newPrimaryRegistrant.era_NeedsAssessmentEvacuee_RegistrantID), newNeedsAssessmentEvacueeRegistrant);
+            dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), newNeedsAssessmentEvacueeRegistrant);
 
-            // save members to dynamics
+            // Add New needs assessment evacuee members to dynamics context
             foreach (var member in members)
             {
                 dynamicsClient.AddTocontacts(member);
-                var evacueeMember = new era_needsassessmentevacuee
+                var newNeedsAssessmentEvacueeMember = new era_needsassessmentevacuee
                 {
                     era_needsassessmentevacueeid = Guid.NewGuid(),
-                    //era_needsassessment = needsAssessment,
                     era_isprimaryregistrant = false,
                     era_evacueetype = LookupEvacueeType("Person")
                 };
-                dynamicsClient.AddToera_needsassessmentevacuees(evacueeMember);
+                dynamicsClient.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeMember);
                 // link members and needs assessment to evacuee record
-                dynamicsClient.AddLink(member, nameof(member.era_NeedsAssessmentEvacuee_RegistrantID), evacueeMember);
-                dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), evacueeMember);
+                dynamicsClient.AddLink(member, nameof(member.era_NeedsAssessmentEvacuee_RegistrantID), newNeedsAssessmentEvacueeMember);
+                dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), newNeedsAssessmentEvacueeMember);
             }
 
-            // save pets to dynamics
-            foreach (var pet in pets)
+            // Add New needs assessment evacuee pets to dynamics context
+            foreach (var petMember in pets)
             {
-                var petMember = new era_needsassessmentevacuee
-                {
-                    era_needsassessmentevacueeid = Guid.NewGuid(),
-                    //era_needsassessment = needsAssessment,
-                    era_typeofpet = pet.era_typeofpet,
-                    era_numberofpets = pet.era_numberofpets
-                };
                 dynamicsClient.AddToera_needsassessmentevacuees(petMember);
-
                 // link pet to evacuee record
                 dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), petMember);
             }
 
             //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
             //var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
-            var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.ContinueOnError);
+            var results = await dynamicsClient.SaveChangesAsync();
 
-            //var newEvacuationFileId = ((era_evacuationfile)results
-            //    .Select(r => (EntityDescriptor)((ChangeOperationResponse)r).Descriptor)
-            //    .Single(ed => ed.Entity is era_evacuationfile).Entity).era_evacuationfileid;
+            var queryResult = dynamicsClient.era_evacuationfiles
+                //.Expand(f => f.era_city)
+                //.Expand(f => f.era_province)
+                //.Expand(f => f.era_country)
+                .Where(f => f.era_evacuationfileid == evacuationFile.era_evacuationfileid).FirstOrDefault();
 
-            //var essFileNumber = dynamicsClient.era_evacuationfiles
-            //    .Where(ef => ef.era_evacuationfileid == newEvacuationFileId)
-            //    .Single().era_essfilenumber;
-
-            return $"E{essFileNumber:D9}";
+            return $"{essFileNumber:D9}";
+            //return queryResult.era_essfilenumber.ToString();
         }
 
+        /// <summary>
+        /// Get a Registrant Profile
+        /// </summary>
+        /// <param name="contactId">Contact Id</param>
+        /// <returns>Registration</returns>
         public Task<Registration> GetProfileById(Guid contactId)
         {
             var profile = newRegistrationObject();
-            var queryResult = dynamicsClient.contacts.Where(c => c.contactid == contactId).FirstOrDefault();
+            var queryResult = dynamicsClient.contacts
+                .Expand(c => c.era_City)
+                .Expand(c => c.era_ProvinceState)
+                .Expand(c => c.era_Country)
+                .Expand(c => c.era_MailingCity)
+                .Expand(c => c.era_MailingProvinceState)
+                .Expand(c => c.era_MailingCountry)
+                .Where(c => c.contactid == contactId).FirstOrDefault();
+
+            if (queryResult == null) return Task.FromResult(profile);
+
+            // Personal Details
             profile.PersonalDetails.FirstName = queryResult.firstname;
             profile.PersonalDetails.LastName = queryResult.lastname;
-            //profile.PersonalDetails.DateOfBirth = queryResult.birthdate;
+            profile.PersonalDetails.DateOfBirth = queryResult.birthdate.ToString();
+            profile.PersonalDetails.Initials = queryResult.era_initial;
+            profile.PersonalDetails.PreferredName = queryResult.era_preferredname;
+            profile.PersonalDetails.Gender = queryResult.gendercode.ToString();
+            // Contact Details
+            profile.ContactDetails.Email = queryResult.emailaddress1;
+            profile.ContactDetails.HideEmailRequired = queryResult.era_emailrefusal.HasValue ? queryResult.era_emailrefusal.Value : false;
+            profile.ContactDetails.Phone = queryResult.address1_telephone1;
+            profile.ContactDetails.HidePhoneRequired = queryResult.era_phonenumberrefusal.HasValue ? queryResult.era_phonenumberrefusal.Value : false;
+            // Primary Address
+            profile.PrimaryAddress.AddressLine1 = queryResult.address1_line1;
+            profile.PrimaryAddress.AddressLine2 = queryResult.address1_line2;
+            profile.PrimaryAddress.Jurisdiction.JurisdictionCode = queryResult.era_City?.era_jurisdictionid.ToString();
+            profile.PrimaryAddress.Jurisdiction.JurisdictionName = queryResult.era_City?.era_jurisdictionname;
+            profile.PrimaryAddress.StateProvince.StateProvinceCode = queryResult.era_ProvinceState?.era_code;
+            profile.PrimaryAddress.StateProvince.StateProvinceName = queryResult.era_ProvinceState?.era_name;
+            profile.PrimaryAddress.Country.CountryCode = queryResult.era_Country?.era_countrycode;
+            profile.PrimaryAddress.Country.CountryName = queryResult.era_Country?.era_name;
+            profile.PrimaryAddress.PostalCode = queryResult.address1_postalcode;
+            // Mailing Address
+            profile.MailingAddress.AddressLine1 = queryResult.address2_line1;
+            profile.MailingAddress.AddressLine2 = queryResult.address2_line2;
+            profile.MailingAddress.Jurisdiction.JurisdictionCode = queryResult.era_MailingCity?.era_jurisdictionid.ToString();
+            profile.MailingAddress.Jurisdiction.JurisdictionName = queryResult.era_MailingCity?.era_jurisdictionname;
+            profile.MailingAddress.StateProvince.StateProvinceCode = queryResult.era_MailingProvinceState?.era_code;
+            profile.MailingAddress.StateProvince.StateProvinceName = queryResult.era_MailingProvinceState?.era_name;
+            profile.MailingAddress.Country.CountryCode = queryResult.era_MailingCountry?.era_countrycode;
+            profile.MailingAddress.Country.CountryName = queryResult.era_MailingCountry?.era_name;
+            profile.MailingAddress.PostalCode = queryResult.address2_postalcode;
+            // Other
+            profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
+            profile.RestrictedAccess = queryResult.era_sharingrestriction.HasValue ? queryResult.era_sharingrestriction.Value : false;
+            profile.SecretPhrase = queryResult.era_secrettext;
+            return Task.FromResult(profile);
+        }
+
+        public Task<Registration> PatchProfileById(Registration profileRegistration)
+        {
+            var contactIdGuid = Guid.Parse(profileRegistration.ContactId);
+            // search for contact
+            var queryResult = dynamicsClient.contacts
+                .Where(c => c.contactid == contactIdGuid).FirstOrDefault();
+            //if (queryResult == null) return NotFoundResult;
+
+            var profile = newRegistrationObject();
             return Task.FromResult(profile);
         }
 
@@ -249,7 +307,13 @@ namespace EMBC.Registrants.API.RegistrationsModule
             registration.PersonalDetails = new PersonDetails();
             registration.ContactDetails = new ContactDetails();
             registration.PrimaryAddress = new Address();
+            registration.PrimaryAddress.Jurisdiction = new Jurisdiction();
+            registration.PrimaryAddress.StateProvince = new StateProvince();
+            registration.PrimaryAddress.Country = new Country();
             registration.MailingAddress = new Address();
+            registration.MailingAddress.Jurisdiction = new Jurisdiction();
+            registration.MailingAddress.StateProvince = new StateProvince();
+            registration.MailingAddress.Country = new Country();
 
             return registration;
         }
@@ -398,6 +462,21 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             //return the new contact created
             return contact;
+        }
+
+        private void SendRegistrationNotificationEmail(EmailAddress toAddress)
+        {
+            System.Collections.Generic.List<EmailAddress> toList = new System.Collections.Generic.List<EmailAddress> { toAddress };
+            string emailSubject = "Registration completed successfully";
+            string emailBody = $@"
+<p>This email has been generated by the Emergency Support Services program to confirm your profile has been created within the Evacuee Registration and Assistant application (ERA).
+<p>
+<p>Please use the following link to login to the system and review your profile information, start an evacuation file if required, or review existing evacuation file and support information.
+<p>";
+            emailBody += $"<p>Go to https://ess.gov.bc.ca/ and select the 'Already have an account? Log in\" link.";
+
+            EmailMessage emailMessage = new EmailMessage(toList, emailSubject, emailBody);
+            emailSender.Send(emailMessage);
         }
     }
 }

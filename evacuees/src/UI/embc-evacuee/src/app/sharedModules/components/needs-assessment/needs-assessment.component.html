@@ -45,17 +45,18 @@
       <app-review [type]="type" [showHeading]="true" (captchaPassed)="allowSubmit($event)"
         [parentPageName]="parentPageName" [currentFlow]="currentFlow"></app-review>
       <br>
-      <div class="col-md-12">
-        <button class="button-p save-button" mat-stroked-button type="button" [disabled]="!captchaPassed"
-          (click)="goForward(needsStepper, true, '')">Save &
-          Submit</button>
-      </div>
+
+      <app-alert></app-alert>
+
+      <button class="button-p save-button" mat-stroked-button type="button" [disabled]="!captchaPassed || isSubmitted"
+        (click)="goForward(needsStepper, true, '')">Save &
+        Submit
+        <app-loader [showLoader]="showLoader"></app-loader>
+      </button>
+      
     </mat-step>
     <ng-template matStepperIcon="edit" let-index="index">
       {{index + 1}}
     </ng-template>
   </mat-horizontal-stepper>
-
 </div>
-
-<!-- {{form?.status}} -->

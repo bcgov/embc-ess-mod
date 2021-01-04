@@ -93,7 +93,7 @@
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Date of Birth:</div>
-                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.dateOfBirth}}
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.dateOfBirth | date: 'dd-MMM-yyyy'}}
                     </div>
                 </div>
                 <div class="row info-detail">
@@ -302,9 +302,9 @@
                         <span>{{(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.addressLine1}}
                             {{(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.addressLine2}}
                         </span>
-                        <span>{{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.jurisdiction.name}},
-                            {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.stateProvince.name}},
-                            {{(formCreationService.evacuatedForm$ | async).value.evacuatedFromAddress.postalCode}}</span>
+                        <span>{{(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.jurisdiction?.name}},
+                            {{(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.stateProvince?.name}},
+                            {{(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode}}</span>
                     </div>
                 </div>
             </mat-card-content>

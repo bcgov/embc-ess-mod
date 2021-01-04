@@ -132,7 +132,7 @@ export class AddressForm {
             stateProvince: ['', [customValidator.conditionalValidation(
                 () => this.address.get('country').value !== null &&
                     (this.compareObjects(this.address.get('country').value, globalConst.defaultCountry) ||
-                        this.compareObjects(this.address.get('country').value.code, globalConst.usDefaultObject)),
+                        this.compareObjects(this.address.get('country').value, globalConst.usDefaultObject)),
                 Validators.required
             ).bind(customValidator)]],
             country: ['', [Validators.required]],
