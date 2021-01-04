@@ -20,7 +20,6 @@ export class EvacuationDetailsComponent implements OnInit {
   currentFlow: string;
   parentPageName = 'needs-assessment';
   referralDetailsText = 'expand all';
-  //expandDetailsFlag = false;
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
@@ -46,19 +45,13 @@ export class EvacuationDetailsComponent implements OnInit {
     this.backArrowImgSrc = '/assets/images/back_arrow.svg';
   }
 
-  expandDetails(event: boolean){
+  expandDetails(): void {
     this.allExpandState = !this.allExpandState;
-    if(this.allExpandState) {
+    if (this.allExpandState) {
       this.referralDetailsText = 'close all';
     } else {
       this.referralDetailsText = 'expand all';
     }
-
-    console.log(event);
-  }
-
-  setInactiveListView(event: boolean): void {
-    //this.showInactiveList = event;
   }
 
 }

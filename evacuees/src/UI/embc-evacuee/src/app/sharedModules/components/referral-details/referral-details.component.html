@@ -3,11 +3,11 @@
     <mat-expansion-panel-header class="headerPanel">
       <!-- <div class="panelHeader"> -->
       <mat-panel-title class="panelTitle">
-        {{evacuationReferral.referralDate}}
+        {{evacuationReferral?.referralDate}}
       </mat-panel-title>
       <!-- </div> -->
     </mat-expansion-panel-header>
-    <table mat-table [dataSource]="evacuationReferral.referralDetails" multiTemplateDataRows>
+    <table mat-table [dataSource]="evacuationReferral?.referralDetails" multiTemplateDataRows>
       <!-- Position Column -->
       <ng-container matColumnDef="provider">
         <th mat-header-cell *matHeaderCellDef style="width: 220px;"> Supporter Provider </th>
