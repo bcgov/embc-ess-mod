@@ -52,12 +52,12 @@ footer nav {
   border: 4px solid #169BD5;
 }
 
-.mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-edit, .mat-step-header .mat-step-icon {
+.mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon {
     background-color: #FFFFFF !important;
     color: #169BD5 !important;
 }
 
-.mat-step-header .mat-step-icon-state-done {
+.mat-step-header .mat-step-icon-state-edit, .mat-step-header .mat-step-icon-state-done {
   background-color: #169BD5 !important;
   color: #FFFFFF !important;
 }

@@ -133,6 +133,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
         this.setFormData(component);
         this.form$.unsubscribe();
         this.isComplete = !this.isComplete;
+        stepper.selected.completed = true;
         stepper.next();
       } else {
         this.form.markAllAsTouched();
