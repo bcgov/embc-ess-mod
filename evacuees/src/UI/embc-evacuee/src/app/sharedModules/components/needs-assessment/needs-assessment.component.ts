@@ -24,7 +24,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   isEditable = true;
   form$: Subscription;
   form: FormGroup;
-  isComplete: boolean;
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
   captchaPassed = false;
   stepToDisplay: number;
@@ -61,7 +60,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   ngAfterViewInit(): void {
     if (this.stepToDisplay === 4) {
-      this.isComplete = true;
       setTimeout(() => {
         this.needsStepper.selectedIndex = this.stepToDisplay;
       }, 0);
@@ -132,7 +130,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
       if (this.form.status === 'VALID') {
         this.setFormData(component);
         this.form$.unsubscribe();
-        this.isComplete = !this.isComplete;
         stepper.selected.completed = true;
         stepper.next();
       } else {
@@ -145,15 +142,12 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     switch (component) {
       case 'evac-address':
         this.updateService.updateEvacuationDetails(this.form);
-        this.isComplete = false;
         break;
       case 'family-information':
         this.updateService.updateFamilyMemberDetails(this.form);
-        this.isComplete = false;
         break;
       case 'pets':
         this.updateService.updatePetsDetails(this.form);
-        this.isComplete = false;
         break;
       case 'identify-needs':
         this.updateService.updateNeedsDetails(this.form);
