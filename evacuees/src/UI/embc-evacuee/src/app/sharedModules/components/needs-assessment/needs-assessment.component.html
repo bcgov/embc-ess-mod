@@ -5,9 +5,9 @@
     </div>
   </div>
 
-  <mat-horizontal-stepper class="stepper-style" linear labelPosition="bottom"
-    (animationDone)="currentStep(needsStepper?.selectedIndex)" #needsStepper>
-    <mat-step *ngFor="let step of needsSteps" [completed]="true" [editable]="isEditable">
+  <mat-horizontal-stepper class="stepper-style" labelPosition="bottom"
+    (animationDone)="currentStep(needsStepper?.selectedIndex)" (selectionChange)="stepChanged($event, needsStepper);" #needsStepper>
+    <mat-step *ngFor="let step of needsSteps" [stepControl]="form">
       <!--[completed]="isComplete"-->
       <ng-template matStepLabel>{{step.stepName}}</ng-template>
       <div *ngIf="step.stepName === 'Evacuated From'; else altText">

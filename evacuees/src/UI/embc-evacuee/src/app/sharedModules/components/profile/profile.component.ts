@@ -75,6 +75,11 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   currentStep(index: number): void {
     this.loadStepForm(index);
+    this.cd.detectChanges();
+  }
+
+  stepChanged(event: any, stepper: MatStepper){
+    stepper.selected.interacted = false;
   }
 
   goBack(stepper: MatStepper, lastStep): void {
