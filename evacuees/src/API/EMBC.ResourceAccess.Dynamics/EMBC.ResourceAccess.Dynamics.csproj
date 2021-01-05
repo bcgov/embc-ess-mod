@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,6 +9,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/bcgov/embc-ess-mod</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,11 +28,11 @@
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.10" />
-    <PackageReference Include="Microsoft.OData.Client" Version="7.7.3" />
-    <PackageReference Include="Microsoft.OData.Core" Version="7.7.3" />
-    <PackageReference Include="Microsoft.OData.Edm" Version="7.7.3" />
-    <PackageReference Include="Microsoft.Spatial" Version="7.7.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.*" />
+    <PackageReference Include="Microsoft.OData.Client" Version="7.8.1" />
+    <PackageReference Include="Microsoft.OData.Core" Version="7.8.1" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.8.1" />
+    <PackageReference Include="Microsoft.Spatial" Version="7.8.1" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 
