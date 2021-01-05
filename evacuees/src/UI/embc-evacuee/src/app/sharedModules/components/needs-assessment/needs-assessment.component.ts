@@ -72,7 +72,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.loadStepForm(index);
   }
 
-  stepChanged(event: any, stepper: MatStepper){
+  stepChanged(event: any, stepper: MatStepper): void{
     stepper.selected.interacted = false;
   }
 

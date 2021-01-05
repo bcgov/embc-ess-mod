@@ -78,7 +78,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.cd.detectChanges();
   }
 
-  stepChanged(event: any, stepper: MatStepper){
+  stepChanged(event: any, stepper: MatStepper): void{
     stepper.selected.interacted = false;
   }
 
