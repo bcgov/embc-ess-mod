@@ -72,6 +72,10 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.loadStepForm(index);
   }
 
+  stepChanged(event: any, stepper: MatStepper): void{
+    stepper.selected.interacted = false;
+  }
+
   /**
    * Loads appropriate forms based on the current step
    * @param index index of the step

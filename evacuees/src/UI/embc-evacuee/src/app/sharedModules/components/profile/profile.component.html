@@ -5,9 +5,9 @@
     </div>
   </div>
 
-  <mat-horizontal-stepper class="stepper-style" linear labelPosition="bottom"
-    (animationDone)="currentStep(profileStepper?.selectedIndex)" #profileStepper>
-    <mat-step *ngFor="let step of steps" [completed]="true" [editable]="true">
+  <mat-horizontal-stepper class="stepper-style" labelPosition="bottom"
+    (animationDone)="currentStep(profileStepper?.selectedIndex)" (selectionChange)="stepChanged($event, profileStepper);" #profileStepper>
+    <mat-step *ngFor="let step of steps" [stepControl]="form"> <!--[editable]="isEditable"-->
       <!--[stepControl]="form" [completed]="isComplete"-->
       <ng-template matStepLabel>{{step.stepName}}</ng-template>
       <div *ngIf="step.stepName === 'Personal Details' && currentFlow === 'verified-registration'; else altText">
@@ -57,9 +57,5 @@
     <ng-template matStepperIcon="edit" let-index="index">
       {{index + 1}}
     </ng-template>
-    <!-- <ng-template matStepperIcon="done">
-       {{index + 10}}
-      {{profileStepper?.selectedIndex + 1}}
-    </ng-template> -->
   </mat-horizontal-stepper>
 </div>
