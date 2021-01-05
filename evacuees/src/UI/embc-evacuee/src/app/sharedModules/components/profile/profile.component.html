@@ -6,9 +6,9 @@
   </div>
 
   <mat-horizontal-stepper class="stepper-style" labelPosition="bottom"
-    (animationDone)="currentStep(profileStepper?.selectedIndex)" (selectionChange)="stepChanged($event, profileStepper);" #profileStepper>
-    <mat-step *ngFor="let step of steps" [stepControl]="form"> <!--[editable]="isEditable"-->
-      <!--[stepControl]="form" [completed]="isComplete"-->
+    (animationDone)="currentStep(profileStepper?.selectedIndex)"
+    (selectionChange)="stepChanged($event, profileStepper);" #profileStepper>
+    <mat-step *ngFor="let step of steps" [stepControl]="form">
       <ng-template matStepLabel>{{step.stepName}}</ng-template>
       <div *ngIf="step.stepName === 'Personal Details' && currentFlow === 'verified-registration'; else altText">
         <p>Please review and complete the form below. As this account is linked to your BC Services Card, certain fields
@@ -32,27 +32,26 @@
             class="button-p" mat-stroked-button type="button"
             (click)="goForward(profileStepper, step.isLast, step.component)">Review Submission</button>
           <ng-template #normalButton>
-            <button class="button-p"
-              mat-stroked-button type="button"
+            <button class="button-p" mat-stroked-button type="button"
               (click)="goForward(profileStepper, step.isLast, step.component)">{{step.nextButtonLabel}}</button>
           </ng-template>
         </div>
       </div>
     </mat-step>
     <mat-step *ngIf="currentFlow === 'verified-registration'">
-      
+
       <p>Please read through and confirm that your details are all correct before submitting.</p>
       <ng-template matStepLabel>Review & Submit</ng-template>
-      <app-review [type]="type" [showHeading]="true" [parentPageName]="parentPageName"
-        [currentFlow]="currentFlow"></app-review>
+      <app-review [type]="type" [showHeading]="true" [parentPageName]="parentPageName" [currentFlow]="currentFlow">
+      </app-review>
       <br>
-      <div class="col-md-12">
-        <button class="button-p save-button" mat-stroked-button type="button"
-          (click)="goForward(profileStepper, true, 'review')">Save &
-          Submit
-          <app-loader [showLoader]="showLoader"></app-loader>
-        </button>
-      </div>
+
+      <button class="button-p save-button" mat-stroked-button type="button"
+        (click)="goForward(profileStepper, true, 'review')">Save &
+        Submit
+        <app-loader [showLoader]="showLoader"></app-loader>
+      </button>
+
     </mat-step>
     <ng-template matStepperIcon="edit" let-index="index">
       {{index + 1}}

@@ -8,7 +8,6 @@
   <mat-horizontal-stepper class="stepper-style" labelPosition="bottom"
     (animationDone)="currentStep(needsStepper?.selectedIndex)" (selectionChange)="stepChanged($event, needsStepper);" #needsStepper>
     <mat-step *ngFor="let step of needsSteps" [stepControl]="form">
-      <!--[completed]="isComplete"-->
       <ng-template matStepLabel>{{step.stepName}}</ng-template>
       <div *ngIf="step.stepName === 'Evacuated From'; else altText">
         <p>The purpose of creating an Emergency Support Services (ESS) File is to help determine how the event has
