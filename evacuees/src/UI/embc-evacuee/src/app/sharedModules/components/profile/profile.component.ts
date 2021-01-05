@@ -25,7 +25,6 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   path: string;
   form$: Subscription;
   form: FormGroup;
-  isComplete: boolean;
   stepToDisplay: number;
   currentFlow: string;
   type = 'profile';
@@ -60,13 +59,11 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   ngAfterViewInit(): void {
     if (this.stepToDisplay === 3) {
-      this.isComplete = true;
       setTimeout(() => {
         this.profileStepper.selectedIndex = this.stepToDisplay;
       }, 0);
     }
     if (this.stepToDisplay === 4) {
-      this.isComplete = true;
       setTimeout(() => {
         this.profileStepper.selectedIndex = this.stepToDisplay;
       }, 0);
@@ -75,6 +72,11 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   currentStep(index: number): void {
     this.loadStepForm(index);
+    this.cd.detectChanges();
+  }
+
+  stepChanged(event: any, stepper: MatStepper): void{
+    stepper.selected.interacted = false;
   }
 
   goBack(stepper: MatStepper, lastStep): void {
@@ -101,7 +103,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
       }
       this.setFormData(component);
       this.form$.unsubscribe();
-      this.isComplete = !this.isComplete;
+      stepper.selected.completed = true;
       stepper.next();
     } else {
       this.form.markAllAsTouched();
@@ -112,19 +114,15 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     switch (component) {
       case 'personal-details':
         this.updateService.updatePersonalDetails(this.form);
-        this.isComplete = false;
         break;
       case 'address':
         this.updateService.updateAddressDetails(this.form);
-        this.isComplete = false;
         break;
       case 'contact-info':
         this.updateService.updateContactDetails(this.form);
-        this.isComplete = false;
         break;
       case 'secret':
         this.updateService.updateSecretDetails(this.form);
-        this.isComplete = false;
         break;
       default:
     }

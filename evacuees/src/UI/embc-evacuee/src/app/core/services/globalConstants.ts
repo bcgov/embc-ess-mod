@@ -46,7 +46,7 @@ export const deleteMemberInfoBody = {
 };
 
 export const gender = [
-  { name: 'Male', value: 'M' },
-  { name: 'Female', value: 'F' },
+  { name: 'Male', value: 'Male' },
+  { name: 'Female', value: 'Female' },
   { name: 'X', value: 'X' }
 ];
