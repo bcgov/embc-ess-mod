@@ -255,6 +255,11 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             if (queryResult == null) return Task.FromResult(profile);
 
+            profile.ContactId = queryResult.contactid.ToString();
+            profile.BCServicesCardId = queryResult.era_bcservicescardid;
+            profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
+            profile.RestrictedAccess = queryResult.era_sharingrestriction.HasValue ? queryResult.era_sharingrestriction.Value : false;
+            profile.SecretPhrase = queryResult.era_secrettext;
             // Personal Details
             profile.PersonalDetails.FirstName = queryResult.firstname;
             profile.PersonalDetails.LastName = queryResult.lastname;
@@ -287,10 +292,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
             profile.MailingAddress.Country.CountryCode = queryResult.era_MailingCountry?.era_countrycode;
             profile.MailingAddress.Country.CountryName = queryResult.era_MailingCountry?.era_name;
             profile.MailingAddress.PostalCode = queryResult.address2_postalcode;
-            // Other
-            profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
-            profile.RestrictedAccess = queryResult.era_sharingrestriction.HasValue ? queryResult.era_sharingrestriction.Value : false;
-            profile.SecretPhrase = queryResult.era_secrettext;
             return Task.FromResult(profile);
         }
 
