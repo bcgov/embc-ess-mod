@@ -2,6 +2,8 @@
 
 The purpose of the system is to streamline processes so evacuated individuals can access services more easily and efficiently.
 
+[![img](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
+
 ## Applications and services in this repository
 
 ### [Suppliers portal](./suppliers)
