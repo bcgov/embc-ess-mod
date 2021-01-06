@@ -74,18 +74,24 @@ namespace EMBC.Registrants.API.RegistrationsModule
         /// <param name="id">Contact Id</param>
         /// <returns>Registration</returns>
         [HttpGet("get-profile/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Registration>> GetProfileById(string id)
         {
             if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out Guid contactId))
+            {
                 return BadRequest();
+            }
 
             var profile = await registrationManager.GetProfileById(contactId);
 
             if (string.IsNullOrEmpty(profile.ContactId))
+            {
                 return NotFound();
+            }
 
-            return CreatedAtAction(nameof(GetProfileById), profile);
+            return Ok(profile);
         }
 
         /// <summary>
