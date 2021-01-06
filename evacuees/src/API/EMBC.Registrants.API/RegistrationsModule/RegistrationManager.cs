@@ -105,12 +105,17 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_needsassessmentdate = now,
                 era_EvacuationFile = evacuationFile,
                 era_needsassessmenttype = 174360000,
-                era_foodrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresFood),
-                era_clothingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresClothing),
+                era_foodrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresFood), //to be deleted
+                era_clothingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresClothing), //to be deleted
+                era_incidentalrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresIncidentals), //to be deleted
+                era_lodgingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresLodging), //to be deleted
+                era_transportationrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresTransportation), //to be deleted
+                era_canevacueeprovidefood = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideFood),
+                era_canevacueeprovideclothing = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideClothing),
+                era_canevacueeprovideincidentals = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideIncidentals),
+                era_canevacueeprovidelodging = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideLodging),
+                era_canevacueeprovidetransportation = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation),
                 era_dietaryrequirement = registration.PreliminaryNeedsAssessment.HaveSpecialDiet,
-                era_incidentalrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresIncidentals),
-                era_lodgingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresLodging),
-                era_transportationrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresTransportation),
                 era_medicationrequirement = registration.PreliminaryNeedsAssessment.HaveMedication,
                 era_insurancecoverage = Lookup(registration.PreliminaryNeedsAssessment.Insurance),
                 era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
@@ -250,6 +255,11 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             if (queryResult == null) return Task.FromResult(profile);
 
+            profile.ContactId = queryResult.contactid.ToString();
+            profile.BCServicesCardId = queryResult.era_bcservicescardid;
+            profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
+            profile.RestrictedAccess = queryResult.era_sharingrestriction.HasValue ? queryResult.era_sharingrestriction.Value : false;
+            profile.SecretPhrase = queryResult.era_secrettext;
             // Personal Details
             profile.PersonalDetails.FirstName = queryResult.firstname;
             profile.PersonalDetails.LastName = queryResult.lastname;
@@ -282,10 +292,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
             profile.MailingAddress.Country.CountryCode = queryResult.era_MailingCountry?.era_countrycode;
             profile.MailingAddress.Country.CountryName = queryResult.era_MailingCountry?.era_name;
             profile.MailingAddress.PostalCode = queryResult.address2_postalcode;
-            // Other
-            profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
-            profile.RestrictedAccess = queryResult.era_sharingrestriction.HasValue ? queryResult.era_sharingrestriction.Value : false;
-            profile.SecretPhrase = queryResult.era_secrettext;
             return Task.FromResult(profile);
         }
 
@@ -323,7 +329,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             ? null
             : dynamicsClient.era_countries.Where(c => c.era_countrycode == country.CountryCode).FirstOrDefault();
 
-        private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
+        private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002; // yes, no, I don't know
 
         private int? Lookup(NeedsAssessment.InsuranceOption value) => value switch
         {
