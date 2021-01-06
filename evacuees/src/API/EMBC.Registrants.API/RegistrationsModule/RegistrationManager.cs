@@ -21,6 +21,7 @@ using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Dynamics.CRM;
+using Microsoft.OData;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 
@@ -244,16 +245,44 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public Task<Registration> GetProfileById(Guid contactId)
         {
             var profile = newRegistrationObject();
-            var queryResult = dynamicsClient.contacts
-                .Expand(c => c.era_City)
-                .Expand(c => c.era_ProvinceState)
-                .Expand(c => c.era_Country)
-                .Expand(c => c.era_MailingCity)
-                .Expand(c => c.era_MailingProvinceState)
-                .Expand(c => c.era_MailingCountry)
-                .Where(c => c.contactid == contactId).FirstOrDefault();
+            contact queryResult = null;
 
-            if (queryResult == null) return Task.FromResult(profile);
+            try
+            {
+                queryResult = dynamicsClient.contacts
+                        .Expand(c => c.era_City)
+                        .Expand(c => c.era_ProvinceState)
+                        .Expand(c => c.era_Country)
+                        .Expand(c => c.era_MailingCity)
+                        .Expand(c => c.era_MailingProvinceState)
+                        .Expand(c => c.era_MailingCountry)
+                        .Where(c => c.contactid == contactId).FirstOrDefault();
+            }
+            catch (DataServiceQueryException ex)
+            {
+                //Client level Exception message
+                //Console.WriteLine(ex.Message);
+
+                //The InnerException of DataServiceQueryException contains DataServiceClientException
+                DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
+
+                // don't throw an exception if contact is not found, return an empty profile
+                if (dataServiceClientException.StatusCode == 404)
+                {
+                    return Task.FromResult(profile);
+                }
+                else
+                {
+                    Console.WriteLine("dataServiceClientException: " + dataServiceClientException.Message);
+                }
+
+                ODataErrorException odataErrorException = dataServiceClientException.InnerException as ODataErrorException;
+                if (odataErrorException != null)
+                {
+                    Console.WriteLine(odataErrorException.Message);
+                    throw dataServiceClientException;
+                }
+            }
 
             profile.ContactId = queryResult.contactid.ToString();
             profile.BCServicesCardId = queryResult.era_bcservicescardid;
