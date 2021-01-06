@@ -241,11 +241,16 @@ namespace EMBC.Registrants.API.RegistrationsModule
         [Required]
         public InsuranceOption Insurance { get; set; }
 
-        public bool? RequiresFood { get; set; }
-        public bool? RequiresTransportation { get; set; }
-        public bool? RequiresLodging { get; set; }
-        public bool? RequiresClothing { get; set; }
-        public bool? RequiresIncidentals { get; set; }
+        public bool? RequiresFood { get; set; } //To be deleted
+        public bool? RequiresTransportation { get; set; } //To be deleted
+        public bool? RequiresLodging { get; set; } //To be deleted
+        public bool? RequiresClothing { get; set; } //To be deleted
+        public bool? RequiresIncidentals { get; set; } //To be deleted
+        public bool? CanEvacueeProvideFood { get; set; }
+        public bool? CanEvacueeProvideLodging { get; set; }
+        public bool? CanEvacueeProvideClothing { get; set; }
+        public bool? CanEvacueeProvideTransportation { get; set; }
+        public bool? CanEvacueeProvideIncidentals { get; set; }
         public bool HaveSpecialDiet { get; set; }
         public bool HaveMedication { get; set; }
         public IEnumerable<PersonDetails> FamilyMembers { get; set; } = Array.Empty<PersonDetails>();
