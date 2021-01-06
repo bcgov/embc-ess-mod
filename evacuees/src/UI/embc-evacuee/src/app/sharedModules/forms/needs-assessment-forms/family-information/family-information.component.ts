@@ -15,7 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
-import { DialogModule } from '../../../../core/components/dialog/dialog.module';
 
 @Component({
   selector: 'app-family-information',
@@ -144,8 +143,7 @@ export default class FamilyInformationComponent implements OnInit {
     MatRadioModule,
     PersonDetailFormModule,
     MatTableModule,
-    MatIconModule,
-    DialogModule
+    MatIconModule
   ],
   declarations: [
     FamilyInformationComponent,

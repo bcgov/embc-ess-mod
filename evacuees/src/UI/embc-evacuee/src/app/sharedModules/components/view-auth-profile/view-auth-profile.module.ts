@@ -10,7 +10,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ReviewModule } from '../../components/review/review.module';
 import { EvacuationCardComponent } from '../../components/evacuation-card/evacuation-card.component';
 import { EvacuationDetailsComponent } from './../evacuation-details/evacuation-details.component';
-import { DialogModule } from '../../../core/components/dialog/dialog.module';
 import { ReferralDetailsComponent } from '../../components/referral-details/referral-details.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 
@@ -31,7 +30,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatButtonModule,
     MatTabsModule,
     ReviewModule,
-    DialogModule,
     MatExpansionModule
   ]
 })

@@ -5,7 +5,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { DataService } from '../../../core/services/data.service';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { DialogModule } from '../../../core/components/dialog/dialog.module';
 
 describe('CollectionNoticeComponent', () => {
   let component: CollectionNoticeComponent;
@@ -14,7 +13,7 @@ describe('CollectionNoticeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ CollectionNoticeComponent ],
-      imports: [ RouterTestingModule, ReactiveFormsModule, DialogModule ],
+      imports: [ RouterTestingModule, ReactiveFormsModule ],
       providers: [MatDialog, DataService, FormBuilder]
     })
     .compileComponents();
