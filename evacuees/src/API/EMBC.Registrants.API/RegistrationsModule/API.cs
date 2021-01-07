@@ -93,6 +93,26 @@ namespace EMBC.Registrants.API.RegistrationsModule
         }
 
         /// <summary>
+        /// Get a Registrant Profile by BCSC
+        /// </summary>
+        /// <param name="bcscId">BCSC Id</param>
+        /// <returns>Registration</returns>
+        [HttpGet("get-profile-by-bcsc-id/{bcscId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Registration>> GetProfileByBcscId(string bcscId)
+        {
+            if (string.IsNullOrEmpty(bcscId))
+            {
+                return BadRequest();
+            }
+
+            var profile = await registrationManager.GetProfileByBcscId(bcscId);
+
+            return Ok(profile);
+        }
+
+        /// <summary>
         /// Update a Registrant Profile
         /// </summary>
         /// <param name="profileRegistration">Contact Id</param>
