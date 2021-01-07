@@ -87,7 +87,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             //if (string.IsNullOrEmpty(profile.ContactId))
             //    return NotFound();
-            }
 
             // if id not found then an empty oject is returned
             return Ok(profile);
