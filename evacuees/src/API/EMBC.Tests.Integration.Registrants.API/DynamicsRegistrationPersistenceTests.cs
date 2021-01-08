@@ -241,6 +241,14 @@ namespace EMBC.Tests.Integration.Registrants.API
             testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
         }
 
-
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetProfileByBcscId()
+        {
+            var regManager = services.GetRequiredService<IRegistrationManager>();
+            var profile = await regManager.GetProfileByBcscId("TESTTESTTESTTESTTESTTESTTESTTEST");
+            Assert.NotNull(profile);
+            Assert.NotEmpty(profile.PersonalDetails.FirstName);
+            testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
+        }
     }
 }
