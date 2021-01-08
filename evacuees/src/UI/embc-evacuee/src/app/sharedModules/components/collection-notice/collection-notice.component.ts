@@ -19,6 +19,9 @@ export class CollectionNoticeComponent implements OnInit {
   constructor(private router: Router, public dialog: MatDialog, private builder: FormBuilder, public dataService: DataService,
               private route: ActivatedRoute) { }
 
+  /**
+   * Initializes the user flow and form group
+   */
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
     this.collectionForm = this.builder.group({
@@ -27,6 +30,9 @@ export class CollectionNoticeComponent implements OnInit {
     this.mapData();
   }
 
+  /**
+   * Pre-populates the form with existing data
+   */
   mapData(): void {
     const existingValues = this.dataService.getRegistration();
     if (existingValues !== null) {
@@ -34,6 +40,10 @@ export class CollectionNoticeComponent implements OnInit {
     }
   }
 
+  /**
+   * If the consent for collection is not met, opens a popup else
+   * navigates to the next page
+   */
   submitNotice(): void {
     if (!this.collectionForm.get('informationCollectionConsent').value) {
       this.dialog.open(DialogComponent, {
