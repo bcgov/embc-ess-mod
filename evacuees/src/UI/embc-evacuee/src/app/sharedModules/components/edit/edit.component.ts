@@ -23,7 +23,7 @@ export class EditComponent implements OnInit, OnDestroy {
   verifiedRoute = '/verified-registration/create-profile';
 
   constructor(private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
-    private formCreationService: FormCreationService) {
+              private formCreationService: FormCreationService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { parentPageName: string };
@@ -32,7 +32,7 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Initializes the user flow and listens for route 
+   * Initializes the user flow and listens for route
    * parameters
    */
   ngOnInit(): void {

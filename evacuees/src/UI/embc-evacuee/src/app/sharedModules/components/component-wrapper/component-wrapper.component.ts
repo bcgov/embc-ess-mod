@@ -18,7 +18,7 @@ export class ComponentWrapperComponent implements OnInit {
   constructor(private injector: Injector, private formBuilder: FormBuilder, private formCreationService: FormCreationService) { }
 
   /**
-   * Initializes the services and loads the component to 
+   * Initializes the services and loads the component to
    * the view
    */
   ngOnInit(): void {
