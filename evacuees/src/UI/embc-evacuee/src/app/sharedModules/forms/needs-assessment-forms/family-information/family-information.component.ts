@@ -83,12 +83,14 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   cancel(): void {
+
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
     // this.showTable = !this.showTable;
-    if (this.data.length === 0) {
-      this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
-    }
+
+    // if (this.data.length === 0) {
+    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
+    // }
   }
 
   /**
