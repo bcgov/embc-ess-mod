@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RestrictionComponent } from './restriction.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -9,7 +9,7 @@ describe('RestrictionComponent', () => {
   let component: RestrictionComponent;
   let fixture: ComponentFixture<RestrictionComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ RestrictionComponent ],
       imports: [ RouterTestingModule, ReactiveFormsModule ],
