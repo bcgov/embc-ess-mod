@@ -74,18 +74,42 @@ namespace EMBC.Registrants.API.RegistrationsModule
         /// <param name="id">Contact Id</param>
         /// <returns>Registration</returns>
         [HttpGet("get-profile/{id}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Registration>> GetProfileById(string id)
         {
             if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out Guid contactId))
+            {
                 return BadRequest();
+            }
 
             var profile = await registrationManager.GetProfileById(contactId);
 
-            if (string.IsNullOrEmpty(profile.ContactId))
-                return NotFound();
+            //if (string.IsNullOrEmpty(profile.ContactId))
+            //    return NotFound();
 
-            return CreatedAtAction(nameof(GetProfileById), profile);
+            // if id not found then an empty oject is returned
+            return Ok(profile);
+        }
+
+        /// <summary>
+        /// Get a Registrant Profile by BCSC
+        /// </summary>
+        /// <param name="bcscId">BCSC Id</param>
+        /// <returns>Registration</returns>
+        [HttpGet("get-profile-by-bcsc-id/{bcscId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Registration>> GetProfileByBcscId(string bcscId)
+        {
+            if (string.IsNullOrEmpty(bcscId))
+            {
+                return BadRequest();
+            }
+
+            var profile = await registrationManager.GetProfileByBcscId(bcscId);
+
+            return Ok(profile);
         }
 
         /// <summary>
@@ -241,11 +265,16 @@ namespace EMBC.Registrants.API.RegistrationsModule
         [Required]
         public InsuranceOption Insurance { get; set; }
 
-        public bool? RequiresFood { get; set; }
-        public bool? RequiresTransportation { get; set; }
-        public bool? RequiresLodging { get; set; }
-        public bool? RequiresClothing { get; set; }
-        public bool? RequiresIncidentals { get; set; }
+        public bool? RequiresFood { get; set; } //To be deleted
+        public bool? RequiresTransportation { get; set; } //To be deleted
+        public bool? RequiresLodging { get; set; } //To be deleted
+        public bool? RequiresClothing { get; set; } //To be deleted
+        public bool? RequiresIncidentals { get; set; } //To be deleted
+        public bool? CanEvacueeProvideFood { get; set; }
+        public bool? CanEvacueeProvideLodging { get; set; }
+        public bool? CanEvacueeProvideClothing { get; set; }
+        public bool? CanEvacueeProvideTransportation { get; set; }
+        public bool? CanEvacueeProvideIncidentals { get; set; }
         public bool HaveSpecialDiet { get; set; }
         public bool HaveMedication { get; set; }
         public IEnumerable<PersonDetails> FamilyMembers { get; set; } = Array.Empty<PersonDetails>();
