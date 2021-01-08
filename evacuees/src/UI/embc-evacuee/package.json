@@ -29,7 +29,7 @@
     "moment": "^2.29.1",
     "mygovbc-captcha-widget": "git+https://github.com/bcgov/MyGovBC-CAPTCHA-Widget.git",
     "popper.js": "^1.14.7",
-    "rxjs": "~6.5.5",
+    "rxjs": "~6.6.3",
     "tslib": "^2.1.0",
     "zone.js": "~0.10.3"
   },
