@@ -26,4 +26,3 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-// pre-registration/:profile

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../../../core/services/componentCreation.service';
@@ -15,7 +15,7 @@ import { ProblemDetail } from 'src/app/core/model/problemDetail';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
 
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
@@ -175,6 +175,10 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
       console.log(error);
     });
 
+  }
+
+  ngOnDestroy(): void {
+    this.form$.unsubscribe();
   }
 
 }
