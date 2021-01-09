@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import IdentifyNeedsComponent from './identify-needs.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -7,7 +7,7 @@ describe('IdentifyNeedsComponent', () => {
   let component: IdentifyNeedsComponent;
   let fixture: ComponentFixture<IdentifyNeedsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ IdentifyNeedsComponent ],
       imports: [ ReactiveFormsModule ],

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
 import { CollectionNoticeComponent } from './collection-notice.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -18,7 +18,7 @@ describe('CollectionNoticeComponent', () => {
   let fixture: ComponentFixture<CollectionNoticeComponent>;
   let router: Router;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [CollectionNoticeComponent],
       imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, MatDialogModule, MatCheckboxModule,
@@ -63,7 +63,7 @@ describe('CollectionNoticeComponent', () => {
 
   // }));
 
-  // it('should navigate to next page when collection notice agreed', async(() => {
+  // it('should navigate to next page when collection notice agreed', waitForAsync(() => {
   //   spyOn(router, 'navigate');
 
   //   // let checkbox = fixture.debugElement.query(By.css('.mat-checkbox'));
