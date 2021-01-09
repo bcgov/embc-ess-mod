@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import EvacAddressComponent from './evac-address.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -8,7 +8,7 @@ describe('EvacAddressComponent', () => {
   let component: EvacAddressComponent;
   let fixture: ComponentFixture<EvacAddressComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ EvacAddressComponent ],
       imports: [ ReactiveFormsModule ],

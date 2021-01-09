@@ -67,7 +67,8 @@ export class CustomValidationService {
                 const email = control.get('email').value;
                 const confirmEmail = control.get('confirmEmail').value;
                 if (email !== undefined && confirmEmail !== undefined &&
-                    email !== null && confirmEmail !== null) {
+                    email !== null && confirmEmail !== null &&
+                    email !== '' && confirmEmail !== '') {
                     if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
                         return { emailMatch: true };
                     }

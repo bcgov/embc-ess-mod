@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule, Inject, ChangeDetectorRef, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, NgModule, Inject, ChangeDetectorRef, AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -21,7 +21,7 @@ import * as globalConst from '../../../../core/services/globalConstants';
   templateUrl: './address.component.html',
   styleUrls: ['./address.component.scss']
 })
-export default class AddressComponent implements OnInit, AfterViewChecked {
+export default class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   primaryAddressForm: FormGroup;
   primaryAddressForm$: Subscription;
@@ -87,19 +87,6 @@ export default class AddressComponent implements OnInit, AfterViewChecked {
     this.cd.detectChanges();
   }
 
-  // validateCountry(control: AbstractControl): boolean {
-  //   const currentCountry = control.value;
-  //   let invalidCountry = false;
-  //   if (currentCountry) {
-  //     if (this.countries.indexOf(currentCountry) === -1) {
-  //       invalidCountry = !invalidCountry;
-  //       control.setErrors({ invalidCountry: true });
-  //     }
-  //   }
-  //   // this.cd.detectChanges();
-  //   return invalidCountry;
-  // }
-
   validateCountry(control: AbstractControl): boolean {
     const currentCountry = control.value;
     let invalidCountry = false;
@@ -109,7 +96,6 @@ export default class AddressComponent implements OnInit, AfterViewChecked {
     }
     return invalidCountry;
   }
-
 
   /**
    * Filters the coutry list for autocomplete field
@@ -184,6 +170,10 @@ export default class AddressComponent implements OnInit, AfterViewChecked {
 
   countryDisplayFn(country: Country): string {
     if (country) { return country.name; }
+  }
+
+  ngOnDestroy(): void {
+    this.primaryAddressForm$.unsubscribe();
   }
 
 }

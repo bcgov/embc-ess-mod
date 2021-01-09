@@ -15,6 +15,10 @@ export class FileSubmissionComponent implements OnInit {
 
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) { }
 
+  /**
+   * Initializes the user flow and fetches the registration
+   * number
+   */
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
     const registrationResult = this.dataService.getRegistrationResult();
@@ -26,6 +30,9 @@ export class FileSubmissionComponent implements OnInit {
     }
   }
 
+  /**
+   * Navigates to view-profile page
+   */
   goToProfile(): void {
     this.router.navigate(['/verified-registration/view-profile']);
   }
