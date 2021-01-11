@@ -33,7 +33,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         Task<OkResult> CreateProfile(Registration profileRegistration);
         Task<Registration> GetProfileById(Guid contactId);
         Task<Registration> GetProfileByBcscId(string bcscId);
-        Task<Registration> PatchProfileById(Registration profileRegistration);
+        Task<Registration> PatchProfileById(string id, Registration profileRegistration);
     }
 
     public class RegistrationManager : IRegistrationManager
