@@ -32,7 +32,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration);
         Task<OkResult> CreateProfile(Registration profileRegistration);
         Task<Registration> GetProfileById(Guid contactId);
-        Task<Registration> PatchProfileById(Registration profileRegistration);
+        Task<Registration> PatchProfileById(string id, Registration profileRegistration);
     }
 
     public class RegistrationManager : IRegistrationManager
@@ -324,11 +324,11 @@ namespace EMBC.Registrants.API.RegistrationsModule
             return Task.FromResult(profile);
         }
 
-        public Task<Registration> PatchProfileById(Registration profileRegistration)
+        public Task<Registration> PatchProfileById(string id, Registration profileRegistration)
         {
             var contactIdGuid = Guid.Parse(profileRegistration.ContactId);
             // search for contact
-            var queryResult = dynamicsClient.contacts
+            var profileQueryResult = dynamicsClient.contacts
                 .Where(c => c.contactid == contactIdGuid).FirstOrDefault();
             //if (queryResult == null) return NotFoundResult;
 
