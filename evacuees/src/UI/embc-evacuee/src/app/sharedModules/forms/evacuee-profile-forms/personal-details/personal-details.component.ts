@@ -18,7 +18,7 @@ import * as globalConst from '../../../../core/services/globalConstants';
   templateUrl: './personal-details.component.html',
   styleUrls: ['./personal-details.component.scss']
 })
-export default class PersonalDetailsComponent implements OnInit {
+export default class PersonalDetailsComponent implements OnInit, OnDestroy {
 
   personalDetailsForm: FormGroup;
   gender = globalConst.gender;
@@ -33,7 +33,8 @@ export default class PersonalDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.personalDetailsForm$ = this.formCreationService.getPeronalDetailsForm().subscribe(
+    this.personalDetailsForm$ = this.formCreationService.getPeronalDetailsForm()
+    .subscribe(
       personalDetails => {
         this.personalDetailsForm = personalDetails;
       }
@@ -47,6 +48,9 @@ export default class PersonalDetailsComponent implements OnInit {
     return this.personalDetailsForm.controls;
   }
 
+  ngOnDestroy(): void {
+    this.personalDetailsForm$.unsubscribe();
+  }
 
 }
 

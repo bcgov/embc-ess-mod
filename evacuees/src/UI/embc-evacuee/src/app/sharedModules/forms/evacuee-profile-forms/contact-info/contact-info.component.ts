@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule, Inject } from '@angular/core';
+import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, NgForm, FormGroupDirective } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -26,7 +26,7 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './contact-info.component.html',
   styleUrls: ['./contact-info.component.scss']
 })
-export default class ContactInfoComponent implements OnInit {
+export default class ContactInfoComponent implements OnInit, OnDestroy {
 
   contactInfoForm: FormGroup;
   formBuilder: FormBuilder;
@@ -88,6 +88,10 @@ export default class ContactInfoComponent implements OnInit {
     } else {
       this.contactInfoForm.get('phone').enable();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.contactInfoForm$.unsubscribe();
   }
 
 }

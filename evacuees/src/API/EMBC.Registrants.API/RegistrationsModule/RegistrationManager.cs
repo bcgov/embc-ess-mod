@@ -32,7 +32,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
         Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration);
         Task<OkResult> CreateProfile(Registration profileRegistration);
         Task<Registration> GetProfileById(Guid contactId);
-        Task<Registration> PatchProfileById(string id, Registration profileRegistration);
+        Task<Registration> GetProfileByBcscId(string bcscId);
+        Task<Registration> PatchProfileById(Registration profileRegistration);
     }
 
     public class RegistrationManager : IRegistrationManager
@@ -286,9 +287,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             profile.ContactId = queryResult.contactid.ToString();
             profile.BCServicesCardId = queryResult.era_bcservicescardid;
-            profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
-            profile.RestrictedAccess = queryResult.era_sharingrestriction.HasValue ? queryResult.era_sharingrestriction.Value : false;
-            profile.SecretPhrase = queryResult.era_secrettext;
             // Personal Details
             profile.PersonalDetails.FirstName = queryResult.firstname;
             profile.PersonalDetails.LastName = queryResult.lastname;
@@ -321,6 +319,98 @@ namespace EMBC.Registrants.API.RegistrationsModule
             profile.MailingAddress.Country.CountryCode = queryResult.era_MailingCountry?.era_countrycode;
             profile.MailingAddress.Country.CountryName = queryResult.era_MailingCountry?.era_name;
             profile.MailingAddress.PostalCode = queryResult.address2_postalcode;
+            // Other
+            profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
+            profile.RestrictedAccess = queryResult.era_sharingrestriction.HasValue ? queryResult.era_sharingrestriction.Value : false;
+            profile.SecretPhrase = queryResult.era_secrettext;
+            return Task.FromResult(profile);
+        }
+
+        /// <summary>
+        /// Get a Registrant Profile
+        /// </summary>
+        /// <param name="bcscId">BCSC Id</param>
+        /// <returns>Registration</returns>
+        public Task<Registration> GetProfileByBcscId(string bcscId)
+        {
+            var profile = newRegistrationObject();
+            contact queryResult = null;
+
+            try
+            {
+                queryResult = dynamicsClient.contacts
+                        .Expand(c => c.era_City)
+                        .Expand(c => c.era_ProvinceState)
+                        .Expand(c => c.era_Country)
+                        .Expand(c => c.era_MailingCity)
+                        .Expand(c => c.era_MailingProvinceState)
+                        .Expand(c => c.era_MailingCountry)
+                        .Where(c => c.era_bcservicescardid == bcscId).FirstOrDefault();
+            }
+            catch (DataServiceQueryException ex)
+            {
+                //The InnerException of DataServiceQueryException contains DataServiceClientException
+                DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
+
+                // don't throw an exception if contact is not found, return an empty profile
+                if (dataServiceClientException.StatusCode == 404)
+                {
+                    return Task.FromResult(profile);
+                }
+                else
+                {
+                    Console.WriteLine("dataServiceClientException: " + dataServiceClientException.Message);
+                }
+
+                ODataErrorException odataErrorException = dataServiceClientException.InnerException as ODataErrorException;
+                if (odataErrorException != null)
+                {
+                    Console.WriteLine(odataErrorException.Message);
+                    throw dataServiceClientException;
+                }
+            }
+
+            if (queryResult != null)
+            {
+                profile.ContactId = queryResult.contactid.ToString();
+                profile.BCServicesCardId = queryResult.era_bcservicescardid;
+                // Personal Details
+                profile.PersonalDetails.FirstName = queryResult.firstname;
+                profile.PersonalDetails.LastName = queryResult.lastname;
+                profile.PersonalDetails.DateOfBirth = queryResult.birthdate.ToString();
+                profile.PersonalDetails.Initials = queryResult.era_initial;
+                profile.PersonalDetails.PreferredName = queryResult.era_preferredname;
+                profile.PersonalDetails.Gender = queryResult.gendercode.ToString();
+                // Contact Details
+                profile.ContactDetails.Email = queryResult.emailaddress1;
+                profile.ContactDetails.HideEmailRequired = queryResult.era_emailrefusal.HasValue ? queryResult.era_emailrefusal.Value : false;
+                profile.ContactDetails.Phone = queryResult.address1_telephone1;
+                profile.ContactDetails.HidePhoneRequired = queryResult.era_phonenumberrefusal.HasValue ? queryResult.era_phonenumberrefusal.Value : false;
+                // Primary Address
+                profile.PrimaryAddress.AddressLine1 = queryResult.address1_line1;
+                profile.PrimaryAddress.AddressLine2 = queryResult.address1_line2;
+                profile.PrimaryAddress.Jurisdiction.JurisdictionCode = queryResult.era_City?.era_jurisdictionid.ToString();
+                profile.PrimaryAddress.Jurisdiction.JurisdictionName = queryResult.era_City?.era_jurisdictionname;
+                profile.PrimaryAddress.StateProvince.StateProvinceCode = queryResult.era_ProvinceState?.era_code;
+                profile.PrimaryAddress.StateProvince.StateProvinceName = queryResult.era_ProvinceState?.era_name;
+                profile.PrimaryAddress.Country.CountryCode = queryResult.era_Country?.era_countrycode;
+                profile.PrimaryAddress.Country.CountryName = queryResult.era_Country?.era_name;
+                profile.PrimaryAddress.PostalCode = queryResult.address1_postalcode;
+                // Mailing Address
+                profile.MailingAddress.AddressLine1 = queryResult.address2_line1;
+                profile.MailingAddress.AddressLine2 = queryResult.address2_line2;
+                profile.MailingAddress.Jurisdiction.JurisdictionCode = queryResult.era_MailingCity?.era_jurisdictionid.ToString();
+                profile.MailingAddress.Jurisdiction.JurisdictionName = queryResult.era_MailingCity?.era_jurisdictionname;
+                profile.MailingAddress.StateProvince.StateProvinceCode = queryResult.era_MailingProvinceState?.era_code;
+                profile.MailingAddress.StateProvince.StateProvinceName = queryResult.era_MailingProvinceState?.era_name;
+                profile.MailingAddress.Country.CountryCode = queryResult.era_MailingCountry?.era_countrycode;
+                profile.MailingAddress.Country.CountryName = queryResult.era_MailingCountry?.era_name;
+                profile.MailingAddress.PostalCode = queryResult.address2_postalcode;
+                // Other
+                profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
+                profile.RestrictedAccess = queryResult.era_sharingrestriction.HasValue ? queryResult.era_sharingrestriction.Value : false;
+                profile.SecretPhrase = queryResult.era_secrettext;
+            }
             return Task.FromResult(profile);
         }
 
@@ -358,7 +448,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             ? null
             : dynamicsClient.era_countries.Where(c => c.era_countrycode == country.CountryCode).FirstOrDefault();
 
-        private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002; // yes, no, I don't know
+        private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
 
         private int? Lookup(NeedsAssessment.InsuranceOption value) => value switch
         {

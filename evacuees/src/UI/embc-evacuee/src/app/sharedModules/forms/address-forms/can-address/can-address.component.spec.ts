@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CanAddressComponent } from './can-address.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -8,7 +8,7 @@ describe('CanAddressComponent', () => {
   let component: CanAddressComponent;
   let fixture: ComponentFixture<CanAddressComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, MatAutocompleteModule ],
       declarations: [ CanAddressComponent ]

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Injector } from '@angular/core';
 import { from } from 'rxjs';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 
 @Component({
@@ -17,6 +17,10 @@ export class ComponentWrapperComponent implements OnInit {
 
   constructor(private injector: Injector, private formBuilder: FormBuilder, private formCreationService: FormCreationService) { }
 
+  /**
+   * Initializes the services and loads the component to
+   * the view
+   */
   ngOnInit(): void {
     if (!this.loadedComponent) {
       this.serviceInjector = Injector.create({
@@ -36,8 +40,10 @@ export class ComponentWrapperComponent implements OnInit {
     });
   }
 
+  /**
+   * Imports the component
+   */
   loadComponent(): Promise<any> {
     return Promise.resolve(import(`../../forms/${this.folderPath}/${this.componentName}/${this.componentName}.component`));
   }
-  // ../core/components/evacuee-profile-forms/${this.componentName}/${this.componentName}.component`
 }

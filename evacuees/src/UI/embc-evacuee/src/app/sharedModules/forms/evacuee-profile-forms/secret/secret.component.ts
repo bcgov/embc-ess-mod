@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule, Inject } from '@angular/core';
+import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './secret.component.html',
   styleUrls: ['./secret.component.scss']
 })
-export default class SecretComponent implements OnInit {
+export default class SecretComponent implements OnInit, OnDestroy {
 
   formBuilder: FormBuilder;
   secretForm$: Subscription;
@@ -36,6 +36,10 @@ export default class SecretComponent implements OnInit {
    */
   get secretFormControl(): { [key: string]: AbstractControl; } {
     return this.secretForm.controls;
+  }
+
+  ngOnDestroy(): void {
+    this.secretForm$.unsubscribe();
   }
 
 }
