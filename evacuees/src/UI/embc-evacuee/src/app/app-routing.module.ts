@@ -1,29 +1,40 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './core/services/auth.guard';
+import { AuthService } from './core/services/auth.service';
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: 'registration-method',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'registration-method',
-    loadChildren: () => import('./login-page/login-page.module').then(m => m.LoginPageModule)
+    loadChildren: () =>
+      import('./login-page/login-page.module').then((m) => m.LoginPageModule),
   },
   {
     path: 'non-verified-registration',
-    loadChildren: () => import('./non-verified-registration/non-verified-registration.module').then(m => m.NonVerifiedRegistrationModule)
+    loadChildren: () =>
+      import(
+        './non-verified-registration/non-verified-registration.module'
+      ).then((m) => m.NonVerifiedRegistrationModule),
   },
   {
     path: 'verified-registration',
-    loadChildren: () => import('./verified-registration/verified-registration.module').then(m => m.VerifiedRegistrationModule)
-  }
+    loadChildren: () =>
+      import('./verified-registration/verified-registration.module').then(
+        (m) => m.VerifiedRegistrationModule
+      ),
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthGuard, AuthService],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
 // pre-registration/:profile

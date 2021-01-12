@@ -18,14 +18,19 @@ using System;
 using System.IO;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
+using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -60,6 +65,54 @@ namespace EMBC.Registrants.API
                 dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
             }
 
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    //options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+            .AddCookie(options =>
+            {
+                configuration.GetSection("auth:cookie").Bind(options);
+                options.Cookie.SameSite = SameSiteMode.Strict;
+
+                options.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = async c =>
+                    {
+                        await Task.CompletedTask;
+                        c.Response.Clear();
+                        c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    }
+                };
+            })
+            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+            {
+                configuration.GetSection("auth:oidc").Bind(options);
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
+
+                options.Events = new OpenIdConnectEvents()
+                {
+                    //OnAuthenticationFailed = async c =>
+                    //{
+                    //    await Task.CompletedTask;
+                    //    var logger = c.HttpContext.RequestServices.GetRequiredService<ILogger<OpenIdConnectHandler>>();
+                    //    logger.LogError(c.Exception, $"Error authenticating with OIDC");
+                    //    c.Fail(c.Exception);
+                    //},
+                    OnTokenValidated = async c =>
+                    {
+                        var logger = c.HttpContext.RequestServices.GetRequiredService<ILogger<OpenIdConnectHandler>>();
+                        logger.LogInformation("User {0} logged in", c.Principal.FindFirstValue(ClaimTypes.NameIdentifier));
+                        var claimTransformer = c.HttpContext.RequestServices.GetRequiredService<BcscClaimTransformation>();
+                        c.Principal = await claimTransformer.TransformAsync(c.Principal);
+                        c.Success();
+                    }
+                };
+            })
+            ;
+
             if (!env.IsProduction())
             {
                 services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
@@ -92,7 +145,8 @@ namespace EMBC.Registrants.API
             services.AddDistributedMemoryCache();
 
             services.AddRegistrationModule();
-            services.AddLocationModule();
+            // services.AddLocationModule();
+            services.AddSecurityModule();
             services.AddADFSTokenProvider();
             services.AddSingleton(sp =>
             {
@@ -133,6 +187,8 @@ namespace EMBC.Registrants.API
                 };
             });
 
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseOpenApi();
             app.UseSwaggerUi3();
 
