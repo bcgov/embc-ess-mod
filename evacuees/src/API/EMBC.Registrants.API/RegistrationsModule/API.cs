@@ -53,17 +53,17 @@ namespace EMBC.Registrants.API.RegistrationsModule
         /// <summary>
         /// Create a Registrant Profile
         /// </summary>
-        /// <param name="profleRegistration">Profile Registration Form</param>
+        /// <param name="profileRegistration">Profile Registration Form</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpPost("create-profile")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> CreateProfile(Registration profleRegistration)
+        public async Task<ActionResult> CreateProfile(Registration profileRegistration)
         {
-            if (profleRegistration == null)
+            if (profileRegistration == null)
                 return BadRequest();
 
-            var result = await registrationManager.CreateProfile(profleRegistration);
+            var result = await registrationManager.CreateProfile(profileRegistration);
 
             return CreatedAtAction(nameof(CreateProfile), result);
         }
@@ -115,16 +115,24 @@ namespace EMBC.Registrants.API.RegistrationsModule
         /// <summary>
         /// Update a Registrant Profile
         /// </summary>
-        /// <param name="profileRegistration">Contact Id</param>
+        /// <param name="id">Contact Id</param>
+        /// <param name="profileRegistration">Profile Registration Form</param>
         /// <returns>Registration</returns>
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpPatch("patch-profile")]
-        public async Task<Registration> PatchProfileById(Registration profileRegistration)
+        [HttpPatch("patch-profile/{id}")]
+        public async Task<ActionResult<Registration>> PatchProfileById(string id, Registration profileRegistration)
         {
-            //if (profileRegistration == null) return StatusCodes.Status404NotFound;
-            var result = await registrationManager.PatchProfileById(profileRegistration);
+            if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out Guid contactId))
+            {
+                return BadRequest();
+            }
 
-            return result;
+            //if (profileRegistration == null) return NotFound();
+
+            var profile = await registrationManager.PatchProfileById(id, profileRegistration);
+
+            return profile;
         }
     }
 
