@@ -28,6 +28,7 @@ export default class PetsComponent implements OnInit {
   formCreationService: FormCreationService;
   showPetsForm = false;
   displayedColumns: string[] = ['type', 'quantity', 'buttons'];
+  petDefaultData = {quantity: ' ', type: ' '};
   dataSource = new BehaviorSubject([]);
   data = [];
   editIndex: number;
@@ -75,11 +76,15 @@ export default class PetsComponent implements OnInit {
     } else {
       this.petsForm.get('pet').markAllAsTouched();
     }
+
   }
 
   cancel(): void {
     this.showPetsForm = !this.showPetsForm;
     // this.showTable = !this.showTable;
+
+    this.petsForm.get('pet').setValue(this.petDefaultData);
+
     if (this.data.length === 0) {
       this.petsForm.get('addPetIndicator').setValue(false);
     }
