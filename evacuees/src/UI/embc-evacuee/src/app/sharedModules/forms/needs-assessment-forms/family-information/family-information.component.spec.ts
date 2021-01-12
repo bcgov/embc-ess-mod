@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import FamilyInformationComponent from './family-information.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -7,7 +7,7 @@ describe('FamilyInformationComponent', () => {
   let component: FamilyInformationComponent;
   let fixture: ComponentFixture<FamilyInformationComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FamilyInformationComponent ],
       imports: [ ReactiveFormsModule ],

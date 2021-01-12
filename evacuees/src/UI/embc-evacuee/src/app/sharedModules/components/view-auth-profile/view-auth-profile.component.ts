@@ -13,17 +13,55 @@ export interface EvacuationCard {
   code: number;
   support: string;
   status: string;
+  referral: boolean;
+  referrals?: Referral[];
+}
+
+export interface Referral {
+  referralDate: string;
+  referralDetails: ReferralDetails[];
+}
+
+export interface ReferralDetails {
+  provider: string;
+  type: string;
+  issuedTo: string;
+  expiry: string;
+  code: string;
+  amount: string;
+  status: string;
+  providedTo: string[];
+  providerDetails: string;
+  issuedBy: string;
 }
 
 const ACTIVE_DATA: EvacuationCard[] = [
-  { from: 'Victoria', date: '20-Feb-2020', code: 333333, support: 'No', status: 'Active' },
-  { from: 'Vancouver', date: '20-Feb-2020', code: 444444, support: 'No', status: 'Active' },
-  { from: 'North Vancouver', date: '20-Feb-2020', code: 555555, support: 'No', status: 'Active' },
+  { from: 'Victoria', date: '20-Feb-2020', code: 333333, support: 'No', status: 'Active', referral: false},
+  { from: 'Vancouver', date: '20-Feb-2020', code: 444444, support: 'No', status: 'Active', referral: true,
+    referrals: [{ referralDate: '07-Sep-2020', referralDetails: [{
+                provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John',
+                expiry: 'n/a', code: 'P356211', amount: '$50', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna',
+                'Smith, Michael', 'Smith, Lily'], providerDetails: 'e-Transfer issued to jsmith@gmail.com',
+                issuedBy: 'Oak Bay ESS Team' }]
+              }]
+  },
 ];
 
 const INACTIVE_DATA: EvacuationCard[] = [
-  { from: 'Victoria', date: '20-Feb-2020', code: 123456, support: 'No', status: 'Inactive' },
-  { from: 'Richmond', date: '20-Feb-2020', code: 123456, support: 'No', status: 'Inactive' },
+  { from: 'Victoria', date: '20-Feb-2020', code: 123456, support: 'No', status: 'Inactive', referral: true,
+  referrals: [{ referralDate: '07-Sep-2020', referralDetails: [{
+    provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John', expiry: 'n/a', code: 'P356211', amount: '$50',
+    status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
+    providerDetails: 'e-Transfer issued to jsmith@gmail.com', issuedBy: 'Oak Bay ESS Team'}]
+  },
+  {referralDate: '04-Sep-2020', referralDetails: [{
+    provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John', expiry: 'n/a', code: 'P356211', amount: '$50',
+    status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
+    providerDetails: 'e-Transfer issued to jsmith@gmail.com', issuedBy: 'Oak Bay ESS Team'},
+    { provider: 'Great Hotel Ltd', type: 'Lodging - Hotel/Motel', issuedTo: 'Smith, John', expiry: 'mm/dd/yyyy', code: 'D12345',
+     amount: 'n/a', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
+     providerDetails: 'Great Hotel ltd Address1 Address 2 City Province Postal Code', issuedBy: 'Oak Bay ESS Team' }]
+  }]}
 ];
 
 @Component({

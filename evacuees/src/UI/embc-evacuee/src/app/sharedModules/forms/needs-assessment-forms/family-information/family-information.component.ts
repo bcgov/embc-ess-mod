@@ -15,7 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
-import { DialogModule } from '../../../../core/components/dialog/dialog.module';
 
 @Component({
   selector: 'app-family-information',
@@ -83,12 +82,14 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   cancel(): void {
+
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
     // this.showTable = !this.showTable;
-    if (this.data.length === 0) {
-      this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
-    }
+
+    // if (this.data.length === 0) {
+    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
+    // }
   }
 
   /**
@@ -144,8 +145,7 @@ export default class FamilyInformationComponent implements OnInit {
     MatRadioModule,
     PersonDetailFormModule,
     MatTableModule,
-    MatIconModule,
-    DialogModule
+    MatIconModule
   ],
   declarations: [
     FamilyInformationComponent,

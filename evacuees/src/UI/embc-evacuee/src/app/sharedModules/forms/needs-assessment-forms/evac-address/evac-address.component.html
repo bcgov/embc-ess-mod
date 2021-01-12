@@ -11,20 +11,26 @@
                 address that you listed when you created your profile?</label>
               <br>
               <mat-radio-group formControlName="evacuatedFromPrimary" aria-labelledby="primary-radio-group-label"
-                class="primary-radio-group" (change)="primaryAddressChange($event)" required>
+                class="primary-radio-group" (change)="evacPrimaryAddressChange($event)" required>
                 <mat-radio-button value="Yes">Yes
                 </mat-radio-button>
                 <div class="prim-address">
-                  <p class="allign"><b>{{(formCreationService.addressForm$ | async).value.address.addressLine1}}</b></p>
-                  <p class="allign" *ngIf="(formCreationService.addressForm$ | async).value.address?.addressLine2">
-                    <b>{{(formCreationService.addressForm$ | async).value.address.addressLine2}}</b></p>
-                  <p class="allign"><b>{{(formCreationService.addressForm$ | async).value.address.jurisdiction.name}} ,
-                      {{(formCreationService.addressForm$ | async).value.address.postalCode}}</b></p>
+                  <p class="allign"><b>{{primaryAddressForm.value.address.addressLine1}}</b></p>
+                  <!--{{(formCreationService.addressForm$ | async).value.address.addressLine1}} -->
+                  <p class="allign" *ngIf="primaryAddressForm.value.address?.addressLine2">
+                    <!--(formCreationService.addressForm$ | async).value.address?.addressLine2-->
+                    <b>{{primaryAddressForm.value.address.addressLine2}}</b>
+                  </p>
+                  <!--formCreationService.addressForm$ | async).value.address.addressLine2-->
+                  <p class="allign"><b>{{primaryAddressForm.value.address.jurisdiction.name}} ,
+                      {{primaryAddressForm.value.address.postalCode}}</b></p>
+                  <!--{{(formCreationService.addressForm$ | async).value.address.jurisdiction.name}} ,
+                        {{(formCreationService.addressForm$ | async).value.address.postalCode}}-->
                 </div>
                 <mat-radio-button value="No">No</mat-radio-button>
                 <mat-error class="custom-mat-error"
                   *ngIf="evacuatedFormControl?.evacuatedFromPrimary.touched && evacuatedFormControl?.evacuatedFromPrimary.invalid && evacuatedFormControl?.evacuatedFromPrimary.hasError('required')">
-                  Evacaution Address is required</mat-error>
+                  Evacuation Address is required</mat-error>
               </mat-radio-group>
             </div>
           </div>
@@ -62,8 +68,7 @@
           <br>
           <mat-radio-group formControlName="insurance" aria-labelledby="primary-radio-group-label"
             class="primary-radio-group" required>
-            <mat-radio-button class="primary-radio-button" *ngFor="let option of insuranceOption"
-              [value]="option.name">
+            <mat-radio-button class="primary-radio-button" *ngFor="let option of insuranceOption" [value]="option.name">
               {{option.value}}
             </mat-radio-button>
             <mat-error class="custom-mat-error"

@@ -9,6 +9,7 @@ import { FormCreationService } from '../../../core/services/formCreation.service
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { DataSubmissionService } from '../../../core/services/dataSubmission.service';
 import { RegistrationResult } from 'src/app/core/services/api/models/registration-result';
+import { AlertService } from 'src/app/core/services/alert.service';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -23,7 +24,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   isEditable = true;
   form$: Subscription;
   form: FormGroup;
-  isComplete: boolean;
   navigationExtras: NavigationExtras = { state: { stepIndex: 3 } };
   captchaPassed = false;
   stepToDisplay: number;
@@ -31,10 +31,11 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   currentFlow: string;
   parentPageName = 'needs-assessment';
   showLoader = false;
+  isSubmitted = false;
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
               private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute, private alertService: AlertService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -59,7 +60,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   ngAfterViewInit(): void {
     if (this.stepToDisplay === 4) {
-      this.isComplete = true;
       setTimeout(() => {
         this.needsStepper.selectedIndex = this.stepToDisplay;
       }, 0);
@@ -68,6 +68,10 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   currentStep(index: number): void {
     this.loadStepForm(index);
+  }
+
+  stepChanged(event: any, stepper: MatStepper): void{
+    stepper.selected.interacted = false;
   }
 
   /**
@@ -126,7 +130,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
       if (this.form.status === 'VALID') {
         this.setFormData(component);
         this.form$.unsubscribe();
-        this.isComplete = !this.isComplete;
+        stepper.selected.completed = true;
         stepper.next();
       } else {
         this.form.markAllAsTouched();
@@ -138,15 +142,12 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     switch (component) {
       case 'evac-address':
         this.updateService.updateEvacuationDetails(this.form);
-        this.isComplete = false;
         break;
       case 'family-information':
         this.updateService.updateFamilyMemberDetails(this.form);
-        this.isComplete = false;
         break;
       case 'pets':
         this.updateService.updatePetsDetails(this.form);
-        this.isComplete = false;
         break;
       case 'identify-needs':
         this.updateService.updateNeedsDetails(this.form);
@@ -165,13 +166,17 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   submitNonVerified(): void {
     this.showLoader = !this.showLoader;
+    this.isSubmitted = !this.isSubmitted;
+    this.alertService.clearAlert();
     this.submissionService.submitRegistrationFile().subscribe((response: RegistrationResult) => {
       console.log(response);
       this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/non-verified-registration/fileSubmission']);
-    }, (error) => {
+    }, (error: any) => {
       console.log(error);
       this.showLoader = !this.showLoader;
+      this.isSubmitted = !this.isSubmitted;
+      this.alertService.setAlert('danger', error.title);
     });
   }
 

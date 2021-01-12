@@ -1,0 +1,29 @@
+.header-style {
+    justify-content: normal;
+}
+
+.app-heading {
+    font-size: 30px;
+}
+
+.heading-text1 {
+ color: #FFFFFF;
+}
+
+.heading-text2 {
+ color: #FCBA19;
+}
+
+.divider {
+    width: 1px;
+    height: 44px;
+    background-color: #FFFFFF;
+    border-radius: 0px;
+    margin-right: 20px;
+}
+
+@media(max-width: 768px) {
+    .divider {
+        width: 0px;
+    }
+}

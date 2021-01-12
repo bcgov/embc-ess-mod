@@ -32,9 +32,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
-  providers: [AuthGuard, AuthService],
 })
 export class AppRoutingModule {}
-// pre-registration/:profile

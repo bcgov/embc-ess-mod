@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ViewAuthProfileComponent } from './view-auth-profile.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -8,7 +8,7 @@ describe('ViewAuthProfileComponent', () => {
   let component: ViewAuthProfileComponent;
   let fixture: ComponentFixture<ViewAuthProfileComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ViewAuthProfileComponent ],
       imports: [ RouterTestingModule ],

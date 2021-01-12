@@ -197,11 +197,16 @@ namespace EMBC.Tests.Integration.Registrants.API
                     Insurance = NeedsAssessment.InsuranceOption.Yes,
                     HaveSpecialDiet = true,
                     HasPetsFood = true,
-                    RequiresClothing = true,
-                    RequiresFood = true,
-                    RequiresLodging = true,
-                    RequiresIncidentals = true,
-                    RequiresTransportation = true,
+                    RequiresClothing = true, //to be deleted
+                    RequiresFood = true, //to be deleted
+                    RequiresLodging = true, //to be deleted
+                    RequiresIncidentals = true, //to be deleted
+                    RequiresTransportation = true, //to be deleted
+                    CanEvacueeProvideClothing = false,
+                    CanEvacueeProvideFood = true,
+                    CanEvacueeProvideIncidentals = null,
+                    CanEvacueeProvideLodging = false,
+                    CanEvacueeProvideTransportation = true,
                     Pets = new[]
                     {
                         new Pet{ Type = $"dog{textContextIdentifier}", Quantity = "4" }
@@ -236,6 +241,14 @@ namespace EMBC.Tests.Integration.Registrants.API
             testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
         }
 
-
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetProfileByBcscId()
+        {
+            var regManager = services.GetRequiredService<IRegistrationManager>();
+            var profile = await regManager.GetProfileByBcscId("TESTTESTTESTTESTTESTTESTTESTTEST");
+            Assert.NotNull(profile);
+            Assert.NotEmpty(profile.PersonalDetails.FirstName);
+            testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
+        }
     }
 }
