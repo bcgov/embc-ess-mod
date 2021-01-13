@@ -521,6 +521,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             contact.birthdate = FromDateTime(DateTime.Parse(profileRegistration.PersonalDetails.DateOfBirth));
             contact.era_collectionandauthorization = profileRegistration.InformationCollectionConsent;
             contact.era_sharingrestriction = profileRegistration.RestrictedAccess;
+            contact.era_bcservicescardid = profileRegistration.BCServicesCardId;
 
             contact.address1_line1 = profileRegistration.PrimaryAddress.AddressLine1;
             contact.address1_line2 = profileRegistration.PrimaryAddress.AddressLine2;
