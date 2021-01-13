@@ -63,13 +63,17 @@ namespace EMBC.Registrants.API.RegistrationsModule
             var results = await dynamicsClient.SaveChangesAsync();
             //var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
 
-            // Send email notification of new registrant record created
-            EmailAddress registrantEmailAddress = new EmailAddress
+            // Check if email address defined for profile
+            if (profileRegistration.ContactDetails.Email != null)
             {
-                Name = profileRegistration.PersonalDetails.FirstName + " " + profileRegistration.PersonalDetails.LastName,
-                Address = profileRegistration.ContactDetails.Email
-            };
-            SendRegistrationNotificationEmail(registrantEmailAddress);
+                // Send email notification of new registrant record created
+                EmailAddress registrantEmailAddress = new EmailAddress
+                {
+                    Name = profileRegistration.PersonalDetails.FirstName + " " + profileRegistration.PersonalDetails.LastName,
+                    Address = profileRegistration.ContactDetails.Email
+                };
+                SendRegistrationNotificationEmail(registrantEmailAddress);
+            }
 
             return new OkResult();
         }
