@@ -88,6 +88,7 @@ export class PetForm {
     pet: FormGroup;
     addPetIndicator = new FormControl(false);
     hasPetsFood = new FormControl();
+    addPetFoodIndicator = new FormControl(false);
 
     constructor(pet: Pet, customValidator: CustomValidationService, builder: FormBuilder) {
         this.pet = builder.group({
@@ -103,7 +104,7 @@ export class PetForm {
 
         this.hasPetsFood.setValue(pet.hasPetsFood);
         this.hasPetsFood.setValidators([customValidator.conditionalValidation(
-            () => this.addPetIndicator.value,
+            () => this.addPetFoodIndicator.value,
             Validators.required
         ).bind(customValidator)]);
     }
