@@ -135,7 +135,7 @@ namespace EMBC.Registrants.API
 
             services.AddDistributedMemoryCache(); // TODO: consider setting a distributed cache in the future
             services.AddRegistrationModule();
-            // services.AddLocationModule();
+            services.AddLocationModule();
             services.AddSecurityModule();
             services.AddADFSTokenProvider();
             services.AddSingleton(sp =>
