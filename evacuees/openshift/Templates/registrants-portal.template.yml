@@ -90,6 +90,7 @@ objects:
       Dynamics__ADFS__ResourceName: ${OAUTH_RESOURCE}
       Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
       Dynamics__ADFS__serviceAccountName: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_NAME}
+      Dynamics__ADFS__serviceAccountPassword: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
       auth__bcsc__clientId: ${BCSC_CLIENT_ID}
       auth__bcsc__clientSecret: ${BCSC_CLIENT_SECRET}
       app__knownNetwork: ${APP_KNOWN_NETWORK}
