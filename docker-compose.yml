@@ -15,7 +15,7 @@ services:
       context: ./suppliers/src/UI
     image: embcess-suppliers-ui:dev
     ports:
-      - 1015:2015
+      - 4200:2015
     environment:
       - "API_URL=suppliers-portal-api:8080"
     depends_on:
@@ -35,7 +35,7 @@ services:
       context: ./evacuees/src/UI
     image: embcess-registrants-ui:dev
     ports:
-      - 2015:2015
+      - 5200:2015
     environment:
       - "API_URL=registrants-portal-api:8080"
     depends_on:
@@ -55,7 +55,7 @@ services:
       context: ./responders/src/UI
     image: embcess-responders-ui:dev
     ports:
-      - 3015:2015
+      - 6200:2015
     environment:
       - "API_URL=responders-portal-api:8080"
     depends_on:
