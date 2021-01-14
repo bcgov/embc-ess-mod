@@ -461,8 +461,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         private int? LookupGender(string value) => value switch
         {
-            "M" => 1,
-            "F" => 2,
+            "Male" => 1,
+            "Female" => 2,
             "X" => 3,
             _ => null
         };
