@@ -18,14 +18,18 @@ using System;
 using System.IO;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
+using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -60,6 +64,34 @@ namespace EMBC.Registrants.API
                 dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
             }
 
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = BcscAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie(options =>
+                {
+                    configuration.GetSection("auth:cookie").Bind(options);
+                    options.Cookie.SameSite = SameSiteMode.Strict;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+                    options.SlidingExpiration = false;
+
+                    options.Events = new CookieAuthenticationEvents
+                    {
+                        OnRedirectToLogin = async c =>
+                        {
+                            await Task.CompletedTask;
+                            c.Response.Clear();
+                            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        }
+                    };
+                })
+                .AddBcscOidc(BcscAuthenticationDefaults.AuthenticationScheme, options =>
+                   {
+                       configuration.Bind("auth:bcsc", options);
+                   });
+
             if (!env.IsProduction())
             {
                 services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
@@ -71,6 +103,7 @@ namespace EMBC.Registrants.API
                         document.Info.Title = "Registrants Portal API";
                     };
                 });
+
                 services.Configure<SwaggerUi3Settings>(options =>
                 {
                     options.Path = "/api/openapi";
@@ -92,7 +125,8 @@ namespace EMBC.Registrants.API
             services.AddDistributedMemoryCache();
 
             services.AddRegistrationModule();
-            services.AddLocationModule();
+            // services.AddLocationModule();
+            services.AddSecurityModule();
             services.AddADFSTokenProvider();
             services.AddSingleton(sp =>
             {
@@ -133,6 +167,8 @@ namespace EMBC.Registrants.API
                 };
             });
 
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseOpenApi();
             app.UseSwaggerUi3();
 
