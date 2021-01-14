@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -120,10 +122,18 @@ namespace EMBC.Registrants.API
             });
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.Configure<LocationCacheHostedServiceOptions>(configuration.GetSection("Location:Cache"));
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
+                var configvalue = configuration.GetValue("app:knownNetwork", string.Empty)?.Split('/');
+                if (configvalue.Length == 2)
+                {
+                    var knownNetwork = new IPNetwork(IPAddress.Parse(configvalue[0]), int.Parse(configvalue[1]));
+                    options.KnownNetworks.Add(knownNetwork);
+                }
+            });
 
-            // TODO: consider setting a distributed cache in the future
-            services.AddDistributedMemoryCache();
-
+            services.AddDistributedMemoryCache(); // TODO: consider setting a distributed cache in the future
             services.AddRegistrationModule();
             // services.AddLocationModule();
             services.AddSecurityModule();
@@ -141,7 +151,7 @@ namespace EMBC.Registrants.API
             services.AddTransient<IEmailSender, EmailSender>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -162,11 +172,15 @@ namespace EMBC.Registrants.API
                     diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
                     diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
                     diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
+                    diagCtx.Set("X-Forwarded-For", httpCtx.Request.Headers["X-Forwarded-For"].ToString());
+                    diagCtx.Set("X-Forwarded-Proto", httpCtx.Request.Headers["X-Forwarded-Proto"].ToString());
+                    diagCtx.Set("X-Forwarded-Host", httpCtx.Request.Headers["X-Forwarded-Host"].ToString());
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
                     if (!env.IsProduction()) diagCtx.Set("Raw_Headers", httpCtx.Request.Headers, true);
                 };
             });
 
+            app.UseForwardedHeaders();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseOpenApi();
