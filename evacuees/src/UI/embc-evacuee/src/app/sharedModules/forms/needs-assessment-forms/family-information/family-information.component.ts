@@ -52,6 +52,8 @@ export default class FamilyInformationComponent implements OnInit {
     this.familyMemberForm.get('addFamilyMemberIndicator').valueChanges.subscribe(value =>
       this.updateOnVisibility());
     this.dataSource.next(this.familyMemberForm.get('familyMember').value);
+    this.data = this.familyMemberForm.get('familyMember').value;
+
   }
 
   addMembers(): void {

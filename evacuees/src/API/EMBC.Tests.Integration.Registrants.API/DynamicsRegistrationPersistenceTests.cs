@@ -34,6 +34,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                     InformationCollectionConsent = true,
                     RestrictedAccess = true,
                     SecretPhrase = $"secret phrase {textContextIdentifier}",
+                    BCServicesCardId = $"BCSC-ID-{textContextIdentifier}",
                     PersonalDetails = new PersonDetails
                     {
                         FirstName = $"PriRegTestFirst-{textContextIdentifier}",
