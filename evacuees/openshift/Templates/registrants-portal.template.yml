@@ -77,6 +77,7 @@ objects:
       location__cache__AutoRefreshEnabled: ${LOCATION_CACHE_REFRESH_ENABLED}
       location__cache__RefreshInterval: ${LOCATION_CACHE_REFRESH_INTERVAL}
       auth__bcsc__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
+      app__knownNetwork: ${APP_KNOWN_NETWORK}
   - kind: Secret
     apiVersion: v1
     type: Opaque
@@ -93,7 +94,6 @@ objects:
       Dynamics__ADFS__serviceAccountPassword: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
       auth__bcsc__clientId: ${BCSC_CLIENT_ID}
       auth__bcsc__clientSecret: ${BCSC_CLIENT_SECRET}
-      app__knownNetwork: ${APP_KNOWN_NETWORK}
   - kind: Service
     apiVersion: v1
     metadata:
