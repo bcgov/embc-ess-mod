@@ -26,7 +26,6 @@ using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -69,49 +68,29 @@ namespace EMBC.Registrants.API
                 .AddAuthentication(options =>
                 {
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    //options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = BcscAuthenticationDefaults.AuthenticationScheme;
                 })
-            .AddCookie(options =>
-            {
-                configuration.GetSection("auth:cookie").Bind(options);
-                options.Cookie.SameSite = SameSiteMode.Strict;
-
-                options.Events = new CookieAuthenticationEvents
+                .AddCookie(options =>
                 {
-                    OnRedirectToLogin = async c =>
-                    {
-                        await Task.CompletedTask;
-                        c.Response.Clear();
-                        c.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    }
-                };
-            })
-            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
-            {
-                configuration.GetSection("auth:oidc").Bind(options);
-                options.SaveTokens = true;
-                options.GetClaimsFromUserInfoEndpoint = true;
+                    configuration.GetSection("auth:cookie").Bind(options);
+                    options.Cookie.SameSite = SameSiteMode.Strict;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+                    options.SlidingExpiration = false;
 
-                options.Events = new OpenIdConnectEvents()
-                {
-                    //OnAuthenticationFailed = async c =>
-                    //{
-                    //    await Task.CompletedTask;
-                    //    var logger = c.HttpContext.RequestServices.GetRequiredService<ILogger<OpenIdConnectHandler>>();
-                    //    logger.LogError(c.Exception, $"Error authenticating with OIDC");
-                    //    c.Fail(c.Exception);
-                    //},
-                    OnTokenValidated = async c =>
+                    options.Events = new CookieAuthenticationEvents
                     {
-                        var logger = c.HttpContext.RequestServices.GetRequiredService<ILogger<OpenIdConnectHandler>>();
-                        logger.LogInformation("User {0} logged in", c.Principal.FindFirstValue(ClaimTypes.NameIdentifier));
-                        var claimTransformer = c.HttpContext.RequestServices.GetRequiredService<BcscClaimTransformation>();
-                        c.Principal = await claimTransformer.TransformAsync(c.Principal);
-                        c.Success();
-                    }
-                };
-            })
-            ;
+                        OnRedirectToLogin = async c =>
+                        {
+                            await Task.CompletedTask;
+                            c.Response.Clear();
+                            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        }
+                    };
+                })
+                .AddBcscOidc(BcscAuthenticationDefaults.AuthenticationScheme, options =>
+                   {
+                       configuration.Bind("auth:bcsc", options);
+                   });
 
             if (!env.IsProduction())
             {
@@ -124,6 +103,7 @@ namespace EMBC.Registrants.API
                         document.Info.Title = "Registrants Portal API";
                     };
                 });
+
                 services.Configure<SwaggerUi3Settings>(options =>
                 {
                     options.Path = "/api/openapi";

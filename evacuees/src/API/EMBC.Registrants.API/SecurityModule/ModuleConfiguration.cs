@@ -22,7 +22,6 @@ namespace EMBC.Registrants.API.SecurityModule
     {
         public static IServiceCollection AddSecurityModule(this IServiceCollection services)
         {
-            services.AddSingleton(new BcscClaimTransformation());
             return services;
         }
     }
