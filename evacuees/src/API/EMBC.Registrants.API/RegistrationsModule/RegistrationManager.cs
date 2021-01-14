@@ -297,7 +297,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             profile.PersonalDetails.DateOfBirth = queryResult.birthdate.ToString();
             profile.PersonalDetails.Initials = queryResult.era_initial;
             profile.PersonalDetails.PreferredName = queryResult.era_preferredname;
-            profile.PersonalDetails.Gender = queryResult.gendercode.ToString();
+            profile.PersonalDetails.Gender = LookupGenderValue(queryResult.gendercode);
             // Contact Details
             profile.ContactDetails.Email = queryResult.emailaddress1;
             profile.ContactDetails.HideEmailRequired = queryResult.era_emailrefusal.HasValue ? queryResult.era_emailrefusal.Value : false;
@@ -384,7 +384,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 profile.PersonalDetails.DateOfBirth = queryResult.birthdate.ToString();
                 profile.PersonalDetails.Initials = queryResult.era_initial;
                 profile.PersonalDetails.PreferredName = queryResult.era_preferredname;
-                profile.PersonalDetails.Gender = queryResult.gendercode.ToString();
+                profile.PersonalDetails.Gender = LookupGenderValue(queryResult.gendercode);
                 // Contact Details
                 profile.ContactDetails.Email = queryResult.emailaddress1;
                 profile.ContactDetails.HideEmailRequired = queryResult.era_emailrefusal.HasValue ? queryResult.era_emailrefusal.Value : false;
@@ -468,6 +468,14 @@ namespace EMBC.Registrants.API.RegistrationsModule
             "Male" => 1,
             "Female" => 2,
             "X" => 3,
+            _ => null
+        };
+
+        private string LookupGenderValue(int? value) => value switch
+        {
+            1 => "Male",
+            2 => "Female",
+            3 => "X",
             _ => null
         };
 
