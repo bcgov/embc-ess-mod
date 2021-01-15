@@ -250,6 +250,9 @@ objects:
         spec:
           containers:
             - name: registrants-portal-ui
+              env:
+                - name: API_URL
+                  value: srv+${APP_NAME}-registrants-portal-api:8080
               image: docker-registry.default.svc:5000/pbiizm-tools/registrants-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:

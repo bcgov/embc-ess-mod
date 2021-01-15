@@ -38,6 +38,7 @@ services:
       - 5200:2015
     environment:
       - "API_URL=registrants-portal-api:8080"
+      - "LOG_LEVEL=DEBUG"
     depends_on:
       - registrants-portal-api
 
