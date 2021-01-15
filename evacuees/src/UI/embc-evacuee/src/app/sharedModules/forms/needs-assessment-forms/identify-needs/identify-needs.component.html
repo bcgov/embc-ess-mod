@@ -7,15 +7,15 @@
       <div class="row row-tile">
         <div class="col-md-12">
           <p class="sub-heading">Food</p>
-          <label class="question requiredField" id="food-label">Do you need food for you and your family while you are
-            evacuated?</label>
+          <label class="question requiredField" id="food-label">Can you provide food for you and your household while
+            you are evacuated?</label>
           <br>
-          <mat-radio-group formControlName="requiresFood" required>
+          <mat-radio-group formControlName="canEvacueeProvideFood" required>
             <mat-radio-button [value]="true">Yes</mat-radio-button>
             <mat-radio-button [value]="false">No</mat-radio-button>
             <mat-radio-button value="null">I'm not sure</mat-radio-button>
             <mat-error class="custom-mat-error"
-              *ngIf="needsFormControl?.requiresFood.touched && needsFormControl?.requiresFood.invalid && needsFormControl?.requiresFood.hasError('required')">
+              *ngIf="needsFormControl?.canEvacueeProvideFood.touched && needsFormControl?.canEvacueeProvideFood.invalid && needsFormControl?.canEvacueeProvideFood.hasError('required')">
               Food is required</mat-error>
           </mat-radio-group>
         </div>
@@ -23,15 +23,15 @@
       <div class="row row-tile-style">
         <div class="col-md-12">
           <p class="sub-heading">Lodging</p>
-          <label class="question requiredField" id="lodging-label">Do you require lodging for you and your family while
-            you are evacuated?</label>
+          <label class="question requiredField" id="lodging-label">Can you provide lodging for you and your household
+            while you are evacuated?</label>
           <br>
-          <mat-radio-group formControlName="requiresLodging" required>
+          <mat-radio-group formControlName="canEvacueeProvideLodging" required>
             <mat-radio-button [value]="true">Yes</mat-radio-button>
             <mat-radio-button [value]="false">No</mat-radio-button>
             <mat-radio-button value="null">I'm not sure</mat-radio-button>
             <mat-error class="custom-mat-error"
-              *ngIf="needsFormControl?.requiresLodging.touched && needsFormControl?.requiresLodging.invalid && needsFormControl?.requiresLodging.hasError('required')">
+              *ngIf="needsFormControl?.canEvacueeProvideLodging.touched && needsFormControl?.canEvacueeProvideLodging.invalid && needsFormControl?.canEvacueeProvideLodging.hasError('required')">
               Lodging is required</mat-error>
           </mat-radio-group>
         </div>
@@ -39,16 +39,16 @@
       <div class="row row-tile">
         <div class="col-md-12">
           <p class="sub-heading">Clothing</p>
-          <label class="question requiredField" id="clothing-label">Do you need appropriate clothing for you and your
-            family while you are
-            evacuated?<br>This includes warm clothing should there be extreme winter conditions.</label>
+          <label class="question requiredField" id="clothing-label">Can you provide appropriate clothing for you and
+            your household while you are evacuated?<br>This includes warm clothing should there be extreme winter
+            conditions.</label>
           <br>
-          <mat-radio-group formControlName="requiresClothing" required>
+          <mat-radio-group formControlName="canEvacueeProvideClothing" required>
             <mat-radio-button [value]="true">Yes</mat-radio-button>
             <mat-radio-button [value]="false">No</mat-radio-button>
             <mat-radio-button value="null">I'm not sure</mat-radio-button>
             <mat-error class="custom-mat-error"
-              *ngIf="needsFormControl?.requiresClothing.touched && needsFormControl?.requiresClothing.invalid && needsFormControl?.requiresClothing.hasError('required')">
+              *ngIf="needsFormControl?.canEvacueeProvideClothing.touched && needsFormControl?.canEvacueeProvideClothing.invalid && needsFormControl?.canEvacueeProvideClothing.hasError('required')">
               Clothing is required</mat-error>
           </mat-radio-group>
         </div>
@@ -56,15 +56,17 @@
       <div class="row row-tile-style">
         <div class="col-md-12">
           <p class="sub-heading">Transportation</p>
-          <label class="question requiredField" id="transportation-label">Do you need transportation to meet your
-            immediate needs?</label>
+          <label class="question requiredField" id="transportation-label">Can you provide transportation for you and
+            your household while you are evacuated?
+            <br>This could include a taxi or rideshare to your current accommodation.
+          </label>
           <br>
-          <mat-radio-group formControlName="requiresTransportation" required>
+          <mat-radio-group formControlName="canEvacueeProvideTransportation" required>
             <mat-radio-button [value]="true">Yes</mat-radio-button>
             <mat-radio-button [value]="false">No</mat-radio-button>
             <mat-radio-button value="null">I'm not sure</mat-radio-button>
             <mat-error class="custom-mat-error"
-              *ngIf="needsFormControl?.requiresTransportation.touched && needsFormControl?.requiresTransportation.invalid && needsFormControl?.requiresTransportation.hasError('required')">
+              *ngIf="needsFormControl?.canEvacueeProvideTransportation.touched && needsFormControl?.canEvacueeProvideTransportation.invalid && needsFormControl?.canEvacueeProvideTransportation.hasError('required')">
               Transportation is required</mat-error>
           </mat-radio-group>
         </div>
@@ -72,17 +74,17 @@
       <div class="row row-tile">
         <div class="col-md-12">
           <p class="sub-heading">Incidentals</p>
-          <label class="question requiredField" id="incidentals-label">Do you have need of necessities for you and your
-            family while you are
-            evacuated?<br>This could include miscellaneous items such as personal hygiene products, laundry supplies
+          <label class="question requiredField" id="incidentals-label">Can you provide incidentals for you and your
+            household while you are evacuated?<br>This could include miscellaneous items such as personal hygiene
+            products, laundry supplies
             and/or pet food.</label>
           <br>
-          <mat-radio-group formControlName="requiresIncidentals" required>
+          <mat-radio-group formControlName="canEvacueeProvideIncidentals" required>
             <mat-radio-button [value]="true">Yes</mat-radio-button>
             <mat-radio-button [value]="false">No</mat-radio-button>
             <mat-radio-button value="null">I'm not sure</mat-radio-button>
             <mat-error class="custom-mat-error"
-              *ngIf="needsFormControl?.requiresIncidentals.touched && needsFormControl?.requiresIncidentals.invalid && needsFormControl?.requiresIncidentals.hasError('required')">
+              *ngIf="needsFormControl?.canEvacueeProvideIncidentals.touched && needsFormControl?.canEvacueeProvideIncidentals.invalid && needsFormControl?.canEvacueeProvideIncidentals.hasError('required')">
               Incidentals is required</mat-error>
           </mat-radio-group>
         </div>

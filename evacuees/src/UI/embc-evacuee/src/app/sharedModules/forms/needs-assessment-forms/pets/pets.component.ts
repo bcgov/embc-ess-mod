@@ -49,7 +49,11 @@ export default class PetsComponent implements OnInit {
 
     this.petsForm.get('addPetIndicator').valueChanges.subscribe(value =>
       this.updateOnVisibility());
+    this.petsForm.get('addPetFoodIndicator').valueChanges.subscribe(value =>
+        this.updateOnVisibility());
+
     this.dataSource.next(this.petsForm.get('pets').value);
+    this.data = this.petsForm.get('pets').value;
   }
 
   addPets(): void {

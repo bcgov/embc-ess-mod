@@ -60,20 +60,21 @@ export class DataUpdationService {
     updateNeedsDetails(formGroup: FormGroup): void {
         this.formCreationService.setIdentifyNeedsForm(formGroup);
         this.dataService.updateNeedsAssessment({
-            requiresClothing: formGroup.get('requiresClothing').value === 'null' ? null : formGroup.get('requiresClothing').value
+            canEvacueeProvideClothing: formGroup.get('canEvacueeProvideClothing').value === 'null' ? null : formGroup.get('canEvacueeProvideClothing').value
         });
         this.dataService.updateNeedsAssessment({
-            requiresFood: formGroup.get('requiresFood').value === 'null' ? null : formGroup.get('requiresFood').value
+            canEvacueeProvideFood:
+            formGroup.get('canEvacueeProvideFood').value === 'null' ? null : formGroup.get('canEvacueeProvideFood').value
         });
         this.dataService.updateNeedsAssessment({
-            requiresIncidentals: formGroup.get('requiresIncidentals').value === 'null' ? null : formGroup.get('requiresIncidentals').value
+            canEvacueeProvideIncidentals: formGroup.get('canEvacueeProvideIncidentals').value === 'null' ? null : formGroup.get('canEvacueeProvideIncidentals').value
         });
         this.dataService.updateNeedsAssessment({
-            requiresLodging: formGroup.get('requiresLodging').value === 'null' ? null : formGroup.get('requiresLodging').value
+            canEvacueeProvideLodging: formGroup.get('canEvacueeProvideLodging').value === 'null' ? null : formGroup.get('canEvacueeProvideLodging').value
         });
         this.dataService.updateNeedsAssessment({
-            requiresTransportation: formGroup.get('requiresTransportation').value === 'null' ?
-                null : formGroup.get('requiresTransportation').value
+            canEvacueeProvideTransportation: formGroup.get('canEvacueeProvideTransportation').value === 'null' ?
+                null : formGroup.get('canEvacueeProvideTransportation').value
         });
     }
 
