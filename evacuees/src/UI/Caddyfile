@@ -2,8 +2,11 @@
 	admin off
 }
 
-:2015 {
-	log
+:2015 {	
+	log {
+		level {$LOG_LEVEL}
+	}
+
 	root * /site 
 
 	header / {

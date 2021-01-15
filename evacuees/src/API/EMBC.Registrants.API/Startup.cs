@@ -124,7 +124,7 @@ namespace EMBC.Registrants.API
             services.Configure<LocationCacheHostedServiceOptions>(configuration.GetSection("Location:Cache"));
             services.Configure<ForwardedHeadersOptions>(options =>
             {
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
+                options.ForwardLimit = 2;
                 var configvalue = configuration.GetValue("app:knownNetwork", string.Empty)?.Split('/');
                 if (configvalue.Length == 2)
                 {
