@@ -48,6 +48,18 @@ parameters:
   - description: Locations lists - cache frequency refresh in minutes
     name: LOCATION_CACHE_REFRESH_INTERVAL
     value: "00:01:00"
+  - description: BCSC client id
+    name: BCSC_CLIENT_ID
+    required: true
+  - description: BCSC client secret
+    name: BCSC_CLIENT_SECRET
+    required: true
+  - description: BCSC metadata endpoint
+    name: BCSC_METADATA_ENDPOINT
+    required: true
+  - description: Reverse proxy known network
+    name: APP_KNOWN_NETWORK
+    required: false
 
 objects:
   - kind: ConfigMap
@@ -64,6 +76,8 @@ objects:
       Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
       location__cache__AutoRefreshEnabled: ${LOCATION_CACHE_REFRESH_ENABLED}
       location__cache__RefreshInterval: ${LOCATION_CACHE_REFRESH_INTERVAL}
+      auth__bcsc__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
+      app__knownNetwork: ${APP_KNOWN_NETWORK}
   - kind: Secret
     apiVersion: v1
     type: Opaque
@@ -78,6 +92,8 @@ objects:
       Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
       Dynamics__ADFS__serviceAccountName: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_NAME}
       Dynamics__ADFS__serviceAccountPassword: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
+      auth__bcsc__clientId: ${BCSC_CLIENT_ID}
+      auth__bcsc__clientSecret: ${BCSC_CLIENT_SECRET}
   - kind: Service
     apiVersion: v1
     metadata:
@@ -234,6 +250,9 @@ objects:
         spec:
           containers:
             - name: registrants-portal-ui
+              env:
+                - name: API_URL
+                  value: srv+${APP_NAME}-registrants-portal-api:8080
               image: docker-registry.default.svc:5000/pbiizm-tools/registrants-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:
