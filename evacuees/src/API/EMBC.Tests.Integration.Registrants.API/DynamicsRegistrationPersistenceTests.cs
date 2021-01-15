@@ -243,7 +243,7 @@ namespace EMBC.Tests.Integration.Registrants.API
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetProfileByBcscId()
+        public async Task GetProfileByBcscId()
         {
             var regManager = services.GetRequiredService<IRegistrationManager>();
             var profile = await regManager.GetProfileByBcscId("TESTTESTTESTTESTTESTTESTTESTTEST");

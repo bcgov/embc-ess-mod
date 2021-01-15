@@ -294,7 +294,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             // Personal Details
             profile.PersonalDetails.FirstName = queryResult.firstname;
             profile.PersonalDetails.LastName = queryResult.lastname;
-            profile.PersonalDetails.DateOfBirth = queryResult.birthdate.ToString();
+            profile.PersonalDetails.DateOfBirth = Convert.ToDateTime(queryResult.birthdate.ToString()).ToShortDateString(); //MM/dd/yyyy
             profile.PersonalDetails.Initials = queryResult.era_initial;
             profile.PersonalDetails.PreferredName = queryResult.era_preferredname;
             profile.PersonalDetails.Gender = LookupGenderValue(queryResult.gendercode);
@@ -381,7 +381,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 // Personal Details
                 profile.PersonalDetails.FirstName = queryResult.firstname;
                 profile.PersonalDetails.LastName = queryResult.lastname;
-                profile.PersonalDetails.DateOfBirth = queryResult.birthdate.ToString();
+                profile.PersonalDetails.DateOfBirth = Convert.ToDateTime(queryResult.birthdate.ToString()).ToShortDateString(); //MM/dd/yyyy
                 profile.PersonalDetails.Initials = queryResult.era_initial;
                 profile.PersonalDetails.PreferredName = queryResult.era_preferredname;
                 profile.PersonalDetails.Gender = LookupGenderValue(queryResult.gendercode);
