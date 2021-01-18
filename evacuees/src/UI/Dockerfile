@@ -11,4 +11,5 @@ FROM caddy:alpine as final
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY --from=ng-builder /src/dist/embc-evacuee/ /site
 ENV API_URL=
+ENV LOG_LEVEL=INFO
 EXPOSE 2015

@@ -40,7 +40,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                         FirstName = $"PriRegTestFirst-{textContextIdentifier}",
                         LastName = $"PriRegTestLast-{textContextIdentifier}",
                         DateOfBirth = "2000/01/01",
-                        Gender = "M",
+                        Gender = "Male",
                         Initials = "initials1",
                         PreferredName = "preferred1"
                     },
@@ -91,7 +91,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                     FirstName = $"PriRegTestFirst-{textContextIdentifier}",
                     LastName = $"PriRegTestLast-{textContextIdentifier}",
                     DateOfBirth = "2000/01/01",
-                    Gender = "F",
+                    Gender = "Female",
                     Initials = "initials1",
                     PreferredName = "preferred1"
                 },
@@ -144,7 +144,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                         FirstName = $"PriRegTestFirst-{textContextIdentifier}",
                         LastName = $"PriRegTestLast-{textContextIdentifier}",
                         DateOfBirth = "2000/01/01",
-                        Gender = "F",
+                        Gender = "Female",
                         Initials = "initials1",
                         PreferredName = "preferred1"
                     },

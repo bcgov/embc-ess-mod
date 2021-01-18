@@ -49,7 +49,11 @@ export default class PetsComponent implements OnInit {
 
     this.petsForm.get('addPetIndicator').valueChanges.subscribe(value =>
       this.updateOnVisibility());
+    this.petsForm.get('addPetFoodIndicator').valueChanges.subscribe(value =>
+        this.updateOnVisibility());
+
     this.dataSource.next(this.petsForm.get('pets').value);
+    this.data = this.petsForm.get('pets').value;
   }
 
   addPets(): void {
@@ -57,6 +61,7 @@ export default class PetsComponent implements OnInit {
     this.showPetsForm = !this.showPetsForm;
     // this.showTable = !this.showTable;
     this.petsForm.get('addPetIndicator').setValue(true);
+    this.petsForm.get('addPetFoodIndicator').setValue(true);
   }
 
   save(): void {
@@ -75,13 +80,18 @@ export default class PetsComponent implements OnInit {
     } else {
       this.petsForm.get('pet').markAllAsTouched();
     }
+
   }
 
   cancel(): void {
     this.showPetsForm = !this.showPetsForm;
     // this.showTable = !this.showTable;
+
+    this.petsForm.get('pet').reset();
+    this.petsForm.get('addPetIndicator').setValue(false);
+
     if (this.data.length === 0) {
-      this.petsForm.get('addPetIndicator').setValue(false);
+      this.petsForm.get('addPetFoodIndicator').setValue(false);
     }
   }
 
@@ -96,8 +106,10 @@ export default class PetsComponent implements OnInit {
     this.data.splice(index, 1);
     this.dataSource.next(this.data);
     this.petsForm.get('pets').setValue(this.data);
+    this.petsForm.get('addPetIndicator').setValue(false);
+
     if (this.data.length === 0) {
-      this.petsForm.get('addPetIndicator').setValue(false);
+      this.petsForm.get('addPetFoodIndicator').setValue(false);
       this.petsForm.get('hasPetsFood').reset();
     }
   }
