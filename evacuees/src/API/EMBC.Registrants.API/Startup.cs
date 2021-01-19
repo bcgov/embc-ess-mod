@@ -20,7 +20,9 @@ using System.Net;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
 using EMBC.Registrants.API.LocationModule;
+using EMBC.Registrants.API.ProfilesModule;
 using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.SecurityModule;
@@ -133,9 +135,11 @@ namespace EMBC.Registrants.API
                 }
             });
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddDistributedMemoryCache(); // TODO: consider setting a distributed cache in the future
             services.AddRegistrationModule();
             services.AddLocationModule();
+            services.AddProfileModule();
             services.AddSecurityModule();
             services.AddADFSTokenProvider();
             services.AddSingleton(sp =>
