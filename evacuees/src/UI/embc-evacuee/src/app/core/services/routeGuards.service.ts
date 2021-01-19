@@ -16,7 +16,7 @@ export class SubmitFileCanDeactivateGuardService implements CanDeactivate<NonVer
             data: globalConst.invalidGoBackMessage,
             height: '220px',
             width: '400px'
-        })
+        });
         return false;
     }
 }
