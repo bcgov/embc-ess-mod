@@ -243,13 +243,70 @@ namespace EMBC.Tests.Integration.Registrants.API
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetProfileByBcscId()
+        public async Task GetProfileByBcscId()
         {
             var regManager = services.GetRequiredService<IRegistrationManager>();
             var profile = await regManager.GetProfileByBcscId("TESTTESTTESTTESTTESTTESTTESTTEST");
             Assert.NotNull(profile);
             Assert.NotEmpty(profile.PersonalDetails.FirstName);
             testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task RegistrantEvacuation()
+        {
+            var textContextIdentifier = DateTime.Now.ToShortTimeString();
+            var registrantEvacuation = new RegistrantEvacuation
+            {
+                ContactId = "91d6f457-b8b5-4fd4-ac71-0e45bd7e989d",
+                PreliminaryNeedsAssessment = new NeedsAssessment
+                {
+                    EvacuatedFromAddress = new Address
+                    {
+                        AddressLine1 = $"AddressLine1-{textContextIdentifier}",
+                        Country = new Country { CountryCode = "CA" },
+                        Jurisdiction = new Jurisdiction { JurisdictionCode = "226adfaf-9f97-ea11-b813-005056830319" },
+                        StateProvince = new StateProvince { StateProvinceCode = "BC", StateProvinceName = "British Columbia" },
+                        PostalCode = "V8V 8V8"
+                    },
+                    FamilyMembers = new[]
+                    {
+                        new PersonDetails
+                        {
+                            FirstName = $"MemberFirstName-{textContextIdentifier}",
+                            LastName = $"MemberLastName-{textContextIdentifier}",
+                            Gender = "F",
+                            DateOfBirth = "1990-09-09"
+                        }
+                    },
+                    HaveMedication = false,
+                    Insurance = NeedsAssessment.InsuranceOption.Unknown,
+                    HaveSpecialDiet = true,
+                    HasPetsFood = true,
+                    RequiresClothing = true, //to be deleted
+                    RequiresFood = true, //to be deleted
+                    RequiresLodging = true, //to be deleted
+                    RequiresIncidentals = true, //to be deleted
+                    RequiresTransportation = true, //to be deleted
+                    CanEvacueeProvideClothing = true,
+                    CanEvacueeProvideFood = false,
+                    CanEvacueeProvideIncidentals = true,
+                    CanEvacueeProvideLodging = false,
+                    CanEvacueeProvideTransportation = false,
+                    Pets = new[]
+                    {
+                        new Pet{ Type = $"Cat{textContextIdentifier}", Quantity = "2" },
+                        new Pet{ Type = $"Dog{textContextIdentifier}", Quantity = "1" }
+                    },
+                }
+            };
+
+            var regManager = services.GetRequiredService<IRegistrationManager>();
+            var result = await regManager.CreateRegistrantEvacuation(registrantEvacuation);
+
+            testLogger.LogDebug("ESS File #: " + result);
+            Assert.NotNull(result);
+            Assert.True(int.Parse(result) > 0);
         }
     }
 }
