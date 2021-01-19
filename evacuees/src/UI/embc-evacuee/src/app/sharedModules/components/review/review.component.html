@@ -446,31 +446,31 @@
                 <div class="row info-detail">
                     <div class="col-md-3">Food:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.identifyNeedsForm$ | async).value.requiresFood === 'null' ? 'I\'m not sure' : (formCreationService.identifyNeedsForm$ | async).value.requiresFood === true ? 'Yes' : 'No'}}
+                        {{(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideFood === 'null' ? 'I\'m not sure' : (formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideFood === true ? 'Yes' : 'No'}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Lodging:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.identifyNeedsForm$ | async).value.requiresLodging === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresLodging === true ? 'Yes' : 'No'}}
+                        {{(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideLodging === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideLodging === true ? 'Yes' : 'No'}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Clothing:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.identifyNeedsForm$ | async).value.requiresClothing === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresClothing === true ? 'Yes' : 'No'}}
+                        {{(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideClothing === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideClothing === true ? 'Yes' : 'No'}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Transportation:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresTransportation === true ? 'Yes' : 'No'}}
+                        {{(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideTransportation === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideTransportation === true ? 'Yes' : 'No'}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Incidentals:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.requiresIncidentals === true ? 'Yes' : 'No'}}
+                        {{(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideIncidentals === 'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideIncidentals === true ? 'Yes' : 'No'}}
                     </div>
                 </div>
             </mat-card-content>
