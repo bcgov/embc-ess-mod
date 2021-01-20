@@ -6,10 +6,12 @@ import { Router } from '@angular/router';
 export class AuthService {
   constructor(private http: HttpClient, private router: Router) { }
 
-  private user: IUser = null;
+
+  private token: string = null;
+
 
   public async isAuthenticated(): Promise<boolean> {
-    return (await this.GetUser()) !== null;
+    return (await this.getToken()) !== null;
   }
 
   public Login(returnPath: string): void {
@@ -17,27 +19,25 @@ export class AuthService {
     window.location.replace('/login?returnUrl=' + returnPath);
   }
 
-  private async GetUser(): Promise<IUser> {
-    if (this.user === null) {
+  public async getToken(): Promise<string> {
+    if (this.token === null) {
       await this.http
-        .get<IUser>('/api/user')
+        .get('/login/token', { responseType: 'text' })
         .toPromise()
-        .then((u) => (this.user = u))
+        .then((token) => {
+          console.log('token=', token);
+          this.token = token;
+        })
         .catch((err) => {
+          console.error(err);
           if (err instanceof HttpErrorResponse && err.status === 401) {
-            this.user = null;
+            this.token = null;
           } else {
-            console.error(err);
+            console.error('getToken', err);
           }
         });
     }
-    console.log(this.user);
-    return this.user;
+    console.log(this.token);
+    return this.token;
   }
-}
-
-interface IUser {
-  id: string;
-  firstName: string;
-  lastName: string;
 }

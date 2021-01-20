@@ -25,6 +25,7 @@ namespace EMBC.Registrants.API.ProfilesModule
 {
     [Route("api/profile")]
     [ApiController]
+    [Authorize]
     public class ProfileController : ControllerBase
     {
         private readonly IProfileManager profileManager;
@@ -35,13 +36,15 @@ namespace EMBC.Registrants.API.ProfilesModule
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
         public async Task<ActionResult<Profile>> GetProfile()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return Ok(await profileManager.GetProfileByBceid(userId));
+            var profile = await profileManager.GetProfileByBceid(userId);
+            if (profile == null) return NotFound();
+            return Ok(profile);
         }
     }
 

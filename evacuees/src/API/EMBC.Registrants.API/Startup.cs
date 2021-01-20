@@ -88,13 +88,14 @@ namespace EMBC.Registrants.API
                             await Task.CompletedTask;
                             c.Response.Clear();
                             c.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            await c.Response.CompleteAsync();
                         }
                     };
                 })
                 .AddBcscOidc(BcscAuthenticationDefaults.AuthenticationScheme, options =>
-                   {
-                       configuration.Bind("auth:bcsc", options);
-                   });
+                {
+                    configuration.Bind("auth:bcsc", options);
+                });
 
             if (!env.IsProduction())
             {
