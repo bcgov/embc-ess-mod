@@ -17,6 +17,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -63,86 +64,5 @@ namespace EMBC.Registrants.API.ProfilesModule
         public Address PrimaryAddress { get; set; }
 
         public Address MailingAddress { get; set; }
-    }
-
-    /// <summary>
-    /// Personal details
-    /// </summary>
-    public class PersonDetails
-    {
-        [Required]
-        public string FirstName { get; set; }
-
-        [Required]
-        public string LastName { get; set; }
-
-        public string Initials { get; set; }
-        public string PreferredName { get; set; }
-
-        [Required]
-        public string Gender { get; set; }
-
-        [Required]
-        public string DateOfBirth { get; set; }
-    }
-
-    /// <summary>
-    /// Address data with optional lookup code
-    /// </summary>
-    public class Address
-    {
-        [Required]
-        public string AddressLine1 { get; set; }
-
-        public string AddressLine2 { get; set; }
-
-        [Required]
-        public Jurisdiction Jurisdiction { get; set; }
-
-        public StateProvince StateProvince { get; set; }
-
-        [Required]
-        public Country Country { get; set; }
-
-        [Required]
-        public string PostalCode { get; set; }
-    }
-
-    public class Jurisdiction
-    {
-        public string Code { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-    }
-
-    public class StateProvince
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Country
-    {
-        [Required]
-        public string Code { get; set; }
-
-        public string Name { get; set; }
-    }
-
-    /// <summary>
-    /// Registrant contact information
-    /// </summary>
-    public class ContactDetails
-    {
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Phone]
-        public string Phone { get; set; }
-
-        public bool HidePhoneRequired { get; set; }
-
-        public bool HideEmailRequired { get; set; }
     }
 }

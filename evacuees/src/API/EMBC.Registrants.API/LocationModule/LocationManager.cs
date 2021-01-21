@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.Shared;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace EMBC.Registrants.API.LocationModule

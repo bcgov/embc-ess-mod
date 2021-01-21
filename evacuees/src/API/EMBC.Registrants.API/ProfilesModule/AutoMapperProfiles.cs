@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using EMBC.Registrants.API.Shared;
 using Microsoft.Dynamics.CRM;
 
 namespace EMBC.Registrants.API.ProfilesModule
@@ -64,12 +65,24 @@ namespace EMBC.Registrants.API.ProfilesModule
             CreateMap<era_jurisdiction, Jurisdiction>()
                 .ForMember(j => j.Code, opts => opts.MapFrom(o => o.era_jurisdictionid))
                 .ForMember(j => j.Name, opts => opts.MapFrom(o => o.era_jurisdictionname))
+                .ForMember(j => j.CountryCode, opts => opts.MapFrom(o => o.era_RelatedProvinceState == null
+                    ? null
+                    : o.era_RelatedProvinceState.era_RelatedCountry == null
+                        ? null
+                        : o.era_RelatedProvinceState.era_RelatedCountry.era_countrycode))
+                .ForMember(j => j.StateProvinceCode, opts => opts.MapFrom(o => o.era_RelatedProvinceState == null
+                        ? null
+                        : o.era_RelatedProvinceState.era_code))
+                .ForMember(j => j.Type, opts => opts.MapFrom(o => (JurisdictionType)o.era_type))
                 ;
 
             CreateMap<era_provinceterritories, StateProvince>()
                 .ForMember(j => j.Code, opts => opts.MapFrom(o => o.era_code))
                 .ForMember(j => j.Name, opts => opts.MapFrom(o => o.era_name))
-                ;
+                .ForMember(j => j.CountryCode, opts => opts.MapFrom(o => o.era_RelatedCountry == null
+                    ? null
+                    : o.era_RelatedCountry.era_countrycode))
+             ;
 
             CreateMap<era_country, Country>()
                 .ForMember(j => j.Code, opts => opts.MapFrom(o => o.era_countrycode))
