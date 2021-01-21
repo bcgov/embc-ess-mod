@@ -12,7 +12,7 @@ export class CanDeactivateGuardService implements CanDeactivate<FileSubmissionCo
 
     canDeactivate(): boolean {
 
-        if (window.location.href === 'http://localhost:4200/non-verified-registration/fileSubmission') {
+        if (window.location.pathname === '/non-verified-registration/fileSubmission') {
             return true;
         } else {
             this.dialog.open(DialogComponent, {
