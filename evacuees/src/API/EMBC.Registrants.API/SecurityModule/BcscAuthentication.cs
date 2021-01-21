@@ -77,26 +77,28 @@ namespace EMBC.Registrants.API.SecurityModule
             return builder.AddOpenIdConnect(authenticationScheme, options =>
              {
                  options.SaveTokens = true;
-                 options.GetClaimsFromUserInfoEndpoint = true;
+                 options.GetClaimsFromUserInfoEndpoint = false;
                  options.UseTokenLifetime = true;
                  options.ResponseType = OpenIdConnectResponseType.Code;
 
                  //add required scopes
-                 options.Scope.Add("address");
-                 options.Scope.Add("email");
+                 //options.Scope.Add("address");
+                 //options.Scope.Add("email");
 
                  // map BCSC token values to claims
-                 options.ClaimActions.MapJsonKey(RegistrantClaimTypes.Id, BcscTokenKeys.Id);
-                 options.ClaimActions.MapJsonKey(RegistrantClaimTypes.FirstName, BcscTokenKeys.GivenName);
-                 options.ClaimActions.MapJsonKey(RegistrantClaimTypes.LastName, BcscTokenKeys.FamilyName);
-                 options.ClaimActions.MapJsonKey(RegistrantClaimTypes.DisplayName, BcscTokenKeys.DisplayName);
-                 options.ClaimActions.MapJsonKey(RegistrantClaimTypes.DateOfBirth, BcscTokenKeys.BirthDate);
-                 options.ClaimActions.MapJsonKey(RegistrantClaimTypes.Gender, BcscTokenKeys.Gender);
-                 options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.StreetAddress, BcscTokenKeys.Address, BcscTokenKeys.AddressStreet);
-                 options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.Jurisdiction, BcscTokenKeys.Address, BcscTokenKeys.AddressLocality);
-                 options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.Province, BcscTokenKeys.Address, BcscTokenKeys.AddressRegion);
-                 options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.Country, BcscTokenKeys.Address, BcscTokenKeys.AddressCountry);
-                 options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.PostalCode, BcscTokenKeys.Address, BcscTokenKeys.AddressPostalCode);
+                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.Id, BcscTokenKeys.Id);
+                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.FirstName, BcscTokenKeys.GivenName);
+                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.LastName, BcscTokenKeys.FamilyName);
+                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.DisplayName, BcscTokenKeys.DisplayName);
+                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.DateOfBirth, BcscTokenKeys.BirthDate);
+                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.Gender, BcscTokenKeys.Gender);
+                 //options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.StreetAddress, BcscTokenKeys.Address, BcscTokenKeys.AddressStreet);
+                 //options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.Jurisdiction, BcscTokenKeys.Address, BcscTokenKeys.AddressLocality);
+                 //options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.Province, BcscTokenKeys.Address, BcscTokenKeys.AddressRegion);
+                 //options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.Country, BcscTokenKeys.Address, BcscTokenKeys.AddressCountry);
+                 //options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.PostalCode, BcscTokenKeys.Address, BcscTokenKeys.AddressPostalCode);
+
+                 options.ClaimActions.Clear();
 
                  options.Events = new OpenIdConnectEvents()
                  {
@@ -117,6 +119,7 @@ namespace EMBC.Registrants.API.SecurityModule
                          await Task.CompletedTask;
                          var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger(BcscAuthenticationDefaults.LoggerCategory);
                          logger.LogInformation("BCSC user {0} logged in", c.Principal?.FindFirstValue(ClaimTypes.NameIdentifier));
+                         c.Principal = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.UserData, c.SecurityToken.RawData) }, c.Principal.Identity.AuthenticationType));
                      }
                  };
 
