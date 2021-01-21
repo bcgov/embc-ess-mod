@@ -1,21 +1,21 @@
 .sub-heading {
-    font-weight: 700;
+    font-weight: 400;
     font-size: 21px;
 }
 
 .sub-info {
-    color: #169BD5;
+    color: #169bd5;
 }
 
 .ref-number {
-    color: #169BD5;
-    font-weight: 400;
-    font-size: 60px;
+    color: #169bd5;
+    font-weight: 700;
+    font-size: 21px;
 }
 
 @media screen and (max-width: 768px) {
     .ref-number {
-        color: #169BD5;
+        color: #169bd5;
         font-weight: 400;
         font-size: 40px;
     }
@@ -23,7 +23,7 @@
 
 .bottom-panel {
     width: 100%;
-    margin-top: 24vh
+    margin-top: 24vh;
 }
 
 .open-panel-heading {
@@ -35,7 +35,7 @@
     .mat-expansion-panel-header.mat-expanded {
         height: auto;
     }
-  }
+}
 
 .services-info {
     background-color: rgba(255, 223, 37, 1);
@@ -55,5 +55,13 @@
 }
 
 .notice-button {
+    width: 100%;
+}
+
+.mat-form-field + .mat-form-field {
+    margin-left: 8px;
+    bottom: 0;
+    position: fixed;
+    z-index: 1;
     width: 100%;
 }

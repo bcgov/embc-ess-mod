@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NonVerifiedRegistrationComponent } from './non-verified-registration.component';
 import { NonVerifiedRegistrationRoutingModule } from './non-verified-registration-routing.module';
-import { SubmitFileCanDeactivateGuardService } from '../core/services/routeGuards.service';
+import { CanDeactivateGuardService } from '../core/services/disableBackGuard.service';
 
 @NgModule({
   declarations: [
@@ -12,6 +12,6 @@ import { SubmitFileCanDeactivateGuardService } from '../core/services/routeGuard
     CommonModule,
     NonVerifiedRegistrationRoutingModule
   ],
-  providers: [SubmitFileCanDeactivateGuardService]
+  providers: [CanDeactivateGuardService]
 })
 export class NonVerifiedRegistrationModule { }
