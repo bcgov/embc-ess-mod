@@ -51,6 +51,24 @@ namespace EMBC.Registrants.API.RegistrationsModule
         }
 
         /// <summary>
+        /// Create a Registrant Evacuation
+        /// </summary>
+        /// <param name="evacuation">registrant evacuation data</param>
+        /// <returns>ESS number</returns>
+        [HttpPost("evacuation")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<RegistrationResult>> CreateEvacuation(RegistrantEvacuation evacuation)
+        {
+            if (evacuation == null || string.IsNullOrEmpty(evacuation.ContactId))
+                return BadRequest();
+
+            var essFileNumber = await registrationManager.CreateRegistrantEvacuation(evacuation);
+
+            return CreatedAtAction(nameof(Create), new RegistrationResult { ReferenceNumber = essFileNumber });
+        }
+
+        /// <summary>
         /// Create a Registrant Profile
         /// </summary>
         /// <param name="profileRegistration">Profile Registration Form</param>
@@ -152,6 +170,18 @@ namespace EMBC.Registrants.API.RegistrationsModule
     }
 
     /// <summary>
+    /// Registrant Evacuation details
+    /// </summary>
+    public class RegistrantEvacuation
+    {
+        [Required]
+        public string ContactId { get; set; }
+
+        [Required]
+        public NeedsAssessment PreliminaryNeedsAssessment { get; set; }
+    }
+
+    /// <summary>
     /// New registration form
     /// </summary>
     public class Registration
@@ -220,7 +250,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
         [Required]
         public Country Country { get; set; }
 
-        [Required]
         public string PostalCode { get; set; }
     }
 
