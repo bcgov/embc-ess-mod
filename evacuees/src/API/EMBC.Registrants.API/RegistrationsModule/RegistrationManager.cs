@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.Shared;
 using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Mvc;
@@ -30,10 +31,15 @@ namespace EMBC.Registrants.API.RegistrationsModule
     public interface IRegistrationManager
     {
         Task<string> CreateRegistrationAnonymous(AnonymousRegistration registration);
+
         Task<string> CreateRegistrantEvacuation(RegistrantEvacuation evacuation);
+
         Task<OkResult> CreateProfile(Registration profileRegistration);
+
         Task<Registration> GetProfileById(Guid contactId);
+
         Task<Registration> GetProfileByBcscId(string bcscId);
+
         Task<Registration> PatchProfileById(string id, Registration profileRegistration);
     }
 
@@ -100,8 +106,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_addressline2 = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine2,
                 era_city = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
                 era_Jurisdiction = Lookup(registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction),
-                era_province = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.StateProvinceCode,
-                era_country = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.CountryCode,
+                era_province = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.Code,
+                era_country = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.Code,
                 era_secrettext = registration.RegistrationDetails.SecretPhrase,
             };
 
@@ -153,8 +159,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
                 address1_line1 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
                 address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine2,
-                address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.JurisdictionName,
-                address1_country = registration.RegistrationDetails.PrimaryAddress.Country.CountryCode,
+                address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.Name,
+                address1_country = registration.RegistrationDetails.PrimaryAddress.Country.Code,
                 era_City = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
                 era_ProvinceState = Lookup(registration.RegistrationDetails.PrimaryAddress.StateProvince),
                 era_Country = Lookup(registration.RegistrationDetails.PrimaryAddress.Country),
@@ -162,8 +168,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
                 address2_line1 = registration.RegistrationDetails.MailingAddress.AddressLine1,
                 address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine2,
-                address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.JurisdictionName,
-                address2_country = registration.RegistrationDetails.MailingAddress.Country.CountryName,
+                address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.Name,
+                address2_country = registration.RegistrationDetails.MailingAddress.Country.Code,
                 era_MailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
                 era_MailingProvinceState = Lookup(registration.RegistrationDetails.MailingAddress.StateProvince),
                 era_MailingCountry = Lookup(registration.RegistrationDetails.MailingAddress.Country),
@@ -325,22 +331,22 @@ namespace EMBC.Registrants.API.RegistrationsModule
             // Primary Address
             profile.PrimaryAddress.AddressLine1 = contact.address1_line1;
             profile.PrimaryAddress.AddressLine2 = contact.address1_line2;
-            profile.PrimaryAddress.Jurisdiction.JurisdictionCode = contact.era_City?.era_jurisdictionid.ToString();
-            profile.PrimaryAddress.Jurisdiction.JurisdictionName = contact.era_City?.era_jurisdictionname;
-            profile.PrimaryAddress.StateProvince.StateProvinceCode = contact.era_ProvinceState?.era_code;
-            profile.PrimaryAddress.StateProvince.StateProvinceName = contact.era_ProvinceState?.era_name;
-            profile.PrimaryAddress.Country.CountryCode = contact.era_Country?.era_countrycode;
-            profile.PrimaryAddress.Country.CountryName = contact.era_Country?.era_name;
+            profile.PrimaryAddress.Jurisdiction.Code = contact.era_City?.era_jurisdictionid.ToString();
+            profile.PrimaryAddress.Jurisdiction.Name = contact.era_City?.era_jurisdictionname;
+            profile.PrimaryAddress.StateProvince.Code = contact.era_ProvinceState?.era_code;
+            profile.PrimaryAddress.StateProvince.Name = contact.era_ProvinceState?.era_name;
+            profile.PrimaryAddress.Country.Code = contact.era_Country?.era_countrycode;
+            profile.PrimaryAddress.Country.Name = contact.era_Country?.era_name;
             profile.PrimaryAddress.PostalCode = contact.address1_postalcode;
             // Mailing Address
             profile.MailingAddress.AddressLine1 = contact.address2_line1;
             profile.MailingAddress.AddressLine2 = contact.address2_line2;
-            profile.MailingAddress.Jurisdiction.JurisdictionCode = contact.era_MailingCity?.era_jurisdictionid.ToString();
-            profile.MailingAddress.Jurisdiction.JurisdictionName = contact.era_MailingCity?.era_jurisdictionname;
-            profile.MailingAddress.StateProvince.StateProvinceCode = contact.era_MailingProvinceState?.era_code;
-            profile.MailingAddress.StateProvince.StateProvinceName = contact.era_MailingProvinceState?.era_name;
-            profile.MailingAddress.Country.CountryCode = contact.era_MailingCountry?.era_countrycode;
-            profile.MailingAddress.Country.CountryName = contact.era_MailingCountry?.era_name;
+            profile.MailingAddress.Jurisdiction.Code = contact.era_MailingCity?.era_jurisdictionid.ToString();
+            profile.MailingAddress.Jurisdiction.Name = contact.era_MailingCity?.era_jurisdictionname;
+            profile.MailingAddress.StateProvince.Code = contact.era_MailingProvinceState?.era_code;
+            profile.MailingAddress.StateProvince.Name = contact.era_MailingProvinceState?.era_name;
+            profile.MailingAddress.Country.Code = contact.era_MailingCountry?.era_countrycode;
+            profile.MailingAddress.Country.Name = contact.era_MailingCountry?.era_name;
             profile.MailingAddress.PostalCode = contact.address2_postalcode;
             // Other
             profile.InformationCollectionConsent = contact.era_collectionandauthorization.HasValue ? contact.era_collectionandauthorization.Value : false;
@@ -413,22 +419,22 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 // Primary Address
                 profile.PrimaryAddress.AddressLine1 = queryResult.address1_line1;
                 profile.PrimaryAddress.AddressLine2 = queryResult.address1_line2;
-                profile.PrimaryAddress.Jurisdiction.JurisdictionCode = queryResult.era_City?.era_jurisdictionid.ToString();
-                profile.PrimaryAddress.Jurisdiction.JurisdictionName = queryResult.era_City?.era_jurisdictionname;
-                profile.PrimaryAddress.StateProvince.StateProvinceCode = queryResult.era_ProvinceState?.era_code;
-                profile.PrimaryAddress.StateProvince.StateProvinceName = queryResult.era_ProvinceState?.era_name;
-                profile.PrimaryAddress.Country.CountryCode = queryResult.era_Country?.era_countrycode;
-                profile.PrimaryAddress.Country.CountryName = queryResult.era_Country?.era_name;
+                profile.PrimaryAddress.Jurisdiction.Code = queryResult.era_City?.era_jurisdictionid.ToString();
+                profile.PrimaryAddress.Jurisdiction.Name = queryResult.era_City?.era_jurisdictionname;
+                profile.PrimaryAddress.StateProvince.Code = queryResult.era_ProvinceState?.era_code;
+                profile.PrimaryAddress.StateProvince.Name = queryResult.era_ProvinceState?.era_name;
+                profile.PrimaryAddress.Country.Code = queryResult.era_Country?.era_countrycode;
+                profile.PrimaryAddress.Country.Name = queryResult.era_Country?.era_name;
                 profile.PrimaryAddress.PostalCode = queryResult.address1_postalcode;
                 // Mailing Address
                 profile.MailingAddress.AddressLine1 = queryResult.address2_line1;
                 profile.MailingAddress.AddressLine2 = queryResult.address2_line2;
-                profile.MailingAddress.Jurisdiction.JurisdictionCode = queryResult.era_MailingCity?.era_jurisdictionid.ToString();
-                profile.MailingAddress.Jurisdiction.JurisdictionName = queryResult.era_MailingCity?.era_jurisdictionname;
-                profile.MailingAddress.StateProvince.StateProvinceCode = queryResult.era_MailingProvinceState?.era_code;
-                profile.MailingAddress.StateProvince.StateProvinceName = queryResult.era_MailingProvinceState?.era_name;
-                profile.MailingAddress.Country.CountryCode = queryResult.era_MailingCountry?.era_countrycode;
-                profile.MailingAddress.Country.CountryName = queryResult.era_MailingCountry?.era_name;
+                profile.MailingAddress.Jurisdiction.Code = queryResult.era_MailingCity?.era_jurisdictionid.ToString();
+                profile.MailingAddress.Jurisdiction.Name = queryResult.era_MailingCity?.era_jurisdictionname;
+                profile.MailingAddress.StateProvince.Code = queryResult.era_MailingProvinceState?.era_code;
+                profile.MailingAddress.StateProvince.Name = queryResult.era_MailingProvinceState?.era_name;
+                profile.MailingAddress.Country.Code = queryResult.era_MailingCountry?.era_countrycode;
+                profile.MailingAddress.Country.Name = queryResult.era_MailingCountry?.era_name;
                 profile.MailingAddress.PostalCode = queryResult.address2_postalcode;
                 // Other
                 profile.InformationCollectionConsent = queryResult.era_collectionandauthorization.HasValue ? queryResult.era_collectionandauthorization.Value : false;
@@ -468,9 +474,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
         }
 
         private era_country Lookup(Country country) =>
-            string.IsNullOrEmpty(country.CountryCode)
+            string.IsNullOrEmpty(country.Code)
             ? null
-            : dynamicsClient.era_countries.Where(c => c.era_countrycode == country.CountryCode).FirstOrDefault();
+            : dynamicsClient.era_countries.Where(c => c.era_countrycode == country.Code).FirstOrDefault();
 
         private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
 
@@ -508,18 +514,18 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         private era_provinceterritories Lookup(StateProvince stateProvince)
         {
-            if (stateProvince == null || string.IsNullOrEmpty(stateProvince.StateProvinceCode))
+            if (stateProvince == null || string.IsNullOrEmpty(stateProvince.Code))
                 return null;
 
-            return dynamicsClient.era_provinceterritorieses.Where(p => p.era_code == stateProvince.StateProvinceCode).FirstOrDefault();
+            return dynamicsClient.era_provinceterritorieses.Where(p => p.era_code == stateProvince.Code).FirstOrDefault();
         }
 
         private era_jurisdiction Lookup(Jurisdiction jurisdiction)
         {
-            if (jurisdiction == null || string.IsNullOrEmpty(jurisdiction.JurisdictionCode))
+            if (jurisdiction == null || string.IsNullOrEmpty(jurisdiction.Code))
                 return null;
 
-            return dynamicsClient.era_jurisdictions.Where(j => j.era_jurisdictionid == Guid.Parse(jurisdiction.JurisdictionCode)).FirstOrDefault();
+            return dynamicsClient.era_jurisdictions.Where(j => j.era_jurisdictionid == Guid.Parse(jurisdiction.Code)).FirstOrDefault();
         }
 
         private Date? FromDateTime(DateTime? dateTime) => dateTime.HasValue ? new Date(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day) : (Date?)null;
@@ -591,7 +597,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             // city
             if (primaryAddressCity == null || !primaryAddressCity.era_jurisdictionid.HasValue)
             {
-                contact.address1_city = profileRegistration.PrimaryAddress.Jurisdiction.JurisdictionName;
+                contact.address1_city = profileRegistration.PrimaryAddress.Jurisdiction.Name;
             }
             else
             {
@@ -611,7 +617,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             // city
             if (mailingAddressCity == null || !mailingAddressCity.era_jurisdictionid.HasValue)
             {
-                contact.address2_city = profileRegistration.MailingAddress.Jurisdiction.JurisdictionName;
+                contact.address2_city = profileRegistration.MailingAddress.Jurisdiction.Name;
             }
             else
             {
@@ -671,8 +677,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_addressline2 = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine2,
                 era_city = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
                 era_Jurisdiction = Lookup(evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction),
-                era_province = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.StateProvinceCode,
-                era_country = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.CountryCode,
+                era_province = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.Code,
+                era_country = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.Code,
                 era_secrettext = profile.SecretPhrase,
             };
 
@@ -718,8 +724,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
                 address1_line1 = profile.PrimaryAddress.AddressLine1,
                 address1_line2 = profile.PrimaryAddress.AddressLine2,
-                address1_city = profile.PrimaryAddress.Jurisdiction.JurisdictionName,
-                address1_country = profile.PrimaryAddress.Country.CountryCode,
+                address1_city = profile.PrimaryAddress.Jurisdiction.Name,
+                address1_country = profile.PrimaryAddress.Country.Code,
                 era_City = Lookup(profile.PrimaryAddress.Jurisdiction),
                 era_ProvinceState = Lookup(profile.PrimaryAddress.StateProvince),
                 era_Country = Lookup(profile.PrimaryAddress.Country),
@@ -727,8 +733,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
                 address2_line1 = profile.MailingAddress.AddressLine1,
                 address2_line2 = profile.MailingAddress.AddressLine2,
-                address2_city = profile.MailingAddress.Jurisdiction.JurisdictionName,
-                address2_country = profile.MailingAddress.Country.CountryName,
+                address2_city = profile.MailingAddress.Jurisdiction.Name,
+                address2_country = profile.MailingAddress.Country.Name,
                 era_MailingCity = Lookup(profile.MailingAddress.Jurisdiction),
                 era_MailingProvinceState = Lookup(profile.MailingAddress.StateProvince),
                 era_MailingCountry = Lookup(profile.MailingAddress.Country),

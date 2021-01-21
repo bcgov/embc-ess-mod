@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.Shared;
 using EMBC.ResourceAccess.Dynamics;
 
 namespace EMBC.Registrants.API.LocationModule
