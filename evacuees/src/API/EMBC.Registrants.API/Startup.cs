@@ -19,7 +19,6 @@ using System.IO;
 using System.Net;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.ProfilesModule;
@@ -29,6 +28,7 @@ using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -71,26 +71,19 @@ namespace EMBC.Registrants.API
             services
                 .AddAuthentication(options =>
                 {
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = BcscAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 })
-                .AddCookie(options =>
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
                     configuration.GetSection("auth:cookie").Bind(options);
                     options.Cookie.SameSite = SameSiteMode.Strict;
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
                     options.SlidingExpiration = false;
-
-                    options.Events = new CookieAuthenticationEvents
-                    {
-                        OnRedirectToLogin = async c =>
-                        {
-                            await Task.CompletedTask;
-                            c.Response.Clear();
-                            c.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                            await c.Response.CompleteAsync();
-                        }
-                    };
+                    options.ForwardChallenge = JwtBearerDefaults.AuthenticationScheme;
+                }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    configuration.Bind("auth:jwt", options);
                 })
                 .AddBcscOidc(BcscAuthenticationDefaults.AuthenticationScheme, options =>
                 {

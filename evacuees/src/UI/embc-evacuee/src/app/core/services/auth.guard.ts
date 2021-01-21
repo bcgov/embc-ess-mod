@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     if (isAuthenticated) {
       return true;
     }
-    this.authService.Login(state.url);
+    this.authService.login(state.url);
     return false;
   }
 }

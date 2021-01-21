@@ -17,16 +17,17 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Registrants.API.SecurityModule
 {
-    [Route("")]
+    [Route("login")]
     [ApiController]
     public class LoginController : ControllerBase
     {
-        [HttpGet("login")]
+        [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = "/")
         {
@@ -34,19 +35,21 @@ namespace EMBC.Registrants.API.SecurityModule
 
             return new ChallengeResult(BcscAuthenticationDefaults.AuthenticationScheme, new AuthenticationProperties
             {
-                RedirectUri = returnUrl,
-                AllowRefresh = true,
-                IsPersistent = true,
+                RedirectUri = returnUrl
             });
         }
 
-        [HttpGet("login/token")]
-        [Authorize]
+        [HttpGet("token")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Token()
         {
             await Task.CompletedTask;
 
-            var token = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            foreach (var cookie in Request.Cookies)
+            {
+                Response.Cookies.Delete(cookie.Key);
+            }
+            var token = User.FindFirstValue(ClaimTypes.UserData);
             return Ok(token);
         }
     }
