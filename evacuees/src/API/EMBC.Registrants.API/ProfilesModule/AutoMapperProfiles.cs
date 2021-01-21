@@ -73,7 +73,7 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForMember(j => j.StateProvinceCode, opts => opts.MapFrom(o => o.era_RelatedProvinceState == null
                         ? null
                         : o.era_RelatedProvinceState.era_code))
-                .ForMember(j => j.Type, opts => opts.MapFrom(o => (JurisdictionType)o.era_type))
+                .ForMember(j => j.Type, opts => opts.MapFrom(o => o.era_type.HasValue ? (JurisdictionType)o.era_type : JurisdictionType.Undefined))
                 ;
 
             CreateMap<era_provinceterritories, StateProvince>()
