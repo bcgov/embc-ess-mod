@@ -50,7 +50,7 @@ export default class PetsComponent implements OnInit {
     this.petsForm.get('addPetIndicator').valueChanges.subscribe(value =>
       this.updateOnVisibility());
     this.petsForm.get('addPetFoodIndicator').valueChanges.subscribe(value =>
-        this.updateOnVisibility());
+      this.updateOnVisibility());
 
     this.dataSource.next(this.petsForm.get('pets').value);
     this.data = this.petsForm.get('pets').value;
@@ -120,6 +120,7 @@ export default class PetsComponent implements OnInit {
     this.petsForm.get('pet').setValue(element);
     this.showPetsForm = !this.showPetsForm;
     // this.showTable = !this.showTable;
+    this.petsForm.get('addPetIndicator').setValue(true);
   }
 
   updateOnVisibility(): void {
