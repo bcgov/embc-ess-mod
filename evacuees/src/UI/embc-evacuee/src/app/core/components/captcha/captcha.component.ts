@@ -5,7 +5,7 @@ import {
 import { HttpResponse } from '@angular/common/http';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CaptchaService } from '../../services/api/captcha.service';
+import { CaptchaService } from '../../services/captcha.service';
 
 //
 // Ref: https://github.com/bcgov/MyGovBC-CAPTCHA-Widget
