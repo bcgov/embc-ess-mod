@@ -12,7 +12,7 @@ import { FormCreationService } from '../../../../core/services/formCreation.serv
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { LocationService } from '../../../../core/services/api/location.service';
+import { LocationService } from '../../../../core/http/api/services/location.service';
 import { Country } from '../../../../core/services/api/models/country';
 import * as globalConst from '../../../../core/services/globalConstants';
 
@@ -34,7 +34,7 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
   countries: Country[] = [];
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-              private service: LocationService, private cd: ChangeDetectorRef) {
+    private service: LocationService, private cd: ChangeDetectorRef) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
