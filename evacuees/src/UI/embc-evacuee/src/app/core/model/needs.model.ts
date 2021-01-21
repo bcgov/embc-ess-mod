@@ -34,6 +34,7 @@ export class EvacuatedForm {
 export class FamilyMembers {
     haveMedication: boolean;
     haveSpecialDiet: boolean;
+    haveSpecialDietSpecifications: string;
     familyMember: Array<PersonDetails>;
 
     constructor() { }
@@ -43,6 +44,7 @@ export class FamilyMembersForm {
 
     haveMedication = new FormControl();
     haveSpecialDiet = new FormControl();
+    haveSpecialDietSpecifications = new FormControl();
     member: FormGroup;
     familyMember = new FormControl([]);
     addFamilyMemberIndicator = new FormControl(false);
@@ -72,6 +74,11 @@ export class FamilyMembersForm {
                 customValidator.dateOfBirthValidator().bind(customValidator)
             ).bind(customValidator)]]
         });
+
+        this.haveSpecialDietSpecifications.setValidators([customValidator.conditionalValidation(
+            () => this.haveSpecialDiet.value,
+            Validators.required
+        ).bind(customValidator)]);
     }
 }
 

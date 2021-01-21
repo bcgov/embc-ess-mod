@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatRadioModule } from '@angular/material/radio';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { PersonDetailFormModule } from '../../person-detail-form/person-detail-form.module';
@@ -37,8 +37,9 @@ export default class FamilyInformationComponent implements OnInit {
   // showTable = true;
   editFlag = false;
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-              public dialog: MatDialog) {
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+    public dialog: MatDialog) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
@@ -88,7 +89,6 @@ export default class FamilyInformationComponent implements OnInit {
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
     // this.showTable = !this.showTable;
-
     // if (this.data.length === 0) {
     this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
     // }
@@ -126,6 +126,7 @@ export default class FamilyInformationComponent implements OnInit {
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
     // this.showTable = !this.showTable;
+    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
   }
 
   updateOnVisibility(): void {
@@ -133,6 +134,13 @@ export default class FamilyInformationComponent implements OnInit {
     this.familyMemberForm.get('member.lastName').updateValueAndValidity();
     this.familyMemberForm.get('member.gender').updateValueAndValidity();
     this.familyMemberForm.get('member.dateOfBirth').updateValueAndValidity();
+  }
+
+  hasSpecialDietChange(event: MatRadioChange): void {
+
+    if (event.value === false) {
+      this.familyMemberForm.get('haveSpecialDietSpecifications').reset();
+    }
   }
 }
 

@@ -7,7 +7,8 @@
             (including dependents) who live in the same household with you,
             please add them below.</label>
           <p><i>Please note:</i> Roommates & tenants need to register separately.</p>
-          <mat-table *ngIf="dataSource.getValue().length > 0" [dataSource]="dataSource"> <!--&& showTable-->
+          <mat-table *ngIf="dataSource.getValue().length > 0" [dataSource]="dataSource">
+            <!--&& showTable-->
 
             <ng-container matColumnDef="firstName">
               <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
@@ -29,33 +30,38 @@
               <mat-header-cell *matHeaderCellDef> Initials </mat-header-cell>
               <mat-cell *matCellDef="let element">
                 <span class="mobile-label">Initials:</span>
-                {{element.initials}} </mat-cell>
+                {{element.initials}}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="gender">
               <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
               <mat-cell *matCellDef="let element">
                 <span class="mobile-label">Gender:</span>
-                {{element.gender}} </mat-cell>
+                {{element.gender}}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="dateOfBirth">
               <mat-header-cell *matHeaderCellDef> Date of Birth </mat-header-cell>
               <mat-cell *matCellDef="let element">
                 <span class="mobile-label">Date of Birth:</span>
-                {{element.dateOfBirth}} </mat-cell>
+                {{element.dateOfBirth}}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="buttons">
               <mat-header-cell *matHeaderCellDef></mat-header-cell>
               <mat-cell *matCellDef="let element; let index = index">
                 <!-- <span class="mobile-label">11</span> -->
-                <button *ngIf="!editFlag" class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(element, index)">
+                <button *ngIf="!editFlag" class="edit-image" mat-icon-button aria-label="Edit"
+                  (click)="editRow(element, index)">
                   <img src="/assets/images/edit.svg" height="35" width="35">
                   <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                 </button>
 
-                <button *ngIf="!editFlag" class="delete-image" mat-icon-button aria-label="Remove" (click)="deleteRow(index)">
+                <button *ngIf="!editFlag" class="delete-image" mat-icon-button aria-label="Remove"
+                  (click)="deleteRow(index)">
                   <img src="/assets/images/delete.svg" height="35" width="35">
                   <img src="/assets/images/delete_onhover.svg" height="35" width="35">
                 </button>
@@ -97,7 +103,7 @@
             have any dietary requirements?</label>
           <br>
           <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="haveSpecialDiet"
-            class="primary-radio-group" required>
+            class="primary-radio-group" required (change)="hasSpecialDietChange($event)">
             <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option.value">
               {{option.name}}
             </mat-radio-button>
@@ -106,6 +112,17 @@
               Dietary Requirement is required</mat-error>
           </mat-radio-group>
         </div>
+      </div>
+      <div *ngIf="familyFormControl?.haveSpecialDiet.value === true">
+        <label class="card-heading" id="primary-radio-group-label">Please specify</label>
+        <br>
+        <mat-form-field appearance="outline" style="width:70%">
+          <input matInput [formControlName]="'haveSpecialDietSpecifications'" placeholder="Specify dietary requirements"
+            maxlength="100">
+          <mat-error
+            *ngIf="familyFormControl?.haveSpecialDietSpecifications.touched && familyFormControl?.haveSpecialDietSpecifications.invalid && familyFormControl?.haveSpecialDietSpecifications.hasError('required')">
+            Dietary requirements specifications are required</mat-error>
+        </mat-form-field>
       </div>
     </mat-card-content>
   </mat-card>
