@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { DataSubmissionService } from 'src/app/core/services/dataSubmission.service';
-import { ProblemDetail } from 'src/app/core/model/problemDetail';
 
 @Component({
   selector: 'app-profile',
@@ -33,9 +32,9 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   showLoader = false;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public updateService: DataUpdationService, private cd: ChangeDetectorRef,
-              private submissionService: DataSubmissionService) {
+    private route: ActivatedRoute, private formCreationService: FormCreationService,
+    public updateService: DataUpdationService, private cd: ChangeDetectorRef,
+    private submissionService: DataSubmissionService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -75,7 +74,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.cd.detectChanges();
   }
 
-  stepChanged(event: any, stepper: MatStepper): void{
+  stepChanged(event: any, stepper: MatStepper): void {
     stepper.selected.interacted = false;
   }
 
@@ -167,7 +166,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   submitFile(): void {
     // this.router.navigate(['/verified-registration/view-profile']);
-    this.submissionService.submitProfile().subscribe((response: ProblemDetail) => {
+    this.submissionService.submitProfile().subscribe((response) => {
       console.log(response);
       // this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/verified-registration/view-profile']);

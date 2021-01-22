@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { DataSubmissionService } from '../../../core/services/dataSubmission.service';
-import { RegistrationResult } from 'src/app/core/services/api/models/registration-result';
+import { RegistrationResult } from '../../../core/http/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
 
 @Component({
@@ -34,8 +34,8 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   isSubmitted = false;
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-              private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
-              private route: ActivatedRoute, private alertService: AlertService) {
+    private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
+    private route: ActivatedRoute, private alertService: AlertService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -70,7 +70,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.loadStepForm(index);
   }
 
-  stepChanged(event: any, stepper: MatStepper): void{
+  stepChanged(event: any, stepper: MatStepper): void {
     stepper.selected.interacted = false;
   }
 

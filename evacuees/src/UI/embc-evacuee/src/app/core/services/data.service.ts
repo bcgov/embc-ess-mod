@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { NeedsAssessment } from '../model/needs-assessment';
-import { Registration } from '../model/registration';
-import { RegistrationResult } from './api/models/registration-result';
+import { NeedsAssessment } from '../http/api/models/needs-assessment';
+import { Registration } from '../http/api/models/registration';
+import { RegistrationResult } from '../http/api/models/registration-result';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -11,8 +11,8 @@ export class DataService {
     private registrationResult: RegistrationResult;
 
     public updateRegistartion(value): void {
-       this.registrationDetails = { ...this.registrationDetails, ...value};
-       console.log(this.registrationDetails);
+        this.registrationDetails = { ...this.registrationDetails, ...value };
+        console.log(this.registrationDetails);
     }
 
     public getRegistration(): Partial<Registration> {
@@ -20,12 +20,12 @@ export class DataService {
     }
 
     public updateNeedsAssessment(value): void {
-      this.preliminaryNeedsAssessment = { ...this.preliminaryNeedsAssessment, ...value};
-      console.log(this.preliminaryNeedsAssessment);
+        this.preliminaryNeedsAssessment = { ...this.preliminaryNeedsAssessment, ...value };
+        console.log(this.preliminaryNeedsAssessment);
     }
 
     public getNeedsAssessment(): Partial<NeedsAssessment> {
-      return this.preliminaryNeedsAssessment;
+        return this.preliminaryNeedsAssessment;
     }
 
     public setRegistrationResult(registrationResult: RegistrationResult): void {

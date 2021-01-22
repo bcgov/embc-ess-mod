@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { LocationService } from '../../../../core/http/api/services/location.service';
 import { startWith, map } from 'rxjs/operators';
 import * as globalConst from '../../../../core/services/globalConstants';
-import { Jurisdiction } from '../../../../core/services/api/models/jurisdiction';
+import { Jurisdiction } from '../../../../core/http/api/models/jurisdiction';
 
 @Component({
   selector: 'app-bc-address',

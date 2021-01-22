@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { RegAddress } from '../model/address';
-import { RegistrationResult } from './api/models/registration-result';
+import { RegistrationResult } from '../http/api/models/registration-result';
 import { DataService } from './data.service';
 import { FormCreationService } from './formCreation.service';
 
@@ -64,7 +64,7 @@ export class DataUpdationService {
         });
         this.dataService.updateNeedsAssessment({
             canEvacueeProvideFood:
-            formGroup.get('canEvacueeProvideFood').value === 'null' ? null : formGroup.get('canEvacueeProvideFood').value
+                formGroup.get('canEvacueeProvideFood').value === 'null' ? null : formGroup.get('canEvacueeProvideFood').value
         });
         this.dataService.updateNeedsAssessment({
             canEvacueeProvideIncidentals: formGroup.get('canEvacueeProvideIncidentals').value === 'null' ? null : formGroup.get('canEvacueeProvideIncidentals').value
@@ -87,20 +87,20 @@ export class DataUpdationService {
             addressLine1: addressObject.addressLine1,
             addressLine2: addressObject.addressLine2,
             country: {
-                countryCode: addressObject.country.code,
-                countryName: addressObject.country.name
+                code: addressObject.country.code,
+                name: addressObject.country.name
             },
             jurisdiction: {
-                jurisdictionCode: addressObject.jurisdiction.code === undefined ?
+                code: addressObject.jurisdiction.code === undefined ?
                     null : addressObject.jurisdiction.code,
-                jurisdictionName: addressObject.jurisdiction.name ===
+                name: addressObject.jurisdiction.name ===
                     undefined ? addressObject.jurisdiction : addressObject.jurisdiction.name
             },
             postalCode: addressObject.postalCode,
             stateProvince: {
-                stateProvinceCode: addressObject.stateProvince === null ?
+                code: addressObject.stateProvince === null ?
                     addressObject.stateProvince : addressObject.stateProvince.code,
-                stateProvinceName: addressObject.stateProvince === null ?
+                name: addressObject.stateProvince === null ?
                     addressObject.stateProvince : addressObject.stateProvince.name
             }
         };
