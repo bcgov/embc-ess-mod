@@ -12,8 +12,8 @@ import { FormCreationService } from '../../../../core/services/formCreation.serv
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { LocationService } from '../../../../core/http/api/services/location.service';
-import { Country } from '../../../../core/http/api/models/country';
+import { LocationService } from '../../../../core/api/services/location.service';
+import { Country } from '../../../../core/api/models/country';
 import * as globalConst from '../../../../core/services/globalConstants';
 
 @Component({

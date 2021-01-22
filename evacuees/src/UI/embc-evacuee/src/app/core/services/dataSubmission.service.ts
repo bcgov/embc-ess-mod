@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Registration } from '../http/api/models/registration';
-import { AnonymousRegistration } from '../http/api/models/anonymous-registration';
-import { RegistrationResult } from '../http/api/models/registration-result';
-import { RegistrationService } from '../http/api/services/registration.service';
+import { Registration } from '../api/models/registration';
+import { AnonymousRegistration } from '../api/models/anonymous-registration';
+import { RegistrationResult } from '../api/models/registration-result';
+import { RegistrationService } from '../api/services/registration.service';
 import { DataService } from './data.service';
 
 @Injectable({ providedIn: 'root' })

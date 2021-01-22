@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { DataSubmissionService } from '../../../core/services/dataSubmission.service';
-import { RegistrationResult } from '../../../core/http/api/models/registration-result';
+import { RegistrationResult } from '../../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
 
 @Component({

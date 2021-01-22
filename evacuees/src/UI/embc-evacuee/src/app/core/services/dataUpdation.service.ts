@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { RegAddress } from '../model/address';
-import { RegistrationResult } from '../http/api/models/registration-result';
+import { RegistrationResult } from '../api/models/registration-result';
 import { DataService } from './data.service';
 import { FormCreationService } from './formCreation.service';
 

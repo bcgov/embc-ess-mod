@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { NeedsAssessment } from '../http/api/models/needs-assessment';
-import { Registration } from '../http/api/models/registration';
-import { RegistrationResult } from '../http/api/models/registration-result';
+import { NeedsAssessment } from '../api/models/needs-assessment';
+import { Registration } from '../api/models/registration';
+import { RegistrationResult } from '../api/models/registration-result';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
