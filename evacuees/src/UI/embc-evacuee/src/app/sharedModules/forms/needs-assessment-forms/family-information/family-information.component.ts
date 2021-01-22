@@ -37,8 +37,9 @@ export default class FamilyInformationComponent implements OnInit {
   // showTable = true;
   editFlag = false;
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-              public dialog: MatDialog) {
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+    public dialog: MatDialog) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
@@ -125,6 +126,7 @@ export default class FamilyInformationComponent implements OnInit {
     this.familyMemberForm.get('member').setValue(element);
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
+    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
     // this.showTable = !this.showTable;
   }
 
