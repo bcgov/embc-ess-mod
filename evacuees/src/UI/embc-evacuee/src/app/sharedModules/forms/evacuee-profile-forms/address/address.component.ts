@@ -34,7 +34,7 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
   countries: Country[] = [];
 
   constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-    private service: LocationService, private cd: ChangeDetectorRef) {
+              private service: LocationService, private cd: ChangeDetectorRef) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }

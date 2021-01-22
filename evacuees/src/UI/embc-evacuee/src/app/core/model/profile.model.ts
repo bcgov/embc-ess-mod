@@ -27,9 +27,9 @@ export class PersonDetails {
     sameLastNameCheck?: boolean;
 
     constructor(firstName?: string, lastName?: string, preferredName?: string, initials?: string,
-        gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
+                gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
 
-        console.log(".." + firstName)
+        console.log('..' + firstName);
         this.firstName = firstName;
         this.lastName = lastName;
         this.preferredName = preferredName;
@@ -53,7 +53,7 @@ export class PersonDetailsForm {
         if (personDetail.firstName) {
             this.firstName.setValue(personDetail.firstName);
 
-            console.log(personDetail.firstName)
+            console.log(personDetail.firstName);
         }
 
         this.firstName.setValidators([Validators.required]);

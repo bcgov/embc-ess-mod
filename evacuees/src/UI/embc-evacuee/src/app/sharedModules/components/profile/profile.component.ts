@@ -32,9 +32,9 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   showLoader = false;
 
   constructor(private router: Router, private componentService: ComponentCreationService,
-    private route: ActivatedRoute, private formCreationService: FormCreationService,
-    public updateService: DataUpdationService, private cd: ChangeDetectorRef,
-    private submissionService: DataSubmissionService) {
+              private route: ActivatedRoute, private formCreationService: FormCreationService,
+              public updateService: DataUpdationService, private cd: ChangeDetectorRef,
+              private submissionService: DataSubmissionService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };

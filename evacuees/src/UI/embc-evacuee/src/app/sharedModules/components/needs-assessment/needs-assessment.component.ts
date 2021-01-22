@@ -34,8 +34,8 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   isSubmitted = false;
 
   constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
-    private route: ActivatedRoute, private alertService: AlertService) {
+              private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
+              private route: ActivatedRoute, private alertService: AlertService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
