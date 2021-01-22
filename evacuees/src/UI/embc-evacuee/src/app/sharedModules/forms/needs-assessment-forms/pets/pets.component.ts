@@ -106,9 +106,10 @@ export default class PetsComponent implements OnInit {
     this.data.splice(index, 1);
     this.dataSource.next(this.data);
     this.petsForm.get('pets').setValue(this.data);
-    this.petsForm.get('addPetIndicator').setValue(false);
+
 
     if (this.data.length === 0) {
+      this.petsForm.get('addPetIndicator').setValue(false);
       this.petsForm.get('addPetFoodIndicator').setValue(false);
       this.petsForm.get('hasPetsFood').reset();
     }
