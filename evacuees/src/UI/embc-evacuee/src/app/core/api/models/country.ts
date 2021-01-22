@@ -1,6 +1,6 @@
 /* tslint:disable */
-export interface StateProvince {
+/* eslint-disable */
+export interface Country {
   code?: null | string;
-  countryCode?: null | string;
   name?: null | string;
 }

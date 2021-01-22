@@ -1,4 +1,5 @@
 /* tslint:disable */
+/* eslint-disable */
 import { JurisdictionType } from './jurisdiction-type';
 export interface Jurisdiction {
   code?: null | string;
