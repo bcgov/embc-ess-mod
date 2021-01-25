@@ -16,18 +16,19 @@ export class CollectionNoticeComponent implements OnInit {
   collectionForm: FormGroup;
   currentFlow: string;
 
-  constructor(private router: Router, public dialog: MatDialog, private builder: FormBuilder, public dataService: DataService,
-              private route: ActivatedRoute) { }
+  constructor(
+    private router: Router, public dialog: MatDialog, private builder: FormBuilder, public dataService: DataService,
+    private route: ActivatedRoute) { }
 
   /**
    * Initializes the user flow and form group
    */
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    this.collectionForm = this.builder.group({
-      informationCollectionConsent: [false]
-    });
-    this.mapData();
+    // this.collectionForm = this.builder.group({
+    //   informationCollectionConsent: [false]
+    // });
+    // this.mapData();
   }
 
   /**
@@ -45,17 +46,17 @@ export class CollectionNoticeComponent implements OnInit {
    * navigates to the next page
    */
   submitNotice(): void {
-    if (!this.collectionForm.get('informationCollectionConsent').value) {
-      this.dialog.open(DialogComponent, {
-        data: globalConst.noticeBody,
-        height: '220px',
-        width: '500px'
-      });
-    } else {
-      this.dataService.updateRegistartion(this.collectionForm.value);
-      const navigationPath = '/' + this.currentFlow + '/restriction';
-      this.router.navigate([navigationPath]);
-    }
+    // if (!this.collectionForm.get('informationCollectionConsent').value) {
+    //   this.dialog.open(DialogComponent, {
+    //     data: globalConst.noticeBody,
+    //     height: '220px',
+    //     width: '500px'
+    //   });
+    // } else {
+    //   this.dataService.updateRegistartion(this.collectionForm.value);
+    const navigationPath = '/' + this.currentFlow + '/restriction';
+    this.router.navigate([navigationPath]);
+    // }
   }
 
 }

@@ -37,4 +37,8 @@ export class FileSubmissionComponent implements OnInit {
     this.router.navigate(['/verified-registration/view-profile']);
   }
 
+  verifyUser(): void {
+    this.router.navigate(['/verified-registration']);
+  }
+
 }

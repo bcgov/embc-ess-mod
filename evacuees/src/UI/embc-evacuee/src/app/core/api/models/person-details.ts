@@ -1,7 +1,8 @@
 /* tslint:disable */
+/* eslint-disable */
 
 /**
- * Person details
+ * Profile personal details
  */
 export interface PersonDetails {
   dateOfBirth: string;
@@ -9,4 +10,5 @@ export interface PersonDetails {
   gender: string;
   initials?: null | string;
   lastName: string;
+  preferredName?: null | string;
 }

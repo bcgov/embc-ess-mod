@@ -1,6 +1,6 @@
 /* tslint:disable */
+/* eslint-disable */
 export enum JurisdictionType {
-  Undefined = 'Undefined',
   City = 'City',
   Village = 'Village',
   Township = 'Township',
@@ -15,5 +15,6 @@ export enum JurisdictionType {
   IslandMunicipality = 'IslandMunicipality',
   RegionalDistrict = 'RegionalDistrict',
   DistrictMunicipality = 'DistrictMunicipality',
-  IndianGovernmentDistrict = 'IndianGovernmentDistrict'
+  IndianGovernmentDistrict = 'IndianGovernmentDistrict',
+  Undefined = 'Undefined'
 }
