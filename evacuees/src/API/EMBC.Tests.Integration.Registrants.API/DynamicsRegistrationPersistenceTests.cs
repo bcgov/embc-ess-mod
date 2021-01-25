@@ -272,6 +272,23 @@ namespace EMBC.Tests.Integration.Registrants.API
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task CanPatchProfileById()
+        {
+            var regManager = services.GetRequiredService<IRegistrationManager>();
+            var profile = await regManager.GetProfileById(new Guid("bbe3422b-ca02-42b6-b4b0-beb5147b2f0e"));
+            Assert.NotNull(profile);
+            Assert.NotEmpty(profile.PersonalDetails.FirstName);
+            profile.PersonalDetails.PreferredName = "Chris";
+            var patchedProfile = await regManager.PatchProfileById(new Guid("bbe3422b-ca02-42b6-b4b0-beb5147b2f0e"), profile);
+            Assert.Equal("Chris", patchedProfile.PersonalDetails.PreferredName);
+            profile.PersonalDetails.PreferredName = "";
+            patchedProfile = await regManager.PatchProfileById(new Guid("bbe3422b-ca02-42b6-b4b0-beb5147b2f0e"), profile);
+            Assert.Equal("", patchedProfile.PersonalDetails.PreferredName);
+
+            testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task RegistrantEvacuation()
         {
             var textContextIdentifier = DateTime.Now.ToShortTimeString();

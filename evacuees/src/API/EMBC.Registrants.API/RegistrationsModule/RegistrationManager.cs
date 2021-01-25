@@ -39,8 +39,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         Task<Registration> GetProfileById(Guid contactId);
 
         Task<Registration> GetProfileByBcscId(string bcscId);
-
-        Task<Registration> PatchProfileById(string id, Registration profileRegistration);
+        Task<Registration> PatchProfileById(Guid id, Registration profileRegistration);
     }
 
     public class RegistrationManager : IRegistrationManager
@@ -444,16 +443,241 @@ namespace EMBC.Registrants.API.RegistrationsModule
             return Task.FromResult(profile);
         }
 
-        public Task<Registration> PatchProfileById(string id, Registration profileRegistration)
+        /// <summary>
+        /// Patch a Profile Registration (dynamics contact)
+        /// </summary>
+        /// <param name="id">Contact Id</param>
+        /// <param name="updatedRegistration">Registration</param>
+        /// <returns><see cref="Registration"/></returns>
+        public async Task<Registration> PatchProfileById(Guid id, Registration updatedRegistration)
         {
-            var contactIdGuid = Guid.Parse(profileRegistration.ContactId);
-            // search for contact
-            var profileQueryResult = dynamicsClient.contacts
-                .Where(c => c.contactid == contactIdGuid).FirstOrDefault();
-            //if (queryResult == null) return NotFoundResult;
+            Registration profile = newRegistrationObject();
+            contact existingContact = null;
+            contact newContact = null;
+            try
+            {
+                // search for contact
+                existingContact = dynamicsClient.contacts
+                                    .Expand(c => c.era_City)
+                                    .Expand(c => c.era_ProvinceState)
+                                    .Expand(c => c.era_Country)
+                                    .Expand(c => c.era_MailingCity)
+                                    .Expand(c => c.era_MailingProvinceState)
+                                    .Expand(c => c.era_MailingCountry)
+                                    .Where(c => c.contactid == id).SingleOrDefault<contact>();
+            }
+            catch (DataServiceQueryException ex)
+            {
+                //The InnerException of DataServiceQueryException contains DataServiceClientException
+                DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
 
-            var profile = newRegistrationObject();
-            return Task.FromResult(profile);
+                // don't throw an exception if contact is not found, return an empty profile
+                if (dataServiceClientException.StatusCode == 404)
+                {
+                    return profile;
+                }
+                else
+                {
+                    Console.WriteLine("dataServiceClientException: " + dataServiceClientException.Message);
+                }
+
+                ODataErrorException odataErrorException = dataServiceClientException.InnerException as ODataErrorException;
+                if (odataErrorException != null)
+                {
+                    Console.WriteLine(odataErrorException.Message);
+                    throw dataServiceClientException;
+                }
+            }
+
+            if (existingContact != null)
+            {
+                newContact = UpdateExistingContact(existingContact, updatedRegistration);
+
+                if (newContact != null)
+                {
+                    try
+                    {
+                        // create an update request
+                        dynamicsClient.UpdateObject(newContact);
+                        // save changes to dynamics
+                        await dynamicsClient.SaveChangesAsync();
+                    }
+                    catch (DataServiceRequestException ex)
+                    {
+                        throw new ApplicationException(
+                            "An error occurred when saving changes.", ex);
+                    }
+                    // Populate registration with updated contact data
+                    profile = PopulateRegistration(profile, newContact);
+                }
+            }
+
+            return profile;
+        }
+
+        private contact UpdateExistingContact(contact existingContact, Registration registration)
+        {
+            // Create a new contact and copy the details over from either the registration if it has the relevant value or the existing contract otherwise
+            contact newContact = new contact();
+
+            newContact.contactid = existingContact.contactid; // Get contact ID from existing contact - cannot be changed by registration
+            newContact.era_bcservicescardid = registration.BCServicesCardId ?? existingContact.era_bcservicescardid;
+
+            // Personal Details
+            newContact.firstname = registration.PersonalDetails?.FirstName ?? existingContact.firstname;
+            newContact.lastname = registration.PersonalDetails?.LastName ?? existingContact.lastname;
+            newContact.era_preferredname = registration.PersonalDetails?.PreferredName ?? existingContact.era_preferredname;
+            newContact.era_initial = registration.PersonalDetails?.Initials ?? existingContact.era_initial;
+            newContact.gendercode = LookupGender(registration.PersonalDetails?.Gender) ?? existingContact.gendercode;
+            newContact.birthdate = FromDateTime(DateTime.Parse(registration.PersonalDetails?.DateOfBirth)) ?? existingContact.birthdate;
+            newContact.era_collectionandauthorization = registration.InformationCollectionConsent; // Always has value
+            newContact.era_sharingrestriction = registration.RestrictedAccess; // Always has value
+
+            // Contact Details - Check booleans
+            newContact.emailaddress1 = registration.ContactDetails?.Email ?? existingContact.emailaddress1;
+            newContact.address1_telephone1 = registration.ContactDetails?.Phone ?? existingContact.address1_telephone1;
+            newContact.era_phonenumberrefusal = string.IsNullOrEmpty(newContact.address1_telephone1);
+            newContact.era_emailrefusal = string.IsNullOrEmpty(newContact.emailaddress1);
+
+            // Primary Address
+            newContact.address1_line1 = registration.PrimaryAddress?.AddressLine1 ?? existingContact.address1_line1;
+            newContact.address1_line2 = registration.PrimaryAddress?.AddressLine2 ?? existingContact.address1_line2;
+            newContact.address1_postalcode = registration.PrimaryAddress?.PostalCode ?? existingContact.address1_postalcode;
+
+            // Mailing Address
+            newContact.address2_line1 = registration.MailingAddress?.AddressLine1 ?? existingContact.address2_line1;
+            newContact.address2_line2 = registration.MailingAddress?.AddressLine2 ?? existingContact.address2_line2;
+            newContact.address2_postalcode = registration.MailingAddress?.PostalCode ?? existingContact.address2_postalcode;
+
+            // Other
+            newContact.era_secrettext = registration.SecretPhrase ?? existingContact.era_secrettext;
+
+            // link registrant primary and mailing address city, province, country
+            var primaryAddressCountry = Lookup(registration.PrimaryAddress?.Country) ?? existingContact.era_Country;
+            var primaryAddressProvince = Lookup(registration.PrimaryAddress?.StateProvince) ?? existingContact.era_ProvinceState;
+            var primaryAddressCity = Lookup(registration.PrimaryAddress?.Jurisdiction) ?? existingContact.era_City;
+            var mailingAddressCountry = Lookup(registration.MailingAddress?.Country) ?? existingContact.era_MailingCountry;
+            var mailingAddressProvince = Lookup(registration.MailingAddress?.StateProvince) ?? existingContact.era_MailingProvinceState;
+            var mailingAddressCity = Lookup(registration.MailingAddress?.Jurisdiction) ?? existingContact.era_MailingCity;
+
+            newContact.era_City = new era_jurisdiction
+            {
+                era_jurisdictionid = primaryAddressCity.era_jurisdictionid,
+                era_jurisdictionname = primaryAddressCity.era_jurisdictionname
+            };
+            newContact.era_ProvinceState = new era_provinceterritories
+            {
+                era_code = primaryAddressProvince.era_code,
+                era_name = primaryAddressProvince.era_name
+            };
+            newContact.era_Country = new era_country
+            {
+                era_countrycode = primaryAddressCountry.era_countrycode,
+                era_name = primaryAddressCountry.era_name
+            };
+
+            newContact.era_MailingCity = new era_jurisdiction
+            {
+                era_jurisdictionid = mailingAddressCity.era_jurisdictionid,
+                era_jurisdictionname = mailingAddressCity.era_jurisdictionname
+            };
+            newContact.era_MailingProvinceState = new era_provinceterritories
+            {
+                era_code = mailingAddressProvince.era_code,
+                era_name = mailingAddressProvince.era_name
+            };
+            newContact.era_MailingCountry = new era_country
+            {
+                era_countrycode = mailingAddressCountry.era_countrycode,
+                era_name = mailingAddressCountry.era_name
+            };
+
+            // Delete the existing contact to allow it to be replaced by adding the new contact.
+            // Note: this is a workaround as the standard approach to patch/update was triggering a mysterious exception
+            dynamicsClient.DeleteObject(existingContact);
+            dynamicsClient.AddTocontacts(newContact);
+
+            // Add links to new client
+
+            // country
+            dynamicsClient.AddLink(primaryAddressCountry, nameof(primaryAddressCountry.era_contact_Country), newContact);
+            // province
+            if (primaryAddressProvince != null && !string.IsNullOrEmpty(primaryAddressProvince.era_code))
+            {
+                dynamicsClient.AddLink(primaryAddressProvince, nameof(primaryAddressProvince.era_provinceterritories_contact_ProvinceState), newContact);
+            }
+            // city
+            if (primaryAddressCity == null || !primaryAddressCity.era_jurisdictionid.HasValue)
+            {
+                newContact.address1_city = primaryAddressCity.era_jurisdictionname;
+            }
+            else
+            {
+                dynamicsClient.AddLink(primaryAddressCity, nameof(primaryAddressCity.era_jurisdiction_contact_City), newContact);
+            }
+
+            // country
+            dynamicsClient.AddLink(mailingAddressCountry, nameof(mailingAddressCountry.era_country_contact_MailingCountry), newContact);
+            // province
+            if (mailingAddressProvince != null && !string.IsNullOrEmpty(mailingAddressProvince.era_code))
+            {
+                dynamicsClient.AddLink(mailingAddressProvince, nameof(mailingAddressProvince.era_provinceterritories_contact_MailingProvinceState), newContact);
+            }
+            // city
+            if (mailingAddressCity == null || !mailingAddressCity.era_jurisdictionid.HasValue)
+            {
+                newContact.address2_city = mailingAddressCity.era_jurisdictionname;
+            }
+            else
+            {
+                dynamicsClient.AddLink(mailingAddressCity, nameof(mailingAddressCity.era_jurisdiction_contact_MailingCity), newContact);
+            }
+
+            return newContact;
+        }
+
+        private Registration PopulateRegistration(Registration registration, contact contact)
+        {
+            // Check each incoming field for updated values and, if found, use them, otherwise use the existing value retrieved from Dynamics for the field.
+            registration.BCServicesCardId = contact.era_bcservicescardid;
+            // Personal Details
+            registration.PersonalDetails.FirstName = contact.firstname;
+            registration.PersonalDetails.LastName = contact.lastname;
+            registration.PersonalDetails.DateOfBirth = contact.birthdate.ToString();
+            registration.PersonalDetails.Initials = contact.era_initial;
+            registration.PersonalDetails.PreferredName = contact.era_preferredname;
+            registration.PersonalDetails.Gender = contact.gendercode.ToString();
+            // Contact Details
+            registration.ContactDetails.Email = contact.emailaddress1;
+            registration.ContactDetails.HideEmailRequired = contact.era_emailrefusal.HasValue ? contact.era_emailrefusal.Value : false;
+            registration.ContactDetails.Phone = contact.address1_telephone1;
+            registration.ContactDetails.HidePhoneRequired = contact.era_phonenumberrefusal.HasValue ? contact.era_phonenumberrefusal.Value : false;
+            // Primary Address
+            registration.PrimaryAddress.AddressLine1 = contact.address1_line1;
+            registration.PrimaryAddress.AddressLine2 = contact.address1_line2;
+            registration.PrimaryAddress.Jurisdiction.Code = contact.era_City?.era_jurisdictionid.ToString();
+            registration.PrimaryAddress.Jurisdiction.Name = contact.era_City?.era_jurisdictionname;
+            registration.PrimaryAddress.StateProvince.Code = contact.era_ProvinceState?.era_code;
+            registration.PrimaryAddress.StateProvince.Name = contact.era_ProvinceState?.era_name;
+            registration.PrimaryAddress.Country.Code = contact.era_Country?.era_countrycode;
+            registration.PrimaryAddress.Country.Name = contact.era_Country?.era_name;
+            registration.PrimaryAddress.PostalCode = contact.address1_postalcode;
+            // Mailing Address
+            registration.MailingAddress.AddressLine1 = contact.address2_line1;
+            registration.MailingAddress.AddressLine2 = contact.address2_line2;
+            registration.MailingAddress.Jurisdiction.Code = contact.era_MailingCity?.era_jurisdictionid.ToString();
+            registration.MailingAddress.Jurisdiction.Name = contact.era_MailingCity?.era_jurisdictionname;
+            registration.MailingAddress.StateProvince.Code = contact.era_MailingProvinceState?.era_code;
+            registration.MailingAddress.StateProvince.Name = contact.era_MailingProvinceState?.era_name;
+            registration.MailingAddress.Country.Code = contact.era_MailingCountry?.era_countrycode;
+            registration.MailingAddress.Country.Name = contact.era_MailingCountry?.era_name;
+            registration.MailingAddress.PostalCode = contact.address2_postalcode;
+            // Other
+            registration.InformationCollectionConsent = contact.era_collectionandauthorization.HasValue ? contact.era_collectionandauthorization.Value : false;
+            registration.RestrictedAccess = contact.era_restriction.HasValue ? contact.era_restriction.Value : false;
+            registration.SecretPhrase = contact.era_secrettext;
+
+            return registration;
         }
 
         private Registration newRegistrationObject()
@@ -474,9 +698,14 @@ namespace EMBC.Registrants.API.RegistrationsModule
         }
 
         private era_country Lookup(Country country) =>
-            string.IsNullOrEmpty(country.Code)
+            country == null || string.IsNullOrEmpty(country.Code)
             ? null
             : dynamicsClient.era_countries.Where(c => c.era_countrycode == country.Code).FirstOrDefault();
+
+        private era_country Lookup(era_country country) =>
+            country == null || string.IsNullOrEmpty(country.era_countrycode)
+            ? null
+            : dynamicsClient.era_countries.Where(c => c.era_countrycode == country.era_countrycode).FirstOrDefault();
 
         private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
 
