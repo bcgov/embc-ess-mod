@@ -48,7 +48,7 @@ namespace EMBC.Registrants.API.LocationModule
         [HttpGet("jurisdictions")]
         public async Task<ActionResult<IEnumerable<Jurisdiction>>> GetJurisdictions([FromQuery] JurisdictionType[] types, [FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
         {
-            return (await locationQueryManager.GetJurisdictions(types, countryCode, stateProvinceCode)).ToArray();
+            return (await locationQueryManager.GetJurisdictions(countryCode, stateProvinceCode, types)).ToArray();
         }
     }
 }
