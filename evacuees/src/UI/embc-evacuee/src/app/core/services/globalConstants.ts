@@ -4,6 +4,7 @@ export const defaultProvince = { code: 'BC', name: 'British Columbia' };
 export const defaultCountry = { code: 'CAN', name: 'Canada' };
 export const usDefaultObject = { code: 'USA', name: 'United States of America' };
 export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
+export const petsQuantityPattern = '^([1-9][0-9]{0,2})$';
 export const radioButton1 = [
   { name: 'Yes', value: true },
   { name: 'No', value: false }
@@ -50,3 +51,15 @@ export const gender = [
   { name: 'Female', value: 'Female' },
   { name: 'X', value: 'X' }
 ];
+
+export const invalidGoBackMessage = {
+  body: '<p>The Go Back action is disabled on this page</p>',
+  buttons:
+    [
+      {
+        name: 'Ok',
+        class: 'button-p',
+        function: 'ok'
+      }
+    ]
+};

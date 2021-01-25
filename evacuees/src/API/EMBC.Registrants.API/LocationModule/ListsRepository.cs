@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.Shared;
 using EMBC.ResourceAccess.Dynamics;
 
 namespace EMBC.Registrants.API.LocationModule
@@ -50,7 +51,7 @@ namespace EMBC.Registrants.API.LocationModule
             var provinces = await dynamicsClient.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync();
             return provinces.Select(sp => new StateProvince
             {
-                Code = sp.era_provinceterritoriesid.ToString(),
+                Code = sp.era_code,
                 Name = sp.era_name,
                 CountryCode = sp.era_RelatedCountry.era_countrycode
             }).ToArray();

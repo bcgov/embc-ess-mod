@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EMBC.Registrants.API;
 using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
+using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,46 +31,46 @@ namespace EMBC.Tests.Integration.Registrants.API
         {
             var textContextIdentifier = DateTime.Now.ToShortTimeString();
             var registration = new Registration
+            {
+                InformationCollectionConsent = true,
+                RestrictedAccess = true,
+                SecretPhrase = $"secret phrase {textContextIdentifier}",
+                BCServicesCardId = $"BCSC-ID-{textContextIdentifier}",
+                PersonalDetails = new PersonDetails
                 {
-                    InformationCollectionConsent = true,
-                    RestrictedAccess = true,
-                    SecretPhrase = $"secret phrase {textContextIdentifier}",
-                    BCServicesCardId = $"BCSC-ID-{textContextIdentifier}",
-                    PersonalDetails = new PersonDetails
-                    {
-                        FirstName = $"PriRegTestFirst-{textContextIdentifier}",
-                        LastName = $"PriRegTestLast-{textContextIdentifier}",
-                        DateOfBirth = "2000/01/01",
-                        Gender = "Male",
-                        Initials = "initials1",
-                        PreferredName = "preferred1"
-                    },
-                    ContactDetails = new ContactDetails
-                    {
-                        Email = "prireg@org.com",
-                        Phone = "999-999-9999",
-                        HidePhoneRequired = false,
-                        HideEmailRequired = false
-                    },
-                    PrimaryAddress = new Address
-                    {
-                        AddressLine1 = "100 Primary Address L1",
-                        AddressLine2 = "Address L2",
-                        Country = new Country { CountryCode = "CAN", CountryName = "Canada" },
-                        StateProvince = new StateProvince { StateProvinceCode = "BC", StateProvinceName = "British Columbia" },
-                        PostalCode = "V1V 1V1",
-                        Jurisdiction = new Jurisdiction { JurisdictionCode = "226adfaf-9f97-ea11-b813-005056830319", JurisdictionName = "North Vancouver" }
-                    },
-                    MailingAddress = new Address
-                    {
-                        AddressLine1 = "100 Mailing Address L1",
-                        AddressLine2 = "Address L2",
-                        Country = new Country { CountryCode = "USA", CountryName = "USA" },
-                        StateProvince = new StateProvince { StateProvinceCode = "WA", StateProvinceName = "Washington" },
-                        PostalCode = "12345",
-                        Jurisdiction = new Jurisdiction { JurisdictionCode = null, JurisdictionName = "Seattle" }
-                    }
-                };
+                    FirstName = $"PriRegTestFirst-{textContextIdentifier}",
+                    LastName = $"PriRegTestLast-{textContextIdentifier}",
+                    DateOfBirth = "2000/01/01",
+                    Gender = "Male",
+                    Initials = "initials1",
+                    PreferredName = "preferred1"
+                },
+                ContactDetails = new ContactDetails
+                {
+                    Email = "prireg@org.com",
+                    Phone = "999-999-9999",
+                    HidePhoneRequired = false,
+                    HideEmailRequired = false
+                },
+                PrimaryAddress = new Address
+                {
+                    AddressLine1 = "100 Primary Address L1",
+                    AddressLine2 = "Address L2",
+                    Country = new Country { Code = "CAN", Name = "Canada" },
+                    StateProvince = new StateProvince { Code = "BC", Name = "British Columbia" },
+                    PostalCode = "V1V 1V1",
+                    Jurisdiction = new Jurisdiction { Code = "226adfaf-9f97-ea11-b813-005056830319", Name = "North Vancouver" }
+                },
+                MailingAddress = new Address
+                {
+                    AddressLine1 = "100 Mailing Address L1",
+                    AddressLine2 = "Address L2",
+                    Country = new Country { Code = "USA", Name = "USA" },
+                    StateProvince = new StateProvince { Code = "WA", Name = "Washington" },
+                    PostalCode = "12345",
+                    Jurisdiction = new Jurisdiction { Code = null, Name = "Seattle" }
+                }
+            };
 
             var regManager = services.GetRequiredService<IRegistrationManager>();
             var result = await regManager.CreateProfile(registration);
@@ -106,19 +107,19 @@ namespace EMBC.Tests.Integration.Registrants.API
                 {
                     AddressLine1 = "100 Primary Address L1",
                     AddressLine2 = "Address L2",
-                    Country = new Country { CountryCode = "AFG", CountryName = "Afghanistan" },
-                    //StateProvince = new StateProvince { StateProvinceCode = "BC", StateProvinceName = "British Columbia" },
+                    Country = new Country { Code = "AFG", Name = "Afghanistan" },
+                    //StateProvince = new StateProvince { Code = "BC", Name = "British Columbia" },
                     PostalCode = "XX99",
-                    Jurisdiction = new Jurisdiction { JurisdictionCode = null, JurisdictionName = "Afghanistan City" }
+                    Jurisdiction = new Jurisdiction { Code = null, Name = "Afghanistan City" }
                 },
                 MailingAddress = new Address
                 {
                     AddressLine1 = "100 Mailing Address L1",
                     AddressLine2 = "Address L2",
-                    Country = new Country { CountryCode = "DZA", CountryName = "Algeria" },
-                    //StateProvince = new StateProvince { StateProvinceCode = "WA", StateProvinceName = "Washington" },
+                    Country = new Country { Code = "DZA", Name = "Algeria" },
+                    //StateProvince = new StateProvince { Code = "WA", Name = "Washington" },
                     PostalCode = "999Z",
-                    Jurisdiction = new Jurisdiction { JurisdictionCode = null, JurisdictionName = "Algeria City" }
+                    Jurisdiction = new Jurisdiction { Code = null, Name = "Algeria City" }
                 }
             };
 
@@ -159,19 +160,19 @@ namespace EMBC.Tests.Integration.Registrants.API
                     {
                         AddressLine1 = $"paddr1-{textContextIdentifier}",
                         AddressLine2 = "paddr2",
-                        Country = new Country { CountryCode = "CAN", CountryName = "Canada" },
-                        StateProvince = new StateProvince { StateProvinceCode = "BC", StateProvinceName = "British Columbia" },
+                        Country = new Country { Code = "CAN", Name = "Canada" },
+                        StateProvince = new StateProvince { Code = "BC", Name = "British Columbia" },
                         PostalCode = "v1v 1v1",
-                        Jurisdiction = new Jurisdiction { JurisdictionCode = "226adfaf-9f97-ea11-b813-005056830319", JurisdictionName = "North Vancouver" }
+                        Jurisdiction = new Jurisdiction { Code = "226adfaf-9f97-ea11-b813-005056830319", Name = "North Vancouver" }
                     },
                     MailingAddress = new Address
                     {
                         AddressLine1 = $"maddr1-{textContextIdentifier}",
                         AddressLine2 = "maddr2",
-                        Country = new Country { CountryCode = "USA", CountryName = "USA" },
-                        StateProvince = new StateProvince { StateProvinceCode = "WA", StateProvinceName = "Washington" },
+                        Country = new Country { Code = "USA", Name = "USA" },
+                        StateProvince = new StateProvince { Code = "WA", Name = "Washington" },
                         PostalCode = "12345",
-                        Jurisdiction = new Jurisdiction { JurisdictionCode = null, JurisdictionName = "Seattle" }
+                        Jurisdiction = new Jurisdiction { Code = null, Name = "Seattle" }
                     }
                 },
                 PreliminaryNeedsAssessment = new NeedsAssessment
@@ -179,9 +180,9 @@ namespace EMBC.Tests.Integration.Registrants.API
                     EvacuatedFromAddress = new Address
                     {
                         AddressLine1 = $"addr1-{textContextIdentifier}",
-                        Country = new Country { CountryCode = "CA" },
-                        Jurisdiction = new Jurisdiction { JurisdictionCode = "226adfaf-9f97-ea11-b813-005056830319" },
-                        StateProvince = new StateProvince { StateProvinceCode = "BC", StateProvinceName = "British Columbia" },
+                        Country = new Country { Code = "CA" },
+                        Jurisdiction = new Jurisdiction { Code = "226adfaf-9f97-ea11-b813-005056830319" },
+                        StateProvince = new StateProvince { Code = "BC", Name = "British Columbia" },
                         PostalCode = "v1v 1v1"
                     },
                     FamilyMembers = new[]
@@ -220,7 +221,7 @@ namespace EMBC.Tests.Integration.Registrants.API
 
             testLogger.LogDebug("ESS File #: " + result);
             Assert.NotNull(result);
-            Assert.True(int.Parse(result)>0);
+            Assert.True(int.Parse(result) > 0);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -228,6 +229,24 @@ namespace EMBC.Tests.Integration.Registrants.API
         {
             var repo = services.GetRequiredService<EMBC.Registrants.API.LocationModule.IListsRepository>();
             var jurisdictions = await repo.GetJurisdictions();
+
+            Assert.NotEmpty(jurisdictions);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetListOfStateProvinces()
+        {
+            var repo = services.GetRequiredService<EMBC.Registrants.API.LocationModule.IListsRepository>();
+            var jurisdictions = await repo.GetStateProvinces();
+
+            Assert.NotEmpty(jurisdictions);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetListOfCountries()
+        {
+            var repo = services.GetRequiredService<EMBC.Registrants.API.LocationModule.IListsRepository>();
+            var jurisdictions = await repo.GetCountries();
 
             Assert.NotEmpty(jurisdictions);
         }
@@ -243,13 +262,70 @@ namespace EMBC.Tests.Integration.Registrants.API
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetProfileByBcscId()
+        public async Task GetProfileByBcscId()
         {
             var regManager = services.GetRequiredService<IRegistrationManager>();
             var profile = await regManager.GetProfileByBcscId("TESTTESTTESTTESTTESTTESTTESTTEST");
             Assert.NotNull(profile);
             Assert.NotEmpty(profile.PersonalDetails.FirstName);
             testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task RegistrantEvacuation()
+        {
+            var textContextIdentifier = DateTime.Now.ToShortTimeString();
+            var registrantEvacuation = new RegistrantEvacuation
+            {
+                ContactId = "91d6f457-b8b5-4fd4-ac71-0e45bd7e989d",
+                PreliminaryNeedsAssessment = new NeedsAssessment
+                {
+                    EvacuatedFromAddress = new Address
+                    {
+                        AddressLine1 = $"AddressLine1-{textContextIdentifier}",
+                        Country = new Country { Code = "CA" },
+                        Jurisdiction = new Jurisdiction { Code = "226adfaf-9f97-ea11-b813-005056830319" },
+                        StateProvince = new StateProvince { Code = "BC", Name = "British Columbia" },
+                        PostalCode = "V8V 8V8"
+                    },
+                    FamilyMembers = new[]
+                    {
+                        new PersonDetails
+                        {
+                            FirstName = $"MemberFirstName-{textContextIdentifier}",
+                            LastName = $"MemberLastName-{textContextIdentifier}",
+                            Gender = "F",
+                            DateOfBirth = "1990-09-09"
+                        }
+                    },
+                    HaveMedication = false,
+                    Insurance = NeedsAssessment.InsuranceOption.Unknown,
+                    HaveSpecialDiet = true,
+                    HasPetsFood = true,
+                    RequiresClothing = true, //to be deleted
+                    RequiresFood = true, //to be deleted
+                    RequiresLodging = true, //to be deleted
+                    RequiresIncidentals = true, //to be deleted
+                    RequiresTransportation = true, //to be deleted
+                    CanEvacueeProvideClothing = true,
+                    CanEvacueeProvideFood = false,
+                    CanEvacueeProvideIncidentals = true,
+                    CanEvacueeProvideLodging = false,
+                    CanEvacueeProvideTransportation = false,
+                    Pets = new[]
+                    {
+                        new Pet{ Type = $"Cat{textContextIdentifier}", Quantity = "2" },
+                        new Pet{ Type = $"Dog{textContextIdentifier}", Quantity = "1" }
+                    },
+                }
+            };
+
+            var regManager = services.GetRequiredService<IRegistrationManager>();
+            var result = await regManager.CreateRegistrantEvacuation(registrantEvacuation);
+
+            testLogger.LogDebug("ESS File #: " + result);
+            Assert.NotNull(result);
+            Assert.True(int.Parse(result) > 0);
         }
     }
 }

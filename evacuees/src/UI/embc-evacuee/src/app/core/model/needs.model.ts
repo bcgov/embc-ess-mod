@@ -1,4 +1,4 @@
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomValidationService } from '../services/customValidation.service';
 import { RegAddress } from './address';
 import { PersonDetails } from './profile.model';
@@ -76,7 +76,7 @@ export class FamilyMembersForm {
 }
 
 export class Pet {
-    quantity: string;
+    quantity: number;
     type: string;
     hasPetsFood: boolean;
 
@@ -95,7 +95,7 @@ export class PetForm {
             quantity: ['', [customValidator.conditionalValidation(
                 () => this.addPetIndicator.value,
                 Validators.required
-            ).bind(customValidator)]],
+            ).bind(customValidator), customValidator.quantityPetsValidator().bind(customValidator)]],
             type: ['', [customValidator.conditionalValidation(
                 () => this.addPetIndicator.value,
                 Validators.required

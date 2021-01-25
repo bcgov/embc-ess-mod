@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { CanDeactivateGuardService } from '../core/services/disableBackGuard.service';
 import { NonVerifiedRegistrationComponent } from './non-verified-registration.component';
 
 const routes: Routes = [
@@ -42,9 +43,11 @@ const routes: Routes = [
         path: 'fileSubmission',
         loadChildren: () => import('../sharedModules/components/file-submission/file-submission.module')
           .then(m => m.FileSubmissionModule),
-        data: { flow: 'non-verified-registration' }
+        data: { flow: 'non-verified-registration' },
+        canDeactivate: [CanDeactivateGuardService]
       }
     ]
+
   }
 ];
 

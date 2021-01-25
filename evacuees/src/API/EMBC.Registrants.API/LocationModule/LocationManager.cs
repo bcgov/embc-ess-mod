@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.Shared;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace EMBC.Registrants.API.LocationModule
@@ -27,7 +28,7 @@ namespace EMBC.Registrants.API.LocationModule
     {
         Task<IEnumerable<Country>> GetCountries();
 
-        Task<IEnumerable<Jurisdiction>> GetJurisdictions(JurisdictionType[] types, string countryCode, string stateProvinceCode);
+        Task<IEnumerable<Jurisdiction>> GetJurisdictions(string countryCode, string stateProvinceCode, JurisdictionType[] types = null);
 
         Task<IEnumerable<StateProvince>> GetStateProvinces(string countryCode);
     }
@@ -53,7 +54,7 @@ namespace EMBC.Registrants.API.LocationModule
                 .ToArray();
         }
 
-        public async Task<IEnumerable<Jurisdiction>> GetJurisdictions(JurisdictionType[] types, string countryCode, string stateProvinceCode)
+        public async Task<IEnumerable<Jurisdiction>> GetJurisdictions(string countryCode, string stateProvinceCode, JurisdictionType[] types = null)
         {
             if (types == null) types = Array.Empty<JurisdictionType>();
             return JsonSerializer.Deserialize<IEnumerable<Jurisdiction>>(await cache.GetAsync(LocationCacheNames.Jurisdictions))

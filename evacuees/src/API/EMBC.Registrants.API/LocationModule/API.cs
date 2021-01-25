@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Registrants.API.LocationModule
@@ -25,97 +26,29 @@ namespace EMBC.Registrants.API.LocationModule
     [ApiController]
     public class LocationController : ControllerBase
     {
-        private readonly ILocationManager locationQueriesService;
+        private readonly ILocationManager locationQueryManager;
 
         public LocationController(ILocationManager locationQueriesService)
         {
-            this.locationQueriesService = locationQueriesService;
+            this.locationQueryManager = locationQueriesService;
         }
 
         [HttpGet("countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
-            return (await locationQueriesService.GetCountries()).ToArray();
+            return (await locationQueryManager.GetCountries()).ToArray();
         }
 
         [HttpGet("stateprovinces")]
         public async Task<ActionResult<IEnumerable<StateProvince>>> GetStateProvinces([FromQuery] string countryCode = "CAN")
         {
-            return (await locationQueriesService.GetStateProvinces(countryCode)).ToArray();
+            return (await locationQueryManager.GetStateProvinces(countryCode)).ToArray();
         }
 
         [HttpGet("jurisdictions")]
         public async Task<ActionResult<IEnumerable<Jurisdiction>>> GetJurisdictions([FromQuery] JurisdictionType[] types, [FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
         {
-            return (await locationQueriesService.GetJurisdictions(types, countryCode, stateProvinceCode)).ToArray();
+            return (await locationQueryManager.GetJurisdictions(countryCode, stateProvinceCode, types)).ToArray();
         }
-    }
-
-    public class Country
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class StateProvince
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string CountryCode { get; set; }
-    }
-
-    public class Region
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string StateProvinceCode { get; set; }
-        public string CountryCode { get; set; }
-    }
-
-    public class Jurisdiction
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public JurisdictionType Type { get; set; }
-        public string StateProvinceCode { get; set; }
-        public string CountryCode { get; set; }
-    }
-
-    public class District
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string RegionCode { get; set; }
-        public string StateProvinceCode { get; set; }
-        public string CountryCode { get; set; }
-    }
-
-    public class Support
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-    }
-
-#pragma warning disable CA1008 // Enums should have zero value
-
-    public enum JurisdictionType
-#pragma warning restore CA1008 // Enums should have zero value
-    {
-        Undefined = -1,
-        City = 1,
-        Town = 4,
-        Village = 2,
-        District = 12,
-        DistrictMunicipality = 100000014,
-        Township = 3,
-        IndianGovernmentDistrict = 100000015,
-        IslandMunicipality = 13,
-        IslandTrust = 10,
-        MountainResortMunicipality = 8,
-        MunicipalityDistrict = 9,
-        RegionalDistrict = 14,
-        RegionalMunicipality = 6,
-        ResortMunicipality = 5,
-        RuralMunicipalities = 7
     }
 }

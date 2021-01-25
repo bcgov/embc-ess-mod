@@ -110,6 +110,15 @@ export class CustomValidationService {
         };
     }
 
+    /**
+     * Checks if the quantity inserted is between 1 and 999
+     */
+    quantityPetsValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            return Validators.pattern(globalConst.petsQuantityPattern)(control);
+        };
+    }
+
 }
 
 
