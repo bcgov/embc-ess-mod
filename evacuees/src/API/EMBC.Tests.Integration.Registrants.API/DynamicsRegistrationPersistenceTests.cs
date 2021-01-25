@@ -234,6 +234,24 @@ namespace EMBC.Tests.Integration.Registrants.API
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetListOfStateProvinces()
+        {
+            var repo = services.GetRequiredService<EMBC.Registrants.API.LocationModule.IListsRepository>();
+            var jurisdictions = await repo.GetStateProvinces();
+
+            Assert.NotEmpty(jurisdictions);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetListOfCountries()
+        {
+            var repo = services.GetRequiredService<EMBC.Registrants.API.LocationModule.IListsRepository>();
+            var jurisdictions = await repo.GetCountries();
+
+            Assert.NotEmpty(jurisdictions);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task GeProfileById()
         {
             var regManager = services.GetRequiredService<IRegistrationManager>();

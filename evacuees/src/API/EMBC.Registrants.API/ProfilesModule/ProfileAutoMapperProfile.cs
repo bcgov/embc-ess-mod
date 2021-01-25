@@ -16,14 +16,20 @@
 
 using EMBC.Registrants.API.Shared;
 using Microsoft.Dynamics.CRM;
+using Microsoft.OData.Edm;
 
 namespace EMBC.Registrants.API.ProfilesModule
 {
-    public class ProfileMap : AutoMapper.Profile
+    public class ProfileAutoMapperProfile : AutoMapper.Profile
     {
-        public ProfileMap()
+        public ProfileAutoMapperProfile()
         {
             CreateMap<contact, Profile>()
+                .ForMember(d => d.EraId, opts => opts.MapFrom(s => s.contactid))
+                .ForMember(d => d.BceId, opts => opts.MapFrom(s => s.era_bcservicescardid))
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_restriction ?? false))
+                .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.era_secrettext))
+
                 .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.ContactDetails, opts => opts.MapFrom(s => s))
 
@@ -40,54 +46,52 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForPath(d => d.MailingAddress.Country, opts => opts.MapFrom(s => s.era_MailingCountry ?? new era_country { era_name = s.address2_country }))
                 .ForPath(d => d.MailingAddress.Jurisdiction, opts => opts.MapFrom(s => s.era_MailingCity ?? new era_jurisdiction { era_jurisdictionname = s.address2_city }))
                 .ForPath(d => d.MailingAddress.StateProvince, opts => opts.MapFrom(s => s.era_MailingProvinceState ?? new era_provinceterritories { era_name = s.address2_stateorprovince }))
-               ;
 
-            CreateMap<contact, PersonDetails>(AutoMapper.MemberList.Destination)
+                .ReverseMap()
+
+                .ForMember(d => d.era_registranttype, opts => opts.MapFrom(s => 174360000))
+                .ForMember(d => d.era_collectionandauthorization, opts => opts.MapFrom(s => true))
+                .ForMember(d => d.era_restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
+
+                .ForMember(d => d.address1_country, opts => opts.MapFrom(s => s.PrimaryAddress.Country.Name))
+                .ForMember(d => d.address1_stateorprovince, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince.Name))
+                .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.Jurisdiction.Name))
+                .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince.Code == "BC"))
+
+                .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country.Name))
+                .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => s.MailingAddress.StateProvince.Name))
+                .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.Jurisdiction.Name))
+                .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince.Code == "BC"))
+                .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s =>
+                    s.MailingAddress.Country.Name == s.PrimaryAddress.Country.Name &&
+                    s.MailingAddress.StateProvince.Name == s.PrimaryAddress.StateProvince.Name &&
+                    s.MailingAddress.Jurisdiction.Name == s.PrimaryAddress.Jurisdiction.Name &&
+                    s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
+                    s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
+                    s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
+                ;
+
+            CreateMap<contact, PersonDetails>()
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.birthdate))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.firstname))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.lastname))
                 .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.gendercode))
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_initial))
-                .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.era_preferredname));
+                .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.era_preferredname))
+                .ReverseMap()
+                .ForMember(d => d.gendercode, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))
+                .ForMember(d => d.birthdate, opts => opts.MapFrom(s => Date.Parse(s.DateOfBirth)))
+                ;
 
-            CreateMap<contact, ContactDetails>(AutoMapper.MemberList.Destination)
+            CreateMap<contact, ContactDetails>()
                 .ForPath(d => d.Email, opts => opts.MapFrom(s => s.emailaddress1))
                 .ForPath(d => d.Phone, opts => opts.MapFrom(s => s.telephone1))
-                .ForPath(d => d.HideEmailRequired, opts => opts.MapFrom(s => s.era_emailrefusal ?? false))
-                .ForPath(d => d.HidePhoneRequired, opts => opts.MapFrom(s => s.era_phonenumberrefusal ?? false));
-        }
-    }
-
-    public class LocationMap : AutoMapper.Profile
-    {
-        public LocationMap()
-        {
-            CreateMap<era_jurisdiction, Jurisdiction>()
-                .ForMember(j => j.Code, opts => opts.MapFrom(o => o.era_jurisdictionid))
-                .ForMember(j => j.Name, opts => opts.MapFrom(o => o.era_jurisdictionname))
-                .ForMember(j => j.CountryCode, opts => opts.MapFrom(o => o.era_RelatedProvinceState == null
-                    ? null
-                    : o.era_RelatedProvinceState.era_RelatedCountry == null
-                        ? null
-                        : o.era_RelatedProvinceState.era_RelatedCountry.era_countrycode))
-                .ForMember(j => j.StateProvinceCode, opts => opts.MapFrom(o => o.era_RelatedProvinceState == null
-                        ? null
-                        : o.era_RelatedProvinceState.era_code))
-                .ForMember(j => j.Type, opts => opts.MapFrom(o => o.era_type.HasValue ? (JurisdictionType)o.era_type : JurisdictionType.Undefined))
-                ;
-
-            CreateMap<era_provinceterritories, StateProvince>()
-                .ForMember(j => j.Code, opts => opts.MapFrom(o => o.era_code))
-                .ForMember(j => j.Name, opts => opts.MapFrom(o => o.era_name))
-                .ForMember(j => j.CountryCode, opts => opts.MapFrom(o => o.era_RelatedCountry == null
-                    ? null
-                    : o.era_RelatedCountry.era_countrycode))
-             ;
-
-            CreateMap<era_country, Country>()
-                .ForMember(j => j.Code, opts => opts.MapFrom(o => o.era_countrycode))
-                .ForMember(j => j.Name, opts => opts.MapFrom(o => o.era_name))
-                ;
+                .ForPath(d => d.HideEmailRequired, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.emailaddress1)))
+                .ForPath(d => d.HidePhoneRequired, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.telephone1)))
+                .ReverseMap()
+                .ForPath(d => d.era_emailrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Email)))
+                .ForPath(d => d.era_phonenumberrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Phone)))
+;
         }
     }
 
