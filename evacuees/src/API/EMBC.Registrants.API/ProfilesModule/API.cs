@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Registrants.API.ProfilesModule
 {
-    [Route("api/profile")]
+    [Route("api/profiles")]
     [ApiController]
     [Authorize]
     public class ProfileController : ControllerBase
@@ -36,7 +36,7 @@ namespace EMBC.Registrants.API.ProfilesModule
             this.profileManager = profileManager;
         }
 
-        [HttpGet]
+        [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
@@ -47,6 +47,19 @@ namespace EMBC.Registrants.API.ProfilesModule
             if (profile == null) return NotFound();
             return Ok(profile);
         }
+
+        [HttpPost("current")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public async Task<ActionResult> Update(Profile profile)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await profileManager.UpdateProfile(profile);
+
+            return Ok();
+        }
     }
 
     /// <summary>
@@ -54,6 +67,9 @@ namespace EMBC.Registrants.API.ProfilesModule
     /// </summary>
     public class Profile
     {
+        public string EraId { get; set; }
+        public string BceId { get; set; }
+
         [Required]
         public PersonDetails PersonalDetails { get; set; }
 
