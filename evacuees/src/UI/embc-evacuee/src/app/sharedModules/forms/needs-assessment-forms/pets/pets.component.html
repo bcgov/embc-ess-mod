@@ -3,13 +3,15 @@
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <label class="card-heading requiredField">If you have any pets who live in the same household with you, please add them below.</label>
-          
-          <mat-table *ngIf="dataSource.getValue().length > 0" [dataSource]="dataSource"> <!--&& showTable-->
+          <label class="card-heading requiredField">If you have any pets who live in the same household with you, please
+            add them below.</label>
+
+          <mat-table *ngIf="dataSource.getValue().length > 0" [dataSource]="dataSource">
+            <!--&& showTable-->
 
             <ng-container matColumnDef="type">
               <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
-              <mat-cell [ngClass] = "(element.type.length >= 40)? 'wrapText':''" *matCellDef="let element">
+              <mat-cell [ngClass]="(element.type.length >= 40)? 'wrapText':''" *matCellDef="let element">
                 <span class="mobile-label">Pet Type</span>
                 {{element.type}}
               </mat-cell>
@@ -26,12 +28,14 @@
             <ng-container matColumnDef="buttons">
               <mat-header-cell *matHeaderCellDef></mat-header-cell>
               <mat-cell *matCellDef="let element; let index = index">
-                <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(element, index)">
+                <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editRow(element, index)"
+                  *ngIf="!showPetsForm">
                   <img src="/assets/images/edit.svg" height="35" width="35">
                   <img src="/assets/images/edit_onhover.svg" height="35" width="35">
                 </button>
 
-                <button class="delete-image" mat-icon-button aria-label="Remove" (click)="deleteRow(index)">
+                <button class="delete-image" mat-icon-button aria-label="Remove" (click)="deleteRow(index)"
+                  *ngIf="!showPetsForm">
                   <img src="/assets/images/delete.svg" height="35" width="35">
                   <img src="/assets/images/delete_onhover.svg" height="35" width="35">
                 </button>
@@ -69,7 +73,8 @@
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <label class="card-heading requiredField" id="primary-radio-group-label">Do you have sufficient food for your pet(s)?</label>
+          <label class="card-heading requiredField" id="primary-radio-group-label">Do you have sufficient food for your
+            pet(s)?</label>
           <br>
           <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="hasPetsFood"
             class="primary-radio-group">

@@ -331,7 +331,8 @@
                     <div class="col-md-3">Insurance:</div>
                     <div class="col-md-3">{{(formCreationService.evacuatedForm$ | async).value.insurance ==='Unknown' ?
                         'I don\'t know' : (formCreationService.evacuatedForm$ | async).value.insurance === 'Unsure' ?
-                        'I\'m not sure' : (formCreationService.evacuatedForm$ | async).value.insurance === 'Yes' ?
+                        'Yes, but I am unsure if I have coverage for this event.' : (formCreationService.evacuatedForm$
+                        | async).value.insurance === 'Yes' ?
                         'Yes' : 'No'}}</div>
                 </div>
             </mat-card-content>
@@ -352,29 +353,27 @@
                 <hr>
                 <div *ngFor="let member of (formCreationService.familyMembersForm$ | async).value.familyMember">
                     <div class="row info-detail">
-                        <div class="col-md-3">Last Name:</div>
-                        <div class="col-md-3">{{member.lastName}}</div>
-                    </div>
-                    <div class="row info-detail">
                         <div class="col-md-3">First Name:</div>
                         <div class="col-md-3">{{member.firstName}}</div>
                     </div>
                     <div class="row info-detail">
-                        <div class="col-md-3">Preferred Name:</div>
-                        <div class="col-md-3">{{member.preferredName}}</div>
+                        <div class="col-md-3">Last Name:</div>
+                        <div class="col-md-3">{{member.lastName}}</div>
                     </div>
+
                     <div class="row info-detail">
                         <div class="col-md-3">Initials:</div>
                         <div class="col-md-3">{{member.initials}}</div>
                     </div>
                     <div class="row info-detail">
-                        <div class="col-md-3">Date of Birth:</div>
-                        <div class="col-md-3">{{member.dateOfBirth | date: 'dd-MMM-yyyy'}}</div>
-                    </div>
-                    <div class="row info-detail">
                         <div class="col-md-3">Gender:</div>
                         <div class="col-md-3">{{member.gender}}</div>
                     </div>
+                    <div class="row info-detail">
+                        <div class="col-md-3">Date of Birth:</div>
+                        <div class="col-md-3">{{member.dateOfBirth | date: 'dd-MMM-yyyy'}}</div>
+                    </div>
+                    <br>
                 </div>
             </mat-card-content>
 
@@ -430,6 +429,7 @@
                         <div class="col-md-3">Quantity:</div>
                         <div class="col-md-3">{{pet.quantity}}</div>
                     </div>
+                    <br>
                 </div>
                 <div *ngIf="(formCreationService.petsForm$ | async).value?.pets?.length > 0" class="row info-detail">
                     <div class="col-md-3">Has sufficient pet food?</div>

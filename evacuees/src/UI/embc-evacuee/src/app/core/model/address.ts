@@ -8,16 +8,16 @@ export interface RegAddress {
 }
 
 export interface Jurisdiction {
-  jurisdictionCode?: null | string;
-  jurisdictionName?: null | string;
+  code?: null | string;
+  name?: null | string;
 }
 
 export interface StateProvince {
-  stateProvinceCode?: null | string;
-  stateProvinceName?: null | string;
+  code?: null | string;
+  name?: null | string;
 }
 
 export interface Country {
-  countryCode: string;
-  countryName: string;
+  code: string;
+  name: string;
 }
