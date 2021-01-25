@@ -52,7 +52,7 @@ namespace EMBC.Registrants.API.ProfilesModule
 
             contact.contactid = Guid.NewGuid();
             contact.era_authenticated = true;
-            contact.era_verified = true;
+            contact.era_verified = false;
             contact.era_registrationdate = DateTimeOffset.UtcNow;
 
             dynamicsClient.AddTocontacts(contact);

@@ -80,5 +80,7 @@ namespace EMBC.Registrants.API.ProfilesModule
         public Address PrimaryAddress { get; set; }
 
         public Address MailingAddress { get; set; }
+        public object RestrictedAccess { get; internal set; }
+        public object SecretPhrase { get; internal set; }
     }
 }

@@ -34,6 +34,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
             profile.EraId.ShouldBe(contact.contactid?.ToString());
             profile.BceId.ShouldBe(contact.era_bcservicescardid);
+            profile.SecretPhrase.ShouldBe(contact.era_secrettext);
+            profile.RestrictedAccess.ShouldBe(contact.era_restriction.Value);
 
             profile.PersonalDetails.DateOfBirth.ShouldBe($"{contact.birthdate.Value.Year:D4}-{contact.birthdate.Value.Month:D2}-{contact.birthdate.Value.Day:D2}");
             profile.PersonalDetails.FirstName.ShouldBe(contact.firstname);
@@ -76,6 +78,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
             contact.contactid.ShouldNotBeNull().ToString().ShouldBe(profile.EraId);
             contact.era_bcservicescardid.ShouldBe(profile.BceId);
+            contact.era_secrettext.ShouldBe(profile.SecretPhrase);
+            contact.era_restriction.ShouldBe(profile.RestrictedAccess);
 
             contact.firstname.ShouldBe(profile.PersonalDetails.FirstName);
             contact.lastname.ShouldBe(profile.PersonalDetails.LastName);
@@ -131,6 +135,9 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             return new Faker<contact>()
                 .RuleFor(o => o.contactid, f => Guid.NewGuid())
                 .RuleFor(o => o.era_bcservicescardid, f => f.Random.String(10))
+                .RuleFor(o => o.era_secrettext, f => f.Internet.Password())
+                .RuleFor(o => o.era_restriction, f => f.Random.Bool())
+
                 .RuleFor(o => o.birthdate, f => f.Date.Past(20))
                 .RuleFor(o => o.firstname, f => f.Name.FirstName())
                 .RuleFor(o => o.lastname, f => f.Name.LastName())
@@ -166,6 +173,9 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             return new Faker<Profile>()
                 .RuleFor(o => o.EraId, f => Guid.NewGuid().ToString())
                 .RuleFor(o => o.BceId, f => f.Random.String(10))
+                .RuleFor(o => o.SecretPhrase, f => f.Internet.Password())
+                .RuleFor(o => o.RestrictedAccess, f => f.Random.Bool())
+
                 .RuleFor(o => o.PersonalDetails, f => new Faker<PersonDetails>()
                         .RuleFor(o => o.FirstName, f => f.Name.FirstName())
                         .RuleFor(o => o.LastName, f => f.Name.LastName())

@@ -27,6 +27,8 @@ namespace EMBC.Registrants.API.ProfilesModule
             CreateMap<contact, Profile>()
                 .ForMember(d => d.EraId, opts => opts.MapFrom(s => s.contactid))
                 .ForMember(d => d.BceId, opts => opts.MapFrom(s => s.era_bcservicescardid))
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_restriction ?? false))
+                .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.era_secrettext))
 
                 .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.ContactDetails, opts => opts.MapFrom(s => s))
@@ -48,14 +50,25 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ReverseMap()
 
                 .ForMember(d => d.era_registranttype, opts => opts.MapFrom(s => 174360000))
+                .ForMember(d => d.era_collectionandauthorization, opts => opts.MapFrom(s => true))
+                .ForMember(d => d.era_restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
 
                 .ForMember(d => d.address1_country, opts => opts.MapFrom(s => s.PrimaryAddress.Country.Name))
                 .ForMember(d => d.address1_stateorprovince, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince.Name))
                 .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.Jurisdiction.Name))
+                .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince.Code == "BC"))
 
                 .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country.Name))
                 .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => s.MailingAddress.StateProvince.Name))
                 .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.Jurisdiction.Name))
+                .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince.Code == "BC"))
+                .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s =>
+                    s.MailingAddress.Country.Name == s.PrimaryAddress.Country.Name &&
+                    s.MailingAddress.StateProvince.Name == s.PrimaryAddress.StateProvince.Name &&
+                    s.MailingAddress.Jurisdiction.Name == s.PrimaryAddress.Jurisdiction.Name &&
+                    s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
+                    s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
+                    s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
                 ;
 
             CreateMap<contact, PersonDetails>()
