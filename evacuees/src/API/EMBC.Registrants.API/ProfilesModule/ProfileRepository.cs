@@ -46,6 +46,9 @@ namespace EMBC.Registrants.API.ProfilesModule
 
         public async Task<string> Create(Profile profile)
         {
+            var existingContactId = GetContactIdForBcscId(profile.Id);
+            if (existingContactId.HasValue) throw new Exception($"Profile already exists for ID {profile.Id}: {existingContactId}");
+
             var contact = mapper.Map<contact>(profile);
 
             contact.contactid = Guid.NewGuid();
@@ -92,7 +95,7 @@ namespace EMBC.Registrants.API.ProfilesModule
 
         public async Task Update(Profile profile)
         {
-            var contactId = dynamicsClient.contacts.Where(c => c.era_bcservicescardid == profile.Id).Select(c => c.contactid).SingleOrDefault();
+            var contactId = GetContactIdForBcscId(profile.Id);
             var contact = mapper.Map<contact>(profile);
 
             contact.contactid = contactId;
@@ -111,5 +114,11 @@ namespace EMBC.Registrants.API.ProfilesModule
 
             dynamicsClient.Detach(updatedContact);
         }
+
+        private Guid? GetContactIdForBcscId(string bcscId) =>
+            dynamicsClient.contacts
+                .Where(c => c.era_bcservicescardid == bcscId)
+                .Select(c => new { c.contactid, c.era_bcservicescardid })
+                .SingleOrDefault()?.contactid;
     }
 }
