@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -53,12 +54,33 @@ namespace EMBC.Registrants.API.ProfilesModule
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize]
-        public async Task<ActionResult> Update(Profile profile)
+        public async Task<ActionResult> Upsert(Profile profile)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await profileManager.UpdateProfile(profile);
+            if (profile.Id == null)
+            {
+                profile.Id = userId;
+                await profileManager.CreateProfile(profile);
+            }
+            else
+            {
+                await profileManager.UpdateProfile(profile);
+            }
 
-            return Ok();
+            return Ok(new { id = profile.Id });
+        }
+
+        [HttpGet("current/conflicts")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<ActionResult<UserProfile>> GetProfileConflicts()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var userProfileWithConflicts = await profileManager.GetProfileAndConflicts(userId);
+            if (userProfileWithConflicts == null) return NotFound();
+            return Ok(userProfileWithConflicts);
         }
     }
 
@@ -67,8 +89,7 @@ namespace EMBC.Registrants.API.ProfilesModule
     /// </summary>
     public class Profile
     {
-        public string EraId { get; set; }
-        public string BceId { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public PersonDetails PersonalDetails { get; set; }
@@ -80,7 +101,20 @@ namespace EMBC.Registrants.API.ProfilesModule
         public Address PrimaryAddress { get; set; }
 
         public Address MailingAddress { get; set; }
-        public object RestrictedAccess { get; internal set; }
-        public object SecretPhrase { get; internal set; }
+        public bool RestrictedAccess { get; set; }
+        public string SecretPhrase { get; set; }
+    }
+
+    public class UserProfile
+    {
+        public bool IsNewUser => EraProfile == null;
+        public Profile EraProfile { get; set; }
+        public Profile LoginProfile { get; set; }
+        public IEnumerable<ProfileDataConflict> Conflicts { get; set; }
+    }
+
+    public class ProfileDataConflict
+    {
+        public string ConflictDataElement { get; set; }
     }
 }
