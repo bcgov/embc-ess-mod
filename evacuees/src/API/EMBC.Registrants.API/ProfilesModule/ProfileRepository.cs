@@ -46,8 +46,6 @@ namespace EMBC.Registrants.API.ProfilesModule
 
         public async Task<string> Create(Profile profile)
         {
-            if (!string.IsNullOrEmpty(profile.Id)) throw new InvalidOperationException($"Profile already has an ID ({profile.Id})");
-
             var contact = mapper.Map<contact>(profile);
 
             contact.contactid = Guid.NewGuid();
@@ -94,8 +92,10 @@ namespace EMBC.Registrants.API.ProfilesModule
 
         public async Task Update(Profile profile)
         {
+            var contactId = dynamicsClient.contacts.Where(c => c.era_bcservicescardid == profile.Id).Select(c => c.contactid).SingleOrDefault();
             var contact = mapper.Map<contact>(profile);
 
+            contact.contactid = contactId;
             contact.era_Country = dynamicsClient.LookupCountryByCode(profile.PrimaryAddress.Country.Code);
             contact.era_ProvinceState = dynamicsClient.LookupStateProvinceByCode(profile.PrimaryAddress.StateProvince.Code);
             contact.era_City = dynamicsClient.LookupJurisdictionByCode(profile.PrimaryAddress.Jurisdiction.Code);

@@ -59,7 +59,8 @@ namespace EMBC.Registrants.API.ProfilesModule
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (profile.Id == null)
             {
-                profile.Id = await profileManager.CreateProfile(profile);
+                profile.Id = userId;
+                await profileManager.CreateProfile(profile);
             }
             else
             {
