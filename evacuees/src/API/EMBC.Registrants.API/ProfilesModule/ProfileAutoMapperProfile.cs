@@ -14,10 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System.Linq;
-using AutoMapper;
-using EMBC.Registrants.API.LocationModule;
-using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Shared;
 using Microsoft.Dynamics.CRM;
 using Microsoft.OData.Edm;
@@ -29,7 +25,8 @@ namespace EMBC.Registrants.API.ProfilesModule
         public ProfileAutoMapperProfile()
         {
             CreateMap<contact, Profile>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_bcservicescardid))
+                .ForMember(d => d.EraId, opts => opts.MapFrom(s => s.contactid))
+                .ForMember(d => d.BceId, opts => opts.MapFrom(s => s.era_bcservicescardid))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_restriction ?? false))
                 .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.era_secrettext))
 
@@ -95,30 +92,10 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForPath(d => d.era_emailrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Email)))
                 .ForPath(d => d.era_phonenumberrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Phone)))
 ;
-            CreateMap<User, Profile>(MemberList.None)
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
-                .ForPath(d => d.ContactDetails.Email, opts => opts.MapFrom(s => s.Email))
-                .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => s))
-                .ForMember(d => d.PrimaryAddress, opts => opts.MapFrom(s => s))
-                ;
-
-            CreateMap<User, Address>()
-                .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.StreetAddress))
-                .ForMember(d => d.AddressLine2, opts => opts.Ignore())
-                .ForMember(d => d.Jurisdiction, opts => opts.ConvertUsing<BcscCityConverter, string>(s => s.City))
-                .ForMember(d => d.StateProvince, opts => opts.ConvertUsing<BcscStateProvinceConverter, string>(s => s.StateProvince))
-                .ForMember(d => d.Country, opts => opts.ConvertUsing<BcscCountryConverter, string>(s => s.Country))
-                .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.PostalCode));
-
-            CreateMap<User, PersonDetails>(MemberList.None)
-                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.BirthDate))
-                .ForMember(d => d.Gender, opts => opts.ConvertUsing<BcscGenderConverter, string>(s => s.Gender))
-                .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.FirstName))
-                .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.LastName));
         }
     }
 
-    public class GenderConverter : IValueConverter<string, int?>, IValueConverter<int?, string>
+    public class GenderConverter : AutoMapper.IValueConverter<string, int?>, AutoMapper.IValueConverter<int?, string>
     {
         public int? Convert(string sourceMember, AutoMapper.ResolutionContext context) => sourceMember switch
         {
@@ -135,46 +112,5 @@ namespace EMBC.Registrants.API.ProfilesModule
             3 => "X",
             _ => null
         };
-    }
-
-    public class BcscGenderConverter : IValueConverter<string, string>
-    {
-        public string Convert(string sourceMember, ResolutionContext context) => sourceMember.ToLowerInvariant() switch
-        {
-            "male" => "Male",
-            "female" => "Female",
-            _ => "X"
-        };
-    }
-
-    public class BcscCountryConverter : IValueConverter<string, Country>
-    {
-        public Country Convert(string sourceMember, ResolutionContext context) => sourceMember.ToUpperInvariant() switch
-        {
-            "CA" => new Country { Code = "CAN", Name = "Canada" },
-            _ => null
-        };
-    }
-
-    public class BcscStateProvinceConverter : IValueConverter<string, StateProvince>
-    {
-        public StateProvince Convert(string sourceMember, ResolutionContext context) => sourceMember.ToUpperInvariant() switch
-        {
-            "BC" => new StateProvince { Code = "BC", Name = "British Columbia" },
-            _ => null
-        };
-    }
-
-    public class BcscCityConverter : IValueConverter<string, Jurisdiction>
-    {
-        private readonly Jurisdiction[] jurisdictions;
-
-        public BcscCityConverter(ILocationManager locationManager)
-        {
-            jurisdictions = locationManager.GetJurisdictions("BC", "CAN").GetAwaiter().GetResult().ToArray();
-        }
-
-        public Jurisdiction Convert(string sourceMember, ResolutionContext context) =>
-            this.jurisdictions.FirstOrDefault(j => j.Name.Equals(sourceMember, System.StringComparison.CurrentCultureIgnoreCase)) ?? null;
     }
 }
