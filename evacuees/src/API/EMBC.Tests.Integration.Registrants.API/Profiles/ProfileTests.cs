@@ -52,16 +52,14 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         {
             var baseProfile = await profileManager.GetProfileByBceid("test");
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
-            baseProfile.EraId = null;
-            baseProfile.BceId = newProfileBceId;
+            baseProfile.Id = newProfileBceId;
 
             var id = await profileManager.CreateProfile(baseProfile);
 
             var profile = await profileManager.GetProfileByBceid(newProfileBceId);
 
-            profile.ShouldNotBeNull().BceId.ShouldBe(newProfileBceId);
-            profile.EraId.ShouldBe(id);
-            profile.EraId.ShouldNotBe(baseProfile.EraId);
+            profile.ShouldNotBeNull().Id.ShouldBe(newProfileBceId);
+            profile.Id.ShouldBe(baseProfile.Id);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -73,8 +71,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
             var province = (await listsRepository.GetStateProvinces()).First(c => c.Code == "BC");
             var city = (await listsRepository.GetJurisdictions()).Skip(new Random().Next(100)).Take(1).First();
 
-            baseProfile.EraId = null;
-            baseProfile.BceId = newProfileBceId;
+            baseProfile.Id = newProfileBceId;
             baseProfile.PrimaryAddress.Country = new Country { Code = country.Code };
             baseProfile.PrimaryAddress.StateProvince = new StateProvince { Code = province.Code };
             baseProfile.PrimaryAddress.Jurisdiction = new Jurisdiction { Code = city.Code };

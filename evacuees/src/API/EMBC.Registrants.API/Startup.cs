@@ -129,7 +129,7 @@ namespace EMBC.Registrants.API
                 }
             });
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
             services.AddDistributedMemoryCache(); // TODO: consider setting a distributed cache in the future
             services.AddRegistrationModule();
             services.AddLocationModule();

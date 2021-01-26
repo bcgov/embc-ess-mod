@@ -1,7 +1,10 @@
 ﻿using System;
 using Bogus;
+using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.ProfilesModule;
+using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Shared;
+using FakeItEasy;
 using Microsoft.Dynamics.CRM;
 using Shouldly;
 using Xunit;
@@ -13,9 +16,32 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         private readonly AutoMapper.MapperConfiguration mapperConfig;
         private AutoMapper.IMapper mapper => mapperConfig.CreateMapper();
 
+        private Jurisdiction[] jurisdictions = new[]
+        {
+            new Jurisdiction{Code="j1", Name="JUR1"},
+            new Jurisdiction{Code="j2", Name="JUR2"},
+            new Jurisdiction{Code="j3", Name="JUR3"},
+            new Jurisdiction{Code="j4", Name="JUR4"},
+            new Jurisdiction{Code="j5", Name="JUR5"},
+            new Jurisdiction{Code="j6", Name="JUR6"},
+            new Jurisdiction{Code="j7", Name="JUR7"},
+            new Jurisdiction{Code="j8", Name="JUR8"},
+        };
+
         public MappingTests()
         {
-            mapperConfig = new AutoMapper.MapperConfiguration(cfg => cfg.AddMaps(typeof(EMBC.Registrants.API.ProfilesModule.ProfileAutoMapperProfile)));
+            var locationManager = A.Fake<ILocationManager>();
+            A.CallTo(() => locationManager.GetJurisdictions("BC", "CAN", null)).Returns(jurisdictions);
+            mapperConfig = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.AddMaps(typeof(ProfileAutoMapperProfile));
+                cfg.ConstructServicesUsing(t => t switch
+                {
+                    Type st when st == typeof(BcscCityConverter) => new BcscCityConverter(locationManager),
+                    Type st => Activator.CreateInstance(st),
+                    _ => null
+                });
+            });
         }
 
         [Fact]
@@ -32,8 +58,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
             profile.ShouldNotBeNull();
 
-            profile.EraId.ShouldBe(contact.contactid?.ToString());
-            profile.BceId.ShouldBe(contact.era_bcservicescardid);
+            profile.Id.ShouldBe(contact.era_bcservicescardid);
             profile.SecretPhrase.ShouldBe(contact.era_secrettext);
             profile.RestrictedAccess.ShouldBe(contact.era_restriction.Value);
 
@@ -76,8 +101,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
             contact.ShouldNotBeNull();
 
-            contact.contactid.ShouldNotBeNull().ToString().ShouldBe(profile.EraId);
-            contact.era_bcservicescardid.ShouldBe(profile.BceId);
+            contact.era_bcservicescardid.ShouldBe(profile.Id);
             contact.era_secrettext.ShouldBe(profile.SecretPhrase);
             contact.era_restriction.ShouldBe(profile.RestrictedAccess);
 
@@ -130,6 +154,25 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             entity.era_name.ShouldBe(country.Name);
         }
 
+        [Fact]
+        public void CanMapBcscUserToProfile()
+        {
+            var bcscUser = CreateUser();
+            var profile = mapper.Map<Profile>(bcscUser);
+
+            profile.Id.ShouldBe(bcscUser.Id);
+            profile.ContactDetails.Email.ShouldBe(bcscUser.Email);
+            profile.PersonalDetails.FirstName.ShouldBe(bcscUser.FirstName);
+            profile.PersonalDetails.LastName.ShouldBe(bcscUser.LastName);
+            profile.PersonalDetails.Gender.ShouldBe(bcscUser.Gender);
+            profile.PersonalDetails.DateOfBirth.ShouldBe(bcscUser.BirthDate);
+            profile.PrimaryAddress.AddressLine1.ShouldBe(bcscUser.StreetAddress);
+            profile.PrimaryAddress.PostalCode.ShouldBe(bcscUser.PostalCode);
+            profile.PrimaryAddress.Jurisdiction.Name.ShouldBe(bcscUser.City);
+            profile.PrimaryAddress.StateProvince.ShouldNotBeNull().Code.ShouldBe("BC");
+            profile.PrimaryAddress.Country.ShouldNotBeNull().Code.ShouldBe("CAN");
+        }
+
         private contact CreateDynamicsContact()
         {
             return new Faker<contact>()
@@ -171,8 +214,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         private Profile CreateRegistrantProfile()
         {
             return new Faker<Profile>()
-                .RuleFor(o => o.EraId, f => Guid.NewGuid().ToString())
-                .RuleFor(o => o.BceId, f => f.Random.String(10))
+                .RuleFor(o => o.Id, f => f.Random.String(10))
                 .RuleFor(o => o.SecretPhrase, f => f.Internet.Password())
                 .RuleFor(o => o.RestrictedAccess, f => f.Random.Bool())
 
@@ -193,17 +235,35 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                     .RuleFor(o => o.PrimaryAddress, f => new Faker<Address>()
                         .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
                         .RuleFor(o => o.AddressLine2, f => f.Address.SecondaryAddress())
-                        .RuleFor(o => o.Jurisdiction, f => new Jurisdiction { Code = f.Random.Guid().ToString(), Name = f.Address.City() })
+                        .RuleFor(o => o.Jurisdiction, f => f.PickRandom(jurisdictions))
                         .RuleFor(o => o.StateProvince, f => new StateProvince { Code = f.Address.StateAbbr(), Name = f.Address.State() })
                         .RuleFor(o => o.Country, f => new Country { Code = f.Address.CountryCode(), Name = f.Address.Country() })
                         .Generate())
                     .RuleFor(o => o.MailingAddress, f => new Faker<Address>()
                         .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
                         .RuleFor(o => o.AddressLine2, f => f.Address.SecondaryAddress())
-                        .RuleFor(o => o.Jurisdiction, f => new Jurisdiction { Code = f.Random.Guid().ToString(), Name = f.Address.City() })
+                        .RuleFor(o => o.Jurisdiction, f => f.PickRandom(jurisdictions))
                         .RuleFor(o => o.StateProvince, f => new StateProvince { Code = f.Address.StateAbbr(), Name = f.Address.State() })
                         .RuleFor(o => o.Country, f => new Country { Code = f.Address.CountryCode(), Name = f.Address.Country() })
                         .Generate())
+                .Generate();
+        }
+
+        private User CreateUser()
+        {
+            return new Faker<User>()
+                .RuleFor(u => u.Id, f => f.Random.String(10))
+                .RuleFor(u => u.DisplayName, f => f.Name.FullName())
+                .RuleFor(u => u.Email, f => f.Internet.Email())
+                .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female", "X" }))
+                .RuleFor(u => u.FirstName, f => f.Name.FirstName())
+                .RuleFor(u => u.LastName, f => f.Name.LastName())
+                .RuleFor(u => u.BirthDate, f => f.Date.Past(20).ToString("yyyy-MM-dd"))
+                .RuleFor(u => u.StreetAddress, f => f.Address.StreetAddress())
+                .RuleFor(u => u.PostalCode, f => f.Address.ZipCode())
+                .RuleFor(u => u.City, f => f.PickRandom(jurisdictions).Name)
+                .RuleFor(u => u.StateProvince, f => "BC")
+                .RuleFor(u => u.Country, f => "CA")
                 .Generate();
         }
     }
