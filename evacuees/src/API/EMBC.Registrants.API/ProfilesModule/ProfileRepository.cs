@@ -120,5 +120,8 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .Where(c => c.era_bcservicescardid == bcscId)
                 .Select(c => new { c.contactid, c.era_bcservicescardid })
                 .SingleOrDefault()?.contactid;
+
+        //private Guid? GetContactIdForBcscId(string bcscId) =>
+        //  dynamicsClient.contacts.GetSingleEntityByKey(new Dictionary<string, object> { { nameof(contact.era_bcservicescardid), bcscId } }).Select(c => c.contactid).GetValue();
     }
 }
