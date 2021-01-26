@@ -39,7 +39,8 @@ namespace EMBC.ResourceAccess.Dynamics
             };
             Configurations.RequestPipeline.OnEntryStarting((arg) =>
             {
-                arg.Entry.Properties = arg.Entry.Properties.Where((prop) => prop.Value != null);
+                // do not send reference properties and null values to Dynamics
+                arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
                 logger.LogDebug("{0} OnEntryStarting: {1}", nameof(DynamicsClientContext), JsonSerializer.Serialize(arg.Entity));
             });
 

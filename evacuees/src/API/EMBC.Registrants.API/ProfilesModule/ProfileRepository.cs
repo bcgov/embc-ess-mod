@@ -46,7 +46,7 @@ namespace EMBC.Registrants.API.ProfilesModule
 
         public async Task<string> Create(Profile profile)
         {
-            if (!string.IsNullOrEmpty(profile.EraId)) throw new InvalidOperationException($"Cannot create profile which already has EraID. Id is {profile.EraId}");
+            if (!string.IsNullOrEmpty(profile.Id)) throw new InvalidOperationException($"Profile already has an ID ({profile.Id})");
 
             var contact = mapper.Map<contact>(profile);
 
@@ -72,7 +72,7 @@ namespace EMBC.Registrants.API.ProfilesModule
             return contact.contactid.ToString();
         }
 
-        public async Task<Profile> Read(string bcscUserId)
+        public async Task<Profile> Read(string userId)
         {
             await Task.CompletedTask;
             var contact = dynamicsClient.contacts
@@ -82,7 +82,7 @@ namespace EMBC.Registrants.API.ProfilesModule
                   .Expand(c => c.era_MailingCity)
                   .Expand(c => c.era_MailingProvinceState)
                   .Expand(c => c.era_MailingCountry)
-                  .Where(c => c.era_bcservicescardid == bcscUserId)
+                  .Where(c => c.era_bcservicescardid == userId)
                   .SingleOrDefault();
 
             if (contact == null) return null;

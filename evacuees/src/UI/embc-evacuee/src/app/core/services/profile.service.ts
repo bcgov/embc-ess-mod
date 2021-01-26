@@ -7,8 +7,8 @@ export class ProfileService {
 
   }
 
-  public async getUserProfile(): Promise<IProfile> {
-    return await this.http.get<IProfile>('/api/profile').toPromise();
+  public async getProfileConflicts(): Promise<IProfile> {
+    return await this.http.get<IProfile>('/api/profiles/current/conflicts').toPromise();
   }
 }
 
