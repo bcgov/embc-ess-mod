@@ -20,7 +20,11 @@ namespace EMBC.Registrants.API.ProfilesModule
 {
     public interface IProfileManager
     {
+        Task<string> CreateProfile(Profile profile);
+
         Task<Profile> GetProfileByBceid(string userId);
+
+        Task UpdateProfile(Profile profile);
     }
 
     public class ProfileManager : IProfileManager
@@ -32,9 +36,19 @@ namespace EMBC.Registrants.API.ProfilesModule
             this.profileRepository = profileRepository;
         }
 
+        public async Task<string> CreateProfile(Profile profile)
+        {
+            return await profileRepository.Create(profile);
+        }
+
         public async Task<Profile> GetProfileByBceid(string userId)
         {
-            return await profileRepository.Get(userId);
+            return await profileRepository.Read(userId);
+        }
+
+        public async Task UpdateProfile(Profile profile)
+        {
+            await profileRepository.Update(profile);
         }
     }
 }
