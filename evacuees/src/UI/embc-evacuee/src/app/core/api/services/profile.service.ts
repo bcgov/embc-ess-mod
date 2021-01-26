@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { Profile } from '../models/profile';
+import { UserProfile } from '../models/user-profile';
 
 @Injectable({
   providedIn: 'root',
@@ -66,21 +67,21 @@ export class ProfileService extends BaseService {
   }
 
   /**
-   * Path part for operation profileUpdate
+   * Path part for operation profileUpsert
    */
-  static readonly ProfileUpdatePath = '/api/profiles/current';
+  static readonly ProfileUpsertPath = '/api/profiles/current';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `profileUpdate()` instead.
+   * To access only the response body, use `profileUpsert()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  profileUpdate$Response(params: {
+  profileUpsert$Response(params: {
     body: Profile
   }): Observable<StrictHttpResponse<void>> {
 
-    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileUpdatePath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileUpsertPath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -98,16 +99,59 @@ export class ProfileService extends BaseService {
 
   /**
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `profileUpdate$Response()` instead.
+   * To access the full response (for headers, for example), `profileUpsert$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  profileUpdate(params: {
+  profileUpsert(params: {
     body: Profile
   }): Observable<void> {
 
-    return this.profileUpdate$Response(params).pipe(
+    return this.profileUpsert$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation profileGetProfileConflicts
+   */
+  static readonly ProfileGetProfileConflictsPath = '/api/profiles/current/conflicts';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `profileGetProfileConflicts()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  profileGetProfileConflicts$Response(params?: {
+  }): Observable<StrictHttpResponse<UserProfile>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileGetProfileConflictsPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<UserProfile>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `profileGetProfileConflicts$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  profileGetProfileConflicts(params?: {
+  }): Observable<UserProfile> {
+
+    return this.profileGetProfileConflicts$Response(params).pipe(
+      map((r: StrictHttpResponse<UserProfile>) => r.body as UserProfile)
     );
   }
 
