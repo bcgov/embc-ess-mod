@@ -133,7 +133,7 @@ export class LocationService extends BaseService {
 
     const rb = new RequestBuilder(this.rootUrl, LocationService.LocationGetJurisdictionsPath, 'get');
     if (params) {
-      rb.query('types', params.types, { "style": "form", "explode": true });
+      rb.query('types', params.types, {"style":"form","explode":true});
       rb.query('countryCode', params.countryCode, {});
       rb.query('stateProvinceCode', params.stateProvinceCode, {});
     }
