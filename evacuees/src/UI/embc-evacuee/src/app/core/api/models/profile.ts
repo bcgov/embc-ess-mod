@@ -9,7 +9,10 @@ import { PersonDetails } from './person-details';
  */
 export interface Profile {
   contactDetails: ContactDetails;
+  id?: null | string;
   mailingAddress?: null | Address;
   personalDetails: PersonDetails;
   primaryAddress: Address;
+  restrictedAccess?: boolean;
+  secretPhrase?: null | string;
 }
