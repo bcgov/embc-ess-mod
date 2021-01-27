@@ -66,16 +66,12 @@ namespace EMBC.Registrants.API.ProfilesModule
         public async Task<ActionResult<string>> Upsert(Profile profile)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (profile.Id == null)
+            if (profile.Id != userId)
             {
+                //TODO: replace with bad request response
                 profile.Id = userId;
-                await profileManager.CreateProfile(profile);
             }
-            else
-            {
-                await profileManager.UpdateProfile(profile);
-            }
-
+            await profileManager.SaveProfile(profile);
             return Ok(profile.Id);
         }
 
