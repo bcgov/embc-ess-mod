@@ -8,11 +8,20 @@ import { Router } from '@angular/router';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
+  // simple url whitelist that do not require authentication header
+  private whiteListUrls = [
+    '/login*',
+    '/api/location*',
+    '/api/registration*'
+  ];
+
   constructor(private authService: AuthService, private router: Router) { }
 
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // only set authentication header for API requests
-    if (!req.url.startsWith('/api')) {
+    const whiteListed = this.isWhiteListed(req.url);
+    console.log(req.url, ' whitelisted ', whiteListed);
+    if (whiteListed) {
       return next.handle(req);
     }
     return from(this.authService.getToken())
@@ -40,11 +49,18 @@ export class AuthInterceptor implements HttpInterceptor {
           // The backend returned an unsuccessful response code.
           // The response body may contain clues as to what went wrong.
           console.error(
-            `API returned code ${error.status}, ` + `body was: ${error.error}`);
+            `API ${req.url} returned code ${error.status}, body was: ${error.error}`);
         }
         // Return an observable with a user-facing error message.
         return throwError('Something bad happened; please try again later.');
       }));
+  }
+
+  private isWhiteListed(url: string): boolean {
+    return this.whiteListUrls.some(u => {
+      if (u.endsWith('*')) { return url.startsWith(u.slice(0, u.length - 1)); }
+      return u === url;
+    });
   }
 
 }

@@ -20,7 +20,7 @@ export class VerifiedRegistrationComponent implements OnInit {
     this.dataService.clearData();
     this.formCreationService.clearData();
 
-    const profile = of(this.profileService.getUserProfile());
+    const profile = of(this.profileService.getProfileConflicts());
     console.log(profile);
   }
 

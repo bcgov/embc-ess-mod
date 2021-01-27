@@ -28,9 +28,9 @@ namespace EMBC.Registrants.API.LocationModule
     {
         Task<IEnumerable<Country>> GetCountries();
 
-        Task<IEnumerable<Jurisdiction>> GetJurisdictions(JurisdictionType[] types, string countryCode, string stateProvinceCode);
+        Task<IEnumerable<Jurisdiction>> GetJurisdictions(string countryCode = null, string stateProvinceCode = null, JurisdictionType[] types = null);
 
-        Task<IEnumerable<StateProvince>> GetStateProvinces(string countryCode);
+        Task<IEnumerable<StateProvince>> GetStateProvinces(string countryCode = null);
     }
 
     public class LocationManager : ILocationManager
@@ -47,19 +47,24 @@ namespace EMBC.Registrants.API.LocationModule
             return JsonSerializer.Deserialize<IEnumerable<Country>>(await cache.GetAsync(LocationCacheNames.Countries)).ToArray();
         }
 
-        public async Task<IEnumerable<StateProvince>> GetStateProvinces(string countryCode)
+        public async Task<IEnumerable<StateProvince>> GetStateProvinces(string countryCode = null)
         {
-            return JsonSerializer.Deserialize<IEnumerable<StateProvince>>(await cache.GetAsync(LocationCacheNames.StateProvinces))
-                .Where(sp => sp.CountryCode == countryCode)
-                .ToArray();
+            var all = JsonSerializer.Deserialize<IEnumerable<StateProvince>>(await cache.GetAsync(LocationCacheNames.StateProvinces));
+
+            if (!string.IsNullOrEmpty(countryCode)) all = all.Where(sp => sp.CountryCode == countryCode);
+            return all.ToArray();
         }
 
-        public async Task<IEnumerable<Jurisdiction>> GetJurisdictions(JurisdictionType[] types, string countryCode, string stateProvinceCode)
+        public async Task<IEnumerable<Jurisdiction>> GetJurisdictions(string countryCode = null, string stateProvinceCode = null, JurisdictionType[] types = null)
         {
             if (types == null) types = Array.Empty<JurisdictionType>();
-            return JsonSerializer.Deserialize<IEnumerable<Jurisdiction>>(await cache.GetAsync(LocationCacheNames.Jurisdictions))
-                .Where(j => j.CountryCode == countryCode && j.StateProvinceCode == stateProvinceCode && (types.Length == 0 || types.Contains(j.Type)))
-                .ToArray();
+            var all = JsonSerializer.Deserialize<IEnumerable<Jurisdiction>>(await cache.GetAsync(LocationCacheNames.Jurisdictions));
+
+            if (!string.IsNullOrEmpty(countryCode)) all = all.Where(j => j.CountryCode == countryCode);
+            if (!string.IsNullOrEmpty(stateProvinceCode)) all = all.Where(j => j.StateProvinceCode == stateProvinceCode);
+            if (types.Any()) all = all.Where(j => types.Contains(j.Type));
+
+            return all.ToArray();
         }
     }
 }
