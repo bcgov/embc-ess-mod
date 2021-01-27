@@ -12,8 +12,8 @@ import { RegistrantProfileService } from '../core/services/registrantProfile.ser
 })
 export class VerifiedRegistrationComponent implements OnInit {
   constructor(private formCreationService: FormCreationService, private dataService: DataService,
-    private regProfService: RegistrantProfileService, private router: Router,
-    public mappingService: ProfileMappingService) {
+              private regProfService: RegistrantProfileService, private router: Router,
+              public mappingService: ProfileMappingService) {
     this.dataService.clearData();
     this.formCreationService.clearData();
   }
