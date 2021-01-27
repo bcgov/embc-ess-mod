@@ -19,7 +19,10 @@ export class ProfileMappingService {
             console.log('era');
             this.setExistingUserProfile(userProfile.eraProfile);
         }
-        sessionStorage.setItem('eraProfile', JSON.stringify(userProfile.eraProfile));
+        if (userProfile.eraProfile) {
+            sessionStorage.setItem('userid', userProfile.eraProfile.id);
+            sessionStorage.setItem('eraProfile', JSON.stringify(userProfile.eraProfile));
+        }
         sessionStorage.setItem('loginProfile', JSON.stringify(userProfile.loginProfile));
     }
 
