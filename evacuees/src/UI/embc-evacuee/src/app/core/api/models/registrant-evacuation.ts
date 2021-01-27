@@ -6,6 +6,6 @@ import { NeedsAssessment } from './needs-assessment';
  * Registrant Evacuation details
  */
 export interface RegistrantEvacuation {
-  contactId: string;
+  id: string;
   preliminaryNeedsAssessment: NeedsAssessment;
 }

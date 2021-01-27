@@ -28,7 +28,7 @@ export class DataSubmissionService {
         return this.registrationService.registrationCreate({ body: this.anonymousRegistration });
     }
 
-    submitProfile(): Observable<void> {
+    submitProfile(): Observable<string> {
         this.profile = this.mergeData({ isMailingAddressSameAsPrimaryAddress: true }, this.dataService.getRegistration());
         console.log(JSON.stringify(this.profile));
         // return this.registrationService.registrationCreateProfile({ body: this.profile });
@@ -43,8 +43,8 @@ export class DataSubmissionService {
     submitVerifiedRegistrationFile(): Observable<RegistrationResult> {
         this.registrantEvacuation = {
             preliminaryNeedsAssessment: this.mergeData({}, this.dataService.getNeedsAssessment()),
-            // contactId: window.localStorage.getItem('userid')
-            contactId: 'TXZESQRHWCVZZT5LXWZLTMR7KEHDR7U4'
+            id: window.localStorage.getItem('userid')
+            // id: 'TXZESQRHWCVZZT5LXWZLTMR7KEHDR7U4'
         };
         console.log(JSON.stringify(this.registrantEvacuation));
         return this.registrationService.registrationCreateEvacuation({ body: this.registrantEvacuation });
