@@ -33,9 +33,10 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   showLoader = false;
   isSubmitted = false;
 
-  constructor(private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-              private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
-              private route: ActivatedRoute, private alertService: AlertService) {
+  constructor(
+    private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
+    private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
+    private route: ActivatedRoute, private alertService: AlertService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -178,10 +179,25 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
       this.isSubmitted = !this.isSubmitted;
       this.alertService.setAlert('danger', error.title);
     });
+
   }
 
   submitVerified(): void {
-    this.router.navigate(['/verified-registration/fileSubmission']);
+    this.showLoader = !this.showLoader;
+    this.alertService.clearAlert();
+    this.submissionService.submitVerifiedRegistrationFile().subscribe((response: RegistrationResult) => {
+      console.log(response);
+      this.updateService.updateRegisrationResult(response);
+      this.router.navigate(['/verified-registration/fileSubmission']);
+    }, (error: any) => {
+      console.log(error);
+      this.showLoader = !this.showLoader;
+      this.isSubmitted = !this.isSubmitted;
+      this.alertService.setAlert('danger', error.title);
+    });
+
+    // this.router.navigate(['/verified-registration/fileSubmission']);
+
   }
 
   allowSubmit($event: boolean): void {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using Bogus;
 using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.ProfilesModule;
@@ -62,7 +64,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             profile.SecretPhrase.ShouldBe(contact.era_secrettext);
             profile.RestrictedAccess.ShouldBe(contact.era_restriction.Value);
 
-            profile.PersonalDetails.DateOfBirth.ShouldBe($"{contact.birthdate.Value.Year:D4}-{contact.birthdate.Value.Month:D2}-{contact.birthdate.Value.Day:D2}");
+            profile.PersonalDetails.DateOfBirth.ShouldBe(Regex.Replace(contact.birthdate.ToString(),
+                @"\b(?<year>\d{2,4})-(?<month>\d{1,2})-(?<day>\d{1,2})\b", "${month}/${day}/${year}", RegexOptions.None));
             profile.PersonalDetails.FirstName.ShouldBe(contact.firstname);
             profile.PersonalDetails.LastName.ShouldBe(contact.lastname);
             profile.PersonalDetails.Initials.ShouldBe(contact.era_initial);
@@ -111,7 +114,9 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             contact.lastname.ShouldBe(profile.PersonalDetails.LastName);
             contact.era_initial.ShouldBe(profile.PersonalDetails.Initials);
             contact.era_preferredname.ShouldBe(profile.PersonalDetails.PreferredName);
-            contact.birthdate.ShouldNotBeNull().ToString().ShouldBe(profile.PersonalDetails.DateOfBirth);
+
+            contact.birthdate.ShouldNotBeNull().ToString().ShouldBe(Regex.Replace(profile.PersonalDetails.DateOfBirth,
+                @"\b(?<month>\d{1,2})/(?<day>\d{1,2})/(?<year>\d{2,4})\b", "${year}-${month}-${day}", RegexOptions.None));
             contact.gendercode.ShouldBe(new GenderConverter().Convert(profile.PersonalDetails.Gender, null));
 
             contact.emailaddress1.ShouldBe(profile.ContactDetails.Email);
@@ -169,7 +174,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             profile.PersonalDetails.FirstName.ShouldBe(bcscUser.FirstName);
             profile.PersonalDetails.LastName.ShouldBe(bcscUser.LastName);
             profile.PersonalDetails.Gender.ShouldBe(bcscUser.Gender);
-            profile.PersonalDetails.DateOfBirth.ShouldBe(bcscUser.BirthDate);
+            profile.PersonalDetails.DateOfBirth.ShouldBe(Regex.Replace(bcscUser.BirthDate,
+             @"\b(?<year>\d{2,4})-(?<month>\d{1,2})-(?<day>\d{1,2})\b", "${month}/${day}/${year}", RegexOptions.None));
             profile.PrimaryAddress.AddressLine1.ShouldBe(bcscUser.StreetAddress);
             profile.PrimaryAddress.PostalCode.ShouldBe(bcscUser.PostalCode);
             profile.PrimaryAddress.Jurisdiction.Name.ShouldBe(bcscUser.City);
@@ -229,7 +235,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                         .RuleFor(o => o.LastName, f => f.Name.LastName())
                         .RuleFor(o => o.Initials, f => f.Name.Prefix())
                         .RuleFor(o => o.PreferredName, f => f.Name.Suffix())
-                        .RuleFor(o => o.DateOfBirth, f => f.Date.Past(20).ToString("yyyy-MM-dd"))
+                        .RuleFor(o => o.DateOfBirth, f => f.Date.Past(20).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture))
                         .RuleFor(o => o.Gender, f => f.PickRandom("Male", "Female", "X"))
                         .Generate())
                 .RuleFor(o => o.ContactDetails, f => new Faker<ContactDetails>()
@@ -267,7 +273,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female", "X" }))
                 .RuleFor(u => u.FirstName, f => f.Name.FirstName())
                 .RuleFor(u => u.LastName, f => f.Name.LastName())
-                .RuleFor(u => u.BirthDate, f => f.Date.Past(20).ToString("yyyy-MM-dd"))
+                .RuleFor(u => u.BirthDate, f => f.Date.Past(20).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))
                 .RuleFor(u => u.StreetAddress, f => f.Address.StreetAddress())
                 .RuleFor(u => u.PostalCode, f => f.Address.ZipCode())
                 .RuleFor(u => u.City, f => f.PickRandom(jurisdictions).Name)

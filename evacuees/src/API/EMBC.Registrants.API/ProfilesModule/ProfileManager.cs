@@ -24,11 +24,9 @@ namespace EMBC.Registrants.API.ProfilesModule
 {
     public interface IProfileManager
     {
-        Task<string> CreateProfile(Profile profile);
-
         Task<Profile> GetProfileByBceid(string userId);
 
-        Task UpdateProfile(Profile profile);
+        Task<string> SaveProfile(Profile profile);
 
         Task<UserProfile> GetProfileAndConflicts(string userId);
     }
@@ -44,11 +42,6 @@ namespace EMBC.Registrants.API.ProfilesModule
             this.profileRepository = profileRepository;
             this.userRepository = userRepository;
             this.mapper = mapper;
-        }
-
-        public async Task<string> CreateProfile(Profile profile)
-        {
-            return await profileRepository.Create(profile);
         }
 
         public async Task<UserProfile> GetProfileAndConflicts(string userId)
@@ -68,9 +61,17 @@ namespace EMBC.Registrants.API.ProfilesModule
             return await profileRepository.Read(userId);
         }
 
-        public async Task UpdateProfile(Profile profile)
+        public async Task<string> SaveProfile(Profile profile)
         {
-            await profileRepository.Update(profile);
+            if (!await profileRepository.DoesProfileExist(profile.Id))
+            {
+                await profileRepository.Create(profile);
+            }
+            else
+            {
+                await profileRepository.Update(profile);
+            }
+            return profile.Id;
         }
     }
 
