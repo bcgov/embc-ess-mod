@@ -121,7 +121,7 @@ namespace EMBC.Registrants.API.ProfilesModule
             CreateMap<User, PersonDetails>(MemberList.None)
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.BirthDate)
                     ? null
-                    : DateTime.ParseExact(s.BirthDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy")))
+                    : DateTime.ParseExact(s.BirthDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.Gender, opts => opts.ConvertUsing<BcscGenderConverter, string>(s => s.Gender))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.LastName));

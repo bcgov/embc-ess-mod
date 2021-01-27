@@ -175,7 +175,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             profile.PersonalDetails.LastName.ShouldBe(bcscUser.LastName);
             profile.PersonalDetails.Gender.ShouldBe(bcscUser.Gender);
             profile.PersonalDetails.DateOfBirth.ShouldBe(Regex.Replace(bcscUser.BirthDate,
-             @"\b(?<year>\d{2,4})-(?<month>\d{1,2})-(?<day>\d{1,2})\b", "${month}-${day}-${year}", RegexOptions.None));
+             @"\b(?<year>\d{2,4})-(?<month>\d{1,2})-(?<day>\d{1,2})\b", "${month}/${day}/${year}", RegexOptions.None));
             profile.PrimaryAddress.AddressLine1.ShouldBe(bcscUser.StreetAddress);
             profile.PrimaryAddress.PostalCode.ShouldBe(bcscUser.PostalCode);
             profile.PrimaryAddress.Jurisdiction.Name.ShouldBe(bcscUser.City);
