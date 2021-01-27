@@ -114,6 +114,7 @@ namespace EMBC.Registrants.API.ProfilesModule
         public Address PrimaryAddress { get; set; }
 
         public Address MailingAddress { get; set; }
+        public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public string SecretPhrase { get; set; }
     }

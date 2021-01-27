@@ -91,6 +91,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             profile.MailingAddress.StateProvince.Name.ShouldBe(contact.era_MailingProvinceState?.era_name ?? contact.address2_stateorprovince);
             profile.MailingAddress.Country.ShouldNotBeNull().Code.ShouldBe(contact.era_MailingCountry?.era_countrycode.ToString());
             profile.MailingAddress.Country.Name.ShouldBe(contact.era_MailingCountry?.era_name ?? contact.address2_country);
+
+            profile.IsMailingAddressSameAsPrimaryAddress.ShouldBe(contact.era_issamemailingaddress.Value);
         }
 
         [Fact]
@@ -134,6 +136,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             contact.era_MailingCity.ShouldBeNull();
             contact.era_MailingProvinceState.ShouldBeNull();
             contact.era_MailingCountry.ShouldBeNull();
+
+            contact.era_issamemailingaddress.ShouldBe(profile.IsMailingAddressSameAsPrimaryAddress);
         }
 
         [Fact]
@@ -208,6 +212,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .RuleFor(o => o.era_MailingCity, f => null)
                 .RuleFor(o => o.era_MailingProvinceState, f => null)
                 .RuleFor(o => o.era_MailingCountry, f => null)
+
+                .RuleFor(o => o.era_issamemailingaddress, f => f.Random.Bool())
                 .Generate();
         }
 
@@ -226,26 +232,29 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                         .RuleFor(o => o.DateOfBirth, f => f.Date.Past(20).ToString("yyyy-MM-dd"))
                         .RuleFor(o => o.Gender, f => f.PickRandom("Male", "Female", "X"))
                         .Generate())
-                    .RuleFor(o => o.ContactDetails, f => new Faker<ContactDetails>()
-                        .RuleFor(o => o.Email, f => f.Internet.Email())
-                        .RuleFor(o => o.HideEmailRequired, f => f.Random.Bool())
-                        .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
-                        .RuleFor(o => o.HidePhoneRequired, f => f.Random.Bool())
-                        .Generate())
-                    .RuleFor(o => o.PrimaryAddress, f => new Faker<Address>()
-                        .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
-                        .RuleFor(o => o.AddressLine2, f => f.Address.SecondaryAddress())
-                        .RuleFor(o => o.Jurisdiction, f => f.PickRandom(jurisdictions))
-                        .RuleFor(o => o.StateProvince, f => new StateProvince { Code = f.Address.StateAbbr(), Name = f.Address.State() })
-                        .RuleFor(o => o.Country, f => new Country { Code = f.Address.CountryCode(), Name = f.Address.Country() })
-                        .Generate())
-                    .RuleFor(o => o.MailingAddress, f => new Faker<Address>()
-                        .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
-                        .RuleFor(o => o.AddressLine2, f => f.Address.SecondaryAddress())
-                        .RuleFor(o => o.Jurisdiction, f => f.PickRandom(jurisdictions))
-                        .RuleFor(o => o.StateProvince, f => new StateProvince { Code = f.Address.StateAbbr(), Name = f.Address.State() })
-                        .RuleFor(o => o.Country, f => new Country { Code = f.Address.CountryCode(), Name = f.Address.Country() })
-                        .Generate())
+                .RuleFor(o => o.ContactDetails, f => new Faker<ContactDetails>()
+                    .RuleFor(o => o.Email, f => f.Internet.Email())
+                    .RuleFor(o => o.HideEmailRequired, f => f.Random.Bool())
+                    .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
+                    .RuleFor(o => o.HidePhoneRequired, f => f.Random.Bool())
+                    .Generate())
+                .RuleFor(o => o.PrimaryAddress, f => new Faker<Address>()
+                    .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
+                    .RuleFor(o => o.AddressLine2, f => f.Address.SecondaryAddress())
+                    .RuleFor(o => o.Jurisdiction, f => f.PickRandom(jurisdictions))
+                    .RuleFor(o => o.StateProvince, f => new StateProvince { Code = f.Address.StateAbbr(), Name = f.Address.State() })
+                    .RuleFor(o => o.Country, f => new Country { Code = f.Address.CountryCode(), Name = f.Address.Country() })
+                    .Generate())
+                .RuleFor(o => o.MailingAddress, f => new Faker<Address>()
+                    .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
+                    .RuleFor(o => o.AddressLine2, f => f.Address.SecondaryAddress())
+                    .RuleFor(o => o.Jurisdiction, f => f.PickRandom(jurisdictions))
+                    .RuleFor(o => o.StateProvince, f => new StateProvince { Code = f.Address.StateAbbr(), Name = f.Address.State() })
+                    .RuleFor(o => o.Country, f => new Country { Code = f.Address.CountryCode(), Name = f.Address.Country() })
+                    .Generate())
+
+                .RuleFor(o => o.IsMailingAddressSameAsPrimaryAddress, f => f.Random.Bool())
+
                 .Generate();
         }
 
