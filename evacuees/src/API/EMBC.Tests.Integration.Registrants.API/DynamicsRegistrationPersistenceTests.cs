@@ -265,7 +265,7 @@ namespace EMBC.Tests.Integration.Registrants.API
         public async Task GetProfileByBcscId()
         {
             var regManager = services.GetRequiredService<IRegistrationManager>();
-            var profile = await regManager.GetProfileByBcscId("TESTTESTTESTTESTTESTTESTTESTTEST");
+            var profile = await regManager.GetProfileByBcscId("BCSC-ID-12:49 PM");
             Assert.NotNull(profile);
             Assert.NotEmpty(profile.PersonalDetails.FirstName);
             testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
@@ -289,12 +289,13 @@ namespace EMBC.Tests.Integration.Registrants.API
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task RegistrantEvacuation()
+        public async Task RegistrantEvacuationByBCSC()
         {
             var textContextIdentifier = DateTime.Now.ToShortTimeString();
             var registrantEvacuation = new RegistrantEvacuation
             {
-                ContactId = "91d6f457-b8b5-4fd4-ac71-0e45bd7e989d",
+                //ContactId = "91d6f457-b8b5-4fd4-ac71-0e45bd7e989d",
+                Id = "BCSC-ID-12:49 PM",
                 PreliminaryNeedsAssessment = new NeedsAssessment
                 {
                     EvacuatedFromAddress = new Address

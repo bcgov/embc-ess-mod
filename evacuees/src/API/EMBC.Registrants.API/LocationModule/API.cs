@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Registrants.API.Shared;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Registrants.API.LocationModule
@@ -34,18 +35,24 @@ namespace EMBC.Registrants.API.LocationModule
         }
 
         [HttpGet("countries")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
             return (await locationQueryManager.GetCountries()).ToArray();
         }
 
         [HttpGet("stateprovinces")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<StateProvince>>> GetStateProvinces([FromQuery] string countryCode = "CAN")
         {
             return (await locationQueryManager.GetStateProvinces(countryCode)).ToArray();
         }
 
         [HttpGet("jurisdictions")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Jurisdiction>>> GetJurisdictions([FromQuery] JurisdictionType[] types, [FromQuery] string countryCode = "CAN", [FromQuery] string stateProvinceCode = "BC")
         {
             return (await locationQueryManager.GetJurisdictions(countryCode, stateProvinceCode, types)).ToArray();

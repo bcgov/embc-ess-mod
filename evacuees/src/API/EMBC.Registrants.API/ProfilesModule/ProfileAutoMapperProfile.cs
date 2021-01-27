@@ -14,6 +14,8 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
+using System.Globalization;
 using System.Linq;
 using AutoMapper;
 using EMBC.Registrants.API.LocationModule;
@@ -79,7 +81,9 @@ namespace EMBC.Registrants.API.ProfilesModule
                 ;
 
             CreateMap<contact, PersonDetails>()
-                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.birthdate))
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.birthdate.HasValue
+                    ? $"{s.birthdate.Value.Month:D2}/{s.birthdate.Value.Day:D2}/{s.birthdate.Value.Year:D2}"
+                    : null))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.firstname))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.lastname))
                 .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.gendercode))
@@ -115,7 +119,9 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.PostalCode));
 
             CreateMap<User, PersonDetails>(MemberList.None)
-                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.BirthDate))
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.BirthDate)
+                    ? null
+                    : DateTime.ParseExact(s.BirthDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)))
                 .ForMember(d => d.Gender, opts => opts.ConvertUsing<BcscGenderConverter, string>(s => s.Gender))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.LastName));

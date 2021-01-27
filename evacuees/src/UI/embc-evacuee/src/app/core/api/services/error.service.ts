@@ -24,7 +24,7 @@ export class ErrorService extends BaseService {
   /**
    * Path part for operation errorErrorLocalDevelopment
    */
-  static readonly ErrorErrorLocalDevelopmentPath = '/error-local-development';
+  static readonly ErrorErrorLocalDevelopmentPath = '/error-details';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
