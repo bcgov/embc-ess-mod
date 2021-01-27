@@ -151,9 +151,9 @@ namespace EMBC.Registrants.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            if (env.IsDevelopment())
+            if (!env.IsProduction())
             {
-                app.UseExceptionHandler("/error-local-development");
+                app.UseExceptionHandler("/error-details");
             }
             else
             {
