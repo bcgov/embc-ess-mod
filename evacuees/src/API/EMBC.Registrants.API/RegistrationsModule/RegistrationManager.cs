@@ -312,6 +312,42 @@ namespace EMBC.Registrants.API.RegistrationsModule
             return queryResult;
         }
 
+        private contact GetDynamicsContactByBCSC(string BCServicesCardId)
+        {
+            contact queryResult = null;
+            try
+            {
+                queryResult = dynamicsClient.contacts
+                        .Expand(c => c.era_City)
+                        .Expand(c => c.era_ProvinceState)
+                        .Expand(c => c.era_Country)
+                        .Expand(c => c.era_MailingCity)
+                        .Expand(c => c.era_MailingProvinceState)
+                        .Expand(c => c.era_MailingCountry)
+                        .Where(c => c.era_bcservicescardid == BCServicesCardId).FirstOrDefault();
+            }
+            catch (DataServiceQueryException ex)
+            {
+                DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
+                // don't throw an exception if contact is not found, return an empty profile
+                if (dataServiceClientException.StatusCode == 404)
+                {
+                    return null;
+                }
+                else
+                {
+                    Console.WriteLine("dataServiceClientException: " + dataServiceClientException.Message);
+                }
+                ODataErrorException odataErrorException = dataServiceClientException.InnerException as ODataErrorException;
+                if (odataErrorException != null)
+                {
+                    Console.WriteLine(odataErrorException.Message);
+                    throw dataServiceClientException;
+                }
+            }
+            return queryResult;
+        }
+
         private Registration CopyContactToProfile(contact contact, Registration profile)
         {
             profile.ContactId = contact.contactid.ToString();
@@ -650,14 +686,16 @@ namespace EMBC.Registrants.API.RegistrationsModule
         /// <returns>ESS File Number</returns>
         public async Task<string> CreateRegistrantEvacuation(RegistrantEvacuation evacuation)
         {
-            if (!Guid.TryParse(evacuation.ContactId, out Guid contactId))
-                throw new Exception("Contact ID is not a valid GUID");
+            //if (!Guid.TryParse(evacuation.ContactId, out Guid contactId))
+            //    throw new Exception("Contact ID is not a valid GUID");
 
-            //var profile = await GetProfileById(contactId);
             var profile = newRegistrationObject();
 
-            // get dynamics contact
-            contact dynamicsContact = GetDynamicsContact(contactId);
+            // get dynamics contact by contactId
+            //contact dynamicsContact = GetDynamicsContact(contactId);
+
+            // get dynamics contact by BCServicesCardId
+            contact dynamicsContact = GetDynamicsContactByBCSC(evacuation.Id);
 
             if (dynamicsContact != null)
             {

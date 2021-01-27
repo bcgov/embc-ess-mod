@@ -4,6 +4,8 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DataService } from 'src/app/core/services/data.service';
+import { GlobalDialogService } from 'src/app/core/services/globalDialog.service';
 
 
 
@@ -36,32 +38,43 @@ export interface ReferralDetails {
 }
 
 const ACTIVE_DATA: EvacuationCard[] = [
-  { from: 'Victoria', date: '20-Feb-2020', code: 333333, support: 'No', status: 'Active', referral: false},
-  { from: 'Vancouver', date: '20-Feb-2020', code: 444444, support: 'No', status: 'Active', referral: true,
-    referrals: [{ referralDate: '07-Sep-2020', referralDetails: [{
-                provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John',
-                expiry: 'n/a', code: 'P356211', amount: '$50', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna',
-                'Smith, Michael', 'Smith, Lily'], providerDetails: 'e-Transfer issued to jsmith@gmail.com',
-                issuedBy: 'Oak Bay ESS Team' }]
-              }]
+  { from: 'Victoria', date: '20-Feb-2020', code: 333333, support: 'No', status: 'Active', referral: false },
+  {
+    from: 'Vancouver', date: '20-Feb-2020', code: 444444, support: 'No', status: 'Active', referral: true,
+    referrals: [{
+      referralDate: '07-Sep-2020', referralDetails: [{
+        provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John',
+        expiry: 'n/a', code: 'P356211', amount: '$50', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna',
+          'Smith, Michael', 'Smith, Lily'], providerDetails: 'e-Transfer issued to jsmith@gmail.com',
+        issuedBy: 'Oak Bay ESS Team'
+      }]
+    }]
   },
 ];
 
 const INACTIVE_DATA: EvacuationCard[] = [
-  { from: 'Victoria', date: '20-Feb-2020', code: 123456, support: 'No', status: 'Inactive', referral: true,
-  referrals: [{ referralDate: '07-Sep-2020', referralDetails: [{
-    provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John', expiry: 'n/a', code: 'P356211', amount: '$50',
-    status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
-    providerDetails: 'e-Transfer issued to jsmith@gmail.com', issuedBy: 'Oak Bay ESS Team'}]
-  },
-  {referralDate: '04-Sep-2020', referralDetails: [{
-    provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John', expiry: 'n/a', code: 'P356211', amount: '$50',
-    status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
-    providerDetails: 'e-Transfer issued to jsmith@gmail.com', issuedBy: 'Oak Bay ESS Team'},
-    { provider: 'Great Hotel Ltd', type: 'Lodging - Hotel/Motel', issuedTo: 'Smith, John', expiry: 'mm/dd/yyyy', code: 'D12345',
-     amount: 'n/a', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
-     providerDetails: 'Great Hotel ltd Address1 Address 2 City Province Postal Code', issuedBy: 'Oak Bay ESS Team' }]
-  }]}
+  {
+    from: 'Victoria', date: '20-Feb-2020', code: 123456, support: 'No', status: 'Inactive', referral: true,
+    referrals: [{
+      referralDate: '07-Sep-2020', referralDetails: [{
+        provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John', expiry: 'n/a', code: 'P356211', amount: '$50',
+        status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
+        providerDetails: 'e-Transfer issued to jsmith@gmail.com', issuedBy: 'Oak Bay ESS Team'
+      }]
+    },
+    {
+      referralDate: '04-Sep-2020', referralDetails: [{
+        provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John', expiry: 'n/a', code: 'P356211', amount: '$50',
+        status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
+        providerDetails: 'e-Transfer issued to jsmith@gmail.com', issuedBy: 'Oak Bay ESS Team'
+      },
+      {
+        provider: 'Great Hotel Ltd', type: 'Lodging - Hotel/Motel', issuedTo: 'Smith, John', expiry: 'mm/dd/yyyy', code: 'D12345',
+        amount: 'n/a', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
+        providerDetails: 'Great Hotel ltd Address1 Address 2 City Province Postal Code', issuedBy: 'Oak Bay ESS Team'
+      }]
+    }]
+  }
 ];
 
 @Component({
@@ -82,43 +95,34 @@ export class ViewAuthProfileComponent implements OnInit {
   showInactiveList = true;
   currentChild: EvacuationCardComponent;
 
-  evacuatedFrom: string;
+  evacuatedFrom?: string;
+  referenceNumber: string;
 
 
-  constructor(private route: ActivatedRoute, public formCreationService: FormCreationService, private router: Router,
-              public dialog: MatDialog) { }
+  constructor(
+    private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
+    private router: Router, private dialogService: GlobalDialogService) { }
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    this.evacuatedFrom = this.dataSourceActive[this.dataSourceActive.length - 1].from;
+    this.evacuatedFrom = this.dataSourceActive[this.dataSourceActive.length - 1]?.from;
+
+    const registrationResult = this.dataService.getRegistrationResult();
+    if (registrationResult.referenceNumber !== null) {
+      this.referenceNumber = registrationResult.referenceNumber;
+      console.log(this.referenceNumber);
+      this.dialogService.submissionCompleteDialog(this.referenceNumber);
+    }
   }
 
+
   startAssessment(): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        title: 'Add Another Evacuation File',
-        body: '<p>We have you as currently evacuated from <span class="highlight">' + this.evacuatedFrom + '</span>, has your situation changed?</p>',
-        buttons:
-          [
-            {
-              name: 'No, Cancel',
-              class: 'button-s',
-              function: 'close'
-            },
-            {
-              name: 'Yes, Continue',
-              class: 'button-p',
-              function: 'add'
-            }
-          ]
-      },
-      height: '252px',
-      width: '699px'
-    }).afterClosed().subscribe(result => {
-      if (result === 'add') {
-        this.router.navigate(['/verified-registration/confirm-restriction']);
-      }
-    });
+    this.router.navigate(['/verified-registration/confirm-restriction']);
+  }
+
+
+  startAdditionalAssessment(): void {
+    this.dialogService.addEvacuationFile(this.evacuatedFrom);
   }
 
 

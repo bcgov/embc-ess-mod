@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { DataSubmissionService } from 'src/app/core/services/dataSubmission.service';
+import { AlertService } from 'src/app/core/services/alert.service';
 
 @Component({
   selector: 'app-profile',
@@ -31,10 +32,10 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   parentPageName = 'create-profile';
   showLoader = false;
 
-  constructor(private router: Router, private componentService: ComponentCreationService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public updateService: DataUpdationService, private cd: ChangeDetectorRef,
-              private submissionService: DataSubmissionService) {
+  constructor(
+    private router: Router, private componentService: ComponentCreationService, private route: ActivatedRoute,
+    private formCreationService: FormCreationService, public updateService: DataUpdationService, private cd: ChangeDetectorRef,
+    private submissionService: DataSubmissionService, private alertService: AlertService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -165,13 +166,19 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   submitFile(): void {
+    this.showLoader = !this.showLoader;
+    this.alertService.clearAlert();
     // this.router.navigate(['/verified-registration/view-profile']);
     this.submissionService.submitProfile().subscribe((response) => {
+      console.log(typeof response);
       console.log(response);
       // this.updateService.updateRegisrationResult(response);
+      window.sessionStorage.setItem('userid', JSON.stringify(response));
       this.router.navigate(['/verified-registration/view-profile']);
     }, (error) => {
       console.log(error);
+      this.showLoader = !this.showLoader;
+      this.alertService.setAlert('danger', error.title);
     });
 
   }

@@ -44,7 +44,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         {
             var profile = await profileManager.GetProfileByBceid("test");
 
-            await profileManager.UpdateProfile(profile);
+            await profileManager.SaveProfile(profile);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -54,20 +54,12 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             baseProfile.Id = newProfileBceId;
 
-            var id = await profileManager.CreateProfile(baseProfile);
+            var id = await profileManager.SaveProfile(baseProfile);
 
             var profile = await profileManager.GetProfileByBceid(newProfileBceId);
 
             profile.ShouldNotBeNull().Id.ShouldBe(newProfileBceId);
             profile.Id.ShouldBe(baseProfile.Id);
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task FailToCreateContactWhichAlreadyExists()
-        {
-            var existingProfile = await profileManager.GetProfileByBceid("test");
-
-            (await Should.ThrowAsync<Exception>(() => profileManager.CreateProfile(existingProfile))).Message.ShouldContain(existingProfile.Id);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -87,7 +79,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
             baseProfile.MailingAddress.StateProvince = new StateProvince { Code = province.Code };
             baseProfile.MailingAddress.Jurisdiction = new Jurisdiction { Code = city.Code };
 
-            var id = await profileManager.CreateProfile(baseProfile);
+            var id = await profileManager.SaveProfile(baseProfile);
 
             var profile = await profileManager.GetProfileByBceid(newProfileBceId);
 
