@@ -139,6 +139,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         /// <param name="id">Contact Id</param>
         /// <param name="profileRegistration">Profile Registration Form</param>
         /// <returns>Registration</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPatch("patch-profile/{id}")]
@@ -151,7 +152,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             //if (profileRegistration == null) return NotFound();
 
-            var profile = await registrationManager.PatchProfileById(id, profileRegistration);
+            var profile = await registrationManager.PatchProfileById(contactId, profileRegistration);
 
             return profile;
         }
