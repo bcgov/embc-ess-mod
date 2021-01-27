@@ -25,13 +25,13 @@ namespace EMBC.Registrants.API
     [ApiController]
     public class ErrorController : ControllerBase
     {
-        [Route("/error-local-development")]
+        [Route("/error-details")]
         public IActionResult ErrorLocalDevelopment([FromServices] IHostEnvironment hostEnvironment)
         {
-            if (!hostEnvironment.IsDevelopment()) throw new InvalidOperationException("This shouldn't be invoked in non-development environments.");
+            if (hostEnvironment.IsProduction()) throw new InvalidOperationException("This shouldn't be invoked in non-development environments.");
 
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            return Problem(detail: context.Error.StackTrace, title: context.Error.Message);
+            return Problem(detail: context.Error.ToString(), title: context.Error.Message);
         }
 
         [Route("/error")]

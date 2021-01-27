@@ -93,8 +93,8 @@
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Date of Birth:</div>
-                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.dateOfBirth |
-                        date: 'dd-MMM-yyyy'}}
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.dateOfBirth}}
+                        <!-- | date: 'dd-MMM-yyyy' -->
                     </div>
                 </div>
                 <div class="row info-detail">
@@ -371,7 +371,8 @@
                     </div>
                     <div class="row info-detail">
                         <div class="col-md-3">Date of Birth:</div>
-                        <div class="col-md-3">{{member.dateOfBirth | date: 'dd-MMM-yyyy'}}</div>
+                        <div class="col-md-3">{{member.dateOfBirth}}</div>
+                        <!-- | date: 'dd-MMM-yyyy' -->
                     </div>
                     <br>
                 </div>
