@@ -61,7 +61,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<RegistrationResult>> CreateEvacuation(RegistrantEvacuation evacuation)
         {
-            if (evacuation == null || string.IsNullOrEmpty(evacuation.ContactId))
+            //if (evacuation == null || string.IsNullOrEmpty(evacuation.ContactId))
+            //    return BadRequest();BCServicesCardtId
+            if (evacuation == null || string.IsNullOrEmpty(evacuation.BCServicesCardId))
                 return BadRequest();
 
             var essFileNumber = await registrationManager.CreateRegistrantEvacuation(evacuation);
@@ -176,7 +178,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
     public class RegistrantEvacuation
     {
         [Required]
-        public string ContactId { get; set; }
+        public string BCServicesCardId { get; set; }
 
         [Required]
         public NeedsAssessment PreliminaryNeedsAssessment { get; set; }
