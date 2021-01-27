@@ -278,7 +278,7 @@ namespace EMBC.Tests.Integration.Registrants.API
             var registrantEvacuation = new RegistrantEvacuation
             {
                 //ContactId = "91d6f457-b8b5-4fd4-ac71-0e45bd7e989d",
-                BCServicesCardId = "BCSC-ID-12:49 PM",
+                Id = "BCSC-ID-12:49 PM",
                 PreliminaryNeedsAssessment = new NeedsAssessment
                 {
                     EvacuatedFromAddress = new Address

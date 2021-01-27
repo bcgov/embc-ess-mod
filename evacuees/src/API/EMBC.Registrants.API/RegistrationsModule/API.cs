@@ -63,7 +63,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         {
             //if (evacuation == null || string.IsNullOrEmpty(evacuation.ContactId))
             //    return BadRequest();BCServicesCardtId
-            if (evacuation == null || string.IsNullOrEmpty(evacuation.BCServicesCardId))
+            if (evacuation == null || string.IsNullOrEmpty(evacuation.Id))
                 return BadRequest();
 
             var essFileNumber = await registrationManager.CreateRegistrantEvacuation(evacuation);
@@ -178,7 +178,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
     public class RegistrantEvacuation
     {
         [Required]
-        public string BCServicesCardId { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public NeedsAssessment PreliminaryNeedsAssessment { get; set; }

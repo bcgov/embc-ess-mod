@@ -695,7 +695,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             //contact dynamicsContact = GetDynamicsContact(contactId);
 
             // get dynamics contact by BCServicesCardId
-            contact dynamicsContact = GetDynamicsContactByBCSC(evacuation.BCServicesCardId);
+            contact dynamicsContact = GetDynamicsContactByBCSC(evacuation.Id);
 
             if (dynamicsContact != null)
             {
