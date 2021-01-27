@@ -63,6 +63,14 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task FailToCreateContactWhichAlreadyExists()
+        {
+            var existingProfile = await profileManager.GetProfileByBceid("test");
+
+            (await Should.ThrowAsync<Exception>(() => profileManager.CreateProfile(existingProfile))).Message.ShouldContain(existingProfile.Id);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateProfileWithAddressLookupValues()
         {
             var baseProfile = await profileManager.GetProfileByBceid("test");

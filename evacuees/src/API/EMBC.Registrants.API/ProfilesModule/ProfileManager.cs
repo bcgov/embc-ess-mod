@@ -55,11 +55,10 @@ namespace EMBC.Registrants.API.ProfilesModule
         {
             var user = await userRepository.Read(userId);
             if (user == null) return null;
+
             var userProfile = mapper.Map<Profile>(user);
             var profile = await profileRepository.Read(user.Id);
-            if (profile == null) return null;
-
-            var conflicts = profile.DetectConflicts(userProfile);
+            var conflicts = userProfile.DetectConflicts(profile);
 
             return new UserProfile { LoginProfile = userProfile, EraProfile = profile, Conflicts = conflicts };
         }
@@ -79,9 +78,14 @@ namespace EMBC.Registrants.API.ProfilesModule
     {
         public static IEnumerable<ProfileDataConflict> DetectConflicts(this Profile source, Profile target)
         {
-            if (!source.PersonalDetails.Equals(target.PersonalDetails))
+            if (target == null) yield break;
+            if (!source.PersonalDetails.DateofBirthEquals(target.PersonalDetails))
             {
-                yield return new ProfileDataConflict { ConflictDataElement = nameof(Profile.PersonalDetails) };
+                yield return new ProfileDataConflict { ConflictDataElement = nameof(Profile.PersonalDetails.DateOfBirth) };
+            }
+            if (!source.PersonalDetails.NameEquals(target.PersonalDetails))
+            {
+                yield return new ProfileDataConflict { ConflictDataElement = "Name" };
             }
             if (!source.PrimaryAddress.Equals(target.PrimaryAddress))
             {
@@ -97,9 +101,11 @@ namespace EMBC.Registrants.API.ProfilesModule
             address.StateProvince.Code.Equals(other.StateProvince.Code) &&
             address.Country.Code.Equals(other.Country.Code);
 
-        public static bool Equals(this PersonDetails personDetails, PersonDetails other) =>
+        public static bool NameEquals(this PersonDetails personDetails, PersonDetails other) =>
             personDetails.FirstName.Equals(other.FirstName, System.StringComparison.CurrentCultureIgnoreCase) &&
-            personDetails.LastName.Equals(other.LastName, System.StringComparison.CurrentCultureIgnoreCase) &&
-            personDetails.DateOfBirth.Equals(other.DateOfBirth);
+            personDetails.LastName.Equals(other.LastName, System.StringComparison.CurrentCultureIgnoreCase);
+
+        public static bool DateofBirthEquals(this PersonDetails personDetails, PersonDetails other) =>
+            personDetails.DateOfBirth == other.DateOfBirth;
     }
 }

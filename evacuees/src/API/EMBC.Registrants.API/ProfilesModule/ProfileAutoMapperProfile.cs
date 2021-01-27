@@ -50,6 +50,8 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForPath(d => d.MailingAddress.Jurisdiction, opts => opts.MapFrom(s => s.era_MailingCity ?? new era_jurisdiction { era_jurisdictionname = s.address2_city }))
                 .ForPath(d => d.MailingAddress.StateProvince, opts => opts.MapFrom(s => s.era_MailingProvinceState ?? new era_provinceterritories { era_name = s.address2_stateorprovince }))
 
+                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s => s.era_issamemailingaddress))
+
                 .ReverseMap()
 
                 .ForMember(d => d.era_registranttype, opts => opts.MapFrom(s => 174360000))
@@ -72,6 +74,8 @@ namespace EMBC.Registrants.API.ProfilesModule
                     s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
                     s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
                     s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
+
+                .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s => s.IsMailingAddressSameAsPrimaryAddress))
                 ;
 
             CreateMap<contact, PersonDetails>()

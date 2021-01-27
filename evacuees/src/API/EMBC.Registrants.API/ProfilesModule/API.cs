@@ -37,6 +37,10 @@ namespace EMBC.Registrants.API.ProfilesModule
             this.profileManager = profileManager;
         }
 
+        /// <summary>
+        /// Get the current logged in user's profile
+        /// </summary>
+        /// <returns>Currently logged in user's profile</returns>
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -49,12 +53,17 @@ namespace EMBC.Registrants.API.ProfilesModule
             return Ok(profile);
         }
 
+        /// <summary>
+        /// Create or update the current user's profile
+        /// </summary>
+        /// <param name="profile">The profile information</param>
+        /// <returns>profile id</returns>
         [HttpPost("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize]
-        public async Task<ActionResult> Upsert(Profile profile)
+        public async Task<ActionResult<string>> Upsert(Profile profile)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (profile.Id == null)
@@ -67,9 +76,13 @@ namespace EMBC.Registrants.API.ProfilesModule
                 await profileManager.UpdateProfile(profile);
             }
 
-            return Ok(new { id = profile.Id });
+            return Ok(profile.Id);
         }
 
+        /// <summary>
+        /// Get the logged in user's profile and conflicts with the data that came from the authenticating identity provider
+        /// </summary>
+        /// <returns>The current user's profile, the identity provider's profile and the detected conflicts</returns>
         [HttpGet("current/conflicts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -85,7 +98,7 @@ namespace EMBC.Registrants.API.ProfilesModule
     }
 
     /// <summary>
-    /// Registrant's profile
+    /// User's profile
     /// </summary>
     public class Profile
     {
@@ -101,10 +114,14 @@ namespace EMBC.Registrants.API.ProfilesModule
         public Address PrimaryAddress { get; set; }
 
         public Address MailingAddress { get; set; }
+        public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public string SecretPhrase { get; set; }
     }
 
+    /// <summary>
+    /// DTO for conflict resolution data
+    /// </summary>
     public class UserProfile
     {
         public bool IsNewUser => EraProfile == null;
@@ -113,6 +130,9 @@ namespace EMBC.Registrants.API.ProfilesModule
         public IEnumerable<ProfileDataConflict> Conflicts { get; set; }
     }
 
+    /// <summary>
+    /// profile data element name in conflict
+    /// </summary>
     public class ProfileDataConflict
     {
         public string ConflictDataElement { get; set; }
