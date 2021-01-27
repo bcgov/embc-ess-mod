@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OData;
 using Microsoft.OData.Client;
 
 namespace EMBC.ResourceAccess.Dynamics
 {
-    public static class DynamicsClientResponseEx
+    public static class DynamicsClientContextEx
     {
         public static async Task<T> SaveChangesAsync<T>(this DynamicsClientContext dynamicsClient, SaveChangesOptions options) where T : BaseEntityType
         {
@@ -29,6 +31,12 @@ namespace EMBC.ResourceAccess.Dynamics
 
             dynamicsClient.AddLink(source, sourceProperty, target);
             return true;
+        }
+
+        public static DataServiceQuerySingle<T> GetSingleEntityByKey<T>(this DataServiceQuery<T> source, IDictionary<string, object> alternateKeys)
+        {
+            var keys = string.Join(',', alternateKeys.Select(kv => $"{kv.Key}={ODataUriUtils.ConvertToUriLiteral(kv.Value, ODataVersion.V4)}"));
+            return new DataServiceQuerySingle<T>(source.Context, source.GetKeyPath(keys));
         }
     }
 }
