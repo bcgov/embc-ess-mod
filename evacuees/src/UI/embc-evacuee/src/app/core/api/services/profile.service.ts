@@ -29,6 +29,10 @@ export class ProfileService extends BaseService {
   static readonly ProfileGetProfilePath = '/api/profiles/current';
 
   /**
+   * Get the current logged in user's profile.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `profileGetProfile()` instead.
    *
@@ -53,6 +57,10 @@ export class ProfileService extends BaseService {
   }
 
   /**
+   * Get the current logged in user's profile.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `profileGetProfile$Response()` instead.
    *
@@ -72,14 +80,22 @@ export class ProfileService extends BaseService {
   static readonly ProfileUpsertPath = '/api/profiles/current';
 
   /**
+   * Create or update the current user's profile.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `profileUpsert()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   profileUpsert$Response(params: {
+
+    /**
+     * The profile information
+     */
     body: Profile
-  }): Observable<StrictHttpResponse<void>> {
+  }): Observable<StrictHttpResponse<string>> {
 
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileUpsertPath, 'post');
     if (params) {
@@ -87,28 +103,36 @@ export class ProfileService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<string>;
       })
     );
   }
 
   /**
+   * Create or update the current user's profile.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `profileUpsert$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
   profileUpsert(params: {
+
+    /**
+     * The profile information
+     */
     body: Profile
-  }): Observable<void> {
+  }): Observable<string> {
 
     return this.profileUpsert$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<string>) => r.body as string)
     );
   }
 
@@ -118,6 +142,10 @@ export class ProfileService extends BaseService {
   static readonly ProfileGetProfileConflictsPath = '/api/profiles/current/conflicts';
 
   /**
+   * Get the logged in user's profile and conflicts with the data that came from the authenticating identity provider.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `profileGetProfileConflicts()` instead.
    *
@@ -142,6 +170,10 @@ export class ProfileService extends BaseService {
   }
 
   /**
+   * Get the logged in user's profile and conflicts with the data that came from the authenticating identity provider.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `profileGetProfileConflicts$Response()` instead.
    *

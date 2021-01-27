@@ -5,11 +5,12 @@ import { ContactDetails } from './contact-details';
 import { PersonDetails } from './person-details';
 
 /**
- * Registrant's profile
+ * User's profile
  */
 export interface Profile {
   contactDetails: ContactDetails;
   id?: null | string;
+  isMailingAddressSameAsPrimaryAddress?: boolean;
   mailingAddress?: null | Address;
   personalDetails: PersonDetails;
   primaryAddress: Address;
