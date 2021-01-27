@@ -6,8 +6,6 @@ import { ProfileService } from '../api/services';
 @Injectable({ providedIn: 'root' })
 export class RegistrantProfileService {
 
-  userType: boolean
-
   constructor(private profileService: ProfileService) { }
 
   public getExistingProfile(): Observable<UserProfile> {

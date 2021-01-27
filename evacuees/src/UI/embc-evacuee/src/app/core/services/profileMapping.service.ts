@@ -10,20 +10,20 @@ import { FormCreationService } from './formCreation.service';
 export class ProfileMappingService {
     constructor(private formCreationService: FormCreationService, private dataService: DataService, private builder: FormBuilder) { }
 
-    mapUserProfile(userProfile: UserProfile) {
+    mapUserProfile(userProfile: UserProfile): void {
         this.dataService.setConflicts(userProfile.conflicts);
         if (userProfile.isNewUser) {
-            console.log("login")
+            console.log('login');
             this.setLoginUserProfile(userProfile.loginProfile);
         } else {
-            console.log("era")
+            console.log('era');
             this.setExistingUserProfile(userProfile.eraProfile);
         }
         sessionStorage.setItem('eraProfile', JSON.stringify(userProfile.eraProfile));
         sessionStorage.setItem('loginProfile', JSON.stringify(userProfile.loginProfile));
     }
 
-    setExistingUserProfile(profile: Profile) {
+    setExistingUserProfile(profile: Profile): void {
         this.setRestrictionDetails(profile);
         this.setPersonalDetails(profile);
         this.setAddressDetails(profile);
@@ -31,19 +31,18 @@ export class ProfileMappingService {
         this.setSecretDetails(profile);
     }
 
-    setLoginUserProfile(profile: Profile) {
-        this.populateFromBCSC(profile)
+    setLoginUserProfile(profile: Profile): void {
+        this.populateFromBCSC(profile);
     }
 
-    private setRestrictionDetails(profile: Profile) {
-        let formGroup: FormGroup;
+    private setRestrictionDetails(profile: Profile): void {
         this.formCreationService.getRestrictionForm().pipe(
             first()).subscribe(details => {
                 details.setValue({ restrictedAccess: profile.restrictedAccess });
             });
     }
 
-    private setPersonalDetails(profile: Profile) {
+    private setPersonalDetails(profile: Profile): void {
         let formGroup: FormGroup;
         this.formCreationService.getPeronalDetailsForm().pipe(
             first()).subscribe(details => {
@@ -53,7 +52,7 @@ export class ProfileMappingService {
         this.formCreationService.setPersonDetailsForm(formGroup);
     }
 
-    private setAddressDetails(profile: Profile) {
+    private setAddressDetails(profile: Profile): void {
         let formGroup: FormGroup;
         this.formCreationService.getAddressForm().pipe(
             first()).subscribe(address => {
@@ -69,7 +68,7 @@ export class ProfileMappingService {
         this.formCreationService.setAddressForm(formGroup);
     }
 
-    private setContactDetails(profile: Profile) {
+    private setContactDetails(profile: Profile): void {
         let formGroup: FormGroup;
         this.formCreationService.getContactDetailsForm().pipe(
             first()).subscribe(contact => {
@@ -79,7 +78,7 @@ export class ProfileMappingService {
         this.formCreationService.setContactDetailsForm(formGroup);
     }
 
-    private setSecretDetails(profile: Profile) {
+    private setSecretDetails(profile: Profile): void {
         let formGroup: FormGroup;
         this.formCreationService.getSecretForm().pipe(
             first()).subscribe(secret => {
@@ -89,15 +88,15 @@ export class ProfileMappingService {
         this.formCreationService.setSecretForm(formGroup);
     }
 
-    private isSameMailingAddress(isMailingAddressSameAsPrimaryAddress: boolean) {
+    private isSameMailingAddress(isMailingAddressSameAsPrimaryAddress: boolean): string {
         return isMailingAddressSameAsPrimaryAddress === true ? 'Yes' : 'No';
     }
 
-    private isBCAddress(province: null | StateProvince) {
+    private isBCAddress(province: null | StateProvince): string {
         return province.code !== null && province.code === 'BC' ? 'Yes' : 'No';
     }
 
-    populateFromBCSC(profile: Profile) {
+    populateFromBCSC(profile: Profile): void {
         this.formCreationService.getPeronalDetailsForm().pipe(
             first()).subscribe(details => {
                 details.setValue({
