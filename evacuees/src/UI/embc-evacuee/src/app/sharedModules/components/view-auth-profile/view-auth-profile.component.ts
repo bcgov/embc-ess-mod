@@ -111,10 +111,10 @@ export class ViewAuthProfileComponent implements OnInit {
       filter((event: RouterEvent) => event instanceof NavigationEnd),
       debounceTime(500)
     ).subscribe(() =>
-      this.openReferenceNumberPopup())
+      this.openReferenceNumberPopup());
   }
 
-  openReferenceNumberPopup() {
+  openReferenceNumberPopup(): void {
     const registrationResult = this.dataService.getRegistrationResult();
     if (registrationResult.referenceNumber !== null) {
       this.referenceNumber = registrationResult.referenceNumber;
