@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
-import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { DataService } from 'src/app/core/services/data.service';
 import { GlobalDialogService } from 'src/app/core/services/globalDialog.service';
+import { debounceTime, filter } from 'rxjs/operators';
 
 
 
@@ -103,10 +102,19 @@ export class ViewAuthProfileComponent implements OnInit {
     private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
     private router: Router, private dialogService: GlobalDialogService) { }
 
+
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
     this.evacuatedFrom = this.dataSourceActive[this.dataSourceActive.length - 1]?.from;
 
+    this.router.events.pipe(
+      filter((event: RouterEvent) => event instanceof NavigationEnd),
+      debounceTime(500)
+    ).subscribe(() =>
+      this.openReferenceNumberPopup())
+  }
+
+  openReferenceNumberPopup() {
     const registrationResult = this.dataService.getRegistrationResult();
     if (registrationResult.referenceNumber !== null) {
       this.referenceNumber = registrationResult.referenceNumber;
@@ -114,7 +122,6 @@ export class ViewAuthProfileComponent implements OnInit {
       this.dialogService.submissionCompleteDialog(this.referenceNumber);
     }
   }
-
 
   startAssessment(): void {
     this.router.navigate(['/verified-registration/confirm-restriction']);
