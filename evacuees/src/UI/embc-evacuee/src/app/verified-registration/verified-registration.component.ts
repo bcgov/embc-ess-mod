@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { of } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../core/services/data.service';
 import { FormCreationService } from '../core/services/formCreation.service';
-import { ProfileService } from '../core/services/profile.service';
+import { ProfileMappingService } from '../core/services/profileMapping.service';
+import { RegistrantProfileService } from '../core/services/registrantProfile.service';
 
 @Component({
   selector: 'app-verified-registration',
@@ -10,18 +11,23 @@ import { ProfileService } from '../core/services/profile.service';
   styleUrls: ['./verified-registration.component.scss']
 })
 export class VerifiedRegistrationComponent implements OnInit {
-
-  constructor(
-    private formCreationService: FormCreationService,
-    private dataService: DataService,
-    private profileService: ProfileService) { }
-
-  ngOnInit(): void {
+  constructor(private formCreationService: FormCreationService, private dataService: DataService,
+    private regProfService: RegistrantProfileService, private router: Router, public mappingService: ProfileMappingService) {
     this.dataService.clearData();
     this.formCreationService.clearData();
-
-    const profile = of(this.profileService.getProfileConflicts());
-    console.log(profile);
   }
+
+  ngOnInit(): void {
+    this.regProfService.getExistingProfile().subscribe(profile => {
+      console.log(profile)
+      this.mappingService.mapUserProfile(profile);
+      if (profile.isNewUser) {
+        this.router.navigate(['/verified-registration/collection-notice'])
+      } else {
+        this.router.navigate(['/verified-registration/view-profile'])
+      }
+    })
+  }
+
 
 }

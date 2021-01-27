@@ -6,11 +6,11 @@ const routes: Routes = [
   {
     path: '', component: VerifiedRegistrationComponent,
     children: [
-      {
-        path: '',
-        redirectTo: 'collection-notice',
-        pathMatch: 'full',
-      },
+      // {
+      //   path: '',
+      //   redirectTo: 'collection-notice',
+      //   pathMatch: 'full',
+      // },
       {
         path: 'collection-notice',
         loadChildren: () => import('../sharedModules/components/collection-notice/collection-notice.module')
