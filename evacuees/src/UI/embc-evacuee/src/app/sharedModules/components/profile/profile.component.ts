@@ -173,7 +173,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
       console.log(typeof response);
       console.log(response);
       // this.updateService.updateRegisrationResult(response);
-      window.sessionStorage.setItem('userid', response);
+      sessionStorage.setItem('userid', response);
       this.router.navigate(['/verified-registration/view-profile']);
     }, (error) => {
       console.log(error);
