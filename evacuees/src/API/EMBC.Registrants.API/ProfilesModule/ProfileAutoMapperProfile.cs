@@ -81,7 +81,9 @@ namespace EMBC.Registrants.API.ProfilesModule
                 ;
 
             CreateMap<contact, PersonDetails>()
-                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.birthdate))
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.birthdate.HasValue
+                    ? $"{s.birthdate.Value.Month:D2}/{s.birthdate.Value.Day:D2}/{s.birthdate.Value.Year:D2}"
+                    : null))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.firstname))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.lastname))
                 .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.gendercode))
