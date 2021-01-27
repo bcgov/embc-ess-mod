@@ -273,7 +273,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .RuleFor(u => u.Gender, f => f.PickRandom(new[] { "Male", "Female", "X" }))
                 .RuleFor(u => u.FirstName, f => f.Name.FirstName())
                 .RuleFor(u => u.LastName, f => f.Name.LastName())
-                .RuleFor(u => u.BirthDate, f => f.Date.Past(20).ToString("yyyy-MM-dd"))
+                .RuleFor(u => u.BirthDate, f => f.Date.Past(20).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))
                 .RuleFor(u => u.StreetAddress, f => f.Address.StreetAddress())
                 .RuleFor(u => u.PostalCode, f => f.Address.ZipCode())
                 .RuleFor(u => u.City, f => f.PickRandom(jurisdictions).Name)
