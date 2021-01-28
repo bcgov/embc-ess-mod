@@ -361,7 +361,7 @@ export class RegistrationService extends BaseService {
      * Profile Registration Form
      */
     body: Registration
-  }): Observable<StrictHttpResponse<void>> {
+  }): Observable<StrictHttpResponse<Registration>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationService.RegistrationPatchProfileByIdPath, 'patch');
     if (params) {
@@ -370,12 +370,12 @@ export class RegistrationService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<Registration>;
       })
     );
   }
@@ -401,10 +401,10 @@ export class RegistrationService extends BaseService {
      * Profile Registration Form
      */
     body: Registration
-  }): Observable<void> {
+  }): Observable<Registration> {
 
     return this.registrationPatchProfileById$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<Registration>) => r.body as Registration)
     );
   }
 
