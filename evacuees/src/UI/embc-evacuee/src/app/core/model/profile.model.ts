@@ -28,8 +28,6 @@ export class PersonDetails {
 
     constructor(firstName?: string, lastName?: string, preferredName?: string, initials?: string,
                 gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
-
-        console.log('..' + firstName);
         this.firstName = firstName;
         this.lastName = lastName;
         this.preferredName = preferredName;

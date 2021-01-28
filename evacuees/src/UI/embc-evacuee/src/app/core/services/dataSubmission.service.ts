@@ -41,9 +41,10 @@ export class DataSubmissionService {
     }
 
     submitVerifiedRegistrationFile(): Observable<RegistrationResult> {
+        console.log(window.sessionStorage.getItem('userid'));
         this.registrantEvacuation = {
             preliminaryNeedsAssessment: this.mergeData({}, this.dataService.getNeedsAssessment()),
-            id: window.localStorage.getItem('userid')
+            id: sessionStorage.getItem('userid')
             // id: 'TXZESQRHWCVZZT5LXWZLTMR7KEHDR7U4'
         };
         console.log(JSON.stringify(this.registrantEvacuation));

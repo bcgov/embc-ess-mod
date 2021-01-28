@@ -12,7 +12,8 @@ export class AuthInterceptor implements HttpInterceptor {
   private whiteListUrls = [
     '/login*',
     '/api/location*',
-    '/api/registration*'
+    '/api/registration*',
+    '/captcha'
   ];
 
   constructor(private authService: AuthService, private router: Router) { }

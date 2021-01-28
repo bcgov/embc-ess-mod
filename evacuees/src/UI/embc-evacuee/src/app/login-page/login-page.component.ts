@@ -14,7 +14,7 @@ export class LoginPageComponent implements OnInit {
   }
 
   verifyUser(): void {
-    this.router.navigate(['/verified-registration/collection-notice']);
+    this.router.navigate(['/verified-registration']);
   }
 
   nonVerifiedUser(): void {
