@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { profile } from 'console';
 import { NeedsAssessment } from '../api/models/needs-assessment';
 import { ProfileDataConflict } from '../api/models/profile-data-conflict';
 import { Registration } from '../api/models/registration';
