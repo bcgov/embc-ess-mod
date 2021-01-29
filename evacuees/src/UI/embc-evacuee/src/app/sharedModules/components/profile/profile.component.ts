@@ -171,7 +171,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.alertService.clearAlert();
     this.submissionService.submitProfile().subscribe((profileId) => {
       this.dataService.setProfileId(profileId);
-      this.router.navigate(['/verified-registration/view-profile']);
+      this.router.navigate(['/verified-registration/dashboard']);
     }, (error) => {
       console.log(error);
       this.showLoader = !this.showLoader;
