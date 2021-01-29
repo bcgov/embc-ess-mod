@@ -112,10 +112,10 @@ export class ViewAuthProfileComponent implements OnInit {
       this.openReferenceNumberPopup()
     );
 
-    //this.openDOBMismatchPopup();
+    // this.openDOBMismatchPopup();
   }
 
-  openDOBMismatchPopup() {
+  openDOBMismatchPopup(): void {
     this.dialogService.dateOfBirthMismatch('02 Mar 1984', '02 Mar 1983');
   }
 

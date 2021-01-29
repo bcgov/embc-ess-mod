@@ -71,7 +71,7 @@ export class DialogService {
             },
             height: '352px',
             width: '699px'
-        })
+        });
     }
 }
 

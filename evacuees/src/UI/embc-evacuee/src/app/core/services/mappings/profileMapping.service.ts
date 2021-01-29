@@ -20,7 +20,7 @@ export class ProfileMappingService {
             this.setExistingUserProfile(userProfile.eraProfile);
         }
         if (userProfile.eraProfile) {
-            this.dataService.setProfileId(userProfile.eraProfile.id)
+            this.dataService.setProfileId(userProfile.eraProfile.id);
             this.cacheService.set('eraProfile', JSON.stringify(userProfile.eraProfile));
         }
     }

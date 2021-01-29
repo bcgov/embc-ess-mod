@@ -14,7 +14,7 @@ export class DataService {
     private profileId: string;
 
     public setProfileId(profileId: string): void {
-        this.profileId = profileId
+        this.profileId = profileId;
     }
 
     public getProfileId(): string {
