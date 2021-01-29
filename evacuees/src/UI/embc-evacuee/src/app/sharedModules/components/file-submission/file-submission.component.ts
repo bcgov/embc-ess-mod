@@ -31,10 +31,10 @@ export class FileSubmissionComponent implements OnInit {
   }
 
   /**
-   * Navigates to view-profile page
+   * Navigates to dashboard page
    */
   goToProfile(): void {
-    this.router.navigate(['/verified-registration/view-profile']);
+    this.router.navigate(['/verified-registration/dashboard']);
   }
 
   verifyUser(): void {
