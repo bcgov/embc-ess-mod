@@ -9,6 +9,7 @@ import { FormCreationService } from '../../../core/services/formCreation.service
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { DataSubmissionService } from 'src/app/core/services/dataSubmission.service';
 import { AlertService } from 'src/app/core/services/alert.service';
+import { DataService } from 'src/app/core/services/data.service';
 
 @Component({
   selector: 'app-profile',
@@ -35,7 +36,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   constructor(
     private router: Router, private componentService: ComponentCreationService, private route: ActivatedRoute,
     private formCreationService: FormCreationService, public updateService: DataUpdationService, private cd: ChangeDetectorRef,
-    private submissionService: DataSubmissionService, private alertService: AlertService) {
+    private submissionService: DataSubmissionService, private alertService: AlertService, private dataService: DataService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -168,10 +169,8 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   submitFile(): void {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
-    this.submissionService.submitProfile().subscribe((response) => {
-      console.log(response);
-      // this.updateService.updateRegisrationResult(response);
-      sessionStorage.setItem('userid', response);
+    this.submissionService.submitProfile().subscribe((profileId) => {
+      this.dataService.setProfileId(profileId);
       this.router.navigate(['/verified-registration/dashboard']);
     }, (error) => {
       console.log(error);

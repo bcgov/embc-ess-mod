@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from '../core/services/data.service';
 import { FormCreationService } from '../core/services/formCreation.service';
-import { ProfileMappingService } from '../core/services/profileMapping.service';
-import { RegistrantProfileService } from '../core/services/registrantProfile.service';
+import { ProfileMappingService } from '../core/services/mappings/profileMapping.service';
+import { ProfileApiService } from '../core/services/api/profileApi.service';
 
 @Component({
   selector: 'app-verified-registration',
@@ -12,7 +12,7 @@ import { RegistrantProfileService } from '../core/services/registrantProfile.ser
 })
 export class VerifiedRegistrationComponent implements OnInit {
   constructor(private formCreationService: FormCreationService, private dataService: DataService,
-              private regProfService: RegistrantProfileService, private router: Router,
+              private regProfService: ProfileApiService, private router: Router,
               public mappingService: ProfileMappingService) {
     this.dataService.clearData();
     this.formCreationService.clearData();

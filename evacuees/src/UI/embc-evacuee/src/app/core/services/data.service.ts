@@ -11,6 +11,15 @@ export class DataService {
     private preliminaryNeedsAssessment: Partial<NeedsAssessment> = {};
     private registrationResult: RegistrationResult;
     private conflicts: Array<ProfileDataConflict>;
+    private profileId: string;
+
+    public setProfileId(profileId: string): void {
+        this.profileId = profileId;
+    }
+
+    public getProfileId(): string {
+        return this.profileId;
+    }
 
     public updateRegistartion(value): void {
         this.registrationDetails = { ...this.registrationDetails, ...value };
