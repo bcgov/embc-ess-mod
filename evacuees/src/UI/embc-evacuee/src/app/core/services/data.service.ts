@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NeedsAssessment } from '../api/models/needs-assessment';
+import { ProfileDataConflict } from '../api/models/profile-data-conflict';
 import { Registration } from '../api/models/registration';
 import { RegistrationResult } from '../api/models/registration-result';
 
@@ -9,6 +10,7 @@ export class DataService {
     private registrationDetails: Partial<Registration> = {};
     private preliminaryNeedsAssessment: Partial<NeedsAssessment> = {};
     private registrationResult: RegistrationResult;
+    private conflicts: Array<ProfileDataConflict>;
 
     public updateRegistartion(value): void {
         this.registrationDetails = { ...this.registrationDetails, ...value };
@@ -36,11 +38,20 @@ export class DataService {
         return this.registrationResult;
     }
 
+    public setConflicts(conflicts: Array<ProfileDataConflict>): void {
+        this.conflicts = conflicts;
+    }
+
+    public getConflicts(): Array<ProfileDataConflict> {
+        return this.conflicts;
+    }
+
     clearData(): void {
         this.registrationDetails = {};
         this.preliminaryNeedsAssessment = {};
         this.registrationResult = {
             referenceNumber: null
         };
+        this.conflicts = [];
     }
 }
