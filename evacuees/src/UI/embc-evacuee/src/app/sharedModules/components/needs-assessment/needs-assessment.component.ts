@@ -188,7 +188,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.submissionService.submitVerifiedRegistrationFile().subscribe((response: RegistrationResult) => {
       console.log(response);
       this.updateService.updateRegisrationResult(response);
-      this.router.navigate(['/verified-registration/view-profile']);
+      this.router.navigate(['/verified-registration/dashboard']);
     }, (error: any) => {
       console.log(error.error.title);
       this.showLoader = !this.showLoader;
