@@ -198,6 +198,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                     HaveMedication = false,
                     Insurance = NeedsAssessment.InsuranceOption.Yes,
                     HaveSpecialDiet = true,
+                    SpecialDietDetails = "Gluten Free",
                     HasPetsFood = true,
                     RequiresClothing = true, //to be deleted
                     RequiresFood = true, //to be deleted
@@ -255,7 +256,7 @@ namespace EMBC.Tests.Integration.Registrants.API
         public async Task GeProfileById()
         {
             var regManager = services.GetRequiredService<IRegistrationManager>();
-            var profile = await regManager.GetProfileById(new Guid("91d6f457-b8b5-4fd4-ac71-0e45bd7e989d"));
+            var profile = await regManager.GetProfileById(new Guid("83a1a0fa-6eb9-4abb-b521-cbfcd0c4bac1"));
             Assert.NotNull(profile);
             Assert.NotEmpty(profile.PersonalDetails.FirstName);
             testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
@@ -275,14 +276,14 @@ namespace EMBC.Tests.Integration.Registrants.API
         public async Task CanPatchProfileById()
         {
             var regManager = services.GetRequiredService<IRegistrationManager>();
-            var profile = await regManager.GetProfileById(new Guid("bbe3422b-ca02-42b6-b4b0-beb5147b2f0e"));
+            var profile = await regManager.GetProfileById(new Guid("83a1a0fa-6eb9-4abb-b521-cbfcd0c4bac1"));
             Assert.NotNull(profile);
             Assert.NotEmpty(profile.PersonalDetails.FirstName);
             profile.PersonalDetails.PreferredName = "Chris";
-            var patchedProfile = await regManager.PatchProfileById(new Guid("bbe3422b-ca02-42b6-b4b0-beb5147b2f0e"), profile);
+            var patchedProfile = await regManager.PatchProfileById(new Guid("83a1a0fa-6eb9-4abb-b521-cbfcd0c4bac1"), profile);
             Assert.Equal("Chris", patchedProfile.PersonalDetails.PreferredName);
             profile.PersonalDetails.PreferredName = "";
-            patchedProfile = await regManager.PatchProfileById(new Guid("bbe3422b-ca02-42b6-b4b0-beb5147b2f0e"), profile);
+            patchedProfile = await regManager.PatchProfileById(new Guid("83a1a0fa-6eb9-4abb-b521-cbfcd0c4bac1"), profile);
             Assert.Equal("", patchedProfile.PersonalDetails.PreferredName);
 
             testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
@@ -319,6 +320,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                     HaveMedication = false,
                     Insurance = NeedsAssessment.InsuranceOption.Unknown,
                     HaveSpecialDiet = true,
+                    SpecialDietDetails = "4th Level Vegan",
                     HasPetsFood = true,
                     RequiresClothing = true, //to be deleted
                     RequiresFood = true, //to be deleted
