@@ -11,9 +11,10 @@ import { ProfileApiService } from '../core/services/api/profileApi.service';
   styleUrls: ['./verified-registration.component.scss']
 })
 export class VerifiedRegistrationComponent implements OnInit {
-  constructor(private formCreationService: FormCreationService, private dataService: DataService,
-              private regProfService: ProfileApiService, private router: Router,
-              public mappingService: ProfileMappingService) {
+  constructor(
+    private formCreationService: FormCreationService, private dataService: DataService, private regProfService: ProfileApiService,
+    private router: Router,
+    public mappingService: ProfileMappingService) {
     this.dataService.clearData();
     this.formCreationService.clearData();
   }
@@ -25,7 +26,7 @@ export class VerifiedRegistrationComponent implements OnInit {
       if (profile.isNewUser) {
         this.router.navigate(['/verified-registration/collection-notice']);
       } else {
-        this.router.navigate(['/verified-registration/view-profile']);
+        this.router.navigate(['/verified-registration/dashboard']);
       }
     });
   }
