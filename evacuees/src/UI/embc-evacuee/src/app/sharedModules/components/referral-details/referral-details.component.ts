@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import { Referral, ReferralDetails} from 'src/app/sharedModules/components/view-auth-profile/view-auth-profile.component';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Referral, ReferralDetails } from 'src/app/sharedModules/components/dashboard/dashboard.component';
 
 @Component({
   selector: 'app-referral-details',
@@ -8,8 +8,8 @@ import { Referral, ReferralDetails} from 'src/app/sharedModules/components/view-
   styleUrls: ['./referral-details.component.scss'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],

@@ -22,8 +22,9 @@ export class EditComponent implements OnInit, OnDestroy {
   nonVerfiedRoute = '/non-verified-registration/needs-assessment';
   verifiedRoute = '/verified-registration/create-profile';
 
-  constructor(private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
-              private formCreationService: FormCreationService) {
+  constructor(
+    private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
+    private formCreationService: FormCreationService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { parentPageName: string };
@@ -54,8 +55,8 @@ export class EditComponent implements OnInit, OnDestroy {
     } else {
       if (this.parentPageName === 'create-profile') {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
-      } else if (this.parentPageName === 'view-profile') {
-        this.router.navigate(['/verified-registration/view-profile']);
+      } else if (this.parentPageName === 'dashboard') {
+        this.router.navigate(['/verified-registration/dashboard']);
       }
     }
   }
@@ -70,8 +71,8 @@ export class EditComponent implements OnInit, OnDestroy {
     } else {
       if (this.parentPageName === 'create-profile') {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
-      } else if (this.parentPageName === 'view-profile') {
-        this.router.navigate(['/verified-registration/view-profile']);
+      } else if (this.parentPageName === 'dashboard') {
+        this.router.navigate(['/verified-registration/dashboard']);
       }
     }
   }
@@ -133,6 +134,7 @@ export class EditComponent implements OnInit, OnDestroy {
             this.form = personalDetails;
           }
         );
+        this.form$.unsubscribe();
         this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;

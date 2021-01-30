@@ -75,9 +75,9 @@ const INACTIVE_DATA: EvacuationCard[] = [
 ];
 
 @Component({
-  selector: 'app-view-auth-profile',
-  templateUrl: './view-auth-profile.component.html',
-  styleUrls: ['./view-auth-profile.component.scss']
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
 
 
@@ -85,7 +85,7 @@ export class ViewAuthProfileComponent implements OnInit {
 
   type = 'profile';
   currentFlow: string;
-  parentPageName = 'view-profile';
+  parentPageName = 'dashboard';
   dataSourceActive = ACTIVE_DATA;
   dataSourceInactive = INACTIVE_DATA;
   showActiveList = true;

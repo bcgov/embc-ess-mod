@@ -28,28 +28,6 @@ export class DataSubmissionService {
         return this.registrationService.registrationCreate({ body: this.anonymousRegistration });
     }
 
-    submitProfile(): Observable<string> {
-        this.profile = this.mergeData({ isMailingAddressSameAsPrimaryAddress: true }, this.dataService.getRegistration());
-        console.log(JSON.stringify(this.profile));
-        // return this.registrationService.registrationCreateProfile({ body: this.profile });
-        return this.profileService.profileUpsert({ body: this.profile });
-    }
-
-    submitVerifiedProfile(): void {
-        this.profile = this.mergeData({}, this.dataService.getRegistration());
-        console.log(JSON.stringify(this.profile));
-    }
-
-    submitVerifiedRegistrationFile(): Observable<RegistrationResult> {
-        this.registrantEvacuation = {
-            preliminaryNeedsAssessment: this.mergeData({}, this.dataService.getNeedsAssessment()),
-            id: this.dataService.getProfileId()
-        };
-        console.log(JSON.stringify(this.registrantEvacuation));
-        return this.registrationService.registrationCreateEvacuation({ body: this.registrantEvacuation });
-
-    }
-
     private mergeData(finalValue, incomingValue): any {
         return { ...finalValue, ...incomingValue };
     }
