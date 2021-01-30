@@ -85,7 +85,7 @@ export class ViewAuthProfileComponent implements OnInit {
 
   type = 'profile';
   currentFlow: string;
-  parentPageName = 'view-profile';
+  parentPageName = 'dashboard';
   dataSourceActive = ACTIVE_DATA;
   dataSourceInactive = INACTIVE_DATA;
   showActiveList = true;

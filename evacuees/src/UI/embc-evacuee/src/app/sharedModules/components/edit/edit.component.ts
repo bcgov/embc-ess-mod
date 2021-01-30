@@ -55,7 +55,7 @@ export class EditComponent implements OnInit, OnDestroy {
     } else {
       if (this.parentPageName === 'create-profile') {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
-      } else if (this.parentPageName === 'view-profile') {
+      } else if (this.parentPageName === 'dashboard') {
         this.router.navigate(['/verified-registration/dashboard']);
       }
     }
@@ -71,7 +71,7 @@ export class EditComponent implements OnInit, OnDestroy {
     } else {
       if (this.parentPageName === 'create-profile') {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
-      } else if (this.parentPageName === 'view-profile') {
+      } else if (this.parentPageName === 'dashboard') {
         this.router.navigate(['/verified-registration/dashboard']);
       }
     }
@@ -133,7 +133,8 @@ export class EditComponent implements OnInit, OnDestroy {
           personalDetails => {
             this.form = personalDetails;
           }
-        );
+        )
+        this.form$.unsubscribe();
         this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
