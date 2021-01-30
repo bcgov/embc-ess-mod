@@ -133,7 +133,7 @@ export class EditComponent implements OnInit, OnDestroy {
           personalDetails => {
             this.form = personalDetails;
           }
-        )
+        );
         this.form$.unsubscribe();
         this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
