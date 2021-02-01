@@ -28,7 +28,6 @@ export class AuthInterceptor implements HttpInterceptor {
     return this.authService.getToken()
       .pipe(switchMap(token => {
         if (!token) {
-          console.log('no token');
           // no token, do not add authentication header
           return next.handle(req);
         } else {
