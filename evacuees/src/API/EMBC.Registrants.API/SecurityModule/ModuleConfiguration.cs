@@ -14,7 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EMBC.Registrants.API.SecurityModule
 {
@@ -24,6 +33,66 @@ namespace EMBC.Registrants.API.SecurityModule
         {
             services.AddTransient<IUserManager, UserManager>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddSingleton<ITokenManager, TokenManager>();
+            return services;
+        }
+
+        public static IServiceCollection AddPortalAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    options.Cookie.SameSite = SameSiteMode.Strict;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+                    options.SlidingExpiration = false;
+                    options.ForwardChallenge = JwtBearerDefaults.AuthenticationScheme;
+                    configuration.GetSection("auth:cookie").Bind(options);
+                }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    var jwtConfig = configuration.GetSection("auth:jwt");
+                    var tokenOptions = jwtConfig.Get<JwtTokenOptions>();
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = true,
+                        ValidateIssuer = true,
+                        RequireSignedTokens = true,
+                        RequireAudience = true,
+                        RequireExpirationTime = true,
+                        TokenDecryptionKey = string.IsNullOrEmpty(tokenOptions.EncryptingKey)
+                            ? null
+                            : new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.EncryptingKey)),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.SigningKey)),
+                        ValidAudience = tokenOptions.Audience,
+                        ValidIssuer = tokenOptions.ClaimsIssuer
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = async c =>
+                        {
+                            await Task.CompletedTask;
+                            var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                            logger.LogError(c.Exception, $"Error authenticating JWT");
+                        },
+                        OnTokenValidated = async c =>
+                        {
+                            await Task.CompletedTask;
+                            var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                            logger.LogDebug($"JTW validated {0}", c.Principal.Identity.Name);
+                        }
+                    };
+                    configuration.Bind("auth:jwt", options);
+                })
+                .AddBcscOidc(BcscAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    configuration.Bind("auth:bcsc", options);
+                });
+
             return services;
         }
     }

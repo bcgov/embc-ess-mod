@@ -4,7 +4,10 @@
 
 export const environment = {
   production: false,
-  version: '1.0.0'
+  version: '1.0.0',
+  tokenRefreshPeriodInSeconds: 30,
+  httpRetryNumber: 3,
+  httpRetryDelayInSeconds: 5,
 };
 
 /*
@@ -14,4 +17,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+import 'zone.js/dist/zone-error';  // Included with Angular CLI.

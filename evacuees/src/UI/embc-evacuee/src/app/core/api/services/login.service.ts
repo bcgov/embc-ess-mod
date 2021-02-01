@@ -70,7 +70,7 @@ export class LoginService extends BaseService {
   /**
    * Path part for operation loginToken
    */
-  static readonly LoginTokenPath = '/login/token';
+  static readonly LoginTokenPath = '/token';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -79,19 +79,19 @@ export class LoginService extends BaseService {
    * This method doesn't expect any request body.
    */
   loginToken$Response(params?: {
-  }): Observable<StrictHttpResponse<Blob>> {
+  }): Observable<StrictHttpResponse<string>> {
 
     const rb = new RequestBuilder(this.rootUrl, LoginService.LoginTokenPath, 'get');
     if (params) {
     }
 
     return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
+        return r as StrictHttpResponse<string>;
       })
     );
   }
@@ -103,10 +103,53 @@ export class LoginService extends BaseService {
    * This method doesn't expect any request body.
    */
   loginToken(params?: {
-  }): Observable<Blob> {
+  }): Observable<string> {
 
     return this.loginToken$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
+      map((r: StrictHttpResponse<string>) => r.body as string)
+    );
+  }
+
+  /**
+   * Path part for operation loginRefreshToken
+   */
+  static readonly LoginRefreshTokenPath = '/token/refresh';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `loginRefreshToken()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  loginRefreshToken$Response(params?: {
+  }): Observable<StrictHttpResponse<string>> {
+
+    const rb = new RequestBuilder(this.rootUrl, LoginService.LoginRefreshTokenPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `loginRefreshToken$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  loginRefreshToken(params?: {
+  }): Observable<string> {
+
+    return this.loginRefreshToken$Response(params).pipe(
+      map((r: StrictHttpResponse<string>) => r.body as string)
     );
   }
 
