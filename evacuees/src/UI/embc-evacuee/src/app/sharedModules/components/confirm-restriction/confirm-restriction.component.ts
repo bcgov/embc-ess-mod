@@ -31,7 +31,7 @@ export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
    * Back navigation
    */
   goBack(): void {
-    this.router.navigate(['/verified-registration/view-profile']);
+    this.router.navigate(['/verified-registration/dashboard']);
   }
 
   /**

@@ -4,14 +4,10 @@ import { CollectionNoticeComponent } from './collection-notice.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule, MatCheckbox } from '@angular/material/checkbox';
-import { DataService } from '../../../core/services/data.service';
 import { CoreModule } from '../../../core/core.module';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
-import * as globalConst from '../../../core/services/globalConstants';
 import { Router } from '@angular/router';
-import { By } from '@angular/platform-browser';
 
 describe('CollectionNoticeComponent', () => {
   let component: CollectionNoticeComponent;
@@ -22,8 +18,8 @@ describe('CollectionNoticeComponent', () => {
     TestBed.configureTestingModule({
       declarations: [CollectionNoticeComponent],
       imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, MatDialogModule, MatCheckboxModule,
-      BrowserAnimationsModule, CoreModule],
-      providers: [DataService, FormBuilder]
+        BrowserAnimationsModule, CoreModule],
+      providers: [FormBuilder]
     })
       .compileComponents();
   }));

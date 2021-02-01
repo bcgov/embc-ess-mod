@@ -3,10 +3,8 @@ import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/rou
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
 import { DataService } from 'src/app/core/services/data.service';
-import { GlobalDialogService } from 'src/app/core/services/globalDialog.service';
+import { DialogService } from 'src/app/core/services/dialog.service';
 import { debounceTime, filter } from 'rxjs/operators';
-
-
 
 export interface EvacuationCard {
   from: string;
@@ -77,9 +75,9 @@ const INACTIVE_DATA: EvacuationCard[] = [
 ];
 
 @Component({
-  selector: 'app-view-auth-profile',
-  templateUrl: './view-auth-profile.component.html',
-  styleUrls: ['./view-auth-profile.component.scss']
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
 
 
@@ -87,7 +85,7 @@ export class ViewAuthProfileComponent implements OnInit {
 
   type = 'profile';
   currentFlow: string;
-  parentPageName = 'view-profile';
+  parentPageName = 'dashboard';
   dataSourceActive = ACTIVE_DATA;
   dataSourceInactive = INACTIVE_DATA;
   showActiveList = true;
@@ -100,7 +98,7 @@ export class ViewAuthProfileComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
-    private router: Router, private dialogService: GlobalDialogService) { }
+    private router: Router, private dialogService: DialogService) { }
 
 
   ngOnInit(): void {
@@ -111,7 +109,14 @@ export class ViewAuthProfileComponent implements OnInit {
       filter((event: RouterEvent) => event instanceof NavigationEnd),
       debounceTime(500)
     ).subscribe(() =>
-      this.openReferenceNumberPopup());
+      this.openReferenceNumberPopup()
+    );
+
+    // this.openDOBMismatchPopup();
+  }
+
+  openDOBMismatchPopup(): void {
+    this.dialogService.dateOfBirthMismatch('02 Mar 1984', '02 Mar 1983');
   }
 
   openReferenceNumberPopup(): void {
