@@ -128,6 +128,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_canevacueeprovidelodging = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideLodging),
                 era_canevacueeprovidetransportation = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation),
                 era_dietaryrequirement = registration.PreliminaryNeedsAssessment.HaveSpecialDiet,
+                era_dietaryrequirementdetails = registration.PreliminaryNeedsAssessment.SpecialDietDetails,
                 era_medicationrequirement = registration.PreliminaryNeedsAssessment.HaveMedication,
                 era_insurancecoverage = Lookup(registration.PreliminaryNeedsAssessment.Insurance),
                 era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
@@ -967,6 +968,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_canevacueeprovidelodging = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideLodging),
                 era_canevacueeprovidetransportation = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation),
                 era_dietaryrequirement = evacuation.PreliminaryNeedsAssessment.HaveSpecialDiet,
+                era_dietaryrequirementdetails = evacuation.PreliminaryNeedsAssessment.SpecialDietDetails,
                 era_medicationrequirement = evacuation.PreliminaryNeedsAssessment.HaveMedication,
                 era_insurancecoverage = Lookup(evacuation.PreliminaryNeedsAssessment.Insurance),
                 era_emailrefusal = string.IsNullOrEmpty(profile.ContactDetails.Email)

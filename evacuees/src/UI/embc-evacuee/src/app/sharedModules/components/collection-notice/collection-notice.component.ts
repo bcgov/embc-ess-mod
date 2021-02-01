@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
-import { DataService } from '../../../core/services/data.service';
-import * as globalConst from '../../../core/services/globalConstants';
 
 @Component({
   selector: 'app-collection-notice',
@@ -13,11 +9,10 @@ import * as globalConst from '../../../core/services/globalConstants';
 })
 export class CollectionNoticeComponent implements OnInit {
 
-  collectionForm: FormGroup;
   currentFlow: string;
 
   constructor(
-    private router: Router, public dialog: MatDialog, private builder: FormBuilder, public dataService: DataService,
+    private router: Router, public dialog: MatDialog,
     private route: ActivatedRoute) { }
 
   /**
@@ -34,12 +29,12 @@ export class CollectionNoticeComponent implements OnInit {
   /**
    * Pre-populates the form with existing data
    */
-  mapData(): void {
-    const existingValues = this.dataService.getRegistration();
-    if (existingValues !== null) {
-      this.collectionForm.get('informationCollectionConsent').setValue(existingValues.informationCollectionConsent);
-    }
-  }
+  // mapData(): void {
+  //   const existingValues = this.dataService.getRegistration();
+  //   if (existingValues !== null) {
+  //     this.collectionForm.get('informationCollectionConsent').setValue(existingValues.informationCollectionConsent);
+  //   }
+  // }
 
   /**
    * If the consent for collection is not met, opens a popup else

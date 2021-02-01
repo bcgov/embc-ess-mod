@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EvacuationCard, Referral} from 'src/app/sharedModules/components/view-auth-profile/view-auth-profile.component';
+import { EvacuationCard, Referral } from 'src/app/sharedModules/components/dashboard/dashboard.component';
 
 @Component({
   selector: 'app-evacuation-details',

@@ -237,6 +237,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public bool? CanEvacueeProvideTransportation { get; set; }
         public bool? CanEvacueeProvideIncidentals { get; set; }
         public bool HaveSpecialDiet { get; set; }
+        public string SpecialDietDetails { get; set; }
         public bool HaveMedication { get; set; }
         public IEnumerable<PersonDetails> FamilyMembers { get; set; } = Array.Empty<PersonDetails>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
