@@ -10,6 +10,7 @@ import { DataUpdationService } from '../../../core/services/dataUpdation.service
 import { DataSubmissionService } from '../../../core/services/dataSubmission.service';
 import { RegistrationResult } from '../../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
+import { EvacuationFileApiService } from 'src/app/core/services/api/evacuationFileApi.service';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -35,8 +36,9 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   constructor(
     private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private updateService: DataUpdationService, private submissionService: DataSubmissionService, private cd: ChangeDetectorRef,
-    private route: ActivatedRoute, private alertService: AlertService) {
+    private updateService: DataUpdationService, private dataSubmissionService: DataSubmissionService,
+    private evacuationFileApiService: EvacuationFileApiService, private cd: ChangeDetectorRef, private route: ActivatedRoute,
+    private alertService: AlertService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -169,7 +171,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
-    this.submissionService.submitRegistrationFile().subscribe((response: RegistrationResult) => {
+    this.dataSubmissionService.submitRegistrationFile().subscribe((response: RegistrationResult) => {
       console.log(response);
       this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/non-verified-registration/fileSubmission']);
@@ -185,7 +187,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   submitVerified(): void {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
-    this.submissionService.submitVerifiedRegistrationFile().subscribe((response: RegistrationResult) => {
+    this.evacuationFileApiService.submitEvacuationFile().subscribe((response: RegistrationResult) => {
       console.log(response);
       this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/verified-registration/dashboard']);

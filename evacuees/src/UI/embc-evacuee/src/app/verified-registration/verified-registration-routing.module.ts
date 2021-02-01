@@ -29,7 +29,7 @@ const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadChildren: () => import('../sharedModules/components/view-auth-profile/view-auth-profile.module')
+        loadChildren: () => import('../sharedModules/components/dashboard/dashboard.module')
           .then(m => m.ViewAuthProfileModule),
         data: { flow: 'verified-registration' }
       },

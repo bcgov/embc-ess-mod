@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 
 @Injectable({ providedIn: 'root' })
-export class GlobalDialogService {
+export class DialogService {
 
     constructor(private router: Router, public dialog: MatDialog) { }
 
@@ -52,6 +52,25 @@ export class GlobalDialogService {
             },
             height: '800px',
             width: '800px'
+        });
+    }
+
+    dateOfBirthMismatch(eraDob: string, bcscDob: string): void {
+        this.dialog.open(DialogComponent, {
+            data: {
+                title: 'BC Services Card Mismatch',
+                body: '<div class="row"><p>The date of birth attached to your BC Services card <b>does not match</b> the date of birth associated with your ERA Profile. By clicking <span class="highlight">Continue</span> your details in your ERA Profile will be updated to match the details associated with your BC Services card.</p></div><br><div class="row justify-content-between"><div class="highlight-conflicts">Evacuee Registration & Assistance (ERA)</div><div class="highlight">BC Services Card</div></div><div class="row justify-content-between"><div>' + eraDob + '</div><div>' + bcscDob + '</div></div>',
+                buttons:
+                    [
+                        {
+                            name: 'Continue',
+                            class: 'button-p',
+                            function: 'close'
+                        }
+                    ]
+            },
+            height: '352px',
+            width: '699px'
         });
     }
 }

@@ -1,29 +1,28 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { Profile, StateProvince } from '../api/models';
-import { UserProfile } from '../api/models/user-profile';
-import { DataService } from './data.service';
-import { FormCreationService } from './formCreation.service';
+import { Profile, StateProvince } from '../../api/models';
+import { UserProfile } from '../../api/models/user-profile';
+import { CacheService } from './../cache.service';
+import { DataService } from './../data.service';
+import { FormCreationService } from './../formCreation.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
-    constructor(private formCreationService: FormCreationService, private dataService: DataService, private builder: FormBuilder) { }
+    constructor(private formCreationService: FormCreationService, private dataService: DataService, private cacheService: CacheService) { }
 
     mapUserProfile(userProfile: UserProfile): void {
         this.dataService.setConflicts(userProfile.conflicts);
+        this.cacheService.set('loginProfile', JSON.stringify(userProfile.loginProfile));
         if (userProfile.isNewUser) {
-            console.log('login');
             this.setLoginUserProfile(userProfile.loginProfile);
         } else {
-            console.log('era');
             this.setExistingUserProfile(userProfile.eraProfile);
         }
         if (userProfile.eraProfile) {
-            sessionStorage.setItem('userid', userProfile.eraProfile.id);
-            sessionStorage.setItem('eraProfile', JSON.stringify(userProfile.eraProfile));
+            this.dataService.setProfileId(userProfile.eraProfile.id);
+            this.cacheService.set('eraProfile', JSON.stringify(userProfile.eraProfile));
         }
-        sessionStorage.setItem('loginProfile', JSON.stringify(userProfile.loginProfile));
     }
 
     setExistingUserProfile(profile: Profile): void {
