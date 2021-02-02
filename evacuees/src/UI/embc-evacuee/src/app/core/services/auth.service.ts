@@ -20,7 +20,7 @@ export class AuthService {
 
   private get token(): string { return window.sessionStorage.getItem('auth:token'); }
   private set token(v: string) {
-    if (v) {
+    if (v != null) {
       window.sessionStorage.setItem('auth:token', v);
     } else {
       window.sessionStorage.removeItem('auth:token');
@@ -34,7 +34,13 @@ export class AuthService {
   public login(returnPath: string): void {
     console.log('login', returnPath);
     this.token = null;
-    window.location.replace('/login?returnUrl=' + returnPath);
+    let loginUrl = '/login?returnUrl=' + returnPath;
+    const loginAsPropertyName = 'loginAs';
+    if (!environment.production && environment.hasOwnProperty(loginAsPropertyName)) {
+      // impersonate a user for automated testing and local development experience
+      loginUrl = loginUrl + '&loginAs=' + environment[loginAsPropertyName];
+    }
+    window.location.replace(loginUrl);
   }
 
   public logout(url: string): void {

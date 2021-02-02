@@ -27,43 +27,70 @@ export class LoginService extends BaseService {
   static readonly LoginLoginPath = '/login';
 
   /**
+   * Initiate the BCSC OIDC login challenge.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `loginLogin()` instead.
    *
    * This method doesn't expect any request body.
    */
   loginLogin$Response(params?: {
+
+    /**
+     * The url to redirect the user after successful login, must be a local path and not a full url
+     */
     returnUrl?: string;
-  }): Observable<StrictHttpResponse<Blob>> {
+
+    /**
+     * Optional user id to impersonate as (to support automated tests and ease of development in non prod environments only)
+     */
+    loginAs?: string;
+  }): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, LoginService.LoginLoginPath, 'get');
     if (params) {
       rb.query('returnUrl', params.returnUrl, {});
+      rb.query('loginAs', params.loginAs, {});
     }
 
     return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/octet-stream'
+      responseType: 'text',
+      accept: '*/*'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
       })
     );
   }
 
   /**
+   * Initiate the BCSC OIDC login challenge.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `loginLogin$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
   loginLogin(params?: {
+
+    /**
+     * The url to redirect the user after successful login, must be a local path and not a full url
+     */
     returnUrl?: string;
-  }): Observable<Blob> {
+
+    /**
+     * Optional user id to impersonate as (to support automated tests and ease of development in non prod environments only)
+     */
+    loginAs?: string;
+  }): Observable<void> {
 
     return this.loginLogin$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 
@@ -73,6 +100,10 @@ export class LoginService extends BaseService {
   static readonly LoginTokenPath = '/token';
 
   /**
+   * Issue a new token based on asp.net authentication cookie.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `loginToken()` instead.
    *
@@ -97,6 +128,10 @@ export class LoginService extends BaseService {
   }
 
   /**
+   * Issue a new token based on asp.net authentication cookie.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `loginToken$Response()` instead.
    *
@@ -116,6 +151,10 @@ export class LoginService extends BaseService {
   static readonly LoginRefreshTokenPath = '/token/refresh';
 
   /**
+   * Refresh the current user's token.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `loginRefreshToken()` instead.
    *
@@ -140,6 +179,10 @@ export class LoginService extends BaseService {
   }
 
   /**
+   * Refresh the current user's token.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `loginRefreshToken$Response()` instead.
    *

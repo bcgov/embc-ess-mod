@@ -15,12 +15,14 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Registrants.API.SecurityModule
 {
@@ -29,31 +31,49 @@ namespace EMBC.Registrants.API.SecurityModule
     public class LoginController : ControllerBase
     {
         private readonly ITokenManager tokenManager;
+        private readonly IHostEnvironment env;
 
-        public LoginController(ITokenManager tokenManager)
+        public LoginController(ITokenManager tokenManager, IHostEnvironment env)
         {
             this.tokenManager = tokenManager;
+            this.env = env;
         }
 
         /// <summary>
         /// Initiate the BCSC OIDC login challenge
         /// </summary>
         /// <param name="returnUrl">The url to redirect the user after successful login, must be a local path and not a full url</param>
+        /// <param name="loginAs">Optional user id to impersonate as (to support automated tests and developer experience in development environments only)</param>
         /// <returns>OIDC challenge response</returns>
         [HttpGet("login")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Login(string returnUrl = "/")
+        public async Task<IActionResult> Login(string returnUrl = "/", string loginAs = null)
         {
-            await Task.CompletedTask;
-
             if (new Uri(returnUrl, UriKind.RelativeOrAbsolute).IsAbsoluteUri)
             {
                 ModelState.AddModelError(nameof(returnUrl), $"returnUrl can only be a relative path");
                 return BadRequest(ModelState);
             }
 
+            if (env.IsDevelopment() && !string.IsNullOrEmpty(loginAs))
+            {
+                //support for user impersonation for automated testing and better development experience
+                var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, loginAs), }, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties
+                {
+                    AllowRefresh = false,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(1),
+                    IsPersistent = false,
+                    IssuedUtc = DateTimeOffset.UtcNow,
+                };
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties);
+                return Redirect(returnUrl);
+            }
+
+            // start BCSC OIDC flow
             return new ChallengeResult(BcscAuthenticationDefaults.AuthenticationScheme, new AuthenticationProperties
             {
                 RedirectUri = returnUrl
