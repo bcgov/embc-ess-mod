@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -64,6 +65,12 @@ namespace EMBC.Registrants.API.SecurityModule
                         RequireSignedTokens = true,
                         RequireAudience = true,
                         RequireExpirationTime = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromSeconds(60),
+                        NameClaimType = ClaimTypes.NameIdentifier,
+                        RoleClaimType = ClaimTypes.Role,
+                        ValidateActor = true,
+                        ValidateIssuerSigningKey = true,
                         TokenDecryptionKey = string.IsNullOrEmpty(tokenOptions.EncryptingKey)
                             ? null
                             : new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.EncryptingKey)),
@@ -77,13 +84,13 @@ namespace EMBC.Registrants.API.SecurityModule
                         {
                             await Task.CompletedTask;
                             var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
-                            logger.LogError(c.Exception, $"Error authenticating JWT");
+                            logger.LogError(c.Exception, $"Error authenticating token");
                         },
                         OnTokenValidated = async c =>
                         {
                             await Task.CompletedTask;
                             var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
-                            logger.LogDebug($"JTW validated {0}", c.Principal.Identity.Name);
+                            logger.LogDebug("Token validated {0}", c.Principal.Identity.Name);
                         }
                     };
                     configuration.Bind("auth:jwt", options);

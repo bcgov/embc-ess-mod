@@ -89,7 +89,7 @@ export class AuthService {
         catchError(error => {
           console.error(error);
           if (error instanceof HttpErrorResponse && error.status === 401) {
-            // token expired
+            // token expired or not valid
             return of(false);
           }
           console.error('refreshToken', error);
