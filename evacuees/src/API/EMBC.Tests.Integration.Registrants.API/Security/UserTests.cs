@@ -20,7 +20,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Security
             userManager = services.GetRequiredService<IUserManager>();
         }
 
-        [Fact]
+        [Fact(Skip = RequiresDynamics)]
         public async Task NewUser_Created()
         {
             var userId = $"test_user_{Guid.NewGuid().ToString("N").Substring(0, 5)}";
@@ -37,7 +37,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Security
             user.DisplayName.ShouldBe(userId);
         }
 
-        [Fact]
+        [Fact(Skip = RequiresDynamics)]
         public async Task ExistingUser_Updated()
         {
             var userId = $"test_user_{Guid.NewGuid().ToString("N").Substring(0, 5)}";
