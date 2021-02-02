@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AllowNavigationGuard } from '../core/services/allowNavigation.guard';
 import { VerifiedRegistrationComponent } from './verified-registration.component';
 
 const routes: Routes = [
   {
     path: '', component: VerifiedRegistrationComponent,
+    canActivate: [AllowNavigationGuard],
     children: [
       // {
       //   path: '',
