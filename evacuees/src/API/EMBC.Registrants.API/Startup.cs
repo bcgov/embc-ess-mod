@@ -27,18 +27,16 @@ using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using NSwag.AspNetCore;
 using Serilog;
 
@@ -57,61 +55,8 @@ namespace EMBC.Registrants.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options =>
-            {
-                options.Filters.Add(new HttpResponseExceptionFilter());
-            });
-            var dpBuilder = services.AddDataProtection();
-            var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
-            if (!string.IsNullOrWhiteSpace(keyRingPath))
-            {
-                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
-            }
-
-            services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-                {
-                    configuration.GetSection("auth:cookie").Bind(options);
-                    options.Cookie.SameSite = SameSiteMode.Strict;
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
-                    options.SlidingExpiration = false;
-                    options.ForwardChallenge = JwtBearerDefaults.AuthenticationScheme;
-                }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-                {
-                    configuration.Bind("auth:jwt", options);
-                })
-                .AddBcscOidc(BcscAuthenticationDefaults.AuthenticationScheme, options =>
-                {
-                    configuration.Bind("auth:bcsc", options);
-                });
-
-            if (!env.IsProduction())
-            {
-                services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
-                {
-                    options.Path = "/api/openapi/{documentName}/openapi.json";
-                    options.DocumentName = "Registrants Portal API";
-                    options.PostProcess = (document, req) =>
-                    {
-                        document.Info.Title = "Registrants Portal API";
-                    };
-                });
-
-                services.Configure<SwaggerUi3Settings>(options =>
-                {
-                    options.Path = "/api/openapi";
-                    options.DocumentTitle = "Registrants Portal API Documentation";
-                    options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
-                });
-
-                services.AddOpenApiDocument();
-            }
-
+            //Add configuration options
+            services.Configure<JwtTokenOptions>(opts => configuration.Bind("auth:jwt", opts));
             services.Configure<JsonOptions>(opts =>
             {
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -129,8 +74,16 @@ namespace EMBC.Registrants.API
                 }
             });
 
+            //Add services
+            AddDataProtection(services);
+            AddOpenApi(services);
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new HttpResponseExceptionFilter());
+            });
+            services.AddPortalAuthentication(configuration);
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
-            services.AddDistributedMemoryCache(); // TODO: consider setting a distributed cache in the future
+            services.AddDistributedMemoryCache(); // TODO: configure proper distributed cache
             services.AddRegistrationModule();
             services.AddLocationModule();
             services.AddProfileModule();
@@ -158,6 +111,11 @@ namespace EMBC.Registrants.API
             else
             {
                 app.UseExceptionHandler("/error");
+            }
+
+            if (env.IsDevelopment())
+            {
+                IdentityModelEventSource.ShowPII = true;
             }
 
             app.UseSerilogRequestLogging(opts =>
@@ -192,6 +150,41 @@ namespace EMBC.Registrants.API
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void AddDataProtection(IServiceCollection services)
+        {
+            var dpBuilder = services.AddDataProtection();
+            var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
+            if (!string.IsNullOrWhiteSpace(keyRingPath))
+            {
+                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
+            }
+        }
+
+        private void AddOpenApi(IServiceCollection services)
+        {
+            if (!env.IsProduction())
+            {
+                services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
+                {
+                    options.Path = "/api/openapi/{documentName}/openapi.json";
+                    options.DocumentName = "Registrants Portal API";
+                    options.PostProcess = (document, req) =>
+                    {
+                        document.Info.Title = "Registrants Portal API";
+                    };
+                });
+
+                services.Configure<SwaggerUi3Settings>(options =>
+                {
+                    options.Path = "/api/openapi";
+                    options.DocumentTitle = "Registrants Portal API Documentation";
+                    options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
+                });
+
+                services.AddOpenApiDocument();
+            }
         }
     }
 }

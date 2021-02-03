@@ -34,6 +34,14 @@
             "scripts": []
           },
           "configurations": {
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ],
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -70,6 +78,9 @@
             "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
+            "local": {
+              "browserTarget": "embc-evacuee:build:local"
+            },
             "production": {
               "browserTarget": "embc-evacuee:build:production"
             }

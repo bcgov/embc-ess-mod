@@ -17,6 +17,4 @@ export class VerifiedRegistrationComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-
 }

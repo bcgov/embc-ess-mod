@@ -9,6 +9,11 @@
     "secure": false,
     "logLevel": "debug"
   },
+  "/token": {
+    "target": "http://localhost:2010",
+    "secure": false,
+    "logLevel": "debug"
+  },
   "/signin-oidc": {
     "target": "http://localhost:2010",
     "secure": false,

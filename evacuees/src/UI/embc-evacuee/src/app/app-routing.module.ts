@@ -27,7 +27,7 @@ const routes: Routes = [
         (m) => m.VerifiedRegistrationModule
       ),
     canActivate: [AuthGuard],
-  },
+  }
 ];
 
 @NgModule({
