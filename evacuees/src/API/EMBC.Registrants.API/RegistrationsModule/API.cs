@@ -156,6 +156,26 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             return profile;
         }
+
+        /// <summary>
+        /// Get a list of evacuations by Contact Id
+        /// </summary>
+        /// <param name="contactId">Query Parameter: Contact Id</param>
+        /// <returns>List of RegistrantEvacuation</returns>
+        [HttpGet("evacuation")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<List<RegistrantEvacuation>>> GetRegistrantEvacuations([FromQuery] string contactId)
+        {
+            if (string.IsNullOrEmpty(contactId) || !Guid.TryParse(contactId, out Guid contactID))
+            {
+                return BadRequest();
+            }
+
+            var evacuationList = await registrationManager.GetRegistrantEvacuations(contactID);
+
+            return Ok(evacuationList);
+        }
     }
 
     /// <summary>
