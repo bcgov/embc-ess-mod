@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './core/services/auth.guard';
-import { LogoutComponent } from './sharedModules/components/logout/logout.component';
 
 const routes: Routes = [
   {
@@ -28,10 +27,6 @@ const routes: Routes = [
         (m) => m.VerifiedRegistrationModule
       ),
     canActivate: [AuthGuard],
-  },
-  {
-    path: 'logout',
-    component: LogoutComponent
   }
 ];
 
