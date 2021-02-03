@@ -91,7 +91,7 @@ namespace EMBC.Registrants.API.SecurityModule
             await dynamicsClient.SaveChangesAsync();
         }
 
-        private era_bcsc GetUserById(string userId) => dynamicsClient.era_bcscs.Where(e => e.era_identifier == userId).SingleOrDefault();
+        private era_bcsc GetUserById(string userId) => dynamicsClient.era_bcscs.Where(e => e.era_identifier == userId).OrderByDescending(e => e.createdon).FirstOrDefault();
     }
 
     public class User

@@ -21,7 +21,6 @@ export class VerifiedRegistrationComponent implements OnInit {
 
   ngOnInit(): void {
     this.regProfService.getExistingProfile().subscribe(profile => {
-      console.log(profile);
       this.mappingService.mapUserProfile(profile);
       if (profile.isNewUser) {
         this.router.navigate(['/verified-registration/collection-notice']);
@@ -30,6 +29,4 @@ export class VerifiedRegistrationComponent implements OnInit {
       }
     });
   }
-
-
 }
