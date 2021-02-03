@@ -93,7 +93,7 @@ objects:
       location__cache__RefreshInterval: ${LOCATION_CACHE_REFRESH_INTERVAL}
       auth__bcsc__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
       app__knownNetwork: ${APP_KNOWN_NETWORK}
-      auth__jwt__issuer: ${JWT_ISSUER}
+      auth__jwt__ClaimsIssuer: ${JWT_ISSUER}
       auth__jwt__audience: ${JWT_AUDIENCE}
       auth__jwt__expiryInMinutes: ${JWT_TOKEN_EXPIRY}
   - kind: Secret
