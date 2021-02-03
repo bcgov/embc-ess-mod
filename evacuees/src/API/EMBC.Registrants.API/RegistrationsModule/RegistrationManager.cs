@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Registrants.API.Shared;
@@ -39,7 +40,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
         Task<Registration> GetProfileById(Guid contactId);
 
         Task<Registration> GetProfileByBcscId(string bcscId);
+
         Task<Registration> PatchProfileById(Guid id, Registration profileRegistration);
+
+        Task<List<RegistrantEvacuation>> GetRegistrantEvacuations(Guid contactId);
     }
 
     public class RegistrationManager : IRegistrationManager
@@ -927,7 +931,11 @@ namespace EMBC.Registrants.API.RegistrationsModule
             // get dynamics contact by BCServicesCardId
             contact dynamicsContact = GetDynamicsContactByBCSC(evacuation.Id);
 
-            if (dynamicsContact != null)
+            if (dynamicsContact == null)
+            {
+                throw new Exception("Profile Not Found. Id: " + evacuation.Id);
+            }
+            else
             {
                 // return contact as a profile
                 CopyContactToProfile(dynamicsContact, profile);
@@ -1080,6 +1088,191 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 .Where(f => f.era_evacuationfileid == evacuationFile.era_evacuationfileid).FirstOrDefault();
 
             return $"{essFileNumber:D9}";
+        }
+
+        /// <summary>
+        /// Get Registrant Evacuations
+        /// </summary>
+        /// <param name="contactId">Contact Id</param>
+        /// <returns>List of RegistrantEvacuation</returns>
+        public async Task<List<RegistrantEvacuation>> GetRegistrantEvacuations(Guid contactId)
+        {
+            if (contactId == null)
+            {
+                throw new Exception("Contact ID cannot be null.");
+            }
+            /* Step 1. query era_needsassessmentevacuee by contactid expand needsassessment => needsassessmentevacuee, needsassessment
+             * Step 2. query evacuationfile by needsassessmentid from previous query => evacuationfile
+             * Step 3. query era_needsassessmentevacuee by needsassessmentid expand contact => members
+             */
+
+            IQueryable queryResult = null;
+            var needsAssessmentsFound = new Dictionary<Guid?, era_needassessment>();
+            var evacuationFilesFound = new Dictionary<Guid?, era_evacuationfile>();
+            var needsAssessmentEvacueesFound = new Dictionary<Guid?, era_needsassessmentevacuee>();
+            var registrantsFound = new Dictionary<Guid?, contact>();
+
+            try
+            {
+                // Step 1.
+                queryResult = dynamicsClient.era_needsassessmentevacuees
+                    .Expand(n => n.era_NeedsAssessmentID)
+                    .Where(n => n.era_RegistrantID.contactid == contactId);
+
+                foreach (era_needsassessmentevacuee nae in queryResult)
+                {
+                    // add needs assessment
+                    needsAssessmentsFound.Add(nae._era_needsassessmentid_value, nae.era_NeedsAssessmentID);
+                }
+
+                foreach (var needsAssessmentObject in needsAssessmentsFound)
+                {
+                    // Step 2.
+                    var efQueryResult = dynamicsClient.era_evacuationfiles
+                    .Where(ef => ef.era_evacuationfileid == needsAssessmentObject.Value._era_evacuationfile_value).FirstOrDefault();
+
+                    // add evacuation file
+                    evacuationFilesFound.Add(efQueryResult.era_evacuationfileid, efQueryResult);
+
+                    // Step 3.
+                    var naeQueryResult = dynamicsClient.era_needsassessmentevacuees
+                        .Expand(nae => nae.era_RegistrantID)
+                        .Where(nae => nae.era_NeedsAssessmentID.era_needassessmentid == needsAssessmentObject.Key);
+
+                    foreach (era_needsassessmentevacuee nae in naeQueryResult)
+                    {
+                        // add needs assessment evacuee
+                        needsAssessmentEvacueesFound.Add(nae.era_needsassessmentevacueeid, nae);
+
+                        // add registrant to hashtable. Note: pets don't have a registrant id
+                        if (nae.era_RegistrantID != null)
+                        {
+                            registrantsFound.Add(nae.era_RegistrantID.contactid, nae.era_RegistrantID);
+                        }
+                    }
+                }
+            }
+            catch (DataServiceQueryException ex)
+            {
+                DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
+
+                // don't throw an exception if record is not found
+                if (dataServiceClientException.StatusCode == 404)
+                {
+                    return null;
+                }
+                else
+                {
+                    Console.WriteLine("dataServiceClientException: " + dataServiceClientException.Message);
+                }
+
+                ODataErrorException odataErrorException = dataServiceClientException.InnerException as ODataErrorException;
+                if (odataErrorException != null)
+                {
+                    Console.WriteLine(odataErrorException.Message);
+                    throw dataServiceClientException;
+                }
+            }
+
+            var registrantEvacuationList = new List<RegistrantEvacuation>();
+
+            if (needsAssessmentsFound.Count == 0)
+            {
+                return await Task.FromResult(registrantEvacuationList);
+            }
+
+            foreach (var needsAssessmentObject in needsAssessmentsFound)
+            {
+                // get the evacuation file object
+                var evacuationFileObject = evacuationFilesFound[needsAssessmentObject.Value._era_evacuationfile_value];
+
+                // create a new registrant evacuation object to populate and add to the list
+                var registrantEvacuation = newRegistrantEvacuationObject();
+
+                // set contact id
+                registrantEvacuation.Id = contactId.ToString();
+
+                // set evacuated from address with dynamics evacuation file details
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.Code = evacuationFileObject.era_Jurisdiction?.era_jurisdictionid?.ToString();
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.Name = evacuationFileObject.era_Jurisdiction?.era_jurisdictionname;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1 = evacuationFileObject.era_addressline1;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine2 = evacuationFileObject.era_addressline2;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.Name = evacuationFileObject.era_province;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.Name = evacuationFileObject.era_country;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.PostalCode = evacuationFileObject.era_postalcode;
+
+                // set needs assessment with dynamics needs assessment details
+                registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideClothing = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovideclothing);
+                registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideFood = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovidefood);
+                registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideIncidentals = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovideincidentals);
+                registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideLodging = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovidelodging);
+                registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovidetransportation);
+                //registrantEvacuation.PreliminaryNeedsAssessment.HasPetsFood = needsAssessmentObject.; //TODO: add field in dynamics
+                registrantEvacuation.PreliminaryNeedsAssessment.HaveMedication = (bool)needsAssessmentObject.Value.era_medicationrequirement;
+                registrantEvacuation.PreliminaryNeedsAssessment.Insurance = (NeedsAssessment.InsuranceOption)needsAssessmentObject.Value.era_insurancecoverage;
+
+                // set pets with dynamics needs assessment evacuee details
+                registrantEvacuation.PreliminaryNeedsAssessment.Pets =
+                    needsAssessmentEvacueesFound.Where(e => e.Value.era_evacueetype == (int)EvacueeType.Pet
+                        && e.Value._era_needsassessmentid_value == needsAssessmentObject.Value.era_needassessmentid)
+                .Select(e => new Pet
+                {
+                    Type = e.Value.era_typeofpet,
+                    Quantity = e.Value.era_numberofpets.ToString()
+                }).ToArray();
+
+                // set members with dynamics needs assessment evacuee details
+                registrantEvacuation.PreliminaryNeedsAssessment.FamilyMembers =
+                    needsAssessmentEvacueesFound.Where(e => e.Value.era_evacueetype == (int)EvacueeType.Person
+                        && e.Value.era_isprimaryregistrant == false
+                        && e.Value._era_needsassessmentid_value == needsAssessmentObject.Value.era_needassessmentid)
+                .Select(e => new PersonDetails
+                {
+                    FirstName = registrantsFound[e.Value.era_RegistrantID.contactid].firstname,
+                    LastName = registrantsFound[e.Value.era_RegistrantID.contactid].lastname,
+                    PreferredName = registrantsFound[e.Value.era_RegistrantID.contactid].era_preferredname,
+                    DateOfBirth = Convert.ToDateTime(registrantsFound[e.Value.era_RegistrantID.contactid].birthdate.ToString()).ToShortDateString(), //MM/dd/yyyy
+                    Gender = LookupGenderValue(registrantsFound[e.Value.era_RegistrantID.contactid].gendercode),
+                    Initials = registrantsFound[e.Value.era_RegistrantID.contactid].era_initial
+                }).ToArray();
+
+                // add evacuation to list
+                registrantEvacuationList.Add(registrantEvacuation);
+            }
+
+            return await Task.FromResult(registrantEvacuationList);
+        }
+
+        /// <summary>
+        /// Creates a new RegistrantEvacuation Object
+        /// </summary>
+        /// <returns>RegistrantEvacuation</returns>
+        private RegistrantEvacuation newRegistrantEvacuationObject()
+        {
+            var registrantEvacuation = new RegistrantEvacuation();
+            registrantEvacuation.PreliminaryNeedsAssessment = new NeedsAssessment();
+            registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress = new Address();
+            registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction = new Jurisdiction();
+            registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince = new StateProvince();
+            registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country = new Country();
+            registrantEvacuation.PreliminaryNeedsAssessment.FamilyMembers = new List<PersonDetails>();
+            registrantEvacuation.PreliminaryNeedsAssessment.Pets = new List<Pet>();
+
+            return registrantEvacuation;
+        }
+
+        private bool? LookupYesNoIdontknowValue(int? value) => value switch
+        {
+            174360000 => true,
+            174360001 => false,
+            174360002 => null,
+            _ => null
+        };
+
+        public enum EvacueeType
+        {
+            Person = 174360000,
+            Pet = 174360001,
         }
     }
 }

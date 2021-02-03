@@ -104,12 +104,13 @@ namespace EMBC.Registrants.API.SecurityModule
                      {
                          await Task.CompletedTask;
                          var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger(BcscAuthenticationDefaults.LoggerCategory);
-                         logger.LogInformation("BCSC user {0} logged in", c.Principal?.FindFirstValue(ClaimTypes.NameIdentifier));
+                         logger.LogInformation("BCSC user {0} logged in", c.SecurityToken.Subject);
                          c.Principal = new ClaimsPrincipal(new ClaimsIdentity(new[]
-                         {
-                             new Claim(ClaimTypes.UserData, c.SecurityToken.RawData),
-                             new Claim(ClaimTypes.NameIdentifier, c.SecurityToken.Subject)
-                         }, c.Principal.Identity.AuthenticationType));
+                             {
+                                 new Claim(ClaimTypes.NameIdentifier, c.SecurityToken.Subject)
+                             }, c.Principal.Identity.AuthenticationType,
+                             ClaimTypes.NameIdentifier,
+                             ClaimTypes.Role));
                      },
                      OnUserInformationReceived = async c =>
                      {

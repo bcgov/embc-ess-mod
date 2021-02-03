@@ -37,8 +37,7 @@ namespace EMBC.Registrants.API.SecurityModule
 
         public async Task<User> Get(string userId)
         {
-            await Task.CompletedTask;
-            return null;
+            return await userRepository.Read(userId);
         }
 
         public async Task<string> Save(string userId, JsonDocument userData)

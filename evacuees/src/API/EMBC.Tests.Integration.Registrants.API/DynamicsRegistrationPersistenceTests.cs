@@ -200,11 +200,6 @@ namespace EMBC.Tests.Integration.Registrants.API
                     HaveSpecialDiet = true,
                     SpecialDietDetails = "Gluten Free",
                     HasPetsFood = true,
-                    RequiresClothing = true, //to be deleted
-                    RequiresFood = true, //to be deleted
-                    RequiresLodging = true, //to be deleted
-                    RequiresIncidentals = true, //to be deleted
-                    RequiresTransportation = true, //to be deleted
                     CanEvacueeProvideClothing = false,
                     CanEvacueeProvideFood = true,
                     CanEvacueeProvideIncidentals = null,
@@ -296,7 +291,7 @@ namespace EMBC.Tests.Integration.Registrants.API
             var registrantEvacuation = new RegistrantEvacuation
             {
                 //ContactId = "91d6f457-b8b5-4fd4-ac71-0e45bd7e989d",
-                Id = "BCSC-ID-12:49 PM",
+                Id = "BCSC-ID-RP-TEST",
                 PreliminaryNeedsAssessment = new NeedsAssessment
                 {
                     EvacuatedFromAddress = new Address
@@ -313,20 +308,27 @@ namespace EMBC.Tests.Integration.Registrants.API
                         {
                             FirstName = $"MemberFirstName-{textContextIdentifier}",
                             LastName = $"MemberLastName-{textContextIdentifier}",
-                            Gender = "F",
+                            PreferredName = $"Preferred-{textContextIdentifier}",
+                            Initials = $"ML-{textContextIdentifier}",
+                            Gender = "Female",
                             DateOfBirth = "1990-09-09"
+                        },
+                        new PersonDetails
+                        {
+                            FirstName = $"Member2FirstName-{textContextIdentifier}",
+                            LastName = $"Member2LastName-{textContextIdentifier}",
+                            PreferredName = $"Preferred2-{textContextIdentifier}",
+                            Initials = $"ML2-{textContextIdentifier}",
+                            Gender = "X",
+                            DateOfBirth = "2000-01-03"
                         }
+
                     },
                     HaveMedication = false,
                     Insurance = NeedsAssessment.InsuranceOption.Unknown,
                     HaveSpecialDiet = true,
                     SpecialDietDetails = "4th Level Vegan",
                     HasPetsFood = true,
-                    RequiresClothing = true, //to be deleted
-                    RequiresFood = true, //to be deleted
-                    RequiresLodging = true, //to be deleted
-                    RequiresIncidentals = true, //to be deleted
-                    RequiresTransportation = true, //to be deleted
                     CanEvacueeProvideClothing = true,
                     CanEvacueeProvideFood = false,
                     CanEvacueeProvideIncidentals = true,
@@ -335,7 +337,8 @@ namespace EMBC.Tests.Integration.Registrants.API
                     Pets = new[]
                     {
                         new Pet{ Type = $"Cat{textContextIdentifier}", Quantity = "2" },
-                        new Pet{ Type = $"Dog{textContextIdentifier}", Quantity = "1" }
+                        new Pet{ Type = $"Dog{textContextIdentifier}", Quantity = "1" },
+                        new Pet{ Type = $"Bird{textContextIdentifier}", Quantity = "3" },
                     },
                 }
             };
@@ -346,6 +349,17 @@ namespace EMBC.Tests.Integration.Registrants.API
             testLogger.LogDebug("ESS File #: " + result);
             Assert.NotNull(result);
             Assert.True(int.Parse(result) > 0);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task GetRegistrantEvacuationsByContactId()
+        {
+            Guid.TryParse("01c93fa2-a2f7-43f3-9e1a-6eceecf40865", out Guid contactId);
+            var regManager = services.GetRequiredService<IRegistrationManager>();
+            var evacuationList = await regManager.GetRegistrantEvacuations(contactId);
+            Assert.NotNull(evacuationList);
+            Assert.NotEmpty(evacuationList);
+            testLogger.LogDebug("Test Result: " + JsonSerializer.Serialize(evacuationList));
         }
     }
 }
