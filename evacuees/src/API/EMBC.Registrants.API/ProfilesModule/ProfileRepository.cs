@@ -33,6 +33,8 @@ namespace EMBC.Registrants.API.ProfilesModule
         Task Update(Profile profile);
 
         Task<bool> DoesProfileExist(string userId);
+
+        Task Delete(string userId);
     }
 
     public class ProfileRepository : IProfileRepository
@@ -121,6 +123,16 @@ namespace EMBC.Registrants.API.ProfilesModule
         {
             await Task.CompletedTask;
             return GetContactIdForBcscId(userId).HasValue;
+        }
+
+        public async Task Delete(string userId)
+        {
+            var profile = await Read(userId);
+            if (profile != null)
+            {
+                dynamicsClient.DeleteObject(profile);
+                await dynamicsClient.SaveChangesAsync();
+            }
         }
 
         private Guid? GetContactIdForBcscId(string bcscId) =>

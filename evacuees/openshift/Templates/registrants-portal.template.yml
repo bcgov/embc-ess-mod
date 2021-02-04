@@ -60,6 +60,21 @@ parameters:
   - description: Reverse proxy known network
     name: APP_KNOWN_NETWORK
     required: false
+  - description: JWT issuer
+    name: JWT_ISSUER
+    required: true
+  - description: JWT audience
+    name: JWT_AUDIENCE
+    required: true
+  - description: JWT signing key
+    name: JWT_SIGNING_KEY
+    required: true
+  - description: JWT encrypting key
+    name: JWT_ENCRYPTING_KEY
+    required: true
+  - description: JWT lifetime since creation in minutes
+    name: JWT_TOKEN_EXPIRY
+    required: true
 
 objects:
   - kind: ConfigMap
@@ -77,8 +92,10 @@ objects:
       location__cache__AutoRefreshEnabled: ${LOCATION_CACHE_REFRESH_ENABLED}
       location__cache__RefreshInterval: ${LOCATION_CACHE_REFRESH_INTERVAL}
       auth__bcsc__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
-      auth__jwt__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
       app__knownNetwork: ${APP_KNOWN_NETWORK}
+      auth__jwt__ClaimsIssuer: ${JWT_ISSUER}
+      auth__jwt__audience: ${JWT_AUDIENCE}
+      auth__jwt__expiryInMinutes: ${JWT_TOKEN_EXPIRY}
   - kind: Secret
     apiVersion: v1
     type: Opaque
@@ -95,7 +112,8 @@ objects:
       Dynamics__ADFS__serviceAccountPassword: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
       auth__bcsc__clientId: ${BCSC_CLIENT_ID}
       auth__bcsc__clientSecret: ${BCSC_CLIENT_SECRET}
-      auth__jwt__audience: ${BCSC_CLIENT_ID}
+      auth__jwt__signingKey: ${JWT_SIGNING_KEY}
+      auth__jwt__encryptingKey: ${JWT_ENCRYPTING_KEY}
   - kind: Service
     apiVersion: v1
     metadata:
@@ -254,7 +272,7 @@ objects:
             - name: registrants-portal-ui
               env:
                 - name: API_URL
-                  value: srv+${APP_NAME}-registrants-portal-api:8080
+                  value: ${APP_NAME}-registrants-portal-api:8080
               image: docker-registry.default.svc:5000/pbiizm-tools/registrants-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:

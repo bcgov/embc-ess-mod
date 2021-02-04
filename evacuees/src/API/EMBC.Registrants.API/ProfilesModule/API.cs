@@ -22,6 +22,7 @@ using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Registrants.API.ProfilesModule
 {
@@ -31,10 +32,12 @@ namespace EMBC.Registrants.API.ProfilesModule
     public class ProfileController : ControllerBase
     {
         private readonly IProfileManager profileManager;
+        private readonly IHostEnvironment env;
 
-        public ProfileController(IProfileManager profileManager)
+        public ProfileController(IProfileManager profileManager, IHostEnvironment env)
         {
             this.profileManager = profileManager;
+            this.env = env;
         }
 
         /// <summary>
@@ -51,6 +54,23 @@ namespace EMBC.Registrants.API.ProfilesModule
             var profile = await profileManager.GetProfileByBceid(userId);
             if (profile == null) return NotFound();
             return Ok(profile);
+        }
+
+        /// <summary>
+        /// Get the current logged in user's profile
+        /// </summary>
+        /// <returns>Currently logged in user's profile</returns>
+        [HttpDelete("current")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize]
+        public async Task<ActionResult<Profile>> DeleteProfile()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!env.IsProduction())
+            {
+                await profileManager.DeleteProfile(userId);
+            }
+            return Ok(userId);
         }
 
         /// <summary>

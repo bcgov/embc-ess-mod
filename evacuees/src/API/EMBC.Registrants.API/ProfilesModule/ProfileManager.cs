@@ -29,6 +29,8 @@ namespace EMBC.Registrants.API.ProfilesModule
         Task<string> SaveProfile(Profile profile);
 
         Task<UserProfile> GetProfileAndConflicts(string userId);
+
+        Task DeleteProfile(string userId);
     }
 
     public class ProfileManager : IProfileManager
@@ -42,6 +44,11 @@ namespace EMBC.Registrants.API.ProfilesModule
             this.profileRepository = profileRepository;
             this.userRepository = userRepository;
             this.mapper = mapper;
+        }
+
+        public async Task DeleteProfile(string userId)
+        {
+            await profileRepository.Delete(userId);
         }
 
         public async Task<UserProfile> GetProfileAndConflicts(string userId)

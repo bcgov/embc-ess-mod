@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 5200",
-    "restart": "npm run gen-api && npm run ng -- serve --port 5200",
+    "startlocal": "npm start -- --configuration=local",
+    "restart": "npm run gen-api && npm start",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
