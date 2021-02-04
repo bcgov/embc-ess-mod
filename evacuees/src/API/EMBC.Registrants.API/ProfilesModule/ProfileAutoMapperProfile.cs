@@ -105,7 +105,8 @@ namespace EMBC.Registrants.API.ProfilesModule
 ;
             CreateMap<User, Profile>(MemberList.None)
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
-                .ForPath(d => d.ContactDetails.Email, opts => opts.MapFrom(s => s.Email))
+                // Email is not mapped from BCSC
+                //.ForPath(d => d.ContactDetails.Email, opts => opts.MapFrom(s => s.Email))
                 .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.PrimaryAddress, opts => opts.MapFrom(s => s))
                 ;
@@ -122,7 +123,8 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.BirthDate)
                     ? null
                     : DateTime.ParseExact(s.BirthDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)))
-                .ForMember(d => d.Gender, opts => opts.ConvertUsing<BcscGenderConverter, string>(s => s.Gender))
+                // Gender is not mapped from BCSC
+                //.ForMember(d => d.Gender, opts => opts.ConvertUsing<BcscGenderConverter, string>(s => s.Gender))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.LastName));
         }
@@ -181,7 +183,7 @@ namespace EMBC.Registrants.API.ProfilesModule
 
         public BcscCityConverter(ILocationManager locationManager)
         {
-            jurisdictions = locationManager.GetJurisdictions("BC", "CAN").GetAwaiter().GetResult().ToArray();
+            jurisdictions = locationManager.GetJurisdictions("CAN", "BC").GetAwaiter().GetResult().ToArray();
         }
 
         public Jurisdiction Convert(string sourceMember, ResolutionContext context) =>
