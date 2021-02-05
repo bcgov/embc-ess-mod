@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -58,7 +59,7 @@ namespace EMBC.Registrants.API.ProfilesModule
 
             var userProfile = mapper.Map<Profile>(user);
             var profile = await profileRepository.Read(user.Id);
-            var conflicts = userProfile.DetectConflicts(profile);
+            var conflicts = ProfilesConflictDetector.DetectConflicts(userProfile, profile);
 
             return new UserProfile { LoginProfile = userProfile, EraProfile = profile, Conflicts = conflicts };
         }
@@ -82,38 +83,44 @@ namespace EMBC.Registrants.API.ProfilesModule
         }
     }
 
-    public static class ProfileEx
+    public static class ProfilesConflictDetector
     {
-        public static IEnumerable<ProfileDataConflict> DetectConflicts(this Profile source, Profile target)
+        public static IEnumerable<ProfileDataConflict> DetectConflicts(Profile source, Profile target)
         {
-            if (target == null) yield break;
-            if (!source.PersonalDetails.DateofBirthEquals(target.PersonalDetails))
+            if (source == null || target == null) yield break;
+            if (source.PersonalDetails != null && !source.PersonalDetails.DateofBirthEquals(target.PersonalDetails))
             {
                 yield return new ProfileDataConflict { ConflictDataElement = nameof(Profile.PersonalDetails.DateOfBirth) };
             }
-            if (!source.PersonalDetails.NameEquals(target.PersonalDetails))
+            if (source.PersonalDetails != null && !source.PersonalDetails.NameEquals(target.PersonalDetails))
             {
                 yield return new ProfileDataConflict { ConflictDataElement = "Name" };
             }
-            if (!source.PrimaryAddress.Equals(target.PrimaryAddress))
+            if (source.PrimaryAddress != null && !source.PrimaryAddress.AddressEquals(target.PrimaryAddress))
             {
                 yield return new ProfileDataConflict { ConflictDataElement = nameof(Profile.PrimaryAddress) };
             }
             yield break;
         }
 
-        public static bool Equals(this Address address, Address other) =>
-            address.AddressLine1.Equals(other.AddressLine1) &&
-            address.PostalCode.Equals(other.PostalCode) &&
-            address.Jurisdiction.Code.Equals(other.Jurisdiction.Code) &&
-            address.StateProvince.Code.Equals(other.StateProvince.Code) &&
-            address.Country.Code.Equals(other.Country.Code);
+        private static bool AddressEquals(this Address address, Address other) =>
+            (address == null && other == null) ||
+            (address != null &&
+            address.AddressLine1.StringSafeEquals(other?.AddressLine1) &&
+            address.PostalCode.StringSafeEquals(other?.PostalCode) &&
+            address.Jurisdiction.Code.StringSafeEquals(other?.Jurisdiction?.Code) &&
+            address.StateProvince.Code.StringSafeEquals(other?.StateProvince?.Code) &&
+            address.Country.Code.StringSafeEquals(other?.Country?.Code));
 
-        public static bool NameEquals(this PersonDetails personDetails, PersonDetails other) =>
-            personDetails.FirstName.Equals(other.FirstName, System.StringComparison.CurrentCultureIgnoreCase) &&
-            personDetails.LastName.Equals(other.LastName, System.StringComparison.CurrentCultureIgnoreCase);
+        private static bool NameEquals(this PersonDetails personDetails, PersonDetails other) =>
+            personDetails != null &&
+            personDetails.FirstName.StringSafeEquals(other?.FirstName) &&
+            personDetails.LastName.StringSafeEquals(other?.LastName);
 
-        public static bool DateofBirthEquals(this PersonDetails personDetails, PersonDetails other) =>
-            personDetails.DateOfBirth == other.DateOfBirth;
+        private static bool DateofBirthEquals(this PersonDetails personDetails, PersonDetails other) =>
+            personDetails?.DateOfBirth == other?.DateOfBirth;
+
+        private static bool StringSafeEquals(this string s, string other) =>
+            string.Equals((s ?? string.Empty).Trim(), (other ?? string.Empty).Trim(), StringComparison.InvariantCultureIgnoreCase);
     }
 }
