@@ -8,11 +8,12 @@ const routes: Routes = [
     path: '', component: VerifiedRegistrationComponent,
     canActivate: [AllowNavigationGuard],
     children: [
-      // {
-      //   path: '',
-      //   redirectTo: 'collection-notice',
-      //   pathMatch: 'full',
-      // },
+      {
+        path: 'conflicts',
+        loadChildren: () => import('../sharedModules/components/conflict-management/conflict-management.module')
+          .then(m => m.ConflictManagementModule),
+        data: { flow: 'verified-registration' }
+      },
       {
         path: 'collection-notice',
         loadChildren: () => import('../sharedModules/components/collection-notice/collection-notice.module')

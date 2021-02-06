@@ -24,7 +24,11 @@ export class AllowNavigationGuard implements CanActivate {
                 if (profile.isNewUser) {
                     this.router.navigate(['/verified-registration/collection-notice']);
                 } else {
-                    this.router.navigate(['/verified-registration/dashboard']);
+                    if (!profile.conflicts) {
+                        this.router.navigate(['/verified-registration/dashboard']);
+                    } else {
+                        this.router.navigate(['/verified-registration/conflicts']);
+                    }
                 }
             }
         });

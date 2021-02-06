@@ -1,31 +1,36 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { Profile, StateProvince } from '../../api/models';
 import { UserProfile } from '../../api/models/user-profile';
-import { CacheService } from './../cache.service';
 import { DataService } from './../data.service';
 import { FormCreationService } from './../formCreation.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
-    constructor(private formCreationService: FormCreationService, private dataService: DataService, private cacheService: CacheService) { }
+    constructor(private formCreationService: FormCreationService, private dataService: DataService) { }
 
     mapUserProfile(userProfile: UserProfile): void {
-        this.dataService.setConflicts(userProfile.conflicts);
-        this.cacheService.set('loginProfile', JSON.stringify(userProfile.loginProfile));
+        this.dataService.setLoginProfile(userProfile.loginProfile);
         if (userProfile.isNewUser) {
-            this.setLoginUserProfile(userProfile.loginProfile);
+            this.setLoginProfile(userProfile.loginProfile);
         } else {
-            this.setExistingUserProfile(userProfile.eraProfile);
+            this.setExistingProfile(userProfile.eraProfile);
         }
         if (userProfile.eraProfile) {
             this.dataService.setProfileId(userProfile.eraProfile.id);
-            this.cacheService.set('eraProfile', JSON.stringify(userProfile.eraProfile));
+            this.dataService.setProfile(userProfile.eraProfile);
         }
+        this.dataService.setConflicts(userProfile.conflicts);
     }
 
-    setExistingUserProfile(profile: Profile): void {
+    mapProfile(profile: Profile) {
+        this.setExistingProfile(profile);
+        this.dataService.setProfileId(profile.id);
+        this.dataService.setProfile(profile);
+    }
+
+    setExistingProfile(profile: Profile): void {
         this.setRestrictionDetails(profile);
         this.setPersonalDetails(profile);
         this.setAddressDetails(profile);
@@ -33,7 +38,7 @@ export class ProfileMappingService {
         this.setSecretDetails(profile);
     }
 
-    setLoginUserProfile(profile: Profile): void {
+    setLoginProfile(profile: Profile): void {
         this.populateFromBCSC(profile);
     }
 

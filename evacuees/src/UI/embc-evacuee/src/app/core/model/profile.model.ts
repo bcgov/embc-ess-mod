@@ -27,14 +27,8 @@ export class PersonDetails {
     sameLastNameCheck?: boolean;
 
     constructor(firstName?: string, lastName?: string, preferredName?: string, initials?: string,
-                gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.preferredName = preferredName;
-        this.initials = initials;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.sameLastNameCheck = sameLastNameCheck;
+        gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
+
     }
 }
 
