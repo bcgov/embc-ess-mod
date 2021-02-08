@@ -55,7 +55,6 @@ export class EditComponent implements OnInit, OnDestroy {
    */
   save(): void {
     this.setFormData(this.componentToLoad);
-    console.log(this.dataService.getRegistration())
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {

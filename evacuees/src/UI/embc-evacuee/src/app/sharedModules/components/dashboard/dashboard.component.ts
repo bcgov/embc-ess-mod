@@ -5,7 +5,6 @@ import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.comp
 import { DataService } from 'src/app/core/services/data.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { debounceTime, filter } from 'rxjs/operators';
-import { EvacuationFileApiService } from 'src/app/core/services/api/evacuationFileApi.service';
 
 export interface EvacuationCard {
   from: string;
@@ -99,7 +98,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
-    private router: Router, private dialogService: DialogService, private evacuationFileApiService: EvacuationFileApiService) { }
+    private router: Router, private dialogService: DialogService) { }
 
 
   ngOnInit(): void {
@@ -113,12 +112,6 @@ export class DashboardComponent implements OnInit {
       this.openReferenceNumberPopup()
     );
 
-    console.log("OUTSIDEFILES!!!")
-    console.log(this.dataService.getContactGuidId());
-    this.evacuationFileApiService.getRegistrantEvacuations().subscribe(evacuationFiles => {
-      console.log("FILES HERE!!!")
-      console.log(evacuationFiles);
-    });
   }
 
   openDOBMismatchPopup(): void {

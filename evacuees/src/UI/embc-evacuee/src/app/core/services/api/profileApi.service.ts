@@ -12,7 +12,9 @@ export class ProfileApiService {
 
   private profile: Registration;
 
-  constructor(private profileService: ProfileService, private dataService: DataService, private profileMappingService: ProfileMappingService) { }
+  constructor(
+    private profileService: ProfileService, private dataService: DataService,
+    private profileMappingService: ProfileMappingService) { }
 
   public getExistingProfile(): Observable<UserProfile> {
     return this.profileService.profileGetProfileConflicts();
