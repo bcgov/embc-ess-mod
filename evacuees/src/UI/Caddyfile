@@ -22,6 +22,8 @@
 		Content-Security-Policy "default-src 'self' 'unsafe-eval' https://fonts.gstatic.com https://*.pathfinder.gov.bc.ca http://localhost:5200; style-src 'self' 'unsafe-inline' https://use.fontawesome.com; script-src 'self' 'unsafe-inline' 'unsafe-eval';"
 		# Set referrer policy
 		Referrer-Policy "same-origin"
+		# Allow general API access (TODO: configure for dev only)
+		Access-Control-Allow-Origin *
 	}
 
 	encode zstd gzip
