@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { NeedsAssessment } from '../api/models/needs-assessment';
 import { ProfileDataConflict } from '../api/models/profile-data-conflict';
 import { Registration } from '../api/models/registration';
@@ -12,6 +13,9 @@ export class DataService {
     private registrationResult: RegistrationResult;
     private conflicts: Array<ProfileDataConflict>;
     private profileId: string;
+    private contactGuidId: string;
+    private loginStatus: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    public loginStatus$: Observable<boolean> = this.loginStatus.asObservable();
 
     public setProfileId(profileId: string): void {
         this.profileId = profileId;
@@ -21,9 +25,24 @@ export class DataService {
         return this.profileId;
     }
 
+    public setContactGuidId(contactId: string): void {
+        this.contactGuidId = contactId;
+    }
+
+    public getContactGuidId(): string {
+        return this.contactGuidId;
+    }
+
+    public setLoginStatus(status: boolean): void {
+        this.loginStatus.next(status);
+    }
+
+    public getLoginStatus(): Observable<boolean> {
+        return this.loginStatus$;
+    }
+
     public updateRegistartion(value): void {
         this.registrationDetails = { ...this.registrationDetails, ...value };
-        console.log(this.registrationDetails);
     }
 
     public getRegistration(): Partial<Registration> {

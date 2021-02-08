@@ -88,6 +88,68 @@ export class RegistrationService extends BaseService {
   }
 
   /**
+   * Path part for operation registrationGetRegistrantEvacuations
+   */
+  static readonly RegistrationGetRegistrantEvacuationsPath = '/api/registration/evacuation';
+
+  /**
+   * Get a list of evacuations by Contact Id.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationGetRegistrantEvacuations()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationGetRegistrantEvacuations$Response(params?: {
+
+    /**
+     * Query Parameter: Contact Id
+     */
+    contactId?: string;
+  }): Observable<StrictHttpResponse<Array<RegistrantEvacuation>>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationService.RegistrationGetRegistrantEvacuationsPath, 'get');
+    if (params) {
+      rb.query('contactId', params.contactId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<RegistrantEvacuation>>;
+      })
+    );
+  }
+
+  /**
+   * Get a list of evacuations by Contact Id.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationGetRegistrantEvacuations$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationGetRegistrantEvacuations(params?: {
+
+    /**
+     * Query Parameter: Contact Id
+     */
+    contactId?: string;
+  }): Observable<Array<RegistrantEvacuation>> {
+
+    return this.registrationGetRegistrantEvacuations$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<RegistrantEvacuation>>) => r.body as Array<RegistrantEvacuation>)
+    );
+  }
+
+  /**
    * Path part for operation registrationCreateEvacuation
    */
   static readonly RegistrationCreateEvacuationPath = '/api/registration/evacuation';

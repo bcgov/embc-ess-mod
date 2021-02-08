@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ViewAuthProfileRoutingModule } from './dashboard-routing.module';
-import { ViewAuthProfileComponent } from './dashboard.component';
+import { DashboardComponent } from './dashboard.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
-    ViewAuthProfileComponent,
+    DashboardComponent,
     EvacuationCardComponent,
     EvacuationDetailsComponent,
     ReferralDetailsComponent

@@ -8,10 +8,12 @@ import { EditComponent } from './edit.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { RestrictionFormModule } from '../../forms/restriction-form/restriction-form.module';
+import { CoreModule } from '../../../core/core.module';
 
 @NgModule({
   declarations: [
-    EditComponent
+    EditComponent,
+
   ],
   imports: [
     CommonModule,
@@ -21,7 +23,8 @@ import { RestrictionFormModule } from '../../forms/restriction-form/restriction-
     MatSelectModule,
     MatAutocompleteModule,
     MatButtonModule,
-    RestrictionFormModule
+    RestrictionFormModule,
+    CoreModule
   ]
 })
 export class EditModule { }
