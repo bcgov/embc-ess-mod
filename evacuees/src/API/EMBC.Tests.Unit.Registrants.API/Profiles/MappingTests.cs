@@ -33,7 +33,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         public MappingTests()
         {
             var locationManager = A.Fake<ILocationManager>();
-            A.CallTo(() => locationManager.GetJurisdictions("BC", "CAN", null)).Returns(jurisdictions);
+            A.CallTo(() => locationManager.GetJurisdictions("CAN", "BC", null)).Returns(jurisdictions);
             mapperConfig = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.AddMaps(typeof(ProfileAutoMapperProfile));
@@ -170,10 +170,10 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             var profile = mapper.Map<Profile>(bcscUser);
 
             profile.Id.ShouldBe(bcscUser.Id);
-            profile.ContactDetails.Email.ShouldBe(bcscUser.Email);
+            profile.ContactDetails.Email.ShouldBeNull();
             profile.PersonalDetails.FirstName.ShouldBe(bcscUser.FirstName);
             profile.PersonalDetails.LastName.ShouldBe(bcscUser.LastName);
-            profile.PersonalDetails.Gender.ShouldBe(bcscUser.Gender);
+            profile.PersonalDetails.Gender.ShouldBeNull();
             profile.PersonalDetails.DateOfBirth.ShouldBe(Regex.Replace(bcscUser.BirthDate,
              @"\b(?<year>\d{2,4})-(?<month>\d{1,2})-(?<day>\d{1,2})\b", "${month}/${day}/${year}", RegexOptions.None));
             profile.PrimaryAddress.AddressLine1.ShouldBe(bcscUser.StreetAddress);
