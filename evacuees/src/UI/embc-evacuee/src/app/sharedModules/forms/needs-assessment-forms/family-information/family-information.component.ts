@@ -125,6 +125,7 @@ export default class FamilyInformationComponent implements OnInit {
     this.familyMemberForm.get('member').setValue(element);
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
+    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
     // this.showTable = !this.showTable;
     this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
   }

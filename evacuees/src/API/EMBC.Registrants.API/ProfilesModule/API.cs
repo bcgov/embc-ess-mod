@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -21,22 +22,29 @@ using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace EMBC.Registrants.API.ProfilesModule
 {
-    [Route("api/profile")]
+    [Route("api/profiles")]
     [ApiController]
     [Authorize]
     public class ProfileController : ControllerBase
     {
         private readonly IProfileManager profileManager;
+        private readonly IHostEnvironment env;
 
-        public ProfileController(IProfileManager profileManager)
+        public ProfileController(IProfileManager profileManager, IHostEnvironment env)
         {
             this.profileManager = profileManager;
+            this.env = env;
         }
 
-        [HttpGet]
+        /// <summary>
+        /// Get the current logged in user's profile
+        /// </summary>
+        /// <returns>Currently logged in user's profile</returns>
+        [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
@@ -47,13 +55,71 @@ namespace EMBC.Registrants.API.ProfilesModule
             if (profile == null) return NotFound();
             return Ok(profile);
         }
+
+        /// <summary>
+        /// Get the current logged in user's profile
+        /// </summary>
+        /// <returns>Currently logged in user's profile</returns>
+        [HttpDelete("current")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize]
+        public async Task<ActionResult<Profile>> DeleteProfile()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!env.IsProduction())
+            {
+                await profileManager.DeleteProfile(userId);
+            }
+            return Ok(userId);
+        }
+
+        /// <summary>
+        /// Create or update the current user's profile
+        /// </summary>
+        /// <param name="profile">The profile information</param>
+        /// <returns>profile id</returns>
+        [HttpPost("current")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public async Task<ActionResult<string>> Upsert(Profile profile)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (profile.Id != userId)
+            {
+                //TODO: replace with bad request response
+                profile.Id = userId;
+            }
+            await profileManager.SaveProfile(profile);
+            return Ok(profile.Id);
+        }
+
+        /// <summary>
+        /// Get the logged in user's profile and conflicts with the data that came from the authenticating identity provider
+        /// </summary>
+        /// <returns>The current user's profile, the identity provider's profile and the detected conflicts</returns>
+        [HttpGet("current/conflicts")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<ActionResult<UserProfile>> GetProfileConflicts()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var userProfileWithConflicts = await profileManager.GetProfileAndConflicts(userId);
+            if (userProfileWithConflicts == null) return NotFound();
+            return Ok(userProfileWithConflicts);
+        }
     }
 
     /// <summary>
-    /// Registrant's profile
+    /// User's profile
     /// </summary>
     public class Profile
     {
+        public string Id { get; set; }
+
         [Required]
         public PersonDetails PersonalDetails { get; set; }
 
@@ -64,5 +130,27 @@ namespace EMBC.Registrants.API.ProfilesModule
         public Address PrimaryAddress { get; set; }
 
         public Address MailingAddress { get; set; }
+        public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
+        public bool RestrictedAccess { get; set; }
+        public string SecretPhrase { get; set; }
+    }
+
+    /// <summary>
+    /// DTO for conflict resolution data
+    /// </summary>
+    public class UserProfile
+    {
+        public bool IsNewUser => EraProfile == null;
+        public Profile EraProfile { get; set; }
+        public Profile LoginProfile { get; set; }
+        public IEnumerable<ProfileDataConflict> Conflicts { get; set; }
+    }
+
+    /// <summary>
+    /// profile data element name in conflict
+    /// </summary>
+    public class ProfileDataConflict
+    {
+        public string ConflictDataElement { get; set; }
     }
 }

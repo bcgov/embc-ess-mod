@@ -1,5 +1,5 @@
 import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { Country } from '../services/api/models/country';
+import { Country } from '../api/models/country';
 import { CustomValidationService } from '../services/customValidation.service';
 import { RegAddress } from './address';
 import * as globalConst from '../services/globalConstants';
@@ -24,9 +24,18 @@ export class PersonDetails {
     initials: string;
     gender: string;
     dateOfBirth: string;
-    sameLastNameCheck ?: boolean;
+    sameLastNameCheck?: boolean;
 
-    constructor() { }
+    constructor(firstName?: string, lastName?: string, preferredName?: string, initials?: string,
+                gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.preferredName = preferredName;
+        this.initials = initials;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.sameLastNameCheck = sameLastNameCheck;
+    }
 }
 
 export class PersonDetailsForm {
@@ -39,7 +48,12 @@ export class PersonDetailsForm {
     dateOfBirth = new FormControl();
 
     constructor(personDetail: PersonDetails, customValidator: CustomValidationService) {
-        this.firstName.setValue(personDetail.firstName);
+        if (personDetail.firstName) {
+            this.firstName.setValue(personDetail.firstName);
+
+            console.log(personDetail.firstName);
+        }
+
         this.firstName.setValidators([Validators.required]);
 
         this.lastName.setValue(personDetail.lastName);

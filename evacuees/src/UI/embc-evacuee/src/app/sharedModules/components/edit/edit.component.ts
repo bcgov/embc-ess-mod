@@ -2,6 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AlertService } from 'src/app/core/services/alert.service';
+import { ProfileApiService } from 'src/app/core/services/api/profileApi.service';
+import { DataService } from 'src/app/core/services/data.service';
 import { DataUpdationService } from 'src/app/core/services/dataUpdation.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 
@@ -19,11 +22,14 @@ export class EditComponent implements OnInit, OnDestroy {
   editHeading: string;
   currentFlow: string;
   parentPageName: string;
+  showLoader = false;
   nonVerfiedRoute = '/non-verified-registration/needs-assessment';
   verifiedRoute = '/verified-registration/create-profile';
 
-  constructor(private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
-              private formCreationService: FormCreationService) {
+  constructor(
+    private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
+    private formCreationService: FormCreationService, private profileApiService: ProfileApiService,
+    private alertService: AlertService, private dataService: DataService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { parentPageName: string };
@@ -54,8 +60,16 @@ export class EditComponent implements OnInit, OnDestroy {
     } else {
       if (this.parentPageName === 'create-profile') {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
-      } else if (this.parentPageName === 'view-profile') {
-        this.router.navigate(['/verified-registration/view-profile']);
+      } else if (this.parentPageName === 'dashboard') {
+        this.showLoader = !this.showLoader;
+        this.profileApiService.submitProfile().subscribe(() => {
+          this.showLoader = !this.showLoader;
+          this.router.navigate(['/verified-registration/dashboard']);
+        }, (error) => {
+          console.log(error);
+          this.showLoader = !this.showLoader;
+          this.alertService.setAlert('danger', error.title);
+        });
       }
     }
   }
@@ -70,8 +84,8 @@ export class EditComponent implements OnInit, OnDestroy {
     } else {
       if (this.parentPageName === 'create-profile') {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
-      } else if (this.parentPageName === 'view-profile') {
-        this.router.navigate(['/verified-registration/view-profile']);
+      } else if (this.parentPageName === 'dashboard') {
+        this.router.navigate(['/verified-registration/dashboard']);
       }
     }
   }

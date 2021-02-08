@@ -41,21 +41,7 @@ namespace EMBC.Registrants.API.SecurityModule
         public const string DisplayName = "display_name";
         public const string BirthDate = "birthdate";
         public const string Gender = "gender";
-    }
-
-    public static class RegistrantClaimTypes
-    {
-        public const string Id = ClaimTypes.NameIdentifier;
-        public const string FirstName = "first_name";
-        public const string LastName = "last_name";
-        public const string StreetAddress = "street_address";
-        public const string PostalCode = "postal_code";
-        public const string Jurisdiction = "jurisdiction";
-        public const string Province = "province";
-        public const string Country = "country";
-        public const string DateOfBirth = "date_of_birth";
-        public const string DisplayName = ClaimTypes.Name;
-        public const string Gender = "gender";
+        public const string Email = "email";
     }
 
     public static class BcscAuthenticationDefaults
@@ -77,28 +63,13 @@ namespace EMBC.Registrants.API.SecurityModule
             return builder.AddOpenIdConnect(authenticationScheme, options =>
              {
                  options.SaveTokens = true;
-                 options.GetClaimsFromUserInfoEndpoint = false;
+                 options.GetClaimsFromUserInfoEndpoint = true;
                  options.UseTokenLifetime = true;
                  options.ResponseType = OpenIdConnectResponseType.Code;
 
                  //add required scopes
-                 //options.Scope.Add("address");
-                 //options.Scope.Add("email");
-
-                 // map BCSC token values to claims
-                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.Id, BcscTokenKeys.Id);
-                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.FirstName, BcscTokenKeys.GivenName);
-                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.LastName, BcscTokenKeys.FamilyName);
-                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.DisplayName, BcscTokenKeys.DisplayName);
-                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.DateOfBirth, BcscTokenKeys.BirthDate);
-                 //options.ClaimActions.MapJsonKey(RegistrantClaimTypes.Gender, BcscTokenKeys.Gender);
-                 //options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.StreetAddress, BcscTokenKeys.Address, BcscTokenKeys.AddressStreet);
-                 //options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.Jurisdiction, BcscTokenKeys.Address, BcscTokenKeys.AddressLocality);
-                 //options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.Province, BcscTokenKeys.Address, BcscTokenKeys.AddressRegion);
-                 //options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.Country, BcscTokenKeys.Address, BcscTokenKeys.AddressCountry);
-                 //options.ClaimActions.MapJsonSubKey(RegistrantClaimTypes.PostalCode, BcscTokenKeys.Address, BcscTokenKeys.AddressPostalCode);
-
-                 options.ClaimActions.Clear();
+                 options.Scope.Add("address");
+                 options.Scope.Add("email");
 
                  options.Events = new OpenIdConnectEvents()
                  {
@@ -118,8 +89,18 @@ namespace EMBC.Registrants.API.SecurityModule
                      {
                          await Task.CompletedTask;
                          var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger(BcscAuthenticationDefaults.LoggerCategory);
-                         logger.LogInformation("BCSC user {0} logged in", c.Principal?.FindFirstValue(ClaimTypes.NameIdentifier));
-                         c.Principal = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.UserData, c.SecurityToken.RawData) }, c.Principal.Identity.AuthenticationType));
+                         logger.LogInformation("BCSC user {0} logged in", c.SecurityToken.Subject);
+                         c.Principal = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                             {
+                                 new Claim(ClaimTypes.NameIdentifier, c.SecurityToken.Subject)
+                             }, c.Principal.Identity.AuthenticationType,
+                             ClaimTypes.NameIdentifier,
+                             ClaimTypes.Role));
+                     },
+                     OnUserInformationReceived = async c =>
+                     {
+                         var userManager = c.HttpContext.RequestServices.GetRequiredService<IUserManager>();
+                         var id = await userManager.Save(c.Principal.FindFirstValue(ClaimTypes.NameIdentifier), c.User);
                      }
                  };
 

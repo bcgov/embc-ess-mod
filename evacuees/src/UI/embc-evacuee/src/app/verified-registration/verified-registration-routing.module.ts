@@ -6,11 +6,11 @@ const routes: Routes = [
   {
     path: '', component: VerifiedRegistrationComponent,
     children: [
-      {
-        path: '',
-        redirectTo: 'collection-notice',
-        pathMatch: 'full',
-      },
+      // {
+      //   path: '',
+      //   redirectTo: 'collection-notice',
+      //   pathMatch: 'full',
+      // },
       {
         path: 'collection-notice',
         loadChildren: () => import('../sharedModules/components/collection-notice/collection-notice.module')
@@ -28,8 +28,8 @@ const routes: Routes = [
         data: { flow: 'verified-registration' }
       },
       {
-        path: 'view-profile',
-        loadChildren: () => import('../sharedModules/components/view-auth-profile/view-auth-profile.module')
+        path: 'dashboard',
+        loadChildren: () => import('../sharedModules/components/dashboard/dashboard.module')
           .then(m => m.ViewAuthProfileModule),
         data: { flow: 'verified-registration' }
       },

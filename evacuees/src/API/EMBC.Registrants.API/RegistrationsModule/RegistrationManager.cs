@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Registrants.API.Shared;
@@ -40,7 +41,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         Task<Registration> GetProfileByBcscId(string bcscId);
 
-        Task<Registration> PatchProfileById(string id, Registration profileRegistration);
+        Task<Registration> PatchProfileById(Guid id, Registration profileRegistration);
+
+        Task<List<RegistrantEvacuation>> GetRegistrantEvacuations(Guid contactId);
     }
 
     public class RegistrationManager : IRegistrationManager
@@ -129,6 +132,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_canevacueeprovidelodging = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideLodging),
                 era_canevacueeprovidetransportation = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation),
                 era_dietaryrequirement = registration.PreliminaryNeedsAssessment.HaveSpecialDiet,
+                era_dietaryrequirementdetails = registration.PreliminaryNeedsAssessment.SpecialDietDetails,
                 era_medicationrequirement = registration.PreliminaryNeedsAssessment.HaveMedication,
                 era_insurancecoverage = Lookup(registration.PreliminaryNeedsAssessment.Insurance),
                 era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
@@ -312,6 +316,42 @@ namespace EMBC.Registrants.API.RegistrationsModule
             return queryResult;
         }
 
+        private contact GetDynamicsContactByBCSC(string BCServicesCardId)
+        {
+            contact queryResult = null;
+            try
+            {
+                queryResult = dynamicsClient.contacts
+                        .Expand(c => c.era_City)
+                        .Expand(c => c.era_ProvinceState)
+                        .Expand(c => c.era_Country)
+                        .Expand(c => c.era_MailingCity)
+                        .Expand(c => c.era_MailingProvinceState)
+                        .Expand(c => c.era_MailingCountry)
+                        .Where(c => c.era_bcservicescardid == BCServicesCardId).FirstOrDefault();
+            }
+            catch (DataServiceQueryException ex)
+            {
+                DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
+                // don't throw an exception if contact is not found, return an empty profile
+                if (dataServiceClientException.StatusCode == 404)
+                {
+                    return null;
+                }
+                else
+                {
+                    Console.WriteLine("dataServiceClientException: " + dataServiceClientException.Message);
+                }
+                ODataErrorException odataErrorException = dataServiceClientException.InnerException as ODataErrorException;
+                if (odataErrorException != null)
+                {
+                    Console.WriteLine(odataErrorException.Message);
+                    throw dataServiceClientException;
+                }
+            }
+            return queryResult;
+        }
+
         private Registration CopyContactToProfile(contact contact, Registration profile)
         {
             profile.ContactId = contact.contactid.ToString();
@@ -444,16 +484,241 @@ namespace EMBC.Registrants.API.RegistrationsModule
             return Task.FromResult(profile);
         }
 
-        public Task<Registration> PatchProfileById(string id, Registration profileRegistration)
+        /// <summary>
+        /// Patch a Profile Registration (dynamics contact)
+        /// </summary>
+        /// <param name="id">Contact Id</param>
+        /// <param name="updatedRegistration">Registration</param>
+        /// <returns><see cref="Registration"/></returns>
+        public async Task<Registration> PatchProfileById(Guid id, Registration updatedRegistration)
         {
-            var contactIdGuid = Guid.Parse(profileRegistration.ContactId);
-            // search for contact
-            var profileQueryResult = dynamicsClient.contacts
-                .Where(c => c.contactid == contactIdGuid).FirstOrDefault();
-            //if (queryResult == null) return NotFoundResult;
+            Registration profile = newRegistrationObject();
+            contact existingContact = null;
+            contact newContact = null;
+            try
+            {
+                // search for contact
+                existingContact = dynamicsClient.contacts
+                                    .Expand(c => c.era_City)
+                                    .Expand(c => c.era_ProvinceState)
+                                    .Expand(c => c.era_Country)
+                                    .Expand(c => c.era_MailingCity)
+                                    .Expand(c => c.era_MailingProvinceState)
+                                    .Expand(c => c.era_MailingCountry)
+                                    .Where(c => c.contactid == id).SingleOrDefault<contact>();
+            }
+            catch (DataServiceQueryException ex)
+            {
+                //The InnerException of DataServiceQueryException contains DataServiceClientException
+                DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
 
-            var profile = newRegistrationObject();
-            return Task.FromResult(profile);
+                // don't throw an exception if contact is not found, return an empty profile
+                if (dataServiceClientException.StatusCode == 404)
+                {
+                    return profile;
+                }
+                else
+                {
+                    Console.WriteLine("dataServiceClientException: " + dataServiceClientException.Message);
+                }
+
+                ODataErrorException odataErrorException = dataServiceClientException.InnerException as ODataErrorException;
+                if (odataErrorException != null)
+                {
+                    Console.WriteLine(odataErrorException.Message);
+                    throw dataServiceClientException;
+                }
+            }
+
+            if (existingContact != null)
+            {
+                newContact = UpdateExistingContact(existingContact, updatedRegistration);
+
+                if (newContact != null)
+                {
+                    try
+                    {
+                        // create an update request
+                        dynamicsClient.UpdateObject(newContact);
+                        // save changes to dynamics
+                        await dynamicsClient.SaveChangesAsync();
+                    }
+                    catch (DataServiceRequestException ex)
+                    {
+                        throw new ApplicationException(
+                            "An error occurred when saving changes.", ex);
+                    }
+                    // Populate registration with updated contact data
+                    profile = PopulateRegistration(profile, newContact);
+                }
+            }
+
+            return profile;
+        }
+
+        private contact UpdateExistingContact(contact existingContact, Registration registration)
+        {
+            // Create a new contact and copy the details over from either the registration if it has the relevant value or the existing contract otherwise
+            contact newContact = new contact();
+
+            newContact.contactid = existingContact.contactid; // Get contact ID from existing contact - cannot be changed by registration
+            newContact.era_bcservicescardid = registration.BCServicesCardId ?? existingContact.era_bcservicescardid;
+
+            // Personal Details
+            newContact.firstname = registration.PersonalDetails?.FirstName ?? existingContact.firstname;
+            newContact.lastname = registration.PersonalDetails?.LastName ?? existingContact.lastname;
+            newContact.era_preferredname = registration.PersonalDetails?.PreferredName ?? existingContact.era_preferredname;
+            newContact.era_initial = registration.PersonalDetails?.Initials ?? existingContact.era_initial;
+            newContact.gendercode = LookupGender(registration.PersonalDetails?.Gender) ?? existingContact.gendercode;
+            newContact.birthdate = FromDateTime(DateTime.Parse(registration.PersonalDetails?.DateOfBirth)) ?? existingContact.birthdate;
+            newContact.era_collectionandauthorization = registration.InformationCollectionConsent; // Always has value
+            newContact.era_sharingrestriction = registration.RestrictedAccess; // Always has value
+
+            // Contact Details - Check booleans
+            newContact.emailaddress1 = registration.ContactDetails?.Email ?? existingContact.emailaddress1;
+            newContact.address1_telephone1 = registration.ContactDetails?.Phone ?? existingContact.address1_telephone1;
+            newContact.era_phonenumberrefusal = string.IsNullOrEmpty(newContact.address1_telephone1);
+            newContact.era_emailrefusal = string.IsNullOrEmpty(newContact.emailaddress1);
+
+            // Primary Address
+            newContact.address1_line1 = registration.PrimaryAddress?.AddressLine1 ?? existingContact.address1_line1;
+            newContact.address1_line2 = registration.PrimaryAddress?.AddressLine2 ?? existingContact.address1_line2;
+            newContact.address1_postalcode = registration.PrimaryAddress?.PostalCode ?? existingContact.address1_postalcode;
+
+            // Mailing Address
+            newContact.address2_line1 = registration.MailingAddress?.AddressLine1 ?? existingContact.address2_line1;
+            newContact.address2_line2 = registration.MailingAddress?.AddressLine2 ?? existingContact.address2_line2;
+            newContact.address2_postalcode = registration.MailingAddress?.PostalCode ?? existingContact.address2_postalcode;
+
+            // Other
+            newContact.era_secrettext = registration.SecretPhrase ?? existingContact.era_secrettext;
+
+            // link registrant primary and mailing address city, province, country
+            var primaryAddressCountry = Lookup(registration.PrimaryAddress?.Country) ?? existingContact.era_Country;
+            var primaryAddressProvince = Lookup(registration.PrimaryAddress?.StateProvince) ?? existingContact.era_ProvinceState;
+            var primaryAddressCity = Lookup(registration.PrimaryAddress?.Jurisdiction) ?? existingContact.era_City;
+            var mailingAddressCountry = Lookup(registration.MailingAddress?.Country) ?? existingContact.era_MailingCountry;
+            var mailingAddressProvince = Lookup(registration.MailingAddress?.StateProvince) ?? existingContact.era_MailingProvinceState;
+            var mailingAddressCity = Lookup(registration.MailingAddress?.Jurisdiction) ?? existingContact.era_MailingCity;
+
+            newContact.era_City = new era_jurisdiction
+            {
+                era_jurisdictionid = primaryAddressCity.era_jurisdictionid,
+                era_jurisdictionname = primaryAddressCity.era_jurisdictionname
+            };
+            newContact.era_ProvinceState = new era_provinceterritories
+            {
+                era_code = primaryAddressProvince.era_code,
+                era_name = primaryAddressProvince.era_name
+            };
+            newContact.era_Country = new era_country
+            {
+                era_countrycode = primaryAddressCountry.era_countrycode,
+                era_name = primaryAddressCountry.era_name
+            };
+
+            newContact.era_MailingCity = new era_jurisdiction
+            {
+                era_jurisdictionid = mailingAddressCity.era_jurisdictionid,
+                era_jurisdictionname = mailingAddressCity.era_jurisdictionname
+            };
+            newContact.era_MailingProvinceState = new era_provinceterritories
+            {
+                era_code = mailingAddressProvince.era_code,
+                era_name = mailingAddressProvince.era_name
+            };
+            newContact.era_MailingCountry = new era_country
+            {
+                era_countrycode = mailingAddressCountry.era_countrycode,
+                era_name = mailingAddressCountry.era_name
+            };
+
+            // Delete the existing contact to allow it to be replaced by adding the new contact.
+            // Note: this is a workaround as the standard approach to patch/update was triggering a mysterious exception
+            dynamicsClient.DeleteObject(existingContact);
+            dynamicsClient.AddTocontacts(newContact);
+
+            // Add links to new client
+
+            // country
+            dynamicsClient.AddLink(primaryAddressCountry, nameof(primaryAddressCountry.era_contact_Country), newContact);
+            // province
+            if (primaryAddressProvince != null && !string.IsNullOrEmpty(primaryAddressProvince.era_code))
+            {
+                dynamicsClient.AddLink(primaryAddressProvince, nameof(primaryAddressProvince.era_provinceterritories_contact_ProvinceState), newContact);
+            }
+            // city
+            if (primaryAddressCity == null || !primaryAddressCity.era_jurisdictionid.HasValue)
+            {
+                newContact.address1_city = primaryAddressCity.era_jurisdictionname;
+            }
+            else
+            {
+                dynamicsClient.AddLink(primaryAddressCity, nameof(primaryAddressCity.era_jurisdiction_contact_City), newContact);
+            }
+
+            // country
+            dynamicsClient.AddLink(mailingAddressCountry, nameof(mailingAddressCountry.era_country_contact_MailingCountry), newContact);
+            // province
+            if (mailingAddressProvince != null && !string.IsNullOrEmpty(mailingAddressProvince.era_code))
+            {
+                dynamicsClient.AddLink(mailingAddressProvince, nameof(mailingAddressProvince.era_provinceterritories_contact_MailingProvinceState), newContact);
+            }
+            // city
+            if (mailingAddressCity == null || !mailingAddressCity.era_jurisdictionid.HasValue)
+            {
+                newContact.address2_city = mailingAddressCity.era_jurisdictionname;
+            }
+            else
+            {
+                dynamicsClient.AddLink(mailingAddressCity, nameof(mailingAddressCity.era_jurisdiction_contact_MailingCity), newContact);
+            }
+
+            return newContact;
+        }
+
+        private Registration PopulateRegistration(Registration registration, contact contact)
+        {
+            // Check each incoming field for updated values and, if found, use them, otherwise use the existing value retrieved from Dynamics for the field.
+            registration.BCServicesCardId = contact.era_bcservicescardid;
+            // Personal Details
+            registration.PersonalDetails.FirstName = contact.firstname;
+            registration.PersonalDetails.LastName = contact.lastname;
+            registration.PersonalDetails.DateOfBirth = contact.birthdate.ToString();
+            registration.PersonalDetails.Initials = contact.era_initial;
+            registration.PersonalDetails.PreferredName = contact.era_preferredname;
+            registration.PersonalDetails.Gender = contact.gendercode.ToString();
+            // Contact Details
+            registration.ContactDetails.Email = contact.emailaddress1;
+            registration.ContactDetails.HideEmailRequired = contact.era_emailrefusal.HasValue ? contact.era_emailrefusal.Value : false;
+            registration.ContactDetails.Phone = contact.address1_telephone1;
+            registration.ContactDetails.HidePhoneRequired = contact.era_phonenumberrefusal.HasValue ? contact.era_phonenumberrefusal.Value : false;
+            // Primary Address
+            registration.PrimaryAddress.AddressLine1 = contact.address1_line1;
+            registration.PrimaryAddress.AddressLine2 = contact.address1_line2;
+            registration.PrimaryAddress.Jurisdiction.Code = contact.era_City?.era_jurisdictionid.ToString();
+            registration.PrimaryAddress.Jurisdiction.Name = contact.era_City?.era_jurisdictionname;
+            registration.PrimaryAddress.StateProvince.Code = contact.era_ProvinceState?.era_code;
+            registration.PrimaryAddress.StateProvince.Name = contact.era_ProvinceState?.era_name;
+            registration.PrimaryAddress.Country.Code = contact.era_Country?.era_countrycode;
+            registration.PrimaryAddress.Country.Name = contact.era_Country?.era_name;
+            registration.PrimaryAddress.PostalCode = contact.address1_postalcode;
+            // Mailing Address
+            registration.MailingAddress.AddressLine1 = contact.address2_line1;
+            registration.MailingAddress.AddressLine2 = contact.address2_line2;
+            registration.MailingAddress.Jurisdiction.Code = contact.era_MailingCity?.era_jurisdictionid.ToString();
+            registration.MailingAddress.Jurisdiction.Name = contact.era_MailingCity?.era_jurisdictionname;
+            registration.MailingAddress.StateProvince.Code = contact.era_MailingProvinceState?.era_code;
+            registration.MailingAddress.StateProvince.Name = contact.era_MailingProvinceState?.era_name;
+            registration.MailingAddress.Country.Code = contact.era_MailingCountry?.era_countrycode;
+            registration.MailingAddress.Country.Name = contact.era_MailingCountry?.era_name;
+            registration.MailingAddress.PostalCode = contact.address2_postalcode;
+            // Other
+            registration.InformationCollectionConsent = contact.era_collectionandauthorization.HasValue ? contact.era_collectionandauthorization.Value : false;
+            registration.RestrictedAccess = contact.era_restriction.HasValue ? contact.era_restriction.Value : false;
+            registration.SecretPhrase = contact.era_secrettext;
+
+            return registration;
         }
 
         private Registration newRegistrationObject()
@@ -474,9 +739,14 @@ namespace EMBC.Registrants.API.RegistrationsModule
         }
 
         private era_country Lookup(Country country) =>
-            string.IsNullOrEmpty(country.Code)
+            country == null || string.IsNullOrEmpty(country.Code)
             ? null
             : dynamicsClient.era_countries.Where(c => c.era_countrycode == country.Code).FirstOrDefault();
+
+        private era_country Lookup(era_country country) =>
+            country == null || string.IsNullOrEmpty(country.era_countrycode)
+            ? null
+            : dynamicsClient.era_countries.Where(c => c.era_countrycode == country.era_countrycode).FirstOrDefault();
 
         private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
 
@@ -650,16 +920,22 @@ namespace EMBC.Registrants.API.RegistrationsModule
         /// <returns>ESS File Number</returns>
         public async Task<string> CreateRegistrantEvacuation(RegistrantEvacuation evacuation)
         {
-            if (!Guid.TryParse(evacuation.ContactId, out Guid contactId))
-                throw new Exception("Contact ID is not a valid GUID");
+            //if (!Guid.TryParse(evacuation.ContactId, out Guid contactId))
+            //    throw new Exception("Contact ID is not a valid GUID");
 
-            //var profile = await GetProfileById(contactId);
             var profile = newRegistrationObject();
 
-            // get dynamics contact
-            contact dynamicsContact = GetDynamicsContact(contactId);
+            // get dynamics contact by contactId
+            //contact dynamicsContact = GetDynamicsContact(contactId);
 
-            if (dynamicsContact != null)
+            // get dynamics contact by BCServicesCardId
+            contact dynamicsContact = GetDynamicsContactByBCSC(evacuation.Id);
+
+            if (dynamicsContact == null)
+            {
+                throw new Exception("Profile Not Found. Id: " + evacuation.Id);
+            }
+            else
             {
                 // return contact as a profile
                 CopyContactToProfile(dynamicsContact, profile);
@@ -700,6 +976,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_canevacueeprovidelodging = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideLodging),
                 era_canevacueeprovidetransportation = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation),
                 era_dietaryrequirement = evacuation.PreliminaryNeedsAssessment.HaveSpecialDiet,
+                era_dietaryrequirementdetails = evacuation.PreliminaryNeedsAssessment.SpecialDietDetails,
                 era_medicationrequirement = evacuation.PreliminaryNeedsAssessment.HaveMedication,
                 era_insurancecoverage = Lookup(evacuation.PreliminaryNeedsAssessment.Insurance),
                 era_emailrefusal = string.IsNullOrEmpty(profile.ContactDetails.Email)
@@ -811,6 +1088,191 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 .Where(f => f.era_evacuationfileid == evacuationFile.era_evacuationfileid).FirstOrDefault();
 
             return $"{essFileNumber:D9}";
+        }
+
+        /// <summary>
+        /// Get Registrant Evacuations
+        /// </summary>
+        /// <param name="contactId">Contact Id</param>
+        /// <returns>List of RegistrantEvacuation</returns>
+        public async Task<List<RegistrantEvacuation>> GetRegistrantEvacuations(Guid contactId)
+        {
+            if (contactId == null)
+            {
+                throw new Exception("Contact ID cannot be null.");
+            }
+            /* Step 1. query era_needsassessmentevacuee by contactid expand needsassessment => needsassessmentevacuee, needsassessment
+             * Step 2. query evacuationfile by needsassessmentid from previous query => evacuationfile
+             * Step 3. query era_needsassessmentevacuee by needsassessmentid expand contact => members
+             */
+
+            IQueryable queryResult = null;
+            var needsAssessmentsFound = new Dictionary<Guid?, era_needassessment>();
+            var evacuationFilesFound = new Dictionary<Guid?, era_evacuationfile>();
+            var needsAssessmentEvacueesFound = new Dictionary<Guid?, era_needsassessmentevacuee>();
+            var registrantsFound = new Dictionary<Guid?, contact>();
+
+            try
+            {
+                // Step 1.
+                queryResult = dynamicsClient.era_needsassessmentevacuees
+                    .Expand(n => n.era_NeedsAssessmentID)
+                    .Where(n => n.era_RegistrantID.contactid == contactId);
+
+                foreach (era_needsassessmentevacuee nae in queryResult)
+                {
+                    // add needs assessment
+                    needsAssessmentsFound.Add(nae._era_needsassessmentid_value, nae.era_NeedsAssessmentID);
+                }
+
+                foreach (var needsAssessmentObject in needsAssessmentsFound)
+                {
+                    // Step 2.
+                    var efQueryResult = dynamicsClient.era_evacuationfiles
+                    .Where(ef => ef.era_evacuationfileid == needsAssessmentObject.Value._era_evacuationfile_value).FirstOrDefault();
+
+                    // add evacuation file
+                    evacuationFilesFound.Add(efQueryResult.era_evacuationfileid, efQueryResult);
+
+                    // Step 3.
+                    var naeQueryResult = dynamicsClient.era_needsassessmentevacuees
+                        .Expand(nae => nae.era_RegistrantID)
+                        .Where(nae => nae.era_NeedsAssessmentID.era_needassessmentid == needsAssessmentObject.Key);
+
+                    foreach (era_needsassessmentevacuee nae in naeQueryResult)
+                    {
+                        // add needs assessment evacuee
+                        needsAssessmentEvacueesFound.Add(nae.era_needsassessmentevacueeid, nae);
+
+                        // add registrant to hashtable. Note: pets don't have a registrant id
+                        if (nae.era_RegistrantID != null)
+                        {
+                            registrantsFound.Add(nae.era_RegistrantID.contactid, nae.era_RegistrantID);
+                        }
+                    }
+                }
+            }
+            catch (DataServiceQueryException ex)
+            {
+                DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
+
+                // don't throw an exception if record is not found
+                if (dataServiceClientException.StatusCode == 404)
+                {
+                    return null;
+                }
+                else
+                {
+                    Console.WriteLine("dataServiceClientException: " + dataServiceClientException.Message);
+                }
+
+                ODataErrorException odataErrorException = dataServiceClientException.InnerException as ODataErrorException;
+                if (odataErrorException != null)
+                {
+                    Console.WriteLine(odataErrorException.Message);
+                    throw dataServiceClientException;
+                }
+            }
+
+            var registrantEvacuationList = new List<RegistrantEvacuation>();
+
+            if (needsAssessmentsFound.Count == 0)
+            {
+                return await Task.FromResult(registrantEvacuationList);
+            }
+
+            foreach (var needsAssessmentObject in needsAssessmentsFound)
+            {
+                // get the evacuation file object
+                var evacuationFileObject = evacuationFilesFound[needsAssessmentObject.Value._era_evacuationfile_value];
+
+                // create a new registrant evacuation object to populate and add to the list
+                var registrantEvacuation = newRegistrantEvacuationObject();
+
+                // set contact id
+                registrantEvacuation.Id = contactId.ToString();
+
+                // set evacuated from address with dynamics evacuation file details
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.Code = evacuationFileObject.era_Jurisdiction?.era_jurisdictionid?.ToString();
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.Name = evacuationFileObject.era_Jurisdiction?.era_jurisdictionname;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1 = evacuationFileObject.era_addressline1;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine2 = evacuationFileObject.era_addressline2;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.Name = evacuationFileObject.era_province;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.Name = evacuationFileObject.era_country;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.PostalCode = evacuationFileObject.era_postalcode;
+
+                // set needs assessment with dynamics needs assessment details
+                registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideClothing = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovideclothing);
+                registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideFood = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovidefood);
+                registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideIncidentals = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovideincidentals);
+                registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideLodging = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovidelodging);
+                registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovidetransportation);
+                //registrantEvacuation.PreliminaryNeedsAssessment.HasPetsFood = needsAssessmentObject.; //TODO: add field in dynamics
+                registrantEvacuation.PreliminaryNeedsAssessment.HaveMedication = (bool)needsAssessmentObject.Value.era_medicationrequirement;
+                registrantEvacuation.PreliminaryNeedsAssessment.Insurance = (NeedsAssessment.InsuranceOption)needsAssessmentObject.Value.era_insurancecoverage;
+
+                // set pets with dynamics needs assessment evacuee details
+                registrantEvacuation.PreliminaryNeedsAssessment.Pets =
+                    needsAssessmentEvacueesFound.Where(e => e.Value.era_evacueetype == (int)EvacueeType.Pet
+                        && e.Value._era_needsassessmentid_value == needsAssessmentObject.Value.era_needassessmentid)
+                .Select(e => new Pet
+                {
+                    Type = e.Value.era_typeofpet,
+                    Quantity = e.Value.era_numberofpets.ToString()
+                }).ToArray();
+
+                // set members with dynamics needs assessment evacuee details
+                registrantEvacuation.PreliminaryNeedsAssessment.FamilyMembers =
+                    needsAssessmentEvacueesFound.Where(e => e.Value.era_evacueetype == (int)EvacueeType.Person
+                        && e.Value.era_isprimaryregistrant == false
+                        && e.Value._era_needsassessmentid_value == needsAssessmentObject.Value.era_needassessmentid)
+                .Select(e => new PersonDetails
+                {
+                    FirstName = registrantsFound[e.Value.era_RegistrantID.contactid].firstname,
+                    LastName = registrantsFound[e.Value.era_RegistrantID.contactid].lastname,
+                    PreferredName = registrantsFound[e.Value.era_RegistrantID.contactid].era_preferredname,
+                    DateOfBirth = Convert.ToDateTime(registrantsFound[e.Value.era_RegistrantID.contactid].birthdate.ToString()).ToShortDateString(), //MM/dd/yyyy
+                    Gender = LookupGenderValue(registrantsFound[e.Value.era_RegistrantID.contactid].gendercode),
+                    Initials = registrantsFound[e.Value.era_RegistrantID.contactid].era_initial
+                }).ToArray();
+
+                // add evacuation to list
+                registrantEvacuationList.Add(registrantEvacuation);
+            }
+
+            return await Task.FromResult(registrantEvacuationList);
+        }
+
+        /// <summary>
+        /// Creates a new RegistrantEvacuation Object
+        /// </summary>
+        /// <returns>RegistrantEvacuation</returns>
+        private RegistrantEvacuation newRegistrantEvacuationObject()
+        {
+            var registrantEvacuation = new RegistrantEvacuation();
+            registrantEvacuation.PreliminaryNeedsAssessment = new NeedsAssessment();
+            registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress = new Address();
+            registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction = new Jurisdiction();
+            registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince = new StateProvince();
+            registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country = new Country();
+            registrantEvacuation.PreliminaryNeedsAssessment.FamilyMembers = new List<PersonDetails>();
+            registrantEvacuation.PreliminaryNeedsAssessment.Pets = new List<Pet>();
+
+            return registrantEvacuation;
+        }
+
+        private bool? LookupYesNoIdontknowValue(int? value) => value switch
+        {
+            174360000 => true,
+            174360001 => false,
+            174360002 => null,
+            _ => null
+        };
+
+        public enum EvacueeType
+        {
+            Person = 174360000,
+            Pet = 174360001,
         }
     }
 }

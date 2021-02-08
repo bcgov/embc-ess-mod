@@ -6,19 +6,33 @@
   </div>
 
   <mat-horizontal-stepper class="stepper-style" labelPosition="bottom"
-    (animationDone)="currentStep(needsStepper?.selectedIndex)" (selectionChange)="stepChanged($event, needsStepper);" #needsStepper>
+    (animationDone)="currentStep(needsStepper?.selectedIndex)" (selectionChange)="stepChanged($event, needsStepper);"
+    #needsStepper>
     <mat-step *ngFor="let step of needsSteps" [stepControl]="form">
       <ng-template matStepLabel>{{step.stepName}}</ng-template>
       <div *ngIf="step.stepName === 'Evacuated From'; else altText">
-        <p>The purpose of creating an Emergency Support Services (ESS) File is to help determine how the event has
-          impacted you and your household members in order for an Emergency Support Services (ESS) Responder to provide
-          you with assistance and offer emergency goods and services if eligible.</p>
-        <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.
-        </p>
+        <ng-container *ngIf="currentFlow === 'non-verified-registration'">
+          <p>The purpose of creating an Emergency Support Services
+            (ESS) File is to help determine how the event has
+            impacted you and your household members in order for an Emergency Support Services (ESS) Responder to
+            provide
+            you with assistance and offer emergency goods and services if eligible.</p>
+          <p>Please review and complete the form below. Required fields are marked with a red asterisk.</p>
+        </ng-container>
+        <ng-container *ngIf="currentFlow === 'verified-registration'">
+          <p>The purpose of creating an <b>Evacuation File</b> is to help determine how the event has impacted you and
+            your
+            household members in order for an Emergency Support Services (ESS) Responder to provide you with assistance
+            and offer emergency goods and services if eligible.</p>
+          <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.
+          </p>
+        </ng-container>
       </div>
       <ng-template #altText>
-        <p>Please answer all questions to the best of your knowledge. Required fields are marked with a red asterisk.
-        </p>
+        <p *ngIf="currentFlow === 'non-verified-registration'">Please review and complete the form below. Required
+          fields are marked with a red asterisk.</p>
+        <p *ngIf="currentFlow === 'verified-registration'">Please answer all questions to the best of your knowledge.
+          Required fields are marked with a red asterisk.</p>
       </ng-template>
       <br>
       <app-component-wrapper [componentName]="step.component" [folderPath]="needsFolderPath"></app-component-wrapper>
@@ -52,7 +66,7 @@
         Submit
         <app-loader [showLoader]="showLoader"></app-loader>
       </button>
-      
+
     </mat-step>
     <ng-template matStepperIcon="edit" let-index="index">
       {{index + 1}}

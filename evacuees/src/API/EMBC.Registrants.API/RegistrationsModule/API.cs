@@ -61,7 +61,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<RegistrationResult>> CreateEvacuation(RegistrantEvacuation evacuation)
         {
-            if (evacuation == null || string.IsNullOrEmpty(evacuation.ContactId))
+            //if (evacuation == null || string.IsNullOrEmpty(evacuation.ContactId))
+            //    return BadRequest();BCServicesCardtId
+            if (evacuation == null || string.IsNullOrEmpty(evacuation.Id))
                 return BadRequest();
 
             var essFileNumber = await registrationManager.CreateRegistrantEvacuation(evacuation);
@@ -137,6 +139,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         /// <param name="id">Contact Id</param>
         /// <param name="profileRegistration">Profile Registration Form</param>
         /// <returns>Registration</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPatch("patch-profile/{id}")]
@@ -149,9 +152,29 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             //if (profileRegistration == null) return NotFound();
 
-            var profile = await registrationManager.PatchProfileById(id, profileRegistration);
+            var profile = await registrationManager.PatchProfileById(contactId, profileRegistration);
 
             return profile;
+        }
+
+        /// <summary>
+        /// Get a list of evacuations by Contact Id
+        /// </summary>
+        /// <param name="contactId">Query Parameter: Contact Id</param>
+        /// <returns>List of RegistrantEvacuation</returns>
+        [HttpGet("evacuation")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<List<RegistrantEvacuation>>> GetRegistrantEvacuations([FromQuery] string contactId)
+        {
+            if (string.IsNullOrEmpty(contactId) || !Guid.TryParse(contactId, out Guid contactID))
+            {
+                return BadRequest();
+            }
+
+            var evacuationList = await registrationManager.GetRegistrantEvacuations(contactID);
+
+            return Ok(evacuationList);
         }
     }
 
@@ -176,7 +199,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
     public class RegistrantEvacuation
     {
         [Required]
-        public string ContactId { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public NeedsAssessment PreliminaryNeedsAssessment { get; set; }
@@ -234,6 +257,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public bool? CanEvacueeProvideTransportation { get; set; }
         public bool? CanEvacueeProvideIncidentals { get; set; }
         public bool HaveSpecialDiet { get; set; }
+        public string SpecialDietDetails { get; set; }
         public bool HaveMedication { get; set; }
         public IEnumerable<PersonDetails> FamilyMembers { get; set; } = Array.Empty<PersonDetails>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();

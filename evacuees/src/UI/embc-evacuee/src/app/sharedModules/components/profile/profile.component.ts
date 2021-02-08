@@ -7,8 +7,9 @@ import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
-import { DataSubmissionService } from 'src/app/core/services/dataSubmission.service';
-import { ProblemDetail } from 'src/app/core/model/problemDetail';
+import { AlertService } from 'src/app/core/services/alert.service';
+import { DataService } from 'src/app/core/services/data.service';
+import { ProfileApiService } from 'src/app/core/services/api/profileApi.service';
 
 @Component({
   selector: 'app-profile',
@@ -32,10 +33,10 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   parentPageName = 'create-profile';
   showLoader = false;
 
-  constructor(private router: Router, private componentService: ComponentCreationService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public updateService: DataUpdationService, private cd: ChangeDetectorRef,
-              private submissionService: DataSubmissionService) {
+  constructor(
+    private router: Router, private componentService: ComponentCreationService, private route: ActivatedRoute,
+    private formCreationService: FormCreationService, public updateService: DataUpdationService, private cd: ChangeDetectorRef,
+    private profileApiService: ProfileApiService, private alertService: AlertService, private dataService: DataService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -75,7 +76,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.cd.detectChanges();
   }
 
-  stepChanged(event: any, stepper: MatStepper): void{
+  stepChanged(event: any, stepper: MatStepper): void {
     stepper.selected.interacted = false;
   }
 
@@ -166,13 +167,15 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   submitFile(): void {
-    // this.router.navigate(['/verified-registration/view-profile']);
-    this.submissionService.submitProfile().subscribe((response: ProblemDetail) => {
-      console.log(response);
-      // this.updateService.updateRegisrationResult(response);
-      this.router.navigate(['/verified-registration/view-profile']);
+    this.showLoader = !this.showLoader;
+    this.alertService.clearAlert();
+    this.profileApiService.submitProfile().subscribe((profileId) => {
+      this.dataService.setProfileId(profileId);
+      this.router.navigate(['/verified-registration/dashboard']);
     }, (error) => {
       console.log(error);
+      this.showLoader = !this.showLoader;
+      this.alertService.setAlert('danger', error.title);
     });
 
   }

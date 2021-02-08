@@ -1,4 +1,4 @@
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomValidationService } from '../services/customValidation.service';
 import { RegAddress } from './address';
 import { PersonDetails } from './profile.model';

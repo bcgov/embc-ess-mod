@@ -10,6 +10,7 @@ import { FooterComponent } from './layout/footer/footer.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import { MatIconModule } from '@angular/material/icon';
         FormsModule,
         MatProgressSpinnerModule,
         MatDialogModule,
-        MatIconModule
+        MatIconModule,
+        MatMenuModule
     ],
     declarations: [
         CaptchaComponent,

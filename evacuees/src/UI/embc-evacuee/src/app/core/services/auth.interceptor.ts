@@ -1,21 +1,31 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpEvent, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
-import { of, Observable, from, throwError } from 'rxjs';
+import { HttpInterceptor, HttpEvent, HttpHandler, HttpRequest } from '@angular/common/http';
+import { Observable, throwError, EMPTY } from 'rxjs';
 import { AuthService } from './auth.service';
 import { catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  // simple url whitelist that do not require authentication header
+  private whiteListUrls = [
+    '/login*',
+    '/token',
+    '/api/location*',
+    '/api/registration*',
+    '/captcha'
+  ];
 
   constructor(private authService: AuthService, private router: Router) { }
 
   public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // only set authentication header for API requests
-    if (!req.url.startsWith('/api')) {
+    const whiteListed = this.isWhiteListed(req.url);
+    console.log(req.url, ' whitelisted ', whiteListed);
+    if (whiteListed) {
       return next.handle(req);
     }
-    return from(this.authService.getToken())
+    return this.authService.getToken()
       .pipe(switchMap(token => {
         if (!token) {
           // no token, do not add authentication header
@@ -34,17 +44,22 @@ export class AuthInterceptor implements HttpInterceptor {
           // Access denied, force login
           console.warn('API returned 401 access denied, redirecting to login', error.url);
           this.authService.login(this.router.url);
-          return of(null);
+          return EMPTY;
         }
         else {
           // The backend returned an unsuccessful response code.
           // The response body may contain clues as to what went wrong.
-          console.error(
-            `API returned code ${error.status}, ` + `body was: ${error.error}`);
+          console.error(`API ${req.url} returned code ${error.status}, body was: ${error.error}`);
         }
         // Return an observable with a user-facing error message.
         return throwError('Something bad happened; please try again later.');
       }));
   }
 
+  private isWhiteListed(url: string): boolean {
+    return this.whiteListUrls.some(u => {
+      if (u.endsWith('*')) { return url.startsWith(u.slice(0, u.length - 1)); }
+      return u === url;
+    });
+  }
 }
