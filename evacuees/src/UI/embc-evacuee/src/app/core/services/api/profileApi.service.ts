@@ -17,7 +17,8 @@ export class ProfileApiService {
   }
 
   submitProfile(): Observable<string> {
-    let profile = this.mergeData({ isMailingAddressSameAsPrimaryAddress: true }, this.dataService.getRegistration()); // this is wrong, should accept profile object
+    const profile = this.mergeData({ isMailingAddressSameAsPrimaryAddress: true },
+      this.dataService.getRegistration()); // this is wrong, should accept profile object
     console.log(JSON.stringify(profile));
     return this.profileService.profileUpsert({ body: profile });
   }
@@ -31,9 +32,9 @@ export class ProfileApiService {
       mergeMap(id => this.profileService.profileGetProfile()),
       map(profile => {
         this.profileMapping.mapProfile(profile);
-        return profile.id
+        return profile.id;
       })
-    )
+    );
   }
 
 }

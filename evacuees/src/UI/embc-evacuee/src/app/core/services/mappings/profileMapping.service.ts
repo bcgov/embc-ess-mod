@@ -24,7 +24,7 @@ export class ProfileMappingService {
         this.dataService.setConflicts(userProfile.conflicts);
     }
 
-    mapProfile(profile: Profile) {
+    mapProfile(profile: Profile): void {
         this.setExistingProfile(profile);
         this.dataService.setProfileId(profile.id);
         this.dataService.setProfile(profile);

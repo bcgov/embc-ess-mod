@@ -17,8 +17,8 @@ import { FormGroup } from '@angular/forms';
 export class ConflictManagementComponent implements OnInit {
 
   updateAddressIndicator = false;
-  folderPath = "evacuee-profile-forms";
-  componentName = "address";
+  folderPath = 'evacuee-profile-forms';
+  componentName = 'address';
   eraProfile: Profile;
   loginProfile: Profile;
   conflicts: Array<ProfileDataConflict> = [];
@@ -28,7 +28,8 @@ export class ConflictManagementComponent implements OnInit {
   form: FormGroup;
 
   constructor(private router: Router, private dataService: DataService, private profileApiService: ProfileApiService,
-    private alertService: AlertService, private formCreationService: FormCreationService, private dataUpdation: DataUpdationService) { }
+              private alertService: AlertService, private formCreationService: FormCreationService,
+              private dataUpdation: DataUpdationService) { }
 
   ngOnInit(): void {
     this.dataService.getConflicts().subscribe(bcscConflicts => {
@@ -45,7 +46,7 @@ export class ConflictManagementComponent implements OnInit {
     if (this.conflicts.some(val => val.conflictDataElement === 'PrimaryAddress')) {
       this.formCreationService.getAddressForm().subscribe(updatedAddress => {
         this.form = updatedAddress;
-      })
+      });
     }
   }
 
@@ -58,7 +59,7 @@ export class ConflictManagementComponent implements OnInit {
 
   next(): void {
     if (this.conflictStepper.selectedIndex === this.conflictStepper.steps.length - 1) {
-      this.updateProfileAndNavigate()
+      this.updateProfileAndNavigate();
     } else {
       this.conflictStepper.next();
     }
@@ -97,11 +98,11 @@ export class ConflictManagementComponent implements OnInit {
       } else if (value.conflictDataElement === 'DateOfBirth') {
         this.eraProfile.personalDetails.dateOfBirth = this.loginProfile.personalDetails.dateOfBirth;
       } else if (value.conflictDataElement === 'PrimaryAddress') {
-        console.log("here")
+        console.log('here');
         this.eraProfile.primaryAddress = this.dataUpdation.setAddressObject(this.form.get('address').value);
         this.eraProfile.mailingAddress = this.dataUpdation.setAddressObject(this.form.get('mailingAddress').value);
       }
-    })
+    });
   }
 
 }

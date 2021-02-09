@@ -25,7 +25,7 @@ export class DataService {
     public getProfile(): Profile {
         return this.profile;
     }
-    public setProfile(profile: Profile) {
+    public setProfile(profile: Profile): void {
         this.profile = profile;
         this.cacheService.set('profile', JSON.stringify(profile));
     }
@@ -33,7 +33,7 @@ export class DataService {
     public getLoginProfile(): Profile {
         return this.loginProfile;
     }
-    public setLoginProfile(loginProfile: Profile) {
+    public setLoginProfile(loginProfile: Profile): void {
         this.loginProfile = loginProfile;
         this.cacheService.set('loginProfile', JSON.stringify(loginProfile));
     }

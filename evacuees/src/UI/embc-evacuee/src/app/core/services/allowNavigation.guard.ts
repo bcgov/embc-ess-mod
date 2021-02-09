@@ -20,7 +20,7 @@ export class AllowNavigationGuard implements CanActivate {
         this.regProfService.getExistingProfile().subscribe(profile => {
             console.log(profile);
             this.mappingService.mapUserProfile(profile);
-            if (state.url === "/verified-registration") {
+            if (state.url === '/verified-registration') {
                 if (profile.isNewUser) {
                     this.router.navigate(['/verified-registration/collection-notice']);
                 } else {
