@@ -16,6 +16,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
@@ -77,6 +78,14 @@ namespace EMBC.Registrants.API
             //Add services
             AddDataProtection(services);
             AddOpenApi(services);
+            services.AddCors(opts => opts.AddDefaultPolicy(policy =>
+            {
+                var corsOrigins = configuration.GetSection("app:cors:origins").GetChildren().Select(c => c.Value);
+                if (corsOrigins.Any())
+                {
+                    policy.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(corsOrigins.ToArray());
+                }
+            }));
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
@@ -141,7 +150,7 @@ namespace EMBC.Registrants.API
             app.UseAuthorization();
             app.UseOpenApi();
             app.UseSwaggerUi3();
-
+            app.UseCors();
             app.UseRouting();
 
             app.UseAuthorization();
