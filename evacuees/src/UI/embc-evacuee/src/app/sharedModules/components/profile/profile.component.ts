@@ -46,11 +46,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    if (this.currentFlow === 'non-verified-registration') {
-      this.profileHeading = 'Create Profile';
-    } else {
-      this.profileHeading = 'Create Your ERA Profile';
-    }
+    this.profileHeading = 'Create Your Profile';
     this.steps = this.componentService.createProfileSteps();
   }
 
@@ -181,7 +177,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   ngOnDestroy(): void {
-    this.form$.unsubscribe();
+    // this.form$.unsubscribe();
   }
 
 }

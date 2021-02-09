@@ -1,3 +1,13 @@
 .needs-button {
     width: 50%;
 }
+
+.content-container {
+    padding: 0 24px 24px 24px;
+}
+
+@media (max-width: 768px) {
+    .needs-button {
+        width: 100%;
+    }
+}
