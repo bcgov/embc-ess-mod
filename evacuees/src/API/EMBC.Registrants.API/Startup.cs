@@ -80,10 +80,14 @@ namespace EMBC.Registrants.API
             AddOpenApi(services);
             services.AddCors(opts => opts.AddDefaultPolicy(policy =>
             {
-                var corsOrigins = configuration.GetSection("app:cors:origins").GetChildren().Select(c => c.Value);
+                // try to get array of origins from section array
+                var corsOrigins = configuration.GetSection("app:cors:origins").GetChildren().Select(c => c.Value).ToArray();
+                // try to get array of origins from value
+                if (!corsOrigins.Any()) corsOrigins = configuration.GetValue("app:cors:origins", string.Empty).Split(',');
+                corsOrigins = corsOrigins.Where(o => !string.IsNullOrWhiteSpace(o)).ToArray();
                 if (corsOrigins.Any())
                 {
-                    policy.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(corsOrigins.ToArray());
+                    policy.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(corsOrigins);
                 }
             }));
             services.AddControllers(options =>
