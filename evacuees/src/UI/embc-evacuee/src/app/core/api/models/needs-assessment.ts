@@ -26,4 +26,5 @@ export interface NeedsAssessment {
   requiresIncidentals?: null | boolean;
   requiresLodging?: null | boolean;
   requiresTransportation?: null | boolean;
+  specialDietDetails?: null | string;
 }
