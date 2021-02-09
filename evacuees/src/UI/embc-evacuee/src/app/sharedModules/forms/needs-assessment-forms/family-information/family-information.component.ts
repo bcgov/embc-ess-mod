@@ -140,7 +140,7 @@ export default class FamilyInformationComponent implements OnInit {
   hasSpecialDietChange(event: MatRadioChange): void {
 
     if (event.value === false) {
-      this.familyMemberForm.get('haveSpecialDietSpecifications').reset();
+      this.familyMemberForm.get('specialDietDetails').reset();
     }
   }
 }

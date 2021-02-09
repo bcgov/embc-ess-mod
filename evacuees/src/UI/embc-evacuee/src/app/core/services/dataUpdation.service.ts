@@ -48,6 +48,7 @@ export class DataUpdationService {
         this.formCreationService.setFamilyMembersForm(formGroup);
         this.dataService.updateNeedsAssessment({ haveMedication: formGroup.get('haveMedication').value });
         this.dataService.updateNeedsAssessment({ haveSpecialDiet: formGroup.get('haveSpecialDiet').value });
+        this.dataService.updateNeedsAssessment({ specialDietDetails: formGroup.get('specialDietDetails').value });
         this.dataService.updateNeedsAssessment({ familyMembers: formGroup.get('familyMember').value });
     }
 

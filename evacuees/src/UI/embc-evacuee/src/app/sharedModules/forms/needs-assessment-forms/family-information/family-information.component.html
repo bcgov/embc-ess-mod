@@ -117,10 +117,10 @@
         <label class="card-heading" id="primary-radio-group-label">Please specify</label>
         <br>
         <mat-form-field appearance="outline" style="width:70%">
-          <input matInput [formControlName]="'haveSpecialDietSpecifications'" placeholder="Specify dietary requirements"
+          <input matInput [formControlName]="'specialDietDetails'" placeholder="Specify dietary requirements"
             maxlength="100">
           <mat-error
-            *ngIf="familyFormControl?.haveSpecialDietSpecifications.touched && familyFormControl?.haveSpecialDietSpecifications.invalid && familyFormControl?.haveSpecialDietSpecifications.hasError('required')">
+            *ngIf="familyFormControl?.specialDietDetails.touched && familyFormControl?.specialDietDetails.invalid && familyFormControl?.specialDietDetails.hasError('required')">
             Dietary requirements specifications are required</mat-error>
         </mat-form-field>
       </div>
