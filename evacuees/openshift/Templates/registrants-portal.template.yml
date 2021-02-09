@@ -75,6 +75,8 @@ parameters:
   - description: JWT lifetime since creation in minutes
     name: JWT_TOKEN_EXPIRY
     required: true
+  - description: CORS policy list of allowed origins
+    name: CORS_ORIGINS
 
 objects:
   - kind: ConfigMap
@@ -93,6 +95,7 @@ objects:
       location__cache__RefreshInterval: ${LOCATION_CACHE_REFRESH_INTERVAL}
       auth__bcsc__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
       app__knownNetwork: ${APP_KNOWN_NETWORK}
+      app__cors__origins: ${CORS_ORIGINS}
       auth__jwt__ClaimsIssuer: ${JWT_ISSUER}
       auth__jwt__audience: ${JWT_AUDIENCE}
       auth__jwt__expiryInMinutes: ${JWT_TOKEN_EXPIRY}
