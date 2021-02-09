@@ -34,7 +34,7 @@
             </mat-card>
             <br>
             <div>
-                <button class="button-s" mat-stroked-button (click)="next()">Continue
+                <button class="button-s" mat-stroked-button (click)="next()" [disabled]="isSubmitted">Continue
                     <app-loader [showLoader]="showLoader"></app-loader>
                 </button>
             </div>
@@ -67,7 +67,7 @@
             </mat-card>
             <br>
             <div>
-                <button class="button-s" mat-stroked-button (click)="next()">Continue
+                <button class="button-s" mat-stroked-button (click)="next()" [disabled]="isSubmitted">Continue
                     <app-loader [showLoader]="showLoader"></app-loader>
                 </button>
             </div>
@@ -116,18 +116,33 @@
             </mat-card>
             <br>
             <div *ngIf="!updateAddressIndicator">
-                <button class="button-s" mat-stroked-button (click)="navigateDashboard()">No, Keep My Address</button>
-                <button class="button-p" mat-stroked-button (click)="toggleAddress()">Yes, Update My Address</button>
+                <div class="row justify-content-between resp-style">
+                    <div class="col-md-6">
+                        <button class="button-s" mat-stroked-button (click)="navigateDashboard()">No, Keep My
+                            Address</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="button-p" mat-stroked-button (click)="toggleAddress()">Yes, Update My
+                            Address</button>
+                    </div>
+                </div>
             </div>
 
             <div *ngIf="updateAddressIndicator">
                 <app-component-wrapper [componentName]="componentName" [folderPath]="folderPath">
                 </app-component-wrapper>
                 <br>
-                <button class="button-s" mat-stroked-button (click)="toggleAddress('cancel')">Cancel</button>
-                <button class="button-p" mat-stroked-button (click)="conflictsResolved()">Save
-                    <app-loader [showLoader]="showLoader"></app-loader>
-                </button>
+                <div class="row justify-content-between resp-style">
+                    <div class="col-md-6">
+                        <button class="button-s" mat-stroked-button (click)="toggleAddress('cancel')">Cancel</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="button-p" mat-stroked-button (click)="conflictsResolved()"
+                            [disabled]="isSubmitted">Save
+                            <app-loader [showLoader]="showLoader"></app-loader>
+                        </button>
+                    </div>
+                </div>
             </div>
         </mat-step>
         <ng-template matStepperIcon="edit" let-index="index">

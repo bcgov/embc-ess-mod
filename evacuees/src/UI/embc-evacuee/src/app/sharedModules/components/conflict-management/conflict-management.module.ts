@@ -10,6 +10,7 @@ import { ComponentWrapperModule } from '../../components/component-wrapper/compo
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CustomPipeModule } from '../../../core/pipe/customPipe.module';
+import { CoreModule } from '../../../core/core.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { CustomPipeModule } from '../../../core/pipe/customPipe.module';
     ComponentWrapperModule,
     MatSelectModule,
     MatAutocompleteModule,
-    CustomPipeModule
+    CustomPipeModule,
+    CoreModule
   ]
 })
 export class ConflictManagementModule { }

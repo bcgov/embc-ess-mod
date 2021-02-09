@@ -7,6 +7,7 @@ import { ProfileApiService } from 'src/app/core/services/api/profileApi.service'
 import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { DataUpdationService } from 'src/app/core/services/dataUpdation.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-conflict-management',
@@ -23,6 +24,8 @@ export class ConflictManagementComponent implements OnInit {
   conflicts: Array<ProfileDataConflict> = [];
   @ViewChild('conflictStepper') conflictStepper: MatStepper;
   showLoader = false;
+  isSubmitted = false;
+  form: FormGroup;
 
   constructor(private router: Router, private dataService: DataService, private profileApiService: ProfileApiService,
     private alertService: AlertService, private formCreationService: FormCreationService, private dataUpdation: DataUpdationService) { }
@@ -32,7 +35,18 @@ export class ConflictManagementComponent implements OnInit {
       this.conflicts = bcscConflicts;
       this.eraProfile = this.dataService.getProfile();
       this.loginProfile = this.dataService.getLoginProfile();
+      if (this.conflicts) {
+        this.loadAddressForm();
+      }
     });
+  }
+
+  loadAddressForm(): void {
+    if (this.conflicts.some(val => val.conflictDataElement === 'PrimaryAddress')) {
+      this.formCreationService.getAddressForm().subscribe(updatedAddress => {
+        this.form = updatedAddress;
+      })
+    }
   }
 
   toggleAddress(action?: string): void {
@@ -58,8 +72,24 @@ export class ConflictManagementComponent implements OnInit {
     this.updateProfileAndNavigate();
   }
 
-  updateProfileAndNavigate() {
+  updateProfileAndNavigate(): void {
     this.showLoader = !this.showLoader;
+    this.isSubmitted = !this.isSubmitted;
+    this.updateConflicts();
+    console.log(this.eraProfile);
+    this.profileApiService.upsertProfile(this.eraProfile).subscribe(profileId => {
+      console.log(profileId);
+      this.router.navigate(['/verified-registration/dashboard']);
+    },
+      (error) => {
+        console.log(error);
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        this.alertService.setAlert('danger', error.title);
+      });
+  }
+
+  updateConflicts(): void {
     this.conflicts.forEach(value => {
       if (value.conflictDataElement === 'Name') {
         this.eraProfile.personalDetails.firstName = this.loginProfile.personalDetails.firstName;
@@ -67,21 +97,11 @@ export class ConflictManagementComponent implements OnInit {
       } else if (value.conflictDataElement === 'DateOfBirth') {
         this.eraProfile.personalDetails.dateOfBirth = this.loginProfile.personalDetails.dateOfBirth;
       } else if (value.conflictDataElement === 'PrimaryAddress') {
-        this.formCreationService.getAddressForm().subscribe(updatedAddress => {
-          console.log(updatedAddress)
-          this.dataUpdation.updateAddressDetails(updatedAddress);
-        })
+        console.log("here")
+        this.eraProfile.primaryAddress = this.dataUpdation.setAddressObject(this.form.get('address').value);
+        this.eraProfile.mailingAddress = this.dataUpdation.setAddressObject(this.form.get('mailingAddress').value);
       }
     })
-
-    this.profileApiService.upsertProfile(this.eraProfile).subscribe(profileId => {
-      this.router.navigate(['/verified-registration/dashboard']);
-    },
-      (error) => {
-        console.log(error);
-        this.showLoader = !this.showLoader;
-        this.alertService.setAlert('danger', error.title);
-      });
   }
 
 }
