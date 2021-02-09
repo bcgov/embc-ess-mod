@@ -44,21 +44,6 @@ namespace EMBC.Registrants.API.SecurityModule
         public const string Email = "email";
     }
 
-    public static class RegistrantClaimTypes
-    {
-        public const string Id = ClaimTypes.NameIdentifier;
-        public const string FirstName = "first_name";
-        public const string LastName = "last_name";
-        public const string StreetAddress = "street_address";
-        public const string PostalCode = "postal_code";
-        public const string Jurisdiction = "jurisdiction";
-        public const string Province = "province";
-        public const string Country = "country";
-        public const string DateOfBirth = "date_of_birth";
-        public const string DisplayName = ClaimTypes.Name;
-        public const string Gender = "gender";
-    }
-
     public static class BcscAuthenticationDefaults
     {
         public const string AuthenticationScheme = "BcscOidc";
