@@ -5257,6 +5257,20 @@
         <NavigationProperty Name="Contact_Emails" Type="Collection(mscrm.email)" Partner="regardingobjectid_contact_email" />
         <NavigationProperty Name="contact_activity_parties" Type="Collection(mscrm.activityparty)" Partner="partyid_contact" />
         <NavigationProperty Name="Contact_Letters" Type="Collection(mscrm.letter)" Partner="regardingobjectid_contact_letter" />
+        <Annotation Term="OData.Community.Keys.V1.AlternateKeys">
+          <Collection>
+            <Record Type="OData.Community.Keys.V1.AlternateKey">
+              <PropertyValue Property="Key">
+                <Collection>
+                  <Record Type="OData.Community.Keys.V1.PropertyRef">
+                    <PropertyValue Property="Alias" String="era_bcservicescardid" />
+                    <PropertyValue Property="Name" PropertyPath="era_bcservicescardid" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Collection>
+        </Annotation>
       </EntityType>
       <EntityType Name="contractdetail" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -8155,20 +8169,16 @@
         <Property Name="era_sharingrestriction" Type="Edm.Boolean" />
         <Property Name="era_canevacueeprovideincidentals" Type="Edm.Int32" />
         <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_canevacueeprovidetransportation" Type="Edm.Int32" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
         <Property Name="era_dietaryrequirementdetails" Type="Edm.String" Unicode="false" />
         <Property Name="era_canevacueeprovidefood" Type="Edm.Int32" />
         <Property Name="era_canevacueeprovidelodging" Type="Edm.Int32" />
-        <Property Name="era_incidentalrequirement" Type="Edm.Int32" />
         <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
         <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
         <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="era_insurancecoverage" Type="Edm.Int32" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="era_needassessmentid" Type="Edm.Guid" />
         <Property Name="era_medicationrequirement" Type="Edm.Boolean" />
         <Property Name="_era_evacuationfile_value" Type="Edm.Guid" />
@@ -8177,20 +8187,20 @@
         <Property Name="era_needsassessmentdate" Type="Edm.DateTimeOffset" />
         <Property Name="importsequencenumber" Type="Edm.Int32" />
         <Property Name="era_phonenumberrefusal" Type="Edm.Boolean" />
-        <Property Name="era_clothingrequirement" Type="Edm.Int32" />
+        <Property Name="era_canevacueeprovidetransportation" Type="Edm.Int32" />
         <Property Name="statecode" Type="Edm.Int32" />
-        <Property Name="era_foodrequirement" Type="Edm.Int32" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="era_name" Type="Edm.String" Unicode="false" />
         <Property Name="era_collectionandauthorization" Type="Edm.Boolean" />
-        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="era_emailrefusal" Type="Edm.Boolean" />
         <Property Name="era_dietaryrequirement" Type="Edm.Boolean" />
         <Property Name="statuscode" Type="Edm.Int32" />
         <Property Name="era_canevacueeprovideclothing" Type="Edm.Int32" />
         <Property Name="era_transportationrequirement" Type="Edm.Int32" />
-        <Property Name="era_lodgingrequirement" Type="Edm.Int32" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
         <Property Name="era_needsassessmenttype" Type="Edm.Int32" />
-        <Property Name="era_emailrefusal" Type="Edm.Boolean" />
+        <Property Name="era_insurancecoverage" Type="Edm.Int32" />
         <Property Name="versionnumber" Type="Edm.Int64" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needassessment_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
