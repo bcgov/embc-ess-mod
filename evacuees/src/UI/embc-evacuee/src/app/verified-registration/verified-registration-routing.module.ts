@@ -1,16 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AllowNavigationGuard } from '../core/services/allowNavigation.guard';
 import { VerifiedRegistrationComponent } from './verified-registration.component';
 
 const routes: Routes = [
   {
     path: '', component: VerifiedRegistrationComponent,
+    canActivate: [AllowNavigationGuard],
     children: [
-      // {
-      //   path: '',
-      //   redirectTo: 'collection-notice',
-      //   pathMatch: 'full',
-      // },
+      {
+        path: 'conflicts',
+        loadChildren: () => import('../sharedModules/components/conflict-management/conflict-management.module')
+          .then(m => m.ConflictManagementModule),
+        data: { flow: 'verified-registration' }
+      },
       {
         path: 'collection-notice',
         loadChildren: () => import('../sharedModules/components/collection-notice/collection-notice.module')

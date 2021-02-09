@@ -82,7 +82,7 @@ export class DataUpdationService {
         this.dataService.setRegistrationResult(registrationResult);
     }
 
-    private setAddressObject(addressObject): RegAddress {
+    public setAddressObject(addressObject): RegAddress {
         const address: RegAddress = {
             addressLine1: addressObject.addressLine1,
             addressLine2: addressObject.addressLine2,

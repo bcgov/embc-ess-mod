@@ -7,10 +7,10 @@ import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
-import { DataSubmissionService } from '../../../core/services/dataSubmission.service';
 import { RegistrationResult } from '../../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { EvacuationFileApiService } from 'src/app/core/services/api/evacuationFileApi.service';
+import { RegistrationApiService } from 'src/app/core/services/api/registrationApi.service';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -36,9 +36,9 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   constructor(
     private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private updateService: DataUpdationService, private dataSubmissionService: DataSubmissionService,
+    private updateService: DataUpdationService,
     private evacuationFileApiService: EvacuationFileApiService, private cd: ChangeDetectorRef, private route: ActivatedRoute,
-    private alertService: AlertService) {
+    private alertService: AlertService, private registrationService: RegistrationApiService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -171,7 +171,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
-    this.dataSubmissionService.submitRegistrationFile().subscribe((response: RegistrationResult) => {
+    this.registrationService.submitRegistration().subscribe((response: RegistrationResult) => {
       console.log(response);
       this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/non-verified-registration/fileSubmission']);
