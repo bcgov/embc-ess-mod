@@ -81,7 +81,7 @@ const INACTIVE_DATA: EvacuationCard[] = [
 })
 
 
-export class ViewAuthProfileComponent implements OnInit {
+export class DashboardComponent implements OnInit {
 
   type = 'profile';
   currentFlow: string;
@@ -112,7 +112,6 @@ export class ViewAuthProfileComponent implements OnInit {
       this.openReferenceNumberPopup()
     );
 
-    // this.openDOBMismatchPopup();
   }
 
   openDOBMismatchPopup(): void {

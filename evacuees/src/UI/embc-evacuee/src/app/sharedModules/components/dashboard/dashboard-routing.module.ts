@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ViewAuthProfileComponent } from './dashboard.component';
+import { DashboardComponent } from './dashboard.component';
 
 const routes: Routes = [
-  { path: '', component: ViewAuthProfileComponent }
+  { path: '', component: DashboardComponent }
 ];
 
 @NgModule({

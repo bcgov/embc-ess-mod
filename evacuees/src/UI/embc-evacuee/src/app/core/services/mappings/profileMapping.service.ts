@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { Profile, StateProvince } from '../../api/models';
+import { Profile, Registration, StateProvince } from '../../api/models';
 import { UserProfile } from '../../api/models/user-profile';
 import { DataService } from './../data.service';
 import { FormCreationService } from './../formCreation.service';
@@ -18,6 +18,8 @@ export class ProfileMappingService {
             this.setExistingProfile(userProfile.eraProfile);
         }
         if (userProfile.eraProfile) {
+            // console.log(userProfile);
+            this.dataService.updateRegistartion(userProfile.eraProfile);
             this.dataService.setProfileId(userProfile.eraProfile.id);
             this.dataService.setProfile(userProfile.eraProfile);
         }

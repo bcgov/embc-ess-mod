@@ -44,7 +44,7 @@ export class LoginService extends BaseService {
     returnUrl?: string;
 
     /**
-     * Optional user id to impersonate as (to support automated tests and ease of development in non prod environments only)
+     * Optional user id to impersonate as (to support automated tests and developer experience in development environments only)
      */
     loginAs?: string;
   }): Observable<StrictHttpResponse<void>> {
@@ -84,7 +84,7 @@ export class LoginService extends BaseService {
     returnUrl?: string;
 
     /**
-     * Optional user id to impersonate as (to support automated tests and ease of development in non prod environments only)
+     * Optional user id to impersonate as (to support automated tests and developer experience in development environments only)
      */
     loginAs?: string;
   }): Observable<void> {

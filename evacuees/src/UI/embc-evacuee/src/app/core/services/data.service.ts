@@ -56,7 +56,6 @@ export class DataService {
 
     public updateRegistartion(value): void {
         this.registrationDetails = { ...this.registrationDetails, ...value };
-        console.log(this.registrationDetails);
     }
 
     public getRegistration(): Partial<Registration> {
