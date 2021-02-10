@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.Registrants.API.Shared;
@@ -23,6 +24,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using NJsonSchema.Converters;
 
 namespace EMBC.Registrants.API.ProfilesModule
 {
@@ -103,13 +106,26 @@ namespace EMBC.Registrants.API.ProfilesModule
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<UserProfile>> GetProfileConflicts()
+        public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var userProfileWithConflicts = await profileManager.GetProfileAndConflicts(userId);
+            var userProfileWithConflicts = await profileManager.GetProfileConflicts(userId);
             if (userProfileWithConflicts == null) return NotFound();
             return Ok(userProfileWithConflicts);
+        }
+
+        [HttpGet("current/login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<ActionResult<Profile>> GetLoggedInProfile()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var loginProfile = await profileManager.GetLoginProfile(userId);
+            if (loginProfile == null) return NotFound();
+            return Ok(loginProfile);
         }
     }
 
@@ -136,21 +152,45 @@ namespace EMBC.Registrants.API.ProfilesModule
     }
 
     /// <summary>
-    /// DTO for conflict resolution data
+    /// Base class for profile data conflicts
     /// </summary>
-    public class UserProfile
+    [JsonConverter(typeof(JsonInheritanceConverter), nameof(ProfileDataConflict.DataElementName))]
+    [KnownType(typeof(DateOfBirthDataConflict))]
+    [KnownType(typeof(NameDataConflict))]
+    [KnownType(typeof(AddressDataConflict))]
+    public abstract class ProfileDataConflict
     {
-        public bool IsNewUser => EraProfile == null;
-        public Profile EraProfile { get; set; }
-        public Profile LoginProfile { get; set; }
-        public IEnumerable<ProfileDataConflict> Conflicts { get; set; }
+        public abstract string DataElementName { get; }
     }
 
     /// <summary>
-    /// profile data element name in conflict
+    /// Date of birth data conflict
     /// </summary>
-    public class ProfileDataConflict
+    public class DateOfBirthDataConflict : ProfileDataConflict
     {
-        public string ConflictDataElement { get; set; }
+        public override string DataElementName => "Name";
+        public string ConflictingValue { get; set; }
+        public string OriginalValue { get; set; }
+    }
+
+    /// <summary>
+    /// Name data conflict
+    /// </summary>
+    public class NameDataConflict : ProfileDataConflict
+    {
+        public override string DataElementName => "DateOfBirth";
+        public (string firstName, string lastName) ConflictingValue { get; set; }
+        public (string firstName, string lastName) OriginalValue { get; set; }
+    }
+
+    /// <summary>
+    /// Address data conflict
+    /// </summary>
+    public class AddressDataConflict : ProfileDataConflict
+    {
+        public override string DataElementName => "Address";
+        public Address ConflictingValue { get; set; }
+
+        public Address OriginalValue { get; set; }
     }
 }
