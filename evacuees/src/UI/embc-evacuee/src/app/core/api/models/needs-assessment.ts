@@ -21,10 +21,5 @@ export interface NeedsAssessment {
   haveSpecialDiet?: boolean;
   insurance: InsuranceOption;
   pets?: null | Array<Pet>;
-  requiresClothing?: null | boolean;
-  requiresFood?: null | boolean;
-  requiresIncidentals?: null | boolean;
-  requiresLodging?: null | boolean;
-  requiresTransportation?: null | boolean;
   specialDietDetails?: null | string;
 }

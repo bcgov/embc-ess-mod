@@ -20,22 +20,21 @@ export class HeaderComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.authService.isAuthenticated().pipe(map(isAuthenticated => {
+        this.authService.isAuthenticated().subscribe(isAuthenticated => {
             if (isAuthenticated) {
                 this.showLoginMatMenu = true;
             } else {
                 this.showLoginMatMenu = false;
             }
-        })).subscribe();
-
+        });
 
     }
 
     homeButton(): void { }
 
     signOut(): void {
-        this.authService.logout('https://www.emergencyinfobc.gov.bc.ca/');
         this.cacheService.clear();
+        this.authService.logout('https://www.emergencyinfobc.gov.bc.ca/');
 
     }
 }
