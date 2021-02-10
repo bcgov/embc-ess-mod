@@ -107,11 +107,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_evacuationfiledate = now,
                 era_addressline1 = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
                 era_addressline2 = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine2,
-                era_city = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
-                era_Jurisdiction = Lookup(registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction),
-                era_province = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.Code,
-                era_country = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.Code,
+                era_province = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.Name,
+                era_country = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.Name,
                 era_secrettext = registration.RegistrationDetails.SecretPhrase,
+                era_postalcode = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.PostalCode
             };
 
             // New needs assessment
@@ -121,11 +120,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_needsassessmentdate = now,
                 era_EvacuationFile = evacuationFile,
                 era_needsassessmenttype = 174360000,
-                era_foodrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresFood), //to be deleted
-                era_clothingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresClothing), //to be deleted
-                era_incidentalrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresIncidentals), //to be deleted
-                era_lodgingrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresLodging), //to be deleted
-                era_transportationrequirement = Lookup(registration.PreliminaryNeedsAssessment.RequiresTransportation), //to be deleted
                 era_canevacueeprovidefood = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideFood),
                 era_canevacueeprovideclothing = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideClothing),
                 era_canevacueeprovideincidentals = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideIncidentals),
@@ -163,20 +157,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
                 address1_line1 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
                 address1_line2 = registration.RegistrationDetails.PrimaryAddress.AddressLine2,
-                address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.Name,
-                address1_country = registration.RegistrationDetails.PrimaryAddress.Country.Code,
-                era_City = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction),
-                era_ProvinceState = Lookup(registration.RegistrationDetails.PrimaryAddress.StateProvince),
-                era_Country = Lookup(registration.RegistrationDetails.PrimaryAddress.Country),
                 address1_postalcode = registration.RegistrationDetails.PrimaryAddress.PostalCode,
 
                 address2_line1 = registration.RegistrationDetails.MailingAddress.AddressLine1,
                 address2_line2 = registration.RegistrationDetails.MailingAddress.AddressLine2,
-                address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.Name,
-                address2_country = registration.RegistrationDetails.MailingAddress.Country.Code,
-                era_MailingCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction),
-                era_MailingProvinceState = Lookup(registration.RegistrationDetails.MailingAddress.StateProvince),
-                era_MailingCountry = Lookup(registration.RegistrationDetails.MailingAddress.Country),
                 address2_postalcode = registration.RegistrationDetails.MailingAddress.PostalCode,
 
                 emailaddress1 = registration.RegistrationDetails.ContactDetails.Email,
@@ -198,6 +182,19 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             // add evacuation file to dynamics context
             dynamicsClient.AddToera_evacuationfiles(evacuationFile);
+            // link primary registrant to evacuation file
+            dynamicsClient.AddLink(newPrimaryRegistrant, nameof(newPrimaryRegistrant.era_evacuationfile_Registrant), evacuationFile);
+            // add jurisdiction/city to evacuation
+            var evacuationJurisdiction = Lookup(registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction);
+            if (evacuationJurisdiction == null || !evacuationJurisdiction.era_jurisdictionid.HasValue)
+            {
+                evacuationFile.era_city = registration.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.Name;
+            }
+            else
+            {
+                dynamicsClient.AddLink(evacuationJurisdiction, nameof(evacuationJurisdiction.era_evacuationfile_Jurisdiction), evacuationFile);
+            }
+
             // add needs assessment to dynamics context
             dynamicsClient.AddToera_needassessments(needsAssessment);
             // link evacuation file to needs assessment
@@ -229,6 +226,47 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 // link members and needs assessment to evacuee record
                 dynamicsClient.AddLink(member, nameof(member.era_NeedsAssessmentEvacuee_RegistrantID), newNeedsAssessmentEvacueeMember);
                 dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), newNeedsAssessmentEvacueeMember);
+
+                // link registrant primary and mailing address city, province, country
+                var primaryAddressCountry = Lookup(registration.RegistrationDetails.PrimaryAddress.Country);
+                var primaryAddressProvince = Lookup(registration.RegistrationDetails.PrimaryAddress.StateProvince);
+                var primaryAddressCity = Lookup(registration.RegistrationDetails.PrimaryAddress.Jurisdiction);
+                // country
+                dynamicsClient.AddLink(primaryAddressCountry, nameof(primaryAddressCountry.era_contact_Country), member);
+                // province
+                if (primaryAddressProvince != null && !string.IsNullOrEmpty(primaryAddressProvince.era_code))
+                {
+                    dynamicsClient.AddLink(primaryAddressProvince, nameof(primaryAddressProvince.era_provinceterritories_contact_ProvinceState), member);
+                }
+                // city
+                if (primaryAddressCity == null || !primaryAddressCity.era_jurisdictionid.HasValue)
+                {
+                    member.address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction.Name;
+                }
+                else
+                {
+                    dynamicsClient.AddLink(primaryAddressCity, nameof(primaryAddressCity.era_jurisdiction_contact_City), member);
+                }
+
+                var mailingAddressCountry = Lookup(registration.RegistrationDetails.MailingAddress.Country);
+                var mailingAddressProvince = Lookup(registration.RegistrationDetails.MailingAddress.StateProvince);
+                var mailingAddressCity = Lookup(registration.RegistrationDetails.MailingAddress.Jurisdiction);
+                // country
+                dynamicsClient.AddLink(mailingAddressCountry, nameof(mailingAddressCountry.era_country_contact_MailingCountry), member);
+                // province
+                if (mailingAddressProvince != null && !string.IsNullOrEmpty(mailingAddressProvince.era_code))
+                {
+                    dynamicsClient.AddLink(mailingAddressProvince, nameof(mailingAddressProvince.era_provinceterritories_contact_MailingProvinceState), member);
+                }
+                // city
+                if (mailingAddressCity == null || !mailingAddressCity.era_jurisdictionid.HasValue)
+                {
+                    member.address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction.Name;
+                }
+                else
+                {
+                    dynamicsClient.AddLink(mailingAddressCity, nameof(mailingAddressCity.era_jurisdiction_contact_MailingCity), member);
+                }
             }
 
             // Add New needs assessment evacuee pets to dynamics context
@@ -248,6 +286,20 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 //.Expand(f => f.era_province)
                 //.Expand(f => f.era_country)
                 .Where(f => f.era_evacuationfileid == evacuationFile.era_evacuationfileid).FirstOrDefault();
+
+            essFileNumber = (int)queryResult?.era_essfilenumber;
+
+            // Check if email address defined for profile
+            if (newPrimaryRegistrant.emailaddress1 != null)
+            {
+                // Send email notification of new registrant record created
+                EmailAddress registrantEmailAddress = new EmailAddress
+                {
+                    Name = newPrimaryRegistrant.firstname + " " + newPrimaryRegistrant.lastname,
+                    Address = newPrimaryRegistrant.emailaddress1
+                };
+                SendAnonEvacuationSubmissionNotificationEmail(registrantEmailAddress, essFileNumber.ToString());
+            }
 
             return $"{essFileNumber:D9}";
             //return queryResult.era_essfilenumber.ToString();
@@ -759,6 +811,15 @@ namespace EMBC.Registrants.API.RegistrationsModule
             _ => null
         };
 
+        private NeedsAssessment.InsuranceOption Lookup(int? value) => value switch
+        {
+            174360000 => NeedsAssessment.InsuranceOption.No,
+            174360001 => NeedsAssessment.InsuranceOption.Yes,
+            174360002 => NeedsAssessment.InsuranceOption.Unsure,
+            174360003 => NeedsAssessment.InsuranceOption.Unknown,
+            _ => NeedsAssessment.InsuranceOption.Unknown
+        };
+
         private int? LookupGender(string value) => value switch
         {
             "Male" => 1,
@@ -898,6 +959,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
             return contact;
         }
 
+        /// <summary>
+        /// Sends a notification email to a verified Registrant after they register their profile
+        /// </summary>
+        /// <param name="toAddress">Registrant's Email Address</param>
         private void SendRegistrationNotificationEmail(EmailAddress toAddress)
         {
             System.Collections.Generic.List<EmailAddress> toList = new System.Collections.Generic.List<EmailAddress> { toAddress };
@@ -914,19 +979,83 @@ namespace EMBC.Registrants.API.RegistrationsModule
         }
 
         /// <summary>
+        /// Sends a notification email to a verified Registrant after they submit an Evacuation
+        /// </summary>
+        /// <param name="toAddress">Registrant's Email Address</param>
+        /// <param name="essFileNumber">ESS File Number</param>
+        private void SendEvacuationSubmissionNotificationEmail(EmailAddress toAddress, string essFileNumber)
+        {
+            System.Collections.Generic.List<EmailAddress> toList = new System.Collections.Generic.List<EmailAddress> { toAddress };
+            string emailSubject = "Registration completed successfully";
+            string emailBody = $@"
+<p><b>Submission Complete</b>
+<p>
+<p>Your Emergency Support Services (ESS) File Number is: " + essFileNumber + $@"
+<p>Thank you for submitting your online self-registration.
+<p>
+<p><b>Next Steps</b>
+<p>Please keep a record of your Emergency Support Services File Number to receive emergency support services that can be
+    provided up to 72 hours starting from the time connecting in with a local ESS Responder at a Reception Centre. After
+    a need's assessment interview with a local ESS Responder has been completed, supports are provided to purchase goods
+    and services if eligible. Any goods and services purchased prior to a need’s assessment interview are not eligible
+    for retroactive reimbursement.
+<p>
+<p>If you are under <b>EVACUATION ALERT</b> or <b>DO NOT</b> require emergency serves at this time, no further action is
+    required.
+<p>
+<p>If you are under <b>EVACUATION ORDER</b>, and require emergency supports, proceed to your nearest Reception Centre. A
+    list of open Reception Centres can be found at Emergency Info BC.
+<p>
+<p>If <b>NO</b> nearby Reception Centre is open and immediate action is required, please contact your First Nation
+    Government or Local Authority for next steps.";
+
+            EmailMessage emailMessage = new EmailMessage(toList, emailSubject, emailBody);
+            emailSender.Send(emailMessage);
+        }
+
+        /// <summary>
+        /// Sends a notification email to an anonymous Registrant after they register their profile and submit an Evacuation
+        /// </summary>
+        /// <param name="toAddress">Registrant's Email Address</param>
+        /// <param name="essFileNumber">ESS File Number</param>
+        private void SendAnonEvacuationSubmissionNotificationEmail(EmailAddress toAddress, string essFileNumber)
+        {
+            System.Collections.Generic.List<EmailAddress> toList = new System.Collections.Generic.List<EmailAddress> { toAddress };
+            string emailSubject = "Registration completed successfully";
+            string emailBody = $@"
+<p><b>Submission Complete</b>
+<p>
+<p>Your Emergency Support Services (ESS) File Number is: " + essFileNumber + $@"
+<p>Thank you for submitting your online self-registration.
+<p>
+<p><b>Next Steps</b>
+<p>Please keep a record of your Emergency Support Services File Number to receive emergency support services that can be
+    provided up to 72 hours starting from the time connecting in with a local ESS Responder at a Reception Centre. After
+    a need's assessment interview with a local ESS Responder has been completed, supports are provided to purchase goods
+    and services if eligible. Any goods and services purchased prior to a need’s assessment interview are not eligible
+    for retroactive reimbursement.
+<p>
+<p>If you are under <b>EVACUATION ALERT</b> or <b>DO NOT</b> require emergency serves at this time, no further action is
+    required.
+<p>
+<p>If you are under <b>EVACUATION ORDER</b>, and require emergency supports, proceed to your nearest Reception Centre. A
+    list of open Reception Centres can be found at Emergency Info BC.
+<p>
+<p>If <b>NO</b> nearby Reception Centre is open and immediate action is required, please contact your First Nation
+    Government or Local Authority for next steps.";
+
+            EmailMessage emailMessage = new EmailMessage(toList, emailSubject, emailBody);
+            emailSender.Send(emailMessage);
+        }
+
+        /// <summary>
         /// Creates a Registrant Evacuation (new evacuation file, new self needs assessment, new household members and links the primary registrant)
         /// </summary>
         /// <param name="evacuation">Evacuation model</param>
         /// <returns>ESS File Number</returns>
         public async Task<string> CreateRegistrantEvacuation(RegistrantEvacuation evacuation)
         {
-            //if (!Guid.TryParse(evacuation.ContactId, out Guid contactId))
-            //    throw new Exception("Contact ID is not a valid GUID");
-
             var profile = newRegistrationObject();
-
-            // get dynamics contact by contactId
-            //contact dynamicsContact = GetDynamicsContact(contactId);
 
             // get dynamics contact by BCServicesCardId
             contact dynamicsContact = GetDynamicsContactByBCSC(evacuation.Id);
@@ -951,11 +1080,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_evacuationfiledate = now,
                 era_addressline1 = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
                 era_addressline2 = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine2,
-                era_city = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1,
-                era_Jurisdiction = Lookup(evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction),
-                era_province = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.Code,
-                era_country = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.Code,
+                era_province = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.Name,
+                era_country = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Country.Name,
                 era_secrettext = profile.SecretPhrase,
+                era_postalcode = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.PostalCode
             };
 
             // New needs assessment
@@ -965,11 +1093,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_needsassessmentdate = now,
                 era_EvacuationFile = evacuationFile,
                 era_needsassessmenttype = 174360000,
-                era_foodrequirement = Lookup(evacuation.PreliminaryNeedsAssessment.RequiresFood), //to be deleted
-                era_clothingrequirement = Lookup(evacuation.PreliminaryNeedsAssessment.RequiresClothing), //to be deleted
-                era_incidentalrequirement = Lookup(evacuation.PreliminaryNeedsAssessment.RequiresIncidentals), //to be deleted
-                era_lodgingrequirement = Lookup(evacuation.PreliminaryNeedsAssessment.RequiresLodging), //to be deleted
-                era_transportationrequirement = Lookup(evacuation.PreliminaryNeedsAssessment.RequiresTransportation), //to be deleted
                 era_canevacueeprovidefood = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideFood),
                 era_canevacueeprovideclothing = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideClothing),
                 era_canevacueeprovideincidentals = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideIncidentals),
@@ -1001,20 +1124,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
                 address1_line1 = profile.PrimaryAddress.AddressLine1,
                 address1_line2 = profile.PrimaryAddress.AddressLine2,
-                address1_city = profile.PrimaryAddress.Jurisdiction.Name,
-                address1_country = profile.PrimaryAddress.Country.Code,
-                era_City = Lookup(profile.PrimaryAddress.Jurisdiction),
-                era_ProvinceState = Lookup(profile.PrimaryAddress.StateProvince),
-                era_Country = Lookup(profile.PrimaryAddress.Country),
                 address1_postalcode = profile.PrimaryAddress.PostalCode,
 
                 address2_line1 = profile.MailingAddress.AddressLine1,
                 address2_line2 = profile.MailingAddress.AddressLine2,
-                address2_city = profile.MailingAddress.Jurisdiction.Name,
-                address2_country = profile.MailingAddress.Country.Name,
-                era_MailingCity = Lookup(profile.MailingAddress.Jurisdiction),
-                era_MailingProvinceState = Lookup(profile.MailingAddress.StateProvince),
-                era_MailingCountry = Lookup(profile.MailingAddress.Country),
                 address2_postalcode = profile.MailingAddress.PostalCode,
 
                 emailaddress1 = profile.ContactDetails.Email,
@@ -1036,6 +1149,19 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             // add evacuation file to dynamics context
             dynamicsClient.AddToera_evacuationfiles(evacuationFile);
+            // link primary registrant to evacuation file
+            dynamicsClient.AddLink(dynamicsContact, nameof(dynamicsContact.era_evacuationfile_Registrant), evacuationFile);
+            // add jurisdiction/city to evacuation
+            var evacuationJurisdiction = Lookup(evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction);
+            if (evacuationJurisdiction == null || !evacuationJurisdiction.era_jurisdictionid.HasValue)
+            {
+                evacuationFile.era_city = evacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.Name;
+            }
+            else
+            {
+                dynamicsClient.AddLink(evacuationJurisdiction, nameof(evacuationJurisdiction.era_evacuationfile_Jurisdiction), evacuationFile);
+            }
+
             // add needs assessment to dynamics context
             dynamicsClient.AddToera_needassessments(needsAssessment);
             // link evacuation file to needs assessment
@@ -1067,6 +1193,47 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 // link members and needs assessment to evacuee record
                 dynamicsClient.AddLink(member, nameof(member.era_NeedsAssessmentEvacuee_RegistrantID), newNeedsAssessmentEvacueeMember);
                 dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), newNeedsAssessmentEvacueeMember);
+
+                // link registrant primary and mailing address city, province, country
+                var primaryAddressCountry = Lookup(profile.PrimaryAddress.Country);
+                var primaryAddressProvince = Lookup(profile.PrimaryAddress.StateProvince);
+                var primaryAddressCity = Lookup(profile.PrimaryAddress.Jurisdiction);
+                // country
+                dynamicsClient.AddLink(primaryAddressCountry, nameof(primaryAddressCountry.era_contact_Country), member);
+                // province
+                if (primaryAddressProvince != null && !string.IsNullOrEmpty(primaryAddressProvince.era_code))
+                {
+                    dynamicsClient.AddLink(primaryAddressProvince, nameof(primaryAddressProvince.era_provinceterritories_contact_ProvinceState), member);
+                }
+                // city
+                if (primaryAddressCity == null || !primaryAddressCity.era_jurisdictionid.HasValue)
+                {
+                    member.address1_city = profile.PrimaryAddress.Jurisdiction.Name;
+                }
+                else
+                {
+                    dynamicsClient.AddLink(primaryAddressCity, nameof(primaryAddressCity.era_jurisdiction_contact_City), member);
+                }
+
+                var mailingAddressCountry = Lookup(profile.MailingAddress.Country);
+                var mailingAddressProvince = Lookup(profile.MailingAddress.StateProvince);
+                var mailingAddressCity = Lookup(profile.MailingAddress.Jurisdiction);
+                // country
+                dynamicsClient.AddLink(mailingAddressCountry, nameof(mailingAddressCountry.era_country_contact_MailingCountry), member);
+                // province
+                if (mailingAddressProvince != null && !string.IsNullOrEmpty(mailingAddressProvince.era_code))
+                {
+                    dynamicsClient.AddLink(mailingAddressProvince, nameof(mailingAddressProvince.era_provinceterritories_contact_MailingProvinceState), member);
+                }
+                // city
+                if (mailingAddressCity == null || !mailingAddressCity.era_jurisdictionid.HasValue)
+                {
+                    member.address2_city = profile.MailingAddress.Jurisdiction.Name;
+                }
+                else
+                {
+                    dynamicsClient.AddLink(mailingAddressCity, nameof(mailingAddressCity.era_jurisdiction_contact_MailingCity), member);
+                }
             }
 
             // Add New needs assessment evacuee pets to dynamics context
@@ -1077,8 +1244,16 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 dynamicsClient.AddLink(needsAssessment, nameof(needsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), petMember);
             }
 
-            //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
-            var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+            try
+            {
+                //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
+                var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+            }
+            catch (DataServiceRequestException ex)
+            {
+                throw new ApplicationException(
+                    "An error occurred when saving changes.", ex);
+            }
             //var results = await dynamicsClient.SaveChangesAsync();
 
             var queryResult = dynamicsClient.era_evacuationfiles
@@ -1086,6 +1261,20 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 //.Expand(f => f.era_province)
                 //.Expand(f => f.era_country)
                 .Where(f => f.era_evacuationfileid == evacuationFile.era_evacuationfileid).FirstOrDefault();
+
+            essFileNumber = (int)queryResult?.era_essfilenumber;
+
+            // Check if email address defined for profile
+            if (dynamicsContact.emailaddress1 != null)
+            {
+                // Send email notification of new registrant record created
+                EmailAddress registrantEmailAddress = new EmailAddress
+                {
+                    Name = dynamicsContact.firstname + " " + dynamicsContact.lastname,
+                    Address = dynamicsContact.emailaddress1
+                };
+                SendEvacuationSubmissionNotificationEmail(registrantEmailAddress, essFileNumber.ToString());
+            }
 
             return $"{essFileNumber:D9}";
         }
@@ -1129,7 +1318,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 {
                     // Step 2.
                     var efQueryResult = dynamicsClient.era_evacuationfiles
-                    .Where(ef => ef.era_evacuationfileid == needsAssessmentObject.Value._era_evacuationfile_value).FirstOrDefault();
+                        .Expand(ef => ef.era_Jurisdiction)
+                        .Where(ef => ef.era_evacuationfileid == needsAssessmentObject.Value._era_evacuationfile_value).FirstOrDefault();
 
                     // add evacuation file
                     evacuationFilesFound.Add(efQueryResult.era_evacuationfileid, efQueryResult);
@@ -1173,6 +1363,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
                     throw dataServiceClientException;
                 }
             }
+//            catch (NullReferenceException ex)
+//            {
+//                throw new ApplicationException("An error occurred when retrieving evacuation data.", ex);
+//            }
 
             var registrantEvacuationList = new List<RegistrantEvacuation>();
 
@@ -1195,6 +1389,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 // set evacuated from address with dynamics evacuation file details
                 registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.Code = evacuationFileObject.era_Jurisdiction?.era_jurisdictionid?.ToString();
                 registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.Name = evacuationFileObject.era_Jurisdiction?.era_jurisdictionname;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.Type = (JurisdictionType)(evacuationFileObject.era_Jurisdiction?.era_type ?? -1);
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.StateProvinceCode = evacuationFileObject.era_Jurisdiction?.era_RelatedProvinceState.era_code;
+                registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.Jurisdiction.CountryCode = evacuationFileObject.era_Jurisdiction?.era_RelatedProvinceState.era_RelatedCountry.era_countrycode;
+
                 registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine1 = evacuationFileObject.era_addressline1;
                 registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.AddressLine2 = evacuationFileObject.era_addressline2;
                 registrantEvacuation.PreliminaryNeedsAssessment.EvacuatedFromAddress.StateProvince.Name = evacuationFileObject.era_province;
@@ -1207,9 +1405,11 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideIncidentals = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovideincidentals);
                 registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideLodging = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovidelodging);
                 registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovidetransportation);
-                //registrantEvacuation.PreliminaryNeedsAssessment.HasPetsFood = needsAssessmentObject.; //TODO: add field in dynamics
                 registrantEvacuation.PreliminaryNeedsAssessment.HaveMedication = (bool)needsAssessmentObject.Value.era_medicationrequirement;
-                registrantEvacuation.PreliminaryNeedsAssessment.Insurance = (NeedsAssessment.InsuranceOption)needsAssessmentObject.Value.era_insurancecoverage;
+                registrantEvacuation.PreliminaryNeedsAssessment.Insurance = Lookup(needsAssessmentObject.Value.era_insurancecoverage);
+                registrantEvacuation.PreliminaryNeedsAssessment.HaveSpecialDiet = (bool)needsAssessmentObject.Value.era_dietaryrequirement;
+                registrantEvacuation.PreliminaryNeedsAssessment.SpecialDietDetails = needsAssessmentObject.Value.era_dietaryrequirementdetails;
+                //registrantEvacuation.PreliminaryNeedsAssessment.HasPetsFood = needsAssessmentObject.Value.; //TODO: add field in dynamics
 
                 // set pets with dynamics needs assessment evacuee details
                 registrantEvacuation.PreliminaryNeedsAssessment.Pets =
