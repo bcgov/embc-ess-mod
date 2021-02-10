@@ -60,6 +60,8 @@ namespace EMBC.Registrants.API.ProfilesModule
 
             var userProfile = mapper.Map<Profile>(user);
             var profile = await profileRepository.Read(user.Id);
+
+            // detect conflicts
             var conflicts = ProfilesConflictDetector.DetectConflicts(profile, userProfile);
 
             return conflicts.ToArray();
