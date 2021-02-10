@@ -2,8 +2,8 @@
 /* eslint-disable */
 
 /**
- * profile data element name in conflict
+ * Base class for profile data conflicts
  */
 export interface ProfileDataConflict {
-  conflictDataElement?: null | string;
+  DataElementName: string;
 }

@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { Profile } from '../models/profile';
-import { UserProfile } from '../models/user-profile';
+import { ProfileDataConflict } from '../models/profile-data-conflict';
 
 @Injectable({
   providedIn: 'root',
@@ -203,7 +203,7 @@ export class ProfileService extends BaseService {
    * This method doesn't expect any request body.
    */
   profileGetProfileConflicts$Response(params?: {
-  }): Observable<StrictHttpResponse<UserProfile>> {
+  }): Observable<StrictHttpResponse<Array<ProfileDataConflict>>> {
 
     const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileGetProfileConflictsPath, 'get');
     if (params) {
@@ -215,7 +215,7 @@ export class ProfileService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<UserProfile>;
+        return r as StrictHttpResponse<Array<ProfileDataConflict>>;
       })
     );
   }
@@ -231,10 +231,53 @@ export class ProfileService extends BaseService {
    * This method doesn't expect any request body.
    */
   profileGetProfileConflicts(params?: {
-  }): Observable<UserProfile> {
+  }): Observable<Array<ProfileDataConflict>> {
 
     return this.profileGetProfileConflicts$Response(params).pipe(
-      map((r: StrictHttpResponse<UserProfile>) => r.body as UserProfile)
+      map((r: StrictHttpResponse<Array<ProfileDataConflict>>) => r.body as Array<ProfileDataConflict>)
+    );
+  }
+
+  /**
+   * Path part for operation profileGetLoggedInProfile
+   */
+  static readonly ProfileGetLoggedInProfilePath = '/api/profiles/current/login';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `profileGetLoggedInProfile()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  profileGetLoggedInProfile$Response(params?: {
+  }): Observable<StrictHttpResponse<Profile>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileGetLoggedInProfilePath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Profile>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `profileGetLoggedInProfile$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  profileGetLoggedInProfile(params?: {
+  }): Observable<Profile> {
+
+    return this.profileGetLoggedInProfile$Response(params).pipe(
+      map((r: StrictHttpResponse<Profile>) => r.body as Profile)
     );
   }
 
