@@ -130,6 +130,10 @@ namespace EMBC.Registrants.API.ProfilesModule
             return Ok(userProfileWithConflicts);
         }
 
+        /// <summary>
+        /// Get the authentication profile of the logged in user
+        /// </summary>
+        /// <returns>a profile representing the authentication user data</returns>
         [HttpGet("current/login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
