@@ -14,9 +14,8 @@ namespace EMBC.ResourceAccess.Dynamics
             var response = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
 
             //TODO: handle errors properly
-            var change = response.First() as ChangeOperationResponse;
-            var descriptor = change.Descriptor as EntityDescriptor;
-            return descriptor.Entity as T;
+            var changeDescriptor = response.Cast<ChangeOperationResponse>().Where(c => (c.Descriptor as EntityDescriptor)?.Entity is T).First().Descriptor as EntityDescriptor;
+            return changeDescriptor.Entity as T;
         }
 
         public static bool TryAddLink<S, T>(this DynamicsClientContext dynamicsClient, S source, string sourceProperty, T target)
