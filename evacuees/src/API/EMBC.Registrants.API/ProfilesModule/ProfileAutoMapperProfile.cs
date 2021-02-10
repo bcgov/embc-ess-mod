@@ -105,8 +105,8 @@ namespace EMBC.Registrants.API.ProfilesModule
 ;
             CreateMap<User, Profile>(MemberList.None)
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
-                // Email is not mapped from BCSC
                 .ForMember(d => d.ContactDetails, opts => opts.MapFrom(s => new ContactDetails()))
+                // Email is not mapped from BCSC
                 .ForPath(d => d.ContactDetails.Email, opts => opts.Ignore())
                 .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.PrimaryAddress, opts => opts.MapFrom(s => s))
