@@ -43,8 +43,16 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         public async Task CanUpdateProfile()
         {
             var profile = await profileManager.GetProfileByBceid("test");
+            var currentCity = profile.PrimaryAddress.Jurisdiction;
+            var newCity = (await listsRepository.GetJurisdictions()).Skip(new Random().Next(100)).Take(1).First();
+
+            profile.PrimaryAddress.Jurisdiction = new Jurisdiction { Code = newCity.Code };
 
             await profileManager.SaveProfile(profile);
+
+            var updatedProfile = await profileManager.GetProfileByBceid("test");
+            updatedProfile.PrimaryAddress.Jurisdiction.Code.ShouldBe(newCity.Code);
+            updatedProfile.PrimaryAddress.Jurisdiction.Name.ShouldBe(newCity.Name);
         }
 
         [Fact(Skip = RequiresDynamics)]
