@@ -1,0 +1,155 @@
+<div class="referral-template">
+  <form [formGroup]="referralForm">
+    <div class="row referral-border">
+      <div class="col-12 referral-header">
+        <div *ngIf="component === 'I'" class="row">
+          <div class="col-md-6 mr-auto">
+            <div class="form-group">
+              <label class="requiredField" for="referralNumber">Referral Number</label>
+              <input type="text" class="form-control form-control-lg" id="referralNumber"
+                [formControlName]="'referralNumber'">
+              <div
+                *ngIf="referralControl.referralNumber?.invalid && (referralControl.referralNumber?.dirty || referralControl.referralNumber?.touched)"
+                class="text-danger">
+                <div *ngIf="referralControl.referralNumber?.errors.required" style="color: red;">
+                  Referral Number is required
+                </div>
+                <div *ngIf="referralControl.referralNumber?.errors.duplicateReferral" style="color: red;">
+                  Referral Number is duplicate
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="formArraySize > 1" class="col-auto">
+            <i (click)="referralToRemove.emit(index)" class="far fa-times-circle"></i>
+          </div>
+        </div>
+
+        <div *ngIf="component === 'R'" class="row">
+          <div class="col-md-6 mr-auto">
+            <p style="font-weight: bold;">Receipt {{index+1}}</p>
+            <div class="form-group">
+              <label class="requiredField" for="referralDate">Receipt Date</label>
+              <div class="input-group">
+                <input class="form-control form-control-lg" placeholder="mm/dd/yyyy" id="referralDate"
+                  [formControlName]="'referralDate'" ngbDatepicker #d2="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" (click)="d2.toggle()" type="button"><i
+                      class="far fa-calendar-alt"></i></button>
+                </div>
+              </div>
+              <div
+                *ngIf="referralControl.referralDate?.invalid && (referralControl.referralDate?.dirty || referralControl.referralDate?.touched)"
+                class="text-danger">
+                <div *ngIf="referralControl.referralDate?.errors?.required">
+                  Referral Date is required
+                </div>
+                <div *ngIf="referralControl.referralDate?.errors?.futureDate">
+                  Future Date not allowed
+                </div>
+                <div *ngIf="(referralControl.referralDate?.status === 'INVALID' && referralControl.referralDate?.value !== null) || 
+                referralControl.referralDate?.errors?.pattern">
+                  Invalid date
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="formArraySize > 1" class="col-auto">
+            <i (click)="referralToRemove.emit(index)" class="far fa-times-circle"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table">
+          <thead class="table-header">
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" class="requiredField">Support Provided</th>
+              <th scope="col">Description</th>
+              <th scope="col" class="requiredField">GST</th>
+              <th scope="col" class="requiredField">Amount(excl. GST)</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody formArrayName="referralRows">
+            <tr *ngFor="let row of referralRows.controls; let j = index" [formGroupName]="j">
+              <td class="line-number">{{j+1}}.</td>
+              <td>
+                <select class="form-control" formControlName="supportProvided" required>
+                  <option value="" disabled selected>-- Select Support</option>
+                  <option *ngFor="let support of supportList" [ngValue]="support">{{support.name}}</option>
+                </select>
+              </td>
+              <td><input type="text" formControlName="description" class="form-control"></td>
+              <td>
+                <span class="input-symbol-dollar items-dollar-line">
+                  <input type="text" formControlName="gst" class="form-control" appDecimalCurrency required>
+                  <div *ngIf="rowControl[j].errors?.amountGreater" style="color: red;">
+                    GST must be less than Amount
+                  </div>
+                </span>
+              </td>
+              <td>
+                <span class="input-symbol-dollar items-dollar-line">
+                  <input type="text" formControlName="amount" class="form-control" appDecimalCurrency required>
+                  <div *ngIf="rowControl[j].errors?.amountGreater" style="color: red;">
+                    Amount must be greater than GST
+                  </div>
+                </span>
+              </td>
+              <td *ngIf="referralRows.controls.length > 1"><i (click)="deleteRow(j)" class="fas fa-trash-alt"></i></td>
+            </tr>
+            <tr>
+              <td colspan="5">
+                <p><u (click)="addRow()" class="add-line">Add another line item to this referral</u></p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-12 form-inline" style="justify-content: flex-end;">
+        <div>
+          Total GST &nbsp;&nbsp;
+          <span class="input-symbol-dollar dollar-line"><input type="number" formControlName="totalGst"
+              class="form-control" readonly></span>
+        </div>
+      </div>
+      <br>
+      <br>
+      <div class="col-12 form-inline" style="justify-content: flex-end;">
+        <div style="margin-bottom: 6px;">
+          Total Amount &nbsp;&nbsp;
+          <span class="input-symbol-dollar dollar-line"><input id="totalAmount" type="number"
+              formControlName="totalAmount" class="form-control" readonly></span>
+        </div>
+      </div>
+      <div class="col-12 form-inline" style="justify-content: flex-end;">
+        <p class="input-help">(excluding GST)</p>
+      </div>
+
+      <div *ngIf="component === 'I'" class="col-md-6">
+        <div class="form-group">
+          <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
+          <app-file-upload [reloadedFiles]="reloadedFiles" [noOfAttachments]="noOfAttachments"
+            (attachedFile)="setReferralFormControl($event)" (deleteFile)="deleteReferralFormControl($event)">
+          </app-file-upload>
+          <div *ngIf="!checkAttachmentLength(referralControl.referralAttachments.value)" style="color: red;">
+            Attachment is required
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="component === 'I'" class="col-md-6">
+        <div class="form-group">
+          <label class="attach-header">Attach any receipt related to this referral below</label>
+          <app-file-upload [reloadedFiles]="reloadedFiles2" (attachedFile)="setReceiptFormControl($event)"
+            (deleteFile)="deleteReceiptFormControl($event)">
+          </app-file-upload>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>

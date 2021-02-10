@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col-md-12">
+            <div class="row">
+                <img class="img-fluid d-none d-md-block" src="/assets/images/essIcon.svg" width="114" height="147">
+                <img class="img-fluid d-md-none" src="/assets/images/essIcon.svg" width="114" height="147">
+                <div class="app-heading">
+                    <p class="submissionHeader">Evacuee Registration & Assistance (ERA)</p>
+                    <span style="font-size: 28px;">Supplier Invoice & Receipt Submission</span>
+                </div>
+            </div>
+            <hr>
+            <div class="row justify-content-center">
+                <img src="/assets/images/completeIcon.svg" width="88" height="88">
+            </div>
+            <div class="row justify-content-center">
+                <div class="text">Thank you for your submission</div>
+            </div>
+            <div class="row justify-content-center">
+                <div>Your reference number is:</div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="text">{{referenceNumber?.referenceNumber}}</div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-7 offset-md-1">
+                    <p>Payment turn around time is estimated at 30 days, if all information received is correct.</p>
+                    <p>If you have any questions regarding your submission, please contact our financial team at
+                        <a href="mailto:ESSFinanceInquiries@gov.bc.ca">ESSFinanceInquiries@gov.bc.ca</a>
+                    </p>
+                </div>
+            </div>
+            <div class="row justify-content-center" style="margin-top: 15px;">
+                <button type="submit" (click)="newSubmission()" class="btn primary-button">Start A New Submission</button>
+            </div>
+        </div>
+    </div>
+</div>

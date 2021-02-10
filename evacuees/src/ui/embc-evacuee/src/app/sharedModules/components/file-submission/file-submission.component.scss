@@ -1,0 +1,67 @@
+.sub-heading {
+    font-weight: 400;
+    font-size: 21px;
+}
+
+.sub-info {
+    color: #169bd5;
+}
+
+.ref-number {
+    color: #169bd5;
+    font-weight: 700;
+    font-size: 21px;
+}
+
+@media screen and (max-width: 768px) {
+    .ref-number {
+        color: #169bd5;
+        font-weight: 400;
+        font-size: 40px;
+    }
+}
+
+.bottom-panel {
+    width: 100%;
+    margin-top: 24vh;
+}
+
+.open-panel-heading {
+    font-size: 25px;
+    font-weight: 400;
+}
+
+@media screen and (max-width: 768px) {
+    .mat-expansion-panel-header.mat-expanded {
+        height: auto;
+    }
+}
+
+.services-info {
+    background-color: rgba(255, 223, 37, 1);
+    border-color: #ffdf25;
+    box-shadow: none;
+}
+
+.edit-button {
+    width: 100%;
+}
+
+.content-container {
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-bottom: 24px;
+    padding-left: 24px;
+}
+
+.notice-button {
+    width: 100%;
+}
+
+.mat-form-field + .mat-form-field {
+    margin-left: 8px;
+    bottom: 0;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+}

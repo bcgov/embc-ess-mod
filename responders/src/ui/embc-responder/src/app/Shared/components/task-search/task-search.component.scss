@@ -1,0 +1,52 @@
+.tips-info {
+    color: white;
+    padding: 8px;
+    margin-top: 20px;
+}
+
+.heading {
+    color: #234075;
+    font-size: 21px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.submit {
+    width: 100%;
+    font-size: 16px;
+}
+
+.tips-heading {
+    color: white;
+    font-size: 21px;
+    margin-left: 5px;
+}
+
+.tips-card {
+    background-color: rgba(35, 64, 117, 1);
+}
+
+.task-details {
+    font-size: 21px;
+    color: #169BD5;
+}
+
+.status-active {
+    font-size: 21px;
+    color: #1BB22C;
+}
+
+.status-expired {
+    font-size: 21px;
+    color: #D51616;
+}
+
+.link-button {
+    text-decoration: underline;
+}
+
+mat-card {
+    border: none !important;
+}

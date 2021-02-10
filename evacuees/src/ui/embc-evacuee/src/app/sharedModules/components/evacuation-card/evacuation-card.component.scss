@@ -1,0 +1,49 @@
+.content-container {
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-bottom: 24px;
+    padding-left: 24px;
+}
+
+.evacuatedSecondary {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.349019607843137);
+    line-height: 35px;
+}
+
+.evacuatedTitle {
+    font-weight: 700;
+    font-style: normal;
+    font-size: 32px;
+    color: #169BD5;
+}
+
+.button-align{
+    padding: 10px 20px 0;
+}
+
+.view-details{
+    width: 100%;
+}
+
+
+.col-md-3 {
+    display: grid;
+    padding-left: 30px;
+}
+
+.titleDiv {
+    padding-bottom: 20px;
+}
+
+.statusSpan{ 
+    font-weight: 400;
+    font-size: 15px
+}
+
+.dataSpan{ 
+    font-weight: 700;
+    font-size: 15px;
+}

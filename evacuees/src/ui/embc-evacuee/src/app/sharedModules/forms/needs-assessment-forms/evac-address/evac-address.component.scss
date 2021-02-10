@@ -1,0 +1,22 @@
+.primary-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+  
+  .primary-radio-button {
+    margin: 5px;
+  }
+
+  mat-form-field {
+    width: 100%;
+}
+
+.prim-address {
+  padding-left: 25px;
+}
+
+.allign {
+    margin-block-start: 0; 
+    margin-block-end: 0;
+}

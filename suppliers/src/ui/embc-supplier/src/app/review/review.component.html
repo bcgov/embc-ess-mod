@@ -1,0 +1,250 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <img class="img-fluid d-none d-md-block" src="/assets/images/essIcon.svg" width="114" height="147">
+            <img class="img-fluid d-md-none" src="/assets/images/essIcon.svg" width="114" height="147">
+            <div class="app-heading">
+                <p class="submissionHeader">Evacuee Registration & Assistance (ERA)</p>
+                <span style="font-size: 28px;">Supplier Invoice & Receipt Submission</span>
+            </div>
+        </div>
+        <hr>
+        <div>
+            <p>Please read through this summary to make sure all your information is correct before submitting.</p>
+            <p style="font-weight: bold;">Please print this page for your records.</p>
+
+            <div class="formHeading">
+                Supplier Details
+            </div>
+            <div>
+                <p><b>Supplier Information:</b></p>
+                <p>{{supplier?.supplierLegalName}}</p>
+                <p>{{supplier?.supplierName}}</p>
+                <p>{{supplier?.location}}</p>
+                <p>GST#:{{supplier?.gstNumber}}</p>
+                <br>
+                <p><b>Supplier Address:</b></p>
+                <p>{{supplier?.address?.address1}}</p>
+                <p>{{supplier?.address?.address2}}</p>
+                <p>{{supplier?.address?.city.name}}</p>
+                <p>{{supplier?.address?.province.name}}</p>
+                <p>{{supplier?.address?.postalCode}}</p>
+                <p>{{supplier?.address?.country.name}}</p>
+                <br>
+                <p><b>Contact person:</b></p>
+                <p>{{supplier?.contactPerson?.firstName}}&nbsp;{{supplier?.contactPerson?.lastName}} </p>
+                <p>{{supplier?.contactPerson?.email}}</p>
+                <p>{{supplier?.contactPerson?.phone}}</p>
+                <p>{{supplier?.contactPerson?.fax}}</p>
+                <br>
+                <p><b>Remit Payment to:</b></p>
+                <p>{{supplier?.businessName}}</p>
+                <p>{{supplier?.remittanceAddress?.address1}}</p>
+                <p>{{supplier?.remittanceAddress?.address2}}</p>
+                <p>{{supplier?.remittanceAddress?.city}}</p>
+                <p>{{supplier?.remittanceAddress?.province?.name}}</p>
+                <p>{{supplier?.remittanceAddress?.state?.name}}</p>
+                <p>{{supplier?.remittanceAddress?.postalCode}}</p>
+                <p>{{supplier?.remittanceAddress?.zipCode}}</p>
+                <p>{{supplier?.remittanceAddress?.otherCode}}</p>
+                <p>{{supplier?.businessCountry?.name}}</p>
+            </div>
+            <div *ngIf="supplierSubmissionType === 'invoice'">
+                <div class="formHeading">
+                    Invoice Submitted
+                </div>
+                <div>
+                    <div class="box" *ngFor="let invoice of supplier?.invoices">
+                        <div class="row header">
+                            <div class="col-8" style="font-size: 18px ;"><b>Invoice# {{invoice.invoiceNumber}}</b></div>
+                            <div class="col"><b>Invoice Date</b> {{invoice.invoiceDate}}</div>
+                        </div>
+                        <div *ngFor="let referral of invoice.referrals">
+                            <div class="nestedHeader">
+                                <p><b>Referral# {{referral.referralNumber}}</b></p>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="table-header">
+                                        <tr>
+                                            <th scope="col">Support Provided</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">GST</th>
+                                            <th scope="col">Amount(excl. GST)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let row of referral.referralRows; let j = index">
+                                            <td>
+                                                {{row.supportProvided.name}}
+                                            </td>
+                                            <td>{{row.description}}</td>
+                                            <td>
+                                                {{row.gst | currency}}
+                                            </td>
+                                            <td>
+                                                {{row.amount | currency}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-3 offset-md-9">
+                                <div>
+                                    <b>Total GST</b> {{referral.totalGst | currency}}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="col-md-4 offset-md-8">
+                                <div>
+                                    <b>Total Amount (excl. GST)</b> {{referral.totalAmount | currency}}
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row total">
+                            <div class="col-md-4 offset-md-8">
+                                <b>Invoice Total (excl. GST)</b> {{invoice.invoiceTotalAmount | currency}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="formHeading">
+                    Attachments
+                </div>
+                <div *ngFor="let invoice of supplier?.invoices">
+                    <div *ngIf="invoice.invoiceAttachments.length > 0" class="attach-box" style="padding: 7px;">
+                        <p><b>Invoice {{invoice.invoiceNumber }}</b></p>
+                        <div *ngFor="let attach of invoice.invoiceAttachments" style="margin-bottom: 5px;">
+                            <span class="icon"><img src="/assets/images/docIcon.svg" width="23"
+                                    height="30">&nbsp;&nbsp;</span>
+                            <span class="icon-text">{{attach.fileName}}</span>
+                        </div>
+                        <br>
+                        <div *ngFor="let ref of invoice.referrals">
+                            <p><b>Referral {{ref.referralNumber }}</b></p>
+                            <div *ngFor="let attach of ref.receiptAttachments" style="margin-bottom: 5px;">
+                                <span class="icon"><img src="/assets/images/docIcon.svg" width="23"
+                                        height="30">&nbsp;&nbsp;</span>
+                                <span class="icon-text">{{attach.fileName}}</span>
+                            </div>
+                            <div *ngFor="let attach of ref.referralAttachments" style="margin-bottom: 5px;">
+                                <span class="icon"><img src="/assets/images/docIcon.svg" width="23"
+                                        height="30">&nbsp;&nbsp;</span>
+                                <span class="icon-text">{{attach.fileName}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div *ngIf="supplierSubmissionType === 'receipt'">
+                <div class="formHeading">
+                    Receipt Submitted
+                </div>
+                <div>
+                    <div class="box" *ngFor="let receipt of supplier?.receipts">
+                        <div class="row header align-items-center">
+                            <div class="col-12" style="font-size: 18px ;"><b>Referral# {{receipt.referralNumber}}</b>
+                            </div>
+                        </div>
+                        <div *ngFor="let referral of receipt.referrals; let j = index">
+                            <div class="row nestedHeader">
+                                <div class="col-8"><b>Receipt {{j+1}}</b></div>
+                                <div class="col"><b>Receipt Date</b> {{referral.referralDate}}</div>
+                                <!-- <p><b>Receipt {{j+1}}</b></p> -->
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="table-header">
+                                        <tr>
+                                            <th scope="col">Support Provided</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">GST</th>
+                                            <th scope="col">Amount(excl. GST)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let row of referral.referralRows">
+                                            <td>
+                                                {{row.supportProvided.name}}
+                                            </td>
+                                            <td>{{row.description}}</td>
+                                            <td>
+                                                {{row.gst | currency}}
+                                            </td>
+                                            <td>
+                                                {{row.amount | currency}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-3 offset-md-9">
+                                <div>
+                                    <b>Total GST</b> {{referral.totalGst | currency}}
+                                </div>
+                            </div>
+                            <div class="col-md-4 offset-md-8">
+                                <div>
+                                    <b>Total Amount (excl. GST)</b> {{referral.totalAmount | currency}}
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        <br>
+
+                        <div class="row total">
+                            <div class="col-md-4 offset-md-8">
+                                <b>Referral Total (excl. GST)</b> {{receipt.receiptTotalAmount | currency}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="formHeading">
+                    Attachments
+                </div>
+                <div *ngFor="let receipt of supplier?.receipts">
+                    <div *ngIf="receipt.receiptAttachments.length >0 || receipt.referralAttachments.length >0"
+                        class="attach-box" style="padding: 7px;">
+                        <p><b>Referral {{receipt.referralNumber }}</b></p>
+                        <div *ngFor="let attach of receipt.receiptAttachments" style="margin-bottom: 5px;">
+                            <span class="icon"><img src="/assets/images/docIcon.svg" width="23"
+                                    height="30">&nbsp;&nbsp;</span>
+                            <span class="icon-text">{{attach.fileName}}</span>
+                        </div>
+                        <div *ngFor="let attach of receipt.referralAttachments" style="margin-bottom: 5px;">
+                            <span class="icon"><img src="/assets/images/docIcon.svg" width="23"
+                                    height="30">&nbsp;&nbsp;</span>
+                            <span class="icon-text">{{attach.fileName}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col">
+                <captcha language="en" eagerFetchAudio="true" (validToken)="onValidToken($event)"
+                    (serverError)="onServerError($event)"></captcha>
+            </div>
+        </div>
+
+        <app-alert></app-alert>
+
+        <div class="row" style="justify-content: space-between;">
+            <div style="padding-left: 13px;">
+                <button type="submit" (click)="goback()" [disabled]="isSubmitted" class="btn primary-button">Go back &
+                    Edit</button>
+            </div>
+            <div style="padding-right: 13px;">
+                <button type="submit" (click)="submit()" [disabled]="isSubmitted" class="btn secondary-button">Submit
+                    <app-loader [showLoader]="showLoader"></app-loader>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="receipt-template">
+  <form [formGroup]="receiptForm">
+    <div class="form-header">
+      <div class="row">
+        <div class="col-md-6 mr-auto">
+          <div class="form-group">
+            <label class="requiredField" for="referralNumber">Referral Number</label>
+            <input type="text" class="form-control form-control-lg" id="referralNumber"
+              [formControlName]="'referralNumber'" required>
+            <div
+              *ngIf="receiptControl.referralNumber?.invalid && (receiptControl.referralNumber?.dirty || receiptControl.referralNumber?.touched)"
+              class="text-white">
+              <div *ngIf="receiptControl.referralNumber?.errors.required" style="color: red;">
+                Referral Number is required
+              </div>
+              <div *ngIf="receiptControl.referralNumber?.errors.duplicateReferral" style="color: red;">
+                Referral Number is duplicate
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="formArraySize > 1" class="col-auto">
+          <i (click)="indexToRemove.emit(index)" class="fas fa-trash-alt"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-body">
+      <div formArrayName="referrals">
+        <div *ngFor="let referral of referrals.controls; let j = index">
+          <app-referral [index]="j" [referralForm]="referral" [formGroupName]="j" [invoiceCurrentIndex]="index" [formArraySize]="referrals.controls.length"
+            [component]="component" (referralToRemove)="removeReferral($event)"></app-referral>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <a (click)="addSingleReferralTemplate()" class="btn btn-block add-referral-button">+ Add another receipt to
+            this referral</a>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="requiredField attach-header">Attach a photo/scanned copies of the referral below</label>
+            <app-file-upload [reloadedFiles]="reloadedFiles" [noOfAttachments]="noOfAttachments" (attachedFile)="setReferralFormControl($event)"
+              (deleteFile)="deleteReferralFormControl($event)">
+            </app-file-upload>
+            <div *ngIf="!checkAttachmentLength(receiptControl.referralAttachments.value)" style="color: red;">
+              Attachment is required
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="requiredField attach-header">Attach any receipt related to this referral below</label>
+            <app-file-upload [reloadedFiles]="reloadedFiles2" (attachedFile)="setReceiptFormControl($event)"
+              (deleteFile)="deleteReceiptFormControl($event)">
+            </app-file-upload>
+            <div *ngIf="!checkAttachmentLength(receiptControl.receiptAttachments.value)" style="color: red;">
+              Attachment is required
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="referrals.controls.length>0" class="row">
+        <div class="col-12 form-inline" style="justify-content: flex-end;">
+          Total GST &nbsp;&nbsp;
+          <span class="input-symbol-dollar total-dollar-line"><input type="number" [formControlName]="'receiptTotalGst'"
+              class="form-control form-control-lg" readonly></span>
+        </div>
+      </div>
+      <br>
+      <div *ngIf="referrals.controls.length> 0" class="row">
+        <div class="col-12 form-inline" style="justify-content: flex-end;">
+          Total Amount &nbsp;&nbsp;
+            <span class="input-symbol-dollar total-dollar-line"><input type="number" id="receiptTotalAmount"
+                [formControlName]="'receiptTotalAmount'" class="form-control form-control-lg" readonly></span>
+        </div>
+        <div class="col-12 form-inline" style="justify-content: flex-end;">
+          <p class="input-help">(excluding GST)</p>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>

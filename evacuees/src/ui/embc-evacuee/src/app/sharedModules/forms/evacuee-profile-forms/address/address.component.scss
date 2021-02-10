@@ -1,0 +1,17 @@
+.primary-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+  
+  .primary-radio-button {
+    margin: 5px;
+  }
+
+  .radio-hint {
+      font-style: italic;
+  }
+
+  mat-form-field {
+    width: 100%;
+}
