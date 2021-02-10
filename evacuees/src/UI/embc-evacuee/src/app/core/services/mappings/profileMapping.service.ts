@@ -19,6 +19,7 @@ export class ProfileMappingService {
         }
         if (userProfile.eraProfile) {
             // console.log(userProfile);
+            this.dataService.updateRegistartion(userProfile.eraProfile);
             this.dataService.setProfileId(userProfile.eraProfile.id);
             this.dataService.setProfile(userProfile.eraProfile);
         }

@@ -179,7 +179,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
       console.log(error);
       this.showLoader = !this.showLoader;
       this.isSubmitted = !this.isSubmitted;
-      this.alertService.setAlert('danger', error.title);
+      this.alertService.setAlert('danger', error.error.title);
     });
 
   }

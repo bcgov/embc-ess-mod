@@ -54,22 +54,6 @@ export class DataService {
         return this.profileId;
     }
 
-    public setContactGuidId(contactId: string): void {
-        this.contactGuidId = contactId;
-    }
-
-    public getContactGuidId(): string {
-        return this.contactGuidId;
-    }
-
-    public setLoginStatus(status: boolean): void {
-        this.loginStatus.next(status);
-    }
-
-    public getLoginStatus(): Observable<boolean> {
-        return this.loginStatus$;
-    }
-
     public updateRegistartion(value): void {
         this.registrationDetails = { ...this.registrationDetails, ...value };
     }
