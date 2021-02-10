@@ -6,18 +6,18 @@ import {
     RouterStateSnapshot,
     UrlTree
 } from '@angular/router';
-import { ProfileApiService } from './api/profileApi.service';
-import { ProfileMappingService } from './mappings/profileMapping.service';
+import { ProfileService } from '../../sharedModules/components/profile/profile.service';
+import { ProfileMappingService } from '../../sharedModules/components/profile/profile-mapping.service';
 
 @Injectable({ providedIn: 'root' })
 export class AllowNavigationGuard implements CanActivate {
 
-    constructor(private router: Router, private regProfService: ProfileApiService, public mappingService: ProfileMappingService) { }
+    constructor(private router: Router, private profileService: ProfileService, public mappingService: ProfileMappingService) { }
 
     public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
         Promise<boolean | UrlTree> {
 
-        this.regProfService.getExistingProfile().subscribe(profile => {
+        this.profileService.getExistingProfile().subscribe(profile => {
             console.log(profile);
             this.mappingService.mapUserProfile(profile);
             if (state.url === '/verified-registration') {

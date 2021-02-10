@@ -1,35 +1,35 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { Profile, Registration, StateProvince } from '../../api/models';
-import { UserProfile } from '../../api/models/user-profile';
-import { DataService } from './../data.service';
-import { FormCreationService } from './../formCreation.service';
+import { Profile, StateProvince, UserProfile } from '../../../core/api/models';
+import { ProfileDataService } from './profile-data.service';
+import { FormCreationService } from '../../../core/services/formCreation.service';
+import { DataService } from 'src/app/core/services/data.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
-    constructor(private formCreationService: FormCreationService, private dataService: DataService) { }
+    constructor(private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
+        private dataService: DataService) { }
 
     mapUserProfile(userProfile: UserProfile): void {
-        this.dataService.setLoginProfile(userProfile.loginProfile);
+        this.profileDataService.setLoginProfile(userProfile.loginProfile);
         if (userProfile.isNewUser) {
             this.setLoginProfile(userProfile.loginProfile);
         } else {
             this.setExistingProfile(userProfile.eraProfile);
         }
         if (userProfile.eraProfile) {
-            // console.log(userProfile);
             this.dataService.updateRegistartion(userProfile.eraProfile);
-            this.dataService.setProfileId(userProfile.eraProfile.id);
-            this.dataService.setProfile(userProfile.eraProfile);
+            this.profileDataService.setProfileId(userProfile.eraProfile.id);
+            this.profileDataService.setProfile(userProfile.eraProfile);
         }
-        this.dataService.setConflicts(userProfile.conflicts);
+        this.profileDataService.setConflicts(userProfile.conflicts);
     }
 
     mapProfile(profile: Profile): void {
         this.setExistingProfile(profile);
-        this.dataService.setProfileId(profile.id);
-        this.dataService.setProfile(profile);
+        this.profileDataService.setProfileId(profile.id);
+        this.profileDataService.setProfile(profile);
     }
 
     setExistingProfile(profile: Profile): void {
