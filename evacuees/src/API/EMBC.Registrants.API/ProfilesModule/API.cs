@@ -60,6 +60,21 @@ namespace EMBC.Registrants.API.ProfilesModule
         }
 
         /// <summary>
+        /// check if user exists or not
+        /// </summary>
+        /// <returns>true if existing user, false if a new user</returns>
+        [HttpGet("current/exists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize]
+        public async Task<ActionResult<bool>> GetDoesUserExists()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // TODO: optimize the check to not require the entire profile
+            var profile = await profileManager.GetProfileByBceid(userId);
+            return Ok(profile != null);
+        }
+
+        /// <summary>
         /// Get the current logged in user's profile
         /// </summary>
         /// <returns>Currently logged in user's profile</returns>
