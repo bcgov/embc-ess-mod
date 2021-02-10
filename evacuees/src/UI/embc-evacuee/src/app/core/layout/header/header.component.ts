@@ -34,7 +34,6 @@ export class HeaderComponent implements OnInit {
     homeButton(): void { }
 
     signOut(): void {
-        //this.dataService.setLoginStatus(false);
         this.authService.logout('https://www.emergencyinfobc.gov.bc.ca/');
         this.cacheService.clear();
 
