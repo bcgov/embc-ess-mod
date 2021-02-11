@@ -89,7 +89,6 @@ namespace EMBC.Registrants.API.Shared
         [Required]
         public Country Country { get; set; }
 
-        [Required]
         public string PostalCode { get; set; }
     }
 
