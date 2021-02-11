@@ -129,10 +129,10 @@ namespace EMBC.Registrants.API.ProfilesModule
 
         public async Task Delete(string userId)
         {
-            var profile = await Read(userId);
-            if (profile != null)
+            var contact = dynamicsClient.contacts.Where(c => c.era_bcservicescardid == userId).SingleOrDefault();
+            if (contact != null)
             {
-                dynamicsClient.DeleteObject(profile);
+                dynamicsClient.DeleteObject(contact);
                 await dynamicsClient.SaveChangesAsync();
             }
         }

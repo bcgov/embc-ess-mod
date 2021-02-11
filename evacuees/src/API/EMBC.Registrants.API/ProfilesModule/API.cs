@@ -60,6 +60,21 @@ namespace EMBC.Registrants.API.ProfilesModule
         }
 
         /// <summary>
+        /// check if user exists or not
+        /// </summary>
+        /// <returns>true if existing user, false if a new user</returns>
+        [HttpGet("current/exists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize]
+        public async Task<ActionResult<bool>> GetDoesUserExists()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // TODO: optimize the check to not require the entire profile
+            var profile = await profileManager.GetProfileByBceid(userId);
+            return Ok(profile != null);
+        }
+
+        /// <summary>
         /// Get the current logged in user's profile
         /// </summary>
         /// <returns>Currently logged in user's profile</returns>
@@ -115,6 +130,10 @@ namespace EMBC.Registrants.API.ProfilesModule
             return Ok(userProfileWithConflicts);
         }
 
+        /// <summary>
+        /// Get the authentication profile of the logged in user
+        /// </summary>
+        /// <returns>a profile representing the authentication user data</returns>
         [HttpGet("current/login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -154,7 +173,7 @@ namespace EMBC.Registrants.API.ProfilesModule
     /// <summary>
     /// Base class for profile data conflicts
     /// </summary>
-    [JsonConverter(typeof(JsonInheritanceConverter), nameof(ProfileDataConflict.DataElementName))]
+    [JsonConverter(typeof(JsonInheritanceConverter), "dataElementName")]
     [KnownType(typeof(DateOfBirthDataConflict))]
     [KnownType(typeof(NameDataConflict))]
     [KnownType(typeof(AddressDataConflict))]
