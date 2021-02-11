@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { ViewAuthProfileComponent } from './dashboard.component';
+import { DashboardComponent } from './dashboard.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 
 describe('ViewAuthProfileComponent', () => {
-  let component: ViewAuthProfileComponent;
-  let fixture: ComponentFixture<ViewAuthProfileComponent>;
+  let component: DashboardComponent;
+  let fixture: ComponentFixture<DashboardComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ViewAuthProfileComponent],
+      declarations: [DashboardComponent],
       imports: [RouterTestingModule],
       providers: [FormCreationService]
     })
@@ -18,7 +18,7 @@ describe('ViewAuthProfileComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewAuthProfileComponent);
+    fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

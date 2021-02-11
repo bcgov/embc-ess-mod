@@ -1,5 +1,5 @@
-export { RegistrationResult } from './models/registration-result';
 export { ProblemDetails } from './models/problem-details';
+export { RegistrationResult } from './models/registration-result';
 export { AnonymousRegistration } from './models/anonymous-registration';
 export { Registration } from './models/registration';
 export { PersonDetails } from './models/person-details';
