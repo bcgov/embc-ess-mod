@@ -17,10 +17,10 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
             conflicts.Count().ShouldBe(3);
             var nameConflict = conflicts.Where(c => c is NameDataConflict).Cast<NameDataConflict>().ShouldHaveSingleItem();
-            nameConflict.OriginalValue.firstName.ShouldNotBeNull().ShouldBe(source.PersonalDetails.FirstName);
-            nameConflict.OriginalValue.lastName.ShouldNotBeNull().ShouldBe(source.PersonalDetails.LastName);
-            nameConflict.ConflictingValue.firstName.ShouldNotBeNull().ShouldBe(target.PersonalDetails.FirstName);
-            nameConflict.ConflictingValue.lastName.ShouldNotBeNull().ShouldBe(target.PersonalDetails.LastName);
+            nameConflict.OriginalValue.ShouldNotBeNull().ShouldContain(source.PersonalDetails.FirstName);
+            nameConflict.OriginalValue.ShouldNotBeNull().ShouldContain(source.PersonalDetails.LastName);
+            nameConflict.ConflictingValue.ShouldNotBeNull().ShouldContain(target.PersonalDetails.FirstName);
+            nameConflict.ConflictingValue.ShouldNotBeNull().ShouldContain(target.PersonalDetails.LastName);
 
             var dobConflict = conflicts.Where(c => c is DateOfBirthDataConflict).Cast<DateOfBirthDataConflict>().ShouldHaveSingleItem();
             dobConflict.OriginalValue.ShouldNotBeNull().ShouldBe(source.PersonalDetails.DateOfBirth);
