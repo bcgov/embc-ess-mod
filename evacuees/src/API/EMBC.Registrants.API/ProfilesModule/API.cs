@@ -173,7 +173,7 @@ namespace EMBC.Registrants.API.ProfilesModule
     /// <summary>
     /// Base class for profile data conflicts
     /// </summary>
-    [JsonConverter(typeof(JsonInheritanceConverter), nameof(ProfileDataConflict.DataElementName))]
+    [JsonConverter(typeof(JsonInheritanceConverter), "dataElementName")]
     [KnownType(typeof(DateOfBirthDataConflict))]
     [KnownType(typeof(NameDataConflict))]
     [KnownType(typeof(AddressDataConflict))]
