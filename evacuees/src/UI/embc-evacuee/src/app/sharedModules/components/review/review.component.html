@@ -43,10 +43,10 @@
 
                 <div class="row info-detail">
                     <div class="col-md-1">
-                        <span *ngIf="(formCreationService.restrictionForm$ | async).value.restrictedAccess">
+                        <span *ngIf="(formCreationService.restrictionForm$ | async)?.value.restrictedAccess">
                             <img src="/assets/images/restriction-on.svg" height="20" width="20">
                         </span>
-                        <span *ngIf="!(formCreationService.restrictionForm$ | async).value.restrictedAccess">
+                        <span *ngIf="!(formCreationService.restrictionForm$ | async)?.value.restrictedAccess">
                             <img src="/assets/images/restriction-off.svg" height="20" width="20">
                         </span>
                     </div>
@@ -76,30 +76,30 @@
 
                 <div class="row info-detail">
                     <div class="col-md-3">Last Name:</div>
-                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.lastName}}</div>
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async)?.value?.lastName}}</div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">First Name:</div>
-                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.firstName}}</div>
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async)?.value?.firstName}}</div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Preferred Name:</div>
-                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.preferredName}}
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async)?.value?.preferredName}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Initials:</div>
-                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.initials}}</div>
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async)?.value?.initials}}</div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Date of Birth:</div>
-                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.dateOfBirth |
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async)?.value?.dateOfBirth |
                         customDate}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Gender:</div>
-                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async).value?.gender}}</div>
+                    <div class="col-md-3">{{(formCreationService.personalDetailsForm$ | async)?.value?.gender}}</div>
                 </div>
             </mat-card-content>
 
@@ -119,34 +119,34 @@
 
                 <div class="row info-detail">
                     <div class="col-md-3">Address line 1:</div>
-                    <div class="col-md-3">{{(formCreationService.addressForm$ | async).value?.address?.addressLine1}}
+                    <div class="col-md-3">{{(formCreationService.addressForm$ | async)?.value?.address?.addressLine1}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Address line 2:</div>
-                    <div class="col-md-3">{{(formCreationService.addressForm$ | async).value?.address?.addressLine2}}
+                    <div class="col-md-3">{{(formCreationService.addressForm$ | async)?.value?.address?.addressLine2}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">City:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.addressForm$ | async).value?.address?.jurisdiction?.name}}
+                        {{(formCreationService.addressForm$ | async)?.value?.address?.jurisdiction?.name}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Postal Code:</div>
-                    <div class="col-md-3">{{(formCreationService.addressForm$ | async).value?.address?.postalCode}}
+                    <div class="col-md-3">{{(formCreationService.addressForm$ | async)?.value?.address?.postalCode}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Province:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.addressForm$ | async).value?.address?.stateProvince?.name}}
+                        {{(formCreationService.addressForm$ | async)?.value?.address?.stateProvince?.name}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Country:</div>
-                    <div class="col-md-3">{{(formCreationService.addressForm$ | async).value?.address?.country?.name}}
+                    <div class="col-md-3">{{(formCreationService.addressForm$ | async)?.value?.address?.country?.name}}
                     </div>
                 </div>
             </mat-card-content>
@@ -167,35 +167,35 @@
                 <div class="row info-detail">
                     <div class="col-md-3">Address line 1:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.addressLine1}}
+                        {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.addressLine1}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Address line 2:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.addressLine2}}
+                        {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.addressLine2}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">City:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.jurisdiction?.name}}</div>
+                        {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.jurisdiction?.name}}</div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Postal Code:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.postalCode}}
+                        {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.postalCode}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Province:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.stateProvince?.name}}</div>
+                        {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.stateProvince?.name}}</div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Country:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.addressForm$ | async).value?.mailingAddress?.country?.name}}
+                        {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.country?.name}}
                     </div>
                 </div>
             </mat-card-content>
@@ -216,11 +216,11 @@
                 <hr>
                 <div class="row info-detail">
                     <div class="col-md-3">Telephone/Mobile:</div>
-                    <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async).value?.phone}}</div>
+                    <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async)?.value?.phone}}</div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Email Address:</div>
-                    <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async).value?.email}}</div>
+                    <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async)?.value?.email}}</div>
                 </div>
             </mat-card-content>
 
@@ -239,7 +239,7 @@
                 <hr>
                 <div class="row info-detail">
                     <div class="col-md-3">Secret Word / Phrase:</div>
-                    <div class="col-md-3">{{(formCreationService.secretForm$ | async).value?.secretPhrase | maskText}}
+                    <div class="col-md-3">{{(formCreationService.secretForm$ | async)?.value?.secretPhrase | maskText}}
                     </div>
                 </div>
             </mat-card-content>
@@ -267,10 +267,10 @@
 
                 <div class="row info-detail">
                     <div class="col-md-1">
-                        <span *ngIf="(formCreationService.restrictionForm$ | async).value.restrictedAccess">
+                        <span *ngIf="(formCreationService.restrictionForm$ | async)?.value.restrictedAccess">
                             <img src="/assets/images/restriction-on.svg" height="20" width="20">
                         </span>
-                        <span *ngIf="!(formCreationService.restrictionForm$ | async).value.restrictedAccess">
+                        <span *ngIf="!(formCreationService.restrictionForm$ | async)?.value.restrictedAccess">
                             <img src="/assets/images/restriction-off.svg" height="20" width="20">
                         </span>
                     </div>
@@ -300,15 +300,16 @@
                 <div class="row info-detail">
                     <div class="col-md-3">Evacuated From:</div>
                     <div class="col-md-3">
-                        <span>{{(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.addressLine1}}
-                            {{(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.addressLine2}}
+                        <span>{{(formCreationService.evacuatedForm$ |
+                            async)?.value?.evacuatedFromAddress?.addressLine1}}
+                            {{(formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine2}}
                         </span>
                         <span>{{(formCreationService.evacuatedForm$ |
-                            async).value?.evacuatedFromAddress?.jurisdiction?.name}},
+                            async)?.value?.evacuatedFromAddress?.jurisdiction?.name}},
                             {{(formCreationService.evacuatedForm$ |
-                            async).value?.evacuatedFromAddress?.stateProvince?.name}},
+                            async)?.value?.evacuatedFromAddress?.stateProvince?.name}},
                             {{(formCreationService.evacuatedForm$ |
-                            async).value?.evacuatedFromAddress?.postalCode}}</span>
+                            async)?.value?.evacuatedFromAddress?.postalCode}}</span>
                     </div>
                 </div>
             </mat-card-content>
@@ -329,10 +330,10 @@
                 <hr>
                 <div class="row info-detail">
                     <div class="col-md-3">Insurance:</div>
-                    <div class="col-md-3">{{(formCreationService.evacuatedForm$ | async).value.insurance ==='Unknown' ?
-                        'I don\'t know' : (formCreationService.evacuatedForm$ | async).value.insurance === 'Unsure' ?
+                    <div class="col-md-3">{{(formCreationService.evacuatedForm$ | async)?.value.insurance ==='Unknown' ?
+                        'I don\'t know' : (formCreationService.evacuatedForm$ | async)?.value.insurance === 'Unsure' ?
                         'Yes, but I am unsure if I have coverage for this event.' : (formCreationService.evacuatedForm$
-                        | async).value.insurance === 'Yes' ?
+                        | async)?.value.insurance === 'Yes' ?
                         'Yes' : 'No'}}</div>
                 </div>
             </mat-card-content>
@@ -351,7 +352,7 @@
                     </div>
                 </div>
                 <hr>
-                <div *ngFor="let member of (formCreationService.familyMembersForm$ | async).value.familyMember">
+                <div *ngFor="let member of (formCreationService.familyMembersForm$ | async)?.value.familyMember">
                     <div class="row info-detail">
                         <div class="col-md-3">First Name:</div>
                         <div class="col-md-3">{{member.firstName}}</div>
@@ -395,14 +396,14 @@
                 <div class="row info-detail">
                     <div class="col-md-3">Family Medication Requirements:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.familyMembersForm$ | async).value.haveMedication === true ? 'Yes' :
+                        {{(formCreationService.familyMembersForm$ | async)?.value.haveMedication === true ? 'Yes' :
                         'No'}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Family Dietary Requirements:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.familyMembersForm$ | async).value.haveSpecialDiet === true ? 'Yes':
+                        {{(formCreationService.familyMembersForm$ | async)?.value.haveSpecialDiet === true ? 'Yes':
                         'No'}}
                     </div>
                 </div>
@@ -421,7 +422,7 @@
                     </div>
                 </div>
                 <hr>
-                <div *ngFor="let pet of (formCreationService.petsForm$ | async).value.pets">
+                <div *ngFor="let pet of (formCreationService.petsForm$ | async)?.value.pets">
                     <div class="row info-detail">
                         <div class="col-md-3">Pet Type:</div>
                         <div class="col-md-3">{{pet.type}}</div>
@@ -432,10 +433,10 @@
                     </div>
                     <br>
                 </div>
-                <div *ngIf="(formCreationService.petsForm$ | async).value?.pets?.length > 0" class="row info-detail">
+                <div *ngIf="(formCreationService.petsForm$ | async)?.value?.pets?.length > 0" class="row info-detail">
                     <div class="col-md-3">Has sufficient pet food?</div>
                     <div class="col-md-3">
-                        {{(formCreationService.petsForm$ | async).value.hasPetsFood === true ? 'Yes' : 'No'}}</div>
+                        {{(formCreationService.petsForm$ | async)?.value.hasPetsFood === true ? 'Yes' : 'No'}}</div>
                 </div>
             </mat-card-content>
 
@@ -456,41 +457,43 @@
                 <div class="row info-detail">
                     <div class="col-md-3">Food:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideFood === 'null' ?
-                        'I\'m not sure' : (formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideFood
+                        {{(formCreationService.identifyNeedsForm$ | async)?.value.canEvacueeProvideFood === 'null' ?
+                        'I\'m not sure' : (formCreationService.identifyNeedsForm$ | async)?.value.canEvacueeProvideFood
                         === true ? 'Yes' : 'No'}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Lodging:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideLodging === 'null' ?
-                        'I\'m not sure' :(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideLodging
+                        {{(formCreationService.identifyNeedsForm$ | async)?.value.canEvacueeProvideLodging === 'null' ?
+                        'I\'m not sure' :(formCreationService.identifyNeedsForm$ |
+                        async)?.value.canEvacueeProvideLodging
                         === true ? 'Yes' : 'No'}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Clothing:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideClothing === 'null' ?
+                        {{(formCreationService.identifyNeedsForm$ | async)?.value.canEvacueeProvideClothing === 'null' ?
                         'I\'m not sure' :(formCreationService.identifyNeedsForm$ |
-                        async).value.canEvacueeProvideClothing === true ? 'Yes' : 'No'}}
+                        async)?.value.canEvacueeProvideClothing === true ? 'Yes' : 'No'}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Transportation:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideTransportation ===
+                        {{(formCreationService.identifyNeedsForm$ | async)?.value.canEvacueeProvideTransportation ===
                         'null' ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ |
-                        async).value.canEvacueeProvideTransportation === true ? 'Yes' : 'No'}}
+                        async)?.value.canEvacueeProvideTransportation === true ? 'Yes' : 'No'}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Incidentals:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.identifyNeedsForm$ | async).value.canEvacueeProvideIncidentals === 'null'
+                        {{(formCreationService.identifyNeedsForm$ | async)?.value.canEvacueeProvideIncidentals ===
+                        'null'
                         ? 'I\'m not sure' :(formCreationService.identifyNeedsForm$ |
-                        async).value.canEvacueeProvideIncidentals === true ? 'Yes' : 'No'}}
+                        async)?.value.canEvacueeProvideIncidentals === true ? 'Yes' : 'No'}}
                     </div>
                 </div>
             </mat-card-content>

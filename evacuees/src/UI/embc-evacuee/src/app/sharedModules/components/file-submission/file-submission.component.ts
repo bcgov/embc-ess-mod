@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { DataService } from '../../../core/services/data.service';
+
+let browserRefresh = false;
 
 @Component({
   selector: 'app-file-submission',
@@ -13,6 +16,8 @@ export class FileSubmissionComponent implements OnInit {
   panelOpenState = false;
   currentFlow: string;
 
+  subscription: Subscription;
+
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) { }
 
   /**
@@ -24,9 +29,9 @@ export class FileSubmissionComponent implements OnInit {
     const registrationResult = this.dataService.getRegistrationResult();
     if (registrationResult) {
       this.referenceNumber = registrationResult.referenceNumber;
-      // if (!this.referenceNumber) {
-      //   this.referenceNumber = 'XXX';
-      // }
+      if (!this.referenceNumber) {
+        this.router.navigate(['/']);
+      }
     }
   }
 
