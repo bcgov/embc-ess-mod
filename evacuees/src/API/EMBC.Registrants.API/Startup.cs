@@ -93,7 +93,8 @@ namespace EMBC.Registrants.API
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
-            });
+            }).AddNewtonsoftJson();
+            services.AddResponseCompression();
             services.AddPortalAuthentication(configuration);
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
             services.AddDistributedMemoryCache(); // TODO: configure proper distributed cache
@@ -156,6 +157,7 @@ namespace EMBC.Registrants.API
             app.UseSwaggerUi3();
             app.UseCors();
             app.UseRouting();
+            app.UseResponseCompression();
 
             app.UseAuthorization();
 
