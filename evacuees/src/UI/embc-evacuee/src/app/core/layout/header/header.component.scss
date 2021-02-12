@@ -1,0 +1,72 @@
+.header-style {
+    justify-content: normal;
+}
+
+.app-heading {
+    font-size: 30px;
+}
+
+.heading-text1 {
+    color: #ffffff;
+}
+
+.heading-text2 {
+    color: #fcba19;
+}
+
+.divider {
+    width: 1px;
+    height: 44px;
+    background-color: #ffffff;
+    border-radius: 0px;
+    margin-right: 20px;
+}
+
+@media (max-width: 768px) {
+    .divider {
+        width: 0px;
+    }
+}
+
+@media (min-width: 900px) {
+    .menuButton {
+        margin: 0px 50px 0px 220px;
+    }
+
+    .img-align {
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+}
+
+.menuButton {
+    margin: 0px 50px 0px 150px;
+    background: #036;
+    color: white;
+    font-size: 15px;
+}
+
+::ng-deep .mat-menu-panel {
+    border-radius: 0px !important;
+    background: #036 !important;
+    min-width: 320px !important;
+}
+
+.mat-menu-item {
+    color: #ffffff !important;
+}
+
+.text {
+    color: white;
+    padding-left: 10px;
+}
+
+.img-align {
+    margin-right: 5px;
+    margin-left: 20px;
+}
+
+.align-content {
+    display: inline-block;
+    line-height: 0;
+}

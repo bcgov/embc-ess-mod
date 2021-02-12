@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { EvacuationCard } from 'src/app/sharedModules/components/view-auth-profile/view-auth-profile.component';
+import { EvacuationCard } from 'src/app/sharedModules/components/dashboard/dashboard.component';
 
 @Component({
   selector: 'app-evacuation-card',
@@ -19,7 +19,7 @@ export class EvacuationCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.changeStatusColor();
- }
+  }
 
   changeStatusColor(): void {
     if (this.evacuationFileCard.status === 'Active') {

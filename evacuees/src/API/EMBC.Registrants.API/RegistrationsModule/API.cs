@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,28 +52,129 @@ namespace EMBC.Registrants.API.RegistrationsModule
         }
 
         /// <summary>
+        /// Create a Registrant Evacuation
+        /// </summary>
+        /// <param name="evacuation">registrant evacuation data</param>
+        /// <returns>ESS number</returns>
+        [HttpPost("evacuation")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<RegistrationResult>> CreateEvacuation(RegistrantEvacuation evacuation)
+        {
+            //if (evacuation == null || string.IsNullOrEmpty(evacuation.ContactId))
+            //    return BadRequest();BCServicesCardtId
+            if (evacuation == null || string.IsNullOrEmpty(evacuation.Id))
+                return BadRequest();
+
+            var essFileNumber = await registrationManager.CreateRegistrantEvacuation(evacuation);
+
+            return CreatedAtAction(nameof(Create), new RegistrationResult { ReferenceNumber = essFileNumber });
+        }
+
+        /// <summary>
         /// Create a Registrant Profile
         /// </summary>
-        /// <param name="profleRegistration">Profile Registration Form</param>
+        /// <param name="profileRegistration">Profile Registration Form</param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpPost("create-profile")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> CreateProfile(Registration profleRegistration)
+        public async Task<ActionResult> CreateProfile(Registration profileRegistration)
         {
-            if (profleRegistration == null) return BadRequest();
-            var result = await registrationManager.CreateProfile(profleRegistration);
+            if (profileRegistration == null)
+                return BadRequest();
+
+            var result = await registrationManager.CreateProfile(profileRegistration);
 
             return CreatedAtAction(nameof(CreateProfile), result);
         }
 
-        [HttpGet("get-profile")]
-        public async Task<Registration> GetProfileById(Guid contactId)
+        /// <summary>
+        /// Get a Registrant Profile
+        /// </summary>
+        /// <param name="id">Contact Id</param>
+        /// <returns>Registration</returns>
+        [HttpGet("get-profile/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Registration>> GetProfileById(string id)
         {
-            if (contactId == null) return null;
-            var result = await registrationManager.GetProfileById(contactId);
+            if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out Guid contactId))
+            {
+                return BadRequest();
+            }
 
-            return result;
+            var profile = await registrationManager.GetProfileById(contactId);
+
+            //if (string.IsNullOrEmpty(profile.ContactId))
+            //    return NotFound();
+
+            // if id not found then an empty oject is returned
+            return Ok(profile);
+        }
+
+        /// <summary>
+        /// Get a Registrant Profile by BCSC
+        /// </summary>
+        /// <param name="bcscId">BCSC Id</param>
+        /// <returns>Registration</returns>
+        [HttpGet("get-profile-by-bcsc-id/{bcscId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Registration>> GetProfileByBcscId(string bcscId)
+        {
+            if (string.IsNullOrEmpty(bcscId))
+            {
+                return BadRequest();
+            }
+
+            var profile = await registrationManager.GetProfileByBcscId(bcscId);
+
+            return Ok(profile);
+        }
+
+        /// <summary>
+        /// Update a Registrant Profile
+        /// </summary>
+        /// <param name="id">Contact Id</param>
+        /// <param name="profileRegistration">Profile Registration Form</param>
+        /// <returns>Registration</returns>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPatch("patch-profile/{id}")]
+        public async Task<ActionResult<Registration>> PatchProfileById(string id, Registration profileRegistration)
+        {
+            if (string.IsNullOrEmpty(id) || !Guid.TryParse(id, out Guid contactId))
+            {
+                return BadRequest();
+            }
+
+            //if (profileRegistration == null) return NotFound();
+
+            var profile = await registrationManager.PatchProfileById(contactId, profileRegistration);
+
+            return profile;
+        }
+
+        /// <summary>
+        /// Get a list of evacuations by Contact Id
+        /// </summary>
+        /// <param name="contactId">Query Parameter: Contact Id</param>
+        /// <returns>List of RegistrantEvacuation</returns>
+        [HttpGet("evacuation")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<List<RegistrantEvacuation>>> GetRegistrantEvacuations([FromQuery] string contactId)
+        {
+            if (string.IsNullOrEmpty(contactId) || !Guid.TryParse(contactId, out Guid contactID))
+            {
+                return BadRequest();
+            }
+
+            var evacuationList = await registrationManager.GetRegistrantEvacuations(contactID);
+
+            return Ok(evacuationList);
         }
     }
 
@@ -92,10 +194,26 @@ namespace EMBC.Registrants.API.RegistrationsModule
     }
 
     /// <summary>
+    /// Registrant Evacuation details
+    /// </summary>
+    public class RegistrantEvacuation
+    {
+        [Required]
+        public string Id { get; set; }
+
+        [Required]
+        public NeedsAssessment PreliminaryNeedsAssessment { get; set; }
+    }
+
+    /// <summary>
     /// New registration form
     /// </summary>
     public class Registration
     {
+        public string ContactId { get; set; }
+
+        public string BCServicesCardId { get; set; }
+
         [Required]
         public PersonDetails PersonalDetails { get; set; }
 
@@ -118,87 +236,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
     }
 
     /// <summary>
-    /// Person details
-    /// </summary>
-    public class PersonDetails
-    {
-        [Required]
-        public string FirstName { get; set; }
-
-        [Required]
-        public string LastName { get; set; }
-
-        public string Initials { get; set; }
-        public string PreferredName { get; set; }
-
-        [Required]
-        public string Gender { get; set; }
-
-        [Required]
-        public string DateOfBirth { get; set; }
-    }
-
-    /// <summary>
-    /// Address data with optional lookup code
-    /// </summary>
-    public class Address
-    {
-        [Required]
-        public string AddressLine1 { get; set; }
-
-        public string AddressLine2 { get; set; }
-
-        [Required]
-        public Jurisdiction Jurisdiction { get; set; }
-
-        public StateProvince StateProvince { get; set; }
-
-        [Required]
-        public Country Country { get; set; }
-
-        [Required]
-        public string PostalCode { get; set; }
-    }
-
-    public class Jurisdiction
-    {
-        public string JurisdictionCode { get; set; }
-
-        [Required]
-        public string JurisdictionName { get; set; }
-    }
-
-    public class StateProvince
-    {
-        public string StateProvinceCode { get; set; }
-        public string StateProvinceName { get; set; }
-    }
-
-    public class Country
-    {
-        [Required]
-        public string CountryCode { get; set; }
-
-        public string CountryName { get; set; }
-    }
-
-    /// <summary>
-    /// Registrant contact information
-    /// </summary>
-    public class ContactDetails
-    {
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Phone]
-        public string Phone { get; set; }
-
-        public bool HidePhoneRequired { get; set; }
-
-        public bool HideEmailRequired { get; set; }
-    }
-
-    /// <summary>
     /// Needs assessment form
     /// </summary>
     public class NeedsAssessment
@@ -208,13 +245,13 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         [Required]
         public InsuranceOption Insurance { get; set; }
-
-        public bool? RequiresFood { get; set; }
-        public bool? RequiresTransportation { get; set; }
-        public bool? RequiresLodging { get; set; }
-        public bool? RequiresClothing { get; set; }
-        public bool? RequiresIncidentals { get; set; }
+        public bool? CanEvacueeProvideFood { get; set; }
+        public bool? CanEvacueeProvideLodging { get; set; }
+        public bool? CanEvacueeProvideClothing { get; set; }
+        public bool? CanEvacueeProvideTransportation { get; set; }
+        public bool? CanEvacueeProvideIncidentals { get; set; }
         public bool HaveSpecialDiet { get; set; }
+        public string SpecialDietDetails { get; set; }
         public bool HaveMedication { get; set; }
         public IEnumerable<PersonDetails> FamilyMembers { get; set; } = Array.Empty<PersonDetails>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();

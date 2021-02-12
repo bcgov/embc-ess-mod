@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { StateProvince } from 'src/app/core/services/api/models/state-province';
-import { LocationService } from '../../../../core/services/api/location.service';
+import { StateProvince } from '../../../../core/api/models/state-province';
+import { LocationService } from '../../../../core/api/services/location.service';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { RegAddress } from '../model/address';
-import { RegistrationResult } from './api/models/registration-result';
+import { RegistrationResult } from '../api/models/registration-result';
 import { DataService } from './data.service';
 import { FormCreationService } from './formCreation.service';
 
@@ -60,20 +60,21 @@ export class DataUpdationService {
     updateNeedsDetails(formGroup: FormGroup): void {
         this.formCreationService.setIdentifyNeedsForm(formGroup);
         this.dataService.updateNeedsAssessment({
-            requiresClothing: formGroup.get('requiresClothing').value === 'null' ? null : formGroup.get('requiresClothing').value
+            canEvacueeProvideClothing: formGroup.get('canEvacueeProvideClothing').value === 'null' ? null : formGroup.get('canEvacueeProvideClothing').value
         });
         this.dataService.updateNeedsAssessment({
-            requiresFood: formGroup.get('requiresFood').value === 'null' ? null : formGroup.get('requiresFood').value
+            canEvacueeProvideFood:
+                formGroup.get('canEvacueeProvideFood').value === 'null' ? null : formGroup.get('canEvacueeProvideFood').value
         });
         this.dataService.updateNeedsAssessment({
-            requiresIncidentals: formGroup.get('requiresIncidentals').value === 'null' ? null : formGroup.get('requiresIncidentals').value
+            canEvacueeProvideIncidentals: formGroup.get('canEvacueeProvideIncidentals').value === 'null' ? null : formGroup.get('canEvacueeProvideIncidentals').value
         });
         this.dataService.updateNeedsAssessment({
-            requiresLodging: formGroup.get('requiresLodging').value === 'null' ? null : formGroup.get('requiresLodging').value
+            canEvacueeProvideLodging: formGroup.get('canEvacueeProvideLodging').value === 'null' ? null : formGroup.get('canEvacueeProvideLodging').value
         });
         this.dataService.updateNeedsAssessment({
-            requiresTransportation: formGroup.get('requiresTransportation').value === 'null' ?
-                null : formGroup.get('requiresTransportation').value
+            canEvacueeProvideTransportation: formGroup.get('canEvacueeProvideTransportation').value === 'null' ?
+                null : formGroup.get('canEvacueeProvideTransportation').value
         });
     }
 
@@ -81,25 +82,25 @@ export class DataUpdationService {
         this.dataService.setRegistrationResult(registrationResult);
     }
 
-    private setAddressObject(addressObject): RegAddress {
+    public setAddressObject(addressObject): RegAddress {
         const address: RegAddress = {
             addressLine1: addressObject.addressLine1,
             addressLine2: addressObject.addressLine2,
             country: {
-                countryCode: addressObject.country.code,
-                countryName: addressObject.country.name
+                code: addressObject.country.code,
+                name: addressObject.country.name
             },
             jurisdiction: {
-                jurisdictionCode: addressObject.jurisdiction.code === undefined ?
+                code: addressObject.jurisdiction.code === undefined ?
                     null : addressObject.jurisdiction.code,
-                jurisdictionName: addressObject.jurisdiction.name ===
+                name: addressObject.jurisdiction.name ===
                     undefined ? addressObject.jurisdiction : addressObject.jurisdiction.name
             },
             postalCode: addressObject.postalCode,
             stateProvince: {
-                stateProvinceCode: addressObject.stateProvince === null ?
+                code: addressObject.stateProvince === null ?
                     addressObject.stateProvince : addressObject.stateProvince.code,
-                stateProvinceName: addressObject.stateProvince === null ?
+                name: addressObject.stateProvince === null ?
                     addressObject.stateProvince : addressObject.stateProvince.name
             }
         };

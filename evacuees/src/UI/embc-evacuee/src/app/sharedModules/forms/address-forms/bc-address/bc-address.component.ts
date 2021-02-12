@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, AfterViewInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { LocationService } from '../../../../core/services/api/location.service';
+import { LocationService } from '../../../../core/api/services/location.service';
 import { startWith, map } from 'rxjs/operators';
 import * as globalConst from '../../../../core/services/globalConstants';
-import { Jurisdiction } from '../../../../core/services/api/models/jurisdiction';
+import { Jurisdiction } from '../../../../core/api/models/jurisdiction';
 
 @Component({
   selector: 'app-bc-address',
@@ -73,10 +73,10 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
 
   compareObjects<T extends Jurisdiction>(c1: T, c2: T): boolean {
     if (c1 === null || c2 === null || c1 === undefined || c2 === undefined) {
-        return null;
+      return null;
     }
     return c1.code === c2.code;
-}
+  }
 
   /**
    * Filters the city list for autocomplete field

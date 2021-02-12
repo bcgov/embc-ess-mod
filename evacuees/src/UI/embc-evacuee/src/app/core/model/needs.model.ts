@@ -1,4 +1,4 @@
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomValidationService } from '../services/customValidation.service';
 import { RegAddress } from './address';
 import { PersonDetails } from './profile.model';
@@ -76,7 +76,7 @@ export class FamilyMembersForm {
 }
 
 export class Pet {
-    quantity: string;
+    quantity: number;
     type: string;
     hasPetsFood: boolean;
 
@@ -88,13 +88,14 @@ export class PetForm {
     pet: FormGroup;
     addPetIndicator = new FormControl(false);
     hasPetsFood = new FormControl();
+    addPetFoodIndicator = new FormControl(false);
 
     constructor(pet: Pet, customValidator: CustomValidationService, builder: FormBuilder) {
         this.pet = builder.group({
             quantity: ['', [customValidator.conditionalValidation(
                 () => this.addPetIndicator.value,
                 Validators.required
-            ).bind(customValidator)]],
+            ).bind(customValidator), customValidator.quantityPetsValidator().bind(customValidator)]],
             type: ['', [customValidator.conditionalValidation(
                 () => this.addPetIndicator.value,
                 Validators.required
@@ -103,41 +104,41 @@ export class PetForm {
 
         this.hasPetsFood.setValue(pet.hasPetsFood);
         this.hasPetsFood.setValidators([customValidator.conditionalValidation(
-            () => this.addPetIndicator.value,
+            () => this.addPetFoodIndicator.value,
             Validators.required
         ).bind(customValidator)]);
     }
 }
 
 export class IdentifyNeeds {
-    requiresClothing: boolean;
-    requiresFood: boolean;
-    requiresIncidentals: boolean;
-    requiresLodging: boolean;
-    requiresTransportation: boolean;
+    canEvacueeProvideClothing: boolean;
+    canEvacueeProvideFood: boolean;
+    canEvacueeProvideIncidentals: boolean;
+    canEvacueeProvideLodging: boolean;
+    canEvacueeProvideTransportation: boolean;
 }
 
 export class IdentifyNeedsForm {
-    requiresClothing = new FormControl();
-    requiresFood = new FormControl();
-    requiresIncidentals = new FormControl();
-    requiresLodging = new FormControl();
-    requiresTransportation = new FormControl();
+    canEvacueeProvideClothing = new FormControl();
+    canEvacueeProvideFood = new FormControl();
+    canEvacueeProvideIncidentals = new FormControl();
+    canEvacueeProvideLodging = new FormControl();
+    canEvacueeProvideTransportation = new FormControl();
 
     constructor(identifyNeeds: IdentifyNeeds) {
-        this.requiresClothing.setValue(identifyNeeds.requiresClothing);
-        this.requiresClothing.setValidators([Validators.required]);
+        this.canEvacueeProvideClothing.setValue(identifyNeeds.canEvacueeProvideClothing);
+        this.canEvacueeProvideClothing.setValidators([Validators.required]);
 
-        this.requiresFood.setValue(identifyNeeds.requiresFood);
-        this.requiresFood.setValidators([Validators.required]);
+        this.canEvacueeProvideFood.setValue(identifyNeeds.canEvacueeProvideFood);
+        this.canEvacueeProvideFood.setValidators([Validators.required]);
 
-        this.requiresIncidentals.setValue(identifyNeeds.requiresIncidentals);
-        this.requiresIncidentals.setValidators([Validators.required]);
+        this.canEvacueeProvideIncidentals.setValue(identifyNeeds.canEvacueeProvideIncidentals);
+        this.canEvacueeProvideIncidentals.setValidators([Validators.required]);
 
-        this.requiresLodging.setValue(identifyNeeds.requiresLodging);
-        this.requiresLodging.setValidators([Validators.required]);
+        this.canEvacueeProvideLodging.setValue(identifyNeeds.canEvacueeProvideLodging);
+        this.canEvacueeProvideLodging.setValidators([Validators.required]);
 
-        this.requiresTransportation.setValue(identifyNeeds.requiresTransportation);
-        this.requiresTransportation.setValidators([Validators.required]);
+        this.canEvacueeProvideTransportation.setValue(identifyNeeds.canEvacueeProvideTransportation);
+        this.canEvacueeProvideTransportation.setValidators([Validators.required]);
     }
 }

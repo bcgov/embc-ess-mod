@@ -16,20 +16,28 @@
 
 using System;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
+using AutoMapper;
 using EMBC.Registrants.API.LocationModule;
+using EMBC.Registrants.API.ProfilesModule;
 using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
+using EMBC.Registrants.API.SecurityModule;
+using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 using NSwag.AspNetCore;
 using Serilog;
 
@@ -48,50 +56,52 @@ namespace EMBC.Registrants.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options =>
-            {
-                options.Filters.Add(new HttpResponseExceptionFilter());
-            });
-            var dpBuilder = services.AddDataProtection();
-            var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
-            if (!string.IsNullOrWhiteSpace(keyRingPath))
-            {
-                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
-            }
-
-            if (!env.IsProduction())
-            {
-                services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
-                {
-                    options.Path = "/api/openapi/{documentName}/openapi.json";
-                    options.DocumentName = "Registrants Portal API";
-                    options.PostProcess = (document, req) =>
-                    {
-                        document.Info.Title = "Registrants Portal API";
-                    };
-                });
-                services.Configure<SwaggerUi3Settings>(options =>
-                {
-                    options.Path = "/api/openapi";
-                    options.DocumentTitle = "Registrants Portal API Documentation";
-                    options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
-                });
-
-                services.AddOpenApiDocument();
-            }
-
+            //Add configuration options
+            services.Configure<JwtTokenOptions>(opts => configuration.Bind("auth:jwt", opts));
             services.Configure<JsonOptions>(opts =>
             {
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.Configure<LocationCacheHostedServiceOptions>(configuration.GetSection("Location:Cache"));
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardLimit = 2;
+                var configvalue = configuration.GetValue("app:knownNetwork", string.Empty)?.Split('/');
+                if (configvalue.Length == 2)
+                {
+                    var knownNetwork = new IPNetwork(IPAddress.Parse(configvalue[0]), int.Parse(configvalue[1]));
+                    options.KnownNetworks.Add(knownNetwork);
+                }
+            });
 
-            // TODO: consider setting a distributed cache in the future
-            services.AddDistributedMemoryCache();
-
+            //Add services
+            AddDataProtection(services);
+            AddOpenApi(services);
+            services.AddCors(opts => opts.AddDefaultPolicy(policy =>
+            {
+                // try to get array of origins from section array
+                var corsOrigins = configuration.GetSection("app:cors:origins").GetChildren().Select(c => c.Value).ToArray();
+                // try to get array of origins from value
+                if (!corsOrigins.Any()) corsOrigins = configuration.GetValue("app:cors:origins", string.Empty).Split(',');
+                corsOrigins = corsOrigins.Where(o => !string.IsNullOrWhiteSpace(o)).ToArray();
+                if (corsOrigins.Any())
+                {
+                    policy.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(corsOrigins);
+                }
+            }));
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new HttpResponseExceptionFilter());
+            }).AddNewtonsoftJson();
+            services.AddResponseCompression();
+            services.AddPortalAuthentication(configuration);
+            services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
+            services.AddDistributedMemoryCache(); // TODO: configure proper distributed cache
             services.AddRegistrationModule();
             services.AddLocationModule();
+            services.AddProfileModule();
+            services.AddSecurityModule();
             services.AddADFSTokenProvider();
             services.AddSingleton(sp =>
             {
@@ -102,17 +112,24 @@ namespace EMBC.Registrants.API
                 var logger = sp.GetRequiredService<ILogger<DynamicsClientContext>>();
                 return new DynamicsClientContext(new Uri(dynamicsApiBaseUri), new Uri(dynamicsApiEndpoint), async () => await tokenProvider.AcquireToken(), logger);
             });
+            services.AddSingleton<IEmailConfiguration>(configuration.GetSection("SMTPSettings").Get<EmailConfiguration>());
+            services.AddTransient<IEmailSender, EmailSender>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            if (env.IsDevelopment())
+            if (!env.IsProduction())
             {
-                app.UseExceptionHandler("/error-local-development");
+                app.UseExceptionHandler("/error-details");
             }
             else
             {
                 app.UseExceptionHandler("/error");
+            }
+
+            if (env.IsDevelopment())
+            {
+                IdentityModelEventSource.ShowPII = true;
             }
 
             app.UseSerilogRequestLogging(opts =>
@@ -125,15 +142,22 @@ namespace EMBC.Registrants.API
                     diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
                     diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
                     diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
+                    diagCtx.Set("X-Forwarded-For", httpCtx.Request.Headers["X-Forwarded-For"].ToString());
+                    diagCtx.Set("X-Forwarded-Proto", httpCtx.Request.Headers["X-Forwarded-Proto"].ToString());
+                    diagCtx.Set("X-Forwarded-Host", httpCtx.Request.Headers["X-Forwarded-Host"].ToString());
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
                     if (!env.IsProduction()) diagCtx.Set("Raw_Headers", httpCtx.Request.Headers, true);
                 };
             });
 
+            app.UseForwardedHeaders();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseOpenApi();
             app.UseSwaggerUi3();
-
+            app.UseCors();
             app.UseRouting();
+            app.UseResponseCompression();
 
             app.UseAuthorization();
 
@@ -141,6 +165,41 @@ namespace EMBC.Registrants.API
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void AddDataProtection(IServiceCollection services)
+        {
+            var dpBuilder = services.AddDataProtection();
+            var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
+            if (!string.IsNullOrWhiteSpace(keyRingPath))
+            {
+                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
+            }
+        }
+
+        private void AddOpenApi(IServiceCollection services)
+        {
+            if (!env.IsProduction())
+            {
+                services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
+                {
+                    options.Path = "/api/openapi/{documentName}/openapi.json";
+                    options.DocumentName = "Registrants Portal API";
+                    options.PostProcess = (document, req) =>
+                    {
+                        document.Info.Title = "Registrants Portal API";
+                    };
+                });
+
+                services.Configure<SwaggerUi3Settings>(options =>
+                {
+                    options.Path = "/api/openapi";
+                    options.DocumentTitle = "Registrants Portal API Documentation";
+                    options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
+                });
+
+                services.AddOpenApiDocument();
+            }
         }
     }
 }

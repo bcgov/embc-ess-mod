@@ -9,11 +9,12 @@ import { FormCreationService } from '../core/services/formCreation.service';
 })
 export class VerifiedRegistrationComponent implements OnInit {
 
-  constructor(private formCreationService: FormCreationService, private dataService: DataService) { }
-
-  ngOnInit(): void {
-     this.dataService.clearData();
-     this.formCreationService.clearData();
+  constructor(
+    private formCreationService: FormCreationService, private dataService: DataService) {
+    this.dataService.clearData();
+    this.formCreationService.clearData();
   }
 
+  ngOnInit(): void {
+  }
 }

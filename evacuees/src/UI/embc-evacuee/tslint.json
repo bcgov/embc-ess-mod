@@ -36,7 +36,8 @@
     "import-spacing": true,
     "indent": {
       "options": [
-        "spaces"
+        "spaces",
+        4
       ]
     },
     "max-classes-per-file": false,
@@ -85,6 +86,7 @@
         "always"
       ]
     },
+    "trailing-comma": false,
     "space-before-function-paren": {
       "options": {
         "anonymous": "never",

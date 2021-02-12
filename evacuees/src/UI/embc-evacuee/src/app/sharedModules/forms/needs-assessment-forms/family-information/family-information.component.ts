@@ -15,7 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
-import { DialogModule } from '../../../../core/components/dialog/dialog.module';
 
 @Component({
   selector: 'app-family-information',
@@ -38,8 +37,9 @@ export default class FamilyInformationComponent implements OnInit {
   // showTable = true;
   editFlag = false;
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-              public dialog: MatDialog) {
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+    public dialog: MatDialog) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
@@ -53,6 +53,8 @@ export default class FamilyInformationComponent implements OnInit {
     this.familyMemberForm.get('addFamilyMemberIndicator').valueChanges.subscribe(value =>
       this.updateOnVisibility());
     this.dataSource.next(this.familyMemberForm.get('familyMember').value);
+    this.data = this.familyMemberForm.get('familyMember').value;
+
   }
 
   addMembers(): void {
@@ -83,12 +85,14 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   cancel(): void {
+
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
     // this.showTable = !this.showTable;
-    if (this.data.length === 0) {
-      this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
-    }
+
+    // if (this.data.length === 0) {
+    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
+    // }
   }
 
   /**
@@ -122,6 +126,7 @@ export default class FamilyInformationComponent implements OnInit {
     this.familyMemberForm.get('member').setValue(element);
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
+    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
     // this.showTable = !this.showTable;
   }
 
@@ -144,8 +149,7 @@ export default class FamilyInformationComponent implements OnInit {
     MatRadioModule,
     PersonDetailFormModule,
     MatTableModule,
-    MatIconModule,
-    DialogModule
+    MatIconModule
   ],
   declarations: [
     FamilyInformationComponent,

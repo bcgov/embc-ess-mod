@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../../../core/services/componentCreation.service';
@@ -7,16 +7,16 @@ import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
-import { DataSubmissionService } from 'src/app/core/services/dataSubmission.service';
-import { RegistrationResult } from 'src/app/core/services/api/models/registration-result';
-import { ProblemDetail } from 'src/app/core/model/problemDetail';
+import { AlertService } from 'src/app/core/services/alert.service';
+import { DataService } from 'src/app/core/services/data.service';
+import { ProfileApiService } from 'src/app/core/services/api/profileApi.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
 
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
@@ -26,17 +26,17 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   path: string;
   form$: Subscription;
   form: FormGroup;
-  isComplete: boolean;
   stepToDisplay: number;
   currentFlow: string;
   type = 'profile';
   profileHeading: string;
   parentPageName = 'create-profile';
+  showLoader = false;
 
-  constructor(private router: Router, private componentService: ComponentCreationService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public updateService: DataUpdationService, private cd: ChangeDetectorRef,
-              private submissionService: DataSubmissionService) {
+  constructor(
+    private router: Router, private componentService: ComponentCreationService, private route: ActivatedRoute,
+    private formCreationService: FormCreationService, public updateService: DataUpdationService, private cd: ChangeDetectorRef,
+    private profileApiService: ProfileApiService, private alertService: AlertService, private dataService: DataService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -46,11 +46,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    if (this.currentFlow === 'non-verified-registration') {
-      this.profileHeading = 'Create Profile';
-    } else {
-      this.profileHeading = 'Create Your ERA Profile';
-    }
+    this.profileHeading = 'Create Your Profile';
     this.steps = this.componentService.createProfileSteps();
   }
 
@@ -60,13 +56,11 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   ngAfterViewInit(): void {
     if (this.stepToDisplay === 3) {
-      this.isComplete = true;
       setTimeout(() => {
         this.profileStepper.selectedIndex = this.stepToDisplay;
       }, 0);
     }
     if (this.stepToDisplay === 4) {
-      this.isComplete = true;
       setTimeout(() => {
         this.profileStepper.selectedIndex = this.stepToDisplay;
       }, 0);
@@ -75,6 +69,11 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   currentStep(index: number): void {
     this.loadStepForm(index);
+    this.cd.detectChanges();
+  }
+
+  stepChanged(event: any, stepper: MatStepper): void {
+    stepper.selected.interacted = false;
   }
 
   goBack(stepper: MatStepper, lastStep): void {
@@ -101,7 +100,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
       }
       this.setFormData(component);
       this.form$.unsubscribe();
-      this.isComplete = !this.isComplete;
+      stepper.selected.completed = true;
       stepper.next();
     } else {
       this.form.markAllAsTouched();
@@ -112,19 +111,15 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     switch (component) {
       case 'personal-details':
         this.updateService.updatePersonalDetails(this.form);
-        this.isComplete = false;
         break;
       case 'address':
         this.updateService.updateAddressDetails(this.form);
-        this.isComplete = false;
         break;
       case 'contact-info':
         this.updateService.updateContactDetails(this.form);
-        this.isComplete = false;
         break;
       case 'secret':
         this.updateService.updateSecretDetails(this.form);
-        this.isComplete = false;
         break;
       default:
     }
@@ -168,15 +163,21 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   submitFile(): void {
-    // this.router.navigate(['/verified-registration/view-profile']);
-    this.submissionService.submitProfile().subscribe((response: ProblemDetail) => {
-      console.log(response);
-      // this.updateService.updateRegisrationResult(response);
-      this.router.navigate(['/verified-registration/view-profile']);
+    this.showLoader = !this.showLoader;
+    this.alertService.clearAlert();
+    this.profileApiService.submitProfile().subscribe((profileId) => {
+      this.dataService.setProfileId(profileId);
+      this.router.navigate(['/verified-registration/dashboard']);
     }, (error) => {
       console.log(error);
+      this.showLoader = !this.showLoader;
+      this.alertService.setAlert('danger', error.title);
     });
 
+  }
+
+  ngOnDestroy(): void {
+    // this.form$.unsubscribe();
   }
 
 }

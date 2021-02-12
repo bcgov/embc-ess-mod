@@ -12,6 +12,7 @@ import { ReviewModule } from '../../components/review/review.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';
+import { CoreModule } from '../../../core/core.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     ReviewModule,
     MatSelectModule,
     MatAutocompleteModule,
-    MatDialogModule
+    MatDialogModule,
+    CoreModule
   ]
 })
 export class NeedsAssessmentModule { }

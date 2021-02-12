@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { DataService } from '../../../core/services/data.service';
@@ -11,7 +11,7 @@ import { DataUpdationService } from 'src/app/core/services/dataUpdation.service'
   templateUrl: './restriction.component.html',
   styleUrls: ['./restriction.component.scss']
 })
-export class RestrictionComponent implements OnInit {
+export class RestrictionComponent implements OnInit, OnDestroy {
 
   restrictionForm: FormGroup;
   restrictionForm$: Subscription;
@@ -45,6 +45,10 @@ export class RestrictionComponent implements OnInit {
     } else {
       this.restrictionForm.markAllAsTouched();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.restrictionForm$.unsubscribe();
   }
 
 }

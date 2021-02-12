@@ -67,7 +67,8 @@ export class CustomValidationService {
                 const email = control.get('email').value;
                 const confirmEmail = control.get('confirmEmail').value;
                 if (email !== undefined && confirmEmail !== undefined &&
-                    email !== null && confirmEmail !== null) {
+                    email !== null && confirmEmail !== null &&
+                    email !== '' && confirmEmail !== '') {
                     if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
                         return { emailMatch: true };
                     }
@@ -106,6 +107,15 @@ export class CustomValidationService {
                 }
             }
             return null;
+        };
+    }
+
+    /**
+     * Checks if the quantity inserted is between 1 and 999
+     */
+    quantityPetsValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            return Validators.pattern(globalConst.petsQuantityPattern)(control);
         };
     }
 

@@ -15,19 +15,30 @@ export class FileSubmissionComponent implements OnInit {
 
   constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) { }
 
+  /**
+   * Initializes the user flow and fetches the registration
+   * number
+   */
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
     const registrationResult = this.dataService.getRegistrationResult();
     if (registrationResult) {
       this.referenceNumber = registrationResult.referenceNumber;
-      if (!this.referenceNumber) {
-        this.referenceNumber = 'XXX';
-      }
+      // if (!this.referenceNumber) {
+      //   this.referenceNumber = 'XXX';
+      // }
     }
   }
 
+  /**
+   * Navigates to dashboard page
+   */
   goToProfile(): void {
-    this.router.navigate(['/verified-registration/view-profile']);
+    this.router.navigate(['/verified-registration/dashboard']);
+  }
+
+  verifyUser(): void {
+    this.router.navigate(['/verified-registration']);
   }
 
 }

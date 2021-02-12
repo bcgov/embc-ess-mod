@@ -48,6 +48,35 @@ parameters:
   - description: Locations lists - cache frequency refresh in minutes
     name: LOCATION_CACHE_REFRESH_INTERVAL
     value: "00:01:00"
+  - description: BCSC client id
+    name: BCSC_CLIENT_ID
+    required: true
+  - description: BCSC client secret
+    name: BCSC_CLIENT_SECRET
+    required: true
+  - description: BCSC metadata endpoint
+    name: BCSC_METADATA_ENDPOINT
+    required: true
+  - description: Reverse proxy known network
+    name: APP_KNOWN_NETWORK
+    required: false
+  - description: JWT issuer
+    name: JWT_ISSUER
+    required: true
+  - description: JWT audience
+    name: JWT_AUDIENCE
+    required: true
+  - description: JWT signing key
+    name: JWT_SIGNING_KEY
+    required: true
+  - description: JWT encrypting key
+    name: JWT_ENCRYPTING_KEY
+    required: true
+  - description: JWT lifetime since creation in minutes
+    name: JWT_TOKEN_EXPIRY
+    required: true
+  - description: CORS policy list of allowed origins
+    name: CORS_ORIGINS
 
 objects:
   - kind: ConfigMap
@@ -64,6 +93,12 @@ objects:
       Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
       location__cache__AutoRefreshEnabled: ${LOCATION_CACHE_REFRESH_ENABLED}
       location__cache__RefreshInterval: ${LOCATION_CACHE_REFRESH_INTERVAL}
+      auth__bcsc__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
+      app__knownNetwork: ${APP_KNOWN_NETWORK}
+      app__cors__origins: ${CORS_ORIGINS}
+      auth__jwt__ClaimsIssuer: ${JWT_ISSUER}
+      auth__jwt__audience: ${JWT_AUDIENCE}
+      auth__jwt__expiryInMinutes: ${JWT_TOKEN_EXPIRY}
   - kind: Secret
     apiVersion: v1
     type: Opaque
@@ -78,6 +113,10 @@ objects:
       Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
       Dynamics__ADFS__serviceAccountName: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_NAME}
       Dynamics__ADFS__serviceAccountPassword: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
+      auth__bcsc__clientId: ${BCSC_CLIENT_ID}
+      auth__bcsc__clientSecret: ${BCSC_CLIENT_SECRET}
+      auth__jwt__signingKey: ${JWT_SIGNING_KEY}
+      auth__jwt__encryptingKey: ${JWT_ENCRYPTING_KEY}
   - kind: Service
     apiVersion: v1
     metadata:
@@ -234,6 +273,9 @@ objects:
         spec:
           containers:
             - name: registrants-portal-ui
+              env:
+                - name: API_URL
+                  value: ${APP_NAME}-registrants-portal-api:8080
               image: docker-registry.default.svc:5000/pbiizm-tools/registrants-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:

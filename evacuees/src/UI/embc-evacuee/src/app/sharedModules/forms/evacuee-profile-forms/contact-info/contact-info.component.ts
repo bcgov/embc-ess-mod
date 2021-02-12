@@ -1,4 +1,4 @@
-import { Component, OnInit, NgModule, Inject } from '@angular/core';
+import { Component, OnInit, NgModule, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, NgForm, FormGroupDirective } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -15,8 +15,9 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { ErrorStateMatcher } from '@angular/material/core';
 
 export class CustomErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
-    return !!(control && control.parent.hasError('emailMatch'));
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('emailMatch');
   }
 }
 
@@ -25,7 +26,7 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: './contact-info.component.html',
   styleUrls: ['./contact-info.component.scss']
 })
-export default class ContactInfoComponent implements OnInit {
+export default class ContactInfoComponent implements OnInit, OnDestroy {
 
   contactInfoForm: FormGroup;
   formBuilder: FormBuilder;
@@ -45,6 +46,7 @@ export default class ContactInfoComponent implements OnInit {
       contactInfo => {
         this.contactInfoForm = contactInfo;
         this.contactInfoForm.setValidators([this.customValidator.confirmEmailValidator().bind(this.customValidator)]);
+        this.contactInfoForm.updateValueAndValidity();
       }
     );
   }
@@ -86,6 +88,10 @@ export default class ContactInfoComponent implements OnInit {
     } else {
       this.contactInfoForm.get('phone').enable();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.contactInfoForm$.unsubscribe();
   }
 
 }

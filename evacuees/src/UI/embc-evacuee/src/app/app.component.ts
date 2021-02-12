@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApiConfiguration } from './core/api/api-configuration';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'embc-evacuee';
+
+  constructor(apiConfig: ApiConfiguration) {
+    apiConfig.rootUrl = '';
+  }
 }
