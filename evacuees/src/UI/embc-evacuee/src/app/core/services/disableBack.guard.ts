@@ -5,14 +5,14 @@ import { FileSubmissionComponent } from '../../sharedModules/components/file-sub
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import * as globalConst from './globalConstants';
 
-@Injectable()
-export class CanDeactivateGuardService implements CanDeactivate<FileSubmissionComponent> {
+@Injectable({ providedIn: 'root' })
+export class DisableBackGuard implements CanDeactivate<FileSubmissionComponent> {
 
     constructor(public dialog: MatDialog) { }
 
     canDeactivate(): boolean {
 
-        if (window.location.pathname === '/non-verified-registration/fileSubmission') {
+        if (window.location.pathname === '/non-verified-registration/filesubmission') {
             return true;
         } else {
             this.dialog.open(DialogComponent, {
@@ -24,4 +24,6 @@ export class CanDeactivateGuardService implements CanDeactivate<FileSubmissionCo
         }
 
     }
+
+
 }
