@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { UserProfile } from '../../api/models/user-profile';
+import { Observable } from 'rxjs';
 import { ProfileService } from '../../api/services';
 import { DataService } from '../data.service';
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { Profile, StateProvince, UserProfile } from '../../../core/api/models';
+import { Profile, ProfileDataConflict, StateProvince } from '../../../core/api/models';
 import { ProfileDataService } from './profile-data.service';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataService } from 'src/app/core/services/data.service';
@@ -11,25 +11,20 @@ export class ProfileMappingService {
     constructor(private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
         private dataService: DataService) { }
 
-    mapUserProfile(userProfile: UserProfile): void {
-        this.profileDataService.setLoginProfile(userProfile.loginProfile);
-        if (userProfile.isNewUser) {
-            this.setLoginProfile(userProfile.loginProfile);
-        } else {
-            this.setExistingProfile(userProfile.eraProfile);
-        }
-        if (userProfile.eraProfile) {
-            this.dataService.updateRegistartion(userProfile.eraProfile);
-            this.profileDataService.setProfileId(userProfile.eraProfile.id);
-            this.profileDataService.setProfile(userProfile.eraProfile);
-        }
-        this.profileDataService.setConflicts(userProfile.conflicts);
-    }
-
     mapProfile(profile: Profile): void {
-        this.setExistingProfile(profile);
         this.profileDataService.setProfileId(profile.id);
         this.profileDataService.setProfile(profile);
+        this.dataService.updateRegistartion(profile); //to be changed
+        this.setExistingProfile(profile);
+    }
+
+    mapLoginProfile(profile: Profile): void {
+        this.setLoginProfile(profile);
+        this.profileDataService.setLoginProfile(profile);
+    }
+
+    mapConflicts(conflicts: ProfileDataConflict[]): void {
+        this.profileDataService.setConflicts(conflicts);
     }
 
     setExistingProfile(profile: Profile): void {

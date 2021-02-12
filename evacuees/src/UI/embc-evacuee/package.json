@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 5200 --configuration=dev",
+    "start": "ng serve --port 5200 --configuration=local",
     "startlocal": "npm start -- --configuration=local",
     "restart": "npm run gen-api && npm start",
     "build": "ng build",

@@ -188,6 +188,57 @@ export class ProfileService extends BaseService {
   }
 
   /**
+   * Path part for operation profileGetDoesUserExists
+   */
+  static readonly ProfileGetDoesUserExistsPath = '/api/profiles/current/exists';
+
+  /**
+   * check if user exists or not.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `profileGetDoesUserExists()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  profileGetDoesUserExists$Response(params?: {
+  }): Observable<StrictHttpResponse<boolean>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileGetDoesUserExistsPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: String((r as HttpResponse<any>).body) === 'true' }) as StrictHttpResponse<boolean>;
+      })
+    );
+  }
+
+  /**
+   * check if user exists or not.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `profileGetDoesUserExists$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  profileGetDoesUserExists(params?: {
+  }): Observable<boolean> {
+
+    return this.profileGetDoesUserExists$Response(params).pipe(
+      map((r: StrictHttpResponse<boolean>) => r.body as boolean)
+    );
+  }
+
+  /**
    * Path part for operation profileGetProfileConflicts
    */
   static readonly ProfileGetProfileConflictsPath = '/api/profiles/current/conflicts';
@@ -244,6 +295,10 @@ export class ProfileService extends BaseService {
   static readonly ProfileGetLoggedInProfilePath = '/api/profiles/current/login';
 
   /**
+   * Get the authentication profile of the logged in user.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `profileGetLoggedInProfile()` instead.
    *
@@ -268,6 +323,10 @@ export class ProfileService extends BaseService {
   }
 
   /**
+   * Get the authentication profile of the logged in user.
+   *
+   *
+   *
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `profileGetLoggedInProfile$Response()` instead.
    *

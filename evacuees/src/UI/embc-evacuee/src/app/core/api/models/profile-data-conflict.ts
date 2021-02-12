@@ -5,5 +5,5 @@
  * Base class for profile data conflicts
  */
 export interface ProfileDataConflict {
-  DataElementName: string;
+  dataElementName: string;
 }

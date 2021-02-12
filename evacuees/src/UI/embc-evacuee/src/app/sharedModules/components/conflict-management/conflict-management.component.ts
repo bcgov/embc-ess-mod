@@ -43,7 +43,11 @@ export class ConflictManagementComponent implements OnInit {
   }
 
   loadAddressForm(): void {
-    if (this.conflicts.some(val => val.conflictDataElement === 'PrimaryAddress')) {
+    this.conflicts.forEach(val => {
+      console.log(val);
+      console.log(val.dataElementName)
+    })
+    if (this.conflicts.some(val => val.dataElementName === 'Address')) {
       this.formCreationService.getAddressForm().subscribe(updatedAddress => {
         this.form = updatedAddress;
       });
@@ -92,12 +96,12 @@ export class ConflictManagementComponent implements OnInit {
 
   updateConflicts(): void {
     this.conflicts.forEach(value => {
-      if (value.conflictDataElement === 'Name') {
+      if (value.dataElementName === 'Name') {
         this.eraProfile.personalDetails.firstName = this.loginProfile.personalDetails.firstName;
         this.eraProfile.personalDetails.lastName = this.loginProfile.personalDetails.lastName;
-      } else if (value.conflictDataElement === 'DateOfBirth') {
+      } else if (value.dataElementName === 'DateOfBirth') {
         this.eraProfile.personalDetails.dateOfBirth = this.loginProfile.personalDetails.dateOfBirth;
-      } else if (value.conflictDataElement === 'PrimaryAddress') {
+      } else if (value.dataElementName === 'Address') {
         console.log('here');
         this.eraProfile.primaryAddress = this.dataUpdation.setAddressObject(this.form.get('address').value);
         this.eraProfile.mailingAddress = this.dataUpdation.setAddressObject(this.form.get('mailingAddress').value);
