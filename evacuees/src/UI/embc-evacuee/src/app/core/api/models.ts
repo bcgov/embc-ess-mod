@@ -14,5 +14,7 @@ export { InsuranceOption } from './models/insurance-option';
 export { Pet } from './models/pet';
 export { RegistrantEvacuation } from './models/registrant-evacuation';
 export { Profile } from './models/profile';
-export { UserProfile } from './models/user-profile';
 export { ProfileDataConflict } from './models/profile-data-conflict';
+export { DateOfBirthDataConflict } from './models/date-of-birth-data-conflict';
+export { NameDataConflict } from './models/name-data-conflict';
+export { AddressDataConflict } from './models/address-data-conflict';

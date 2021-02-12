@@ -10,7 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gen-api": "ng-openapi-gen -i http://localhost:2010/api/openapi/v1/openapi.json -o ./src/app/core/api"
+    "gen-api": "ng-openapi-gen -i http://localhost:2010/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
   },
   "private": true,
   "dependencies": {
