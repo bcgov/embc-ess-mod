@@ -73,7 +73,10 @@
             </div>
 
         </mat-step>
-        <mat-step *ngIf="conflicts | arrayContains: 'PrimaryAddress'">
+
+        {{eraProfile?.id | json}}
+        {{conflicts | arrayContains: 'Address'}}
+        <mat-step *ngIf="conflicts | arrayContains: 'Address'">
             <ng-template matStepLabel><span class="custom-label">Address Mismatch</span></ng-template>
             <mat-card class="card-border">
                 <mat-card-content>
@@ -150,15 +153,3 @@
         </ng-template>
     </mat-vertical-stepper>
 </div>
-
-
-<!-- <div class="row justify-content-between">
-    <div>'
-        + eraAddress.addressLine1 + '<br>' + eraAddress.addressLine2 + '<br>' + eraAddress.jurisdiction.name + ' ' +
-        eraAddress.stateProvince.code + ' ' + eraAddress.postalCode + '<br>' + eraAddress.country.name
-        + '</div>
-    <div>'
-        + bcscAddress.addressLine1 + '<br>' + bcscAddress.addressLine2 + '<br>' + bcscAddress.jurisdiction + ' ' +
-        bcscAddress.stateProvince.code + ' ' + bcscAddress.postalCode + '<br>' + bcscAddress.country.name
-        + '</div>
-</div> -->

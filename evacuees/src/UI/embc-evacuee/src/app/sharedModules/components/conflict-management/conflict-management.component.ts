@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { Profile, ProfileDataConflict } from 'src/app/core/api/models';
-import { DataService } from 'src/app/core/services/data.service';
-import { ProfileApiService } from 'src/app/core/services/api/profileApi.service';
+import { ProfileDataService } from '../profile/profile-data.service';
+import { ProfileService } from '../profile/profile.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { DataUpdationService } from 'src/app/core/services/dataUpdation.service';
@@ -27,15 +27,15 @@ export class ConflictManagementComponent implements OnInit {
   isSubmitted = false;
   form: FormGroup;
 
-  constructor(private router: Router, private dataService: DataService, private profileApiService: ProfileApiService,
-              private alertService: AlertService, private formCreationService: FormCreationService,
-              private dataUpdation: DataUpdationService) { }
+  constructor(private router: Router, private profileDataService: ProfileDataService, private profileService: ProfileService,
+    private alertService: AlertService, private formCreationService: FormCreationService,
+    private dataUpdation: DataUpdationService) { }
 
   ngOnInit(): void {
-    this.dataService.getConflicts().subscribe(bcscConflicts => {
+    this.profileDataService.getConflicts().subscribe(bcscConflicts => {
       this.conflicts = bcscConflicts;
-      this.eraProfile = this.dataService.getProfile();
-      this.loginProfile = this.dataService.getLoginProfile();
+      this.eraProfile = this.profileDataService.getProfile();
+      this.loginProfile = this.profileDataService.getLoginProfile();
       if (this.conflicts) {
         this.loadAddressForm();
       }
@@ -43,7 +43,11 @@ export class ConflictManagementComponent implements OnInit {
   }
 
   loadAddressForm(): void {
-    if (this.conflicts.some(val => val.conflictDataElement === 'PrimaryAddress')) {
+    this.conflicts.forEach(val => {
+      console.log(val);
+      console.log(val.dataElementName)
+    })
+    if (this.conflicts.some(val => val.dataElementName === 'Address')) {
       this.formCreationService.getAddressForm().subscribe(updatedAddress => {
         this.form = updatedAddress;
       });
@@ -78,7 +82,7 @@ export class ConflictManagementComponent implements OnInit {
     this.isSubmitted = !this.isSubmitted;
     this.updateConflicts();
     console.log(this.eraProfile);
-    this.profileApiService.upsertProfile(this.eraProfile).subscribe(profileId => {
+    this.profileService.upsertProfile(this.eraProfile).subscribe(profileId => {
       console.log(profileId);
       this.router.navigate(['/verified-registration/dashboard']);
     },
@@ -92,12 +96,12 @@ export class ConflictManagementComponent implements OnInit {
 
   updateConflicts(): void {
     this.conflicts.forEach(value => {
-      if (value.conflictDataElement === 'Name') {
+      if (value.dataElementName === 'Name') {
         this.eraProfile.personalDetails.firstName = this.loginProfile.personalDetails.firstName;
         this.eraProfile.personalDetails.lastName = this.loginProfile.personalDetails.lastName;
-      } else if (value.conflictDataElement === 'DateOfBirth') {
+      } else if (value.dataElementName === 'DateOfBirth') {
         this.eraProfile.personalDetails.dateOfBirth = this.loginProfile.personalDetails.dateOfBirth;
-      } else if (value.conflictDataElement === 'PrimaryAddress') {
+      } else if (value.dataElementName === 'Address') {
         console.log('here');
         this.eraProfile.primaryAddress = this.dataUpdation.setAddressObject(this.form.get('address').value);
         this.eraProfile.mailingAddress = this.dataUpdation.setAddressObject(this.form.get('mailingAddress').value);

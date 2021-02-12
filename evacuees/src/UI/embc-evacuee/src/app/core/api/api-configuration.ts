@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfiguration {
-  rootUrl: string = 'http://localhost:2010';
+  rootUrl: string = 'https://era-registrants-dev.pathfinder.gov.bc.ca';
 }
 
 /**
