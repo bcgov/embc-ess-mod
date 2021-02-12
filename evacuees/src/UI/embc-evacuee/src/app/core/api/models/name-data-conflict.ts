@@ -1,8 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
 import { ProfileDataConflict } from './profile-data-conflict';
+import { ValueTupleOfStringAndString } from './value-tuple-of-string-and-string';
 export interface NameDataConflict extends ProfileDataConflict {
-  conflictingValue?: null | string;
-  dataElementName?: null | string;
-  originalValue?: null | string;
+  conflictingValue: ValueTupleOfStringAndString;
+  dataElementName: string;
+  originalValue: ValueTupleOfStringAndString;
 }
