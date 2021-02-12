@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ResponderAccessRoutingModule } from './responder-access-routing.module';
 import { ResponderAccessComponent } from './responder-access.component';
-import { CoreModule } from '../../core/core.module';
+import { SharedModule } from '../../shared/shared.module';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
@@ -13,7 +13,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
   imports: [
     CommonModule,
     ResponderAccessRoutingModule,
-    CoreModule,
+    SharedModule,
     MatSidenavModule
   ]
 })
