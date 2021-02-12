@@ -187,7 +187,7 @@ namespace EMBC.Registrants.API.ProfilesModule
     /// </summary>
     public class DateOfBirthDataConflict : ProfileDataConflict
     {
-        public override string DataElementName => "Name";
+        public override string DataElementName => "DateOfBirth";
         public string ConflictingValue { get; set; }
         public string OriginalValue { get; set; }
     }
@@ -197,9 +197,9 @@ namespace EMBC.Registrants.API.ProfilesModule
     /// </summary>
     public class NameDataConflict : ProfileDataConflict
     {
-        public override string DataElementName => "DateOfBirth";
-        public (string firstName, string lastName) ConflictingValue { get; set; }
-        public (string firstName, string lastName) OriginalValue { get; set; }
+        public override string DataElementName => "Name";
+        public string ConflictingValue { get; set; }
+        public string OriginalValue { get; set; }
     }
 
     /// <summary>
