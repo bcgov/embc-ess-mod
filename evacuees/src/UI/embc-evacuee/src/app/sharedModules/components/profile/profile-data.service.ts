@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Profile, ProfileDataConflict } from 'src/app/core/api/models';
+import { Profile } from 'src/app/core/api/models';
 import { CacheService } from 'src/app/core/services/cache.service';
 
 @Injectable({ providedIn: 'root' })
@@ -8,8 +7,6 @@ export class ProfileDataService {
 
     private loginProfile: Profile;
     private profile: Profile;
-    private conflicts: BehaviorSubject<Array<ProfileDataConflict>> = new BehaviorSubject<Array<ProfileDataConflict>>([]);
-    public conflicts$: Observable<Array<ProfileDataConflict>> = this.conflicts.asObservable();
     private profileId: string;
 
     constructor(private cacheService: CacheService) { }
@@ -35,14 +32,6 @@ export class ProfileDataService {
     public setLoginProfile(loginProfile: Profile): void {
         this.loginProfile = loginProfile;
         this.cacheService.set('loginProfile', loginProfile);
-    }
-
-    public setConflicts(conflicts: Array<ProfileDataConflict>): void {
-        this.conflicts.next(conflicts);
-    }
-
-    public getConflicts(): Observable<Array<ProfileDataConflict>> {
-        return this.conflicts$;
     }
 
     public setProfileId(profileId: string): void {

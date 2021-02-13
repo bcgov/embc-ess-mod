@@ -5,11 +5,12 @@ import { Profile, ProfileDataConflict, StateProvince } from '../../../core/api/m
 import { ProfileDataService } from './profile-data.service';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataService } from 'src/app/core/services/data.service';
+import { ConflictManagementService } from '../conflict-management/conflict-management.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
     constructor(private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
-        private dataService: DataService) { }
+        private conflictService: ConflictManagementService, private dataService: DataService) { }
 
     mapProfile(profile: Profile): void {
         this.profileDataService.setProfileId(profile.id);
@@ -24,7 +25,9 @@ export class ProfileMappingService {
     }
 
     mapConflicts(conflicts: ProfileDataConflict[]): void {
-        this.profileDataService.setConflicts(conflicts);
+        this.conflictService.setConflicts(conflicts);
+        this.conflictService.setCount(conflicts.length);
+        this.conflictService.setHasVisitedConflictPage(true);
     }
 
     setExistingProfile(profile: Profile): void {
