@@ -5,7 +5,7 @@ import { ProfileDataConflict } from '../api/models';
 export class ArrayContains implements PipeTransform {
     transform(array: Array<ProfileDataConflict>, value: string): boolean {
         if (array) {
-            return array.some(element => element.conflictDataElement === value);
+            return array.some(element => element.dataElementName === value);
         }
     }
 }

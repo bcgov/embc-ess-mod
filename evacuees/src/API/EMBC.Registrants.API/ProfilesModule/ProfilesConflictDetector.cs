@@ -35,11 +35,10 @@ namespace EMBC.Registrants.API.ProfilesModule
             }
             if (source.PersonalDetails != null && !source.PersonalDetails.NameEquals(target.PersonalDetails))
             {
-                string nameFormatter(string firstName, string lastName) => $"{lastName}, {firstName}";
                 yield return new NameDataConflict
                 {
-                    OriginalValue = nameFormatter(firstName: source.PersonalDetails?.FirstName, lastName: source.PersonalDetails?.LastName),
-                    ConflictingValue = nameFormatter(firstName: target.PersonalDetails?.FirstName, lastName: target.PersonalDetails?.LastName),
+                    OriginalValue = (firstName: source.PersonalDetails?.FirstName, lastName: source.PersonalDetails?.LastName),
+                    ConflictingValue = (firstName: target.PersonalDetails?.FirstName, lastName: target.PersonalDetails?.LastName),
                 };
             }
             if (source.PrimaryAddress != null && !source.PrimaryAddress.AddressEquals(target.PrimaryAddress))

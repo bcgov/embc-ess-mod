@@ -6,32 +6,45 @@ import {
     RouterStateSnapshot,
     UrlTree
 } from '@angular/router';
-import { ProfileApiService } from './api/profileApi.service';
-import { ProfileMappingService } from './mappings/profileMapping.service';
+import { ProfileService } from '../../sharedModules/components/profile/profile.service';
+import { ProfileMappingService } from '../../sharedModules/components/profile/profile-mapping.service';
+import { ConflictManagementService } from 'src/app/sharedModules/components/conflict-management/conflict-management.service';
 
 @Injectable({ providedIn: 'root' })
 export class AllowNavigationGuard implements CanActivate {
 
-    constructor(private router: Router, private regProfService: ProfileApiService, public mappingService: ProfileMappingService) { }
+    constructor(private router: Router, private profileService: ProfileService, public mappingService: ProfileMappingService,
+                private conflictService: ConflictManagementService) { }
 
     public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
         Promise<boolean | UrlTree> {
 
-        this.regProfService.getExistingProfile().subscribe(profile => {
-            console.log(profile);
-            this.mappingService.mapUserProfile(profile);
-            if (state.url === '/verified-registration') {
-                if (profile.isNewUser) {
-                    this.router.navigate(['/verified-registration/collection-notice']);
+        this.profileService.getProfile();
+        this.profileService.profileExists().subscribe((exists: boolean) => {
+            if (!exists && state.url === '/verified-registration') {
+                this.profileService.getLoginProfile();
+                this.router.navigate(['/verified-registration/collection-notice']);
+            } else {
+                console.log(this.conflictService.getCount());
+                if (state.url === '/verified-registration/conflicts' && this.conflictService.getCount() === 0) {
+                    this.router.navigate(['/verified-registration/dashboard']);
                 } else {
-                    if (!profile.conflicts) {
-                        this.router.navigate(['/verified-registration/dashboard']);
-                    } else {
-                        this.router.navigate(['/verified-registration/conflicts']);
-                    }
+                    this.profileService.getConflicts().subscribe(conflicts => {
+                        this.mappingService.mapConflicts(conflicts);
+                        if (state.url === '/verified-registration') {
+                            if (conflicts.length !== 0) {
+                                this.router.navigate(['/verified-registration/conflicts']);
+                            } else {
+                                this.router.navigate(['/verified-registration/dashboard']);
+                            }
+                        }
+                    });
                 }
             }
         });
+
         return true;
     }
 }
+
+
