@@ -33,7 +33,7 @@ export class NonVerifiedRegistrationMappingService {
             haveSpecialDiet: null,
             insurance: null,
             pets: null,
-        }
+        };
     }
 
     private createRegistration(): Registration {
@@ -46,6 +46,6 @@ export class NonVerifiedRegistrationMappingService {
             primaryAddress: null,
             restrictedAccess: null,
             secretPhrase: null,
-        }
+        };
     }
 }

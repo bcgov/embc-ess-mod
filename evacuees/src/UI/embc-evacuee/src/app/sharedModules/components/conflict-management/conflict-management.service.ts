@@ -19,7 +19,7 @@ export class ConflictManagementService {
         }
         return this.hasVisitedConflictPage;
     }
-    public setHasVisitedConflictPage(hasVisitedConflictPage: boolean) {
+    public setHasVisitedConflictPage(hasVisitedConflictPage: boolean): void {
         this.hasVisitedConflictPage = hasVisitedConflictPage;
         this.cacheService.set('hasVisitedConflictPage', hasVisitedConflictPage);
     }

@@ -10,12 +10,12 @@ import { ConflictManagementService } from '../conflict-management/conflict-manag
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
     constructor(private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
-        private conflictService: ConflictManagementService, private dataService: DataService) { }
+                private conflictService: ConflictManagementService, private dataService: DataService) { }
 
     mapProfile(profile: Profile): void {
         this.profileDataService.setProfileId(profile.id);
         this.profileDataService.setProfile(profile);
-        this.dataService.updateRegistartion(profile); //to be changed
+        this.dataService.updateRegistartion(profile); // to be changed
         this.setExistingProfile(profile);
     }
 

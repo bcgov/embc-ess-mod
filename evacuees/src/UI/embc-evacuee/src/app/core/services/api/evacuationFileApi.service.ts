@@ -13,7 +13,7 @@ export class EvacuationFileApiService {
     private registrantEvacuation: RegistrantEvacuation;
 
     constructor(private registrationService: RegistrationService, private profileDataService: ProfileDataService,
-        private dataService: DataService) { }
+                private dataService: DataService) { }
 
     submitEvacuationFile(): Observable<RegistrationResult> {
         this.registrantEvacuation = {

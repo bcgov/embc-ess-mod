@@ -31,8 +31,8 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   profile: Profile;
 
   constructor(private router: Router, private profileDataService: ProfileDataService, private profileService: ProfileService,
-    private alertService: AlertService, private formCreationService: FormCreationService,
-    private dataUpdation: DataUpdationService, private conflictService: ConflictManagementService) { }
+              private alertService: AlertService, private formCreationService: FormCreationService,
+              private dataUpdation: DataUpdationService, private conflictService: ConflictManagementService) { }
 
   ngDoCheck(): void {
     if (!this.profile) {
@@ -70,9 +70,9 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
 
   next(stepName: string): void {
     if (stepName === 'name') {
-      this.resolveNameConflict()
+      this.resolveNameConflict();
     } else if (stepName === 'dob') {
-      this.resolveDOBConflict()
+      this.resolveDOBConflict();
     }
     if (this.conflictStepper.selectedIndex === this.conflictStepper.steps.length - 1) {
       this.updateProfileAndNavigate();
@@ -94,20 +94,20 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
     this.updateProfileAndNavigate();
   }
 
-  resolveNameConflict() {
+  resolveNameConflict(): void {
     if (this.nameConflict) {
       this.profile.personalDetails.firstName = this.nameConflict.conflictingValue.item1;
       this.profile.personalDetails.lastName = this.nameConflict.conflictingValue.item2;
     }
   }
 
-  resolveDOBConflict() {
+  resolveDOBConflict(): void {
     if (this.dobConflict) {
       this.profile.personalDetails.dateOfBirth = this.dobConflict.conflictingValue;
     }
   }
 
-  resolveAddressConflict() {
+  resolveAddressConflict(): void {
     if (this.addressConflict) {
       this.profile.primaryAddress = this.dataUpdation.setAddressObject(this.form.get('address').value);
       this.profile.mailingAddress = this.dataUpdation.setAddressObject(this.form.get('mailingAddress').value);
