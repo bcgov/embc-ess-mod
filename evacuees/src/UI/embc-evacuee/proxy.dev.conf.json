@@ -1,0 +1,26 @@
+{
+  "/api": {
+    "target": "https://era-registrants-dev.pathfinder.gov.bc.ca",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/login": {
+    "target": "https://era-registrants-dev.pathfinder.gov.bc.ca",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/token": {
+    "target": "https://era-registrants-dev.pathfinder.gov.bc.ca",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/signin-oidc": {
+    "target": "https://era-registrants-dev.pathfinder.gov.bc.ca",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 5200",
+    "start": "ng serve --port 5200 --configuration=local",
     "startlocal": "npm start -- --configuration=local",
     "restart": "npm run gen-api && npm start",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gen-api": "ng-openapi-gen -i http://localhost:2010/api/openapi/v1/openapi.json -o ./src/app/core/api"
+    "gen-api": "ng-openapi-gen -i https://era-registrants-dev.pathfinder.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
   },
   "private": true,
   "dependencies": {

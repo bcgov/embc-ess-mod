@@ -1,35 +1,33 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { Profile, Registration, StateProvince } from '../../api/models';
-import { UserProfile } from '../../api/models/user-profile';
-import { DataService } from './../data.service';
-import { FormCreationService } from './../formCreation.service';
+import { Profile, ProfileDataConflict, StateProvince } from '../../../core/api/models';
+import { ProfileDataService } from './profile-data.service';
+import { FormCreationService } from '../../../core/services/formCreation.service';
+import { DataService } from 'src/app/core/services/data.service';
+import { ConflictManagementService } from '../conflict-management/conflict-management.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
-    constructor(private formCreationService: FormCreationService, private dataService: DataService) { }
-
-    mapUserProfile(userProfile: UserProfile): void {
-        this.dataService.setLoginProfile(userProfile.loginProfile);
-        if (userProfile.isNewUser) {
-            this.setLoginProfile(userProfile.loginProfile);
-        } else {
-            this.setExistingProfile(userProfile.eraProfile);
-        }
-        if (userProfile.eraProfile) {
-            // console.log(userProfile);
-            this.dataService.updateRegistartion(userProfile.eraProfile);
-            this.dataService.setProfileId(userProfile.eraProfile.id);
-            this.dataService.setProfile(userProfile.eraProfile);
-        }
-        this.dataService.setConflicts(userProfile.conflicts);
-    }
+    constructor(private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
+                private conflictService: ConflictManagementService, private dataService: DataService) { }
 
     mapProfile(profile: Profile): void {
+        this.profileDataService.setProfileId(profile.id);
+        this.profileDataService.setProfile(profile);
+        this.dataService.updateRegistartion(profile); // to be changed
         this.setExistingProfile(profile);
-        this.dataService.setProfileId(profile.id);
-        this.dataService.setProfile(profile);
+    }
+
+    mapLoginProfile(profile: Profile): void {
+        this.setLoginProfile(profile);
+        this.profileDataService.setLoginProfile(profile);
+    }
+
+    mapConflicts(conflicts: ProfileDataConflict[]): void {
+        this.conflictService.setConflicts(conflicts);
+        this.conflictService.setCount(conflicts.length);
+        this.conflictService.setHasVisitedConflictPage(true);
     }
 
     setExistingProfile(profile: Profile): void {

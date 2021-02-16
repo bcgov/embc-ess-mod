@@ -15,6 +15,8 @@
 // -------------------------------------------------------------------------
 
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace EMBC.Registrants.API.Shared
 {
@@ -48,6 +50,7 @@ namespace EMBC.Registrants.API.Shared
         public string CountryCode { get; set; }
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
 #pragma warning disable CA1008 // Enums should have zero value
 
     public enum JurisdictionType
