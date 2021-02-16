@@ -7,8 +7,13 @@ export class CacheService {
         return sessionStorage.getItem(key);
     }
 
-    public set(key: string, value: any): void {
-        sessionStorage.setItem(key, value);
+    public set<T>(key: string, value: T): void {
+        if (typeof value === 'string') {
+            sessionStorage.setItem(key, value);
+        } else {
+            sessionStorage.setItem(key, JSON.stringify(value));
+        }
+
     }
 
     public remove(key: string): void {
