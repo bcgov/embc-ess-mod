@@ -6,7 +6,7 @@
     </div>
 
     <mat-vertical-stepper class="stepper-style" [linear]="false" #conflictStepper>
-        <mat-step *ngIf="conflicts | arrayContains: 'Name'">
+        <mat-step *ngIf="conflicts | arrayContains: 'NameDataConflict'">
             <ng-template matStepLabel><span class="custom-label">Name Mismatch</span></ng-template>
             <mat-card class="card-border">
                 <mat-card-content>
@@ -24,23 +24,24 @@
                         <div class="col-md-8 highlight-conflicts">Evacuee Registration & Assistance (ERA)</div>
                         <div class="col-md-4 highlight">BC Services Card</div>
                     </div>
+
                     <div class="row justify-content-between">
-                        <div class="col-md-8"> {{eraProfile?.personalDetails?.lastName}} ,
-                            {{eraProfile?.personalDetails?.firstName}} </div>
-                        <div class="col-md-4"> {{loginProfile?.personalDetails?.lastName}} ,
-                            {{loginProfile?.personalDetails?.firstName}} </div>
+                        <div class="col-md-8"> {{nameConflict?.originalValue?.item2}} ,
+                            {{nameConflict?.originalValue?.item1}} </div>
+                        <div class="col-md-4"> {{nameConflict?.conflictingValue?.item2}} ,
+                            {{nameConflict?.conflictingValue?.item1}} </div>
                     </div>
                 </mat-card-content>
             </mat-card>
             <br>
             <div>
-                <button class="button-s" mat-stroked-button (click)="next()" [disabled]="isSubmitted">Continue
+                <button class="button-s" mat-stroked-button (click)="next('name')" [disabled]="isSubmitted">Continue
                     <app-loader [showLoader]="showLoader"></app-loader>
                 </button>
             </div>
         </mat-step>
 
-        <mat-step *ngIf="conflicts | arrayContains: 'DateOfBirth'">
+        <mat-step *ngIf="conflicts | arrayContains: 'DateOfBirthDataConflict'">
             <ng-template matStepLabel><span class="custom-label">DOB Mismatch</span></ng-template>
             <mat-card class="card-border">
                 <mat-card-content>
@@ -60,20 +61,21 @@
                         <div class="col-md-4 highlight">BC Services Card</div>
                     </div>
                     <div class="row justify-content-between">
-                        <div class="col-md-8"> {{eraProfile?.personalDetails?.dateOfBirth | customDate}} </div>
-                        <div class="col-md-4"> {{loginProfile?.personalDetails?.dateOfBirth | customDate}} </div>
+                        <div class="col-md-8"> {{dobConflict?.originalValue | customDate}} </div>
+                        <div class="col-md-4"> {{dobConflict?.conflictingValue | customDate}} </div>
                     </div>
                 </mat-card-content>
             </mat-card>
             <br>
             <div>
-                <button class="button-s" mat-stroked-button (click)="next()" [disabled]="isSubmitted">Continue
+                <button class="button-s" mat-stroked-button (click)="next('dob')" [disabled]="isSubmitted">Continue
                     <app-loader [showLoader]="showLoader"></app-loader>
                 </button>
             </div>
 
         </mat-step>
-        <mat-step *ngIf="conflicts | arrayContains: 'PrimaryAddress'">
+
+        <mat-step *ngIf="conflicts | arrayContains: 'AddressDataConflict'">
             <ng-template matStepLabel><span class="custom-label">Address Mismatch</span></ng-template>
             <mat-card class="card-border">
                 <mat-card-content>
@@ -93,23 +95,23 @@
                     </div>
                     <div class="row justify-content-between">
                         <div class="col-md-8">
-                            {{eraProfile?.primaryAddress?.addressLine1}}<br>
-                            <div *ngIf="eraProfile?.primaryAddress?.addressLine2">
-                                {{eraProfile?.primaryAddress?.addressLine2}}<br></div>
-                            {{eraProfile?.primaryAddress?.jurisdiction?.name}}
-                            {{eraProfile?.primaryAddress?.stateProvince?.code}}
-                            {{eraProfile?.primaryAddress?.postalCode}}<br>
-                            {{eraProfile?.primaryAddress?.country?.name}}
+                            {{addressConflict?.originalValue?.addressLine1}}<br>
+                            <div *ngIf="addressConflict?.originalValue?.addressLine2">
+                                {{addressConflict?.originalValue?.addressLine2}}<br></div>
+                            {{addressConflict?.originalValue?.jurisdiction?.name}}
+                            {{addressConflict?.originalValue?.stateProvince?.code}}
+                            {{addressConflict?.originalValue?.postalCode}}<br>
+                            {{addressConflict?.originalValue?.country?.name}}
                         </div>
                         <div class="col-md-4">
-                            {{loginProfile?.primaryAddress?.addressLine1}}<br>
-                            <div *ngIf="loginProfile?.primaryAddress.addressLine2">
-                                {{loginProfile?.primaryAddress?.addressLine2}}<br>
+                            {{addressConflict?.conflictingValue?.addressLine1}}<br>
+                            <div *ngIf="addressConflict?.conflictingValue?.addressLine2">
+                                {{addressConflict?.conflictingValue?.addressLine2}}<br>
                             </div>
-                            {{loginProfile?.primaryAddress?.jurisdiction?.name}}
-                            {{loginProfile?.primaryAddress?.stateProvince?.code}}
-                            {{loginProfile?.primaryAddress?.postalCode}}<br>
-                            {{loginProfile?.primaryAddress?.country?.name}}
+                            {{addressConflict?.conflictingValue?.jurisdiction?.name}}
+                            {{addressConflict?.conflictingValue?.stateProvince?.code}}
+                            {{addressConflict?.conflictingValue?.postalCode}}<br>
+                            {{addressConflict?.conflictingValue?.country?.name}}
                         </div>
                     </div>
                 </mat-card-content>
@@ -118,8 +120,11 @@
             <div *ngIf="!updateAddressIndicator">
                 <div class="row justify-content-between resp-style">
                     <div class="col-md-6">
-                        <button class="button-s" mat-stroked-button (click)="navigateDashboard()">No, Keep My
-                            Address</button>
+                        <button class="button-s" mat-stroked-button [disabled]="isSubmitted"
+                            (click)="navigateDashboard()">No, Keep My
+                            Address
+                            <app-loader [showLoader]="showLoader"></app-loader>
+                        </button>
                     </div>
                     <div class="col-md-6">
                         <button class="button-p" mat-stroked-button (click)="toggleAddress()">Yes, Update My
@@ -150,15 +155,3 @@
         </ng-template>
     </mat-vertical-stepper>
 </div>
-
-
-<!-- <div class="row justify-content-between">
-    <div>'
-        + eraAddress.addressLine1 + '<br>' + eraAddress.addressLine2 + '<br>' + eraAddress.jurisdiction.name + ' ' +
-        eraAddress.stateProvince.code + ' ' + eraAddress.postalCode + '<br>' + eraAddress.country.name
-        + '</div>
-    <div>'
-        + bcscAddress.addressLine1 + '<br>' + bcscAddress.addressLine2 + '<br>' + bcscAddress.jurisdiction + ' ' +
-        bcscAddress.stateProvince.code + ' ' + bcscAddress.postalCode + '<br>' + bcscAddress.country.name
-        + '</div>
-</div> -->

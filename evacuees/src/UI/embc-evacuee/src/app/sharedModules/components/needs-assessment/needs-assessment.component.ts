@@ -10,7 +10,7 @@ import { DataUpdationService } from '../../../core/services/dataUpdation.service
 import { RegistrationResult } from '../../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { EvacuationFileApiService } from 'src/app/core/services/api/evacuationFileApi.service';
-import { RegistrationApiService } from 'src/app/core/services/api/registrationApi.service';
+import { NonVerifiedRegistrationService } from '../../../non-verified-registration/non-verified-registration.services';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -38,7 +38,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
     private updateService: DataUpdationService,
     private evacuationFileApiService: EvacuationFileApiService, private cd: ChangeDetectorRef, private route: ActivatedRoute,
-    private alertService: AlertService, private registrationService: RegistrationApiService) {
+    private alertService: AlertService, private nonVerifiedRegistrationService: NonVerifiedRegistrationService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -171,7 +171,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
-    this.registrationService.submitRegistration().subscribe((response: RegistrationResult) => {
+    this.nonVerifiedRegistrationService.submitRegistration().subscribe((response: RegistrationResult) => {
       console.log(response);
       this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/non-verified-registration/file-submission']);

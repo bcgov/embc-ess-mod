@@ -7,6 +7,7 @@ const routes: Routes = [
   {
     path: '', component: VerifiedRegistrationComponent,
     canActivate: [AllowNavigationGuard],
+    runGuardsAndResolvers: 'always',
     children: [
       {
         path: 'conflicts',

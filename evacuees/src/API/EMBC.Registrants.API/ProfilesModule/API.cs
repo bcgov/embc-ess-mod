@@ -179,7 +179,12 @@ namespace EMBC.Registrants.API.ProfilesModule
     [KnownType(typeof(AddressDataConflict))]
     public abstract class ProfileDataConflict
     {
+        [Required]
         public abstract string DataElementName { get; }
+        [Required]
+        public virtual object ConflictingValue { get; set; }
+        [Required]
+        public virtual object OriginalValue { get; set; }
     }
 
     /// <summary>
@@ -187,9 +192,12 @@ namespace EMBC.Registrants.API.ProfilesModule
     /// </summary>
     public class DateOfBirthDataConflict : ProfileDataConflict
     {
-        public override string DataElementName => "Name";
-        public string ConflictingValue { get; set; }
-        public string OriginalValue { get; set; }
+        [Required]
+        public override string DataElementName => "DateOfBirth";
+        [Required]
+        public new string ConflictingValue { get; set; }
+        [Required]
+        public new string OriginalValue { get; set; }
     }
 
     /// <summary>
@@ -197,9 +205,12 @@ namespace EMBC.Registrants.API.ProfilesModule
     /// </summary>
     public class NameDataConflict : ProfileDataConflict
     {
-        public override string DataElementName => "DateOfBirth";
-        public (string firstName, string lastName) ConflictingValue { get; set; }
-        public (string firstName, string lastName) OriginalValue { get; set; }
+        [Required]
+        public override string DataElementName => "Name";
+        [Required]
+        public new (string firstName, string lastName) ConflictingValue { get; set; }
+        [Required]
+        public new (string firstName, string lastName) OriginalValue { get; set; }
     }
 
     /// <summary>
@@ -207,9 +218,11 @@ namespace EMBC.Registrants.API.ProfilesModule
     /// </summary>
     public class AddressDataConflict : ProfileDataConflict
     {
+        [Required]
         public override string DataElementName => "Address";
-        public Address ConflictingValue { get; set; }
-
-        public Address OriginalValue { get; set; }
+        [Required]
+        public new Address ConflictingValue { get; set; }
+        [Required]
+        public new Address OriginalValue { get; set; }
     }
 }

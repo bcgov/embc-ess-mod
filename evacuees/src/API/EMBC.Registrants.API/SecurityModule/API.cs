@@ -57,7 +57,7 @@ namespace EMBC.Registrants.API.SecurityModule
                 return BadRequest(ModelState);
             }
 
-            if (env.IsDevelopment() && !string.IsNullOrEmpty(loginAs))
+            if (!env.IsProduction() && !string.IsNullOrEmpty(loginAs))
             {
                 //support for user impersonation for automated testing and better development experience
                 var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, loginAs), }, CookieAuthenticationDefaults.AuthenticationScheme);
