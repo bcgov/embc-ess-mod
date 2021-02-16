@@ -19,7 +19,8 @@ import { DataTableComponent } from './components/data-table/data-table.component
   ],
   exports: [
     TopNavMenuComponent,
-    ToggleSideNavComponent
+    ToggleSideNavComponent,
+    DataTableComponent
   ]
 })
 export class SharedModule { }

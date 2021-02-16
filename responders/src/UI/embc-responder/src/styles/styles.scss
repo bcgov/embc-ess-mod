@@ -335,26 +335,35 @@ mat-card {
 //   background-color: #CCCCCC !important;
 //   min-width: 250px !important;
 // }
-//  .mat-tab-label, .mat-tab-link {
-//   color: black !important;
-//   font-size: 16px;
-//   font-weight: 700 !important;
-// }
 
 // .mat-tab-label.mat-tab-label-active {
 //   background-color: white !important;
 //   min-width: 250px !important;
-//   color: #169BD5 !important;
+//   font-weight: 700 !important;
+//   color: black !important;
 // }
 
-// .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
-//    background-color: transparent !important; 
-// }
+ .mat-tab-label, .mat-tab-link {
+  color: #333333 !important;
+  font-size: 16px;
+  background-color: rgba(221, 221, 221, 1) !important;
+  text-decoration: none;
+}
 
-// .profile-headers {
-//   font-size: 36px;
-//   color: #234075;
-// }
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+   background-color: transparent !important; 
+}
+
+.active-tab {
+  background-color: white !important;
+  min-width: 250px !important;
+  font-weight: 700 !important;
+  color: #333333 !important;
+}
+
+.active-list-item {
+  color: #169BD5 !important;
+}
 
 
 

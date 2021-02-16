@@ -1,21 +1,17 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-data-table',
-  templateUrl: './data-table.component.html',
-  styleUrls: ['./data-table.component.scss']
+  selector: 'app-community-list',
+  templateUrl: './community-list.component.html',
+  styleUrls: ['./community-list.component.scss']
 })
-export class DataTableComponent implements AfterViewInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+export class CommunityListComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  constructor() { }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+  ngOnInit(): void {
   }
+
 }
 
 export interface PeriodicElement {

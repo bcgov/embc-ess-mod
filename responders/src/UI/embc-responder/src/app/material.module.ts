@@ -8,6 +8,9 @@ import { MatListModule } from '@angular/material/list';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { MatMenuModule } from '@angular/material/menu';
     MatListModule,
     FlexLayoutModule,
     MatDividerModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTableModule,
+    MatTabsModule,
+    MatPaginatorModule
   ],
   exports: [
     CommonModule,
@@ -33,7 +39,10 @@ import { MatMenuModule } from '@angular/material/menu';
     MatListModule,
     FlexLayoutModule,
     MatDividerModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTableModule,
+    MatTabsModule,
+    MatPaginatorModule
   ]
 })
 export class MaterialModule { }
