@@ -13,7 +13,7 @@ const routes: Routes = [
       },
       {
         path: 'task',
-        loadChildren: () => import('../components/task-search/task-search.module').then(m => m.TaskSearchModule)
+        loadChildren: () => import('../task-search/task-search.module').then(m => m.TaskSearchModule)
       }
     ]
   }
