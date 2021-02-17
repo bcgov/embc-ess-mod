@@ -20,15 +20,15 @@ export class DataTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['incomingData']) {
+    if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
     }
-    if(changes['displayedColumns']) {
+    if (changes.displayedColumns) {
       this.columns = this.displayedColumns.map(column => column.ref);
     }
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
 }

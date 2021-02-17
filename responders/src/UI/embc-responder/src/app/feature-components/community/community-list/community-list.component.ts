@@ -10,9 +10,6 @@ export class CommunityListComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
   displayedColumns: TableColumnModel[] = [
     {label: 'Community', ref: 'community'},
     {label: 'Regional District', ref: 'regionalDistrict'},
@@ -25,6 +22,9 @@ export class CommunityListComponent implements OnInit {
     {community: 'Community Name', regionalDistrict: 'Regional District Name', type: 'First Nations Community', date: 'mm/dd/yyyy'},
     {community: 'Community Name', regionalDistrict: 'Regional District Name', type: 'First Nations Community', date: 'mm/dd/yyyy'}
   ];
+
+  ngOnInit(): void {
+  }
 
 }
 

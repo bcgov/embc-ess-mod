@@ -17,6 +17,6 @@ import { MaterialModule } from '../material.module';
     HeaderComponent,
     FooterComponent,
   ],
- 
+
 })
 export class CoreModule { }
