@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
-  selector: 'app-community-management',
-  templateUrl: './community-management.component.html',
-  styleUrls: ['./community-management.component.scss']
+  selector: 'app-assigned-community-management',
+  templateUrl: './assigned-community-management.component.html',
+  styleUrls: ['./assigned-community-management.component.scss']
 })
-export class CommunityManagementComponent implements OnInit {
+export class AssignedCommunityManagementComponent implements OnInit {
 
   tabs: TabModel[] = [
     {

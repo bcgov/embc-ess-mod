@@ -25,7 +25,8 @@ const routes: Routes = [
       },
       {
         path: 'community-management',
-        loadChildren: () => import('../community/community-management/community-management.module').then(m => m.CommunityManagementModule)
+        loadChildren: () => import('../assigned-community/assigned-community-management/assigned-community-management.module')
+        .then(m => m.AssignedCommunityManagementModule)
       },
       {
         path: 'responder-management',

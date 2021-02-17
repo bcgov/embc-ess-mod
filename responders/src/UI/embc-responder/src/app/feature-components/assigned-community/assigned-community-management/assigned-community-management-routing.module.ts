@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CommunityManagementComponent } from './community-management.component';
+import { AssignedCommunityManagementComponent } from './assigned-community-management.component';
 
 const routes: Routes = [
   {
-    path: '', component: CommunityManagementComponent,
+    path: '', component: AssignedCommunityManagementComponent,
     children: [
       {
         path: '',
@@ -27,4 +27,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class CommunityManagementRoutingModule { }
+export class AssignedCommunityManagementRoutingModule { }
