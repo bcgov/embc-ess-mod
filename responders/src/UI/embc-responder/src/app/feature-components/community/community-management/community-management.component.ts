@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-community-management',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CommunityManagementComponent implements OnInit {
 
-  tabs: any[] = [
+  tabs: TabModel[] = [
     {
       label: 'Community List',
       route: 'list',
