@@ -22,6 +22,14 @@ const routes: Routes = [
       {
         path: 'user-profile',
         loadChildren: () => import('../user-profile/user-profile.module').then(m => m.UserProfileModule)
+      },
+      {
+        path: 'community-management',
+        loadChildren: () => import('../community/community-management/community-management.module').then(m => m.CommunityManagementModule)
+      },
+      {
+        path: 'responder-management',
+        loadChildren: () => import('../responder/responder-management/responder-management.module').then(m => m.ResponderManagementModule)
       }
     ]
   }
