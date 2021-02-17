@@ -12,6 +12,6 @@ export interface Address {
   addressLine2?: null | string;
   country: Country;
   jurisdiction: Jurisdiction;
-  postalCode: string;
+  postalCode?: null | string;
   stateProvince?: null | StateProvince;
 }
