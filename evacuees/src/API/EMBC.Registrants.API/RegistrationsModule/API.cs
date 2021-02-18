@@ -21,6 +21,8 @@ using System.Threading.Tasks;
 using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace EMBC.Registrants.API.RegistrationsModule
 {
@@ -246,11 +248,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
         [Required]
         public InsuranceOption Insurance { get; set; }
 
-        public bool? RequiresFood { get; set; } //To be deleted
-        public bool? RequiresTransportation { get; set; } //To be deleted
-        public bool? RequiresLodging { get; set; } //To be deleted
-        public bool? RequiresClothing { get; set; } //To be deleted
-        public bool? RequiresIncidentals { get; set; } //To be deleted
         public bool? CanEvacueeProvideFood { get; set; }
         public bool? CanEvacueeProvideLodging { get; set; }
         public bool? CanEvacueeProvideClothing { get; set; }
@@ -263,6 +260,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum InsuranceOption
         {
             Unknown,

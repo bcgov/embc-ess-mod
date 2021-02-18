@@ -3,13 +3,16 @@ import { CommonModule } from '@angular/common';
 import { EnumToArrayPipe } from './EnumToArray.pipe';
 import { MaskTextPipe } from './maskText.pipe';
 import { CustomDate } from './customDate.pipe';
-
+import { ArrayContains } from './arrayContains.pipe';
+import { ArrayValueOf } from './arrayValueOf.pipe';
 
 @NgModule({
   declarations: [
     EnumToArrayPipe,
     MaskTextPipe,
-    CustomDate
+    CustomDate,
+    ArrayContains,
+    ArrayValueOf
   ],
   imports: [
     CommonModule
@@ -17,7 +20,9 @@ import { CustomDate } from './customDate.pipe';
   exports: [
     EnumToArrayPipe,
     MaskTextPipe,
-    CustomDate
+    CustomDate,
+    ArrayContains,
+    ArrayValueOf
   ]
 })
 export class CustomPipeModule { }

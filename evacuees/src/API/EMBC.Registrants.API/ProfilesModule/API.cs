@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.Registrants.API.Shared;
@@ -23,6 +24,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using NJsonSchema.Converters;
 
 namespace EMBC.Registrants.API.ProfilesModule
 {
@@ -54,6 +57,21 @@ namespace EMBC.Registrants.API.ProfilesModule
             var profile = await profileManager.GetProfileByBceid(userId);
             if (profile == null) return NotFound();
             return Ok(profile);
+        }
+
+        /// <summary>
+        /// check if user exists or not
+        /// </summary>
+        /// <returns>true if existing user, false if a new user</returns>
+        [HttpGet("current/exists")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize]
+        public async Task<ActionResult<bool>> GetDoesUserExists()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // TODO: optimize the check to not require the entire profile
+            var profile = await profileManager.GetProfileByBceid(userId);
+            return Ok(profile != null);
         }
 
         /// <summary>
@@ -103,13 +121,30 @@ namespace EMBC.Registrants.API.ProfilesModule
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<UserProfile>> GetProfileConflicts()
+        public async Task<ActionResult<IEnumerable<ProfileDataConflict>>> GetProfileConflicts()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var userProfileWithConflicts = await profileManager.GetProfileAndConflicts(userId);
+            var userProfileWithConflicts = await profileManager.GetProfileConflicts(userId);
             if (userProfileWithConflicts == null) return NotFound();
             return Ok(userProfileWithConflicts);
+        }
+
+        /// <summary>
+        /// Get the authentication profile of the logged in user
+        /// </summary>
+        /// <returns>a profile representing the authentication user data</returns>
+        [HttpGet("current/login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<ActionResult<Profile>> GetLoggedInProfile()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var loginProfile = await profileManager.GetLoginProfile(userId);
+            if (loginProfile == null) return NotFound();
+            return Ok(loginProfile);
         }
     }
 
@@ -136,21 +171,58 @@ namespace EMBC.Registrants.API.ProfilesModule
     }
 
     /// <summary>
-    /// DTO for conflict resolution data
+    /// Base class for profile data conflicts
     /// </summary>
-    public class UserProfile
+    [JsonConverter(typeof(JsonInheritanceConverter), "dataElementName")]
+    [KnownType(typeof(DateOfBirthDataConflict))]
+    [KnownType(typeof(NameDataConflict))]
+    [KnownType(typeof(AddressDataConflict))]
+    public abstract class ProfileDataConflict
     {
-        public bool IsNewUser => EraProfile == null;
-        public Profile EraProfile { get; set; }
-        public Profile LoginProfile { get; set; }
-        public IEnumerable<ProfileDataConflict> Conflicts { get; set; }
+        [Required]
+        public abstract string DataElementName { get; }
+        [Required]
+        public virtual object ConflictingValue { get; set; }
+        [Required]
+        public virtual object OriginalValue { get; set; }
     }
 
     /// <summary>
-    /// profile data element name in conflict
+    /// Date of birth data conflict
     /// </summary>
-    public class ProfileDataConflict
+    public class DateOfBirthDataConflict : ProfileDataConflict
     {
-        public string ConflictDataElement { get; set; }
+        [Required]
+        public override string DataElementName => "DateOfBirth";
+        [Required]
+        public new string ConflictingValue { get; set; }
+        [Required]
+        public new string OriginalValue { get; set; }
+    }
+
+    /// <summary>
+    /// Name data conflict
+    /// </summary>
+    public class NameDataConflict : ProfileDataConflict
+    {
+        [Required]
+        public override string DataElementName => "Name";
+        [Required]
+        public new (string firstName, string lastName) ConflictingValue { get; set; }
+        [Required]
+        public new (string firstName, string lastName) OriginalValue { get; set; }
+    }
+
+    /// <summary>
+    /// Address data conflict
+    /// </summary>
+    public class AddressDataConflict : ProfileDataConflict
+    {
+        [Required]
+        public override string DataElementName => "Address";
+        [Required]
+        public new Address ConflictingValue { get; set; }
+        [Required]
+        public new Address OriginalValue { get; set; }
     }
 }

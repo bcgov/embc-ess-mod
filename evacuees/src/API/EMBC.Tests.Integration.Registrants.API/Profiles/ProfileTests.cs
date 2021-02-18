@@ -43,22 +43,30 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         public async Task CanUpdateProfile()
         {
             var profile = await profileManager.GetProfileByBceid("test");
+            var currentCity = profile.PrimaryAddress.Jurisdiction;
+            var newCity = (await listsRepository.GetJurisdictions()).Skip(new Random().Next(100)).Take(1).First();
+
+            profile.PrimaryAddress.Jurisdiction = new Jurisdiction { Code = newCity.Code };
 
             await profileManager.SaveProfile(profile);
+
+            var updatedProfile = await profileManager.GetProfileByBceid("test");
+            updatedProfile.PrimaryAddress.Jurisdiction.Code.ShouldBe(newCity.Code);
+            updatedProfile.PrimaryAddress.Jurisdiction.Name.ShouldBe(newCity.Name);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateProfile()
         {
             var baseProfile = await profileManager.GetProfileByBceid("test");
-            var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
-            baseProfile.Id = newProfileBceId;
+            var newProfileId = Guid.NewGuid().ToString("N").Substring(0, 10);
+            baseProfile.Id = newProfileId;
 
             var id = await profileManager.SaveProfile(baseProfile);
 
-            var profile = await profileManager.GetProfileByBceid(newProfileBceId);
+            var profile = await profileManager.GetProfileByBceid(newProfileId);
 
-            profile.ShouldNotBeNull().Id.ShouldBe(newProfileBceId);
+            profile.ShouldNotBeNull().Id.ShouldBe(newProfileId);
             profile.Id.ShouldBe(baseProfile.Id);
         }
 
@@ -96,6 +104,20 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
             profile.MailingAddress.StateProvince.Name.ShouldBe(province.Name);
             profile.MailingAddress.Jurisdiction.Code.ShouldBe(city.Code);
             profile.MailingAddress.Jurisdiction.Name.ShouldBe(city.Name);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanDeleteProfile()
+        {
+            var baseProfile = await profileManager.GetProfileByBceid("test");
+            var newProfileId = Guid.NewGuid().ToString("N").Substring(0, 10);
+            baseProfile.Id = newProfileId;
+
+            await profileManager.SaveProfile(baseProfile);
+
+            await profileManager.DeleteProfile(newProfileId);
+
+            (await profileManager.GetProfileByBceid(newProfileId)).ShouldBeNull();
         }
     }
 }

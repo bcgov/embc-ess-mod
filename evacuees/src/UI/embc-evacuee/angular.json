@@ -40,7 +40,15 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.local.ts"
                 }
-              ],
+              ]
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
             },
             "production": {
               "fileReplacements": [
@@ -74,12 +82,16 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "embc-evacuee:build",
-            "proxyConfig": "proxy.conf.json"
+            "browserTarget": "embc-evacuee:build"
           },
           "configurations": {
             "local": {
-              "browserTarget": "embc-evacuee:build:local"
+              "browserTarget": "embc-evacuee:build:local",
+              "proxyConfig": "proxy.conf.json"
+            },
+            "dev": {
+              "browserTarget": "embc-evacuee:build:local",
+              "proxyConfig": "proxy.dev.conf.json"
             },
             "production": {
               "browserTarget": "embc-evacuee:build:production"

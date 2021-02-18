@@ -19,7 +19,8 @@ export const authConfig: AuthConfig = {
     scope: environment.keycloak.scope,
     // at_hash is not present in JWT token
     showDebugInformation: environment.keycloak.showDebugInformation,
-    disableAtHashCheck: environment.keycloak.disableAtHashCheck
+    disableAtHashCheck: environment.keycloak.disableAtHashCheck,
+    customQueryParams: { kc_idp_hint: 'bceid' }
 };
 
 export class OAuthModuleConfig {
