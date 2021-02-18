@@ -4,7 +4,22 @@ import { TeamManagementComponent } from './team-management.component';
 
 const routes: Routes = [
   {
-    path: '', component: TeamManagementComponent
+    path: '', component: TeamManagementComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'list',
+        pathMatch: 'full'
+      },
+      {
+        path: 'list',
+        loadChildren: () => import('../team-list/team-list.module').then(m => m.TeamListModule)
+      },
+      {
+        path: 'add',
+        loadChildren: () => import('../add-team-member/add-team-member.module').then(m => m.AddTeamMemberModule)
+      }
+    ]
   }
 ];
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-team-management',
@@ -6,6 +7,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./team-management.component.scss']
 })
 export class TeamManagementComponent implements OnInit {
+
+ 
+  tabs: TabModel[] = [
+    {
+      label: 'ESS Team',
+      route: 'list',
+    },
+    {
+      label: 'Add Team Members',
+      route: 'add',
+    }
+  ];
 
   constructor() { }
 

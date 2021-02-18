@@ -1,1 +1,16 @@
-<p>responder-management works!</p>
+<div class="container">
+    <div class="row heading-container">
+        <div class="col-md-12">
+            <span class="page-heading">Responder Management</span>
+        </div>
+    </div>
+    <br>
+
+    <nav mat-tab-nav-bar dynamicHeight>
+        <a mat-tab-link *ngFor="let tabItem of tabs" [routerLink]="tabItem.route" routerLinkActive="active-tab">
+            {{tabItem.label}}
+        </a>
+    </nav>
+
+    <router-outlet></router-outlet>
+</div>
