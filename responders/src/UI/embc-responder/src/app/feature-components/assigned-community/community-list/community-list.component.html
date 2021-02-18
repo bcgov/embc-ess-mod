@@ -1,1 +1,2 @@
-<app-data-table [incomingData] = 'sampleCommunityData' [displayedColumns]='displayedColumns'></app-data-table>
+<app-search-filter [filtersToLoad]='filtersToLoad' (filterTerm)="filter($event)"></app-search-filter>
+<app-data-table [incomingData] = 'sampleCommunityData' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm"></app-data-table>
