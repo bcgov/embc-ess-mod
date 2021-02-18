@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-7">
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter Task #</mat-label>
+                    <input matInput placeholder="Enter Task #">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <button class="search-button button-p" mat-button>Search</button>
+            </div>
+            <div class="col-md-2">
+                <button class="search-button button-s" mat-button>Reset</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1">
+        <p class="span-or">or</p>
+    </div>
+    <div class="col-md-5">
+        <div class="row">
+            <div *ngFor="let filter of filtersToLoad">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{filter?.label}}</mat-label>
+                    <mat-select (selectionChange)="selected($event, filter?.type)">
+                        <mat-option *ngFor="let role of filter?.values" [value]="role">{{role}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>

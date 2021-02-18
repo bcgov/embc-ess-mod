@@ -5,12 +5,14 @@ import { RouterModule } from '@angular/router';
 import { ToggleSideNavComponent } from './components/toggle-side-nav/toggle-side-nav.component';
 import { MaterialModule } from '../material.module';
 import { DataTableComponent } from './components/data-table/data-table.component';
+import { SearchFilterComponent } from './components/search-filter/search-filter.component';
 
 @NgModule({
   declarations: [
     TopNavMenuComponent,
     ToggleSideNavComponent,
-    DataTableComponent
+    DataTableComponent,
+    SearchFilterComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { DataTableComponent } from './components/data-table/data-table.component
   exports: [
     TopNavMenuComponent,
     ToggleSideNavComponent,
-    DataTableComponent
+    DataTableComponent,
+    SearchFilterComponent
   ]
 })
 export class SharedModule { }

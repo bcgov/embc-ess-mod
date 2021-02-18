@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
+import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 
 @Component({
   selector: 'app-data-table',
@@ -10,14 +12,16 @@ import { TableColumnModel } from 'src/app/core/models/table-column.model';
 })
 export class DataTableComponent implements AfterViewInit, OnChanges {
 
-  // add optional sorting, filtering and clickable rows
+  // add optional clickable rows
 
   @Input() displayedColumns: TableColumnModel[];
   @Input() incomingData = [];
+  @Input() filterTerm : TableFilterValueModel;
   dataSource = new MatTableDataSource();
   columns: string[];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.incomingData) {
@@ -26,9 +30,21 @@ export class DataTableComponent implements AfterViewInit, OnChanges {
     if (changes.displayedColumns) {
       this.columns = this.displayedColumns.map(column => column.ref);
     }
+    if(changes.filterTerm && this.filterTerm !== undefined) {
+      this.filter(this.filterTerm.value);
+    }
   }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  filter(term: string) {
+    this.dataSource.filter = term.toLocaleLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }

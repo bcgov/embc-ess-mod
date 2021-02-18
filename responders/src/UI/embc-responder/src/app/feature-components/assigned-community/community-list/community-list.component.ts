@@ -27,10 +27,3 @@ export class CommunityListComponent implements OnInit {
   }
 
 }
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
