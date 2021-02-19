@@ -39,22 +39,29 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TeamMember>>> GetTeamMembers()
         {
-            return Ok(await Task.FromResult(Array.Empty<TeamMember>()));
+            var teamId = "t1";
+            var members = new[]
+            {
+                new TeamMember { Id = "1", FirstName = "one_f", LastName = "one_l", IsActive = true, Email = "1@email.com", UserName = "one", TeamId = teamId, RoleId = "r1", LabelId = "l1", AgreementSignDate = DateTime.Now },
+                new TeamMember { Id = "2", FirstName = "two_f", LastName = "two_l", IsActive = true, Email = "2@email.com", UserName = "two", TeamId = teamId, RoleId = "r2", LabelId = "l2", AgreementSignDate = DateTime.Now },
+                new TeamMember { Id = "3", FirstName = "three_f", LastName = "three_l", IsActive = true, Email = "3@email.com", UserName = "three", TeamId = teamId, RoleId = "r3", LabelId = "l3", AgreementSignDate = DateTime.Now },
+                new TeamMember { Id = "4", FirstName = "four_f", LastName = "four_l", IsActive = true, Email = "4@email.com", UserName = "four", TeamId = teamId, RoleId = "r4", LabelId = "l4", AgreementSignDate = DateTime.Now },
+            };
+            return Ok(await Task.FromResult(members));
         }
 
         /// <summary>
         /// Get a single team member
         /// </summary>
-        /// <param name="id">team member id</param>
+        /// <param name="memberId">team member id</param>
         /// <returns>team member or not found</returns>
-        [HttpGet("{id}")]
+        [HttpGet("{memberId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<TeamMember>> GetTeamMember(string id)
+        public async Task<ActionResult<TeamMember>> GetTeamMember(string memberId)
         {
-            await Task.CompletedTask;
-
-            return Ok(new TeamMember { Id = id });
+            var teamId = "t1";
+            return Ok(await Task.FromResult(new TeamMember { Id = "1", FirstName = "one_f", LastName = "one_l", IsActive = true, Email = "1@email.com", UserName = "one", TeamId = teamId, RoleId = "r1", LabelId = "l1", AgreementSignDate = DateTime.Now }));
         }
 
         /// <summary>
@@ -76,34 +83,76 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Updates team member
         /// </summary>
-        /// <param name="id">team member id to update</param>
+        /// <param name="memberId">team member id to update</param>
         /// <param name="teamMember">team member</param>
         /// <returns>team member id if success, not found or bad request</returns>
-        [HttpPost("{id}")]
+        [HttpPost("{memberId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateTeamMember(string id, [FromBody] TeamMember teamMember)
+        public async Task<IActionResult> UpdateTeamMember(string memberId, [FromBody] TeamMember teamMember)
         {
             await Task.CompletedTask;
 
-            return Ok(new { Id = id });
+            return Ok(new { Id = memberId });
         }
 
         /// <summary>
         /// Deactivate a team member
         /// </summary>
-        /// <param name="id">team member id</param>
+        /// <param name="memberId">team member id</param>
         /// <returns>team member id if success, not found or bad request</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("{memberId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteTeamMember(string id)
+        public async Task<IActionResult> DeleteTeamMember(string memberId)
         {
             await Task.CompletedTask;
 
-            return Ok(new { Id = id });
+            return Ok(new { Id = memberId });
+        }
+
+        [HttpGet("username")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<bool>> IsUserNameExists(string userName)
+        {
+            return Ok(await Task.FromResult(string.Equals(userName, "positive", StringComparison.InvariantCultureIgnoreCase)));
+        }
+
+        /// <summary>
+        /// Provides a list of team member roles
+        /// </summary>
+        /// <returns>list of roles</returns>
+        [HttpGet("memberroles")]
+        public async Task<ActionResult<IEnumerable<MemberRole>>> GetMemberRoles()
+        {
+            var roles = new[]
+            {
+                new MemberRole { Id = "r1", Name = "Tier 1" },
+                new MemberRole { Id = "r2", Name = "Tier 2" },
+                new MemberRole { Id = "r3", Name = "Tier 3" },
+                new MemberRole { Id = "r4", Name = "Tier 4" },
+            };
+            return Ok(await Task.FromResult(roles));
+        }
+
+        /// <summary>
+        /// Provides a list of team member labels
+        /// </summary>
+        /// <returns>list of labels</returns>
+        [HttpGet("memberlabels")]
+        public async Task<ActionResult<IEnumerable<MemberLabel>>> GetMemberLabels()
+        {
+            var labels = new[]
+            {
+                new MemberLabel { Id = "l1", Name = "label 1" },
+                new MemberLabel { Id = "l2", Name = "label 2" },
+                new MemberLabel { Id = "l3", Name = "label 3" },
+                new MemberLabel { Id = "l4", Name = "label 4" },
+            };
+            return Ok(await Task.FromResult(labels));
         }
     }
 
@@ -118,7 +167,7 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public string Name { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 
     /// <summary>
@@ -134,7 +183,7 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public string UserName { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         [EmailAddress]
         public string Email { get; set; }
@@ -150,5 +199,28 @@ namespace EMBC.Responders.API.Controllers
 
         public DateTime? LastSuccessfulLogin { get; set; }
         public DateTime? AgreementSignDate { get; set; }
+
+        [Required]
+        public string RoleId { get; set; }
+
+        public string LabelId { get; set; }
+    }
+
+    /// <summary>
+    /// a role that a team member belongs to
+    /// </summary>
+    public class MemberRole
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    /// <summary>
+    /// a label to describe the team member
+    /// </summary>
+    public class MemberLabel
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
     }
 }
