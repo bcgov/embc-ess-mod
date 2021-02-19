@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------
-//  Copyright © 2020 Province of British Columbia
+//  Copyright © 2021 Province of British Columbia
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -41,72 +41,97 @@ namespace EMBC.Responders.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardLimit = 2;
+                var configvalue = configuration.GetValue("app:knownNetwork", string.Empty)?.Split('/');
+                if (configvalue.Length == 2)
+                {
+                    var knownNetwork = new IPNetwork(IPAddress.Parse(configvalue[0]), int.Parse(configvalue[1]));
+                    options.KnownNetworks.Add(knownNetwork);
+                }
+            });
+            AddDataProtection(services);
+            AddOpenApi(services);
+            services.AddDistributedMemoryCache();
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
             });
-            var dpBuilder = services.AddDataProtection();
-            var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
-            if (!string.IsNullOrWhiteSpace(keyRingPath))
-            {
-                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
-            }
-
-            services.AddOpenApiDocument();
-            services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
-            {
-                options.Path = "/api/swagger/{documentName}/swagger.json";
-            });
-            services.Configure<SwaggerUi3Settings>(options =>
-            {
-                options.Path = "/api/swagger";
-                options.DocumentPath = "/api/swagger/{documentName}/swagger.json";
-            });
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders = ForwardedHeaders.All;
-                var knownNetworks = configuration.GetValue("KNOWN_NETWORKS", "::ffff:172.51.0.0/16").Split(';');
-                foreach (var knownNetwork in knownNetworks)
-                {
-                    options.KnownNetworks.Add(ParseNetworkFromString(knownNetwork));
-                }
-            });
-            services.AddDistributedMemoryCache();
-        }
-
-        private IPNetwork ParseNetworkFromString(string network)
-        {
-            var networkParts = network.Trim().Split('/');
-            var prefix = IPAddress.Parse(networkParts[0]);
-            var length = int.Parse(networkParts[1]);
-            return new IPNetwork(prefix, length);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
-                app.UseExceptionHandler("/error-local-development");
+                app.UseExceptionHandler("/error-details");
             }
             else
             {
                 app.UseExceptionHandler("/error");
             }
 
-            app.UseSerilogRequestLogging();
-            app.UseForwardedHeaders();
+            app.UseSerilogRequestLogging(opts =>
+            {
+                opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
+                {
+                    diagCtx.Set("User", httpCtx.User.Identity?.Name);
+                    diagCtx.Set("Host", httpCtx.Request.Host);
+                    diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
+                    diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
+                    diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
+                    diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
+                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
+                };
+            });
 
+            app.UseForwardedHeaders();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseOpenApi();
             app.UseSwaggerUi3();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void AddDataProtection(IServiceCollection services)
+        {
+            var dpBuilder = services.AddDataProtection();
+            var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
+            if (!string.IsNullOrWhiteSpace(keyRingPath))
+            {
+                dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
+            }
+        }
+
+        private void AddOpenApi(IServiceCollection services)
+        {
+            if (!env.IsProduction())
+            {
+                services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
+                {
+                    options.Path = "/api/openapi/{documentName}/openapi.json";
+                    options.DocumentName = "Responders Portal API";
+                    options.PostProcess = (document, req) =>
+                    {
+                        document.Info.Title = "Registrants Portal API";
+                    };
+                });
+
+                services.Configure<SwaggerUi3Settings>(options =>
+                {
+                    options.Path = "/api/openapi";
+                    options.DocumentTitle = "responders Portal API Documentation";
+                    options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
+                });
+
+                services.AddOpenApiDocument();
+            }
         }
     }
 }
