@@ -12,7 +12,7 @@ export class DisableBackGuard implements CanDeactivate<FileSubmissionComponent> 
 
     canDeactivate(): boolean {
 
-        if (window.location.pathname === '/non-verified-registration/filesubmission') {
+        if (window.location.pathname === '/non-verified-registration/file-submission') {
             return true;
         } else {
             this.dialog.open(DialogComponent, {

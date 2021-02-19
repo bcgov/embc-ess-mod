@@ -44,7 +44,7 @@ const routes: Routes = [
         loadChildren: () => import('../sharedModules/components/file-submission/file-submission.module')
           .then(m => m.FileSubmissionModule),
         data: { flow: 'non-verified-registration' },
-        //canDeactivate: [DisableBackGuard]
+        canDeactivate: [DisableBackGuard]
       }
     ]
 
