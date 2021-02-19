@@ -23,7 +23,7 @@ export class EvacuatedForm {
             jurisdiction: ['', [Validators.required]],
             stateProvince: ['', [Validators.required]],
             country: ['', [Validators.required]],
-            postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
+            postalCode: ['', [customValidator.postalValidation().bind(customValidator)]]
         });
 
         this.insurance.setValue(evacuated.insurance);

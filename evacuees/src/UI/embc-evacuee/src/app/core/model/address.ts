@@ -2,7 +2,7 @@ export interface RegAddress {
   addressLine1: string;
   addressLine2?: null | string;
   jurisdiction: Partial<Jurisdiction>;
-  postalCode: string;
+  postalCode: null | string;
   stateProvince: Partial<StateProvince>;
   country: Country;
 }

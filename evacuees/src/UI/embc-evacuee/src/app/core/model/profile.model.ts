@@ -26,8 +26,9 @@ export class PersonDetails {
     dateOfBirth: string;
     sameLastNameCheck?: boolean;
 
-    constructor(firstName?: string, lastName?: string, preferredName?: string, initials?: string,
-                gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
+    constructor(
+        firstName?: string, lastName?: string, preferredName?: string, initials?: string,
+        gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
 
     }
 }
@@ -80,23 +81,19 @@ export class ContactDetailsForm {
 
     email = new FormControl();
     phone = new FormControl();
-    hidePhoneRequired = new FormControl();
-    hideEmailRequired = new FormControl();
     confirmEmail = new FormControl();
+    hideContacts = new FormControl();
 
     constructor(contactDetails: ContactDetails, customValidator: CustomValidationService) {
 
-        this.hideEmailRequired.setValue(contactDetails.hideEmailRequired);
-        this.hidePhoneRequired.setValue(contactDetails.hidePhoneRequired);
-
         this.email.setValue(contactDetails.email);
-        this.email.setValidators([Validators.required, Validators.email]);
+        this.email.setValidators([Validators.email]);
 
         this.confirmEmail.setValue(contactDetails.confirmEmail);
-        this.confirmEmail.setValidators([Validators.required, Validators.email]);
+        this.confirmEmail.setValidators([Validators.email]);
 
         this.phone.setValue(contactDetails.phone);
-        this.phone.setValidators([Validators.required, customValidator.maskedNumberLengthValidator().bind(customValidator)]);
+        this.phone.setValidators([customValidator.maskedNumberLengthValidator().bind(customValidator)]);
     }
 }
 
@@ -144,7 +141,7 @@ export class AddressForm {
                 Validators.required
             ).bind(customValidator)]],
             country: ['', [Validators.required]],
-            postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
+            postalCode: ['', [customValidator.postalValidation().bind(customValidator)]]
         });
 
         this.mailingAddress = builder.group({
@@ -158,7 +155,7 @@ export class AddressForm {
                 Validators.required
             ).bind(customValidator)]],
             country: ['', [Validators.required]],
-            postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
+            postalCode: ['', [customValidator.postalValidation().bind(customValidator)]]
         });
 
         this.isBcAddress.setValue(address.isBcAddress);
