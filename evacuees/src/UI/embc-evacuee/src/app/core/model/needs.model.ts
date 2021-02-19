@@ -23,7 +23,7 @@ export class EvacuatedForm {
             jurisdiction: ['', [Validators.required]],
             stateProvince: ['', [Validators.required]],
             country: ['', [Validators.required]],
-            postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
+            postalCode: ['', [customValidator.postalValidation().bind(customValidator)]]
         });
 
         this.insurance.setValue(evacuated.insurance);
@@ -34,6 +34,7 @@ export class EvacuatedForm {
 export class FamilyMembers {
     haveMedication: boolean;
     haveSpecialDiet: boolean;
+    specialDietDetails: string;
     familyMember: Array<PersonDetails>;
 
     constructor() { }
@@ -43,6 +44,7 @@ export class FamilyMembersForm {
 
     haveMedication = new FormControl();
     haveSpecialDiet = new FormControl();
+    specialDietDetails = new FormControl();
     member: FormGroup;
     familyMember = new FormControl([]);
     addFamilyMemberIndicator = new FormControl(false);
@@ -72,6 +74,11 @@ export class FamilyMembersForm {
                 customValidator.dateOfBirthValidator().bind(customValidator)
             ).bind(customValidator)]]
         });
+
+        this.specialDietDetails.setValidators([customValidator.conditionalValidation(
+            () => this.haveSpecialDiet.value,
+            Validators.required
+        ).bind(customValidator)]);
     }
 }
 

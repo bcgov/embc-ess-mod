@@ -17,8 +17,8 @@
         <button mat-button [matMenuTriggerFor]="menu" class="menuButton">
           <div>
             <span style="color: white"><b>{{(formCreationService.personalDetailsForm$ |
-                async).value?.lastName | uppercase}}</b>, {{(formCreationService.personalDetailsForm$ |
-              async).value?.firstName}}</span>
+                async)?.value?.lastName | uppercase}}</b>, {{(formCreationService.personalDetailsForm$ |
+              async)?.value?.firstName}}</span>
             <img class="img-align" src="../../../../assets/images/down_arrow.svg" height="12" width="20">
           </div>
         </button>

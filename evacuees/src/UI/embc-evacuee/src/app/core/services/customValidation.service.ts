@@ -35,7 +35,7 @@ export class CustomValidationService {
     /**
      * Validition for the fields that are conditional
      * @param predicate : condition to check
-     * @param validator : validtor to test again
+     * @param validator : validator to test again
      * @param errorName : custom error name
      */
     conditionalValidation(predicate: () => boolean, validator: ValidatorFn, errorName?: string): ValidatorFn {
@@ -59,6 +59,26 @@ export class CustomValidationService {
     }
 
     /**
+     * Checks if either of the contact Info required are filled out
+     */
+    contactInfoValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            if (control) {
+                const email = control.get('email').value;
+                const phone = control.get('phone').value;
+
+                if (control.get('hideContacts').value === true) {
+                    if ((email === undefined || email === null || email === '') &&
+                        (phone === undefined || phone === null || phone === '')) {
+                        return { contactInfoReq: true };
+                    }
+                }
+            }
+            return null;
+        };
+    }
+
+    /**
      * Checks if the email and confirm email field matches
      */
     confirmEmailValidator(): ValidatorFn {
@@ -75,6 +95,24 @@ export class CustomValidationService {
                 }
             }
             return null;
+        };
+    }
+
+    requiredConfirmEmailValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            if (control) {
+                const email = control.get('email').value;
+                const confirmEmail = control.get('confirmEmail').value;
+                const phone = control.get('phone').value;
+
+                if (control.get('hideContacts').value === true && (phone === null || phone === undefined || phone === '')) {
+                    if ((email !== undefined || email !== null || email === '') &&
+                        (confirmEmail === null || confirmEmail === '' || confirmEmail === undefined)) {
+                        return { confirmEmailRequired: true };
+                    }
+                }
+                return null;
+            }
         };
     }
 

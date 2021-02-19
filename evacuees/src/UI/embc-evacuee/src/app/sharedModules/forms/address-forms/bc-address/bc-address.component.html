@@ -25,7 +25,7 @@
         <div class="col-md-4">
             <mat-form-field appearance="outline">
                 <mat-label>City</mat-label>
-                <input  maxlength="100" type="text" [formControlName]="'jurisdiction'" matInput placeholder="City"
+                <input maxlength="100" type="text" [formControlName]="'jurisdiction'" matInput placeholder="City"
                     [matAutocomplete]="auto" required>
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="cityDisplayFn">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
@@ -35,8 +35,7 @@
                 <mat-error
                     *ngIf="addressFormControl?.jurisdiction.invalid && addressFormControl?.jurisdiction.hasError('required')">
                     City is required</mat-error>
-                <mat-error
-                    *ngIf="validateCity()">
+                <mat-error *ngIf="validateCity()">
                     City is invalid</mat-error>
             </mat-form-field>
         </div>
@@ -55,10 +54,10 @@
         <div class="col-md-3">
             <mat-form-field appearance="outline">
                 <mat-label>Postal Code</mat-label>
-                <input [formControlName]="'postalCode'" matInput placeholder="Postal Code" required>
-                <mat-error
+                <input [formControlName]="'postalCode'" matInput placeholder="Postal Code">
+                <!-- <mat-error
                     *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
-                    Postal Code is required</mat-error>
+                    Postal Code is required</mat-error> -->
                 <mat-error
                     *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')">
                     Postal Code is invalid</mat-error>
