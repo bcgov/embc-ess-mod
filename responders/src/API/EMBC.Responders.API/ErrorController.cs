@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------
-//  Copyright © 2020 Province of British Columbia
+//  Copyright © 2021 Province of British Columbia
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -25,13 +25,13 @@ namespace EMBC.Responders.API
     [ApiController]
     public class ErrorController : ControllerBase
     {
-        [Route("/error-local-development")]
+        [Route("/error-details")]
         public IActionResult ErrorLocalDevelopment([FromServices] IHostEnvironment hostEnvironment)
         {
-            if (!hostEnvironment.IsDevelopment()) throw new InvalidOperationException("This shouldn't be invoked in non-development environments.");
+            if (hostEnvironment.IsProduction()) throw new InvalidOperationException("This shouldn't be invoked in production environments.");
 
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            return Problem(detail: context.Error.StackTrace, title: context.Error.Message);
+            return Problem(detail: context.Error.ToString(), title: context.Error.Message);
         }
 
         [Route("/error")]

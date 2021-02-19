@@ -16,7 +16,7 @@ export class AuthService {
     initiateAuthentication(): Promise<any> {
         return new Promise((resolveFn, rejectFn) => {
             this.oauthService.configure(this.authConfig);
-            this.oauthService.setStorage(localStorage);
+            this.oauthService.setStorage(sessionStorage);
             this.oauthService.tokenValidationHandler = new NullValidationHandler();
             this.oauthService.events.pipe(filter((e: any) => {
                 return e.type === 'token_received';
@@ -38,6 +38,10 @@ export class AuthService {
     private handleNewToken(): void {
         this.decodedAccessToken = this.oauthService.getAccessToken();
         this.decodedIDToken = this.oauthService.getIdToken();
+    }
+
+    logout(): void {
+        this.oauthService.logOut();
     }
 
 }
