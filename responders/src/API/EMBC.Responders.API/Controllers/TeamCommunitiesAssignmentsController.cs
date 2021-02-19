@@ -14,8 +14,8 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,16 +33,38 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Get all assigned communities
         /// </summary>
-        /// <returns>list of communities</returns>
+        /// <param name="forAllTeams">indicates if a list of communities assigned to all teams should be returned</param>
+        /// <returns>list of communities and their associated teams</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Community>>> GetAssignedCommunities()
+        public async Task<ActionResult<IEnumerable<AssignedCommunity>>> GetAssignedCommunities([FromQuery] bool forAllTeams = false)
         {
-            return Ok(await Task.FromResult(Array.Empty<Community>()));
+            var teamId = "t1";
+            var associatedCommunities = new[]
+            {
+               new AssignedCommunity { CommunityId = "c1", TeamId = "t1", TeamName = "team 1" },
+               new AssignedCommunity { CommunityId = "c2", TeamId = "t1", TeamName = "team 1" },
+               new AssignedCommunity { CommunityId = "c3", TeamId = "t2", TeamName = "team 2" },
+               new AssignedCommunity { CommunityId = "c4", TeamId = "t3", TeamName = "team 3" },
+            };
+            return Ok(await Task.FromResult(forAllTeams
+                ? associatedCommunities
+                : associatedCommunities.Where(c => c.TeamId == teamId)));
         }
 
         /// <summary>
-        /// Assign communities to the team, will ignore communities which were already associated with the team
+        /// An associated community and team
+        /// </summary>
+        public class AssignedCommunity
+        {
+            public string CommunityId { get; set; }
+            public string TeamId { get; set; }
+            public string TeamName { get; set; }
+        }
+
+        /// <summary>
+        /// Assign communities to the team, will ignore communities which were already associated with the team.
+        /// It will fail if a community is already assigned to another team,
         /// </summary>
         /// <param name="communityIds">list of community ids</param>
         /// <returns>Ok if successful, bad request if a community is not found or a community is associated with another team</returns>
