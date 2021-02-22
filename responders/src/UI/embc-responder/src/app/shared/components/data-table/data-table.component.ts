@@ -10,18 +10,22 @@ import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.mo
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss']
 })
-export class DataTableComponent implements AfterViewInit, OnChanges {
+export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
 
   // add optional clickable rows
 
   @Input() displayedColumns: TableColumnModel[];
   @Input() incomingData = [];
   @Input() filterTerm : TableFilterValueModel;
+  @Input() filterPredicate: any;
   dataSource = new MatTableDataSource();
   columns: string[];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  ngOnInit(): void {
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.incomingData) {
@@ -31,7 +35,11 @@ export class DataTableComponent implements AfterViewInit, OnChanges {
       this.columns = this.displayedColumns.map(column => column.ref);
     }
     if(changes.filterTerm && this.filterTerm !== undefined) {
-      this.filter(this.filterTerm.value);
+      this.filter(this.filterTerm);
+    }
+    if(changes.filterPredicate) {
+      console.log(this.filterPredicate)
+      this.dataSource.filterPredicate = this.filterPredicate;
     }
   }
 
@@ -40,8 +48,9 @@ export class DataTableComponent implements AfterViewInit, OnChanges {
     this.dataSource.sort = this.sort;
   }
 
-  filter(term: string) {
-    this.dataSource.filter = term.toLocaleLowerCase();
+  filter(term: TableFilterValueModel) {
+    console.log(term)
+    this.dataSource.filter = JSON.stringify(term);
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();

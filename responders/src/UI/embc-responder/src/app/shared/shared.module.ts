@@ -6,6 +6,7 @@ import { ToggleSideNavComponent } from './components/toggle-side-nav/toggle-side
 import { MaterialModule } from '../material.module';
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { SearchFilterComponent } from './components/search-filter/search-filter.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { SearchFilterComponent } from './components/search-filter/search-filter.
   imports: [
     CommonModule,
     RouterModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule
   ],
   exports: [
     TopNavMenuComponent,

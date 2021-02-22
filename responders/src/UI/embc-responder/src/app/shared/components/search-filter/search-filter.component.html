@@ -3,15 +3,15 @@
         <div class="row">
             <div class="col-md-7">
                 <mat-form-field appearance="outline">
-                    <mat-label>Enter Task #</mat-label>
-                    <input matInput placeholder="Enter Task #">
+                    <mat-label>{{filtersToLoad?.loadInputFilter?.label}}</mat-label>
+                    <input [(ngModel)]="searchTerm" matInput placeholder="{{filtersToLoad?.loadInputFilter?.label}}">
                 </mat-form-field>
             </div>
             <div class="col-md-3">
-                <button class="search-button button-p" mat-button>Search</button>
+                <button class="search-button button-p" mat-button (click)="search()">Search</button>
             </div>
             <div class="col-md-2">
-                <button class="search-button button-s" mat-button>Reset</button>
+                <button class="search-button button-s" mat-button (click)="reset()">Reset</button>
             </div>
         </div>
     </div>
@@ -20,10 +20,10 @@
     </div>
     <div class="col-md-5">
         <div class="row">
-            <div *ngFor="let filter of filtersToLoad">
+            <div *ngFor="let filter of filtersToLoad?.loadDropdownFilters">
                 <mat-form-field appearance="outline">
                     <mat-label>{{filter?.label}}</mat-label>
-                    <mat-select (selectionChange)="selected($event, filter?.type)">
+                    <mat-select #matRef (selectionChange)="selected($event, filter?.type)">
                         <mat-option *ngFor="let role of filter?.values" [value]="role">{{role}}</mat-option>
                     </mat-select>
                 </mat-form-field>

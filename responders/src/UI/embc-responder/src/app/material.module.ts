@@ -15,6 +15,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { MatInputModule } from '@angular/material/input';
     MatSortModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatInputModule
+    MatInputModule,
+    MatSlideToggleModule
   ],
   exports: [
     CommonModule,
@@ -51,7 +53,8 @@ import { MatInputModule } from '@angular/material/input';
     MatSortModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatInputModule
+    MatInputModule,
+    MatSlideToggleModule
   ]
 })
 export class MaterialModule { }

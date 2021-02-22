@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { MatOption } from '@angular/material/core';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 
@@ -10,9 +11,10 @@ import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 })
 export class SearchFilterComponent implements OnInit, OnChanges {
 
-  @Output() filterTerm = new EventEmitter<TableFilterValueModel>();
-  @Input() filtersToLoad: TableFilterModel[];
-  rolesList: string[] = ['All User Roles', 'Tier 1 Responder', 'Tier 2 Superviser', 'Tier 3 ESSD', 'Tier 4 LEP'];
+  @Output() filterEvent = new EventEmitter<TableFilterValueModel>();
+  @Input() filtersToLoad: TableFilterModel;
+  searchTerm: string;
+  @ViewChild('matRef') matRef: MatSelect;
 
   constructor() { }
 
@@ -20,15 +22,30 @@ export class SearchFilterComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.filtersToLoad) {}
+    if (changes.filtersToLoad) { }
   }
 
   selected(event: MatSelectChange, filterType: string): void {
     console.log(filterType)
-    if (event.value === 'All User Roles') {
-      this.filterTerm.emit({ type: 'role', value: '' });
-    } else {
-      this.filterTerm.emit({ type: 'role', value: event.value });
-    }
+    console.log(event.value)
+    // if (event.value === 'All User Roles') {
+    //   this.filterEvent.emit({ type: filterType, value: '' });
+    // } else {
+      console.log("-----")
+      this.filterEvent.emit({ type: filterType, value: event.value });
+    //}
   }
+
+  search(): void {
+    this.filterEvent.emit({ type: '', value: this.searchTerm })
+    this.filterEvent.emit({ type: 'text', value: this.searchTerm })
+  }
+
+  reset(): void {
+    console.log(this.matRef)
+    //this.matRef.options.forEach((data: MatOption) => data.deselect());
+    this.searchTerm = ''
+    this.filterEvent.emit();
+  }
+
 }
