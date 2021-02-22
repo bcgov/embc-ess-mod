@@ -13,7 +13,7 @@ const routes: Routes = [
       },
       {
         path: 'list',
-        loadChildren: () => import('../community-list/community-list.module').then(m => m.CommunityListModule)
+        loadChildren: () => import('../assigned-community-list/assigned-community-list.module').then(m => m.AssignedCommunityListModule)
       },
       {
         path: 'add-edit',

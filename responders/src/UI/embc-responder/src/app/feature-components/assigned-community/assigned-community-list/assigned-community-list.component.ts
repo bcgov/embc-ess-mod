@@ -4,11 +4,11 @@ import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.mo
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 
 @Component({
-  selector: 'app-community-list',
-  templateUrl: './community-list.component.html',
-  styleUrls: ['./community-list.component.scss']
+  selector: 'app-assigned-community-list',
+  templateUrl: './assigned-community-list.component.html',
+  styleUrls: ['./assigned-community-list.component.scss']
 })
-export class CommunityListComponent implements OnInit {
+export class AssignedCommunityListComponent implements OnInit {
 
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
