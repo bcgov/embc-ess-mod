@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, NgFor
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
@@ -13,11 +13,26 @@ import { DirectivesModule } from '../../../../core/directives/directives.module'
 import { TextMaskModule } from 'angular2-text-mask';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
-export class CustomErrorStateMatcher implements ErrorStateMatcher {
+export class CustomErrorRequiredFields implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('contactInfoReq');
+  }
+}
+
+export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('emailMatch');
+  }
+}
+
+export class CustomErrorRequiredConfirmMail implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('confirmEmailRequired');
   }
 }
 
@@ -33,10 +48,14 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
   contactInfoForm$: Subscription;
   formCreationService: FormCreationService;
   readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-  matcher = new CustomErrorStateMatcher();
+  requiredFieldsMatcher = new CustomErrorRequiredFields();
+  emailMatcher = new CustomErrorMailMatcher();
+  requiredConfirmEmail = new CustomErrorRequiredConfirmMail();
+  contactsFlag = false;
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-              public customValidator: CustomValidationService) {
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+    public customValidator: CustomValidationService) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
@@ -45,7 +64,9 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     this.contactInfoForm$ = this.formCreationService.getContactDetailsForm().subscribe(
       contactInfo => {
         this.contactInfoForm = contactInfo;
-        this.contactInfoForm.setValidators([this.customValidator.confirmEmailValidator().bind(this.customValidator)]);
+        this.contactInfoForm.setValidators([this.customValidator.contactInfoValidator().bind(this.customValidator),
+        this.customValidator.confirmEmailValidator().bind(this.customValidator),
+        this.customValidator.requiredConfirmEmailValidator().bind(this.customValidator)]);
         this.contactInfoForm.updateValueAndValidity();
       }
     );
@@ -58,35 +79,12 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     return this.contactInfoForm.controls;
   }
 
-  /**
-   * Triggers when the checkbox selction changes and reset and disables
-   * email form fields
-   * @param event : Checkbox selected event
-   */
-  hideEmail(event: MatCheckboxChange): void {
-    if (event.checked) {
-      this.contactInfoForm.get('email').reset();
-      this.contactInfoForm.get('email').disable();
-
-      this.contactInfoForm.get('confirmEmail').reset();
-      this.contactInfoForm.get('confirmEmail').disable();
-    } else {
-      this.contactInfoForm.get('email').enable();
-      this.contactInfoForm.get('confirmEmail').enable();
-    }
-  }
-
-  /**
-   * Triggers when the checkbox selction changes and reset and disables
-   * phone form fields
-   * @param event : Checkbox selected event
-   */
-  hidePhone(event: MatCheckboxChange): void {
-    if (event.checked) {
+  hideContact(event: MatRadioChange): void {
+    this.contactsFlag = event.value;
+    if (!event.value) {
       this.contactInfoForm.get('phone').reset();
-      this.contactInfoForm.get('phone').disable();
-    } else {
-      this.contactInfoForm.get('phone').enable();
+      this.contactInfoForm.get('email').reset();
+      this.contactInfoForm.get('confirmEmail').reset();
     }
   }
 
@@ -106,7 +104,8 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     ReactiveFormsModule,
     MatCheckboxModule,
     DirectivesModule,
-    TextMaskModule
+    TextMaskModule,
+    MatRadioModule
   ],
   declarations: [
     ContactInfoComponent,

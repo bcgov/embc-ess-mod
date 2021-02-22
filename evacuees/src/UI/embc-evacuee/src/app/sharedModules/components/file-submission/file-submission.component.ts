@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { DataService } from '../../../core/services/data.service';
 
 @Component({
@@ -13,7 +15,11 @@ export class FileSubmissionComponent implements OnInit {
   panelOpenState = false;
   currentFlow: string;
 
-  constructor(private dataService: DataService, private route: ActivatedRoute, private router: Router) { }
+  subscription: Subscription;
+
+  constructor(
+    private dataService: DataService, private route: ActivatedRoute, private router: Router,
+    public location: Location) { }
 
   /**
    * Initializes the user flow and fetches the registration
@@ -24,9 +30,10 @@ export class FileSubmissionComponent implements OnInit {
     const registrationResult = this.dataService.getRegistrationResult();
     if (registrationResult) {
       this.referenceNumber = registrationResult.referenceNumber;
-      // if (!this.referenceNumber) {
-      //   this.referenceNumber = 'XXX';
-      // }
+      if (!this.referenceNumber) {
+        console.log(this.referenceNumber);
+        this.router.navigate(['/registration-method']);
+      }
     }
   }
 
@@ -38,7 +45,7 @@ export class FileSubmissionComponent implements OnInit {
   }
 
   verifyUser(): void {
-    this.router.navigate(['/verified-registration']);
+    window.location.replace('/verified-registration');
   }
 
 }
