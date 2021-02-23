@@ -25,6 +25,8 @@
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.32.0" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.35.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.10.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
@@ -36,5 +38,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\ess\src\API\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="..\..\..\..\ess\src\API\EMBC.ESS\Utilities\Messaging\Dispatcher.proto" GrpcServices="Client">
+      <Link>Protos\Dispatcher.proto</Link>
+    </Protobuf>
   </ItemGroup>
 </Project>
