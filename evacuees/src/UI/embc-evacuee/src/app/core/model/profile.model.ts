@@ -70,9 +70,8 @@ export class PersonDetailsForm {
 export class ContactDetails {
     email: string;
     phone: string;
-    hidePhoneRequired = false;
-    hideEmailRequired = false;
     confirmEmail: string;
+    showContacts: boolean;
 
     constructor() { }
 }
@@ -82,18 +81,34 @@ export class ContactDetailsForm {
     email = new FormControl();
     phone = new FormControl();
     confirmEmail = new FormControl();
-    hideContacts = new FormControl();
+    showContacts = new FormControl();
 
     constructor(contactDetails: ContactDetails, customValidator: CustomValidationService) {
 
+        this.showContacts.setValue(contactDetails.showContacts);
+        this.showContacts.setValidators([Validators.required]);
+
         this.email.setValue(contactDetails.email);
-        this.email.setValidators([Validators.email]);
+        this.email.setValidators([Validators.email, customValidator.conditionalValidation(
+            () => (this.phone.value === '' || this.phone.value === undefined || this.phone.value === null)
+                && (this.showContacts.value === true),
+            Validators.required
+        ).bind(customValidator)]);
 
         this.confirmEmail.setValue(contactDetails.confirmEmail);
-        this.confirmEmail.setValidators([Validators.email]);
+        this.confirmEmail.setValidators([Validators.email, customValidator.conditionalValidation(
+            () => (this.email.value !== '' && this.email.value !== undefined && this.email.value !== null)
+                && (this.showContacts.value === true),
+            Validators.required
+        ).bind(customValidator)]);
 
         this.phone.setValue(contactDetails.phone);
-        this.phone.setValidators([customValidator.maskedNumberLengthValidator().bind(customValidator)]);
+        this.phone.setValidators([customValidator.maskedNumberLengthValidator().bind(customValidator),
+        customValidator.conditionalValidation(
+            () => (this.email.value === '' || this.email.value === undefined || this.email.value === null)
+                && (this.showContacts.value === true),
+            Validators.required
+        ).bind(customValidator)]);
     }
 }
 
