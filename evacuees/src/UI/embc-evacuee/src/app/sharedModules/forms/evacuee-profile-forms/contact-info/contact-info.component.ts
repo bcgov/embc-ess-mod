@@ -14,25 +14,12 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
-
-export class CustomErrorRequiredFields implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('contactInfoReq');
-  }
-}
+import { distinctUntilChanged } from 'rxjs/operators';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('emailMatch');
-  }
-}
-
-export class CustomErrorRequiredConfirmMail implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('confirmEmailRequired');
   }
 }
 
@@ -48,10 +35,7 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
   contactInfoForm$: Subscription;
   formCreationService: FormCreationService;
   readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-  requiredFieldsMatcher = new CustomErrorRequiredFields();
   emailMatcher = new CustomErrorMailMatcher();
-  requiredConfirmEmail = new CustomErrorRequiredConfirmMail();
-  contactsFlag = false;
 
   constructor(
     @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
@@ -64,12 +48,27 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     this.contactInfoForm$ = this.formCreationService.getContactDetailsForm().subscribe(
       contactInfo => {
         this.contactInfoForm = contactInfo;
-        this.contactInfoForm.setValidators([this.customValidator.contactInfoValidator().bind(this.customValidator),
-        this.customValidator.confirmEmailValidator().bind(this.customValidator),
-        this.customValidator.requiredConfirmEmailValidator().bind(this.customValidator)]);
+        this.contactInfoForm.setValidators([this.customValidator.confirmEmailValidator().bind(this.customValidator)]);
         this.contactInfoForm.updateValueAndValidity();
       }
     );
+
+    this.contactInfoForm.get('phone').valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
+      this.contactInfoForm.get('email').updateValueAndValidity();
+      this.contactInfoForm.get('confirmEmail').updateValueAndValidity();
+    });
+
+    this.contactInfoForm.get('email').valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
+      this.contactInfoForm.get('phone').updateValueAndValidity();
+      this.contactInfoForm.get('confirmEmail').updateValueAndValidity();
+    });
+
+    this.contactInfoForm.get('confirmEmail').valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
+      this.contactInfoForm.get('email').updateValueAndValidity();
+      this.contactInfoForm.get('phone').updateValueAndValidity();
+    });
+
+    console.log(this.contactInfoForm.get('showContacts').value);
   }
 
   /**
@@ -80,12 +79,18 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
   }
 
   hideContact(event: MatRadioChange): void {
-    this.contactsFlag = event.value;
     if (!event.value) {
       this.contactInfoForm.get('phone').reset();
       this.contactInfoForm.get('email').reset();
       this.contactInfoForm.get('confirmEmail').reset();
+      this.updateOnVisibility();
     }
+  }
+
+  updateOnVisibility(): void {
+    this.contactInfoForm.get('phone').updateValueAndValidity();
+    this.contactInfoForm.get('email').updateValueAndValidity();
+    this.contactInfoForm.get('confirmEmail').updateValueAndValidity();
   }
 
   ngOnDestroy(): void {

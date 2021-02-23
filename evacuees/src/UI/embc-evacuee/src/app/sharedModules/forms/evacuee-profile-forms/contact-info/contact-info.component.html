@@ -6,14 +6,13 @@
       local Emergency Support Services (ESS) team can easily support you.</p>
     <br>
     <p>Do you authorize Emergency Management British Columbia and your Local Emergency Program to communicate with you
-      by
-      email or phone regarding your emergency situation. Note: if yocontactFormControl.email.invalid &&
-      contactFormControl.email.hasError('email')u do not authorize communications, you can still
+      by email or phone regarding your emergency situation. Note: if you do not authorize communications, you can still
       complete your registration and receive emergency supports, however you will not receive your ESS file number
-      confirmation and will not be able to receive e-transfer based supports.</p>
+      confirmation and will not be able to receive e-transfer based supports. </p>
+
     <form [formGroup]="contactInfoForm">
 
-      <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="hideContacts"
+      <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="showContacts"
         class="primary-radio-group" (change)="hideContact($event)" required>
         <mat-radio-button class="primary-radio-button" [value]=true>
           <span class="highlight">Yes</span> - you may contact me regarding the emergency situation.
@@ -23,7 +22,7 @@
         </mat-radio-button>
       </mat-radio-group>
 
-      <ng-container *ngIf="contactsFlag">
+      <ng-container *ngIf="contactFormControl?.showContacts.value === true">
         <div class="row">
           <div class="col-md-12">
             <p class="sub-heading">Contact Telephone Number</p>
@@ -34,11 +33,11 @@
         <div class="row">
           <div class="col-md-4">
             <mat-form-field appearance="outline">
-              <!--[hideRequiredMarker]="contactFormControl?.hidePhoneRequired?.value" -->
+              <!--[hideRequiredMarker]="contactFormControl?.hidePhoneRequired?.value" [errorStateMatcher]="requiredFieldsMatcher" -->
               <mat-label>Telephone Number</mat-label>
               <input formControlName="phone" matInput placeholder="Telephone Number"
-                [textMask]="{mask: phoneMask, keepCharPositions: true}" [errorStateMatcher]="requiredFieldsMatcher">
-              <mat-error *ngIf="contactFormControl?.phone?.parent?.hasError('contactInfoReq')">
+                [textMask]="{mask: phoneMask, keepCharPositions: true}">
+              <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('required')">
                 Telephone Number is required</mat-error>
               <mat-error
                 *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')">
@@ -67,9 +66,8 @@
             <mat-form-field appearance="outline">
               <!-- [hideRequiredMarker]="contactFormControl?.hideEmailRequired?.value" -->
               <mat-label>Email Address</mat-label>
-              <input formControlName="email" matInput placeholder="Email Address"
-                [errorStateMatcher]="requiredFieldsMatcher">
-              <mat-error *ngIf="contactFormControl?.email?.parent?.hasError('contactInfoReq')">
+              <input formControlName="email" matInput placeholder="Email Address">
+              <mat-error *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('required')">
                 Email
                 is required</mat-error>
               <mat-error *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('email')">Invalid
@@ -84,8 +82,9 @@
               <!--[hideRequiredMarker]="contactFormControl?.hideEmailRequired?.value"-->
               <mat-label>Confirm Email Address</mat-label>
               <input formControlName="confirmEmail" matInput placeholder="Confirm Email Address"
-                [errorStateMatcher]="emailMatcher" [errorStateMatcher]="requiredConfirmEmail">
-              <mat-error *ngIf="contactFormControl?.confirmEmail?.parent?.hasError('confirmEmailRequired')">
+                [errorStateMatcher]="emailMatcher">
+              <mat-error
+                *ngIf="contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('required')">
                 Confirm Email is required</mat-error>
               <mat-error
                 *ngIf="contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('email')">
