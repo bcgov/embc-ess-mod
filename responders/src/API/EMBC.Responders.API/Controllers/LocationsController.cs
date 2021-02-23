@@ -14,43 +14,38 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Responders.API.Controllers
 {
     /// <summary>
-    /// Provides lists for location services and backend controlled metadata
+    /// Provides location related lists
     /// </summary>
     [ApiController]
-    [Route("api/lists")]
-    public class ListsController : ControllerBase
+    [Route("api/locations")]
+    public class LocationsController : ControllerBase
     {
         /// <summary>
-        /// Provides a filtered list of communities by region, state/province and/or country
+        /// Provides a filtered list of communities by community type, state/province and/or country
         /// </summary>
-        /// <param name="regionId">region filter</param>
         /// <param name="stateProvinceId">state/province filter</param>
         /// <param name="countryId">country filter</param>
+        /// <param name="types">community type filter</param>
         /// <returns>filtered list of communities</returns>
         [HttpGet("communities")]
-        public async Task<ActionResult<IEnumerable<Community>>> GetCommunities([FromQuery] string regionId, [FromQuery] string stateProvinceId, [FromQuery] string countryId)
+        public async Task<ActionResult<IEnumerable<Community>>> GetCommunities([FromQuery] string stateProvinceId, [FromQuery] string countryId, [FromQuery] CommunityType[] types)
         {
-            return Ok(await Task.FromResult(Array.Empty<Community>()));
-        }
-
-        /// <summary>
-        /// Provides a filtered list of regions by state/province and/or country
-        /// </summary>
-        /// <param name="stateProvinceId">state/province filter</param>
-        /// <param name="countryId">country filter</param>
-        /// <returns>filtered list of regions</returns>
-        [HttpGet("regions")]
-        public async Task<ActionResult<IEnumerable<Region>>> GetRegions([FromQuery] string stateProvinceId, [FromQuery] string countryId)
-        {
-            return Ok(await Task.FromResult(Array.Empty<Region>()));
+            var communities = new[]
+            {
+                new Community { Id = "c1", Name = "c 1", DistrictName = "d 1", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.City },
+                new Community { Id = "c2", Name = "c 2", DistrictName = "d 2", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.IslandMunicipality },
+                new Community { Id = "c3", Name = "c 3", DistrictName = "d 1", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.Township },
+                new Community { Id = "c4", Name = "c 4", DistrictName = "d 2", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.Village },
+            };
+            return Ok(await Task.FromResult(communities));
         }
 
         /// <summary>
@@ -61,7 +56,12 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("stateprovinces")]
         public async Task<ActionResult<IEnumerable<StateProvince>>> GetStateProvinces([FromQuery] string countryId)
         {
-            return Ok(await Task.FromResult(Array.Empty<StateProvince>()));
+            var stateProvinces = new[]
+            {
+                new StateProvince { Id = "sp1", CountryId = "c1", Name = "sp 1" },
+                new StateProvince { Id = "sp2", CountryId = "c1", Name = "sp 2" },
+            };
+            return Ok(await Task.FromResult(stateProvinces));
         }
 
         /// <summary>
@@ -71,7 +71,13 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
-            return Ok(await Task.FromResult(Array.Empty<Country>()));
+            var countries = new[]
+            {
+                new Country { Id = "c1", Name = "c 1" },
+                new Country { Id = "c2", Name = "c 2" },
+                new Country { Id = "c3", Name = "c 3" },
+            };
+            return Ok(await Task.FromResult(countries));
         }
     }
 
@@ -86,17 +92,7 @@ namespace EMBC.Responders.API.Controllers
         public string RegionId { get; set; }
         public string StateProvinceId { get; set; }
         public string CountryId { get; set; }
-    }
-
-    /// <summary>
-    /// A region is a group of communities
-    /// </summary>
-    public class Region
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string StateProvinceId { get; set; }
-        public string CountryId { get; set; }
+        public CommunityType Type { get; set; }
     }
 
     /// <summary>
@@ -116,5 +112,29 @@ namespace EMBC.Responders.API.Controllers
     {
         public string Id { get; set; }
         public string Name { get; set; }
+    }
+
+    /// <summary>
+    /// Community type
+    /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum CommunityType
+    {
+        Undefined,
+        City,
+        Town,
+        Village,
+        District,
+        DistrictMunicipality,
+        Township,
+        IndianGovernmentDistrict,
+        IslandMunicipality,
+        IslandTrust,
+        MountainResortMunicipality,
+        MunicipalityDistrict,
+        RegionalDistrict,
+        RegionalMunicipality,
+        ResortMunicipality,
+        RuralMunicipalities
     }
 }
