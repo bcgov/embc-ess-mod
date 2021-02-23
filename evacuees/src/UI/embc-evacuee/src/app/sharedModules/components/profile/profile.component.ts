@@ -94,6 +94,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
       console.log('profile-submit');
       this.submitFile();
     } else if (this.form.status === 'VALID') {
+      console.log(this.form);
       if (isLast) {
         if (this.currentFlow === 'non-verified-registration') {
           const navigationPath = '/' + this.currentFlow + '/needs-assessment';
@@ -106,6 +107,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
       stepper.next();
     } else {
       this.form.markAllAsTouched();
+      console.log(this.form);
     }
   }
 
