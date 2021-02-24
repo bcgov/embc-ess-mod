@@ -26,7 +26,7 @@ namespace EMBC.Responders.API
     {
         public static async Task<TReply> SendRequest<TRequest, TReply>(this Dispatcher.DispatcherClient dispatcherClient, TRequest request)
         {
-            var response = await dispatcherClient.ProcessAsync(new RequestEnvelope
+            var response = await dispatcherClient.DispatchAsync(new RequestEnvelope
             {
                 Type = typeof(TRequest).FullName,
                 Content = Value.Parser.ParseJson(JsonSerializer.Serialize(request))

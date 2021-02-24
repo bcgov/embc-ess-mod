@@ -63,7 +63,7 @@ namespace EMBC.Responders.API
 
             services.AddGrpcClient<Dispatcher.DispatcherClient>(opts =>
             {
-                opts.Address = new Uri("https://localhost:2050");
+                opts.Address = configuration.GetValue<Uri>("backend:url");
             });
         }
 
