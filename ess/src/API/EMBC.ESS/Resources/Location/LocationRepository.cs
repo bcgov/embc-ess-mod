@@ -67,7 +67,7 @@ namespace EMBC.ESS.Resources.Location
                 Type = !j.era_type.HasValue ? CommunityType.Undefined : (CommunityType)j.era_type.Value,
                 StateProvinceCode = j.era_RelatedProvinceState.era_code,
                 CountryCode = j.era_RelatedProvinceState.era_RelatedCountry.era_countrycode
-            });
+            }).ToArray();
         }
     }
 

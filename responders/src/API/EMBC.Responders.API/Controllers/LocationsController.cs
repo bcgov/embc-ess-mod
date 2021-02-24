@@ -15,8 +15,11 @@
 // -------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using EMBC.ESS;
+using EMBC.ESS.Shared.Contracts.Location;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Responders.API.Controllers
@@ -28,6 +31,13 @@ namespace EMBC.Responders.API.Controllers
     [Route("api/locations")]
     public class LocationsController : ControllerBase
     {
+        private readonly Dispatcher.DispatcherClient dispatcherClient;
+
+        public LocationsController(Dispatcher.DispatcherClient dispatcherClient)
+        {
+            this.dispatcherClient = dispatcherClient;
+        }
+
         /// <summary>
         /// Provides a filtered list of communities by community type, state/province and/or country
         /// </summary>
@@ -38,14 +48,16 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("communities")]
         public async Task<ActionResult<IEnumerable<Community>>> GetCommunities([FromQuery] string stateProvinceId, [FromQuery] string countryId, [FromQuery] CommunityType[] types)
         {
-            var communities = new[]
+            var communities = (await dispatcherClient.SendRequest<CommunitiesQueryRequest, CommunitiesQueryReply>(new CommunitiesQueryRequest()
             {
-                new Community { Id = "c1", Name = "c 1", DistrictName = "d 1", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.City },
-                new Community { Id = "c2", Name = "c 2", DistrictName = "d 2", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.IslandMunicipality },
-                new Community { Id = "c3", Name = "c 3", DistrictName = "d 1", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.Township },
-                new Community { Id = "c4", Name = "c 4", DistrictName = "d 2", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.Village },
-            };
-            return Ok(await Task.FromResult(communities));
+                CountryCode = countryId,
+                StateProvinceCode = stateProvinceId,
+                Types = types.Select(t => (EMBC.ESS.Shared.Contracts.Location.CommunityType)t)
+            })).Items;
+            return Ok(await Task.FromResult(communities.Select(c => new Community
+            {
+                Id = c.Code
+            })));
         }
 
         /// <summary>
@@ -56,12 +68,15 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("stateprovinces")]
         public async Task<ActionResult<IEnumerable<StateProvince>>> GetStateProvinces([FromQuery] string countryId)
         {
-            var stateProvinces = new[]
+            var stateProvinces = (await dispatcherClient.SendRequest<StateProvincesQueryRequest, StateProvincesQueryReply>(new StateProvincesQueryRequest
             {
-                new StateProvince { Id = "sp1", CountryId = "c1", Name = "sp 1" },
-                new StateProvince { Id = "sp2", CountryId = "c1", Name = "sp 2" },
-            };
-            return Ok(await Task.FromResult(stateProvinces));
+                CountryCode = countryId
+            })).Items;
+            return Ok(await Task.FromResult(stateProvinces.Select(c => new StateProvince
+            {
+                Id = c.Code,
+                Name = c.Name
+            })));
         }
 
         /// <summary>
@@ -71,13 +86,12 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
-            var countries = new[]
+            var countries = (await dispatcherClient.SendRequest<CountriesQueryRequest, CountriesQueryReply>(new CountriesQueryRequest())).Items;
+            return Ok(await Task.FromResult(countries.Select(c => new Country
             {
-                new Country { Id = "c1", Name = "c 1" },
-                new Country { Id = "c2", Name = "c 2" },
-                new Country { Id = "c3", Name = "c 3" },
-            };
-            return Ok(await Task.FromResult(countries));
+                Id = c.Code,
+                Name = c.Name
+            })));
         }
     }
 

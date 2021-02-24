@@ -14,7 +14,9 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 
@@ -46,8 +48,33 @@ namespace EMBC.ESS.Utilities.Cache
             await distributedCache.SetAsync(key, Serialize(item));
         }
 
-        private static T Deserialize<T>(byte[] data) => JsonSerializer.Deserialize<T>(data);
+        private static T Deserialize<T>(byte[] data) => data == null ? default(T) : JsonSerializer.Deserialize<T>(data);
 
-        private static byte[] Serialize<T>(T obj) => JsonSerializer.SerializeToUtf8Bytes(obj);
+        private static byte[] Serialize<T>(T obj) => obj == null ? null : JsonSerializer.SerializeToUtf8Bytes(obj);
+    }
+
+    public static class CacheEx
+    {
+        private static SemaphoreSlim locker = new SemaphoreSlim(1, 1);
+
+        public static async Task<T> GetOrAdd<T>(this ICache cache, string key, Func<Task<T>> getter)
+        {
+            await locker.WaitAsync();
+            try
+            {
+                var value = await cache.Get<T>(key);
+                if (value == null)
+                {
+                    value = await getter();
+                    await cache.Set(key, value);
+                }
+
+                return value;
+            }
+            finally
+            {
+                locker.Release();
+            }
+        }
     }
 }

@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Location;
 using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.ESS.Utilities.Cache;
 
 namespace EMBC.ESS.Managers.Admin
 {
@@ -28,12 +29,14 @@ namespace EMBC.ESS.Managers.Admin
         private readonly Resources.Team.ITeamRepository teamRepository;
         private readonly Resources.Location.ILocationRepository locationRepository;
         private readonly IMapper mapper;
+        private readonly ICache cache;
 
-        public AdminManager(Resources.Team.ITeamRepository teamRepository, Resources.Location.ILocationRepository locationRepository, IMapper mapper)
+        public AdminManager(Resources.Team.ITeamRepository teamRepository, Resources.Location.ILocationRepository locationRepository, IMapper mapper, ICache cache)
         {
             this.teamRepository = teamRepository;
             this.locationRepository = locationRepository;
             this.mapper = mapper;
+            this.cache = cache;
         }
 
         public async Task<TeamMembersQueryReply> Handle(TeamMembersByIdQueryRequest request)
@@ -52,14 +55,14 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<CountriesQueryReply> Handle(CountriesQueryRequest req)
         {
-            var countries = await locationRepository.GetCountries();
+            var countries = await cache.GetOrAdd("location:countries", () => locationRepository.GetCountries());
 
             return new CountriesQueryReply { Items = mapper.Map<IEnumerable<Country>>(countries) };
         }
 
         public async Task<StateProvincesQueryReply> Handle(StateProvincesQueryRequest req)
         {
-            var stateProvinces = await locationRepository.GetStateProvinces();
+            var stateProvinces = await cache.GetOrAdd("location:state_provinces", () => locationRepository.GetStateProvinces());
             if (!string.IsNullOrEmpty(req.CountryCode))
             {
                 stateProvinces = stateProvinces.Where(sp => sp.CountryCode == req.CountryCode);
@@ -69,7 +72,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<CommunitiesQueryReply> Handle(CommunitiesQueryRequest req)
         {
-            var communities = await locationRepository.GetCommunities();
+            var communities = await cache.GetOrAdd("location:communities", () => locationRepository.GetCommunities());
 
             return new CommunitiesQueryReply { Items = mapper.Map<IEnumerable<Community>>(communities) };
         }
