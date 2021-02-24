@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace EMBC.ESS.Utilities.Cache
 {
     public interface ICache
     {
-        Task Set<T>(string key, T item);
+        Task Set<T>(string key, T item, DateTimeOffset? expiration = null);
 
         Task<T> Get<T>(string key);
     }
@@ -43,9 +44,9 @@ namespace EMBC.ESS.Utilities.Cache
             return Deserialize<T>(await distributedCache.GetAsync(key));
         }
 
-        public async Task Set<T>(string key, T item)
+        public async Task Set<T>(string key, T item, DateTimeOffset? expiration = null)
         {
-            await distributedCache.SetAsync(key, Serialize(item));
+            await distributedCache.SetAsync(key, Serialize(item), new DistributedCacheEntryOptions { AbsoluteExpiration = expiration });
         }
 
         private static T Deserialize<T>(byte[] data) => data == null ? default(T) : JsonSerializer.Deserialize<T>(data);
@@ -55,20 +56,22 @@ namespace EMBC.ESS.Utilities.Cache
 
     public static class CacheEx
     {
-        private static SemaphoreSlim locker = new SemaphoreSlim(1, 1);
+        private static readonly ConcurrentDictionary<string, SemaphoreSlim> keyLocks = new ConcurrentDictionary<string, SemaphoreSlim>();
 
-        public static async Task<T> GetOrAdd<T>(this ICache cache, string key, Func<Task<T>> getter)
+        public static async Task<T> GetOrAdd<T>(this ICache cache, string key, Func<Task<T>> getter, DateTimeOffset? expiration = null)
         {
+            var value = await cache.Get<T>(key);
+            if (value != null) return value;
+
+            var locker = keyLocks.GetOrAdd(key, new SemaphoreSlim(1, 1));
             await locker.WaitAsync();
             try
             {
-                var value = await cache.Get<T>(key);
-                if (value == null)
-                {
-                    value = await getter();
-                    await cache.Set(key, value);
-                }
+                value = await cache.Get<T>(key);
+                if (value != null) return value;
 
+                value = await getter();
+                await cache.Set(key, value, expiration);
                 return value;
             }
             finally

@@ -15,9 +15,9 @@
 // -------------------------------------------------------------------------
 
 using System;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EMBC.ESS.Utilities.Dynamics
 {
@@ -25,15 +25,18 @@ namespace EMBC.ESS.Utilities.Dynamics
     {
         public static IServiceCollection AddDynamics(this IServiceCollection services)
         {
-            services.AddADFSTokenProvider();
-            services.AddSingleton(sp =>
+            services.AddHttpClient("adfs_token", (sp, c) =>
             {
-                var configuration = sp.GetRequiredService<IConfiguration>();
-                var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
-                var dynamicsApiBaseUri = configuration.GetValue<string>("Dynamics:DynamicsApiBaseUri");
+                var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
+                c.BaseAddress = new Uri(options.Adfs.OAuth2TokenEndpoint);
+            });
+            services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
+            services.AddScoped(sp =>
+            {
+                var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;
                 var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
                 var logger = sp.GetRequiredService<ILogger<EssContext>>();
-                return new EssContext(new Uri(dynamicsApiBaseUri), new Uri(dynamicsApiEndpoint), async () => await tokenProvider.AcquireToken(), logger);
+                return new EssContext(new Uri(options.DynamicsApiBaseUri), new Uri(options.DynamicsApiEndpoint), async () => await tokenProvider.AcquireToken(), logger);
             });
 
             return services;

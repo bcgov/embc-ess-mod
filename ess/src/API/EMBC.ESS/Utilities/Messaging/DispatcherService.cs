@@ -39,7 +39,7 @@ namespace EMBC.ESS.Utilities.Messaging
             this.logger = logger;
         }
 
-        public async override Task<ReplyEnvelope> Process(RequestEnvelope request, ServerCallContext context)
+        public async override Task<ReplyEnvelope> Dispatch(RequestEnvelope request, ServerCallContext context)
         {
             try
             {

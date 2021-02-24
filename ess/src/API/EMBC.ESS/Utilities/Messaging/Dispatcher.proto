@@ -15,5 +15,5 @@ message ReplyEnvelope {
 }
 
 service Dispatcher {
-    rpc Process (RequestEnvelope) returns (ReplyEnvelope);
+    rpc Dispatch (RequestEnvelope) returns (ReplyEnvelope);
 }

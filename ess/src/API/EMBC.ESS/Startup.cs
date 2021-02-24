@@ -57,7 +57,7 @@ namespace EMBC.ESS.Services
             services.AddAdminManager();
             services.AddTeamRepository();
             services.AddLocationRepository();
-            services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
+            services.Configure<DynamicsOptions>(configuration.GetSection("Dynamics"));
             services.AddDynamics();
             services.AddCache();
         }

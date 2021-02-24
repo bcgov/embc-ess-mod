@@ -19,8 +19,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
+using EMBC.ESS.Utilities.Cache;
 using Microsoft.Extensions.Options;
 
 namespace EMBC.ESS.Utilities.Dynamics
@@ -34,32 +33,23 @@ namespace EMBC.ESS.Utilities.Dynamics
     {
         private readonly string cacheKey = $"{nameof(CachedADFSSecurityTokenProvider)}_token";
         private readonly ADFSSecurityTokenProvider internalSecurityProvider;
-        private readonly IDistributedCache cache;
+        private readonly ICache cache;
 
-        public CachedADFSSecurityTokenProvider(IHttpClientFactory httpClientFactory, IOptions<ADFSTokenProviderOptions> options, IDistributedCache cache)
+        public CachedADFSSecurityTokenProvider(IHttpClientFactory httpClientFactory, IOptions<DynamicsOptions> options, ICache cache)
         {
             internalSecurityProvider = new ADFSSecurityTokenProvider(httpClientFactory, options);
             this.cache = cache;
         }
 
-        public async Task<string> AcquireToken()
-        {
-            var token = await cache.GetStringAsync(cacheKey);
-            if (string.IsNullOrEmpty(token))
-            {
-                token = await internalSecurityProvider.AcquireToken();
-                await cache.SetStringAsync(cacheKey, token, new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
-            }
-            return token;
-        }
+        public async Task<string> AcquireToken() => await cache.GetOrAdd(cacheKey, () => internalSecurityProvider.AcquireToken(), DateTimeOffset.Now.AddMinutes(1));
     }
 
     public class ADFSSecurityTokenProvider : ISecurityTokenProvider
     {
-        private ADFSTokenProviderOptions options;
+        private readonly DynamicsOptions options;
         private readonly IHttpClientFactory httpClientFactory;
 
-        public ADFSSecurityTokenProvider(IHttpClientFactory httpClientFactory, IOptions<ADFSTokenProviderOptions> options)
+        public ADFSSecurityTokenProvider(IHttpClientFactory httpClientFactory, IOptions<DynamicsOptions> options)
         {
             this.options = options.Value;
             this.httpClientFactory = httpClientFactory;
@@ -74,11 +64,11 @@ namespace EMBC.ESS.Utilities.Dynamics
             // Construct the body of the request
             var pairs = new List<KeyValuePair<string, string>>
                 {
-                    new KeyValuePair<string, string>("resource", options.ResourceName),
-                    new KeyValuePair<string, string>("client_id", options.ClientId),
-                    new KeyValuePair<string, string>("client_secret", options.ClientSecret),
-                    new KeyValuePair<string, string>("username", $"{options.ServiceAccountDomain}\\{options.ServiceAccountName}"),
-                    new KeyValuePair<string, string>("password", options.ServiceAccountPassword),
+                    new KeyValuePair<string, string>("resource", options.Adfs.ResourceName),
+                    new KeyValuePair<string, string>("client_id", options.Adfs.ClientId),
+                    new KeyValuePair<string, string>("client_secret", options.Adfs.ClientSecret),
+                    new KeyValuePair<string, string>("username", $"{options.Adfs.ServiceAccountDomain}\\{options.Adfs.ServiceAccountName}"),
+                    new KeyValuePair<string, string>("password", options.Adfs.ServiceAccountPassword),
                     new KeyValuePair<string, string>("scope", "openid"),
                     new KeyValuePair<string, string>("response_mode", "form_post"),
                     new KeyValuePair<string, string>("grant_type", "password")
@@ -109,34 +99,8 @@ namespace EMBC.ESS.Utilities.Dynamics
             }
             catch (Exception e)
             {
-                throw new Exception($"Failed to obtain access token from {options.OAuth2TokenEndpoint}: {e.Message}", e);
+                throw new Exception($"Failed to obtain access token from {options.Adfs.OAuth2TokenEndpoint}: {e.Message}", e);
             }
-        }
-    }
-
-    public class ADFSTokenProviderOptions
-    {
-        public string OAuth2TokenEndpoint { get; set; }
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
-        public string ServiceAccountDomain { get; set; }
-        public string ServiceAccountName { get; set; }
-        public string ServiceAccountPassword { get; set; }
-        public string ResourceName { get; set; }
-    }
-
-    public static class AccessTokenProviderEx
-    {
-        public static IServiceCollection AddADFSTokenProvider(this IServiceCollection services)
-        {
-            services.AddHttpClient("adfs_token", (sp, c) =>
-            {
-                var options = sp.GetRequiredService<IOptions<ADFSTokenProviderOptions>>().Value;
-                c.BaseAddress = new Uri(options.OAuth2TokenEndpoint);
-            });
-            services.AddTransient<ISecurityTokenProvider, CachedADFSSecurityTokenProvider>();
-
-            return services;
         }
     }
 }
