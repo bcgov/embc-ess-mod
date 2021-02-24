@@ -319,6 +319,22 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 {
                     List<PersonDetails> familyMembers = new List<PersonDetails>();
                     List<Pet> petMembers = new List<Pet>();
+                    era_evacuationfile evacuationFile;
+
+                    // Step 2.
+                    var efQueryResult = dynamicsClient.era_evacuationfiles
+                        .Expand(ef => ef.era_Jurisdiction)
+                        .Where(ef => ef.era_evacuationfileid == needsAssessmentObject.Value._era_evacuationfile_value).FirstOrDefault();
+
+                    // add evacuation file to needs assessment
+                    evacuationFile = efQueryResult;
+
+                    var jurQueryResult = dynamicsClient.era_jurisdictions
+                        .Where(j => j.era_jurisdictionid == evacuationFile._era_jurisdiction_value).FirstOrDefault();
+
+                    evacuationFile.era_Jurisdiction = jurQueryResult;
+
+                    na.era_EvacuationFile = evacuationFile;
 
                     // Step 3.
                     var naeQueryResult = dynamicsClient.era_needsassessmentevacuees

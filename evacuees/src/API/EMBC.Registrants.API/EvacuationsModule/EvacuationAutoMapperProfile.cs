@@ -20,6 +20,7 @@ using System.Linq;
 using AutoMapper;
 using EMBC.Registrants.API.Shared;
 using Microsoft.Dynamics.CRM;
+using static EMBC.Registrants.API.EvacuationsModule.NeedsAssessment;
 
 namespace EMBC.Registrants.API.EvacuationsModule
 {
@@ -27,15 +28,14 @@ namespace EMBC.Registrants.API.EvacuationsModule
     {
         public EvacuationAutoMapperProfile()
         {
-            CreateMap<era_needassessment, NeedsAssessment>() //.IncludeMembers(s => s.era_EvacuationFile)
-                //.ForMember(d => d, opts => opts.MapFrom(s => s.era_EvacuationFile))
+            CreateMap<era_needassessment, NeedsAssessment>().IncludeMembers(s => s.era_EvacuationFile)
                 .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => s.era_canevacueeprovideclothing))
                 .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => s.era_canevacueeprovidefood))
                 .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => s.era_canevacueeprovideincidentals))
                 .ForMember(d => d.CanEvacueeProvideLodging, opts => opts.MapFrom(s => s.era_canevacueeprovidelodging))
                 .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => s.era_canevacueeprovidetransportation))
                 .ForMember(d => d.HaveMedication, opts => opts.MapFrom(s => s.era_medicationrequirement))
-                .ForMember(d => d.Insurance, opts => opts.MapFrom(s => (NeedsAssessment.InsuranceOption)s.era_insurancecoverage))
+                .ForMember(d => d.Insurance, opts => opts.MapFrom(s => (InsuranceOption)s.era_insurancecoverage))
                 .ForMember(d => d.HaveSpecialDiet, opts => opts.MapFrom(s => s.era_dietaryrequirement))
                 .ForMember(d => d.SpecialDietDetails, opts => opts.MapFrom(s => s.era_dietaryrequirementdetails))
                 .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => s.era_haspetfood))
@@ -50,7 +50,6 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
                 .ReverseMap()
 
-                //.ForMember(d => d.era_EvacuationFile, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.era_needsassessmenttype, opts => opts.MapFrom(s => NeedsAssessmentType.Preliminary))
                 .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => Lookup(s.CanEvacueeProvideFood)))
                 .ForMember(d => d.era_canevacueeprovideclothing, opts => opts.MapFrom(s => Lookup(s.CanEvacueeProvideClothing)))
@@ -60,7 +59,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForMember(d => d.era_dietaryrequirement, opts => opts.MapFrom(s => s.HaveSpecialDiet))
                 .ForMember(d => d.era_dietaryrequirementdetails, opts => opts.MapFrom(s => s.SpecialDietDetails))
                 .ForMember(d => d.era_medicationrequirement, opts => opts.MapFrom(s => s.HaveMedication))
-                .ForMember(d => (NeedsAssessment.InsuranceOption)d.era_insurancecoverage, opts => opts.MapFrom(s => s.Insurance))
+                .ForMember(d => d.era_insurancecoverage, opts => opts.MapFrom(s => (int?)s.Insurance))
                 .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => Lookup(s.HasPetsFood)))
                 .ForPath(d => d.era_EvacuationFile.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine1))
                 .ForPath(d => d.era_EvacuationFile.era_addressline2, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine2))
