@@ -25,7 +25,7 @@
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EMBC.ESS.Shared.Contracts" Version="1.0.0" />
+    <!--<PackageReference Include="EMBC.ESS.Shared.Contracts" Version="1.0.0" />-->
     <PackageReference Include="Grpc.AspNetCore" Version="2.35.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.35.0" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.10.6" />

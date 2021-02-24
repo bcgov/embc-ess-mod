@@ -17,10 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS;
-using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,31 +48,31 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<IEnumerable<TeamMember>>> GetTeamMembers()
         {
             var teamId = "t1";
-            // var members = new[]
-            // {
-            //    new TeamMember { Id = "1", FirstName = "one_f", LastName = "one_l", IsActive = true, Email = "1@email.com", UserName = "one", TeamId = teamId, RoleId = "r1", LabelId = "l1", AgreementSignDate = DateTime.Now },
-            //    new TeamMember { Id = "2", FirstName = "two_f", LastName = "two_l", IsActive = true, Email = "2@email.com", UserName = "two", TeamId = teamId, RoleId = "r2", LabelId = "l2", AgreementSignDate = DateTime.Now },
-            //    new TeamMember { Id = "3", FirstName = "three_f", LastName = "three_l", IsActive = true, Email = "3@email.com", UserName = "three", TeamId = teamId, RoleId = "r3", LabelId = "l3", AgreementSignDate = DateTime.Now },
-            //    new TeamMember { Id = "4", FirstName = "four_f", LastName = "four_l", IsActive = true, Email = "4@email.com", UserName = "four", TeamId = teamId, RoleId = "r4", LabelId = "l4", AgreementSignDate = DateTime.Now },
-            // };
-            // return Ok(await Task.FromResult(members));
-            var response = await dispatcherClient.SendRequest<TeamMembersByIdQueryRequest, TeamMembersQueryReply>(new TeamMembersByIdQueryRequest { TeamId = teamId });
-            var teamMembers = response.TeamMembers;
-            return Ok(teamMembers.Select(m => new TeamMember
+            var members = new[]
             {
-                Id = m.Id,
-                FirstName = m.FirstName,
-                LastName = m.LastName,
-                Email = m.Email,
-                Phone = m.Phone,
-                IsActive = m.IsActive,
-                LabelId = null,
-                UserName = m.UserName,
-                AgreementSignDate = m.AgreementSignDate,
-                LastSuccessfulLogin = m.LastSuccessfulLogin,
-                RoleId = null,
-                TeamId = teamId
-            }));
+                new TeamMember { Id = "1", FirstName = "one_f", LastName = "one_l", IsActive = true, Email = "1@email.com", UserName = "one", TeamId = teamId, RoleId = "r1", LabelId = "l1", AgreementSignDate = DateTime.Now },
+                new TeamMember { Id = "2", FirstName = "two_f", LastName = "two_l", IsActive = true, Email = "2@email.com", UserName = "two", TeamId = teamId, RoleId = "r2", LabelId = "l2", AgreementSignDate = DateTime.Now },
+                new TeamMember { Id = "3", FirstName = "three_f", LastName = "three_l", IsActive = true, Email = "3@email.com", UserName = "three", TeamId = teamId, RoleId = "r3", LabelId = "l3", AgreementSignDate = DateTime.Now },
+                new TeamMember { Id = "4", FirstName = "four_f", LastName = "four_l", IsActive = true, Email = "4@email.com", UserName = "four", TeamId = teamId, RoleId = "r4", LabelId = "l4", AgreementSignDate = DateTime.Now },
+            };
+            return Ok(await Task.FromResult(members));
+            //var response = await dispatcherClient.SendRequest<TeamMembersByIdQueryRequest, TeamMembersQueryReply>(new TeamMembersByIdQueryRequest { TeamId = teamId });
+            //var teamMembers = response.TeamMembers;
+            //return Ok(teamMembers.Select(m => new TeamMember
+            //{
+            //    Id = m.Id,
+            //    FirstName = m.FirstName,
+            //    LastName = m.LastName,
+            //    Email = m.Email,
+            //    Phone = m.Phone,
+            //    IsActive = m.IsActive,
+            //    LabelId = null,
+            //    UserName = m.UserName,
+            //    AgreementSignDate = m.AgreementSignDate,
+            //    LastSuccessfulLogin = m.LastSuccessfulLogin,
+            //    RoleId = null,
+            //    TeamId = teamId
+            //}));
         }
 
         /// <summary>
