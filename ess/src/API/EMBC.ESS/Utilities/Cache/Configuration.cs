@@ -14,23 +14,17 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Managers.Admin
+namespace EMBC.ESS.Utilities.Cache
 {
-    public class MappingProfile : Profile
+    public static class Configuration
     {
-        public MappingProfile()
+        public static IServiceCollection AddCache(this IServiceCollection services)
         {
-            CreateMap<Shared.Contracts.Team.TeamMember, Resources.Team.TeamMember>()
-                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.Name))
-                .ReverseMap()
-                .ForMember(d => d.Role, opts => opts.MapFrom(s => new Shared.Contracts.Team.TeamRole { Name = s.Role }))
-                ;
-
-            CreateMap<Shared.Contracts.Location.Country, Resources.Location.Country>().ReverseMap();
-            CreateMap<Shared.Contracts.Location.StateProvince, Resources.Location.StateProvince>().ReverseMap();
-            CreateMap<Shared.Contracts.Location.Community, Resources.Location.Community>().ReverseMap();
+            services.AddDistributedMemoryCache();
+            services.AddTransient<ICache, Cache>();
+            return services;
         }
     }
 }

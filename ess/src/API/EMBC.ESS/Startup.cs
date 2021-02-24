@@ -15,11 +15,14 @@
 // -------------------------------------------------------------------------
 
 using EMBC.ESS.Managers.Admin;
+using EMBC.ESS.Resources.Location;
 using EMBC.ESS.Resources.Team;
+using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Messaging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -27,9 +30,15 @@ namespace EMBC.ESS.Services
 {
     public class Startup
     {
+        private readonly IConfiguration configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDistributedMemoryCache();
             services.AddGrpc(opts =>
             {
                 opts.EnableDetailedErrors = true;
@@ -47,7 +56,10 @@ namespace EMBC.ESS.Services
 
             services.AddAdminManager();
             services.AddTeamRepository();
+            services.AddLocationRepository();
+            services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.AddDynamics();
+            services.AddCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

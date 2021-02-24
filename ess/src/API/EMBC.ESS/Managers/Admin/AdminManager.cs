@@ -15,20 +15,24 @@
 // -------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Admin;
+using EMBC.ESS.Shared.Contracts.Location;
+using EMBC.ESS.Shared.Contracts.Team;
 
 namespace EMBC.ESS.Managers.Admin
 {
     public class AdminManager
     {
         private readonly Resources.Team.ITeamRepository teamRepository;
+        private readonly Resources.Location.ILocationRepository locationRepository;
         private readonly IMapper mapper;
 
-        public AdminManager(Resources.Team.ITeamRepository teamRepository, IMapper mapper)
+        public AdminManager(Resources.Team.ITeamRepository teamRepository, Resources.Location.ILocationRepository locationRepository, IMapper mapper)
         {
             this.teamRepository = teamRepository;
+            this.locationRepository = locationRepository;
             this.mapper = mapper;
         }
 
@@ -36,9 +40,7 @@ namespace EMBC.ESS.Managers.Admin
         {
             var members = await teamRepository.GetMembers(request.TeamId);
 
-            var response = new TeamMembersQueryReply { TeamId = request.TeamId, TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
-
-            return response;
+            return new TeamMembersQueryReply { TeamId = request.TeamId, TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
         }
 
         public async Task<SaveTeamMemberReply> Handle(SaveTeamMemberCommand req)
@@ -46,6 +48,30 @@ namespace EMBC.ESS.Managers.Admin
             var id = await teamRepository.SaveMember(new Resources.Team.TeamMember { });
 
             return new SaveTeamMemberReply { TeamId = req.Member.TeamId, MemberId = id };
+        }
+
+        public async Task<CountriesQueryReply> Handle(CountriesQueryRequest req)
+        {
+            var countries = await locationRepository.GetCountries();
+
+            return new CountriesQueryReply { Items = mapper.Map<IEnumerable<Country>>(countries) };
+        }
+
+        public async Task<StateProvincesQueryReply> Handle(StateProvincesQueryRequest req)
+        {
+            var stateProvinces = await locationRepository.GetStateProvinces();
+            if (!string.IsNullOrEmpty(req.CountryCode))
+            {
+                stateProvinces = stateProvinces.Where(sp => sp.CountryCode == req.CountryCode);
+            }
+            return new StateProvincesQueryReply { Items = mapper.Map<IEnumerable<StateProvince>>(stateProvinces) };
+        }
+
+        public async Task<CommunitiesQueryReply> Handle(CommunitiesQueryRequest req)
+        {
+            var communities = await locationRepository.GetCommunities();
+
+            return new CommunitiesQueryReply { Items = mapper.Map<IEnumerable<Community>>(communities) };
         }
     }
 }

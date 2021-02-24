@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EMBC.ESS.Shared.Contracts.Admin
+namespace EMBC.ESS.Shared.Contracts.Team
 {
     public class TeamRole
     {
