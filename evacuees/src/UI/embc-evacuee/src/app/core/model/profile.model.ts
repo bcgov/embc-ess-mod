@@ -26,8 +26,9 @@ export class PersonDetails {
     dateOfBirth: string;
     sameLastNameCheck?: boolean;
 
-    constructor(firstName?: string, lastName?: string, preferredName?: string, initials?: string,
-                gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
+    constructor(
+        firstName?: string, lastName?: string, preferredName?: string, initials?: string,
+        gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
 
     }
 }
@@ -69,9 +70,10 @@ export class PersonDetailsForm {
 export class ContactDetails {
     email: string;
     phone: string;
-    hidePhoneRequired = false;
-    hideEmailRequired = false;
     confirmEmail: string;
+    showContacts: boolean;
+    hideEmailRequired: boolean;
+    hidePhoneRequired: boolean;
 
     constructor() { }
 }
@@ -80,23 +82,37 @@ export class ContactDetailsForm {
 
     email = new FormControl();
     phone = new FormControl();
-    hidePhoneRequired = new FormControl();
-    hideEmailRequired = new FormControl();
     confirmEmail = new FormControl();
+    showContacts = new FormControl();
+    hideEmailRequired = new FormControl(false);
+    hidePhoneRequired = new FormControl(false);
 
     constructor(contactDetails: ContactDetails, customValidator: CustomValidationService) {
 
-        this.hideEmailRequired.setValue(contactDetails.hideEmailRequired);
-        this.hidePhoneRequired.setValue(contactDetails.hidePhoneRequired);
+        this.showContacts.setValue(contactDetails.showContacts);
+        this.showContacts.setValidators([Validators.required]);
 
         this.email.setValue(contactDetails.email);
-        this.email.setValidators([Validators.required, Validators.email]);
+        this.email.setValidators([Validators.email, customValidator.conditionalValidation(
+            () => (this.phone.value === '' || this.phone.value === undefined || this.phone.value === null)
+                && (this.showContacts.value === true),
+            Validators.required
+        ).bind(customValidator)]);
 
         this.confirmEmail.setValue(contactDetails.confirmEmail);
-        this.confirmEmail.setValidators([Validators.required, Validators.email]);
+        this.confirmEmail.setValidators([Validators.email, customValidator.conditionalValidation(
+            () => (this.email.value !== '' && this.email.value !== undefined && this.email.value !== null)
+                && (this.showContacts.value === true),
+            Validators.required
+        ).bind(customValidator)]);
 
         this.phone.setValue(contactDetails.phone);
-        this.phone.setValidators([Validators.required, customValidator.maskedNumberLengthValidator().bind(customValidator)]);
+        this.phone.setValidators([customValidator.maskedNumberLengthValidator().bind(customValidator),
+        customValidator.conditionalValidation(
+            () => (this.email.value === '' || this.email.value === undefined || this.email.value === null)
+                && (this.showContacts.value === true),
+            Validators.required
+        ).bind(customValidator)]);
     }
 }
 
@@ -144,7 +160,7 @@ export class AddressForm {
                 Validators.required
             ).bind(customValidator)]],
             country: ['', [Validators.required]],
-            postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
+            postalCode: ['', [customValidator.postalValidation().bind(customValidator)]]
         });
 
         this.mailingAddress = builder.group({
@@ -158,7 +174,7 @@ export class AddressForm {
                 Validators.required
             ).bind(customValidator)]],
             country: ['', [Validators.required]],
-            postalCode: ['', [Validators.required, customValidator.postalValidation().bind(customValidator)]]
+            postalCode: ['', [customValidator.postalValidation().bind(customValidator)]]
         });
 
         this.isBcAddress.setValue(address.isBcAddress);

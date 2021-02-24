@@ -21,6 +21,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using AutoMapper;
+using EMBC.Registrants.API.EvacuationsModule;
 using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.ProfilesModule;
 using EMBC.Registrants.API.RegistrationsModule;
@@ -102,6 +103,7 @@ namespace EMBC.Registrants.API
             services.AddLocationModule();
             services.AddProfileModule();
             services.AddSecurityModule();
+            services.AddEvacuationsModule();
             services.AddADFSTokenProvider();
             services.AddSingleton(sp =>
             {

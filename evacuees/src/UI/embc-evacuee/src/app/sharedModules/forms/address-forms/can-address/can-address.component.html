@@ -4,7 +4,8 @@
         <div class="col-md-5">
             <mat-form-field appearance="outline">
                 <mat-label>Address Line 1</mat-label>
-                <input [formControlName]="'addressLine1'" maxlength="100" matInput placeholder="Address Line 1" required>
+                <input [formControlName]="'addressLine1'" maxlength="100" matInput placeholder="Address Line 1"
+                    required>
                 <mat-error
                     *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')">
                     Address Line 1 is required</mat-error>
@@ -25,7 +26,7 @@
         <div class="col-md-4">
             <mat-form-field appearance="outline">
                 <mat-label>City</mat-label>
-                <input  maxlength="100" [formControlName]="'jurisdiction'" matInput placeholder="City" required>
+                <input maxlength="100" [formControlName]="'jurisdiction'" matInput placeholder="City" required>
                 <mat-error
                     *ngIf="addressFormControl?.jurisdiction.invalid && addressFormControl?.jurisdiction.hasError('required')">
                     City is required</mat-error>
@@ -37,10 +38,10 @@
         <div class="col-md-3">
             <mat-form-field appearance="outline">
                 <mat-label>Postal Code</mat-label>
-                <input [formControlName]="'postalCode'" matInput placeholder="Postal Code" required>
-                <mat-error
+                <input [formControlName]="'postalCode'" matInput placeholder="Postal Code">
+                <!-- <mat-error
                     *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
-                    Postal Code is required</mat-error>
+                    Postal Code is required</mat-error>-->
                 <mat-error
                     *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')">
                     Postal Code is invalid</mat-error>

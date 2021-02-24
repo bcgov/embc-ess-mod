@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl, NgFor
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
@@ -13,8 +13,10 @@ import { DirectivesModule } from '../../../../core/directives/directives.module'
 import { TextMaskModule } from 'angular2-text-mask';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
+import { distinctUntilChanged } from 'rxjs/operators';
 
-export class CustomErrorStateMatcher implements ErrorStateMatcher {
+export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted)) || control.parent.hasError('emailMatch');
@@ -33,10 +35,11 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
   contactInfoForm$: Subscription;
   formCreationService: FormCreationService;
   readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
-  matcher = new CustomErrorStateMatcher();
+  emailMatcher = new CustomErrorMailMatcher();
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-              public customValidator: CustomValidationService) {
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+    public customValidator: CustomValidationService) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
@@ -49,6 +52,34 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
         this.contactInfoForm.updateValueAndValidity();
       }
     );
+
+    this.contactInfoForm.get('phone').valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      if (value === '') {
+        this.contactInfoForm.get('phone').reset();
+      }
+      this.contactInfoForm.get('email').updateValueAndValidity();
+      this.contactInfoForm.get('confirmEmail').updateValueAndValidity();
+    });
+
+    this.contactInfoForm.get('email').valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      if (value === '') {
+        this.contactInfoForm.get('email').reset();
+        this.contactInfoForm.get('confirmEmail').reset();
+        this.contactInfoForm.get('confirmEmail').disable();
+      } else {
+        this.contactInfoForm.get('confirmEmail').enable();
+      }
+      this.contactInfoForm.get('phone').updateValueAndValidity();
+      this.contactInfoForm.get('confirmEmail').updateValueAndValidity();
+    });
+
+    this.contactInfoForm.get('confirmEmail').valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      if (value === '') {
+        this.contactInfoForm.get('confirmEmail').reset();
+      }
+      this.contactInfoForm.get('email').updateValueAndValidity();
+      this.contactInfoForm.get('phone').updateValueAndValidity();
+    });
   }
 
   /**
@@ -58,36 +89,19 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     return this.contactInfoForm.controls;
   }
 
-  /**
-   * Triggers when the checkbox selction changes and reset and disables
-   * email form fields
-   * @param event : Checkbox selected event
-   */
-  hideEmail(event: MatCheckboxChange): void {
-    if (event.checked) {
+  hideContact(event: MatRadioChange): void {
+    if (!event.value) {
+      this.contactInfoForm.get('phone').reset();
       this.contactInfoForm.get('email').reset();
-      this.contactInfoForm.get('email').disable();
-
       this.contactInfoForm.get('confirmEmail').reset();
-      this.contactInfoForm.get('confirmEmail').disable();
-    } else {
-      this.contactInfoForm.get('email').enable();
-      this.contactInfoForm.get('confirmEmail').enable();
+      this.updateOnVisibility();
     }
   }
 
-  /**
-   * Triggers when the checkbox selction changes and reset and disables
-   * phone form fields
-   * @param event : Checkbox selected event
-   */
-  hidePhone(event: MatCheckboxChange): void {
-    if (event.checked) {
-      this.contactInfoForm.get('phone').reset();
-      this.contactInfoForm.get('phone').disable();
-    } else {
-      this.contactInfoForm.get('phone').enable();
-    }
+  updateOnVisibility(): void {
+    this.contactInfoForm.get('phone').updateValueAndValidity();
+    this.contactInfoForm.get('email').updateValueAndValidity();
+    this.contactInfoForm.get('confirmEmail').updateValueAndValidity();
   }
 
   ngOnDestroy(): void {
@@ -106,7 +120,8 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     ReactiveFormsModule,
     MatCheckboxModule,
     DirectivesModule,
-    TextMaskModule
+    TextMaskModule,
+    MatRadioModule
   ],
   declarations: [
     ContactInfoComponent,

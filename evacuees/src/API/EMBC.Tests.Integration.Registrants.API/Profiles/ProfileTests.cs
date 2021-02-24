@@ -27,7 +27,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetProfile()
         {
-            var profile = await profileManager.GetProfileByBceid("test");
+            var profile = await profileManager.GetProfileByBcscid("test");
 
             profile.ShouldNotBeNull();
 
@@ -42,7 +42,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateProfile()
         {
-            var profile = await profileManager.GetProfileByBceid("test");
+            var profile = await profileManager.GetProfileByBcscid("test");
             var currentCity = profile.PrimaryAddress.Jurisdiction;
             var newCity = (await listsRepository.GetJurisdictions()).Skip(new Random().Next(100)).Take(1).First();
 
@@ -50,7 +50,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
 
             await profileManager.SaveProfile(profile);
 
-            var updatedProfile = await profileManager.GetProfileByBceid("test");
+            var updatedProfile = await profileManager.GetProfileByBcscid("test");
             updatedProfile.PrimaryAddress.Jurisdiction.Code.ShouldBe(newCity.Code);
             updatedProfile.PrimaryAddress.Jurisdiction.Name.ShouldBe(newCity.Name);
         }
@@ -58,13 +58,13 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateProfile()
         {
-            var baseProfile = await profileManager.GetProfileByBceid("test");
+            var baseProfile = await profileManager.GetProfileByBcscid("test");
             var newProfileId = Guid.NewGuid().ToString("N").Substring(0, 10);
             baseProfile.Id = newProfileId;
 
             var id = await profileManager.SaveProfile(baseProfile);
 
-            var profile = await profileManager.GetProfileByBceid(newProfileId);
+            var profile = await profileManager.GetProfileByBcscid(newProfileId);
 
             profile.ShouldNotBeNull().Id.ShouldBe(newProfileId);
             profile.Id.ShouldBe(baseProfile.Id);
@@ -73,7 +73,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateProfileWithAddressLookupValues()
         {
-            var baseProfile = await profileManager.GetProfileByBceid("test");
+            var baseProfile = await profileManager.GetProfileByBcscid("test");
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             var country = (await listsRepository.GetCountries()).First(c => c.Code == "CAN");
             var province = (await listsRepository.GetStateProvinces()).First(c => c.Code == "BC");
@@ -89,7 +89,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
 
             var id = await profileManager.SaveProfile(baseProfile);
 
-            var profile = await profileManager.GetProfileByBceid(newProfileBceId);
+            var profile = await profileManager.GetProfileByBcscid(newProfileBceId);
 
             profile.PrimaryAddress.Country.Code.ShouldBe(country.Code);
             profile.PrimaryAddress.Country.Name.ShouldBe(country.Name);
@@ -109,7 +109,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteProfile()
         {
-            var baseProfile = await profileManager.GetProfileByBceid("test");
+            var baseProfile = await profileManager.GetProfileByBcscid("test");
             var newProfileId = Guid.NewGuid().ToString("N").Substring(0, 10);
             baseProfile.Id = newProfileId;
 
@@ -117,7 +117,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
 
             await profileManager.DeleteProfile(newProfileId);
 
-            (await profileManager.GetProfileByBceid(newProfileId)).ShouldBeNull();
+            (await profileManager.GetProfileByBcscid(newProfileId)).ShouldBeNull();
         }
     }
 }

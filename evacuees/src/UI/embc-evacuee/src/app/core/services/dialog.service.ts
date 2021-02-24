@@ -2,11 +2,15 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
+import { RegistrationResult } from '../api/models';
+import { DataUpdationService } from './dataUpdation.service';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
 
-    constructor(private router: Router, public dialog: MatDialog) { }
+    emptyRegistrationResult: RegistrationResult = { referenceNumber: null };
+
+    constructor(private router: Router, public dialog: MatDialog, private updateService: DataUpdationService) { }
 
     addEvacuationFile(city: string): void {
         this.dialog.open(DialogComponent, {
@@ -52,6 +56,8 @@ export class DialogService {
             },
             height: '800px',
             width: '800px'
+        }).afterClosed().subscribe(() => {
+            this.updateService.updateRegisrationResult(this.emptyRegistrationResult);
         });
     }
 
