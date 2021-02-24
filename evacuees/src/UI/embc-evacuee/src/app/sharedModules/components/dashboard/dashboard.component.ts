@@ -115,11 +115,11 @@ export class DashboardComponent implements OnInit {
 
     if (this.cacheService.get('previousComponent') === 'EditComponent') {
       this.tabIndex = 2;
-    } else if (this.cacheService.get('previousComponent') === 'ConfirmRestrictionComponent') {
-      setTimeout(() => {
-        this.openReferenceNumberPopup();
-      }, 500);
     }
+
+    setTimeout(() => {
+      this.openReferenceNumberPopup();
+    }, 500);
   }
 
   openDOBMismatchPopup(): void {

@@ -128,7 +128,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   goForward(stepper: MatStepper, isLast: boolean, component: string): void {
     if (isLast) {
-      console.log(this.form);
       this.submitFile();
     } else {
       if (this.form.status === 'VALID') {
