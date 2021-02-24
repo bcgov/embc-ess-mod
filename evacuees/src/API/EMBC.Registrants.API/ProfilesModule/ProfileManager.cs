@@ -24,7 +24,7 @@ namespace EMBC.Registrants.API.ProfilesModule
 {
     public interface IProfileManager
     {
-        Task<Profile> GetProfileByBceid(string userId);
+        Task<Profile> GetProfileByBcscid(string userId);
 
         Task<string> SaveProfile(Profile profile);
 
@@ -65,7 +65,7 @@ namespace EMBC.Registrants.API.ProfilesModule
             return conflicts.ToArray();
         }
 
-        public async Task<Profile> GetProfileByBceid(string userId)
+        public async Task<Profile> GetProfileByBcscid(string userId)
         {
             return await profileRepository.Read(userId);
         }

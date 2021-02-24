@@ -263,10 +263,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
         [JsonConverter(typeof(StringEnumConverter))]
         public enum InsuranceOption
         {
-            Unknown,
-            Yes,
-            No,
-            Unsure
+            No = 174360000,
+            Yes = 174360001,
+            Unsure = 174360002,
+            Unknown = 174360003
         }
     }
 
