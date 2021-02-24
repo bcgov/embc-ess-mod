@@ -7,13 +7,15 @@ import { MaterialModule } from '../material.module';
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { SearchFilterComponent } from './components/search-filter/search-filter.component';
 import { FormsModule } from '@angular/forms';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
     TopNavMenuComponent,
     ToggleSideNavComponent,
     DataTableComponent,
-    SearchFilterComponent
+    SearchFilterComponent,
+    DialogComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     TopNavMenuComponent,
     ToggleSideNavComponent,
     DataTableComponent,
-    SearchFilterComponent
+    SearchFilterComponent,
+    DialogComponent
   ]
 })
 export class SharedModule { }

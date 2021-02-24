@@ -209,31 +209,12 @@ button:focus {
 }
 
 mat-card {
-  @extend .mat-card-left, .mat-card-right, .mat-card-top;
   border-radius: 0px !important;
 }
 
 .card-heading {
   font-size: 21px;
   color: #169BD5;
-}
-
-.mat-card-left {
-    border-left-color: #B5B5B5;
-    border-left-style: solid;
-    border-left-width: 1px;
-}
-
-.mat-card-right {
-  border-right-color: #B5B5B5;
-  border-right-style: solid;
-  border-right-width: 1px;
-}
-
-.mat-card-top {
-  border-top-color: #B5B5B5;
-  border-top-style: solid;
-  border-top-width: 1px;
 }
 
 .mat-form-field-appearance-outline .mat-form-field-outline-start {
