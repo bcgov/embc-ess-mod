@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMapper;
@@ -26,7 +27,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
     {
         public EvacuationAutoMapperProfile()
         {
-            CreateMap<era_needassessment, NeedsAssessment>().IncludeMembers(s => s.era_EvacuationFile)
+            CreateMap<era_needassessment, NeedsAssessment>() //.IncludeMembers(s => s.era_EvacuationFile)
                 //.ForMember(d => d, opts => opts.MapFrom(s => s.era_EvacuationFile))
                 .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => s.era_canevacueeprovideclothing))
                 .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => s.era_canevacueeprovidefood))
@@ -38,6 +39,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForMember(d => d.HaveSpecialDiet, opts => opts.MapFrom(s => s.era_dietaryrequirement))
                 .ForMember(d => d.SpecialDietDetails, opts => opts.MapFrom(s => s.era_dietaryrequirementdetails))
                 .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => s.era_haspetfood))
+                .ForMember(d => d.FamilyMembers, opts => opts.MapFrom(s => new List<PersonDetails>()))
+                .ForMember(d => d.Pets, opts => opts.MapFrom(s => new List<Pet>()))
                 .ForPath(d => d.EvacuatedFromAddress.AddressLine1, opts => opts.MapFrom(s => s.era_EvacuationFile.era_addressline1))
                 .ForPath(d => d.EvacuatedFromAddress.AddressLine2, opts => opts.MapFrom(s => s.era_EvacuationFile.era_addressline2))
                 .ForPath(d => d.EvacuatedFromAddress.PostalCode, opts => opts.MapFrom(s => s.era_EvacuationFile.era_postalcode))
@@ -67,6 +70,18 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForPath(d => d.era_EvacuationFile.era_Jurisdiction, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction));
 
             CreateMap<era_evacuationfile, NeedsAssessment>()
+                .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => false))
+                .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => false))
+                .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => false))
+                .ForMember(d => d.CanEvacueeProvideLodging, opts => opts.MapFrom(s => false))
+                .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => false))
+                .ForMember(d => d.HaveMedication, opts => opts.MapFrom(s => false))
+                .ForMember(d => d.Insurance, opts => opts.MapFrom(s => NeedsAssessment.InsuranceOption.Unknown))
+                .ForMember(d => d.HaveSpecialDiet, opts => opts.MapFrom(s => false))
+                .ForMember(d => d.SpecialDietDetails, opts => opts.MapFrom(s => new string(string.Empty)))
+                .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => false))
+                .ForMember(d => d.FamilyMembers, opts => opts.MapFrom(s => new List<PersonDetails>()))
+                .ForMember(d => d.Pets, opts => opts.MapFrom(s => new List<Pet>()))
                 .ForPath(d => d.EvacuatedFromAddress.AddressLine1, opts => opts.MapFrom(s => s.era_addressline1))
                 .ForPath(d => d.EvacuatedFromAddress.AddressLine2, opts => opts.MapFrom(s => s.era_addressline2))
                 .ForPath(d => d.EvacuatedFromAddress.PostalCode, opts => opts.MapFrom(s => s.era_postalcode))

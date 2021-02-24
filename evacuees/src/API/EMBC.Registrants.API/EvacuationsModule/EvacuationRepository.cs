@@ -71,6 +71,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
             // New evacuation file mapped from needsAssessment
             var evacuationFile = mapper.Map<era_evacuationfile>(needsAssessment);
+            //var evacuationFile = new era_evacuationfile();
 
             evacuationFile.era_evacuationfileid = Guid.NewGuid();
             evacuationFile.era_essfilenumber = essFileNumber;
