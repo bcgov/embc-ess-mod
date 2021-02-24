@@ -53,22 +53,33 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.contactInfoForm.get('phone').valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
+    this.contactInfoForm.get('phone').valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      if (value === '') {
+        this.contactInfoForm.get('phone').reset();
+      }
       this.contactInfoForm.get('email').updateValueAndValidity();
       this.contactInfoForm.get('confirmEmail').updateValueAndValidity();
     });
 
-    this.contactInfoForm.get('email').valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
+    this.contactInfoForm.get('email').valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      if (value === '') {
+        this.contactInfoForm.get('email').reset();
+        this.contactInfoForm.get('confirmEmail').reset();
+        this.contactInfoForm.get('confirmEmail').disable();
+      } else {
+        this.contactInfoForm.get('confirmEmail').enable();
+      }
       this.contactInfoForm.get('phone').updateValueAndValidity();
       this.contactInfoForm.get('confirmEmail').updateValueAndValidity();
     });
 
-    this.contactInfoForm.get('confirmEmail').valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
+    this.contactInfoForm.get('confirmEmail').valueChanges.pipe(distinctUntilChanged()).subscribe(value => {
+      if (value === '') {
+        this.contactInfoForm.get('confirmEmail').reset();
+      }
       this.contactInfoForm.get('email').updateValueAndValidity();
       this.contactInfoForm.get('phone').updateValueAndValidity();
     });
-
-    console.log(this.contactInfoForm.get('showContacts').value);
   }
 
   /**

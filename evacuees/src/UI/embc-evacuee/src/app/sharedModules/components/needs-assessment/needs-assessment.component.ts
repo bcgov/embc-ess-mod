@@ -128,6 +128,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   goForward(stepper: MatStepper, isLast: boolean, component: string): void {
     if (isLast) {
+      console.log(this.form);
       this.submitFile();
     } else {
       if (this.form.status === 'VALID') {
@@ -203,7 +204,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   }
 
   allowSubmit($event: boolean): void {
-    console.log($event);
     this.captchaPassed = $event;
   }
 }

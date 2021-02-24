@@ -72,6 +72,8 @@ export class ContactDetails {
     phone: string;
     confirmEmail: string;
     showContacts: boolean;
+    hideEmailRequired: boolean;
+    hidePhoneRequired: boolean;
 
     constructor() { }
 }
@@ -82,6 +84,8 @@ export class ContactDetailsForm {
     phone = new FormControl();
     confirmEmail = new FormControl();
     showContacts = new FormControl();
+    hideEmailRequired = new FormControl(false);
+    hidePhoneRequired = new FormControl(false);
 
     constructor(contactDetails: ContactDetails, customValidator: CustomValidationService) {
 

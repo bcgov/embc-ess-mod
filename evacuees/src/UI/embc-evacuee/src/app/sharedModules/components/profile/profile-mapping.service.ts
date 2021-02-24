@@ -9,8 +9,9 @@ import { ConflictManagementService } from '../conflict-management/conflict-manag
 
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
-    constructor(private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
-                private conflictService: ConflictManagementService, private dataService: DataService) { }
+    constructor(
+        private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
+        private conflictService: ConflictManagementService, private dataService: DataService) { }
 
     mapProfile(profile: Profile): void {
         this.profileDataService.setProfileId(profile.id);
@@ -77,12 +78,24 @@ export class ProfileMappingService {
 
     private setContactDetails(profile: Profile): void {
         let formGroup: FormGroup;
+
         this.formCreationService.getContactDetailsForm().pipe(
             first()).subscribe(contact => {
-                contact.setValue({ ...profile.contactDetails, confirmEmail: profile.contactDetails.email });
+                contact.setValue({
+                    ...profile.contactDetails, confirmEmail: profile.contactDetails.email,
+                    showContacts: this.setShowContactsInfo(profile.contactDetails.phone, profile.contactDetails.email)
+                });
                 formGroup = contact;
             });
         this.formCreationService.setContactDetailsForm(formGroup);
+    }
+
+    private setShowContactsInfo(phoneNumber: string, email: string): boolean {
+        if (phoneNumber != null || email != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private setSecretDetails(profile: Profile): void {
