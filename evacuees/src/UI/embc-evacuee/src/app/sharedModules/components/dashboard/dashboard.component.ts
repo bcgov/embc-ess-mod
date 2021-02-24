@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ActivationEnd, NavigationEnd, NavigationStart, Router, RouterEvent, RoutesRecognized } from '@angular/router';
+import { ActivatedRoute, ActivationEnd, Router, RouterEvent } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
 import { DataService } from 'src/app/core/services/data.service';
