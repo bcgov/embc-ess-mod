@@ -15,7 +15,7 @@
 // -------------------------------------------------------------------------
 
 using EMBC.ESS.Managers.Admin;
-using EMBC.ESS.Resources.Location;
+using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
@@ -56,7 +56,7 @@ namespace EMBC.ESS.Services
 
             services.AddAdminManager();
             services.AddTeamRepository();
-            services.AddLocationRepository();
+            services.AddMetadataRepository();
             services.Configure<DynamicsOptions>(configuration.GetSection("Dynamics"));
             services.AddDynamics();
             services.AddCache();

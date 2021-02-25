@@ -19,9 +19,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics;
 
-namespace EMBC.ESS.Resources.Location
+namespace EMBC.ESS.Resources.Metadata
 {
-    public interface ILocationRepository
+    public interface IMetadataRepository
     {
         Task<IEnumerable<Country>> GetCountries();
 
@@ -30,11 +30,11 @@ namespace EMBC.ESS.Resources.Location
         Task<IEnumerable<Community>> GetCommunities();
     }
 
-    public class LocationRepository : ILocationRepository
+    public class MetadataRepository : IMetadataRepository
     {
         private readonly EssContext essContext;
 
-        public LocationRepository(EssContext essContext)
+        public MetadataRepository(EssContext essContext)
         {
             this.essContext = essContext;
         }

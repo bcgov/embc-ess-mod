@@ -16,7 +16,7 @@
 
 using Microsoft.Dynamics.CRM;
 
-namespace EMBC.ESS.Resources.Location
+namespace EMBC.ESS.Resources.Metadata
 {
     public class MappingProfile : AutoMapper.Profile
     {

@@ -14,19 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Managers.Admin
+namespace EMBC.ESS.Managers.Location
 {
-    public class MappingProfile : Profile
+    public static class Configuration
     {
-        public MappingProfile()
+        public static IServiceCollection AddLocationManager(this IServiceCollection services)
         {
-            CreateMap<Shared.Contracts.Team.TeamMember, Resources.Team.TeamMember>()
-                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.Name))
-                .ReverseMap()
-                .ForMember(d => d.Role, opts => opts.MapFrom(s => new Shared.Contracts.Team.TeamRole { Name = s.Role }))
-                ;
+            services.AddTransient<LocationManager>();
+            return services;
         }
     }
 }

@@ -14,7 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -57,7 +56,14 @@ namespace EMBC.Responders.API.Controllers
             //{
             //    Id = c.Code
             //})));
-            return Ok(await Task.FromResult(Array.Empty<Community>()));
+            var communities = new[]
+            {
+                new Community { Id = "c1", Name = "c 1", DistrictName = "d 1", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.City },
+                new Community { Id = "c2", Name = "c 2", DistrictName = "d 2", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.IslandMunicipality },
+                new Community { Id = "c3", Name = "c 3", DistrictName = "d 1", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.Township },
+                new Community { Id = "c4", Name = "c 4", DistrictName = "d 2", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.Village },
+            };
+            return Ok(await Task.FromResult(communities));
         }
 
         /// <summary>
@@ -77,7 +83,12 @@ namespace EMBC.Responders.API.Controllers
             //    Id = c.Code,
             //    Name = c.Name
             //})));
-            return Ok(await Task.FromResult(Array.Empty<StateProvince>()));
+            var stateProvinces = new[]
+            {
+                new StateProvince { Id = "sp1", CountryId = "c1", Name = "sp 1" },
+                new StateProvince { Id = "sp2", CountryId = "c1", Name = "sp 2" },
+            };
+            return Ok(await Task.FromResult(stateProvinces));
         }
 
         /// <summary>
@@ -93,7 +104,13 @@ namespace EMBC.Responders.API.Controllers
             //    Id = c.Code,
             //    Name = c.Name
             //})));
-            return Ok(await Task.FromResult(Array.Empty<Country>()));
+            var countries = new[]
+            {
+                new Country { Id = "c1", Name = "c 1" },
+                new Country { Id = "c2", Name = "c 2" },
+                new Country { Id = "c3", Name = "c 3" },
+            };
+            return Ok(await Task.FromResult(countries));
         }
     }
 

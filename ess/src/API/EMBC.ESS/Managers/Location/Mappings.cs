@@ -14,16 +14,18 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
+using EMBC.ESS.Resources.Metadata;
 
-namespace EMBC.ESS.Resources.Location
+namespace EMBC.ESS.Managers.Location
 {
-    public static class Configuration
+    public class Mappings : Profile
     {
-        public static IServiceCollection AddLocationRepository(this IServiceCollection services)
+        public Mappings()
         {
-            services.AddTransient<ILocationRepository, LocationRepository>();
-            return services;
+            CreateMap<Shared.Contracts.Location.Country, Country>().ReverseMap();
+            CreateMap<Shared.Contracts.Location.StateProvince, StateProvince>().ReverseMap();
+            CreateMap<Shared.Contracts.Location.Community, Community>().ReverseMap();
         }
     }
 }
