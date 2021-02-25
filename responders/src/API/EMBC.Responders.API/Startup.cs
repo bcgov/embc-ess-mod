@@ -14,8 +14,10 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.IO;
 using System.Net;
+using EMBC.ESS;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -57,6 +59,11 @@ namespace EMBC.Responders.API
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
+            });
+
+            services.AddGrpcClient<Dispatcher.DispatcherClient>(opts =>
+            {
+                opts.Address = configuration.GetValue<Uri>("backend:url");
             });
         }
 
