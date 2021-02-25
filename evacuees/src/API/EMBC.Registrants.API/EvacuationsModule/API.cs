@@ -50,9 +50,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
         /// <returns>List of RegistrantEvacuation</returns>
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<List<NeedsAssessment>>> GetCurrentEvacuations()
+        public async Task<ActionResult<IEnumerable<NeedsAssessment>>> GetCurrentEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var evacuationList = await evacuationManager.GetEvacuations(userId);
@@ -66,9 +65,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
         /// <returns>List of RegistrantEvacuation</returns>
         [HttpGet("past")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<List<NeedsAssessment>>> GetPastEvacuations()
+        public async Task<ActionResult<IEnumerable<NeedsAssessment>>> GetPastEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var evacuationList = await evacuationManager.GetEvacuations(userId);

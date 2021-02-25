@@ -21,7 +21,6 @@ using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.Registrants.API.Shared;
-using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.Dynamics.CRM;
 using Microsoft.OData;
@@ -46,13 +45,11 @@ namespace EMBC.Registrants.API.EvacuationsModule
     {
         private readonly DynamicsClientContext dynamicsClient;
         private readonly IMapper mapper;
-        private readonly IEmailSender emailSender;
 
-        public EvacuationRepository(DynamicsClientContext dynamicsClient, IMapper mapper, IEmailSender emailSender)
+        public EvacuationRepository(DynamicsClientContext dynamicsClient, IMapper mapper)
         {
             this.dynamicsClient = dynamicsClient;
             this.mapper = mapper;
-            this.emailSender = emailSender;
         }
 
         public async Task<string> Create(string userId, NeedsAssessment needsAssessment)
@@ -62,7 +59,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
             if (dynamicsContact == null)
             {
-                throw new Exception("Profile Not Found. Id: " + userId);
+                return string.Empty;
             }
 
             // return contact as a profile
@@ -71,7 +68,6 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
             // New evacuation file mapped from needsAssessment
             var evacuationFile = mapper.Map<era_evacuationfile>(needsAssessment);
-            //var evacuationFile = new era_evacuationfile();
 
             evacuationFile.era_evacuationfileid = Guid.NewGuid();
             evacuationFile.era_essfilenumber = essFileNumber;
@@ -165,15 +161,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
             }
 
             //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
-            try
-            {
-                var results = await dynamicsClient.SaveChangesAsync<era_evacuationfile>(SaveChangesOptions.BatchWithSingleChangeset);
-            }
-            catch (DataServiceRequestException ex)
-            {
-                throw new ApplicationException(
-                    "An error occurred when saving changes.", ex);
-            }
+            var results = await dynamicsClient.SaveChangesAsync<era_evacuationfile>(SaveChangesOptions.BatchWithSingleChangeset);
+
             dynamicsClient.Detach(evacuationFile);
 
             var queryResult = dynamicsClient.era_evacuationfiles
@@ -181,17 +170,6 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
             essFileNumber = (int)queryResult?.era_essfilenumber;
 
-            // Check if email address defined for profile
-            if (dynamicsContact.emailaddress1 != null)
-            {
-                // Send email notification of new registrant record created
-                EmailAddress registrantEmailAddress = new EmailAddress
-                {
-                    Name = dynamicsContact.firstname + " " + dynamicsContact.lastname,
-                    Address = dynamicsContact.emailaddress1
-                };
-                SendEvacuationSubmissionNotificationEmail(registrantEmailAddress, essFileNumber.ToString());
-            }
             return $"{evacuationFile.era_essfilenumber:D9}";
         }
 
@@ -214,156 +192,41 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
             if (dynamicsContact == null)
             {
-                throw new Exception("Profile Not Found. Id: " + userId);
+                return mapper.Map<IEnumerable<NeedsAssessment>>(new NeedsAssessment());
             }
 
-            /* Step 1. query era_needsassessmentevacuee by contactid expand needsassessment => needsassessmentevacuee, needsassessment
-             * Step 2. query evacuationfile by needsassessmentid from previous query => evacuationfile
-             * Step 3. query era_needsassessmentevacuee by needsassessmentid expand contact => members
-             */
-            /*
-                        IQueryable queryResult = null;
-                        var needsAssessmentsFound = new Dictionary<Guid?, era_needassessment>();
-                        var evacuationFilesFound = new Dictionary<Guid?, era_evacuationfile>();
-                        var needsAssessmentEvacueesFound = new Dictionary<Guid?, era_needsassessmentevacuee>();
-                        var registrantsFound = new Dictionary<Guid?, contact>();
-
-                        try
-                        {
-                            // Step 1.
-                            queryResult = dynamicsClient.era_needsassessmentevacuees
-                                .Expand(n => n.era_NeedsAssessmentID)
-                                .Where(n => n.era_RegistrantID.contactid == dynamicsContact.contactid);
-
-                            foreach (era_needsassessmentevacuee nae in queryResult)
-                            {
-                                // add needs assessment
-                                needsAssessmentsFound.Add(nae._era_needsassessmentid_value, nae.era_NeedsAssessmentID);
-                            }
-
-                            foreach (var needsAssessmentObject in needsAssessmentsFound)
-                            {
-                                // Step 2.
-                                var efQueryResult = dynamicsClient.era_evacuationfiles
-                                    .Expand(ef => ef.era_Jurisdiction)
-                                    .Where(ef => ef.era_evacuationfileid == needsAssessmentObject.Value._era_evacuationfile_value).FirstOrDefault();
-
-                                // add evacuation file
-                                evacuationFilesFound.Add(efQueryResult.era_evacuationfileid, efQueryResult);
-
-                                // Step 3.
-                                var naeQueryResult = dynamicsClient.era_needsassessmentevacuees
-                                    .Expand(nae => nae.era_RegistrantID)
-                                    .Where(nae => nae.era_NeedsAssessmentID.era_needassessmentid == needsAssessmentObject.Key);
-
-                                foreach (era_needsassessmentevacuee nae in naeQueryResult)
-                                {
-                                    // add needs assessment evacuee
-                                    needsAssessmentEvacueesFound.Add(nae.era_needsassessmentevacueeid, nae);
-
-                                    // add registrant to hashtable. Note: pets don't have a registrant id
-                                    if (nae.era_RegistrantID != null)
-                                    {
-                                        registrantsFound.Add(nae.era_RegistrantID.contactid, nae.era_RegistrantID);
-                                    }
-                                }
-                            }
-                        }
-                        catch (DataServiceQueryException ex)
-                        {
-                            DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
-
-                            // don't throw an exception if record is not found
-                            if (dataServiceClientException.StatusCode == 404)
-                            {
-                                return null;
-                            }
-                            else
-                            {
-                                Console.WriteLine("dataServiceClientException: " + dataServiceClientException.Message);
-                            }
-
-                            ODataErrorException odataErrorException = dataServiceClientException.InnerException as ODataErrorException;
-                            if (odataErrorException != null)
-                            {
-                                Console.WriteLine(odataErrorException.Message);
-                                throw dataServiceClientException;
-                            }
-                        }
-            */
-            IQueryable queryResult = null;
-            var needsAssessmentsFound = new Dictionary<Guid?, era_needassessment>();
-            var needsAssessmentEvacueesFound = new Dictionary<Guid?, era_needsassessmentevacuee>();
-            var registrantsFound = new Dictionary<Guid?, contact>();
-            //List<NeedsAssessmentEvacuee> needsAssessmentEvacuees = new List<NeedsAssessment>();
             List<NeedsAssessment> needsAssessments = new List<NeedsAssessment>();
 
-            queryResult = dynamicsClient.era_needsassessmentevacuees
+            var needsAssessmentEvacuees = dynamicsClient.era_needsassessmentevacuees
+                .Expand(n => n.era_RegistrantID)
                 .Expand(n => n.era_NeedsAssessmentID)
-                .Where(n => n.era_RegistrantID.contactid == dynamicsContact.contactid);
+                .Where(n => n.era_RegistrantID.contactid == dynamicsContact.contactid).ToArray();
 
-            foreach (era_needsassessmentevacuee nae in queryResult)
+            var era_needsAssessments = needsAssessmentEvacuees
+                .Select(nae => nae.era_NeedsAssessmentID).ToArray();
+
+            foreach (var era_needsAssessment in era_needsAssessments)
             {
-                // add needs assessment
-                needsAssessmentsFound.Add(nae._era_needsassessmentid_value, nae.era_NeedsAssessmentID);
-            }
+                var evacuationFile = dynamicsClient.era_evacuationfiles
+                    .Expand(ef => ef.era_Jurisdiction)
+                    .Where(ef => ef.era_evacuationfileid == era_needsAssessment._era_evacuationfile_value).FirstOrDefault();
 
-            foreach (var needsAssessmentObject in needsAssessmentsFound)
-            {
-                var era_needsassessments = dynamicsClient.era_needassessments
-                    .Expand(n => n.era_NeedsAssessmentEvacuee_NeedsAssessmentID)
-                    .Expand(n => n.era_EvacuationFile)
-                    .Where(n => n.era_needassessmentid == needsAssessmentObject.Key);
+                var jurQueryResult = dynamicsClient.era_jurisdictions
+                    .Where(j => j.era_jurisdictionid == evacuationFile._era_jurisdiction_value).FirstOrDefault();
 
-                foreach (era_needassessment na in era_needsassessments)
-                {
-                    List<PersonDetails> familyMembers = new List<PersonDetails>();
-                    List<Pet> petMembers = new List<Pet>();
-                    era_evacuationfile evacuationFile;
+                evacuationFile.era_Jurisdiction = jurQueryResult;
 
-                    // Step 2.
-                    var efQueryResult = dynamicsClient.era_evacuationfiles
-                        .Expand(ef => ef.era_Jurisdiction)
-                        .Where(ef => ef.era_evacuationfileid == needsAssessmentObject.Value._era_evacuationfile_value).FirstOrDefault();
+                era_needsAssessment.era_EvacuationFile = evacuationFile;
 
-                    // add evacuation file to needs assessment
-                    evacuationFile = efQueryResult;
+                var naeQueryResult = dynamicsClient.era_needsassessmentevacuees
+                    .Expand(nae => nae.era_RegistrantID)
+                    .Where(nae => nae.era_NeedsAssessmentID.era_needassessmentid == era_needsAssessment.era_needassessmentid).ToArray();
 
-                    var jurQueryResult = dynamicsClient.era_jurisdictions
-                        .Where(j => j.era_jurisdictionid == evacuationFile._era_jurisdiction_value).FirstOrDefault();
+                var needsAssessment = mapper.Map<NeedsAssessment>(era_needsAssessment);
+                needsAssessment.FamilyMembers = naeQueryResult.Where(nae => nae.era_evacueetype == (int)EvacueeType.Person).Select(nae => mapper.Map<PersonDetails>(nae.era_RegistrantID)).ToArray();
+                needsAssessment.Pets = naeQueryResult.Where(nae => nae.era_evacueetype != (int)EvacueeType.Person).Select(nae => mapper.Map<Pet>(nae)).ToArray();
 
-                    evacuationFile.era_Jurisdiction = jurQueryResult;
-
-                    na.era_EvacuationFile = evacuationFile;
-
-                    // Step 3.
-                    var naeQueryResult = dynamicsClient.era_needsassessmentevacuees
-                        .Expand(nae => nae.era_RegistrantID)
-                        .Where(nae => nae.era_NeedsAssessmentID.era_needassessmentid == na.era_needassessmentid);
-
-                    foreach (era_needsassessmentevacuee nae in naeQueryResult)
-                    {
-                        // add needs assessment evacuee
-                        needsAssessmentEvacueesFound.Add(nae.era_needsassessmentevacueeid, nae);
-
-                        // add registrant to hashtable. Note: pets don't have a registrant id
-                        if (nae.era_evacueetype == (int)EvacueeType.Person)
-                        {
-                            var member = mapper.Map<PersonDetails>(nae.era_RegistrantID);
-                            familyMembers.Add(member);
-                        }
-                        else
-                        {
-                            var pet = mapper.Map<Pet>(nae);
-                            petMembers.Add(pet);
-                        }
-                    }
-
-                    var needsAssessment = mapper.Map<NeedsAssessment>(na);
-                    needsAssessment.FamilyMembers = familyMembers;
-                    needsAssessment.Pets = petMembers;
-                    needsAssessments.Add(needsAssessment);
-                }
+                needsAssessments.Add(needsAssessment);
             }
 
             if (needsAssessments == null) return null;
@@ -412,41 +275,6 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 }
             }
             return queryResult;
-        }
-
-        /// <summary>
-        /// Sends a notification email to a verified Registrant after they submit an Evacuation
-        /// </summary>
-        /// <param name="toAddress">Registrant's Email Address</param>
-        /// <param name="essFileNumber">ESS File Number</param>
-        private void SendEvacuationSubmissionNotificationEmail(EmailAddress toAddress, string essFileNumber)
-        {
-            System.Collections.Generic.List<EmailAddress> toList = new System.Collections.Generic.List<EmailAddress> { toAddress };
-            string emailSubject = "Registration completed successfully";
-            string emailBody = $@"
-<p><b>Submission Complete</b>
-<p>
-<p>Your Emergency Support Services (ESS) File Number is: " + essFileNumber + $@"
-<p>Thank you for submitting your online self-registration.
-<p>
-<p><b>Next Steps</b>
-<p>Please keep a record of your Emergency Support Services File Number to receive emergency support services that can be
-    provided up to 72 hours starting from the time connecting in with a local ESS Responder at a Reception Centre. After
-    a need's assessment interview with a local ESS Responder has been completed, supports are provided to purchase goods
-    and services if eligible. Any goods and services purchased prior to a need’s assessment interview are not eligible
-    for retroactive reimbursement.
-<p>
-<p>If you are under <b>EVACUATION ALERT</b> or <b>DO NOT</b> require emergency serves at this time, no further action is
-    required.
-<p>
-<p>If you are under <b>EVACUATION ORDER</b>, and require emergency supports, proceed to your nearest Reception Centre. A
-    list of open Reception Centres can be found at Emergency Info BC.
-<p>
-<p>If <b>NO</b> nearby Reception Centre is open and immediate action is required, please contact your First Nation
-    Government or Local Authority for next steps.";
-
-            EmailMessage emailMessage = new EmailMessage(toList, emailSubject, emailBody);
-            emailSender.Send(emailMessage);
         }
     }
 }
