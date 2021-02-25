@@ -17,14 +17,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using EMBC.Registrants.API.ProfilesModule;
 using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace EMBC.Registrants.API.EvacuationsModule
 {
@@ -48,9 +50,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
         /// <returns>List of RegistrantEvacuation</returns>
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<List<NeedsAssessment>>> GetCurrentEvacuations()
+        public async Task<ActionResult<IEnumerable<NeedsAssessment>>> GetCurrentEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var evacuationList = await evacuationManager.GetEvacuations(userId);
@@ -64,9 +65,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
         /// <returns>List of RegistrantEvacuation</returns>
         [HttpGet("past")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<List<NeedsAssessment>>> GetPastEvacuations()
+        public async Task<ActionResult<IEnumerable<NeedsAssessment>>> GetPastEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var evacuationList = await evacuationManager.GetEvacuations(userId);
@@ -136,11 +136,16 @@ namespace EMBC.Registrants.API.EvacuationsModule
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum InsuranceOption
         {
+            [EnumMember(Value = "No")]
             No = 174360000,
+            [EnumMember(Value = "Yes")]
             Yes = 174360001,
+            [EnumMember(Value = "Unsure")]
             Unsure = 174360002,
+            [EnumMember(Value = "Unknown")]
             Unknown = 174360003
         }
     }
