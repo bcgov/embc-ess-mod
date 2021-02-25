@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+package EMBC.ESS;
+
+message RequestEnvelope {
+    string Type = 1;
+    google.protobuf.Value Content = 2;
+}
+
+message ReplyEnvelope {
+    string Type = 1;
+    google.protobuf.Value Content = 2;
+}
+
+service Dispatcher {
+    rpc Dispatch (RequestEnvelope) returns (ReplyEnvelope);
+}

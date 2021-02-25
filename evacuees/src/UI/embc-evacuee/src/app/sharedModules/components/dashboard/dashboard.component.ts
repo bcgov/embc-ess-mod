@@ -110,6 +110,7 @@ export class DashboardComponent implements OnInit {
       filter((event: RouterEvent) => event instanceof ActivationEnd),
       first()
     ).subscribe((event: any) => {
+      console.log(event);
       this.cacheService.set('previousComponent', event.snapshot.component.name);
     });
 
