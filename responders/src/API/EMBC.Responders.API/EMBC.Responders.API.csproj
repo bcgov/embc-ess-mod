@@ -41,8 +41,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Protobuf Include="..\..\..\..\ess\src\API\EMBC.ESS\Utilities\Messaging\Dispatcher.proto" GrpcServices="Client">
-      <Link>Protos\Dispatcher.proto</Link>
+    <Protobuf Include="Protos\Dispatcher.proto" GrpcServices="Client">
+      <SourceUri>https://raw.githubusercontent.com/ytqsl/embc-ess-mod/EMBCESSMOD-1123/ess/src/API/EMBC.ESS/Utilities/Messaging/Dispatcher.proto</SourceUri>
     </Protobuf>
   </ItemGroup>
 </Project>
