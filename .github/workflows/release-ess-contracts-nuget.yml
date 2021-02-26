@@ -11,8 +11,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-dotnet@v1
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: setup .net
+      uses: actions/setup-dotnet@v1
       with:
           dotnet-version: '3.1.x' # SDK Version to use.
           source-url: https://nuget.pkg.github.com/bcgov/embc-ess-mod/index.json
