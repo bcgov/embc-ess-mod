@@ -1,0 +1,199 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: ess-backend-template
+
+parameters:
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+  - description: openshift namespace env name
+    name: ENV
+    required: true
+  - description: app name
+    name: APP_NAME
+    required: true
+  - description: image tag for deployments
+    name: TAG
+    required: true
+  - description: ASPNET runtime environment (Development/Staging/Production)
+    name: RUNTIME_ENVIRONMENT
+    value: Staging
+  - name: DYNAMICS_OAUTH_ENDPOINT
+    required: true
+  - description: Dynamics ADFS client ID
+    name: DYNAMICS_OAUTH_CLIENT_ID
+    required: true
+  - description: Dynamics ADFS client secret
+    name: DYNAMICS_OAUTH_CLIENT_SECRET
+    required: true
+  - description: Dynamics ADFS resource name
+    name: DYNAMICS_OAUTH_RESOURCE
+    required: true
+  - description: Dynamics API endpoint
+    name: DYNAMICS_ENDPOINT
+    required: true
+  - description: Dynamics entities base URI
+    name: DYNAMICS_URI
+    required: true
+  - description: Dynamics service account domain
+    name: DYNAMICS_SERVICE_ACCOUNT_DOMAIN
+    required: true
+  - description: Dynamics service account name
+    name: DYNAMICS_SERVICE_ACCOUNT_NAME
+    required: true
+  - description: Dynamics service account password
+    name: DYNAMICS_SERVICE_ACCOUNT_PASSWORD
+    required: true
+
+objects:
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-ess-backend-config
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-ess-backend
+    data:     
+      ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
+      KEY_RING_PATH: "/dpkeys"
+      Dynamics__ADFS__OAuth2TokenEndpoint: ${OAUTH_ENDPOINT}
+      Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
+      Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
+
+  - kind: Secret
+    apiVersion: v1
+    type: Opaque
+    metadata:
+      name: ${APP_NAME}-ess-backend-secrets
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-ess-backend
+    stringData:
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-ess-backend
+      name: ${APP_NAME}-ess-backend
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    stringData:
+      Dynamics__ADFS__ClientId: ${OAUTH_CLIENT_ID}
+      Dynamics__ADFS__ClientSecret: ${OAUTH_CLIENT_SECRET}
+      Dynamics__ADFS__ResourceName: ${OAUTH_RESOURCE}
+      Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
+      Dynamics__ADFS__serviceAccountName: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_NAME}
+      Dynamics__ADFS__serviceAccountPassword: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
+    spec:
+      ports:
+        - name: 2050-tcp
+          port: 2050
+          protocol: TCP
+          targetPort: 2050
+      selector:
+        deploymentconfig: ${APP_NAME}-ess-backend
+      type: ClusterIP
+
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-ess-backend
+      name: ${APP_NAME}-ess-backend
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    spec:
+      replicas: 2
+      selector:
+        app: ${APP_NAME}-ess-backend
+        deploymentconfig: ${APP_NAME}-ess-backend
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}-ess-backend
+            deploymentconfig: ${APP_NAME}-ess-backend
+        spec:
+          containers:
+            - name: ess-backend
+              env:
+                - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
+                  value: "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt"
+              envFrom:
+                - configMapRef:
+                    name: ${APP_NAME}-ess-backend-config
+                - secretRef:
+                    name: ${APP_NAME}-ess-backend-secrets
+              image: docker-registry.default.svc:5000/pbiizm-tools/ess-backend:${TAG}
+              imagePullPolicy: Always
+              volumeMounts:
+                - mountPath: /dpkeys
+                  name: dp-keys
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          serviceAccount: ${APP_NAME}-backend-svc
+          serviceAccountName: ${APP_NAME}-backend-svc
+          volumes:
+            - name: dp-keys
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-ess-backend-key-ring
+      test: false
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ess-backend
+            from:
+              kind: ImageStreamTag
+              name: ess-backend:${TAG}
+              namespace: ${NAMESPACE_PREFIX}-tools
+
+  - kind: "PersistentVolumeClaim"
+    apiVersion: "v1"
+    metadata:
+      name: ${APP_NAME}-ess-backend-key-ring
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-ess-backend
+    spec:
+      accessModes:
+        - "ReadWriteMany"
+      resources:
+        requests:
+          storage: "100Mi"
+  
+  - kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-backend-svc 
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-ess-backend
+
+  - kind: RoleBinding
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      name: 'system:image-puller-backend-svc'
+      namespace: ${NAMESPACE_PREFIX}-tools
+    subjects:
+      - kind: ServiceAccount
+        name: ${APP_NAME}-backend-svc
+        namespace: ${NAMESPACE_PREFIX}-${ENV}
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: 'system:image-puller'
