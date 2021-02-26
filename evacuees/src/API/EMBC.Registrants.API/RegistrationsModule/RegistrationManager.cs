@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.EvacuationsModule;
 using EMBC.Registrants.API.Shared;
 using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
