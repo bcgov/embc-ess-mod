@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Community } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
@@ -13,7 +14,8 @@ import { AlertService } from '../../../shared/components/alert/alert.service';
 })
 export class AddCommunityComponent implements OnInit {
 
-  constructor(private assignedCommunityListDataService: AssignedCommunityListDataService, private alertService: AlertService) { }
+  constructor(private assignedCommunityListDataService: AssignedCommunityListDataService, private alertService: AlertService,
+    private router: Router) { }
 
   ngOnInit(): void {
     console.log(this.assignedCommunityListDataService.getCommunitiesToAddList())
@@ -24,7 +26,7 @@ export class AddCommunityComponent implements OnInit {
   typesList: string[] = ['First Nations Community', 'City'];
   communities: Community[];
   filterTerm: TableFilterValueModel;
-  selectedCommunitiesList: Community[];
+  selectedCommunitiesList: Community[] =[];
 
   filter(event: TableFilterValueModel) {
     this.filterTerm = event;
@@ -60,6 +62,6 @@ addToMyList() {
   }
 
   goToList() {
-    
+    this.router.navigate(['/responder-access/community-management/list'])
   }
 }

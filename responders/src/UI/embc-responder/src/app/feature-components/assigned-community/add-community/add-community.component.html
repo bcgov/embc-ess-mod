@@ -14,8 +14,13 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+            <p class="selected-text">Number of communities selected: {{selectedCommunitiesList.length}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <app-data-table [incomingData]='communities' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm"
-                (selectedRows)="selectedCommunities($event)"></app-data-table>
+                (selectedRows)="selectedCommunities($event)" [disableRow]="true"></app-data-table>
         </div>
     </div>
     <div class="row">

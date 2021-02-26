@@ -33,7 +33,7 @@ export class AssignedCommunityListService {
                 return assignedCommunities.map(list => {
                     let found = allCommunities.find(x => x.id === list.communityId);
                     if (found) {
-                        list.allowSelect = true;
+                        list.allowSelect = false;
                         list.conflict = true;
                     }
                     return this.mergeData(list, found);

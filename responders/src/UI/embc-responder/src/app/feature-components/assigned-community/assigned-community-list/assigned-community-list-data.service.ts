@@ -65,6 +65,7 @@ export class AssignedCommunityListDataService {
   }
 
   public displayedColumns: TableColumnModel[] = [
+    { label: 'select', ref: 'select' },
     { label: 'Community', ref: 'name' },
     { label: 'Regional District', ref: 'districtName' },
     { label: 'Type', ref: 'type' },

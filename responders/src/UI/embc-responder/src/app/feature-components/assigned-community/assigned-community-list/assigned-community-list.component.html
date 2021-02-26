@@ -3,12 +3,15 @@
         <app-search-filter [filtersToLoad]='filtersToLoad' (filterEvent)="filter($event)"></app-search-filter>
     </div>
     <div class="row data-margin">
-        <div class="col-md-12">
+        <div class="col-md-6">
+            <button class="button-s" mat-stroked-button (click)="deleteCommunities()">Delete Communities</button>
+        </div>
+        <div class="col-md-6">
             <button class="button-s add-button" mat-stroked-button (click)="addCommunities()">Add New Community</button>
         </div>
     </div>
     <div class="data-margin">
         <app-data-table [incomingData]='assignedCommunities' [displayedColumns]='displayedColumns'
-            [filterTerm]="filterTerm" [filterPredicate]="filterPredicate"></app-data-table>
+            [filterTerm]="filterTerm" [filterPredicate]="filterPredicate" (selectedRows)="communitiesToDelete($event)"></app-data-table>
     </div>
 </mat-card>

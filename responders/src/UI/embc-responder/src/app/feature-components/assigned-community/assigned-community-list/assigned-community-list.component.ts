@@ -22,6 +22,7 @@ export class AssignedCommunityListComponent implements OnInit {
   assignedCommunities: TeamCommunityModel[];
   displayedColumns: TableColumnModel[];
   filterPredicate: (data: TeamCommunityModel, filter: string) => boolean;
+  communitiesToDeleteList: Community[];
 
   constructor(private assignedCommunityListService: AssignedCommunityListService,
     private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
@@ -65,6 +66,14 @@ export class AssignedCommunityListComponent implements OnInit {
       }
     }
     this.filterPredicate = filterPredicate;
+  }
+
+  communitiesToDelete($event) {
+    this.communitiesToDeleteList = $event;
+  }
+
+  deleteCommunities() {
+    
   }
 
 }

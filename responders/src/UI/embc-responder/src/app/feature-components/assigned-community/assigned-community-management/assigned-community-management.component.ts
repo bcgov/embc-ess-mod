@@ -22,6 +22,7 @@ export class AssignedCommunityManagementComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    
   }
 
 }

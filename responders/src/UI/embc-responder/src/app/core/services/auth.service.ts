@@ -23,7 +23,6 @@ export class AuthService {
             })).subscribe(() => this.handleNewToken());
             this.oauthService.loadDiscoveryDocumentAndLogin().then(isLoggedIn => {
                 if (isLoggedIn) {
-                    alert(isLoggedIn ? 'authenticated' : 'not authenticated');
                     this.oauthService.setupAutomaticSilentRefresh();
                     resolveFn();
                 } else {
