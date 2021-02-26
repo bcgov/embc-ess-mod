@@ -1,11 +1,14 @@
 name: ESS Contracts nuget workflow
 
 on:
-  release:
-    types: [created]
-    paths:
-    - "ess/src/API/EMBC.ESS.Shared.Contracts/**"
-    - ".github/workflows/release-ess-contracts-nuget.yml"
+  workflow_dispatch
+  #push:
+  #  branches:
+  #  - master
+  #  tags: 'ess.contracts.*'
+  #  paths:
+  #  - "ess/src/API/EMBC.ESS.Shared.Contracts/**"
+  #  - ".github/workflows/release-ess-contracts-nuget.yml"
 
 jobs:
   publish:
