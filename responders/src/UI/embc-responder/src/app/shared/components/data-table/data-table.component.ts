@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,7 +9,8 @@ import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.mo
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
-  styleUrls: ['./data-table.component.scss']
+  styleUrls: ['./data-table.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
 
@@ -19,11 +20,11 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   @Input() incomingData = [];
   @Input() filterTerm : TableFilterValueModel;
   @Input() filterPredicate: any;
-  @Output() addEvent = new EventEmitter<boolean>(false);
   @Output() selectedRows = new EventEmitter<any[]>();
   dataSource = new MatTableDataSource();
   columns: string[];
   selection = new SelectionModel<any>(true, []);
+  disableRow = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -42,18 +43,20 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     if(changes.filterTerm && this.filterTerm !== undefined) {
       this.filter(this.filterTerm);
     }
-    if(changes.filterPredicate) {
-      console.log(this.filterPredicate)
-      this.dataSource.filterPredicate = this.filterPredicate;
-    }
+    // if(changes.filterPredicate) {
+    //   console.log(this.filterPredicate)
+    //   this.dataSource.filterPredicate = this.filterPredicate;
+    // }
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
   filter(term: TableFilterValueModel) {
     console.log(term)
+    this.dataSource.filterPredicate = this.filterPredicate;
     this.dataSource.filter = JSON.stringify(term);
 
     if (this.dataSource.paginator) {
@@ -61,8 +64,9 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     }
   }
 
-  triggerEvent() {
-    this.addEvent.emit(true);
+  disable(row?): boolean {
+   this.disableRow = true;
+   return !row?.allowSelect;
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
