@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AssignedCommunity, Community } from 'src/app/core/api/models';
 import { TeamCommunitiesAssignmentsService } from 'src/app/core/api/services';
+import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { LoadLocationsService } from 'src/app/core/services/load-locations.service';
 
 @Injectable({ providedIn: 'root' })
@@ -10,14 +10,39 @@ export class AssignedCommunityListService {
 
     constructor(private teamCommunitiesAssignmentsService: TeamCommunitiesAssignmentsService, private loadLocationService: LoadLocationsService) { }
 
-    public getAssignedCommunityList(): Observable<Community[]> {
+    public getAssignedCommunityList(): Observable<TeamCommunityModel[]> {
         return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsGetAssignedCommunities().pipe(
-            map((assignedCommunities: AssignedCommunity[]) => {
+            map((assignedCommunities: TeamCommunityModel[]) => {
                 let allCommunities = this.loadLocationService.getCommunityList();
                 return assignedCommunities.map(list => {
-                    return allCommunities.find(x => x.id === list.communityId)
+                    let found = allCommunities.find(x => x.id === list.communityId);
+                    if (found) {
+                        list.allowSelect = false;
+                        list.conflict = false;
+                    }
+                    return this.mergeData(list, found);
                 })
             })
         );
+    }
+
+    public getAllAssignedCommunityList(): Observable<TeamCommunityModel[]> {
+        return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsGetAssignedCommunities({ forAllTeams: true }).pipe(
+            map((assignedCommunities: TeamCommunityModel[]) => {
+                let allCommunities = this.loadLocationService.getCommunityList();
+                return assignedCommunities.map(list => {
+                    let found = allCommunities.find(x => x.id === list.communityId);
+                    if (found) {
+                        list.allowSelect = true;
+                        list.conflict = true;
+                    }
+                    return this.mergeData(list, found);
+                })
+            })
+        );
+    }
+
+    private mergeData<T>(finalValue: T, incomingValue: Partial<T>): T {
+        return { ...finalValue, ...incomingValue };
     }
 }

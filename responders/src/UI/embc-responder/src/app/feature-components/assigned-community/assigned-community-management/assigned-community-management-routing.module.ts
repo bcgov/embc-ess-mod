@@ -16,8 +16,8 @@ const routes: Routes = [
         loadChildren: () => import('../assigned-community-list/assigned-community-list.module').then(m => m.AssignedCommunityListModule)
       },
       {
-        path: 'add-edit',
-        loadChildren: () => import('../add-edit-community/add-edit-community.module').then(m => m.AddEditCommunityModule)
+        path: 'add',
+        loadChildren: () => import('../add-community/add-community.module').then(m => m.AddCommunityModule)
       }
     ]
   }

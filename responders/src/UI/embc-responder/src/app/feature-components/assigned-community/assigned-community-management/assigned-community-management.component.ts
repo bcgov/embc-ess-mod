@@ -13,10 +13,10 @@ export class AssignedCommunityManagementComponent implements OnInit {
       label: 'Community List',
       route: 'list',
     },
-    {
-      label: 'Add/Edit Community List',
-      route: 'add-edit',
-    }
+    // {
+    //   label: 'Add/Edit Community List',
+    //   route: 'add-edit',
+    // }
   ];
 
   constructor() { }

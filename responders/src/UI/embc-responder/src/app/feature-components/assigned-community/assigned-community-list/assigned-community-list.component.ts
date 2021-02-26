@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Community } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
+import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { AssignedCommunityListDataService } from './assigned-community-list-data.service';
 import { AssignedCommunityListService } from './assigned-community-list.service';
@@ -17,46 +19,52 @@ export class AssignedCommunityListComponent implements OnInit {
 
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
-  assignedCommunities: Community[];
+  assignedCommunities: TeamCommunityModel[];
   displayedColumns: TableColumnModel[];
-  newRow: Community = { name: 'Add New Community' }
+  filterPredicate: (data: TeamCommunityModel, filter: string) => boolean;
 
   constructor(private assignedCommunityListService: AssignedCommunityListService,
-    private assignedCommunityListDataService: AssignedCommunityListDataService, public dialog: MatDialog) { }
+    private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
 
   ngOnInit(): void {
+    this.communitiesFilterPredicate();
     this.assignedCommunityListService.getAssignedCommunityList().subscribe(values => {
-      console.log(values);
-      values.splice(0, 0, this.newRow);
       this.assignedCommunities = values;
+      this.assignedCommunityListDataService.setTeamCommunityList(values);
+    });
+
+    this.assignedCommunityListService.getAllAssignedCommunityList().subscribe(values => {
+      console.log(values)
+      this.assignedCommunityListDataService.setAllTeamCommunityList(values);
     });
 
     this.filtersToLoad = this.assignedCommunityListDataService.filtersToLoad;
     this.displayedColumns = this.assignedCommunityListDataService.displayedColumns;
+
   }
 
-  filter(event: TableFilterValueModel) {
+  filter(event: TableFilterValueModel): void {
     this.filterTerm = event;
   }
 
-  addCommunities($event: boolean) {
-    console.log($event)
-    if ($event) {
-      this.dialog.open(DialogComponent, {
-        //height: '800px',
-        //width: '800px'
-      });
+  addCommunities(): void {
+    this.router.navigate(['/responder-access/community-management/add']);
+  }
+
+  communitiesFilterPredicate(): void {
+    let filterPredicate = (data: TeamCommunityModel, filter: string): boolean => {
+      let searchString: TableFilterValueModel = JSON.parse(filter);
+      if (searchString.value === 'All Regional Districts' || searchString.value === 'All Types') {
+        return true;
+      }
+      if (searchString.type === 'text') {
+        return (data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1)
+      } else {
+        return data.districtName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1 ||
+          data.type.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1
+      }
     }
+    this.filterPredicate = filterPredicate;
   }
 
 }
-
-
-
-
-
-  // sampleCommunityData = [
-  //   { name: 'Community Name', regionalDistrict: 'Cariboo', type: 'First Nations Community', date: 'mm/dd/yyyy' },
-  //   { community: 'Community Name', regionalDistrict: 'Victoria', type: 'City', date: 'mm/dd/yyyy' },
-  //   { community: 'Community Name', regionalDistrict: 'Cariboo', type: 'First Nations Community', date: 'mm/dd/yyyy' }
-  // ];

@@ -2,8 +2,13 @@
     <div class="filter-margin">
         <app-search-filter [filtersToLoad]='filtersToLoad' (filterEvent)="filter($event)"></app-search-filter>
     </div>
+    <div class="row data-margin">
+        <div class="col-md-12">
+            <button class="button-s add-button" mat-stroked-button (click)="addCommunities()">Add New Community</button>
+        </div>
+    </div>
     <div class="data-margin">
         <app-data-table [incomingData]='assignedCommunities' [displayedColumns]='displayedColumns'
-            [filterTerm]="filterTerm" (addEvent)="addCommunities($event)"></app-data-table>
+            [filterTerm]="filterTerm" [filterPredicate]="filterPredicate"></app-data-table>
     </div>
 </mat-card>
