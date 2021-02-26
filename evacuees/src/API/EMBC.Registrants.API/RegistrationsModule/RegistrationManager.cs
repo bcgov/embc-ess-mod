@@ -17,7 +17,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.EvacuationsModule;
 using EMBC.Registrants.API.Shared;
 using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
@@ -119,16 +121,17 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_needassessmentid = Guid.NewGuid(),
                 era_needsassessmentdate = now,
                 era_EvacuationFile = evacuationFile,
-                era_needsassessmenttype = 174360000,
+                era_needsassessmenttype = (int?)NeedsAssessmentType.Preliminary,
                 era_canevacueeprovidefood = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideFood),
                 era_canevacueeprovideclothing = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideClothing),
                 era_canevacueeprovideincidentals = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideIncidentals),
                 era_canevacueeprovidelodging = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideLodging),
                 era_canevacueeprovidetransportation = Lookup(registration.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation),
+                era_haspetfood = Lookup(registration.PreliminaryNeedsAssessment.HasPetsFood),
                 era_dietaryrequirement = registration.PreliminaryNeedsAssessment.HaveSpecialDiet,
                 era_dietaryrequirementdetails = registration.PreliminaryNeedsAssessment.SpecialDietDetails,
                 era_medicationrequirement = registration.PreliminaryNeedsAssessment.HaveMedication,
-                era_insurancecoverage = Lookup(registration.PreliminaryNeedsAssessment.Insurance),
+                era_insurancecoverage = (int?)registration.PreliminaryNeedsAssessment.Insurance,
                 era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
                 era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
                 era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
@@ -142,7 +145,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             var members = (registration.PreliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
             {
                 contactid = Guid.NewGuid(),
-                era_registranttype = 174360001,
+                era_registranttype = (int?)RegistrantType.Member,
                 era_authenticated = false,
                 era_verified = false,
                 era_registrationdate = now,
@@ -177,7 +180,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_needsassessmentevacueeid = Guid.NewGuid(),
                 era_numberofpets = Convert.ToInt32(p.Quantity),
                 era_typeofpet = p.Type,
-                era_evacueetype = LookupEvacueeType("Pet")
+                era_evacueetype = (int?)EvacueeType.Pet
             });
 
             // add evacuation file to dynamics context
@@ -205,7 +208,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             {
                 era_needsassessmentevacueeid = Guid.NewGuid(),
                 era_isprimaryregistrant = true,
-                era_evacueetype = LookupEvacueeType("Person")
+                era_evacueetype = (int?)EvacueeType.Person
             };
             dynamicsClient.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeRegistrant);
             // link registrant and needs assessment to evacuee record
@@ -220,7 +223,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 {
                     era_needsassessmentevacueeid = Guid.NewGuid(),
                     era_isprimaryregistrant = false,
-                    era_evacueetype = LookupEvacueeType("Person")
+                    era_evacueetype = (int?)EvacueeType.Person
                 };
                 dynamicsClient.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeMember);
                 // link members and needs assessment to evacuee record
@@ -349,7 +352,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
 
                 // don't throw an exception if contact is not found, return an empty profile
-                if (dataServiceClientException.StatusCode == 404)
+                if (dataServiceClientException.StatusCode == (int)HttpStatusCode.NotFound)
                 {
                     return null;
                 }
@@ -386,7 +389,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             {
                 DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
                 // don't throw an exception if contact is not found, return an empty profile
-                if (dataServiceClientException.StatusCode == 404)
+                if (dataServiceClientException.StatusCode == (int)HttpStatusCode.NotFound)
                 {
                     return null;
                 }
@@ -425,8 +428,12 @@ namespace EMBC.Registrants.API.RegistrationsModule
             profile.PrimaryAddress.AddressLine2 = contact.address1_line2;
             profile.PrimaryAddress.Jurisdiction.Code = contact.era_City?.era_jurisdictionid.ToString();
             profile.PrimaryAddress.Jurisdiction.Name = contact.era_City?.era_jurisdictionname;
+            profile.PrimaryAddress.Jurisdiction.Type = (JurisdictionType)(contact.era_City?.era_type ?? -1);
+            profile.PrimaryAddress.Jurisdiction.StateProvinceCode = contact.era_City?.era_RelatedProvinceState?.era_code;
+            profile.PrimaryAddress.Jurisdiction.CountryCode = contact.era_City?.era_RelatedProvinceState?.era_RelatedCountry?.era_countrycode;
             profile.PrimaryAddress.StateProvince.Code = contact.era_ProvinceState?.era_code;
             profile.PrimaryAddress.StateProvince.Name = contact.era_ProvinceState?.era_name;
+            profile.PrimaryAddress.StateProvince.CountryCode = contact.era_ProvinceState?.era_RelatedCountry?.era_countrycode;
             profile.PrimaryAddress.Country.Code = contact.era_Country?.era_countrycode;
             profile.PrimaryAddress.Country.Name = contact.era_Country?.era_name;
             profile.PrimaryAddress.PostalCode = contact.address1_postalcode;
@@ -435,8 +442,12 @@ namespace EMBC.Registrants.API.RegistrationsModule
             profile.MailingAddress.AddressLine2 = contact.address2_line2;
             profile.MailingAddress.Jurisdiction.Code = contact.era_MailingCity?.era_jurisdictionid.ToString();
             profile.MailingAddress.Jurisdiction.Name = contact.era_MailingCity?.era_jurisdictionname;
+            profile.MailingAddress.Jurisdiction.Type = (JurisdictionType)(contact.era_MailingCity?.era_type ?? -1);
+            profile.MailingAddress.Jurisdiction.StateProvinceCode = contact.era_MailingCity?.era_RelatedProvinceState?.era_code;
+            profile.MailingAddress.Jurisdiction.CountryCode = contact.era_MailingCity?.era_RelatedProvinceState?.era_RelatedCountry?.era_countrycode;
             profile.MailingAddress.StateProvince.Code = contact.era_MailingProvinceState?.era_code;
             profile.MailingAddress.StateProvince.Name = contact.era_MailingProvinceState?.era_name;
+            profile.MailingAddress.StateProvince.CountryCode = contact.era_MailingProvinceState?.era_RelatedCountry?.era_countrycode;
             profile.MailingAddress.Country.Code = contact.era_MailingCountry?.era_countrycode;
             profile.MailingAddress.Country.Name = contact.era_MailingCountry?.era_name;
             profile.MailingAddress.PostalCode = contact.address2_postalcode;
@@ -475,7 +486,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
 
                 // don't throw an exception if contact is not found, return an empty profile
-                if (dataServiceClientException.StatusCode == 404)
+                if (dataServiceClientException.StatusCode == (int)HttpStatusCode.NotFound)
                 {
                     return Task.FromResult(profile);
                 }
@@ -565,7 +576,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
 
                 // don't throw an exception if contact is not found, return an empty profile
-                if (dataServiceClientException.StatusCode == 404)
+                if (dataServiceClientException.StatusCode == (int)HttpStatusCode.NotFound)
                 {
                     return profile;
                 }
@@ -802,24 +813,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
 
-        private int? Lookup(NeedsAssessment.InsuranceOption value) => value switch
-        {
-            NeedsAssessment.InsuranceOption.No => 174360000,
-            NeedsAssessment.InsuranceOption.Yes => 174360001,
-            NeedsAssessment.InsuranceOption.Unsure => 174360002,
-            NeedsAssessment.InsuranceOption.Unknown => 174360003,
-            _ => null
-        };
-
-        private NeedsAssessment.InsuranceOption Lookup(int? value) => value switch
-        {
-            174360000 => NeedsAssessment.InsuranceOption.No,
-            174360001 => NeedsAssessment.InsuranceOption.Yes,
-            174360002 => NeedsAssessment.InsuranceOption.Unsure,
-            174360003 => NeedsAssessment.InsuranceOption.Unknown,
-            _ => NeedsAssessment.InsuranceOption.Unknown
-        };
-
         private int? LookupGender(string value) => value switch
         {
             "Male" => 1,
@@ -833,13 +826,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
             1 => "Male",
             2 => "Female",
             3 => "X",
-            _ => null
-        };
-
-        private int? LookupEvacueeType(string value) => value switch
-        {
-            "Person" => 174360000,
-            "Pet" => 174360001,
             _ => null
         };
 
@@ -872,9 +858,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
             var contact = new contact();
             contact.contactid = Guid.NewGuid();
             if (isPrimary)
-                contact.era_registranttype = 174360000; // Primary
+                contact.era_registranttype = (int?)RegistrantType.Primary;
             else
-                contact.era_registranttype = 174360001; // Memeber
+                contact.era_registranttype = (int?)RegistrantType.Member;
             contact.era_authenticated = true;
             contact.era_verified = false;
             contact.era_registrationdate = now;
@@ -1092,16 +1078,17 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_needassessmentid = Guid.NewGuid(),
                 era_needsassessmentdate = now,
                 era_EvacuationFile = evacuationFile,
-                era_needsassessmenttype = 174360000,
+                era_needsassessmenttype = (int?)NeedsAssessmentType.Preliminary,
                 era_canevacueeprovidefood = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideFood),
                 era_canevacueeprovideclothing = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideClothing),
                 era_canevacueeprovideincidentals = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideIncidentals),
                 era_canevacueeprovidelodging = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideLodging),
                 era_canevacueeprovidetransportation = Lookup(evacuation.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation),
+                era_haspetfood = Lookup(evacuation.PreliminaryNeedsAssessment.HasPetsFood),
                 era_dietaryrequirement = evacuation.PreliminaryNeedsAssessment.HaveSpecialDiet,
                 era_dietaryrequirementdetails = evacuation.PreliminaryNeedsAssessment.SpecialDietDetails,
                 era_medicationrequirement = evacuation.PreliminaryNeedsAssessment.HaveMedication,
-                era_insurancecoverage = Lookup(evacuation.PreliminaryNeedsAssessment.Insurance),
+                era_insurancecoverage = (int?)evacuation.PreliminaryNeedsAssessment.Insurance,
                 era_emailrefusal = string.IsNullOrEmpty(profile.ContactDetails.Email)
             };
 
@@ -1109,7 +1096,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             var members = (evacuation.PreliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
             {
                 contactid = Guid.NewGuid(),
-                era_registranttype = 174360001,
+                era_registranttype = (int?)RegistrantType.Member,
                 era_authenticated = false,
                 era_verified = false,
                 era_registrationdate = now,
@@ -1144,7 +1131,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_needsassessmentevacueeid = Guid.NewGuid(),
                 era_numberofpets = Convert.ToInt32(p.Quantity),
                 era_typeofpet = p.Type,
-                era_evacueetype = LookupEvacueeType("Pet")
+                era_evacueetype = (int?)EvacueeType.Pet
             });
 
             // add evacuation file to dynamics context
@@ -1172,7 +1159,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             {
                 era_needsassessmentevacueeid = Guid.NewGuid(),
                 era_isprimaryregistrant = true,
-                era_evacueetype = LookupEvacueeType("Person")
+                era_evacueetype = (int?)EvacueeType.Person
             };
             dynamicsClient.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeRegistrant);
             // link registrant (contact) and needs assessment to evacuee record
@@ -1187,7 +1174,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 {
                     era_needsassessmentevacueeid = Guid.NewGuid(),
                     era_isprimaryregistrant = false,
-                    era_evacueetype = LookupEvacueeType("Person")
+                    era_evacueetype = (int?)EvacueeType.Person
                 };
                 dynamicsClient.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeMember);
                 // link members and needs assessment to evacuee record
@@ -1406,10 +1393,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideLodging = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovidelodging);
                 registrantEvacuation.PreliminaryNeedsAssessment.CanEvacueeProvideTransportation = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_canevacueeprovidetransportation);
                 registrantEvacuation.PreliminaryNeedsAssessment.HaveMedication = (bool)needsAssessmentObject.Value.era_medicationrequirement;
-                registrantEvacuation.PreliminaryNeedsAssessment.Insurance = Lookup(needsAssessmentObject.Value.era_insurancecoverage);
+                registrantEvacuation.PreliminaryNeedsAssessment.Insurance = (NeedsAssessment.InsuranceOption)needsAssessmentObject.Value.era_insurancecoverage;
                 registrantEvacuation.PreliminaryNeedsAssessment.HaveSpecialDiet = (bool)needsAssessmentObject.Value.era_dietaryrequirement;
                 registrantEvacuation.PreliminaryNeedsAssessment.SpecialDietDetails = needsAssessmentObject.Value.era_dietaryrequirementdetails;
-                //registrantEvacuation.PreliminaryNeedsAssessment.HasPetsFood = needsAssessmentObject.Value.; //TODO: add field in dynamics
+                registrantEvacuation.PreliminaryNeedsAssessment.HasPetsFood = LookupYesNoIdontknowValue(needsAssessmentObject.Value.era_haspetfood);
 
                 // set pets with dynamics needs assessment evacuee details
                 registrantEvacuation.PreliminaryNeedsAssessment.Pets =
@@ -1472,7 +1459,19 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public enum EvacueeType
         {
             Person = 174360000,
-            Pet = 174360001,
+            Pet = 174360001
+        }
+
+        public enum NeedsAssessmentType
+        {
+            Preliminary = 174360000,
+            Assessed = 174360001
+        }
+
+        public enum RegistrantType
+        {
+            Primary = 174360000,
+            Member = 174360001
         }
     }
 }

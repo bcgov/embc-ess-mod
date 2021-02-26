@@ -2,9 +2,10 @@
   "profiles": {
     "EMBC.Responders.API": {
       "commandName": "Project",
-      "applicationUrl": "http://localhost:2015",
+      "applicationUrl": "http://localhost:6020",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "BACKEND__URL": "https://localhost:2020"
       }
     }
   }

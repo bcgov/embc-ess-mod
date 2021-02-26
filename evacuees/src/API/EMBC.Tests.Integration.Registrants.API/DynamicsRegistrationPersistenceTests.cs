@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
+using EMBC.Registrants.API.EvacuationsModule;
 using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.Shared;

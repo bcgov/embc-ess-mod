@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using EMBC.ESS;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,13 @@ namespace EMBC.Responders.API.Controllers
     [Route("api/team/members")]
     public class TeamMembersController : ControllerBase
     {
+        private readonly Dispatcher.DispatcherClient dispatcherClient;
+
+        public TeamMembersController(Dispatcher.DispatcherClient dispatcherClient)
+        {
+            this.dispatcherClient = dispatcherClient;
+        }
+
         /// <summary>
         /// Get all team members
         /// </summary>
@@ -48,6 +56,23 @@ namespace EMBC.Responders.API.Controllers
                 new TeamMember { Id = "4", FirstName = "four_f", LastName = "four_l", IsActive = true, Email = "4@email.com", UserName = "four", TeamId = teamId, RoleId = "r4", LabelId = "l4", AgreementSignDate = DateTime.Now },
             };
             return Ok(await Task.FromResult(members));
+            //var response = await dispatcherClient.SendRequest<TeamMembersByIdQueryRequest, TeamMembersQueryReply>(new TeamMembersByIdQueryRequest { TeamId = teamId });
+            //var teamMembers = response.TeamMembers;
+            //return Ok(teamMembers.Select(m => new TeamMember
+            //{
+            //    Id = m.Id,
+            //    FirstName = m.FirstName,
+            //    LastName = m.LastName,
+            //    Email = m.Email,
+            //    Phone = m.Phone,
+            //    IsActive = m.IsActive,
+            //    LabelId = null,
+            //    UserName = m.UserName,
+            //    AgreementSignDate = m.AgreementSignDate,
+            //    LastSuccessfulLogin = m.LastSuccessfulLogin,
+            //    RoleId = null,
+            //    TeamId = teamId
+            //}));
         }
 
         /// <summary>

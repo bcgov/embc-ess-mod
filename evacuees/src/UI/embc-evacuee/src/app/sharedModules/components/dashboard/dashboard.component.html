@@ -47,7 +47,7 @@
     </div>
 </div>
 <div class="container">
-    <mat-tab-group class="test-tab" (selectedTabChange)="resetTab($event)">
+    <mat-tab-group class="test-tab" (selectedTabChange)="resetTab($event)" [(selectedIndex)]="tabIndex">
         <mat-tab>
             <ng-template mat-tab-label>
                 <img class="inactive-curr" src="/assets/images/curr-evac.svg" height="15" width="15">

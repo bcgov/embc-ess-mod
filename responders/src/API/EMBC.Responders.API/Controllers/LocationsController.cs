@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using EMBC.ESS;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Responders.API.Controllers
@@ -28,6 +29,13 @@ namespace EMBC.Responders.API.Controllers
     [Route("api/locations")]
     public class LocationsController : ControllerBase
     {
+        private readonly Dispatcher.DispatcherClient dispatcherClient;
+
+        public LocationsController(Dispatcher.DispatcherClient dispatcherClient)
+        {
+            this.dispatcherClient = dispatcherClient;
+        }
+
         /// <summary>
         /// Provides a filtered list of communities by community type, state/province and/or country
         /// </summary>
@@ -38,6 +46,16 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("communities")]
         public async Task<ActionResult<IEnumerable<Community>>> GetCommunities([FromQuery] string stateProvinceId, [FromQuery] string countryId, [FromQuery] CommunityType[] types)
         {
+            //var communities = (await dispatcherClient.SendRequest<CommunitiesQueryRequest, CommunitiesQueryReply>(new CommunitiesQueryRequest()
+            //{
+            //    CountryCode = countryId,
+            //    StateProvinceCode = stateProvinceId,
+            //    Types = types.Select(t => (EMBC.ESS.Shared.Contracts.Location.CommunityType)t)
+            //})).Items;
+            //return Ok(await Task.FromResult(communities.Select(c => new Community
+            //{
+            //    Id = c.Code
+            //})));
             var communities = new[]
             {
                 new Community { Id = "c1", Name = "c 1", DistrictName = "d 1", CountryId = "c1", StateProvinceId = "sp1", Type = CommunityType.City },
@@ -56,6 +74,15 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("stateprovinces")]
         public async Task<ActionResult<IEnumerable<StateProvince>>> GetStateProvinces([FromQuery] string countryId)
         {
+            //var stateProvinces = (await dispatcherClient.SendRequest<StateProvincesQueryRequest, StateProvincesQueryReply>(new StateProvincesQueryRequest
+            //{
+            //    CountryCode = countryId
+            //})).Items;
+            //return Ok(await Task.FromResult(stateProvinces.Select(c => new StateProvince
+            //{
+            //    Id = c.Code,
+            //    Name = c.Name
+            //})));
             var stateProvinces = new[]
             {
                 new StateProvince { Id = "sp1", CountryId = "c1", Name = "sp 1" },
@@ -71,6 +98,12 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
+            //var countries = (await dispatcherClient.SendRequest<CountriesQueryRequest, CountriesQueryReply>(new CountriesQueryRequest())).Items;
+            //return Ok(await Task.FromResult(countries.Select(c => new Country
+            //{
+            //    Id = c.Code,
+            //    Name = c.Name
+            //})));
             var countries = new[]
             {
                 new Country { Id = "c1", Name = "c 1" },

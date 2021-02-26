@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { ActivatedRoute, ActivationEnd, Router, RouterEvent } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
 import { DataService } from 'src/app/core/services/data.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
-import { debounceTime, filter } from 'rxjs/operators';
+import { debounceTime, filter, first, take } from 'rxjs/operators';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 export interface EvacuationCard {
   from: string;
@@ -91,14 +92,14 @@ export class DashboardComponent implements OnInit {
   showActiveList = true;
   showInactiveList = true;
   currentChild: EvacuationCardComponent;
+  tabIndex: number;
 
   evacuatedFrom?: string;
-  referenceNumber: string;
 
 
   constructor(
     private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
-    private router: Router, private dialogService: DialogService) { }
+    private router: Router, private dialogService: DialogService, private cacheService: CacheService) { }
 
 
   ngOnInit(): void {
@@ -106,12 +107,20 @@ export class DashboardComponent implements OnInit {
     this.evacuatedFrom = this.dataSourceActive[this.dataSourceActive.length - 1]?.from;
 
     this.router.events.pipe(
-      filter((event: RouterEvent) => event instanceof NavigationEnd),
-      debounceTime(500)
-    ).subscribe(() =>
-      this.openReferenceNumberPopup()
-    );
+      filter((event: RouterEvent) => event instanceof ActivationEnd),
+      first()
+    ).subscribe((event: any) => {
+      console.log(event);
+      this.cacheService.set('previousComponent', event.snapshot.component.name);
+    });
 
+    if (this.cacheService.get('previousComponent') === 'EditComponent') {
+      this.tabIndex = 2;
+    }
+
+    setTimeout(() => {
+      this.openReferenceNumberPopup();
+    }, 500);
   }
 
   openDOBMismatchPopup(): void {
@@ -119,11 +128,11 @@ export class DashboardComponent implements OnInit {
   }
 
   openReferenceNumberPopup(): void {
+
     const registrationResult = this.dataService.getRegistrationResult();
+
     if (registrationResult.referenceNumber !== null) {
-      this.referenceNumber = registrationResult.referenceNumber;
-      console.log(this.referenceNumber);
-      this.dialogService.submissionCompleteDialog(this.referenceNumber);
+      this.dialogService.submissionCompleteDialog(registrationResult.referenceNumber);
     }
   }
 

@@ -8177,6 +8177,7 @@
         <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
         <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_haspetfood" Type="Edm.Int32" />
         <Property Name="_ownerid_value" Type="Edm.Guid" />
         <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="era_needassessmentid" Type="Edm.Guid" />

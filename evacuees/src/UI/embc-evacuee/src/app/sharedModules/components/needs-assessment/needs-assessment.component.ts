@@ -203,7 +203,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   }
 
   allowSubmit($event: boolean): void {
-    console.log($event);
     this.captchaPassed = $event;
   }
 }
