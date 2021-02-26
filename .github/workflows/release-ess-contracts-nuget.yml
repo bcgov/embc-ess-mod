@@ -4,25 +4,20 @@ on:
   release:
     types: [created]
     paths:
-        - "ess/src/API/EMBC.ESS.Shared.Contracts/**"
-        - ".github/workflows/release-ess-contracts-nuget.yml"
+    - "ess/src/API/EMBC.ESS.Shared.Contracts/**"
+    - ".github/workflows/release-ess-contracts-nuget.yml"
 
 jobs:
-  deploy:
+  publish:
     runs-on: ubuntu-latest
     env:
       NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
     - uses: actions/checkout@v2
-      name: checkout
     - uses: actions/setup-dotnet@v1
-      name: setup .net
       with:
-          dotnet-version: '3.1.x' # SDK Version to use.
-          source-url: https://nuget.pkg.github.com/bcgov/embc-ess-mod/index.json
+        dotnet-version: '3.1.x'
+        source-url: https://nuget.pkg.github.com/bcgov/embc-ess-mod/index.json
     - run: dotnet build ess/src/API/EMBC.ESS.Shared.Contracts/
-      name: build
     - run: dotnet pack --configuration Release ess/src/API/EMBC.ESS.Shared.Contracts/
-      name: pack      
     - run: dotnet nuget push ess/src/API/EMBC.ESS.Shared.Contracts//bin/Release/*.nupkg
-      name: push
