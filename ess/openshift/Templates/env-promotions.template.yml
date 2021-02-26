@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: ess-backend-env-promotions
+  annotations:
+    description: "Pipelines to promote ess-backend images to higher environments"
+objects:
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "ess-backend-promote-test"
+    spec:
+      strategy:
+        jenkinsPipelineStrategy:
+          jenkinsfile: |-
+            node {
+              stage('tag image'){
+                openshiftTag(srcStream: 'ess-backend', srcTag: 'latest', destStream: 'ess-backend', destTag: 'test')
+                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'test-ess-backend')
+              }
+            }
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "ess-backend-promote-training"
+    spec:
+      strategy:
+        jenkinsPipelineStrategy:
+          jenkinsfile: |-
+            node {
+              stage('approval') {
+                timeout(time: 30, unit: 'DAYS') {
+                  input message: "Deploy to training?"
+                }
+              }
+              stage('tag image'){
+                openshiftTag(srcStream: 'ess-backend', srcTag: 'test', destStream: 'ess-backend', destTag: 'training')
+                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'training-ess-backend')
+              }
+            }
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "ess-backend-promote-prod"
+    spec:
+      strategy:
+        jenkinsPipelineStrategy:
+          jenkinsfile: |-
+            node {
+              stage('approval') {
+                timeout(time: 30, unit: 'DAYS') {
+                  input message: "Deploy to prod?"
+                }    
+              }
+               stage('tag image'){
+                openshiftTag(srcStream: 'ess-backend', srcTag: 'test', destStream: 'ess-backend', destTag: 'prod')
+                openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-ess-backend')
+              }
+            }
