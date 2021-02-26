@@ -23,4 +23,4 @@ jobs:
         #source-url: https://nuget.pkg.github.com/bcgov/embc-ess-mod/index.json
     - run: dotnet build --configuration Release ess/src/API/EMBC.ESS.Shared.Contracts/
     - run: dotnet pack --configuration Release ess/src/API/EMBC.ESS.Shared.Contracts/
-    - run: dotnet nuget push ess/src/API/EMBC.ESS.Shared.Contracts/bin/Release/*.nupkg -s https://nuget.pkg.github.com/bcgov/index.json
+    - run: dotnet nuget push ess/src/API/EMBC.ESS.Shared.Contracts/bin/Release/*.nupkg -s https://nuget.pkg.github.com/bcgov/embc-ess-mod/index.json -k ${{secrets.GITHUB_TOKEN}}
