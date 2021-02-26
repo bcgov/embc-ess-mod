@@ -18,7 +18,6 @@ jobs:
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
-        source-url: https://nuget.pkg.github.com/bcgov/index.json
     - run: dotnet build --configuration Release ess/src/API/EMBC.ESS.Shared.Contracts/
     - run: dotnet pack --configuration Release ess/src/API/EMBC.ESS.Shared.Contracts/
     - run: dotnet nuget push ess/src/API/EMBC.ESS.Shared.Contracts/bin/Release/*.nupkg --source "github" -k ${{secrets.GITHUB_TOKEN}}
