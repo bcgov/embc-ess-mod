@@ -4,8 +4,11 @@ metadata:
   name: ess-backend-template
 
 parameters:
-  - description: openshift namespace
-    name: NAMESPACE
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+  - description: openshift namespace env name
+    name: ENV
     required: true
   - description: app name
     name: APP_NAME
@@ -48,7 +51,7 @@ objects:
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-ess-backend-config
-      namespace: ${NAMESPACE}-dev
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-ess-backend
     data:     
@@ -63,17 +66,18 @@ objects:
     type: Opaque
     metadata:
       name: ${APP_NAME}-ess-backend-secrets
-      namespace: ${NAMESPACE}-dev
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-ess-backend
     stringData:
+
   - kind: Service
     apiVersion: v1
     metadata:
       labels:
         app: ${APP_NAME}-ess-backend
       name: ${APP_NAME}-ess-backend
-      namespace: ${NAMESPACE}-dev
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     stringData:
       Dynamics__ADFS__ClientId: ${OAUTH_CLIENT_ID}
       Dynamics__ADFS__ClientSecret: ${OAUTH_CLIENT_SECRET}
@@ -97,7 +101,7 @@ objects:
       labels:
         app: ${APP_NAME}-ess-backend
       name: ${APP_NAME}-ess-backend
-      namespace: ${NAMESPACE}-dev
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
@@ -156,13 +160,13 @@ objects:
             from:
               kind: ImageStreamTag
               name: ess-backend:${TAG}
-              namespace: ${NAMESPACE}-tools
+              namespace: ${NAMESPACE_PREFIX}-tools
 
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
       name: ${APP_NAME}-ess-backend-key-ring
-      namespace: ${NAMESPACE}-dev
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-ess-backend
     spec:
@@ -176,7 +180,7 @@ objects:
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-backend-svc 
-      namespace: ${NAMESPACE}-dev
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-ess-backend
 
@@ -184,11 +188,11 @@ objects:
     apiVersion: rbac.authorization.k8s.io/v1
     metadata:
       name: 'system:image-puller-backend-svc'
-      namespace: ${NAMESPACE}-tools
+      namespace: ${NAMESPACE_PREFIX}-tools
     subjects:
       - kind: ServiceAccount
         name: ${APP_NAME}-backend-svc
-        namespace: ${NAMESPACE}-dev
+        namespace: ${NAMESPACE_PREFIX}-${ENV}
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole

@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: responders-portal-env-promotions
   annotations:
-    description: "Pipelines to promote images to higher environments"
+    description: "Pipelines to promote responders portal images to higher environments"
 objects:
   - kind: "BuildConfig"
     apiVersion: "v1"
