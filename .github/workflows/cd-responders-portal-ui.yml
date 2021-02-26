@@ -32,7 +32,7 @@ jobs:
 
       - name: Build image
         working-directory: ./responders/src/UI
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID --build-arg GITHUB_NUGET_USERNAME=github --build-arg GITHUB_NUGET_PAT=${{ secrets.GITHUB_TOKEN }}
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID
 
       - name: Push image
         run: |
