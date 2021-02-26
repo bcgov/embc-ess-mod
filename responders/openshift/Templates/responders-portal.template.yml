@@ -37,7 +37,7 @@ objects:
     data:     
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
-      BACKEND_URL: ${BACKEND_URL}
+      BACKEND__URL: ${BACKEND_URL}
 
   - kind: Secret
     apiVersion: v1
