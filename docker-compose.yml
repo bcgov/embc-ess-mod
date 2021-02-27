@@ -49,6 +49,9 @@ services:
   responders-portal-api:
     build:
       context: ./responders/src/API
+      args:
+      - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
+      - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
     image: embcess-responders-api:dev
     ports:
       - 6020:8080
