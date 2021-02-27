@@ -9,6 +9,7 @@ import { SearchFilterComponent } from './components/search-filter/search-filter.
 import { FormsModule } from '@angular/forms';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { AlertComponent } from './components/alert/alert.component';
     DataTableComponent,
     SearchFilterComponent,
     DialogComponent,
-    AlertComponent
+    AlertComponent,
+    AppLoaderComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +33,8 @@ import { AlertComponent } from './components/alert/alert.component';
     DataTableComponent,
     SearchFilterComponent,
     DialogComponent,
-    AlertComponent
+    AlertComponent,
+    AppLoaderComponent
   ]
 })
 export class SharedModule { }

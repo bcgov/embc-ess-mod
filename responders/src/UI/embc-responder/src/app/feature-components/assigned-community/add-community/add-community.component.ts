@@ -5,7 +5,6 @@ import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { AssignedCommunityListDataService } from 'src/app/feature-components/assigned-community/assigned-community-list/assigned-community-list-data.service';
-import { AlertService } from '../../../shared/components/alert/alert.service';
 import { AddCommunityService } from './add-community.service';
 
 @Component({
@@ -15,19 +14,36 @@ import { AddCommunityService } from './add-community.service';
 })
 export class AddCommunityComponent implements OnInit {
 
-  constructor(private assignedCommunityListDataService: AssignedCommunityListDataService,
-    private router: Router, private addCommunityService: AddCommunityService) { }
-
-  ngOnInit(): void {
-    console.log(this.assignedCommunityListDataService.getCommunitiesToAddList())
-    this.communities = this.assignedCommunityListDataService.getCommunitiesToAddList();
-  }
-
   regionalDistrictList: string[] = ['Cariboo', 'Victoria', 'Comox Valley'];
   typesList: string[] = ['First Nations Community', 'City'];
   communities: Community[];
   filterTerm: TableFilterValueModel;
   selectedCommunitiesList: Community[] =[];
+  filterPredicate: (data: Community, filter: string) => boolean;
+
+  constructor(private assignedCommunityListDataService: AssignedCommunityListDataService,
+    private router: Router, private addCommunityService: AddCommunityService) { }
+
+  ngOnInit(): void {
+    this.communitiesFilterPredicate();
+    console.log(this.assignedCommunityListDataService.getCommunitiesToAddList())
+    this.communities = this.assignedCommunityListDataService.getCommunitiesToAddList();
+  }
+
+  communitiesFilterPredicate(): void {
+    let filterPredicate = (data: Community, filter: string): boolean => {
+      let searchString: TableFilterValueModel = JSON.parse(filter);
+      if (searchString.value === 'All Regional Districts') {
+        return true;
+      }
+      if (searchString.type === 'text') {
+        return (data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1)
+      } else {
+        return data.districtName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1
+      }
+    }
+    this.filterPredicate = filterPredicate;
+  }
 
   filter(event: TableFilterValueModel) {
     this.filterTerm = event;

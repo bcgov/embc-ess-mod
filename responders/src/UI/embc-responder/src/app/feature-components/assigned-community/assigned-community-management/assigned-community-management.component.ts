@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
@@ -6,7 +6,7 @@ import { TabModel } from 'src/app/core/models/tab.model';
   templateUrl: './assigned-community-management.component.html',
   styleUrls: ['./assigned-community-management.component.scss']
 })
-export class AssignedCommunityManagementComponent implements OnInit {
+export class AssignedCommunityManagementComponent implements OnInit, OnDestroy {
 
   tabs: TabModel[] = [
     {
@@ -20,6 +20,10 @@ export class AssignedCommunityManagementComponent implements OnInit {
   ];
 
   constructor() { }
+
+  ngOnDestroy(): void {
+    console.log("**************ON-DESTROY***************")
+  }
 
   ngOnInit(): void {
     

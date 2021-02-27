@@ -23,13 +23,16 @@ export class AssignedCommunityListComponent implements OnInit {
   displayedColumns: TableColumnModel[];
   filterPredicate: (data: TeamCommunityModel, filter: string) => boolean;
   communitiesToDeleteList: Community[] = [];
+  isLoading = false;
 
   constructor(private assignedCommunityListService: AssignedCommunityListService,
     private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
 
   ngOnInit(): void {
     this.communitiesFilterPredicate();
+    this.isLoading = !this.isLoading;
     this.assignedCommunityListService.getAssignedCommunityList().subscribe(values => {
+      this.isLoading = !this.isLoading;
       this.assignedCommunities = values;
       this.assignedCommunityListDataService.setTeamCommunityList(values);
     });

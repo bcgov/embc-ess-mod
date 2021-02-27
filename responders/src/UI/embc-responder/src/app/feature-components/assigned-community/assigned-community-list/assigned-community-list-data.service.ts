@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
+import { CacheService } from 'src/app/core/services/cache.service';
 import { LoadLocationsService } from 'src/app/core/services/load-locations.service';
 
 @Injectable({ providedIn: 'root' })
@@ -13,7 +14,7 @@ export class AssignedCommunityListDataService {
   private allTeamCommunityList: TeamCommunityModel[];
   private communitiesToDelete: TeamCommunityModel[];
 
-  constructor(private loadLocationService: LoadLocationsService) { }
+  constructor(private loadLocationService: LoadLocationsService, private cacheService: CacheService) { }
 
   public setCommunitiesToDelete(communitiesToDelete: TeamCommunityModel[]): void {
     this.communitiesToDelete = communitiesToDelete;
@@ -24,29 +25,33 @@ export class AssignedCommunityListDataService {
   }
 
   public setTeamCommunityList(teamCommunityList: TeamCommunityModel[]): void {
+    this.cacheService.set('teamCommunityList', teamCommunityList);
     this.teamCommunityList = teamCommunityList;
   }
 
-  public getTeamCommunityList(): TeamCommunityModel[] {
-    return this.teamCommunityList;
+  private getTeamCommunityList(): TeamCommunityModel[] {
+    return this.teamCommunityList ? this.teamCommunityList :
+      JSON.parse(this.cacheService.get('teamCommunityList'));
   }
 
   public setAllTeamCommunityList(allTeamCommunityList: TeamCommunityModel[]): void {
+    this.cacheService.set('allTeamCommunityList', allTeamCommunityList);
     this.allTeamCommunityList = allTeamCommunityList;
   }
 
-  public getAllTeamCommunityList(): TeamCommunityModel[] {
-    return this.allTeamCommunityList;
+  private getAllTeamCommunityList(): TeamCommunityModel[] {
+    return this.allTeamCommunityList ? this.allTeamCommunityList :
+      JSON.parse(this.cacheService.get('allTeamCommunityList'));
   }
 
   public getCommunitiesToAddList(): TeamCommunityModel[] {
     let allCommunities = this.loadLocationService.getCommunityList();
     let conflictMap: TeamCommunityModel[] = allCommunities.map(values => {
-      let conflicts = this.allTeamCommunityList.find(x => x.id === values.id);
+      let conflicts = this.getAllTeamCommunityList().find(x => x.id === values.id);
       return this.mergeData(values, conflicts);
     });
     let addMap: TeamCommunityModel[] = conflictMap.map(values => {
-      let existing = this.teamCommunityList.find(x => x.id === values.id);
+      let existing = this.getTeamCommunityList().find(x => x.id === values.id);
       return this.mergeData(values, existing);
     });
     return addMap;

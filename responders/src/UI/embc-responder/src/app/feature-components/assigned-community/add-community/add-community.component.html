@@ -20,7 +20,7 @@
     <div class="row">
         <div class="col-md-12">
             <app-data-table [incomingData]='communities' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm"
-                (selectedRows)="selectedCommunities($event)" [disableRow]="true"></app-data-table>
+            [filterPredicate]="filterPredicate" (selectedRows)="selectedCommunities($event)" [disableRow]="true"></app-data-table>
         </div>
     </div>
     <div class="row">
