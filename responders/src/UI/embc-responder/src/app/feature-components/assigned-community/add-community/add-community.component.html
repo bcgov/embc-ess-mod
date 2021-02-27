@@ -33,7 +33,7 @@
             <button class="button-s" mat-button (click)="goToList()">Cancel</button>
         </div>
         <div class="col-md-6">
-            <button class="button-p add-button" mat-button (click)="addToMyList()">Add to my List</button>
+            <button class="button-p add-button" mat-button [disabled]="selectedCommunitiesList.length == 0" (click)="addToMyList()">Add to my List</button>
         </div>
     </div>
 </mat-card>

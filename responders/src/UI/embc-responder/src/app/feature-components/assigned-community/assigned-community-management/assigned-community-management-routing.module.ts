@@ -8,16 +8,20 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'list',
+        redirectTo: 'list-communities',
         pathMatch: 'full'
       },
       {
-        path: 'list',
+        path: 'list-communities',
         loadChildren: () => import('../assigned-community-list/assigned-community-list.module').then(m => m.AssignedCommunityListModule)
       },
       {
-        path: 'add',
+        path: 'add-communities',
         loadChildren: () => import('../add-community/add-community.module').then(m => m.AddCommunityModule)
+      },
+      {
+        path: 'review',
+        loadChildren: () => import('../assigned-community-review/assigned-community-review.module').then(m => m.AssignedCommunityReviewModule)
       }
     ]
   }

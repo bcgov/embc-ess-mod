@@ -7,12 +7,21 @@ import { LoadLocationsService } from 'src/app/core/services/load-locations.servi
 @Injectable({ providedIn: 'root' })
 export class AssignedCommunityListDataService {
 
-  public regionalDistrictList: string[] = ['All Regional Districts','d1', 'd2', 'Comox Valley'];
-  public typesList: string[] = ['All Types','First Nations Community', 'City', 'IslandMunicipality'];
+  public regionalDistrictList: string[] = ['All Regional Districts', 'd1', 'd2', 'Comox Valley'];
+  public typesList: string[] = ['All Types', 'First Nations Community', 'City', 'IslandMunicipality'];
   private teamCommunityList: TeamCommunityModel[];
   private allTeamCommunityList: TeamCommunityModel[];
+  private communitiesToDelete: TeamCommunityModel[];
 
   constructor(private loadLocationService: LoadLocationsService) { }
+
+  public setCommunitiesToDelete(communitiesToDelete: TeamCommunityModel[]): void {
+    this.communitiesToDelete = communitiesToDelete;
+  }
+
+  public getCommunitiesToDelete(): TeamCommunityModel[] {
+    return this.communitiesToDelete;
+  }
 
   public setTeamCommunityList(teamCommunityList: TeamCommunityModel[]): void {
     this.teamCommunityList = teamCommunityList;

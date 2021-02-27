@@ -22,7 +22,7 @@ export class AssignedCommunityListComponent implements OnInit {
   assignedCommunities: TeamCommunityModel[];
   displayedColumns: TableColumnModel[];
   filterPredicate: (data: TeamCommunityModel, filter: string) => boolean;
-  communitiesToDeleteList: Community[];
+  communitiesToDeleteList: Community[] = [];
 
   constructor(private assignedCommunityListService: AssignedCommunityListService,
     private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
@@ -49,7 +49,7 @@ export class AssignedCommunityListComponent implements OnInit {
   }
 
   addCommunities(): void {
-    this.router.navigate(['/responder-access/community-management/add']);
+    this.router.navigate(['/responder-access/community-management/add-communities']);
   }
 
   communitiesFilterPredicate(): void {
@@ -70,10 +70,11 @@ export class AssignedCommunityListComponent implements OnInit {
 
   communitiesToDelete($event) {
     this.communitiesToDeleteList = $event;
+    this.assignedCommunityListDataService.setCommunitiesToDelete($event);
   }
 
   deleteCommunities() {
-    
+    this.router.navigate(['/responder-access/community-management/review'], {queryParams: {action: 'delete'}})
   }
 
 }

@@ -6,6 +6,7 @@ import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.mo
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { AssignedCommunityListDataService } from 'src/app/feature-components/assigned-community/assigned-community-list/assigned-community-list-data.service';
 import { AlertService } from '../../../shared/components/alert/alert.service';
+import { AddCommunityService } from './add-community.service';
 
 @Component({
   selector: 'app-add-community',
@@ -14,8 +15,8 @@ import { AlertService } from '../../../shared/components/alert/alert.service';
 })
 export class AddCommunityComponent implements OnInit {
 
-  constructor(private assignedCommunityListDataService: AssignedCommunityListDataService, private alertService: AlertService,
-    private router: Router) { }
+  constructor(private assignedCommunityListDataService: AssignedCommunityListDataService,
+    private router: Router, private addCommunityService: AddCommunityService) { }
 
   ngOnInit(): void {
     console.log(this.assignedCommunityListDataService.getCommunitiesToAddList())
@@ -54,14 +55,15 @@ export class AddCommunityComponent implements OnInit {
 
   selectedCommunities($event) {
     this.selectedCommunitiesList = $event;
+    this.addCommunityService.setAddedCommunities($event);
 }
 
 addToMyList() {
     console.log(this.selectedCommunitiesList);
-    this.alertService.setAlert('warning', 'Conflicts Detected');
+    this.router.navigate(['/responder-access/community-management/review'], {queryParams: {action: 'add'}})
   }
 
   goToList() {
-    this.router.navigate(['/responder-access/community-management/list'])
+    this.router.navigate(['/responder-access/community-management/list-communities'])
   }
 }
