@@ -14,9 +14,15 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
+using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Exceptions;
@@ -76,6 +82,49 @@ namespace EMBC.ESS.Services
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                }).ConfigureServices((context, services) =>
+                {
+                    //These config paths are compatible with Kestrel config in .net 5 so this entire code section can be removed when migrating to .net 5+
+                    services.Configure<KestrelServerOptions>(opts =>
+                    {
+                        var configuration = context.Configuration.GetSection("Kestrel");
+                        configuration.Bind(opts);
+                        opts.ConfigureHttpsDefaults(httpOpts =>
+                        {
+                            var certKeyPath = configuration.GetValue("Certificates:Default:KeyPath", string.Empty);
+                            var certCaPath = configuration.GetValue("Certificates:Default:Path", string.Empty);
+                            if (!string.IsNullOrEmpty(certKeyPath))
+                            {
+                                //set default server cert
+                                var cert = LoadPemCertificate(certCaPath, certKeyPath);
+                                httpOpts.ServerCertificate = cert;
+                            }
+                        });
+                    });
                 });
+
+        // https://github.com/dotnet/runtime/issues/19581#issuecomment-581147166
+
+        private static X509Certificate2 LoadPemCertificate(string certificatePath, string privateKeyPath)
+        {
+            using var publicKey = new X509Certificate2(certificatePath);
+
+            var privateKeyText = File.ReadAllText(privateKeyPath);
+            var privateKeyBlocks = privateKeyText.Split("-", StringSplitOptions.RemoveEmptyEntries);
+            var privateKeyBytes = Convert.FromBase64String(privateKeyBlocks[1]);
+            using var rsa = RSA.Create();
+
+            if (privateKeyBlocks[0] == "BEGIN PRIVATE KEY")
+            {
+                rsa.ImportPkcs8PrivateKey(privateKeyBytes, out _);
+            }
+            else if (privateKeyBlocks[0] == "BEGIN RSA PRIVATE KEY")
+            {
+                rsa.ImportRSAPrivateKey(privateKeyBytes, out _);
+            }
+
+            var keyPair = publicKey.CopyWithPrivateKey(rsa);
+            return new X509Certificate2(keyPair.Export(X509ContentType.Pfx));
+        }
     }
 }

@@ -3,7 +3,7 @@
     "EMBC.ESS": {
       "commandName": "Project",
       "launchBrowser": false,
-      "applicationUrl": "https://localhost:2050",
+      "applicationUrl": "https://localhost:2020",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
