@@ -57,7 +57,7 @@ objects:
     data:     
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
-      Dynamics__ADFS__OAuth2TokenEndpoint: ${OAUTH_ENDPOINT}
+      Dynamics__ADFS__OAuth2TokenEndpoint: ${DYNAMICS_OAUTH_ENDPOINT}
       Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
       Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
 
@@ -70,6 +70,12 @@ objects:
       labels:
         app: ${APP_NAME}-ess-backend
     stringData:
+      Dynamics__ADFS__ClientId: ${DYNAMICS_OAUTH_CLIENT_ID}
+      Dynamics__ADFS__ClientSecret: ${DYNAMICS_OAUTH_CLIENT_SECRET}
+      Dynamics__ADFS__ResourceName: ${DYNAMICS_OAUTH_RESOURCE}
+      Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
+      Dynamics__ADFS__serviceAccountName: ${DYNAMICS_SERVICE_ACCOUNT_NAME}
+      Dynamics__ADFS__serviceAccountPassword: ${DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
 
   - kind: Service
     apiVersion: v1
@@ -78,19 +84,14 @@ objects:
         app: ${APP_NAME}-ess-backend
       name: ${APP_NAME}-ess-backend
       namespace: ${NAMESPACE_PREFIX}-${ENV}
-    stringData:
-      Dynamics__ADFS__ClientId: ${OAUTH_CLIENT_ID}
-      Dynamics__ADFS__ClientSecret: ${OAUTH_CLIENT_SECRET}
-      Dynamics__ADFS__ResourceName: ${OAUTH_RESOURCE}
-      Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
-      Dynamics__ADFS__serviceAccountName: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_NAME}
-      Dynamics__ADFS__serviceAccountPassword: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
+      annotations:
+        service.alpha.openshift.io/serving-cert-secret-name: ${APP_NAME}-ess-backend-ssl
     spec:
       ports:
-        - name: 2050-tcp
-          port: 2050
+        - name: 2020-tcp
+          port: 2020
           protocol: TCP
-          targetPort: 2050
+          targetPort: 8080
       selector:
         deploymentconfig: ${APP_NAME}-ess-backend
       type: ClusterIP
@@ -127,7 +128,9 @@ objects:
             - name: ess-backend
               env:
                 - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
-                  value: "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt"
+                  value: "/ssl/tls.crt"
+                - name: "ASPNETCORE_Kestrel__Certificates__Default__KeyPath"
+                  value: "/ssl/tls.key"
               envFrom:
                 - configMapRef:
                     name: ${APP_NAME}-ess-backend-config
@@ -138,17 +141,21 @@ objects:
               volumeMounts:
                 - mountPath: /dpkeys
                   name: dp-keys
+                - mountPath: /ssl
+                  name: ssl
+                  readonly: true
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
           securityContext: {}
           terminationGracePeriodSeconds: 30
-          serviceAccount: ${APP_NAME}-backend-svc
-          serviceAccountName: ${APP_NAME}-backend-svc
           volumes:
             - name: dp-keys
               persistentVolumeClaim:
                 claimName: ${APP_NAME}-ess-backend-key-ring
+            - name: ssl
+              secret:
+                secretName: ${APP_NAME}-ess-backend-ssl
       test: false
       triggers:
         - type: ConfigChange
@@ -175,25 +182,3 @@ objects:
       resources:
         requests:
           storage: "100Mi"
-  
-  - kind: ServiceAccount
-    apiVersion: v1
-    metadata:
-      name: ${APP_NAME}-backend-svc 
-      namespace: ${NAMESPACE_PREFIX}-${ENV}
-      labels:
-        app: ${APP_NAME}-ess-backend
-
-  - kind: RoleBinding
-    apiVersion: rbac.authorization.k8s.io/v1
-    metadata:
-      name: 'system:image-puller-backend-svc'
-      namespace: ${NAMESPACE_PREFIX}-tools
-    subjects:
-      - kind: ServiceAccount
-        name: ${APP_NAME}-backend-svc
-        namespace: ${NAMESPACE_PREFIX}-${ENV}
-    roleRef:
-      apiGroup: rbac.authorization.k8s.io
-      kind: ClusterRole
-      name: 'system:image-puller'

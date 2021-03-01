@@ -25,6 +25,9 @@ parameters:
   - description: ESS backend url
     name: BACKEND_URL
     required: true
+  - description: ESS backend allow invalid server cert
+    name: BACKEND_ALLOW_INVALID_CERT
+    value: "false"
 
 objects:
   - kind: ConfigMap
@@ -38,6 +41,7 @@ objects:
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
       BACKEND__URL: ${BACKEND_URL}
+      BACKEND__ALLOWINVALIDSERVERCERTIFICATE: ${BACKEND_ALLOW_INVALID_CERT}
 
   - kind: Secret
     apiVersion: v1
@@ -154,6 +158,9 @@ objects:
         spec:
           containers:
             - name: responders-portal-api
+              env:
+                - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
+                  value: "/ssl/tls.crt"
               envFrom:
                 - configMapRef:
                     name: ${APP_NAME}-responders-api-config
@@ -164,6 +171,9 @@ objects:
               volumeMounts:
                 - mountPath: /dpkeys
                   name: dp-keys
+                - mountPath: /ssl
+                  name: ssl
+                  readonly: true
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
@@ -173,6 +183,9 @@ objects:
             - name: dp-keys
               persistentVolumeClaim:
                 claimName: ${APP_NAME}-responders-key-ring
+            - name: ssl
+              secret:
+                secretName: ${APP_NAME}-ess-backend-ssl
       test: false
       triggers:
         - type: ConfigChange
