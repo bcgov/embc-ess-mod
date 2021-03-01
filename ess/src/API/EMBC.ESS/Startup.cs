@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using EMBC.ESS.Managers.Admin;
+using EMBC.ESS.Managers.Location;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Utilities.Cache;
@@ -50,11 +51,13 @@ namespace EMBC.ESS.Services
             {
                 var registry = new MessageHandlerRegistry();
                 registry.Register<AdminManager>();
+                registry.Register<LocationManager>();
 
                 return registry;
             });
 
             services.AddAdminManager();
+            services.AddLocationManager();
             services.AddTeamRepository();
             services.AddMetadataRepository();
             services.Configure<DynamicsOptions>(configuration.GetSection("Dynamics"));
