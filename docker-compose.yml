@@ -1,4 +1,4 @@
-version: "3"
+version: "3.4"
 
 services:
   suppliers-portal-api:
@@ -9,8 +9,6 @@ services:
       - 7020:8080
     env_file:
       - .env
-    depends_on:
-      - ess-backend
 
   suppliers-portal-ui:
     build:
@@ -31,8 +29,6 @@ services:
       - 5020:8080
     env_file:
       - .env
-    depends_on:
-      - ess-backend
 
   registrants-portal-ui:
     build:
@@ -42,7 +38,6 @@ services:
       - 5200:2015
     environment:
       - "API_URL=registrants-portal-api:8080"
-      - "LOG_LEVEL=DEBUG"
     depends_on:
       - registrants-portal-api
 
@@ -56,7 +51,8 @@ services:
     ports:
       - 6020:8080
     environment:
-      - "BACKEND__URL=https://ess-backend:8080"
+    - "BACKEND__URL=https://ess-backend:8080"
+    - "BACKEND__ALLOWINVALIDSERVERCERTIFICATE=true"
     env_file:
       - .env
     depends_on:
@@ -82,6 +78,6 @@ services:
     env_file:
       - .env
     environment:
-    - "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx"
+    - "ASPNETCORE_Kestrel__Certificates__Default__Path=/ssl/aspnetapp.pfx"
     volumes:
-      - $USERPROFILE\.aspnet\https:/https/
+    - ~/.aspnet/https:/ssl/
