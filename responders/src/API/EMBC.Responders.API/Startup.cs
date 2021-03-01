@@ -17,6 +17,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using EMBC.ESS;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -61,10 +62,20 @@ namespace EMBC.Responders.API
                 options.Filters.Add(new HttpResponseExceptionFilter());
             });
 
-            services.AddGrpcClient<Dispatcher.DispatcherClient>(opts =>
+            var httpClientBuilder = services.AddGrpcClient<Dispatcher.DispatcherClient>(opts =>
             {
                 opts.Address = configuration.GetValue<Uri>("backend:url");
             });
+            if (configuration.GetValue("backend:allowInvalidServerCertificate", false))
+            {
+                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    return new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    };
+                });
+            }
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
