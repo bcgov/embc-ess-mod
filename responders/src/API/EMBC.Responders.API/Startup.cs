@@ -56,6 +56,8 @@ namespace EMBC.Responders.API
             });
             AddDataProtection(services);
             AddOpenApi(services);
+
+            services.AddAutoMapper(typeof(Startup));
             services.AddDistributedMemoryCache();
             services.AddControllers(options =>
             {
