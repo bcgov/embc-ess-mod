@@ -25,11 +25,13 @@ UI
 To create an environment:
 
 1. create a new file named `responders-portal.yml.<app name>.params` in the templates directory
-2. copy the content from `responders-portal.yml.params.template` into the file and fill in the values, these are the parameters supplied later to the template
-3. run the following command from cmd/powershell console (modify the Openshift project to the one you want to deploy to):
+1. copy the content from `responders-portal.yml.params.template` into the file and fill in the values, these are the parameters supplied later to the template
+1. login to openshift cli `oc login ... --token=...`
+1. switch to the correct namespace `oc project <openshift namespace>`
+1. run the following command from cmd/powershell console (modify the Openshift project to the one you want to deploy to):
 
 ```cmd
-oc process -f .\responders-portal.template.yml --param-file .\responders-portal.yml.<app name>.params | oc -n <openshift project name> apply -f -
+oc process -f .\responders-portal.template.yml --param-file .\responders-portal.yml.<app name>.params | oc apply -f -
 ```
 
 4. to update an existing environment, modify the templates and params, then execute the same command.

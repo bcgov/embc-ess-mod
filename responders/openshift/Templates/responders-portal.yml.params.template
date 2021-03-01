@@ -1,3 +1,7 @@
+NAMESPACE_PREFIX=<openshift namespace>
+ENV=<openshift namespace env>
 APP_NAME=<app name>
 TAG=<image stream tag to deploy from>
-RUNTIME_ENVIRONMENT=<ASP.Net core environment development|staging|production>
+RUNTIME_ENVIRONMENT=<ASP.Net core environment: development|staging|production>
+BACKEND_URL=<https address of ESS backend service gRPC endpoint>
+BACKEND_ALLOW_INVALID_CERT=<allow not trusted backend server certificate: true|false>
