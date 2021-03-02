@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Community, Country, StateProvince } from '../api/models';
 import { LocationsService } from '../api/services';
 import { CacheService } from './cache.service';
@@ -12,6 +11,7 @@ export class LoadLocationsService {
     private communityList: Community[];
     private stateProvinceList: StateProvince[];
     private countriesList: Country[];
+    private regionalDistricts: string[];
 
     public getCommunityList(): Community[] {
         return this.communityList ? this.communityList :
@@ -41,6 +41,16 @@ export class LoadLocationsService {
                 JSON.parse(this.cacheService.get('countriesList')) : this.getCountries());
     }
 
+    private setRegionalDistricts(regionalDistricts: string[]): void {
+        this.regionalDistricts = regionalDistricts;
+        this.cacheService.set('regionalDistrictsList', regionalDistricts);
+    }
+
+    public getRegionalDistricts(): string[] {
+        return this.regionalDistricts ? this.regionalDistricts :
+            JSON.parse(this.cacheService.get('regionalDistrictsList'));
+    }
+
     private setCountriesList(countriesList: Country[]): void {
         this.countriesList = countriesList;
         this.cacheService.set('countriesList', countriesList);
@@ -51,6 +61,7 @@ export class LoadLocationsService {
         this.locationsService.locationsGetCommunities().subscribe((commumities: Community[]) => {
             communities = commumities;
             this.setCommunityList(communities);
+            this.setRegionalDistricts(commumities.map(comm => { return comm['districtName'] }));
         });
         return communities;
     }

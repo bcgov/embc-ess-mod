@@ -4,12 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.dev.conf.json",
-    "restart": "npm run gen-api && npm start",
+    "restart": "npm run gen-api",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gen-api": "ng-openapi-gen -i http://localhost:2015/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
+    "gen-api": "ng-openapi-gen -i https://dev1-embc-responders.pathfinder.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
   },
   "private": true,
   "dependencies": {

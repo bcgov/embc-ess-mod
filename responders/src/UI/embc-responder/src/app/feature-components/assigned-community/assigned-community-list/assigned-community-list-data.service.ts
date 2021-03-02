@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CommunityType } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
@@ -65,12 +66,12 @@ export class AssignedCommunityListDataService {
     loadDropdownFilters: [{
       type: 'regionalDistrict',
       label: 'All Regional Districts',
-      values: this.regionalDistrictList
+      values: this.loadLocationService.getRegionalDistricts()
     },
     {
       type: 'type',
       label: 'All Types',
-      values: this.typesList
+      values: Object.keys(CommunityType).filter(e => e)
     }],
     loadInputFilter: {
       type: 'Search by city, town, village or community',

@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
+import { EnumToArrayPipe } from './pipes/EnumToArray.pipe';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AppLoaderComponent } from './components/app-loader/app-loader.component
     SearchFilterComponent,
     DialogComponent,
     AlertComponent,
-    AppLoaderComponent
+    AppLoaderComponent,
+   // EnumToArrayPipe
   ],
   imports: [
     CommonModule,
@@ -34,7 +36,8 @@ import { AppLoaderComponent } from './components/app-loader/app-loader.component
     SearchFilterComponent,
     DialogComponent,
     AlertComponent,
-    AppLoaderComponent
+    AppLoaderComponent,
+   // EnumToArrayPipe
   ]
 })
 export class SharedModule { }

@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TabModel } from 'src/app/core/models/tab.model';
+import { CacheService } from 'src/app/core/services/cache.service';
+import { AssignedCommunityListDataService } from '../assigned-community-list/assigned-community-list-data.service';
 
 @Component({
   selector: 'app-assigned-community-management',
@@ -19,10 +21,12 @@ export class AssignedCommunityManagementComponent implements OnInit, OnDestroy {
     // }
   ];
 
-  constructor() { }
+  constructor(private cacheService: CacheService) { }
 
   ngOnDestroy(): void {
     console.log("**************ON-DESTROY***************")
+    this.cacheService.remove('allTeamCommunityList');
+    this.cacheService.remove('teamCommunityList');
   }
 
   ngOnInit(): void {
