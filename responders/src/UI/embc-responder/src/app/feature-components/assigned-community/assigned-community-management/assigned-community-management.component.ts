@@ -24,13 +24,13 @@ export class AssignedCommunityManagementComponent implements OnInit, OnDestroy {
   constructor(private cacheService: CacheService) { }
 
   ngOnDestroy(): void {
-    console.log("**************ON-DESTROY***************")
+    console.log('**************ON-DESTROY***************');
     this.cacheService.remove('allTeamCommunityList');
     this.cacheService.remove('teamCommunityList');
   }
 
   ngOnInit(): void {
-    
+
   }
 
 }

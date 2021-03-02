@@ -25,7 +25,7 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   dataSource = new MatTableDataSource();
   columns: string[];
   selection = new SelectionModel<any>(true, []);
-  @Input() disableRow: boolean = false;
+  @Input() disableRow = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -51,8 +51,8 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  filter(term: TableFilterValueModel) {
-    console.log(term)
+  filter(term: TableFilterValueModel): void {
+    console.log(term);
     this.dataSource.filterPredicate = this.filterPredicate;
     this.dataSource.filter = JSON.stringify(term);
 
@@ -62,28 +62,28 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   }
 
   disable(row?): boolean {
-    //this.disableRow = true;
-    if(this.disableRow) {
+    // this.disableRow = true;
+    if (this.disableRow) {
       return !row?.allowSelect;
     }
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
+  isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
+  masterToggle(): void {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => {
         if (row.hasOwnProperty('allowSelect')) {
-          let r: TeamCommunityModel = row;
+          const r: TeamCommunityModel = row;
           if (r.allowSelect) {
-            this.selection.select(row)
+            this.selection.select(row);
           }
         }
       });
@@ -97,9 +97,9 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  selectionToggle(row) {
+  selectionToggle(row): void {
     this.selection.toggle(row);
-    this.selectedRows.emit(this.selection.selected)
-    console.log(this.selection.selected)
+    this.selectedRows.emit(this.selection.selected);
+    console.log(this.selection.selected);
   }
 }

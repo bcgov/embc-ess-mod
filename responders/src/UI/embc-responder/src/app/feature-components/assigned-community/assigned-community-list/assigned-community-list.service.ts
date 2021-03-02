@@ -8,20 +8,21 @@ import { LoadLocationsService } from 'src/app/core/services/load-locations.servi
 @Injectable({ providedIn: 'root' })
 export class AssignedCommunityListService {
 
-    constructor(private teamCommunitiesAssignmentsService: TeamCommunitiesAssignmentsService, private loadLocationService: LoadLocationsService) { }
+    constructor(private teamCommunitiesAssignmentsService: TeamCommunitiesAssignmentsService,
+                private loadLocationService: LoadLocationsService) { }
 
     public getAssignedCommunityList(): Observable<TeamCommunityModel[]> {
         return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsGetAssignedCommunities().pipe(
             map((assignedCommunities: TeamCommunityModel[]) => {
-                let allCommunities = this.loadLocationService.getCommunityList();
+                const allCommunities = this.loadLocationService.getCommunityList();
                 return assignedCommunities.map(list => {
-                    let found = allCommunities.find(x => x.id === list.communityId);
+                    const found = allCommunities.find(x => x.id === list.communityId);
                     if (found) {
                         list.allowSelect = false;
                         list.conflict = false;
                     }
                     return this.mergeData(list, found);
-                })
+                });
             })
         );
     }
@@ -29,15 +30,15 @@ export class AssignedCommunityListService {
     public getAllAssignedCommunityList(): Observable<TeamCommunityModel[]> {
         return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsGetAssignedCommunities({ forAllTeams: true }).pipe(
             map((assignedCommunities: TeamCommunityModel[]) => {
-                let allCommunities = this.loadLocationService.getCommunityList();
+                const allCommunities = this.loadLocationService.getCommunityList();
                 return assignedCommunities.map(list => {
-                    let found = allCommunities.find(x => x.id === list.communityId);
+                    const found = allCommunities.find(x => x.id === list.communityId);
                     if (found) {
                         list.allowSelect = false;
                         list.conflict = true;
                     }
                     return this.mergeData(list, found);
-                })
+                });
             })
         );
     }

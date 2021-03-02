@@ -10,36 +10,11 @@ import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 })
 export class TeamListComponent implements OnInit {
 
+  constructor() { }
+
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
   filterPredicate: any;
-
-  constructor() { }
-
-  ngOnInit(): void {
-    this.filtersToLoad = {
-      loadDropdownFilters: [{
-        type: 'role',
-        label: 'All User Roles',
-        values: this.rolesList
-      },
-      {
-        type: 'status',
-        label: 'Active & Deactivated Users',
-        values: this.statusList
-      },
-      {
-        type: 'label',
-        label: 'All Labels',
-        values: this.labelsList
-      }],
-      loadInputFilter: {
-        type: 'Search by last name or BCeID',
-        label: 'Search by last name or BCeID'
-      }
-    }
-    this.teamFilterPredicate();
-  }
 
   rolesList: string[] = ['All User Roles', 'Tier 1 Responder', 'Tier 2 Superviser', 'Tier 3 ESSD', 'Tier 4 LEP'];
   statusList: string[] = ['Active & Deactivated Users', 'Active', 'Deactivated'];
@@ -63,26 +38,53 @@ export class TeamListComponent implements OnInit {
     { lastName: 'EDWARDS111', firstName: 'Susan', bceid: '123', role: 'Tier 1 Responder', label: 'Volunteer', status: 'Active' }
   ];
 
-  filter(event: TableFilterValueModel) {
+  ngOnInit(): void {
+    this.filtersToLoad = {
+      loadDropdownFilters: [{
+        type: 'role',
+        label: 'All User Roles',
+        values: this.rolesList
+      },
+      {
+        type: 'status',
+        label: 'Active & Deactivated Users',
+        values: this.statusList
+      },
+      {
+        type: 'label',
+        label: 'All Labels',
+        values: this.labelsList
+      }],
+      loadInputFilter: {
+        type: 'Search by last name or BCeID',
+        label: 'Search by last name or BCeID'
+      }
+    };
+    this.teamFilterPredicate();
+  }
+
+  filter(event: TableFilterValueModel): void {
     this.filterTerm = event;
   }
 
-  teamFilterPredicate() {
-    let filterPredicate = (data: Team, filter: string): boolean => {
-      let searchString: TableFilterValueModel = JSON.parse(filter);
+  teamFilterPredicate(): void {
+    const filterPredicate = (data: Team, filter: string): boolean => {
+      const searchString: TableFilterValueModel = JSON.parse(filter);
       if (searchString.value === 'All User Roles' || searchString.value === 'Active & Deactivated Users' || searchString.value === 'All Labels') {
         return true;
       }
       if (searchString.type === 'text') {
-        if (data.lastName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1)
+        if (data.lastName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) {
           return true;
-        else if (data.bceid.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1)
+        }
+        else if (data.bceid.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) {
           return true;
-        else return false;
+ }
+        else { return false; }
       } else {
-        return data.role.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1 ||
-          data.status.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1 ||
-          data.label.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1
+        return data.role.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
+          data.status.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
+          data.label.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1;
       }
 
       // if (searchString.type === 'role') {
@@ -96,7 +98,7 @@ export class TeamListComponent implements OnInit {
       // if (searchString.type === 'label') {
       //   return data.label.toLowerCase().trim().indexOf(searchString.value.toLowerCase()) != -1
       // }
-    }
+    };
     this.filterPredicate = filterPredicate;
   }
 }
@@ -107,7 +109,7 @@ export interface Team {
   bceid: string;
   role: string;
   label: string;
-  status: string
+  status: string;
 }
 
 

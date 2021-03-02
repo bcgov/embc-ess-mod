@@ -8,7 +8,7 @@ import { TabModel } from 'src/app/core/models/tab.model';
 })
 export class TeamManagementComponent implements OnInit {
 
- 
+
   tabs: TabModel[] = [
     {
       label: 'ESS Team',

@@ -12,7 +12,8 @@ export class AssignedCommunityReviewService {
         }
 
         removeCommunities(communityListId: string[]): Observable<void> {
-                return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsRemoveCommunities({ communityIds: communityListId });
+                return this.teamCommunitiesAssignmentsService
+                .teamCommunitiesAssignmentsRemoveCommunities({ communityIds: communityListId });
         }
 
 }

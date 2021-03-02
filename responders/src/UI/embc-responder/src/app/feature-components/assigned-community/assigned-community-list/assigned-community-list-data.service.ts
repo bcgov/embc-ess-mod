@@ -9,13 +9,38 @@ import { LoadLocationsService } from 'src/app/core/services/load-locations.servi
 @Injectable({ providedIn: 'root' })
 export class AssignedCommunityListDataService {
 
+  constructor(private loadLocationService: LoadLocationsService, private cacheService: CacheService) { }
+
   public regionalDistrictList: string[] = ['All Regional Districts', 'd1', 'd2', 'Comox Valley'];
   public typesList: string[] = ['All Types', 'First Nations Community', 'City', 'IslandMunicipality'];
   private teamCommunityList: TeamCommunityModel[];
   private allTeamCommunityList: TeamCommunityModel[];
   private communitiesToDelete: TeamCommunityModel[];
 
-  constructor(private loadLocationService: LoadLocationsService, private cacheService: CacheService) { }
+  public filtersToLoad: TableFilterModel = {
+    loadDropdownFilters: [{
+      type: 'regionalDistrict',
+      label: 'All Regional Districts',
+      values: this.loadLocationService.getRegionalDistricts()
+    },
+    {
+      type: 'type',
+      label: 'All Types',
+      values: Object.keys(CommunityType).filter(e => e)
+    }],
+    loadInputFilter: {
+      type: 'Search by city, town, village or community',
+      label: 'Search by city, town, village or community'
+    }
+  };
+
+  public displayedColumns: TableColumnModel[] = [
+    { label: 'select', ref: 'select' },
+    { label: 'Community', ref: 'name' },
+    { label: 'Regional District', ref: 'districtName' },
+    { label: 'Type', ref: 'type' },
+    { label: 'Date Added to List', ref: 'date' },
+  ];
 
   public setCommunitiesToDelete(communitiesToDelete: TeamCommunityModel[]): void {
     this.communitiesToDelete = communitiesToDelete;
@@ -46,13 +71,13 @@ export class AssignedCommunityListDataService {
   }
 
   public getCommunitiesToAddList(): TeamCommunityModel[] {
-    let allCommunities = this.loadLocationService.getCommunityList();
-    let conflictMap: TeamCommunityModel[] = allCommunities.map(values => {
-      let conflicts = this.getAllTeamCommunityList().find(x => x.id === values.id);
+    const allCommunities = this.loadLocationService.getCommunityList();
+    const conflictMap: TeamCommunityModel[] = allCommunities.map(values => {
+      const conflicts = this.getAllTeamCommunityList().find(x => x.id === values.id);
       return this.mergeData(values, conflicts);
     });
-    let addMap: TeamCommunityModel[] = conflictMap.map(values => {
-      let existing = this.getTeamCommunityList().find(x => x.id === values.id);
+    const addMap: TeamCommunityModel[] = conflictMap.map(values => {
+      const existing = this.getTeamCommunityList().find(x => x.id === values.id);
       return this.mergeData(values, existing);
     });
     return addMap;
@@ -61,30 +86,5 @@ export class AssignedCommunityListDataService {
   private mergeData<T>(finalValue: T, incomingValue: Partial<T>): T {
     return { ...finalValue, ...incomingValue };
   }
-
-  public filtersToLoad: TableFilterModel = {
-    loadDropdownFilters: [{
-      type: 'regionalDistrict',
-      label: 'All Regional Districts',
-      values: this.loadLocationService.getRegionalDistricts()
-    },
-    {
-      type: 'type',
-      label: 'All Types',
-      values: Object.keys(CommunityType).filter(e => e)
-    }],
-    loadInputFilter: {
-      type: 'Search by city, town, village or community',
-      label: 'Search by city, town, village or community'
-    }
-  }
-
-  public displayedColumns: TableColumnModel[] = [
-    { label: 'select', ref: 'select' },
-    { label: 'Community', ref: 'name' },
-    { label: 'Regional District', ref: 'districtName' },
-    { label: 'Type', ref: 'type' },
-    { label: 'Date Added to List', ref: 'date' },
-  ];
 
 }

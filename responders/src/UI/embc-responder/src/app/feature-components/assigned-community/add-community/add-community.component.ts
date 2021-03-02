@@ -14,40 +14,15 @@ import { AddCommunityService } from './add-community.service';
 })
 export class AddCommunityComponent implements OnInit {
 
+  constructor(private assignedCommunityListDataService: AssignedCommunityListDataService,
+              private router: Router, private addCommunityService: AddCommunityService) { }
+
   regionalDistrictList: string[] = ['Cariboo', 'Victoria', 'Comox Valley'];
   typesList: string[] = ['First Nations Community', 'City'];
   communities: Community[];
   filterTerm: TableFilterValueModel;
-  selectedCommunitiesList: Community[] =[];
+  selectedCommunitiesList: Community[] = [];
   filterPredicate: (data: Community, filter: string) => boolean;
-
-  constructor(private assignedCommunityListDataService: AssignedCommunityListDataService,
-    private router: Router, private addCommunityService: AddCommunityService) { }
-
-  ngOnInit(): void {
-    this.communitiesFilterPredicate();
-    console.log(this.assignedCommunityListDataService.getCommunitiesToAddList())
-    this.communities = this.assignedCommunityListDataService.getCommunitiesToAddList();
-  }
-
-  communitiesFilterPredicate(): void {
-    let filterPredicate = (data: Community, filter: string): boolean => {
-      let searchString: TableFilterValueModel = JSON.parse(filter);
-      if (searchString.value === 'All Regional Districts') {
-        return true;
-      }
-      if (searchString.type === 'text') {
-        return (data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1)
-      } else {
-        return data.districtName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1
-      }
-    }
-    this.filterPredicate = filterPredicate;
-  }
-
-  filter(event: TableFilterValueModel) {
-    this.filterTerm = event;
-  }
 
   filtersToLoad: TableFilterModel = {
     loadDropdownFilters: [{
@@ -59,7 +34,7 @@ export class AddCommunityComponent implements OnInit {
       type: 'Search by city, town, village or community',
       label: 'Search by city, town, village or community'
     }
-  }
+  };
 
   displayedColumns: TableColumnModel[] = [
     { label: 'select', ref: 'select' },
@@ -69,17 +44,41 @@ export class AddCommunityComponent implements OnInit {
     { label: 'Type', ref: 'type' }
   ];
 
-  selectedCommunities($event) {
+  ngOnInit(): void {
+    this.communitiesFilterPredicate();
+    console.log(this.assignedCommunityListDataService.getCommunitiesToAddList());
+    this.communities = this.assignedCommunityListDataService.getCommunitiesToAddList();
+  }
+
+  communitiesFilterPredicate(): void {
+    const filterPredicate = (data: Community, filter: string): boolean => {
+      const searchString: TableFilterValueModel = JSON.parse(filter);
+      if (searchString.value === 'All Regional Districts') {
+        return true;
+      }
+      if (searchString.type === 'text') {
+        return (data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1);
+      } else {
+        return data.districtName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1;
+      }
+    };
+    this.filterPredicate = filterPredicate;
+  }
+
+  filter(event: TableFilterValueModel): void {
+    this.filterTerm = event;
+  }
+
+  selectedCommunities($event): void {
     this.selectedCommunitiesList = $event;
     this.addCommunityService.setAddedCommunities($event);
 }
 
-addToMyList() {
-    console.log(this.selectedCommunitiesList);
-    this.router.navigate(['/responder-access/community-management/review'], {queryParams: {action: 'add'}})
+addToMyList(): void {
+    this.router.navigate(['/responder-access/community-management/review'], {queryParams: {action: 'add'}});
   }
 
-  goToList() {
-    this.router.navigate(['/responder-access/community-management/list-communities'])
+  goToList(): void {
+    this.router.navigate(['/responder-access/community-management/list-communities']);
   }
 }

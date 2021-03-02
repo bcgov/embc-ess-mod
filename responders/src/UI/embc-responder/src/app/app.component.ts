@@ -8,13 +8,13 @@ import { LoadLocationsService } from './core/services/load-locations.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  
+
   constructor(apiConfig: ApiConfiguration, private loadLocationService: LoadLocationsService) {
     apiConfig.rootUrl = '';
     this.loadLocations();
   }
 
-  loadLocations() {
+  loadLocations(): void {
     this.loadLocationService.getCommunityList();
     this.loadLocationService.getCountriesList();
     this.loadLocationService.getStateProvinceList();

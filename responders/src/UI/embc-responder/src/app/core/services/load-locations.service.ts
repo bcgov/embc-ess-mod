@@ -61,24 +61,24 @@ export class LoadLocationsService {
         this.locationsService.locationsGetCommunities().subscribe((commumities: Community[]) => {
             communities = commumities;
             this.setCommunityList(communities);
-            this.setRegionalDistricts(commumities.map(comm => { return comm['districtName'] }));
+            this.setRegionalDistricts(commumities.map(comm => comm.districtName));
         });
         return communities;
     }
 
     private getStateProvince(): StateProvince[] {
-        let stateProvince: StateProvince[] = [];
+        let stateProvinces: StateProvince[] = [];
         this.locationsService.locationsGetStateProvinces().subscribe((stateProvince: StateProvince[]) => {
-            stateProvince = stateProvince
+            stateProvinces = stateProvince;
             this.setStateProvinceList(stateProvince);
         });
-        return stateProvince;
+        return stateProvinces;
     }
 
     private getCountries(): Country[] {
         let countries: Country[] = [];
-        this.locationsService.locationsGetCountries().subscribe((countries: Country[]) => {
-            countries = countries
+        this.locationsService.locationsGetCountries().subscribe((countriesList: Country[]) => {
+            countries = countriesList;
             this.setCountriesList(countries);
         });
         return countries;

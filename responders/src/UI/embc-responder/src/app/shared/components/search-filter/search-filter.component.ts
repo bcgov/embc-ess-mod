@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
-import { MatOption } from '@angular/material/core';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
@@ -28,7 +27,7 @@ export class SearchFilterComponent implements OnInit {
 
   search(): void {
     this.resetSelects();
-    this.filterEvent.emit({ type: 'text', value: this.searchTerm })
+    this.filterEvent.emit({ type: 'text', value: this.searchTerm });
   }
 
   resetAllFilters(): void {
@@ -38,13 +37,13 @@ export class SearchFilterComponent implements OnInit {
 
   private resetSelects(): void {
     this.matRef.forEach((select: MatSelect) => {
-      select.value = ''
+      select.value = '';
     });
   }
 
   private resetTextField(): void {
-    this.searchTerm = ''
-    this.filterEvent.emit({ type: 'text', value: this.searchTerm })
+    this.searchTerm = '';
+    this.filterEvent.emit({ type: 'text', value: this.searchTerm });
   }
 
 }

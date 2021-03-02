@@ -26,7 +26,7 @@ export class AssignedCommunityListComponent implements OnInit {
   isLoading = false;
 
   constructor(private assignedCommunityListService: AssignedCommunityListService,
-    private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
+              private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
 
   ngOnInit(): void {
     this.communitiesFilterPredicate();
@@ -38,7 +38,7 @@ export class AssignedCommunityListComponent implements OnInit {
     });
 
     this.assignedCommunityListService.getAllAssignedCommunityList().subscribe(values => {
-      console.log(values)
+      console.log(values);
       this.assignedCommunityListDataService.setAllTeamCommunityList(values);
     });
 
@@ -56,28 +56,28 @@ export class AssignedCommunityListComponent implements OnInit {
   }
 
   communitiesFilterPredicate(): void {
-    let filterPredicate = (data: TeamCommunityModel, filter: string): boolean => {
-      let searchString: TableFilterValueModel = JSON.parse(filter);
+    const filterPredicate = (data: TeamCommunityModel, filter: string): boolean => {
+      const searchString: TableFilterValueModel = JSON.parse(filter);
       if (searchString.value === 'All Regional Districts' || searchString.value === 'All Types') {
         return true;
       }
       if (searchString.type === 'text') {
-        return (data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1)
+        return (data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1);
       } else {
-        return data.districtName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1 ||
-          data.type.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) != -1
+        return data.districtName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
+          data.type.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1;
       }
-    }
+    };
     this.filterPredicate = filterPredicate;
   }
 
-  communitiesToDelete($event) {
+  communitiesToDelete($event): void {
     this.communitiesToDeleteList = $event;
     this.assignedCommunityListDataService.setCommunitiesToDelete($event);
   }
 
-  deleteCommunities() {
-    this.router.navigate(['/responder-access/community-management/review'], {queryParams: {action: 'delete'}})
+  deleteCommunities(): void {
+    this.router.navigate(['/responder-access/community-management/review'], {queryParams: {action: 'delete'}});
   }
 
 }

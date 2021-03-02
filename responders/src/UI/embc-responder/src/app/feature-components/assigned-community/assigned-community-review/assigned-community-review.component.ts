@@ -21,12 +21,13 @@ export class AssignedCommunityReviewComponent implements OnInit {
   isSubmitted = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private addCommunityService: AddCommunityService,
-    private assignedCommunityDataService: AssignedCommunityListDataService, private assignedCommunityReviewService: AssignedCommunityReviewService,
-    private alertService: AlertService) {
+              private assignedCommunityDataService: AssignedCommunityListDataService,
+              private assignedCommunityReviewService: AssignedCommunityReviewService,
+              private alertService: AlertService) {
   }
 
   ngOnInit(): void {
-    let params = this.route.snapshot.queryParams;
+    const params = this.route.snapshot.queryParams;
     if (params) {
       this.reviewAction = params.action;
     }
@@ -35,14 +36,14 @@ export class AssignedCommunityReviewComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/responder-access/community-management/add-communities'])
+    this.router.navigate(['/responder-access/community-management/add-communities']);
   }
 
   save(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.assignedCommunityReviewService.addCommunities(this.communityList.map(comm => { return comm['communityId'] })).subscribe(response => {
-      this.router.navigate(['/responder-access/community-management/list-communities'])
+    this.assignedCommunityReviewService.addCommunities(this.communityList.map(comm => comm.communityId)).subscribe(response => {
+      this.router.navigate(['/responder-access/community-management/list-communities']);
     }, (error) => {
       this.showLoader = !this.showLoader;
       this.isSubmitted = !this.isSubmitted;
@@ -51,14 +52,14 @@ export class AssignedCommunityReviewComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/responder-access/community-management/list-communities'])
+    this.router.navigate(['/responder-access/community-management/list-communities']);
   }
 
   remove(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.assignedCommunityReviewService.removeCommunities(this.deleteCommunityList.map(comm => { return comm['communityId'] })).subscribe(response => {
-      this.router.navigate(['/responder-access/community-management/list-communities'])
+    this.assignedCommunityReviewService.removeCommunities(this.deleteCommunityList.map(comm => comm.communityId)).subscribe(response => {
+      this.router.navigate(['/responder-access/community-management/list-communities']);
     }, (error) => {
       this.showLoader = !this.showLoader;
       this.isSubmitted = !this.isSubmitted;

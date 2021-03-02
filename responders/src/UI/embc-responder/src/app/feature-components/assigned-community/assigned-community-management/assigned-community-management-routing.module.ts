@@ -21,7 +21,8 @@ const routes: Routes = [
       },
       {
         path: 'review',
-        loadChildren: () => import('../assigned-community-review/assigned-community-review.module').then(m => m.AssignedCommunityReviewModule)
+        loadChildren: () => import('../assigned-community-review/assigned-community-review.module')
+        .then(m => m.AssignedCommunityReviewModule)
       }
     ]
   }
