@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { EvacuationCard } from 'src/app/sharedModules/components/dashboard/dashboard.component';
+import { NeedsAssessment } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-evacuation-card',
@@ -9,9 +9,9 @@ import { EvacuationCard } from 'src/app/sharedModules/components/dashboard/dashb
 
 export class EvacuationCardComponent implements OnInit {
 
-  @Input() evacuationFileCard: EvacuationCard;
+  @Input() evacuationFileCard: NeedsAssessment;
   @Output() showEvacuationList = new EventEmitter<boolean>();
-  @Output() evacuationFile = new EventEmitter<EvacuationCard>();
+  @Output() evacuationFile = new EventEmitter<NeedsAssessment>();
 
   imageIcon: string;
 
@@ -22,11 +22,11 @@ export class EvacuationCardComponent implements OnInit {
   }
 
   changeStatusColor(): void {
-    if (this.evacuationFileCard.status === 'Active') {
-      this.imageIcon = '/assets/images/active_status.svg';
-    } else {
-      this.imageIcon = '/assets/images/inactive_status.svg';
-    }
+    // if (this.evacuationFileCard.status === 'Active') {
+    //   this.imageIcon = '/assets/images/active_status.svg';
+    // } else {
+    //   this.imageIcon = '/assets/images/inactive_status.svg';
+    // }
   }
 
   goToDetails(): void {
