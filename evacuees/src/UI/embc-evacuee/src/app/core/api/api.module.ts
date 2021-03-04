@@ -9,7 +9,6 @@ import { LoginService } from './services/login.service';
 import { RegistrationService } from './services/registration.service';
 import { ProfileService } from './services/profile.service';
 import { LocationService } from './services/location.service';
-import { EvacuationService } from './services/evacuation.service';
 
 /**
  * Module that provides all services and configuration.
@@ -24,7 +23,6 @@ import { EvacuationService } from './services/evacuation.service';
     RegistrationService,
     ProfileService,
     LocationService,
-    EvacuationService,
     ApiConfiguration
   ],
 })

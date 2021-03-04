@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { Profile } from 'src/app/core/api/models';
 import { CacheService } from 'src/app/core/services/cache.service';
 
@@ -42,4 +41,5 @@ export class ProfileDataService {
     public getProfileId(): string {
         return this.profileId;
     }
+
 }

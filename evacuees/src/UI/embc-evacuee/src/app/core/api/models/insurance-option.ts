@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum InsuranceOption {
-  No = 'No',
+  Unknown = 'Unknown',
   Yes = 'Yes',
-  Unsure = 'Unsure',
-  Unknown = 'Unknown'
+  No = 'No',
+  Unsure = 'Unsure'
 }

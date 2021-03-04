@@ -9,9 +9,8 @@ import { FormCreationService } from '../../../core/services/formCreation.service
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { DataService } from 'src/app/core/services/data.service';
+import { ProfileApiService } from 'src/app/core/services/api/profileApi.service';
 import { ProfileDataService } from './profile-data.service';
-import { ProfileMappingService } from './profile-mapping.service';
-import { ProfileService } from './profile.service';
 
 @Component({
   selector: 'app-profile',
@@ -37,10 +36,9 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   constructor(
     private router: Router, private componentService: ComponentCreationService, private route: ActivatedRoute,
-    private formCreationService: FormCreationService, public updateService: DataUpdationService,
-    private cd: ChangeDetectorRef, private alertService: AlertService, private dataService: DataService,
-    private profileDataService: ProfileDataService, private profileMappingService: ProfileMappingService,
-    private profileService: ProfileService) {
+    private formCreationService: FormCreationService, public updateService: DataUpdationService, private cd: ChangeDetectorRef,
+    private profileApiService: ProfileApiService, private alertService: AlertService, private dataService: DataService,
+    private profileDataService: ProfileDataService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -171,17 +169,15 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   submitFile(): void {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
-
-    let profile = this.profileMappingService.getProfile();
-    console.log(profile);
-    this.profileService.upsertProfile(profile).subscribe(() => {
-      this.showLoader = !this.showLoader;
+    this.profileApiService.submitProfile().subscribe((profileId) => {
+      this.profileDataService.setProfileId(profileId);
       this.router.navigate(['/verified-registration/dashboard']);
     }, (error) => {
       console.log(error);
       this.showLoader = !this.showLoader;
       this.alertService.setAlert('danger', error.title);
     });
+
   }
 
   ngOnDestroy(): void {

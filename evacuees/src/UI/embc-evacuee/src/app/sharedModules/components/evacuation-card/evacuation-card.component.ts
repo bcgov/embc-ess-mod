@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { EvacuationCard } from '../evacuation-file-list/evacuation-file-list.component';
+import { EvacuationCard } from 'src/app/sharedModules/components/dashboard/dashboard.component';
 
 @Component({
   selector: 'app-evacuation-card',

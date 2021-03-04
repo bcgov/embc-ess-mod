@@ -59,12 +59,6 @@ const routes: Routes = [
         loadChildren: () => import('../sharedModules/components/file-submission/file-submission.module')
           .then(m => m.FileSubmissionModule),
         data: { flow: 'verified-registration' }
-      },
-      {
-        path: 'error',
-        loadChildren: () => import('../sharedModules/components/error-screen/error-screen.module')
-          .then(m => m.ErrorScreenModule),
-        data: { flow: 'verified-registration' }
       }
     ]
   }
