@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { ContactDetails, Profile, ProfileDataConflict, StateProvince } from '../../../core/api/models';
+import { Profile, ProfileDataConflict, StateProvince } from '../../../core/api/models';
 import { ProfileDataService } from './profile-data.service';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataService } from 'src/app/core/services/data.service';
@@ -112,10 +112,6 @@ export class ProfileMappingService {
         return isMailingAddressSameAsPrimaryAddress === true ? 'Yes' : 'No';
     }
 
-    private isMailingAddressSameAsPrimaryAddress(isSameMailingAddress: string): boolean {
-        return isSameMailingAddress === 'Yes' ? true : false;
-    }
-
     private isBCAddress(province: null | StateProvince): string {
         return province.code !== null && province.code === 'BC' ? 'Yes' : 'No';
     }
@@ -172,7 +168,7 @@ export class ProfileMappingService {
                 console.log(address);
                 profile.primaryAddress = address.value.address;
                 profile.mailingAddress = address.value.mailingAddress;
-                profile.isMailingAddressSameAsPrimaryAddress = this.isMailingAddressSameAsPrimaryAddress(address.value.isNewMailingAddress);
+                profile.isMailingAddressSameAsPrimaryAddress = address.value.isNewMailingAddress;
             });
 
         this.formCreationService.getSecretForm().pipe(

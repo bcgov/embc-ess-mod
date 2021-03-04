@@ -37,10 +37,9 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   constructor(
     private router: Router, private componentService: ComponentCreationService, private route: ActivatedRoute,
-    private formCreationService: FormCreationService, public updateService: DataUpdationService,
-    private cd: ChangeDetectorRef, private alertService: AlertService, private dataService: DataService,
-    private profileDataService: ProfileDataService, private profileMappingService: ProfileMappingService,
-    private profileService: ProfileService) {
+    private formCreationService: FormCreationService, public updateService: DataUpdationService, private cd: ChangeDetectorRef,
+    private alertService: AlertService, private dataService: DataService,
+    private profileDataService: ProfileDataService, private profileMappingService: ProfileMappingService, private profileService: ProfileService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -182,6 +181,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.showLoader = !this.showLoader;
       this.alertService.setAlert('danger', error.title);
     });
+
   }
 
   ngOnDestroy(): void {

@@ -187,7 +187,8 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   submitVerified(): void {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
-    this.evacuationFileService.createEvacuationFile().subscribe((response: string) => {
+
+    this.evacuationFileService.createEvacuationFile().subscribe((response) => {
       console.log(response);
       const registrationResult: RegistrationResult = { referenceNumber: response };
       this.updateService.updateRegisrationResult(registrationResult);

@@ -1,92 +1,58 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NeedsAssessment } from 'src/app/core/api/models';
+import { CacheService } from 'src/app/core/services/cache.service';
+import { DataService } from 'src/app/core/services/data.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
-import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
-import { EvacuationFileDataService } from '../evacuation-file-data.service';
-
-export interface EvacuationCard {
-  from: string;
-  date: string;
-  code: number;
-  support: string;
-  status: string;
-  referral: boolean;
-  referrals?: Referral[];
-}
-
-export interface Referral {
-  referralDate: string;
-  referralDetails: ReferralDetails[];
-}
-
-export interface ReferralDetails {
-  provider: string;
-  type: string;
-  issuedTo: string;
-  expiry: string;
-  code: string;
-  amount: string;
-  status: string;
-  providedTo: string[];
-  providerDetails: string;
-  issuedBy: string;
-}
+import { FormCreationService } from 'src/app/core/services/formCreation.service';
 
 @Component({
-  selector: 'app-evacuation-file-list',
-  templateUrl: './evacuation-file-list.component.html',
-  styleUrls: ['./evacuation-file-list.component.scss']
+    selector: 'app-evacuation-file-list',
+    templateUrl: './evacuation-file-list.component.html',
+    styleUrls: ['./evacuation-file-list.component.scss']
 })
 export class EvacuationFileListComponent implements OnInit {
 
-  dataSourceActive: Array<NeedsAssessment>;
-  dataSourceInactive: Array<NeedsAssessment>;
-  showActiveList = true;
-  showInactiveList = true;
-  currentChild: EvacuationCardComponent;
-  evacuatedFrom?: string;
-  currentPath: string;
+    currentPath: string;
+    evacuatedFrom: string;
+    showActiveList = true;
+    showInactiveList = true;
+    currentChild: NeedsAssessment;
+    dataSourceActive: Array<NeedsAssessment>;
+    dataSourceInactive: Array<NeedsAssessment>;
 
-  constructor(private dialogService: DialogService, private evacuationFileDataService: EvacuationFileDataService) { }
+    constructor(private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
+        private router: Router, private dialogService: DialogService, private cacheService: CacheService) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void { }
 
-    this.dataSourceActive = this.evacuationFileDataService.getCurrentEvacuationFiles();
-    // this.dataSourceInactive = this.evacuationFileDataService.getPastEvacuationFiles();
+    startAdditionalAssessment(): void {
+        this.dialogService.addEvacuationFile(this.evacuatedFrom);
+    }
 
-    // this.evacuatedFrom = this.dataSourceActive[this.dataSourceActive.length - 1]?.from;
 
-    this.currentPath = window.location.pathname;
-    console.log(this.currentPath);
-  }
+    setActiveListView(event: boolean): void {
+        this.showActiveList = event;
+    }
 
-  startAdditionalAssessment(): void {
-    this.dialogService.addEvacuationFile(this.evacuatedFrom);
-  }
+    setInactiveListView(event: boolean): void {
+        this.showInactiveList = event;
+    }
 
-  setActiveListView(event: boolean): void {
-    this.showActiveList = event;
-  }
+    setCurrentChild(fileCard: NeedsAssessment): void {
+        this.currentChild = fileCard;
+    }
 
-  setInactiveListView(event: boolean): void {
-    this.showInactiveList = event;
-  }
+    goBackActive(): void {
+        this.showActiveList = !this.showActiveList;
+    }
 
-  setCurrentChild(fileCard: EvacuationCardComponent): void {
-    this.currentChild = fileCard;
-  }
+    goBackInactive(): void {
+        this.showInactiveList = !this.showInactiveList;
+    }
 
-  goBackActive(): void {
-    this.showActiveList = !this.showActiveList;
-  }
-
-  goBackInactive(): void {
-    this.showInactiveList = !this.showInactiveList;
-  }
-
-  resetTab($event): void {
-    this.showActiveList = true;
-    this.showInactiveList = true;
-  }
-
+    resetTab($event): void {
+        this.showActiveList = true;
+        this.showInactiveList = true;
+    }
 }
