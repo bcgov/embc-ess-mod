@@ -1,17 +1,18 @@
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs/internal/Observable";
-import { NeedsAssessment } from "src/app/core/api/models/needs-assessment";
-import { EvacuationService } from "src/app/core/api/services/evacuation.service";
-import { DataService } from "src/app/core/services/data.service";
-import { EvacuationFileDataService } from "./evacuation-file-data.service";
-import { EvacuationFileMappingService } from "./evacuation-file-mapping.service";
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { NeedsAssessment } from 'src/app/core/api/models/needs-assessment';
+import { EvacuationService } from 'src/app/core/api/services/evacuation.service';
+import { DataService } from 'src/app/core/services/data.service';
+import { EvacuationFileDataService } from './evacuation-file-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileService {
 
     private evacuationFile: NeedsAssessment;
 
-    constructor(private evacuationService: EvacuationService, private dataService: DataService, private evacuationFileDataService: EvacuationFileDataService) { }
+    constructor(
+        private evacuationService: EvacuationService, private dataService: DataService,
+        private evacuationFileDataService: EvacuationFileDataService) { }
 
     getCurrentEvacuationFiles(): void {
         this.evacuationService.evacuationGetCurrentEvacuations().subscribe(evacuationFileList => {

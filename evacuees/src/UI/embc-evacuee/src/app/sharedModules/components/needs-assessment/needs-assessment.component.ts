@@ -189,7 +189,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.alertService.clearAlert();
     this.evacuationFileService.createEvacuationFile().subscribe((response: string) => {
       console.log(response);
-      let registrationResult: RegistrationResult = { referenceNumber: response };
+      const registrationResult: RegistrationResult = { referenceNumber: response };
       this.updateService.updateRegisrationResult(registrationResult);
       this.router.navigate(['/verified-registration/dashboard']);
     }, (error: any) => {

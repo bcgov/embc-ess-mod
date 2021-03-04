@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { NeedsAssessment } from 'src/app/core/api/models';
 import { EvacuationCard } from '../evacuation-file-list/evacuation-file-list.component';
 
 @Component({
@@ -9,7 +10,7 @@ import { EvacuationCard } from '../evacuation-file-list/evacuation-file-list.com
 
 export class EvacuationCardComponent implements OnInit {
 
-  @Input() evacuationFileCard: EvacuationCard;
+  @Input() evacuationFileCard: NeedsAssessment;
   @Output() showEvacuationList = new EventEmitter<boolean>();
   @Output() evacuationFile = new EventEmitter<EvacuationCard>();
 

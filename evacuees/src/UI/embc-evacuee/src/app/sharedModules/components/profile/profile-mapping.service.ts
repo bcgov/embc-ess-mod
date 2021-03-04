@@ -146,7 +146,7 @@ export class ProfileMappingService {
     }
 
     getProfile(): Profile {
-        let profile: Profile = {
+        const profile: Profile = {
             contactDetails: null,
             id: this.profileDataService.getProfileId(),
             isMailingAddressSameAsPrimaryAddress: false,

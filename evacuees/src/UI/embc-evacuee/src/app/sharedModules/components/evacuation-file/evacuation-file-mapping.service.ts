@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { NeedsAssessment } from "src/app/core/api/models";
-import { EvacuationFileDataService } from "./evacuation-file-data.service";
+import { Injectable } from '@angular/core';
+import { NeedsAssessment } from 'src/app/core/api/models';
+import { EvacuationFileDataService } from './evacuation-file-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileMappingService {

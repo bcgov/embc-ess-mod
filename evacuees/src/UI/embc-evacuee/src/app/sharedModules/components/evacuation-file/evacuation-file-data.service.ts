@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { NeedsAssessment } from "src/app/core/api/models";
+import { Injectable } from '@angular/core';
+import { NeedsAssessment } from 'src/app/core/api/models';
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileDataService {
@@ -13,7 +13,7 @@ export class EvacuationFileDataService {
     constructor() { }
 
     getCurrentEvacuationFileCount(): number {
-        console.log(this.currentEvacuationFileCount)
+        console.log(this.currentEvacuationFileCount);
         return this.currentEvacuationFileCount;
     }
 
@@ -22,7 +22,7 @@ export class EvacuationFileDataService {
     }
 
     getCurrentEvacuationFiles(): Array<NeedsAssessment> {
-        console.log(this.currentEvacuationFiles)
+        console.log(this.currentEvacuationFiles);
         return this.currentEvacuationFiles;
     }
 
@@ -32,7 +32,7 @@ export class EvacuationFileDataService {
     }
 
     getPastEvacuationFileCount(): number {
-        console.log(this.pastEvacuationFileCount)
+        console.log(this.pastEvacuationFileCount);
         return this.pastEvacuationFileCount;
     }
 
@@ -41,7 +41,7 @@ export class EvacuationFileDataService {
     }
 
     getPastEvacuationFiles(): Array<NeedsAssessment> {
-        console.log(this.pastEvacuationFiles)
+        console.log(this.pastEvacuationFiles);
         return this.pastEvacuationFiles;
     }
 
@@ -56,6 +56,4 @@ export class EvacuationFileDataService {
     setSelectedEvacuationFile(evacuationFile: NeedsAssessment): void {
         this.selectedEvacuationFile = evacuationFile;
     }
-
-
 }

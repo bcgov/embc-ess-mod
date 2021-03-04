@@ -65,7 +65,7 @@ export class EditComponent implements OnInit, OnDestroy {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
       } else if (this.parentPageName === 'dashboard') {
         this.showLoader = !this.showLoader;
-        let profile = this.profileMappingService.getProfile();
+        const profile = this.profileMappingService.getProfile();
         this.profileService.upsertProfile(profile).subscribe(() => {
           this.showLoader = !this.showLoader;
           this.router.navigate(['/verified-registration/dashboard']);

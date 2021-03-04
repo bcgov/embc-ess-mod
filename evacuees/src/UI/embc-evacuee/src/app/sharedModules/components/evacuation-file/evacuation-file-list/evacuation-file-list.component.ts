@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { NeedsAssessment } from 'src/app/core/api/models';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
@@ -33,46 +32,6 @@ export interface ReferralDetails {
   issuedBy: string;
 }
 
-const ACTIVE_DATA: EvacuationCard[] = [
-  { from: 'Victoria', date: '20-Feb-2020', code: 333333, support: 'No', status: 'Active', referral: false },
-  {
-    from: 'Vancouver', date: '20-Feb-2020', code: 444444, support: 'No', status: 'Active', referral: true,
-    referrals: [{
-      referralDate: '07-Sep-2020', referralDetails: [{
-        provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John',
-        expiry: 'n/a', code: 'P356211', amount: '$50', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna',
-          'Smith, Michael', 'Smith, Lily'], providerDetails: 'e-Transfer issued to jsmith@gmail.com',
-        issuedBy: 'Oak Bay ESS Team'
-      }]
-    }]
-  },
-];
-
-const INACTIVE_DATA: EvacuationCard[] = [
-  {
-    from: 'Victoria', date: '20-Feb-2020', code: 123456, support: 'No', status: 'Inactive', referral: true,
-    referrals: [{
-      referralDate: '07-Sep-2020', referralDetails: [{
-        provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John', expiry: 'n/a', code: 'P356211', amount: '$50',
-        status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
-        providerDetails: 'e-Transfer issued to jsmith@gmail.com', issuedBy: 'Oak Bay ESS Team'
-      }]
-    },
-    {
-      referralDate: '04-Sep-2020', referralDetails: [{
-        provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John', expiry: 'n/a', code: 'P356211', amount: '$50',
-        status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
-        providerDetails: 'e-Transfer issued to jsmith@gmail.com', issuedBy: 'Oak Bay ESS Team'
-      },
-      {
-        provider: 'Great Hotel Ltd', type: 'Lodging - Hotel/Motel', issuedTo: 'Smith, John', expiry: 'mm/dd/yyyy', code: 'D12345',
-        amount: 'n/a', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
-        providerDetails: 'Great Hotel ltd Address1 Address 2 City Province Postal Code', issuedBy: 'Oak Bay ESS Team'
-      }]
-    }]
-  }
-];
-
 @Component({
   selector: 'app-evacuation-file-list',
   templateUrl: './evacuation-file-list.component.html',
@@ -93,12 +52,12 @@ export class EvacuationFileListComponent implements OnInit {
   ngOnInit(): void {
 
     this.dataSourceActive = this.evacuationFileDataService.getCurrentEvacuationFiles();
-    this.dataSourceInactive = this.evacuationFileDataService.getPastEvacuationFiles();
+    // this.dataSourceInactive = this.evacuationFileDataService.getPastEvacuationFiles();
 
-    //this.evacuatedFrom = this.dataSourceActive[this.dataSourceActive.length - 1]?.from;
+    // this.evacuatedFrom = this.dataSourceActive[this.dataSourceActive.length - 1]?.from;
 
     this.currentPath = window.location.pathname;
-    console.log(this.currentPath)
+    console.log(this.currentPath);
   }
 
   startAdditionalAssessment(): void {

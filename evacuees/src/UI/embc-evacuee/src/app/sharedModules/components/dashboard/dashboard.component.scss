@@ -1,5 +1,5 @@
 .view-banner {
-    background-color: #FCBA19;
+    background-color: #fcba19;
     border-color: #ffdf25;
     box-shadow: none;
 }
@@ -26,37 +26,25 @@
     padding-bottom: 20px;
 }
 
-:host ::ng-deep .mat-tab-label-active {
-    .inactive-curr{
+.mat-tab-link {
+    background-color: rgba(204, 204, 204, 1);
+    opacity: 1;
+}
+
+.active-tab {
+    color: #169bd5 !important;
+    background: white;
+
+    .inactive-curr {
         display: none !important;
     }
-    .active-curr{
+    .active-curr {
         display: block !important;
     }
 }
 
-.active-curr{
+.active-curr {
     display: none;
-}
-
-:host ::ng-deep app-review {
-    .mat-card {
-        box-shadow: none;
-    }
-    .mat-card-top, mat-card {
-     border-top-style: none !important; 
-    }
-    .mat-card-left, mat-card {
-        border-left-style: none !important; 
-    }
-    .mat-card-right, mat-card {
-        border-right-style: none !important; 
-    }   
-}
-
-.breadCrumb { 
-    font-family: 'BC Sans', sans-serif;
-    padding: 10px 50px;
 }
 
 .goBackLink {
@@ -65,12 +53,12 @@
 }
 
 .goBackLink:hover {
-    color: #169BD5;
+    color: #169bd5;
     text-decoration: underline;
     cursor: pointer;
 }
 
 .card-container {
     margin: 2em 0;
-    box-shadow:  8px 5px 5px -1px rgba(0, 0, 0, 0.101960784313725);
+    box-shadow: 8px 5px 5px -1px rgba(0, 0, 0, 0.101960784313725);
 }

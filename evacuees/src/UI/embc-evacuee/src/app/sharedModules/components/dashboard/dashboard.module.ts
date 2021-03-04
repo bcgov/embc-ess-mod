@@ -1,36 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ViewAuthProfileRoutingModule } from './dashboard-routing.module';
+import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ReviewModule } from '../review/review.module';
-import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
-import { EvacuationDetailsComponent } from '../evacuation-details/evacuation-details.component';
-import { ReferralDetailsComponent } from '../referral-details/referral-details.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { EvacuationFileListRoutingModule } from '../evacuation-file/evacuation-file-list/evacuation-file-list-routing.module';
+import { ProfileRoutingModule } from '../evacuation-file/profile/profile-routing.module';
 
 
 
 @NgModule({
-  declarations: [
-    DashboardComponent,
-    EvacuationCardComponent,
-    EvacuationDetailsComponent,
-    ReferralDetailsComponent
-  ],
+  declarations: [DashboardComponent],
   imports: [
     CommonModule,
-    ViewAuthProfileRoutingModule,
+    DashboardRoutingModule,
+    EvacuationFileListRoutingModule,
+    ProfileRoutingModule,
     MatCardModule,
-    MatTableModule,
-    MatButtonModule,
-    MatTabsModule,
-    ReviewModule,
-    MatExpansionModule
+    MatTabsModule
   ]
 })
 export class ViewAuthProfileModule { }
