@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics;
+using Microsoft.Dynamics.CRM;
 
 namespace EMBC.ESS.Resources.Metadata
 {
@@ -50,11 +51,11 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<StateProvince>> GetStateProvinces()
         {
-            var provinces = await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync();
+            var stateProvinces = await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync();
 
             essContext.DetachAll();
 
-            return provinces.Select(sp => new StateProvince
+            return stateProvinces.Select(sp => new StateProvince
             {
                 Code = sp.era_code,
                 Name = sp.era_name,
@@ -64,12 +65,12 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<Community>> GetCommunities()
         {
-            await GetStateProvinces();  // temporary solution to populate the client's cache with entities, otherwise era_RelatedCountry will be null
+            var stateProvinces = (await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync()).ToArray();
+
             var jurisdictions = await essContext.era_jurisdictions
                 .Expand(j => j.era_RelatedProvinceState)
                 .Expand(j => j.era_RegionalDistrict)
                 .GetAllPagesAsync();
-
             essContext.DetachAll();
 
             return jurisdictions.Select(j => new Community
@@ -78,7 +79,7 @@ namespace EMBC.ESS.Resources.Metadata
                 Name = j.era_jurisdictionname,
                 Type = !j.era_type.HasValue ? CommunityType.Undefined : (CommunityType)j.era_type.Value,
                 StateProvinceCode = j.era_RelatedProvinceState.era_code,
-                CountryCode = j.era_RelatedProvinceState?.era_RelatedCountry?.era_countrycode,
+                CountryCode = stateProvinces.SingleOrDefault(sp => sp.era_provinceterritoriesid == j.era_RelatedProvinceState.era_provinceterritoriesid)?.era_RelatedCountry?.era_countrycode,
                 DistrictCode = j.era_RegionalDistrict?.era_regionaldistrictid.Value.ToString(),
                 DistrictName = j.era_RegionalDistrict?.era_districtname
             }).ToArray();

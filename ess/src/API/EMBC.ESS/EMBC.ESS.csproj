@@ -10,8 +10,6 @@
     <PackageLicenseExpression></PackageLicenseExpression>
     <RepositoryUrl>https://github.com/bcgov/embc-ess-mod</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <UserSecretsId>0d3cba7f-28c0-495e-a236-85cae997fa6f</UserSecretsId>
   </PropertyGroup>
 
@@ -60,10 +58,10 @@
     <PackageReference Include="Serilog.Exceptions" Version="6.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Splunk" Version="3.6.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+    <!--<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.321">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    </PackageReference>-->
   </ItemGroup>
 
   <ItemGroup>

@@ -34,6 +34,8 @@ namespace EMBC.ESS.Resources.Metadata
                         ? null
                         : o.era_RelatedProvinceState.era_code))
                 .ForMember(j => j.Type, opts => opts.MapFrom(o => o.era_type.HasValue ? (CommunityType)o.era_type : CommunityType.Undefined))
+                .ForMember(j => j.DistrictCode, opts => opts.MapFrom(o => o.era_RegionalDistrict.era_regionaldistrictid.ToString()))
+                .ForMember(j => j.DistrictName, opts => opts.MapFrom(o => o.era_RegionalDistrict.era_districtname))
                 .ReverseMap()
                 ;
 

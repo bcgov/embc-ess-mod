@@ -70,7 +70,7 @@ namespace EMBC.ESS.Resources.Team
 
         public DateTime? LastSuccessfulLogin { get; set; }
         public bool IsActive { get; set; }
-        public string ExternalUserId { get; internal set; }
+        public string ExternalUserId { get; set; }
     }
 
     public class TeamRepository : ITeamRepository
@@ -84,9 +84,10 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<IEnumerable<TeamMember>> GetMembers(string teamId)
         {
-            var teamUsers = (await context.era_essteamusers
-                .GetAllPagesAsync())
-                .Where(u => u.era_ESSTeamId.era_essteamid == Guid.Parse(teamId));
+            await Task.CompletedTask;
+            var teamUsers = context.era_essteamusers
+                .Where(u => u._era_essteamid_value == Guid.Parse(teamId))
+                .ToArray();
 
             context.DetachAll();
 
@@ -134,26 +135,25 @@ namespace EMBC.ESS.Resources.Team
             var essTeam = GetEssTeam(teamMember.TeamId);
             if (essTeam == null) throw new Exception($"team {teamMember.TeamId} not found");
 
-            var essTeamUsermember = teamMember.Id == null
-                ? new era_essteamuser { era_essteamuserid = Guid.NewGuid() }
-                : GetEssTeamUser(teamMember.Id);
+            var essTeamUser = teamMember.Id == null
+                ? CreateTeamUser()
+                : GetEssTeamUsers(teamMember.TeamId).Where(u => u.era_essteamuserid == Guid.Parse(teamMember.Id)).SingleOrDefault();
+            if (essTeamUser == null) throw new Exception($"team member {teamMember.Id} not found in team {teamMember.TeamId}");
 
-            context.Detach(essTeamUsermember);
+            essTeamUser.era_firstname = teamMember.FirstName;
+            essTeamUser.era_lastname = teamMember.LastName;
+            essTeamUser.era_email = teamMember.Email;
+            essTeamUser.era_active = teamMember.IsActive;
+            essTeamUser.era_electronicaccessagreementaccepteddate = teamMember.AgreementSignDate;
+            essTeamUser.era_bceidaccountguid = teamMember.ExternalUserId;
 
-            essTeamUsermember.era_firstname = teamMember.FirstName;
-            essTeamUsermember.era_lastname = teamMember.LastName;
-            essTeamUsermember.era_email = teamMember.Email;
-            essTeamUsermember.era_active = teamMember.IsActive;
-            essTeamUsermember.era_electronicaccessagreementaccepteddate = teamMember.AgreementSignDate;
-            essTeamUsermember.era_bceidaccountguid = teamMember.ExternalUserId;
-
-            context.AddToera_essteamusers(essTeamUsermember);
-            context.AddLink(essTeamUsermember, nameof(era_essteamuser.era_ESSTeamId), essTeam);
+            context.UpdateObject(essTeamUser);
+            context.AddLink(essTeam, nameof(era_essteam.era_essteamuser_ESSTeamId), essTeamUser);
             await context.SaveChangesAsync();
 
             context.DetachAll();
 
-            return essTeamUsermember.era_essteamuserid.Value.ToString();
+            return essTeamUser.era_essteamuserid.Value.ToString();
         }
 
         public async Task<string> SaveTeam(Team team)
@@ -184,6 +184,7 @@ namespace EMBC.ESS.Resources.Team
                 context.AddLink(essTeam, nameof(essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID), teamArea);
             }
 
+            context.UpdateObject(essTeam);
             await context.SaveChangesAsync();
 
             context.DetachAll();
@@ -191,12 +192,20 @@ namespace EMBC.ESS.Resources.Team
             return team.Id;
         }
 
-        private era_essteamuser GetEssTeamUser(string id) =>
-            context.era_essteamusers.Where(m => m.era_essteamuserid.Value == Guid.Parse(id)).SingleOrDefault();
+        private era_essteamuser CreateTeamUser()
+        {
+            var newUser = new era_essteamuser { era_essteamuserid = Guid.NewGuid() };
+            context.AddToera_essteamusers(newUser);
+            return newUser;
+        }
 
-        private era_essteam GetEssTeam(string id) =>
+        private IQueryable<era_essteamuser> GetEssTeamUsers(string teamId) =>
+            context.era_essteamusers
+                .Where(u => u._era_essteamid_value == Guid.Parse(teamId));
+
+        private era_essteam GetEssTeam(string teamId) =>
             context.era_essteams
-                .GetSingleEntityByKey(new Dictionary<string, object> { { "era_essteamid", Guid.Parse(id) } })
+                .GetSingleEntityByKey(new Dictionary<string, object> { { "era_essteamid", Guid.Parse(teamId) } })
                 .GetValue();
     }
 }
