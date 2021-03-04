@@ -16,8 +16,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics;
+using Microsoft.Dynamics.CRM;
 
 namespace EMBC.ESS.Resources.Team
 {
@@ -29,10 +31,6 @@ namespace EMBC.ESS.Resources.Team
 
         Task<string> SaveMember(TeamMember teamMember);
 
-        Task ActivateMember(string teamMemberId);
-
-        Task DeactivateMember(string teamMemberId);
-
         Task<string> SaveTeam(Team team);
     }
 
@@ -40,7 +38,7 @@ namespace EMBC.ESS.Resources.Team
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<Community> AssignedCommunities { get; set; }
+        public IEnumerable<string> AssignedCommunitiesIds { get; set; }
     }
 
     public class Community
@@ -72,61 +70,133 @@ namespace EMBC.ESS.Resources.Team
 
         public DateTime? LastSuccessfulLogin { get; set; }
         public bool IsActive { get; set; }
+        public string ExternalUserId { get; internal set; }
     }
 
     public class TeamRepository : ITeamRepository
     {
-        private readonly EssContext dynamicsClientContext;
+        private readonly EssContext context;
 
         public TeamRepository(EssContext dynamicsClientContext)
         {
-            this.dynamicsClientContext = dynamicsClientContext;
-        }
-
-        public async Task ActivateMember(string teamMemberId)
-        {
-            await Task.CompletedTask;
-        }
-
-        public async Task DeactivateMember(string teamMemberId)
-        {
-            await Task.CompletedTask;
+            this.context = dynamicsClientContext;
         }
 
         public async Task<IEnumerable<TeamMember>> GetMembers(string teamId)
         {
-            var members = new[]
-            {
-                new TeamMember { Id = "1", FirstName = "one_f", LastName = "one_l", IsActive = true, Email = "1@email.com", UserName = "one", TeamId = teamId, Role = "r1", Label = "l1", AgreementSignDate = DateTime.Now },
-                new TeamMember { Id = "2", FirstName = "two_f", LastName = "two_l", IsActive = true, Email = "2@email.com", UserName = "two", TeamId = teamId, Role = "r2", Label = "l2", AgreementSignDate = DateTime.Now },
-                new TeamMember { Id = "3", FirstName = "three_f", LastName = "three_l", IsActive = true, Email = "3@email.com", UserName = "three", TeamId = teamId, Role = "r3", Label = "l3", AgreementSignDate = DateTime.Now },
-                new TeamMember { Id = "4", FirstName = "four_f", LastName = "four_l", IsActive = true, Email = "4@email.com", UserName = "four", TeamId = teamId, Role = "r4", Label = "l4", AgreementSignDate = DateTime.Now },
-            };
+            var teamUsers = (await context.era_essteamusers
+                .GetAllPagesAsync())
+                .Where(u => u.era_ESSTeamId.era_essteamid == Guid.Parse(teamId));
 
-            return await Task.FromResult(members);
+            context.DetachAll();
+
+            return teamUsers.Select(m => new TeamMember
+            {
+                Id = m.era_essteamuserid.ToString(),
+                FirstName = m.era_firstname,
+                LastName = m.era_lastname,
+                Email = m.era_email,
+                Phone = null,
+                UserName = null,
+                ExternalUserId = m.era_bceidaccountguid,
+                AgreementSignDate = m.era_electronicaccessagreementaccepteddate,
+                IsActive = m.era_active ?? false,
+                Role = null,
+                Label = null,
+                LastSuccessfulLogin = null,
+                TeamId = teamId
+            });
         }
 
         public async Task<Team> GetTeam(string id)
         {
-            return await Task.FromResult(new Team
+            await Task.CompletedTask;
+            var essTeam = GetEssTeam(id);
+            if (essTeam == null) return null;
+
+            var communities = context.era_essteamareas
+                .Expand(a => a.era_JurisdictionID)
+                .Where(a => a.era_ESSTeamID.era_essteamid == essTeam.era_essteamid)
+                .ToArray();
+
+            context.DetachAll();
+
+            return new Team
             {
-                Id = "team1",
-                Name = "team 1",
-                AssignedCommunities = new[]
-                {
-                    new Community { Id = "c1", Name = "comm 1" }
-                }
-            });
+                Id = id,
+                Name = essTeam.era_name,
+                AssignedCommunitiesIds = communities.Select(c => c.era_JurisdictionID.era_jurisdictionid.Value.ToString()).ToArray()
+            };
         }
 
         public async Task<string> SaveMember(TeamMember teamMember)
         {
-            return await Task.FromResult(Guid.Empty.ToString("D"));
+            var essTeam = GetEssTeam(teamMember.TeamId);
+            if (essTeam == null) throw new Exception($"team {teamMember.TeamId} not found");
+
+            var essTeamUsermember = teamMember.Id == null
+                ? new era_essteamuser { era_essteamuserid = Guid.NewGuid() }
+                : GetEssTeamUser(teamMember.Id);
+
+            context.Detach(essTeamUsermember);
+
+            essTeamUsermember.era_firstname = teamMember.FirstName;
+            essTeamUsermember.era_lastname = teamMember.LastName;
+            essTeamUsermember.era_email = teamMember.Email;
+            essTeamUsermember.era_active = teamMember.IsActive;
+            essTeamUsermember.era_electronicaccessagreementaccepteddate = teamMember.AgreementSignDate;
+            essTeamUsermember.era_bceidaccountguid = teamMember.ExternalUserId;
+
+            context.AddToera_essteamusers(essTeamUsermember);
+            context.AddLink(essTeamUsermember, nameof(era_essteamuser.era_ESSTeamId), essTeam);
+            await context.SaveChangesAsync();
+
+            context.DetachAll();
+
+            return essTeamUsermember.era_essteamuserid.Value.ToString();
         }
 
         public async Task<string> SaveTeam(Team team)
         {
-            return await Task.FromResult(Guid.Empty.ToString("D"));
+            var essTeam = GetEssTeam(team.Id);
+            if (essTeam == null) throw new Exception($"team {team.Id} not found");
+
+            var currentCommunities = context.era_essteamareas
+                .Where(a => a.era_ESSTeamID.era_essteamid == essTeam.era_essteamid)
+                .ToArray();
+
+            foreach (var community in currentCommunities)
+            {
+                context.DeleteObject(community);
+            }
+
+            foreach (var community in team.AssignedCommunitiesIds)
+            {
+                var jurisdiction = new era_jurisdiction { era_jurisdictionid = Guid.Parse(community) };
+                var teamArea = new era_essteamarea
+                {
+                    era_essteamareaid = Guid.NewGuid(),
+                    era_ESSTeamID = essTeam,
+                };
+                context.AddToera_essteamareas(teamArea);
+                context.AttachTo(nameof(context.era_jurisdictions), jurisdiction);
+                context.SetLink(teamArea, nameof(era_essteamarea.era_JurisdictionID), jurisdiction);
+                context.AddLink(essTeam, nameof(essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID), teamArea);
+            }
+
+            await context.SaveChangesAsync();
+
+            context.DetachAll();
+
+            return team.Id;
         }
+
+        private era_essteamuser GetEssTeamUser(string id) =>
+            context.era_essteamusers.Where(m => m.era_essteamuserid.Value == Guid.Parse(id)).SingleOrDefault();
+
+        private era_essteam GetEssTeam(string id) =>
+            context.era_essteams
+                .GetSingleEntityByKey(new Dictionary<string, object> { { "era_essteamid", Guid.Parse(id) } })
+                .GetValue();
     }
 }

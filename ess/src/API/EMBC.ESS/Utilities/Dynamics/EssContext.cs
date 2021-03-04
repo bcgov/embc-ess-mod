@@ -33,7 +33,7 @@ namespace EMBC.ESS.Utilities.Dynamics
         public EssContext(Uri uri, Uri url, Func<Task<string>> tokenFactory, ILogger logger) : base(uri)
         {
             this.logger = logger;
-
+            this.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
             BuildingRequest += (sender, args) =>
             {
                 args.Headers.Add("Authorization", $"Bearer {tokenFactory().GetAwaiter().GetResult()}");
@@ -81,24 +81,22 @@ namespace EMBC.ESS.Utilities.Dynamics
             return descriptor.Entity as T;
         }
 
-        public static bool TryAddLink<TSource, TTarget>(this EssContext context, TSource source, string sourceProperty, TTarget target)
-            where TSource : BaseEntityType
-            where TTarget : BaseEntityType
-        {
-            if (source == null || target == null) return false;
-            if (!typeof(TSource).GetProperties().Any(p => p.Name.Equals(sourceProperty, StringComparison.OrdinalIgnoreCase)))
-            {
-                throw new ArgumentException($"Property {sourceProperty} not found in type {typeof(TSource).FullName}", nameof(sourceProperty));
-            }
-
-            context.AddLink(source, sourceProperty, target);
-            return true;
-        }
-
         public static DataServiceQuerySingle<T> GetSingleEntityByKey<T>(this DataServiceQuery<T> source, IDictionary<string, object> alternateKeys)
         {
             var keys = string.Join(',', alternateKeys.Select(kv => $"{kv.Key}={ODataUriUtils.ConvertToUriLiteral(kv.Value, ODataVersion.V4)}"));
             return new DataServiceQuerySingle<T>(source.Context, source.GetKeyPath(keys));
+        }
+
+        public static void DetachAll(this EssContext context)
+        {
+            foreach (var descriptor in context.EntityTracker.Entities)
+            {
+                context.Detach(descriptor.Entity);
+            }
+            foreach (var link in context.EntityTracker.Links)
+            {
+                context.DetachLink(link.Source, link.SourceProperty, link.Target);
+            }
         }
     }
 

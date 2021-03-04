@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
@@ -34,7 +35,7 @@ namespace EMBC.Tests.Integration.ESS
             this.webApplicationFactory = webApplicationFactory.WithWebHostBuilder(builder =>
             {
                 builder
-                    .ConfigureServices(services => { /*services.RemoveAll<ILoggerProvider>();*/ })
+                    .ConfigureServices(services => { services.RemoveAll<ILoggerProvider>(); })
                     .ConfigureLogging(lb => { lb.ClearProviders().AddProvider(new XUnitLoggerProvider(output)); });
             });
         }
