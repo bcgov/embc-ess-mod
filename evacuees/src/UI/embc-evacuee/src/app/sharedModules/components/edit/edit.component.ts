@@ -3,10 +3,12 @@ import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AlertService } from 'src/app/core/services/alert.service';
-import { ProfileApiService } from 'src/app/core/services/api/profileApi.service';
 import { DataService } from 'src/app/core/services/data.service';
 import { DataUpdationService } from 'src/app/core/services/dataUpdation.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
+import { ProfileDataService } from '../profile/profile-data.service';
+import { ProfileMappingService } from '../profile/profile-mapping.service';
+import { ProfileService } from '../profile/profile.service';
 
 @Component({
   selector: 'app-edit',
@@ -28,7 +30,8 @@ export class EditComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
-    private formCreationService: FormCreationService, private profileApiService: ProfileApiService,
+    private formCreationService: FormCreationService, private profileService: ProfileService,
+    private profileDataService: ProfileDataService, private profileMappingService: ProfileMappingService,
     private alertService: AlertService, private dataService: DataService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
@@ -62,7 +65,8 @@ export class EditComponent implements OnInit, OnDestroy {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
       } else if (this.parentPageName === 'dashboard') {
         this.showLoader = !this.showLoader;
-        this.profileApiService.submitProfile().subscribe(() => {
+        let profile = this.profileMappingService.getProfile();
+        this.profileService.upsertProfile(profile).subscribe(() => {
           this.showLoader = !this.showLoader;
           this.router.navigate(['/verified-registration/dashboard']);
         }, (error) => {
