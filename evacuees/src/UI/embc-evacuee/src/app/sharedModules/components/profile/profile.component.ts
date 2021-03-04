@@ -9,7 +9,6 @@ import { FormCreationService } from '../../../core/services/formCreation.service
 import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { DataService } from 'src/app/core/services/data.service';
-import { ProfileApiService } from 'src/app/core/services/api/profileApi.service';
 import { ProfileDataService } from './profile-data.service';
 import { ProfileMappingService } from './profile-mapping.service';
 import { ProfileService } from './profile.service';

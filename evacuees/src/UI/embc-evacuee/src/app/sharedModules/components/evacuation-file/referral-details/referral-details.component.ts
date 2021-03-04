@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Referral, ReferralDetails } from '../evacuation-file-list/evacuation-file-list.component';
+import { Referral, ReferralDetails } from '../../dashboard/dashboard.component';
 
 @Component({
   selector: 'app-referral-details',
