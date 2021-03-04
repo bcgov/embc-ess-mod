@@ -172,7 +172,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
 
-    let profile = this.profileMappingService.getProfile();
+    const profile = this.profileMappingService.getProfile();
     console.log(profile);
     this.profileService.upsertProfile(profile).subscribe(() => {
       this.showLoader = !this.showLoader;
