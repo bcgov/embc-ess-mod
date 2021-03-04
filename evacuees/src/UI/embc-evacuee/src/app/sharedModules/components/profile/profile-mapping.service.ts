@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { Profile, ProfileDataConflict, StateProvince } from '../../../core/api/models';
+import { ContactDetails, Profile, ProfileDataConflict, StateProvince } from '../../../core/api/models';
 import { ProfileDataService } from './profile-data.service';
 import { FormCreationService } from '../../../core/services/formCreation.service';
 import { DataService } from 'src/app/core/services/data.service';
@@ -112,6 +112,10 @@ export class ProfileMappingService {
         return isMailingAddressSameAsPrimaryAddress === true ? 'Yes' : 'No';
     }
 
+    private isMailingAddressSameAsPrimaryAddress(isSameMailingAddress: string): boolean {
+        return isSameMailingAddress === 'Yes' ? true : false;
+    }
+
     private isBCAddress(province: null | StateProvince): string {
         return province.code !== null && province.code === 'BC' ? 'Yes' : 'No';
     }
@@ -139,5 +143,48 @@ export class ProfileMappingService {
                     mailingAddress: profile.primaryAddress
                 });
             });
+    }
+
+    getProfile(): Profile {
+        let profile: Profile = {
+            contactDetails: null,
+            id: this.profileDataService.getProfileId(),
+            isMailingAddressSameAsPrimaryAddress: false,
+            mailingAddress: null,
+            personalDetails: null,
+            primaryAddress: null,
+            restrictedAccess: null,
+            secretPhrase: null
+        };
+
+        this.formCreationService.getPeronalDetailsForm().pipe(
+            first()).subscribe(details => {
+                console.log(details);
+                profile.personalDetails = details.value;
+            });
+
+        this.formCreationService.getContactDetailsForm().pipe(
+            first()).subscribe(contacts => {
+                profile.contactDetails = contacts.value;
+            });
+        this.formCreationService.getAddressForm().pipe(
+            first()).subscribe(address => {
+                console.log(address);
+                profile.primaryAddress = address.value.address;
+                profile.mailingAddress = address.value.mailingAddress;
+                profile.isMailingAddressSameAsPrimaryAddress = this.isMailingAddressSameAsPrimaryAddress(address.value.isNewMailingAddress);
+            });
+
+        this.formCreationService.getSecretForm().pipe(
+            first()).subscribe(secret => {
+                profile.secretPhrase = secret.value.secretPhrase;
+            });
+
+        this.formCreationService.getRestrictionForm().pipe(
+            first()).subscribe(restriction => {
+                profile.restrictedAccess = restriction.value.restrictedAccess;
+            });
+
+        return profile;
     }
 }
