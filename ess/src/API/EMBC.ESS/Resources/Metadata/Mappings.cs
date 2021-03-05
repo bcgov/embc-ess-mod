@@ -14,7 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using Microsoft.Dynamics.CRM;
+using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
 namespace EMBC.ESS.Resources.Metadata
 {

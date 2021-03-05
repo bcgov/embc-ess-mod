@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Dynamics.CRM;
+using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.Extensions.Logging;
 using Microsoft.OData;
 using Microsoft.OData.Client;

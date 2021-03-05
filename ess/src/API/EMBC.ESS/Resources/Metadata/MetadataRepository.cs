@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics;
-using Microsoft.Dynamics.CRM;
 
 namespace EMBC.ESS.Resources.Metadata
 {
