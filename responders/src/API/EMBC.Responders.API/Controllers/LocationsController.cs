@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
 using EMBC.ESS;
 using EMBC.ESS.Shared.Contracts.Location;
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +33,12 @@ namespace EMBC.Responders.API.Controllers
     public class LocationsController : ControllerBase
     {
         private readonly Dispatcher.DispatcherClient dispatcherClient;
+        private readonly IMapper mapper;
 
-        public LocationsController(Dispatcher.DispatcherClient dispatcherClient)
+        public LocationsController(Dispatcher.DispatcherClient dispatcherClient, IMapper mapper)
         {
             this.dispatcherClient = dispatcherClient;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -54,10 +57,8 @@ namespace EMBC.Responders.API.Controllers
                 StateProvinceCode = stateProvinceId,
                 Types = types.Select(t => (EMBC.ESS.Shared.Contracts.Location.CommunityType)t)
             })).Items;
-            return Ok(await Task.FromResult(communities.Select(c => new Community
-            {
-                Id = c.Code
-            })));
+
+            return Ok(mapper.Map<IEnumerable<Community>>(communities));
         }
 
         /// <summary>
@@ -72,11 +73,8 @@ namespace EMBC.Responders.API.Controllers
             {
                 CountryCode = countryId
             })).Items;
-            return Ok(await Task.FromResult(stateProvinces.Select(c => new StateProvince
-            {
-                Id = c.Code,
-                Name = c.Name
-            })));
+
+            return Ok(mapper.Map<IEnumerable<StateProvince>>(stateProvinces));
         }
 
         /// <summary>
@@ -87,11 +85,8 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
             var countries = (await dispatcherClient.SendRequest<CountriesQueryRequest, CountriesQueryReply>(new CountriesQueryRequest())).Items;
-            return Ok(await Task.FromResult(countries.Select(c => new Country
-            {
-                Id = c.Code,
-                Name = c.Name
-            })));
+
+            return Ok(mapper.Map<IEnumerable<Country>>(countries));
         }
     }
 
@@ -100,12 +95,11 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class Community
     {
-        public string Id { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
         public string DistrictName { get; set; }
-        public string RegionId { get; set; }
-        public string StateProvinceId { get; set; }
-        public string CountryId { get; set; }
+        public string StateProvinceCode { get; set; }
+        public string CountryCode { get; set; }
         public CommunityType Type { get; set; }
     }
 
@@ -114,9 +108,9 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class StateProvince
     {
-        public string Id { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
-        public string CountryId { get; set; }
+        public string CountryCode { get; set; }
     }
 
     /// <summary>
@@ -124,7 +118,7 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class Country
     {
-        public string Id { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
     }
 
@@ -150,5 +144,15 @@ namespace EMBC.Responders.API.Controllers
         RegionalMunicipality,
         ResortMunicipality,
         RuralMunicipalities
+    }
+
+    public class LocationMapping : Profile
+    {
+        public LocationMapping()
+        {
+            CreateMap<ESS.Shared.Contracts.Location.Country, Country>().ReverseMap();
+            CreateMap<ESS.Shared.Contracts.Location.StateProvince, StateProvince>().ReverseMap();
+            CreateMap<ESS.Shared.Contracts.Location.Community, Community>().ForMember(d => d.DistrictName, opts => opts.Ignore()).ReverseMap();
+        }
     }
 }
