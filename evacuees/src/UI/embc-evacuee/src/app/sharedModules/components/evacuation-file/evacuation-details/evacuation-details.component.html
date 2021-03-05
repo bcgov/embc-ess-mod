@@ -4,16 +4,16 @@
             <button class="backButton" (click)="goToCurrent()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
                 <img [src]="backArrowImgSrc" height="28" width="31">
             </button>
-            <span class="evacFileSpan">Evacuation File #{{evacuationFileCard.code}}</span>
+            <span class="evacFileSpan">Evacuation File #123456</span>
         </div>
         <div class="col-md-3 statusDetailHeader">
             <div class="statusDetailHeaderElements">
                 <span>Status: </span>
-                <span [ngStyle]="{'color': changeStatusColor()}">{{evacuationFileCard.status}}</span>
+                <span [ngStyle]="{'color': changeStatusColor()}">{{evacuationFileStatus}}</span>
             </div>
         </div>
     </div>
-    <div *ngIf="evacuationFileCard.referral === false; else referrals">
+    <div *ngIf="referralData.length === 0; else referrals">
         <app-review [type]="type" [showHeading]='false' [currentFlow]="currentFlow" [parentPageName]="parentPageName">
         </app-review>
         <div class="supportReceived">
@@ -57,17 +57,23 @@
             </div>
             <hr>
             <div class="row info-detail">
-                <div class="col-md-10">Click on the dates that you received supports below to view full support details.</div>
+                <div class="col-md-10">Click on the dates that you received supports below to view full support details.
+                </div>
                 <div class="col-md-2 row mainReferralsLink" (click)="expandDetails()">
                     <div class="col-md-6" style="padding: 3px 0"><a>{{referralDetailsText}}</a></div>
-                    <div class="col-md-6 row" >
-                        <div class="col-md-9" style="height: 6px;"><img [ngClass]="expandDetailsFlag? 'rotate180':'none'" src="../../../../assets/images/expand_arrow.svg" height="10" width="18"></div>
-                        <div class="col-md-3" style="height: auto;"><img [ngClass]="expandDetailsFlag? 'rotate180':'none'" src="../../../../assets/images/expand_arrow.svg" height="10" width="18"></div>
+                    <div class="col-md-6 row">
+                        <div class="col-md-9" style="height: 6px;"><img
+                                [ngClass]="expandDetailsFlag? 'rotate180':'none'"
+                                src="../../../../assets/images/expand_arrow.svg" height="10" width="18"></div>
+                        <div class="col-md-3" style="height: auto;"><img
+                                [ngClass]="expandDetailsFlag? 'rotate180':'none'"
+                                src="../../../../assets/images/expand_arrow.svg" height="10" width="18"></div>
                     </div>
                 </div>
             </div>
             <br>
-            <app-referral-details *ngFor= "let referral of evacuationFileCard.referrals" [evacuationReferral]="referral" [allExpandState]="allExpandState"></app-referral-details>
+            <app-referral-details *ngFor="let referral of referralData" [evacuationReferral]="referral"
+                [allExpandState]="allExpandState"></app-referral-details>
         </mat-card-content>
     </ng-template>
 </mat-card>

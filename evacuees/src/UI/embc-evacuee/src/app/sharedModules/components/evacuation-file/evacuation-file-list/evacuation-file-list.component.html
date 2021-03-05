@@ -21,7 +21,7 @@
                 <div class="card-container">
                     <app-evacuation-card *ngFor="let card of dataSourceActive"
                         (showEvacuationList)="setActiveListView($event)" (evacuationFile)="setCurrentChild($event)"
-                        [evacuationFileCard]="card">
+                        [evacuationFileCard]="card" [evacuationFileStatus]="'Active'">
                     </app-evacuation-card>
                 </div>
             </ng-container>
@@ -31,11 +31,11 @@
                         <a class="goBackLink" (click)="goBackActive()">Current Evacuation
                             ({{dataSourceActive.length}})
                             &nbsp;</a>
-                        <span> / &nbsp; Evacuation File #{{currentChild.code}}</span>
+                        <span> / &nbsp; Evacuation File #123456</span>
                     </div>
                 </div>
                 <div class="card-container">
-                    <app-evacuation-details [evacuationFileCard]="currentChild"
+                    <app-evacuation-details [evacuationFileCard]="currentChild" [evacuationFileStatus]="'Active'"
                         (showEvacuationList)="setActiveListView($event)">
                     </app-evacuation-details>
                 </div>
@@ -61,7 +61,7 @@
                 <div class="card-container">
                     <app-evacuation-card *ngFor="let card of dataSourceInactive"
                         (showEvacuationList)="setInactiveListView($event)" (evacuationFile)="setCurrentChild($event)"
-                        [evacuationFileCard]="card">
+                        [evacuationFileCard]="card" [evacuationFileStatus]="'Inactive'">
                     </app-evacuation-card>
                 </div>
             </ng-container>
@@ -71,11 +71,11 @@
                         <a class="goBackLink" (click)="goBackInactive()">Past Evacuation
                             ({{dataSourceInactive.length}})
                             &nbsp;</a>
-                        <span> / &nbsp; Evacuation File #{{currentChild.code}}</span>
+                        <span> / &nbsp; Evacuation File #12345</span>
                     </div>
                 </div>
                 <div class="card-container">
-                    <app-evacuation-details [evacuationFileCard]="currentChild"
+                    <app-evacuation-details [evacuationFileCard]="currentChild" [evacuationFileStatus]="'Inative'"
                         (showEvacuationList)="setInactiveListView($event)">
                     </app-evacuation-details>
                 </div>
