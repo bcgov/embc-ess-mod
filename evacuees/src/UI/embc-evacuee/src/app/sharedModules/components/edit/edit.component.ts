@@ -3,10 +3,10 @@ import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AlertService } from 'src/app/core/services/alert.service';
-import { ProfileApiService } from 'src/app/core/services/api/profileApi.service';
-import { DataService } from 'src/app/core/services/data.service';
-import { DataUpdationService } from 'src/app/core/services/dataUpdation.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
+import { ProfileDataService } from '../profile/profile-data.service';
+import { ProfileService } from '../profile/profile.service';
+import { EditService } from './edit.service';
 
 @Component({
   selector: 'app-edit',
@@ -27,9 +27,10 @@ export class EditComponent implements OnInit, OnDestroy {
   verifiedRoute = '/verified-registration/create-profile';
 
   constructor(
-    private router: Router, private route: ActivatedRoute, public updateService: DataUpdationService,
-    private formCreationService: FormCreationService, private profileApiService: ProfileApiService,
-    private alertService: AlertService, private dataService: DataService) {
+    private router: Router, private route: ActivatedRoute,
+    private formCreationService: FormCreationService, private profileService: ProfileService,
+    private profileDataService: ProfileDataService,
+    private alertService: AlertService, private editService: EditService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { parentPageName: string };
@@ -54,7 +55,7 @@ export class EditComponent implements OnInit, OnDestroy {
    * page
    */
   save(): void {
-    this.setFormData(this.componentToLoad);
+    this.editService.saveFormData(this.componentToLoad, this.form);
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {
@@ -62,11 +63,10 @@ export class EditComponent implements OnInit, OnDestroy {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
       } else if (this.parentPageName === 'dashboard') {
         this.showLoader = !this.showLoader;
-        this.profileApiService.submitProfile().subscribe(() => {
+        this.profileService.upsertProfile(this.profileDataService.createProfileDTO()).subscribe(profileId => {
           this.showLoader = !this.showLoader;
           this.router.navigate(['/verified-registration/dashboard']);
         }, (error) => {
-          console.log(error);
           this.showLoader = !this.showLoader;
           this.alertService.setAlert('danger', error.title);
         });
@@ -79,6 +79,7 @@ export class EditComponent implements OnInit, OnDestroy {
    * page
    */
   cancel(): void {
+    this.editService.cancelFormData(this.componentToLoad, this.form);
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {
@@ -90,42 +91,7 @@ export class EditComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Updates the form with latest values
-   * @param component form name
-   */
-  setFormData(component: string): void {
-    switch (component) {
-      case 'restriction':
-        this.updateService.updateRestriction(this.form);
-        break;
-      case 'personal-details':
-        this.updateService.updatePersonalDetails(this.form);
-        break;
-      case 'address':
-        this.updateService.updateAddressDetails(this.form);
-        break;
-      case 'contact-info':
-        this.updateService.updateContactDetails(this.form);
-        break;
-      case 'secret':
-        this.updateService.updateSecretDetails(this.form);
-        break;
-      case 'evac-address':
-        this.updateService.updateEvacuationDetails(this.form);
-        break;
-      case 'family-information':
-        this.updateService.updateFamilyMemberDetails(this.form);
-        break;
-      case 'pets':
-        this.updateService.updatePetsDetails(this.form);
-        break;
-      case 'identify-needs':
-        this.updateService.updateNeedsDetails(this.form);
-        break;
-      default:
-    }
-  }
+
 
   /**
    * Loads the form into view

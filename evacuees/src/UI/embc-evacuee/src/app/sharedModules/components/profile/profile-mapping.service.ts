@@ -16,7 +16,6 @@ export class ProfileMappingService {
     mapProfile(profile: Profile): void {
         this.profileDataService.setProfileId(profile.id);
         this.profileDataService.setProfile(profile);
-        this.dataService.updateRegistartion(profile); // to be changed
         this.setExistingProfile(profile);
     }
 
@@ -57,7 +56,7 @@ export class ProfileMappingService {
                 details.setValue({ ...profile.personalDetails });
                 formGroup = details;
             });
-        this.formCreationService.setPersonDetailsForm(formGroup);
+        this.profileDataService.personalDetails = profile.personalDetails;
     }
 
     private setAddressDetails(profile: Profile): void {
@@ -73,7 +72,8 @@ export class ProfileMappingService {
                 });
                 formGroup = address;
             });
-        this.formCreationService.setAddressForm(formGroup);
+        this.profileDataService.primaryAddressDetails = profile.primaryAddress;
+        this.profileDataService.mailingAddressDetails = profile.mailingAddress;
     }
 
     private setContactDetails(profile: Profile): void {
@@ -87,7 +87,7 @@ export class ProfileMappingService {
                 });
                 formGroup = contact;
             });
-        this.formCreationService.setContactDetailsForm(formGroup);
+        this.profileDataService.contactDetails = profile.contactDetails;
     }
 
     private setShowContactsInfo(phoneNumber: string, email: string): boolean {
@@ -105,7 +105,7 @@ export class ProfileMappingService {
                 secret.setValue({ secretPhrase: profile.secretPhrase });
                 formGroup = secret;
             });
-        this.formCreationService.setSecretForm(formGroup);
+        this.profileDataService.secretWordPhrase = profile.secretPhrase;
     }
 
     private isSameMailingAddress(isMailingAddressSameAsPrimaryAddress: boolean): string {
@@ -140,4 +140,5 @@ export class ProfileMappingService {
                 });
             });
     }
+
 }
