@@ -42,13 +42,19 @@ namespace EMBC.ESS.Resources.Metadata
         public async Task<IEnumerable<Country>> GetCountries()
         {
             var countries = await essContext.era_countries.GetAllPagesAsync();
+
+            essContext.DetachAll();
+
             return countries.Select(c => new Country { Code = c.era_countrycode, Name = c.era_name }).ToArray();
         }
 
         public async Task<IEnumerable<StateProvince>> GetStateProvinces()
         {
-            var provinces = await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync();
-            return provinces.Select(sp => new StateProvince
+            var stateProvinces = await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync();
+
+            essContext.DetachAll();
+
+            return stateProvinces.Select(sp => new StateProvince
             {
                 Code = sp.era_code,
                 Name = sp.era_name,
@@ -58,15 +64,23 @@ namespace EMBC.ESS.Resources.Metadata
 
         public async Task<IEnumerable<Community>> GetCommunities()
         {
-            await GetStateProvinces();  // temporary solution to populate the client's cache with entities, otherwise era_RelatedCountry will be null
-            var jurisdictions = await essContext.era_jurisdictions.Expand(j => j.era_RelatedProvinceState).GetAllPagesAsync();
+            var stateProvinces = (await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync()).ToArray();
+
+            var jurisdictions = await essContext.era_jurisdictions
+                .Expand(j => j.era_RelatedProvinceState)
+                .Expand(j => j.era_RegionalDistrict)
+                .GetAllPagesAsync();
+            essContext.DetachAll();
+
             return jurisdictions.Select(j => new Community
             {
-                Code = j.era_jurisdictionid.ToString(),
+                Code = j.era_jurisdictionid.Value.ToString(),
                 Name = j.era_jurisdictionname,
                 Type = !j.era_type.HasValue ? CommunityType.Undefined : (CommunityType)j.era_type.Value,
                 StateProvinceCode = j.era_RelatedProvinceState.era_code,
-                CountryCode = j.era_RelatedProvinceState.era_RelatedCountry.era_countrycode
+                CountryCode = stateProvinces.SingleOrDefault(sp => sp.era_provinceterritoriesid == j.era_RelatedProvinceState.era_provinceterritoriesid)?.era_RelatedCountry?.era_countrycode,
+                DistrictCode = j.era_RegionalDistrict?.era_regionaldistrictid.Value.ToString(),
+                DistrictName = j.era_RegionalDistrict?.era_districtname
             }).ToArray();
         }
     }
@@ -91,6 +105,8 @@ namespace EMBC.ESS.Resources.Metadata
         public CommunityType Type { get; set; }
         public string StateProvinceCode { get; set; }
         public string CountryCode { get; set; }
+        public string DistrictCode { get; set; }
+        public string DistrictName { get; set; }
     }
 
 #pragma warning disable CA1008 // Enums should have zero value

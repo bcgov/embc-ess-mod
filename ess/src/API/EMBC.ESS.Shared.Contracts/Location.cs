@@ -66,6 +66,8 @@ namespace EMBC.ESS.Shared.Contracts.Location
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public string DistrictCode { get; set; }
+        public string DistrictName { get; set; }
         public CommunityType Type { get; set; }
         public string StateProvinceCode { get; set; }
         public string CountryCode { get; set; }

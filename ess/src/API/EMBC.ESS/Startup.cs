@@ -27,7 +27,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace EMBC.ESS.Services
+namespace EMBC.ESS
 {
     public class Startup
     {
