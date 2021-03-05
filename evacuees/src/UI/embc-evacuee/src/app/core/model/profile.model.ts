@@ -20,8 +20,8 @@ export class RestrictionForm {
 export class PersonDetails {
     firstName: string;
     lastName: string;
-    preferredName: string;
-    initials: string;
+    preferredName?: string;
+    initials?: string;
     gender: string;
     dateOfBirth: string;
     sameLastNameCheck?: boolean;

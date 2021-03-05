@@ -24,11 +24,15 @@ export class EvacuationFileService {
         return { ...finalValue, ...incomingValue };
     }
 
-    getCurrentEvacuationFile() {
-        this.evacuationService.evacuationGetCurrentEvacuations().subscribe(files => {
-            this.evacuationFileDataService.setCurrentEvacuationFiles(files);
-            this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
-        });
+    // getCurrentEvacuationFile() {
+    //     this.evacuationService.evacuationGetCurrentEvacuations().subscribe(files => {
+    //         this.evacuationFileDataService.setCurrentEvacuationFiles(files);
+    //         this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
+    //     });
+    // }
+
+    getCurrentEvacuationFile(): Observable<Array<NeedsAssessment>> {
+        return this.evacuationService.evacuationGetCurrentEvacuations();
     }
 
     getPastEvacuationFile() {

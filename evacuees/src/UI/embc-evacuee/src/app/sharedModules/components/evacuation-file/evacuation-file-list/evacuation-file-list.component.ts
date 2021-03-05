@@ -22,6 +22,7 @@ export class EvacuationFileListComponent implements OnInit {
   currentChild: NeedsAssessment;
   dataSourceActive: Array<NeedsAssessment>;
   dataSourceInactive: Array<NeedsAssessment>;
+  showLoading = false;
 
   constructor(private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
     private router: Router, private dialogService: DialogService, private evacuationFileService: EvacuationFileService,
@@ -32,8 +33,12 @@ export class EvacuationFileListComponent implements OnInit {
     this.currentPath = window.location.pathname;
 
     if (this.currentPath === '/verified-registration/dashboard/current') {
-      this.evacuationFileService.getCurrentEvacuationFile();
-      this.dataSourceActive = this.evacuationFileDataService.getCurrentEvacuationFiles();
+      this.showLoading = true;
+      this.evacuationFileService.getCurrentEvacuationFile().subscribe(files => {
+        this.dataSourceActive = files;
+        console.log(this.dataSourceActive)
+        this.showLoading = false;
+      });
       console.log(this.dataSourceActive);
     } else if (this.currentPath === '/verified-registration/dashboard/past') {
       this.evacuationFileService.getPastEvacuationFile();
