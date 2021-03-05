@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../../../core/services/componentCreation.service';
@@ -6,18 +6,16 @@ import { ComponentMetaDataModel } from '../../../core/model/componentMetaData.mo
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
-import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { AlertService } from 'src/app/core/services/alert.service';
-import { DataService } from 'src/app/core/services/data.service';
-import { ProfileApiService } from 'src/app/core/services/api/profileApi.service';
 import { ProfileDataService } from './profile-data.service';
+import { ProfileService } from './profile.service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
+export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
@@ -36,9 +34,9 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   constructor(
     private router: Router, private componentService: ComponentCreationService, private route: ActivatedRoute,
-    private formCreationService: FormCreationService, public updateService: DataUpdationService, private cd: ChangeDetectorRef,
-    private profileApiService: ProfileApiService, private alertService: AlertService, private dataService: DataService,
-    private profileDataService: ProfileDataService) {
+    private formCreationService: FormCreationService, private cd: ChangeDetectorRef,
+    private alertService: AlertService,
+    private profileDataService: ProfileDataService, private profileService: ProfileService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -69,15 +67,29 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
+  /**
+   * Loads form for every step based on index
+   * @param index step index
+   */
   currentStep(index: number): void {
     this.loadStepForm(index);
     this.cd.detectChanges();
   }
 
+  /**
+   * Triggered on the step change animation event
+   * @param event 
+   * @param stepper 
+   */
   stepChanged(event: any, stepper: MatStepper): void {
     stepper.selected.interacted = false;
   }
 
+  /**
+   * Custom back stepper function
+   * @param stepper 
+   * @param lastStep 
+   */
   goBack(stepper: MatStepper, lastStep): void {
     if (lastStep === 0) {
       stepper.previous();
@@ -89,12 +101,16 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
+  /**
+   * Custom next stepper function
+   * @param stepper 
+   * @param isLast 
+   * @param component 
+   */
   goForward(stepper: MatStepper, isLast: boolean, component: string): void {
     if (isLast && component === 'review') {
-      console.log('profile-submit');
       this.submitFile();
     } else if (this.form.status === 'VALID') {
-      console.log(this.form);
       if (isLast) {
         if (this.currentFlow === 'non-verified-registration') {
           const navigationPath = '/' + this.currentFlow + '/needs-assessment';
@@ -107,23 +123,26 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
       stepper.next();
     } else {
       this.form.markAllAsTouched();
-      console.log(this.form);
     }
   }
 
+  /**
+   * Sets the form data to the DTO services
+   * @param component Name of the component
+   */
   setFormData(component: string): void {
     switch (component) {
       case 'personal-details':
-        this.updateService.updatePersonalDetails(this.form);
+        this.profileDataService.personalDetails = this.form.value;
         break;
       case 'address':
-        this.updateService.updateAddressDetails(this.form);
+        this.profileDataService.primaryAddressDetails = this.form.get('address').value;
+        this.profileDataService.mailingAddressDetails = this.form.get('mailingAddress').value;
         break;
       case 'contact-info':
-        this.updateService.updateContactDetails(this.form);
-        break;
+        this.profileDataService.contactDetails = this.form.value;
       case 'secret':
-        this.updateService.updateSecretDetails(this.form);
+        this.profileDataService.secretWordPhrase = this.form.get('secretPhrase').value;
         break;
       default:
     }
@@ -169,19 +188,13 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   submitFile(): void {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
-    this.profileApiService.submitProfile().subscribe((profileId) => {
+    this.profileService.upsertProfile(this.profileDataService.createProfileDTO()).subscribe(profileId => {
       this.profileDataService.setProfileId(profileId);
       this.router.navigate(['/verified-registration/dashboard']);
     }, (error) => {
-      console.log(error);
       this.showLoader = !this.showLoader;
       this.alertService.setAlert('danger', error.title);
     });
-
-  }
-
-  ngOnDestroy(): void {
-    // this.form$.unsubscribe();
   }
 
 }
