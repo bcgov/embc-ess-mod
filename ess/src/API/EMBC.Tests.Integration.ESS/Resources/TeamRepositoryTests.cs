@@ -21,7 +21,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             teamRepository = services.GetRequiredService<ITeamRepository>();
         }
 
-        [Fact]
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanGetTeam()
         {
             var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
@@ -32,7 +32,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             team.AssignedCommunitiesIds.ShouldNotBeEmpty();
         }
 
-        [Fact]
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanSaveTeam()
         {
             var metaDataRepository = services.GetRequiredService<IMetadataRepository>();
@@ -48,7 +48,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             updatedTeam.AssignedCommunitiesIds.OrderBy(c => c).ShouldBe(team.AssignedCommunitiesIds.OrderBy(c => c));
         }
 
-        [Fact]
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanGetTeamMembers()
         {
             var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
@@ -57,7 +57,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             members.ShouldNotBeEmpty();
         }
 
-        [Fact]
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanAddTeamMember()
         {
             var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
@@ -96,7 +96,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             newMember.IsActive.ShouldBe(newTeamMember.IsActive);
         }
 
-        [Fact]
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateTeamMember()
         {
             var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
