@@ -78,8 +78,8 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Triggered on the step change animation event
-   * @param event 
-   * @param stepper 
+   * @param event animation event
+   * @param stepper stepper instance
    */
   stepChanged(event: any, stepper: MatStepper): void {
     stepper.selected.interacted = false;
@@ -87,8 +87,8 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Custom back stepper function
-   * @param stepper 
-   * @param lastStep 
+   * @param stepper stepper instance
+   * @param lastStep stepIndex
    */
   goBack(stepper: MatStepper, lastStep): void {
     if (lastStep === 0) {
@@ -103,9 +103,9 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Custom next stepper function
-   * @param stepper 
-   * @param isLast 
-   * @param component 
+   * @param stepper stepper instance
+   * @param isLast stepperIndex
+   * @param component current component name
    */
   goForward(stepper: MatStepper, isLast: boolean, component: string): void {
     if (isLast && component === 'review') {
@@ -141,6 +141,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
         break;
       case 'contact-info':
         this.profileDataService.contactDetails = this.form.value;
+        break;
       case 'secret':
         this.profileDataService.secretWordPhrase = this.form.get('secretPhrase').value;
         break;

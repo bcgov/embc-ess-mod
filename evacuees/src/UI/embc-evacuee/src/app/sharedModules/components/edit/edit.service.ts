@@ -8,12 +8,12 @@ import { RestrictionService } from '../restriction/restriction.service';
 export class EditService {
 
     constructor(private profileDataService: ProfileDataService,
-        private needsAssessmentDataService: NeedsAssessmentService, private restrictionService: RestrictionService) { }
+                private needsAssessmentDataService: NeedsAssessmentService, private restrictionService: RestrictionService) { }
 
     /**
-   * Updates the form with latest values
-   * @param component form name
-   */
+     * Updates the form with latest values
+     * @param component current component name
+     */
     saveFormData(component: string, form: FormGroup): void {
         switch (component) {
             case 'restriction':
@@ -55,8 +55,8 @@ export class EditService {
 
     /**
      * Cancels the updates and sets the form with existing values
-     * @param component 
-     * @param form 
+     * @param component current component name
+     * @param form  form to update
      */
     cancelFormData(component: string, form: FormGroup): void {
         switch (component) {
@@ -75,7 +75,8 @@ export class EditService {
                 }
                 break;
             case 'address':
-                if (this.profileDataService.primaryAddressDetails !== undefined && this.profileDataService.mailingAddressDetails !== undefined) {
+                if (this.profileDataService.primaryAddressDetails !== undefined &&
+                    this.profileDataService.mailingAddressDetails !== undefined) {
                     form.get('address').patchValue(this.profileDataService.primaryAddressDetails);
                     form.get('mailingAddress').patchValue(this.profileDataService.mailingAddressDetails);
                 } else {
@@ -97,7 +98,8 @@ export class EditService {
                 }
                 break;
             case 'evac-address':
-                if (this.needsAssessmentDataService.evacuatedFromAddress !== undefined && this.needsAssessmentDataService.insurance !== undefined) {
+                if (this.needsAssessmentDataService.evacuatedFromAddress !== undefined &&
+                    this.needsAssessmentDataService.insurance !== undefined) {
                     form.get('evacuatedFromAddress').patchValue(this.needsAssessmentDataService.evacuatedFromAddress);
                     form.get('insurance').patchValue(this.needsAssessmentDataService.insurance);
                 } else {
@@ -105,8 +107,10 @@ export class EditService {
                 }
                 break;
             case 'family-information':
-                if (this.needsAssessmentDataService.familyMembers.length !== 0 || this.needsAssessmentDataService.haveMedication !== undefined &&
-                    this.needsAssessmentDataService.haveSpecialDiet !== undefined && this.needsAssessmentDataService.specialDietDetails !== undefined) {
+                if (this.needsAssessmentDataService.familyMembers.length !== 0 ||
+                    this.needsAssessmentDataService.haveMedication !== undefined &&
+                    this.needsAssessmentDataService.haveSpecialDiet !== undefined &&
+                    this.needsAssessmentDataService.specialDietDetails !== undefined) {
                     form.get('familyMember').patchValue(this.needsAssessmentDataService.familyMembers);
                     form.get('haveMedication').patchValue(this.needsAssessmentDataService.haveMedication);
                     form.get('haveSpecialDiet').patchValue(this.needsAssessmentDataService.haveSpecialDiet);
@@ -119,7 +123,8 @@ export class EditService {
                 }
                 break;
             case 'pets':
-                if (this.needsAssessmentDataService.pets.length !== 0 && this.needsAssessmentDataService.hasPetsFood !== undefined) {
+                if (this.needsAssessmentDataService.pets.length !== 0 &&
+                    this.needsAssessmentDataService.hasPetsFood !== undefined) {
                     form.get('pets').patchValue(this.needsAssessmentDataService.pets);
                     form.get('hasPetsFood').patchValue(this.needsAssessmentDataService.hasPetsFood);
                 } else {
@@ -128,8 +133,10 @@ export class EditService {
                 }
                 break;
             case 'identify-needs':
-                if (this.needsAssessmentDataService.canEvacueeProvideClothing !== undefined && this.needsAssessmentDataService.canEvacueeProvideFood !== undefined
-                    && this.needsAssessmentDataService.canEvacueeProvideIncidentals !== undefined && this.needsAssessmentDataService.canEvacueeProvideLodging !== undefined
+                if (this.needsAssessmentDataService.canEvacueeProvideClothing !== undefined &&
+                    this.needsAssessmentDataService.canEvacueeProvideFood !== undefined
+                    && this.needsAssessmentDataService.canEvacueeProvideIncidentals !== undefined &&
+                    this.needsAssessmentDataService.canEvacueeProvideLodging !== undefined
                     && this.needsAssessmentDataService.canEvacueeProvideTransportation !== undefined) {
                     form.get('canEvacueeProvideClothing').patchValue(this.needsAssessmentDataService.canEvacueeProvideClothing);
                     form.get('canEvacueeProvideFood').patchValue(this.needsAssessmentDataService.canEvacueeProvideFood);

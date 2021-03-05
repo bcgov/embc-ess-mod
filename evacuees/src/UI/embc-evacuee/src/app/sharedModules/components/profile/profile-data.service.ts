@@ -91,7 +91,7 @@ export class ProfileDataService {
             primaryAddress: this.setAddressObject(this.primaryAddressDetails),
             restrictedAccess: this.restrictionService.restrictedAccess,
             secretPhrase: this.secretWordPhrase
-        }
+        };
     }
 
     private setAddressObject(addressObject): Address {

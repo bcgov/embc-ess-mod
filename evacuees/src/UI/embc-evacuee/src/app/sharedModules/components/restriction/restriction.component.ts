@@ -18,8 +18,8 @@ export class RestrictionComponent implements OnInit, OnDestroy {
   currentFlow: string;
 
   constructor(private router: Router, private dataService: DataService,
-    private route: ActivatedRoute, private formCreationService: FormCreationService,
-    public restrictionService: RestrictionService) { }
+              private route: ActivatedRoute, private formCreationService: FormCreationService,
+              public restrictionService: RestrictionService) { }
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;

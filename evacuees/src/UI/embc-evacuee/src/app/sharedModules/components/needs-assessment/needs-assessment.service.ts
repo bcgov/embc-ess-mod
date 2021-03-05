@@ -126,13 +126,13 @@ export class NeedsAssessmentService {
     }
 
     public setNeedsDetails(formGroup: FormGroup): void {
-        this.canEvacueeProvideClothing = formGroup.get('canEvacueeProvideClothing').value === 'null' ? null : formGroup.get('canEvacueeProvideClothing').value
+        this.canEvacueeProvideClothing = formGroup.get('canEvacueeProvideClothing').value === 'null' ? null : formGroup.get('canEvacueeProvideClothing').value;
         this.canEvacueeProvideFood =
-            formGroup.get('canEvacueeProvideFood').value === 'null' ? null : formGroup.get('canEvacueeProvideFood').value
-        this.canEvacueeProvideIncidentals = formGroup.get('canEvacueeProvideIncidentals').value === 'null' ? null : formGroup.get('canEvacueeProvideIncidentals').value
-        this.canEvacueeProvideLodging = formGroup.get('canEvacueeProvideLodging').value === 'null' ? null : formGroup.get('canEvacueeProvideLodging').value
+            formGroup.get('canEvacueeProvideFood').value === 'null' ? null : formGroup.get('canEvacueeProvideFood').value;
+        this.canEvacueeProvideIncidentals = formGroup.get('canEvacueeProvideIncidentals').value === 'null' ? null : formGroup.get('canEvacueeProvideIncidentals').value;
+        this.canEvacueeProvideLodging = formGroup.get('canEvacueeProvideLodging').value === 'null' ? null : formGroup.get('canEvacueeProvideLodging').value;
         this.canEvacueeProvideTransportation = formGroup.get('canEvacueeProvideTransportation').value === 'null' ?
-            null : formGroup.get('canEvacueeProvideTransportation').value
+            null : formGroup.get('canEvacueeProvideTransportation').value;
     }
 
     public createNeedsAssessmentDTO(): NeedsAssessment {
