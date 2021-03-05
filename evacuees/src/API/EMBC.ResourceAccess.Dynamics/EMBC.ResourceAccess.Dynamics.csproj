@@ -9,7 +9,9 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <RepositoryUrl>https://github.com/bcgov/embc-ess-mod</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisMode>Default</AnalysisMode>
+    <EnableDotNetAnalyzers>True</EnableDotNetAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <ItemGroup>

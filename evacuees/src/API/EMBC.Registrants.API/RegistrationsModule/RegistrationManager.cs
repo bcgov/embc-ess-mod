@@ -1273,10 +1273,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
         /// <returns>List of RegistrantEvacuation</returns>
         public async Task<List<RegistrantEvacuation>> GetRegistrantEvacuations(Guid contactId)
         {
-            if (contactId == null)
-            {
-                throw new Exception("Contact ID cannot be null.");
-            }
             /* Step 1. query era_needsassessmentevacuee by contactid expand needsassessment => needsassessmentevacuee, needsassessment
              * Step 2. query evacuationfile by needsassessmentid from previous query => evacuationfile
              * Step 3. query era_needsassessmentevacuee by needsassessmentid expand contact => members
@@ -1350,10 +1346,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
                     throw dataServiceClientException;
                 }
             }
-//            catch (NullReferenceException ex)
-//            {
-//                throw new ApplicationException("An error occurred when retrieving evacuation data.", ex);
-//            }
+            //            catch (NullReferenceException ex)
+            //            {
+            //                throw new ApplicationException("An error occurred when retrieving evacuation data.", ex);
+            //            }
 
             var registrantEvacuationList = new List<RegistrantEvacuation>();
 

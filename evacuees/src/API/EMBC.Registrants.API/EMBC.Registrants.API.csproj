@@ -14,7 +14,9 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <UserSecretsId>78326412-d09d-4d67-964c-b4b680228563</UserSecretsId>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisMode>Default</AnalysisMode>
+    <EnableDotNetAnalyzers>True</EnableDotNetAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <ItemGroup>

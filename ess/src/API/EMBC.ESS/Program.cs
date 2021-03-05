@@ -28,7 +28,7 @@ using Serilog;
 using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
 
-namespace EMBC.ESS.Services
+namespace EMBC.ESS
 {
     public class Program
     {

@@ -62,7 +62,11 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
         public string UserName { get; set; }
 
+        public string ExternalUserId { get; set; }
+
         public TeamRole Role { get; set; }
+
+        public string Label { get; set; }
 
         public string Email { get; set; }
 
