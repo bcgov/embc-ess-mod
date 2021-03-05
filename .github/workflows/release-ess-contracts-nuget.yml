@@ -23,4 +23,4 @@ jobs:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - run: dotnet build --configuration Release ess/src/API/EMBC.ESS.Shared.Contracts/
     - run: dotnet pack --configuration Release ess/src/API/EMBC.ESS.Shared.Contracts/
-    - run: dotnet nuget push ess/src/API/EMBC.ESS.Shared.Contracts/bin/Release/*.nupkg --source "github" -k ${{secrets.GITHUB_TOKEN}}
+    - run: dotnet nuget push ess/src/API/EMBC.ESS.Shared.Contracts/bin/Release/*.nupkg --source "bcgov_github" -k ${{secrets.GITHUB_TOKEN}}
