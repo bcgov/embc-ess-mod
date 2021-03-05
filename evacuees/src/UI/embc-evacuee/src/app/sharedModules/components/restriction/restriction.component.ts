@@ -4,7 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { DataService } from '../../../core/services/data.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
-import { DataUpdationService } from 'src/app/core/services/dataUpdation.service';
+import { RestrictionService } from './restriction.service';
 
 @Component({
   selector: 'app-restriction',
@@ -18,8 +18,8 @@ export class RestrictionComponent implements OnInit, OnDestroy {
   currentFlow: string;
 
   constructor(private router: Router, private dataService: DataService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public updateService: DataUpdationService) { }
+    private route: ActivatedRoute, private formCreationService: FormCreationService,
+    public restrictionService: RestrictionService) { }
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
@@ -39,7 +39,7 @@ export class RestrictionComponent implements OnInit, OnDestroy {
 
   submitRestriction(): void {
     if (this.restrictionForm.status === 'VALID') {
-      this.updateService.updateRestriction(this.restrictionForm);
+      this.restrictionService.restrictedAccess = this.restrictionForm.get('restrictedAccess').value;
       const navigationPath = '/' + this.currentFlow + '/create-profile';
       this.router.navigate([navigationPath]);
     } else {
