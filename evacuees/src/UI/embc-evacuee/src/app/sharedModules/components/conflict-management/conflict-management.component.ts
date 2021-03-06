@@ -29,7 +29,8 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   addressConflict: ProfileDataConflict;
   profile: Profile;
 
-  constructor(private router: Router, private profileDataService: ProfileDataService, private profileService: ProfileService,
+  constructor(
+    private router: Router, private profileDataService: ProfileDataService, private profileService: ProfileService,
     private alertService: AlertService, private formCreationService: FormCreationService,
     private conflictService: ConflictManagementService) { }
 
