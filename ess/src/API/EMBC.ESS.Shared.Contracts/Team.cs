@@ -29,6 +29,7 @@ namespace EMBC.ESS.Shared.Contracts.Team
     public class TeamMembersByIdQueryRequest
     {
         public string TeamId { get; set; }
+        public string MemberId { get; set; }
     }
 
     public class TeamMembersQueryReply
@@ -49,6 +50,22 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
         public string MemberId { get; set; }
     }
+
+    public class DeactivateTeamMemberCommand
+    {
+        public string TeamId { get; set; }
+        public string MemberId { get; set; }
+    }
+
+    public class DeactivateTeamMemberReply { }
+
+    public class ActivateTeamMemberCommand
+    {
+        public string TeamId { get; set; }
+        public string MemberId { get; set; }
+    }
+
+    public class ActivateTeamMemberReply { }
 
     public class TeamMember
     {

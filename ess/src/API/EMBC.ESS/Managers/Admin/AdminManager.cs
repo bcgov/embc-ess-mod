@@ -14,7 +14,9 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Team;
@@ -36,14 +38,38 @@ namespace EMBC.ESS.Managers.Admin
         {
             var members = await teamRepository.GetMembers(request.TeamId);
 
+            if (!string.IsNullOrEmpty(request.MemberId)) members = members.Where(m => m.Id == request.MemberId).ToArray();
+
             return new TeamMembersQueryReply { TeamId = request.TeamId, TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
         }
 
         public async Task<SaveTeamMemberReply> Handle(SaveTeamMemberCommand req)
         {
-            var id = await teamRepository.SaveMember(new Resources.Team.TeamMember { });
+            var id = await teamRepository.SaveMember(mapper.Map<Resources.Team.TeamMember>(req.Member));
 
             return new SaveTeamMemberReply { TeamId = req.Member.TeamId, MemberId = id };
+        }
+
+        public async Task<DeactivateTeamMemberReply> Handle(DeactivateTeamMemberCommand cmd)
+        {
+            var member = (await teamRepository.GetMembers(cmd.TeamId)).SingleOrDefault(m => m.Id == cmd.MemberId);
+            if (member == null) throw new Exception($"Member {cmd.MemberId} not found in team {cmd.TeamId}");
+
+            member.IsActive = false;
+            await teamRepository.SaveMember(member);
+
+            return new DeactivateTeamMemberReply();
+        }
+
+        public async Task<ActivateTeamMemberReply> Handle(ActivateTeamMemberCommand cmd)
+        {
+            var member = (await teamRepository.GetMembers(cmd.TeamId)).SingleOrDefault(m => m.Id == cmd.MemberId);
+            if (member == null) throw new Exception($"Member {cmd.MemberId} not found in team {cmd.TeamId}");
+
+            member.IsActive = true;
+            await teamRepository.SaveMember(member);
+
+            return new ActivateTeamMemberReply();
         }
     }
 }
