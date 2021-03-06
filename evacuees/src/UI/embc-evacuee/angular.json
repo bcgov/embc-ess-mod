@@ -42,14 +42,6 @@
                 }
               ]
             },
-            "dev": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
-                }
-              ]
-            },
             "production": {
               "fileReplacements": [
                 {
@@ -86,12 +78,7 @@
           },
           "configurations": {
             "local": {
-              "browserTarget": "embc-evacuee:build:local",
-              "proxyConfig": "proxy.conf.json"
-            },
-            "dev": {
-              "browserTarget": "embc-evacuee:build:local",
-              "proxyConfig": "proxy.dev.conf.json"
+              "browserTarget": "embc-evacuee:build:local"
             },
             "production": {
               "browserTarget": "embc-evacuee:build:production"

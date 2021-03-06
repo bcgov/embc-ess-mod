@@ -6,7 +6,6 @@ import { ProfileDataService } from '../profile/profile-data.service';
 import { ProfileService } from '../profile/profile.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
-import { DataUpdationService } from 'src/app/core/services/dataUpdation.service';
 import { FormGroup } from '@angular/forms';
 import { ConflictManagementService } from './conflict-management.service';
 
@@ -30,9 +29,10 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   addressConflict: ProfileDataConflict;
   profile: Profile;
 
-  constructor(private router: Router, private profileDataService: ProfileDataService, private profileService: ProfileService,
-              private alertService: AlertService, private formCreationService: FormCreationService,
-              private dataUpdation: DataUpdationService, private conflictService: ConflictManagementService) { }
+  constructor(
+    private router: Router, private profileDataService: ProfileDataService, private profileService: ProfileService,
+    private alertService: AlertService, private formCreationService: FormCreationService,
+    private conflictService: ConflictManagementService) { }
 
   ngDoCheck(): void {
     if (!this.profile) {
@@ -109,8 +109,8 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
 
   resolveAddressConflict(): void {
     if (this.addressConflict) {
-      this.profile.primaryAddress = this.dataUpdation.setAddressObject(this.form.get('address').value);
-      this.profile.mailingAddress = this.dataUpdation.setAddressObject(this.form.get('mailingAddress').value);
+      this.profile.primaryAddress = this.profileDataService.setAddressObject(this.form.get('address').value);
+      this.profile.mailingAddress = this.profileDataService.setAddressObject(this.form.get('mailingAddress').value);
     }
   }
 
