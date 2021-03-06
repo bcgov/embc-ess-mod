@@ -31,8 +31,8 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
   profile: Profile;
 
   constructor(private router: Router, private profileDataService: ProfileDataService, private profileService: ProfileService,
-              private alertService: AlertService, private formCreationService: FormCreationService,
-              private dataUpdation: DataUpdationService, private conflictService: ConflictManagementService) { }
+    private alertService: AlertService, private formCreationService: FormCreationService,
+    private conflictService: ConflictManagementService) { }
 
   ngDoCheck(): void {
     if (!this.profile) {
@@ -109,8 +109,8 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
 
   resolveAddressConflict(): void {
     if (this.addressConflict) {
-      this.profile.primaryAddress = this.dataUpdation.setAddressObject(this.form.get('address').value);
-      this.profile.mailingAddress = this.dataUpdation.setAddressObject(this.form.get('mailingAddress').value);
+      this.profile.primaryAddress = this.profileDataService.setAddressObject(this.form.get('address').value);
+      this.profile.mailingAddress = this.profileDataService.setAddressObject(this.form.get('mailingAddress').value);
     }
   }
 

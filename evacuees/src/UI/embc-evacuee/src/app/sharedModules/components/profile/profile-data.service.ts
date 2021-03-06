@@ -94,7 +94,7 @@ export class ProfileDataService {
         };
     }
 
-    private setAddressObject(addressObject): Address {
+    public setAddressObject(addressObject): Address {
         const address: Address = {
             addressLine1: addressObject.addressLine1,
             addressLine2: addressObject.addressLine2,
