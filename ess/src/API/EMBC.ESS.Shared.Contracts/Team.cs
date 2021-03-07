@@ -19,54 +19,54 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Team
 {
-    public class TeamMembersByIdQueryCommand
+    public class TeamMembersByIdQueryCommand : Command<TeamMembersQueryResponse>
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class TeamMembersQueryResponse
+    public class TeamMembersQueryResponse : Response
     {
         public string TeamId { get; set; }
 
         public IEnumerable<TeamMember> TeamMembers { get; set; }
     }
 
-    public class SaveTeamMemberCommand
+    public class SaveTeamMemberCommand : Command<SaveTeamMemberResponse>
     {
         public TeamMember Member { get; set; }
     }
 
-    public class SaveTeamMemberResponse
+    public class SaveTeamMemberResponse : Response
     {
         public string TeamId { get; set; }
 
         public string MemberId { get; set; }
     }
 
-    public class DeactivateTeamMemberCommand
+    public class DeactivateTeamMemberCommand : Command<DeactivateTeamMemberResponse>
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class DeactivateTeamMemberResponse { }
+    public class DeactivateTeamMemberResponse : Response { }
 
-    public class ActivateTeamMemberCommand
+    public class ActivateTeamMemberCommand : Command<ActivateTeamMemberResponse>
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class ActivateTeamMemberResponse { }
+    public class ActivateTeamMemberResponse : Response { }
 
-    public class DeleteTeamMemberCommand
+    public class DeleteTeamMemberCommand : Command<DeleteTeamMemberResponse>
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class DeleteTeamMemberResponse { }
+    public class DeleteTeamMemberResponse : Response { }
 
     public class TeamMember
     {

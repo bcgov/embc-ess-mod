@@ -14,11 +14,11 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Team;
 
 namespace EMBC.ESS.Managers.Admin
@@ -52,7 +52,8 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<DeleteTeamMemberResponse> Handle(DeleteTeamMemberCommand cmd)
         {
-            await teamRepository.DeleteMember(cmd.TeamId, cmd.MemberId);
+            var result = await teamRepository.DeleteMember(cmd.TeamId, cmd.MemberId);
+            if (!result) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             return new DeleteTeamMemberResponse();
         }
@@ -60,7 +61,7 @@ namespace EMBC.ESS.Managers.Admin
         public async Task<DeactivateTeamMemberResponse> Handle(DeactivateTeamMemberCommand cmd)
         {
             var member = (await teamRepository.GetMembers(cmd.TeamId)).SingleOrDefault(m => m.Id == cmd.MemberId);
-            if (member == null) throw new Exception($"Member {cmd.MemberId} not found in team {cmd.TeamId}");
+            if (member == null) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             member.IsActive = false;
             await teamRepository.SaveMember(member);
@@ -71,7 +72,7 @@ namespace EMBC.ESS.Managers.Admin
         public async Task<ActivateTeamMemberResponse> Handle(ActivateTeamMemberCommand cmd)
         {
             var member = (await teamRepository.GetMembers(cmd.TeamId)).SingleOrDefault(m => m.Id == cmd.MemberId);
-            if (member == null) throw new Exception($"Member {cmd.MemberId} not found in team {cmd.TeamId}");
+            if (member == null) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             member.IsActive = true;
             await teamRepository.SaveMember(member);
