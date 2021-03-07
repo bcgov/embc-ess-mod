@@ -19,53 +19,54 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Team
 {
-    public class TeamRole
-    {
-        public string Id { get; set; }
-
-        public string Name { get; set; }
-    }
-
-    public class TeamMembersByIdQueryRequest
+    public class TeamMembersByIdQueryCommand : Command<TeamMembersQueryResponse>
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class TeamMembersQueryReply
+    public class TeamMembersQueryResponse : Response
     {
         public string TeamId { get; set; }
 
         public IEnumerable<TeamMember> TeamMembers { get; set; }
     }
 
-    public class SaveTeamMemberCommand
+    public class SaveTeamMemberCommand : Command<SaveTeamMemberResponse>
     {
         public TeamMember Member { get; set; }
     }
 
-    public class SaveTeamMemberReply
+    public class SaveTeamMemberResponse : Response
     {
         public string TeamId { get; set; }
 
         public string MemberId { get; set; }
     }
 
-    public class DeactivateTeamMemberCommand
+    public class DeactivateTeamMemberCommand : Command<DeactivateTeamMemberResponse>
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class DeactivateTeamMemberReply { }
+    public class DeactivateTeamMemberResponse : Response { }
 
-    public class ActivateTeamMemberCommand
+    public class ActivateTeamMemberCommand : Command<ActivateTeamMemberResponse>
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class ActivateTeamMemberReply { }
+    public class ActivateTeamMemberResponse : Response { }
+
+    public class DeleteTeamMemberCommand : Command<DeleteTeamMemberResponse>
+    {
+        public string TeamId { get; set; }
+        public string MemberId { get; set; }
+    }
+
+    public class DeleteTeamMemberResponse : Response { }
 
     public class TeamMember
     {
@@ -94,5 +95,12 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public DateTime? LastSuccessfulLogin { get; set; }
 
         public bool IsActive { get; set; }
+    }
+
+    public class TeamRole
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
     }
 }

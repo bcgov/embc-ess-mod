@@ -21,7 +21,7 @@ namespace EMBC.Tests.Integration.ESS.Location
         {
             var locationManager = base.services.GetRequiredService<LocationManager>();
 
-            var reply = await locationManager.Handle(new CountriesQueryRequest());
+            var reply = await locationManager.Handle(new CountriesQueryCommand());
 
             reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null);
@@ -32,7 +32,7 @@ namespace EMBC.Tests.Integration.ESS.Location
         {
             var locationManager = base.services.GetRequiredService<LocationManager>();
 
-            var reply = await locationManager.Handle(new StateProvincesQueryRequest());
+            var reply = await locationManager.Handle(new StateProvincesQueryCommand());
 
             reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);
@@ -43,7 +43,7 @@ namespace EMBC.Tests.Integration.ESS.Location
         {
             var locationManager = base.services.GetRequiredService<LocationManager>();
 
-            var reply = await locationManager.Handle(new CommunitiesQueryRequest());
+            var reply = await locationManager.Handle(new CommunitiesQueryCommand());
 
             reply.ShouldNotBeNull().Items.ShouldNotBeEmpty();
             reply.Items.ShouldAllBe(c => c.Code != null && c.Name != null && c.CountryCode != null);

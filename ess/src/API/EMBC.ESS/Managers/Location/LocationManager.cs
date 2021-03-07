@@ -38,14 +38,14 @@ namespace EMBC.ESS.Managers.Location
             this.metadataRepository = metadataRepository;
         }
 
-        public async Task<CountriesQueryReply> Handle(CountriesQueryRequest _)
+        public async Task<CountriesQueryResponse> Handle(CountriesQueryCommand _)
         {
             var countries = await cache.GetOrAdd("location:countries", () => metadataRepository.GetCountries(), DateTimeOffset.Now.Add(cacheEntryLifetime));
 
-            return new CountriesQueryReply { Items = mapper.Map<IEnumerable<Country>>(countries) };
+            return new CountriesQueryResponse { Items = mapper.Map<IEnumerable<Country>>(countries) };
         }
 
-        public async Task<StateProvincesQueryReply> Handle(StateProvincesQueryRequest req)
+        public async Task<StateProvincesQueryResponse> Handle(StateProvincesQueryCommand req)
         {
             var stateProvinces = await cache.GetOrAdd("location:state_provinces", () => metadataRepository.GetStateProvinces(), DateTimeOffset.Now.Add(cacheEntryLifetime));
 
@@ -54,10 +54,10 @@ namespace EMBC.ESS.Managers.Location
                 stateProvinces = stateProvinces.Where(sp => sp.CountryCode == req.CountryCode);
             }
 
-            return new StateProvincesQueryReply { Items = mapper.Map<IEnumerable<StateProvince>>(stateProvinces) };
+            return new StateProvincesQueryResponse { Items = mapper.Map<IEnumerable<StateProvince>>(stateProvinces) };
         }
 
-        public async Task<CommunitiesQueryReply> Handle(CommunitiesQueryRequest req)
+        public async Task<CommunitiesQueryResponse> Handle(CommunitiesQueryCommand req)
         {
             var communities = await cache.GetOrAdd("location:communities", () => metadataRepository.GetCommunities(), DateTimeOffset.Now.Add(cacheEntryLifetime));
 
@@ -76,7 +76,7 @@ namespace EMBC.ESS.Managers.Location
                 communities = communities.Where(c => types.Any(t => t == c.Type.ToString()));
             }
 
-            return new CommunitiesQueryReply { Items = mapper.Map<IEnumerable<Community>>(communities) };
+            return new CommunitiesQueryResponse { Items = mapper.Map<IEnumerable<Community>>(communities) };
         }
     }
 }
