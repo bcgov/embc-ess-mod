@@ -48,7 +48,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             reply.MemberId.ShouldNotBeNull();
 
-            var existingMember = (await adminManager.Handle(new TeamMembersByIdQueryRequest { TeamId = teamId, MemberId = reply.MemberId })).TeamMembers.ShouldHaveSingleItem();
+            var existingMember = (await adminManager.Handle(new TeamMembersByIdQueryCommand { TeamId = teamId, MemberId = reply.MemberId })).TeamMembers.ShouldHaveSingleItem();
 
             existingMember.Id.ShouldBe(reply.MemberId);
             existingMember.TeamId.ShouldBe(teamId);
@@ -69,23 +69,34 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresDynamics)]
         public async Task CanActivateTeamMember()
         {
-            var memberToUpdate = (await adminManager.Handle(new TeamMembersByIdQueryRequest { TeamId = teamId })).TeamMembers.First();
+            var memberToUpdate = (await adminManager.Handle(new TeamMembersByIdQueryCommand { TeamId = teamId })).TeamMembers.First();
 
             await adminManager.Handle(new ActivateTeamMemberCommand { TeamId = teamId, MemberId = memberToUpdate.Id });
 
-            var updatedMember = (await adminManager.Handle(new TeamMembersByIdQueryRequest { TeamId = teamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            var updatedMember = (await adminManager.Handle(new TeamMembersByIdQueryCommand { TeamId = teamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
             updatedMember.IsActive.ShouldBeTrue();
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeActivateTeamMember()
         {
-            var memberToUpdate = (await adminManager.Handle(new TeamMembersByIdQueryRequest { TeamId = teamId })).TeamMembers.First();
+            var memberToUpdate = (await adminManager.Handle(new TeamMembersByIdQueryCommand { TeamId = teamId })).TeamMembers.First();
 
             await adminManager.Handle(new DeactivateTeamMemberCommand { TeamId = teamId, MemberId = memberToUpdate.Id });
 
-            var updatedMember = (await adminManager.Handle(new TeamMembersByIdQueryRequest { TeamId = teamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            var updatedMember = (await adminManager.Handle(new TeamMembersByIdQueryCommand { TeamId = teamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
             updatedMember.IsActive.ShouldBeFalse();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanDeleteTeamMember()
+        {
+            var memberToDelete = (await adminManager.Handle(new TeamMembersByIdQueryCommand { TeamId = teamId })).TeamMembers.First();
+
+            await adminManager.Handle(new DeleteTeamMemberCommand { TeamId = teamId, MemberId = memberToDelete.Id });
+
+            var teamMembers = (await adminManager.Handle(new TeamMembersByIdQueryCommand { TeamId = teamId, MemberId = memberToDelete.Id })).TeamMembers;
+            teamMembers.Where(m => m.Id == memberToDelete.Id).ShouldBeEmpty();
         }
     }
 }

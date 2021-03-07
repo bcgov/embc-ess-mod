@@ -32,6 +32,8 @@ namespace EMBC.ESS.Resources.Team
         Task<string> SaveMember(TeamMember teamMember);
 
         Task<string> SaveTeam(Team team);
+
+        Task DeleteMember(string teamId, string teamMemberId);
     }
 
     public class Team
@@ -190,6 +192,21 @@ namespace EMBC.ESS.Resources.Team
             context.DetachAll();
 
             return team.Id;
+        }
+
+        public async Task DeleteMember(string teamId, string teamMemberId)
+        {
+            var essTeam = GetEssTeam(teamId);
+            if (essTeam == null) throw new Exception($"team {teamId} not found");
+
+            var essTeamUser = GetEssTeamUsers(teamId).Where(u => u.era_essteamuserid == Guid.Parse(teamMemberId)).SingleOrDefault();
+            if (essTeamUser == null) throw new Exception($"team member {teamMemberId} not found in team {teamId}");
+
+            //TODO: change to soft delete
+            context.DeleteObject(essTeamUser);
+
+            await context.SaveChangesAsync();
+            context.DetachAll();
         }
 
         private era_essteamuser CreateTeamUser()

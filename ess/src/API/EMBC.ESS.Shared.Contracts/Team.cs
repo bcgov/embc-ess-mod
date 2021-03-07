@@ -19,20 +19,13 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Team
 {
-    public class TeamRole
-    {
-        public string Id { get; set; }
-
-        public string Name { get; set; }
-    }
-
-    public class TeamMembersByIdQueryRequest
+    public class TeamMembersByIdQueryCommand
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class TeamMembersQueryReply
+    public class TeamMembersQueryResponse
     {
         public string TeamId { get; set; }
 
@@ -44,7 +37,7 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public TeamMember Member { get; set; }
     }
 
-    public class SaveTeamMemberReply
+    public class SaveTeamMemberResponse
     {
         public string TeamId { get; set; }
 
@@ -57,7 +50,7 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public string MemberId { get; set; }
     }
 
-    public class DeactivateTeamMemberReply { }
+    public class DeactivateTeamMemberResponse { }
 
     public class ActivateTeamMemberCommand
     {
@@ -65,7 +58,15 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public string MemberId { get; set; }
     }
 
-    public class ActivateTeamMemberReply { }
+    public class ActivateTeamMemberResponse { }
+
+    public class DeleteTeamMemberCommand
+    {
+        public string TeamId { get; set; }
+        public string MemberId { get; set; }
+    }
+
+    public class DeleteTeamMemberResponse { }
 
     public class TeamMember
     {
@@ -94,5 +95,12 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public DateTime? LastSuccessfulLogin { get; set; }
 
         public bool IsActive { get; set; }
+    }
+
+    public class TeamRole
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
     }
 }

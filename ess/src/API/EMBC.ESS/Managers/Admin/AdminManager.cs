@@ -34,23 +34,30 @@ namespace EMBC.ESS.Managers.Admin
             this.mapper = mapper;
         }
 
-        public async Task<TeamMembersQueryReply> Handle(TeamMembersByIdQueryRequest request)
+        public async Task<TeamMembersQueryResponse> Handle(TeamMembersByIdQueryCommand cmd)
         {
-            var members = await teamRepository.GetMembers(request.TeamId);
+            var members = await teamRepository.GetMembers(cmd.TeamId);
 
-            if (!string.IsNullOrEmpty(request.MemberId)) members = members.Where(m => m.Id == request.MemberId).ToArray();
+            if (!string.IsNullOrEmpty(cmd.MemberId)) members = members.Where(m => m.Id == cmd.MemberId).ToArray();
 
-            return new TeamMembersQueryReply { TeamId = request.TeamId, TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
+            return new TeamMembersQueryResponse { TeamId = cmd.TeamId, TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
         }
 
-        public async Task<SaveTeamMemberReply> Handle(SaveTeamMemberCommand req)
+        public async Task<SaveTeamMemberResponse> Handle(SaveTeamMemberCommand cmd)
         {
-            var id = await teamRepository.SaveMember(mapper.Map<Resources.Team.TeamMember>(req.Member));
+            var id = await teamRepository.SaveMember(mapper.Map<Resources.Team.TeamMember>(cmd.Member));
 
-            return new SaveTeamMemberReply { TeamId = req.Member.TeamId, MemberId = id };
+            return new SaveTeamMemberResponse { TeamId = cmd.Member.TeamId, MemberId = id };
         }
 
-        public async Task<DeactivateTeamMemberReply> Handle(DeactivateTeamMemberCommand cmd)
+        public async Task<DeleteTeamMemberResponse> Handle(DeleteTeamMemberCommand cmd)
+        {
+            await teamRepository.DeleteMember(cmd.TeamId, cmd.MemberId);
+
+            return new DeleteTeamMemberResponse();
+        }
+
+        public async Task<DeactivateTeamMemberResponse> Handle(DeactivateTeamMemberCommand cmd)
         {
             var member = (await teamRepository.GetMembers(cmd.TeamId)).SingleOrDefault(m => m.Id == cmd.MemberId);
             if (member == null) throw new Exception($"Member {cmd.MemberId} not found in team {cmd.TeamId}");
@@ -58,10 +65,10 @@ namespace EMBC.ESS.Managers.Admin
             member.IsActive = false;
             await teamRepository.SaveMember(member);
 
-            return new DeactivateTeamMemberReply();
+            return new DeactivateTeamMemberResponse();
         }
 
-        public async Task<ActivateTeamMemberReply> Handle(ActivateTeamMemberCommand cmd)
+        public async Task<ActivateTeamMemberResponse> Handle(ActivateTeamMemberCommand cmd)
         {
             var member = (await teamRepository.GetMembers(cmd.TeamId)).SingleOrDefault(m => m.Id == cmd.MemberId);
             if (member == null) throw new Exception($"Member {cmd.MemberId} not found in team {cmd.TeamId}");
@@ -69,7 +76,7 @@ namespace EMBC.ESS.Managers.Admin
             member.IsActive = true;
             await teamRepository.SaveMember(member);
 
-            return new ActivateTeamMemberReply();
+            return new ActivateTeamMemberResponse();
         }
     }
 }
