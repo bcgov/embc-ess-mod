@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { AnonymousRegistration, NeedsAssessment, Registration } from '../core/api/models';
-import { DataService } from '../core/services/data.service';
+import { NeedsAssessmentService } from '../sharedModules/components/needs-assessment/needs-assessment.service';
+import { ProfileDataService } from '../sharedModules/components/profile/profile-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class NonVerifiedRegistrationMappingService {
 
-    constructor(public dataService: DataService) { }
+    constructor(private profileDataService: ProfileDataService, private needsService: NeedsAssessmentService) { }
 
     mapAnonymousRegistration(): AnonymousRegistration {
         return {
-            preliminaryNeedsAssessment: this.mergeData(this.createNeedsAssessment(), this.dataService.getNeedsAssessment()),
-            registrationDetails: this.mergeData(this.createRegistration(), this.dataService.getRegistration()),
+            preliminaryNeedsAssessment: this.mergeData(this.createNeedsAssessment(), this.needsService.createNeedsAssessmentDTO()),
+            registrationDetails: this.mergeData(this.createRegistration(), this.profileDataService.createProfileDTO()),
             captcha: 'abc'
         };
     }

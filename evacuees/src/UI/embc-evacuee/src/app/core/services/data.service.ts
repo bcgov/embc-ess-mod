@@ -13,17 +13,8 @@ export class DataService {
 
     constructor() { }
 
-    public updateRegistartion(value): void {
-        this.registrationDetails = { ...this.registrationDetails, ...value };
-    }
-
     public getRegistration(): Partial<Registration> {
         return this.registrationDetails;
-    }
-
-    public updateNeedsAssessment(value): void {
-        this.preliminaryNeedsAssessment = { ...this.preliminaryNeedsAssessment, ...value };
-        console.log(this.preliminaryNeedsAssessment);
     }
 
     public getNeedsAssessment(): Partial<NeedsAssessment> {
