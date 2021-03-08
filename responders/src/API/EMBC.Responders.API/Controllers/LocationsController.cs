@@ -151,7 +151,7 @@ namespace EMBC.Responders.API.Controllers
         {
             CreateMap<ESS.Shared.Contracts.Location.Country, Country>().ReverseMap();
             CreateMap<ESS.Shared.Contracts.Location.StateProvince, StateProvince>().ReverseMap();
-            CreateMap<ESS.Shared.Contracts.Location.Community, Community>().ForMember(d => d.DistrictName, opts => opts.Ignore()).ReverseMap();
+            CreateMap<ESS.Shared.Contracts.Location.Community, Community>().ReverseMap();
         }
     }
 }

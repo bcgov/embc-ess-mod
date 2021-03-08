@@ -71,7 +71,7 @@ namespace EMBC.ESS.Resources.Team
             return teams.Select(t =>
             {
                 var team = mapper.Map<Team>(t);
-                team.AssignedCommunitiesIds = assignedCommunities
+                team.AssignedCommunities = assignedCommunities
                     .Where(c => c._era_essteamid_value == t.era_essteamid)
                     .Select(c => c.era_JurisdictionID.era_jurisdictionid.Value.ToString())
                     .ToArray();
@@ -119,7 +119,7 @@ namespace EMBC.ESS.Resources.Team
                 context.DeleteObject(community);
             }
 
-            foreach (var community in team.AssignedCommunitiesIds)
+            foreach (var community in team.AssignedCommunities)
             {
                 var jurisdiction = new era_jurisdiction { era_jurisdictionid = Guid.Parse(community) };
                 var teamArea = new era_essteamarea

@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Team
 {
-    public class TeamMembersByIdQueryCommand : Command<TeamMembersQueryResponse>
+    public class TeamMembersQueryCommand : Command<TeamMembersQueryResponse>
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
@@ -30,6 +30,16 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public string TeamId { get; set; }
 
         public IEnumerable<TeamMember> TeamMembers { get; set; }
+    }
+
+    public class TeamsQueryCommand : Command<TeamsQueryResponse>
+    {
+        public string TeamId { get; set; }
+    }
+
+    public class TeamsQueryResponse : Response
+    {
+        public IEnumerable<Team> Teams { get; set; }
     }
 
     public class SaveTeamMemberCommand : Command<SaveTeamMemberResponse>
@@ -76,6 +86,13 @@ namespace EMBC.ESS.Shared.Contracts.Team
     public class ValidateTeamMemberResponse : Response
     {
         public bool UniqueUserName { get; set; }
+    }
+
+    public class Team
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public IEnumerable<string> AssignedCommunities { get; set; }
     }
 
     public class TeamMember
