@@ -68,6 +68,16 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
     public class DeleteTeamMemberResponse : Response { }
 
+    public class ValidateTeamMemberCommand : Command<ValidateTeamMemberResponse>
+    {
+        public string UniqueUserName { get; set; }
+    }
+
+    public class ValidateTeamMemberResponse : Response
+    {
+        public bool UniqueUserName { get; set; }
+    }
+
     public class TeamMember
     {
         public string Id { get; set; }

@@ -98,5 +98,21 @@ namespace EMBC.Tests.Integration.ESS.Admin
             var teamMembers = (await adminManager.Handle(new TeamMembersByIdQueryCommand { TeamId = teamId, MemberId = memberToDelete.Id })).TeamMembers;
             teamMembers.Where(m => m.Id == memberToDelete.Id).ShouldBeEmpty();
         }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanValidateUniqueUserName()
+        {
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand { UniqueUserName = "user1" });
+            validationResult.UniqueUserName.ShouldBeTrue();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanValidateDuplicateUserName()
+        {
+            var aMember = (await adminManager.Handle(new TeamMembersByIdQueryCommand { TeamId = teamId })).TeamMembers.First();
+
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand { UniqueUserName = aMember.UserName });
+            validationResult.UniqueUserName.ShouldBeFalse();
+        }
     }
 }

@@ -25392,6 +25392,22 @@
         <Parameter Name="entity" Type="mscrm.systemuser" Nullable="false" />
         <ReturnType Type="mscrm.RetrieveUserLicenseInfoResponse" Nullable="false" />
       </Function>
+      <ComplexType Name="RetrieveUserPrivilegeByPrivilegeIdResponse">
+        <Property Name="RolePrivileges" Type="Collection(mscrm.RolePrivilege)" />
+      </ComplexType>
+      <Function Name="RetrieveUserPrivilegeByPrivilegeId" IsBound="true">
+        <Parameter Name="entity" Type="mscrm.systemuser" Nullable="false" />
+        <Parameter Name="PrivilegeId" Type="Edm.Guid" Nullable="false" />
+        <ReturnType Type="mscrm.RetrieveUserPrivilegeByPrivilegeIdResponse" Nullable="false" />
+      </Function>
+      <ComplexType Name="RetrieveUserPrivilegeByPrivilegeNameResponse">
+        <Property Name="RolePrivileges" Type="Collection(mscrm.RolePrivilege)" />
+      </ComplexType>
+      <Function Name="RetrieveUserPrivilegeByPrivilegeName" IsBound="true">
+        <Parameter Name="entity" Type="mscrm.systemuser" Nullable="false" />
+        <Parameter Name="PrivilegeName" Type="Edm.String" Nullable="false" Unicode="false" />
+        <ReturnType Type="mscrm.RetrieveUserPrivilegeByPrivilegeNameResponse" Nullable="false" />
+      </Function>
       <ComplexType Name="RetrieveUserPrivilegesResponse">
         <Property Name="RolePrivileges" Type="Collection(mscrm.RolePrivilege)" />
       </ComplexType>
