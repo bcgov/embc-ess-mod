@@ -52,7 +52,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TeamMember>>> GetTeamMembers()
         {
-            var response = await client.Send(new TeamMembersByIdQueryCommand { TeamId = teamId });
+            var response = await client.Send(new TeamMembersQueryCommand { TeamId = teamId });
             return Ok(mapper.Map<IEnumerable<TeamMember>>(response.TeamMembers));
         }
 
@@ -66,7 +66,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TeamMember>> GetTeamMember(string memberId)
         {
-            var reply = await client.Send(new TeamMembersByIdQueryCommand { TeamId = teamId, MemberId = memberId });
+            var reply = await client.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId });
             var teamMember = reply.TeamMembers.SingleOrDefault();
             if (teamMember == null) return NotFound(memberId);
 
