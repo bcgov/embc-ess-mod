@@ -286,7 +286,10 @@ namespace EMBC.Responders.API.Controllers
     {
         public Mapping()
         {
-            CreateMap<TeamMember, ESS.Shared.Contracts.Team.TeamMember>().ReverseMap();
+            CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
+                .ForMember(d => d.RoleId, opts => opts.MapFrom(s => s.Role.Id))
+                .ForMember(d => d.LabelId, opts => opts.MapFrom(s => s.Label))
+                .ReverseMap();
         }
     }
 }
