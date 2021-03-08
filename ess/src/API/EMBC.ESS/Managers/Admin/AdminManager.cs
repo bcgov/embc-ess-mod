@@ -35,7 +35,14 @@ namespace EMBC.ESS.Managers.Admin
             this.mapper = mapper;
         }
 
-        public async Task<TeamMembersQueryResponse> Handle(TeamMembersByIdQueryCommand cmd)
+        public async Task<TeamsQueryResponse> Handle(TeamsQueryCommand cmd)
+        {
+            var teams = await teamRepository.GetTeams(id: cmd.TeamId);
+
+            return new TeamsQueryResponse { Teams = mapper.Map<IEnumerable<Team>>(teams) };
+        }
+
+        public async Task<TeamMembersQueryResponse> Handle(TeamMembersQueryCommand cmd)
         {
             var members = await teamRepository.GetMembers(cmd.TeamId);
 

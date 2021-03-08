@@ -8,7 +8,7 @@ namespace EMBC.ESS.Resources.Team
         public Mappings()
         {
             CreateMap<era_essteam, Team>()
-                .ForMember(d => d.AssignedCommunitiesIds, opts => opts.Ignore())
+                .ForMember(d => d.AssignedCommunities, opts => opts.Ignore())
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_essteamid.ToString()))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.era_name))
                 ;

@@ -29,7 +29,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var team = (await teamRepository.GetTeams(teamId)).ShouldHaveSingleItem();
             team.ShouldNotBeNull();
             team.Name.ShouldNotBeNull();
-            team.AssignedCommunitiesIds.ShouldNotBeEmpty();
+            team.AssignedCommunities.ShouldNotBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -40,12 +40,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var team = (await teamRepository.GetTeams(teamId)).ShouldHaveSingleItem();
 
-            team.AssignedCommunitiesIds = (await metaDataRepository.GetCommunities()).Take(10).Select(c => c.Code);
+            team.AssignedCommunities = (await metaDataRepository.GetCommunities()).Take(10).Select(c => c.Code);
 
             var updatedTeamId = await teamRepository.SaveTeam(team);
 
             var updatedTeam = (await teamRepository.GetTeams(updatedTeamId)).ShouldHaveSingleItem();
-            updatedTeam.AssignedCommunitiesIds.OrderBy(c => c).ShouldBe(team.AssignedCommunitiesIds.OrderBy(c => c));
+            updatedTeam.AssignedCommunities.OrderBy(c => c).ShouldBe(team.AssignedCommunities.OrderBy(c => c));
         }
 
         [Fact(Skip = RequiresDynamics)]
