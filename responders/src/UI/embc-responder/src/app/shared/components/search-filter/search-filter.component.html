@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-7">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{filtersToLoad?.loadInputFilter?.label}}</mat-label>
+                    <input [(ngModel)]="searchTerm" matInput placeholder="{{filtersToLoad?.loadInputFilter?.label}}">
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <button class="search-button button-p" mat-button (click)="search()">Search</button>
+            </div>
+            <div class="col-md-2">
+                <button class="search-button button-transparent" mat-button (click)="resetAllFilters()">Reset</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1">
+        <p class="span-or">or</p>
+    </div>
+    <div class="col-md-5">
+        <div class="row">
+            <div *ngFor="let filter of filtersToLoad?.loadDropdownFilters">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{filter?.label}}</mat-label>
+                    <mat-select #matRef id="custom-select" (selectionChange)="selected($event, filter?.type)">
+                        <mat-option *ngFor="let val of filter?.values" [value]="val">{{val}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>

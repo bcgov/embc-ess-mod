@@ -32,6 +32,8 @@ namespace EMBC.ESS.Resources.Team
         Task<string> SaveMember(TeamMember teamMember);
 
         Task<string> SaveTeam(Team team);
+
+        Task<bool> DeleteMember(string teamId, string teamMemberId);
     }
 
     public class Team
@@ -190,6 +192,19 @@ namespace EMBC.ESS.Resources.Team
             context.DetachAll();
 
             return team.Id;
+        }
+
+        public async Task<bool> DeleteMember(string teamId, string teamMemberId)
+        {
+            var essTeamUser = GetEssTeamUsers(teamId).Where(u => u.era_essteamuserid == Guid.Parse(teamMemberId)).SingleOrDefault();
+            if (essTeamUser == null) return false;
+
+            //TODO: change to soft delete
+            context.DeleteObject(essTeamUser);
+
+            await context.SaveChangesAsync();
+            context.DetachAll();
+            return true;
         }
 
         private era_essteamuser CreateTeamUser()

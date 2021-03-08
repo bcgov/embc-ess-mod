@@ -25,11 +25,12 @@ const routes: Routes = [
       },
       {
         path: 'community-management',
-        loadChildren: () => import('../community/community-management/community-management.module').then(m => m.CommunityManagementModule)
+        loadChildren: () => import('../assigned-community/assigned-community-management/assigned-community-management.module')
+        .then(m => m.AssignedCommunityManagementModule)
       },
       {
         path: 'responder-management',
-        loadChildren: () => import('../responder/responder-management/responder-management.module').then(m => m.ResponderManagementModule)
+        loadChildren: () => import('../team/team-management/team-management.module').then(m => m.TeamManagementModule)
       }
     ]
   }

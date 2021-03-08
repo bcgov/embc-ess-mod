@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Admin\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\EMBC.ESS\EMBC.ESS.csproj" />
   </ItemGroup>
 </Project>

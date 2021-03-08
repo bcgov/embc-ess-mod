@@ -10,7 +10,7 @@ import { DataUpdationService } from '../../../core/services/dataUpdation.service
 import { RegistrationResult } from '../../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { NonVerifiedRegistrationService } from '../../../non-verified-registration/non-verified-registration.services';
-import { EvacuationFileService } from '../evacuation-file/evacuation-file.service';
+import { NeedsAssessmentService } from './needs-assessment.service';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -36,9 +36,9 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   constructor(
     private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private updateService: DataUpdationService, private cd: ChangeDetectorRef, private route: ActivatedRoute,
-    private alertService: AlertService, private nonVerifiedRegistrationService: NonVerifiedRegistrationService,
-    private evacuationFileService: EvacuationFileService) {
+    private updateService: DataUpdationService, private needsAssessmentService: NeedsAssessmentService,
+    private cd: ChangeDetectorRef, private route: ActivatedRoute,
+    private alertService: AlertService, private nonVerifiedRegistrationService: NonVerifiedRegistrationService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -145,16 +145,21 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   setFormData(component: string): void {
     switch (component) {
       case 'evac-address':
-        this.updateService.updateEvacuationDetails(this.form);
+        this.needsAssessmentService.evacuatedFromAddress = this.form.get('evacuatedFromAddress').value;
+        this.needsAssessmentService.insurance = this.form.get('insurance').value;
         break;
       case 'family-information':
-        this.updateService.updateFamilyMemberDetails(this.form);
+        this.needsAssessmentService.haveSpecialDiet = this.form.get('haveSpecialDiet').value;
+        this.needsAssessmentService.haveMedication = this.form.get('haveMedication').value;
+        this.needsAssessmentService.specialDietDetails = this.form.get('specialDietDetails').value;
+        this.needsAssessmentService.familyMembers = this.form.get('familyMember').value;
         break;
       case 'pets':
-        this.updateService.updatePetsDetails(this.form);
+        this.needsAssessmentService.pets = this.form.get('pets').value;
+        this.needsAssessmentService.hasPetsFood = this.form.get('hasPetsFood').value;
         break;
       case 'identify-needs':
-        this.updateService.updateNeedsDetails(this.form);
+        this.needsAssessmentService.setNeedsDetails(this.form);
         break;
       default:
     }
@@ -188,11 +193,9 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   submitVerified(): void {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
-
-    this.evacuationFileService.createEvacuationFile().subscribe((response) => {
-      console.log(response);
-      const registrationResult: RegistrationResult = { referenceNumber: response };
-      this.updateService.updateRegisrationResult(registrationResult);
+    this.needsAssessmentService.createEvacuationFile().subscribe((value) => {
+      console.log(value);
+      // this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/verified-registration/dashboard']);
     }, (error: any) => {
       console.log(error.error.title);
@@ -200,9 +203,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
       this.isSubmitted = !this.isSubmitted;
       this.alertService.setAlert('danger', error.error.title);
     });
-
-    // this.router.navigate(['/verified-registration/fileSubmission']);
-
   }
 
   allowSubmit($event: boolean): void {
