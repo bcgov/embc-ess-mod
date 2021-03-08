@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,14 @@ namespace EMBC.Responders.API.Controllers
     [Route("api/team/communities")]
     public class TeamCommunitiesAssignmentsController : ControllerBase
     {
+        private string teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
+        private readonly IMessagingClient messagingClient;
+
+        public TeamCommunitiesAssignmentsController(IMessagingClient messagingClient)
+        {
+            this.messagingClient = messagingClient;
+        }
+
         /// <summary>
         /// Get all assigned communities
         /// </summary>
@@ -39,27 +48,18 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<AssignedCommunity>>> GetAssignedCommunities([FromQuery] bool forAllTeams = false)
         {
-            var teamId = "t1";
-            var associatedCommunities = new[]
-            {
-               new AssignedCommunity { CommunityId = "c1", TeamId = "t1", TeamName = "team 1" },
-               new AssignedCommunity { CommunityId = "c2", TeamId = "t1", TeamName = "team 1" },
-               new AssignedCommunity { CommunityId = "c3", TeamId = "t2", TeamName = "team 2" },
-               new AssignedCommunity { CommunityId = "c4", TeamId = "t3", TeamName = "team 3" },
-            };
-            return Ok(await Task.FromResult(forAllTeams
-                ? associatedCommunities
-                : associatedCommunities.Where(c => c.TeamId == teamId)));
-        }
+            var query = new TeamsQueryCommand();
+            if (!forAllTeams) query.TeamId = teamId;
 
-        /// <summary>
-        /// An associated community and team
-        /// </summary>
-        public class AssignedCommunity
-        {
-            public string CommunityId { get; set; }
-            public string TeamId { get; set; }
-            public string TeamName { get; set; }
+            var teams = (await messagingClient.Send(query)).Teams;
+
+            var communities = teams.SelectMany(t => t.AssignedCommunities.Select(c => new { CommunityId = c, Team = t }));
+            return Ok(communities.Select(c => new AssignedCommunity
+            {
+                TeamId = c.Team.Id,
+                TeamName = c.Team.Name,
+                CommunityId = c.CommunityId
+            }));
         }
 
         /// <summary>
@@ -74,6 +74,7 @@ namespace EMBC.Responders.API.Controllers
         public async Task<IActionResult> AssignCommunities([FromBody] IEnumerable<string> communityIds)
         {
             await Task.CompletedTask;
+            //var response = await messagingClient.Send(new AssignCommunitiesToTeamCommand { teamId = teamId, Communities = communityIds });
             return Ok();
         }
 
@@ -88,7 +89,18 @@ namespace EMBC.Responders.API.Controllers
         public async Task<IActionResult> RemoveCommunities([FromQuery] IEnumerable<string> communityIds)
         {
             await Task.CompletedTask;
+            //var response = await messagingClient.Send(new UnassignCommunitiesFromTeamCommand { teamId = teamId, Communities = communityIds });
             return Ok();
         }
+    }
+
+    /// <summary>
+    /// An associated community and team
+    /// </summary>
+    public class AssignedCommunity
+    {
+        public string CommunityId { get; set; }
+        public string TeamId { get; set; }
+        public string TeamName { get; set; }
     }
 }
