@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,6 +46,9 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<SaveTeamMemberResponse> Handle(SaveTeamMemberCommand cmd)
         {
+            var teamMembersWithSameUserName = await teamRepository.GetMembers(userName: cmd.Member.UserName);
+            if (teamMembersWithSameUserName.Any()) throw new Exception($"A team member with user name {cmd.Member.UserName} already exists");
+
             var id = await teamRepository.SaveMember(mapper.Map<Resources.Team.TeamMember>(cmd.Member));
 
             return new SaveTeamMemberResponse { TeamId = cmd.Member.TeamId, MemberId = id };
@@ -78,6 +82,13 @@ namespace EMBC.ESS.Managers.Admin
             await teamRepository.SaveMember(member);
 
             return new ActivateTeamMemberResponse();
+        }
+
+        public async Task<ValidateTeamMemberResponse> Handle(ValidateTeamMemberCommand cmd)
+        {
+            var members = await teamRepository.GetMembers(userName: cmd.UniqueUserName);
+
+            return new ValidateTeamMemberResponse { UniqueUserName = !members.Any() };
         }
     }
 }

@@ -17,8 +17,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
-using EMBC.ESS;
+using AutoMapper;
+using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,11 +34,14 @@ namespace EMBC.Responders.API.Controllers
     [Route("api/team/members")]
     public class TeamMembersController : ControllerBase
     {
-        private readonly Dispatcher.DispatcherClient dispatcherClient;
+        private readonly IMessagingClient client;
+        private readonly IMapper mapper;
+        private string teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
 
-        public TeamMembersController(Dispatcher.DispatcherClient dispatcherClient)
+        public TeamMembersController(IMessagingClient client, IMapper mapper)
         {
-            this.dispatcherClient = dispatcherClient;
+            this.client = client;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -47,32 +52,8 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TeamMember>>> GetTeamMembers()
         {
-            var teamId = "t1";
-            var members = new[]
-            {
-                new TeamMember { Id = "1", FirstName = "one_f", LastName = "one_l", IsActive = true, Email = "1@email.com", UserName = "one", TeamId = teamId, RoleId = "r1", LabelId = "l1", AgreementSignDate = DateTime.Now },
-                new TeamMember { Id = "2", FirstName = "two_f", LastName = "two_l", IsActive = true, Email = "2@email.com", UserName = "two", TeamId = teamId, RoleId = "r2", LabelId = "l2", AgreementSignDate = DateTime.Now },
-                new TeamMember { Id = "3", FirstName = "three_f", LastName = "three_l", IsActive = true, Email = "3@email.com", UserName = "three", TeamId = teamId, RoleId = "r3", LabelId = "l3", AgreementSignDate = DateTime.Now },
-                new TeamMember { Id = "4", FirstName = "four_f", LastName = "four_l", IsActive = true, Email = "4@email.com", UserName = "four", TeamId = teamId, RoleId = "r4", LabelId = "l4", AgreementSignDate = DateTime.Now },
-            };
-            return Ok(await Task.FromResult(members));
-            //var response = await dispatcherClient.SendRequest<TeamMembersByIdQueryRequest, TeamMembersQueryReply>(new TeamMembersByIdQueryRequest { TeamId = teamId });
-            //var teamMembers = response.TeamMembers;
-            //return Ok(teamMembers.Select(m => new TeamMember
-            //{
-            //    Id = m.Id,
-            //    FirstName = m.FirstName,
-            //    LastName = m.LastName,
-            //    Email = m.Email,
-            //    Phone = m.Phone,
-            //    IsActive = m.IsActive,
-            //    LabelId = null,
-            //    UserName = m.UserName,
-            //    AgreementSignDate = m.AgreementSignDate,
-            //    LastSuccessfulLogin = m.LastSuccessfulLogin,
-            //    RoleId = null,
-            //    TeamId = teamId
-            //}));
+            var response = await client.Send(new TeamMembersByIdQueryCommand { TeamId = teamId });
+            return Ok(mapper.Map<IEnumerable<TeamMember>>(response.TeamMembers));
         }
 
         /// <summary>
@@ -85,8 +66,11 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TeamMember>> GetTeamMember(string memberId)
         {
-            var teamId = "t1";
-            return Ok(await Task.FromResult(new TeamMember { Id = "1", FirstName = "one_f", LastName = "one_l", IsActive = true, Email = "1@email.com", UserName = "one", TeamId = teamId, RoleId = "r1", LabelId = "l1", AgreementSignDate = DateTime.Now }));
+            var reply = await client.Send(new TeamMembersByIdQueryCommand { TeamId = teamId, MemberId = memberId });
+            var teamMember = reply.TeamMembers.SingleOrDefault();
+            if (teamMember == null) return NotFound(memberId);
+
+            return Ok(mapper.Map<TeamMember>(teamMember));
         }
 
         /// <summary>
@@ -99,10 +83,11 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateTeamMember([FromBody] TeamMember teamMember)
         {
-            await Task.CompletedTask;
-
-            var id = Guid.NewGuid().ToString("D");
-            return Ok(new { Id = id });
+            var reply = await client.Send(new SaveTeamMemberCommand
+            {
+                Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
+            });
+            return Ok(new { Id = reply.MemberId });
         }
 
         /// <summary>
@@ -117,13 +102,17 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateTeamMember(string memberId, [FromBody] TeamMember teamMember)
         {
-            await Task.CompletedTask;
+            if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
-            return Ok(new { Id = memberId });
+            var reply = await client.Send(new SaveTeamMemberCommand
+            {
+                Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
+            });
+            return Ok(new { Id = reply.MemberId });
         }
 
         /// <summary>
-        /// Deactivate a team member
+        /// Delete a team member
         /// </summary>
         /// <param name="memberId">team member id</param>
         /// <returns>team member id if success, not found or bad request</returns>
@@ -133,8 +122,52 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteTeamMember(string memberId)
         {
-            await Task.CompletedTask;
+            if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
+            var reply = await client.Send(new DeleteTeamMemberCommand
+            {
+                MemberId = memberId
+            });
+            return Ok(new { Id = memberId });
+        }
+
+        /// <summary>
+        /// Deactivate a team member
+        /// </summary>
+        /// <param name="memberId">team member id</param>
+        /// <returns>team member id if success, not found or bad request</returns>
+        [HttpPost("{memberId}/active")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeactivateTeamMember(string memberId)
+        {
+            if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
+
+            var reply = await client.Send(new ActivateTeamMemberCommand
+            {
+                MemberId = memberId
+            });
+            return Ok(new { Id = memberId });
+        }
+
+        /// <summary>
+        /// Activate a team member
+        /// </summary>
+        /// <param name="memberId">team member id</param>
+        /// <returns>team member id if success, not found or bad request</returns>
+        [HttpPost("{memberId}/inactive")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ActivateTeamMember(string memberId)
+        {
+            if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
+
+            var reply = await client.Send(new DeactivateTeamMemberCommand
+            {
+                MemberId = memberId
+            });
             return Ok(new { Id = memberId });
         }
 
@@ -247,5 +280,16 @@ namespace EMBC.Responders.API.Controllers
     {
         public string Id { get; set; }
         public string Name { get; set; }
+    }
+
+    public class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
+                .ForMember(d => d.RoleId, opts => opts.MapFrom(s => s.Role.Id))
+                .ForMember(d => d.LabelId, opts => opts.MapFrom(s => s.Label))
+                .ReverseMap();
+        }
     }
 }

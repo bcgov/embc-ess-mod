@@ -26,7 +26,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
 
-            var team = await teamRepository.GetTeam(teamId);
+            var team = (await teamRepository.GetTeams(teamId)).ShouldHaveSingleItem();
             team.ShouldNotBeNull();
             team.Name.ShouldNotBeNull();
             team.AssignedCommunitiesIds.ShouldNotBeEmpty();
@@ -38,13 +38,13 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var metaDataRepository = services.GetRequiredService<IMetadataRepository>();
             var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
 
-            var team = await teamRepository.GetTeam(teamId);
+            var team = (await teamRepository.GetTeams(teamId)).ShouldHaveSingleItem();
 
             team.AssignedCommunitiesIds = (await metaDataRepository.GetCommunities()).Take(10).Select(c => c.Code);
 
             var updatedTeamId = await teamRepository.SaveTeam(team);
 
-            var updatedTeam = await teamRepository.GetTeam(updatedTeamId);
+            var updatedTeam = (await teamRepository.GetTeams(updatedTeamId)).ShouldHaveSingleItem();
             updatedTeam.AssignedCommunitiesIds.OrderBy(c => c).ShouldBe(team.AssignedCommunitiesIds.OrderBy(c => c));
         }
 

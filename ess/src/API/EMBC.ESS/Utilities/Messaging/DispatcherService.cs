@@ -58,7 +58,7 @@ namespace EMBC.ESS.Utilities.Messaging
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error when processing request {0} of type {0}", request.CorrelationId, request.Type);
+                logger.LogError(e, "Error when processing request {0} of type {1}", request.CorrelationId, request.Type);
                 return new ReplyEnvelope
                 {
                     CorrelationId = request.CorrelationId,

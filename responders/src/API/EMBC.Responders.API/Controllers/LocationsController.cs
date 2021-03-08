@@ -19,7 +19,6 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS;
 using EMBC.ESS.Shared.Contracts.Location;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,12 +31,12 @@ namespace EMBC.Responders.API.Controllers
     [Route("api/locations")]
     public class LocationsController : ControllerBase
     {
-        private readonly Dispatcher.DispatcherClient dispatcherClient;
+        private readonly IMessagingClient client;
         private readonly IMapper mapper;
 
-        public LocationsController(Dispatcher.DispatcherClient dispatcherClient, IMapper mapper)
+        public LocationsController(IMessagingClient client, IMapper mapper)
         {
-            this.dispatcherClient = dispatcherClient;
+            this.client = client;
             this.mapper = mapper;
         }
 
@@ -51,7 +50,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("communities")]
         public async Task<ActionResult<IEnumerable<Community>>> GetCommunities([FromQuery] string stateProvinceId, [FromQuery] string countryId, [FromQuery] CommunityType[] types)
         {
-            var communities = (await dispatcherClient.SendRequest<CommunitiesQueryRequest, CommunitiesQueryReply>(new CommunitiesQueryRequest()
+            var communities = (await client.Send(new CommunitiesQueryCommand()
             {
                 CountryCode = countryId,
                 StateProvinceCode = stateProvinceId,
@@ -69,7 +68,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("stateprovinces")]
         public async Task<ActionResult<IEnumerable<StateProvince>>> GetStateProvinces([FromQuery] string countryId)
         {
-            var stateProvinces = (await dispatcherClient.SendRequest<StateProvincesQueryRequest, StateProvincesQueryReply>(new StateProvincesQueryRequest
+            var stateProvinces = (await client.Send(new StateProvincesQueryCommand
             {
                 CountryCode = countryId
             })).Items;
@@ -84,7 +83,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("countries")]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
-            var countries = (await dispatcherClient.SendRequest<CountriesQueryRequest, CountriesQueryReply>(new CountriesQueryRequest())).Items;
+            var countries = (await client.Send(new CountriesQueryCommand())).Items;
 
             return Ok(mapper.Map<IEnumerable<Country>>(countries));
         }
