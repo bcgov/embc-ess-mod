@@ -88,6 +88,22 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public bool UniqueUserName { get; set; }
     }
 
+    public class AssignCommunitiesToTeamCommand : Command<AssignCommunitiesToTeamResponse>
+    {
+        public string TeamId { get; set; }
+        public IEnumerable<string> Communities { get; set; }
+    }
+
+    public class AssignCommunitiesToTeamResponse : Response { }
+
+    public class UnassignCommunitiesFromTeamCommand : Command<UnassignCommunitiesFromTeamResponse>
+    {
+        public string TeamId { get; set; }
+        public IEnumerable<string> Communities { get; set; }
+    }
+
+    public class UnassignCommunitiesFromTeamResponse : Response { }
+
     public class Team
     {
         public string Id { get; set; }

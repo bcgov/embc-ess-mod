@@ -97,5 +97,27 @@ namespace EMBC.ESS.Managers.Admin
 
             return new ValidateTeamMemberResponse { UniqueUserName = !members.Any() };
         }
+
+        public async Task<AssignCommunitiesToTeamResponse> Handle(AssignCommunitiesToTeamCommand cmd)
+        {
+            var team = (await teamRepository.GetTeams(id: cmd.TeamId)).SingleOrDefault();
+            if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
+
+            team.AssignedCommunities = team.AssignedCommunities.Concat(cmd.Communities).Distinct();
+            await teamRepository.SaveTeam(team);
+
+            return new AssignCommunitiesToTeamResponse();
+        }
+
+        public async Task<UnassignCommunitiesFromTeamResponse> Handle(UnassignCommunitiesFromTeamCommand cmd)
+        {
+            var team = (await teamRepository.GetTeams(id: cmd.TeamId)).SingleOrDefault();
+            if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
+
+            team.AssignedCommunities = team.AssignedCommunities.Where(c => !cmd.Communities.Contains(c));
+            await teamRepository.SaveTeam(team);
+
+            return new UnassignCommunitiesFromTeamResponse();
+        }
     }
 }
