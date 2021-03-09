@@ -188,10 +188,10 @@ namespace EMBC.Responders.API.Controllers
         {
             var roles = new[]
             {
-                new MemberRole { Id = "r1", Name = "Tier 1" },
-                new MemberRole { Id = "r2", Name = "Tier 2" },
-                new MemberRole { Id = "r3", Name = "Tier 3" },
-                new MemberRole { Id = "r4", Name = "Tier 4" },
+                new MemberRole { Code = "r1", Name = "Tier 1" },
+                new MemberRole { Code = "r2", Name = "Tier 2" },
+                new MemberRole { Code = "r3", Name = "Tier 3" },
+                new MemberRole { Code = "r4", Name = "Tier 4" },
             };
             return Ok(await Task.FromResult(roles));
         }
@@ -205,10 +205,10 @@ namespace EMBC.Responders.API.Controllers
         {
             var labels = new[]
             {
-                new MemberLabel { Id = "l1", Name = "label 1" },
-                new MemberLabel { Id = "l2", Name = "label 2" },
-                new MemberLabel { Id = "l3", Name = "label 3" },
-                new MemberLabel { Id = "l4", Name = "label 4" },
+                new MemberLabel { Code = "l1", Name = "label 1" },
+                new MemberLabel { Code = "l2", Name = "label 2" },
+                new MemberLabel { Code = "l3", Name = "label 3" },
+                new MemberLabel { Code = "l4", Name = "label 4" },
             };
             return Ok(await Task.FromResult(labels));
         }
@@ -259,9 +259,9 @@ namespace EMBC.Responders.API.Controllers
         public DateTime? AgreementSignDate { get; set; }
 
         [Required]
-        public string RoleId { get; set; }
+        public string RoleCode { get; set; }
 
-        public string LabelId { get; set; }
+        public string LabelCode { get; set; }
     }
 
     /// <summary>
@@ -269,7 +269,7 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class MemberRole
     {
-        public string Id { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
     }
 
@@ -278,7 +278,7 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class MemberLabel
     {
-        public string Id { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
     }
 
@@ -287,8 +287,8 @@ namespace EMBC.Responders.API.Controllers
         public Mapping()
         {
             CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
-                .ForMember(d => d.RoleId, opts => opts.MapFrom(s => s.Role.Id))
-                .ForMember(d => d.LabelId, opts => opts.MapFrom(s => s.Label))
+                .ForMember(d => d.RoleCode, opts => opts.MapFrom(s => s.Role.Id))
+                .ForMember(d => d.LabelCode, opts => opts.MapFrom(s => s.Label))
                 .ReverseMap();
         }
     }
