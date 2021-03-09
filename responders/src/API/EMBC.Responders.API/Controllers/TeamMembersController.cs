@@ -108,6 +108,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
             });
+            if (reply == null) return NotFound(memberId);
             return Ok(new { Id = reply.MemberId });
         }
 
@@ -126,8 +127,10 @@ namespace EMBC.Responders.API.Controllers
 
             var reply = await client.Send(new DeleteTeamMemberCommand
             {
+                TeamId = teamId,
                 MemberId = memberId
             });
+            if (reply == null) return NotFound(memberId);
             return Ok(new { Id = memberId });
         }
 
@@ -146,8 +149,10 @@ namespace EMBC.Responders.API.Controllers
 
             var reply = await client.Send(new ActivateTeamMemberCommand
             {
+                TeamId = teamId,
                 MemberId = memberId
             });
+            if (reply == null) return NotFound(memberId);
             return Ok(new { Id = memberId });
         }
 
@@ -166,8 +171,10 @@ namespace EMBC.Responders.API.Controllers
 
             var reply = await client.Send(new DeactivateTeamMemberCommand
             {
+                TeamId = teamId,
                 MemberId = memberId
             });
+            if (reply == null) return NotFound(memberId);
             return Ok(new { Id = memberId });
         }
 

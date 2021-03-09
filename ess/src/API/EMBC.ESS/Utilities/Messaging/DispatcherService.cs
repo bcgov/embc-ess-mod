@@ -63,7 +63,7 @@ namespace EMBC.ESS.Utilities.Messaging
                 {
                     CorrelationId = request.CorrelationId,
                     Error = true,
-                    Type = e.GetType().FullName,
+                    ErrorType = e.GetType().FullName,
                     ErrorMessage = e.Message,
                     ErrorDetails = e.ToString()
                 };
