@@ -183,7 +183,8 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> IsUserNameExists(string userName)
         {
-            return Ok(await Task.FromResult(string.Equals(userName, "positive", StringComparison.InvariantCultureIgnoreCase)));
+            var response = await client.Send(new ValidateTeamMemberCommand { UniqueUserName = userName });
+            return Ok(!response.UniqueUserName);
         }
 
         /// <summary>
