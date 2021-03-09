@@ -5,6 +5,6 @@
  * A country
  */
 export interface Country {
-  id?: null | string;
+  code?: null | string;
   name?: null | string;
 }

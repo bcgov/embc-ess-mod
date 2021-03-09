@@ -6,11 +6,10 @@ import { CommunityType } from './community-type';
  * A community in the system
  */
 export interface Community {
-  countryId?: null | string;
+  code?: null | string;
+  countryCode?: null | string;
   districtName?: null | string;
-  id?: null | string;
   name?: null | string;
-  regionId?: null | string;
-  stateProvinceId?: null | string;
+  stateProvinceCode?: null | string;
   type?: CommunityType;
 }

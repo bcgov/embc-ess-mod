@@ -15,7 +15,7 @@ import { AssignedCommunityReviewService } from './assigned-community-review.serv
 export class AssignedCommunityReviewComponent implements OnInit {
 
   reviewAction: string;
-  communityList: TeamCommunityModel[];
+  addedCommunityList: TeamCommunityModel[];
   deleteCommunityList: TeamCommunityModel[];
   showLoader = false;
   isSubmitted = false;
@@ -31,7 +31,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
     if (params) {
       this.reviewAction = params.action;
     }
-    this.communityList = this.addCommunityService.getAddedCommunities();
+    this.addedCommunityList = this.addCommunityService.getAddedCommunities();
     this.deleteCommunityList = this.assignedCommunityDataService.getCommunitiesToDelete();
   }
 
@@ -42,7 +42,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
   save(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.assignedCommunityReviewService.addCommunities(this.communityList.map(comm => comm.communityId)).subscribe(response => {
+    this.assignedCommunityReviewService.addCommunities(this.addedCommunityList.map(comm => comm.communityId)).subscribe(response => {
       this.router.navigate(['/responder-access/community-management/list-communities']);
     }, (error) => {
       this.showLoader = !this.showLoader;

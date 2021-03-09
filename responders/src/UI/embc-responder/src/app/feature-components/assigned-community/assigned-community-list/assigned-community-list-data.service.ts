@@ -11,8 +11,6 @@ export class AssignedCommunityListDataService {
 
   constructor(private loadLocationService: LoadLocationsService, private cacheService: CacheService) { }
 
-  public regionalDistrictList: string[] = ['All Regional Districts', 'd1', 'd2', 'Comox Valley'];
-  public typesList: string[] = ['All Types', 'First Nations Community', 'City', 'IslandMunicipality'];
   private teamCommunityList: TeamCommunityModel[];
   private allTeamCommunityList: TeamCommunityModel[];
   private communitiesToDelete: TeamCommunityModel[];
@@ -71,16 +69,23 @@ export class AssignedCommunityListDataService {
   }
 
   public getCommunitiesToAddList(): TeamCommunityModel[] {
-    const allCommunities = this.loadLocationService.getCommunityList();
-    const conflictMap: TeamCommunityModel[] = allCommunities.map(values => {
-      const conflicts = this.getAllTeamCommunityList().find(x => x.id === values.id);
+    const conflictMap: TeamCommunityModel[] = this.mergedCommunityList().map(values => {
+      const conflicts = this.getAllTeamCommunityList().find(x => x.code === values.code);
       return this.mergeData(values, conflicts);
     });
     const addMap: TeamCommunityModel[] = conflictMap.map(values => {
-      const existing = this.getTeamCommunityList().find(x => x.id === values.id);
+      const existing = this.getTeamCommunityList().find(x => x.code === values.code);
       return this.mergeData(values, existing);
     });
     return addMap;
+  }
+
+  private mergedCommunityList(): TeamCommunityModel[] {
+    let teamModel : TeamCommunityModel = {
+      allowSelect: true,
+      conflict: false
+    }
+    return this.loadLocationService.getCommunityList().map(community => this.mergeData(teamModel, community));
   }
 
   private mergeData<T>(finalValue: T, incomingValue: Partial<T>): T {

@@ -42,8 +42,12 @@
         <tr mat-header-row *matHeaderRowDef="columns"></tr>
         <tr mat-row *matRowDef="let row; columns: columns;"></tr>
     </table>
+<!--background-color: seagreen; -->
+    <app-loader style="display: flex; justify-content: center; align-items: center;" class="mat-progress"
+        [showLoader]="!isLoading" [strokeWidth]="3" [diameter]="50" [color]="color"></app-loader>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons></mat-paginator>
 </div>
 <br>
 <!--color:#b0b0b0-->

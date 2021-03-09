@@ -26,6 +26,8 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   columns: string[];
   selection = new SelectionModel<any>(true, []);
   @Input() disableRow = false;
+  isLoading = true;
+  color = "#169BD5";
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -37,6 +39,9 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
+      console.log(this.isLoading)
+      console.log(this.dataSource.data)
+      this.isLoading = !this.isLoading;
     }
     if (changes.displayedColumns) {
       this.columns = this.displayedColumns.map(column => column.ref);

@@ -278,7 +278,7 @@ export class TeamMembersService extends BaseService {
   static readonly TeamMembersDeleteTeamMemberPath = '/api/team/members/{memberId}';
 
   /**
-   * Deactivate a team member.
+   * Delete a team member.
    *
    *
    *
@@ -312,7 +312,7 @@ export class TeamMembersService extends BaseService {
   }
 
   /**
-   * Deactivate a team member.
+   * Delete a team member.
    *
    *
    *
@@ -330,6 +330,130 @@ export class TeamMembersService extends BaseService {
   }): Observable<void> {
 
     return this.teamMembersDeleteTeamMember$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation teamMembersDeactivateTeamMember
+   */
+  static readonly TeamMembersDeactivateTeamMemberPath = '/api/team/members/{memberId}/active';
+
+  /**
+   * Deactivate a team member.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `teamMembersDeactivateTeamMember()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  teamMembersDeactivateTeamMember$Response(params: {
+
+    /**
+     * team member id
+     */
+    memberId: string;
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersDeactivateTeamMemberPath, 'post');
+    if (params) {
+      rb.path('memberId', params.memberId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Deactivate a team member.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `teamMembersDeactivateTeamMember$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  teamMembersDeactivateTeamMember(params: {
+
+    /**
+     * team member id
+     */
+    memberId: string;
+  }): Observable<void> {
+
+    return this.teamMembersDeactivateTeamMember$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation teamMembersActivateTeamMember
+   */
+  static readonly TeamMembersActivateTeamMemberPath = '/api/team/members/{memberId}/inactive';
+
+  /**
+   * Activate a team member.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `teamMembersActivateTeamMember()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  teamMembersActivateTeamMember$Response(params: {
+
+    /**
+     * team member id
+     */
+    memberId: string;
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersActivateTeamMemberPath, 'post');
+    if (params) {
+      rb.path('memberId', params.memberId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Activate a team member.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `teamMembersActivateTeamMember$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  teamMembersActivateTeamMember(params: {
+
+    /**
+     * team member id
+     */
+    memberId: string;
+  }): Observable<void> {
+
+    return this.teamMembersActivateTeamMember$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
