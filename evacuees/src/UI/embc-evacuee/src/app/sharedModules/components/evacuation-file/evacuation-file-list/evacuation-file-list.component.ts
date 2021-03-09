@@ -36,13 +36,16 @@ export class EvacuationFileListComponent implements OnInit {
       this.showLoading = true;
       this.evacuationFileService.getCurrentEvacuationFile().subscribe(files => {
         this.dataSourceActive = files;
-        console.log(this.dataSourceActive)
+        this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
         this.showLoading = false;
       });
-      console.log(this.dataSourceActive);
+
     } else if (this.currentPath === '/verified-registration/dashboard/past') {
-      this.evacuationFileService.getPastEvacuationFile();
-      this.dataSourceInactive = this.evacuationFileDataService.getPastEvacuationFiles();
+      this.showLoading = true;
+      this.evacuationFileService.getPastEvacuationFile().subscribe(files => {
+        this.dataSourceInactive = files;
+        this.showLoading = false;
+      });
     }
   }
 

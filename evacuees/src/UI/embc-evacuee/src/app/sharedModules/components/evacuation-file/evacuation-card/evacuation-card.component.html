@@ -5,27 +5,26 @@
         </mat-card-title>
         <div class="row">
             <div class="col-md-9">
-                <div class="row">
-                    <div class="col-md-3">
-                        <p class="evacuatedSecondary"> Evacuated File Created </p>
-                        <span class="dataSpan">20-Feb-2020</span>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="evacuatedSecondary"> Evacuation File # </label>
-                        <span class="dataSpan">123456</span>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="evacuatedSecondary"> Supports Received </label>
-                        <span class="dataSpan"> No </span>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="evacuatedSecondary"> Status </label>
-                        <span class="statusSpan">
-                            <img src="{{imageIcon}}" height="13" width="13">
-                            {{evacuationFileStatus}}
-                        </span>
-                    </div>
-                </div>
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="evacuatedSecondary">Evacuated File Created </th>
+                            <th class="evacuatedSecondary">Evacuation File #</th>
+                            <th class="evacuatedSecondary">Supports Received</th>
+                            <th class="evacuatedSecondary">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="dataSpan">20-Feb-2020</td>
+                            <td class="dataSpan">123456</td>
+                            <td class="dataSpan">No</td>
+                            <td class="dataSpan"><img src="{{imageIcon}}" height="13" width="13">
+                                {{evacuationFileStatus}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="col-md-3 button-align">
                 <button class="button-p view-details" mat-stroked-button type="button" (click)="goToDetails()">View

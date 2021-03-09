@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ActivationEnd, Router, RouterEvent } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { DataService } from 'src/app/core/services/data.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
-import { filter, first } from 'rxjs/operators';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { EvacuationFileService } from '../evacuation-file/evacuation-file.service';
 import { TabModel } from 'src/app/core/model/tab.model';
+import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +17,7 @@ import { TabModel } from 'src/app/core/model/tab.model';
 export class DashboardComponent implements OnInit {
 
   currentFlow: string;
+  activeFiles: number;
 
   tabs: TabModel[] = [
     {
@@ -44,21 +44,12 @@ export class DashboardComponent implements OnInit {
   constructor(
     private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
     private router: Router, private dialogService: DialogService, private cacheService: CacheService,
-    private evacuationFilesService: EvacuationFileService) { }
+    public evacuationFilesDataService: EvacuationFileDataService) { }
 
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-
-    this.router.events.pipe(
-      filter((event: RouterEvent) => event instanceof ActivationEnd),
-      first()
-    ).subscribe((event: any) => {
-      console.log(event);
-      if (event.snapshot._routerState.url === '/verified-registration/dashboard/current') {
-        this.router.navigate(['/verified-registration/dashboard/profile']);
-      }
-    });
+    console.log(this.activeFiles);
 
     setTimeout(() => {
       this.openReferenceNumberPopup();

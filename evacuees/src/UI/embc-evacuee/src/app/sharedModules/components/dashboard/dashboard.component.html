@@ -7,13 +7,13 @@
                     {{(formCreationService.personalDetailsForm$ | async)?.value?.firstName}}</span>
             </div>
         </div>
-
+        {{evacuationFilesDataService.currentEvacuationFileCount$ |async}}
         <div class="row align-banner">
             <div class="col-md-12">
                 <mat-card class="view-banner">
                     <mat-card-content>
-                        <div class="row">
-                            <!-- *ngIf="dataSourceActive.length === 0; else activeFileBanner" -->
+                        <div class="row"
+                            *ngIf="(evacuationFilesDataService.currentEvacuationFileCount$ |async ) === 0; else activeFileBanner">
                             <div class="col-md-9">
                                 <p class="top-detail">If you are currently <b>evacuated</b>, please start an
                                     <b>Evacuation File</b>.

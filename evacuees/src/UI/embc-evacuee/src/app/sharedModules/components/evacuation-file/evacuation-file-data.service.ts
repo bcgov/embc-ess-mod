@@ -1,11 +1,13 @@
 import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
 import { NeedsAssessment } from "src/app/core/api/models";
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileDataService {
 
     private currentEvacuationFiles: Array<NeedsAssessment>
-    private currentEvacuationFileCount: number;
+    private currentEvacuationFileCount: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+    public currentEvacuationFileCount$: Observable<number> = this.currentEvacuationFileCount.asObservable();
 
     private pastEvacuationFiles: Array<NeedsAssessment>
     private pastEvacuationFileCount: number;
@@ -18,12 +20,12 @@ export class EvacuationFileDataService {
         this.currentEvacuationFiles = evacuationFiles;
     }
 
-    getCurrentEvacuationFileCount(): number {
-        return this.currentEvacuationFileCount;
+    getCurrentEvacuationFileCount(): Observable<number> {
+        return this.currentEvacuationFileCount$;
     }
 
     setCurrentEvacuationFileCount(count: number): void {
-        this.currentEvacuationFileCount = count;
+        this.currentEvacuationFileCount.next(count);
     }
 
 
