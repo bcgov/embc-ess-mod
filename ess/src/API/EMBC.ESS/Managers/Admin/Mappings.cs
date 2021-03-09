@@ -31,6 +31,10 @@ namespace EMBC.ESS.Managers.Admin
             CreateMap<Shared.Contracts.Team.Team, Resources.Team.Team>()
                 .ReverseMap()
                 ;
+
+            CreateMap<Shared.Contracts.Team.AssignedCommunity, Resources.Team.AssignedCommunity>()
+                .ReverseMap()
+                ;
         }
     }
 }

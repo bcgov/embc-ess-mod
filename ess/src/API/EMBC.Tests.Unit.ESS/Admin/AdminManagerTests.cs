@@ -19,9 +19,20 @@ namespace EMBC.Tests.Unit.ESS.Admin
 
         private Dictionary<string, EMBC.ESS.Resources.Team.Team> stagedTeams = new Dictionary<string, EMBC.ESS.Resources.Team.Team>()
         {
-            {"t1", new EMBC.ESS.Resources.Team.Team { Id = "t1", Name = "team1", AssignedCommunities = new [] { "c1", "c2" } } },
-            {"t2", new EMBC.ESS.Resources.Team.Team { Id = "t2", Name = "team2", AssignedCommunities = new [] { "c3", "c4" } } },
-            {"t3", new EMBC.ESS.Resources.Team.Team { Id = "t3", Name = "team3", AssignedCommunities = Array.Empty<string>() } }
+            { "t1", new EMBC.ESS.Resources.Team.Team { Id = "t1", Name = "team1", AssignedCommunities = new []
+                    {
+                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c1", DateAssigned = DateTime.Now },
+                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c2", DateAssigned = DateTime.Now }
+                    } }
+            },
+            { "t2", new EMBC.ESS.Resources.Team.Team { Id = "t2", Name = "team2", AssignedCommunities = new []
+                    {
+                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c3", DateAssigned = DateTime.Now },
+                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c4", DateAssigned = DateTime.Now }
+                    } }
+            },
+            { "t3", new EMBC.ESS.Resources.Team.Team { Id = "t3", Name = "team3", AssignedCommunities = Array.Empty<EMBC.ESS.Resources.Team.AssignedCommunity>() }
+            }
         };
 
         private Dictionary<string, EMBC.ESS.Resources.Team.TeamMember> stagedTeamMembers = new Dictionary<string, EMBC.ESS.Resources.Team.TeamMember>
@@ -114,7 +125,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
         public async Task AssignCommunities_AlreadyAssignedCommunity_Throws()
         {
             var team = stagedTeams.First().Value;
-            var updatedAssignedCommunities = team.AssignedCommunities.Append("c3").ToArray();
+            var updatedAssignedCommunities = team.AssignedCommunities.Select(c => c.Code).Append("c3").ToArray();
             var exception = await adminManager.Handle(new AssignCommunitiesToTeamCommand
             {
                 TeamId = team.Id,
@@ -128,14 +139,14 @@ namespace EMBC.Tests.Unit.ESS.Admin
         public async Task AssignCommunities_UnassignedCommuity_CommunitiesAdded()
         {
             var team = stagedTeams.First().Value;
-            var updatedAssignedCommunities = team.AssignedCommunities.Append("c5").ToArray();
+            var updatedAssignedCommunities = team.AssignedCommunities.Select(c => c.Code).Append("c5").ToArray();
             var response = await adminManager.Handle(new AssignCommunitiesToTeamCommand
             {
                 TeamId = team.Id,
                 Communities = updatedAssignedCommunities
             });
 
-            team.AssignedCommunities.OrderBy(c => c).ShouldBe(updatedAssignedCommunities.OrderBy(c => c));
+            team.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(updatedAssignedCommunities.OrderBy(c => c));
         }
 
         [Fact]

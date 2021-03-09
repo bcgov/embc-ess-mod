@@ -40,12 +40,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var team = (await teamRepository.GetTeams(teamId)).ShouldHaveSingleItem();
 
-            team.AssignedCommunities = (await metaDataRepository.GetCommunities()).Take(10).Select(c => c.Code);
+            team.AssignedCommunities = (await metaDataRepository.GetCommunities()).Take(10).Select(c => new AssignedCommunity { Code = c.Code, DateAssigned = DateTime.Now });
 
             var updatedTeamId = await teamRepository.SaveTeam(team);
 
             var updatedTeam = (await teamRepository.GetTeams(updatedTeamId)).ShouldHaveSingleItem();
-            updatedTeam.AssignedCommunities.OrderBy(c => c).ShouldBe(team.AssignedCommunities.OrderBy(c => c));
+            updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(team.AssignedCommunities.Select(c => c.Code).OrderBy(c => c));
         }
 
         [Fact(Skip = RequiresDynamics)]
