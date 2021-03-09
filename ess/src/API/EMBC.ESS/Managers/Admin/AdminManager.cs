@@ -100,8 +100,13 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<AssignCommunitiesToTeamResponse> Handle(AssignCommunitiesToTeamCommand cmd)
         {
-            var team = (await teamRepository.GetTeams(id: cmd.TeamId)).SingleOrDefault();
+            var allTeams = await teamRepository.GetTeams();
+            var team = allTeams.SingleOrDefault(t => t.Id == cmd.TeamId);
             if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
+
+            var allAssignedCommunities = allTeams.Where(t => t.Id != cmd.TeamId).SelectMany(t => t.AssignedCommunities);
+            var alreadyAssignedCommunities = cmd.Communities.Intersect(allAssignedCommunities).ToArray();
+            if (alreadyAssignedCommunities.Any()) throw new CommunitiesAlreadyAssignedException(alreadyAssignedCommunities);
 
             team.AssignedCommunities = team.AssignedCommunities.Concat(cmd.Communities).Distinct();
             await teamRepository.SaveTeam(team);

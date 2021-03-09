@@ -146,4 +146,14 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
         public string Name { get; set; }
     }
+
+    public class CommunitiesAlreadyAssignedException : Exception
+    {
+        public CommunitiesAlreadyAssignedException(IEnumerable<string> communityIds)
+        {
+            CommunityIds = communityIds;
+        }
+
+        public IEnumerable<string> CommunityIds { get; }
+    }
 }
