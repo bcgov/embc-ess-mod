@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,7 +59,8 @@ namespace EMBC.Responders.API.Controllers
             {
                 TeamId = c.Team.Id,
                 TeamName = c.Team.Name,
-                CommunityCode = c.CommunityCode
+                CommunityCode = c.CommunityCode,
+                DateAssigned = DateTime.Now.Date // TODO: map from response
             }));
         }
 
@@ -100,5 +102,6 @@ namespace EMBC.Responders.API.Controllers
         public string CommunityCode { get; set; }
         public string TeamId { get; set; }
         public string TeamName { get; set; }
+        public DateTime DateAssigned { get; set; }
     }
 }
