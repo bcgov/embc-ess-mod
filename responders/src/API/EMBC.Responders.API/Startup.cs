@@ -14,11 +14,9 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.IO;
 using System.Net;
-using System.Net.Http;
-using EMBC.ESS;
+using EMBC.Responders.API.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -64,20 +62,8 @@ namespace EMBC.Responders.API
                 options.Filters.Add(new HttpResponseExceptionFilter());
             });
 
-            var httpClientBuilder = services.AddGrpcClient<Dispatcher.DispatcherClient>(opts =>
-            {
-                opts.Address = configuration.GetValue<Uri>("backend:url");
-            });
-            if (configuration.GetValue("backend:allowInvalidServerCertificate", false))
-            {
-                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
-                {
-                    return new HttpClientHandler
-                    {
-                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                    };
-                });
-            }
+            services.Configure<MessagingOptions>(configuration.GetSection("backend"));
+            services.AddMessaging();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
