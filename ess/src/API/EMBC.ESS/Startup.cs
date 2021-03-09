@@ -40,6 +40,7 @@ namespace EMBC.ESS
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
             services.AddGrpc(opts =>
             {
                 opts.EnableDetailedErrors = true;
