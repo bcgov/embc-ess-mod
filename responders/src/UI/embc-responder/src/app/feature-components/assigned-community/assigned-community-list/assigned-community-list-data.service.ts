@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { CommunityType } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
@@ -68,7 +69,7 @@ export class AssignedCommunityListDataService {
       JSON.parse(this.cacheService.get('allTeamCommunityList'));
   }
 
-  public getCommunitiesToAddList(): TeamCommunityModel[] {
+  public getCommunitiesToAddList(): Observable<TeamCommunityModel[]> {
     const conflictMap: TeamCommunityModel[] = this.mergedCommunityList().map(values => {
       const conflicts = this.getAllTeamCommunityList().find(x => x.code === values.code);
       return this.mergeData(values, conflicts);
@@ -77,7 +78,7 @@ export class AssignedCommunityListDataService {
       const existing = this.getTeamCommunityList().find(x => x.code === values.code);
       return this.mergeData(values, existing);
     });
-    return addMap;
+    return of(addMap);
   }
 
   private mergedCommunityList(): TeamCommunityModel[] {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { delay } from 'rxjs/operators';
 import { Community } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
@@ -27,7 +28,9 @@ export class AddCommunityComponent implements OnInit {
 
   ngOnInit(): void {
     this.communitiesFilterPredicate();
-    this.communities = this.assignedCommunityListDataService.getCommunitiesToAddList();
+    this.assignedCommunityListDataService.getCommunitiesToAddList().pipe(delay(1000)).subscribe(values => {
+      this.communities = values;
+    });
     this.filtersToLoad = this.addCommunityService.filtersToLoad;
     this.displayedColumns = this.addCommunityService.displayedColumns;
   }

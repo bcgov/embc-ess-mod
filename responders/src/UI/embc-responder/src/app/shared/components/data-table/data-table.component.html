@@ -42,7 +42,7 @@
         <tr mat-header-row *matHeaderRowDef="columns"></tr>
         <tr mat-row *matRowDef="let row; columns: columns;"></tr>
     </table>
-<!--background-color: seagreen; -->
+
     <app-loader style="display: flex; justify-content: center; align-items: center;" class="mat-progress"
         [showLoader]="!isLoading" [strokeWidth]="3" [diameter]="50" [color]="color"></app-loader>
 

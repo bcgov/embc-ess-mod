@@ -40,9 +40,9 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
       console.log(this.isLoading)
-      console.log(this.dataSource.data)
       this.isLoading = !this.isLoading;
     }
+
     if (changes.displayedColumns) {
       this.columns = this.displayedColumns.map(column => column.ref);
     }
@@ -57,7 +57,6 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   }
 
   filter(term: TableFilterValueModel): void {
-    console.log(term);
     this.dataSource.filterPredicate = this.filterPredicate;
     this.dataSource.filter = JSON.stringify(term);
 
@@ -82,16 +81,49 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle(): void {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => {
-        if (row.hasOwnProperty('allowSelect')) {
-          const r: TeamCommunityModel = row;
-          if (r.allowSelect) {
+    if (this.disableRow) {
+      if (this.selection.selected.length !== 0) {
+        this.selection.clear()
+      } else {
+        this.dataSource.filteredData.forEach(row => {
+          if (row.hasOwnProperty('allowSelect')) {
+            const r: TeamCommunityModel = row;
+            if (r.allowSelect) {
+              this.selection.select(row);
+            }
+          }
+        });
+      }
+    } else {
+      if (this.isAllSelected()) {
+        this.selection.clear();
+      } else {
+        this.dataSource.filteredData.forEach(row => {
+          if (row.hasOwnProperty('allowSelect')) {
+            const r: TeamCommunityModel = row;
             this.selection.select(row);
           }
-        }
-      });
+        });
+      }
+    }
+
+    this.selectedRows.emit(this.selection.selected);
+
+    // this.isAllSelected() ?
+    //   this.selection.clear() :
+    //   this.dataSource.data.forEach(row => {
+    //     if (row.hasOwnProperty('allowSelect')) {
+    //       const r: TeamCommunityModel = row;
+    //       if (this.disableRow) {
+    //         if (r.allowSelect) {
+    //           this.selection.select(row);
+    //         }
+    //       } else {
+    //         this.selection.select(row);
+    //       }
+
+    //     }
+    //   });
   }
 
   /** The label for the checkbox on the passed row */
@@ -105,6 +137,5 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   selectionToggle(row): void {
     this.selection.toggle(row);
     this.selectedRows.emit(this.selection.selected);
-    console.log(this.selection.selected);
   }
 }
