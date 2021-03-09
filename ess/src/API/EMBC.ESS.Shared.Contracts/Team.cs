@@ -156,4 +156,14 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
         public IEnumerable<string> CommunityIds { get; }
     }
+
+    public class UsernameAlreadyExistsException : Exception
+    {
+        public UsernameAlreadyExistsException(string userName)
+        {
+            UserName = userName;
+        }
+
+        public string UserName { get; }
+    }
 }

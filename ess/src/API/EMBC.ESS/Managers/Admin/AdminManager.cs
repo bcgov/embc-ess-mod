@@ -54,7 +54,7 @@ namespace EMBC.ESS.Managers.Admin
         public async Task<SaveTeamMemberResponse> Handle(SaveTeamMemberCommand cmd)
         {
             var teamMembersWithSameUserName = await teamRepository.GetMembers(userName: cmd.Member.UserName);
-            if (teamMembersWithSameUserName.Any()) throw new Exception($"A team member with user name {cmd.Member.UserName} already exists");
+            if (teamMembersWithSameUserName.Any()) throw new UsernameAlreadyExistsException(cmd.Member.UserName);
 
             var id = await teamRepository.SaveMember(mapper.Map<Resources.Team.TeamMember>(cmd.Member));
 
