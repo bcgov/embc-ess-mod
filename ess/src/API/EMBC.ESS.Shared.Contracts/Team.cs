@@ -149,12 +149,12 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
     public class CommunitiesAlreadyAssignedException : Exception
     {
-        public CommunitiesAlreadyAssignedException(IEnumerable<string> communityIds)
+        public CommunitiesAlreadyAssignedException(IEnumerable<string> communities)
         {
-            CommunityIds = communityIds;
+            Communities = communities;
         }
 
-        public IEnumerable<string> CommunityIds { get; }
+        public IEnumerable<string> Communities { get; }
     }
 
     public class UsernameAlreadyExistsException : Exception

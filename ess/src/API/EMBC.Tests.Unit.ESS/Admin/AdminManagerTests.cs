@@ -121,7 +121,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
                 Communities = updatedAssignedCommunities
             }).ShouldThrowAsync<CommunitiesAlreadyAssignedException>();
 
-            exception.CommunityIds.ShouldBe(new[] { "c3" });
+            exception.Communities.ShouldBe(new[] { "c3" });
         }
 
         [Fact]
