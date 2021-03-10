@@ -31,14 +31,14 @@ export default class EvacAddressComponent implements OnInit {
 
   // registrationAddress: Partial<Registration>;
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-              public dataService: DataService) {
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+    public dataService: DataService) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
 
   ngOnInit(): void {
-    // this.registration = this.dataService.getRegistration();
     this.evacuatedForm$ = this.formCreationService.getEvacuatedForm().subscribe(
       evacuatedForm => {
         this.evacuatedForm = evacuatedForm;

@@ -1,0 +1,103 @@
+.content-container {
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-bottom: 24px;
+    padding-left: 24px;
+}
+
+.evacuatedSecondary {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.349019607843137);
+    line-height: 35px;
+    padding-right: 10%;
+    max-width: 100%;
+}
+
+.evacuatedTitle {
+    font-weight: 700;
+    font-style: normal;
+    font-size: 32px;
+    color: #169bd5;
+}
+
+.button-align {
+    padding: 10px 20px 0;
+}
+
+.view-details {
+    width: 100%;
+}
+
+.col-md-3 {
+    display: grid;
+    padding-left: 30px;
+}
+
+.titleDiv {
+    padding-bottom: 20px;
+}
+
+.statusSpan {
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.dataSpan {
+    font-weight: 700;
+    font-size: 15px;
+    max-width: 100%;
+}
+
+@media only screen and (max-width: 420px), (min-device-width: 400px) and (max-device-width: 1000px) {
+    /* Force table to not be like tables anymore */
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    td {
+        /* Behave  like a "row" */
+        border: none;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+    }
+
+    /*
+	Label the data
+	*/
+    td:nth-of-type(1):before {
+        content: "File Created";
+    }
+    td:nth-of-type(2):before {
+        content: "File #";
+    }
+    td:nth-of-type(3):before {
+        content: "Supt. Received";
+    }
+    td:nth-of-type(4):before {
+        content: "Status";
+    }
+}

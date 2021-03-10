@@ -301,14 +301,18 @@
                     <div class="col-md-3">Evacuated From:</div>
                     <div class="col-md-3">
                         <span>{{(formCreationService.evacuatedForm$ |
-                            async)?.value?.evacuatedFromAddress?.addressLine1}}
-                            {{(formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine2}}
-                        </span>
-                        <span>{{(formCreationService.evacuatedForm$ |
-                            async)?.value?.evacuatedFromAddress?.jurisdiction?.name}},
-                            {{(formCreationService.evacuatedForm$ |
-                            async)?.value?.evacuatedFromAddress?.stateProvince?.name}},
-                            {{(formCreationService.evacuatedForm$ |
+                            async)?.value?.evacuatedFromAddress?.addressLine1}},</span>
+                        <span
+                            *ngIf="(formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine2 !== null">
+                            &nbsp;{{(formCreationService.evacuatedForm$ |
+                            async)?.value?.evacuatedFromAddress?.addressLine2}},</span>
+                        <span>&nbsp;{{(formCreationService.evacuatedForm$ |
+                            async)?.value?.evacuatedFromAddress?.jurisdiction?.name}}, </span>
+                        <span> &nbsp; {{(formCreationService.evacuatedForm$ |
+                            async)?.value?.evacuatedFromAddress?.stateProvince?.name}}</span>
+                        <span *ngIf="(formCreationService.evacuatedForm$ |
+                                async)?.value?.evacuatedFromAddress?.postalCode !== null">
+                            ,&nbsp;{{(formCreationService.evacuatedForm$ |
                             async)?.value?.evacuatedFromAddress?.postalCode}}</span>
                     </div>
                 </div>

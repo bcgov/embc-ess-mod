@@ -1,0 +1,35 @@
+<mat-card>
+    <mat-card-content>
+        <span class="evacuatedSecondary">Evacuated From</span>
+        <mat-card-title class="evacuatedTitle">{{evacuationFileCard?.evacuatedFromAddress.jurisdiction.name}}
+        </mat-card-title>
+        <div class="row">
+            <div class="col-md-9">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="evacuatedSecondary">Evacuated File Created </th>
+                            <th class="evacuatedSecondary">Evacuation File #</th>
+                            <th class="evacuatedSecondary">Supports Received</th>
+                            <th class="evacuatedSecondary">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="dataSpan">20-Feb-2020</td>
+                            <td class="dataSpan">123456</td>
+                            <td class="dataSpan">No</td>
+                            <td class="dataSpan"><img src="{{imageIcon}}" height="13" width="13">
+                                {{evacuationFileStatus}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-3 button-align">
+                <button class="button-p view-details" mat-stroked-button type="button" (click)="goToDetails()">View
+                    Details</button>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
