@@ -37,15 +37,15 @@
                 <div class="col-md-3">Evacuated From:</div>
                 <div class="col-md-3 evacuatedAddress">
                     <div>
-                        <span>{{evacuationFileCard.evacuatedFromAddress.addressLine1}},</span>
-                        <span *ngIf="evacuationFileCard.evacuatedFromAddress.addressLine2 != null">
-                            &nbsp;{{evacuationFileCard.evacuatedFromAddress.addressLine2}},</span>
+                        <span>{{evacuationFileCard?.evacuatedFromAddress?.addressLine1}},</span>
+                        <span *ngIf="evacuationFileCard?.evacuatedFromAddress?.addressLine2 != null">
+                            &nbsp;{{evacuationFileCard?.evacuatedFromAddress?.addressLine2}},</span>
                     </div>
                     <div>
-                        <span>{{evacuationFileCard.evacuatedFromAddress.jurisdiction.name}},</span>
-                        <span> &nbsp;{{evacuationFileCard.evacuatedFromAddress.stateProvince.name}}</span>
-                        <span *ngIf="evacuationFileCard.evacuatedFromAddress.postalCode != null">,
-                            &nbsp;{{evacuationFileCard.evacuatedFromAddress.postalCode}}</span>
+                        <span>{{evacuationFileCard?.evacuatedFromAddress?.jurisdiction?.name}},</span>
+                        <span> &nbsp;{{evacuationFileCard?.evacuatedFromAddress?.stateProvince?.name}}</span>
+                        <span *ngIf="evacuationFileCard?.evacuatedFromAddress?.postalCode != null">,
+                            &nbsp;{{evacuationFileCard?.evacuatedFromAddress?.postalCode}}</span>
                     </div>
                 </div>
             </div>
