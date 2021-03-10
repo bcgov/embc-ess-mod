@@ -31,7 +31,8 @@ export default class EvacAddressComponent implements OnInit {
 
   // registrationAddress: Partial<Registration>;
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
     public dataService: DataService) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
