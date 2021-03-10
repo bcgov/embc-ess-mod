@@ -135,15 +135,15 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Deactivate a team member
+        /// Activate a team member
         /// </summary>
         /// <param name="memberId">team member id</param>
         /// <returns>team member id if success, not found or bad request</returns>
-        [HttpPost("{memberId}/inactive")]
+        [HttpPost("{memberId}/active")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeactivateTeamMember(string memberId)
+        public async Task<IActionResult> ActivateTeamMember(string memberId)
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
@@ -157,15 +157,15 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Activate a team member
+        /// Deactivate a team member
         /// </summary>
         /// <param name="memberId">team member id</param>
         /// <returns>team member id if success, not found or bad request</returns>
-        [HttpPost("{memberId}/active")]
+        [HttpPost("{memberId}/inactive")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ActivateTeamMember(string memberId)
+        public async Task<IActionResult> DeactivateTeamMember(string memberId)
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
