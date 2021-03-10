@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.ESS;
@@ -24,15 +25,32 @@ namespace EMBC.Responders.API
 {
     public static class DispatcherClientEx
     {
-        public static async Task<TReply> SendRequest<TRequest, TReply>(this Dispatcher.DispatcherClient dispatcherClient, TRequest request)
+        public static async Task<TReply> DispatchAsync<TReply>(this Dispatcher.DispatcherClient dispatcherClient, object content)
         {
-            var response = await dispatcherClient.DispatchAsync(new RequestEnvelope
+            var request = new RequestEnvelope
             {
-                Type = typeof(TRequest).FullName,
-                Content = Value.Parser.ParseJson(JsonSerializer.Serialize(request))
-            });
-
+                CorrelationId = Guid.NewGuid().ToString(),
+                Type = content.GetType().FullName,
+                Content = Value.Parser.ParseJson(JsonSerializer.Serialize(content))
+            };
+            var response = await dispatcherClient.DispatchAsync(request);
+            if (response.Empty) return default;
+            if (response.Error) throw new ServerException(response.CorrelationId, response.ErrorType, response.ErrorMessage, response.ErrorDetails);
             return JsonSerializer.Deserialize<TReply>(JsonFormatter.Default.Format(response.Content));
         }
+    }
+
+    public class ServerException : Exception
+    {
+        public ServerException(string correlationId, string type, string message, string details) : base(message)
+        {
+            CorrelationId = correlationId;
+            Type = type;
+            Details = details;
+        }
+
+        public string CorrelationId { get; }
+        public string Type { get; }
+        public string Details { get; }
     }
 }

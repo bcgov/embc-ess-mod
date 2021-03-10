@@ -25,7 +25,7 @@ namespace EMBC.ESS.Utilities.Messaging
     {
         private Dictionary<Type, MethodInfo> registry = new Dictionary<Type, MethodInfo>();
 
-        public (Type type, MethodInfo) Resolve(string messageType)
+        public (Type Type, MethodInfo Method) Resolve(string messageType)
         {
             var type = registry.Keys.SingleOrDefault(k => k.FullName == messageType);
             if (type == null) throw new InvalidOperationException($"message type {messageType} has no handler registered");

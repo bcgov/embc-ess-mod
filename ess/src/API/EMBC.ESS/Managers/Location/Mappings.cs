@@ -25,7 +25,9 @@ namespace EMBC.ESS.Managers.Location
         {
             CreateMap<Shared.Contracts.Location.Country, Country>().ReverseMap();
             CreateMap<Shared.Contracts.Location.StateProvince, StateProvince>().ReverseMap();
-            CreateMap<Shared.Contracts.Location.Community, Community>().ReverseMap();
+            CreateMap<Shared.Contracts.Location.Community, Community>()
+                .ForMember(c => c.DistrictCode, opts => opts.Ignore())
+                .ReverseMap();
         }
     }
 }

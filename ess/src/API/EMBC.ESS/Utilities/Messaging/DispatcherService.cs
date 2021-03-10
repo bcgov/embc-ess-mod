@@ -48,16 +48,25 @@ namespace EMBC.ESS.Utilities.Messaging
                 var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType);
                 var replyMessage = await messageHandler.InvokeAsync(handlerInstance, new object[] { requestMessage });
 
-                return await Task.FromResult(new ReplyEnvelope
+                return new ReplyEnvelope
                 {
+                    CorrelationId = request.CorrelationId,
                     Type = replyMessage.GetType().FullName,
-                    Content = Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage))
-                });
+                    Content = Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
+                    Empty = replyMessage == null
+                };
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error when processing request type {0}", request.Type);
-                throw;
+                logger.LogError(e, "Error when processing request {0} of type {1}", request.CorrelationId, request.Type);
+                return new ReplyEnvelope
+                {
+                    CorrelationId = request.CorrelationId,
+                    Error = true,
+                    ErrorType = e.GetType().FullName,
+                    ErrorMessage = e.Message,
+                    ErrorDetails = e.ToString()
+                };
             }
         }
     }

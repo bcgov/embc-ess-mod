@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 
 namespace EMBC.ESS.Resources.Metadata
@@ -33,41 +34,55 @@ namespace EMBC.ESS.Resources.Metadata
     public class MetadataRepository : IMetadataRepository
     {
         private readonly EssContext essContext;
+        private readonly IMapper mapper;
 
-        public MetadataRepository(EssContext essContext)
+        public MetadataRepository(EssContext essContext, IMapper mapper)
         {
             this.essContext = essContext;
+            this.mapper = mapper;
         }
 
         public async Task<IEnumerable<Country>> GetCountries()
         {
             var countries = await essContext.era_countries.GetAllPagesAsync();
-            return countries.Select(c => new Country { Code = c.era_countrycode, Name = c.era_name }).ToArray();
+
+            essContext.DetachAll();
+
+            return mapper.Map<IEnumerable<Country>>(countries);
         }
 
         public async Task<IEnumerable<StateProvince>> GetStateProvinces()
         {
-            var provinces = await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync();
-            return provinces.Select(sp => new StateProvince
-            {
-                Code = sp.era_code,
-                Name = sp.era_name,
-                CountryCode = sp.era_RelatedCountry.era_countrycode
-            }).ToArray();
+            var stateProvinces = await essContext.era_provinceterritorieses.Expand(c => c.era_RelatedCountry).GetAllPagesAsync();
+
+            essContext.DetachAll();
+
+            return mapper.Map<IEnumerable<StateProvince>>(stateProvinces);
         }
 
         public async Task<IEnumerable<Community>> GetCommunities()
         {
-            await GetStateProvinces();  // temporary solution to populate the client's cache with entities, otherwise era_RelatedCountry will be null
-            var jurisdictions = await essContext.era_jurisdictions.Expand(j => j.era_RelatedProvinceState).GetAllPagesAsync();
-            return jurisdictions.Select(j => new Community
+            await Task.CompletedTask;
+
+            var jurisdictions = await essContext.era_jurisdictions
+                .Expand(j => j.era_RelatedProvinceState)
+                .Expand(j => j.era_RegionalDistrict)
+                .GetAllPagesAsync();
+
+            essContext.DetachAll();
+
+            var communities = mapper.Map<IEnumerable<Community>>(jurisdictions);
+
+            // a hack to map country codes to communities because Dynamics v9.0 doesn't allow multi step expansion (i.e. province->country)
+            var stateProvinces = essContext.era_provinceterritorieses
+                   .Select(sp => new { code = sp.era_code, countryId = sp.era_RelatedCountry.era_countryid, countryCode = sp.era_RelatedCountry.era_countrycode })
+                   .ToArray();
+
+            foreach (var community in communities)
             {
-                Code = j.era_jurisdictionid.ToString(),
-                Name = j.era_jurisdictionname,
-                Type = !j.era_type.HasValue ? CommunityType.Undefined : (CommunityType)j.era_type.Value,
-                StateProvinceCode = j.era_RelatedProvinceState.era_code,
-                CountryCode = j.era_RelatedProvinceState.era_RelatedCountry.era_countrycode
-            }).ToArray();
+                community.CountryCode = stateProvinces.FirstOrDefault(sp => sp.code == community.StateProvinceCode)?.countryCode;
+            }
+            return communities;
         }
     }
 
@@ -91,6 +106,8 @@ namespace EMBC.ESS.Resources.Metadata
         public CommunityType Type { get; set; }
         public string StateProvinceCode { get; set; }
         public string CountryCode { get; set; }
+        public string DistrictCode { get; set; }
+        public string DistrictName { get; set; }
     }
 
 #pragma warning disable CA1008 // Enums should have zero value

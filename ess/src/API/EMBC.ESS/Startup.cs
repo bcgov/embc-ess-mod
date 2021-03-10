@@ -27,7 +27,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace EMBC.ESS.Services
+namespace EMBC.ESS
 {
     public class Startup
     {
@@ -40,6 +40,7 @@ namespace EMBC.ESS.Services
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
             services.AddGrpc(opts =>
             {
                 opts.EnableDetailedErrors = true;

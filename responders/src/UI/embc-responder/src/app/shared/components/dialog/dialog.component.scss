@@ -1,0 +1,29 @@
+.close-image img:last-child {
+  display: none;
+}
+
+.close-image:hover img:last-child {
+  display: block;
+}
+
+.close-image:hover img:first-child {
+  display: none;
+}
+
+.close-button-style {
+  background-color: white;
+  float: right;
+}
+
+.filter-margin {
+  padding: 10px;
+}
+
+.data-margin {
+  padding: 10px;
+}
+
+.mat-dialog-content {
+  margin: 0 !important;
+  max-height: none !important;
+}

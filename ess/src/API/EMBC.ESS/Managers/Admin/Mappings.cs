@@ -25,7 +25,15 @@ namespace EMBC.ESS.Managers.Admin
             CreateMap<Shared.Contracts.Team.TeamMember, Resources.Team.TeamMember>()
                 .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.Name))
                 .ReverseMap()
-                .ForMember(d => d.Role, opts => opts.MapFrom(s => new Shared.Contracts.Team.TeamRole { Name = s.Role }))
+                .ForMember(d => d.Role, opts => opts.MapFrom(s => new Shared.Contracts.Team.TeamRole { Id = s.Role, Name = s.Role }))
+                ;
+
+            CreateMap<Shared.Contracts.Team.Team, Resources.Team.Team>()
+                .ReverseMap()
+                ;
+
+            CreateMap<Shared.Contracts.Team.AssignedCommunity, Resources.Team.AssignedCommunity>()
+                .ReverseMap()
                 ;
         }
     }

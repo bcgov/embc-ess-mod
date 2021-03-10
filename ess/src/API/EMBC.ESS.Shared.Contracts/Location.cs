@@ -18,11 +18,11 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Location
 {
-    public class CountriesQueryRequest
+    public class CountriesQueryCommand : Command<CountriesQueryResponse>
     {
     }
 
-    public class CountriesQueryReply
+    public class CountriesQueryResponse : Response
     {
         public IEnumerable<Country> Items { get; set; }
     }
@@ -33,12 +33,12 @@ namespace EMBC.ESS.Shared.Contracts.Location
         public string Name { get; set; }
     }
 
-    public class StateProvincesQueryRequest
+    public class StateProvincesQueryCommand : Command<StateProvincesQueryResponse>
     {
         public string CountryCode { get; set; }
     }
 
-    public class StateProvincesQueryReply
+    public class StateProvincesQueryResponse : Response
     {
         public IEnumerable<StateProvince> Items { get; set; }
     }
@@ -50,14 +50,14 @@ namespace EMBC.ESS.Shared.Contracts.Location
         public string CountryCode { get; set; }
     }
 
-    public class CommunitiesQueryRequest
+    public class CommunitiesQueryCommand : Command<CommunitiesQueryResponse>
     {
         public string CountryCode { get; set; }
         public string StateProvinceCode { get; set; }
         public IEnumerable<CommunityType> Types { get; set; }
     }
 
-    public class CommunitiesQueryReply
+    public class CommunitiesQueryResponse : Response
     {
         public IEnumerable<Community> Items { get; set; }
     }
@@ -66,6 +66,8 @@ namespace EMBC.ESS.Shared.Contracts.Location
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public string DistrictCode { get; set; }
+        public string DistrictName { get; set; }
         public CommunityType Type { get; set; }
         public string StateProvinceCode { get; set; }
         public string CountryCode { get; set; }

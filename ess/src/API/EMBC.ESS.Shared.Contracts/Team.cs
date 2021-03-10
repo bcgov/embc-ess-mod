@@ -19,35 +19,102 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Team
 {
-    public class TeamRole
-    {
-        public string Id { get; set; }
-
-        public string Name { get; set; }
-    }
-
-    public class TeamMembersByIdQueryRequest
+    public class TeamMembersQueryCommand : Command<TeamMembersQueryResponse>
     {
         public string TeamId { get; set; }
+        public string MemberId { get; set; }
     }
 
-    public class TeamMembersQueryReply
+    public class TeamMembersQueryResponse : Response
     {
         public string TeamId { get; set; }
 
         public IEnumerable<TeamMember> TeamMembers { get; set; }
     }
 
-    public class SaveTeamMemberCommand
+    public class TeamsQueryCommand : Command<TeamsQueryResponse>
+    {
+        public string TeamId { get; set; }
+    }
+
+    public class TeamsQueryResponse : Response
+    {
+        public IEnumerable<Team> Teams { get; set; }
+    }
+
+    public class SaveTeamMemberCommand : Command<SaveTeamMemberResponse>
     {
         public TeamMember Member { get; set; }
     }
 
-    public class SaveTeamMemberReply
+    public class SaveTeamMemberResponse : Response
     {
         public string TeamId { get; set; }
 
         public string MemberId { get; set; }
+    }
+
+    public class DeactivateTeamMemberCommand : Command<DeactivateTeamMemberResponse>
+    {
+        public string TeamId { get; set; }
+        public string MemberId { get; set; }
+    }
+
+    public class DeactivateTeamMemberResponse : Response { }
+
+    public class ActivateTeamMemberCommand : Command<ActivateTeamMemberResponse>
+    {
+        public string TeamId { get; set; }
+        public string MemberId { get; set; }
+    }
+
+    public class ActivateTeamMemberResponse : Response { }
+
+    public class DeleteTeamMemberCommand : Command<DeleteTeamMemberResponse>
+    {
+        public string TeamId { get; set; }
+        public string MemberId { get; set; }
+    }
+
+    public class DeleteTeamMemberResponse : Response { }
+
+    public class ValidateTeamMemberCommand : Command<ValidateTeamMemberResponse>
+    {
+        public string UniqueUserName { get; set; }
+    }
+
+    public class ValidateTeamMemberResponse : Response
+    {
+        public bool UniqueUserName { get; set; }
+    }
+
+    public class AssignCommunitiesToTeamCommand : Command<AssignCommunitiesToTeamResponse>
+    {
+        public string TeamId { get; set; }
+        public IEnumerable<string> Communities { get; set; }
+    }
+
+    public class AssignCommunitiesToTeamResponse : Response { }
+
+    public class UnassignCommunitiesFromTeamCommand : Command<UnassignCommunitiesFromTeamResponse>
+    {
+        public string TeamId { get; set; }
+        public IEnumerable<string> Communities { get; set; }
+    }
+
+    public class UnassignCommunitiesFromTeamResponse : Response { }
+
+    public class Team
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public IEnumerable<AssignedCommunity> AssignedCommunities { get; set; }
+    }
+
+    public class AssignedCommunity
+    {
+        public string Code { get; set; }
+        public DateTime DateAssigned { get; set; }
     }
 
     public class TeamMember
@@ -62,7 +129,11 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
         public string UserName { get; set; }
 
+        public string ExternalUserId { get; set; }
+
         public TeamRole Role { get; set; }
+
+        public string Label { get; set; }
 
         public string Email { get; set; }
 
@@ -73,5 +144,32 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public DateTime? LastSuccessfulLogin { get; set; }
 
         public bool IsActive { get; set; }
+    }
+
+    public class TeamRole
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
+    public class CommunitiesAlreadyAssignedException : Exception
+    {
+        public CommunitiesAlreadyAssignedException(IEnumerable<string> communities)
+        {
+            Communities = communities;
+        }
+
+        public IEnumerable<string> Communities { get; }
+    }
+
+    public class UsernameAlreadyExistsException : Exception
+    {
+        public UsernameAlreadyExistsException(string userName)
+        {
+            UserName = userName;
+        }
+
+        public string UserName { get; }
     }
 }
