@@ -54,13 +54,13 @@ namespace EMBC.Responders.API.Controllers
 
             var teams = (await messagingClient.Send(query)).Teams;
 
-            var communities = teams.SelectMany(t => t.AssignedCommunities.Select(c => new { CommunityCode = c, Team = t }));
+            var communities = teams.SelectMany(t => t.AssignedCommunities.Select(c => new { CommunityCode = c.Code, DateAssigned = c.DateAssigned, Team = t }));
             return Ok(communities.Select(c => new AssignedCommunity
             {
                 TeamId = c.Team.Id,
                 TeamName = c.Team.Name,
                 CommunityCode = c.CommunityCode,
-                DateAssigned = DateTime.Now.Date // TODO: map from response
+                DateAssigned = c.DateAssigned
             }));
         }
 
