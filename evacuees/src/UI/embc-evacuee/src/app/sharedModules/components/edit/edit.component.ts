@@ -48,8 +48,6 @@ export class EditComponent implements OnInit, OnDestroy {
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
     });
-
-    console.log(this.parentPageName);
   }
 
   /**
