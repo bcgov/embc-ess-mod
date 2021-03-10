@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 /**
- * Community type
+ * Community type enumeration
  */
 export enum CommunityType {
   Undefined = 'Undefined',
