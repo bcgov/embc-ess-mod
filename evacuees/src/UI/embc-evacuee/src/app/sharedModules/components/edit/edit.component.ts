@@ -48,6 +48,8 @@ export class EditComponent implements OnInit, OnDestroy {
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
     });
+
+    console.log(this.parentPageName);
   }
 
   /**
@@ -65,11 +67,14 @@ export class EditComponent implements OnInit, OnDestroy {
         this.showLoader = !this.showLoader;
         this.profileService.upsertProfile(this.profileDataService.createProfileDTO()).subscribe(profileId => {
           this.showLoader = !this.showLoader;
-          this.router.navigate(['/verified-registration/dashboard']);
+          this.router.navigate(['/verified-registration/dashboard/profile']);
         }, (error) => {
           this.showLoader = !this.showLoader;
           this.alertService.setAlert('danger', error.title);
         });
+      } else if (this.parentPageName === 'needs-assessment') {
+        // console.log('SAVE NEEDS ASSESSMENTS FROM EVACUATION CARD HERE');
+        this.router.navigate(['/verified-registration/dashboard/current']);
       }
     }
   }
@@ -86,7 +91,9 @@ export class EditComponent implements OnInit, OnDestroy {
       if (this.parentPageName === 'create-profile') {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
       } else if (this.parentPageName === 'dashboard') {
-        this.router.navigate(['/verified-registration/dashboard']);
+        this.router.navigate(['/verified-registration/dashboard/profile']);
+      } else if (this.parentPageName === 'needs-assessment') {
+        this.router.navigate(['/verified-registration/dashboard/current']);
       }
     }
   }
@@ -147,6 +154,7 @@ export class EditComponent implements OnInit, OnDestroy {
         this.form$ = this.formCreationService.getEvacuatedForm().subscribe(
           evacuatedForm => {
             this.form = evacuatedForm;
+            console.log(this.form);
           }
         );
         this.editHeading = 'Edit Evacuation File';
@@ -156,6 +164,7 @@ export class EditComponent implements OnInit, OnDestroy {
         this.form$ = this.formCreationService.getFamilyMembersForm().subscribe(
           memberForm => {
             this.form = memberForm;
+            console.log(this.form);
           }
         );
         this.editHeading = 'Edit Evacuation File';

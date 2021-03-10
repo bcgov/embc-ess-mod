@@ -1,4 +1,4 @@
-.detailsCard{
+.detailsCard {
     padding: 0;
 }
 
@@ -6,7 +6,7 @@
     padding: 20px;
 }
 
-.evacFileHeader{
+.evacFileHeader {
     left: 0px;
     top: 0px;
     width: 100%;
@@ -17,8 +17,8 @@
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
-    margin:0;
-    font-family: 'BC Sans', sans-serif;
+    margin: 0;
+    font-family: "BC Sans", sans-serif;
     font-style: normal;
 }
 
@@ -27,17 +27,22 @@
     font-size: 36px;
     color: #234075;
     font-weight: 400;
+    display: inherit;
 }
 
-.backButton:hover{
-    color: #169BD5;
+.backButton {
+    padding-bottom: 30px;
+}
+
+.backButton:hover {
+    color: #169bd5;
 }
 
 .evacFileSpan {
-    padding: 20px;
+    padding: 0 20px;
 }
 
-.statusDetailHeader{
+.statusDetailHeader {
     display: block;
     padding-top: 40px;
     padding-right: 30px;
@@ -51,29 +56,73 @@
     line-height: 35px;
 }
 
-.supportReceived{
+.supportReceived {
     padding: 30px 30px 100px;
 }
 
-.supportReceivedBoldSpan{
+.supportReceivedBoldSpan {
     font-weight: 700;
     line-height: 35px;
 }
 
-.supportReceivedRegSpan{
+.supportReceivedRegSpan {
     font-weight: 400;
     line-height: 24px;
 }
 
 .evacuatedAddress {
     font-weight: 700;
-    color: #169BD5;
+    color: #169bd5;
 }
 
-.mainReferralsLink{
+.mainReferralsLink {
     text-align: right;
-    //padding: 3px 0;
-    color: #169BD5;
+    color: #169bd5;
     padding: 0 0 0 45px;
     cursor: pointer;
+}
+
+.allReferrals {
+    padding: 3px 0;
+}
+
+:host ::ng-deep app-review {
+    .mat-card {
+        box-shadow: none;
+    }
+    .mat-card-top,
+    mat-card {
+        border-top-style: none !important;
+    }
+    .mat-card-left,
+    mat-card {
+        border-left-style: none !important;
+    }
+    .mat-card-right,
+    mat-card {
+        border-right-style: none !important;
+    }
+}
+
+@media (max-width: 995px) {
+    .evacFileHeader {
+        height: auto;
+    }
+
+    .allReferrals {
+        padding: 5px;
+        display: contents;
+        text-align: end;
+    }
+
+    .mainReferralsLink {
+        padding: 0;
+    }
+}
+
+@media (max-width: 330px) {
+    .evacFileHeader {
+        height: auto;
+        display: grid;
+    }
 }

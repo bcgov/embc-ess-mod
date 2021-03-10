@@ -9,10 +9,6 @@
     padding-bottom: 40px;
 }
 
-.start-button {
-    width: 100%;
-}
-
 .top-detail {
     font-size: 21px;
 }
@@ -47,18 +43,8 @@
     display: none;
 }
 
-.goBackLink {
-    color: rgba(0, 0, 0, 0.35);
-    text-decoration: none;
-}
-
-.goBackLink:hover {
-    color: #169bd5;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.card-container {
-    margin: 2em 0;
-    box-shadow: 8px 5px 5px -1px rgba(0, 0, 0, 0.101960784313725);
+.start-button {
+    width: 100%;
+    white-space: normal;
+    line-height: inherit;
 }

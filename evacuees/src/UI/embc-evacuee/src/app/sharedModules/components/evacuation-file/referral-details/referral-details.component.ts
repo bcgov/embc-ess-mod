@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Referral, ReferralDetails } from '../../dashboard/dashboard.component';
+import { Referral, ReferralDetails } from '../evacuation-details/evacuation-details.component';
 
 @Component({
   selector: 'app-referral-details',
@@ -27,7 +27,7 @@ export class ReferralDetailsComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.evacuationReferral);
+    // console.log(this.evacuationReferral);
   }
 
 }
