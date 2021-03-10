@@ -39,11 +39,11 @@ namespace EMBC.ESS.Utilities.Dynamics
                 args.Headers.Add("Authorization", $"Bearer {tokenFactory().GetAwaiter().GetResult()}");
                 if (args.RequestUri.IsAbsoluteUri)
                 {
-                    args.RequestUri = new Uri(url, url.AbsolutePath + args.RequestUri.AbsolutePath + args.RequestUri.Query);
+                    args.RequestUri = new Uri(url, (url.AbsolutePath == "/" ? string.Empty : url.AbsolutePath) + args.RequestUri.AbsolutePath + args.RequestUri.Query);
                 }
                 else
                 {
-                    args.RequestUri = new Uri(url, url.AbsolutePath + uri.AbsolutePath + args.RequestUri.ToString());
+                    args.RequestUri = new Uri(url, (url.AbsolutePath == "/" ? string.Empty : url.AbsolutePath) + uri.AbsolutePath + args.RequestUri.ToString());
                 }
             };
             SendingRequest2 += (sender, args) =>

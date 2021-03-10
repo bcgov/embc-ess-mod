@@ -12,9 +12,9 @@ namespace EMBC.Tests.Unit.ESS
         public MappingTests()
         {
             mapperConfig = new MapperConfiguration(cfg =>
-           {
-               cfg.AddMaps(typeof(Startup));
-           });
+            {
+                cfg.AddMaps(typeof(Startup));
+            });
         }
 
         [Fact]

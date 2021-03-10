@@ -25,9 +25,7 @@ namespace EMBC.ESS.Utilities.Cache
 {
     public interface ICache
     {
-        Task Set<T>(string key, T item, DateTimeOffset? expiration = null);
-
-        Task<T> Get<T>(string key);
+        Task<T> GetOrAdd<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiration = null);
     }
 
     public class Cache : ICache
@@ -39,39 +37,22 @@ namespace EMBC.ESS.Utilities.Cache
             this.distributedCache = distributedCache;
         }
 
-        public async Task<T> Get<T>(string key)
-        {
-            return Deserialize<T>(await distributedCache.GetAsync(key));
-        }
-
-        public async Task Set<T>(string key, T item, DateTimeOffset? expiration = null)
-        {
-            await distributedCache.SetAsync(key, Serialize(item), new DistributedCacheEntryOptions { AbsoluteExpiration = expiration });
-        }
-
-        private static T Deserialize<T>(byte[] data) => data == null ? default(T) : JsonSerializer.Deserialize<T>(data);
-
-        private static byte[] Serialize<T>(T obj) => obj == null ? null : JsonSerializer.SerializeToUtf8Bytes(obj);
-    }
-
-    public static class CacheEx
-    {
         private static readonly ConcurrentDictionary<string, SemaphoreSlim> keyLocks = new ConcurrentDictionary<string, SemaphoreSlim>();
 
-        public static async Task<T> GetOrAdd<T>(this ICache cache, string key, Func<Task<T>> getter, DateTimeOffset? expiration = null)
+        public async Task<T> GetOrAdd<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiration = null)
         {
-            var value = await cache.Get<T>(key);
+            var value = await Get<T>(key);
             if (value != null) return value;
 
             var locker = keyLocks.GetOrAdd(key, new SemaphoreSlim(1, 1));
             await locker.WaitAsync();
             try
             {
-                value = await cache.Get<T>(key);
+                value = await Get<T>(key);
                 if (value != null) return value;
 
                 value = await getter();
-                await cache.Set(key, value, expiration);
+                await Set(key, value, expiration);
                 return value;
             }
             finally
@@ -79,5 +60,17 @@ namespace EMBC.ESS.Utilities.Cache
                 locker.Release();
             }
         }
+
+        private async Task<T> Get<T>(string key) =>
+            Deserialize<T>(await distributedCache.GetAsync(key));
+
+        private async Task Set<T>(string key, T item, DateTimeOffset? expiration = null) =>
+            await distributedCache.SetAsync(key, Serialize(item), new DistributedCacheEntryOptions { AbsoluteExpiration = expiration });
+
+        private static T Deserialize<T>(byte[] data) =>
+            data == null ? default(T) : JsonSerializer.Deserialize<T>(data);
+
+        private static byte[] Serialize<T>(T obj) =>
+            obj == null ? null : JsonSerializer.SerializeToUtf8Bytes(obj);
     }
 }

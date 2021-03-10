@@ -88,11 +88,33 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public bool UniqueUserName { get; set; }
     }
 
+    public class AssignCommunitiesToTeamCommand : Command<AssignCommunitiesToTeamResponse>
+    {
+        public string TeamId { get; set; }
+        public IEnumerable<string> Communities { get; set; }
+    }
+
+    public class AssignCommunitiesToTeamResponse : Response { }
+
+    public class UnassignCommunitiesFromTeamCommand : Command<UnassignCommunitiesFromTeamResponse>
+    {
+        public string TeamId { get; set; }
+        public IEnumerable<string> Communities { get; set; }
+    }
+
+    public class UnassignCommunitiesFromTeamResponse : Response { }
+
     public class Team
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> AssignedCommunities { get; set; }
+        public IEnumerable<AssignedCommunity> AssignedCommunities { get; set; }
+    }
+
+    public class AssignedCommunity
+    {
+        public string Code { get; set; }
+        public DateTime DateAssigned { get; set; }
     }
 
     public class TeamMember
@@ -129,5 +151,25 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public string Id { get; set; }
 
         public string Name { get; set; }
+    }
+
+    public class CommunitiesAlreadyAssignedException : Exception
+    {
+        public CommunitiesAlreadyAssignedException(IEnumerable<string> communities)
+        {
+            Communities = communities;
+        }
+
+        public IEnumerable<string> Communities { get; }
+    }
+
+    public class UsernameAlreadyExistsException : Exception
+    {
+        public UsernameAlreadyExistsException(string userName)
+        {
+            UserName = userName;
+        }
+
+        public string UserName { get; }
     }
 }

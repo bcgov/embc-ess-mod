@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS;
 using EMBC.ESS.Managers.Admin;
+using EMBC.ESS.Managers.Location;
+using EMBC.ESS.Shared.Contracts.Location;
 using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -131,6 +133,37 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             teams.Count().ShouldNotBe(0);
             teams.ShouldAllBe(t => t.AssignedCommunities.Any());
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanAssignCommunitiesToTeam()
+        {
+            var locationManager = services.GetRequiredService<LocationManager>();
+            var communities = (await locationManager.Handle(new CommunitiesQueryCommand())).Items;
+
+            var team = (await adminManager.Handle(new TeamsQueryCommand { TeamId = teamId })).Teams.ShouldHaveSingleItem();
+
+            var newCommunities = communities.Where(c => !team.AssignedCommunities.Select(c => c.Code).Contains(c.Code)).Take(5).Select(c => c.Code);
+
+            await adminManager.Handle(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = newCommunities });
+
+            var updatedTeam = (await adminManager.Handle(new TeamsQueryCommand { TeamId = teamId })).Teams.ShouldHaveSingleItem();
+
+            updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(team.AssignedCommunities.Select(c => c.Code).Concat(newCommunities).OrderBy(c => c));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanUnassignCommunitiesToTeam()
+        {
+            var team = (await adminManager.Handle(new TeamsQueryCommand { TeamId = teamId })).Teams.ShouldHaveSingleItem();
+
+            var removedCommunities = team.AssignedCommunities.Take(2);
+
+            await adminManager.Handle(new UnassignCommunitiesFromTeamCommand { TeamId = teamId, Communities = removedCommunities.Select(c => c.Code) });
+
+            var updatedTeam = (await adminManager.Handle(new TeamsQueryCommand { TeamId = teamId })).Teams.ShouldHaveSingleItem();
+
+            updatedTeam.AssignedCommunities.Where(c => removedCommunities.Contains(c)).ShouldBeEmpty();
         }
     }
 }

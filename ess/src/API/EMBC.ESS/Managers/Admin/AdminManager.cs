@@ -54,7 +54,7 @@ namespace EMBC.ESS.Managers.Admin
         public async Task<SaveTeamMemberResponse> Handle(SaveTeamMemberCommand cmd)
         {
             var teamMembersWithSameUserName = await teamRepository.GetMembers(userName: cmd.Member.UserName);
-            if (teamMembersWithSameUserName.Any()) throw new Exception($"A team member with user name {cmd.Member.UserName} already exists");
+            if (teamMembersWithSameUserName.Any()) throw new UsernameAlreadyExistsException(cmd.Member.UserName);
 
             var id = await teamRepository.SaveMember(mapper.Map<Resources.Team.TeamMember>(cmd.Member));
 
@@ -96,6 +96,37 @@ namespace EMBC.ESS.Managers.Admin
             var members = await teamRepository.GetMembers(userName: cmd.UniqueUserName);
 
             return new ValidateTeamMemberResponse { UniqueUserName = !members.Any() };
+        }
+
+        public async Task<AssignCommunitiesToTeamResponse> Handle(AssignCommunitiesToTeamCommand cmd)
+        {
+            var allTeams = await teamRepository.GetTeams();
+            var team = allTeams.SingleOrDefault(t => t.Id == cmd.TeamId);
+            if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
+
+            var allAssignedCommunities = allTeams.Where(t => t.Id != cmd.TeamId).SelectMany(t => t.AssignedCommunities).Select(c => c.Code);
+            var alreadyAssignedCommunities = cmd.Communities.Intersect(allAssignedCommunities).ToArray();
+            if (alreadyAssignedCommunities.Any()) throw new CommunitiesAlreadyAssignedException(alreadyAssignedCommunities);
+
+            var now = DateTime.Now;
+            var newCommunities = cmd.Communities
+                .Where(c => !team.AssignedCommunities.Any(ac => ac.Code == c))
+                .Select(c => new Resources.Team.AssignedCommunity { Code = c, DateAssigned = now });
+            team.AssignedCommunities = team.AssignedCommunities.Concat(newCommunities).ToArray();
+            await teamRepository.SaveTeam(team);
+
+            return new AssignCommunitiesToTeamResponse();
+        }
+
+        public async Task<UnassignCommunitiesFromTeamResponse> Handle(UnassignCommunitiesFromTeamCommand cmd)
+        {
+            var team = (await teamRepository.GetTeams(id: cmd.TeamId)).SingleOrDefault();
+            if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
+
+            team.AssignedCommunities = team.AssignedCommunities.Where(c => !cmd.Communities.Contains(c.Code));
+            await teamRepository.SaveTeam(team);
+
+            return new UnassignCommunitiesFromTeamResponse();
         }
     }
 }

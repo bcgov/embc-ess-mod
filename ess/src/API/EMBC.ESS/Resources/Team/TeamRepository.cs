@@ -28,6 +28,8 @@ namespace EMBC.ESS.Resources.Team
     {
         private readonly EssContext context;
         private readonly IMapper mapper;
+        private const int DynamicsActiveStatus = 1;
+        private const int DynamicsInactiveStatus = 2;
 
         public TeamRepository(EssContext dynamicsClientContext, IMapper mapper)
         {
@@ -54,7 +56,7 @@ namespace EMBC.ESS.Resources.Team
         {
             await Task.CompletedTask;
 
-            IQueryable<era_essteam> essTeams = context.era_essteams;
+            IQueryable<era_essteam> essTeams = context.era_essteams.Where(t => t.statuscode == DynamicsActiveStatus);
             IQueryable<era_essteamarea> communities = context.era_essteamareas.Expand(a => a.era_JurisdictionID);
 
             if (!string.IsNullOrEmpty(id))
@@ -73,7 +75,11 @@ namespace EMBC.ESS.Resources.Team
                 var team = mapper.Map<Team>(t);
                 team.AssignedCommunities = assignedCommunities
                     .Where(c => c._era_essteamid_value == t.era_essteamid)
-                    .Select(c => c.era_JurisdictionID.era_jurisdictionid.Value.ToString())
+                    .Select(c => new AssignedCommunity
+                    {
+                        Code = c.era_JurisdictionID.era_jurisdictionid.Value.ToString(),
+                        DateAssigned = c.createdon.Value.Date
+                    })
                     .ToArray();
                 return team;
             }).ToArray();
@@ -82,7 +88,7 @@ namespace EMBC.ESS.Resources.Team
         public async Task<string> SaveMember(TeamMember teamMember)
         {
             var essTeam = GetEssTeam(teamMember.TeamId);
-            if (essTeam == null) throw new Exception($"team {teamMember.TeamId} not found");
+            if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new Exception($"team {teamMember.TeamId} not found");
 
             var essTeamUser = teamMember.Id == null
                 ? CreateTeamUser()
@@ -108,20 +114,27 @@ namespace EMBC.ESS.Resources.Team
         public async Task<string> SaveTeam(Team team)
         {
             var essTeam = GetEssTeam(team.Id);
-            if (essTeam == null) throw new Exception($"team {team.Id} not found");
+            if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new Exception($"team {team.Id} not found");
 
-            var currentCommunities = context.era_essteamareas
+            var currentAssignments = context.era_essteamareas
+                .Expand(a => a.era_JurisdictionID)
                 .Where(a => a.era_ESSTeamID.era_essteamid == essTeam.era_essteamid)
                 .ToArray();
 
-            foreach (var community in currentCommunities)
+            var teamCommunities = team.AssignedCommunities.Select(c => Guid.Parse(c.Code)).Distinct().ToArray();
+
+            var assignementsToDelete = currentAssignments.Where(c => !teamCommunities.Contains(c.era_JurisdictionID.era_jurisdictionid.Value)).ToArray();
+
+            foreach (var assignmnent in assignementsToDelete)
             {
-                context.DeleteObject(community);
+                context.DeleteObject(assignmnent);
             }
 
-            foreach (var community in team.AssignedCommunities)
+            var assignementsToAdd = teamCommunities.Where(c => !currentAssignments.Any(a => a.era_JurisdictionID.era_jurisdictionid == c)).ToArray();
+
+            foreach (var communityId in assignementsToAdd)
             {
-                var jurisdiction = new era_jurisdiction { era_jurisdictionid = Guid.Parse(community) };
+                var jurisdiction = new era_jurisdiction { era_jurisdictionid = communityId };
                 var teamArea = new era_essteamarea
                 {
                     era_essteamareaid = Guid.NewGuid(),
