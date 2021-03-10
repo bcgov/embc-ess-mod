@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { delay } from 'rxjs/operators';
 import { Community } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
+import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { AssignedCommunityListDataService } from 'src/app/feature-components/assigned-community/assigned-community-list/assigned-community-list-data.service';
 import { AddCommunityService } from './add-community.service';
 
@@ -17,37 +19,20 @@ export class AddCommunityComponent implements OnInit {
   constructor(private assignedCommunityListDataService: AssignedCommunityListDataService,
               private router: Router, private addCommunityService: AddCommunityService) { }
 
-  regionalDistrictList: string[] = ['Cariboo', 'Victoria', 'Comox Valley'];
-  typesList: string[] = ['First Nations Community', 'City'];
-  communities: Community[];
+  communities: TeamCommunityModel[];
   filterTerm: TableFilterValueModel;
   selectedCommunitiesList: Community[] = [];
   filterPredicate: (data: Community, filter: string) => boolean;
-
-  filtersToLoad: TableFilterModel = {
-    loadDropdownFilters: [{
-      type: 'regionalDistrict',
-      label: 'All Regional Districts',
-      values: this.regionalDistrictList
-    }],
-    loadInputFilter: {
-      type: 'Search by city, town, village or community',
-      label: 'Search by city, town, village or community'
-    }
-  };
-
-  displayedColumns: TableColumnModel[] = [
-    { label: 'select', ref: 'select' },
-    { label: '', ref: 'action' },
-    { label: 'Community', ref: 'name' },
-    { label: 'Regional District', ref: 'districtName' },
-    { label: 'Type', ref: 'type' }
-  ];
+  filtersToLoad: TableFilterModel;
+  displayedColumns: TableColumnModel[];
 
   ngOnInit(): void {
     this.communitiesFilterPredicate();
-    console.log(this.assignedCommunityListDataService.getCommunitiesToAddList());
-    this.communities = this.assignedCommunityListDataService.getCommunitiesToAddList();
+    this.assignedCommunityListDataService.getCommunitiesToAddList().pipe(delay(1000)).subscribe(values => {
+      this.communities = values;
+    });
+    this.filtersToLoad = this.addCommunityService.filtersToLoad;
+    this.displayedColumns = this.addCommunityService.displayedColumns;
   }
 
   communitiesFilterPredicate(): void {
@@ -72,10 +57,10 @@ export class AddCommunityComponent implements OnInit {
   selectedCommunities($event): void {
     this.selectedCommunitiesList = $event;
     this.addCommunityService.setAddedCommunities($event);
-}
+  }
 
-addToMyList(): void {
-    this.router.navigate(['/responder-access/community-management/review'], {queryParams: {action: 'add'}});
+  addToMyList(): void {
+    this.router.navigate(['/responder-access/community-management/review'], { queryParams: { action: 'add' } });
   }
 
   goToList(): void {

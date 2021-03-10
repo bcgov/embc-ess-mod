@@ -12,7 +12,6 @@
         </div>
     </div>
     <div class="data-margin">
-        <app-loader [showLoader]="isLoading"></app-loader>
         <app-data-table [incomingData]='assignedCommunities' [displayedColumns]='displayedColumns'
             [filterTerm]="filterTerm" [filterPredicate]="filterPredicate" (selectedRows)="communitiesToDelete($event)">
         </app-data-table>

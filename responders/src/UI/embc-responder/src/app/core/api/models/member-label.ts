@@ -5,6 +5,6 @@
  * a label to describe the team member
  */
 export interface MemberLabel {
-  id?: null | string;
+  code?: null | string;
   name?: null | string;
 }

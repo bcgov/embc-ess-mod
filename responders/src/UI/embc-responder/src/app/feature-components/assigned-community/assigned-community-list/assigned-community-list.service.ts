@@ -16,7 +16,7 @@ export class AssignedCommunityListService {
             map((assignedCommunities: TeamCommunityModel[]) => {
                 const allCommunities = this.loadLocationService.getCommunityList();
                 return assignedCommunities.map(list => {
-                    const found = allCommunities.find(x => x.id === list.communityId);
+                    const found = allCommunities.find(x => x.code === list.communityCode);
                     if (found) {
                         list.allowSelect = false;
                         list.conflict = false;
@@ -32,7 +32,7 @@ export class AssignedCommunityListService {
             map((assignedCommunities: TeamCommunityModel[]) => {
                 const allCommunities = this.loadLocationService.getCommunityList();
                 return assignedCommunities.map(list => {
-                    const found = allCommunities.find(x => x.id === list.communityId);
+                    const found = allCommunities.find(x => x.code === list.communityCode);
                     if (found) {
                         list.allowSelect = false;
                         list.conflict = true;

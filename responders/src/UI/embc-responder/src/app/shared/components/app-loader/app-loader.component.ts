@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-loader',
@@ -9,11 +8,17 @@ import { ThemePalette } from '@angular/material/core';
 export class AppLoaderComponent implements OnInit {
 
   @Input() showLoader: boolean;
-  color: ThemePalette = 'warn';
+  @Input() strokeWidth: number;
+  @Input() diameter: number;
+  @Input() color: string;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  get spinnerColor(): { color: string } {
+    return { color: this.color };
   }
 
 }

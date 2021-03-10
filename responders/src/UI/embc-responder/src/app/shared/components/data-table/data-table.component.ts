@@ -1,6 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
@@ -22,10 +23,13 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   @Input() filterTerm: TableFilterValueModel;
   @Input() filterPredicate: any;
   @Output() selectedRows = new EventEmitter<any[]>();
+  @Output() toggleStatus = new EventEmitter<string>();
   dataSource = new MatTableDataSource();
   columns: string[];
   selection = new SelectionModel<any>(true, []);
   @Input() disableRow = false;
+  isLoading = true;
+  color = '#169BD5';
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -37,7 +41,10 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
+      console.log(this.isLoading);
+      this.isLoading = !this.isLoading;
     }
+
     if (changes.displayedColumns) {
       this.columns = this.displayedColumns.map(column => column.ref);
     }
@@ -52,7 +59,6 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   }
 
   filter(term: TableFilterValueModel): void {
-    console.log(term);
     this.dataSource.filterPredicate = this.filterPredicate;
     this.dataSource.filter = JSON.stringify(term);
 
@@ -77,16 +83,33 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle(): void {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => {
-        if (row.hasOwnProperty('allowSelect')) {
-          const r: TeamCommunityModel = row;
-          if (r.allowSelect) {
+    if (this.disableRow) {
+      if (this.selection.selected.length !== 0) {
+        this.selection.clear();
+      } else {
+        this.dataSource.filteredData.forEach(row => {
+          if (row.hasOwnProperty('allowSelect')) {
+            const r: TeamCommunityModel = row;
+            if (r.allowSelect) {
+              this.selection.select(row);
+            }
+          }
+        });
+      }
+    } else {
+      if (this.selection.selected.length !== 0 || this.isAllSelected()) {
+        this.selection.clear();
+      } else {
+        this.dataSource.filteredData.forEach(row => {
+          if (row.hasOwnProperty('allowSelect')) {
+            const r: TeamCommunityModel = row;
             this.selection.select(row);
           }
-        }
-      });
+        });
+      }
+    }
+
+    this.selectedRows.emit(this.selection.selected);
   }
 
   /** The label for the checkbox on the passed row */
@@ -100,6 +123,11 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   selectionToggle(row): void {
     this.selection.toggle(row);
     this.selectedRows.emit(this.selection.selected);
-    console.log(this.selection.selected);
+  }
+
+  slideToggle($event: MatSlideToggleChange, row): void {
+    console.log($event);
+    console.log(row);
+    this.toggleStatus.emit($event.checked ? 'A' : 'D' + ':' + row.id);
   }
 }

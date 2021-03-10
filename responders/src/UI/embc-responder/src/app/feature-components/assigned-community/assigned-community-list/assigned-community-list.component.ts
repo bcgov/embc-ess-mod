@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Community } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { AssignedCommunityListDataService } from './assigned-community-list-data.service';
 import { AssignedCommunityListService } from './assigned-community-list.service';
 
@@ -30,15 +28,12 @@ export class AssignedCommunityListComponent implements OnInit {
 
   ngOnInit(): void {
     this.communitiesFilterPredicate();
-    this.isLoading = !this.isLoading;
     this.assignedCommunityListService.getAssignedCommunityList().subscribe(values => {
-      this.isLoading = !this.isLoading;
       this.assignedCommunities = values;
       this.assignedCommunityListDataService.setTeamCommunityList(values);
     });
 
     this.assignedCommunityListService.getAllAssignedCommunityList().subscribe(values => {
-      console.log(values);
       this.assignedCommunityListDataService.setAllTeamCommunityList(values);
     });
 

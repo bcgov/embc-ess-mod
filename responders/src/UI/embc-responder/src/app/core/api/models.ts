@@ -2,6 +2,7 @@ export { Community } from './models/community';
 export { CommunityType } from './models/community-type';
 export { StateProvince } from './models/state-province';
 export { Country } from './models/country';
+export { CommunityTypeDescription } from './models/community-type-description';
 export { AssignedCommunity } from './models/assigned-community';
 export { ProblemDetails } from './models/problem-details';
 export { TeamMember } from './models/team-member';

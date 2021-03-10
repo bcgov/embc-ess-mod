@@ -168,12 +168,12 @@ export class TeamCommunitiesAssignmentsService extends BaseService {
     /**
      * list of community ids to disassociate
      */
-    communityIds?: Array<string>;
+    communityCodes?: Array<string>;
   }): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, TeamCommunitiesAssignmentsService.TeamCommunitiesAssignmentsRemoveCommunitiesPath, 'delete');
     if (params) {
-      rb.query('communityIds', params.communityIds, {"style":"form","explode":true});
+      rb.query('communityCodes', params.communityCodes, {"style":"form","explode":true});
     }
 
     return this.http.request(rb.build({
@@ -202,7 +202,7 @@ export class TeamCommunitiesAssignmentsService extends BaseService {
     /**
      * list of community ids to disassociate
      */
-    communityIds?: Array<string>;
+    communityCodes?: Array<string>;
   }): Observable<void> {
 
     return this.teamCommunitiesAssignmentsRemoveCommunities$Response(params).pipe(

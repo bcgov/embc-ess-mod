@@ -11,6 +11,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { Community } from '../models/community';
 import { CommunityType } from '../models/community-type';
+import { CommunityTypeDescription } from '../models/community-type-description';
 import { Country } from '../models/country';
 import { StateProvince } from '../models/state-province';
 
@@ -219,6 +220,57 @@ export class LocationsService extends BaseService {
 
     return this.locationsGetCountries$Response(params).pipe(
       map((r: StrictHttpResponse<Array<Country>>) => r.body as Array<Country>)
+    );
+  }
+
+  /**
+   * Path part for operation locationsGetCommunityTypes
+   */
+  static readonly LocationsGetCommunityTypesPath = '/api/locations/communitytypes';
+
+  /**
+   * Provides a list of community types and their English description.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `locationsGetCommunityTypes()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  locationsGetCommunityTypes$Response(params?: {
+  }): Observable<StrictHttpResponse<Array<CommunityTypeDescription>>> {
+
+    const rb = new RequestBuilder(this.rootUrl, LocationsService.LocationsGetCommunityTypesPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<CommunityTypeDescription>>;
+      })
+    );
+  }
+
+  /**
+   * Provides a list of community types and their English description.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `locationsGetCommunityTypes$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  locationsGetCommunityTypes(params?: {
+  }): Observable<Array<CommunityTypeDescription>> {
+
+    return this.locationsGetCommunityTypes$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<CommunityTypeDescription>>) => r.body as Array<CommunityTypeDescription>)
     );
   }
 
