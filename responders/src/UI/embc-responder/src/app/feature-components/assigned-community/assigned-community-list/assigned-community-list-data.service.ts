@@ -38,7 +38,7 @@ export class AssignedCommunityListDataService {
     { label: 'Community', ref: 'name' },
     { label: 'Regional District', ref: 'districtName' },
     { label: 'Type', ref: 'type' },
-    { label: 'Date Added to List', ref: 'date' },
+    { label: 'Date Added to List', ref: 'dateAssigned' },
   ];
 
   public setCommunitiesToDelete(communitiesToDelete: TeamCommunityModel[]): void {

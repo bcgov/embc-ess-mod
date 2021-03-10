@@ -1,6 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
@@ -22,6 +23,7 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   @Input() filterTerm: TableFilterValueModel;
   @Input() filterPredicate: any;
   @Output() selectedRows = new EventEmitter<any[]>();
+  @Output() toggleStatus = new EventEmitter<string>();
   dataSource = new MatTableDataSource();
   columns: string[];
   selection = new SelectionModel<any>(true, []);
@@ -95,7 +97,7 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
         });
       }
     } else {
-      if (this.isAllSelected()) {
+      if (this.selection.selected.length !== 0 || this.isAllSelected()) {
         this.selection.clear();
       } else {
         this.dataSource.filteredData.forEach(row => {
@@ -108,22 +110,6 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     }
 
     this.selectedRows.emit(this.selection.selected);
-
-    // this.isAllSelected() ?
-    //   this.selection.clear() :
-    //   this.dataSource.data.forEach(row => {
-    //     if (row.hasOwnProperty('allowSelect')) {
-    //       const r: TeamCommunityModel = row;
-    //       if (this.disableRow) {
-    //         if (r.allowSelect) {
-    //           this.selection.select(row);
-    //         }
-    //       } else {
-    //         this.selection.select(row);
-    //       }
-
-    //     }
-    //   });
   }
 
   /** The label for the checkbox on the passed row */
@@ -137,5 +123,11 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   selectionToggle(row): void {
     this.selection.toggle(row);
     this.selectedRows.emit(this.selection.selected);
+  }
+
+  slideToggle($event: MatSlideToggleChange, row) {
+    console.log($event);
+    console.log(row);
+    this.toggleStatus.emit($event.checked ? 'A' : 'D' +':' + row.id);
   }
 }
