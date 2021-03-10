@@ -104,11 +104,15 @@ namespace EMBC.ESS.Managers.Admin
             var team = allTeams.SingleOrDefault(t => t.Id == cmd.TeamId);
             if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
 
-            var allAssignedCommunities = allTeams.Where(t => t.Id != cmd.TeamId).SelectMany(t => t.AssignedCommunities);
+            var allAssignedCommunities = allTeams.Where(t => t.Id != cmd.TeamId).SelectMany(t => t.AssignedCommunities).Select(c => c.Code);
             var alreadyAssignedCommunities = cmd.Communities.Intersect(allAssignedCommunities).ToArray();
             if (alreadyAssignedCommunities.Any()) throw new CommunitiesAlreadyAssignedException(alreadyAssignedCommunities);
 
-            team.AssignedCommunities = team.AssignedCommunities.Concat(cmd.Communities).Distinct();
+            var now = DateTime.Now;
+            var newCommunities = cmd.Communities
+                .Where(c => !team.AssignedCommunities.Any(ac => ac.Code == c))
+                .Select(c => new Resources.Team.AssignedCommunity { Code = c, DateAssigned = now });
+            team.AssignedCommunities = team.AssignedCommunities.Concat(newCommunities).ToArray();
             await teamRepository.SaveTeam(team);
 
             return new AssignCommunitiesToTeamResponse();
@@ -119,7 +123,7 @@ namespace EMBC.ESS.Managers.Admin
             var team = (await teamRepository.GetTeams(id: cmd.TeamId)).SingleOrDefault();
             if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
 
-            team.AssignedCommunities = team.AssignedCommunities.Where(c => !cmd.Communities.Contains(c));
+            team.AssignedCommunities = team.AssignedCommunities.Where(c => !cmd.Communities.Contains(c.Code));
             await teamRepository.SaveTeam(team);
 
             return new UnassignCommunitiesFromTeamResponse();

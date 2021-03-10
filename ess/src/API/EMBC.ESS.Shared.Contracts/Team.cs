@@ -108,7 +108,13 @@ namespace EMBC.ESS.Shared.Contracts.Team
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> AssignedCommunities { get; set; }
+        public IEnumerable<AssignedCommunity> AssignedCommunities { get; set; }
+    }
+
+    public class AssignedCommunity
+    {
+        public string Code { get; set; }
+        public DateTime DateAssigned { get; set; }
     }
 
     public class TeamMember

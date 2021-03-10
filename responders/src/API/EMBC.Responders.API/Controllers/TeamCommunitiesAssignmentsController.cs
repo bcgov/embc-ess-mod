@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,12 +54,13 @@ namespace EMBC.Responders.API.Controllers
 
             var teams = (await messagingClient.Send(query)).Teams;
 
-            var communities = teams.SelectMany(t => t.AssignedCommunities.Select(c => new { CommunityId = c, Team = t }));
+            var communities = teams.SelectMany(t => t.AssignedCommunities.Select(c => new { CommunityCode = c, Team = t }));
             return Ok(communities.Select(c => new AssignedCommunity
             {
                 TeamId = c.Team.Id,
                 TeamName = c.Team.Name,
-                CommunityId = c.CommunityId
+                CommunityCode = c.CommunityCode,
+                DateAssigned = DateTime.Now.Date // TODO: map from response
             }));
         }
 
@@ -66,30 +68,28 @@ namespace EMBC.Responders.API.Controllers
         /// Assign communities to the team, will ignore communities which were already associated with the team.
         /// It will fail if a community is already assigned to another team,
         /// </summary>
-        /// <param name="communityIds">list of community ids</param>
+        /// <param name="communityCodes">list of community ids</param>
         /// <returns>Ok if successful, bad request if a community is not found or a community is associated with another team</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AssignCommunities([FromBody] IEnumerable<string> communityIds)
+        public async Task<IActionResult> AssignCommunities([FromBody] IEnumerable<string> communityCodes)
         {
-            await Task.CompletedTask;
-            //var response = await messagingClient.Send(new AssignCommunitiesToTeamCommand { teamId = teamId, Communities = communityIds });
+            await messagingClient.Send(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = communityCodes });
             return Ok();
         }
 
         /// <summary>
         /// Remove communities associations with the team, will ignore communities which are not associated
         /// </summary>
-        /// <param name="communityIds">list of community ids to disassociate</param>
+        /// <param name="communityCodes">list of community ids to disassociate</param>
         /// <returns>Ok if successful, bad request if a community is not found</returns>
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RemoveCommunities([FromQuery] IEnumerable<string> communityIds)
+        public async Task<IActionResult> RemoveCommunities([FromQuery] IEnumerable<string> communityCodes)
         {
-            await Task.CompletedTask;
-            //var response = await messagingClient.Send(new UnassignCommunitiesFromTeamCommand { teamId = teamId, Communities = communityIds });
+            await messagingClient.Send(new UnassignCommunitiesFromTeamCommand { TeamId = teamId, Communities = communityCodes });
             return Ok();
         }
     }
@@ -99,8 +99,9 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class AssignedCommunity
     {
-        public string CommunityId { get; set; }
+        public string CommunityCode { get; set; }
         public string TeamId { get; set; }
         public string TeamName { get; set; }
+        public DateTime DateAssigned { get; set; }
     }
 }

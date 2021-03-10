@@ -15,11 +15,14 @@
 // -------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Location;
+using EMBC.Responders.API.Utilities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Responders.API.Controllers
@@ -48,6 +51,7 @@ namespace EMBC.Responders.API.Controllers
         /// <param name="types">community type filter</param>
         /// <returns>filtered list of communities</returns>
         [HttpGet("communities")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Community>>> GetCommunities([FromQuery] string stateProvinceId, [FromQuery] string countryId, [FromQuery] CommunityType[] types)
         {
             var communities = (await client.Send(new CommunitiesQueryCommand()
@@ -66,6 +70,7 @@ namespace EMBC.Responders.API.Controllers
         /// <param name="countryId">country filter</param>
         /// <returns>filtered list of state/provinces</returns>
         [HttpGet("stateprovinces")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<StateProvince>>> GetStateProvinces([FromQuery] string countryId)
         {
             var stateProvinces = (await client.Send(new StateProvincesQueryCommand
@@ -81,77 +86,130 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <returns>list of countries</returns>
         [HttpGet("countries")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
         {
             var countries = (await client.Send(new CountriesQueryCommand())).Items;
 
             return Ok(mapper.Map<IEnumerable<Country>>(countries));
         }
-    }
 
-    /// <summary>
-    /// A community in the system
-    /// </summary>
-    public class Community
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string DistrictName { get; set; }
-        public string StateProvinceCode { get; set; }
-        public string CountryCode { get; set; }
-        public CommunityType Type { get; set; }
-    }
-
-    /// <summary>
-    /// A state or a province within a country
-    /// </summary>
-    public class StateProvince
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string CountryCode { get; set; }
-    }
-
-    /// <summary>
-    /// A country
-    /// </summary>
-    public class Country
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
-    }
-
-    /// <summary>
-    /// Community type
-    /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum CommunityType
-    {
-        Undefined,
-        City,
-        Town,
-        Village,
-        District,
-        DistrictMunicipality,
-        Township,
-        IndianGovernmentDistrict,
-        IslandMunicipality,
-        IslandTrust,
-        MountainResortMunicipality,
-        MunicipalityDistrict,
-        RegionalDistrict,
-        RegionalMunicipality,
-        ResortMunicipality,
-        RuralMunicipalities
-    }
-
-    public class LocationMapping : Profile
-    {
-        public LocationMapping()
+        /// <summary>
+        /// Provides a list of community types and their English description
+        /// </summary>
+        /// <returns>List of community types and descriptions</returns>
+        [HttpGet("communitytypes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CommunityTypeDescription>>> GetCommunityTypes()
         {
-            CreateMap<ESS.Shared.Contracts.Location.Country, Country>().ReverseMap();
-            CreateMap<ESS.Shared.Contracts.Location.StateProvince, StateProvince>().ReverseMap();
-            CreateMap<ESS.Shared.Contracts.Location.Community, Community>().ReverseMap();
+            var enumList = EnumHelper.GetEnumDescriptions<CommunityType>();
+            return Ok(await Task.FromResult(enumList.Select(e => new CommunityTypeDescription { Type = e.value, Description = e.description }).ToArray()));
+        }
+
+        /// <summary>
+        /// A community in the system
+        /// </summary>
+        public class Community
+        {
+            public string Code { get; set; }
+            public string Name { get; set; }
+            public string DistrictName { get; set; }
+            public string StateProvinceCode { get; set; }
+            public string CountryCode { get; set; }
+            public CommunityType Type { get; set; }
+        }
+
+        /// <summary>
+        /// A state or a province within a country
+        /// </summary>
+        public class StateProvince
+        {
+            public string Code { get; set; }
+            public string Name { get; set; }
+            public string CountryCode { get; set; }
+        }
+
+        /// <summary>
+        /// A country
+        /// </summary>
+        public class Country
+        {
+            public string Code { get; set; }
+            public string Name { get; set; }
+        }
+
+        /// <summary>
+        /// Community type enumeration
+        /// </summary>
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public enum CommunityType
+        {
+            [Description("Undefined")]
+            Undefined,
+
+            [Description("City")]
+            City,
+
+            [Description("Town")]
+            Town,
+
+            [Description("Village")]
+            Village,
+
+            [Description("District")]
+            District,
+
+            [Description("District Municipality")]
+            DistrictMunicipality,
+
+            [Description("Township")]
+            Township,
+
+            [Description("Indian GovernmentDistrict")]
+            IndianGovernmentDistrict,
+
+            [Description("Island Municipality")]
+            IslandMunicipality,
+
+            [Description("Island Trust")]
+            IslandTrust,
+
+            [Description("Mountain Resort Municipality")]
+            MountainResortMunicipality,
+
+            [Description("Municipality District")]
+            MunicipalityDistrict,
+
+            [Description("Regional District")]
+            RegionalDistrict,
+
+            [Description("Regional Municipality")]
+            RegionalMunicipality,
+
+            [Description("Resort Municipality")]
+            ResortMunicipality,
+
+            [Description("Rural Municipalities")]
+            RuralMunicipalities
+        }
+
+        /// <summary>
+        /// A community type and description
+        /// </summary>
+        public class CommunityTypeDescription
+        {
+            public CommunityType Type { get; set; }
+            public string Description { get; set; }
+        }
+
+        public class LocationMapping : Profile
+        {
+            public LocationMapping()
+            {
+                CreateMap<ESS.Shared.Contracts.Location.Country, Country>().ReverseMap();
+                CreateMap<ESS.Shared.Contracts.Location.StateProvince, StateProvince>().ReverseMap();
+                CreateMap<ESS.Shared.Contracts.Location.Community, Community>().ReverseMap();
+            }
         }
     }
 }
