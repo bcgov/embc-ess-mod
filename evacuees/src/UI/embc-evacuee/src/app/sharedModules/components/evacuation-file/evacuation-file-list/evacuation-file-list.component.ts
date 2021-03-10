@@ -24,7 +24,8 @@ export class EvacuationFileListComponent implements OnInit {
   dataSourceInactive: Array<NeedsAssessment>;
   showLoading = false;
 
-  constructor(private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
+  constructor(
+    private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
     private router: Router, private dialogService: DialogService, private evacuationFileService: EvacuationFileService,
     private evacuationFileDataService: EvacuationFileDataService) { }
 

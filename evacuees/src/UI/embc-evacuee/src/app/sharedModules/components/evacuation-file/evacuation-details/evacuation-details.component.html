@@ -6,6 +6,7 @@
             </button>
             <span class="evacFileSpan">Evacuation File #123456</span>
         </div>
+
         <div class="col-md-3 statusDetailHeader">
             <div class="statusDetailHeaderElements">
                 <span>Status: </span>
@@ -35,12 +36,17 @@
             <div class="row info-detail">
                 <div class="col-md-3">Evacuated From:</div>
                 <div class="col-md-3 evacuatedAddress">
-                    <span>addressLine1
-                        addressLine2
-                    </span>
-                    <span>jurisdiction.name,
-                        stateProvince.name,
-                        postalCode</span>
+                    <div>
+                        <span>{{evacuationFileCard.evacuatedFromAddress.addressLine1}},</span>
+                        <span *ngIf="evacuationFileCard.evacuatedFromAddress.addressLine2 != null">
+                            &nbsp;{{evacuationFileCard.evacuatedFromAddress.addressLine2}},</span>
+                    </div>
+                    <div>
+                        <span>{{evacuationFileCard.evacuatedFromAddress.jurisdiction.name}},</span>
+                        <span> &nbsp;{{evacuationFileCard.evacuatedFromAddress.stateProvince.name}}</span>
+                        <span *ngIf="evacuationFileCard.evacuatedFromAddress.postalCode != null">,
+                            &nbsp;{{evacuationFileCard.evacuatedFromAddress.postalCode}}</span>
+                    </div>
                 </div>
             </div>
             <div class="row info-detail">
@@ -60,14 +66,12 @@
                 <div class="col-md-10">Click on the dates that you received supports below to view full support details.
                 </div>
                 <div class="col-md-2 row mainReferralsLink" (click)="expandDetails()">
-                    <div class="col-md-6" style="padding: 3px 0"><a>{{referralDetailsText}}</a></div>
+                    <div class="col-md-6 allReferrals"><a>{{referralDetailsText}}</a></div>
                     <div class="col-md-6 row">
-                        <div class="col-md-9" style="height: 6px;"><img
-                                [ngClass]="expandDetailsFlag? 'rotate180':'none'"
-                                src="../../../../assets/images/expand_arrow.svg" height="10" width="18"></div>
-                        <div class="col-md-3" style="height: auto;"><img
-                                [ngClass]="expandDetailsFlag? 'rotate180':'none'"
-                                src="../../../../assets/images/expand_arrow.svg" height="10" width="18"></div>
+                        <div class="col-md-9" style="height: 6px;">
+                            <img [ngClass]="allExpandState? 'rotate180':'none'"
+                                src="../../../../assets/images/expand_arrow.png" height="15" width="18">
+                        </div>
                     </div>
                 </div>
             </div>

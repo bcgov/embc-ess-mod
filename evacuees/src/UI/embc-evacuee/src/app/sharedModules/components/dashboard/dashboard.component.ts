@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit {
 
   currentFlow: string;
   activeFiles: number;
+  evacuationFileWithTask: boolean;
 
   tabs: TabModel[] = [
     {
@@ -50,6 +51,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
     console.log(this.activeFiles);
+    this.evacuationFileWithTask = false;
 
     setTimeout(() => {
       this.openReferenceNumberPopup();

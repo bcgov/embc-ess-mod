@@ -27,6 +27,11 @@
     font-size: 36px;
     color: #234075;
     font-weight: 400;
+    display: inherit;
+}
+
+.backButton {
+    padding-bottom: 30px;
 }
 
 .backButton:hover {
@@ -34,7 +39,7 @@
 }
 
 .evacFileSpan {
-    padding: 20px;
+    padding: 0 20px;
 }
 
 .statusDetailHeader {
@@ -72,10 +77,13 @@
 
 .mainReferralsLink {
     text-align: right;
-    //padding: 3px 0;
     color: #169bd5;
     padding: 0 0 0 45px;
     cursor: pointer;
+}
+
+.allReferrals {
+    padding: 3px 0;
 }
 
 :host ::ng-deep app-review {
@@ -93,5 +101,28 @@
     .mat-card-right,
     mat-card {
         border-right-style: none !important;
+    }
+}
+
+@media (max-width: 995px) {
+    .evacFileHeader {
+        height: auto;
+    }
+
+    .allReferrals {
+        padding: 5px;
+        display: contents;
+        text-align: end;
+    }
+
+    .mainReferralsLink {
+        padding: 0;
+    }
+}
+
+@media (max-width: 330px) {
+    .evacFileHeader {
+        height: auto;
+        display: grid;
     }
 }

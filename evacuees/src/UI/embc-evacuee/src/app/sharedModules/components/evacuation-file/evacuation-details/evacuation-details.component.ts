@@ -41,11 +41,13 @@ const REFERRALS: Referral[] = [{
 export class EvacuationDetailsComponent implements OnInit {
 
   @Input() evacuationFileCard: NeedsAssessment;
-  @Input() evacuationFileStatus: string
+  @Input() evacuationFileStatus: string;
   @Input() allExpandState = false;
   @Output() showEvacuationList = new EventEmitter<boolean>();
 
-  constructor(private route: ActivatedRoute, private needsAssessmentMapping: NeedsAssessmentMappingService) { }
+  constructor(
+    private route: ActivatedRoute, private needsAssessmentMapping: NeedsAssessmentMappingService,
+    public formCreationService: FormCreationService) { }
 
   backArrowImgSrc = '/assets/images/back_arrow.svg';
   type = 'need';
@@ -56,7 +58,6 @@ export class EvacuationDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    console.log(this.evacuationFileCard);
     this.needsAssessmentMapping.setNeedsAssessment(this.evacuationFileCard);
   }
 

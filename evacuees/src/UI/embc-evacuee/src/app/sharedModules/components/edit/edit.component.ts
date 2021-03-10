@@ -73,7 +73,7 @@ export class EditComponent implements OnInit, OnDestroy {
           this.alertService.setAlert('danger', error.title);
         });
       } else if (this.parentPageName === 'needs-assessment') {
-        console.log("SAVE NEEDS ASSESSMENTS FROM EVACUATION CARD HERE");
+        // console.log('SAVE NEEDS ASSESSMENTS FROM EVACUATION CARD HERE');
         this.router.navigate(['/verified-registration/dashboard/current']);
       }
     }
@@ -91,7 +91,7 @@ export class EditComponent implements OnInit, OnDestroy {
       if (this.parentPageName === 'create-profile') {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
       } else if (this.parentPageName === 'dashboard') {
-        this.router.navigate(['/verified-registration/dashboard']);
+        this.router.navigate(['/verified-registration/dashboard/profile']);
       } else if (this.parentPageName === 'needs-assessment') {
         this.router.navigate(['/verified-registration/dashboard/current']);
       }

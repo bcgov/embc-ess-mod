@@ -31,6 +31,4 @@ export class EvacuationFileService {
     getPastEvacuationFile(): Observable<Array<NeedsAssessment>> {
         return this.evacuationService.evacuationGetPastEvacuations();
     }
-
-
 }
