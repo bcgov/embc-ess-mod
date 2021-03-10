@@ -22,7 +22,6 @@ namespace EMBC.ESS.Utilities.Cache
     {
         public static IServiceCollection AddCache(this IServiceCollection services)
         {
-            services.AddDistributedMemoryCache();
             services.AddTransient<ICache, Cache>();
             return services;
         }

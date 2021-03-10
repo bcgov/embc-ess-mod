@@ -143,13 +143,13 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             var team = (await adminManager.Handle(new TeamsQueryCommand { TeamId = teamId })).Teams.ShouldHaveSingleItem();
 
-            var newCommunities = communities.Where(c => !team.AssignedCommunities.Contains(c.Code)).Take(5).Select(c => c.Code);
+            var newCommunities = communities.Where(c => !team.AssignedCommunities.Select(c => c.Code).Contains(c.Code)).Take(5).Select(c => c.Code);
 
             await adminManager.Handle(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = newCommunities });
 
             var updatedTeam = (await adminManager.Handle(new TeamsQueryCommand { TeamId = teamId })).Teams.ShouldHaveSingleItem();
 
-            updatedTeam.AssignedCommunities.OrderBy(c => c).ShouldBe(team.AssignedCommunities.Concat(newCommunities).OrderBy(c => c));
+            updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(team.AssignedCommunities.Select(c => c.Code).Concat(newCommunities).OrderBy(c => c));
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -159,7 +159,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             var removedCommunities = team.AssignedCommunities.Take(2);
 
-            await adminManager.Handle(new UnassignCommunitiesFromTeamCommand { TeamId = teamId, Communities = removedCommunities });
+            await adminManager.Handle(new UnassignCommunitiesFromTeamCommand { TeamId = teamId, Communities = removedCommunities.Select(c => c.Code) });
 
             var updatedTeam = (await adminManager.Handle(new TeamsQueryCommand { TeamId = teamId })).Teams.ShouldHaveSingleItem();
 

@@ -108,7 +108,13 @@ namespace EMBC.ESS.Shared.Contracts.Team
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> AssignedCommunities { get; set; }
+        public IEnumerable<AssignedCommunity> AssignedCommunities { get; set; }
+    }
+
+    public class AssignedCommunity
+    {
+        public string Code { get; set; }
+        public DateTime DateAssigned { get; set; }
     }
 
     public class TeamMember
@@ -149,12 +155,12 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
     public class CommunitiesAlreadyAssignedException : Exception
     {
-        public CommunitiesAlreadyAssignedException(IEnumerable<string> communityIds)
+        public CommunitiesAlreadyAssignedException(IEnumerable<string> communities)
         {
-            CommunityIds = communityIds;
+            Communities = communities;
         }
 
-        public IEnumerable<string> CommunityIds { get; }
+        public IEnumerable<string> Communities { get; }
     }
 
     public class UsernameAlreadyExistsException : Exception

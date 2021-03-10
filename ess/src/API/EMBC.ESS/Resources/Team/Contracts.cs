@@ -37,13 +37,13 @@ namespace EMBC.ESS.Resources.Team
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> AssignedCommunities { get; set; }
+        public IEnumerable<AssignedCommunity> AssignedCommunities { get; set; }
     }
 
-    public class Community
+    public class AssignedCommunity
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
+        public string Code { get; set; }
+        public DateTime DateAssigned { get; set; }
     }
 
     public class TeamMember

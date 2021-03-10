@@ -14,27 +14,22 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
-namespace EMBC.ESS.Managers.Admin
+namespace EMBC.Responders.API.Utilities
 {
-    public class MappingProfile : Profile
+    public static class EnumHelper
     {
-        public MappingProfile()
-        {
-            CreateMap<Shared.Contracts.Team.TeamMember, Resources.Team.TeamMember>()
-                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.Name))
-                .ReverseMap()
-                .ForMember(d => d.Role, opts => opts.MapFrom(s => new Shared.Contracts.Team.TeamRole { Id = s.Role, Name = s.Role }))
-                ;
+        public static IEnumerable<(TEnum value, string description)> GetEnumDescriptions<TEnum>()
+            where TEnum : struct =>
+           Enum.GetNames(typeof(TEnum)).Select(e => (Enum.Parse<TEnum>(e), GetEnumDescription(typeof(TEnum), e)));
 
-            CreateMap<Shared.Contracts.Team.Team, Resources.Team.Team>()
-                .ReverseMap()
-                ;
-
-            CreateMap<Shared.Contracts.Team.AssignedCommunity, Resources.Team.AssignedCommunity>()
-                .ReverseMap()
-                ;
-        }
+        private static string GetEnumDescription(Type enumType, string value) =>
+            (enumType.GetField(value.ToString())
+                .GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[])
+                .FirstOrDefault().Description;
     }
 }
