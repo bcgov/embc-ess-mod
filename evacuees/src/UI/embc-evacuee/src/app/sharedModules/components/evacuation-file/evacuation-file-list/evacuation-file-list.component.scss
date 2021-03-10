@@ -1,0 +1,36 @@
+.breadCrumb {
+    font-family: "BC Sans", sans-serif;
+    padding: 10px 50px;
+}
+
+.goBackLink {
+    color: rgba(0, 0, 0, 0.35);
+    text-decoration: none;
+}
+
+.goBackLink:hover {
+    color: #169bd5;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.loader-align {
+    padding: 20% 50%;
+    display: inline-flex;
+}
+
+.start-button {
+    width: 100%;
+    white-space: normal;
+    line-height: inherit;
+}
+
+::ng-deep .mat-progress-spinner circle,
+.mat-spinner circle {
+    stroke: #234075 !important;
+}
+
+.card-container {
+    margin: 2em 0;
+    box-shadow: 8px 5px 5px -1px rgba(0, 0, 0, 0.101960784313725);
+}

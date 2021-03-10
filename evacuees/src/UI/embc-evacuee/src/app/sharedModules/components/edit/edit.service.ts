@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { first } from 'rxjs/operators';
+import { FormCreationService } from 'src/app/core/services/formCreation.service';
+import { NeedsAssessmentMappingService } from '../needs-assessment/needs-assessment-mapping.service';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { RestrictionService } from '../restriction/restriction.service';
@@ -7,8 +10,10 @@ import { RestrictionService } from '../restriction/restriction.service';
 @Injectable({ providedIn: 'root' })
 export class EditService {
 
-    constructor(private profileDataService: ProfileDataService,
-                private needsAssessmentDataService: NeedsAssessmentService, private restrictionService: RestrictionService) { }
+    constructor(
+        private profileDataService: ProfileDataService, private needsAssessmentDataService: NeedsAssessmentService,
+        private restrictionService: RestrictionService, private formCreationService: FormCreationService,
+        private needsAssessmentMapping: NeedsAssessmentMappingService) { }
 
     /**
      * Updates the form with latest values
@@ -25,6 +30,17 @@ export class EditService {
             case 'address':
                 this.profileDataService.primaryAddressDetails = form.get('address').value;
                 this.profileDataService.mailingAddressDetails = form.get('mailingAddress').value;
+                let evacFromPrimary: string;
+                this.formCreationService.getEvacuatedForm().pipe(first()).subscribe(
+                    evacuatedForm => {
+                        evacFromPrimary = evacuatedForm.value.evacuatedFromPrimary;
+                    });
+
+                if (evacFromPrimary === 'Yes') {
+                    const evacuationAddress = form.get('address').value;
+                    const insurance = this.needsAssessmentDataService.insurance;
+                    this.needsAssessmentMapping.setEvacuationAddress(evacuationAddress, insurance);
+                }
                 break;
             case 'contact-info':
                 this.profileDataService.contactDetails = form.value;

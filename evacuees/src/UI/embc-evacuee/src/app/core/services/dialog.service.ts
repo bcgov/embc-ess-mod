@@ -4,13 +4,16 @@ import { Router } from '@angular/router';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import { RegistrationResult } from '../api/models';
 import { DataUpdationService } from './dataUpdation.service';
+import { FormCreationService } from './formCreation.service';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
 
     emptyRegistrationResult: RegistrationResult = { referenceNumber: null };
 
-    constructor(private router: Router, public dialog: MatDialog, private updateService: DataUpdationService) { }
+    constructor(
+        private router: Router, public dialog: MatDialog, private updateService: DataUpdationService,
+        private formCreationService: FormCreationService) { }
 
     addEvacuationFile(city: string): void {
         this.dialog.open(DialogComponent, {
@@ -35,6 +38,7 @@ export class DialogService {
             width: '699px'
         }).afterClosed().subscribe(result => {
             if (result === 'add') {
+                this.formCreationService.clearNeedsAssessmentData();
                 this.router.navigate(['/verified-registration/confirm-restriction']);
             }
         });
