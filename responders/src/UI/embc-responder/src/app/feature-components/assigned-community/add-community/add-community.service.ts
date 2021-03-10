@@ -22,7 +22,7 @@ export class AddCommunityService {
           label: 'Search by city, town, village or community'
         }
       };
-    
+
     public  displayedColumns: TableColumnModel[] = [
         { label: 'select', ref: 'select' },
         { label: '', ref: 'action' },

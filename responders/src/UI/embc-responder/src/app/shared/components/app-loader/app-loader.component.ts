@@ -17,8 +17,8 @@ export class AppLoaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  get spinnerColor() {
-    return { color: this.color}
+  get spinnerColor(): { color: string } {
+    return { color: this.color };
   }
 
 }

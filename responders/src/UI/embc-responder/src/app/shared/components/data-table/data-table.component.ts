@@ -29,7 +29,7 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   selection = new SelectionModel<any>(true, []);
   @Input() disableRow = false;
   isLoading = true;
-  color = "#169BD5";
+  color = '#169BD5';
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -41,7 +41,7 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
-      console.log(this.isLoading)
+      console.log(this.isLoading);
       this.isLoading = !this.isLoading;
     }
 
@@ -85,7 +85,7 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   masterToggle(): void {
     if (this.disableRow) {
       if (this.selection.selected.length !== 0) {
-        this.selection.clear()
+        this.selection.clear();
       } else {
         this.dataSource.filteredData.forEach(row => {
           if (row.hasOwnProperty('allowSelect')) {
@@ -125,9 +125,9 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     this.selectedRows.emit(this.selection.selected);
   }
 
-  slideToggle($event: MatSlideToggleChange, row) {
+  slideToggle($event: MatSlideToggleChange, row): void {
     console.log($event);
     console.log(row);
-    this.toggleStatus.emit($event.checked ? 'A' : 'D' +':' + row.id);
+    this.toggleStatus.emit($event.checked ? 'A' : 'D' + ':' + row.id);
   }
 }

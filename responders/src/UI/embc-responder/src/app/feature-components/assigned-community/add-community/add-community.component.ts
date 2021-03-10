@@ -17,7 +17,7 @@ import { AddCommunityService } from './add-community.service';
 export class AddCommunityComponent implements OnInit {
 
   constructor(private assignedCommunityListDataService: AssignedCommunityListDataService,
-    private router: Router, private addCommunityService: AddCommunityService) { }
+              private router: Router, private addCommunityService: AddCommunityService) { }
 
   communities: TeamCommunityModel[];
   filterTerm: TableFilterValueModel;

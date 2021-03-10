@@ -82,10 +82,10 @@ export class AssignedCommunityListDataService {
   }
 
   private mergedCommunityList(): TeamCommunityModel[] {
-    let teamModel : TeamCommunityModel = {
+    const teamModel: TeamCommunityModel = {
       allowSelect: true,
       conflict: false
-    }
+    };
     return this.loadLocationService.getCommunityList().map(community => this.mergeData(teamModel, community));
   }
 
