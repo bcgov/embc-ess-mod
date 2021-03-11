@@ -58,7 +58,7 @@ export class DialogService {
                         }
                     ]
             },
-            height: '800px',
+            height: '810px',
             width: '800px'
         }).afterClosed().subscribe(() => {
             this.updateService.updateRegisrationResult(this.emptyRegistrationResult);

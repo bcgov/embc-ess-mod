@@ -22,21 +22,16 @@
     margin-right: 20px;
 }
 
-@media (max-width: 768px) {
-    .divider {
-        width: 0px;
-    }
+::ng-deep .mat-menu-content {
+    border-bottom: 2px solid #fcba19;
 }
 
-@media (min-width: 900px) {
-    .menuButton {
-        margin: 0px 50px 0px 220px;
-    }
+.signOut-button {
+    color: rgb(252, 186, 25) !important;
+}
 
-    .img-align {
-        margin-right: 5px;
-        margin-left: 5px;
-    }
+.signOut-button:hover {
+    text-decoration: underline;
 }
 
 .menuButton {
@@ -53,7 +48,7 @@
 }
 
 .mat-menu-item {
-    color: #ffffff !important;
+    color: #ffffff;
 }
 
 .text {
@@ -69,4 +64,31 @@
 .align-content {
     display: inline-block;
     line-height: 0;
+}
+
+@media (max-width: 900px) {
+    .menuButton {
+        margin: 0px 10px 0px 600px;
+    }
+
+    .img-align {
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+}
+
+@media (max-width: 768px) {
+    .divider {
+        width: 0px;
+    }
+
+    .menuButton {
+        margin: 0px 10px 0px 370px;
+    }
+}
+
+@media (max-width: 420px) {
+    .menuButton {
+        margin: 0px 10px 0px 200px;
+    }
 }

@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit {
     showLoginMatMenu: boolean;
 
 
-    constructor(private formCreationService: FormCreationService, private authService: AuthService, private cacheService: CacheService) { }
+    constructor(public formCreationService: FormCreationService, private authService: AuthService, private cacheService: CacheService) { }
 
     ngOnInit(): void {
 

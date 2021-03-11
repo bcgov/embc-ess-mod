@@ -11,4 +11,8 @@ export class DataUpdationService {
         this.dataService.setRegistrationResult(registrationResult);
     }
 
+    updateVerifiedRegistrationResult(registrationResult: string): void {
+        this.dataService.setVerifiedRegistrationResult(registrationResult);
+    }
+
 }

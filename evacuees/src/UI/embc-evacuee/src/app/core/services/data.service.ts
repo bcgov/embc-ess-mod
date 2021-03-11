@@ -10,6 +10,7 @@ export class DataService {
     private registrationDetails: Partial<Registration> = {};
     private preliminaryNeedsAssessment: Partial<NeedsAssessment> = {};
     private registrationResult: RegistrationResult;
+    private verifiedRegistrationResult: string;
 
     constructor() { }
 
@@ -29,11 +30,20 @@ export class DataService {
         return this.registrationResult;
     }
 
+    public setVerifiedRegistrationResult(registrationResult: string): void {
+        this.verifiedRegistrationResult = registrationResult;
+    }
+
+    public getVerifiedRegistrationResult(): string {
+        return this.verifiedRegistrationResult;
+    }
+
     clearData(): void {
         this.registrationDetails = {};
         this.preliminaryNeedsAssessment = {};
         this.registrationResult = {
             referenceNumber: null
         };
+        this.verifiedRegistrationResult = null;
     }
 }

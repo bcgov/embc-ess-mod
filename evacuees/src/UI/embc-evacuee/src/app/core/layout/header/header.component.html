@@ -22,8 +22,10 @@
             <img class="img-align" src="../../../../assets/images/down_arrow.svg" height="12" width="20">
           </div>
         </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)='signOut()'>Sign Out</button>
+        <mat-menu #menu="matMenu" overlapTrigger="false">
+          <span>
+            <button class="signOut-button" mat-menu-item (click)='signOut()'>Sign out</button>
+          </span>
         </mat-menu>
       </div>
     </div>

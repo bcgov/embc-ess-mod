@@ -64,10 +64,10 @@ export class DashboardComponent implements OnInit {
 
   openReferenceNumberPopup(): void {
 
-    const registrationResult = this.dataService.getRegistrationResult();
+    const registrationResult = this.dataService.getVerifiedRegistrationResult();
 
-    if (registrationResult.referenceNumber !== null) {
-      this.dialogService.submissionCompleteDialog(registrationResult.referenceNumber);
+    if (registrationResult !== null) {
+      this.dialogService.submissionCompleteDialog(registrationResult);
     }
   }
 
