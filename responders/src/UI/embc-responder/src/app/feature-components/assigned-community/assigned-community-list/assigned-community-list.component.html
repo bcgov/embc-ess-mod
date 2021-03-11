@@ -5,14 +5,13 @@
     <div class="row data-margin">
         <div class="col-md-6">
             <button class="button-s" mat-stroked-button [disabled]="communitiesToDeleteList?.length == 0"
-                (click)="deleteCommunities()">Delete Communities</button>
+                (click)="deleteCommunities()">Remove Communities</button>
         </div>
         <div class="col-md-6">
             <button class="button-s add-button" mat-stroked-button (click)="addCommunities()">Add New Community</button>
         </div>
     </div>
     <div class="data-margin">
-        <app-loader [showLoader]="isLoading"></app-loader>
         <app-data-table [incomingData]='assignedCommunities' [displayedColumns]='displayedColumns'
             [filterTerm]="filterTerm" [filterPredicate]="filterPredicate" (selectedRows)="communitiesToDelete($event)">
         </app-data-table>

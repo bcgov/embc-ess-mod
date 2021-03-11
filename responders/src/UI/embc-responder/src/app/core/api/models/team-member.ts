@@ -10,11 +10,11 @@ export interface TeamMember {
   firstName: string;
   id?: null | string;
   isActive?: boolean;
-  labelId?: null | string;
+  labelCode?: null | string;
   lastName: string;
   lastSuccessfulLogin?: null | string;
   phone?: null | string;
-  roleId: string;
+  roleCode: string;
   teamId: string;
   userName: string;
 }

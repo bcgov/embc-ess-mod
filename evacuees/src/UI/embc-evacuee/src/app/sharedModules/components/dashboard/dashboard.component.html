@@ -7,12 +7,12 @@
                     {{(formCreationService.personalDetailsForm$ | async)?.value?.firstName}}</span>
             </div>
         </div>
-
         <div class="row align-banner">
             <div class="col-md-12">
                 <mat-card class="view-banner">
                     <mat-card-content>
-                        <div class="row" *ngIf="dataSourceActive.length === 0; else activeFileBanner">
+                        <div class="row"
+                            *ngIf="(evacuationFilesDataService.currentEvacuationFileCount$ |async ) === 0; else activeFileBanner">
                             <div class="col-md-9">
                                 <p class="top-detail">If you are currently <b>evacuated</b>, please start an
                                     <b>Evacuation File</b>.
@@ -31,15 +31,27 @@
                     </mat-card-content>
 
                     <ng-template #activeFileBanner>
+                        <ng-container *ngIf="!evacuationFileWithTask">
+                            <div class="col-md-12">
+                                <p class="top-detail"><b>Please connect with an Emergency Support Services Volunteer or
+                                        proceed to your closest Reception Center.</b></p>
+                                <p><b>Please remember to bring government-issued identification with you if you have
+                                        it.</b>
+                                </p>
+                                <p>All details pertaining to your evacuation can be found below, under the "Current
+                                    Evacuations" tab.</p>
+                            </div>
+                        </ng-container>
 
-                        <div class="col-md-12">
-                            <p class="top-detail"><b>Please connect with an Emergency Support Services Volunteer or
-                                    proceed to your closest Reception Center.</b></p>
-                            <p><b>Please remember to bring government-issued identification with you if you have it.</b>
-                            </p>
-                            <p>All details pertaining to your evacuation can be found below, under the "Current
-                                Evacuations" tab.</p>
-                        </div>
+                        <ng-container *ngIf="evacuationFileWithTask">
+                            <div class="col-md-12">
+                                <p class="top-detail"><b>Are you still on evacuation order and require additional
+                                        supports?</b></p>
+                                <p>Please connect with your Local Government for assistance.</p>
+                            </div>
+                        </ng-container>
+
+
                     </ng-template>
                 </mat-card>
             </div>
@@ -47,7 +59,7 @@
     </div>
 </div>
 <div class="container">
-    <mat-tab-group class="test-tab" (selectedTabChange)="resetTab($event)" [(selectedIndex)]="tabIndex">
+    <!-- <mat-tab-group class="test-tab" (selectedTabChange)="resetTab($event)" [(selectedIndex)]="tabIndex">
         <mat-tab>
             <ng-template mat-tab-label>
                 <img class="inactive-curr" src="/assets/images/curr-evac.svg" height="15" width="15">
@@ -158,5 +170,13 @@
             <br>
             <br>
         </mat-tab>
-    </mat-tab-group>
+    </mat-tab-group> -->
+    <nav mat-tab-nav-bar dynamicHeight>
+        <a mat-tab-link *ngFor="let tabItem of tabs" [routerLink]="tabItem.route" routerLinkActive="active-tab">
+            <img class="inactive-curr" [src]="tabItem.inactiveImage" height="15" width="15">
+            <img class="active-curr" [src]="tabItem.activeImage" height="15" width="15">
+            &nbsp;&nbsp; {{tabItem.label}}
+        </a>
+    </nav>
+    <router-outlet></router-outlet>
 </div>

@@ -199,4 +199,3 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
 }
-

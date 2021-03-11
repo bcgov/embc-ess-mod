@@ -12,8 +12,9 @@ export class NonVerifiedRegistrationComponent implements OnInit {
   constructor(private formCreationService: FormCreationService, private dataService: DataService) { }
 
   ngOnInit(): void {
-     this.dataService.clearData();
-     this.formCreationService.clearData();
+    this.dataService.clearData();
+    this.formCreationService.clearProfileData();
+    this.formCreationService.clearNeedsAssessmentData();
   }
 
 }
