@@ -16,11 +16,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.Responders.API.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -190,35 +193,23 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Provides a list of team member roles
         /// </summary>
-        /// <returns>list of roles</returns>
-        [HttpGet("memberroles")]
+        /// <returns>list of role codes with description</returns>
+        [HttpGet("codes/memberrole")]
         public async Task<ActionResult<IEnumerable<MemberRole>>> GetMemberRoles()
         {
-            var roles = new[]
-            {
-                new MemberRole { Code = "r1", Name = "Tier 1" },
-                new MemberRole { Code = "r2", Name = "Tier 2" },
-                new MemberRole { Code = "r3", Name = "Tier 3" },
-                new MemberRole { Code = "r4", Name = "Tier 4" },
-            };
-            return Ok(await Task.FromResult(roles));
+            var enumList = EnumHelper.GetEnumDescriptions<MemberRole>();
+            return Ok(await Task.FromResult(enumList.Select(e => new MemberRoleDescription { Code = e.value, Description = e.description }).ToArray()));
         }
 
         /// <summary>
         /// Provides a list of team member labels
         /// </summary>
-        /// <returns>list of labels</returns>
-        [HttpGet("memberlabels")]
+        /// <returns>list of label codes with description</returns>
+        [HttpGet("codes/memberlabel")]
         public async Task<ActionResult<IEnumerable<MemberLabel>>> GetMemberLabels()
         {
-            var labels = new[]
-            {
-                new MemberLabel { Code = "l1", Name = "label 1" },
-                new MemberLabel { Code = "l2", Name = "label 2" },
-                new MemberLabel { Code = "l3", Name = "label 3" },
-                new MemberLabel { Code = "l4", Name = "label 4" },
-            };
-            return Ok(await Task.FromResult(labels));
+            var enumList = EnumHelper.GetEnumDescriptions<MemberLabel>();
+            return Ok(await Task.FromResult(enumList.Select(e => new MemberLabelDescription { Code = e.value, Description = e.description }).ToArray()));
         }
     }
 
@@ -267,27 +258,65 @@ namespace EMBC.Responders.API.Controllers
         public DateTime? AgreementSignDate { get; set; }
 
         [Required]
-        public string RoleCode { get; set; }
+        public MemberRole Role { get; set; }
 
-        public string LabelCode { get; set; }
+        public MemberLabel Label { get; set; }
     }
 
     /// <summary>
-    /// a role that a team member belongs to
+    /// role code and description
     /// </summary>
-    public class MemberRole
+    public class MemberRoleDescription
     {
-        public string Code { get; set; }
-        public string Name { get; set; }
+        public MemberRole Code { get; set; }
+        public string Description { get; set; }
     }
 
     /// <summary>
-    /// a label to describe the team member
+    /// A role a team member is assigned to
     /// </summary>
-    public class MemberLabel
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum MemberRole
     {
-        public string Code { get; set; }
-        public string Name { get; set; }
+        [Description("Tier 1 (Responder)")]
+        Tier1,
+
+        [Description("Tier 2 (Supervisor)")]
+        Tier2,
+
+        [Description("Tier 3 (Director/Manager)")]
+        Tier3,
+
+        [Description("Tier 4 (LEP)")]
+        Tier4,
+    }
+
+    /// <summary>
+    /// label code and description
+    /// </summary>
+    public class MemberLabelDescription
+    {
+        public MemberLabel Code { get; set; }
+        public string Description { get; set; }
+    }
+
+    /// <summary>
+    /// A label to describe a team member
+    /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum MemberLabel
+    {
+        [Description("Volunteer")]
+        Volunteer,
+
+        [Description("3rd Party")]
+        ThirdParty,
+
+        [Description("Convergent Volunteer")]
+        ConvergentVolunteer,
+
+        [Description("EMBC Employee")]
+        EMBCEmployee,
     }
 
     public class Mapping : Profile
@@ -295,8 +324,8 @@ namespace EMBC.Responders.API.Controllers
         public Mapping()
         {
             CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
-                .ForMember(d => d.RoleCode, opts => opts.MapFrom(s => s.Role.Id))
-                .ForMember(d => d.LabelCode, opts => opts.MapFrom(s => s.Label))
+                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.Id))
+                .ForMember(d => d.Label, opts => opts.MapFrom(s => s.Label))
                 .ReverseMap();
         }
     }

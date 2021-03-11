@@ -103,7 +103,7 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<IEnumerable<CommunityTypeDescription>>> GetCommunityTypes()
         {
             var enumList = EnumHelper.GetEnumDescriptions<CommunityType>();
-            return Ok(await Task.FromResult(enumList.Select(e => new CommunityTypeDescription { Type = e.value, Description = e.description }).ToArray()));
+            return Ok(await Task.FromResult(enumList.Select(e => new CommunityTypeDescription { Code = e.value, Description = e.description }).ToArray()));
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         public class CommunityTypeDescription
         {
-            public CommunityType Type { get; set; }
+            public CommunityType Code { get; set; }
             public string Description { get; set; }
         }
 
