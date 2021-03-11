@@ -335,71 +335,9 @@ export class TeamMembersService extends BaseService {
   }
 
   /**
-   * Path part for operation teamMembersDeactivateTeamMember
-   */
-  static readonly TeamMembersDeactivateTeamMemberPath = '/api/team/members/{memberId}/active';
-
-  /**
-   * Deactivate a team member.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `teamMembersDeactivateTeamMember()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  teamMembersDeactivateTeamMember$Response(params: {
-
-    /**
-     * team member id
-     */
-    memberId: string;
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersDeactivateTeamMemberPath, 'post');
-    if (params) {
-      rb.path('memberId', params.memberId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
-  }
-
-  /**
-   * Deactivate a team member.
-   *
-   *
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `teamMembersDeactivateTeamMember$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  teamMembersDeactivateTeamMember(params: {
-
-    /**
-     * team member id
-     */
-    memberId: string;
-  }): Observable<void> {
-
-    return this.teamMembersDeactivateTeamMember$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
-  }
-
-  /**
    * Path part for operation teamMembersActivateTeamMember
    */
-  static readonly TeamMembersActivateTeamMemberPath = '/api/team/members/{memberId}/inactive';
+  static readonly TeamMembersActivateTeamMemberPath = '/api/team/members/{memberId}/active';
 
   /**
    * Activate a team member.
@@ -459,6 +397,68 @@ export class TeamMembersService extends BaseService {
   }
 
   /**
+   * Path part for operation teamMembersDeactivateTeamMember
+   */
+  static readonly TeamMembersDeactivateTeamMemberPath = '/api/team/members/{memberId}/inactive';
+
+  /**
+   * Deactivate a team member.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `teamMembersDeactivateTeamMember()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  teamMembersDeactivateTeamMember$Response(params: {
+
+    /**
+     * team member id
+     */
+    memberId: string;
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersDeactivateTeamMemberPath, 'post');
+    if (params) {
+      rb.path('memberId', params.memberId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Deactivate a team member.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `teamMembersDeactivateTeamMember$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  teamMembersDeactivateTeamMember(params: {
+
+    /**
+     * team member id
+     */
+    memberId: string;
+  }): Observable<void> {
+
+    return this.teamMembersDeactivateTeamMember$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
    * Path part for operation teamMembersIsUserNameExists
    */
   static readonly TeamMembersIsUserNameExistsPath = '/api/team/members/username';
@@ -507,7 +507,7 @@ export class TeamMembersService extends BaseService {
   /**
    * Path part for operation teamMembersGetMemberRoles
    */
-  static readonly TeamMembersGetMemberRolesPath = '/api/team/members/memberroles';
+  static readonly TeamMembersGetMemberRolesPath = '/api/team/members/codes/memberrole';
 
   /**
    * Provides a list of team member roles.
@@ -558,7 +558,7 @@ export class TeamMembersService extends BaseService {
   /**
    * Path part for operation teamMembersGetMemberLabels
    */
-  static readonly TeamMembersGetMemberLabelsPath = '/api/team/members/memberlabels';
+  static readonly TeamMembersGetMemberLabelsPath = '/api/team/members/codes/memberlabel';
 
   /**
    * Provides a list of team member labels.
