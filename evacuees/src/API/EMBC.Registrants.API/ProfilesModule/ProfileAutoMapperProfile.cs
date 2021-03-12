@@ -81,6 +81,7 @@ namespace EMBC.Registrants.API.ProfilesModule
                 ;
 
             CreateMap<contact, PersonDetails>()
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.contactid))
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.birthdate.HasValue
                     ? $"{s.birthdate.Value.Month:D2}/{s.birthdate.Value.Day:D2}/{s.birthdate.Value.Year:D2}"
                     : null))
@@ -90,6 +91,7 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_initial))
                 .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.era_preferredname))
                 .ReverseMap()
+                .ForMember(d => d.contactid, opts => opts.MapFrom(s => Guid.Parse(s.Id)))
                 .ForMember(d => d.gendercode, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))
                 .ForMember(d => d.birthdate, opts => opts.MapFrom(s => Date.Parse(s.DateOfBirth)))
                 ;

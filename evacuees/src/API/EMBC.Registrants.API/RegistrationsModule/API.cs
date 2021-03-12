@@ -235,6 +235,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         [Required]
         public string SecretPhrase { get; set; }
+
+        [Required]
+        public Address EvacuatedFromAddress { get; set; }
     }
 
     /// <summary>
