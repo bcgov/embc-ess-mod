@@ -24,7 +24,7 @@ namespace EMBC.Tests.Integration.Registrants.API
         protected readonly WebApplicationFactory<Startup> webApplicationFactory;
 
         protected IConfiguration configuration => webApplicationFactory.Services.GetRequiredService<IConfiguration>();
-        protected IServiceProvider services => webApplicationFactory.Services;
+        protected IServiceProvider services => new Lazy<IServiceProvider>(() => webApplicationFactory.Services.CreateScope().ServiceProvider).Value;
         protected ILogger testLogger => loggerFactory.CreateLogger("SUT");
 
         public WebAppTestBase(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
