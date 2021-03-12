@@ -6,6 +6,7 @@ import { ComponentCreationService } from '../../../core/services/componentCreati
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../core/services/formCreation.service';
+import { DataUpdationService } from '../../../core/services/dataUpdation.service';
 import { RegistrationResult } from '../../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { NonVerifiedRegistrationService } from '../../../non-verified-registration/non-verified-registration.services';
@@ -35,7 +36,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   constructor(
     private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private needsAssessmentService: NeedsAssessmentService,
+    private updateService: DataUpdationService, private needsAssessmentService: NeedsAssessmentService,
     private cd: ChangeDetectorRef, private route: ActivatedRoute,
     private alertService: AlertService, private nonVerifiedRegistrationService: NonVerifiedRegistrationService) {
     const navigation = this.router.getCurrentNavigation();
@@ -177,7 +178,8 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
     this.nonVerifiedRegistrationService.submitRegistration().subscribe((response: RegistrationResult) => {
-      this.needsAssessmentService.setNonVerifiedEvacuationFileNo(response);
+      console.log(response);
+      this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/non-verified-registration/file-submission']);
     }, (error: any) => {
       console.log(error);
@@ -193,7 +195,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.alertService.clearAlert();
     this.needsAssessmentService.createEvacuationFile().subscribe((value) => {
       console.log(value);
-      this.needsAssessmentService.setVerifiedEvacuationFileNo(value);
+      // this.updateService.updateRegisrationResult(response);
       this.router.navigate(['/verified-registration/dashboard']);
     }, (error: any) => {
       console.log(error.error.title);

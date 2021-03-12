@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../../services/data.service';
 import { FormCreationService } from '../../services/formCreation.service';
 import { AuthService } from '../../services/auth.service';
 import { map } from 'rxjs/operators';
@@ -15,7 +16,7 @@ export class HeaderComponent implements OnInit {
     showLoginMatMenu: boolean;
 
 
-    constructor(public formCreationService: FormCreationService, private authService: AuthService, private cacheService: CacheService) { }
+    constructor(private formCreationService: FormCreationService, private authService: AuthService, private cacheService: CacheService) { }
 
     ngOnInit(): void {
 

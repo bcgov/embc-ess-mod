@@ -302,18 +302,18 @@
                     <div class="col-md-3">
                         <span>{{(formCreationService.evacuatedForm$ |
                             async)?.value?.evacuatedFromAddress?.addressLine1}},</span>
+                        <span
+                            *ngIf="(formCreationService.evacuatedForm$ | async)?.value?.evacuatedFromAddress?.addressLine2 !== null">
+                            &nbsp;{{(formCreationService.evacuatedForm$ |
+                            async)?.value?.evacuatedFromAddress?.addressLine2}},</span>
                         <span>&nbsp;{{(formCreationService.evacuatedForm$ |
-                            async)?.value?.evacuatedFromAddress?.addressLine2}}</span>
-                        <span
-                            [hidden]="(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.addressLine2 == '' || (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.addressLine2 == null">,&nbsp;</span>
-                        <span>{{(formCreationService.evacuatedForm$
-                            |async)?.value?.evacuatedFromAddress?.jurisdiction?.name}}, </span>
-                        <span> &nbsp; {{(formCreationService.evacuatedForm$
-                            |async)?.value?.evacuatedFromAddress?.stateProvince?.name}}</span>
-                        <span
-                            [hidden]="(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode == '' || (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode == null">,&nbsp;</span>
-                        <span>{{(formCreationService.evacuatedForm$
-                            |async)?.value?.evacuatedFromAddress?.postalCode}}</span>
+                            async)?.value?.evacuatedFromAddress?.jurisdiction?.name}}, </span>
+                        <span> &nbsp; {{(formCreationService.evacuatedForm$ |
+                            async)?.value?.evacuatedFromAddress?.stateProvince?.name}}</span>
+                        <span *ngIf="(formCreationService.evacuatedForm$ |
+                                async)?.value?.evacuatedFromAddress?.postalCode !== null">
+                            ,&nbsp;{{(formCreationService.evacuatedForm$ |
+                            async)?.value?.evacuatedFromAddress?.postalCode}}</span>
                     </div>
                 </div>
             </mat-card-content>
@@ -412,10 +412,10 @@
                     </div>
                 </div>
                 <div class="row info-detail"
-                    *ngIf="(formCreationService.familyMembersForm$ | async)?.value.haveSpecialDiet">
+                    *ngIf="(formCreationService.familyMembersForm$ | async).value.haveSpecialDiet">
                     <div class="col-md-3">Special Dietary Details:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.familyMembersForm$ | async)?.value.specialDietDetails}}
+                        {{(formCreationService.familyMembersForm$ | async).value.specialDietDetails}}
                     </div>
                 </div>
             </mat-card-content>

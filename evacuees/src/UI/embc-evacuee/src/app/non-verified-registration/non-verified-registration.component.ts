@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../core/services/data.service';
 import { FormCreationService } from '../core/services/formCreation.service';
-import { NeedsAssessmentService } from '../sharedModules/components/needs-assessment/needs-assessment.service';
 
 @Component({
   selector: 'app-non-verified-registration',
@@ -9,10 +9,10 @@ import { NeedsAssessmentService } from '../sharedModules/components/needs-assess
 })
 export class NonVerifiedRegistrationComponent implements OnInit {
 
-  constructor(private formCreationService: FormCreationService, private needsAssessmentService: NeedsAssessmentService) { }
+  constructor(private formCreationService: FormCreationService, private dataService: DataService) { }
 
   ngOnInit(): void {
-    this.needsAssessmentService.clearEvacuationFileNo();
+    this.dataService.clearData();
     this.formCreationService.clearProfileData();
     this.formCreationService.clearNeedsAssessmentData();
   }
