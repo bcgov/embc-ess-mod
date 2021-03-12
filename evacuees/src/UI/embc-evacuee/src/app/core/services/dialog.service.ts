@@ -2,16 +2,17 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
-import { NeedsAssessmentService } from 'src/app/sharedModules/components/needs-assessment/needs-assessment.service';
+import { RegistrationResult } from '../api/models';
+import { DataUpdationService } from './dataUpdation.service';
 import { FormCreationService } from './formCreation.service';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
 
-    emptyRegistrationResult: string = null;
+    emptyRegistrationResult: RegistrationResult = { referenceNumber: null };
 
     constructor(
-        private router: Router, public dialog: MatDialog, private needsAssessmentService: NeedsAssessmentService,
+        private router: Router, public dialog: MatDialog, private updateService: DataUpdationService,
         private formCreationService: FormCreationService) { }
 
     addEvacuationFile(city: string): void {
@@ -33,8 +34,8 @@ export class DialogService {
                         }
                     ]
             },
-            height: '260px',
-            width: '800px'
+            height: '252px',
+            width: '699px'
         }).afterClosed().subscribe(result => {
             if (result === 'add') {
                 this.formCreationService.clearNeedsAssessmentData();
@@ -57,10 +58,10 @@ export class DialogService {
                         }
                     ]
             },
-            height: '810px',
+            height: '800px',
             width: '800px'
         }).afterClosed().subscribe(() => {
-            this.needsAssessmentService.setVerifiedEvacuationFileNo(this.emptyRegistrationResult);
+            this.updateService.updateRegisrationResult(this.emptyRegistrationResult);
         });
     }
 
