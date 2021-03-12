@@ -1,3 +1,11 @@
+.close-button {
+  width: 100%;
+}
+
+.title-row {
+  width: 100%;
+}
+
 .close-image img:last-child {
   display: none;
 }
@@ -12,7 +20,9 @@
 
 .close-button-style {
   background-color: white;
-  float: right;
+  // float: right;
+  position: relative;
+  left: 750px;
 }
 
 .mat-title {
@@ -20,7 +30,9 @@
   font-size: 33px !important;
   line-height: 21px;
   padding: 10px 5px 10px 30px;
-  text-align: center;
+  text-align: left;
+  position: relative;
+  left: 25px;
 }
 
 .mainBody {
@@ -28,4 +40,38 @@
   font-weight: 400;
   margin: 0 5px;
   padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .mat-dialog-content {
+    margin: 0;
+    padding: 0;
+    max-height: auto;
+  }
+
+  .close-button-style {
+    left: 550px;
+  }
+}
+
+@media (max-width: 715px) {
+  .mainBody {
+    padding: 0;
+  }
+
+  .close-button-style {
+    left: 250px;
+  }
+}
+
+@media (max-width: 376px) {
+  .mat-title {
+    left: 0;
+  }
+}
+
+@media (max-width: 320px) {
+  .close-button-style {
+    left: 200px;
+  }
 }

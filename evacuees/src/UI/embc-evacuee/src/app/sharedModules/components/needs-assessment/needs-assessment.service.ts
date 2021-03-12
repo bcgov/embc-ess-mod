@@ -21,6 +21,8 @@ export class NeedsAssessmentService {
     private _canEvacueeProvideIncidentals: boolean;
     private _canEvacueeProvideLodging: boolean;
     private _canEvacueeProvideTransportation: boolean;
+    private registrationResult: RegistrationResult;
+    private verifiedRegistrationResult: string;
 
     constructor(private evacuationService: EvacuationService) { }
 
@@ -180,6 +182,27 @@ export class NeedsAssessmentService {
         };
 
         return address;
+    }
+
+    public setNonVerifiedEvacuationFileNo(registrationResult: RegistrationResult): void {
+        this.registrationResult = registrationResult;
+    }
+
+    public getNonVerifiedEvacuationFileNo(): RegistrationResult {
+        return this.registrationResult;
+    }
+
+    public setVerifiedEvacuationFileNo(registrationResult: string): void {
+        this.verifiedRegistrationResult = registrationResult;
+    }
+
+    public getVerifiedEvacuationFileNo(): string {
+        return this.verifiedRegistrationResult;
+    }
+
+    public clearEvacuationFileNo(): void {
+        this.registrationResult = { referenceNumber: null };
+        this.verifiedRegistrationResult = null;
     }
 
 }
