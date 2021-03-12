@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { DataService } from '../../../core/services/data.service';
+import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 
 @Component({
   selector: 'app-file-submission',
@@ -18,7 +18,7 @@ export class FileSubmissionComponent implements OnInit {
   subscription: Subscription;
 
   constructor(
-    private dataService: DataService, private route: ActivatedRoute, private router: Router,
+    private needsAssessmentService: NeedsAssessmentService, private route: ActivatedRoute, private router: Router,
     public location: Location) { }
 
   /**
@@ -27,7 +27,7 @@ export class FileSubmissionComponent implements OnInit {
    */
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    const registrationResult = this.dataService.getRegistrationResult();
+    const registrationResult = this.needsAssessmentService.getNonVerifiedEvacuationFileNo();
     if (registrationResult) {
       this.referenceNumber = registrationResult.referenceNumber;
       if (!this.referenceNumber) {

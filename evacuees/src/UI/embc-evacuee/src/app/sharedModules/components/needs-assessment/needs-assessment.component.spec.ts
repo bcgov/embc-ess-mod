@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { NeedsAssessmentComponent } from './needs-assessment.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ComponentCreationService } from '../../../core/services/componentCreation.service';
@@ -11,11 +10,11 @@ describe('NeedsAssessmentComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NeedsAssessmentComponent ],
-      imports: [ RouterTestingModule ],
-      providers: [ ComponentCreationService, FormCreationService ]
+      declarations: [NeedsAssessmentComponent],
+      imports: [RouterTestingModule],
+      providers: [ComponentCreationService, FormCreationService]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

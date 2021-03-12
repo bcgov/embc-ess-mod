@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FileSubmissionComponent } from './file-submission.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('FileSubmissionComponent', () => {
   let component: FileSubmissionComponent;
@@ -9,10 +10,10 @@ describe('FileSubmissionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FileSubmissionComponent ],
-      imports: [ RouterTestingModule ],
+      declarations: [FileSubmissionComponent],
+      imports: [RouterTestingModule, HttpClientTestingModule],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { DataService } from '../../../core/services/data.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { RestrictionService } from './restriction.service';
@@ -17,9 +16,9 @@ export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm$: Subscription;
   currentFlow: string;
 
-  constructor(private router: Router, private dataService: DataService,
-              private route: ActivatedRoute, private formCreationService: FormCreationService,
-              public restrictionService: RestrictionService) { }
+  constructor(
+    private router: Router, private route: ActivatedRoute, private formCreationService: FormCreationService,
+    public restrictionService: RestrictionService) { }
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
@@ -31,9 +30,9 @@ export class RestrictionComponent implements OnInit, OnDestroy {
   }
 
   mapData(): void {
-    const existingValues = this.dataService.getRegistration();
-    if (existingValues !== null) {
-      this.restrictionForm.get('restrictedAccess').setValue(existingValues.restrictedAccess);
+    const existingRestrictionAccess = this.restrictionService.restrictedAccess;
+    if (existingRestrictionAccess !== null) {
+      this.restrictionForm.get('restrictedAccess').setValue(existingRestrictionAccess);
     }
   }
 
