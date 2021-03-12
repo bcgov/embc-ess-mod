@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { RestrictionComponent } from './restriction.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { DataService } from '../../../core/services/data.service';
 
 describe('RestrictionComponent', () => {
   let component: RestrictionComponent;
@@ -11,11 +9,11 @@ describe('RestrictionComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ RestrictionComponent ],
-      imports: [ RouterTestingModule, ReactiveFormsModule ],
-      providers: [FormBuilder, DataService]
+      declarations: [RestrictionComponent],
+      imports: [RouterTestingModule, ReactiveFormsModule],
+      providers: [FormBuilder]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
