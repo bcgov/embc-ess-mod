@@ -47,11 +47,11 @@ namespace EMBC.Registrants.API.EvacuationsModule
         /// <summary>
         /// Get the currently logged in user's current list of evacuations
         /// </summary>
-        /// <returns>List of RegistrantEvacuation</returns>
+        /// <returns>List of EvacuationFile</returns>
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<NeedsAssessment>>> GetCurrentEvacuations()
+        public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetCurrentEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var evacuationList = await evacuationManager.GetEvacuations(userId);
@@ -62,11 +62,11 @@ namespace EMBC.Registrants.API.EvacuationsModule
         /// <summary>
         /// Get the currently logged in user's past list of evacuations
         /// </summary>
-        /// <returns>List of RegistrantEvacuation</returns>
+        /// <returns>List of EvacuationFile</returns>
         [HttpGet("past")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<NeedsAssessment>>> GetPastEvacuations()
+        public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetPastEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var evacuationList = await evacuationManager.GetEvacuations(userId);
@@ -77,18 +77,18 @@ namespace EMBC.Registrants.API.EvacuationsModule
         /// <summary>
         /// Create a verified Evacuation
         /// </summary>
-        /// <param name="needsAssessment">Evacuation data</param>
+        /// <param name="evacuationFile">Evacuation data</param>
         /// <returns>ESS number</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> CreateEvacuation(NeedsAssessment needsAssessment)
+        public async Task<ActionResult<string>> CreateEvacuation(EvacuationFile evacuationFile)
         {
-            if (needsAssessment == null)
+            if (evacuationFile == null)
                 return BadRequest();
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var essFileNumber = await evacuationManager.SaveEvacuation(userId, null, needsAssessment);
+            var essFileNumber = await evacuationManager.SaveEvacuation(userId, null, evacuationFile);
 
             return Ok(essFileNumber);
         }
@@ -97,21 +97,37 @@ namespace EMBC.Registrants.API.EvacuationsModule
         /// Update a verified Evacuation
         /// </summary>
         /// <param name="essFileNumber">ESS File Number</param>
-        /// <param name="needsAssessment">Evacuation data</param>
+        /// <param name="evacuationFile">Evacuation data</param>
         /// <returns>ESS number</returns>
         [HttpPost("{essFileNumber}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> UpdateEvacuation(string essFileNumber, NeedsAssessment needsAssessment)
+        public async Task<ActionResult<string>> UpdateEvacuation(string essFileNumber, EvacuationFile evacuationFile)
         {
-            if (needsAssessment == null)
+            if (evacuationFile == null)
                 return BadRequest();
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            essFileNumber = await evacuationManager.SaveEvacuation(userId, essFileNumber, needsAssessment);
+            essFileNumber = await evacuationManager.SaveEvacuation(userId, essFileNumber, evacuationFile);
 
             return Ok(essFileNumber);
         }
+    }
+
+    /// <summary>
+    /// Evacuation File
+    /// </summary>
+    public class EvacuationFile
+    {
+        public string EssFileNumber { get; set; }
+
+        public string EvacuationFileDate { get; set; }
+
+        [Required]
+        public Address EvacuatedFromAddress { get; set; }
+
+        [Required]
+        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
     }
 
     /// <summary>
@@ -119,9 +135,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
     /// </summary>
     public class NeedsAssessment
     {
-        [Required]
-        public Address EvacuatedFromAddress { get; set; }
-
+        public string Id { get; set; }
         [Required]
         public InsuranceOption Insurance { get; set; }
         public bool? CanEvacueeProvideFood { get; set; }
@@ -135,6 +149,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
         public IEnumerable<PersonDetails> FamilyMembers { get; set; } = Array.Empty<PersonDetails>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }
+        public NeedsAssessmentType Type { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public enum InsuranceOption
@@ -147,6 +162,13 @@ namespace EMBC.Registrants.API.EvacuationsModule
             Unsure = 174360002,
             [EnumMember(Value = "Unknown")]
             Unknown = 174360003
+        }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum NeedsAssessmentType
+        {
+            Preliminary = 174360000,
+            Assessed = 174360001
         }
     }
 
@@ -163,12 +185,6 @@ namespace EMBC.Registrants.API.EvacuationsModule
     {
         Person = 174360000,
         Pet = 174360001
-    }
-
-    public enum NeedsAssessmentType
-    {
-        Preliminary = 174360000,
-        Assessed = 174360001
     }
 
     public enum RegistrantType
