@@ -2,8 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NonVerifiedRegistrationComponent } from './non-verified-registration.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 
 describe('NonVerifiedRegistrationComponent', () => {
   let component: NonVerifiedRegistrationComponent;
@@ -11,11 +9,11 @@ describe('NonVerifiedRegistrationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [NonVerifiedRegistrationComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [FormBuilder]
+      declarations: [ NonVerifiedRegistrationComponent ],
+      imports: [ ReactiveFormsModule ],
+      providers: [ FormBuilder]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
+import { DataService } from 'src/app/core/services/data.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { TabModel } from 'src/app/core/model/tab.model';
 import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
-import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -43,7 +43,7 @@ export class DashboardComponent implements OnInit {
 
 
   constructor(
-    private route: ActivatedRoute, private needsAssessmentService: NeedsAssessmentService, public formCreationService: FormCreationService,
+    private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
     private router: Router, private dialogService: DialogService, private cacheService: CacheService,
     public evacuationFilesDataService: EvacuationFileDataService) { }
 
@@ -64,10 +64,10 @@ export class DashboardComponent implements OnInit {
 
   openReferenceNumberPopup(): void {
 
-    const registrationResult = this.needsAssessmentService.getVerifiedEvacuationFileNo();
+    const registrationResult = this.dataService.getRegistrationResult();
 
-    if (registrationResult !== null) {
-      this.dialogService.submissionCompleteDialog(registrationResult);
+    if (registrationResult.referenceNumber !== null) {
+      this.dialogService.submissionCompleteDialog(registrationResult.referenceNumber);
     }
   }
 
