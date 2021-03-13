@@ -15,12 +15,11 @@ const routes: Routes = [
   {
     path: 'member-details',
     loadChildren: () => import('../team-member-detail/team-member-detail.module').then(m => m.TeamMemberDetailModule)
+  },
+  {
+    path: 'edit',
+    loadChildren: () => import('../edit-team-member/edit-team-member.module').then(m => m.EditTeamMemberModule)
   }
-  // {
-  //   path: 'electronic-agreement',
-  //   loadChildren: () => import('./feature-components/electronic-agreement/electronic-agreement.module')
-  //   .then(m => m.ElectronicAgreementModule)
-  // }
 ];
 
 @NgModule({

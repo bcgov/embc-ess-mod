@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TeamMember } from 'src/app/core/api/models';
+import { DeleteConfirmationDialogComponent } from 'src/app/shared/components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { TeamListDataService } from '../team-list/team-list-data.service';
 import { TeamMemberDetailsService } from './team-member-details.service';
 
 @Component({
@@ -14,21 +16,23 @@ export class TeamMemberDetailComponent implements OnInit {
 
   teamMember: TeamMember;
 
-  constructor(private router: Router, private dialog: MatDialog, private teamDetailsService: TeamMemberDetailsService) {
+  constructor(private router: Router, private dialog: MatDialog, private teamDetailsService: TeamMemberDetailsService,
+              private teamDataService: TeamListDataService) {
     if (this.router.getCurrentNavigation().extras.state !== undefined) {
       const state = this.router.getCurrentNavigation().extras.state as TeamMember;
       this.teamMember = state;
+    } else {
+      this.teamMember = this.teamDataService.getSelectedTeamMember();
     }
   }
 
   ngOnInit(): void {
-    console.log(this.teamMember)
   }
 
-  deleteUser() {
+  deleteUser(): void {
     this.dialog.open(DialogComponent, {
       data: {
-        body: '<p>You are requesting to delete this user from the ERA Tool.<br> <mat-checkbox id="collection">I confirm that I want this user removed from the ERA Tool, and I am aware this cannot be undone.</mat-checkbox</p>',
+        component: DeleteConfirmationDialogComponent,
         buttons: [
           {
             name: 'No, Cancel',
@@ -43,19 +47,19 @@ export class TeamMemberDetailComponent implements OnInit {
         ]
       },
       height: '250px',
-      width: '550px'
+      width: '650px'
     }).afterClosed().subscribe(event => {
-      console.log(event)
-      if(event === 'delete') {
+      console.log(event);
+      if (event === 'delete') {
         this.teamDetailsService.deleteTeamMember(this.teamMember.id).subscribe(value => {
-          this.router.navigate(['/responder-access/responder-management/details/member-list'])
+          this.router.navigate(['/responder-access/responder-management/details/member-list']);
         });
       }
-    })
+    });
   }
 
-  editUser() {
-
+  editUser(): void {
+    this.router.navigate(['/responder-access/responder-management/details/edit'], { state: this.teamMember });
   }
 
 }

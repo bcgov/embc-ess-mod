@@ -132,12 +132,12 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
 
   rowClicked(row): void {
     if (this.allowClickableRows) {
-      console.log(row)
+      console.log(row);
       this.clickedRow.emit(row);
     }
   }
 
-  disableRowInteraction($event, columnLabel) {
+  disableRowInteraction($event, columnLabel): void {
     if (columnLabel === 'isActive') {
       $event.stopPropagation();
     }
@@ -147,9 +147,9 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     console.log($event);
     console.log(row);
     if ($event.checked) {
-      this.toggleActive.emit(row.id)
+      this.toggleActive.emit(row.id);
     } else {
-      this.toggleInactive.emit(row.id)
+      this.toggleInactive.emit(row.id);
     }
   }
 }

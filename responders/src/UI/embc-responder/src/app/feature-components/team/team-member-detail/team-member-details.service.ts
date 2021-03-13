@@ -8,6 +8,6 @@ export class TeamMemberDetailsService {
     constructor(private teamMembersService: TeamMembersService) { }
 
     deleteTeamMember(memberId: string): Observable<void> {
-       return this.teamMembersService.teamMembersDeleteTeamMember({memberId: memberId})
+       return this.teamMembersService.teamMembersDeleteTeamMember({memberId});
     }
 }

@@ -13,7 +13,7 @@ export class TeamListService {
        return this.teamMembersService.teamMembersGetTeamMembers();
     }
 
-    public activateTeamMember(memberId: string) {
+    public activateTeamMember(memberId: string): Observable<TeamMember[]> {
         return this.teamMembersService.teamMembersActivateTeamMember({memberId}).pipe(
             mergeMap((result) => {
                 console.log(result);
