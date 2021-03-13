@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { TeamListRoutingModule } from './team-list-routing.module';
-import { TeamListComponent } from './team-list.component';
+import { TeamMemberDetailRoutingModule } from './team-member-detail-routing.module';
+import { TeamMemberDetailComponent } from './team-member-detail.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { MaterialModule } from '../../../material.module';
 
 @NgModule({
   declarations: [
-    TeamListComponent
+    TeamMemberDetailComponent
   ],
   imports: [
     CommonModule,
-    TeamListRoutingModule,
+    TeamMemberDetailRoutingModule,
     SharedModule,
     MaterialModule
   ]
 })
-export class TeamListModule { }
+export class TeamMemberDetailModule { }

@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TeamListComponent } from './team-list.component';
+import { EditTeamMemberComponent } from './edit-team-member.component';
 
 const routes: Routes = [
-  {
-    path: '', component: TeamListComponent
-  }
+  { path: '', component: EditTeamMemberComponent }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TeamListRoutingModule { }
+export class EditTeamMemberRoutingModule { }

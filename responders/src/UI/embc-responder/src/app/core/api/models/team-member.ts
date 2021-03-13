@@ -1,5 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
+import { MemberLabel } from './member-label';
+import { MemberRole } from './member-role';
 
 /**
  * Team member
@@ -10,11 +12,11 @@ export interface TeamMember {
   firstName: string;
   id?: null | string;
   isActive?: boolean;
-  labelCode?: null | string;
+  label?: MemberLabel;
   lastName: string;
   lastSuccessfulLogin?: null | string;
   phone?: null | string;
-  roleCode: string;
+  role: MemberRole;
   teamId: string;
   userName: string;
 }

@@ -2,9 +2,11 @@
 /* eslint-disable */
 
 /**
- * a label to describe the team member
+ * A label to describe a team member
  */
-export interface MemberLabel {
-  code?: null | string;
-  name?: null | string;
+export enum MemberLabel {
+  Volunteer = 'Volunteer',
+  ThirdParty = 'ThirdParty',
+  ConvergentVolunteer = 'ConvergentVolunteer',
+  EMBCEmployee = 'EMBCEmployee'
 }

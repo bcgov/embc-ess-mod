@@ -22,12 +22,17 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   @Input() incomingData = [];
   @Input() filterTerm: TableFilterValueModel;
   @Input() filterPredicate: any;
+  @Input() disableRow = false;
+  @Input() allowClickableRows: boolean;
   @Output() selectedRows = new EventEmitter<any[]>();
-  @Output() toggleStatus = new EventEmitter<string>();
+  @Output() toggleActive = new EventEmitter<string>();
+  @Output() toggleInactive = new EventEmitter<string>();
+  @Output() clickedRow = new EventEmitter<{}>();
+
+
   dataSource = new MatTableDataSource();
   columns: string[];
   selection = new SelectionModel<any>(true, []);
-  @Input() disableRow = false;
   isLoading = true;
   color = '#169BD5';
 
@@ -125,9 +130,26 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     this.selectedRows.emit(this.selection.selected);
   }
 
+  rowClicked(row): void {
+    if (this.allowClickableRows) {
+      console.log(row);
+      this.clickedRow.emit(row);
+    }
+  }
+
+  disableRowInteraction($event, columnLabel): void {
+    if (columnLabel === 'isActive') {
+      $event.stopPropagation();
+    }
+  }
+
   slideToggle($event: MatSlideToggleChange, row): void {
     console.log($event);
     console.log(row);
-    this.toggleStatus.emit($event.checked ? 'A' : 'D' + ':' + row.id);
+    if ($event.checked) {
+      this.toggleActive.emit(row.id);
+    } else {
+      this.toggleInactive.emit(row.id);
+    }
   }
 }
