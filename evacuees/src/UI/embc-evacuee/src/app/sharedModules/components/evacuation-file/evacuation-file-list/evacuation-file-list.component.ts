@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NeedsAssessment } from 'src/app/core/api/models';
-import { CacheService } from 'src/app/core/services/cache.service';
-import { DataService } from 'src/app/core/services/data.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
@@ -25,7 +23,7 @@ export class EvacuationFileListComponent implements OnInit {
   showLoading = false;
 
   constructor(
-    private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
+    private route: ActivatedRoute, public formCreationService: FormCreationService,
     private router: Router, private dialogService: DialogService, private evacuationFileService: EvacuationFileService,
     private evacuationFileDataService: EvacuationFileDataService) { }
 

@@ -17,7 +17,7 @@
             </div>
             <ng-template #noSelect>
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column?.label}} </th>
-                <td mat-cell *matCellDef="let row; let index = index">
+                <td mat-cell *matCellDef="let row; let index = index" (click)="disableRowInteraction($event, column?.ref)">
                     <span *ngIf="column?.ref !== 'isActive'">
                         <span *ngIf="!row?.allowSelect && disableRow else data" style="color:#b0b0b0">{{row[column?.ref]
                             }}</span>
@@ -42,7 +42,7 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columns"></tr>
-        <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns;" (click)="rowClicked(row)"></tr>
     </table>
 
     <app-loader style="display: flex; justify-content: center; align-items: center;" class="mat-progress"

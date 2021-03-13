@@ -12,7 +12,7 @@ export class TeamManagementComponent implements OnInit {
   tabs: TabModel[] = [
     {
       label: 'ESS Team',
-      route: 'list',
+      route: 'details',
     },
     {
       label: 'Add Team Members',

@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
-import { EnumToArrayPipe } from './pipes/EnumToArray.pipe';
+import { DeleteConfirmationDialogComponent } from './components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +21,7 @@ import { EnumToArrayPipe } from './pipes/EnumToArray.pipe';
     DialogComponent,
     AlertComponent,
     AppLoaderComponent,
+    DeleteConfirmationDialogComponent
    // EnumToArrayPipe
   ],
   imports: [
@@ -37,6 +38,7 @@ import { EnumToArrayPipe } from './pipes/EnumToArray.pipe';
     DialogComponent,
     AlertComponent,
     AppLoaderComponent,
+    DeleteConfirmationDialogComponent
    // EnumToArrayPipe
   ]
 })

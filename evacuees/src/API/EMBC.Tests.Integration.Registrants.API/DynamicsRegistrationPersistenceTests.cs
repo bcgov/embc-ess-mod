@@ -174,10 +174,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                         StateProvince = new StateProvince { Code = "WA", Name = "Washington" },
                         PostalCode = "12345",
                         Jurisdiction = new Jurisdiction { Code = null, Name = "Seattle" }
-                    }
-                },
-                PreliminaryNeedsAssessment = new NeedsAssessment
-                {
+                    },
                     EvacuatedFromAddress = new Address
                     {
                         AddressLine1 = $"addr1-{textContextIdentifier}",
@@ -185,7 +182,10 @@ namespace EMBC.Tests.Integration.Registrants.API
                         Jurisdiction = new Jurisdiction { Code = "226adfaf-9f97-ea11-b813-005056830319" },
                         StateProvince = new StateProvince { Code = "BC", Name = "British Columbia" },
                         PostalCode = "v1v 1v1"
-                    },
+                    }
+                },
+                PreliminaryNeedsAssessment = new NeedsAssessment
+                {
                     FamilyMembers = new[]
                     {
                         new PersonDetails
@@ -284,9 +284,9 @@ namespace EMBC.Tests.Integration.Registrants.API
 
             testLogger.LogDebug("Registration Profile: " + JsonSerializer.Serialize(profile));
         }
-
+/*
         [Fact(Skip = RequiresDynamics)]
-        public async Task RegistrantEvacuationByBCSC()
+        public Task RegistrantEvacuationByBCSC()
         {
             var textContextIdentifier = DateTime.Now.ToShortTimeString();
             var registrantEvacuation = new RegistrantEvacuation
@@ -350,6 +350,7 @@ namespace EMBC.Tests.Integration.Registrants.API
             testLogger.LogDebug("ESS File #: " + result);
             Assert.NotNull(result);
             Assert.True(int.Parse(result) > 0);
+
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -362,5 +363,6 @@ namespace EMBC.Tests.Integration.Registrants.API
             Assert.NotEmpty(evacuationList);
             testLogger.LogDebug("Test Result: " + JsonSerializer.Serialize(evacuationList));
         }
+*/
     }
 }
