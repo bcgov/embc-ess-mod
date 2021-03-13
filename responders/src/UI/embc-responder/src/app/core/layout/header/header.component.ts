@@ -1,26 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { UserProfile, UserService } from '../../services/user.service';
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss']
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
-    constructor(private router: Router, private authService: AuthService) {}
+  public profile: UserProfile;
+  public get signedInTask(): string {
+    return this.profile.taskNumber
+      ? `Logged in to task #${this.profile.taskNumber}`
+      : `Not logged in to a task`;
+  }
+  public get teamName(): string { return this.profile.teamName; }
 
-    homeButton(): void {
+  public get userName(): string { return this.profile.userName; }
 
-    }
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService
+  ) { }
 
-    openUserProfile(): void {
-        this.router.navigate(['/responder-access/user-profile']);
-    }
+  public ngOnInit(): void {
+    this.profile = this.userService.profile;
+  }
 
-    signOut(): void {
-        this.authService.logout();
-    }
+  homeButton(): void {
+
+  }
+
+  openUserProfile(): void {
+    this.router.navigate(['/responder-access/user-profile']);
+  }
+
+  signOut(): void {
+    this.authService.logout();
+  }
 
 }

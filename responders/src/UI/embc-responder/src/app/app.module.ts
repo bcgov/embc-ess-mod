@@ -8,11 +8,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthConfig, OAuthModule } from 'angular-oauth2-oidc';
 import { AuthService } from './core/services/auth.service';
-import { authConfig, OAuthModuleConfig } from './core/services/authConfig';
+import { authConfig } from './core/services/authConfig';
 
-export function initialize(authService: AuthService): () => Promise<any> {
-  return () => authService.initiateAuthentication();
-}
+export const initialize = (authService: AuthService) => () => authService.ensureLoggedIn();
 
 @NgModule({
   declarations: [
@@ -28,8 +26,10 @@ export function initialize(authService: AuthService): () => Promise<any> {
   ],
   providers: [
     AuthService,
-    { provide: AuthConfig, useValue: authConfig },
-    OAuthModuleConfig,
+    {
+      provide: AuthConfig,
+      useValue: authConfig
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: initialize,
