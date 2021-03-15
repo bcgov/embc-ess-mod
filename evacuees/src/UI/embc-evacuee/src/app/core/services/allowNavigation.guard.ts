@@ -13,8 +13,9 @@ import { ConflictManagementService } from 'src/app/sharedModules/components/conf
 @Injectable({ providedIn: 'root' })
 export class AllowNavigationGuard implements CanActivate {
 
-    constructor(private router: Router, private profileService: ProfileService, public mappingService: ProfileMappingService,
-                private conflictService: ConflictManagementService) { }
+    constructor(
+        private router: Router, private profileService: ProfileService, public mappingService: ProfileMappingService,
+        private conflictService: ConflictManagementService) { }
 
     public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
         Promise<boolean | UrlTree> {
@@ -25,7 +26,7 @@ export class AllowNavigationGuard implements CanActivate {
                 this.profileService.getLoginProfile();
                 this.router.navigate(['/verified-registration/collection-notice']);
             } else {
-                console.log(this.conflictService.getCount());
+                // console.log(this.conflictService.getCount());
                 if (state.url === '/verified-registration/conflicts' && this.conflictService.getCount() === 0) {
                     this.router.navigate(['/verified-registration/dashboard']);
                 } else {

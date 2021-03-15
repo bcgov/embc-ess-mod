@@ -19,6 +19,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -28,16 +29,16 @@ namespace EMBC.Registrants.API.LocationModule
     public class LocationCacheHostedService : IHostedService, IDisposable
     {
         private readonly IDistributedCache cache;
-        private readonly IListsRepository listsRepository;
+        private readonly IServiceProvider serviceProvider;
         private readonly ILogger logger;
         private readonly LocationCacheHostedServiceOptions options;
         private Timer timer;
         private bool disposedValue;
 
-        public LocationCacheHostedService(IDistributedCache cache, IListsRepository listsRepository, ILogger<LocationCacheHostedService> logger, IOptions<LocationCacheHostedServiceOptions> options)
+        public LocationCacheHostedService(IDistributedCache cache, IServiceProvider serviceProvider,  ILogger<LocationCacheHostedService> logger, IOptions<LocationCacheHostedServiceOptions> options)
         {
             this.cache = cache;
-            this.listsRepository = listsRepository;
+            this.serviceProvider = serviceProvider;
             this.logger = logger;
             this.options = options.Value;
         }
@@ -64,6 +65,7 @@ namespace EMBC.Registrants.API.LocationModule
 
         private async Task RefreshCache(CancellationToken cancellationToken)
         {
+            var listsRepository = serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IListsRepository>();
             try
             {
                 logger.LogInformation("{0} starting location cache refresh", nameof(LocationCacheHostedService));

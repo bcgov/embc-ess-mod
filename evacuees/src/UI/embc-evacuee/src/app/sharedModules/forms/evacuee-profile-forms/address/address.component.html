@@ -19,20 +19,20 @@
               {{option}}
             </mat-radio-button>
             <mat-error class="custom-mat-error"
-              *ngIf="primaryAddressFormControl?.isBcAddress.touched && primaryAddressFormControl?.isBcAddress.invalid && primaryAddressFormControl?.isBcAddress.hasError('required')">
+              *ngIf="primaryAddressFormControl?.isBcAddress?.touched && primaryAddressFormControl?.isBcAddress?.invalid && primaryAddressFormControl?.isBcAddress?.hasError('required')">
               Primary Residence is required</mat-error>
           </mat-radio-group>
         </div>
       </div>
 
 
-      <div *ngIf="primaryAddressFormControl?.isBcAddress.value ==='Yes'" class="row">
+      <div *ngIf="primaryAddressFormControl?.isBcAddress?.value ==='Yes'" class="row">
         <div class="col-md-12">
           <app-bc-address [addressForm]="primaryAddressFormControl?.address"></app-bc-address>
         </div>
       </div>
 
-      <div *ngIf="primaryAddressFormControl?.isBcAddress.value ==='No'">
+      <div *ngIf="primaryAddressFormControl?.isBcAddress?.value ==='No'">
         <div formGroupName="address">
           <div class="row">
             <div class="col-md-5">
@@ -40,7 +40,8 @@
               <mat-form-field appearance="outline">
                 <input type="text" placeholder="Start Typing" aria-label="Country" matInput formControlName="country"
                   [matAutocomplete]="auto" required>
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="countryDisplayFn" (optionSelected)="setCountryConfig($event)">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="countryDisplayFn"
+                  (optionSelected)="setCountryConfig($event)">
                   <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                     {{option.name}}
                   </mat-option>
@@ -94,13 +95,13 @@
               {{option}}
             </mat-radio-button>
             <mat-error class="custom-mat-error"
-              *ngIf="primaryAddressFormControl?.isNewMailingAddress.touched && primaryAddressFormControl?.isNewMailingAddress.invalid && primaryAddressFormControl?.isNewMailingAddress.hasError('required')">
+              *ngIf="primaryAddressFormControl?.isNewMailingAddress?.touched && primaryAddressFormControl?.isNewMailingAddress?.invalid && primaryAddressFormControl?.isNewMailingAddress?.hasError('required')">
               Required</mat-error>
           </mat-radio-group>
         </div>
       </div>
 
-      <div *ngIf="primaryAddressFormControl?.isNewMailingAddress.value ==='No'">
+      <div *ngIf="primaryAddressFormControl?.isNewMailingAddress?.value ==='No'">
         <div class="row">
           <div class="col-md-12">
             <label id="primary-radio-group-label">Is your <b>mailing address</b> within British Columbia?</label>
@@ -130,7 +131,8 @@
                 <mat-form-field appearance="outline">
                   <input type="text" placeholder="Start Typing" aria-label="Country" matInput formControlName="country"
                     [matAutocomplete]="auto">
-                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="countryDisplayFn" (optionSelected)="setMailingCountryConfig($event)">
+                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="countryDisplayFn"
+                    (optionSelected)="setMailingCountryConfig($event)">
                     <mat-option *ngFor="let option of mailingFilteredOptions | async" [value]="option">
                       {{option.name}}
                     </mat-option>
@@ -139,7 +141,7 @@
                     *ngIf="primaryAddressFormControl?.mailingAddress?.controls?.country.invalid && primaryAddressFormControl?.mailingAddress?.controls?.country.hasError('required')">
                     Country is required</mat-error>
                   <mat-error *ngIf="validateCountry(primaryAddressFormControl?.mailingAddress?.controls?.country)">
-                      Country is invalid</mat-error>
+                    Country is invalid</mat-error>
                 </mat-form-field>
               </div>
             </div>

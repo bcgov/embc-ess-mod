@@ -1,0 +1,184 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: ess-backend-template
+
+parameters:
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+  - description: openshift namespace env name
+    name: ENV
+    required: true
+  - description: app name
+    name: APP_NAME
+    required: true
+  - description: image tag for deployments
+    name: TAG
+    required: true
+  - description: ASPNET runtime environment (Development/Staging/Production)
+    name: RUNTIME_ENVIRONMENT
+    value: Staging
+  - name: DYNAMICS_OAUTH_ENDPOINT
+    required: true
+  - description: Dynamics ADFS client ID
+    name: DYNAMICS_OAUTH_CLIENT_ID
+    required: true
+  - description: Dynamics ADFS client secret
+    name: DYNAMICS_OAUTH_CLIENT_SECRET
+    required: true
+  - description: Dynamics ADFS resource name
+    name: DYNAMICS_OAUTH_RESOURCE
+    required: true
+  - description: Dynamics API endpoint
+    name: DYNAMICS_ENDPOINT
+    required: true
+  - description: Dynamics entities base URI
+    name: DYNAMICS_URI
+    required: true
+  - description: Dynamics service account domain
+    name: DYNAMICS_SERVICE_ACCOUNT_DOMAIN
+    required: true
+  - description: Dynamics service account name
+    name: DYNAMICS_SERVICE_ACCOUNT_NAME
+    required: true
+  - description: Dynamics service account password
+    name: DYNAMICS_SERVICE_ACCOUNT_PASSWORD
+    required: true
+
+objects:
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-ess-backend-config
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-ess-backend
+    data:     
+      ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
+      KEY_RING_PATH: "/dpkeys"
+      Dynamics__ADFS__OAuth2TokenEndpoint: ${DYNAMICS_OAUTH_ENDPOINT}
+      Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
+      Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
+
+  - kind: Secret
+    apiVersion: v1
+    type: Opaque
+    metadata:
+      name: ${APP_NAME}-ess-backend-secrets
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-ess-backend
+    stringData:
+      Dynamics__ADFS__ClientId: ${DYNAMICS_OAUTH_CLIENT_ID}
+      Dynamics__ADFS__ClientSecret: ${DYNAMICS_OAUTH_CLIENT_SECRET}
+      Dynamics__ADFS__ResourceName: ${DYNAMICS_OAUTH_RESOURCE}
+      Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
+      Dynamics__ADFS__serviceAccountName: ${DYNAMICS_SERVICE_ACCOUNT_NAME}
+      Dynamics__ADFS__serviceAccountPassword: ${DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-ess-backend
+      name: ${APP_NAME}-ess-backend
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      annotations:
+        service.alpha.openshift.io/serving-cert-secret-name: ${APP_NAME}-ess-backend-ssl
+    spec:
+      ports:
+        - name: 2020-tcp
+          port: 2020
+          protocol: TCP
+          targetPort: 8080
+      selector:
+        deploymentconfig: ${APP_NAME}-ess-backend
+      type: ClusterIP
+
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      labels:
+        app: ${APP_NAME}-ess-backend
+      name: ${APP_NAME}-ess-backend
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    spec:
+      replicas: 2
+      selector:
+        app: ${APP_NAME}-ess-backend
+        deploymentconfig: ${APP_NAME}-ess-backend
+      strategy:
+        activeDeadlineSeconds: 21600
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: ${APP_NAME}-ess-backend
+            deploymentconfig: ${APP_NAME}-ess-backend
+        spec:
+          containers:
+            - name: ess-backend
+              env:
+                - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
+                  value: "/ssl/tls.crt"
+                - name: "ASPNETCORE_Kestrel__Certificates__Default__KeyPath"
+                  value: "/ssl/tls.key"
+              envFrom:
+                - configMapRef:
+                    name: ${APP_NAME}-ess-backend-config
+                - secretRef:
+                    name: ${APP_NAME}-ess-backend-secrets
+              image: docker-registry.default.svc:5000/pbiizm-tools/ess-backend:${TAG}
+              imagePullPolicy: Always
+              volumeMounts:
+                - mountPath: /dpkeys
+                  name: dp-keys
+                - mountPath: /ssl
+                  name: ssl
+                  readonly: true
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - name: dp-keys
+              persistentVolumeClaim:
+                claimName: ${APP_NAME}-ess-backend-key-ring
+            - name: ssl
+              secret:
+                secretName: ${APP_NAME}-ess-backend-ssl
+      test: false
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ess-backend
+            from:
+              kind: ImageStreamTag
+              name: ess-backend:${TAG}
+              namespace: ${NAMESPACE_PREFIX}-tools
+
+  - kind: "PersistentVolumeClaim"
+    apiVersion: "v1"
+    metadata:
+      name: ${APP_NAME}-ess-backend-key-ring
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-ess-backend
+    spec:
+      accessModes:
+        - "ReadWriteMany"
+      resources:
+        requests:
+          storage: "100Mi"

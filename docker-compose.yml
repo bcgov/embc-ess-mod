@@ -1,4 +1,4 @@
-version: "3"
+version: "3.4"
 
 services:
   suppliers-portal-api:
@@ -6,7 +6,7 @@ services:
       context: ./suppliers/src/API
     image: embcess-suppliers-api:dev
     ports:
-      - 1010:8080
+      - 7020:8080
     env_file:
       - .env
 
@@ -15,7 +15,7 @@ services:
       context: ./suppliers/src/UI
     image: embcess-suppliers-ui:dev
     ports:
-      - 4200:2015
+      - 7200:2015
     environment:
       - "API_URL=suppliers-portal-api:8080"
     depends_on:
@@ -26,7 +26,7 @@ services:
       context: ./evacuees/src/API
     image: embcess-registrants-api:dev
     ports:
-      - 2010:8080
+      - 5020:8080
     env_file:
       - .env
 
@@ -38,18 +38,25 @@ services:
       - 5200:2015
     environment:
       - "API_URL=registrants-portal-api:8080"
-      - "LOG_LEVEL=DEBUG"
     depends_on:
       - registrants-portal-api
 
   responders-portal-api:
     build:
       context: ./responders/src/API
+      args:
+      - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
+      - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
     image: embcess-responders-api:dev
     ports:
-      - 3010:8080
+      - 6020:8080
+    environment:
+    - "BACKEND__URL=https://ess-backend:8080"
+    - "BACKEND__ALLOWINVALIDSERVERCERTIFICATE=true"
     env_file:
       - .env
+    depends_on:
+      - ess-backend
 
   responders-portal-ui:
     build:
@@ -61,3 +68,16 @@ services:
       - "API_URL=responders-portal-api:8080"
     depends_on:
       - responders-portal-api
+  
+  ess-backend:
+    build:
+      context: ./ess/src/API
+    image: embcess-backend-api:dev
+    ports:
+      - 2020:8080
+    env_file:
+      - .env
+    environment:
+    - "ASPNETCORE_Kestrel__Certificates__Default__Path=/ssl/aspnetapp.pfx"
+    volumes:
+    - ~/.aspnet/https:/ssl/

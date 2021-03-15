@@ -21,7 +21,8 @@
                     <button class="button-s edit-button" mat-button type="button" (click)="cancel()">Cancel</button>
                 </div>
                 <div class="col-md-6">
-                    <button class="button-p edit-button" mat-stroked-button type="button" (click)="save()">Save
+                    <button class="button-p edit-button" mat-stroked-button type="button" [disabled]="!form.valid"
+                        (click)="save()">Save
                         <app-loader [showLoader]="showLoader"></app-loader>
                     </button>
                 </div>

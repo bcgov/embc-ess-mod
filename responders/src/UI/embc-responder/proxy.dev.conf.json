@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://dev1-embc-responders.pathfinder.gov.bc.ca",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

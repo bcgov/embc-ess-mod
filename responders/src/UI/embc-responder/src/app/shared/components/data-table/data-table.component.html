@@ -1,14 +1,55 @@
 <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="dataSource" matSort>
         <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column?.ref">
-            <th mat-header-cell *matHeaderCellDef> {{column?.label}} </th>
-            <td mat-cell *matCellDef="let row"> {{row[column?.ref]}} </td>
+            <div *ngIf="column?.ref === 'select' else noSelect">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionToggle(row) : null"
+                        [checked]="selection.isSelected(row)" [disabled]="disable(row)"
+                        [aria-label]="checkboxLabel(row)">
+                    </mat-checkbox>
+                </td>
+            </div>
+            <ng-template #noSelect>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column?.label}} </th>
+                <td mat-cell *matCellDef="let row; let index = index" (click)="disableRowInteraction($event, column?.ref)">
+                    <span *ngIf="column?.ref !== 'isActive'">
+                        <span *ngIf="!row?.allowSelect && disableRow else data" style="color:#b0b0b0">{{row[column?.ref]
+                            }}</span>
+                        <ng-template #data>
+                            <span>{{row[column?.ref] }}</span>
+                        </ng-template>
+                    </span>
+                    <span *ngIf="column?.ref === 'action' && row.conflict">
+                        <img matTooltip="This communtiy is claimed by {{row?.teamName}}" matTooltipClass="tooltip-red"
+                            src="/assets/images/exclaimation.svg" height="25" width="25">
+                    </span>
+                    <span *ngIf="column?.ref === 'isActive'">
+                        <mat-slide-toggle [checked]="row[column?.ref]" (change)="slideToggle($event, row)">
+                            <span
+                                [ngClass]="{'active-style': row[column?.ref], 'inactive-style': !row[column?.ref]}">{{row[column?.ref]
+                                ? 'Active' : 'Deactivated'}}</span>
+                        </mat-slide-toggle>
+                    </span>
+                </td>
+            </ng-template>
+
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columns"></tr>
-        <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns;" (click)="rowClicked(row)"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    <app-loader style="display: flex; justify-content: center; align-items: center;" class="mat-progress"
+        [showLoader]="!isLoading" [strokeWidth]="3" [diameter]="50" [color]="color"></app-loader>
+
+
+    <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons></mat-paginator>
 </div>
 <br>
+<!--color:#b0b0b0-->

@@ -1,78 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
-import { EvacuationCardComponent } from '../evacuation-card/evacuation-card.component';
-import { DataService } from 'src/app/core/services/data.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
-import { debounceTime, filter } from 'rxjs/operators';
-
-export interface EvacuationCard {
-  from: string;
-  date: string;
-  code: number;
-  support: string;
-  status: string;
-  referral: boolean;
-  referrals?: Referral[];
-}
-
-export interface Referral {
-  referralDate: string;
-  referralDetails: ReferralDetails[];
-}
-
-export interface ReferralDetails {
-  provider: string;
-  type: string;
-  issuedTo: string;
-  expiry: string;
-  code: string;
-  amount: string;
-  status: string;
-  providedTo: string[];
-  providerDetails: string;
-  issuedBy: string;
-}
-
-const ACTIVE_DATA: EvacuationCard[] = [
-  { from: 'Victoria', date: '20-Feb-2020', code: 333333, support: 'No', status: 'Active', referral: false },
-  {
-    from: 'Vancouver', date: '20-Feb-2020', code: 444444, support: 'No', status: 'Active', referral: true,
-    referrals: [{
-      referralDate: '07-Sep-2020', referralDetails: [{
-        provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John',
-        expiry: 'n/a', code: 'P356211', amount: '$50', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna',
-          'Smith, Michael', 'Smith, Lily'], providerDetails: 'e-Transfer issued to jsmith@gmail.com',
-        issuedBy: 'Oak Bay ESS Team'
-      }]
-    }]
-  },
-];
-
-const INACTIVE_DATA: EvacuationCard[] = [
-  {
-    from: 'Victoria', date: '20-Feb-2020', code: 123456, support: 'No', status: 'Inactive', referral: true,
-    referrals: [{
-      referralDate: '07-Sep-2020', referralDetails: [{
-        provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John', expiry: 'n/a', code: 'P356211', amount: '$50',
-        status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
-        providerDetails: 'e-Transfer issued to jsmith@gmail.com', issuedBy: 'Oak Bay ESS Team'
-      }]
-    },
-    {
-      referralDate: '04-Sep-2020', referralDetails: [{
-        provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John', expiry: 'n/a', code: 'P356211', amount: '$50',
-        status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
-        providerDetails: 'e-Transfer issued to jsmith@gmail.com', issuedBy: 'Oak Bay ESS Team'
-      },
-      {
-        provider: 'Great Hotel Ltd', type: 'Lodging - Hotel/Motel', issuedTo: 'Smith, John', expiry: 'mm/dd/yyyy', code: 'D12345',
-        amount: 'n/a', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna', 'Smith, Michael', 'Smith, Lily'],
-        providerDetails: 'Great Hotel ltd Address1 Address 2 City Province Postal Code', issuedBy: 'Oak Bay ESS Team'
-      }]
-    }]
-  }
-];
+import { CacheService } from 'src/app/core/services/cache.service';
+import { TabModel } from 'src/app/core/model/tab.model';
+import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
+import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -83,35 +16,46 @@ const INACTIVE_DATA: EvacuationCard[] = [
 
 export class DashboardComponent implements OnInit {
 
-  type = 'profile';
   currentFlow: string;
-  parentPageName = 'dashboard';
-  dataSourceActive = ACTIVE_DATA;
-  dataSourceInactive = INACTIVE_DATA;
-  showActiveList = true;
-  showInactiveList = true;
-  currentChild: EvacuationCardComponent;
+  activeFiles: number;
+  evacuationFileWithTask: boolean;
 
-  evacuatedFrom?: string;
-  referenceNumber: string;
+  tabs: TabModel[] = [
+    {
+      label: 'Current Evacuations',
+      route: 'current',
+      activeImage: '/assets/images/curr-evac-active.svg',
+      inactiveImage: '/assets/images/curr-evac.svg'
+    },
+    {
+      label: 'Past Evacuations',
+      route: 'past',
+      activeImage: '/assets/images/past-evac-active.svg',
+      inactiveImage: '/assets/images/past-evac.svg'
+    },
+    {
+      label: 'User Profile',
+      route: 'profile',
+      activeImage: '/assets/images/profile-active.svg',
+      inactiveImage: '/assets/images/profile.svg'
+    }
+  ];
 
 
   constructor(
-    private route: ActivatedRoute, private dataService: DataService, public formCreationService: FormCreationService,
-    private router: Router, private dialogService: DialogService) { }
+    private route: ActivatedRoute, private needsAssessmentService: NeedsAssessmentService, public formCreationService: FormCreationService,
+    private router: Router, private dialogService: DialogService, private cacheService: CacheService,
+    public evacuationFilesDataService: EvacuationFileDataService) { }
 
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    this.evacuatedFrom = this.dataSourceActive[this.dataSourceActive.length - 1]?.from;
+    console.log(this.activeFiles);
+    this.evacuationFileWithTask = false;
 
-    this.router.events.pipe(
-      filter((event: RouterEvent) => event instanceof NavigationEnd),
-      debounceTime(500)
-    ).subscribe(() =>
-      this.openReferenceNumberPopup()
-    );
-
+    setTimeout(() => {
+      this.openReferenceNumberPopup();
+    }, 500);
   }
 
   openDOBMismatchPopup(): void {
@@ -119,47 +63,15 @@ export class DashboardComponent implements OnInit {
   }
 
   openReferenceNumberPopup(): void {
-    const registrationResult = this.dataService.getRegistrationResult();
-    if (registrationResult.referenceNumber !== null) {
-      this.referenceNumber = registrationResult.referenceNumber;
-      console.log(this.referenceNumber);
-      this.dialogService.submissionCompleteDialog(this.referenceNumber);
+
+    const registrationResult = this.needsAssessmentService.getVerifiedEvacuationFileNo();
+
+    if (registrationResult !== null) {
+      this.dialogService.submissionCompleteDialog(registrationResult);
     }
   }
 
   startAssessment(): void {
     this.router.navigate(['/verified-registration/confirm-restriction']);
   }
-
-
-  startAdditionalAssessment(): void {
-    this.dialogService.addEvacuationFile(this.evacuatedFrom);
-  }
-
-
-  setActiveListView(event: boolean): void {
-    this.showActiveList = event;
-  }
-
-  setInactiveListView(event: boolean): void {
-    this.showInactiveList = event;
-  }
-
-  setCurrentChild(fileCard: EvacuationCardComponent): void {
-    this.currentChild = fileCard;
-  }
-
-  goBackActive(): void {
-    this.showActiveList = !this.showActiveList;
-  }
-
-  goBackInactive(): void {
-    this.showInactiveList = !this.showInactiveList;
-  }
-
-  resetTab($event): void {
-    this.showActiveList = true;
-    this.showInactiveList = true;
-  }
-
 }

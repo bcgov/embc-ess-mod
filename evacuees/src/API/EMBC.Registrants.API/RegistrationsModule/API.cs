@@ -18,11 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.EvacuationsModule;
 using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace EMBC.Registrants.API.RegistrationsModule
 {
@@ -235,48 +235,9 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         [Required]
         public string SecretPhrase { get; set; }
-    }
 
-    /// <summary>
-    /// Needs assessment form
-    /// </summary>
-    public class NeedsAssessment
-    {
         [Required]
         public Address EvacuatedFromAddress { get; set; }
-
-        [Required]
-        public InsuranceOption Insurance { get; set; }
-
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
-        public bool HaveSpecialDiet { get; set; }
-        public string SpecialDietDetails { get; set; }
-        public bool HaveMedication { get; set; }
-        public IEnumerable<PersonDetails> FamilyMembers { get; set; } = Array.Empty<PersonDetails>();
-        public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HasPetsFood { get; set; }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum InsuranceOption
-        {
-            Unknown,
-            Yes,
-            No,
-            Unsure
-        }
-    }
-
-    /// <summary>
-    /// A pet in needs assessment
-    /// </summary>
-    public class Pet
-    {
-        public string Type { get; set; }
-        public string Quantity { get; set; }
     }
 
     /// <summary>

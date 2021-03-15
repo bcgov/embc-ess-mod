@@ -4,6 +4,12 @@ metadata:
   name: responders-portal-template
 
 parameters:
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+  - description: openshift namespace env name
+    name: ENV
+    required: true
   - description: app name
     name: APP_NAME
     required: true
@@ -16,31 +22,44 @@ parameters:
   - description: ASPNET runtime environment (Development/Staging/Production)
     name: RUNTIME_ENVIRONMENT
     value: Staging
+  - description: ESS backend url
+    name: BACKEND_URL
+    required: true
+  - description: ESS backend allow invalid server cert
+    name: BACKEND_ALLOW_INVALID_CERT
+    value: "false"
 
 objects:
   - kind: ConfigMap
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-responders-api-config
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-responders-portal
     data:     
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
+      BACKEND__URL: ${BACKEND_URL}
+      BACKEND__ALLOWINVALIDSERVERCERTIFICATE: ${BACKEND_ALLOW_INVALID_CERT}
+
   - kind: Secret
     apiVersion: v1
     type: Opaque
     metadata:
       name: ${APP_NAME}-responders-api-secrets
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-responders-portal
     stringData:
+
   - kind: Service
     apiVersion: v1
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
       name: ${APP_NAME}-responders-portal-api
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       ports:
         - name: 8080-tcp
@@ -50,12 +69,14 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-responders-portal-api
       type: ClusterIP
+
   - kind: Service
     apiVersion: v1
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
       name: ${APP_NAME}-responders-portal-ui
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       ports:
         - name: 2015-tcp
@@ -65,12 +86,14 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-responders-portal-ui
       type: ClusterIP
+
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
       name: ${APP_NAME}-responders-portal-api
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       host: ${APP_NAME}-embc-responders.pathfinder.gov.bc.ca
       path: /api
@@ -84,12 +107,14 @@ objects:
         name: ${APP_NAME}-responders-portal-api
         weight: 100
       wildcardPolicy: None
+
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
       name: ${APP_NAME}-responders-portal-ui
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       host: ${APP_NAME}-embc-responders.pathfinder.gov.bc.ca
       path: /
@@ -102,12 +127,14 @@ objects:
         kind: Service
         name: ${APP_NAME}-responders-portal-ui
         weight: 100
+
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
       name: ${APP_NAME}-responders-portal-api
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
@@ -131,16 +158,22 @@ objects:
         spec:
           containers:
             - name: responders-portal-api
+              env:
+                - name: "ASPNETCORE_Kestrel__Certificates__Default__Path"
+                  value: "/ssl/tls.crt"
               envFrom:
                 - configMapRef:
                     name: ${APP_NAME}-responders-api-config
                 - secretRef:
                     name: ${APP_NAME}-responders-api-secrets
-              image: docker-registry.default.svc:5000/pbiizm-tools/responders-portal-api:${TAG}
+              image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/responders-portal-api:${TAG}
               imagePullPolicy: Always
               volumeMounts:
                 - mountPath: /dpkeys
                   name: dp-keys
+                - mountPath: /ssl
+                  name: ssl
+                  readonly: true
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
@@ -150,6 +183,9 @@ objects:
             - name: dp-keys
               persistentVolumeClaim:
                 claimName: ${APP_NAME}-responders-key-ring
+            - name: ssl
+              secret:
+                secretName: ${APP_NAME}-ess-backend-ssl
       test: false
       triggers:
         - type: ConfigChange
@@ -161,13 +197,15 @@ objects:
             from:
               kind: ImageStreamTag
               name: responders-portal-api:${TAG}
-              namespace: pbiizm-tools
+              namespace: ${NAMESPACE_PREFIX}-tools
+
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
       name: ${APP_NAME}-responders-portal-ui
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
@@ -191,7 +229,7 @@ objects:
         spec:
           containers:
             - name: responders-portal-ui
-              image: docker-registry.default.svc:5000/pbiizm-tools/responders-portal-ui:${TAG}
+              image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/responders-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:
                 - containerPort: 2015
@@ -215,11 +253,13 @@ objects:
             from:
               kind: ImageStreamTag
               name: responders-portal-ui:${TAG}
-              namespace: pbiizm-tools
+              namespace: ${NAMESPACE_PREFIX}-tools
+
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
       name: ${APP_NAME}-responders-key-ring
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-responders-portal
     spec:

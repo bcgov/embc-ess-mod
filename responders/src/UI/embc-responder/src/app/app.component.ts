@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ApiConfiguration } from './core/api/api-configuration';
+import { LoadLocationsService } from './core/services/load-locations.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'embc-responder';
+
+  constructor(apiConfig: ApiConfiguration, private loadLocationService: LoadLocationsService) {
+    apiConfig.rootUrl = '';
+    this.loadLocations();
+  }
+
+  loadLocations(): void {
+    this.loadLocationService.getCommunityList();
+    this.loadLocationService.getCountriesList();
+    this.loadLocationService.getStateProvinceList();
+  }
 }

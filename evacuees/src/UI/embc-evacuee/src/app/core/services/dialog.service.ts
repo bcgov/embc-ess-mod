@@ -2,11 +2,17 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
+import { NeedsAssessmentService } from 'src/app/sharedModules/components/needs-assessment/needs-assessment.service';
+import { FormCreationService } from './formCreation.service';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
 
-    constructor(private router: Router, public dialog: MatDialog) { }
+    emptyRegistrationResult: string = null;
+
+    constructor(
+        private router: Router, public dialog: MatDialog, private needsAssessmentService: NeedsAssessmentService,
+        private formCreationService: FormCreationService) { }
 
     addEvacuationFile(city: string): void {
         this.dialog.open(DialogComponent, {
@@ -27,10 +33,11 @@ export class DialogService {
                         }
                     ]
             },
-            height: '252px',
-            width: '699px'
+            height: '260px',
+            width: '800px'
         }).afterClosed().subscribe(result => {
             if (result === 'add') {
+                this.formCreationService.clearNeedsAssessmentData();
                 this.router.navigate(['/verified-registration/confirm-restriction']);
             }
         });
@@ -50,8 +57,10 @@ export class DialogService {
                         }
                     ]
             },
-            height: '800px',
+            height: '810px',
             width: '800px'
+        }).afterClosed().subscribe(() => {
+            this.needsAssessmentService.setVerifiedEvacuationFileNo(this.emptyRegistrationResult);
         });
     }
 

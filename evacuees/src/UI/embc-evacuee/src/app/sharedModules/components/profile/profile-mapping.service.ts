@@ -4,18 +4,17 @@ import { first } from 'rxjs/operators';
 import { Profile, ProfileDataConflict, StateProvince } from '../../../core/api/models';
 import { ProfileDataService } from './profile-data.service';
 import { FormCreationService } from '../../../core/services/formCreation.service';
-import { DataService } from 'src/app/core/services/data.service';
 import { ConflictManagementService } from '../conflict-management/conflict-management.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
-    constructor(private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
-                private conflictService: ConflictManagementService, private dataService: DataService) { }
+    constructor(
+        private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
+        private conflictService: ConflictManagementService) { }
 
     mapProfile(profile: Profile): void {
         this.profileDataService.setProfileId(profile.id);
         this.profileDataService.setProfile(profile);
-        this.dataService.updateRegistartion(profile); // to be changed
         this.setExistingProfile(profile);
     }
 
@@ -56,7 +55,7 @@ export class ProfileMappingService {
                 details.setValue({ ...profile.personalDetails });
                 formGroup = details;
             });
-        this.formCreationService.setPersonDetailsForm(formGroup);
+        this.profileDataService.personalDetails = profile.personalDetails;
     }
 
     private setAddressDetails(profile: Profile): void {
@@ -72,17 +71,30 @@ export class ProfileMappingService {
                 });
                 formGroup = address;
             });
-        this.formCreationService.setAddressForm(formGroup);
+        this.profileDataService.primaryAddressDetails = profile.primaryAddress;
+        this.profileDataService.mailingAddressDetails = profile.mailingAddress;
     }
 
     private setContactDetails(profile: Profile): void {
         let formGroup: FormGroup;
+
         this.formCreationService.getContactDetailsForm().pipe(
             first()).subscribe(contact => {
-                contact.setValue({ ...profile.contactDetails, confirmEmail: profile.contactDetails.email });
+                contact.setValue({
+                    ...profile.contactDetails, confirmEmail: profile.contactDetails.email,
+                    showContacts: this.setShowContactsInfo(profile.contactDetails.phone, profile.contactDetails.email)
+                });
                 formGroup = contact;
             });
-        this.formCreationService.setContactDetailsForm(formGroup);
+        this.profileDataService.contactDetails = profile.contactDetails;
+    }
+
+    private setShowContactsInfo(phoneNumber: string, email: string): boolean {
+        if (phoneNumber != null || email != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private setSecretDetails(profile: Profile): void {
@@ -92,7 +104,7 @@ export class ProfileMappingService {
                 secret.setValue({ secretPhrase: profile.secretPhrase });
                 formGroup = secret;
             });
-        this.formCreationService.setSecretForm(formGroup);
+        this.profileDataService.secretWordPhrase = profile.secretPhrase;
     }
 
     private isSameMailingAddress(isMailingAddressSameAsPrimaryAddress: boolean): string {
@@ -127,4 +139,47 @@ export class ProfileMappingService {
                 });
             });
     }
+
+    // getProfile(): Profile {
+    //     const profile: Profile = {
+    //         contactDetails: null,
+    //         id: this.profileDataService.getProfileId(),
+    //         isMailingAddressSameAsPrimaryAddress: false,
+    //         mailingAddress: null,
+    //         personalDetails: null,
+    //         primaryAddress: null,
+    //         restrictedAccess: null,
+    //         secretPhrase: null
+    //     };
+    //
+    //     this.formCreationService.getPeronalDetailsForm().pipe(
+    //         first()).subscribe(details => {
+    //             console.log(details);
+    //             profile.personalDetails = details.value;
+    //         });
+    //
+    //     this.formCreationService.getContactDetailsForm().pipe(
+    //         first()).subscribe(contacts => {
+    //             profile.contactDetails = contacts.value;
+    //         });
+    //     this.formCreationService.getAddressForm().pipe(
+    //         first()).subscribe(address => {
+    //             console.log(address);
+    //             profile.primaryAddress = address.value.address;
+    //             profile.mailingAddress = address.value.mailingAddress;
+    //             profile.isMailingAddressSameAsPrimaryAddress = address.value.isNewMailingAddress;
+    //         });
+    //
+    //     this.formCreationService.getSecretForm().pipe(
+    //         first()).subscribe(secret => {
+    //             profile.secretPhrase = secret.value.secretPhrase;
+    //         });
+    //
+    //     this.formCreationService.getRestrictionForm().pipe(
+    //         first()).subscribe(restriction => {
+    //             profile.restrictedAccess = restriction.value.restrictedAccess;
+    //         });
+    //
+    //     return profile;
+    // }
 }

@@ -1,0 +1,85 @@
+<mat-accordion>
+  <mat-expansion-panel [expanded]="allExpandState" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+    <mat-expansion-panel-header class="headerPanel">
+      <!-- <div class="panelHeader"> -->
+      <mat-panel-title class="panelTitle">
+        20-Feb-2020
+        <!-- {{evacuationReferral?.referralDate}} -->
+      </mat-panel-title>
+      <!-- </div> -->
+    </mat-expansion-panel-header>
+    <table mat-table [dataSource]="" multiTemplateDataRows>
+      <!-- evacuationReferral?.referralDetails -->
+      <!-- Position Column -->
+      <ng-container matColumnDef="provider">
+        <th mat-header-cell *matHeaderCellDef style="width: 220px;"> Supporter Provider </th>
+        <td mat-cell *matCellDef="let element" style="width: 220px;"> {{element.provider}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef style="width: 220px;"> Support Type </th>
+        <td mat-cell *matCellDef="let element" style="width: 220px;"> {{element.type}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="issuedTo">
+        <th mat-header-cell *matHeaderCellDef style="width: 220px;"> Issued To </th>
+        <td mat-cell *matCellDef="let element" style="width: 220px;"> {{element.issuedTo}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="expiry" style="width: 145px;">
+        <th mat-header-cell *matHeaderCellDef style="width: 145px;"> Expiry </th>
+        <td mat-cell *matCellDef="let element"> {{element.expiry}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="referral">
+        <th mat-header-cell *matHeaderCellDef style="width: 105px;"> Referral # </th>
+        <td mat-cell *matCellDef="let element" style="width: 105px;"> {{element.code}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef style="width: 136px;"> Amount </th>
+        <td mat-cell *matCellDef="let element" class=" row amountCell">
+          <div class="col-md-6" style="padding: 35px 20px;">{{element.amount}}</div>
+          <div class="col-md-6" style="padding: 35px 20px;">
+            <img src="../../../../assets/images/record_detail_arrow.svg" height="8" width="14">
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+          <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
+            <div class="row info-detail" style="width:45%; padding-top:15px;">
+              <div class="col-md-5"><b>Status</b></div>
+              <div class="col-md-3">{{element.status}}</div>
+
+              <div class="col-md-5"><b>Support Provided to</b></div>
+              <div class="col-md-3">{{element.providedTo}}</div>
+            </div>
+            <div class="row info-detail" style="width:45%; padding-top:15px;">
+              <div class="col-md-5"><b>Support Provider</b></div>
+              <div class="col-md-3">{{element.providerDetails}}</div>
+
+              <div class="col-md-5"><b>Support Issued By</b></div>
+              <div class="col-md-3">{{element.issuedBy}}</div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+  </mat-expansion-panel>
+</mat-accordion>

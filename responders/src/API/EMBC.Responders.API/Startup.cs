@@ -16,6 +16,7 @@
 
 using System.IO;
 using System.Net;
+using EMBC.Responders.API.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -53,11 +54,16 @@ namespace EMBC.Responders.API
             });
             AddDataProtection(services);
             AddOpenApi(services);
+
+            services.AddAutoMapper(typeof(Startup));
             services.AddDistributedMemoryCache();
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
             });
+
+            services.Configure<MessagingOptions>(configuration.GetSection("backend"));
+            services.AddMessaging();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

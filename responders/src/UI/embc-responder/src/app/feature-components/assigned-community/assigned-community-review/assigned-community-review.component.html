@@ -1,0 +1,47 @@
+<app-alert></app-alert>
+
+<mat-card *ngIf="reviewAction === 'add'">
+    <p>You are requesting to <b>add</b> the following communities to the <b>Oak Bay ESS Team</b> Areas of Responsibility list.</p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <mat-list class="list-style" role="list">
+                <mat-list-item *ngFor="let community of addedCommunityList" role="listitem">
+                    {{community?.name}} - {{community?.districtName}} - {{community?.type}}
+                </mat-list-item>
+              </mat-list>
+        </div>
+    </div>
+    <br>
+    <div class="row justify-content-between">
+        <div class="col-md-6">
+            <button class="button-s" mat-button (click)="goBack()">Go Back & Edit</button>
+        </div>
+        <div class="col-md-6">
+            <button class="button-p save-button" mat-button [disabled]="isSubmitted" (click)="save()">Save <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader></button>
+        </div>
+    </div>
+</mat-card>
+
+<mat-card *ngIf="reviewAction === 'delete'">
+    <p>You are requesting to <b>remove</b> the following communities from the <b>Oak Bay ESS Team</b> Areas of Responsibility list.</p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <mat-list class="list-style" role="list">
+                <mat-list-item *ngFor="let community of deleteCommunityList" role="listitem">
+                    {{community?.name}} - {{community?.districtName}} - {{community?.type}}
+                </mat-list-item>
+              </mat-list>
+        </div>
+    </div>
+    <br>
+    <div class="row justify-content-between">
+        <div class="col-md-6">
+            <button class="button-s" mat-button (click)="cancel()">No, Cancel</button>
+        </div>
+        <div class="col-md-6">
+            <button class="button-p save-button" mat-button [disabled]="isSubmitted" (click)="remove()">Yes, Remove from List <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader></button>
+        </div>
+    </div>
+</mat-card>

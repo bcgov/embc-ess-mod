@@ -54,7 +54,7 @@ namespace EMBC.Registrants.API.ProfilesModule
         public async Task<ActionResult<Profile>> GetProfile()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var profile = await profileManager.GetProfileByBceid(userId);
+            var profile = await profileManager.GetProfileByBcscid(userId);
             if (profile == null) return NotFound();
             return Ok(profile);
         }
@@ -70,7 +70,7 @@ namespace EMBC.Registrants.API.ProfilesModule
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             // TODO: optimize the check to not require the entire profile
-            var profile = await profileManager.GetProfileByBceid(userId);
+            var profile = await profileManager.GetProfileByBcscid(userId);
             return Ok(profile != null);
         }
 
