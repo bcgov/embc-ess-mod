@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { UserProfile, UserService } from '../../services/user.service';
+import { LoggedInUserProfile, UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +10,7 @@ import { UserProfile, UserService } from '../../services/user.service';
 })
 export class HeaderComponent implements OnInit {
 
-  public profile: UserProfile;
+  public profile: LoggedInUserProfile;
   public get signedInTask(): string {
     return this.profile.taskNumber
       ? `Logged in to task #${this.profile.taskNumber}`
@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
-    this.profile = this.userService.profile;
+    this.profile = this.userService.currentProfile;
   }
 
   homeButton(): void {

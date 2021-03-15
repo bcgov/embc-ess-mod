@@ -1,41 +1,37 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { UserProfile } from '../api/models/user-profile';
+import { SecurityService } from '../api/services';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private userProfile?: UserProfile = null;
+  private profile?: LoggedInUserProfile = null;
 
-  constructor() { }
+  constructor(private securityService: SecurityService) { }
 
-  public handleLogin(): Promise<string> {
-    this.userProfile = {
-      userId: '123',
-      userName: 'Avisha S',
-      firstName: 'first',
-      lastName: 'last',
-      role: 'r1',
-      taskNumber: '123',
-      teamId: '1',
-      teamName: 'Oak Bay ESS Team'
-    };
-    return Promise.resolve('responder-access');
+  public loadUserProfile(): Observable<UserProfile> {
+    return this.securityService.securityGetCurrentUserProfile().pipe(tap(response => {
+      this.profile = { ...response, taskNumber: null };
+    }));
   }
 
-  public get profile(): UserProfile {
-    return this.userProfile;
+  public get currentProfile(): LoggedInUserProfile {
+    return this.profile;
   }
 
 }
 
-export interface UserProfile {
-  userId: string;
-  userName: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  taskNumber: string;
-  teamName: string;
-  teamId: string;
+export interface LoggedInUserProfile {
+  firstName?: string;
+  id?: string;
+  lastName?: string;
+  lastSuccessfulLogin?: string;
+  teamId?: string;
+  teamName?: string;
+  userName?: string;
+  taskNumber?: string;
 }

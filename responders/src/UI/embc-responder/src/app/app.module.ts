@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthConfig, OAuthModule } from 'angular-oauth2-oidc';
 import { AuthService } from './core/services/auth.service';
 import { authConfig } from './core/services/authConfig';
+import { ApiModule } from './core/api/api.module';
 
 export const initialize = (authService: AuthService) => () => authService.ensureLoggedIn();
 
@@ -22,7 +23,8 @@ export const initialize = (authService: AuthService) => () => authService.ensure
     CoreModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    OAuthModule.forRoot()
+    OAuthModule.forRoot(),
+    ApiModule.forRoot({ rootUrl: '' })
   ],
   providers: [
     AuthService,
