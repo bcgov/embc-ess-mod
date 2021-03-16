@@ -47,7 +47,8 @@ export class EditTeamMemberComponent implements OnInit {
   }
 
   next(): void {
-
+    let updatedTeamMember: TeamMember = this.editForm.getRawValue();
+    this.router.navigate(['/responder-access/responder-management/details/review'], { state: { ...this.teamMember, ...updatedTeamMember } });
   }
 
 }

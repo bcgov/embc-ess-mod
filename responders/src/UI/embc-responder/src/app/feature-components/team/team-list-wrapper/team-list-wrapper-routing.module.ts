@@ -19,6 +19,10 @@ const routes: Routes = [
   {
     path: 'edit',
     loadChildren: () => import('../edit-team-member/edit-team-member.module').then(m => m.EditTeamMemberModule)
+  },
+  {
+    path: 'review',
+    loadChildren: () => import('../team-member-review/team-member-review.module').then(m => m.TeamMemberReviewModule)
   }
 ];
 
