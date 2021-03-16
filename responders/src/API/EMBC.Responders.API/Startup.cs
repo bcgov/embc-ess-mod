@@ -14,10 +14,14 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using EMBC.Responders.API.Utilities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +29,9 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
 using NSwag.AspNetCore;
 using Serilog;
 
@@ -57,6 +64,50 @@ namespace EMBC.Responders.API
             AddOpenApi(services);
             AddCors(services);
 
+            services.AddAuthentication(options =>
+             {
+                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+             }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+             {
+                 configuration.GetSection("jwt").Bind(options);
+
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateAudience = false,
+                     ValidateIssuer = true,
+                     RequireSignedTokens = true,
+                     RequireAudience = true,
+                     RequireExpirationTime = true,
+                     ValidateLifetime = true,
+                     ClockSkew = TimeSpan.FromSeconds(60),
+                     NameClaimType = ClaimTypes.NameIdentifier,
+                     RoleClaimType = ClaimTypes.Role,
+                     ValidateActor = true,
+                     ValidateIssuerSigningKey = true,
+                 };
+                 options.Events = new JwtBearerEvents
+                 {
+                     OnAuthenticationFailed = async c =>
+                     {
+                         await Task.CompletedTask;
+                         var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                         logger.LogError(c.Exception, $"Error authenticating token");
+                     },
+                     OnTokenValidated = async c =>
+                     {
+                         await Task.CompletedTask;
+                         var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                         logger.LogDebug("Token validated for {0}", c.Principal.Identity.Name);
+                     }
+                 };
+                 options.Validate();
+             });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser());
+                options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme);
+            });
             services.AddAutoMapper(typeof(Startup));
             services.AddDistributedMemoryCache();
             services.AddControllers(options =>
@@ -73,6 +124,7 @@ namespace EMBC.Responders.API
             if (env.IsDevelopment())
             {
                 app.UseExceptionHandler("/error-details");
+                IdentityModelEventSource.ShowPII = true;
             }
             else
             {
@@ -95,7 +147,6 @@ namespace EMBC.Responders.API
 
             app.UseForwardedHeaders();
             app.UseAuthentication();
-            app.UseAuthorization();
             app.UseOpenApi();
             app.UseSwaggerUi3();
             app.UseRouting();

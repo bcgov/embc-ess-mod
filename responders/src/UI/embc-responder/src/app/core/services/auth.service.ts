@@ -1,7 +1,8 @@
+import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
-import { UserProfile } from '../api/models';
+import { AuthConfig, OAuthResourceServerErrorHandler, OAuthService } from 'angular-oauth2-oidc';
+import { Observable, throwError } from 'rxjs';
 import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
@@ -16,14 +17,15 @@ export class AuthService {
   public ensureLoggedIn(): Promise<void> {
 
     this.oauthService.configure(this.authConfig);
-    this.oauthService.setStorage(sessionStorage);
+    // this.oauthService.setStorage(sessionStorage);
+    this.oauthService.setupAutomaticSilentRefresh();
     // this.oauthService.tokenValidationHandler = new NullValidationHandler();
     return this.oauthService.loadDiscoveryDocumentAndLogin().then(isLoggedIn => {
       console.log('isLoggedIn', isLoggedIn);
       if (isLoggedIn) {
-        this.oauthService.setupAutomaticSilentRefresh();
         return this.userService.loadUserProfile().toPromise().then(userProfile => {
-          this.router.navigateByUrl(this.resolveNextRoute(userProfile)).then(_ => Promise.resolve());
+          const nextRoute = !userProfile.lastSuccessfulLogin ? 'electronic-agreement' : (this.oauthService.state || 'responder-access');
+          this.router.navigateByUrl(nextRoute).then(_ => Promise.resolve());
         });
       } else {
         return Promise.reject('Not logged in');
@@ -31,11 +33,25 @@ export class AuthService {
     });
   }
 
+  public login(targetUrl: null | string): void {
+    this.oauthService.initLoginFlow(targetUrl);
+  }
+
   public logout(): void {
     this.oauthService.logOut();
   }
 
-  private resolveNextRoute(userProfile: UserProfile): string {
-    return userProfile.lastSuccessfulLogin ? 'responder-access' : 'electronic-agreement';
+  public getToken(): string {
+    return this.oauthService.getAccessToken();
   }
+
+}
+
+export class OAuthNoopResourceServerErrorHandler implements OAuthResourceServerErrorHandler {
+
+  handleError(err: HttpResponse<any>): Observable<any> {
+    console.debug('OAuthNoopResourceServerErrorHandler', err);
+    return throwError(err);
+  }
+
 }

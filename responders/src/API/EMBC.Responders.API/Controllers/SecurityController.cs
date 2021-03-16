@@ -16,6 +16,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Responders.API.Controllers
@@ -25,6 +26,7 @@ namespace EMBC.Responders.API.Controllers
     public class SecurityController : ControllerBase
     {
         [HttpGet("profile/current")]
+        [Authorize]
         public async Task<ActionResult<UserProfile>> GetCurrentUserProfile()
         {
             return await Task.FromResult(new UserProfile
@@ -35,7 +37,7 @@ namespace EMBC.Responders.API.Controllers
                 LastName = "last",
                 TeamId = "111",
                 TeamName = "team111",
-                LastSuccessfulLogin = null
+                LastSuccessfulLogin = DateTime.Parse("2020/01/01")
             });
         }
     }

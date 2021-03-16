@@ -6,8 +6,8 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthConfig, OAuthModule } from 'angular-oauth2-oidc';
-import { AuthService } from './core/services/auth.service';
+import { AuthConfig, OAuthModule, OAuthResourceServerErrorHandler } from 'angular-oauth2-oidc';
+import { AuthService, OAuthNoopResourceServerErrorHandler } from './core/services/auth.service';
 import { authConfig } from './core/services/authConfig';
 import { ApiModule } from './core/api/api.module';
 
@@ -23,7 +23,12 @@ export const initialize = (authService: AuthService) => () => authService.ensure
     CoreModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    OAuthModule.forRoot(),
+    OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: ['/api'],
+        sendAccessToken: true
+      }
+    }),
     ApiModule.forRoot({ rootUrl: '' })
   ],
   providers: [
@@ -31,6 +36,10 @@ export const initialize = (authService: AuthService) => () => authService.ensure
     {
       provide: AuthConfig,
       useValue: authConfig
+    },
+    {
+      provide: OAuthResourceServerErrorHandler,
+      useClass: OAuthNoopResourceServerErrorHandler
     },
     {
       provide: APP_INITIALIZER,
