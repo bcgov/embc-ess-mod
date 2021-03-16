@@ -32,24 +32,11 @@ export class TeamMemberDetailComponent implements OnInit {
   deleteUser(): void {
     this.dialog.open(DialogComponent, {
       data: {
-        component: DeleteConfirmationDialogComponent,
-        buttons: [
-          {
-            name: 'No, Cancel',
-            class: 'button-s',
-            function: 'close'
-          },
-          {
-            name: 'Yes, Delete this user',
-            class: 'button-p',
-            function: 'delete'
-          }
-        ]
+        component: DeleteConfirmationDialogComponent
       },
-      height: '250px',
+      height: '300px',
       width: '650px'
     }).afterClosed().subscribe(event => {
-      console.log(event);
       if (event === 'delete') {
         this.teamDetailsService.deleteTeamMember(this.teamMember.id).subscribe(value => {
           this.router.navigate(['/responder-access/responder-management/details/member-list']);
