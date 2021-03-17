@@ -324,9 +324,12 @@ namespace EMBC.Responders.API.Controllers
         public Mapping()
         {
             CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
-                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.Id))
-                .ForMember(d => d.Label, opts => opts.MapFrom(s => s.Label))
-                .ReverseMap();
+                .ForMember(d => d.Role, opts => opts.MapFrom(s => Enum.Parse<MemberRole>(s.Role)))
+                .ForMember(d => d.Label, opts => opts.MapFrom(s => Enum.Parse<MemberLabel>(s.Label)))
+                .ReverseMap()
+                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.ToString()))
+                .ForMember(d => d.Label, opts => opts.MapFrom(s => s.Label.ToString()))
+                ;
         }
     }
 }
