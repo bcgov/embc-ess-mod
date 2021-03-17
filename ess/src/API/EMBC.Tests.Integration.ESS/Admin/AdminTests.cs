@@ -30,20 +30,22 @@ namespace EMBC.Tests.Integration.ESS.Admin
         public async Task CanCreateMember()
         {
             var now = DateTime.Now;
+            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
+
             var newMember = new TeamMember
             {
                 Email = "email@email.com",
                 FirstName = "first",
                 LastName = "last",
                 IsActive = true,
-                Label = "label",
-                Role = new TeamRole { Id = "r1", Name = "role1" },
+                Label = "Volunteer",
+                Role = "Tier1",
                 AgreementSignDate = now,
                 LastSuccessfulLogin = now,
                 ExternalUserId = "extid",
                 Phone = "1234",
                 TeamId = teamId,
-                UserName = "username"
+                UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
             };
 
             var reply = await adminManager.Handle(new SaveTeamMemberCommand { Member = newMember });
@@ -54,18 +56,18 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             existingMember.Id.ShouldBe(reply.MemberId);
             existingMember.TeamId.ShouldBe(teamId);
+            existingMember.TeamName.ShouldNotBeNull();
             existingMember.Email.ShouldBe(newMember.Email);
-            // existingMember.Phone.ShouldBe(newMember.Phone);
+            existingMember.Phone.ShouldBe(newMember.Phone);
             existingMember.FirstName.ShouldBe(newMember.FirstName);
             existingMember.LastName.ShouldBe(newMember.LastName);
-            // existingMember.UserName.ShouldBe(newMember.UserName);
+            existingMember.UserName.ShouldBe(newMember.UserName);
             existingMember.ExternalUserId.ShouldBe(newMember.ExternalUserId);
             existingMember.IsActive.ShouldBe(newMember.IsActive);
-            // existingMember.LastSuccessfulLogin.ShouldBe(newMember.LastSuccessfulLogin);
+            existingMember.LastSuccessfulLogin.ShouldBe(newMember.LastSuccessfulLogin);
             existingMember.AgreementSignDate.ShouldBe(newMember.AgreementSignDate.Value.Date);
-            //existingMember.Label.ShouldBe(newMember.Label);
-            //existingMember.Role.Id.ShouldBe(newMember.Role.Id);
-            //existingMember.Role.Name.ShouldBe(newMember.Role.Name);
+            existingMember.Label.ShouldBe(newMember.Label);
+            existingMember.Role.ShouldBe(newMember.Role);
         }
 
         [Fact(Skip = RequiresDynamics)]

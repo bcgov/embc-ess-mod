@@ -48,7 +48,7 @@ namespace EMBC.ESS.Managers.Admin
 
             if (!string.IsNullOrEmpty(cmd.MemberId)) members = members.Where(m => m.Id == cmd.MemberId).ToArray();
 
-            return new TeamMembersQueryResponse { TeamId = cmd.TeamId, TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
+            return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
         }
 
         public async Task<SaveTeamMemberResponse> Handle(SaveTeamMemberCommand cmd)

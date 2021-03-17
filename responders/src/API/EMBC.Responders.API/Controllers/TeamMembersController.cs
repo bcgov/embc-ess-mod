@@ -86,6 +86,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateTeamMember([FromBody] TeamMember teamMember)
         {
+            teamMember.TeamId = teamId;
             var reply = await client.Send(new SaveTeamMemberCommand
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
@@ -107,6 +108,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
+            teamMember.TeamId = teamId;
             var reply = await client.Send(new SaveTeamMemberCommand
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
@@ -234,8 +236,8 @@ namespace EMBC.Responders.API.Controllers
     {
         public string Id { get; set; }
 
-        [Required]
         public string TeamId { get; set; }
+        public string TeamName { get; set; }
 
         [Required]
         public string UserName { get; set; }
@@ -324,9 +326,12 @@ namespace EMBC.Responders.API.Controllers
         public Mapping()
         {
             CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
-                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.Id))
-                .ForMember(d => d.Label, opts => opts.MapFrom(s => s.Label))
-                .ReverseMap();
+                .ForMember(d => d.Role, opts => opts.MapFrom(s => Enum.Parse<MemberRole>(s.Role)))
+                .ForMember(d => d.Label, opts => opts.MapFrom(s => Enum.Parse<MemberLabel>(s.Label)))
+                .ReverseMap()
+                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.ToString()))
+                .ForMember(d => d.Label, opts => opts.MapFrom(s => s.Label.ToString()))
+                ;
         }
     }
 }
