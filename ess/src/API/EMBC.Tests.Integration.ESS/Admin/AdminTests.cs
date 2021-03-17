@@ -56,6 +56,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             existingMember.Id.ShouldBe(reply.MemberId);
             existingMember.TeamId.ShouldBe(teamId);
+            existingMember.TeamName.ShouldNotBeNull();
             existingMember.Email.ShouldBe(newMember.Email);
             existingMember.Phone.ShouldBe(newMember.Phone);
             existingMember.FirstName.ShouldBe(newMember.FirstName);

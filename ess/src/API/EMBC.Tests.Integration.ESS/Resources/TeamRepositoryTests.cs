@@ -87,6 +87,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var newMember = members.Where(m => m.Id == newMemberId).ShouldHaveSingleItem();
             newMember.Id.ShouldNotBeNull();
             newMember.TeamId.ShouldBe(newTeamMember.TeamId);
+            newMember.TeamName.ShouldNotBeNull();
             newMember.FirstName.ShouldBe(newTeamMember.FirstName);
             newMember.LastName.ShouldBe(newTeamMember.LastName);
             newMember.Email.ShouldBe(newTeamMember.Email);
