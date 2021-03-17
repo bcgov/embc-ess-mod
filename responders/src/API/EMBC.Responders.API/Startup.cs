@@ -73,14 +73,14 @@ namespace EMBC.Responders.API
 
                  options.TokenValidationParameters = new TokenValidationParameters
                  {
-                     ValidateAudience = false,
+                     ValidateAudience = true,
                      ValidateIssuer = true,
                      RequireSignedTokens = true,
                      RequireAudience = true,
                      RequireExpirationTime = true,
                      ValidateLifetime = true,
                      ClockSkew = TimeSpan.FromSeconds(60),
-                     NameClaimType = ClaimTypes.NameIdentifier,
+                     NameClaimType = ClaimTypes.Upn,
                      RoleClaimType = ClaimTypes.Role,
                      ValidateActor = true,
                      ValidateIssuerSigningKey = true,

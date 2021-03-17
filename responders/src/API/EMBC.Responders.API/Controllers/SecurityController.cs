@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,13 +32,15 @@ namespace EMBC.Responders.API.Controllers
         {
             return await Task.FromResult(new UserProfile
             {
-                Id = "1234",
-                UserName = "username",
-                FirstName = "first",
-                LastName = "last",
+                Id = User.FindFirstValue(ClaimTypes.Sid),
+                UserName = User.FindFirstValue(ClaimTypes.Upn),
+                FirstName = User.FindFirstValue(ClaimTypes.GivenName),
+                LastName = User.FindFirstValue(ClaimTypes.Surname),
                 TeamId = "111",
                 TeamName = "team111",
-                LastSuccessfulLogin = DateTime.Parse("2020/01/01")
+                LastSuccessfulLogin = DateTime.Parse("2020/01/01"),
+                Role = "Tier1",
+                Label = "Volunteer"
             });
         }
     }
@@ -50,6 +53,8 @@ namespace EMBC.Responders.API.Controllers
         public string LastName { get; set; }
         public string TeamId { get; set; }
         public string TeamName { get; set; }
+        public string Role { get; set; }
+        public string Label { get; set; }
         public DateTime? LastSuccessfulLogin { get; set; }
     }
 }

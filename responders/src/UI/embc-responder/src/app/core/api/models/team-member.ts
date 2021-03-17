@@ -17,6 +17,7 @@ export interface TeamMember {
   lastSuccessfulLogin?: null | string;
   phone?: null | string;
   role: MemberRole;
-  teamId: string;
+  teamId?: null | string;
+  teamName?: null | string;
   userName: string;
 }

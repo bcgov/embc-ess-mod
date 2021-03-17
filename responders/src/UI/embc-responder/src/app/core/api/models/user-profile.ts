@@ -3,8 +3,10 @@
 export interface UserProfile {
   firstName?: null | string;
   id?: null | string;
+  label?: null | string;
   lastName?: null | string;
   lastSuccessfulLogin?: null | string;
+  role?: null | string;
   teamId?: null | string;
   teamName?: null | string;
   userName?: null | string;
