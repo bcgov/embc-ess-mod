@@ -42,7 +42,7 @@ namespace EMBC.ESS.Resources.Team
             var teamUsers = GetEssTeamUsers();
 
             if (!string.IsNullOrEmpty(teamId)) teamUsers = teamUsers.Where(u => u._era_essteamid_value == Guid.Parse(teamId));
-            if (!string.IsNullOrEmpty(userName)) teamUsers = teamUsers.Where(u => u.era_bceidaccountguid == userName);
+            if (!string.IsNullOrEmpty(userName)) teamUsers = teamUsers.Where(u => u.era_externalsystemusername == userName);
 
             var users = teamUsers.ToArray();
             context.DetachAll();
@@ -98,10 +98,15 @@ namespace EMBC.ESS.Resources.Team
             essTeamUser.era_firstname = teamMember.FirstName;
             essTeamUser.era_lastname = teamMember.LastName;
             essTeamUser.era_email = teamMember.Email;
+            essTeamUser.era_phone = teamMember.Phone;
             essTeamUser.era_bceidaccountguid = teamMember.ExternalUserId;
-            essTeamUser.era_externalsystemtype = null; // TODO: map
+            essTeamUser.era_externalsystemtype = (int)ExternalSystemOptionSet.Bceid;
             essTeamUser.era_externalsystemusername = teamMember.UserName;
             essTeamUser.era_electronicaccessagreementaccepteddate = teamMember.AgreementSignDate;
+            essTeamUser.era_label = string.IsNullOrEmpty(teamMember.Label) ? (int?)null : (int)Enum.Parse<TeamUserLabelOptionSet>(teamMember.Label);
+            essTeamUser.era_role = string.IsNullOrEmpty(teamMember.Role) ? (int?)null : (int)Enum.Parse<TeamUserRoleOptionSet>(teamMember.Role);
+            essTeamUser.era_lastsuccessfullogin = teamMember.LastSuccessfulLogin;
+
             if (teamMember.IsActive)
             {
                 context.ActivateObject(essTeamUser);
