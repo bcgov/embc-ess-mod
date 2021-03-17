@@ -39,9 +39,7 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null)
         {
-            await Task.CompletedTask;
-
-            IQueryable<era_essteamuser> teamUsers = context.era_essteamusers;
+            var teamUsers = GetEssTeamUsers();
 
             if (!string.IsNullOrEmpty(teamId)) teamUsers = teamUsers.Where(u => u._era_essteamid_value == Guid.Parse(teamId));
             if (!string.IsNullOrEmpty(userName)) teamUsers = teamUsers.Where(u => u.era_bceidaccountguid == userName);
@@ -49,7 +47,7 @@ namespace EMBC.ESS.Resources.Team
             var users = teamUsers.ToArray();
             context.DetachAll();
 
-            return mapper.Map<IEnumerable<TeamMember>>(users);
+            return await Task.FromResult(mapper.Map<IEnumerable<TeamMember>>(users));
         }
 
         public async Task<IEnumerable<Team>> GetTeams(string id = null)
@@ -92,15 +90,26 @@ namespace EMBC.ESS.Resources.Team
 
             var essTeamUser = teamMember.Id == null
                 ? CreateTeamUser()
-                : GetEssTeamUsers(teamMember.TeamId).Where(u => u.era_essteamuserid == Guid.Parse(teamMember.Id)).SingleOrDefault();
+                : GetEssTeamUsers()
+                .Where(u => u._era_essteamid_value == Guid.Parse(teamMember.TeamId) && u.era_essteamuserid == Guid.Parse(teamMember.Id))
+                .SingleOrDefault();
             if (essTeamUser == null) throw new Exception($"team member {teamMember.Id} not found in team {teamMember.TeamId}");
 
             essTeamUser.era_firstname = teamMember.FirstName;
             essTeamUser.era_lastname = teamMember.LastName;
             essTeamUser.era_email = teamMember.Email;
-            essTeamUser.era_active = teamMember.IsActive;
-            essTeamUser.era_electronicaccessagreementaccepteddate = teamMember.AgreementSignDate;
             essTeamUser.era_bceidaccountguid = teamMember.ExternalUserId;
+            essTeamUser.era_externalsystemtype = null; // TODO: map
+            essTeamUser.era_externalsystemusername = teamMember.UserName;
+            essTeamUser.era_electronicaccessagreementaccepteddate = teamMember.AgreementSignDate;
+            if (teamMember.IsActive)
+            {
+                context.ActivateObject(essTeamUser);
+            }
+            else
+            {
+                context.DeactivateObject(essTeamUser);
+            }
 
             context.UpdateObject(essTeamUser);
             context.AddLink(essTeam, nameof(era_essteam.era_essteamuser_ESSTeamId), essTeamUser);
@@ -156,11 +165,12 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<bool> DeleteMember(string teamId, string teamMemberId)
         {
-            var essTeamUser = GetEssTeamUsers(teamId).Where(u => u.era_essteamuserid == Guid.Parse(teamMemberId)).SingleOrDefault();
+            var essTeamUser = GetEssTeamUsers()
+                .Where(u => u._era_essteamid_value == Guid.Parse(teamId) && u.era_essteamuserid == Guid.Parse(teamMemberId))
+                .SingleOrDefault();
             if (essTeamUser == null) return false;
 
-            //TODO: change to soft delete
-            context.DeleteObject(essTeamUser);
+            context.SoftDeleteObject(essTeamUser);
 
             await context.SaveChangesAsync();
             context.DetachAll();
@@ -174,10 +184,10 @@ namespace EMBC.ESS.Resources.Team
             return newUser;
         }
 
-        private IQueryable<era_essteamuser> GetEssTeamUsers(string teamId) =>
+        private IQueryable<era_essteamuser> GetEssTeamUsers() =>
             context.era_essteamusers
                 .Expand(u => u.era_ESSTeamId)
-                .Where(u => u._era_essteamid_value == Guid.Parse(teamId));
+                .Where(u => u.statuscode != (int)EntityStatus.SoftDelete);
 
         private era_essteam GetEssTeam(string teamId) =>
             context.era_essteams

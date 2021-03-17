@@ -98,6 +98,25 @@ namespace EMBC.ESS.Utilities.Dynamics
                 context.DetachLink(link.Source, link.SourceProperty, link.Target);
             }
         }
+
+        public static void SoftDeleteObject(this EssContext context, object entity) => ModifyEntityStatus(context, entity, EntityStatus.SoftDelete);
+
+        public static void ActivateObject(this EssContext context, object entity) => ModifyEntityStatus(context, entity, EntityStatus.Active);
+
+        public static void DeactivateObject(this EssContext context, object entity) => ModifyEntityStatus(context, entity, EntityStatus.Inactive);
+
+        private static void ModifyEntityStatus(this EssContext context, object entity, EntityStatus status)
+        {
+            var entityType = entity.GetType();
+            if (!typeof(crmbaseentity).IsAssignableFrom(entityType)) throw new InvalidOperationException($"entity {entityType.FullName} is not a valid {typeof(crmbaseentity).FullName}");
+            var statusProp = entity.GetType().GetProperty("statuscode");
+            var stateProp = entity.GetType().GetProperty("statecode");
+
+            statusProp.SetValue(entity, (int)status);
+            stateProp.SetValue(entity, (int)(status == EntityStatus.Active ? EntityState.Active : EntityState.Inactive));
+
+            context.UpdateObject(entity);
+        }
     }
 
     public static class EssContextLookupHelpers

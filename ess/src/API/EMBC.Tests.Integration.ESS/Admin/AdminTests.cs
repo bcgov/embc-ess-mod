@@ -80,7 +80,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanDeActivateTeamMember()
+        public async Task CanDeactivateTeamMember()
         {
             var memberToUpdate = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId })).TeamMembers.First();
 
