@@ -86,6 +86,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateTeamMember([FromBody] TeamMember teamMember)
         {
+            teamMember.TeamId = teamId;
             var reply = await client.Send(new SaveTeamMemberCommand
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
@@ -107,6 +108,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
+            teamMember.TeamId = teamId;
             var reply = await client.Send(new SaveTeamMemberCommand
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
