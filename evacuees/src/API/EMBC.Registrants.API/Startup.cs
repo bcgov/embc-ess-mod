@@ -105,7 +105,7 @@ namespace EMBC.Registrants.API
             services.AddSecurityModule();
             services.AddEvacuationsModule();
             services.AddADFSTokenProvider();
-            services.AddSingleton(sp =>
+            services.AddScoped(sp =>
             {
                 var configuration = sp.GetRequiredService<IConfiguration>();
                 var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");

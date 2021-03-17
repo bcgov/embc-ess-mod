@@ -1,3 +1,4 @@
+export { Configuration } from './models/configuration';
 export { Community } from './models/community';
 export { CommunityType } from './models/community-type';
 export { StateProvince } from './models/state-province';

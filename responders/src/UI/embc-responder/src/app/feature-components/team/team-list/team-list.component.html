@@ -1,3 +1,12 @@
-<app-search-filter [filtersToLoad]='filtersToLoad' (filterEvent)="filter($event)"></app-search-filter>
-<app-data-table [incomingData]='sampleCommunityData' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm"
- [filterPredicate]="filterPredicate"></app-data-table>
+<mat-card>
+        <div class="filter-margin">
+            <app-search-filter [filtersToLoad]='filtersToLoad' (filterEvent)="filter($event)"></app-search-filter>
+        </div>
+    
+         <div class="data-margin">
+            <app-data-table [incomingData]='teamMembers' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm"
+            [filterPredicate]="filterPredicate" [allowClickableRows]="true" (clickedRow)="openMemberDetails($event)"
+            (toggleActive)="activateTeamMember($event)" (toggleInactive)="deactivateTeamMember($event)"></app-data-table>
+        </div>
+</mat-card>
+

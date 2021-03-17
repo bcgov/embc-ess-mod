@@ -10,7 +10,6 @@ import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { CustomPipeModule } from '../../../../core/pipe/customPipe.module';
-import { DataService } from '../../../../core/services/data.service';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { AddressFormsModule } from '../../address-forms/address-forms.module';
 
@@ -32,8 +31,7 @@ export default class EvacAddressComponent implements OnInit {
   // registrationAddress: Partial<Registration>;
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-    public dataService: DataService) {
+    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }

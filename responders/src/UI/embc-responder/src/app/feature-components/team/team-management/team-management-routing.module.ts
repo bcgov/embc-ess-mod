@@ -8,12 +8,12 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'list',
+        redirectTo: 'details',
         pathMatch: 'full'
       },
       {
-        path: 'list',
-        loadChildren: () => import('../team-list/team-list.module').then(m => m.TeamListModule)
+        path: 'details',
+        loadChildren: () => import('../team-list-wrapper/team-list-wrapper.module').then(m => m.TeamListWrapperModule)
       },
       {
         path: 'add',

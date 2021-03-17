@@ -118,7 +118,7 @@
         <br>
         <mat-form-field appearance="outline" style="width:70%">
           <input matInput [formControlName]="'specialDietDetails'" placeholder="Specify dietary requirements"
-            maxlength="100">
+            maxlength="200">
           <mat-error
             *ngIf="familyFormControl?.specialDietDetails.touched && familyFormControl?.specialDietDetails.invalid && familyFormControl?.specialDietDetails.hasError('required')">
             Dietary requirements specifications are required</mat-error>

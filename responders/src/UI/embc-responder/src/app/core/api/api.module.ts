@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { ErrorService } from './services/error.service';
+import { ConfigurationService } from './services/configuration.service';
 import { LocationsService } from './services/locations.service';
 import { TeamCommunitiesAssignmentsService } from './services/team-communities-assignments.service';
 import { TeamMembersService } from './services/team-members.service';
@@ -18,6 +19,7 @@ import { TeamMembersService } from './services/team-members.service';
   declarations: [],
   providers: [
     ErrorService,
+    ConfigurationService,
     LocationsService,
     TeamCommunitiesAssignmentsService,
     TeamMembersService,

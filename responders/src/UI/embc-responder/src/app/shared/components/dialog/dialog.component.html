@@ -12,5 +12,20 @@
 </div>
 
 <mat-dialog-content>
+    <div class="row mainBody">
+        <!-- <div class="col-md-12" mat-dialog-content [innerHTML]="data.body"></div> -->
+        <ng-template #target></ng-template>
+    </div>
+    <div *ngIf="showError" class="row">
+        <div class="col-md-12">
+            Please confirm the delete action
+        </div>
+    </div>
     
+    <div class="row justify-content-between">
+        <div *ngFor="let b of data.buttons" class="col-md-6">
+            <button style="width: 100%;" [ngClass]="{'button-p': b.class === 'button-p', 'button-s': b.class === 'button-s'}" (click)="buttonAction(b.function)"
+            mat-button>{{b.name}}</button>
+        </div>
+    </div>
 </mat-dialog-content>
