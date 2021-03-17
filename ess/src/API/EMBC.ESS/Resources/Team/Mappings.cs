@@ -33,7 +33,8 @@ namespace EMBC.ESS.Resources.Team
 
             CreateMap<era_essteamuser, TeamMember>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_essteamuserid.ToString()))
-                .ForMember(d => d.TeamId, opts => opts.MapFrom(s => s._era_essteamid_value.ToString()))
+                .ForMember(d => d.TeamId, opts => opts.MapFrom(s => s.era_ESSTeamId.era_essteamid.Value.ToString()))
+                .ForMember(d => d.TeamName, opts => opts.MapFrom(s => s.era_ESSTeamId.era_name))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname))
                 .ForMember(d => d.UserName, opts => opts.MapFrom(s => s.era_externalsystemusername))
