@@ -234,8 +234,8 @@ namespace EMBC.Responders.API.Controllers
     {
         public string Id { get; set; }
 
-        [Required]
         public string TeamId { get; set; }
+        public string TeamName { get; set; }
 
         [Required]
         public string UserName { get; set; }
