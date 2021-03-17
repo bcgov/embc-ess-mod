@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using AutoMapper;
+using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
 namespace EMBC.ESS.Resources.Team
@@ -34,16 +35,15 @@ namespace EMBC.ESS.Resources.Team
                 .ForMember(d => d.TeamId, opts => opts.MapFrom(s => s._era_essteamid_value.ToString()))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname))
-                //TODO: change to username
-                .ForMember(d => d.UserName, opts => opts.MapFrom(s => s.era_bceidaccountguid))
+                .ForMember(d => d.UserName, opts => opts.MapFrom(s => s.era_externalsystemusername))
                 .ForMember(d => d.ExternalUserId, opts => opts.MapFrom(s => s.era_bceidaccountguid))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.era_email))
-                .ForMember(d => d.Phone, opts => opts.Ignore())
-                .ForMember(d => d.Role, opts => opts.Ignore())
-                .ForMember(d => d.Label, opts => opts.Ignore())
+                .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.era_phone))
+                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.era_role))
+                .ForMember(d => d.Label, opts => opts.MapFrom(s => s.era_label))
                 .ForMember(d => d.LastSuccessfulLogin, opts => opts.Ignore())
                 .ForMember(d => d.AgreementSignDate, opts => opts.MapFrom(s => s.era_electronicaccessagreementaccepteddate))
-                .ForMember(d => d.IsActive, opts => opts.MapFrom(s => s.era_active ?? false))
+                .ForMember(d => d.IsActive, opts => opts.MapFrom(s => s.statuscode == (int)EntityStatus.Active))
                 ;
         }
     }
