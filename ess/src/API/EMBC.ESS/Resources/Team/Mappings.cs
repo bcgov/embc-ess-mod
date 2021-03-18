@@ -38,7 +38,7 @@ namespace EMBC.ESS.Resources.Team
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname))
                 .ForMember(d => d.UserName, opts => opts.MapFrom(s => s.era_externalsystemusername))
-                .ForMember(d => d.ExternalUserId, opts => opts.MapFrom(s => s.era_bceidaccountguid))
+                .ForMember(d => d.ExternalUserId, opts => opts.MapFrom(s => s.era_externalsystemuser))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.era_email))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.era_phone))
                 .ForMember(d => d.Role, opts => opts.MapFrom(s => Enum.GetName(typeof(TeamUserRoleOptionSet), s.era_role)))

@@ -42,7 +42,7 @@ namespace EMBC.ESS.Resources.Team
             var teamUsers = GetEssTeamUsers();
 
             if (!string.IsNullOrEmpty(teamId)) teamUsers = teamUsers.Where(u => u._era_essteamid_value == Guid.Parse(teamId));
-            if (!string.IsNullOrEmpty(userName)) teamUsers = teamUsers.Where(u => u.era_externalsystemusername == userName);
+            if (!string.IsNullOrEmpty(userName)) teamUsers = teamUsers.Where(u => u.era_externalsystemusername.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
             var users = teamUsers.ToArray();
             context.DetachAll();
@@ -99,7 +99,7 @@ namespace EMBC.ESS.Resources.Team
             essTeamUser.era_lastname = teamMember.LastName;
             essTeamUser.era_email = teamMember.Email;
             essTeamUser.era_phone = teamMember.Phone;
-            essTeamUser.era_bceidaccountguid = teamMember.ExternalUserId;
+            essTeamUser.era_externalsystemuser = teamMember.ExternalUserId;
             essTeamUser.era_externalsystemtype = (int)ExternalSystemOptionSet.Bceid;
             essTeamUser.era_externalsystemusername = teamMember.UserName;
             essTeamUser.era_electronicaccessagreementaccepteddate = teamMember.AgreementSignDate;
