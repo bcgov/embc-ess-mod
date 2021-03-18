@@ -17,14 +17,13 @@ export class AuthService {
   public ensureLoggedIn(): Promise<void> {
 
     this.oauthService.configure(this.authConfig);
-    // this.oauthService.setStorage(sessionStorage);
     this.oauthService.setupAutomaticSilentRefresh();
     // this.oauthService.tokenValidationHandler = new NullValidationHandler();
     return this.oauthService.loadDiscoveryDocumentAndLogin().then(isLoggedIn => {
       console.log('isLoggedIn', isLoggedIn);
       if (isLoggedIn) {
         return this.userService.loadUserProfile().toPromise().then(userProfile => {
-          const nextRoute = !userProfile.lastSuccessfulLogin ? 'electronic-agreement' : (this.oauthService.state || 'responder-access');
+          const nextRoute = userProfile.requiredToSignAgreement ? 'electronic-agreement' : (this.oauthService.state || 'responder-access');
           this.router.navigateByUrl(nextRoute).then(_ => Promise.resolve());
         });
       } else {

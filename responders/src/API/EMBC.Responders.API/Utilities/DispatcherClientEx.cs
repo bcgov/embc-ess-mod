@@ -30,13 +30,14 @@ namespace EMBC.Responders.API
             var request = new RequestEnvelope
             {
                 CorrelationId = Guid.NewGuid().ToString(),
-                Type = content.GetType().FullName,
+                Type = content.GetType().AssemblyQualifiedName,
                 Content = Value.Parser.ParseJson(JsonSerializer.Serialize(content))
             };
             var response = await dispatcherClient.DispatchAsync(request);
             if (response.Empty) return default;
             if (response.Error) throw new ServerException(response.CorrelationId, response.ErrorType, response.ErrorMessage, response.ErrorDetails);
-            return JsonSerializer.Deserialize<TReply>(JsonFormatter.Default.Format(response.Content));
+            var responseType = System.Type.GetType(response.Type, true);
+            return (TReply)JsonSerializer.Deserialize(JsonFormatter.Default.Format(response.Content), responseType);
         }
     }
 
