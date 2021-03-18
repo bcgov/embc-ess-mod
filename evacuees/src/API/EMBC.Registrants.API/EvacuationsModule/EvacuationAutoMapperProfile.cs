@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using AutoMapper;
 using EMBC.Registrants.API.Shared;
 using Microsoft.Dynamics.CRM;
 
@@ -98,7 +99,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => new List<HouseholdMember>()))
                 .ForMember(d => d.Pets, opts => opts.MapFrom(s => new List<Pet>()));
 
-            CreateMap<HouseholdMember, contact>().IncludeMembers(s => s.Details)
+            CreateMap<HouseholdMember, contact>(MemberList.None).IncludeMembers(s => s.Details)
                 .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.Id))
 
                 .ReverseMap()
