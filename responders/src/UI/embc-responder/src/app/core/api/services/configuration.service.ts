@@ -25,7 +25,7 @@ export class ConfigurationService extends BaseService {
   /**
    * Path part for operation configurationGetConfiguration
    */
-  static readonly ConfigurationGetConfigurationPath = '/api/locations';
+  static readonly ConfigurationGetConfigurationPath = '/api/Configuration';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.

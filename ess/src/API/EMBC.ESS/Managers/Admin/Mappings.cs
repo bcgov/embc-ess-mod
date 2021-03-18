@@ -33,6 +33,11 @@ namespace EMBC.ESS.Managers.Admin
             CreateMap<Shared.Contracts.Team.AssignedCommunity, Resources.Team.AssignedCommunity>()
                 .ReverseMap()
                 ;
+
+            CreateMap<Resources.Team.TeamMember, Shared.Contracts.Profile.UserProfile>()
+                .ForMember(d => d.LastLoginDate, opts => opts.MapFrom(s => s.LastSuccessfulLogin))
+                .ForMember(d => d.RequiredToSignAgreement, opts => opts.MapFrom(s => !s.AgreementSignDate.HasValue))
+                ;
         }
     }
 }
