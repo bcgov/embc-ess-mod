@@ -44,35 +44,41 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
         public async Task CanUpdateEvacuation()
         {
             string testUserId = "4PRCSME5JFAAGAV5OPLTZLQXBGDL7XYD";
-            var evacuationFiles = await evacuationManager.GetEvacuations(testUserId);
-            var evacuationFile = evacuationFiles.First();
-            var currentCity = evacuationFile.EvacuatedFromAddress.Jurisdiction;
-            var newCity = (await listsRepository.GetJurisdictions()).Skip(new Random().Next(100)).Take(1).First();
+            string testEssFileNumber = "100615";
+            var evacuationFile = await evacuationManager.GetEvacuation(testUserId, testEssFileNumber);
+            var currentAddress = evacuationFile.EvacuatedFromAddress.AddressLine1;
+            var newAddress = "1530 Party Ave.";
 
-            evacuationFile.EvacuatedFromAddress.Jurisdiction = new Jurisdiction { Code = newCity.Code };
+            evacuationFile.EvacuatedFromAddress.AddressLine1 = newAddress;
 
-            await evacuationManager.SaveEvacuation(testUserId, evacuationFile.EssFileNumber, evacuationFile);
+            var essFileNumber = await evacuationManager.SaveEvacuation(testUserId, evacuationFile.EssFileNumber, evacuationFile);
+            essFileNumber.ShouldBe(testEssFileNumber);
 
-            var updatedEvacuationFiles = await evacuationManager.GetEvacuations(testUserId);
-            var updatedEvacuationFile = updatedEvacuationFiles.FirstOrDefault();
-            updatedEvacuationFile.EvacuatedFromAddress.Jurisdiction.Code.ShouldBe(newCity.Code);
-            updatedEvacuationFile.EvacuatedFromAddress.Jurisdiction.Name.ShouldBe(newCity.Name);
+            var updatedEvacuationFile = await evacuationManager.GetEvacuation(testUserId, testEssFileNumber);
+
+            updatedEvacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(newAddress);
+
+            evacuationFile.EvacuatedFromAddress.AddressLine1 = currentAddress;
+
+            essFileNumber = await evacuationManager.SaveEvacuation(testUserId, evacuationFile.EssFileNumber, evacuationFile);
+            essFileNumber.ShouldBe(testEssFileNumber);
+
+            updatedEvacuationFile = await evacuationManager.GetEvacuation(testUserId, testEssFileNumber);
+            updatedEvacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(currentAddress);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateEvacuation()
         {
             string testUserId = "4PRCSME5JFAAGAV5OPLTZLQXBGDL7XYD";
-            var evacuationFiles = await evacuationManager.GetEvacuations(testUserId);
-            var baseEvacuationFile = evacuationFiles.LastOrDefault();
+            string testEssFileNumber = "100615";
+            var evacuationFile = await evacuationManager.GetEvacuation(testUserId, testEssFileNumber);
 
-            var newEssFileNumber = await evacuationManager.SaveEvacuation(testUserId, null, baseEvacuationFile);
+            var newEssFileNumber = await evacuationManager.SaveEvacuation(testUserId, null, evacuationFile);
 
-            var updatedEvacuationFiles = await evacuationManager.GetEvacuations(testUserId);
-            var createdEvacuationFile = updatedEvacuationFiles
-                .Where(ef => ef.EssFileNumber == newEssFileNumber).FirstOrDefault();
+            var createdEvacuationFile = await evacuationManager.GetEvacuation(testUserId, newEssFileNumber);
 
-            createdEvacuationFile.ShouldNotBeNull().EssFileNumber.ShouldBe(newEssFileNumber);
+            createdEvacuationFile.ShouldNotBeNull();
         }
     }
 }

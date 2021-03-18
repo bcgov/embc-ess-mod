@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts;
+using EMBC.ESS.Shared.Contracts.Profile;
 using EMBC.ESS.Shared.Contracts.Team;
 
 namespace EMBC.ESS.Managers.Admin
@@ -48,7 +49,7 @@ namespace EMBC.ESS.Managers.Admin
 
             if (!string.IsNullOrEmpty(cmd.MemberId)) members = members.Where(m => m.Id == cmd.MemberId).ToArray();
 
-            return new TeamMembersQueryResponse { TeamId = cmd.TeamId, TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
+            return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
         }
 
         public async Task<SaveTeamMemberResponse> Handle(SaveTeamMemberCommand cmd)
@@ -127,6 +128,37 @@ namespace EMBC.ESS.Managers.Admin
             await teamRepository.SaveTeam(team);
 
             return new UnassignCommunitiesFromTeamResponse();
+        }
+
+        public async Task<LogInUserResponse> Handle(LogInUserCommand cmd)
+        {
+            var member = (await teamRepository.GetMembers(userName: cmd.UserName)).SingleOrDefault();
+            if (member == null) return new FailedLogin { Reason = $"User {cmd.UserName} not found" };
+            if (member.ExternalUserId != null && member.ExternalUserId != cmd.UserId)
+                throw new Exception($"User {cmd.UserName} has external id {member.ExternalUserId} but trying to log in with user id {cmd.UserId}");
+            if (member.ExternalUserId == null && member.LastSuccessfulLogin.HasValue)
+                throw new Exception($"User {cmd.UserName} has no external id but somehow logged in already");
+
+            if (!member.LastSuccessfulLogin.HasValue || string.IsNullOrEmpty(member.ExternalUserId))
+            {
+                member.ExternalUserId = cmd.UserId;
+            }
+
+            member.LastSuccessfulLogin = DateTime.Now;
+
+            await teamRepository.SaveMember(member);
+
+            return new SuccessfulLogin { Profile = mapper.Map<UserProfile>(member) };
+        }
+
+        public async Task<SignResponderAgreementResponse> Handle(SignResponderAgreementCommand cmd)
+        {
+            var member = (await teamRepository.GetMembers(userName: cmd.UserName)).SingleOrDefault();
+            if (member == null) throw new NotFoundException($"team member not found", cmd.UserName);
+
+            member.AgreementSignDate = cmd.SignatureDate;
+            await teamRepository.SaveMember(member);
+            return new SignResponderAgreementResponse();
         }
     }
 }

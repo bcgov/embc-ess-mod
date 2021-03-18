@@ -25,7 +25,7 @@ namespace EMBC.Responders.API.Controllers
     /// Provides configuration data for clients
     /// </summary>
     [ApiController]
-    [Route("api/locations")]
+    [Route("api/[controller]")]
     public class ConfigurationController : ControllerBase
     {
         private readonly IConfiguration configuration;

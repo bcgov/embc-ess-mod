@@ -61,6 +61,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task CanAddTeamMember()
         {
             var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
+            var now = DateTime.Now;
+            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
 
             var newTeamMember = new TeamMember
             {
@@ -70,10 +72,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 LastName = "last",
                 Email = "email@email.com",
                 Phone = "123456",
-                AgreementSignDate = DateTime.Now,
-                LastSuccessfulLogin = DateTime.Now,
-                Label = "label",
-                Role = "role",
+                AgreementSignDate = now,
+                LastSuccessfulLogin = now,
+                Label = "Volunteer",
+                Role = "Tier1",
                 ExternalUserId = "extid",
                 UserName = "username",
                 IsActive = true,
@@ -85,15 +87,18 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var newMember = members.Where(m => m.Id == newMemberId).ShouldHaveSingleItem();
             newMember.Id.ShouldNotBeNull();
             newMember.TeamId.ShouldBe(newTeamMember.TeamId);
+            newMember.TeamName.ShouldNotBeNull();
             newMember.FirstName.ShouldBe(newTeamMember.FirstName);
             newMember.LastName.ShouldBe(newTeamMember.LastName);
             newMember.Email.ShouldBe(newTeamMember.Email);
-            //newMember.Phone.ShouldBe(newTeamMember.Phone);
-            //newMember.Label.ShouldBe(newTeamMember.Label);
-            //newMember.Role.ShouldBe(newTeamMember.Role);
-            //newMember.UserName.ShouldBe(newTeamMember.UserName);
+            newMember.Phone.ShouldBe(newTeamMember.Phone);
+            newMember.Label.ShouldBe(newTeamMember.Label);
+            newMember.Role.ShouldBe(newTeamMember.Role);
+            newMember.UserName.ShouldBe(newTeamMember.UserName);
             newMember.ExternalUserId.ShouldBe(newTeamMember.ExternalUserId);
             newMember.IsActive.ShouldBe(newTeamMember.IsActive);
+            newMember.LastSuccessfulLogin.ShouldNotBeNull().ShouldBe(newTeamMember.LastSuccessfulLogin.Value);
+            newMember.AgreementSignDate.ShouldNotBeNull().Date.ShouldBe(newTeamMember.AgreementSignDate.Value.Date);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -115,6 +120,23 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var updatedMember = updatedMembers.Single(m => m.Id == updatedMemberId);
             updatedMember.AgreementSignDate.ShouldNotBeNull().ShouldBe(now.Date);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanDeleteTeamMember()
+        {
+            var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
+            var members = await teamRepository.GetMembers(teamId);
+
+            var now = DateTime.Now;
+
+            var memberToDelete = members.Skip(3).First();
+
+            await teamRepository.DeleteMember(teamId, memberToDelete.Id);
+
+            var newMembers = await teamRepository.GetMembers(teamId);
+
+            newMembers.SingleOrDefault(m => m.Id == memberToDelete.Id).ShouldBeNull();
         }
     }
 }

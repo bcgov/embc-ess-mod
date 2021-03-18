@@ -27,8 +27,6 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
     public class TeamMembersQueryResponse : Response
     {
-        public string TeamId { get; set; }
-
         public IEnumerable<TeamMember> TeamMembers { get; set; }
     }
 
@@ -123,6 +121,8 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
         public string TeamId { get; set; }
 
+        public string TeamName { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -131,7 +131,7 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
         public string ExternalUserId { get; set; }
 
-        public TeamRole Role { get; set; }
+        public string Role { get; set; }
 
         public string Label { get; set; }
 
@@ -144,13 +144,6 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public DateTime? LastSuccessfulLogin { get; set; }
 
         public bool IsActive { get; set; }
-    }
-
-    public class TeamRole
-    {
-        public string Id { get; set; }
-
-        public string Name { get; set; }
     }
 
     public class CommunitiesAlreadyAssignedException : Exception
