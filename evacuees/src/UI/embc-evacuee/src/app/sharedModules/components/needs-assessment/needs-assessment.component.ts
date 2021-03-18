@@ -10,6 +10,7 @@ import { RegistrationResult } from '../../../core/api/models/registration-result
 import { AlertService } from 'src/app/core/services/alert.service';
 import { NonVerifiedRegistrationService } from '../../../non-verified-registration/non-verified-registration.services';
 import { NeedsAssessmentService } from './needs-assessment.service';
+import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
 
 @Component({
   selector: 'app-needs-assessment',
@@ -35,9 +36,9 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   constructor(
     private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private needsAssessmentService: NeedsAssessmentService,
-    private cd: ChangeDetectorRef, private route: ActivatedRoute,
-    private alertService: AlertService, private nonVerifiedRegistrationService: NonVerifiedRegistrationService) {
+    private needsAssessmentService: NeedsAssessmentService, private cd: ChangeDetectorRef, private route: ActivatedRoute,
+    private alertService: AlertService, private nonVerifiedRegistrationService: NonVerifiedRegistrationService,
+    private evacuationFileDataService: EvacuationFileDataService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -144,7 +145,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   setFormData(component: string): void {
     switch (component) {
       case 'evac-address':
-        this.needsAssessmentService.evacuatedFromAddress = this.form.get('evacuatedFromAddress').value;
+        this.evacuationFileDataService.evacuatedFromAddress = this.form.get('evacuatedFromAddress').value;
         this.needsAssessmentService.insurance = this.form.get('insurance').value;
         break;
       case 'family-information':
@@ -191,15 +192,14 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   submitVerified(): void {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
-    this.needsAssessmentService.createEvacuationFile().subscribe((value) => {
+    this.evacuationFileDataService.createEvacuationFile().subscribe((value) => {
       console.log(value);
       this.needsAssessmentService.setVerifiedEvacuationFileNo(value);
       this.router.navigate(['/verified-registration/dashboard']);
     }, (error: any) => {
-      console.log(error.error.title);
       this.showLoader = !this.showLoader;
       this.isSubmitted = !this.isSubmitted;
-      this.alertService.setAlert('danger', error.error.title);
+      this.alertService.setAlert('danger', error);
     });
   }
 

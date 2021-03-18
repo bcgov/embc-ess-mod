@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Address, InsuranceOption, NeedsAssessment, Pet, RegistrationResult } from 'src/app/core/api/models';
+import { Address, InsuranceOption, NeedsAssessment, PersonDetails, Pet, RegistrationResult, NeedsAssessmentType } from 'src/app/core/api/models';
 import { EvacuationService } from 'src/app/core/api/services';
-import { PersonDetails } from 'src/app/core/model/profile.model';
+//import { PersonDetails } from 'src/app/core/model/profile.model';
+
 
 @Injectable({ providedIn: 'root' })
 export class NeedsAssessmentService {
 
-    private _evacuatedFromAddress: Address;
     private _insurance: InsuranceOption;
     private _haveMedication: boolean;
     private _haveSpecialDiet: boolean;
@@ -26,12 +26,6 @@ export class NeedsAssessmentService {
 
     constructor(private evacuationService: EvacuationService) { }
 
-    public get evacuatedFromAddress(): Address {
-        return this._evacuatedFromAddress;
-    }
-    public set evacuatedFromAddress(value: Address) {
-        this._evacuatedFromAddress = value;
-    }
 
     public get insurance(): InsuranceOption {
         return this._insurance;
@@ -144,45 +138,16 @@ export class NeedsAssessmentService {
             canEvacueeProvideIncidentals: this.canEvacueeProvideIncidentals,
             canEvacueeProvideLodging: this.canEvacueeProvideLodging,
             canEvacueeProvideTransportation: this.canEvacueeProvideTransportation,
-            evacuatedFromAddress: this.setAddressObject(this.evacuatedFromAddress),
             familyMembers: this.familyMembers,
             hasPetsFood: this.hasPetsFood,
             haveMedication: this.haveMedication,
             haveSpecialDiet: this.haveSpecialDiet,
             insurance: this.insurance,
-            pets: this.pets
+            pets: this.pets,
+            type: NeedsAssessmentType.Preliminary
         };
     }
 
-    public createEvacuationFile(): Observable<string> {
-        return this.evacuationService.evacuationCreateEvacuation({ body: this.createNeedsAssessmentDTO() });
-    }
-
-    private setAddressObject(addressObject): Address {
-        const address: Address = {
-            addressLine1: addressObject.addressLine1,
-            addressLine2: addressObject.addressLine2,
-            country: {
-                code: addressObject.country.code,
-                name: addressObject.country.name
-            },
-            jurisdiction: {
-                code: addressObject.jurisdiction.code === undefined ?
-                    null : addressObject.jurisdiction.code,
-                name: addressObject.jurisdiction.name ===
-                    undefined ? addressObject.jurisdiction : addressObject.jurisdiction.name
-            },
-            postalCode: addressObject.postalCode,
-            stateProvince: {
-                code: addressObject.stateProvince === null ?
-                    addressObject.stateProvince : addressObject.stateProvince.code,
-                name: addressObject.stateProvince === null ?
-                    addressObject.stateProvince : addressObject.stateProvince.name
-            }
-        };
-
-        return address;
-    }
 
     public setNonVerifiedEvacuationFileNo(registrationResult: RegistrationResult): void {
         this.registrationResult = registrationResult;

@@ -1,8 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NeedsAssessment } from 'src/app/core/api/models';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { EvacuationFile, NeedsAssessment } from 'src/app/core/api/models';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { NeedsAssessmentMappingService } from '../../needs-assessment/needs-assessment-mapping.service';
+import { EvacuationFileDataService } from '../evacuation-file-data.service';
+import { EvacuationFileService } from '../evacuation-file.service';
 
 export interface Referral {
   referralDate: string;
@@ -38,14 +41,26 @@ const REFERRALS: Referral[] = [{
 })
 export class EvacuationDetailsComponent implements OnInit {
 
-  @Input() evacuationFileCard: NeedsAssessment;
-  @Input() evacuationFileStatus: string;
+  // @Input() evacuationFileCard: EvacuationFile;
+  // @Input() evacuationFileStatus: string;
   @Input() allExpandState = false;
-  @Output() showEvacuationList = new EventEmitter<boolean>();
+  // @Output() showEvacuationList = new EventEmitter<boolean>();
+
+  previousUrl: string;
+  evacuationFileTab: string;
 
   constructor(
-    private route: ActivatedRoute, private needsAssessmentMapping: NeedsAssessmentMappingService,
-    public formCreationService: FormCreationService) { }
+    private route: ActivatedRoute, public formCreationService: FormCreationService,
+    public evacuationFilesService: EvacuationFileService, private router: Router,
+    public evacuationFileDataService: EvacuationFileDataService) {
+
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        console.log('prev:', event.url);
+        this.previousUrl = event.url;
+      });
+  }
 
   backArrowImgSrc = '/assets/images/back_arrow.svg';
   type = 'need';
@@ -54,13 +69,26 @@ export class EvacuationDetailsComponent implements OnInit {
   referralDetailsText = 'expand all';
   referralData = [];
 
+  showActiveList = true;
+  showInactiveList = true;
+
   ngOnInit(): void {
-    this.currentFlow = this.route.snapshot.data.flow;
-    this.needsAssessmentMapping.setNeedsAssessment(this.evacuationFileCard);
+    // this.currentFlow = this.route.snapshot.data.flow;
+    if (this.previousUrl.includes('current')) {
+      this.evacuationFileTab = 'Current';
+    } else {
+      this.evacuationFileTab = 'Past';
+    }
+
+    // this.route.paramMap.subscribe(params => {
+    //   // this.componentToLoad = 
+    //   console.log(params.get('essFile'));
+    //   // this.loadForm(this.componentToLoad);
+    // });
   }
 
   changeStatusColor(): string {
-    if (this.evacuationFileStatus === 'Active') {
+    if (this.evacuationFileDataService.evacuationFileStatus === 'Active') {
       return '#26B378';
     } else {
       return '#8B0000';
@@ -68,7 +96,11 @@ export class EvacuationDetailsComponent implements OnInit {
   }
 
   goToCurrent(): void {
-    this.showEvacuationList.emit(true);
+    if (this.previousUrl.includes('current')) {
+      this.router.navigate(['/verified-registration/dashboard/current']);
+    } else {
+      this.router.navigate(['/verified-registration/dashboard/past']);
+    }
   }
 
   onMouseOver(): void {

@@ -51,6 +51,7 @@ export class FamilyMembersForm {
 
     constructor(familyMembers: FamilyMembers, customValidator: CustomValidationService, builder: FormBuilder) {
         this.member = builder.group({
+            id: [''], // Erase later
             firstName: ['', [customValidator.conditionalValidation(
                 () => this.addFamilyMemberIndicator.value,
                 Validators.required

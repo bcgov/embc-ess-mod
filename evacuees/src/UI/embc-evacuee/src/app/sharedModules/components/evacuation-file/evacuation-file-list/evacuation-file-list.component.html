@@ -25,25 +25,9 @@
                         </div>
                     </div>
                     <div class="card-container">
-                        <app-evacuation-card *ngFor="let card of dataSourceActive"
-                            (showEvacuationList)="setActiveListView($event)" (evacuationFile)="setCurrentChild($event)"
-                            [evacuationFileCard]="card" [evacuationFileStatus]="'Active'">
+                        <app-evacuation-card *ngFor="let card of dataSourceActive" [evacuationFileCard]="card"
+                            [evacuationFileStatus]="'Active'">
                         </app-evacuation-card>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="!showActiveList">
-                    <div class="row" style="max-width: 100%;">
-                        <div class="col-md-12 breadCrumb">
-                            <a class="goBackLink" (click)="goBackActive()">Current Evacuation
-                                ({{dataSourceActive.length}})
-                                &nbsp;</a>
-                            <span> / &nbsp; Evacuation File #123456</span>
-                        </div>
-                    </div>
-                    <div class="card-container">
-                        <app-evacuation-details [evacuationFileCard]="currentChild" [evacuationFileStatus]="'Active'"
-                            (showEvacuationList)="setActiveListView($event)">
-                        </app-evacuation-details>
                     </div>
                 </ng-container>
             </div>
@@ -72,26 +56,9 @@
                         <span class="profile-headers">Past Evacuations ({{dataSourceInactive?.length}})</span>
                     </div>
                     <div class="card-container">
-                        <app-evacuation-card *ngFor="let card of dataSourceInactive"
-                            (showEvacuationList)="setInactiveListView($event)"
-                            (evacuationFile)="setCurrentChild($event)" [evacuationFileCard]="card"
+                        <app-evacuation-card *ngFor="let card of dataSourceInactive" [evacuationFileCard]="card"
                             [evacuationFileStatus]="'Inactive'">
                         </app-evacuation-card>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="!showInactiveList">
-                    <div class="row" style="max-width: 100%;">
-                        <div class="col-md-12 breadCrumb">
-                            <a class="goBackLink" (click)="goBackInactive()">Past Evacuation
-                                ({{dataSourceInactive.length}})
-                                &nbsp;</a>
-                            <span> / &nbsp; Evacuation File #12345</span>
-                        </div>
-                    </div>
-                    <div class="card-container">
-                        <app-evacuation-details [evacuationFileCard]="currentChild" [evacuationFileStatus]="'Inative'"
-                            (showEvacuationList)="setInactiveListView($event)">
-                        </app-evacuation-details>
                     </div>
                 </ng-container>
             </div>

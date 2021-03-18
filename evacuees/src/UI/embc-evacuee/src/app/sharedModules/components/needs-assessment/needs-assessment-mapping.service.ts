@@ -3,6 +3,7 @@ import { first } from 'rxjs/operators';
 import { Address, InsuranceOption, NeedsAssessment, Pet } from 'src/app/core/api/models';
 import { PersonDetails } from 'src/app/core/model/profile.model';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
+import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { NeedsAssessmentService } from './needs-assessment.service';
 
@@ -12,11 +13,13 @@ export class NeedsAssessmentMappingService {
 
     constructor(
         private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
-        private needsAssessmentService: NeedsAssessmentService) { }
+        private needsAssessmentService: NeedsAssessmentService, private evacuationFileDataService: EvacuationFileDataService) { }
 
-    setNeedsAssessment(needsAssessment: NeedsAssessment): void {
+    setNeedsAssessment(evacuatedFromAddress: Address, needsAssessment: NeedsAssessment): void {
 
-        this.setEvacuationAddress(needsAssessment.evacuatedFromAddress, needsAssessment.insurance);
+        console.log(needsAssessment);
+
+        this.setInsurance(evacuatedFromAddress, needsAssessment.insurance);
         this.setFamilyMedicationDiet(
             needsAssessment.haveMedication, needsAssessment.haveSpecialDiet,
             needsAssessment.familyMembers, needsAssessment.specialDietDetails);
@@ -36,6 +39,7 @@ export class NeedsAssessmentMappingService {
                 lastName: member.lastName,
                 initials: member.initials,
                 gender: member.gender,
+                id: member.id,
                 dateOfBirth: member.dateOfBirth,
                 sameLastNameCheck: this.isSameLastName(member.lastName)
             };
@@ -45,8 +49,8 @@ export class NeedsAssessmentMappingService {
         return familyMembersFormArray;
     }
 
-    setEvacuationAddress(evacuatedFromAddress: Address, insurance: InsuranceOption): void {
-        this.needsAssessmentService.evacuatedFromAddress = evacuatedFromAddress;
+    setInsurance(evacuatedFromAddress: Address, insurance: InsuranceOption): void {
+        this.evacuationFileDataService.evacuatedFromAddress = evacuatedFromAddress;
         this.needsAssessmentService.insurance = insurance;
 
         this.formCreationService.getEvacuatedForm().pipe(
@@ -77,6 +81,7 @@ export class NeedsAssessmentMappingService {
                     familyMember: this.familyMembersForm(familyMembers),
                     member:
                     {
+                        id: '', // Erase Later
                         dateOfBirth: '',
                         firstName: '',
                         gender: '',

@@ -9,7 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-import { NeedsAssessment } from '../models/needs-assessment';
+import { EvacuationFile } from '../models/evacuation-file';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +38,7 @@ export class EvacuationService extends BaseService {
    * This method doesn't expect any request body.
    */
   evacuationGetCurrentEvacuations$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<NeedsAssessment>>> {
+  }): Observable<StrictHttpResponse<Array<EvacuationFile>>> {
 
     const rb = new RequestBuilder(this.rootUrl, EvacuationService.EvacuationGetCurrentEvacuationsPath, 'get');
     if (params) {
@@ -50,7 +50,7 @@ export class EvacuationService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<NeedsAssessment>>;
+        return r as StrictHttpResponse<Array<EvacuationFile>>;
       })
     );
   }
@@ -66,10 +66,10 @@ export class EvacuationService extends BaseService {
    * This method doesn't expect any request body.
    */
   evacuationGetCurrentEvacuations(params?: {
-  }): Observable<Array<NeedsAssessment>> {
+  }): Observable<Array<EvacuationFile>> {
 
     return this.evacuationGetCurrentEvacuations$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<NeedsAssessment>>) => r.body as Array<NeedsAssessment>)
+      map((r: StrictHttpResponse<Array<EvacuationFile>>) => r.body as Array<EvacuationFile>)
     );
   }
 
@@ -89,7 +89,7 @@ export class EvacuationService extends BaseService {
    * This method doesn't expect any request body.
    */
   evacuationGetPastEvacuations$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<NeedsAssessment>>> {
+  }): Observable<StrictHttpResponse<Array<EvacuationFile>>> {
 
     const rb = new RequestBuilder(this.rootUrl, EvacuationService.EvacuationGetPastEvacuationsPath, 'get');
     if (params) {
@@ -101,7 +101,7 @@ export class EvacuationService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<NeedsAssessment>>;
+        return r as StrictHttpResponse<Array<EvacuationFile>>;
       })
     );
   }
@@ -117,10 +117,10 @@ export class EvacuationService extends BaseService {
    * This method doesn't expect any request body.
    */
   evacuationGetPastEvacuations(params?: {
-  }): Observable<Array<NeedsAssessment>> {
+  }): Observable<Array<EvacuationFile>> {
 
     return this.evacuationGetPastEvacuations$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<NeedsAssessment>>) => r.body as Array<NeedsAssessment>)
+      map((r: StrictHttpResponse<Array<EvacuationFile>>) => r.body as Array<EvacuationFile>)
     );
   }
 
@@ -144,7 +144,7 @@ export class EvacuationService extends BaseService {
     /**
      * Evacuation data
      */
-    body: NeedsAssessment
+    body: EvacuationFile
   }): Observable<StrictHttpResponse<string>> {
 
     const rb = new RequestBuilder(this.rootUrl, EvacuationService.EvacuationCreateEvacuationPath, 'post');
@@ -178,7 +178,7 @@ export class EvacuationService extends BaseService {
     /**
      * Evacuation data
      */
-    body: NeedsAssessment
+    body: EvacuationFile
   }): Observable<string> {
 
     return this.evacuationCreateEvacuation$Response(params).pipe(
@@ -211,7 +211,7 @@ export class EvacuationService extends BaseService {
     /**
      * Evacuation data
      */
-    body: NeedsAssessment
+    body: EvacuationFile
   }): Observable<StrictHttpResponse<string>> {
 
     const rb = new RequestBuilder(this.rootUrl, EvacuationService.EvacuationUpdateEvacuationPath, 'post');
@@ -251,7 +251,7 @@ export class EvacuationService extends BaseService {
     /**
      * Evacuation data
      */
-    body: NeedsAssessment
+    body: EvacuationFile
   }): Observable<string> {
 
     return this.evacuationUpdateEvacuation$Response(params).pipe(

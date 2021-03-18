@@ -50,9 +50,19 @@ export class ProfileMappingService {
 
     private setPersonalDetails(profile: Profile): void {
         let formGroup: FormGroup;
-        this.formCreationService.getPeronalDetailsForm().pipe(
+        this.formCreationService.getPersonalDetailsForm().pipe(
             first()).subscribe(details => {
-                details.setValue({ ...profile.personalDetails });
+                console.log(details)
+                console.log(profile)
+                details.setValue({
+                    ...profile.personalDetails
+                    // firstName: profile.personalDetails.firstName,
+                    // lastName: profile.personalDetails.lastName,
+                    // preferredName: profile.personalDetails.preferredName,
+                    // initials: profile.personalDetails.initials,
+                    // gender: profile.personalDetails.gender,
+                    // dateOfBirth: profile.personalDetails.dateOfBirth
+                });
                 formGroup = details;
             });
         this.profileDataService.personalDetails = profile.personalDetails;
@@ -116,7 +126,7 @@ export class ProfileMappingService {
     }
 
     populateFromBCSC(profile: Profile): void {
-        this.formCreationService.getPeronalDetailsForm().pipe(
+        this.formCreationService.getPersonalDetailsForm().pipe(
             first()).subscribe(details => {
                 details.setValue({
                     firstName: profile.personalDetails.firstName,

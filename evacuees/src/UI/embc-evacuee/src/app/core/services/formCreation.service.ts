@@ -66,7 +66,7 @@ export class FormCreationService {
         this.restrictionForm.next(restrictionForm);
     }
 
-    getPeronalDetailsForm(): Observable<FormGroup> {
+    getPersonalDetailsForm(): Observable<FormGroup> {
         return this.personalDetailsForm$;
     }
 
@@ -132,13 +132,13 @@ export class FormCreationService {
 
     clearProfileData(): void {
         this.restrictionForm.next(this.formBuilder.group(new RestrictionForm(new Restriction())));
+        this.addressForm.next(this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator)));
         this.personalDetailsForm.next(this.formBuilder.group(new PersonDetailsForm(new PersonDetails(), this.customValidator)));
         this.contactDetailsForm.next(this.formBuilder.group(new ContactDetailsForm(new ContactDetails(), this.customValidator)));
         this.secretForm.next(this.formBuilder.group(new SecretForm(new Secret())));
     }
 
     clearNeedsAssessmentData(): void {
-        this.addressForm.next(this.formBuilder.group(new AddressForm(new Address(), this.formBuilder, this.customValidator)));
         this.evacuatedForm.next(this.formBuilder.group(new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator)));
         this.familyMembersForm.next(this.formBuilder.group(new FamilyMembersForm(new FamilyMembers(),
             this.customValidator, this.formBuilder)));

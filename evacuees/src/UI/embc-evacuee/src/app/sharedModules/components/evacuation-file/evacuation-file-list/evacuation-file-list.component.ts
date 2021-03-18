@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NeedsAssessment } from 'src/app/core/api/models';
+import { ActivatedRoute } from '@angular/router';
+import { EvacuationFile, NeedsAssessment } from 'src/app/core/api/models';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
@@ -17,14 +17,14 @@ export class EvacuationFileListComponent implements OnInit {
   evacuatedFrom: string;
   showActiveList = true;
   showInactiveList = true;
-  currentChild: NeedsAssessment;
-  dataSourceActive: Array<NeedsAssessment>;
-  dataSourceInactive: Array<NeedsAssessment>;
+  currentChild: EvacuationFile;
+  dataSourceActive: Array<EvacuationFile>;
+  dataSourceInactive: Array<EvacuationFile>;
   showLoading = false;
 
   constructor(
     private route: ActivatedRoute, public formCreationService: FormCreationService,
-    private router: Router, private dialogService: DialogService, private evacuationFileService: EvacuationFileService,
+    private dialogService: DialogService, private evacuationFileService: EvacuationFileService,
     private evacuationFileDataService: EvacuationFileDataService) { }
 
   ngOnInit(): void {
@@ -33,16 +33,21 @@ export class EvacuationFileListComponent implements OnInit {
 
     if (this.currentPath === '/verified-registration/dashboard/current') {
       this.showLoading = true;
-      this.evacuationFileService.getCurrentEvacuationFile().subscribe(files => {
+      this.evacuationFileService.getCurrentEvacuationFiles().subscribe(files => {
         this.dataSourceActive = files;
+        this.dataSourceActive.sort((a, b) => parseInt(b.essFileNumber) - parseInt(a.essFileNumber));
+        console.log(this.dataSourceActive);
         this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
+        this.evacuatedFrom = this.dataSourceActive[0].evacuatedFromAddress.jurisdiction.name;
         this.showLoading = false;
       });
 
     } else if (this.currentPath === '/verified-registration/dashboard/past') {
       this.showLoading = true;
-      this.evacuationFileService.getPastEvacuationFile().subscribe(files => {
+      this.evacuationFileService.getPastEvacuationFiles().subscribe(files => {
         this.dataSourceInactive = files;
+        this.dataSourceInactive.sort((a, b) => parseInt(b.essFileNumber) - parseInt(a.essFileNumber));
+        console.log(this.dataSourceInactive)
         this.showLoading = false;
       });
     }
@@ -50,31 +55,5 @@ export class EvacuationFileListComponent implements OnInit {
 
   startAdditionalAssessment(): void {
     this.dialogService.addEvacuationFile(this.evacuatedFrom);
-  }
-
-
-  setActiveListView(event: boolean): void {
-    this.showActiveList = event;
-  }
-
-  setInactiveListView(event: boolean): void {
-    this.showInactiveList = event;
-  }
-
-  setCurrentChild(fileCard: NeedsAssessment): void {
-    this.currentChild = fileCard;
-  }
-
-  goBackActive(): void {
-    this.showActiveList = !this.showActiveList;
-  }
-
-  goBackInactive(): void {
-    this.showInactiveList = !this.showInactiveList;
-  }
-
-  resetTab($event): void {
-    this.showActiveList = true;
-    this.showInactiveList = true;
   }
 }

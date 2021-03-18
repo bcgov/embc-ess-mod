@@ -11,6 +11,7 @@ export interface Registration {
   bcServicesCardId?: null | string;
   contactDetails: ContactDetails;
   contactId?: null | string;
+  evacuatedFromAddress: Address;
   informationCollectionConsent: boolean;
   mailingAddress?: null | Address;
   personalDetails: PersonDetails;

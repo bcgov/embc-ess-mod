@@ -67,11 +67,13 @@ export default class FamilyInformationComponent implements OnInit {
 
   save(): void {
     if (this.familyMemberForm.get('member').status === 'VALID') {
+      console.log(this.data[this.editIndex])
       if (this.editIndex !== undefined && this.rowEdit) {
         this.data[this.editIndex] = this.familyMemberForm.get('member').value;
         this.rowEdit = !this.rowEdit;
         this.editIndex = undefined;
       } else {
+        this.familyMemberForm.get('member').patchValue({ id: '123' });
         this.data.push(this.familyMemberForm.get('member').value);
       }
       this.dataSource.next(this.data);

@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
+import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
+import { EvacuationFileService } from '../evacuation-file/evacuation-file.service';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { ProfileService } from '../profile/profile.service';
 import { EditService } from './edit.service';
@@ -25,12 +27,13 @@ export class EditComponent implements OnInit, OnDestroy {
   showLoader = false;
   nonVerfiedRoute = '/non-verified-registration/needs-assessment';
   verifiedRoute = '/verified-registration/create-profile';
+  verifiedNeedsAssessments = '/verified-registration/needs-assessment';
 
   constructor(
     private router: Router, private route: ActivatedRoute,
     private formCreationService: FormCreationService, private profileService: ProfileService,
-    private profileDataService: ProfileDataService,
-    private alertService: AlertService, private editService: EditService) {
+    private profileDataService: ProfileDataService, private evacuationFileDataService: EvacuationFileDataService,
+    private alertService: AlertService, private editService: EditService, private evacuationFileService: EvacuationFileService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { parentPageName: string };
@@ -71,8 +74,23 @@ export class EditComponent implements OnInit, OnDestroy {
           this.alertService.setAlert('danger', error.title);
         });
       } else if (this.parentPageName === 'needs-assessment') {
-        // console.log('SAVE NEEDS ASSESSMENTS FROM EVACUATION CARD HERE');
-        this.router.navigate(['/verified-registration/dashboard/current']);
+        if (this.evacuationFileDataService.essFileNumber === undefined) {
+          this.router.navigate([this.verifiedNeedsAssessments], this.navigationExtras);
+        } else {
+          this.showLoader = !this.showLoader;
+          this.evacuationFileService.updateEvacuationFile().subscribe(essFileNumber => {
+            this.showLoader = !this.showLoader;
+            this.router.navigate(['/verified-registration/dashboard/current/' + essFileNumber]);
+          }, (error) => {
+            this.showLoader = !this.showLoader;
+            console.log(error);
+            this.alertService.setAlert('danger', error.title);
+          })
+        }
+        //this.router.navigate([this.verifiedRoute], this.navigationExtras);
+        console.log(this.evacuationFileDataService.essFileNumber);
+
+        //this.router.navigate(['/verified-registration/dashboard/current/' + this.evacuationFileDataService.essFileNumber]);
       }
     }
   }
@@ -91,7 +109,7 @@ export class EditComponent implements OnInit, OnDestroy {
       } else if (this.parentPageName === 'dashboard') {
         this.router.navigate(['/verified-registration/dashboard/profile']);
       } else if (this.parentPageName === 'needs-assessment') {
-        this.router.navigate(['/verified-registration/dashboard/current']);
+        this.router.navigate(['/verified-registration/dashboard/current/' + this.evacuationFileDataService.essFileNumber]);
       }
     }
   }
@@ -113,7 +131,7 @@ export class EditComponent implements OnInit, OnDestroy {
         this.editHeading = 'Edit Restriction';
         break;
       case 'personal-details':
-        this.form$ = this.formCreationService.getPeronalDetailsForm().subscribe(
+        this.form$ = this.formCreationService.getPersonalDetailsForm().subscribe(
           personalDetails => {
             this.form = personalDetails;
           }

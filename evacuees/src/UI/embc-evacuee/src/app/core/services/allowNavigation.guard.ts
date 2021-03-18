@@ -20,19 +20,19 @@ export class AllowNavigationGuard implements CanActivate {
     public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
         Promise<boolean | UrlTree> {
 
-        this.profileService.getProfile();
         this.profileService.profileExists().subscribe((exists: boolean) => {
             if (!exists && state.url === '/verified-registration') {
                 this.profileService.getLoginProfile();
                 this.router.navigate(['/verified-registration/collection-notice']);
             } else {
-                // console.log(this.conflictService.getCount());
                 if (state.url === '/verified-registration/conflicts' && this.conflictService.getCount() === 0) {
+                    this.profileService.getProfile();
                     this.router.navigate(['/verified-registration/dashboard']);
                 } else {
                     this.profileService.getConflicts().subscribe(conflicts => {
                         this.mappingService.mapConflicts(conflicts);
                         if (state.url === '/verified-registration') {
+                            this.profileService.getProfile();
                             if (conflicts.length !== 0) {
                                 this.router.navigate(['/verified-registration/conflicts']);
                             } else {

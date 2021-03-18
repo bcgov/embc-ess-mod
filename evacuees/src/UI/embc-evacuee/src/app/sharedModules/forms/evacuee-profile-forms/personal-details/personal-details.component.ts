@@ -33,12 +33,12 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.personalDetailsForm$ = this.formCreationService.getPeronalDetailsForm()
-    .subscribe(
-      personalDetails => {
-        this.personalDetailsForm = personalDetails;
-      }
-    );
+    this.personalDetailsForm$ = this.formCreationService.getPersonalDetailsForm()
+      .subscribe(
+        personalDetails => {
+          this.personalDetailsForm = personalDetails;
+        }
+      );
   }
 
   /**

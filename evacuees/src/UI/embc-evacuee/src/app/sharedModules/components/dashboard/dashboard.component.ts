@@ -4,8 +4,8 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { TabModel } from 'src/app/core/model/tab.model';
-import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
+import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -50,7 +50,6 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    console.log(this.activeFiles);
     this.evacuationFileWithTask = false;
 
     setTimeout(() => {
