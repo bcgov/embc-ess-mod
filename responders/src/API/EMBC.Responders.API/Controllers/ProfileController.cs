@@ -101,8 +101,6 @@ namespace EMBC.Responders.API.Controllers
         public string TeamId { get; set; }
         public string TeamName { get; set; }
         public string Role { get; set; }
-        public string Label { get; set; }
-        public DateTime? LastSuccessfulLogin { get; set; }
         public bool RequiredToSignAgreement { get; set; }
     }
 
