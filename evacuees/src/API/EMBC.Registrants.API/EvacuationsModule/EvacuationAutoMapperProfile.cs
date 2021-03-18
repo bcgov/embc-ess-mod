@@ -48,9 +48,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForPath(d => d.era_postalcode, opts => opts.MapFrom(s => s.EvacuatedFromAddress.PostalCode))
                 .ForPath(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Country.Name))
                 .ForPath(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvince.Name))
-                .ForPath(d => d.era_Jurisdiction, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction))
-                .ForPath(d => d.era_Jurisdiction.era_RelatedProvinceState.era_code, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction))
-                .ForPath(d => d.era_Jurisdiction.era_RelatedProvinceState.era_RelatedCountry.era_countrycode, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction.CountryCode));
+                .ForPath(d => d.era_Jurisdiction, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction));
 
             CreateMap<era_needassessment, NeedsAssessment>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_needassessmentid))
