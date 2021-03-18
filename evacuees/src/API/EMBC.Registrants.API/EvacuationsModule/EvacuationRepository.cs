@@ -93,7 +93,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 eraNeedsAssessment.era_EvacuationFile = eraEvacuationFile;
 
                 // New Contacts (Household Members)
-                var members = mapper.Map<IEnumerable<contact>>(needsAssessment.FamilyMembers);
+                var members = mapper.Map<IEnumerable<contact>>(needsAssessment.HouseholdMembers);
 
                 foreach (var member in members)
                 {
@@ -223,6 +223,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                     // add needs assessment
                     needsAssessmentsFound.Add(nae.era_NeedsAssessmentID);
                 }
+                dynamicsClient.Detach(queryResult);
 
                 foreach (var needsAssessmentObject in needsAssessmentsFound)
                 {
@@ -233,7 +234,12 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
                     // add evacuation file
                     evacuationFilesFound.Add(efQueryResult);
-                    jurisdictionsFound.Add(efQueryResult.era_Jurisdiction);
+
+                    var jurQueryResult = dynamicsClient.era_jurisdictions
+                        .Expand(j => j.era_RelatedProvinceState)
+                        .Where(j => j.era_jurisdictionid == efQueryResult._era_jurisdiction_value).FirstOrDefault();
+
+                    jurisdictionsFound.Add(jurQueryResult);
 
                     // Step 3.
                     var naeQueryResult = dynamicsClient.era_needsassessmentevacuees
@@ -289,7 +295,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                         .Where(nae => nae._era_needsassessmentid_value == era_needsAssessment.era_needassessmentid).ToArray();
 
                     var needsAssessment = mapper.Map<NeedsAssessment>(era_needsAssessment);
-                    needsAssessment.FamilyMembers = naeQueryResult.Where(nae => nae.era_evacueetype == (int)EvacueeType.Person).Select(nae => mapper.Map<PersonDetails>(nae.era_RegistrantID)).ToArray();
+                    needsAssessment.HouseholdMembers = naeQueryResult.Where(nae => nae.era_evacueetype == (int)EvacueeType.Person).Select(nae => mapper.Map<HouseholdMember>(nae.era_RegistrantID)).ToArray();
                     needsAssessment.Pets = naeQueryResult.Where(nae => nae.era_evacueetype != (int)EvacueeType.Person).Select(nae => mapper.Map<Pet>(nae)).ToArray();
 
                     needsAssessments.Add(needsAssessment);
@@ -302,6 +308,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
             if (evacuationFiles == null) return null;
 
             dynamicsClient.Detach(evacuationFiles);
+            dynamicsClient.DetachAll();
 
             return mapper.Map<IEnumerable<EvacuationFile>>(evacuationFiles);
         }
@@ -318,58 +325,112 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 return mapper.Map<EvacuationFile>(new EvacuationFile());
             }
 
-            EvacuationFile evacuationFile = new EvacuationFile();
+            List<EvacuationFile> evacuationFiles = new List<EvacuationFile>();
 
-            var needsAssessmentEvacuees = dynamicsClient.era_needsassessmentevacuees
-                .Expand(n => n.era_RegistrantID)
-                .Expand(n => n.era_NeedsAssessmentID)
-                .Where(n => n.era_RegistrantID.contactid == dynamicsContact.contactid).ToArray();
+            /* Step 1. query era_needsassessmentevacuee by contactid expand needsassessment => needsassessmentevacuee, needsassessment
+             * Step 2. query evacuationfile by needsassessmentid from previous query => evacuationfile
+             * Step 3. query era_needsassessmentevacuee by needsassessmentid expand contact => members
+             */
 
-            var era_naeNeedsAssessments = needsAssessmentEvacuees
-                .Select(nae => nae.era_NeedsAssessmentID).ToArray();
+            IQueryable queryResult = null;
+            var needsAssessmentsFound = new List<era_needassessment>();
+            var evacuationFileFound = new era_evacuationfile();
+            var needsAssessmentEvacueesFound = new List<era_needsassessmentevacuee>();
+            var jurisdictionsFound = new List<era_jurisdiction>();
 
-            era_naeNeedsAssessments = era_naeNeedsAssessments
-                .Where(na => na.era_EvacuationFile.era_essfilenumber == int.Parse(essFileNumber)).ToArray();
-
-            var era_evacuationFiles = era_naeNeedsAssessments
-                .Select(na => na.era_EvacuationFile).ToArray();
-
-            foreach (var era_evacuationFile in era_evacuationFiles)
+            try
             {
-                evacuationFile = mapper.Map<EvacuationFile>(era_evacuationFile);
-                var era_needsAssessments = dynamicsClient.era_needassessments
-                    .Expand(na => na.era_EvacuationFile)
-                    .Where(na => na._era_evacuationfile_value == era_evacuationFile.era_evacuationfileid).ToArray();
+                // Step 1.
+                queryResult = dynamicsClient.era_needsassessmentevacuees
+                    .Expand(n => n.era_RegistrantID)
+                    .Expand(n => n.era_NeedsAssessmentID)
+                    .Where(n => n.era_RegistrantID.contactid == dynamicsContact.contactid);
 
-                List<NeedsAssessment> needsAssessments = new List<NeedsAssessment>();
-
-                foreach (var era_needsAssessment in era_needsAssessments)
+                foreach (era_needsassessmentevacuee nae in queryResult)
                 {
-                    var jurQueryResult = dynamicsClient.era_jurisdictions
-                        .Where(j => j.era_jurisdictionid == era_evacuationFile._era_jurisdiction_value).FirstOrDefault();
-
-                    era_evacuationFile.era_Jurisdiction = jurQueryResult;
-
-                    era_needsAssessment.era_EvacuationFile = era_evacuationFile;
-
-                    var naeQueryResult = dynamicsClient.era_needsassessmentevacuees
-                        .Expand(nae => nae.era_RegistrantID)
-                        .Where(nae => nae.era_NeedsAssessmentID.era_needassessmentid == era_needsAssessment.era_needassessmentid).ToArray();
-
-                    var needsAssessment = mapper.Map<NeedsAssessment>(era_needsAssessment);
-                    needsAssessment.FamilyMembers = naeQueryResult.Where(nae => nae.era_evacueetype == (int)EvacueeType.Person).Select(nae => mapper.Map<PersonDetails>(nae.era_RegistrantID)).ToArray();
-                    needsAssessment.Pets = naeQueryResult.Where(nae => nae.era_evacueetype != (int)EvacueeType.Person).Select(nae => mapper.Map<Pet>(nae)).ToArray();
-
-                    needsAssessments.Add(needsAssessment);
+                    // add needs assessment
+                    needsAssessmentsFound.Add(nae.era_NeedsAssessmentID);
                 }
-                evacuationFile.NeedsAssessments = needsAssessments;
+
+                foreach (var needsAssessmentObject in needsAssessmentsFound)
+                {
+                    // Step 2.
+                    var efQueryResult = dynamicsClient.era_evacuationfiles
+                        .Expand(ef => ef.era_Jurisdiction)
+                        .Where(ef => ef.era_evacuationfileid == needsAssessmentObject._era_evacuationfile_value
+                            && ef.era_essfilenumber == int.Parse(essFileNumber)).FirstOrDefault();
+
+                    if (efQueryResult != null)
+                    {
+                        // add evacuation file
+                        evacuationFileFound = efQueryResult;
+                        jurisdictionsFound.Add(evacuationFileFound.era_Jurisdiction);
+
+                        // Step 3.
+                        var naeQueryResult = dynamicsClient.era_needsassessmentevacuees
+                            .Expand(nae => nae.era_RegistrantID)
+                            .Where(nae => nae.era_NeedsAssessmentID.era_needassessmentid == needsAssessmentObject.era_needassessmentid);
+
+                        foreach (era_needsassessmentevacuee nae in naeQueryResult)
+                        {
+                            // add needs assessment evacuee
+                            needsAssessmentEvacueesFound.Add(nae);
+                        }
+                    }
+                }
+            }
+            catch (DataServiceQueryException ex)
+            {
+                DataServiceClientException dataServiceClientException = ex.InnerException as DataServiceClientException;
+
+                // don't throw an exception if record is not found
+                if (dataServiceClientException.StatusCode == 404)
+                {
+                    return null;
+                }
+                else
+                {
+                    Console.WriteLine("dataServiceClientException: " + dataServiceClientException.Message);
+                }
+
+                ODataErrorException odataErrorException = dataServiceClientException.InnerException as ODataErrorException;
+                if (odataErrorException != null)
+                {
+                    Console.WriteLine(odataErrorException.Message);
+                    throw dataServiceClientException;
+                }
             }
 
-            if (evacuationFile == null) return null;
+            var era_needsAssessments = needsAssessmentsFound
+                .Where(na => na._era_evacuationfile_value == evacuationFileFound.era_evacuationfileid).ToArray();
 
-            dynamicsClient.Detach(evacuationFile);
+            List<NeedsAssessment> needsAssessments = new List<NeedsAssessment>();
 
-            return mapper.Map<EvacuationFile>(evacuationFile);
+            foreach (var era_needsAssessment in era_needsAssessments)
+            {
+                var jurQueryResult = jurisdictionsFound
+                    .Where(j => j.era_jurisdictionid == evacuationFileFound._era_jurisdiction_value).FirstOrDefault();
+
+                evacuationFileFound.era_Jurisdiction = jurQueryResult;
+
+                era_needsAssessment.era_EvacuationFile = evacuationFileFound;
+
+                var naeQueryResult = needsAssessmentEvacueesFound
+                    .Where(nae => nae._era_needsassessmentid_value == era_needsAssessment.era_needassessmentid).ToArray();
+
+                var needsAssessment = mapper.Map<NeedsAssessment>(era_needsAssessment);
+                needsAssessment.HouseholdMembers = naeQueryResult.Where(nae => nae.era_evacueetype == (int)EvacueeType.Person).Select(nae => mapper.Map<HouseholdMember>(nae.era_RegistrantID)).ToArray();
+                needsAssessment.Pets = naeQueryResult.Where(nae => nae.era_evacueetype != (int)EvacueeType.Person).Select(nae => mapper.Map<Pet>(nae)).ToArray();
+
+                needsAssessments.Add(needsAssessment);
+            }
+            var evacuationFile = mapper.Map<EvacuationFile>(evacuationFileFound);
+            evacuationFile.NeedsAssessments = needsAssessments;
+            evacuationFiles.Add(evacuationFile);
+
+            dynamicsClient.DetachAll();
+
+            return mapper.Map<EvacuationFile>(evacuationFileFound);
         }
 
         public async Task<string> Update(string userId, string essFileNumber, EvacuationFile evacuationFileIn)
@@ -391,6 +452,22 @@ namespace EMBC.Registrants.API.EvacuationsModule
             var existingNeedsAssessments = dynamicsClient.era_needassessments
                 .Expand(na => na.era_NeedsAssessmentEvacuee_NeedsAssessmentID)
                 .Where(na => na.era_EvacuationFile.era_evacuationfileid == existingEvacuationFile.era_evacuationfileid).ToArray();
+
+            var existingNeedsAssessmentEvacuees = new List<era_needsassessmentevacuee>();
+
+            foreach (era_needassessment na in existingNeedsAssessments)
+            {
+                var needsAssessmentEvacuees = dynamicsClient.era_needsassessmentevacuees
+                    .Expand(n => n.era_RegistrantID)
+                    .Expand(n => n.era_NeedsAssessmentID)
+                    .Where(n => n.era_NeedsAssessmentID.era_needassessmentid == na.era_needassessmentid).ToArray();
+
+                foreach (era_needsassessmentevacuee nae in needsAssessmentEvacuees)
+                {
+                    // add needs assessment
+                    existingNeedsAssessmentEvacuees.Add(nae);
+                }
+            }
 
             // return contact as a profile
             var profile = mapper.Map<ProfilesModule.Profile>(dynamicsContact);
@@ -429,34 +506,83 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
                 // Contacts (Household Members)
                 // Add New needs assessment evacuee members to dynamics context
-                foreach (var member in needsAssessment.FamilyMembers)
+                var currentEvacuees = existingNeedsAssessmentEvacuees
+                            .Where(e => e.era_evacueetype == (int?)EvacueeType.Person
+                                && e._era_needsassessmentid_value == updatedNeedsAssessment.era_needassessmentid).ToArray();
+                var updatedEvacuees = new List<Guid?>();
+                foreach (var member in needsAssessment.HouseholdMembers)
                 {
                     var updatedMember = mapper.Map<contact>(member);
-                    var existingMember = dynamicsClient.contacts
-                        .Where(m => m.contactid == updatedMember.contactid).FirstOrDefault();
-
-                    dynamicsClient.Detach(existingMember);
-                    dynamicsClient.AttachTo(nameof(dynamicsClient.contacts), updatedMember);
-
                     var updatedEvacuee = new era_needsassessmentevacuee();
-                    var existingEvacuee = dynamicsClient.era_needsassessmentevacuees
-                        .Where(e => e.era_NeedsAssessmentID.era_needassessmentid == updatedNeedsAssessment.era_needassessmentid
-                            && e.era_evacueetype == (int)EvacueeType.Person
-                            && e.era_RegistrantID.contactid == updatedMember.contactid).FirstOrDefault();
 
-                    updatedEvacuee.era_needsassessmentevacueeid = existingEvacuee.era_needsassessmentevacueeid;
-                    updatedEvacuee.era_isprimaryregistrant = existingEvacuee.era_isprimaryregistrant;
-                    updatedEvacuee.era_evacueetype = existingEvacuee.era_evacueetype;
-                    updatedEvacuee.era_NeedsAssessmentID = updatedNeedsAssessment;
+                    if (updatedMember.contactid == null)
+                    {
+                        // New member
+                        updatedMember.contactid = Guid.NewGuid();
+                        updatedMember.era_registranttype = (int?)RegistrantType.Member;
+                        updatedMember.era_authenticated = false;
+                        updatedMember.era_verified = false;
+                        updatedMember.era_registrationdate = DateTimeOffset.UtcNow;
 
-                    dynamicsClient.Detach(existingEvacuee);
-                    dynamicsClient.AttachTo(nameof(dynamicsClient.era_needsassessmentevacuees), updatedEvacuee);
+                        dynamicsClient.AddTocontacts(updatedMember);
+                        updatedEvacuee = new era_needsassessmentevacuee
+                        {
+                            era_needsassessmentevacueeid = Guid.NewGuid(),
+                            era_isprimaryregistrant = false,
+                            era_evacueetype = (int?)EvacueeType.Person,
+                            era_NeedsAssessmentID = updatedNeedsAssessment
+                        };
+                        dynamicsClient.AddToera_needsassessmentevacuees(updatedEvacuee);
+
+                        // link registrant primary and mailing address city, province, country
+                        dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.PrimaryAddress.Country.Code), nameof(era_country.era_contact_Country), updatedMember);
+                        dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.PrimaryAddress.StateProvince.Code), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), updatedMember);
+                        dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.PrimaryAddress.Jurisdiction.Code), nameof(era_jurisdiction.era_jurisdiction_contact_City), updatedMember);
+
+                        dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.MailingAddress.Country.Code), nameof(era_country.era_country_contact_MailingCountry), updatedMember);
+                        dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.MailingAddress.StateProvince.Code), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), updatedMember);
+                        dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.MailingAddress.Jurisdiction.Code), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), updatedMember);
+                    }
+                    else
+                    {
+                        // Existing member
+                        dynamicsClient.AttachTo(nameof(dynamicsClient.contacts), updatedMember);
+
+                        var existingEvacuee = existingNeedsAssessmentEvacuees
+                            .Where(e => e.era_NeedsAssessmentID.era_needassessmentid == updatedNeedsAssessment.era_needassessmentid
+                                && e.era_evacueetype == (int)EvacueeType.Person
+                                && e.era_RegistrantID.contactid == updatedMember.contactid).FirstOrDefault();
+
+                        updatedEvacuee.era_needsassessmentevacueeid = existingEvacuee.era_needsassessmentevacueeid;
+                        updatedEvacuee.era_isprimaryregistrant = existingEvacuee.era_isprimaryregistrant;
+                        updatedEvacuee.era_evacueetype = existingEvacuee.era_evacueetype;
+                        updatedEvacuee.era_NeedsAssessmentID = updatedNeedsAssessment;
+
+                        dynamicsClient.Detach(existingEvacuee);
+                        dynamicsClient.AttachTo(nameof(dynamicsClient.era_needsassessmentevacuees), updatedEvacuee);
+                    }
 
                     // link members and needs assessment to evacuee record
                     dynamicsClient.TryAddLink(updatedMember, nameof(updatedMember.era_NeedsAssessmentEvacuee_RegistrantID), updatedEvacuee);
                     dynamicsClient.TryAddLink(updatedNeedsAssessment, nameof(updatedNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), updatedEvacuee);
 
                     dynamicsClient.UpdateObject(updatedEvacuee);
+                    updatedEvacuees.Add(updatedEvacuee.era_needsassessmentevacueeid);
+                }
+
+                var membersToDelete = new List<era_needsassessmentevacuee>();
+
+                foreach (var evacuee in currentEvacuees)
+                {
+                    if (!updatedEvacuees.Contains(evacuee.era_needsassessmentevacueeid))
+                    {
+                        membersToDelete.Add(evacuee);
+                    }
+                }
+
+                foreach (var member in membersToDelete)
+                {
+                    dynamicsClient.DeleteObject(member);
                 }
 
                 // Needs assessment evacuee as pet
@@ -479,7 +605,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
             essFileNumber = queryResult?.era_essfilenumber.ToString();
 
-            dynamicsClient.Detach(queryResult);
+            dynamicsClient.DetachAll();
 
             return $"{essFileNumber:D9}";
         }

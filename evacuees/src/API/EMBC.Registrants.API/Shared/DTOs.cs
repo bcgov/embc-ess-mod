@@ -101,9 +101,6 @@ namespace EMBC.Registrants.API.Shared
     public class PersonDetails
     {
         [Required]
-        public string Id { get; set; }
-
-        [Required]
         public string FirstName { get; set; }
 
         [Required]

@@ -142,19 +142,19 @@ namespace EMBC.Registrants.API.RegistrationsModule
             var newPrimaryRegistrant = CreateNewContact(registration.RegistrationDetails, true);
 
             // New Contacts (Household Members)
-            var members = (registration.PreliminaryNeedsAssessment.FamilyMembers ?? Array.Empty<PersonDetails>()).Select(fm => new contact
+            var members = (registration.PreliminaryNeedsAssessment.HouseholdMembers ?? Array.Empty<HouseholdMember>()).Select(fm => new contact
             {
                 contactid = Guid.NewGuid(),
                 era_registranttype = (int?)RegistrantType.Member,
                 era_authenticated = false,
                 era_verified = false,
                 era_registrationdate = now,
-                firstname = fm.FirstName,
-                lastname = fm.LastName,
-                era_preferredname = fm.PreferredName,
-                era_initial = fm.Initials,
-                gendercode = LookupGender(fm.Gender),
-                birthdate = FromDateTime(DateTime.Parse(fm.DateOfBirth)),
+                firstname = fm.Details.FirstName,
+                lastname = fm.Details.LastName,
+                era_preferredname = fm.Details.PreferredName,
+                era_initial = fm.Details.Initials,
+                gendercode = LookupGender(fm.Details.Gender),
+                birthdate = FromDateTime(DateTime.Parse(fm.Details.DateOfBirth)),
                 era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
                 era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
 
