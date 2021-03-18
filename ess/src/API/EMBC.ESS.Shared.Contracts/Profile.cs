@@ -39,6 +39,14 @@ namespace EMBC.ESS.Shared.Contracts.Profile
         public string Reason { get; set; }
     }
 
+    public class SignResponderAgreementCommand : Command<SignResponderAgreementResponse>
+    {
+        public string UserName { get; set; }
+        public DateTime SignatureDate { get; set; }
+    }
+
+    public class SignResponderAgreementResponse : Response { }
+
     public class UserProfile
     {
         public string Id { get; set; }

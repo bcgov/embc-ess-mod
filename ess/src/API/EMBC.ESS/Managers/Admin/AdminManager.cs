@@ -150,5 +150,15 @@ namespace EMBC.ESS.Managers.Admin
 
             return new SuccessfulLogin { Profile = mapper.Map<UserProfile>(member) };
         }
+
+        public async Task<SignResponderAgreementResponse> Handle(SignResponderAgreementCommand cmd)
+        {
+            var member = (await teamRepository.GetMembers(userName: cmd.UserName)).SingleOrDefault();
+            if (member == null) throw new NotFoundException($"team member not found", cmd.UserName);
+
+            member.AgreementSignDate = cmd.SignatureDate;
+            await teamRepository.SaveMember(member);
+            return new SignResponderAgreementResponse();
+        }
     }
 }
