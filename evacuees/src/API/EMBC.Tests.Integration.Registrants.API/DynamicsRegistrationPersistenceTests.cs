@@ -186,14 +186,18 @@ namespace EMBC.Tests.Integration.Registrants.API
                 },
                 PreliminaryNeedsAssessment = new NeedsAssessment
                 {
-                    FamilyMembers = new[]
+                    HouseholdMembers = new[]
                     {
-                        new PersonDetails
+                        new HouseholdMember
                         {
-                            FirstName = $"MemRegTestFirst-{textContextIdentifier}",
-                            LastName = $"MemRegTestLast-{textContextIdentifier}",
-                            Gender = "X",
-                            DateOfBirth = "2010-01-01"
+                            Id = null,
+                            Details = new PersonDetails
+                            {
+                                FirstName = $"MemRegTestFirst-{textContextIdentifier}",
+                                LastName = $"MemRegTestLast-{textContextIdentifier}",
+                                Gender = "X",
+                                DateOfBirth = "2010-01-01"
+                            }
                         }
                     },
                     HaveMedication = false,

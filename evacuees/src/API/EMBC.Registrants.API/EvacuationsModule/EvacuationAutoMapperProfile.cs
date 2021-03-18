@@ -34,6 +34,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForPath(d => d.EvacuatedFromAddress.Country.Name, opts => opts.MapFrom(s => s.era_country))
                 .ForPath(d => d.EvacuatedFromAddress.StateProvince.Name, opts => opts.MapFrom(s => s.era_province))
                 .ForPath(d => d.EvacuatedFromAddress.Jurisdiction, opts => opts.MapFrom(s => s.era_Jurisdiction))
+                .ForPath(d => d.EvacuatedFromAddress.Jurisdiction.StateProvinceCode, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_code))
+                .ForPath(d => d.EvacuatedFromAddress.Jurisdiction.CountryCode, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_RelatedCountry.era_countrycode))
 
                 .ReverseMap()
 
@@ -45,7 +47,9 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForPath(d => d.era_postalcode, opts => opts.MapFrom(s => s.EvacuatedFromAddress.PostalCode))
                 .ForPath(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Country.Name))
                 .ForPath(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvince.Name))
-                .ForPath(d => d.era_Jurisdiction, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction));
+                .ForPath(d => d.era_Jurisdiction, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction))
+                .ForPath(d => d.era_Jurisdiction.era_RelatedProvinceState.era_code, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction))
+                .ForPath(d => d.era_Jurisdiction.era_RelatedProvinceState.era_RelatedCountry.era_countrycode, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction.CountryCode));
 
             CreateMap<era_needassessment, NeedsAssessment>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_needassessmentid))
@@ -60,7 +64,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForMember(d => d.HaveSpecialDiet, opts => opts.MapFrom(s => s.era_dietaryrequirement))
                 .ForMember(d => d.SpecialDietDetails, opts => opts.MapFrom(s => s.era_dietaryrequirementdetails))
                 .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => s.era_haspetfood))
-                .ForMember(d => d.FamilyMembers, opts => opts.MapFrom(s => new List<PersonDetails>()))
+                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => new List<HouseholdMember>()))
                 .ForMember(d => d.Pets, opts => opts.MapFrom(s => new List<Pet>()))
 
                 .ReverseMap()
@@ -91,8 +95,15 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForMember(d => d.HaveSpecialDiet, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.SpecialDietDetails, opts => opts.MapFrom(s => new string(string.Empty)))
                 .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => false))
-                .ForMember(d => d.FamilyMembers, opts => opts.MapFrom(s => new List<PersonDetails>()))
+                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => new List<HouseholdMember>()))
                 .ForMember(d => d.Pets, opts => opts.MapFrom(s => new List<Pet>()));
+
+            CreateMap<HouseholdMember, contact>().IncludeMembers(s => s.Details)
+                .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.Id))
+
+                .ReverseMap()
+
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.contactid));
 
             CreateMap<era_needsassessmentevacuee, Pet>()
                 .ForMember(d => d.Quantity, opts => opts.MapFrom(s => s.era_numberofpets))
