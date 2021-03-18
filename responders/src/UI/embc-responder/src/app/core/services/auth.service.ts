@@ -49,7 +49,6 @@ export class AuthService {
 export class OAuthNoopResourceServerErrorHandler implements OAuthResourceServerErrorHandler {
 
   handleError(err: HttpResponse<any>): Observable<any> {
-    console.debug('OAuthNoopResourceServerErrorHandler', err);
     return throwError(err);
   }
 
