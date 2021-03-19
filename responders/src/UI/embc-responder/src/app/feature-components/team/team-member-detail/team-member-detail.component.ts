@@ -17,7 +17,7 @@ export class TeamMemberDetailComponent implements OnInit {
   teamMember: TeamMember;
 
   constructor(private router: Router, private dialog: MatDialog, private teamDetailsService: TeamMemberDetailsService,
-              private teamDataService: TeamListDataService) {
+    private teamDataService: TeamListDataService) {
     if (this.router.getCurrentNavigation().extras.state !== undefined) {
       const state = this.router.getCurrentNavigation().extras.state as TeamMember;
       this.teamMember = state;
@@ -47,6 +47,10 @@ export class TeamMemberDetailComponent implements OnInit {
 
   editUser(): void {
     this.router.navigate(['/responder-access/responder-management/details/edit'], { state: this.teamMember });
+  }
+
+  cancel(): void {
+    this.router.navigate(['/responder-access/responder-management/details/member-list']);
   }
 
 }

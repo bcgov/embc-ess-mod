@@ -1,0 +1,1 @@
+export const userNameExistsMessage = 'The BCeID Username entered is already associated to another ESS Team user record. Please verify that the BCeID Username is correct or contact your Local Government or First Nations Authority for assistance.'

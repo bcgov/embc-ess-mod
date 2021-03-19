@@ -11,4 +11,8 @@ export class TeamMemberReviewService {
     updateTeamMember(memberId: string, teamMember: TeamMember): Observable<void> {
         return this.teamMembersService.teamMembersUpdateTeamMember({ memberId: memberId, body: teamMember });
     }
+
+    addTeamMember(teamMember: TeamMember): Observable<void> {
+        return this.teamMembersService.teamMembersCreateTeamMember({ body: teamMember });
+    }
 }

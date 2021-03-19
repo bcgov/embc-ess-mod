@@ -1,7 +1,16 @@
+<!-- <div class="row heading-container">
+    <div class="col-md-12">
+        <span class="page-heading">View Responder</span>
+    </div>
+</div>
+<br> -->
+
 <mat-card>
     <div class="content-align">
         <div class="row">
-            <p class="details-heading">Responder Details</p>
+            <div class="col-md-12">
+                <p class="details-heading">Responder Details</p>
+            </div>
         </div>
 
         <br>
@@ -32,7 +41,7 @@
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">ESS Team</div>
-            <div class="col-md-8"> Team name is missing in the Team Member object</div>
+            <div class="col-md-8"> {{teamMember?.teamName}}</div>
         </div>
 
         <div class="row row-align">
@@ -47,12 +56,12 @@
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">Electronic Access Agreement Signed</div>
-            <div class="col-md-8"> {{teamMember?.agreementSignDate}}</div>
+            <div class="col-md-8"> {{teamMember?.agreementSignDate | date:'dd-MMM-yyyy'}}</div>
         </div>
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">Last Login Date & Time</div>
-            <div class="col-md-8"> {{teamMember?.lastSuccessfulLogin}}</div>
+            <div class="col-md-8"> {{teamMember?.lastSuccessfulLogin | date:'dd-MMM-yyyy HH:mm'}}</div>
         </div>
 
         <div class="row row-align">
@@ -60,9 +69,15 @@
             <div class="col-md-8"> {{teamMember?.isActive}}</div>
         </div>
         <br>
-        <div>
-            <button class="button-s button-margin" mat-button (click)="deleteUser()">Delete User</button>
-            <button class="button-p" mat-button (click)="editUser()">Edit User Details</button>
+
+        <div class="row justify-content-between">
+            <div class="col-md-6">
+                <button class="button-s" mat-button (click)="cancel()">Cancel</button>
+            </div>
+            <div class="col-md-6">
+                <button class="button-s button-float" mat-button (click)="deleteUser()">Delete User</button>
+                <button class="button-p button-float button-margin" mat-button (click)="editUser()">Edit User Details</button>
+            </div>
         </div>
     </div>
 </mat-card>

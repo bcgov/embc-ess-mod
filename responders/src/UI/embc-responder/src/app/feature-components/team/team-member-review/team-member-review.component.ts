@@ -37,7 +37,29 @@ export class TeamMemberReviewComponent implements OnInit {
   save(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
+    if (this.teamMember.id) {
+      this.updateTeamMember()
+    } else {
+      this.addTeamMember();
+    }
+  }
+
+  updateTeamMember(): void {
     this.teamMemberReviewService.updateTeamMember(this.teamMember.id, this.teamMember).subscribe(value => {
+      this.router.navigate(['/responder-access/responder-management/details/member-list']);
+    }, (error) => {
+      this.showLoader = !this.showLoader;
+      this.isSubmitted = !this.isSubmitted;
+      if (error.title) {
+        this.alertService.setAlert('danger', error.title);
+      } else {
+        this.alertService.setAlert('danger', error.statusText);
+      }
+    })
+  }
+
+  addTeamMember(): void {
+    this.teamMemberReviewService.addTeamMember(this.teamMember).subscribe(value => {
       this.router.navigate(['/responder-access/responder-management/details/member-list']);
     }, (error) => {
       this.showLoader = !this.showLoader;

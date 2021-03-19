@@ -24,6 +24,7 @@ export class TeamListComponent implements OnInit {
 
   ngOnInit(): void {
     this.teamFilterPredicate();
+    this.teamDataService.clear();
     this.teamListService.getTeamMembers().subscribe(values => {
       this.teamMembers = values;
     });
@@ -89,6 +90,10 @@ export class TeamListComponent implements OnInit {
       console.log(value);
       this.teamMembers = value;
     });
+  }
+
+  addTeamMember(): void {
+    this.router.navigate(['/responder-access/responder-management/add-member'])
   }
 }
 
