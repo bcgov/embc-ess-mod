@@ -28,6 +28,12 @@ parameters:
   - description: ESS backend allow invalid server cert
     name: BACKEND_ALLOW_INVALID_CERT
     value: "false"
+  - description: JWT metadata url
+    name: JWT_METADATA_URL
+    required: true
+  - description: JWT audience
+    name: JWT_AUDIENCE
+    required: true
 
 objects:
   - kind: ConfigMap
@@ -42,6 +48,8 @@ objects:
       KEY_RING_PATH: "/dpkeys"
       BACKEND__URL: ${BACKEND_URL}
       BACKEND__ALLOWINVALIDSERVERCERTIFICATE: ${BACKEND_ALLOW_INVALID_CERT}
+      JWT__METADATAADDRESS: ${JWT_METADATA_URL}
+      JWT__AUDIENCE: ${JWT_AUDIENCE}
 
   - kind: Secret
     apiVersion: v1
