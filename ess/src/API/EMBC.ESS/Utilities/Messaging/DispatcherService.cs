@@ -51,7 +51,7 @@ namespace EMBC.ESS.Utilities.Messaging
                 return new ReplyEnvelope
                 {
                     CorrelationId = request.CorrelationId,
-                    Type = replyMessage.GetType().FullName,
+                    Type = replyMessage.GetType().AssemblyQualifiedName,
                     Content = Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
                     Empty = replyMessage == null
                 };

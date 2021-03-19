@@ -7964,6 +7964,7 @@
         <Property Name="_era_essteamid_value" Type="Edm.Guid" />
         <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="era_externalsystemuser" Type="Edm.String" Unicode="false" />
         <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
         <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="era_essteamuserid" Type="Edm.Guid" />

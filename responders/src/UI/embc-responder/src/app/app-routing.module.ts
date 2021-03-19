@@ -3,24 +3,19 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'electronic-agreement',
-    pathMatch: 'full'
-  },
-  {
     path: 'responder-access',
     loadChildren: () => import('./feature-components/responder-access/responder-access.module')
-    .then(m => m.ResponderAccessModule)
+      .then(m => m.ResponderAccessModule)
   },
   {
     path: 'electronic-agreement',
     loadChildren: () => import('./feature-components/electronic-agreement/electronic-agreement.module')
-    .then(m => m.ElectronicAgreementModule)
+      .then(m => m.ElectronicAgreementModule)
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

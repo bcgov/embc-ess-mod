@@ -146,7 +146,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
         public bool HaveSpecialDiet { get; set; }
         public string SpecialDietDetails { get; set; }
         public bool HaveMedication { get; set; }
-        public IEnumerable<PersonDetails> FamilyMembers { get; set; } = Array.Empty<PersonDetails>();
+        public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }
         public NeedsAssessmentType Type { get; set; }
@@ -170,6 +170,15 @@ namespace EMBC.Registrants.API.EvacuationsModule
             Preliminary = 174360000,
             Assessed = 174360001
         }
+    }
+
+    /// <summary>
+    /// A member of the household in needs assessment
+    /// </summary>
+    public class HouseholdMember
+    {
+        public string Id { get; set; }
+        public PersonDetails Details { get; set; }
     }
 
     /// <summary>
