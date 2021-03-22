@@ -4,17 +4,7 @@
 
 export const environment = {
   production: false,
-  version: '1.0.0',
-  keycloak: {
-    issuer: 'https://dev.oidc.gov.bc.ca/auth/realms/udb1ycga',
-    redirectUri: window.location.origin + '/',
-    clientId: 'responder-portal',
-    scope: 'openid profile email offline_access',
-    responseType: 'code',
-    // at_hash is not present in JWT token
-    disableAtHashCheck: true,
-    showDebugInformation: true
-  }
+  version: '1.0.0'
 
 };
 
@@ -25,4 +15,5 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+
+import 'zone.js/dist/zone-error';  // Included with Angular CLI.
