@@ -265,7 +265,9 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public MemberRole Role { get; set; }
 
-        public MemberLabel Label { get; set; }
+        public MemberLabel? Label { get; set; }
+
+        public bool IsUserNameEditable { get; set; }
     }
 
     /// <summary>
@@ -330,7 +332,8 @@ namespace EMBC.Responders.API.Controllers
         {
             CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
                 .ForMember(d => d.Role, opts => opts.MapFrom(s => Enum.Parse<MemberRole>(s.Role)))
-                .ForMember(d => d.Label, opts => opts.MapFrom(s => Enum.Parse<MemberLabel>(s.Label)))
+                .ForMember(d => d.Label, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Label) ? (MemberLabel?)null : Enum.Parse<MemberLabel>(s.Label)))
+                .ForMember(d => d.IsUserNameEditable, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.ExternalUserId)))
                 .ReverseMap()
                 .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.ToString()))
                 .ForMember(d => d.Label, opts => opts.MapFrom(s => s.Label.ToString()))
