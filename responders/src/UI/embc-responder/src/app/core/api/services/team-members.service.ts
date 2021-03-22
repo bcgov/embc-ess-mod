@@ -9,8 +9,8 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-import { MemberLabel } from '../models/member-label';
-import { MemberRole } from '../models/member-role';
+import { MemberLabelDescription } from '../models/member-label-description';
+import { MemberRoleDescription } from '../models/member-role-description';
 import { TeamMember } from '../models/team-member';
 
 @Injectable({
@@ -520,7 +520,7 @@ export class TeamMembersService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamMembersGetMemberRoles$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<MemberRole>>> {
+  }): Observable<StrictHttpResponse<Array<MemberRoleDescription>>> {
 
     const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersGetMemberRolesPath, 'get');
     if (params) {
@@ -532,7 +532,7 @@ export class TeamMembersService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<MemberRole>>;
+        return r as StrictHttpResponse<Array<MemberRoleDescription>>;
       })
     );
   }
@@ -548,10 +548,10 @@ export class TeamMembersService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamMembersGetMemberRoles(params?: {
-  }): Observable<Array<MemberRole>> {
+  }): Observable<Array<MemberRoleDescription>> {
 
     return this.teamMembersGetMemberRoles$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<MemberRole>>) => r.body as Array<MemberRole>)
+      map((r: StrictHttpResponse<Array<MemberRoleDescription>>) => r.body as Array<MemberRoleDescription>)
     );
   }
 
@@ -571,7 +571,7 @@ export class TeamMembersService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamMembersGetMemberLabels$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<MemberLabel>>> {
+  }): Observable<StrictHttpResponse<Array<MemberLabelDescription>>> {
 
     const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersGetMemberLabelsPath, 'get');
     if (params) {
@@ -583,7 +583,7 @@ export class TeamMembersService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<MemberLabel>>;
+        return r as StrictHttpResponse<Array<MemberLabelDescription>>;
       })
     );
   }
@@ -599,10 +599,10 @@ export class TeamMembersService extends BaseService {
    * This method doesn't expect any request body.
    */
   teamMembersGetMemberLabels(params?: {
-  }): Observable<Array<MemberLabel>> {
+  }): Observable<Array<MemberLabelDescription>> {
 
     return this.teamMembersGetMemberLabels$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<MemberLabel>>) => r.body as Array<MemberLabel>)
+      map((r: StrictHttpResponse<Array<MemberLabelDescription>>) => r.body as Array<MemberLabelDescription>)
     );
   }
 

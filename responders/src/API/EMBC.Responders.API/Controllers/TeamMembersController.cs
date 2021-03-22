@@ -197,7 +197,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <returns>list of role codes with description</returns>
         [HttpGet("codes/memberrole")]
-        public async Task<ActionResult<IEnumerable<MemberRole>>> GetMemberRoles()
+        public async Task<ActionResult<IEnumerable<MemberRoleDescription>>> GetMemberRoles()
         {
             var enumList = EnumHelper.GetEnumDescriptions<MemberRole>();
             return Ok(await Task.FromResult(enumList.Select(e => new MemberRoleDescription { Code = e.value, Description = e.description }).ToArray()));
@@ -208,7 +208,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <returns>list of label codes with description</returns>
         [HttpGet("codes/memberlabel")]
-        public async Task<ActionResult<IEnumerable<MemberLabel>>> GetMemberLabels()
+        public async Task<ActionResult<IEnumerable<MemberLabelDescription>>> GetMemberLabels()
         {
             var enumList = EnumHelper.GetEnumDescriptions<MemberLabel>();
             return Ok(await Task.FromResult(enumList.Select(e => new MemberLabelDescription { Code = e.value, Description = e.description }).ToArray()));

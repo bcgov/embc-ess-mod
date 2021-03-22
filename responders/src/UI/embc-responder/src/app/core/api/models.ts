@@ -11,3 +11,5 @@ export { AssignedCommunity } from './models/assigned-community';
 export { TeamMember } from './models/team-member';
 export { MemberRole } from './models/member-role';
 export { MemberLabel } from './models/member-label';
+export { MemberRoleDescription } from './models/member-role-description';
+export { MemberLabelDescription } from './models/member-label-description';
