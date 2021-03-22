@@ -19,3 +19,4 @@ JWT_AUDIENCE=<JWT audience>
 JWT_SIGNING_KEY=<JWT signing key>
 JWT_ENCRYPTING_KEY=<JWT encrypting key>
 JWT_TOKEN_EXPIRY=<minutes of JWT validity since creation>
+SMTP_SERVER=<SMTP server address>

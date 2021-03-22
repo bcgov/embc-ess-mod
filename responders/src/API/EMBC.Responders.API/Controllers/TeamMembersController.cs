@@ -186,9 +186,12 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("username")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> IsUserNameExists(string userName)
+        public async Task<ActionResult<bool>> IsUserNameExists(string userName, string memberId = null)
         {
-            var response = await client.Send(new ValidateTeamMemberCommand { UniqueUserName = userName });
+            var response = await client.Send(new ValidateTeamMemberCommand
+            {
+                TeamMember = new ESS.Shared.Contracts.Team.TeamMember { UserName = userName, Id = memberId, TeamId = teamId }
+            });
             return Ok(!response.UniqueUserName);
         }
 
