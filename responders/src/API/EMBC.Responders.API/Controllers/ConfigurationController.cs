@@ -41,8 +41,11 @@ namespace EMBC.Responders.API.Controllers
         {
             var config = new Configuration
             {
-                OidcClientId = configuration.GetValue<string>("oidc:clientId"),
-                OidcIssuer = configuration.GetValue<string>("oidc:issuer")
+                Oidc = new OidcConfiguration
+                {
+                    ClientId = configuration.GetValue<string>("oidc:clientId"),
+                    Issuer = configuration.GetValue<string>("oidc:issuer")
+                }
             };
 
             return Ok(await Task.FromResult(config));
@@ -51,7 +54,12 @@ namespace EMBC.Responders.API.Controllers
 
     public class Configuration
     {
-        public string OidcIssuer { get; set; }
-        public string OidcClientId { get; set; }
+        public OidcConfiguration Oidc { get; set; }
+    }
+
+    public class OidcConfiguration
+    {
+        public string Issuer { get; set; }
+        public string ClientId { get; set; }
     }
 }
