@@ -17,7 +17,7 @@ export class TeamMemberDetailComponent implements OnInit {
   teamMember: TeamMember;
 
   constructor(private router: Router, private dialog: MatDialog, private teamDetailsService: TeamMemberDetailsService,
-    private teamDataService: TeamListDataService) {
+              private teamDataService: TeamListDataService) {
     if (this.router.getCurrentNavigation().extras.state !== undefined) {
       const state = this.router.getCurrentNavigation().extras.state as TeamMember;
       this.teamMember = state;
@@ -39,7 +39,7 @@ export class TeamMemberDetailComponent implements OnInit {
     }).afterClosed().subscribe(event => {
       if (event === 'delete') {
         this.teamDetailsService.deleteTeamMember(this.teamMember.id).subscribe(value => {
-          let stateIndicator = { action: "delete" };
+          const stateIndicator = { action: 'delete' };
           this.router.navigate(['/responder-access/responder-management/details/member-list'], { state: stateIndicator });
         });
       }

@@ -8,7 +8,7 @@ export class EditTeamMemberService {
   constructor(private teamMembersService: TeamMembersService) { }
 
   checkUserNameExists(userName: string): Observable<boolean> {
-    return this.teamMembersService.teamMembersIsUserNameExists({ userName: userName });
+    return this.teamMembersService.teamMembersIsUserNameExists({ userName });
   }
 
 }

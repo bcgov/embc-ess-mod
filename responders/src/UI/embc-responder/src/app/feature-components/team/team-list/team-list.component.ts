@@ -19,22 +19,22 @@ import * as globalConst from '../../../core/services/global-constants';
 export class TeamListComponent implements OnInit {
 
   constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService,
-    private dialog: MatDialog) {
+              private dialog: MatDialog) {
     if (this.router.getCurrentNavigation().extras.state !== undefined) {
       const state = this.router.getCurrentNavigation().extras.state;
-      let displayText: string = '';
-      if(state?.action === "delete") {
+      let displayText = '';
+      if (state?.action === 'delete') {
         console.log(state?.action);
         displayText = globalConst.deleteMessage;
-      } else if(state?.action === "edit") {
+      } else if (state?.action === 'edit') {
         displayText = globalConst.editMessage;
       } else {
-        displayText = "Hello.. Something went wrong";
+        displayText = 'Hello.. Something went wrong';
       }
       setTimeout(() => {
         this.openConfirmation(displayText);
-      }, 500)
-    } 
+      }, 500);
+    }
    }
 
   filterTerm: TableFilterValueModel;
@@ -114,14 +114,14 @@ export class TeamListComponent implements OnInit {
   }
 
   addTeamMember(): void {
-    this.router.navigate(['/responder-access/responder-management/add-member'])
+    this.router.navigate(['/responder-access/responder-management/add-member']);
   }
 
   openConfirmation(text: string): void {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text: text
+        text
       },
       height: '230px',
       width: '530px'

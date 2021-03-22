@@ -23,8 +23,8 @@ export class EditTeamMemberComponent implements OnInit {
   color = '#169BD5';
 
   constructor(private builder: FormBuilder, private router: Router, private teamDataService: TeamListDataService,
-    private listService: LoadTeamListService, private customValidation: CustomValidationService,
-    private editTeamMemberService: EditTeamMemberService, private alertService: AlertService) {
+              private listService: LoadTeamListService, private customValidation: CustomValidationService,
+              private editTeamMemberService: EditTeamMemberService, private alertService: AlertService) {
     if (this.router.getCurrentNavigation().extras.state !== undefined) {
       const state = this.router.getCurrentNavigation().extras.state as TeamMember;
       this.teamMember = state;
@@ -47,7 +47,8 @@ export class EditTeamMemberComponent implements OnInit {
     this.editForm = this.builder.group({
       firstName: [this.teamMember.firstName, [this.customValidation.whitespaceValidator()]],
       lastName: [this.teamMember.lastName, [this.customValidation.whitespaceValidator()]],
-      userName: [{ value: this.teamMember.userName, disabled: this.isEditAllowed() }, [this.customValidation.whitespaceValidator()]],
+      userName: [{ value: this.teamMember.userName, disabled: this.isEditAllowed() },
+        [this.customValidation.whitespaceValidator()]],
       role: [this.teamMember.role, [this.customValidation.whitespaceValidator()]],
       label: [this.teamMember.label],
       email: [{ value: this.teamMember.email, disabled: true }],
@@ -64,11 +65,12 @@ export class EditTeamMemberComponent implements OnInit {
   }
 
   next(): void {
-    let updatedTeamMember: TeamMember = this.editForm.getRawValue();
-    this.router.navigate(['/responder-access/responder-management/details/review'], { state: { ...this.teamMember, ...updatedTeamMember } });
+    const updatedTeamMember: TeamMember = this.editForm.getRawValue();
+    this.router.navigate(['/responder-access/responder-management/details/review'],
+    { state: { ...this.teamMember, ...updatedTeamMember } });
   }
 
-  checkUserName($event) {
+  checkUserName($event): void {
     this.showLoader = !this.showLoader;
     this.editTeamMemberService.checkUserNameExists($event.target.value).subscribe(value => {
       this.showLoader = !this.showLoader;
@@ -83,7 +85,7 @@ export class EditTeamMemberComponent implements OnInit {
     }, (error) => {
       this.showLoader = !this.showLoader;
       this.alertService.setAlert('danger', error.error.title);
-    })
+    });
   }
 
 }

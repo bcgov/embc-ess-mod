@@ -17,7 +17,7 @@ export class AddTeamMemberComponent implements OnInit {
   labels: MemberLabelDescription[];
 
   constructor(private builder: FormBuilder, private router: Router, private listService: LoadTeamListService,
-    private customValidation: CustomValidationService) { }
+              private customValidation: CustomValidationService) { }
 
   ngOnInit(): void {
     this.constructAddForm();
@@ -44,7 +44,7 @@ export class AddTeamMemberComponent implements OnInit {
   }
 
   next(): void {
-    let newTeamMember: TeamMember = this.addForm.getRawValue();
+    const newTeamMember: TeamMember = this.addForm.getRawValue();
     this.router.navigate(['/responder-access/responder-management/details/review'], { state: newTeamMember });
   }
 

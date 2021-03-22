@@ -8,18 +8,18 @@ export class CustomValidationService {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             if (control.value !== undefined) {
                 if ((control.value || '').trim().length === 0) {
-                    return { whitespaceError: true }
+                    return { whitespaceError: true };
                 }
             }
-        }
+        };
     }
 
     userNameExistsValidator(existsIndicator: boolean): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
-            if(existsIndicator && control.value !== null && control.value !== undefined && control.value !== '') {
-                return { userNameExists: true }
+            if (existsIndicator && control.value !== null && control.value !== undefined && control.value !== '') {
+                return { userNameExists: true };
             }
-        }
+        };
     }
 
 

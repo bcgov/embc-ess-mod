@@ -17,7 +17,7 @@ export class TeamMemberReviewComponent implements OnInit {
   isSubmitted = false;
 
   constructor(private router: Router, private teamDataService: TeamListDataService,
-    private teamMemberReviewService: TeamMemberReviewService, private alertService: AlertService) {
+              private teamMemberReviewService: TeamMemberReviewService, private alertService: AlertService) {
     if (this.router.getCurrentNavigation().extras.state !== undefined) {
       const state = this.router.getCurrentNavigation().extras.state as TeamMember;
       console.log(state);
@@ -38,7 +38,7 @@ export class TeamMemberReviewComponent implements OnInit {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     if (this.teamMember.id) {
-      this.updateTeamMember()
+      this.updateTeamMember();
     } else {
       this.addTeamMember();
     }
@@ -46,7 +46,7 @@ export class TeamMemberReviewComponent implements OnInit {
 
   updateTeamMember(): void {
     this.teamMemberReviewService.updateTeamMember(this.teamMember.id, this.teamMember).subscribe(value => {
-      let stateIndicator = { action: "edit" };
+      const stateIndicator = { action: 'edit' };
       this.router.navigate(['/responder-access/responder-management/details/member-list'], { state: stateIndicator });
     }, (error) => {
       this.showLoader = !this.showLoader;
@@ -56,7 +56,7 @@ export class TeamMemberReviewComponent implements OnInit {
       } else {
         this.alertService.setAlert('danger', error.statusText);
       }
-    })
+    });
   }
 
   addTeamMember(): void {
@@ -70,7 +70,7 @@ export class TeamMemberReviewComponent implements OnInit {
       } else {
         this.alertService.setAlert('danger', error.statusText);
       }
-    })
+    });
   }
 
 }

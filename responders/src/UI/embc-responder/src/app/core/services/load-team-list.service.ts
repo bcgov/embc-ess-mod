@@ -38,7 +38,7 @@ export class LoadTeamListService {
         this.teamMembersService.teamMembersGetMemberRoles().subscribe(roles => {
             memberRoles = roles;
             this.setMemberRoles(memberRoles);
-        })
+        });
         return memberRoles;
     }
 
@@ -47,7 +47,7 @@ export class LoadTeamListService {
         this.teamMembersService.teamMembersGetMemberLabels().subscribe(labels => {
             memberLabels = labels;
             this.setMemberLabels(memberLabels);
-        })
+        });
         return memberLabels;
     }
 }
