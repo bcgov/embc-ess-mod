@@ -1,9 +1,9 @@
 import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthConfig, OAuthResourceServerErrorHandler, OAuthService } from 'angular-oauth2-oidc';
+import { OAuthResourceServerErrorHandler, OAuthService } from 'angular-oauth2-oidc';
 import { Observable, throwError } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ConfigService } from './config.service';
 import { UserService } from './user.service';
 
@@ -29,7 +29,6 @@ export class AuthService {
     } else {
       return Promise.reject('Not logged in');
     }
-
 
   }
 
