@@ -6,18 +6,19 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   templateUrl: './delete-confirmation-dialog.component.html',
   styleUrls: ['./delete-confirmation-dialog.component.scss']
 })
-export class DeleteConfirmationDialogComponent implements OnInit {
+export class DeleteConfirmationDialogComponent {
 
   @Output() outputEvent = new EventEmitter<string>();
   isConfirmed = false;
+  showError = false;
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
   confirmDeleteChange($event: MatCheckboxChange): void {
-    this.isConfirmed = $event.checked; 
+    this.isConfirmed = $event.checked;
+    if (this.isConfirmed) {
+      this.showError = !this.isConfirmed;
+    }
   }
 
   cancel(): void {
@@ -25,7 +26,11 @@ export class DeleteConfirmationDialogComponent implements OnInit {
   }
 
   delete(): void {
-    this.outputEvent.emit('delete');
+    if (this.isConfirmed) {
+      this.outputEvent.emit('delete');
+    } else {
+      this.showError = !this.isConfirmed;
+    }
   }
 
 }

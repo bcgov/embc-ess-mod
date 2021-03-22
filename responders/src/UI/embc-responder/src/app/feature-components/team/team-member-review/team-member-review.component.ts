@@ -46,7 +46,8 @@ export class TeamMemberReviewComponent implements OnInit {
 
   updateTeamMember(): void {
     this.teamMemberReviewService.updateTeamMember(this.teamMember.id, this.teamMember).subscribe(value => {
-      this.router.navigate(['/responder-access/responder-management/details/member-list']);
+      let stateIndicator = { action: "edit" };
+      this.router.navigate(['/responder-access/responder-management/details/member-list'], { state: stateIndicator });
     }, (error) => {
       this.showLoader = !this.showLoader;
       this.isSubmitted = !this.isSubmitted;

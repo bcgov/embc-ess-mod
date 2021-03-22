@@ -11,6 +11,9 @@
             ERA Tool, and I am aware this cannot
             be undone.</mat-checkbox>
     </div>
+    <div *ngIf="showError" class="col-md-12 field-error">
+        You must confirm this action before selecting the Delete button
+    </div>
 </div>
 
 <br>
@@ -19,6 +22,6 @@
         <button class="button-s" mat-button (click)="cancel()">No, Cancel</button>
     </div>
     <div class="col-md-6">
-        <button class="button-p delete-button" mat-button [disabled]="!isConfirmed" (click)="delete()">Yes, Delete this User</button>
+        <button class="button-p delete-button" mat-button (click)="delete()">Yes, Delete this User</button>
     </div>
 </div>

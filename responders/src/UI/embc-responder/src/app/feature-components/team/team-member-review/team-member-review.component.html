@@ -1,7 +1,7 @@
-<app-alert></app-alert>
 <div class="row">
     <div class="col-md-8">
         <mat-card>
+            <app-alert></app-alert>
             <div class="row">
                 <div class="col-md-12">
                     <p class="details-heading">Review Details & Save</p>
@@ -25,7 +25,7 @@
 
             <div class="row row-align">
                 <div class="col-md-4 detail-label">ESS Team</div>
-                <div class="col-md-8"> Team name is missing in the Team Member object</div>
+                <div class="col-md-8"> {{teamMember?.teamName}}</div>
             </div>
 
             <div class="row row-align">
@@ -40,7 +40,8 @@
             <br>
             <div>
                 <button class="button-s button-margin" mat-button (click)="goBack()">Go Back & Edit</button>
-                <button class="button-p" mat-button [disabled]="isSubmitted" (click)="save()">Save <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader></button>
+                <button class="button-p" mat-button [disabled]="isSubmitted" (click)="save()">Save <app-loader
+                        [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader></button>
             </div>
         </mat-card>
     </div>

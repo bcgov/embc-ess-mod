@@ -39,7 +39,8 @@ export class TeamMemberDetailComponent implements OnInit {
     }).afterClosed().subscribe(event => {
       if (event === 'delete') {
         this.teamDetailsService.deleteTeamMember(this.teamMember.id).subscribe(value => {
-          this.router.navigate(['/responder-access/responder-management/details/member-list']);
+          let stateIndicator = { action: "delete" };
+          this.router.navigate(['/responder-access/responder-management/details/member-list'], { state: stateIndicator });
         });
       }
     });

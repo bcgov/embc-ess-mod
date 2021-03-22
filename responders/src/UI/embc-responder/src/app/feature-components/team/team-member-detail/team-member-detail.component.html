@@ -70,7 +70,13 @@
         </div>
         <br>
 
-        <div class="row justify-content-between">
+        <div class="row">
+            <button class="button-s button-float button-margin" mat-button (click)="deleteUser()">Delete User</button>
+            <button class="button-p button-float" mat-button (click)="editUser()">Edit User
+                Details</button>
+        </div>
+
+        <!-- <div class="row justify-content-between">
             <div class="col-md-6">
                 <button class="button-s" mat-button (click)="cancel()">Cancel</button>
             </div>
@@ -78,6 +84,6 @@
                 <button class="button-s button-float" mat-button (click)="deleteUser()">Delete User</button>
                 <button class="button-p button-float button-margin" mat-button (click)="editUser()">Edit User Details</button>
             </div>
-        </div>
+        </div> -->
     </div>
 </mat-card>

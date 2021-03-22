@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MemberLabel, MemberRole, TeamMember } from 'src/app/core/api/models';
+import { MemberLabel, MemberLabelDescription, MemberRole, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
 
@@ -13,8 +13,8 @@ import { LoadTeamListService } from 'src/app/core/services/load-team-list.servic
 export class AddTeamMemberComponent implements OnInit {
 
   addForm: FormGroup;
-  roles: MemberRole[];
-  labels: MemberLabel[];
+  roles: MemberRoleDescription[];
+  labels: MemberLabelDescription[];
 
   constructor(private builder: FormBuilder, private router: Router, private listService: LoadTeamListService,
     private customValidation: CustomValidationService) { }

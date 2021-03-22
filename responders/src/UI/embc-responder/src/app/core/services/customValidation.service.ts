@@ -6,7 +6,7 @@ export class CustomValidationService {
 
     whitespaceValidator(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
-            if (control.value !== null && control.value !== undefined) {
+            if (control.value !== undefined) {
                 if ((control.value || '').trim().length === 0) {
                     return { whitespaceError: true }
                 }
@@ -16,7 +16,7 @@ export class CustomValidationService {
 
     userNameExistsValidator(existsIndicator: boolean): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
-            if(existsIndicator) {
+            if(existsIndicator && control.value !== null && control.value !== undefined && control.value !== '') {
                 return { userNameExists: true }
             }
         }

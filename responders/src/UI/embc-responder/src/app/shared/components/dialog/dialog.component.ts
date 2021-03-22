@@ -19,15 +19,17 @@ export class DialogComponent implements OnInit, OnDestroy {
   componentRef: ComponentRef<any>;
 
   constructor(public dialogRef: MatDialogRef<DialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
-              private resolver: ComponentFactoryResolver) { }
+    private resolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
     const factory = this.resolver.resolveComponentFactory(this.data.component);
     this.componentRef = this.vcRef.createComponent(factory);
-    this.componentRef.instance.outputEvent.subscribe(value =>
-      {
-       this.buttonAction(value)
-      })
+    if (this.data.text !== undefined && this.data.text !== null) {
+      this.componentRef.instance.inputEvent = this.data.text;
+    }
+    this.componentRef.instance.outputEvent.subscribe(value => {
+      this.buttonAction(value)
+    })
   }
 
   buttonAction(action: string): void {

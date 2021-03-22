@@ -1,1 +1,2 @@
-export const userNameExistsMessage = 'The BCeID Username entered is already associated to another ESS Team user record. Please verify that the BCeID Username is correct or contact your Local Government or First Nations Authority for assistance.'
+export const deleteMessage = 'User has been successfully deleted from the ERA Tool.';
+export const editMessage = 'User has been edited successfully.';

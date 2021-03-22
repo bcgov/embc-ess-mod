@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MemberLabel, MemberRole } from '../api/models';
+import { MemberLabel, MemberLabelDescription, MemberRole, MemberRoleDescription } from '../api/models';
 import { TeamMembersService } from '../api/services';
 import { CacheService } from './cache.service';
 
@@ -8,33 +8,33 @@ export class LoadTeamListService {
 
     constructor(private teamMembersService: TeamMembersService, private cacheService: CacheService) { }
 
-    private memberRoles: MemberRole[];
-    private memberLabels: MemberLabel[];
+    private memberRoles: MemberRoleDescription[];
+    private memberLabels: MemberLabelDescription[];
 
-    public getMemberRoles(): MemberRole[] {
+    public getMemberRoles(): MemberRoleDescription[] {
         return this.memberRoles ? this.memberRoles :
             (JSON.parse(this.cacheService.get('memberRoles')) ?
                 JSON.parse(this.cacheService.get('memberRoles')) : this.getMemberRole());
     }
 
-    private setMemberRoles(memberRoles: MemberRole[]): void {
+    private setMemberRoles(memberRoles: MemberRoleDescription[]): void {
         this.memberRoles = memberRoles;
         this.cacheService.set('memberRoles', memberRoles);
     }
 
-    public getMemberLabels(): MemberLabel[] {
+    public getMemberLabels(): MemberLabelDescription[] {
         return this.memberLabels ? this.memberLabels :
             (JSON.parse(this.cacheService.get('memberLabels')) ?
                 JSON.parse(this.cacheService.get('memberLabels')) : this.getMemberLabel());
     }
 
-    private setMemberLabels(memberLabels: MemberLabel[]): void {
+    private setMemberLabels(memberLabels: MemberLabelDescription[]): void {
         this.memberLabels = memberLabels;
         this.cacheService.set('memberLabels', memberLabels);
     }
 
-    private getMemberRole(): MemberRole[] {
-        let memberRoles: MemberRole[] = [];
+    private getMemberRole(): MemberRoleDescription[] {
+        let memberRoles: MemberRoleDescription[] = [];
         this.teamMembersService.teamMembersGetMemberRoles().subscribe(roles => {
             memberRoles = roles;
             this.setMemberRoles(memberRoles);
@@ -42,8 +42,8 @@ export class LoadTeamListService {
         return memberRoles;
     }
 
-    private getMemberLabel(): MemberLabel[] {
-        let memberLabels: MemberLabel[] = [];
+    private getMemberLabel(): MemberLabelDescription[] {
+        let memberLabels: MemberLabelDescription[] = [];
         this.teamMembersService.teamMembersGetMemberLabels().subscribe(labels => {
             memberLabels = labels;
             this.setMemberLabels(memberLabels);
