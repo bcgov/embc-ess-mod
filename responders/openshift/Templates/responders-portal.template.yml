@@ -34,6 +34,12 @@ parameters:
   - description: JWT audience
     name: JWT_AUDIENCE
     required: true
+  - description: OIDC issuer
+    name: OIDC_ISSUER
+    required: true
+  - description: OIDC client ID
+    name: OIDC_CLIENTID
+    required: true
 
 objects:
   - kind: ConfigMap
@@ -50,6 +56,8 @@ objects:
       BACKEND__ALLOWINVALIDSERVERCERTIFICATE: ${BACKEND_ALLOW_INVALID_CERT}
       JWT__METADATAADDRESS: ${JWT_METADATA_URL}
       JWT__AUDIENCE: ${JWT_AUDIENCE}
+      OIDC__ISSUER: ${OIDC_ISSUER}
+      OIDC_CLIENTID: ${OIDC_CLIENTID}
 
   - kind: Secret
     apiVersion: v1
