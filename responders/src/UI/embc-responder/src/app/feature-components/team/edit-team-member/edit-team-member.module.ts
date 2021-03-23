@@ -4,9 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { EditTeamMemberRoutingModule } from './edit-team-member-routing.module';
 import { EditTeamMemberComponent } from './edit-team-member.component';
-import { SharedModule } from '../../../shared/shared.module';
 import { MaterialModule } from '../../../material.module';
-
+import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
   declarations: [EditTeamMemberComponent],
@@ -14,8 +13,8 @@ import { MaterialModule } from '../../../material.module';
     CommonModule,
     ReactiveFormsModule,
     EditTeamMemberRoutingModule,
-    SharedModule,
-    MaterialModule
+    MaterialModule,
+    SharedModule
   ]
 })
 export class EditTeamMemberModule { }

@@ -1,6 +1,14 @@
+<!-- <div class="row heading-container">
+    <div class="col-md-12">
+        <span class="page-heading">Edit Responder</span>
+    </div>
+</div>
+<br> -->
+
 <div class="row">
     <div class="col-md-8">
         <mat-card>
+            <app-alert></app-alert>
             <form [formGroup]="editForm">
                 <div class="content-align">
                     <div class="row">
@@ -8,70 +16,91 @@
                             <p class="details-heading">User Details</p>
                         </div>
                     </div>
-    
+
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>First Name</mat-label>
-                                <input formControlName="firstName" matInput placeholder="First Name">
+                                <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required>
+                                <mat-error
+                                    *ngIf="editFormControl.firstName.invalid && editFormControl.firstName.hasError('whitespaceError')">
+                                    First Name is required</mat-error>
                             </mat-form-field>
                         </div>
                     </div>
-    
+
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>Last Name</mat-label>
-                                <input formControlName="lastName" matInput placeholder="Last Name">
+                                <input formControlName="lastName" maxlength="100" matInput placeholder="Last Name" required>
+                                <mat-error
+                                    *ngIf="editFormControl.lastName.invalid && editFormControl.lastName.hasError('whitespaceError')">
+                                    Last Name is required</mat-error>
                             </mat-form-field>
                         </div>
                     </div>
-    
-                    <div class="row">
+
+                    <div class="row align-items-center">
                         <div class="col-md-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>BCeID Username</mat-label>
-                                <input formControlName="username" matInput placeholder="BCeID Username">
+                                <input formControlName="userName" maxlength="255" matInput
+                                    placeholder="BCeID Username" (change)="checkUserName($event)" required>
+                                <mat-error
+                                    *ngIf="editFormControl.userName.invalid && editFormControl.userName.hasError('whitespaceError')">
+                                    BCeID Username is required</mat-error>
+                                <mat-error
+                                    *ngIf="editFormControl.userName.invalid && editFormControl.userName.hasError('userNameExists')">
+                                    BCeID Username Already in Use</mat-error>
                             </mat-form-field>
                         </div>
+                        <div *ngIf="isEditAllowed()" class="col-md-8">
+                            <p class="disabled">Username cannot be edited in the ERA Tool as the user has already logged in with this BCeID. If the username has been changed in the BCeID application it will be auto-updated the next time the user logs in.</p>
+                        </div>
+                        <div class="col-md-4">
+                            <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color">
+                            </app-loader>
+                        </div>
                     </div>
-    
+
                     <div class="row">
                         <div class="col-md-3">
                             <mat-form-field appearance="outline">
                                 <mat-label>Role</mat-label>
                                 <mat-select formControlName="role" required>
                                     <mat-option>--Select Role</mat-option>
-                                    <mat-option *ngFor="let role of roles" [value]="role">
-                                        {{role}}
+                                    <mat-option *ngFor="let role of roles" [value]="role.code">
+                                        {{role?.description}}
                                     </mat-option>
                                 </mat-select>
-                                <!-- <mat-error *ngIf="personalFormControl.gender.invalid && personalFormControl.gender.hasError('required')">Gender is required</mat-error> -->
+                                <mat-error
+                                    *ngIf="editFormControl.role.invalid && editFormControl.role.hasError('whitespaceError')">
+                                    Role is required</mat-error>
                             </mat-form-field>
                         </div>
                     </div>
-    
+
                     <div class="row">
                         <div class="col-md-3">
                             <mat-form-field appearance="outline">
                                 <mat-label>Optional Label</mat-label>
-                                <mat-select formControlName="label" required>
+                                <mat-select formControlName="label">
                                     <mat-option>--Select Label</mat-option>
-                                    <mat-option *ngFor="let label of labels" [value]="label">
-                                        {{label}}
+                                    <mat-option *ngFor="let label of labels" [value]="label.code">
+                                        {{label?.description}}
                                     </mat-option>
                                 </mat-select>
-                                <!-- <mat-error *ngIf="personalFormControl.gender.invalid && personalFormControl.gender.hasError('required')">Gender is required</mat-error> -->
                             </mat-form-field>
                         </div>
                     </div>
-    
+
                     <div class="row">
                         <div class="col-md-12">
                             <p class="details-heading">Contact Details</p>
                         </div>
                     </div>
-    
+
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field appearance="outline">
@@ -80,7 +109,7 @@
                             </mat-form-field>
                         </div>
                     </div>
-    
+
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field appearance="outline">
@@ -89,13 +118,12 @@
                             </mat-form-field>
                         </div>
                     </div>
-    
-                    <div>
-                        <button class="button-s button-margin" mat-button (click)="cancel()">Cancel</button>
-                        <button class="button-p" mat-button (click)="next()">Next</button>
-                    </div>
                 </div>
             </form>
+            <div>
+                <button class="button-s button-margin" mat-button (click)="cancel()">Cancel</button>
+                <button class="button-p" [disabled]="!editForm.valid" mat-button (click)="next()">Next</button>
+            </div>
         </mat-card>
     </div>
     <div class="col-md-4">

@@ -1,14 +1,11 @@
-.content-align {
-    padding: 10px;
-}
-
 .details-heading {
     font-size: 21px;
     color: #234075;
 }
 
-mat-form-field {
-    width: 100%;
+.row-align {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .button-margin {
@@ -29,11 +26,4 @@ mat-form-field {
     color: white;
     padding: 8px;
     margin-top: 20px;
-}
-
-.role-details {
-    height: 102px;
-    width: 300px;
-    background-color: rgb(252, 186, 25);
-    padding: 7px;
 }
