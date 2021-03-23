@@ -7,7 +7,7 @@ import { CoreModule } from './core/core.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { OAuthModule, OAuthResourceServerErrorHandler } from 'angular-oauth2-oidc';
-import { AuthService, OAuthNoopResourceServerErrorHandler } from './core/services/auth.service';
+import { AuthenticationService, OAuthNoopResourceServerErrorHandler } from './core/services/authentication.service';
 import { ApiModule } from './core/api/api.module';
 import { ConfigService } from './core/services/config.service';
 
@@ -30,12 +30,12 @@ import { ConfigService } from './core/services/config.service';
     ApiModule.forRoot({ rootUrl: '' })
   ],
   providers: [
-    AuthService,
+    AuthenticationService,
     ConfigService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (authService: AuthService) => () => authService.ensureLoggedIn(),
-      deps: [AuthService],
+      useFactory: (authService: AuthenticationService) => () => authService.login(),
+      deps: [AuthenticationService],
       multi: true
     },
     {

@@ -8,7 +8,7 @@ import { ConfigService } from './config.service';
 import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
+export class AuthenticationService {
 
   constructor(
     private oauthService: OAuthService,
@@ -16,28 +16,25 @@ export class AuthService {
     private userService: UserService,
     private router: Router) { }
 
-  public async ensureLoggedIn(): Promise<void> {
+  public async login(): Promise<void> {
     await this.configureOAuthService();
-    const isLoggedIn = await this.oauthService.loadDiscoveryDocumentAndLogin();
+    const returnRoute = location.pathname.substring(1);
+    const isLoggedIn = await this.oauthService.loadDiscoveryDocumentAndLogin({ state: returnRoute });
     if (isLoggedIn) {
       const userProfile = await this.userService.loadUserProfile().toPromise();
-      const nextRoute = userProfile.requiredToSignAgreement
+      const nextRoute = decodeURIComponent(userProfile.requiredToSignAgreement
         ? 'electronic-agreement' :
-        (this.oauthService.state || 'responder-access');
-      await this.router.navigateByUrl(nextRoute);
+        (this.oauthService.state || returnRoute || 'responder-access'));
+      await this.router.navigate([nextRoute]);
       return Promise.resolve();
     } else {
       return Promise.reject('Not logged in');
     }
-
   }
 
-  public login(targetUrl: null | string): void {
-    this.oauthService.initLoginFlow(targetUrl);
-  }
-
-  public logout(): void {
-    this.oauthService.logOut();
+  public logout(targetUrl?: string): void {
+    this.oauthService.logOut(targetUrl != null);
+    if (targetUrl != null) { window.location.replace(targetUrl); }
   }
 
   public getToken(): string {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthenticationService } from '../../services/authentication.service';
 import { LoggedInUserProfile, UserService } from '../../services/user.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
+    private authService: AuthenticationService,
     private userService: UserService
   ) { }
 
