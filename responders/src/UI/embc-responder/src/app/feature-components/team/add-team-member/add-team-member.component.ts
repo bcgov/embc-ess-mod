@@ -24,13 +24,13 @@ export class AddTeamMemberComponent implements OnInit {
   showLoader = false;
   color = '#169BD5';
   defaultRole = {
-    code: "Tier1",
-    description: "Tier 1 (Responder)"
-  }
+    code: 'Tier1',
+    description: 'Tier 1 (Responder)'
+  };
 
   constructor(private builder: FormBuilder, private router: Router, private listService: LoadTeamListService,
-    private customValidation: CustomValidationService, private addTeamMemberService: AddTeamMemberService,
-    private alertService: AlertService, private userService: UserService) { }
+              private customValidation: CustomValidationService, private addTeamMemberService: AddTeamMemberService,
+              private alertService: AlertService, private userService: UserService) { }
 
   ngOnInit(): void {
     this.constructAddForm();

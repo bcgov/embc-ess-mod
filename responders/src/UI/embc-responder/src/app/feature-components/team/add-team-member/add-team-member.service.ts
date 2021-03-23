@@ -21,7 +21,7 @@ export class AddTeamMemberService {
     }
 
     getAddedTeamMember(): TeamMember {
-        return this.addedTeamMember
+        return this.addedTeamMember;
     }
 
 }
