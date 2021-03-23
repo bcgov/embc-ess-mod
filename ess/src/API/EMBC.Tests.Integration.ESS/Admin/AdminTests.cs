@@ -104,18 +104,63 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanValidateUniqueUserName()
+        public async Task CanValidateNewUserNameForExistingMember()
         {
-            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand { UniqueUserName = "user1" });
+            var aMember = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId })).TeamMembers.First();
+            aMember.UserName = Guid.NewGuid().ToString().Substring(0, 5);
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            {
+                TeamMember = aMember
+            });
             validationResult.UniqueUserName.ShouldBeTrue();
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanValidateDuplicateUserName()
+        public async Task CanValidateSameUserNameForExistingMember()
         {
             var aMember = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId })).TeamMembers.First();
 
-            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand { UniqueUserName = aMember.UserName });
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            {
+                TeamMember = aMember
+            });
+            validationResult.UniqueUserName.ShouldBeTrue();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanValidatExistingUserNameForExistingMember()
+        {
+            var members = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId })).TeamMembers;
+            var aMember = members.Skip(0).First();
+            var bMember = members.Skip(1).First();
+
+            aMember.UserName = bMember.UserName;
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            {
+                TeamMember = aMember
+            });
+            validationResult.UniqueUserName.ShouldBeFalse();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanValidateUniqueUserNameForNewMember()
+        {
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            {
+                TeamMember = new TeamMember { UserName = Guid.NewGuid().ToString().Substring(0, 5) }
+            });
+            validationResult.UniqueUserName.ShouldBeTrue();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanValidateDuplicateUserName1ForNewMember()
+        {
+            var aMember = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId })).TeamMembers.First();
+
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            {
+                TeamMember = new TeamMember { UserName = aMember.UserName }
+            });
             validationResult.UniqueUserName.ShouldBeFalse();
         }
 

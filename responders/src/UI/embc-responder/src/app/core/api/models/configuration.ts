@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+import { OidcConfiguration } from './oidc-configuration';
 export interface Configuration {
-  oidcClientId?: null | string;
-  oidcIssuer?: null | string;
+  oidc?: null | OidcConfiguration;
 }

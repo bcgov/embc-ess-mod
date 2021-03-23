@@ -186,9 +186,12 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("username")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> IsUserNameExists(string userName)
+        public async Task<ActionResult<bool>> IsUserNameExists(string userName, string memberId = null)
         {
-            var response = await client.Send(new ValidateTeamMemberCommand { UniqueUserName = userName });
+            var response = await client.Send(new ValidateTeamMemberCommand
+            {
+                TeamMember = new ESS.Shared.Contracts.Team.TeamMember { UserName = userName, Id = memberId, TeamId = teamId }
+            });
             return Ok(!response.UniqueUserName);
         }
 
@@ -262,7 +265,9 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public MemberRole Role { get; set; }
 
-        public MemberLabel Label { get; set; }
+        public MemberLabel? Label { get; set; }
+
+        public bool IsUserNameEditable { get; set; }
     }
 
     /// <summary>
@@ -327,7 +332,8 @@ namespace EMBC.Responders.API.Controllers
         {
             CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
                 .ForMember(d => d.Role, opts => opts.MapFrom(s => Enum.Parse<MemberRole>(s.Role)))
-                .ForMember(d => d.Label, opts => opts.MapFrom(s => Enum.Parse<MemberLabel>(s.Label)))
+                .ForMember(d => d.Label, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Label) ? (MemberLabel?)null : Enum.Parse<MemberLabel>(s.Label)))
+                .ForMember(d => d.IsUserNameEditable, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.ExternalUserId)))
                 .ReverseMap()
                 .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.ToString()))
                 .ForMember(d => d.Label, opts => opts.MapFrom(s => s.Label.ToString()))
