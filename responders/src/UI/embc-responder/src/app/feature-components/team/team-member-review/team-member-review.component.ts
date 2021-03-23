@@ -10,7 +10,7 @@ import { TeamMemberReviewService } from './team-member-review.service';
   templateUrl: './team-member-review.component.html',
   styleUrls: ['./team-member-review.component.scss']
 })
-export class TeamMemberReviewComponent implements OnInit {
+export class TeamMemberReviewComponent {
 
   teamMember: TeamMember;
   showLoader = false;
@@ -27,11 +27,12 @@ export class TeamMemberReviewComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-  }
-
   goBack(): void {
+    if (this.teamMember.id) {
     this.router.navigate(['/responder-access/responder-management/details/edit'], { state: this.teamMember });
+    } else {
+      this.router.navigate(['/responder-access/responder-management/add-member']);
+    }
   }
 
   save(): void {
@@ -61,7 +62,8 @@ export class TeamMemberReviewComponent implements OnInit {
 
   addTeamMember(): void {
     this.teamMemberReviewService.addTeamMember(this.teamMember).subscribe(value => {
-      this.router.navigate(['/responder-access/responder-management/details/member-list']);
+      const stateIndicator = { action: 'add' };
+      this.router.navigate(['/responder-access/responder-management/details/member-list'], { state: stateIndicator });
     }, (error) => {
       this.showLoader = !this.showLoader;
       this.isSubmitted = !this.isSubmitted;
