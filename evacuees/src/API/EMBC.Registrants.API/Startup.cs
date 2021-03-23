@@ -116,6 +116,7 @@ namespace EMBC.Registrants.API
             });
             services.AddSingleton<IEmailConfiguration>(configuration.GetSection("SMTP").Get<EmailConfiguration>());
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<ITemplateEmailService, TemplateEmailService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

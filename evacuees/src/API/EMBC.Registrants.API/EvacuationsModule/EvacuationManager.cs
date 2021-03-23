@@ -40,14 +40,14 @@ namespace EMBC.Registrants.API.EvacuationsModule
         private readonly IEvacuationRepository evacuationRepository;
         private readonly IProfileRepository profileRepository;
         private readonly IMapper mapper;
-        private readonly IEmailSender emailSender;
+        private readonly ITemplateEmailService emailService;
 
-        public EvacuationManager(IEvacuationRepository evacuationRepository, IProfileRepository profileRepository, IMapper mapper, IEmailSender emailSender)
+        public EvacuationManager(IEvacuationRepository evacuationRepository, IProfileRepository profileRepository, IMapper mapper, ITemplateEmailService emailService)
         {
             this.evacuationRepository = evacuationRepository;
             this.profileRepository = profileRepository;
             this.mapper = mapper;
-            this.emailSender = emailSender;
+            this.emailService = emailService;
         }
 
         public async Task<IEnumerable<EvacuationFile>> GetEvacuations(string userid)
@@ -85,7 +85,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                             Name = profile.PersonalDetails.FirstName + " " + profile.PersonalDetails.LastName,
                             Address = profile.ContactDetails.Email
                         };
-                        SendEvacuationSubmissionNotificationEmail(registrantEmailAddress, essFileNumber.ToString());
+                        emailService.SendEvacuationSubmissionNotificationEmail(registrantEmailAddress, essFileNumber.ToString());
                     }
                 }
             }
@@ -96,69 +96,6 @@ namespace EMBC.Registrants.API.EvacuationsModule
         public async Task DeleteEvacuation(string userId, string essFileNumber)
         {
             await evacuationRepository.Delete(userId, essFileNumber);
-        }
-
-        /// <summary>
-        /// Sends a notification email to a verified Registrant after they submit an Evacuation
-        /// </summary>
-        /// <param name="toAddress">Registrant's Email Address</param>
-        /// <param name="essFileNumber">ESS File Number</param>
-        private void SendEvacuationSubmissionNotificationEmail(EmailAddress toAddress, string essFileNumber)
-        {
-            System.Collections.Generic.List<EmailAddress> toList = new System.Collections.Generic.List<EmailAddress> { toAddress };
-            string emailSubject = "Registration completed successfully";
-            string emailBody = $@"
-<p>
-<p style='font-size: 18pt;color:darkblue;font-weight: bold;'>Submission Complete</p>
-<p>
-<p>
-<p style='font-size: 16pt;color:lightblue;'>Your Emergency Support Services (ESS) File Number is: " + essFileNumber +
-    $@"</p>
-<p>Thank you for submitting your online self-registration.
-<p>
-<p>
-<p style='font-size: 18pt;color:lightblue;font-weight: bold;'>Next Steps</p>
-<p>
-    <li>Please keep a record of your Emergency Support Services File Number to receive emergency support services that
-        can
-        be provided up to 72 hours starting from the time connecting in with a local ESS Responder at a Reception
-        Centre.
-    </li>
-</p>
-<br>
-<p>
-    <li>After a need's assessment interview with a local ESS Responder has been completed, supports are provided to
-        purchase goods and services if eligible.</li>
-</p>
-<br>
-<p>
-    <li>Any goods and services purchased prior to a need’s assessment interview are not eligible for retroactive
-        reimbursement.</li>
-</p>
-<br>
-<p>
-    <li>If you are under <b>EVACUATION ALERT</b> or <b>DO NOT</b> require emergency serves at this time, no further
-        action is required.</li>
-</p>
-<br>
-<p>
-    <li>If you are under <b>EVACUATION ORDER</b>, and require emergency supports, proceed to your nearest Reception
-        Centre. A list of open Reception Centres can be found at Emergency Info BC.</li>
-</p>
-<br>
-<p>
-    <li>If <b>NO</b> nearby Reception Centre is open and immediate action is required, please contact your Local
-        Emergency Program for next steps.</li>
-</p>
-<br>
-<p>
-    <li>If you have a registered account please use the following link to login to the tool and review and/or edit your
-        new ESS File: <a href='https://ess.gov.bc.ca'>https://ess.gov.bc.ca</a> (select the 'Already have an account?
-        Log in' link)</li>
-</p>";
-
-            EmailMessage emailMessage = new EmailMessage(toList, emailSubject, emailBody);
-            emailSender.Send(emailMessage);
         }
     }
 }
