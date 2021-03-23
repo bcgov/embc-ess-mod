@@ -78,7 +78,7 @@ namespace EMBC.ESS.Shared.Contracts.Team
 
     public class ValidateTeamMemberCommand : Command<ValidateTeamMemberResponse>
     {
-        public string UniqueUserName { get; set; }
+        public TeamMember TeamMember { get; set; }
     }
 
     public class ValidateTeamMemberResponse : Response

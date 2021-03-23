@@ -47,7 +47,7 @@ namespace EMBC.ESS.Managers.Admin
         {
             var members = await teamRepository.GetMembers(cmd.TeamId);
 
-            if (!string.IsNullOrEmpty(cmd.MemberId)) members = members.Where(m => m.Id == cmd.MemberId).ToArray();
+            if (!string.IsNullOrEmpty(cmd.MemberId)) members = members.Where(m => m.Id == cmd.MemberId);
 
             return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
         }
@@ -55,6 +55,8 @@ namespace EMBC.ESS.Managers.Admin
         public async Task<SaveTeamMemberResponse> Handle(SaveTeamMemberCommand cmd)
         {
             var teamMembersWithSameUserName = await teamRepository.GetMembers(userName: cmd.Member.UserName);
+            //filter this user if exists
+            if (cmd.Member.Id != null) teamMembersWithSameUserName = teamMembersWithSameUserName.Where(m => m.Id != cmd.Member.Id);
             if (teamMembersWithSameUserName.Any()) throw new UsernameAlreadyExistsException(cmd.Member.UserName);
 
             var id = await teamRepository.SaveMember(mapper.Map<Resources.Team.TeamMember>(cmd.Member));
@@ -94,9 +96,13 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<ValidateTeamMemberResponse> Handle(ValidateTeamMemberCommand cmd)
         {
-            var members = await teamRepository.GetMembers(userName: cmd.UniqueUserName);
-
-            return new ValidateTeamMemberResponse { UniqueUserName = !members.Any() };
+            var members = await teamRepository.GetMembers(userName: cmd.TeamMember.UserName);
+            //filter this user if exists
+            if (!string.IsNullOrEmpty(cmd.TeamMember.Id)) members = members.Where(m => m.Id != cmd.TeamMember.Id);
+            return new ValidateTeamMemberResponse
+            {
+                UniqueUserName = !members.Any()
+            };
         }
 
         public async Task<AssignCommunitiesToTeamResponse> Handle(AssignCommunitiesToTeamCommand cmd)
