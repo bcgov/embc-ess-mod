@@ -57,7 +57,7 @@ objects:
       JWT__METADATAADDRESS: ${JWT_METADATA_URL}
       JWT__AUDIENCE: ${JWT_AUDIENCE}
       OIDC__ISSUER: ${OIDC_ISSUER}
-      OIDC_CLIENTID: ${OIDC_CLIENTID}
+      OIDC__CLIENTID: ${OIDC_CLIENTID}
 
   - kind: Secret
     apiVersion: v1
