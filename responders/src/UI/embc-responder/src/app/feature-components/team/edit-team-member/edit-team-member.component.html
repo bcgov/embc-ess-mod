@@ -23,7 +23,7 @@
                                 <mat-label>First Name</mat-label>
                                 <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required>
                                 <mat-error
-                                    *ngIf="editFormControl.firstName.invalid && editFormControl.firstName.hasError('required')">
+                                    *ngIf="editFormControl.firstName.invalid && editFormControl.firstName.hasError('whitespaceError')">
                                     First Name is required</mat-error>
                             </mat-form-field>
                         </div>

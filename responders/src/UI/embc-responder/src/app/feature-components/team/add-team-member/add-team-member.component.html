@@ -13,9 +13,9 @@
                         <div class="col-md-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>First Name</mat-label>
-                                <input formControlName="firstName" matInput placeholder="First Name" required>
+                                <input formControlName="firstName" maxlength="100" matInput placeholder="First Name" required>
                                 <mat-error
-                                    *ngIf="addFormControl.firstName.invalid && addFormControl.firstName.hasError('required')">
+                                    *ngIf="addFormControl.firstName.invalid && addFormControl.firstName.hasError('whitespaceError')">
                                     First Name is required</mat-error>
                             </mat-form-field>
                         </div>
@@ -25,40 +25,53 @@
                         <div class="col-md-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>Last Name</mat-label>
-                                <input formControlName="lastName" matInput placeholder="Last Name" required>
+                                <input formControlName="lastName" maxlength="100" matInput placeholder="Last Name" required>
                                 <mat-error
-                                    *ngIf="addFormControl.lastName.invalid && addFormControl.lastName.hasError('required')">
+                                    *ngIf="addFormControl.lastName.invalid && addFormControl.lastName.hasError('whitespaceError')">
                                     Last Name is required</mat-error>
                             </mat-form-field>
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row align-items-center">
                         <div class="col-md-4">
                             <mat-form-field appearance="outline">
                                 <mat-label>BCeID Username</mat-label>
-                                <input formControlName="userName" matInput placeholder="BCeID Username" required>
+                                <input formControlName="userName" maxlength="255" (change)="checkUserName($event)" matInput placeholder="BCeID Username" required>
                                 <mat-error
-                                    *ngIf="addFormControl.userName.invalid && addFormControl.userName.hasError('required')">
+                                    *ngIf="addFormControl.userName.invalid && addFormControl.userName.hasError('whitespaceError')">
                                     BCeID Username is required</mat-error>
+                                    <mat-error
+                                    *ngIf="addFormControl.userName.invalid && addFormControl.userName.hasError('userNameExists')">
+                                    BCeID Username Already in Use</mat-error>
                             </mat-form-field>
                         </div>
+                        <div class="col-md-4">
+                            <app-loader [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader" [color]="color">
+                            </app-loader>
+                        </div>
                     </div>
-
+                    
                     <div class="row">
                         <div class="col-md-3">
                             <mat-form-field appearance="outline">
                                 <mat-label>Role</mat-label>
-                                <mat-select formControlName="role" required>
+                                <mat-select formControlName="role" (selectionChange)="roleSelectionChange($event)" required>
                                     <mat-option>--Select Role</mat-option>
                                     <mat-option *ngFor="let role of roles" [value]="role.code">
                                         {{role?.description}}
                                     </mat-option>
                                 </mat-select>
                                 <mat-error
-                                    *ngIf="addFormControl.role.invalid && addFormControl.role.hasError('required')">
+                                    *ngIf="addFormControl.role.invalid && addFormControl.role.hasError('whitespaceError')">
                                     Role is required</mat-error>
                             </mat-form-field>
+                        </div>
+
+                        <div class="col-md-9">
+                            <div *ngIf="addFormControl.role.value !== '' && addFormControl.role.value !== undefined" class="role-details">
+                                {{detailsText}}
+                            </div>
                         </div>
                     </div>
 
