@@ -16,7 +16,7 @@ const routes: Routes = [
         loadChildren: () => import('../team-list-wrapper/team-list-wrapper.module').then(m => m.TeamListWrapperModule)
       },
       {
-        path: 'add',
+        path: 'add-member',
         loadChildren: () => import('../add-team-member/add-team-member.module').then(m => m.AddTeamMemberModule)
       }
     ]

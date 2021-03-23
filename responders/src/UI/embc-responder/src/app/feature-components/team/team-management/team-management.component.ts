@@ -16,7 +16,7 @@ export class TeamManagementComponent implements OnInit {
     },
     {
       label: 'Add Team Members',
-      route: 'add',
+      route: 'add-member',
     }
   ];
 
