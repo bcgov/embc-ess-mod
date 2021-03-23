@@ -126,12 +126,12 @@ footer nav {
 }
 
 .heading-container {
-  font-size: 50px;
+  line-height: 40px;
   color: #003366;
 }
 
 .page-heading {
- font-size: 40px;
+ font-size: 50px;
 }
 
 .button-style {
@@ -199,6 +199,14 @@ button:focus {
   }
   .button-p {
     width: 100% !important;
+  }
+  .button-s {
+    margin-right: 0px !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+  }
+  .cdk-overlay-pane {
+    height: 350px !important;
   }
 }
 
@@ -289,9 +297,9 @@ mat-card {
 //    font-size: 75%;
 //  }
 
-//  .mat-dialog-container {
-//    border-radius: 0px !important;
-//  }
+ .mat-dialog-container {
+   border-radius: 0px !important;
+ }
 
 //  .mat-radio-label {
 //    white-space: normal !important;

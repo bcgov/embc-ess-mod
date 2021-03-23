@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TeamMember } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { TeamListDataService } from './team-list-data.service';
 import { TeamListService } from './team-list.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-team-list',
@@ -14,7 +18,24 @@ import { TeamListService } from './team-list.service';
 })
 export class TeamListComponent implements OnInit {
 
-  constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService) { }
+  constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService,
+              private dialog: MatDialog) {
+    if (this.router.getCurrentNavigation().extras.state !== undefined) {
+      const state = this.router.getCurrentNavigation().extras.state;
+      let displayText = '';
+      if (state?.action === 'delete') {
+        console.log(state?.action);
+        displayText = globalConst.deleteMessage;
+      } else if (state?.action === 'edit') {
+        displayText = globalConst.editMessage;
+      } else {
+        displayText = 'Hello.. Something went wrong';
+      }
+      setTimeout(() => {
+        this.openConfirmation(displayText);
+      }, 500);
+    }
+   }
 
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
@@ -24,6 +45,7 @@ export class TeamListComponent implements OnInit {
 
   ngOnInit(): void {
     this.teamFilterPredicate();
+    this.teamDataService.clear();
     this.teamListService.getTeamMembers().subscribe(values => {
       this.teamMembers = values;
     });
@@ -88,6 +110,21 @@ export class TeamListComponent implements OnInit {
     this.teamListService.deactivatedTeamMember($event).subscribe(value => {
       console.log(value);
       this.teamMembers = value;
+    });
+  }
+
+  addTeamMember(): void {
+    this.router.navigate(['/responder-access/responder-management/add-member']);
+  }
+
+  openConfirmation(text: string): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        text
+      },
+      height: '230px',
+      width: '530px'
     });
   }
 }

@@ -1,1 +1,98 @@
-<p>add-team-member works!</p>
+<div class="row">
+    <div class="col-md-8">
+        <mat-card>
+            <form [formGroup]="addForm">
+                <div class="content-align">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="details-heading">Add User</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>First Name</mat-label>
+                                <input formControlName="firstName" matInput placeholder="First Name" required>
+                                <mat-error
+                                    *ngIf="addFormControl.firstName.invalid && addFormControl.firstName.hasError('required')">
+                                    First Name is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Last Name</mat-label>
+                                <input formControlName="lastName" matInput placeholder="Last Name" required>
+                                <mat-error
+                                    *ngIf="addFormControl.lastName.invalid && addFormControl.lastName.hasError('required')">
+                                    Last Name is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>BCeID Username</mat-label>
+                                <input formControlName="userName" matInput placeholder="BCeID Username" required>
+                                <mat-error
+                                    *ngIf="addFormControl.userName.invalid && addFormControl.userName.hasError('required')">
+                                    BCeID Username is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Role</mat-label>
+                                <mat-select formControlName="role" required>
+                                    <mat-option>--Select Role</mat-option>
+                                    <mat-option *ngFor="let role of roles" [value]="role.code">
+                                        {{role?.description}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error
+                                    *ngIf="addFormControl.role.invalid && addFormControl.role.hasError('required')">
+                                    Role is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Add Optional Label</mat-label>
+                                <mat-select formControlName="label">
+                                    <mat-option>--Select Label</mat-option>
+                                    <mat-option *ngFor="let label of labels" [value]="label.code">
+                                        {{label?.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button class="button-s button-margin" mat-button (click)="cancel()">Cancel</button>
+                        <button class="button-p" mat-button [disabled]="!addForm.valid" (click)="next()">Next</button>
+                    </div>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+    <div class="col-md-4">
+        <mat-card class="tips-card">
+            <div>
+                <img src="/assets/images/tips-lightbulb.svg" height="63" width="62">
+                <span class="tips-heading"><b>Tips: </b>Roles</span>
+            </div>
+            <p class="tips-info">Tier 1 - Responder</p>
+            <p class="tips-info">Tier 2 - Supervisor</p>
+            <p class="tips-info">Tier 3 - ESS Director / Manager</p>
+        </mat-card>
+    </div>
+</div>
