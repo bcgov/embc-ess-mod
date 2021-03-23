@@ -180,9 +180,24 @@ namespace EMBC.Registrants.API.EvacuationsModule
             return essFileNumber.ToString();
         }
 
-        public Task Delete(string userId, string essFileNumber)
+        public async Task Delete(string userId, string essFileNumber)
         {
-            throw new NotImplementedException();
+            await Task.CompletedTask;
+
+            // get dynamics contact by BCServicesCardId
+            contact dynamicsContact = GetDynamicsContactByBCSC(userId);
+
+            if (dynamicsContact != null)
+            {
+                var evacuationFile = dynamicsClient.era_evacuationfiles
+                    .Where(ef => ef.era_essfilenumber == int.Parse(essFileNumber)).FirstOrDefault();
+
+                if (evacuationFile != null)
+                {
+                    dynamicsClient.DeleteObject(evacuationFile);
+                    await dynamicsClient.SaveChangesAsync();
+                }
+            }
         }
 
         public async Task<IEnumerable<EvacuationFile>> Read(string userId)

@@ -114,7 +114,7 @@ namespace EMBC.Registrants.API
                 var logger = sp.GetRequiredService<ILogger<DynamicsClientContext>>();
                 return new DynamicsClientContext(new Uri(dynamicsApiBaseUri), new Uri(dynamicsApiEndpoint), async () => await tokenProvider.AcquireToken(), logger);
             });
-            services.AddSingleton<IEmailConfiguration>(configuration.GetSection("SMTPSettings").Get<EmailConfiguration>());
+            services.AddSingleton<IEmailConfiguration>(configuration.GetSection("SMTP").Get<EmailConfiguration>());
             services.AddTransient<IEmailSender, EmailSender>();
         }
 

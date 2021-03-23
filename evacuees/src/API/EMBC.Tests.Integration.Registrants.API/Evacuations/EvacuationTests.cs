@@ -79,6 +79,8 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
             var createdEvacuationFile = await evacuationManager.GetEvacuation(testUserId, newEssFileNumber);
 
             createdEvacuationFile.ShouldNotBeNull();
+
+            await evacuationManager.DeleteEvacuation(testUserId, newEssFileNumber);
         }
     }
 }

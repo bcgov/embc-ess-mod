@@ -83,7 +83,7 @@ namespace EMBC.Registrants.API.Utils
     }
     public interface IEmailConfiguration
     {
-        string SmtpServer { get; }
+        string Server { get; }
         int SmtpPort { get; }
         string SmtpUsername { get; set; }
         string SmtpPassword { get; set; }
@@ -93,22 +93,24 @@ namespace EMBC.Registrants.API.Utils
 
     public class EmailConfiguration : IEmailConfiguration
     {
-        public string SmtpServer { get; set; }
-        public int SmtpPort { get; set; }
-        public string SmtpUsername { get; set; }
-        public string SmtpPassword { get; set; }
-        public EmailAddress SmtpDefaultSender { get; set; }
-        public bool EnableSSL { get; set; }
+        public string Server { get; set; }
+        public int SmtpPort { get; set; } = 25;
+        public string SmtpUsername { get; set; } = string.Empty;
+        public string SmtpPassword { get; set; } = string.Empty;
+        public EmailAddress SmtpDefaultSender { get; set; } = new EmailAddress()
+        {
+            Name = "Do Not Reply",
+            Address = "no-reply@gov.bc.ca"
+        };
+        public bool EnableSSL { get; set; } = false;
     }
 
     public class EmailSender : IEmailSender
     {
-        private const string BcGovSmtpServer = "apps.smtp.gov.bc.ca";
-
         private readonly IEmailConfiguration emailConfiguration;
         private readonly ILogger logger;
 
-        private bool Enabled => !string.IsNullOrEmpty(emailConfiguration.SmtpServer);
+        private bool Enabled => !string.IsNullOrEmpty(emailConfiguration.Server);
 
         public EmailSender(IEmailConfiguration configuration, ILoggerFactory loggerFactory)
         {
@@ -145,14 +147,14 @@ namespace EMBC.Registrants.API.Utils
 
                 try
                 {
-                    if (emailConfiguration.SmtpServer == BcGovSmtpServer)
+                    if (emailConfiguration.EnableSSL == false)
                     {
-                        // The certificate for the government SMTP server (apps.smtp.gov.bc.ca) doesn't match the actual server name and so we have to disable SSL.
-                        emailClient.Connect(emailConfiguration.SmtpServer, emailConfiguration.SmtpPort, SecureSocketOptions.None);
+                        // The certificate for the government SMTP server doesn't match the actual server name and so we have to disable SSL.
+                        emailClient.Connect(emailConfiguration.Server, emailConfiguration.SmtpPort, SecureSocketOptions.None);
                     }
                     else
                     {
-                        emailClient.Connect(emailConfiguration.SmtpServer, emailConfiguration.SmtpPort, emailConfiguration.EnableSSL);
+                        emailClient.Connect(emailConfiguration.Server, emailConfiguration.SmtpPort, emailConfiguration.EnableSSL);
                         if (emailConfiguration.SmtpUsername.Length > 0 && emailConfiguration.SmtpPassword.Length > 0)
                         {
                             emailClient.Authenticate(emailConfiguration.SmtpUsername, emailConfiguration.SmtpPassword);
