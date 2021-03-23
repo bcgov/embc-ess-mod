@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { EvacuationFile } from 'src/app/core/api/models';
 import { NeedsAssessmentMappingService } from '../../needs-assessment/needs-assessment-mapping.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
+import { EvacuationFileMappingService } from '../evacuation-file-mapping.service';
 
 @Component({
   selector: 'app-evacuation-card',
@@ -20,7 +21,7 @@ export class EvacuationCardComponent implements OnInit {
 
   constructor(
     private router: Router, private evacuationFileDataService: EvacuationFileDataService,
-    private needsAssessmentMappingService: NeedsAssessmentMappingService) {
+    private needsAssessmentMappingService: NeedsAssessmentMappingService, private evacuationFileMapping: EvacuationFileMappingService) {
 
     this.pathName = window.location.pathname;
     console.log(this.pathName);
@@ -40,10 +41,7 @@ export class EvacuationCardComponent implements OnInit {
 
   goToDetails(): void {
 
-    this.evacuationFileDataService.evacuatedFromAddress = this.evacuationFileCard.evacuatedFromAddress;
-    this.evacuationFileDataService.essFileNumber = this.evacuationFileCard.essFileNumber;
-    this.evacuationFileDataService.evacuationFileStatus = this.evacuationFileStatus;
-    this.needsAssessmentMappingService.setNeedsAssessment(this.evacuationFileCard.evacuatedFromAddress, this.evacuationFileCard.needsAssessments[0]);
+    this.evacuationFileMapping.mapEvacuationFile(this.evacuationFileCard);
 
     if (this.pathName === '/verified-registration/dashboard/current') {
       this.router.navigate(['/verified-registration/dashboard/current/' + this.evacuationFileCard.essFileNumber]);

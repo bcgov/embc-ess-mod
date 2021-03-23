@@ -10,6 +10,7 @@ export class EvacuationFileDataService {
 
     private _essFileNumber: string;
     private _evacuatedFromAddress: Address;
+    private _evacuationFileDate: string;
     private _needsAssessments: Array<NeedsAssessment> = [];
     private _evacuationFileStatus: string;
     private _evacuationFile: EvacuationFile;
@@ -28,6 +29,13 @@ export class EvacuationFileDataService {
     }
     public set essFileNumber(value: string) {
         this._essFileNumber = value;
+    }
+
+    public get evacuationFileDate(): string {
+        return this._evacuationFileDate;
+    }
+    public set evacuationFileDate(value: string) {
+        this._evacuationFileDate = value;
     }
 
     public get evacuatedFromAddress(): Address {
@@ -79,7 +87,8 @@ export class EvacuationFileDataService {
     public createEvacuationFileDTO(): EvacuationFile {
         return {
             evacuatedFromAddress: this.setAddressObject(this.evacuatedFromAddress),
-            needsAssessments: this.getNeedsAssessment()
+            needsAssessments: this.getNeedsAssessment(),
+            evacuationFileDate: this.evacuationFileDate
         };
     }
 
@@ -114,9 +123,9 @@ export class EvacuationFileDataService {
     }
 
     private getNeedsAssessment(): Array<NeedsAssessment> {
-        let needsAssessment: NeedsAssessment = this.needsAssessmentService.createNeedsAssessmentDTO();
+        const needsAssessment: NeedsAssessment = this.needsAssessmentService.createNeedsAssessmentDTO();
         this._needsAssessments.splice(0, 1, needsAssessment);
-        console.log(this._needsAssessments);
+        // console.log(this._needsAssessments);
         return this._needsAssessments;
     }
 

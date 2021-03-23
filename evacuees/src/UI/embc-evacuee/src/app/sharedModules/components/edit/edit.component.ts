@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router, ActivatedRoute, NavigationExtras, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
@@ -85,12 +85,8 @@ export class EditComponent implements OnInit, OnDestroy {
             this.showLoader = !this.showLoader;
             console.log(error);
             this.alertService.setAlert('danger', error.title);
-          })
+          });
         }
-        //this.router.navigate([this.verifiedRoute], this.navigationExtras);
-        console.log(this.evacuationFileDataService.essFileNumber);
-
-        //this.router.navigate(['/verified-registration/dashboard/current/' + this.evacuationFileDataService.essFileNumber]);
       }
     }
   }
@@ -177,10 +173,9 @@ export class EditComponent implements OnInit, OnDestroy {
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'family-information':
-        this.form$ = this.formCreationService.getFamilyMembersForm().subscribe(
-          memberForm => {
-            this.form = memberForm;
-            console.log(this.form);
+        this.form$ = this.formCreationService.getHouseholdMembersForm().subscribe(
+          householdMemberForm => {
+            this.form = householdMemberForm;
           }
         );
         this.editHeading = 'Edit Evacuation File';

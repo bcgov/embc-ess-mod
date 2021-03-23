@@ -8,11 +8,14 @@ import { EvacuationFileDataService } from './evacuation-file-data.service';
 
 export class EvacuationFileMappingService {
 
-    constructor(private needsAssessmentMapService: NeedsAssessmentMappingService, private evacuationFileDataService: EvacuationFileDataService) { }
+    constructor(
+        private needsAssessmentMapService: NeedsAssessmentMappingService,
+        private evacuationFileDataService: EvacuationFileDataService) { }
 
     public mapEvacuationFile(evacuationFile: EvacuationFile): void {
         this.evacuationFileDataService.essFileNumber = evacuationFile.essFileNumber;
         this.evacuationFileDataService.evacuatedFromAddress = evacuationFile.evacuatedFromAddress;
+        this.evacuationFileDataService.evacuationFileDate = evacuationFile.evacuationFileDate;
         this.needsAssessmentMapService.setNeedsAssessment(evacuationFile.evacuatedFromAddress, evacuationFile.needsAssessments[0]);
     }
 

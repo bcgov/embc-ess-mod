@@ -46,9 +46,10 @@ export class EditService {
                 break;
             case 'contact-info':
                 this.profileDataService.contactDetails = form.value;
+                console.log(this.profileDataService.contactDetails);
                 break;
             case 'secret':
-                this.profileDataService.secretWordPhrase = form.value;
+                this.profileDataService.secretWordPhrase = form.get('secretPhrase').value;
                 break;
             case 'evac-address':
                 this.evacuationFileDataService.evacuatedFromAddress = form.get('evacuatedFromAddress').value;
@@ -58,7 +59,7 @@ export class EditService {
                 this.needsAssessmentDataService.haveSpecialDiet = form.get('haveSpecialDiet').value;
                 this.needsAssessmentDataService.haveMedication = form.get('haveMedication').value;
                 this.needsAssessmentDataService.specialDietDetails = form.get('specialDietDetails').value;
-                this.needsAssessmentDataService.familyMembers = form.get('familyMember').value;
+                this.needsAssessmentDataService.setHouseHoldMembers(form.get('householdMembers').value);
                 break;
             case 'pets':
                 this.needsAssessmentDataService.pets = form.get('pets').value;
@@ -125,16 +126,16 @@ export class EditService {
                 }
                 break;
             case 'family-information':
-                if (this.needsAssessmentDataService.familyMembers.length !== 0 ||
+                if (this.needsAssessmentDataService.householdMembers.length !== 0 ||
                     this.needsAssessmentDataService.haveMedication !== undefined &&
                     this.needsAssessmentDataService.haveSpecialDiet !== undefined &&
                     this.needsAssessmentDataService.specialDietDetails !== undefined) {
-                    form.get('familyMember').patchValue(this.needsAssessmentDataService.familyMembers);
+                    form.get('householdMembers').patchValue(this.needsAssessmentDataService.householdMembers);
                     form.get('haveMedication').patchValue(this.needsAssessmentDataService.haveMedication);
                     form.get('haveSpecialDiet').patchValue(this.needsAssessmentDataService.haveSpecialDiet);
                     form.get('specialDietDetails').patchValue(this.needsAssessmentDataService.specialDietDetails);
                 } else {
-                    form.get('familyMember').patchValue([]);
+                    form.get('householdMembers').patchValue([]);
                     form.get('haveMedication').reset();
                     form.get('haveSpecialDiet').reset();
                     form.get('specialDietDetails').reset();

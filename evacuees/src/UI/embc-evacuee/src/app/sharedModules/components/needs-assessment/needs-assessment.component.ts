@@ -91,9 +91,9 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
         );
         break;
       case 1:
-        this.form$ = this.formCreationService.getFamilyMembersForm().subscribe(
-          memberForm => {
-            this.form = memberForm;
+        this.form$ = this.formCreationService.getHouseholdMembersForm().subscribe(
+          householdMemberForm => {
+            this.form = householdMemberForm;
           }
         );
         break;
@@ -131,7 +131,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
       this.submitFile();
     } else {
       if (this.form.status === 'VALID') {
-        console.log(this.form);
         this.setFormData(component);
         this.form$.unsubscribe();
         stepper.selected.completed = true;
@@ -152,7 +151,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
         this.needsAssessmentService.haveSpecialDiet = this.form.get('haveSpecialDiet').value;
         this.needsAssessmentService.haveMedication = this.form.get('haveMedication').value;
         this.needsAssessmentService.specialDietDetails = this.form.get('specialDietDetails').value;
-        this.needsAssessmentService.familyMembers = this.form.get('familyMember').value;
+        this.needsAssessmentService.setHouseHoldMembers(this.form.get('householdMembers').value);
         break;
       case 'pets':
         this.needsAssessmentService.pets = this.form.get('pets').value;

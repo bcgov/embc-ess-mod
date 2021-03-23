@@ -22,6 +22,10 @@ export class EvacuationFileService {
     }
 
     updateEvacuationFile(): Observable<string> {
+        console.log({
+            essFileNumber: this.evacuationFileDataService.essFileNumber,
+            body: this.evacuationFileDataService.createEvacuationFileDTO()
+        });
         return this.evacuationService.evacuationUpdateEvacuation({
             essFileNumber: this.evacuationFileDataService.essFileNumber,
             body: this.evacuationFileDataService.createEvacuationFileDTO()
@@ -35,6 +39,6 @@ export class EvacuationFileService {
         //         return updatedEvacFile.essFileNumber;
         //     })
         // )
-    };
+    }
 
 }

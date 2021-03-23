@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { Address, InsuranceOption, NeedsAssessment, Pet } from 'src/app/core/api/models';
+import { Address, HouseholdMember, InsuranceOption, NeedsAssessment, Pet } from 'src/app/core/api/models';
 import { PersonDetails } from 'src/app/core/model/profile.model';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
@@ -18,11 +18,11 @@ export class NeedsAssessmentMappingService {
     setNeedsAssessment(evacuatedFromAddress: Address, needsAssessment: NeedsAssessment): void {
 
         console.log(needsAssessment);
-
+        this.setNeedsAssessmentId(needsAssessment.id);
         this.setInsurance(evacuatedFromAddress, needsAssessment.insurance);
         this.setFamilyMedicationDiet(
             needsAssessment.haveMedication, needsAssessment.haveSpecialDiet,
-            needsAssessment.familyMembers, needsAssessment.specialDietDetails);
+            needsAssessment.householdMembers, needsAssessment.specialDietDetails);
         this.setPets(needsAssessment.pets, needsAssessment.hasPetsFood);
         this.setIdentifiedNeeds(
             needsAssessment.canEvacueeProvideClothing, needsAssessment.canEvacueeProvideFood,
@@ -30,23 +30,8 @@ export class NeedsAssessmentMappingService {
             needsAssessment.canEvacueeProvideTransportation);
     }
 
-    private familyMembersForm(familyMembers: Array<PersonDetails>): Array<PersonDetails> {
-        const familyMembersFormArray: Array<PersonDetails> = [];
-
-        for (const member of familyMembers) {
-            const memberDetails: PersonDetails = {
-                firstName: member.firstName,
-                lastName: member.lastName,
-                initials: member.initials,
-                gender: member.gender,
-                id: member.id,
-                dateOfBirth: member.dateOfBirth,
-                sameLastNameCheck: this.isSameLastName(member.lastName)
-            };
-
-            familyMembersFormArray.push(memberDetails);
-        }
-        return familyMembersFormArray;
+    setNeedsAssessmentId(needsAssessmentID: string): void {
+        this.needsAssessmentService.id = needsAssessmentID;
     }
 
     setInsurance(evacuatedFromAddress: Address, insurance: InsuranceOption): void {
@@ -65,23 +50,22 @@ export class NeedsAssessmentMappingService {
 
     setFamilyMedicationDiet(
         haveMedication: boolean, haveSpecialDiet: boolean,
-        familyMembers: Array<PersonDetails>, specialDietDetails: string): void {
+        householdMembers: Array<HouseholdMember>, specialDietDetails: string): void {
 
         this.needsAssessmentService.haveMedication = haveMedication;
         this.needsAssessmentService.haveSpecialDiet = haveSpecialDiet;
         this.needsAssessmentService.specialDietDetails = specialDietDetails;
-        this.needsAssessmentService.familyMembers = familyMembers;
+        this.needsAssessmentService.householdMembers = householdMembers;
 
-        this.formCreationService.getFamilyMembersForm().pipe(
+        this.formCreationService.getHouseholdMembersForm().pipe(
             first()).subscribe(details => {
                 details.setValue({
                     haveMedication,
                     haveSpecialDiet,
                     specialDietDetails,
-                    familyMember: this.familyMembersForm(familyMembers),
-                    member:
+                    householdMembers: this.householdMembersForm(householdMembers),
+                    householdMember:
                     {
-                        id: '', // Erase Later
                         dateOfBirth: '',
                         firstName: '',
                         gender: '',
@@ -89,7 +73,7 @@ export class NeedsAssessmentMappingService {
                         lastName: '',
                         sameLastNameCheck: ''
                     },
-                    addFamilyMemberIndicator: null
+                    addHouseholdMemberIndicator: null
                 });
 
             });
@@ -150,6 +134,24 @@ export class NeedsAssessmentMappingService {
     private isSameAddress(evacAddress: Address): boolean {
         const userPersonalAddress = this.profileDataService.primaryAddressDetails;
         return (evacAddress === userPersonalAddress);
+    }
+
+    private householdMembersForm(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
+        const householdMembersFormArray: Array<PersonDetails> = [];
+
+        for (const member of householdMembers) {
+            const memberDetails: PersonDetails = {
+                firstName: member.details.firstName,
+                lastName: member.details.lastName,
+                initials: member.details.initials,
+                gender: member.details.gender,
+                dateOfBirth: member.details.dateOfBirth,
+                sameLastNameCheck: this.isSameLastName(member.details.lastName)
+            };
+
+            householdMembersFormArray.push(memberDetails);
+        }
+        return householdMembersFormArray;
     }
 
 }

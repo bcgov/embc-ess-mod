@@ -30,7 +30,7 @@ export class NonVerifiedRegistrationMappingService {
             canEvacueeProvideIncidentals: null,
             canEvacueeProvideLodging: null,
             canEvacueeProvideTransportation: null,
-            familyMembers: null,
+            householdMembers: null,
             hasPetsFood: null,
             haveMedication: null,
             haveSpecialDiet: null,
@@ -59,7 +59,7 @@ export class NonVerifiedRegistrationMappingService {
 
         const evacuatedAddress = {
             evacuatedFromAddress: this.setAddressObject(this.evacuationFileDataService.evacuatedFromAddress)
-        }
+        };
 
         nonVerifiedRegistration = this.mergeData(nonVerifiedRegistration, this.profileDataService.createProfileDTO());
         nonVerifiedRegistration = this.mergeData(nonVerifiedRegistration, evacuatedAddress);

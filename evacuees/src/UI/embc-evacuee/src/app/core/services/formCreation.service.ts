@@ -6,7 +6,7 @@ import {
     AddressForm, Address, RestrictionForm, Restriction
 } from '../model/profile.model';
 import { CustomValidationService } from './customValidation.service';
-import { Evacuated, EvacuatedForm, FamilyMembers, FamilyMembersForm, IdentifyNeeds, IdentifyNeedsForm, Pet, PetForm } from '../model/needs.model';
+import { Evacuated, EvacuatedForm, HouseholdMembers, HouseholdMembersForm, IdentifyNeeds, IdentifyNeedsForm, Pet, PetForm } from '../model/needs.model';
 
 @Injectable({ providedIn: 'root' })
 export class FormCreationService {
@@ -41,10 +41,10 @@ export class FormCreationService {
 
     evacuatedForm$: Observable<FormGroup> = this.evacuatedForm.asObservable();
 
-    private familyMembersForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
-        this.formBuilder.group(new FamilyMembersForm(new FamilyMembers(), this.customValidator, this.formBuilder)));
+    private householdMembersForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
+        this.formBuilder.group(new HouseholdMembersForm(new HouseholdMembers(), this.customValidator, this.formBuilder)));
 
-    familyMembersForm$: Observable<FormGroup> = this.familyMembersForm.asObservable();
+    householdMembersForm$: Observable<FormGroup> = this.householdMembersForm.asObservable();
 
     private petsForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
         this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder)));
@@ -106,12 +106,12 @@ export class FormCreationService {
         this.evacuatedForm.next(evacuatedForm);
     }
 
-    getFamilyMembersForm(): Observable<FormGroup> {
-        return this.familyMembersForm$;
+    getHouseholdMembersForm(): Observable<FormGroup> {
+        return this.householdMembersForm$;
     }
 
-    setFamilyMembersForm(familyMembersForm: FormGroup): void {
-        this.familyMembersForm.next(familyMembersForm);
+    setHouseholdMembersForm(householdMembersForm: FormGroup): void {
+        this.householdMembersForm.next(householdMembersForm);
     }
 
     getPetsForm(): Observable<FormGroup> {
@@ -140,7 +140,7 @@ export class FormCreationService {
 
     clearNeedsAssessmentData(): void {
         this.evacuatedForm.next(this.formBuilder.group(new EvacuatedForm(new Evacuated(), this.formBuilder, this.customValidator)));
-        this.familyMembersForm.next(this.formBuilder.group(new FamilyMembersForm(new FamilyMembers(),
+        this.householdMembersForm.next(this.formBuilder.group(new HouseholdMembersForm(new HouseholdMembers(),
             this.customValidator, this.formBuilder)));
         this.petsForm.next(this.formBuilder.group(new PetForm(new Pet(), this.customValidator, this.formBuilder)));
         this.identifyNeedsForm.next(this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds())));

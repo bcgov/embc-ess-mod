@@ -24,12 +24,11 @@ export class PersonDetails {
     initials?: string;
     gender: string;
     dateOfBirth: string;
-    id: string;  // Erase later
     sameLastNameCheck?: boolean;
 
     constructor(
         firstName?: string, lastName?: string, preferredName?: string, initials?: string,
-        gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean, id?: string) {
+        gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
     }
 }
 
@@ -41,7 +40,7 @@ export class PersonDetailsForm {
     initials = new FormControl();
     gender = new FormControl();
     dateOfBirth = new FormControl();
-    id = new FormControl();
+
 
     constructor(personDetail: PersonDetails, customValidator: CustomValidationService) {
         if (personDetail.firstName) {
@@ -62,9 +61,6 @@ export class PersonDetailsForm {
 
         this.dateOfBirth.setValue(personDetail.dateOfBirth);
         this.dateOfBirth.setValidators([Validators.required, customValidator.dateOfBirthValidator().bind(customValidator)]);
-        // Validators.pattern(globalConst.datePattern),
-
-        this.id.setValue('12345-0009-78999');
     }
 }
 

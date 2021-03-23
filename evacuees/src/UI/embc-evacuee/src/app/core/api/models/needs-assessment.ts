@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
+import { HouseholdMember } from './household-member';
 import { InsuranceOption } from './insurance-option';
 import { NeedsAssessmentType } from './needs-assessment-type';
-import { PersonDetails } from './person-details';
 import { Pet } from './pet';
 
 /**
@@ -14,10 +14,10 @@ export interface NeedsAssessment {
   canEvacueeProvideIncidentals?: null | boolean;
   canEvacueeProvideLodging?: null | boolean;
   canEvacueeProvideTransportation?: null | boolean;
-  familyMembers?: null | Array<PersonDetails>;
   hasPetsFood?: null | boolean;
   haveMedication?: boolean;
   haveSpecialDiet?: boolean;
+  householdMembers?: null | Array<HouseholdMember>;
   id?: null | string;
   insurance: InsuranceOption;
   pets?: null | Array<Pet>;

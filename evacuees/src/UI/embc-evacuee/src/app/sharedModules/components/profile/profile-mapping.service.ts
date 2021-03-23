@@ -52,16 +52,8 @@ export class ProfileMappingService {
         let formGroup: FormGroup;
         this.formCreationService.getPersonalDetailsForm().pipe(
             first()).subscribe(details => {
-                console.log(details)
-                console.log(profile)
                 details.setValue({
                     ...profile.personalDetails
-                    // firstName: profile.personalDetails.firstName,
-                    // lastName: profile.personalDetails.lastName,
-                    // preferredName: profile.personalDetails.preferredName,
-                    // initials: profile.personalDetails.initials,
-                    // gender: profile.personalDetails.gender,
-                    // dateOfBirth: profile.personalDetails.dateOfBirth
                 });
                 formGroup = details;
             });

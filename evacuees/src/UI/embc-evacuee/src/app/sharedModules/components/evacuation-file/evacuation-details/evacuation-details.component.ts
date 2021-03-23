@@ -41,10 +41,7 @@ const REFERRALS: Referral[] = [{
 })
 export class EvacuationDetailsComponent implements OnInit {
 
-  // @Input() evacuationFileCard: EvacuationFile;
-  // @Input() evacuationFileStatus: string;
   @Input() allExpandState = false;
-  // @Output() showEvacuationList = new EventEmitter<boolean>();
 
   previousUrl: string;
   evacuationFileTab: string;
@@ -73,18 +70,11 @@ export class EvacuationDetailsComponent implements OnInit {
   showInactiveList = true;
 
   ngOnInit(): void {
-    // this.currentFlow = this.route.snapshot.data.flow;
     if (this.previousUrl.includes('current')) {
       this.evacuationFileTab = 'Current';
     } else {
       this.evacuationFileTab = 'Past';
     }
-
-    // this.route.paramMap.subscribe(params => {
-    //   // this.componentToLoad = 
-    //   console.log(params.get('essFile'));
-    //   // this.loadForm(this.componentToLoad);
-    // });
   }
 
   changeStatusColor(): string {

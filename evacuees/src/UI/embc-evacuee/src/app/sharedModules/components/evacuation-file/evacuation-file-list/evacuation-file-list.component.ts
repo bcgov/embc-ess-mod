@@ -35,7 +35,7 @@ export class EvacuationFileListComponent implements OnInit {
       this.showLoading = true;
       this.evacuationFileService.getCurrentEvacuationFiles().subscribe(files => {
         this.dataSourceActive = files;
-        this.dataSourceActive.sort((a, b) => parseInt(b.essFileNumber) - parseInt(a.essFileNumber));
+        this.dataSourceActive.sort((a, b) => parseInt(b.essFileNumber, 10) - parseInt(a.essFileNumber, 10));
         console.log(this.dataSourceActive);
         this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
         this.evacuatedFrom = this.dataSourceActive[0].evacuatedFromAddress.jurisdiction.name;
@@ -46,8 +46,8 @@ export class EvacuationFileListComponent implements OnInit {
       this.showLoading = true;
       this.evacuationFileService.getPastEvacuationFiles().subscribe(files => {
         this.dataSourceInactive = files;
-        this.dataSourceInactive.sort((a, b) => parseInt(b.essFileNumber) - parseInt(a.essFileNumber));
-        console.log(this.dataSourceInactive)
+        this.dataSourceInactive.sort((a, b) => parseInt(b.essFileNumber, 10) - parseInt(a.essFileNumber, 10));
+        // console.log(this.dataSourceInactive);
         this.showLoading = false;
       });
     }

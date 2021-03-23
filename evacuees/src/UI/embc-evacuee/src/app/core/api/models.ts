@@ -11,6 +11,7 @@ export { StateProvince } from './models/state-province';
 export { Country } from './models/country';
 export { NeedsAssessment } from './models/needs-assessment';
 export { InsuranceOption } from './models/insurance-option';
+export { HouseholdMember } from './models/household-member';
 export { Pet } from './models/pet';
 export { NeedsAssessmentType } from './models/needs-assessment-type';
 export { RegistrantEvacuation } from './models/registrant-evacuation';

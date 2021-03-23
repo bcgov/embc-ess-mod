@@ -1,4 +1,5 @@
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { HouseholdMember } from '../api/models';
 import { CustomValidationService } from '../services/customValidation.service';
 import { RegAddress } from './address';
 import { PersonDetails } from './profile.model';
@@ -31,47 +32,46 @@ export class EvacuatedForm {
     }
 }
 
-export class FamilyMembers {
+export class HouseholdMembers {
     haveMedication: boolean;
     haveSpecialDiet: boolean;
     specialDietDetails: string;
-    familyMember: Array<PersonDetails>;
+    householdMembers: Array<HouseholdMember>;
 
     constructor() { }
 }
 
-export class FamilyMembersForm {
+export class HouseholdMembersForm {
 
     haveMedication = new FormControl();
     haveSpecialDiet = new FormControl();
     specialDietDetails = new FormControl();
-    member: FormGroup;
-    familyMember = new FormControl([]);
-    addFamilyMemberIndicator = new FormControl(false);
+    householdMember: FormGroup;
+    householdMembers = new FormControl([]);
+    addHouseholdMemberIndicator = new FormControl(false);
 
-    constructor(familyMembers: FamilyMembers, customValidator: CustomValidationService, builder: FormBuilder) {
-        this.member = builder.group({
-            id: [''], // Erase later
+    constructor(householdMembers: HouseholdMembers, customValidator: CustomValidationService, builder: FormBuilder) {
+        this.householdMember = builder.group({
             firstName: ['', [customValidator.conditionalValidation(
-                () => this.addFamilyMemberIndicator.value,
+                () => this.addHouseholdMemberIndicator.value,
                 Validators.required
             ).bind(customValidator)]],
             lastName: ['', [customValidator.conditionalValidation(
-                () => this.addFamilyMemberIndicator.value,
+                () => this.addHouseholdMemberIndicator.value,
                 Validators.required
             ).bind(customValidator)]],
             sameLastNameCheck: [''],
             initials: [''],
             gender: ['', [customValidator.conditionalValidation(
-                () => this.addFamilyMemberIndicator.value,
+                () => this.addHouseholdMemberIndicator.value,
                 Validators.required
             ).bind(customValidator)]],
             dateOfBirth: ['', [customValidator.conditionalValidation(
-                () => this.addFamilyMemberIndicator.value,
+                () => this.addHouseholdMemberIndicator.value,
                 Validators.required
             ).bind(customValidator),
             customValidator.conditionalValidation(
-                () => this.addFamilyMemberIndicator.value,
+                () => this.addHouseholdMemberIndicator.value,
                 customValidator.dateOfBirthValidator().bind(customValidator)
             ).bind(customValidator)]]
         });
