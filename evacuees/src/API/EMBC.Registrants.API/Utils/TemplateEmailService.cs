@@ -23,24 +23,22 @@ namespace EMBC.Registrants.API.Utils
 {
     public interface ITemplateEmailService
     {
-        void SendRegistrationNotificationEmail(EmailAddress toAddress);
-        void SendAnonEvacuationSubmissionNotificationEmail(EmailAddress toAddress, string essFileNumber);
-        void SendEvacuationSubmissionNotificationEmail(EmailAddress toAddress, string essFileNumber);
+        EmailMessage GetRegistrationNotificationEmailMessage(EmailAddress toAddress);
+        EmailMessage GetAnonEvacuationSubmissionNotificationEmailMessage(EmailAddress toAddress, string essFileNumber);
+        EmailMessage GetEvacuationSubmissionNotificationEmailMessage(EmailAddress toAddress, string essFileNumber);
     }
 
     public class TemplateEmailService : ITemplateEmailService
     {
-        private readonly IEmailSender emailSender;
-        public TemplateEmailService(IEmailSender emailSender)
-        {
-            this.emailSender = emailSender;
-        }
+        public TemplateEmailService()
+        { }
 
         /// <summary>
         /// Sends a notification email to a verified Registrant after they register their profile
         /// </summary>
         /// <param name="toAddress">Registrant's Email Address</param>
-        public void SendRegistrationNotificationEmail(EmailAddress toAddress)
+        /// <returns>Formatted Email Message</returns>
+        public EmailMessage GetRegistrationNotificationEmailMessage(EmailAddress toAddress)
         {
             System.Collections.Generic.List<EmailAddress> toList = new System.Collections.Generic.List<EmailAddress> { toAddress };
             string emailSubject = "Registration completed successfully";
@@ -51,8 +49,7 @@ namespace EMBC.Registrants.API.Utils
 <br>
 <p>Go to <a href='https://ess.gov.bc.ca'>https://ess.gov.bc.ca</a> and select the 'Already have an account? Log in' link.</p>";
 
-            EmailMessage emailMessage = new EmailMessage(toList, emailSubject, emailBody);
-            emailSender.Send(emailMessage);
+            return new EmailMessage(toList, emailSubject, emailBody);
         }
 
         /// <summary>
@@ -60,7 +57,8 @@ namespace EMBC.Registrants.API.Utils
         /// </summary>
         /// <param name="toAddress">Registrant's Email Address</param>
         /// <param name="essFileNumber">ESS File Number</param>
-        public void SendAnonEvacuationSubmissionNotificationEmail(EmailAddress toAddress, string essFileNumber)
+        /// <returns>Formatted Email Message</returns>
+        public EmailMessage GetAnonEvacuationSubmissionNotificationEmailMessage(EmailAddress toAddress, string essFileNumber)
         {
             System.Collections.Generic.List<EmailAddress> toList = new System.Collections.Generic.List<EmailAddress> { toAddress };
             string emailSubject = "Registration completed successfully";
@@ -114,8 +112,7 @@ namespace EMBC.Registrants.API.Utils
         Log in' link)</li>
 </p>";
 
-            EmailMessage emailMessage = new EmailMessage(toList, emailSubject, emailBody);
-            emailSender.Send(emailMessage);
+            return new EmailMessage(toList, emailSubject, emailBody);
         }
 
         /// <summary>
@@ -123,7 +120,8 @@ namespace EMBC.Registrants.API.Utils
         /// </summary>
         /// <param name="toAddress">Registrant's Email Address</param>
         /// <param name="essFileNumber">ESS File Number</param>
-        public void SendEvacuationSubmissionNotificationEmail(EmailAddress toAddress, string essFileNumber)
+        /// <returns>Formatted Email Message</returns>
+        public EmailMessage GetEvacuationSubmissionNotificationEmailMessage(EmailAddress toAddress, string essFileNumber)
         {
             System.Collections.Generic.List<EmailAddress> toList = new System.Collections.Generic.List<EmailAddress> { toAddress };
             string emailSubject = "Registration completed successfully";
@@ -177,8 +175,7 @@ namespace EMBC.Registrants.API.Utils
         Log in' link)</li>
 </p>";
 
-            EmailMessage emailMessage = new EmailMessage(toList, emailSubject, emailBody);
-            emailSender.Send(emailMessage);
+            return new EmailMessage(toList, emailSubject, emailBody);
         }
     }
 }

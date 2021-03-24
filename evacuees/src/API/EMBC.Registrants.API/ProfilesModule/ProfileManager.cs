@@ -42,13 +42,15 @@ namespace EMBC.Registrants.API.ProfilesModule
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
         private readonly ITemplateEmailService emailService;
+        private readonly IEmailSender emailSender;
 
-        public ProfileManager(IProfileRepository profileRepository, IUserRepository userRepository, IMapper mapper, ITemplateEmailService emailService)
+        public ProfileManager(IProfileRepository profileRepository, IUserRepository userRepository, IMapper mapper, ITemplateEmailService emailService, IEmailSender emailSender)
         {
             this.profileRepository = profileRepository;
             this.userRepository = userRepository;
             this.mapper = mapper;
             this.emailService = emailService;
+            this.emailSender = emailSender;
         }
 
         public async Task DeleteProfile(string userId)
@@ -82,15 +84,16 @@ namespace EMBC.Registrants.API.ProfilesModule
                 // get user by BCServicesCardId
                 Profile newProfile = await profileRepository.Read(profile.Id);
 
-                if (profile != null && profile.ContactDetails.Email != null)
+                if (!string.IsNullOrEmpty(profile?.ContactDetails?.Email))
                 {
                     // Send email notification of new registrant record created
                     EmailAddress registrantEmailAddress = new EmailAddress
                     {
-                        Name = profile.PersonalDetails.FirstName + " " + profile.PersonalDetails.LastName,
+                        Name = $"{profile.PersonalDetails.FirstName} {profile.PersonalDetails.LastName}",
                         Address = profile.ContactDetails.Email
                     };
-                    emailService.SendRegistrationNotificationEmail(registrantEmailAddress);
+                    var emailMessage = emailService.GetRegistrationNotificationEmailMessage(registrantEmailAddress);
+                    await emailSender.SendAsync(emailMessage);
                 }
             }
             else

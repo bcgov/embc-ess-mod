@@ -37,13 +37,15 @@ namespace EMBC.Registrants.API.RegistrationsModule
     {
         private readonly DynamicsClientContext dynamicsClient;
         private readonly ITemplateEmailService emailService;
+        private readonly IEmailSender emailSender;
         private DateTimeOffset now;
 
-        public RegistrationManager(DynamicsClientContext dynamicsClient, ITemplateEmailService emailService)
+        public RegistrationManager(DynamicsClientContext dynamicsClient, ITemplateEmailService emailService, IEmailSender emailSender)
         {
             this.dynamicsClient = dynamicsClient;
             this.now = DateTimeOffset.UtcNow;
             this.emailService = emailService;
+            this.emailSender = emailSender;
         }
 
         /// <summary>
@@ -238,30 +240,26 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
             var results = await dynamicsClient.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
-            //var results = await dynamicsClient.SaveChangesAsync();
 
             var queryResult = dynamicsClient.era_evacuationfiles
-                //.Expand(f => f.era_city)
-                //.Expand(f => f.era_province)
-                //.Expand(f => f.era_country)
                 .Where(f => f.era_evacuationfileid == evacuationFile.era_evacuationfileid).FirstOrDefault();
 
             essFileNumber = (int)queryResult?.era_essfilenumber;
 
             // Check if email address defined for profile
-            if (newPrimaryRegistrant.emailaddress1 != null)
+            if (!string.IsNullOrEmpty(newPrimaryRegistrant?.emailaddress1))
             {
                 // Send email notification of new registrant record created
                 EmailAddress registrantEmailAddress = new EmailAddress
                 {
-                    Name = newPrimaryRegistrant.firstname + " " + newPrimaryRegistrant.lastname,
+                    Name = $"{newPrimaryRegistrant.firstname} {newPrimaryRegistrant.lastname}",
                     Address = newPrimaryRegistrant.emailaddress1
                 };
-                emailService.SendAnonEvacuationSubmissionNotificationEmail(registrantEmailAddress, essFileNumber.ToString());
+                var emailMessage = emailService.GetAnonEvacuationSubmissionNotificationEmailMessage(registrantEmailAddress, essFileNumber.ToString());
+                await emailSender.SendAsync(emailMessage);
             }
 
             return $"{essFileNumber:D9}";
-            //return queryResult.era_essfilenumber.ToString();
         }
 
         private era_country Lookup(Country country) =>

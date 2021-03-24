@@ -41,13 +41,15 @@ namespace EMBC.Registrants.API.EvacuationsModule
         private readonly IProfileRepository profileRepository;
         private readonly IMapper mapper;
         private readonly ITemplateEmailService emailService;
+        private readonly IEmailSender emailSender;
 
-        public EvacuationManager(IEvacuationRepository evacuationRepository, IProfileRepository profileRepository, IMapper mapper, ITemplateEmailService emailService)
+        public EvacuationManager(IEvacuationRepository evacuationRepository, IProfileRepository profileRepository, IMapper mapper, ITemplateEmailService emailService, IEmailSender emailSender)
         {
             this.evacuationRepository = evacuationRepository;
             this.profileRepository = profileRepository;
             this.mapper = mapper;
             this.emailService = emailService;
+            this.emailSender = emailSender;
         }
 
         public async Task<IEnumerable<EvacuationFile>> GetEvacuations(string userid)
@@ -63,7 +65,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
         public async Task<string> SaveEvacuation(string userid, string essFileNumber, EvacuationFile evacuationFile)
         {
             // When an ESS File Number has been defined, perform an update. Otherwise, create a new evacuation.
-            if (essFileNumber != null && essFileNumber.Length > 0)
+            if (!string.IsNullOrEmpty(essFileNumber))
             {
                 await evacuationRepository.Update(userid, essFileNumber, evacuationFile);
             }
@@ -72,20 +74,21 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 essFileNumber = await evacuationRepository.Create(userid, evacuationFile);
 
                 // Check if Create returned an ESS File Number
-                if (essFileNumber != string.Empty)
+                if (!string.IsNullOrEmpty(essFileNumber))
                 {
                     // get user by BCServicesCardId
-                    Profile profile = await profileRepository.Read(userid);
+                    var profile = await profileRepository.Read(userid);
 
-                    if (profile != null && profile.ContactDetails.Email != null)
+                    if (!string.IsNullOrEmpty(profile?.ContactDetails?.Email))
                     {
                         // Send email notification of new registrant record created
-                        EmailAddress registrantEmailAddress = new EmailAddress
+                        var registrantEmailAddress = new EmailAddress
                         {
-                            Name = profile.PersonalDetails.FirstName + " " + profile.PersonalDetails.LastName,
+                            Name = $"{profile.PersonalDetails.FirstName} {profile.PersonalDetails.LastName}",
                             Address = profile.ContactDetails.Email
                         };
-                        emailService.SendEvacuationSubmissionNotificationEmail(registrantEmailAddress, essFileNumber.ToString());
+                        var emailMessage = emailService.GetEvacuationSubmissionNotificationEmailMessage(registrantEmailAddress, essFileNumber);
+                        await emailSender.SendAsync(emailMessage);
                     }
                 }
             }

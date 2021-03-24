@@ -20,13 +20,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.Registrants.API.LocationModule;
-using EMBC.Registrants.API.Shared;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.Dynamics.CRM;
 using Microsoft.OData;
 using Microsoft.OData.Client;
-using Microsoft.OData.Edm;
 
 namespace EMBC.Registrants.API.EvacuationsModule
 {
