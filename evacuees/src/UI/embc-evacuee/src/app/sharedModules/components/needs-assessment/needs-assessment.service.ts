@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { Address, InsuranceOption, NeedsAssessment, Pet, RegistrationResult } from 'src/app/core/api/models';
+import { InsuranceOption, NeedsAssessment, PersonDetails, Pet, RegistrationResult, NeedsAssessmentType, HouseholdMember } from 'src/app/core/api/models';
 import { EvacuationService } from 'src/app/core/api/services';
-import { PersonDetails } from 'src/app/core/model/profile.model';
+
 
 @Injectable({ providedIn: 'root' })
 export class NeedsAssessmentService {
 
-    private _evacuatedFromAddress: Address;
+    private _needsAssessmentId: string = null;
     private _insurance: InsuranceOption;
     private _haveMedication: boolean;
     private _haveSpecialDiet: boolean;
-    private _familyMembers: Array<PersonDetails>;
+    private _householdMembers: Array<HouseholdMember>;
     private _specialDietDetails: string;
     private _pets: Array<Pet> = [];
     private _hasPetsFood: boolean;
@@ -26,11 +25,11 @@ export class NeedsAssessmentService {
 
     constructor(private evacuationService: EvacuationService) { }
 
-    public get evacuatedFromAddress(): Address {
-        return this._evacuatedFromAddress;
+    public get id(): string {
+        return this._needsAssessmentId;
     }
-    public set evacuatedFromAddress(value: Address) {
-        this._evacuatedFromAddress = value;
+    public set id(value: string) {
+        this._needsAssessmentId = value;
     }
 
     public get insurance(): InsuranceOption {
@@ -112,12 +111,12 @@ export class NeedsAssessmentService {
         this._haveSpecialDiet = value;
     }
 
-    public get familyMembers(): Array<PersonDetails> {
-        return this._familyMembers;
+    public get householdMembers(): Array<HouseholdMember> {
+        return this._householdMembers;
     }
 
-    public set familyMembers(value: Array<PersonDetails>) {
-        this._familyMembers = value;
+    public set householdMembers(value: Array<HouseholdMember>) {
+        this._householdMembers = value;
     }
 
     public get specialDietDetails(): string {
@@ -125,6 +124,20 @@ export class NeedsAssessmentService {
     }
     public set specialDietDetails(value: string) {
         this._specialDietDetails = value;
+    }
+
+    public setHouseHoldMembers(members: PersonDetails[]): void {
+        const householdMembers: Array<HouseholdMember> = [];
+        for (const member of members) {
+            const houseHoldMember: HouseholdMember = {
+                id: null,
+                details: member
+            };
+
+            householdMembers.push(houseHoldMember);
+        }
+
+        this.householdMembers = householdMembers;
     }
 
     public setNeedsDetails(formGroup: FormGroup): void {
@@ -139,50 +152,22 @@ export class NeedsAssessmentService {
 
     public createNeedsAssessmentDTO(): NeedsAssessment {
         return {
+            id: this.id,
             canEvacueeProvideClothing: this.canEvacueeProvideClothing,
             canEvacueeProvideFood: this.canEvacueeProvideFood,
             canEvacueeProvideIncidentals: this.canEvacueeProvideIncidentals,
             canEvacueeProvideLodging: this.canEvacueeProvideLodging,
             canEvacueeProvideTransportation: this.canEvacueeProvideTransportation,
-            evacuatedFromAddress: this.setAddressObject(this.evacuatedFromAddress),
-            familyMembers: this.familyMembers,
+            householdMembers: this.householdMembers,
             hasPetsFood: this.hasPetsFood,
             haveMedication: this.haveMedication,
             haveSpecialDiet: this.haveSpecialDiet,
             insurance: this.insurance,
-            pets: this.pets
+            pets: this.pets,
+            type: NeedsAssessmentType.Preliminary
         };
     }
 
-    public createEvacuationFile(): Observable<string> {
-        return this.evacuationService.evacuationCreateEvacuation({ body: this.createNeedsAssessmentDTO() });
-    }
-
-    private setAddressObject(addressObject): Address {
-        const address: Address = {
-            addressLine1: addressObject.addressLine1,
-            addressLine2: addressObject.addressLine2,
-            country: {
-                code: addressObject.country.code,
-                name: addressObject.country.name
-            },
-            jurisdiction: {
-                code: addressObject.jurisdiction.code === undefined ?
-                    null : addressObject.jurisdiction.code,
-                name: addressObject.jurisdiction.name ===
-                    undefined ? addressObject.jurisdiction : addressObject.jurisdiction.name
-            },
-            postalCode: addressObject.postalCode,
-            stateProvince: {
-                code: addressObject.stateProvince === null ?
-                    addressObject.stateProvince : addressObject.stateProvince.code,
-                name: addressObject.stateProvince === null ?
-                    addressObject.stateProvince : addressObject.stateProvince.name
-            }
-        };
-
-        return address;
-    }
 
     public setNonVerifiedEvacuationFileNo(registrationResult: RegistrationResult): void {
         this.registrationResult = registrationResult;

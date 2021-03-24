@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { EvacuationFileListComponent } from './evacuation-file-list.component';
+import { EvacuationDetailsComponent } from './evacuation-details.component';
 
 const routes: Routes = [
-    {
-        path: '', component: EvacuationFileListComponent
-    }
+    { path: '', component: EvacuationDetailsComponent }
 ];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class EvacuationFileListRoutingModule { }
+export class EvacuationDetailsRoutingModule { }

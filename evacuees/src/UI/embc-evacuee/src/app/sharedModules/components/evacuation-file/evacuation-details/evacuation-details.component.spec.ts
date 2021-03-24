@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { EvacuationDetailsComponent } from './evacuation-details.component';
 
 describe('EvacuationDetailsComponent', () => {
@@ -8,9 +7,9 @@ describe('EvacuationDetailsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EvacuationDetailsComponent ]
+      declarations: [EvacuationDetailsComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

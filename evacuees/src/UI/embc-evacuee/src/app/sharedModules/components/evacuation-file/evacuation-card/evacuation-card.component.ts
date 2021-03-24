@@ -1,5 +1,9 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { NeedsAssessment } from 'src/app/core/api/models';
+import { Router } from '@angular/router';
+import { EvacuationFile } from 'src/app/core/api/models';
+import { NeedsAssessmentMappingService } from '../../needs-assessment/needs-assessment-mapping.service';
+import { EvacuationFileDataService } from '../evacuation-file-data.service';
+import { EvacuationFileMappingService } from '../evacuation-file-mapping.service';
 
 @Component({
   selector: 'app-evacuation-card',
@@ -9,14 +13,19 @@ import { NeedsAssessment } from 'src/app/core/api/models';
 
 export class EvacuationCardComponent implements OnInit {
 
-  @Input() evacuationFileCard: NeedsAssessment;
+  @Input() evacuationFileCard: EvacuationFile;
   @Input() evacuationFileStatus: string;
-  @Output() showEvacuationList = new EventEmitter<boolean>();
-  @Output() evacuationFile = new EventEmitter<NeedsAssessment>();
 
   imageIcon: string;
+  pathName: string;
 
-  constructor() { }
+  constructor(
+    private router: Router, private evacuationFileDataService: EvacuationFileDataService,
+    private needsAssessmentMappingService: NeedsAssessmentMappingService, private evacuationFileMapping: EvacuationFileMappingService) {
+
+    this.pathName = window.location.pathname;
+    console.log(this.pathName);
+  }
 
   ngOnInit(): void {
     this.changeStatusColor();
@@ -31,8 +40,14 @@ export class EvacuationCardComponent implements OnInit {
   }
 
   goToDetails(): void {
-    this.showEvacuationList.emit(false);
-    this.evacuationFile.emit(this.evacuationFileCard);
+
+    this.evacuationFileMapping.mapEvacuationFile(this.evacuationFileCard);
+
+    if (this.pathName === '/verified-registration/dashboard/current') {
+      this.router.navigate(['/verified-registration/dashboard/current/' + this.evacuationFileCard.essFileNumber]);
+    } else {
+      this.router.navigate(['/verified-registration/dashboard/past/' + this.evacuationFileCard.essFileNumber]);
+    }
   }
 
 }

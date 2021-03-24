@@ -1,16 +1,26 @@
+<br>
+<div class="row" style="max-width: 100%;">
+    <div class="col-md-12 breadCrumb">
+        <a class="goBackLink" (click)="goToCurrent()">{{evacuationFileTab}} Evacuations
+            ({{(evacuationFileDataService.currentEvacuationFileCount$ |async)}})
+            &nbsp;</a>
+        <span> / &nbsp; Evacuation File #{{evacuationFileDataService?.essFileNumber}}</span>
+    </div>
+</div>
 <mat-card class="detailsCard">
     <div class="row evacFileHeader">
         <div class="col-md-9 titleDetailHeader">
             <button class="backButton" (click)="goToCurrent()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
                 <img [src]="backArrowImgSrc" height="28" width="31">
             </button>
-            <span class="evacFileSpan">Evacuation File #123456</span>
+            <span class="evacFileSpan">Evacuation File #{{evacuationFileDataService?.essFileNumber}}</span>
         </div>
 
         <div class="col-md-3 statusDetailHeader">
             <div class="statusDetailHeaderElements">
                 <span>Status: </span>
-                <span [ngStyle]="{'color': changeStatusColor()}">{{evacuationFileStatus}}</span>
+                <span
+                    [ngStyle]="{'color': changeStatusColor()}">{{evacuationFileDataService?.evacuationFileStatus}}</span>
             </div>
         </div>
     </div>
@@ -37,15 +47,15 @@
                 <div class="col-md-3">Evacuated From:</div>
                 <div class="col-md-3 evacuatedAddress">
                     <div>
-                        <span>{{evacuationFileCard?.evacuatedFromAddress?.addressLine1}},</span>
-                        <span *ngIf="evacuationFileCard?.evacuatedFromAddress?.addressLine2 != null">
-                            &nbsp;{{evacuationFileCard?.evacuatedFromAddress?.addressLine2}},</span>
+                        <span>{{evacuationFileDataService?.evacuatedFromAddress?.addressLine1}},</span>
+                        <span *ngIf="evacuationFileDataService?.evacuatedFromAddress?.addressLine2 != null">
+                            &nbsp;{{evacuationFileDataService?.evacuatedFromAddress?.addressLine2}},</span>
                     </div>
                     <div>
-                        <span>{{evacuationFileCard?.evacuatedFromAddress?.jurisdiction?.name}},</span>
-                        <span> &nbsp;{{evacuationFileCard?.evacuatedFromAddress?.stateProvince?.name}}</span>
-                        <span *ngIf="evacuationFileCard?.evacuatedFromAddress?.postalCode != null">,
-                            &nbsp;{{evacuationFileCard?.evacuatedFromAddress?.postalCode}}</span>
+                        <span>{{evacuationFileDataService?.evacuatedFromAddress?.jurisdiction?.name}},</span>
+                        <span> &nbsp;{{evacuationFileDataService?.evacuatedFromAddress?.stateProvince?.name}}</span>
+                        <span *ngIf="evacuationFileDataService?.evacuatedFromAddress?.postalCode != null">,
+                            &nbsp;{{evacuationFileDataService?.evacuatedFromAddress?.postalCode}}</span>
                     </div>
                 </div>
             </div>

@@ -16,9 +16,10 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="dataSpan">20-Feb-2020</td>
-                            <td class="dataSpan">123456</td>
-                            <td class="dataSpan">No</td>
+                            <td class="dataSpan">{{evacuationFileCard?.evacuationFileDate | date: 'dd-MMM-yyyy'}}</td>
+                            <td class="dataSpan">{{evacuationFileCard?.essFileNumber}}</td>
+                            <td class="dataSpan">{{evacuationFileCard?.needsAssessments[0]?.type === 'Preliminary'?
+                                'No': 'Yes'}}</td>
                             <td class="dataSpan"><img src="{{imageIcon}}" height="13" width="13">
                                 {{evacuationFileStatus}}
                             </td>

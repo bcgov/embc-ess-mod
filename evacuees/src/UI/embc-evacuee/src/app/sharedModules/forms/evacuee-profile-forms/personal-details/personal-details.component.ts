@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { DirectivesModule } from '../../../../core/directives/directives.module';
 import { TextMaskModule } from 'angular2-text-mask';
 import * as globalConst from '../../../../core/services/globalConstants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-personal-details',
@@ -26,19 +27,28 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   personalDetailsForm$: Subscription;
   formCreationService: FormCreationService;
   readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
+  editVerifiedPersonalDetails = '/verified-registration/edit/personal-details';
+  disableFields = false;
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
+
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+    private router: Router) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
 
   ngOnInit(): void {
-    this.personalDetailsForm$ = this.formCreationService.getPeronalDetailsForm()
-    .subscribe(
-      personalDetails => {
-        this.personalDetailsForm = personalDetails;
-      }
-    );
+    this.personalDetailsForm$ = this.formCreationService.getPersonalDetailsForm()
+      .subscribe(
+        personalDetails => {
+          this.personalDetailsForm = personalDetails;
+        }
+      );
+
+    if (window.location.pathname === this.editVerifiedPersonalDetails) {
+      this.disableFields = true;
+    }
   }
 
   /**

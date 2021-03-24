@@ -29,12 +29,12 @@ export class RestrictionComponent implements OnInit, OnDestroy {
     );
   }
 
-  mapData(): void {
-    const existingRestrictionAccess = this.restrictionService.restrictedAccess;
-    if (existingRestrictionAccess !== null) {
-      this.restrictionForm.get('restrictedAccess').setValue(existingRestrictionAccess);
-    }
-  }
+  // mapData(): void {
+  //   const existingRestrictionAccess = this.restrictionService.restrictedAccess;
+  //   if (existingRestrictionAccess !== null) {
+  //     this.restrictionForm.get('restrictedAccess').setValue(existingRestrictionAccess);
+  //   }
+  // }
 
   submitRestriction(): void {
     if (this.restrictionForm.status === 'VALID') {
