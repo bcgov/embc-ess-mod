@@ -19,6 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.Registrants.API.SecurityModule;
+using EMBC.Registrants.API.Utils;
 
 namespace EMBC.Registrants.API.ProfilesModule
 {
@@ -40,12 +41,16 @@ namespace EMBC.Registrants.API.ProfilesModule
         private readonly IProfileRepository profileRepository;
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
+        private readonly ITemplateEmailService emailService;
+        private readonly IEmailSender emailSender;
 
-        public ProfileManager(IProfileRepository profileRepository, IUserRepository userRepository, IMapper mapper)
+        public ProfileManager(IProfileRepository profileRepository, IUserRepository userRepository, IMapper mapper, ITemplateEmailService emailService, IEmailSender emailSender)
         {
             this.profileRepository = profileRepository;
             this.userRepository = userRepository;
             this.mapper = mapper;
+            this.emailService = emailService;
+            this.emailSender = emailSender;
         }
 
         public async Task DeleteProfile(string userId)
@@ -75,6 +80,21 @@ namespace EMBC.Registrants.API.ProfilesModule
             if (!await profileRepository.DoesProfileExist(profile.Id))
             {
                 await profileRepository.Create(profile);
+
+                // get user by BCServicesCardId
+                Profile newProfile = await profileRepository.Read(profile.Id);
+
+                if (!string.IsNullOrEmpty(profile?.ContactDetails?.Email))
+                {
+                    // Send email notification of new registrant record created
+                    EmailAddress registrantEmailAddress = new EmailAddress
+                    {
+                        Name = $"{profile.PersonalDetails.FirstName} {profile.PersonalDetails.LastName}",
+                        Address = profile.ContactDetails.Email
+                    };
+                    var emailMessage = emailService.GetRegistrationNotificationEmailMessage(registrantEmailAddress);
+                    await emailSender.SendAsync(emailMessage);
+                }
             }
             else
             {
