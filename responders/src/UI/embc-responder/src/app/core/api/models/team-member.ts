@@ -12,7 +12,8 @@ export interface TeamMember {
   firstName: string;
   id?: null | string;
   isActive?: boolean;
-  label?: MemberLabel;
+  isUserNameEditable?: boolean;
+  label?: null | MemberLabel;
   lastName: string;
   lastSuccessfulLogin?: null | string;
   phone?: null | string;

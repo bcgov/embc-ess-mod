@@ -61,7 +61,7 @@ export class EditTeamMemberComponent implements OnInit {
   }
 
   isEditAllowed(): boolean {
-    return (this.teamMember.lastSuccessfulLogin !== null && this.teamMember.lastSuccessfulLogin !== '');
+    return this.teamMember.isUserNameEditable;
   }
 
   next(): void {

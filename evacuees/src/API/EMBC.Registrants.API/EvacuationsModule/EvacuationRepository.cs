@@ -20,13 +20,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.Registrants.API.LocationModule;
-using EMBC.Registrants.API.Shared;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.Dynamics.CRM;
 using Microsoft.OData;
 using Microsoft.OData.Client;
-using Microsoft.OData.Edm;
 
 namespace EMBC.Registrants.API.EvacuationsModule
 {
@@ -180,9 +177,24 @@ namespace EMBC.Registrants.API.EvacuationsModule
             return essFileNumber.ToString();
         }
 
-        public Task Delete(string userId, string essFileNumber)
+        public async Task Delete(string userId, string essFileNumber)
         {
-            throw new NotImplementedException();
+            await Task.CompletedTask;
+
+            // get dynamics contact by BCServicesCardId
+            contact dynamicsContact = GetDynamicsContactByBCSC(userId);
+
+            if (dynamicsContact != null)
+            {
+                var evacuationFile = dynamicsClient.era_evacuationfiles
+                    .Where(ef => ef.era_essfilenumber == int.Parse(essFileNumber)).FirstOrDefault();
+
+                if (evacuationFile != null)
+                {
+                    dynamicsClient.DeleteObject(evacuationFile);
+                    await dynamicsClient.SaveChangesAsync();
+                }
+            }
         }
 
         public async Task<IEnumerable<EvacuationFile>> Read(string userId)

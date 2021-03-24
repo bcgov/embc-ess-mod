@@ -29,7 +29,7 @@ export class TeamListComponent implements OnInit {
       } else if (state?.action === 'edit') {
         displayText = globalConst.editMessage;
       } else {
-        displayText = 'Hello.. Something went wrong';
+        displayText = globalConst.addMessage;
       }
       setTimeout(() => {
         this.openConfirmation(displayText);
