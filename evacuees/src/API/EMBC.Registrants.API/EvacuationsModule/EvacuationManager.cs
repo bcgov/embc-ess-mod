@@ -31,6 +31,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
         Task<EvacuationFile> GetEvacuation(string userid, string essFileNumber);
 
         Task<string> SaveEvacuation(string userid, string essFileNumber, EvacuationFile evacuationFile);
+
+        Task DeleteEvacuation(string userId, string essFileNumber);
     }
 
     public class EvacuationManager : IEvacuationManager
@@ -38,13 +40,15 @@ namespace EMBC.Registrants.API.EvacuationsModule
         private readonly IEvacuationRepository evacuationRepository;
         private readonly IProfileRepository profileRepository;
         private readonly IMapper mapper;
+        private readonly ITemplateEmailService emailService;
         private readonly IEmailSender emailSender;
 
-        public EvacuationManager(IEvacuationRepository evacuationRepository, IProfileRepository profileRepository, IMapper mapper, IEmailSender emailSender)
+        public EvacuationManager(IEvacuationRepository evacuationRepository, IProfileRepository profileRepository, IMapper mapper, ITemplateEmailService emailService, IEmailSender emailSender)
         {
             this.evacuationRepository = evacuationRepository;
             this.profileRepository = profileRepository;
             this.mapper = mapper;
+            this.emailService = emailService;
             this.emailSender = emailSender;
         }
 
@@ -61,7 +65,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
         public async Task<string> SaveEvacuation(string userid, string essFileNumber, EvacuationFile evacuationFile)
         {
             // When an ESS File Number has been defined, perform an update. Otherwise, create a new evacuation.
-            if (essFileNumber != null && essFileNumber.Length > 0)
+            if (!string.IsNullOrEmpty(essFileNumber))
             {
                 await evacuationRepository.Update(userid, essFileNumber, evacuationFile);
             }
@@ -70,20 +74,21 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 essFileNumber = await evacuationRepository.Create(userid, evacuationFile);
 
                 // Check if Create returned an ESS File Number
-                if (essFileNumber != string.Empty)
+                if (!string.IsNullOrEmpty(essFileNumber))
                 {
                     // get user by BCServicesCardId
-                    Profile profile = await profileRepository.Read(userid);
+                    var profile = await profileRepository.Read(userid);
 
-                    if (profile != null && profile.ContactDetails.Email != null)
+                    if (!string.IsNullOrEmpty(profile?.ContactDetails?.Email))
                     {
                         // Send email notification of new registrant record created
-                        EmailAddress registrantEmailAddress = new EmailAddress
+                        var registrantEmailAddress = new EmailAddress
                         {
-                            Name = profile.PersonalDetails.FirstName + " " + profile.PersonalDetails.LastName,
+                            Name = $"{profile.PersonalDetails.FirstName} {profile.PersonalDetails.LastName}",
                             Address = profile.ContactDetails.Email
                         };
-                        SendEvacuationSubmissionNotificationEmail(registrantEmailAddress, essFileNumber.ToString());
+                        var emailMessage = emailService.GetEvacuationSubmissionNotificationEmailMessage(registrantEmailAddress, essFileNumber);
+                        await emailSender.SendAsync(emailMessage);
                     }
                 }
             }
@@ -91,39 +96,9 @@ namespace EMBC.Registrants.API.EvacuationsModule
             return essFileNumber;
         }
 
-        /// <summary>
-        /// Sends a notification email to a verified Registrant after they submit an Evacuation
-        /// </summary>
-        /// <param name="toAddress">Registrant's Email Address</param>
-        /// <param name="essFileNumber">ESS File Number</param>
-        private void SendEvacuationSubmissionNotificationEmail(EmailAddress toAddress, string essFileNumber)
+        public async Task DeleteEvacuation(string userId, string essFileNumber)
         {
-            System.Collections.Generic.List<EmailAddress> toList = new System.Collections.Generic.List<EmailAddress> { toAddress };
-            string emailSubject = "Registration completed successfully";
-            string emailBody = $@"
-<p><b>Submission Complete</b>
-<p>
-<p>Your Emergency Support Services (ESS) File Number is: " + essFileNumber + $@"
-<p>Thank you for submitting your online self-registration.
-<p>
-<p><b>Next Steps</b>
-<p>Please keep a record of your Emergency Support Services File Number to receive emergency support services that can be
-    provided up to 72 hours starting from the time connecting in with a local ESS Responder at a Reception Centre. After
-    a need's assessment interview with a local ESS Responder has been completed, supports are provided to purchase goods
-    and services if eligible. Any goods and services purchased prior to a need’s assessment interview are not eligible
-    for retroactive reimbursement.
-<p>
-<p>If you are under <b>EVACUATION ALERT</b> or <b>DO NOT</b> require emergency serves at this time, no further action is
-    required.
-<p>
-<p>If you are under <b>EVACUATION ORDER</b>, and require emergency supports, proceed to your nearest Reception Centre. A
-    list of open Reception Centres can be found at Emergency Info BC.
-<p>
-<p>If <b>NO</b> nearby Reception Centre is open and immediate action is required, please contact your First Nation
-    Government or Local Authority for next steps.";
-
-            EmailMessage emailMessage = new EmailMessage(toList, emailSubject, emailBody);
-            emailSender.Send(emailMessage);
+            await evacuationRepository.Delete(userId, essFileNumber);
         }
     }
 }
