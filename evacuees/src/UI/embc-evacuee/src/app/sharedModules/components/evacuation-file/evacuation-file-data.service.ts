@@ -125,7 +125,6 @@ export class EvacuationFileDataService {
     private getNeedsAssessment(): Array<NeedsAssessment> {
         const needsAssessment: NeedsAssessment = this.needsAssessmentService.createNeedsAssessmentDTO();
         this._needsAssessments.splice(0, 1, needsAssessment);
-        // console.log(this._needsAssessments);
         return this._needsAssessments;
     }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Address, AnonymousRegistration, NeedsAssessment, Registration } from '../core/api/models';
+import { Address, AnonymousRegistration, NeedsAssessment, Profile } from '../core/api/models';
 import { EvacuationFileDataService } from '../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { NeedsAssessmentService } from '../sharedModules/components/needs-assessment/needs-assessment.service';
 import { ProfileDataService } from '../sharedModules/components/profile/profile-data.service';
@@ -13,8 +13,10 @@ export class NonVerifiedRegistrationMappingService {
 
     mapAnonymousRegistration(): AnonymousRegistration {
         return {
+            evacuatedFromAddress: this.setAddressObject(this.evacuationFileDataService.evacuatedFromAddress),
+            informationCollectionConsent: true,
             preliminaryNeedsAssessment: this.mergeData(this.createNeedsAssessment(), this.needsService.createNeedsAssessmentDTO()),
-            registrationDetails: this.createRegistrationDTO(),
+            registrationDetails: this.mergeData(this.createRegistration(), this.profileDataService.createProfileDTO()),
             captcha: 'abc'
         };
     }
@@ -39,32 +41,16 @@ export class NonVerifiedRegistrationMappingService {
         };
     }
 
-    private createRegistration(): Registration {
+    private createRegistration(): Profile {
         return {
+            id: null,
             contactDetails: null,
-            contactId: null,
-            evacuatedFromAddress: null,
-            informationCollectionConsent: false,
             mailingAddress: null,
             personalDetails: null,
             primaryAddress: null,
             restrictedAccess: null,
             secretPhrase: null,
         };
-    }
-
-    private createRegistrationDTO(): Registration {
-
-        let nonVerifiedRegistration: Registration = this.createRegistration();
-
-        const evacuatedAddress = {
-            evacuatedFromAddress: this.setAddressObject(this.evacuationFileDataService.evacuatedFromAddress)
-        };
-
-        nonVerifiedRegistration = this.mergeData(nonVerifiedRegistration, this.profileDataService.createProfileDTO());
-        nonVerifiedRegistration = this.mergeData(nonVerifiedRegistration, evacuatedAddress);
-
-        return nonVerifiedRegistration;
     }
 
     private setAddressObject(addressObject): Address {

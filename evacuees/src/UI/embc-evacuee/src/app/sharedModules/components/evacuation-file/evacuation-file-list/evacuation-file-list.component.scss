@@ -1,17 +1,17 @@
-.loader-align {
+.list-loader-align {
     padding: 20% 50%;
     display: inline-flex;
+}
+
+.list-loader-align ::ng-deep .mat-progress-spinner circle,
+.mat-spinner circle {
+    stroke: #234075 !important;
 }
 
 .start-button {
     width: 100%;
     white-space: normal;
     line-height: inherit;
-}
-
-::ng-deep .mat-progress-spinner circle,
-.mat-spinner circle {
-    stroke: #234075 !important;
 }
 
 .card-container {

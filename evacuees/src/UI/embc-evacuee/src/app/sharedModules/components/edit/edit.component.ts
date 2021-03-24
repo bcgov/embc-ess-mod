@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
@@ -28,6 +29,7 @@ export class EditComponent implements OnInit, OnDestroy {
   nonVerfiedRoute = '/non-verified-registration/needs-assessment';
   verifiedRoute = '/verified-registration/create-profile';
   verifiedNeedsAssessments = '/verified-registration/needs-assessment';
+  disabledSavedButton = false;
 
   constructor(
     private router: Router, private route: ActivatedRoute,
@@ -50,6 +52,26 @@ export class EditComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(params => {
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
+    });
+    this.onChanges();
+  }
+
+
+  onChanges(): void {
+    this.form.statusChanges.subscribe(val => {
+      if (val === 'VALID') {
+
+        setTimeout(() => {
+          this.disabledSavedButton = false;
+        }, 0);
+
+
+      } else {
+        setTimeout(() => {
+          this.disabledSavedButton = true;
+        }, 0);
+
+      }
     });
   }
 

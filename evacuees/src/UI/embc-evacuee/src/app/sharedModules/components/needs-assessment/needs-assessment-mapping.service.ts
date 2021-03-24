@@ -131,9 +131,15 @@ export class NeedsAssessmentMappingService {
         return (userLastname === lastname);
     }
 
-    private isSameAddress(evacAddress: Address): boolean {
+    private isSameAddress(evacAddress: Address): string {
         const userPersonalAddress = this.profileDataService.primaryAddressDetails;
-        return (evacAddress === userPersonalAddress);
+        console.log(evacAddress === userPersonalAddress);
+
+        if (evacAddress === userPersonalAddress) {
+            return 'Yes';
+        } else {
+            return 'No';
+        }
     }
 
     private householdMembersForm(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {

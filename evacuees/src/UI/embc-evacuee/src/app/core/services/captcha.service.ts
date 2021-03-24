@@ -21,7 +21,8 @@ export class CaptchaService {
         return new HttpHeaders({ 'Content-Type': 'application/json', Accept: 'application/json' });
     }
 
-    private readonly baseUrl = 'https://embcess-captcha.pathfinder.gov.bc.ca';
+    private readonly baseUrl = 'https://embcess-captcha.apps.silver.devops.gov.bc.ca/';
+    // 'https://embcess-captcha.pathfinder.gov.bc.ca';
 
 
     fetchData(nonce: string): Observable<HttpResponse<ServerPayload>> {
