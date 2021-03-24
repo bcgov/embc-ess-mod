@@ -60,17 +60,13 @@ export class EditComponent implements OnInit, OnDestroy {
   onChanges(): void {
     this.form.statusChanges.subscribe(val => {
       if (val === 'VALID') {
-
         setTimeout(() => {
           this.disabledSavedButton = false;
         }, 0);
-
-
       } else {
         setTimeout(() => {
           this.disabledSavedButton = true;
         }, 0);
-
       }
     });
   }
