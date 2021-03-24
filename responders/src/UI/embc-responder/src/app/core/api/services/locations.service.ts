@@ -29,7 +29,7 @@ export class LocationsService extends BaseService {
   /**
    * Path part for operation locationsGetCommunities
    */
-  static readonly LocationsGetCommunitiesPath = '/api/locations/communities';
+  static readonly LocationsGetCommunitiesPath = '/api/Locations/communities';
 
   /**
    * Provides a filtered list of communities by community type, state/province and/or country.
@@ -113,7 +113,7 @@ export class LocationsService extends BaseService {
   /**
    * Path part for operation locationsGetStateProvinces
    */
-  static readonly LocationsGetStateProvincesPath = '/api/locations/stateprovinces';
+  static readonly LocationsGetStateProvincesPath = '/api/Locations/stateprovinces';
 
   /**
    * Provides a filtered list of state/provinces by country.
@@ -175,7 +175,7 @@ export class LocationsService extends BaseService {
   /**
    * Path part for operation locationsGetCountries
    */
-  static readonly LocationsGetCountriesPath = '/api/locations/countries';
+  static readonly LocationsGetCountriesPath = '/api/Locations/countries';
 
   /**
    * Provides a list of countries.
@@ -226,7 +226,7 @@ export class LocationsService extends BaseService {
   /**
    * Path part for operation locationsGetCommunityTypes
    */
-  static readonly LocationsGetCommunityTypesPath = '/api/locations/communitytypes';
+  static readonly LocationsGetCommunityTypesPath = '/api/Locations/communitytypes';
 
   /**
    * Provides a list of community types and their English description.

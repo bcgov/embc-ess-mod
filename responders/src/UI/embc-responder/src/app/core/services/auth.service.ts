@@ -1,46 +1,63 @@
+import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthConfig, NullValidationHandler, OAuthService } from 'angular-oauth2-oidc';
-import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { OAuthResourceServerErrorHandler, OAuthService } from 'angular-oauth2-oidc';
+import { Observable, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ConfigService } from './config.service';
+import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
+  constructor(
+    private oauthService: OAuthService,
+    private configService: ConfigService,
+    private userService: UserService,
+    private router: Router) { }
 
-    private decodedAccessToken: any;
-    private decodedIDToken: any;
-    get accessToken(): any { return this.decodedAccessToken; }
-    get iDToken(): any { return this.decodedIDToken; }
-
-    constructor(private oauthService: OAuthService, private authConfig: AuthConfig) { }
-
-    initiateAuthentication(): Promise<any> {
-        return new Promise((resolveFn, rejectFn) => {
-            this.oauthService.configure(this.authConfig);
-            this.oauthService.setStorage(sessionStorage);
-            this.oauthService.tokenValidationHandler = new NullValidationHandler();
-            this.oauthService.events.pipe(filter((e: any) => {
-                return e.type === 'token_received';
-            })).subscribe(() => this.handleNewToken());
-            this.oauthService.loadDiscoveryDocumentAndLogin().then(isLoggedIn => {
-                if (isLoggedIn) {
-                    this.oauthService.setupAutomaticSilentRefresh();
-                    resolveFn();
-                } else {
-                    alert('failed to initialize');
-                    this.oauthService.initImplicitFlow();
-                    rejectFn();
-                }
-            });
-        });
+  public async ensureLoggedIn(): Promise<void> {
+    await this.configureOAuthService();
+    const isLoggedIn = await this.oauthService.loadDiscoveryDocumentAndLogin();
+    if (isLoggedIn) {
+      const userProfile = await this.userService.loadUserProfile().toPromise();
+      const nextRoute = userProfile.requiredToSignAgreement
+        ? 'electronic-agreement' :
+        (this.oauthService.state || 'responder-access');
+      await this.router.navigateByUrl(nextRoute);
+      return Promise.resolve();
+    } else {
+      return Promise.reject('Not logged in');
     }
 
-    private handleNewToken(): void {
-        this.decodedAccessToken = this.oauthService.getAccessToken();
-        this.decodedIDToken = this.oauthService.getIdToken();
-    }
+  }
 
-    logout(): void {
-        this.oauthService.logOut();
-    }
+  public login(targetUrl: null | string): void {
+    this.oauthService.initLoginFlow(targetUrl);
+  }
+
+  public logout(): void {
+    this.oauthService.logOut();
+  }
+
+  public getToken(): string {
+    return this.oauthService.getAccessToken();
+  }
+
+  private configureOAuthService(): Promise<void> {
+    return this.configService.getAuthConfig().pipe(map(authConfig => {
+      // this.oauthService.tokenValidationHandler = new NullValidationHandler();
+      this.oauthService.configure(authConfig);
+      this.oauthService.setupAutomaticSilentRefresh();
+    })).toPromise();
+  }
+
+}
+
+export class OAuthNoopResourceServerErrorHandler implements OAuthResourceServerErrorHandler {
+
+  handleError(err: HttpResponse<any>): Observable<any> {
+    return throwError(err);
+  }
 
 }

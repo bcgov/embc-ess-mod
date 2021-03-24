@@ -9,8 +9,7 @@ import { LoadLocationsService } from './core/services/load-locations.service';
 })
 export class AppComponent {
 
-  constructor(apiConfig: ApiConfiguration, private loadLocationService: LoadLocationsService) {
-    apiConfig.rootUrl = '';
+  constructor(private loadLocationService: LoadLocationsService) {
     this.loadLocations();
   }
 

@@ -27,7 +27,7 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   @Output() selectedRows = new EventEmitter<any[]>();
   @Output() toggleActive = new EventEmitter<string>();
   @Output() toggleInactive = new EventEmitter<string>();
-  @Output() clickedRow = new EventEmitter<{}>();
+  @Output() clickedRow = new EventEmitter<any>();
 
 
   dataSource = new MatTableDataSource();

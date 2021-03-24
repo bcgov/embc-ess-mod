@@ -51,6 +51,7 @@ namespace EMBC.ESS.Resources.Team
         public string Id { get; set; }
 
         public string TeamId { get; set; }
+        public string TeamName { get; set; }
 
         public string FirstName { get; set; }
 

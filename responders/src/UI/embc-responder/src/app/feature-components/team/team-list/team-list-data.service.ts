@@ -56,6 +56,8 @@ export class TeamListDataService {
     this.selectedTeamMember = selectedTeamMember;
   }
 
-
+  clear(): void {
+    this.cacheService.remove('selectedTeamMember');
+  }
 
 }

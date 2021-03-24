@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
+import { ElectronicAgreementService } from './electronic-agreement.service';
 
 @Component({
   selector: 'app-electronic-agreement',
@@ -11,13 +13,12 @@ export class ElectronicAgreementComponent implements OnInit {
 
   agreementAccepted = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private eaaService: ElectronicAgreementService) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   submitEAA(): void {
-    this.router.navigate(['/responder-access/responder-dashboard']);
+    this.eaaService.signAgreement().subscribe(() => { this.router.navigateByUrl('responder-access'); });
   }
 
   agreementChangeEvent(event: MatCheckboxChange): void {

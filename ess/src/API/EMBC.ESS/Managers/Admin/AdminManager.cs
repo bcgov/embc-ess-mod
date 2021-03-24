@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts;
+using EMBC.ESS.Shared.Contracts.Profile;
 using EMBC.ESS.Shared.Contracts.Team;
 
 namespace EMBC.ESS.Managers.Admin
@@ -46,14 +47,16 @@ namespace EMBC.ESS.Managers.Admin
         {
             var members = await teamRepository.GetMembers(cmd.TeamId);
 
-            if (!string.IsNullOrEmpty(cmd.MemberId)) members = members.Where(m => m.Id == cmd.MemberId).ToArray();
+            if (!string.IsNullOrEmpty(cmd.MemberId)) members = members.Where(m => m.Id == cmd.MemberId);
 
-            return new TeamMembersQueryResponse { TeamId = cmd.TeamId, TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
+            return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
         }
 
         public async Task<SaveTeamMemberResponse> Handle(SaveTeamMemberCommand cmd)
         {
             var teamMembersWithSameUserName = await teamRepository.GetMembers(userName: cmd.Member.UserName);
+            //filter this user if exists
+            if (cmd.Member.Id != null) teamMembersWithSameUserName = teamMembersWithSameUserName.Where(m => m.Id != cmd.Member.Id);
             if (teamMembersWithSameUserName.Any()) throw new UsernameAlreadyExistsException(cmd.Member.UserName);
 
             var id = await teamRepository.SaveMember(mapper.Map<Resources.Team.TeamMember>(cmd.Member));
@@ -93,9 +96,13 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<ValidateTeamMemberResponse> Handle(ValidateTeamMemberCommand cmd)
         {
-            var members = await teamRepository.GetMembers(userName: cmd.UniqueUserName);
-
-            return new ValidateTeamMemberResponse { UniqueUserName = !members.Any() };
+            var members = await teamRepository.GetMembers(userName: cmd.TeamMember.UserName);
+            //filter this user if exists
+            if (!string.IsNullOrEmpty(cmd.TeamMember.Id)) members = members.Where(m => m.Id != cmd.TeamMember.Id);
+            return new ValidateTeamMemberResponse
+            {
+                UniqueUserName = !members.Any()
+            };
         }
 
         public async Task<AssignCommunitiesToTeamResponse> Handle(AssignCommunitiesToTeamCommand cmd)
@@ -127,6 +134,37 @@ namespace EMBC.ESS.Managers.Admin
             await teamRepository.SaveTeam(team);
 
             return new UnassignCommunitiesFromTeamResponse();
+        }
+
+        public async Task<LogInUserResponse> Handle(LogInUserCommand cmd)
+        {
+            var member = (await teamRepository.GetMembers(userName: cmd.UserName)).SingleOrDefault();
+            if (member == null) return new FailedLogin { Reason = $"User {cmd.UserName} not found" };
+            if (member.ExternalUserId != null && member.ExternalUserId != cmd.UserId)
+                throw new Exception($"User {cmd.UserName} has external id {member.ExternalUserId} but trying to log in with user id {cmd.UserId}");
+            if (member.ExternalUserId == null && member.LastSuccessfulLogin.HasValue)
+                throw new Exception($"User {cmd.UserName} has no external id but somehow logged in already");
+
+            if (!member.LastSuccessfulLogin.HasValue || string.IsNullOrEmpty(member.ExternalUserId))
+            {
+                member.ExternalUserId = cmd.UserId;
+            }
+
+            member.LastSuccessfulLogin = DateTime.Now;
+
+            await teamRepository.SaveMember(member);
+
+            return new SuccessfulLogin { Profile = mapper.Map<UserProfile>(member) };
+        }
+
+        public async Task<SignResponderAgreementResponse> Handle(SignResponderAgreementCommand cmd)
+        {
+            var member = (await teamRepository.GetMembers(userName: cmd.UserName)).SingleOrDefault();
+            if (member == null) throw new NotFoundException($"team member not found", cmd.UserName);
+
+            member.AgreementSignDate = cmd.SignatureDate;
+            await teamRepository.SaveMember(member);
+            return new SignResponderAgreementResponse();
         }
     }
 }

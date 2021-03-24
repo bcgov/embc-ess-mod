@@ -17,8 +17,6 @@ export class DialogComponent implements OnInit, OnDestroy {
   @ViewChild('target', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
 
   componentRef: ComponentRef<any>;
-  confirmCheckBoxSelected = false;
-  showError = false;
 
   constructor(public dialogRef: MatDialogRef<DialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
               private resolver: ComponentFactoryResolver) { }
@@ -26,25 +24,16 @@ export class DialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const factory = this.resolver.resolveComponentFactory(this.data.component);
     this.componentRef = this.vcRef.createComponent(factory);
-    // this.componentRef.instance.outputEvent.subscribe(value =>
-    //   {
-    //     console.log(value)
-    //     console.log(this.confirmCheckBoxSelected)
-    //     this.confirmCheckBoxSelected = value
-    //   })
+    if (this.data.text !== undefined && this.data.text !== null) {
+      this.componentRef.instance.inputEvent = this.data.text;
+    }
+    this.componentRef.instance.outputEvent.subscribe(value => {
+      this.buttonAction(value);
+    });
   }
 
   buttonAction(action: string): void {
-    console.log(this.confirmCheckBoxSelected);
-    // if(action === 'delete') {
-    //   if(!this.confirmCheckBoxSelected) {
-    //     this.showError = !this.showError;
-    //   } else {
-    //     this.dialogRef.close(action);
-    //   }
-    // } else {
     this.dialogRef.close(action);
-   // }
   }
 
   ngOnDestroy(): void {

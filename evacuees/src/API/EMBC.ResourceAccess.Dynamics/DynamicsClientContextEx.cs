@@ -37,5 +37,17 @@ namespace EMBC.ResourceAccess.Dynamics
             var keys = string.Join(',', alternateKeys.Select(kv => $"{kv.Key}={ODataUriUtils.ConvertToUriLiteral(kv.Value, ODataVersion.V4)}"));
             return new DataServiceQuerySingle<T>(source.Context, source.GetKeyPath(keys));
         }
+
+        public static void DetachAll(this DynamicsClientContext context)
+        {
+            foreach (var descriptor in context.EntityTracker.Entities)
+            {
+                context.Detach(descriptor.Entity);
+            }
+            foreach (var link in context.EntityTracker.Links)
+            {
+                context.DetachLink(link.Source, link.SourceProperty, link.Target);
+            }
+        }
     }
 }

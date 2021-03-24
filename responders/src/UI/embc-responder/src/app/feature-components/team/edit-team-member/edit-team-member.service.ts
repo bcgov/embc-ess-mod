@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
-import { MemberLabel, MemberRole } from 'src/app/core/api/models';
+import { Observable } from 'rxjs';
+import { TeamMembersService } from 'src/app/core/api/services';
 
 @Injectable({ providedIn: 'root' })
 export class EditTeamMemberService {
 
-  constructor() { }
+  constructor(private teamMembersService: TeamMembersService) { }
+
+  checkUserNameExists(userName: string): Observable<boolean> {
+    return this.teamMembersService.teamMembersIsUserNameExists({ userName });
+  }
 
 }

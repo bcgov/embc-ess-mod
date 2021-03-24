@@ -86,6 +86,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateTeamMember([FromBody] TeamMember teamMember)
         {
+            teamMember.TeamId = teamId;
             var reply = await client.Send(new SaveTeamMemberCommand
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
@@ -107,6 +108,7 @@ namespace EMBC.Responders.API.Controllers
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
+            teamMember.TeamId = teamId;
             var reply = await client.Send(new SaveTeamMemberCommand
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
@@ -184,9 +186,12 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("username")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<bool>> IsUserNameExists(string userName)
+        public async Task<ActionResult<bool>> IsUserNameExists(string userName, string memberId = null)
         {
-            var response = await client.Send(new ValidateTeamMemberCommand { UniqueUserName = userName });
+            var response = await client.Send(new ValidateTeamMemberCommand
+            {
+                TeamMember = new ESS.Shared.Contracts.Team.TeamMember { UserName = userName, Id = memberId, TeamId = teamId }
+            });
             return Ok(!response.UniqueUserName);
         }
 
@@ -195,7 +200,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <returns>list of role codes with description</returns>
         [HttpGet("codes/memberrole")]
-        public async Task<ActionResult<IEnumerable<MemberRole>>> GetMemberRoles()
+        public async Task<ActionResult<IEnumerable<MemberRoleDescription>>> GetMemberRoles()
         {
             var enumList = EnumHelper.GetEnumDescriptions<MemberRole>();
             return Ok(await Task.FromResult(enumList.Select(e => new MemberRoleDescription { Code = e.value, Description = e.description }).ToArray()));
@@ -206,7 +211,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <returns>list of label codes with description</returns>
         [HttpGet("codes/memberlabel")]
-        public async Task<ActionResult<IEnumerable<MemberLabel>>> GetMemberLabels()
+        public async Task<ActionResult<IEnumerable<MemberLabelDescription>>> GetMemberLabels()
         {
             var enumList = EnumHelper.GetEnumDescriptions<MemberLabel>();
             return Ok(await Task.FromResult(enumList.Select(e => new MemberLabelDescription { Code = e.value, Description = e.description }).ToArray()));
@@ -234,8 +239,8 @@ namespace EMBC.Responders.API.Controllers
     {
         public string Id { get; set; }
 
-        [Required]
         public string TeamId { get; set; }
+        public string TeamName { get; set; }
 
         [Required]
         public string UserName { get; set; }
@@ -260,7 +265,9 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public MemberRole Role { get; set; }
 
-        public MemberLabel Label { get; set; }
+        public MemberLabel? Label { get; set; }
+
+        public bool IsUserNameEditable { get; set; }
     }
 
     /// <summary>
@@ -324,9 +331,13 @@ namespace EMBC.Responders.API.Controllers
         public Mapping()
         {
             CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
-                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.Id))
-                .ForMember(d => d.Label, opts => opts.MapFrom(s => s.Label))
-                .ReverseMap();
+                .ForMember(d => d.Role, opts => opts.MapFrom(s => Enum.Parse<MemberRole>(s.Role)))
+                .ForMember(d => d.Label, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Label) ? (MemberLabel?)null : Enum.Parse<MemberLabel>(s.Label)))
+                .ForMember(d => d.IsUserNameEditable, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.ExternalUserId)))
+                .ReverseMap()
+                .ForMember(d => d.Role, opts => opts.MapFrom(s => s.Role.ToString()))
+                .ForMember(d => d.Label, opts => opts.MapFrom(s => s.Label.ToString()))
+                ;
         }
     }
 }

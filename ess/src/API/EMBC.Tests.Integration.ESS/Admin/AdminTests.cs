@@ -30,20 +30,22 @@ namespace EMBC.Tests.Integration.ESS.Admin
         public async Task CanCreateMember()
         {
             var now = DateTime.Now;
+            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
+
             var newMember = new TeamMember
             {
                 Email = "email@email.com",
                 FirstName = "first",
                 LastName = "last",
                 IsActive = true,
-                Label = "label",
-                Role = new TeamRole { Id = "r1", Name = "role1" },
+                Label = "Volunteer",
+                Role = "Tier1",
                 AgreementSignDate = now,
                 LastSuccessfulLogin = now,
                 ExternalUserId = "extid",
                 Phone = "1234",
                 TeamId = teamId,
-                UserName = "username"
+                UserName = $"username{Guid.NewGuid().ToString().Substring(0, 4)}"
             };
 
             var reply = await adminManager.Handle(new SaveTeamMemberCommand { Member = newMember });
@@ -54,18 +56,18 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             existingMember.Id.ShouldBe(reply.MemberId);
             existingMember.TeamId.ShouldBe(teamId);
+            existingMember.TeamName.ShouldNotBeNull();
             existingMember.Email.ShouldBe(newMember.Email);
-            // existingMember.Phone.ShouldBe(newMember.Phone);
+            existingMember.Phone.ShouldBe(newMember.Phone);
             existingMember.FirstName.ShouldBe(newMember.FirstName);
             existingMember.LastName.ShouldBe(newMember.LastName);
-            // existingMember.UserName.ShouldBe(newMember.UserName);
+            existingMember.UserName.ShouldBe(newMember.UserName);
             existingMember.ExternalUserId.ShouldBe(newMember.ExternalUserId);
             existingMember.IsActive.ShouldBe(newMember.IsActive);
-            // existingMember.LastSuccessfulLogin.ShouldBe(newMember.LastSuccessfulLogin);
+            existingMember.LastSuccessfulLogin.ShouldBe(newMember.LastSuccessfulLogin);
             existingMember.AgreementSignDate.ShouldBe(newMember.AgreementSignDate.Value.Date);
-            //existingMember.Label.ShouldBe(newMember.Label);
-            //existingMember.Role.Id.ShouldBe(newMember.Role.Id);
-            //existingMember.Role.Name.ShouldBe(newMember.Role.Name);
+            existingMember.Label.ShouldBe(newMember.Label);
+            existingMember.Role.ShouldBe(newMember.Role);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -80,7 +82,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanDeActivateTeamMember()
+        public async Task CanDeactivateTeamMember()
         {
             var memberToUpdate = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId })).TeamMembers.First();
 
@@ -102,18 +104,63 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanValidateUniqueUserName()
+        public async Task CanValidateNewUserNameForExistingMember()
         {
-            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand { UniqueUserName = "user1" });
+            var aMember = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId })).TeamMembers.First();
+            aMember.UserName = Guid.NewGuid().ToString().Substring(0, 5);
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            {
+                TeamMember = aMember
+            });
             validationResult.UniqueUserName.ShouldBeTrue();
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanValidateDuplicateUserName()
+        public async Task CanValidateSameUserNameForExistingMember()
         {
             var aMember = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId })).TeamMembers.First();
 
-            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand { UniqueUserName = aMember.UserName });
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            {
+                TeamMember = aMember
+            });
+            validationResult.UniqueUserName.ShouldBeTrue();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanValidatExistingUserNameForExistingMember()
+        {
+            var members = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId })).TeamMembers;
+            var aMember = members.Skip(0).First();
+            var bMember = members.Skip(1).First();
+
+            aMember.UserName = bMember.UserName;
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            {
+                TeamMember = aMember
+            });
+            validationResult.UniqueUserName.ShouldBeFalse();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanValidateUniqueUserNameForNewMember()
+        {
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            {
+                TeamMember = new TeamMember { UserName = Guid.NewGuid().ToString().Substring(0, 5) }
+            });
+            validationResult.UniqueUserName.ShouldBeTrue();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanValidateDuplicateUserName1ForNewMember()
+        {
+            var aMember = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId })).TeamMembers.First();
+
+            var validationResult = await adminManager.Handle(new ValidateTeamMemberCommand
+            {
+                TeamMember = new TeamMember { UserName = aMember.UserName }
+            });
             validationResult.UniqueUserName.ShouldBeFalse();
         }
 

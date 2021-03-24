@@ -1,0 +1,60 @@
+<div class="row">
+    <div class="col-md-8">
+        <mat-card>
+            <app-alert></app-alert>
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="details-heading">Review Details & Save</p>
+                </div>
+            </div>
+
+            <div class="row row-align">
+                <div class="col-md-4 detail-label">First Name</div>
+                <div class="col-md-8"> {{teamMember?.firstName}}</div>
+            </div>
+
+            <div class="row row-align">
+                <div class="col-md-4 detail-label">Last Name</div>
+                <div class="col-md-8"> {{teamMember?.lastName}}</div>
+            </div>
+
+            <div class="row row-align">
+                <div class="col-md-4 detail-label">BCeID Username</div>
+                <div class="col-md-8"> {{teamMember?.userName}}</div>
+            </div>
+
+            <div class="row row-align">
+                <div class="col-md-4 detail-label">ESS Team</div>
+                <div class="col-md-8"> {{teamMember?.teamName}}</div>
+            </div>
+
+            <div class="row row-align">
+                <div class="col-md-4 detail-label">Role</div>
+                <div class="col-md-8"> {{teamMember?.role}}</div>
+            </div>
+
+            <div class="row row-align">
+                <div class="col-md-4 detail-label">Optional Label</div>
+                <div class="col-md-8"> {{teamMember?.label}}</div>
+            </div>
+            <br>
+            <div>
+                <button class="button-s button-margin" mat-button (click)="goBack()">Go Back & Edit</button>
+                <button class="button-p" mat-button [disabled]="isSubmitted" (click)="save()">Save <app-loader
+                        [strokeWidth]="3" [diameter]="25" [showLoader]="showLoader"></app-loader></button>
+            </div>
+        </mat-card>
+    </div>
+
+    <div class="col-md-4">
+        <mat-card class="tips-card">
+            <div>
+                <img src="/assets/images/tips-lightbulb.svg" height="63" width="62">
+                <span class="tips-heading"><b>Tips: </b>Roles</span>
+            </div>
+            <p class="tips-info">Tier 1 - Responder</p>
+            <p class="tips-info">Tier 2 - Supervisor</p>
+            <p class="tips-info">Tier 3 - ESS Director / Manager</p>
+        </mat-card>
+    </div>
+</div>

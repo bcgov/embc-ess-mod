@@ -31,7 +31,7 @@ namespace EMBC.Responders.API.Controllers
     /// Provides location related lists
     /// </summary>
     [ApiController]
-    [Route("api/locations")]
+    [Route("api/[controller]")]
     public class LocationsController : ControllerBase
     {
         private readonly IMessagingClient client;

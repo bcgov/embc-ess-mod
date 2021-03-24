@@ -77,6 +77,9 @@ parameters:
     required: true
   - description: CORS policy list of allowed origins
     name: CORS_ORIGINS
+  - description: SMTP Server
+    name: SMTP_SERVER
+    required: true
 
 objects:
   - kind: ConfigMap
@@ -99,6 +102,7 @@ objects:
       auth__jwt__ClaimsIssuer: ${JWT_ISSUER}
       auth__jwt__audience: ${JWT_AUDIENCE}
       auth__jwt__expiryInMinutes: ${JWT_TOKEN_EXPIRY}
+      smtp__server: ${SMTP_SERVER}
   - kind: Secret
     apiVersion: v1
     type: Opaque

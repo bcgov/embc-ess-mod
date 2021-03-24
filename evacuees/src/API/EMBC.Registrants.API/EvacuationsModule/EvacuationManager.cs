@@ -28,6 +28,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
     {
         Task<IEnumerable<EvacuationFile>> GetEvacuations(string userid);
 
+        Task<EvacuationFile> GetEvacuation(string userid, string essFileNumber);
+
         Task<string> SaveEvacuation(string userid, string essFileNumber, EvacuationFile evacuationFile);
     }
 
@@ -49,6 +51,11 @@ namespace EMBC.Registrants.API.EvacuationsModule
         public async Task<IEnumerable<EvacuationFile>> GetEvacuations(string userid)
         {
             return await evacuationRepository.Read(userid);
+        }
+
+        public async Task<EvacuationFile> GetEvacuation(string userid, string essFileNumber)
+        {
+            return await evacuationRepository.Read(userid, essFileNumber);
         }
 
         public async Task<string> SaveEvacuation(string userid, string essFileNumber, EvacuationFile evacuationFile)

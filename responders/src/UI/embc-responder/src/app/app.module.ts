@@ -6,13 +6,10 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthConfig, OAuthModule } from 'angular-oauth2-oidc';
-import { AuthService } from './core/services/auth.service';
-import { authConfig, OAuthModuleConfig } from './core/services/authConfig';
-
-export function initialize(authService: AuthService): () => Promise<any> {
-  return () => authService.initiateAuthentication();
-}
+import { OAuthModule, OAuthResourceServerErrorHandler } from 'angular-oauth2-oidc';
+import { AuthService, OAuthNoopResourceServerErrorHandler } from './core/services/auth.service';
+import { ApiModule } from './core/api/api.module';
+import { ConfigService } from './core/services/config.service';
 
 @NgModule({
   declarations: [
@@ -24,17 +21,26 @@ export function initialize(authService: AuthService): () => Promise<any> {
     CoreModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    OAuthModule.forRoot()
+    OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: ['/api'],
+        sendAccessToken: true
+      }
+    }),
+    ApiModule.forRoot({ rootUrl: '' })
   ],
   providers: [
     AuthService,
-    { provide: AuthConfig, useValue: authConfig },
-    OAuthModuleConfig,
+    ConfigService,
     {
       provide: APP_INITIALIZER,
-      useFactory: initialize,
+      useFactory: (authService: AuthService) => () => authService.ensureLoggedIn(),
       deps: [AuthService],
       multi: true
+    },
+    {
+      provide: OAuthResourceServerErrorHandler,
+      useClass: OAuthNoopResourceServerErrorHandler
     }
   ],
   bootstrap: [AppComponent]

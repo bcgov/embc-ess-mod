@@ -11,6 +11,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 import { DeleteConfirmationDialogComponent } from './components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { InformationDialogComponent } from './components/dialog-components/information-dialog/information-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { DeleteConfirmationDialogComponent } from './components/dialog-component
     DialogComponent,
     AlertComponent,
     AppLoaderComponent,
-    DeleteConfirmationDialogComponent
+    DeleteConfirmationDialogComponent,
+    InformationDialogComponent
    // EnumToArrayPipe
   ],
   imports: [
@@ -38,7 +40,8 @@ import { DeleteConfirmationDialogComponent } from './components/dialog-component
     DialogComponent,
     AlertComponent,
     AppLoaderComponent,
-    DeleteConfirmationDialogComponent
+    DeleteConfirmationDialogComponent,
+    InformationDialogComponent
    // EnumToArrayPipe
   ]
 })
