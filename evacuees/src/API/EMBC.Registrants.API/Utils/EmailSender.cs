@@ -44,10 +44,10 @@ namespace EMBC.Registrants.API.Utils
         public string Subject { get; set; }
         public string Content { get; set; }
 
-        public EmailMessage(List<EmailAddress> to, string subject, string body) : this(null, to, subject, body)
+        public EmailMessage(IEnumerable<EmailAddress> to, string subject, string body) : this(null, to, subject, body)
         { }
 
-        public EmailMessage(List<EmailAddress> fromAddresses, List<EmailAddress> toAddresses, string subject, string body)
+        public EmailMessage(IEnumerable<EmailAddress> fromAddresses, IEnumerable<EmailAddress> toAddresses, string subject, string body)
         {
             Content = body;
             Subject = subject;

@@ -70,37 +70,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
         public NeedsAssessment PreliminaryNeedsAssessment { get; set; }
 
         [Required]
-        public string Captcha { get; set; }
-    }
-
-    /// <summary>
-    /// New registration form
-    /// </summary>
-    public class Registration
-    {
-        public string ContactId { get; set; }
-
-        public string BCServicesCardId { get; set; }
-
-        [Required]
-        public PersonDetails PersonalDetails { get; set; }
-
-        [Required]
-        public ContactDetails ContactDetails { get; set; }
-
-        [Required]
-        public Address PrimaryAddress { get; set; }
-
-        public Address MailingAddress { get; set; }
-
-        [Required]
         public bool InformationCollectionConsent { get; set; }
 
         [Required]
-        public bool RestrictedAccess { get; set; }
-
-        [Required]
-        public string SecretPhrase { get; set; }
+        public string Captcha { get; set; }
     }
 
     /// <summary>

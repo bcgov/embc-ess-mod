@@ -90,7 +90,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_dietaryrequirementdetails = registration.PreliminaryNeedsAssessment.SpecialDietDetails,
                 era_medicationrequirement = registration.PreliminaryNeedsAssessment.HaveMedication,
                 era_insurancecoverage = (int?)registration.PreliminaryNeedsAssessment.Insurance,
-                //era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
+                era_collectionandauthorization = registration.InformationCollectionConsent,
                 era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
                 era_phonenumberrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Phone),
                 era_emailrefusal = string.IsNullOrEmpty(registration.RegistrationDetails.ContactDetails.Email)
@@ -98,6 +98,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             // New Contact (Primary Registrant)
             var newPrimaryRegistrant = CreateNewContact(registration.RegistrationDetails, true);
+            newPrimaryRegistrant.era_collectionandauthorization = registration.InformationCollectionConsent;
 
             // New Contacts (Household Members)
             var members = (registration.PreliminaryNeedsAssessment.HouseholdMembers ?? Array.Empty<HouseholdMember>()).Select(fm => new contact
@@ -113,7 +114,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 era_initial = fm.Details.Initials,
                 gendercode = LookupGender(fm.Details.Gender),
                 birthdate = FromDateTime(DateTime.Parse(fm.Details.DateOfBirth)),
-                //era_collectionandauthorization = registration.RegistrationDetails.InformationCollectionConsent,
+                era_collectionandauthorization = registration.InformationCollectionConsent,
                 era_sharingrestriction = registration.RegistrationDetails.RestrictedAccess,
 
                 address1_line1 = registration.RegistrationDetails.PrimaryAddress.AddressLine1,
@@ -318,7 +319,6 @@ namespace EMBC.Registrants.API.RegistrationsModule
             contact.era_initial = profile.PersonalDetails.Initials;
             contact.gendercode = LookupGender(profile.PersonalDetails.Gender);
             contact.birthdate = FromDateTime(DateTime.Parse(profile.PersonalDetails.DateOfBirth));
-            //contact.era_collectionandauthorization = profile.InformationCollectionConsent;
             contact.era_sharingrestriction = profile.RestrictedAccess;
             contact.era_bcservicescardid = profile.Id;
 
