@@ -136,8 +136,10 @@ namespace EMBC.Registrants.API.EvacuationsModule
     public class NeedsAssessment
     {
         public string Id { get; set; }
+
         [Required]
         public InsuranceOption Insurance { get; set; }
+
         public bool? CanEvacueeProvideFood { get; set; }
         public bool? CanEvacueeProvideLodging { get; set; }
         public bool? CanEvacueeProvideClothing { get; set; }
@@ -156,10 +158,13 @@ namespace EMBC.Registrants.API.EvacuationsModule
         {
             [EnumMember(Value = "No")]
             No = 174360000,
+
             [EnumMember(Value = "Yes")]
             Yes = 174360001,
+
             [EnumMember(Value = "Unsure")]
             Unsure = 174360002,
+
             [EnumMember(Value = "Unknown")]
             Unknown = 174360003
         }
@@ -188,17 +193,5 @@ namespace EMBC.Registrants.API.EvacuationsModule
     {
         public string Type { get; set; }
         public string Quantity { get; set; }
-    }
-
-    public enum EvacueeType
-    {
-        Person = 174360000,
-        Pet = 174360001
-    }
-
-    public enum RegistrantType
-    {
-        Primary = 174360000,
-        Member = 174360001
     }
 }

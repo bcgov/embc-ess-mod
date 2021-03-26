@@ -18,9 +18,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.Registrants.API.ProfilesModule;
-using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Utils;
-using Profile = EMBC.Registrants.API.ProfilesModule.Profile;
 
 namespace EMBC.Registrants.API.EvacuationsModule
 {
