@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
-using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.EvacuationsModule;
-using EMBC.Registrants.API.Shared;
+using EMBC.Registrants.API.LocationModule;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -29,15 +28,23 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
         {
             string testUserId = "CHRIS-TEST";
             var evacuationFiles = await evacuationManager.GetEvacuations(testUserId);
-            var evacuationFile = evacuationFiles.First();
+            evacuationFiles.ShouldNotBeEmpty();
 
-            evacuationFiles.ShouldNotBeNull();
+            var evacuationFile = evacuationFiles.First();
             evacuationFile.ShouldNotBeNull();
-            evacuationFile.NeedsAssessments.First().CanEvacueeProvideClothing.ShouldBe(true);
-            evacuationFile.NeedsAssessments.First().CanEvacueeProvideFood.ShouldBe(true);
-            evacuationFile.NeedsAssessments.First().CanEvacueeProvideIncidentals.ShouldBe(true);
-            evacuationFile.NeedsAssessments.First().CanEvacueeProvideLodging.ShouldBe(true);
-            evacuationFile.EvacuatedFromAddress.ShouldNotBeNull().AddressLine1.ShouldBe("9837 Douglas St");
+
+            var needsAssessment = evacuationFile.NeedsAssessments.ShouldHaveSingleItem();
+            needsAssessment.CanEvacueeProvideClothing.ShouldBe(true);
+            needsAssessment.CanEvacueeProvideFood.ShouldBe(true);
+            needsAssessment.CanEvacueeProvideIncidentals.ShouldBe(true);
+            needsAssessment.CanEvacueeProvideLodging.ShouldBe(true);
+            needsAssessment.CanEvacueeProvideLodging.ShouldBe(true);
+            needsAssessment.HouseholdMembers.ShouldNotBeEmpty();
+            evacuationFile.EvacuatedFromAddress.ShouldNotBeNull();
+            evacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe("9837 Douglas St");
+            evacuationFile.EvacuatedFromAddress.Jurisdiction.ShouldNotBeNull().Name.ShouldBe("Port Edward");
+            evacuationFile.EvacuatedFromAddress.StateProvince.ShouldNotBeNull().Code.ShouldBe("BC");
+            evacuationFile.EvacuatedFromAddress.Country.ShouldNotBeNull().Code.ShouldBe("CAN");
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -47,7 +54,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
             string testEssFileNumber = "100615";
             var evacuationFile = await evacuationManager.GetEvacuation(testUserId, testEssFileNumber);
             var currentAddress = evacuationFile.EvacuatedFromAddress.AddressLine1;
-            var newAddress = "1530 Party Ave.";
+            var newAddress = $"1530 Party Ave.{Guid.NewGuid().ToString().Substring(0, 4)}";
 
             evacuationFile.EvacuatedFromAddress.AddressLine1 = newAddress;
 
@@ -57,6 +64,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
             var updatedEvacuationFile = await evacuationManager.GetEvacuation(testUserId, testEssFileNumber);
 
             updatedEvacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(newAddress);
+            updatedEvacuationFile.NeedsAssessments.First().HouseholdMembers.ShouldNotBeEmpty();
 
             evacuationFile.EvacuatedFromAddress.AddressLine1 = currentAddress;
 
@@ -73,10 +81,11 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
             string testUserId = "CHRIS-TEST";
             string testEssFileNumber = "100615";
             var evacuationFile = await evacuationManager.GetEvacuation(testUserId, testEssFileNumber);
-
+            evacuationFile.NeedsAssessments.First().HouseholdMembers.ShouldNotBeEmpty();
             var newEssFileNumber = await evacuationManager.SaveEvacuation(testUserId, null, evacuationFile);
 
             var createdEvacuationFile = await evacuationManager.GetEvacuation(testUserId, newEssFileNumber);
+            evacuationFile.NeedsAssessments.First().HouseholdMembers.ShouldNotBeEmpty();
 
             createdEvacuationFile.ShouldNotBeNull();
 
