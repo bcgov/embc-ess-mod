@@ -1,4 +1,4 @@
-import { TeamMember } from "../api/models";
+import { TeamMember } from '../api/models';
 
 export interface TeamMemberModel extends TeamMember {
     roleDescription: string;

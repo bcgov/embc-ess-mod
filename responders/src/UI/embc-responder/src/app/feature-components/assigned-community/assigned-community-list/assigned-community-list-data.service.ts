@@ -15,8 +15,8 @@ export class AssignedCommunityListDataService {
   private teamCommunityList: TeamCommunityModel[];
   private allTeamCommunityList: TeamCommunityModel[];
   private communitiesToDelete: TeamCommunityModel[];
-  defaultDistrict: ObjectWrapper = {code: "All Districts", description: "All Regional Districts"};
-  defaultTypes: ObjectWrapper = {code: "All Types", description: "All Types"};
+  defaultDistrict: ObjectWrapper = {code: 'All Districts', description: 'All Regional Districts'};
+  defaultTypes: ObjectWrapper = {code: 'All Types', description: 'All Types'};
 
   public filtersToLoad: TableFilterModel = {
     loadDropdownFilters: [{

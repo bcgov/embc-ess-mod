@@ -22,18 +22,12 @@ export class SearchFilterComponent implements OnInit {
 
   selected(event: MatSelectChange, filterType: string): void {
     this.resetTextField();
-    let filterArray = [];
+    const filterArray = [];
     this.matRef.forEach((select: MatSelect) => {
-      //console.log(select.value)
-      filterArray.push(select.value === undefined ? '' : (select.value.description !== undefined ? select.value.description : select.value));
+      filterArray.push(select.value === undefined ? '' : (select.value.description !== undefined ?
+        select.value.description : select.value));
     });
-    //console.log(filterArray.join(","));
-    this.filterEvent.emit({ type: 'array', value:filterArray.join(",")});
-    // if(event.value.description !== undefined) {
-    //   this.filterEvent.emit({ type: filterType, value: event.value.description });
-    // } else {
-    //   this.filterEvent.emit({ type: filterType, value: event.value });
-    // }
+    this.filterEvent.emit({ type: 'array', value: filterArray.join(',') });
   }
 
   search(): void {

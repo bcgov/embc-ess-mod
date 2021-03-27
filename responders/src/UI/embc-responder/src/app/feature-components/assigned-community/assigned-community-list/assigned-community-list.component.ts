@@ -24,7 +24,7 @@ export class AssignedCommunityListComponent implements OnInit {
   isLoading = false;
 
   constructor(private assignedCommunityListService: AssignedCommunityListService,
-    private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
+              private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
 
   ngOnInit(): void {
     this.communitiesFilterPredicate();
@@ -56,12 +56,12 @@ export class AssignedCommunityListComponent implements OnInit {
       if (searchString.type === 'text') {
         return (data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1);
       } else if (searchString.type === 'array') {
-        let terms = searchString.value.split(',');
-        let districtTerm = terms[0];
-        let typeTerm = terms[1];
+        const terms = searchString.value.split(',');
+        const districtTerm = terms[0];
+        const typeTerm = terms[1];
         const matchFilter = [];
-        let districtBoolean = data.districtName.trim().toLowerCase().indexOf(districtTerm.trim().toLowerCase()) !== -1;
-        let typeBoolean =  data.type.trim().toLowerCase().indexOf(typeTerm.trim().toLowerCase()) !== -1
+        const districtBoolean = data.districtName.trim().toLowerCase().indexOf(districtTerm.trim().toLowerCase()) !== -1;
+        const typeBoolean =  data.type.trim().toLowerCase().indexOf(typeTerm.trim().toLowerCase()) !== -1;
         matchFilter.push(districtBoolean);
         matchFilter.push(typeBoolean);
         return matchFilter.every(Boolean);

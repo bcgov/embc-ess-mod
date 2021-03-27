@@ -8,7 +8,7 @@ import { LoadLocationsService } from 'src/app/core/services/load-locations.servi
 export class AddCommunityService {
 
     private addedCommunities: TeamCommunityModel[];
-    defaultDistrict: ObjectWrapper = {code: "All Districts", description: "All Regional Districts"};
+    defaultDistrict: ObjectWrapper = {code: 'All Districts', description: 'All Regional Districts'};
 
     constructor(private loadLocationService: LoadLocationsService) { }
 

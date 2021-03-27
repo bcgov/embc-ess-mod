@@ -14,17 +14,17 @@ export class TeamListService {
     public getTeamMembers(): Observable<TeamMemberModel[]> {
         return this.teamMembersService.teamMembersGetTeamMembers().pipe(
             map((members: TeamMemberModel[]) => {
-                let roles = this.listService.getMemberRoles();
-                let labels: MemberLabelDescription[] = this.listService.getMemberLabels();
+                const roles = this.listService.getMemberRoles();
+                const labels: MemberLabelDescription[] = this.listService.getMemberLabels();
                 return members.map((teamMember: TeamMemberModel) => {
-                    let matchedLabel = labels.find(label => label.code === teamMember.label);
-                    let matchedRole = roles.find(role => role.code === teamMember.role);
+                    const matchedLabel = labels.find(label => label.code === teamMember.label);
+                    const matchedRole = roles.find(role => role.code === teamMember.role);
                     if (matchedLabel) {
                         teamMember.labelDescription = matchedLabel.description;
                         teamMember.roleDescription = matchedRole.description;
                     }
-                    return teamMember
-                })
+                    return teamMember;
+                });
             })
         );
     }

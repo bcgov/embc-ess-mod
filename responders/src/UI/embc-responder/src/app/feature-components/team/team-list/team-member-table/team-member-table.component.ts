@@ -76,21 +76,21 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
       }
     }
     else if (searchString.type === 'array') {
-      let terms = searchString.value.split(',');
-      let roleTerm = terms[0];
-      let statusTerm = terms[1];
-      let labelTerm = terms[2];
+      const terms = searchString.value.split(',');
+      const roleTerm = terms[0];
+      const statusTerm = terms[1];
+      const labelTerm = terms[2];
       const matchFilter = [];
-      let isActive = data.isActive === true ? "Active" : "Deactivated";
-      let roleBoolean = data.roleDescription.trim().toLowerCase().indexOf(roleTerm.trim().toLowerCase()) !== -1;
-      let statusBoolean = isActive.trim().toLowerCase().indexOf(statusTerm.trim().toLowerCase()) !== -1
-      let labelBoolean = data.labelDescription.trim().toLowerCase().indexOf(labelTerm.trim().toLowerCase()) !== -1;
+      const isActive = data.isActive === true ? 'Active' : 'Deactivated';
+      const roleBoolean = data.roleDescription.trim().toLowerCase().indexOf(roleTerm.trim().toLowerCase()) !== -1;
+      const statusBoolean = isActive.trim().toLowerCase().indexOf(statusTerm.trim().toLowerCase()) !== -1;
+      const labelBoolean = data.labelDescription.trim().toLowerCase().indexOf(labelTerm.trim().toLowerCase()) !== -1;
       matchFilter.push(roleBoolean);
       matchFilter.push(statusBoolean);
       matchFilter.push(labelBoolean);
       return matchFilter.every(Boolean);
     }
-  };
+  }
 
   rowClicked(row): void {
     this.clickedRow.emit(row);

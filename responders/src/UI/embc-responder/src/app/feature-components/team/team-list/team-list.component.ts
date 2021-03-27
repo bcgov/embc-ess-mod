@@ -19,7 +19,7 @@ import * as globalConst from '../../../core/services/global-constants';
 export class TeamListComponent implements OnInit {
 
   constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService,
-    private dialog: MatDialog) {
+              private dialog: MatDialog) {
     if (this.router.getCurrentNavigation().extras.state !== undefined) {
       const state = this.router.getCurrentNavigation().extras.state;
       let displayText = '';

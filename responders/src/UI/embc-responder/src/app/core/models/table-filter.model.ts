@@ -16,5 +16,5 @@ export interface InputFilterModel {
 
 export class ObjectWrapper {
     code: string;
-    description: string
+    description: string;
 }
