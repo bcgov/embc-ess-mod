@@ -5,11 +5,16 @@ export interface TableFilterModel {
 
 export interface DropdownFilterModel {
     type: string;
-    label: string;
-    values: string[];
+    label: ObjectWrapper;
+    values: any[];
 }
 
 export interface InputFilterModel {
     type: string;
     label: string;
+}
+
+export class ObjectWrapper {
+    code: string;
+    description: string
 }

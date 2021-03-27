@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
-import { TableFilterModel } from 'src/app/core/models/table-filter.model';
+import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { LoadLocationsService } from 'src/app/core/services/load-locations.service';
 
@@ -8,13 +8,14 @@ import { LoadLocationsService } from 'src/app/core/services/load-locations.servi
 export class AddCommunityService {
 
     private addedCommunities: TeamCommunityModel[];
+    defaultDistrict: ObjectWrapper = {code: "All Districts", description: "All Regional Districts"};
 
     constructor(private loadLocationService: LoadLocationsService) { }
 
     public filtersToLoad: TableFilterModel = {
         loadDropdownFilters: [{
           type: 'regionalDistrict',
-          label: 'All Regional Districts',
+          label: this.defaultDistrict,
           values: this.loadLocationService.getRegionalDistricts()
         }],
         loadInputFilter: {

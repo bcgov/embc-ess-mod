@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { CommunityType } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
-import { TableFilterModel } from 'src/app/core/models/table-filter.model';
+import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { LoadLocationsService } from 'src/app/core/services/load-locations.service';
@@ -15,16 +15,18 @@ export class AssignedCommunityListDataService {
   private teamCommunityList: TeamCommunityModel[];
   private allTeamCommunityList: TeamCommunityModel[];
   private communitiesToDelete: TeamCommunityModel[];
+  defaultDistrict: ObjectWrapper = {code: "All Districts", description: "All Regional Districts"};
+  defaultTypes: ObjectWrapper = {code: "All Types", description: "All Types"};
 
   public filtersToLoad: TableFilterModel = {
     loadDropdownFilters: [{
       type: 'regionalDistrict',
-      label: 'All Regional Districts',
+      label: this.defaultDistrict,
       values: this.loadLocationService.getRegionalDistricts()
     },
     {
       type: 'type',
-      label: 'All Types',
+      label: this.defaultTypes,
       values: Object.keys(CommunityType).filter(e => e)
     }],
     loadInputFilter: {

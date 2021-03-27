@@ -19,7 +19,7 @@ import * as globalConst from '../../../core/services/global-constants';
 export class TeamListComponent implements OnInit {
 
   constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService,
-              private dialog: MatDialog) {
+    private dialog: MatDialog) {
     if (this.router.getCurrentNavigation().extras.state !== undefined) {
       const state = this.router.getCurrentNavigation().extras.state;
       let displayText = '';
@@ -35,7 +35,7 @@ export class TeamListComponent implements OnInit {
         this.openConfirmation(displayText);
       }, 500);
     }
-   }
+  }
 
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
@@ -44,7 +44,6 @@ export class TeamListComponent implements OnInit {
   teamMembers: TeamMember[];
 
   ngOnInit(): void {
-    this.teamFilterPredicate();
     this.teamDataService.clear();
     this.teamListService.getTeamMembers().subscribe(values => {
       this.teamMembers = values;
@@ -55,41 +54,6 @@ export class TeamListComponent implements OnInit {
 
   filter(event: TableFilterValueModel): void {
     this.filterTerm = event;
-  }
-
-  teamFilterPredicate(): void {
-    const filterPredicate = (data: TeamMember, filter: string): boolean => {
-      const searchString: TableFilterValueModel = JSON.parse(filter);
-      if (searchString.value === 'All User Roles' || searchString.value === 'Active & Deactivated Users' || searchString.value === 'All Labels') {
-        return true;
-      }
-      if (searchString.type === 'text') {
-        if (data.lastName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) {
-          return true;
-        }
-        else if (data.userName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) {
-          return true;
-        }
-        else { return false; }
-      } else {
-        return data.role.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
-          // data.isActive.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
-          data.label.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1;
-      }
-
-      // if (searchString.type === 'role') {
-      //   return data.role.toLowerCase().trim().indexOf(searchString.value.toLowerCase()) != -1
-      // }
-
-      // if (searchString.type === 'status') {
-      //   return data.status.toLowerCase().trim().indexOf(searchString.value.toLowerCase()) != -1
-      // }
-
-      // if (searchString.type === 'label') {
-      //   return data.label.toLowerCase().trim().indexOf(searchString.value.toLowerCase()) != -1
-      // }
-    };
-    this.filterPredicate = filterPredicate;
   }
 
   openMemberDetails($event: TeamMember): void {

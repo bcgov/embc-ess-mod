@@ -1,34 +1,41 @@
 import { Injectable } from '@angular/core';
-import { TeamMember } from 'src/app/core/api/models';
+import { MemberLabelDescription, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
-import { TableFilterModel } from 'src/app/core/models/table-filter.model';
+import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
 
 @Injectable({ providedIn: 'root' })
 export class TeamListDataService {
 
   private selectedTeamMember: TeamMember;
 
-  constructor(private cacheService: CacheService) { }
+  constructor(private cacheService: CacheService, private listService: LoadTeamListService) { }
 
-  rolesList: string[] = ['All User Roles', 'Tier 1 Responder', 'Tier 2 Superviser', 'Tier 3 ESSD', 'Tier 4 LEP'];
-  statusList: string[] = ['Active & Deactivated Users', 'Active', 'Deactivated'];
-  labelsList: string[] = ['All Labels', 'Volunteer', 'EMBC Employee', 'Convergent Volunteer', '3rd Party'];
+  rolesList: MemberRoleDescription[] = this.listService.getMemberRoles();
+  defaultRole: ObjectWrapper = {code: "All Roles", description: "All User Roles"};
+  defaultStatus: ObjectWrapper = { code: null, description: 'Active & Deactivated Users' };
+  statusList: Array<{}> = [
+    { code: true, description: 'Active' },
+    { code: false, description: 'Deactivated' }
+  ];
+  labelsList: MemberLabelDescription[] = this.listService.getMemberLabels();
+  defaultLabel: ObjectWrapper = {code: "All Labels", description: "All Labels"}
 
   public filtersToLoad: TableFilterModel = {
     loadDropdownFilters: [{
       type: 'role',
-      label: 'All User Roles',
+      label: this.defaultRole,
       values: this.rolesList
     },
     {
       type: 'status',
-      label: 'Active & Deactivated Users',
+      label: this.defaultStatus,
       values: this.statusList
     },
     {
       type: 'label',
-      label: 'All Labels',
+      label: this.defaultLabel,
       values: this.labelsList
     }],
     loadInputFilter: {
@@ -41,8 +48,8 @@ export class TeamListDataService {
     { label: 'Last Name', ref: 'lastName' },
     { label: 'First Name', ref: 'firstName' },
     { label: 'BCeID Username', ref: 'userName' },
-    { label: 'Role', ref: 'role' },
-    { label: 'Label', ref: 'label' },
+    { label: 'Role', ref: 'roleDescription' },
+    { label: 'Label', ref: 'labelDescription' },
     { label: 'Status', ref: 'isActive' },
   ];
 
