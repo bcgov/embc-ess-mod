@@ -156,7 +156,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   loadStepForm(index: number): void {
     switch (index) {
       case 0:
-        this.form$ = this.formCreationService.getPeronalDetailsForm().subscribe(
+        this.form$ = this.formCreationService.getPersonalDetailsForm().subscribe(
           personalDetails => {
             this.form = personalDetails;
           }

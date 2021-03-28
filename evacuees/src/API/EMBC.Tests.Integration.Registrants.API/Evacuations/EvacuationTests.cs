@@ -27,7 +27,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetEvacuations()
         {
-            string testUserId = "4PRCSME5JFAAGAV5OPLTZLQXBGDL7XYD";
+            string testUserId = "CHRIS-TEST";
             var evacuationFiles = await evacuationManager.GetEvacuations(testUserId);
             var evacuationFile = evacuationFiles.First();
 
@@ -43,7 +43,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateEvacuation()
         {
-            string testUserId = "4PRCSME5JFAAGAV5OPLTZLQXBGDL7XYD";
+            string testUserId = "CHRIS-TEST";
             string testEssFileNumber = "100615";
             var evacuationFile = await evacuationManager.GetEvacuation(testUserId, testEssFileNumber);
             var currentAddress = evacuationFile.EvacuatedFromAddress.AddressLine1;
@@ -70,7 +70,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateEvacuation()
         {
-            string testUserId = "4PRCSME5JFAAGAV5OPLTZLQXBGDL7XYD";
+            string testUserId = "CHRIS-TEST";
             string testEssFileNumber = "100615";
             var evacuationFile = await evacuationManager.GetEvacuation(testUserId, testEssFileNumber);
 
@@ -79,6 +79,8 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
             var createdEvacuationFile = await evacuationManager.GetEvacuation(testUserId, newEssFileNumber);
 
             createdEvacuationFile.ShouldNotBeNull();
+
+            await evacuationManager.DeleteEvacuation(testUserId, newEssFileNumber);
         }
     }
 }

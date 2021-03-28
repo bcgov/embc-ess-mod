@@ -100,6 +100,8 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForPath(d => d.HideEmailRequired, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.emailaddress1)))
                 .ForPath(d => d.HidePhoneRequired, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.telephone1)))
                 .ReverseMap()
+                .ForPath(d => d.emailaddress1, opts => opts.MapFrom(s => s.Email ?? string.Empty))
+                .ForPath(d => d.telephone1, opts => opts.MapFrom(s => s.Phone ?? string.Empty))
                 .ForPath(d => d.era_emailrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Email)))
                 .ForPath(d => d.era_phonenumberrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Phone)))
 ;

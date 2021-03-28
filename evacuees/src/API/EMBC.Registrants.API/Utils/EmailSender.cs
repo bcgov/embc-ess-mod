@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,7 @@ namespace EMBC.Registrants.API.Utils
 {
     public interface IEmailSender
     {
-        void Send(EmailMessage message);
+        Task SendAsync(EmailMessage message);
     }
 
     public class EmailAddress
@@ -38,52 +39,25 @@ namespace EMBC.Registrants.API.Utils
 
     public class EmailMessage
     {
-        public EmailMessage()
-        {
-            SetToAddresses(new List<EmailAddress>());
-            SetFromAddresses(new List<EmailAddress>());
-        }
-
-        private List<EmailAddress> toAddresses;
-        private List<EmailAddress> fromAddresses;
+        public IEnumerable<EmailAddress> ToAddresses { get; set; }
+        public IEnumerable<EmailAddress> FromAddresses { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
 
-        public List<EmailAddress> GetToAddresses()
-        {
-            return toAddresses;
-        }
+        public EmailMessage(IEnumerable<EmailAddress> to, string subject, string body) : this(null, to, subject, body)
+        { }
 
-        public void SetToAddresses(List<EmailAddress> value)
-        {
-            toAddresses = value;
-        }
-
-        public List<EmailAddress> GetFromAddresses()
-        {
-            return fromAddresses;
-        }
-
-        public void SetFromAddresses(List<EmailAddress> value)
-        {
-            fromAddresses = value;
-        }
-
-        public EmailMessage(List<EmailAddress> to, string subject, string body) : this(null, to, subject, body)
-        {
-        }
-
-        public EmailMessage(List<EmailAddress> fromAddresses, List<EmailAddress> toAddresses, string subject, string body)
+        public EmailMessage(IEnumerable<EmailAddress> fromAddresses, IEnumerable<EmailAddress> toAddresses, string subject, string body)
         {
             Content = body;
             Subject = subject;
-            SetToAddresses(toAddresses);
-            SetFromAddresses(fromAddresses);
+            ToAddresses = toAddresses;
+            FromAddresses = fromAddresses;
         }
     }
     public interface IEmailConfiguration
     {
-        string SmtpServer { get; }
+        string Server { get; }
         int SmtpPort { get; }
         string SmtpUsername { get; set; }
         string SmtpPassword { get; set; }
@@ -93,22 +67,24 @@ namespace EMBC.Registrants.API.Utils
 
     public class EmailConfiguration : IEmailConfiguration
     {
-        public string SmtpServer { get; set; }
-        public int SmtpPort { get; set; }
-        public string SmtpUsername { get; set; }
-        public string SmtpPassword { get; set; }
-        public EmailAddress SmtpDefaultSender { get; set; }
-        public bool EnableSSL { get; set; }
+        public string Server { get; set; }
+        public int SmtpPort { get; set; } = 25;
+        public string SmtpUsername { get; set; } = string.Empty;
+        public string SmtpPassword { get; set; } = string.Empty;
+        public EmailAddress SmtpDefaultSender { get; set; } = new EmailAddress()
+        {
+            Name = "Do Not Reply",
+            Address = "no-reply@gov.bc.ca"
+        };
+        public bool EnableSSL { get; set; } = false;
     }
 
     public class EmailSender : IEmailSender
     {
-        private const string BcGovSmtpServer = "apps.smtp.gov.bc.ca";
-
         private readonly IEmailConfiguration emailConfiguration;
         private readonly ILogger logger;
 
-        private bool Enabled => !string.IsNullOrEmpty(emailConfiguration.SmtpServer);
+        private bool Enabled => !string.IsNullOrEmpty(emailConfiguration.Server);
 
         public EmailSender(IEmailConfiguration configuration, ILoggerFactory loggerFactory)
         {
@@ -116,8 +92,10 @@ namespace EMBC.Registrants.API.Utils
             logger = loggerFactory.CreateLogger(typeof(EmailSender));
         }
 
-        public void Send(EmailMessage emailMessage)
+        public async Task SendAsync(EmailMessage emailMessage)
         {
+            await Task.CompletedTask;
+
             if (!Enabled)
             {
                 logger.LogWarning("SMTP is not configured, check the environment variables for SMTP_HOST");
@@ -126,10 +104,10 @@ namespace EMBC.Registrants.API.Utils
             using (var emailClient = new SmtpClient())
             {
                 var message = new MimeMessage();
-                message.To.AddRange(emailMessage.GetToAddresses().Select(x => new MailboxAddress(x.Name, x.Address)));
-                if (emailMessage.GetFromAddresses() != null && emailMessage.GetFromAddresses().Count > 0)
+                message.To.AddRange(emailMessage.ToAddresses.Select(x => new MailboxAddress(x.Name, x.Address)));
+                if (emailMessage.FromAddresses != null && emailMessage.FromAddresses.Count() > 0)
                 {
-                    message.From.AddRange(emailMessage.GetFromAddresses().Select(x => new MailboxAddress(x.Name, x.Address)));
+                    message.From.AddRange(emailMessage.FromAddresses.Select(x => new MailboxAddress(x.Name, x.Address)));
                 }
                 else
                 {
@@ -143,35 +121,16 @@ namespace EMBC.Registrants.API.Utils
                     Text = emailMessage.Content
                 };
 
-                try
-                {
-                    if (emailConfiguration.SmtpServer == BcGovSmtpServer)
-                    {
-                        // The certificate for the government SMTP server (apps.smtp.gov.bc.ca) doesn't match the actual server name and so we have to disable SSL.
-                        emailClient.Connect(emailConfiguration.SmtpServer, emailConfiguration.SmtpPort, SecureSocketOptions.None);
-                    }
-                    else
-                    {
-                        emailClient.Connect(emailConfiguration.SmtpServer, emailConfiguration.SmtpPort, emailConfiguration.EnableSSL);
-                        if (emailConfiguration.SmtpUsername.Length > 0 && emailConfiguration.SmtpPassword.Length > 0)
-                        {
-                            emailClient.Authenticate(emailConfiguration.SmtpUsername, emailConfiguration.SmtpPassword);
-                        }
-                    }
-                    emailClient.Send(message);
+                emailClient.Connect(emailConfiguration.Server, emailConfiguration.SmtpPort, emailConfiguration.EnableSSL ? SecureSocketOptions.Auto : SecureSocketOptions.None);
 
-                    emailClient.Disconnect(true);
-                }
-                catch (ArgumentNullException)
+                if (!string.IsNullOrEmpty(emailConfiguration.SmtpUsername) && !string.IsNullOrEmpty(emailConfiguration.SmtpPassword))
                 {
-                    logger.LogError("ArgumentNullException sending email message");
-                    throw;
+                    emailClient.Authenticate(emailConfiguration.SmtpUsername, emailConfiguration.SmtpPassword);
                 }
-                catch (InvalidOperationException)
-                {
-                    logger.LogError("InvalidOperationException sending email message");
-                    throw;
-                }
+
+                await emailClient.SendAsync(message);
+
+                emailClient.Disconnect(true);
             }
         }
     }

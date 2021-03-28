@@ -1,7 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 
 @Component({
@@ -35,6 +36,10 @@ export class FileSubmissionComponent implements OnInit {
         this.router.navigate(['/registration-method']);
       }
     }
+
+    // this.router.events.pipe(filter((event: any) => event instanceof NavigationStart)).subscribe(event => {
+    //   console.log(event);
+    // })
   }
 
   /**

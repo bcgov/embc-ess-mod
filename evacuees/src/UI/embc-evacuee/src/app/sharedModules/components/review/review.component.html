@@ -215,6 +215,21 @@
                 </div>
                 <hr>
                 <div class="row info-detail">
+                    <div class="col-md-1">
+                        <span *ngIf="(formCreationService.contactDetailsForm$ | async)?.value.showContacts">
+                            <img src="/assets/images/restriction-on.svg" height="20" width="20">
+                        </span>
+                        <span *ngIf="!(formCreationService.contactDetailsForm$ | async)?.value.showContacts">
+                            <img src="/assets/images/restriction-off.svg" height="20" width="20">
+                        </span>
+                    </div>
+                    <div class="col-md-9">
+                        <p>You have given your consent for Emergency Management British Columbia and your Local
+                            Emergency Program to communicate with you by email or phone regarding your emergency
+                            situation.</p>
+                    </div>
+                </div>
+                <div class="row info-detail">
                     <div class="col-md-3">Telephone/Mobile:</div>
                     <div class="col-md-3">{{(formCreationService.contactDetailsForm$ | async)?.value?.phone}}</div>
                 </div>
@@ -356,7 +371,7 @@
                     </div>
                 </div>
                 <hr>
-                <div *ngFor="let member of (formCreationService.familyMembersForm$ | async)?.value.familyMember">
+                <div *ngFor="let member of (formCreationService.householdMembersForm$ | async)?.value.householdMembers">
                     <div class="row info-detail">
                         <div class="col-md-3">First Name:</div>
                         <div class="col-md-3">{{member.firstName}}</div>
@@ -400,22 +415,22 @@
                 <div class="row info-detail">
                     <div class="col-md-3">Family Medication Requirements:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.familyMembersForm$ | async)?.value.haveMedication === true ? 'Yes' :
+                        {{(formCreationService.householdMembersForm$ | async)?.value.haveMedication === true ? 'Yes' :
                         'No'}}
                     </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Family Dietary Requirements:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.familyMembersForm$ | async)?.value.haveSpecialDiet === true ? 'Yes':
+                        {{(formCreationService.householdMembersForm$ | async)?.value.haveSpecialDiet === true ? 'Yes':
                         'No'}}
                     </div>
                 </div>
                 <div class="row info-detail"
-                    *ngIf="(formCreationService.familyMembersForm$ | async)?.value.haveSpecialDiet">
+                    *ngIf="(formCreationService.householdMembersForm$ | async)?.value.haveSpecialDiet">
                     <div class="col-md-3">Special Dietary Details:</div>
                     <div class="col-md-3">
-                        {{(formCreationService.familyMembersForm$ | async)?.value.specialDietDetails}}
+                        {{(formCreationService.householdMembersForm$ | async)?.value.specialDietDetails}}
                     </div>
                 </div>
             </mat-card-content>

@@ -14,6 +14,8 @@ export class DialogService {
         private router: Router, public dialog: MatDialog, private needsAssessmentService: NeedsAssessmentService,
         private formCreationService: FormCreationService) { }
 
+
+
     addEvacuationFile(city: string): void {
         this.dialog.open(DialogComponent, {
             data: {
@@ -82,5 +84,22 @@ export class DialogService {
             width: '699px'
         });
     }
-}
 
+    invalidGoBackMessage(): void {
+        this.dialog.open(DialogComponent, {
+            data: {
+                body: '<p>The Go Back action is disabled on this page</p>',
+                buttons:
+                    [
+                        {
+                            name: 'Ok',
+                            class: 'button-p',
+                            function: 'ok'
+                        }
+                    ]
+            },
+            height: '220px',
+            width: '400px'
+        });
+    }
+}

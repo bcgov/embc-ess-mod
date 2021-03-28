@@ -471,11 +471,13 @@ export class TeamMembersService extends BaseService {
    */
   teamMembersIsUserNameExists$Response(params?: {
     userName?: string;
+    memberId?: string;
   }): Observable<StrictHttpResponse<boolean>> {
 
     const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersIsUserNameExistsPath, 'get');
     if (params) {
       rb.query('userName', params.userName, {});
+      rb.query('memberId', params.memberId, {});
     }
 
     return this.http.request(rb.build({
@@ -497,6 +499,7 @@ export class TeamMembersService extends BaseService {
    */
   teamMembersIsUserNameExists(params?: {
     userName?: string;
+    memberId?: string;
   }): Observable<boolean> {
 
     return this.teamMembersIsUserNameExists$Response(params).pipe(

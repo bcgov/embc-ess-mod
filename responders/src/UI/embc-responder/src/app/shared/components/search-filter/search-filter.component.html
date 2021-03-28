@@ -22,9 +22,13 @@
         <div class="row">
             <div *ngFor="let filter of filtersToLoad?.loadDropdownFilters">
                 <mat-form-field appearance="outline">
-                    <mat-label>{{filter?.label}}</mat-label>
+                    <mat-label>{{filter?.label.description}}</mat-label>
                     <mat-select #matRef id="custom-select" (selectionChange)="selected($event, filter?.type)">
-                        <mat-option *ngFor="let val of filter?.values" [value]="val">{{val}}</mat-option>
+                        <mat-option value="">{{filter?.label.description}}</mat-option> <!--{{filter?.label.description}}-->
+                        <mat-option *ngFor="let val of filter?.values" [value]="val">
+                            <div *ngIf="val?.description !== undefined else value"> {{val?.description}}</div>
+                            <ng-template #value>{{val}}</ng-template>
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
