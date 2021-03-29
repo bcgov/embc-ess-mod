@@ -21,7 +21,7 @@ export class AuthenticationService {
     const returnRoute = location.pathname.substring(1);
     const isLoggedIn = await this.oauthService.loadDiscoveryDocumentAndLogin({ state: returnRoute });
     if (isLoggedIn) {
-      const userProfile = await this.userService.loadUserProfile().toPromise();
+      const userProfile = await this.userService.loadUserProfile();
       const nextRoute = decodeURIComponent(userProfile.requiredToSignAgreement
         ? 'electronic-agreement' :
         (this.oauthService.state || returnRoute || 'responder-access'));
