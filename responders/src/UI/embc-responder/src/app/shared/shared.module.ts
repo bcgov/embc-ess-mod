@@ -23,8 +23,7 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     AlertComponent,
     AppLoaderComponent,
     DeleteConfirmationDialogComponent,
-    InformationDialogComponent
-   // EnumToArrayPipe
+    InformationDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -41,8 +40,7 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     AlertComponent,
     AppLoaderComponent,
     DeleteConfirmationDialogComponent,
-    InformationDialogComponent
-   // EnumToArrayPipe
+    InformationDialogComponent,
   ]
 })
 export class SharedModule { }
