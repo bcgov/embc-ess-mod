@@ -19,11 +19,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Team;
 using EMBC.Responders.API.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +41,7 @@ namespace EMBC.Responders.API.Controllers
     {
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
-        private string teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
+        private string teamId => User.FindFirstValue("user_team");
 
         public TeamMembersController(IMessagingClient client, IMapper mapper)
         {

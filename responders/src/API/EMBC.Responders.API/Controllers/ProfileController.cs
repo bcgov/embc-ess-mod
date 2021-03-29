@@ -52,7 +52,6 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [Authorize]
         public async Task<ActionResult<UserProfile>> GetCurrentUserProfile()
         {
             var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
@@ -77,7 +76,6 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <returns>Ok when successful</returns>
         [HttpPost("agreement")]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SignAgreement()

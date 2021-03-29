@@ -45,7 +45,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<TeamMembersQueryResponse> Handle(TeamMembersQueryCommand cmd)
         {
-            var members = await teamRepository.GetMembers(cmd.TeamId);
+            var members = await teamRepository.GetMembers(cmd.TeamId, cmd.UserName);
 
             if (!string.IsNullOrEmpty(cmd.MemberId)) members = members.Where(m => m.Id == cmd.MemberId);
 
