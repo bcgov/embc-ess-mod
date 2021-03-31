@@ -1,7 +1,9 @@
 {
-  "/api/*": {
-    "target": "http://localhost:5000",
+  "/api": {
+    "targetOFF": "https://dev1-embc-suppliers.pathfinder.gov.bc.ca",
+    "target": "http://localhost:5000/",
     "secure": false,
+    "changeOrigin": true,
     "logLevel": "debug"
   }
 }

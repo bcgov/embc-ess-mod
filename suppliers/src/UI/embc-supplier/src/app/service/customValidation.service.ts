@@ -103,7 +103,7 @@ export class CustomValidationService {
     futureDateValidator(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: boolean } | null => {
             if (control) {
-                if(Date.parse(control.value) > Date.parse(new Date().toISOString())) {
+                if (Date.parse(control.value) > Date.parse(new Date().toISOString())) {
                     return { futureDate: true };
                 }
             }

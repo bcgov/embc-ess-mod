@@ -37,7 +37,7 @@ export class FileUploadComponent implements OnInit {
         if (this.showToast) {
             this.showToast = !this.showToast;
         }
-        if(this.attachSizeError) {
+        if (this.attachSizeError) {
             this.attachSizeError = !this.attachSizeError;
         }
         for (const e of event) {
@@ -45,16 +45,16 @@ export class FileUploadComponent implements OnInit {
                 this.warningService.warningModal(constant.zeroFileMessage);
                 // this.showToast = !this.showToast;
                 // this.toastService.show(constant.zeroFileMessage, { delay: 9500 });
-            } else if(!constant.allowedFileTypes.includes(e.type)) {
+            } else if (!constant.allowedFileTypes.includes(e.type)) {
                 this.warningService.warningModal(constant.fileTypeMessage);
                 //alert(constant.fileTypeMessage);
                 // this.showToast = !this.showToast;
                 // this.toastService.show(constant.fileTypeMessage, { delay: 9500 });
-            } else if(!constant.fileNameFormat.test(e.name)) {
+            } else if (!constant.fileNameFormat.test(e.name)) {
                 this.warningService.warningModal(constant.invalidFileNameMessage);
                 //this.showToast = !this.showToast;
                 //this.toastService.show(constant.invalidFileNameMessage, { delay: 9500 });
-            } else if(this.invoiceAttachments !== undefined && this.invoiceAttachments.length >= this.noOfAttachments) {
+            } else if (this.invoiceAttachments !== undefined && this.invoiceAttachments.length >= this.noOfAttachments) {
                 this.attachSizeError = true;
                 setTimeout(function() {
                     this.attachSizeError = false;
