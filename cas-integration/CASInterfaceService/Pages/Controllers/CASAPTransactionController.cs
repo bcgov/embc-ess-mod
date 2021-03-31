@@ -126,29 +126,5 @@ namespace CASInterfaceService.Pages.Controllers
             Console.WriteLine(DateTime.Now + " Successfully sent invoice: " + casAPTransaction.invoiceNumber);
             return xjo;
         }
-
-        [HttpPost("InsertCASAPTransaction")]
-        public IActionResult InsertCASAPTransaction(CASAPTransaction casAPTransaction)
-        {
-            try
-            {
-                Console.WriteLine(DateTime.Now + " In InsertCASAPTransaction");
-                CASAPTransactionRegistrationReply casregreply = new CASAPTransactionRegistrationReply();
-                CASAPTransactionRegistration.getInstance().Add(casAPTransaction);
-                casregreply.RegistrationStatus = "Success";
-
-                // Now we must call CAS with this data
-                //Task<string> outputResult = CASAPTransactionRegistration.getInstance().sendTransactionsToCAS(casAPTransaction);
-                //casregreply.RegistrationStatus = Convert.ToString(outputResult);
-
-                return Ok(casregreply);
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(DateTime.Now + " Error in InsertCASAPTransaction. " + e.ToString());
-                return StatusCode(e.HResult);
-            }
-
-        }
     }
 }
