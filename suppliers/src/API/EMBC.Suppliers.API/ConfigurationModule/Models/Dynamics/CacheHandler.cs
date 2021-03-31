@@ -16,7 +16,9 @@
 
 using System;
 using System.IO.Abstractions;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using EMBC.Suppliers.API.Utilities;
 using Jasper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -31,7 +33,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
         private readonly IListsGateway listsGateway;
         private readonly IFileSystem fileSystem;
         private readonly FileBasedCachedListsOptions options;
-        private static readonly Random random = new Random();
+        private static readonly RandomGenerator random = new RandomGenerator();
 
         public CacheHandler(IMessageContext messageContext,
             ILogger<CacheHandler> logger,
@@ -62,7 +64,10 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             {
                 logger.LogError(e, "Failed to refresh cached lists from Dynamics");
             }
-            await messageContext.Schedule(new RefreshCacheCommand(), DateTime.Now.AddMinutes(options.UpdateFrequency).AddSeconds(random.Next(-5, 5)));
+
+            await messageContext.Schedule(
+                new RefreshCacheCommand(),
+                DateTime.Now.AddMinutes(options.UpdateFrequency).AddSeconds(random.Next(-5, 5)));
         }
     }
 

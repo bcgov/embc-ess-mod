@@ -32,16 +32,23 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
         public SubmissionRepository(IFileSystem fileSystem, IConfiguration configuration, IReferenceNumberGenerator referenceNumberGenerator)
         {
             submissionStoragePath = configuration.GetValue<string>("Submission_Storage_Path");
+
             this.fileSystem = fileSystem ?? throw new System.ArgumentNullException(nameof(fileSystem));
             this.referenceNumberGenerator = referenceNumberGenerator;
-            if (!fileSystem.Directory.Exists(submissionStoragePath)) fileSystem.Directory.CreateDirectory(submissionStoragePath);
+
+            if (!fileSystem.Directory.Exists(submissionStoragePath))
+                fileSystem.Directory.CreateDirectory(submissionStoragePath);
         }
 
         public async Task<Submission> GetAsync(string referenceNumber)
         {
             var filePath = fileSystem.Path.Combine(submissionStoragePath, $"submission_{referenceNumber}.json");
-            if (!fileSystem.File.Exists(filePath)) return null;
+
+            if (!fileSystem.File.Exists(filePath))
+                return null;
+
             using var fs = fileSystem.File.OpenRead(filePath);
+
             return await JsonSerializer.DeserializeAsync<Submission>(fs);
         }
 
@@ -49,7 +56,10 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
         {
             var referenceNumber = referenceNumberGenerator.CreateNew();
             var filePath = fileSystem.Path.Combine(submissionStoragePath, $"submission_{referenceNumber}.json");
-            if (fileSystem.File.Exists(filePath)) throw new Exception($"Submission with reference number r{referenceNumber} already exists");
+
+            if (fileSystem.File.Exists(filePath))
+                throw new ArgumentException($"Submission with reference number r{referenceNumber} already exists");
+
             using var fs = fileSystem.File.OpenWrite(filePath);
             await JsonSerializer.SerializeAsync(fs, submission);
             return referenceNumber;

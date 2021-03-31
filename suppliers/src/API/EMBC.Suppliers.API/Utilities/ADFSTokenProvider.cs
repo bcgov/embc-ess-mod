@@ -70,16 +70,16 @@ namespace EMBC.Suppliers.API.DynamicsModule
                 }
                 else if (result.ContainsKey("error"))
                 {
-                    throw new Exception($"{result["error"].GetString()}: {result["error_description"].GetString()}");
+                    throw new InvalidOperationException($"{result["error"].GetString()}: {result["error_description"].GetString()}");
                 }
                 else
                 {
-                    throw new Exception(responseContent);
+                    throw new InvalidOperationException(responseContent);
                 }
             }
             catch (Exception e)
             {
-                throw new Exception($"Failed to obtain access token from {options.OAuth2TokenEndpoint}: {e.Message}", e);
+                throw new InvalidOperationException($"Failed to obtain access token from {options.OAuth2TokenEndpoint}: {e.Message}", e);
             }
         }
     }
@@ -95,7 +95,7 @@ namespace EMBC.Suppliers.API.DynamicsModule
         public string ResourceName { get; set; }
     }
 
-    public static class AccessTokenProviderEx
+    public static class AccessTokenProvider2
     {
         public static IServiceCollection AddADFSTokenProvider(this IServiceCollection services)
         {
