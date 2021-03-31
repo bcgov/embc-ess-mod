@@ -28,7 +28,7 @@ export class UserService {
   }
 
   public hasClaim(claimType: ClaimType, value: string): boolean {
-    return this.profile.claims.findIndex(c => c.claimType === claimType && c.claimValue === value) >= 0;
+    return this.profile && this.profile.claims.findIndex(c => c.claimType === claimType && c.claimValue === value) >= 0;
   }
 
 }

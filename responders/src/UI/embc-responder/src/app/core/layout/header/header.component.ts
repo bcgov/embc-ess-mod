@@ -30,16 +30,21 @@ export class HeaderComponent implements OnInit {
     this.profile = this.userService.currentProfile;
   }
 
-  homeButton(): void {
+  public homeButton(): void {
+    this.router.navigate(['/responder-access']);
 
   }
 
-  openUserProfile(): void {
+  public openUserProfile(): void {
     this.router.navigate(['/responder-access/user-profile']);
   }
 
-  signOut(): void {
+  public signOut(): void {
     this.authService.logout();
+  }
+
+  public showUserProfile(): boolean {
+    return this.profile != null;
   }
 
 }

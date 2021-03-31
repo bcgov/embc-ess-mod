@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { OAuthResourceServerErrorHandler, OAuthService } from 'angular-oauth2-oidc';
 import { Observable, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { ConfigService } from './config.service';
 import { UserService } from './user.service';
 
@@ -33,7 +32,7 @@ export class AuthenticationService {
   }
 
   public logout(targetUrl?: string): void {
-    this.oauthService.logOut(targetUrl != null);
+    this.oauthService.revokeTokenAndLogout();
     if (targetUrl != null) { window.location.replace(targetUrl); }
   }
 
@@ -41,20 +40,13 @@ export class AuthenticationService {
     return this.oauthService.getAccessToken();
   }
 
-  private configureOAuthService(): Promise<void> {
-    return this.configService.getAuthConfig().pipe(map(authConfig => {
+  private async configureOAuthService(): Promise<void> {
+    return this.configService.getAuthConfig().then(authConfig => {
       // this.oauthService.tokenValidationHandler = new NullValidationHandler();
       this.oauthService.configure(authConfig);
       this.oauthService.setupAutomaticSilentRefresh();
-    })).toPromise();
+    });
   }
 
 }
 
-export class OAuthNoopResourceServerErrorHandler implements OAuthResourceServerErrorHandler {
-
-  handleError(err: HttpResponse<any>): Observable<any> {
-    return throwError(err);
-  }
-
-}
