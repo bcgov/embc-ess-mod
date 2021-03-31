@@ -20,6 +20,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Team;
 using EMBC.Responders.API.Utilities;
+using Microsoft.Extensions.Logging;
 
 namespace EMBC.Responders.API.Services
 {
@@ -32,28 +33,38 @@ namespace EMBC.Responders.API.Services
     {
         private readonly IMessagingClient messagingClient;
         private readonly ICache cache;
+        private readonly ILogger<UserService> logger;
 
-        public UserService(IMessagingClient messagingClient, ICache cache)
+        public UserService(IMessagingClient messagingClient, ICache cache, ILogger<UserService> logger)
         {
             this.messagingClient = messagingClient;
             this.cache = cache;
+            this.logger = logger;
         }
 
         public async Task<ClaimsPrincipal> CreatePrincipalForUser(ClaimsPrincipal tokenPrincipal)
         {
-            var userName = tokenPrincipal.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
-
-            var teamMember = await cache.GetOrAdd($"_{nameof(UserService.CreatePrincipalForUser)}_{userName}", async () => await GetTeamMember(userName), DateTimeOffset.Now.AddMinutes(10));
-            if (teamMember == null) return tokenPrincipal;
-
-            var essClaims = new[]
+            try
             {
-                new Claim("user_role", teamMember.Role),
-                new Claim("user_team", teamMember.TeamId)
-            };
-            var principal = new ClaimsPrincipal(new ClaimsIdentity(tokenPrincipal.Identity, tokenPrincipal.Claims.Concat(essClaims)));
+                var userName = tokenPrincipal.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
 
-            return await Task.FromResult(principal);
+                var teamMember = await cache.GetOrAdd($"_{nameof(UserService.CreatePrincipalForUser)}_{userName}", async () => await GetTeamMember(userName), DateTimeOffset.Now.AddMinutes(10));
+                if (teamMember == null) return tokenPrincipal;
+
+                var essClaims = new[]
+                {
+                    new Claim("user_role", teamMember.Role),
+                    new Claim("user_team", teamMember.TeamId)
+                };
+                var principal = new ClaimsPrincipal(new ClaimsIdentity(tokenPrincipal.Identity, tokenPrincipal.Claims.Concat(essClaims)));
+
+                return await Task.FromResult(principal);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, $"Failed to transform JWT principal to ESS user principal");
+                return tokenPrincipal;
+            }
         }
 
         private async Task<TeamMember> GetTeamMember(string userName)
