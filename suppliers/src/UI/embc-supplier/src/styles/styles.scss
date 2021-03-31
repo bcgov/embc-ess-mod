@@ -15,20 +15,20 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
 // monospace font used for fixed-size text blocks (eg, referral comments)
 // NB: same font as PDF renderer service
 @font-face {
-    font-family: 'LiberationMono';
-    src: url('/assets/LiberationMono-Regular.woff2') format('woff2'), /* Super Modern Browsers */
-         url('/assets/LiberationMono-Regular.woff') format('woff'), /* Pretty Modern Browsers */
-         url('/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
-  }
+  font-family: 'LiberationMono';
+  src: url('/assets/LiberationMono-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+        url('/assets/LiberationMono-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+        url('/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
+}
 
 .form-control {
-    border-radius:0
+  border-radius:0
 }
 
 .requiredField::after {
-    content: "*";
-    color: red;
- }
+  content: "*";
+  color: red;
+}
 
 // .input-help {
 //     vertical-align: top;
@@ -36,45 +36,45 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
 // }
 
 .input-help {
-    font-size: small;
-    color: #6c757d !important;
-    font-weight: lighter;
+  font-size: small;
+  color: #6c757d !important;
+  font-weight: lighter;
 }
 
 body {
-    font-size: 15px;
-    // background: linear-gradient(theme-color(info) 5%, white);
-    // background-repeat: no-repeat;
-    // background-attachment: fixed;
+  font-size: 15px;
+  // background: linear-gradient(theme-color(info) 5%, white);
+  // background-repeat: no-repeat;
+  // background-attachment: fixed;
 }
 
 .input-symbol-dollar {
-    position: relative;
-  }
+  position: relative;
+}
  
 .input-symbol-dollar:after {
-    content: "$";
-    font-size: 16px !important;
-    font-weight: 400;
-    position: absolute;
-    height: 100%;
-    top: 0;
-    left: 4px;
+  content: "$";
+  font-size: 16px !important;
+  font-weight: 400;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 4px;
  }
 
 /******** ESS Application Theme********/
 hr {
-     color: #BECDDB;
-     border: 0.75px solid;
- }
+  color: #BECDDB;
+  border: 0.75px solid;
+}
 
 .formHeading {
-    background-color: #E2E9F0;
-    margin: 20px 0px 20px 0px;
-    font-size: 25px;
-    padding-left: 20px;
-    font-weight: bold;
-  }
+  background-color: #E2E9F0;
+  margin: 20px 0px 20px 0px;
+  font-size: 25px;
+  padding-left: 20px;
+  font-weight: bold;
+}
 
 //  p {
 //      line-height: 21px;
@@ -82,24 +82,24 @@ hr {
 
 /**START - Theme for Cards**/
 .side-box-title {
-    line-height: 21px;
-    font-size: 21px;
-  }
+  line-height: 21px;
+  font-size: 21px;
+}
 
 .side-box-body {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 .app-heading {
-    margin-top: 15px;
-    margin-left: 6px;
+  margin-top: 15px;
+  margin-left: 6px;
 }
 
 .submissionHeader {
-    margin-bottom: 0 !important;
-    font-size: 40px;
-    font-weight: bold;
-  }
+  margin-bottom: 0 !important;
+  font-size: 40px;
+  font-weight: bold;
+}
 /**END - Theme for Cards**/
 
 .icon,
@@ -109,46 +109,45 @@ hr {
 }
 
 .form-header {
-    background-color: #2F6699;
-    border-bottom: 3px #FCBA19 solid;
-    color: white;
-    font-weight: bold;
-    font-size: 21px;
-    padding: 10px;
-  }
+  background-color: #2F6699;
+  border-bottom: 3px #FCBA19 solid;
+  color: white;
+  font-weight: bold;
+  font-size: 21px;
+  padding: 10px;
+}
 
-  .form-body {
-    background-color: #F0F0F0;
-    border-left: 3px #2F6699 solid;
-    border-bottom: 3px #2F6699 solid;
-    border-right: 3px #2F6699 solid;
-    font-weight: bold;
-    padding: 10px;
-  }
+.form-body {
+  background-color: #F0F0F0;
+  border-left: 3px #2F6699 solid;
+  border-bottom: 3px #2F6699 solid;
+  border-right: 3px #2F6699 solid;
+  font-weight: bold;
+  padding: 10px;
+}
 
-  .button-style {
-      border-radius: 0 !important;
-      height: 40px;
-      font-size: 15px;
-      color: #FFFFFF !important;
-  }
+.button-style {
+  border-radius: 0 !important;
+  height: 40px;
+  font-size: 15px;
+  color: #FFFFFF !important;
+}
 
-  .primary-button {
-      @extend .button-style;
-      background-color: #2F6699;
-  } 
-  
-  .secondary-button {
-    @extend .button-style;
-    background-color: #FCBA19;
-  }
+.primary-button {
+  @extend .button-style;
+  background-color: #2F6699;
+} 
 
-  .disable-button {
-    @extend .button-style;
-    background-color: #8c8c8c;
-  }
+.secondary-button {
+  @extend .button-style;
+  background-color: #FCBA19;
+}
 
-  .primary-button:hover, .secondary-button:hover, .disable-button:hover {
-    background-color: #174671;
-  }
+.disable-button {
+  @extend .button-style;
+  background-color: #8c8c8c;
+}
 
+.primary-button:hover, .secondary-button:hover, .disable-button:hover {
+  background-color: #174671;
+}
