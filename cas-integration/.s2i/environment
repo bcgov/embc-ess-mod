@@ -1,0 +1,2 @@
+DOTNET_STARTUP_PROJECT=CASInterfaceService/cas-interface-service.csproj
+
