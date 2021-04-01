@@ -184,6 +184,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
     {
         public string Id { get; set; }
         public PersonDetails Details { get; set; }
+        public bool isUnder19 { get; set; }
     }
 
     /// <summary>
