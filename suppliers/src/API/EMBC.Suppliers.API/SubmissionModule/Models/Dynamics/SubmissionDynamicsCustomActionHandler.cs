@@ -56,7 +56,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
 
                     if (!result.submissionFlag)
                     {
-                        throw new InvalidOperationException($"era_SubmitUnauthInvoices call failed: {result.message}");
+                        throw new Exception($"era_SubmitUnauthInvoices call failed: {result.message}");
                     }
                 }
             }
@@ -78,7 +78,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models.Dynamics
             }
             catch (Exception e)
             {
-                throw new InvalidOperationException($"Failed to post submission '{evt.ReferenceNumber}' to Dynamics: {e.Message}", e);
+                throw new Exception($"Failed to post submission '{evt.ReferenceNumber}' to Dynamics: {e.Message}", e);
             }
         }
 

@@ -58,7 +58,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
             var filePath = fileSystem.Path.Combine(submissionStoragePath, $"submission_{referenceNumber}.json");
 
             if (fileSystem.File.Exists(filePath))
-                throw new ArgumentException($"Submission with reference number r{referenceNumber} already exists");
+                throw new Exception($"Submission with reference number r{referenceNumber} already exists");
 
             using var fs = fileSystem.File.OpenWrite(filePath);
             await JsonSerializer.SerializeAsync(fs, submission);

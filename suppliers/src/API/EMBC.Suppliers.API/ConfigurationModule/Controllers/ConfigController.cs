@@ -63,9 +63,9 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             }
 
             // Other options for site takedown via maintTimeStr
-            if (maintTimeStr.ToLower(CultureInfo.InvariantCulture) == "down")
+            if (maintTimeStr.ToLower() == "down")
                 siteDown = true;
-            else if (maintTimeStr.ToLower(CultureInfo.InvariantCulture) == "warn")
+            else if (maintTimeStr.ToLower() == "warn")
                 maintMsg = maintWarn;
 
             // If site is down, deliver maintenance page message instead of warning, and remove other Notification message

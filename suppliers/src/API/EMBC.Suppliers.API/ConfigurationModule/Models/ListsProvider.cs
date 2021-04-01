@@ -51,7 +51,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 
             return (await listsRepository.GetJurisdictionsAsync())
                 .Where(j => j._era_relatedprovincestate_value == stateProvince.era_provinceterritoriesid &&
-                    (types == null || !types.Any() || types.Any(t => ((int)t).ToString().Equals(j.era_type, StringComparison.Ordinal))))
+                    (types == null || !types.Any() || types.Any(t => ((int)t).ToString().Equals(j.era_type))))
                 .Select(j => new Jurisdiction
                 {
                     Code = j.era_jurisdictionid,
