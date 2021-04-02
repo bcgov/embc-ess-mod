@@ -1,15 +1,15 @@
 ﻿{
   "ProviderId": "Microsoft.OData.ConnectedService",
-  "Version": "0.11.1.0",
+  "Version": "0.12.1.0",
   "GettingStartedDocument": {
     "Uri": "http://odata.github.io/odata.net/"
   },
   "ExtendedData": {
-    "ExcludedOperationImports": [],
-    "ExcludedBoundOperations": [],
     "EnableNamingAlias": false,
     "IgnoreUnexpectedElementsAndAttributes": false,
     "IncludeT4File": false,
+    "ExcludedOperationImports": [],
+    "ExcludedBoundOperations": [],
     "ServiceName": "Dynamics",
     "Endpoint": "https://embc-ess.dev.jag.gov.bc.ca/api/data/v9.0/$metadata",
     "EdmxVersion": {

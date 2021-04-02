@@ -15,25 +15,24 @@ namespace EMBC.ResourceAccess.Dynamics
         public DynamicsClientContext(Uri uri, Uri url, Func<Task<string>> tokenFactory, ILogger logger) : base(uri)
         {
             this.logger = logger;
-
-            BuildingRequest += delegate (object sender, BuildingRequestEventArgs args)
+            this.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
+            BuildingRequest += (sender, args) =>
             {
                 args.Headers.Add("Authorization", $"Bearer {tokenFactory().GetAwaiter().GetResult()}");
                 if (args.RequestUri.IsAbsoluteUri)
                 {
-                    args.RequestUri = new Uri(url, url.AbsolutePath + args.RequestUri.AbsolutePath + args.RequestUri.Query);
+                    args.RequestUri = new Uri(url, (url.AbsolutePath == "/" ? string.Empty : url.AbsolutePath) + args.RequestUri.AbsolutePath + args.RequestUri.Query);
                 }
                 else
                 {
-                    args.RequestUri = new Uri(url, url.AbsolutePath + uri.AbsolutePath + args.RequestUri.ToString());
+                    args.RequestUri = new Uri(url, (url.AbsolutePath == "/" ? string.Empty : url.AbsolutePath) + uri.AbsolutePath + args.RequestUri.ToString());
                 }
-                logger.LogDebug("{0} BuildingRequest {1}", nameof(DynamicsClientContext), args.RequestUri);
             };
-            SendingRequest2 += delegate (object sender, SendingRequest2EventArgs args)
+            SendingRequest2 += (sender, args) =>
             {
                 logger.LogDebug("{0} SendingRequest2 {1} {2} ", nameof(DynamicsClientContext), args.RequestMessage.Method, args.RequestMessage.Url);
             };
-            ReceivingResponse += delegate (object sender, ReceivingResponseEventArgs args)
+            ReceivingResponse += (sender, args) =>
             {
                 logger.LogDebug("{0} ReceivingResponse {1} response", nameof(DynamicsClientContext), args.ResponseMessage?.StatusCode);
             };
@@ -42,11 +41,6 @@ namespace EMBC.ResourceAccess.Dynamics
                 // do not send reference properties and null values to Dynamics
                 arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
                 logger.LogDebug("{0} OnEntryStarting: {1}", nameof(DynamicsClientContext), JsonSerializer.Serialize(arg.Entity));
-            });
-
-            Configurations.RequestPipeline.OnEntityReferenceLink((arg) =>
-            {
-                logger.LogDebug("{0} OnEntityReferenceLink url {1}", nameof(DynamicsClientContext), arg.EntityReferenceLink.Url);
             });
         }
     }
