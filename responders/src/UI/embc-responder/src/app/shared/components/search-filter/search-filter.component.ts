@@ -14,7 +14,6 @@ export class SearchFilterComponent implements OnInit {
   @Input() filtersToLoad: TableFilterModel;
   searchTerm: string;
   @ViewChildren('matRef') matRef: QueryList<MatSelect>;
-  drop: any;
 
   constructor() { }
 
@@ -22,7 +21,13 @@ export class SearchFilterComponent implements OnInit {
   }
 
   selected(event: MatSelectChange, filterType: string): void {
-    this.filterEvent.emit({ type: filterType, value: event.value });
+    this.resetTextField();
+    const filterArray = [];
+    this.matRef.forEach((select: MatSelect) => {
+      filterArray.push(select.value === undefined ? '' : (select.value.description !== undefined ?
+        select.value.description : select.value));
+    });
+    this.filterEvent.emit({ type: 'array', value: filterArray.join(',') });
   }
 
   search(): void {

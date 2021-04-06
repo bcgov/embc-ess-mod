@@ -10,9 +10,9 @@
     </div> -->
 
     <div class="data-margin">
-        <app-data-table [incomingData]='teamMembers' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm"
-            [filterPredicate]="filterPredicate" [allowClickableRows]="true" (clickedRow)="openMemberDetails($event)"
+        <app-team-member-table [incomingData]='teamMembers' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm"
+             (clickedRow)="openMemberDetails($event)"
             (toggleActive)="activateTeamMember($event)" (toggleInactive)="deactivateTeamMember($event)">
-        </app-data-table>
+        </app-team-member-table>
     </div>
 </mat-card>
