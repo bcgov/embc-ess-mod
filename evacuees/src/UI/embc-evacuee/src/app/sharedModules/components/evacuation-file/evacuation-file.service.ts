@@ -22,25 +22,22 @@ export class EvacuationFileService {
     }
 
     updateEvacuationFile(): Observable<string> {
-        console.log({
-            essFileNumber: this.evacuationFileDataService.essFileNumber,
-            body: this.evacuationFileDataService.createEvacuationFileDTO()
-        });
+        // console.log({
+        //     essFileNumber: this.evacuationFileDataService.essFileNumber,
+        //     body: this.evacuationFileDataService.createEvacuationFileDTO()
+        // });
         return this.evacuationService.evacuationUpdateEvacuation({
             essFileNumber: this.evacuationFileDataService.essFileNumber,
             body: this.evacuationFileDataService.createEvacuationFileDTO()
-        })
-            .pipe(
-                mergeMap(essFileNumber => this.getCurrentEvacuationFiles()),
-                map(evacFiles => {
-                    console.log(evacFiles)
-                    let updatedEvacFile = evacFiles.filter(
-                        evacFile => evacFile.essFileNumber === this.evacuationFileDataService.essFileNumber)[0];
-                    console.log(updatedEvacFile)
-                    this.evacuationFileMapping.mapEvacuationFile(updatedEvacFile);
-                    return updatedEvacFile.essFileNumber;
-                })
-            )
+        }).pipe(
+            mergeMap(essFileNumber => this.getCurrentEvacuationFiles()),
+            map(evacFiles => {
+                const updatedEvacFile = evacFiles.filter(
+                    evacFile => evacFile.essFileNumber === this.evacuationFileDataService.essFileNumber)[0];
+                this.evacuationFileMapping.mapEvacuationFile(updatedEvacFile);
+                return updatedEvacFile.essFileNumber;
+            })
+        );
     }
 
 }
