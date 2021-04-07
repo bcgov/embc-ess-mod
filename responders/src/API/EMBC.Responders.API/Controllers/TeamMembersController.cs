@@ -25,7 +25,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Team;
 using EMBC.Responders.API.Utilities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -57,7 +56,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TeamMember>>> GetTeamMembers()
         {
-            var response = await client.Send(new TeamMembersQueryCommand { TeamId = teamId });
+            var response = await client.Send(new TeamMembersQueryCommand { TeamId = teamId, IncludeActiveUsersOnly = false });
             return Ok(mapper.Map<IEnumerable<TeamMember>>(response.TeamMembers));
         }
 
@@ -71,7 +70,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TeamMember>> GetTeamMember(string memberId)
         {
-            var reply = await client.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId });
+            var reply = await client.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = false });
             var teamMember = reply.TeamMembers.SingleOrDefault();
             if (teamMember == null) return NotFound(memberId);
 
