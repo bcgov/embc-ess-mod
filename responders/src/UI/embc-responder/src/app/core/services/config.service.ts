@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthConfig } from 'angular-oauth2-oidc';
-import { from, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Configuration } from '../api/models';
 
@@ -11,19 +10,22 @@ import { Configuration } from '../api/models';
 })
 export class ConfigService {
 
-  private config?: Configuration;
+  private config?: Configuration = null;
 
   constructor(private httpClient: HttpClient) { }
 
-  public get(): Observable<Configuration> {
+  public load(): Promise<Configuration> {
     if (this.config != null) {
-      return from([this.config]);
+      return Promise.resolve(this.config);
     }
-    return this.httpClient.get<Configuration>('/api/configuration').pipe(tap(c => this.config = { ...c }));
+    return this.httpClient
+      .get<Configuration>('/api/configuration')
+      .pipe(tap(c => this.config = { ...c }))
+      .toPromise();
   }
 
-  public getAuthConfig(): Observable<AuthConfig> {
-    return this.get().pipe(map(c => ({
+  public async getAuthConfig(): Promise<AuthConfig> {
+    return await this.load().then(c => ({
       issuer: c.oidc.issuer,
       clientId: c.oidc.clientId,
       redirectUri: window.location.origin + '/',
@@ -32,6 +34,10 @@ export class ConfigService {
       showDebugInformation: !environment.production,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       customQueryParams: { kc_idp_hint: 'bceid' },
-    })));
+    }));
+  }
+
+  public isConfigured(): boolean {
+    return this.config === null;
   }
 }

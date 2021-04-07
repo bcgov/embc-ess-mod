@@ -22,6 +22,7 @@ using AutoMapper;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.Dynamics.CRM;
 using Microsoft.OData.Client;
+using Microsoft.OData.Edm;
 
 namespace EMBC.Registrants.API.EvacuationsModule
 {
@@ -118,7 +119,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 {
                     era_needsassessmentevacueeid = Guid.NewGuid(),
                     era_isprimaryregistrant = true,
-                    era_evacueetype = (int?)EvacueeType.Person
+                    era_evacueetype = (int?)EvacueeType.Person,
+                    era_isunder19 = CheckIfUnder19Years(Date.Parse(profile.PersonalDetails.DateOfBirth), Date.Now)
                 };
                 dynamicsClient.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeRegistrant);
                 // link registrant (contact) and needs assessment to evacuee record
@@ -211,7 +213,6 @@ namespace EMBC.Registrants.API.EvacuationsModule
                     .Expand(ev => ev.era_RegistrantID)
                     .Where(ev => ev.era_NeedsAssessmentID.era_needassessmentid == Guid.Parse(na.Id) && ev.era_evacueetype == (int)EvacueeType.Person)
                     .ToArray()
-                    .Select(ev => ev.era_RegistrantID)
                     ;
 
                 na.HouseholdMembers = mapper.Map<IEnumerable<HouseholdMember>>(evacuees);
@@ -285,22 +286,6 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
             dynamicsClient.Detach(existingEvacuationFile);
 
-            //var existingNeedsAssessmentEvacuees = new List<era_needsassessmentevacuee>();
-
-            //foreach (era_needassessment na in existingNeedsAssessments)
-            //{
-            //    var needsAssessmentEvacuees = dynamicsClient.era_needsassessmentevacuees
-            //        .Expand(n => n.era_RegistrantID)
-            //        .Expand(n => n.era_NeedsAssessmentID)
-            //        .Where(n => n.era_NeedsAssessmentID.era_needassessmentid == na.era_needassessmentid).ToArray();
-
-            //    foreach (era_needsassessmentevacuee nae in needsAssessmentEvacuees)
-            //    {
-            //        // add needs assessment
-            //        existingNeedsAssessmentEvacuees.Add(nae);
-            //    }
-            //}
-
             // return contact as a profile
             var profile = mapper.Map<ProfilesModule.Profile>(primaryRegistrant);
 
@@ -308,15 +293,11 @@ namespace EMBC.Registrants.API.EvacuationsModule
             var updatedEvacuationFile = mapper.Map<era_evacuationfile>(evacuationFileIn);
 
             updatedEvacuationFile.era_evacuationfileid = existingEvacuationFile.era_evacuationfileid;
-            //updatedEvacuationFile.era_essfilenumber = existingEvacuationFile.era_essfilenumber; // Can't be edited
-            //updatedEvacuationFile.era_secrettext = existingEvacuationFile.era_secrettext; // Can't be edited
 
             // attach evacuation file to dynamics context
             dynamicsClient.AttachTo(nameof(dynamicsClient.era_evacuationfiles), updatedEvacuationFile);
             dynamicsClient.UpdateObject(updatedEvacuationFile);
 
-            // link primary registrant to evacuation file
-            //dynamicsClient.TryAddLink(primaryRegistrant, nameof(primaryRegistrant.era_evacuationfile_Registrant), updatedEvacuationFile);
             // add jurisdiction/city to evacuation
             if (!string.IsNullOrEmpty(evacuationFileIn.EvacuatedFromAddress.Jurisdiction.Code))
             {
@@ -341,15 +322,11 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 // attach needs assessment to dynamics context
                 dynamicsClient.AttachTo(nameof(dynamicsClient.era_needassessments), updatedNeedsAssessment);
                 dynamicsClient.UpdateObject(updatedNeedsAssessment);
-                // link evacuation file to needs assessment
-                //dynamicsClient.TryAddLink(updatedEvacuationFile, nameof(updatedEvacuationFile.era_needsassessment_EvacuationFile), updatedNeedsAssessment);
 
                 // Contacts (Household Members)
                 // Add New needs assessment evacuee members to dynamics context
-                //var currentEvacuees = existingNeedsAssessmentEvacuees
-                //            .Where(e => e.era_evacueetype == (int?)EvacueeType.Person
-                //                && e._era_needsassessmentid_value == updatedNeedsAssessment.era_needassessmentid).ToArray();
-                var currentEvacuees = existingNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID.ToArray();
+                var currentEvacuees = existingNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID
+                    .Where(e => e.era_evacueetype == (int?)EvacueeType.Person).ToArray();
                 var updatedEvacuees = new List<Guid>();
                 foreach (var member in needsAssessment.HouseholdMembers)
                 {
@@ -370,11 +347,13 @@ namespace EMBC.Registrants.API.EvacuationsModule
                             era_needsassessmentevacueeid = Guid.NewGuid(),
                             era_isprimaryregistrant = false,
                             era_evacueetype = (int?)EvacueeType.Person,
-                            //era_NeedsAssessmentID = updatedNeedsAssessment
+                            era_isunder19 = CheckIfUnder19Years((Date)contact.birthdate, Date.Now)
                         };
                         dynamicsClient.AddToera_needsassessmentevacuees(evacuee);
+
+                        // link members and needs assessment to evacuee record
+                        dynamicsClient.TryAddLink(contact, nameof(contact.era_NeedsAssessmentEvacuee_RegistrantID), evacuee);
                         dynamicsClient.TryAddLink(updatedNeedsAssessment, nameof(era_needassessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), evacuee);
-                        dynamicsClient.TryAddLink(evacuee, nameof(era_needsassessmentevacuee.era_NeedsAssessmentID), updatedNeedsAssessment);
 
                         // link registrant primary and mailing address city, province, country
                         dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.PrimaryAddress.Country.Code), nameof(era_country.era_contact_Country), contact);
@@ -388,43 +367,31 @@ namespace EMBC.Registrants.API.EvacuationsModule
                     else
                     {
                         // Existing member
+                        var existingContact = dynamicsClient.contacts
+                            .Where(c => c.contactid == contact.contactid).FirstOrDefault();
+
+                        var existingBirthdate = existingContact.birthdate;
+
+                        dynamicsClient.Detach(existingContact);
+
                         dynamicsClient.AttachTo(nameof(dynamicsClient.contacts), contact);
 
-                        //var existingEvacuee = existingNeedsAssessmentEvacuees
-                        //    .Where(e => e.era_NeedsAssessmentID.era_needassessmentid == updatedNeedsAssessment.era_needassessmentid
-                        //        && e.era_evacueetype == (int)EvacueeType.Person
-                        //        && e.era_RegistrantID.contactid == contact.contactid).FirstOrDefault();
                         var evacuee = currentEvacuees.FirstOrDefault(e => e._era_registrantid_value == contact.contactid);
                         if (evacuee == null) throw new Exception($"evacuee {contact.contactid} not found in needs assessment {existingNeedsAssessment.era_needassessmentid}");
 
-                        //evacuee.era_needsassessmentevacueeid = existingEvacuee.era_needsassessmentevacueeid;
-                        //evacuee.era_isprimaryregistrant = existingEvacuee.era_isprimaryregistrant;
-                        //evacuee.era_evacueetype = existingEvacuee.era_evacueetype;
-                        //evacuee.era_NeedsAssessmentID = updatedNeedsAssessment;
+                        if (contact.birthdate != existingBirthdate)
+                        {
+                            // When updating the birthdate, recheck if evacuee is under 19 years of age
+                            evacuee.era_isunder19 = CheckIfUnder19Years((Date)contact.birthdate, Date.Now);
+                        }
 
-                        //dynamicsClient.Detach(existingEvacuee);
-                        //dynamicsClient.AttachTo(nameof(dynamicsClient.era_needsassessmentevacuees), evacuee);
+                        dynamicsClient.UpdateObject(contact);
                         dynamicsClient.UpdateObject(evacuee);
                         updatedEvacuees.Add(evacuee.era_needsassessmentevacueeid.Value);
                     }
-
-                    // link members and needs assessment to evacuee record
-                    //dynamicsClient.TryAddLink(contact, nameof(contact.era_NeedsAssessmentEvacuee_RegistrantID), evacuee);
-                    //dynamicsClient.TryAddLink(updatedNeedsAssessment, nameof(updatedNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), evacuee);
-
-                    //updatedEvacuees.Add(evacuee.era_needsassessmentevacueeid);
                 }
 
-                //var membersToDelete = new List<era_needsassessmentevacuee>();
                 var evacueesToDelete = currentEvacuees.Where(e => !updatedEvacuees.Any(id => id == e.era_needsassessmentevacueeid));
-
-                //foreach (var evacuee in currentEvacuees)
-                //{
-                //    if (!updatedEvacuees.Contains(evacuee.era_needsassessmentevacueeid))
-                //    {
-                //        membersToDelete.Add(evacuee);
-                //    }
-                //}
 
                 foreach (var evacuee in evacueesToDelete)
                 {
@@ -436,17 +403,16 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
                 // Needs assessment evacuee as pet
                 // Currently no good way to identify the specific pet to update. Will revisit when Pet table has been added.
-
-                //dynamicsClient.UpdateObject(updatedNeedsAssessment);
+                var currentPets = existingNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID
+                    .Where(e => e.era_evacueetype == (int?)EvacueeType.Pet).ToArray();
+                foreach (var pet in currentPets)
+                {
+                    dynamicsClient.UpdateObject(pet);
+                }
             }
-            //dynamicsClient.Detach(existingNeedsAssessments);
-
-            //dynamicsClient.UpdateObject(updatedEvacuationFile);
 
             //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
             await dynamicsClient.SaveChangesAsync();
-
-            // dynamicsClient.Detach(updatedEvacuationFile);
 
             var queryResult = dynamicsClient.era_evacuationfiles
                 .Expand(f => f.era_needsassessment_EvacuationFile)
@@ -469,6 +435,11 @@ namespace EMBC.Registrants.API.EvacuationsModule
                                .Expand(c => c.era_MailingProvinceState)
                                .Expand(c => c.era_MailingCountry)
                                .Where(c => c.era_bcservicescardid == BCServicesCardId).FirstOrDefault();
+        }
+
+        public bool CheckIfUnder19Years(Date birthdate, Date currentDate)
+        {
+            return birthdate.AddYears(19) >= currentDate;
         }
     }
 

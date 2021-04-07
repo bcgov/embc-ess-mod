@@ -26,6 +26,7 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class ConfigurationController : ControllerBase
     {
         private readonly IConfiguration configuration;

@@ -56,16 +56,16 @@ namespace EMBC.Registrants.API.EvacuationsModule
             CreateMap<era_needassessment, NeedsAssessment>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_needassessmentid))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_needsassessmenttype))
-                .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => s.era_canevacueeprovideclothing))
-                .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => s.era_canevacueeprovidefood))
-                .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => s.era_canevacueeprovideincidentals))
-                .ForMember(d => d.CanEvacueeProvideLodging, opts => opts.MapFrom(s => s.era_canevacueeprovidelodging))
-                .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => s.era_canevacueeprovidetransportation))
+                .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovideclothing)))
+                .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidefood)))
+                .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovideincidentals)))
+                .ForMember(d => d.CanEvacueeProvideLodging, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidelodging)))
+                .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidetransportation)))
                 .ForMember(d => d.HaveMedication, opts => opts.MapFrom(s => s.era_medicationrequirement))
                 .ForMember(d => d.Insurance, opts => opts.MapFrom(s => (NeedsAssessment.InsuranceOption)s.era_insurancecoverage))
                 .ForMember(d => d.HaveSpecialDiet, opts => opts.MapFrom(s => s.era_dietaryrequirement))
                 .ForMember(d => d.SpecialDietDetails, opts => opts.MapFrom(s => s.era_dietaryrequirementdetails))
-                .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => s.era_haspetfood))
+                .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => Lookup(s.era_haspetfood)))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => new List<HouseholdMember>()))
                 .ForMember(d => d.Pets, opts => opts.MapFrom(s => new List<Pet>()))
 
@@ -107,6 +107,17 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.contactid));
 
+            CreateMap<HouseholdMember, era_needsassessmentevacuee>(MemberList.None)
+                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => s.isUnder19))
+                .ForPath(d => d.era_RegistrantID.contactid, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.era_RegistrantID, opts => opts.MapFrom(s => s.Details))
+
+                .ReverseMap()
+
+                .ForMember(d => d.isUnder19, opts => opts.MapFrom(s => s.era_isunder19))
+                .ForPath(d => d.Id, opts => opts.MapFrom(s => s.era_RegistrantID.contactid))
+                .ForMember(d => d.Details, opts => opts.MapFrom(s => s.era_RegistrantID));
+
             CreateMap<era_needsassessmentevacuee, Pet>()
                 .ForMember(d => d.Quantity, opts => opts.MapFrom(s => s.era_numberofpets))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_typeofpet))
@@ -118,6 +129,14 @@ namespace EMBC.Registrants.API.EvacuationsModule
         }
 
         private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
+
+        private bool? Lookup(int? value) => value switch
+        {
+            174360000 => true,
+            174360001 => false,
+            174360002 => null,
+            _ => null
+        };
     }
 
     public class LocationConverter :

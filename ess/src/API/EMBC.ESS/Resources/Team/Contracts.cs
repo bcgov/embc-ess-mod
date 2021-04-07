@@ -24,7 +24,7 @@ namespace EMBC.ESS.Resources.Team
     {
         Task<IEnumerable<Team>> GetTeams(string id = null);
 
-        Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null);
+        Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, bool onlyActive = true);
 
         Task<string> SaveMember(TeamMember teamMember);
 
