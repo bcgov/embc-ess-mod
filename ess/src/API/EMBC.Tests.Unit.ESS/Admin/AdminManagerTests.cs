@@ -87,17 +87,24 @@ namespace EMBC.Tests.Unit.ESS.Admin
                 });
 
             //get team members for a team
-            A.CallTo(() => teamRepository.GetMembers(A<string>.That.IsNotNull(), A<string>.That.IsNullOrEmpty()))
+            A.CallTo(() => teamRepository.GetMembers(A<string>.That.IsNotNull(), A<string>.That.IsNullOrEmpty(), A<string>.That.IsNullOrEmpty(), true))
                 .ReturnsLazily(o =>
                 {
                     return Task.FromResult(stagedTeamMembers.Values.Where(m => m.TeamId == o.GetArgument<string>(0)));
                 });
 
             //get team members by user name
-            A.CallTo(() => teamRepository.GetMembers(A<string>.That.IsNullOrEmpty(), A<string>.That.IsNotNull()))
+            A.CallTo(() => teamRepository.GetMembers(A<string>.That.IsNullOrEmpty(), A<string>.That.IsNotNull(), A<string>.That.IsNullOrEmpty(), true))
                 .ReturnsLazily(o =>
                 {
                     return Task.FromResult(stagedTeamMembers.Values.Where(m => m.UserName == o.GetArgument<string>(1)));
+                });
+
+            //get team members by user id
+            A.CallTo(() => teamRepository.GetMembers(A<string>.That.IsNullOrEmpty(), A<string>.That.IsNullOrEmpty(), A<string>.That.IsNotNull(), true))
+                .ReturnsLazily(o =>
+                {
+                    return Task.FromResult(stagedTeamMembers.Values.Where(m => m.ExternalUserId == o.GetArgument<string>(2)));
                 });
 
             //add team member

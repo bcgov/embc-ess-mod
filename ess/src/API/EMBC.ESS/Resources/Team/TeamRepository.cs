@@ -37,14 +37,16 @@ namespace EMBC.ESS.Resources.Team
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null)
+        public async Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, bool onlyActive = true)
         {
-            var teamUsers = GetEssTeamUsers();
+            var query = EssTeamUsers;
 
-            if (!string.IsNullOrEmpty(teamId)) teamUsers = teamUsers.Where(u => u._era_essteamid_value == Guid.Parse(teamId));
-            if (!string.IsNullOrEmpty(userName)) teamUsers = teamUsers.Where(u => u.era_externalsystemusername.Equals(userName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(teamId)) query = query.Where(u => u._era_essteamid_value == Guid.Parse(teamId));
+            if (!string.IsNullOrEmpty(userName)) query = query.Where(u => u.era_externalsystemusername.Equals(userName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(userId)) query = query.Where(u => u.era_essteamuserid == Guid.Parse(userId));
+            if (onlyActive) query = query.Where(u => u.statuscode == (int)EntityStatus.Active);
 
-            var users = teamUsers.ToArray();
+            var users = query.ToArray();
             context.DetachAll();
 
             return await Task.FromResult(mapper.Map<IEnumerable<TeamMember>>(users));
@@ -85,12 +87,12 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<string> SaveMember(TeamMember teamMember)
         {
-            var essTeam = GetEssTeam(teamMember.TeamId);
+            var essTeam = EssTeam(teamMember.TeamId);
             if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new Exception($"team {teamMember.TeamId} not found");
 
             var essTeamUser = teamMember.Id == null
                 ? CreateTeamUser()
-                : GetEssTeamUsers()
+                : EssTeamUsers
                 .Where(u => u._era_essteamid_value == Guid.Parse(teamMember.TeamId) && u.era_essteamuserid == Guid.Parse(teamMember.Id))
                 .SingleOrDefault();
             if (essTeamUser == null) throw new Exception($"team member {teamMember.Id} not found in team {teamMember.TeamId}");
@@ -127,7 +129,7 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<string> SaveTeam(Team team)
         {
-            var essTeam = GetEssTeam(team.Id);
+            var essTeam = EssTeam(team.Id);
             if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new Exception($"team {team.Id} not found");
 
             var currentAssignments = context.era_essteamareas
@@ -170,12 +172,13 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<bool> DeleteMember(string teamId, string teamMemberId)
         {
-            var essTeamUser = GetEssTeamUsers()
+            var query = EssTeamUsers
                 .Where(u => u._era_essteamid_value == Guid.Parse(teamId) && u.era_essteamuserid == Guid.Parse(teamMemberId))
                 .SingleOrDefault();
-            if (essTeamUser == null) return false;
 
-            context.SoftDeleteObject(essTeamUser);
+            if (query == null) return false;
+
+            context.SoftDeleteObject(query);
 
             await context.SaveChangesAsync();
             context.DetachAll();
@@ -189,12 +192,12 @@ namespace EMBC.ESS.Resources.Team
             return newUser;
         }
 
-        private IQueryable<era_essteamuser> GetEssTeamUsers() =>
+        private IQueryable<era_essteamuser> EssTeamUsers =>
             context.era_essteamusers
                 .Expand(u => u.era_ESSTeamId)
                 .Where(u => u.statuscode != (int)EntityStatus.SoftDelete);
 
-        private era_essteam GetEssTeam(string teamId) =>
+        private era_essteam EssTeam(string teamId) =>
             context.era_essteams
                 .GetSingleEntityByKey(new Dictionary<string, object> { { "era_essteamid", Guid.Parse(teamId) } })
                 .GetValue();
