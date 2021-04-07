@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { MemberRole } from '../api/models';
 import { UserProfile } from '../api/models/user-profile';
 import { ProfileService } from '../api/services';

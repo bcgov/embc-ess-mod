@@ -1,39 +1,28 @@
-import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { OAuthResourceServerErrorHandler, OAuthService } from 'angular-oauth2-oidc';
-import { Observable, throwError } from 'rxjs';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { ConfigService } from './config.service';
-import { UserService } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
 
   constructor(
     private oauthService: OAuthService,
-    private configService: ConfigService,
-    private userService: UserService,
-    private router: Router) { }
+    private configService: ConfigService
+  ) { }
 
-  public async login(): Promise<void> {
+  public async login(): Promise<string> {
     await this.configureOAuthService();
     const returnRoute = location.pathname.substring(1);
     const isLoggedIn = await this.oauthService.loadDiscoveryDocumentAndLogin({ state: returnRoute });
     if (isLoggedIn) {
-      const userProfile = await this.userService.loadUserProfile();
-      const nextRoute = decodeURIComponent(userProfile.requiredToSignAgreement
-        ? 'electronic-agreement' :
-        (this.oauthService.state || returnRoute || 'responder-access'));
-      await this.router.navigate([nextRoute]);
-      return Promise.resolve();
+      return Promise.resolve(this.oauthService.state || returnRoute);
     } else {
       return Promise.reject('Not logged in');
     }
   }
 
   public logout(targetUrl?: string): void {
-    this.oauthService.revokeTokenAndLogout();
-    if (targetUrl != null) { window.location.replace(targetUrl); }
+    this.oauthService.logOut();
   }
 
   public getToken(): string {

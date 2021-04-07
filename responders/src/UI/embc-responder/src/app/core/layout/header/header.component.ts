@@ -10,7 +10,7 @@ import { LoggedInUserProfile, UserService } from '../../services/user.service';
 })
 export class HeaderComponent implements OnInit {
 
-  public profile: LoggedInUserProfile;
+  public get profile(): LoggedInUserProfile { return this.userService.currentProfile; }
   public get signedInTask(): string {
     return this.profile.taskNumber
       ? `Logged in to task #${this.profile.taskNumber}`
@@ -27,7 +27,6 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
-    this.profile = this.userService.currentProfile;
   }
 
   public homeButton(): void {

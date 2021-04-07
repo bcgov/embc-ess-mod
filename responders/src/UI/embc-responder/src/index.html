@@ -1,15 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html class="h-100" lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <title>Embc Responder</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <meta charset="utf-8" />
+  <title>EMBC ERA Team Portal</title>
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 </head>
+
 <body class="h-100 mat-typography background">
-  <app-root class="d-flex flex-column h-100"></app-root>
+  <div class="d-flex flex-column h-100">
+    <app-root id="online"></app-root>
+    <div id="offline" style="display: none">
+      <h1>The system is offline, please try again later</h1>
+    </div>
+  </div>
 </body>
+
 </html>

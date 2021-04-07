@@ -44,10 +44,9 @@ namespace EMBC.Responders.API.Services
 
         public async Task<ClaimsPrincipal> CreatePrincipalForUser(ClaimsPrincipal tokenPrincipal)
         {
+            var userName = tokenPrincipal.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
             try
             {
-                var userName = tokenPrincipal.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
-
                 var teamMember = await cache.GetOrAdd($"_{nameof(UserService.CreatePrincipalForUser)}_{userName}", async () => await GetTeamMember(userName), DateTimeOffset.Now.AddMinutes(10));
                 if (teamMember == null) return tokenPrincipal;
 
@@ -58,12 +57,12 @@ namespace EMBC.Responders.API.Services
                 };
                 var principal = new ClaimsPrincipal(new ClaimsIdentity(tokenPrincipal.Identity, tokenPrincipal.Claims.Concat(essClaims)));
 
-                return await Task.FromResult(principal);
+                return principal;
             }
             catch (Exception e)
             {
-                logger.LogError(e, $"Failed to transform JWT principal to ESS user principal");
-                return tokenPrincipal;
+                logger.LogError(e, $"Failed to transform JWT principal for user {userName} to ESS user principal");
+                throw;
             }
         }
 
