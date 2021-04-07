@@ -1,9 +1,12 @@
-<app-header></app-header>
-<main class="fill-body">
+<div *ngIf="!isLoading">
+  <app-header></app-header>
+  <main class="fill-body">
     <div>
-        <router-outlet></router-outlet>
+      <router-outlet></router-outlet>
     </div>
-</main>
-<div class="footer mt-auto">
+  </main>
+  <div class="footer mt-auto">
     <app-footer></app-footer>
+  </div>
 </div>
+<app-loader class="spinner" [showLoader]="isLoading" [strokeWidth]="10" [diameter]="50" [color]="color"></app-loader>

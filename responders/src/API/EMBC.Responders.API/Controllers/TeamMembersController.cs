@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -39,7 +40,7 @@ namespace EMBC.Responders.API.Controllers
     {
         private readonly IMessagingClient client;
         private readonly IMapper mapper;
-        private string teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
+        private string teamId => User.FindFirstValue("user_team");
 
         public TeamMembersController(IMessagingClient client, IMapper mapper)
         {
@@ -55,7 +56,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TeamMember>>> GetTeamMembers()
         {
-            var response = await client.Send(new TeamMembersQueryCommand { TeamId = teamId });
+            var response = await client.Send(new TeamMembersQueryCommand { TeamId = teamId, IncludeActiveUsersOnly = false });
             return Ok(mapper.Map<IEnumerable<TeamMember>>(response.TeamMembers));
         }
 
@@ -69,7 +70,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TeamMember>> GetTeamMember(string memberId)
         {
-            var reply = await client.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId });
+            var reply = await client.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = false });
             var teamMember = reply.TeamMembers.SingleOrDefault();
             if (teamMember == null) return NotFound(memberId);
 

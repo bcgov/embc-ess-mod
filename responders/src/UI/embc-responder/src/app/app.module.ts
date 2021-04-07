@@ -1,15 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { OAuthModule, OAuthResourceServerErrorHandler } from 'angular-oauth2-oidc';
-import { AuthService, OAuthNoopResourceServerErrorHandler } from './core/services/auth.service';
+import { OAuthModule } from 'angular-oauth2-oidc';
 import { ApiModule } from './core/api/api.module';
 import { ConfigService } from './core/services/config.service';
+import { ErrorHandlingModule } from './shared/error-handling/error-handing.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -23,24 +23,31 @@ import { ConfigService } from './core/services/config.service';
     HttpClientModule,
     OAuthModule.forRoot({
       resourceServer: {
-        allowedUrls: ['/api'],
+        customUrlValidation: url => url.startsWith('/api') && !url.endsWith('/configuration'),
         sendAccessToken: true
       }
     }),
-    ApiModule.forRoot({ rootUrl: '' })
+    ApiModule.forRoot({ rootUrl: '' }),
+    ErrorHandlingModule.forRoot(),
+    SharedModule
   ],
   providers: [
-    AuthService,
     ConfigService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (authService: AuthService) => () => authService.ensureLoggedIn(),
-      deps: [AuthService],
+      useFactory: (configService: ConfigService) =>
+        () => configService.load()
+          .then(() => {
+            document.getElementById('online').style.display = 'block';
+            document.getElementById('offline').style.display = 'none';
+          })
+          .catch(r => {
+            document.getElementById('online').style.display = 'none';
+            document.getElementById('offline').style.display = 'block';
+            return Promise.reject(r);
+          }),
+      deps: [ConfigService],
       multi: true
-    },
-    {
-      provide: OAuthResourceServerErrorHandler,
-      useClass: OAuthNoopResourceServerErrorHandler
     }
   ],
   bootstrap: [AppComponent]

@@ -126,17 +126,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task CanDeleteTeamMember()
         {
             var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
-            var members = await teamRepository.GetMembers(teamId);
 
-            var now = DateTime.Now;
+            var memberId = await teamRepository.SaveMember(new TeamMember { FirstName = "to delete", LastName = "to delete", TeamId = teamId, IsActive = true });
 
-            var memberToDelete = members.Skip(3).First();
+            await teamRepository.DeleteMember(teamId, memberId);
 
-            await teamRepository.DeleteMember(teamId, memberToDelete.Id);
+            var newMembers = await teamRepository.GetMembers(teamId, onlyActive: false);
 
-            var newMembers = await teamRepository.GetMembers(teamId);
-
-            newMembers.SingleOrDefault(m => m.Id == memberToDelete.Id).ShouldBeNull();
+            newMembers.SingleOrDefault(m => m.Id == memberId).ShouldBeNull();
         }
     }
 }
