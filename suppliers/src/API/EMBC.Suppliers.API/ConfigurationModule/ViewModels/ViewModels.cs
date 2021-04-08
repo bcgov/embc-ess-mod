@@ -18,6 +18,13 @@ using System.Text.Json.Serialization;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.ViewModels
 {
+    public class Config
+    {
+        public string MaintMsg { get; set; }
+        public string MaintTime { get; set; }
+        public string MaintWarn { get; set; }
+    }
+
     public class Country
     {
         public string Code { get; set; }

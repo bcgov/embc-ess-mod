@@ -2,6 +2,9 @@
 
 <main class="fill-body background">
     <div class="container">
+        <app-banner *ngIf="maintMsg && !siteDown" [bannerMsg]="maintMsg" bannerType="Maintenance"></app-banner>
+        <app-banner *ngIf="noticeMsg && !siteDown" [bannerMsg]="noticeMsg" bannerType="Notice"></app-banner>
+        
         <router-outlet></router-outlet>
     </div>
 </main>
