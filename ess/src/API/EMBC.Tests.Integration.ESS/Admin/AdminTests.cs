@@ -88,7 +88,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             await adminManager.Handle(new DeactivateTeamMemberCommand { TeamId = teamId, MemberId = memberToUpdate.Id });
 
-            var updatedMember = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberToUpdate.Id })).TeamMembers.Single();
+            var updatedMember = (await adminManager.Handle(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberToUpdate.Id, IncludeActiveUsersOnly = false })).TeamMembers.Single();
             updatedMember.IsActive.ShouldBeFalse();
         }
 
@@ -179,7 +179,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
             var teams = (await adminManager.Handle(new TeamsQueryCommand())).Teams;
 
             teams.Count().ShouldNotBe(0);
-            teams.ShouldAllBe(t => t.AssignedCommunities.Any());
+            teams.Single(t => t.Id == teamId).AssignedCommunities.ShouldNotBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]

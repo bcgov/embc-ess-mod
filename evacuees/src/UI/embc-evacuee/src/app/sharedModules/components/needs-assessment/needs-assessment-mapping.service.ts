@@ -17,7 +17,7 @@ export class NeedsAssessmentMappingService {
 
     setNeedsAssessment(evacuatedFromAddress: Address, needsAssessment: NeedsAssessment): void {
 
-        console.log(needsAssessment);
+        // console.log(needsAssessment);
         this.setNeedsAssessmentId(needsAssessment.id);
         this.setInsurance(evacuatedFromAddress, needsAssessment.insurance);
         this.setFamilyMedicationDiet(
@@ -63,7 +63,7 @@ export class NeedsAssessmentMappingService {
                     haveMedication,
                     haveSpecialDiet,
                     specialDietDetails,
-                    householdMembers: this.householdMembersForm(householdMembers),
+                    householdMembers: this.convertHouseholdMembers(householdMembers),
                     householdMember:
                     {
                         dateOfBirth: '',
@@ -133,7 +133,6 @@ export class NeedsAssessmentMappingService {
 
     private isSameAddress(evacAddress: Address): string {
         const userPersonalAddress = this.profileDataService.primaryAddressDetails;
-        console.log(evacAddress === userPersonalAddress);
 
         if (evacAddress === userPersonalAddress) {
             return 'Yes';
@@ -142,22 +141,38 @@ export class NeedsAssessmentMappingService {
         }
     }
 
-    private householdMembersForm(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
+    private isSameUser(householdMember: PersonDetails): boolean {
+        const currentUser = this.profileDataService.personalDetails;
+        if (currentUser.firstName === householdMember.firstName && currentUser.lastName === householdMember.lastName &&
+            currentUser.dateOfBirth === householdMember.dateOfBirth && currentUser.gender === householdMember.gender &&
+            currentUser.initials === householdMember.initials && currentUser.preferredName === householdMember.preferredName) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public convertHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
         const householdMembersFormArray: Array<PersonDetails> = [];
 
         for (const member of householdMembers) {
-            const memberDetails: PersonDetails = {
-                firstName: member.details.firstName,
-                lastName: member.details.lastName,
-                initials: member.details.initials,
-                gender: member.details.gender,
-                dateOfBirth: member.details.dateOfBirth,
-                sameLastNameCheck: this.isSameLastName(member.details.lastName)
-            };
+            if (!this.isSameUser(member.details)) {
+                const memberDetails: PersonDetails = {
+                    firstName: member.details.firstName,
+                    lastName: member.details.lastName,
+                    initials: member.details.initials,
+                    gender: member.details.gender,
+                    dateOfBirth: member.details.dateOfBirth,
+                    sameLastNameCheck: this.isSameLastName(member.details.lastName)
+                };
 
-            householdMembersFormArray.push(memberDetails);
+                householdMembersFormArray.push(memberDetails);
+            } else {
+                this.needsAssessmentService.mainHouseHoldMember = member;
+            }
         }
         return householdMembersFormArray;
     }
+
 
 }

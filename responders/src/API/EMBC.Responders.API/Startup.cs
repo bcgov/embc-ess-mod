@@ -20,12 +20,14 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using EMBC.Responders.API.Services;
 using EMBC.Responders.API.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -95,8 +97,10 @@ namespace EMBC.Responders.API
                      },
                      OnTokenValidated = async c =>
                      {
-                         await Task.CompletedTask;
                          var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+
+                         var userService = c.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                         c.Principal = await userService.CreatePrincipalForUser(c.Principal);
                          logger.LogDebug("Token validated for {0}", c.Principal.Identity.Name);
                      }
                  };
@@ -105,7 +109,12 @@ namespace EMBC.Responders.API
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
-                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser());
+                {
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                        .RequireAuthenticatedUser()
+                        .RequireClaim("user_role")
+                        .RequireClaim("user_team");
+                });
                 options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme);
             });
             services.AddAutoMapper(typeof(Startup));
@@ -113,10 +122,14 @@ namespace EMBC.Responders.API
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
+                options.Filters.Add(new AuthorizeFilter());
             });
 
             services.Configure<MessagingOptions>(configuration.GetSection("backend"));
             services.AddMessaging();
+            services.AddTransient<IUserService, UserService>();
+            services.AddDistributedMemoryCache();
+            services.AddTransient<ICache, Cache>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

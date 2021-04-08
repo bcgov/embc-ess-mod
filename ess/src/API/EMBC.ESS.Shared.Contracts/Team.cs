@@ -23,6 +23,8 @@ namespace EMBC.ESS.Shared.Contracts.Team
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
+        public string UserName { get; set; }
+        public bool IncludeActiveUsersOnly { get; set; } = true;
     }
 
     public class TeamMembersQueryResponse : Response
