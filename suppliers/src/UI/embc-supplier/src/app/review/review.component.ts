@@ -19,12 +19,16 @@ export class ReviewComponent implements OnInit {
     isSubmitted = false;
     showLoader = false;
 
-    constructor(public supplierService: SupplierService, private router: Router, private httpService: SupplierHttpService,
-                private alertService: AlertService) { }
+    constructor(
+        public supplierService: SupplierService,
+        private router: Router,
+        private httpService: SupplierHttpService,
+        private alertService: AlertService
+    ) {}
 
     ngOnInit() {
         this.supplier = this.supplierService.getSupplierDetails();
-        this.supplierSubmissionType = this.supplier.supplierSubmissionType;
+        this.supplierSubmissionType = this.supplier?.supplierSubmissionType;
     }
 
     goback() {
