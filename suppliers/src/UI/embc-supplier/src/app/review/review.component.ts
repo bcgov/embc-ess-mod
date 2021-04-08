@@ -10,8 +10,8 @@ import { AlertService } from '../service/alert.service';
     templateUrl: './review.component.html',
     styleUrls: ['./review.component.scss']
 })
-export class ReviewComponent implements OnInit {
 
+export class ReviewComponent implements OnInit {
     supplierSubmissionType: string;
     supplier: any;
     captchaVerified = false;
@@ -35,6 +35,7 @@ export class ReviewComponent implements OnInit {
         this.isSubmitted = !this.isSubmitted;
         this.showLoader = !this.showLoader;
         this.alertService.clearAlert();
+
         if (!this.captchaFilled) {
             this.alertService.setAlert('danger', globalConst.captchaErr);
             this.isSubmitted = !this.isSubmitted;
@@ -44,15 +45,16 @@ export class ReviewComponent implements OnInit {
                 this.supplierService.setReferenceNumber(res);
                 this.router.navigate(['/thankyou']);
             },
-                (error: any) => {
-                    this.isSubmitted = !this.isSubmitted;
-                    this.showLoader = !this.showLoader;
-                    if (error.title && error.title !== '') {
-                        this.alertService.setAlert('danger', error.title);
-                    } else {
-                        this.alertService.setAlert('danger', globalConst.appSubmitErr);
-                    }
-                });
+            (error: any) => {
+                this.isSubmitted = !this.isSubmitted;
+                this.showLoader = !this.showLoader;
+
+                if (error.title && error.title !== '') {
+                    this.alertService.setAlert('danger', error.title);
+                } else {
+                    this.alertService.setAlert('danger', globalConst.appSubmitErr);
+                }
+            });
         }
     }
 
@@ -68,5 +70,4 @@ export class ReviewComponent implements OnInit {
         this.captchaVerified = true;
         this.captchaFilled = true;
     }
-
 }
