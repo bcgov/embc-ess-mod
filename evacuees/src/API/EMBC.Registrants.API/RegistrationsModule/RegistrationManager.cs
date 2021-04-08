@@ -167,7 +167,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
             {
                 era_needsassessmentevacueeid = Guid.NewGuid(),
                 era_isprimaryregistrant = true,
-                era_evacueetype = (int?)EvacueeType.Person
+                era_evacueetype = (int?)EvacueeType.Person,
+                era_isunder19 = CheckIfUnder19Years((Date)newPrimaryRegistrant.birthdate, Date.Now)
             };
             dynamicsClient.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeRegistrant);
             // link registrant and needs assessment to evacuee record
@@ -182,7 +183,8 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 {
                     era_needsassessmentevacueeid = Guid.NewGuid(),
                     era_isprimaryregistrant = false,
-                    era_evacueetype = (int?)EvacueeType.Person
+                    era_evacueetype = (int?)EvacueeType.Person,
+                    era_isunder19 = CheckIfUnder19Years((Date)member.birthdate, Date.Now)
                 };
                 dynamicsClient.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeMember);
                 // link members and needs assessment to evacuee record
@@ -391,6 +393,11 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             //return the new contact created
             return contact;
+        }
+
+        public bool CheckIfUnder19Years(Date birthdate, Date currentDate)
+        {
+            return birthdate.AddYears(19) >= currentDate;
         }
 
         private bool? LookupYesNoIdontknowValue(int? value) => value switch

@@ -29,7 +29,6 @@ export class PersonDetails {
     constructor(
         firstName?: string, lastName?: string, preferredName?: string, initials?: string,
         gender?: string, dateOfBirth?: string, sameLastNameCheck?: boolean) {
-
     }
 }
 
@@ -42,11 +41,10 @@ export class PersonDetailsForm {
     gender = new FormControl();
     dateOfBirth = new FormControl();
 
+
     constructor(personDetail: PersonDetails, customValidator: CustomValidationService) {
         if (personDetail.firstName) {
             this.firstName.setValue(personDetail.firstName);
-
-            console.log(personDetail.firstName);
         }
 
         this.firstName.setValidators([Validators.required]);
@@ -63,7 +61,6 @@ export class PersonDetailsForm {
 
         this.dateOfBirth.setValue(personDetail.dateOfBirth);
         this.dateOfBirth.setValidators([Validators.required, customValidator.dateOfBirthValidator().bind(customValidator)]);
-        // Validators.pattern(globalConst.datePattern),
     }
 }
 

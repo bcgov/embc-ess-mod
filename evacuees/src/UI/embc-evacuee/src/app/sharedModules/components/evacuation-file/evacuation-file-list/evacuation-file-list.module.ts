@@ -18,18 +18,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @NgModule({
   declarations: [
     EvacuationFileListComponent,
-    EvacuationCardComponent,
-    EvacuationDetailsComponent,
-    ReferralDetailsComponent],
+    EvacuationCardComponent],
   imports: [
     CommonModule,
     EvacuationFileListRoutingModule,
-    ReviewModule,
     MatCardModule,
-    MatTableModule,
     MatButtonModule,
     MatTabsModule,
-    MatExpansionModule,
     MatProgressSpinnerModule
   ]
 })

@@ -1,21 +1,43 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NeedsAssessment } from 'src/app/core/api/models';
+import { filter, map, mergeMap } from 'rxjs/operators';
+import { EvacuationFile } from 'src/app/core/api/models';
 import { EvacuationService } from 'src/app/core/api/services';
+import { EvacuationFileDataService } from './evacuation-file-data.service';
+import { EvacuationFileMappingService } from './evacuation-file-mapping.service';
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileService {
 
-    private evacuationFile: NeedsAssessment;
-
     constructor(
-        private evacuationService: EvacuationService) { }
+        private evacuationService: EvacuationService, private evacuationFileDataService: EvacuationFileDataService,
+        private evacuationFileMapping: EvacuationFileMappingService) { }
 
-    getCurrentEvacuationFile(): Observable<Array<NeedsAssessment>> {
+    getCurrentEvacuationFiles(): Observable<Array<EvacuationFile>> {
         return this.evacuationService.evacuationGetCurrentEvacuations();
     }
 
-    getPastEvacuationFile(): Observable<Array<NeedsAssessment>> {
+    getPastEvacuationFiles(): Observable<Array<EvacuationFile>> {
         return this.evacuationService.evacuationGetPastEvacuations();
     }
+
+    updateEvacuationFile(): Observable<string> {
+        // console.log({
+        //     essFileNumber: this.evacuationFileDataService.essFileNumber,
+        //     body: this.evacuationFileDataService.createEvacuationFileDTO()
+        // });
+        return this.evacuationService.evacuationUpdateEvacuation({
+            essFileNumber: this.evacuationFileDataService.essFileNumber,
+            body: this.evacuationFileDataService.createEvacuationFileDTO()
+        }).pipe(
+            mergeMap(essFileNumber => this.getCurrentEvacuationFiles()),
+            map(evacFiles => {
+                const updatedEvacFile = evacFiles.filter(
+                    evacFile => evacFile.essFileNumber === this.evacuationFileDataService.essFileNumber)[0];
+                this.evacuationFileMapping.mapEvacuationFile(updatedEvacFile);
+                return updatedEvacFile.essFileNumber;
+            })
+        );
+    }
+
 }

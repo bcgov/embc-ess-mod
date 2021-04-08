@@ -50,9 +50,11 @@ export class ProfileMappingService {
 
     private setPersonalDetails(profile: Profile): void {
         let formGroup: FormGroup;
-        this.formCreationService.getPeronalDetailsForm().pipe(
+        this.formCreationService.getPersonalDetailsForm().pipe(
             first()).subscribe(details => {
-                details.setValue({ ...profile.personalDetails });
+                details.setValue({
+                    ...profile.personalDetails
+                });
                 formGroup = details;
             });
         this.profileDataService.personalDetails = profile.personalDetails;
@@ -116,7 +118,7 @@ export class ProfileMappingService {
     }
 
     populateFromBCSC(profile: Profile): void {
-        this.formCreationService.getPeronalDetailsForm().pipe(
+        this.formCreationService.getPersonalDetailsForm().pipe(
             first()).subscribe(details => {
                 details.setValue({
                     firstName: profile.personalDetails.firstName,
@@ -139,47 +141,4 @@ export class ProfileMappingService {
                 });
             });
     }
-
-    // getProfile(): Profile {
-    //     const profile: Profile = {
-    //         contactDetails: null,
-    //         id: this.profileDataService.getProfileId(),
-    //         isMailingAddressSameAsPrimaryAddress: false,
-    //         mailingAddress: null,
-    //         personalDetails: null,
-    //         primaryAddress: null,
-    //         restrictedAccess: null,
-    //         secretPhrase: null
-    //     };
-    //
-    //     this.formCreationService.getPeronalDetailsForm().pipe(
-    //         first()).subscribe(details => {
-    //             console.log(details);
-    //             profile.personalDetails = details.value;
-    //         });
-    //
-    //     this.formCreationService.getContactDetailsForm().pipe(
-    //         first()).subscribe(contacts => {
-    //             profile.contactDetails = contacts.value;
-    //         });
-    //     this.formCreationService.getAddressForm().pipe(
-    //         first()).subscribe(address => {
-    //             console.log(address);
-    //             profile.primaryAddress = address.value.address;
-    //             profile.mailingAddress = address.value.mailingAddress;
-    //             profile.isMailingAddressSameAsPrimaryAddress = address.value.isNewMailingAddress;
-    //         });
-    //
-    //     this.formCreationService.getSecretForm().pipe(
-    //         first()).subscribe(secret => {
-    //             profile.secretPhrase = secret.value.secretPhrase;
-    //         });
-    //
-    //     this.formCreationService.getRestrictionForm().pipe(
-    //         first()).subscribe(restriction => {
-    //             profile.restrictedAccess = restriction.value.restrictedAccess;
-    //         });
-    //
-    //     return profile;
-    // }
 }

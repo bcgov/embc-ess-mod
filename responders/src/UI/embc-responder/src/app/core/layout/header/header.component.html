@@ -25,28 +25,28 @@
         </div>
       </div>
 
-      <!-- <div> -->
-      <button mat-button [matMenuTriggerFor]="menu">
-        <div class="row align-content">
-          <div>
-            <img
-              class="img-align"
-              src="/assets/images/user.svg"
-              height="34"
-              width="34"
-            />
-            <span style="color: white"
-              ><b>{{ this.userName }}</b> ({{ this.teamName }})</span
-            >
+      <ng-container *ngIf="showUserProfile()">
+        <button mat-button [matMenuTriggerFor]="menu">
+          <div class="row align-content">
+            <div>
+              <img
+                class="img-align"
+                src="/assets/images/user.svg"
+                height="34"
+                width="34"
+              />
+              <span style="color: white"
+                ><b>{{ this.userName }}</b> ({{ this.teamName }})</span
+              >
+            </div>
+            <span class="text">{{ this.signedInTask }}</span>
           </div>
-          <span class="text">{{ this.signedInTask }}</span>
-        </div>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="openUserProfile()">My Profile</button>
-        <button mat-menu-item (click)="signOut()">Sign out</button>
-      </mat-menu>
-      <!-- </div> -->
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="openUserProfile()">My Profile</button>
+          <button mat-menu-item (click)="signOut()">Sign out</button>
+        </mat-menu>
+      </ng-container>
     </div>
   </nav>
 </header>

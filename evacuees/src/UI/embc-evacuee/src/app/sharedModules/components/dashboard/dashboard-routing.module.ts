@@ -25,6 +25,16 @@ const routes: Routes = [
         path: 'profile',
         loadChildren: () => import('src/app/sharedModules/components/evacuation-file/profile/profile.module')
           .then(m => m.ProfileModule)
+      },
+      {
+        path: 'current/:essFile',
+        loadChildren: () => import('src/app/sharedModules/components/evacuation-file/evacuation-details/evacuation-details.module')
+          .then(m => m.EvacuationDetailsModule)
+      },
+      {
+        path: 'past/:essFile',
+        loadChildren: () => import('src/app/sharedModules/components/evacuation-file/evacuation-details/evacuation-details.module')
+          .then(m => m.EvacuationDetailsModule)
       }
     ]
   }

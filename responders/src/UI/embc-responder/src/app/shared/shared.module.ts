@@ -10,7 +10,9 @@ import { FormsModule } from '@angular/forms';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
-import { DeleteConfirmationDialogComponent } from './components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import {
+  DeleteConfirmationDialogComponent
+} from './components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { InformationDialogComponent } from './components/dialog-components/information-dialog/information-dialog.component';
 
 @NgModule({
@@ -24,7 +26,6 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     AppLoaderComponent,
     DeleteConfirmationDialogComponent,
     InformationDialogComponent
-   // EnumToArrayPipe
   ],
   imports: [
     CommonModule,
@@ -41,8 +42,7 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     AlertComponent,
     AppLoaderComponent,
     DeleteConfirmationDialogComponent,
-    InformationDialogComponent
-   // EnumToArrayPipe
+    InformationDialogComponent,
   ]
 })
 export class SharedModule { }

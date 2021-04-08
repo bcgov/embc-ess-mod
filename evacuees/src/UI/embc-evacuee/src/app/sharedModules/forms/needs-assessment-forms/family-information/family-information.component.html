@@ -1,4 +1,4 @@
-<form [formGroup]="familyMemberForm">
+<form [formGroup]="householdMemberForm">
   <mat-card class="card-align">
     <mat-card-content>
       <div class="row">
@@ -77,7 +77,8 @@
           <button *ngIf="!showFamilyForm" class="family-button" mat-button type="button" (click)="addMembers()">+ Add
             Family Member</button>
           <div *ngIf="showFamilyForm">
-            <app-person-detail-form [personalDetailsForm]="familyFormControl?.member"></app-person-detail-form>
+            <app-person-detail-form [personalDetailsForm]="householdFormControl?.householdMember">
+            </app-person-detail-form>
             <div class="row">
               <div class="col-md-3">
                 <button class="button-s details-button" mat-button type="button" (click)="cancel()">Cancel</button>
@@ -108,19 +109,19 @@
               {{option.name}}
             </mat-radio-button>
             <mat-error class="custom-mat-error"
-              *ngIf="familyFormControl?.haveSpecialDiet.touched && familyFormControl?.haveSpecialDiet.invalid && familyFormControl?.haveSpecialDiet.hasError('required')">
+              *ngIf="householdFormControl?.haveSpecialDiet.touched && householdFormControl?.haveSpecialDiet.invalid && householdFormControl?.haveSpecialDiet.hasError('required')">
               Dietary Requirement is required</mat-error>
           </mat-radio-group>
         </div>
       </div>
-      <div *ngIf="familyFormControl?.haveSpecialDiet.value === true">
+      <div *ngIf="householdFormControl?.haveSpecialDiet.value === true">
         <label class="card-heading" id="primary-radio-group-label">Please specify</label>
         <br>
         <mat-form-field appearance="outline" style="width:70%">
           <input matInput [formControlName]="'specialDietDetails'" placeholder="Specify dietary requirements"
             maxlength="200">
           <mat-error
-            *ngIf="familyFormControl?.specialDietDetails.touched && familyFormControl?.specialDietDetails.invalid && familyFormControl?.specialDietDetails.hasError('required')">
+            *ngIf="householdFormControl?.specialDietDetails.touched && householdFormControl?.specialDietDetails.invalid && householdFormControl?.specialDietDetails.hasError('required')">
             Dietary requirements specifications are required</mat-error>
         </mat-form-field>
       </div>
@@ -141,7 +142,7 @@
               {{option.name}}
             </mat-radio-button>
             <mat-error class="custom-mat-error"
-              *ngIf="familyFormControl?.haveMedication.touched && familyFormControl?.haveMedication.invalid && familyFormControl?.haveMedication.hasError('required')">
+              *ngIf="householdFormControl?.haveMedication.touched && householdFormControl?.haveMedication.invalid && householdFormControl?.haveMedication.hasError('required')">
               Medication is required</mat-error>
           </mat-radio-group>
         </div>

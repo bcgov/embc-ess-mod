@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Http;
@@ -32,7 +33,7 @@ namespace EMBC.Responders.API.Controllers
     [Route("api/team/communities")]
     public class TeamCommunitiesAssignmentsController : ControllerBase
     {
-        private string teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
+        private string teamId => User.FindFirstValue("user_team");
         private readonly IMessagingClient messagingClient;
 
         public TeamCommunitiesAssignmentsController(IMessagingClient messagingClient)

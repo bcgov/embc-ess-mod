@@ -15,13 +15,15 @@
 // -------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
+using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.Shared;
 using Microsoft.Dynamics.CRM;
 
 namespace EMBC.Registrants.API.EvacuationsModule
 {
-    public class EvacuationAutoMapperProfile : AutoMapper.Profile
+    public class EvacuationAutoMapperProfile : Profile
     {
         public EvacuationAutoMapperProfile()
         {
@@ -29,40 +31,41 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForMember(d => d.EssFileNumber, opts => opts.MapFrom(s => s.era_essfilenumber))
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.era_evacuationfiledate))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => s.era_needsassessment_EvacuationFile))
-                .ForPath(d => d.EvacuatedFromAddress.AddressLine1, opts => opts.MapFrom(s => s.era_addressline1))
-                .ForPath(d => d.EvacuatedFromAddress.AddressLine2, opts => opts.MapFrom(s => s.era_addressline2))
-                .ForPath(d => d.EvacuatedFromAddress.PostalCode, opts => opts.MapFrom(s => s.era_postalcode))
-                .ForPath(d => d.EvacuatedFromAddress.Country.Name, opts => opts.MapFrom(s => s.era_country))
-                .ForPath(d => d.EvacuatedFromAddress.StateProvince.Name, opts => opts.MapFrom(s => s.era_province))
-                .ForPath(d => d.EvacuatedFromAddress.Jurisdiction, opts => opts.MapFrom(s => s.era_Jurisdiction))
-                .ForPath(d => d.EvacuatedFromAddress.Jurisdiction.StateProvinceCode, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_code))
-                .ForPath(d => d.EvacuatedFromAddress.Jurisdiction.CountryCode, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_RelatedCountry.era_countrycode))
-
+                .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s))
                 .ReverseMap()
-
                 .ForMember(d => d.era_essfilenumber, opts => opts.MapFrom(s => s.EssFileNumber))
                 .ForMember(d => d.era_evacuationfiledate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.era_needsassessment_EvacuationFile, opts => opts.MapFrom(s => s.NeedsAssessments))
                 .ForPath(d => d.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine1))
                 .ForPath(d => d.era_addressline2, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine2))
                 .ForPath(d => d.era_postalcode, opts => opts.MapFrom(s => s.EvacuatedFromAddress.PostalCode))
+                .ForPath(d => d.era_city, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction.Name))
                 .ForPath(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Country.Name))
                 .ForPath(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvince.Name))
-                .ForPath(d => d.era_Jurisdiction, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction));
+                ;
+
+            CreateMap<era_evacuationfile, Address>(MemberList.None)
+                .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.era_addressline1))
+                .ForMember(d => d.AddressLine2, opts => opts.MapFrom(s => s.era_addressline2))
+                .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.era_postalcode))
+                .ForMember(d => d.Jurisdiction, opts => opts.ConvertUsing<LocationConverter, era_jurisdiction>(s => s.era_Jurisdiction))
+                .ForMember(d => d.StateProvince, opts => opts.ConvertUsing<LocationConverter, era_jurisdiction>(s => s.era_Jurisdiction))
+                .ForMember(d => d.Country, opts => opts.ConvertUsing<LocationConverter, era_jurisdiction>(s => s.era_Jurisdiction))
+                .ReverseMap();
 
             CreateMap<era_needassessment, NeedsAssessment>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_needassessmentid))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_needsassessmenttype))
-                .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => s.era_canevacueeprovideclothing))
-                .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => s.era_canevacueeprovidefood))
-                .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => s.era_canevacueeprovideincidentals))
-                .ForMember(d => d.CanEvacueeProvideLodging, opts => opts.MapFrom(s => s.era_canevacueeprovidelodging))
-                .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => s.era_canevacueeprovidetransportation))
+                .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovideclothing)))
+                .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidefood)))
+                .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovideincidentals)))
+                .ForMember(d => d.CanEvacueeProvideLodging, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidelodging)))
+                .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidetransportation)))
                 .ForMember(d => d.HaveMedication, opts => opts.MapFrom(s => s.era_medicationrequirement))
                 .ForMember(d => d.Insurance, opts => opts.MapFrom(s => (NeedsAssessment.InsuranceOption)s.era_insurancecoverage))
                 .ForMember(d => d.HaveSpecialDiet, opts => opts.MapFrom(s => s.era_dietaryrequirement))
                 .ForMember(d => d.SpecialDietDetails, opts => opts.MapFrom(s => s.era_dietaryrequirementdetails))
-                .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => s.era_haspetfood))
+                .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => Lookup(s.era_haspetfood)))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => new List<HouseholdMember>()))
                 .ForMember(d => d.Pets, opts => opts.MapFrom(s => new List<Pet>()))
 
@@ -104,6 +107,17 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.contactid));
 
+            CreateMap<HouseholdMember, era_needsassessmentevacuee>(MemberList.None)
+                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => s.isUnder19))
+                .ForPath(d => d.era_RegistrantID.contactid, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.era_RegistrantID, opts => opts.MapFrom(s => s.Details))
+
+                .ReverseMap()
+
+                .ForMember(d => d.isUnder19, opts => opts.MapFrom(s => s.era_isunder19))
+                .ForPath(d => d.Id, opts => opts.MapFrom(s => s.era_RegistrantID.contactid))
+                .ForMember(d => d.Details, opts => opts.MapFrom(s => s.era_RegistrantID));
+
             CreateMap<era_needsassessmentevacuee, Pet>()
                 .ForMember(d => d.Quantity, opts => opts.MapFrom(s => s.era_numberofpets))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_typeofpet))
@@ -115,5 +129,49 @@ namespace EMBC.Registrants.API.EvacuationsModule
         }
 
         private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
+
+        private bool? Lookup(int? value) => value switch
+        {
+            174360000 => true,
+            174360001 => false,
+            174360002 => null,
+            _ => null
+        };
+    }
+
+    public class LocationConverter :
+        IValueConverter<era_jurisdiction, Jurisdiction>,
+        IValueConverter<era_jurisdiction, StateProvince>,
+        IValueConverter<era_jurisdiction, Country>
+    {
+        private readonly Jurisdiction[] jurisdictions;
+        private readonly StateProvince[] stateProvinces;
+        private readonly Country[] countries;
+
+        public LocationConverter(ILocationManager locationManager)
+        {
+            jurisdictions = locationManager.GetJurisdictions().GetAwaiter().GetResult().ToArray();
+            stateProvinces = locationManager.GetStateProvinces().GetAwaiter().GetResult().ToArray();
+            countries = locationManager.GetCountries().GetAwaiter().GetResult().ToArray();
+        }
+
+        public Jurisdiction Convert(era_jurisdiction sourceMember, ResolutionContext context)
+        {
+            return jurisdictions.FirstOrDefault(j => j.Code == sourceMember.era_jurisdictionid?.ToString()) ?? null;
+        }
+
+        StateProvince IValueConverter<era_jurisdiction, StateProvince>.Convert(era_jurisdiction sourceMember, ResolutionContext context)
+        {
+            var jurisdiction = jurisdictions.FirstOrDefault(j => j.Code == sourceMember.era_jurisdictionid?.ToString());
+            if (jurisdiction == null) return null;
+            return stateProvinces.FirstOrDefault(sp => sp.Code == jurisdiction.StateProvinceCode);
+        }
+
+        Country IValueConverter<era_jurisdiction, Country>.Convert(era_jurisdiction sourceMember, ResolutionContext context)
+        {
+            var jurisdiction = jurisdictions.FirstOrDefault(j => j.Code == sourceMember.era_jurisdictionid?.ToString());
+            if (jurisdiction == null) return null;
+            return countries.FirstOrDefault(c => c.Code == jurisdiction.CountryCode);
+        }
     }
 }

@@ -21,7 +21,7 @@ export class PersonDetailFormComponent implements OnInit {
   constructor(private formCreationService: FormCreationService) { }
 
   ngOnInit(): void {
-    this.formCreationService.getPeronalDetailsForm().subscribe(
+    this.formCreationService.getPersonalDetailsForm().subscribe(
       personalDetails => {
         this.primaryApplicantLastName = personalDetails.get('lastName').value;
       }
@@ -29,9 +29,9 @@ export class PersonDetailFormComponent implements OnInit {
     this.sameLastNameEditForm();
   }
 
- /**
-  * Returns the control of the form
-  */
+  /**
+   * Returns the control of the form
+   */
   get personalFormControl(): { [key: string]: AbstractControl; } {
     return this.personalDetailsForm.controls;
   }

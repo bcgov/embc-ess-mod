@@ -45,9 +45,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<TeamMembersQueryResponse> Handle(TeamMembersQueryCommand cmd)
         {
-            var members = await teamRepository.GetMembers(cmd.TeamId);
-
-            if (!string.IsNullOrEmpty(cmd.MemberId)) members = members.Where(m => m.Id == cmd.MemberId);
+            var members = await teamRepository.GetMembers(cmd.TeamId, cmd.UserName, cmd.MemberId, cmd.IncludeActiveUsersOnly);
 
             return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
         }
@@ -96,7 +94,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<ValidateTeamMemberResponse> Handle(ValidateTeamMemberCommand cmd)
         {
-            var members = await teamRepository.GetMembers(userName: cmd.TeamMember.UserName);
+            var members = await teamRepository.GetMembers(userName: cmd.TeamMember.UserName, onlyActive: true);
             //filter this user if exists
             if (!string.IsNullOrEmpty(cmd.TeamMember.Id)) members = members.Where(m => m.Id != cmd.TeamMember.Id);
             return new ValidateTeamMemberResponse
@@ -138,7 +136,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<LogInUserResponse> Handle(LogInUserCommand cmd)
         {
-            var member = (await teamRepository.GetMembers(userName: cmd.UserName)).SingleOrDefault();
+            var member = (await teamRepository.GetMembers(userName: cmd.UserName, onlyActive: true)).SingleOrDefault();
             if (member == null) return new FailedLogin { Reason = $"User {cmd.UserName} not found" };
             if (member.ExternalUserId != null && member.ExternalUserId != cmd.UserId)
                 throw new Exception($"User {cmd.UserName} has external id {member.ExternalUserId} but trying to log in with user id {cmd.UserId}");
@@ -159,7 +157,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<SignResponderAgreementResponse> Handle(SignResponderAgreementCommand cmd)
         {
-            var member = (await teamRepository.GetMembers(userName: cmd.UserName)).SingleOrDefault();
+            var member = (await teamRepository.GetMembers(userName: cmd.UserName, onlyActive: true)).SingleOrDefault();
             if (member == null) throw new NotFoundException($"team member not found", cmd.UserName);
 
             member.AgreementSignDate = cmd.SignatureDate;

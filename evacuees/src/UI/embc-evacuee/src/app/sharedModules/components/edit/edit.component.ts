@@ -4,6 +4,9 @@ import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
+import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
+import { EvacuationFileService } from '../evacuation-file/evacuation-file.service';
+import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { ProfileService } from '../profile/profile.service';
 import { EditService } from './edit.service';
@@ -25,12 +28,14 @@ export class EditComponent implements OnInit, OnDestroy {
   showLoader = false;
   nonVerfiedRoute = '/non-verified-registration/needs-assessment';
   verifiedRoute = '/verified-registration/create-profile';
+  verifiedNeedsAssessments = '/verified-registration/needs-assessment';
+  disabledSavedButton = false;
 
   constructor(
     private router: Router, private route: ActivatedRoute,
     private formCreationService: FormCreationService, private profileService: ProfileService,
-    private profileDataService: ProfileDataService,
-    private alertService: AlertService, private editService: EditService) {
+    private profileDataService: ProfileDataService, private evacuationFileDataService: EvacuationFileDataService,
+    private alertService: AlertService, private editService: EditService, private evacuationFileService: EvacuationFileService) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { parentPageName: string };
@@ -47,6 +52,22 @@ export class EditComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(params => {
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
+    });
+    this.onChanges();
+  }
+
+
+  onChanges(): void {
+    this.form.statusChanges.subscribe(val => {
+      if (val === 'VALID') {
+        setTimeout(() => {
+          this.disabledSavedButton = false;
+        }, 0);
+      } else {
+        setTimeout(() => {
+          this.disabledSavedButton = true;
+        }, 0);
+      }
     });
   }
 
@@ -71,8 +92,19 @@ export class EditComponent implements OnInit, OnDestroy {
           this.alertService.setAlert('danger', error.title);
         });
       } else if (this.parentPageName === 'needs-assessment') {
-        // console.log('SAVE NEEDS ASSESSMENTS FROM EVACUATION CARD HERE');
-        this.router.navigate(['/verified-registration/dashboard/current']);
+        if (this.evacuationFileDataService.essFileNumber === undefined) {
+          this.router.navigate([this.verifiedNeedsAssessments], this.navigationExtras);
+        } else {
+          this.showLoader = !this.showLoader;
+          this.evacuationFileService.updateEvacuationFile().subscribe(essFileNumber => {
+            this.showLoader = !this.showLoader;
+            this.router.navigate(['/verified-registration/dashboard/current/' + essFileNumber]);
+          }, (error) => {
+            this.showLoader = !this.showLoader;
+            console.log(error);
+            this.alertService.setAlert('danger', error.title);
+          });
+        }
       }
     }
   }
@@ -91,7 +123,7 @@ export class EditComponent implements OnInit, OnDestroy {
       } else if (this.parentPageName === 'dashboard') {
         this.router.navigate(['/verified-registration/dashboard/profile']);
       } else if (this.parentPageName === 'needs-assessment') {
-        this.router.navigate(['/verified-registration/dashboard/current']);
+        this.router.navigate(['/verified-registration/dashboard/current/' + this.evacuationFileDataService.essFileNumber]);
       }
     }
   }
@@ -113,7 +145,7 @@ export class EditComponent implements OnInit, OnDestroy {
         this.editHeading = 'Edit Restriction';
         break;
       case 'personal-details':
-        this.form$ = this.formCreationService.getPeronalDetailsForm().subscribe(
+        this.form$ = this.formCreationService.getPersonalDetailsForm().subscribe(
           personalDetails => {
             this.form = personalDetails;
           }
@@ -159,10 +191,9 @@ export class EditComponent implements OnInit, OnDestroy {
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'family-information':
-        this.form$ = this.formCreationService.getFamilyMembersForm().subscribe(
-          memberForm => {
-            this.form = memberForm;
-            console.log(this.form);
+        this.form$ = this.formCreationService.getHouseholdMembersForm().subscribe(
+          householdMemberForm => {
+            this.form = householdMemberForm;
           }
         );
         this.editHeading = 'Edit Evacuation File';

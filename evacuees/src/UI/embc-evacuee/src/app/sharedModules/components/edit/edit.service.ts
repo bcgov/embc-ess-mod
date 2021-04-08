@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
+import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
 import { NeedsAssessmentMappingService } from '../needs-assessment/needs-assessment-mapping.service';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 import { ProfileDataService } from '../profile/profile-data.service';
@@ -13,7 +14,7 @@ export class EditService {
     constructor(
         private profileDataService: ProfileDataService, private needsAssessmentDataService: NeedsAssessmentService,
         private restrictionService: RestrictionService, private formCreationService: FormCreationService,
-        private needsAssessmentMapping: NeedsAssessmentMappingService) { }
+        private needsAssessmentMapping: NeedsAssessmentMappingService, private evacuationFileDataService: EvacuationFileDataService) { }
 
     /**
      * Updates the form with latest values
@@ -23,6 +24,7 @@ export class EditService {
         switch (component) {
             case 'restriction':
                 this.restrictionService.restrictedAccess = form.get('restrictedAccess').value;
+                console.log(this.restrictionService.restrictedAccess);
                 break;
             case 'personal-details':
                 this.profileDataService.personalDetails = form.value;
@@ -39,24 +41,26 @@ export class EditService {
                 if (evacFromPrimary === 'Yes') {
                     const evacuationAddress = form.get('address').value;
                     const insurance = this.needsAssessmentDataService.insurance;
-                    this.needsAssessmentMapping.setEvacuationAddress(evacuationAddress, insurance);
+                    this.needsAssessmentMapping.setInsurance(evacuationAddress, insurance);
                 }
                 break;
             case 'contact-info':
                 this.profileDataService.contactDetails = form.value;
+                console.log(this.profileDataService.contactDetails);
                 break;
             case 'secret':
-                this.profileDataService.secretWordPhrase = form.value;
+                this.profileDataService.secretWordPhrase = form.get('secretPhrase').value;
                 break;
             case 'evac-address':
-                this.needsAssessmentDataService.evacuatedFromAddress = form.get('evacuatedFromAddress').value;
+                this.evacuationFileDataService.evacuatedFromAddress = form.get('evacuatedFromAddress').value;
                 this.needsAssessmentDataService.insurance = form.get('insurance').value;
                 break;
             case 'family-information':
                 this.needsAssessmentDataService.haveSpecialDiet = form.get('haveSpecialDiet').value;
                 this.needsAssessmentDataService.haveMedication = form.get('haveMedication').value;
                 this.needsAssessmentDataService.specialDietDetails = form.get('specialDietDetails').value;
-                this.needsAssessmentDataService.familyMembers = form.get('familyMember').value;
+                this.needsAssessmentDataService.setHouseHoldMembers(form.get('householdMembers').value);
+                this.needsAssessmentDataService.addMainHouseholdMembers();
                 break;
             case 'pets':
                 this.needsAssessmentDataService.pets = form.get('pets').value;
@@ -114,25 +118,26 @@ export class EditService {
                 }
                 break;
             case 'evac-address':
-                if (this.needsAssessmentDataService.evacuatedFromAddress !== undefined &&
+                if (this.evacuationFileDataService.evacuatedFromAddress !== undefined &&
                     this.needsAssessmentDataService.insurance !== undefined) {
-                    form.get('evacuatedFromAddress').patchValue(this.needsAssessmentDataService.evacuatedFromAddress);
+                    form.get('evacuatedFromAddress').patchValue(this.evacuationFileDataService.evacuatedFromAddress);
                     form.get('insurance').patchValue(this.needsAssessmentDataService.insurance);
                 } else {
                     form.reset();
                 }
                 break;
             case 'family-information':
-                if (this.needsAssessmentDataService.familyMembers.length !== 0 ||
+                if (this.needsAssessmentDataService.householdMembers.length !== 0 ||
                     this.needsAssessmentDataService.haveMedication !== undefined &&
                     this.needsAssessmentDataService.haveSpecialDiet !== undefined &&
                     this.needsAssessmentDataService.specialDietDetails !== undefined) {
-                    form.get('familyMember').patchValue(this.needsAssessmentDataService.familyMembers);
+                    form.get('householdMembers').patchValue(
+                        this.needsAssessmentMapping.convertHouseholdMembers(this.needsAssessmentDataService.householdMembers));
                     form.get('haveMedication').patchValue(this.needsAssessmentDataService.haveMedication);
                     form.get('haveSpecialDiet').patchValue(this.needsAssessmentDataService.haveSpecialDiet);
                     form.get('specialDietDetails').patchValue(this.needsAssessmentDataService.specialDietDetails);
                 } else {
-                    form.get('familyMember').patchValue([]);
+                    form.get('householdMembers').patchValue([]);
                     form.get('haveMedication').reset();
                     form.get('haveSpecialDiet').reset();
                     form.get('specialDietDetails').reset();

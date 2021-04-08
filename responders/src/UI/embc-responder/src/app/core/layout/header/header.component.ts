@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthenticationService } from '../../services/authentication.service';
 import { LoggedInUserProfile, UserService } from '../../services/user.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { LoggedInUserProfile, UserService } from '../../services/user.service';
 })
 export class HeaderComponent implements OnInit {
 
-  public profile: LoggedInUserProfile;
+  public get profile(): LoggedInUserProfile { return this.userService.currentProfile; }
   public get signedInTask(): string {
     return this.profile.taskNumber
       ? `Logged in to task #${this.profile.taskNumber}`
@@ -22,24 +22,28 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
+    private authService: AuthenticationService,
     private userService: UserService
   ) { }
 
   public ngOnInit(): void {
-    this.profile = this.userService.currentProfile;
   }
 
-  homeButton(): void {
+  public homeButton(): void {
+    this.router.navigate(['/responder-access']);
 
   }
 
-  openUserProfile(): void {
+  public openUserProfile(): void {
     this.router.navigate(['/responder-access/user-profile']);
   }
 
-  signOut(): void {
+  public signOut(): void {
     this.authService.logout();
+  }
+
+  public showUserProfile(): boolean {
+    return this.profile != null;
   }
 
 }

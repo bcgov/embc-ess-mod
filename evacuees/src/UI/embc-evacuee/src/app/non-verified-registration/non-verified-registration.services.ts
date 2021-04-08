@@ -10,6 +10,7 @@ export class NonVerifiedRegistrationService {
     constructor(private registrationService: RegistrationService, private registrationMapping: NonVerifiedRegistrationMappingService) { }
 
     public submitRegistration(): Observable<RegistrationResult> {
+        console.log(this.registrationMapping.mapAnonymousRegistration());
         return this.registrationService.registrationCreate({ body: this.registrationMapping.mapAnonymousRegistration() });
     }
 

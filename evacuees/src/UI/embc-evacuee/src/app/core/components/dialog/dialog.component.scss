@@ -20,9 +20,8 @@
 
 .close-button-style {
   background-color: white;
-  // float: right;
   position: relative;
-  left: 750px;
+  left: 95%;
 }
 
 .mat-title {
@@ -48,19 +47,11 @@
     padding: 0;
     max-height: auto;
   }
-
-  .close-button-style {
-    left: 550px;
-  }
 }
 
 @media (max-width: 715px) {
   .mainBody {
     padding: 0;
-  }
-
-  .close-button-style {
-    left: 250px;
   }
 }
 
@@ -70,8 +61,8 @@
   }
 }
 
-@media (max-width: 320px) {
-  .close-button-style {
-    left: 200px;
-  }
-}
+// @media (max-width: 320px) {
+//   .close-button-style {
+//     left: 200px;
+//   }
+// }

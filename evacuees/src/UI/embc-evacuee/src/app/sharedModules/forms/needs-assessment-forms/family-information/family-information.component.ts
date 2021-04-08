@@ -23,10 +23,10 @@ import { DialogComponent } from 'src/app/core/components/dialog/dialog.component
 })
 export default class FamilyInformationComponent implements OnInit {
 
-  familyMemberForm: FormGroup;
+  householdMemberForm: FormGroup;
   radioOption = globalConst.radioButton1;
   formBuilder: FormBuilder;
-  familyMemberForm$: Subscription;
+  householdMemberForm$: Subscription;
   formCreationService: FormCreationService;
   showFamilyForm = false;
   displayedColumns: string[] = ['firstName', 'lastName', 'initials', 'gender', 'dateOfBirth', 'buttons'];
@@ -45,42 +45,44 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.familyMemberForm$ = this.formCreationService.getFamilyMembersForm().subscribe(
-      familyMemberForm => {
-        this.familyMemberForm = familyMemberForm;
+    this.householdMemberForm$ = this.formCreationService.getHouseholdMembersForm().subscribe(
+      householdMemberForm => {
+        this.householdMemberForm = householdMemberForm;
       }
     );
-    this.familyMemberForm.get('addFamilyMemberIndicator').valueChanges.subscribe(value =>
+    this.householdMemberForm.get('addHouseholdMemberIndicator').valueChanges.subscribe(value =>
       this.updateOnVisibility());
-    this.dataSource.next(this.familyMemberForm.get('familyMember').value);
-    this.data = this.familyMemberForm.get('familyMember').value;
+    this.dataSource.next(this.householdMemberForm.get('householdMembers').value);
+    this.data = this.householdMemberForm.get('householdMembers').value;
 
+    console.log(this.dataSource);
+    console.log(this.data);
   }
 
   addMembers(): void {
-    this.familyMemberForm.get('member').reset();
+    this.householdMemberForm.get('householdMember').reset();
     this.showFamilyForm = !this.showFamilyForm;
     // this.showTable = !this.showTable;
     this.editFlag = !this.editFlag;
-    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
+    this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
   }
 
   save(): void {
-    if (this.familyMemberForm.get('member').status === 'VALID') {
+    if (this.householdMemberForm.get('householdMember').status === 'VALID') {
       if (this.editIndex !== undefined && this.rowEdit) {
-        this.data[this.editIndex] = this.familyMemberForm.get('member').value;
+        this.data[this.editIndex] = this.householdMemberForm.get('householdMember').value;
         this.rowEdit = !this.rowEdit;
         this.editIndex = undefined;
       } else {
-        this.data.push(this.familyMemberForm.get('member').value);
+        this.data.push(this.householdMemberForm.get('householdMember').value);
       }
       this.dataSource.next(this.data);
-      this.familyMemberForm.get('familyMember').setValue(this.data);
+      this.householdMemberForm.get('householdMembers').setValue(this.data);
       this.showFamilyForm = !this.showFamilyForm;
       this.editFlag = !this.editFlag;
       // this.showTable = !this.showTable;
     } else {
-      this.familyMemberForm.get('member').markAllAsTouched();
+      this.householdMemberForm.get('householdMember').markAllAsTouched();
     }
   }
 
@@ -90,15 +92,15 @@ export default class FamilyInformationComponent implements OnInit {
     this.editFlag = !this.editFlag;
     // this.showTable = !this.showTable;
     // if (this.data.length === 0) {
-    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
+    this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
     // }
   }
 
   /**
    * Returns the control of the form
    */
-  get familyFormControl(): { [key: string]: AbstractControl; } {
-    return this.familyMemberForm.controls;
+  get householdFormControl(): { [key: string]: AbstractControl; } {
+    return this.householdMemberForm.controls;
   }
 
   deleteRow(index: number): void {
@@ -108,12 +110,12 @@ export default class FamilyInformationComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe(result => {
       if (result === 'remove') {
-        console.log(result);
+        // console.log(result);
         this.data.splice(index, 1);
         this.dataSource.next(this.data);
-        this.familyMemberForm.get('familyMember').setValue(this.data);
+        this.householdMemberForm.get('householdMember').setValue(this.data);
         if (this.data.length === 0) {
-          this.familyMemberForm.get('addFamilyMemberIndicator').setValue(false);
+          this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
         }
       }
     });
@@ -122,25 +124,25 @@ export default class FamilyInformationComponent implements OnInit {
   editRow(element, index): void {
     this.editIndex = index;
     this.rowEdit = !this.rowEdit;
-    this.familyMemberForm.get('member').setValue(element);
+    this.householdMemberForm.get('householdMember').setValue(element);
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
-    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
+    this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
     // this.showTable = !this.showTable;
-    this.familyMemberForm.get('addFamilyMemberIndicator').setValue(true);
+    this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
   }
 
   updateOnVisibility(): void {
-    this.familyMemberForm.get('member.firstName').updateValueAndValidity();
-    this.familyMemberForm.get('member.lastName').updateValueAndValidity();
-    this.familyMemberForm.get('member.gender').updateValueAndValidity();
-    this.familyMemberForm.get('member.dateOfBirth').updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.firstName').updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.lastName').updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.gender').updateValueAndValidity();
+    this.householdMemberForm.get('householdMember.dateOfBirth').updateValueAndValidity();
   }
 
   hasSpecialDietChange(event: MatRadioChange): void {
 
     if (event.value === false) {
-      this.familyMemberForm.get('specialDietDetails').reset();
+      this.householdMemberForm.get('specialDietDetails').reset();
     }
   }
 }
