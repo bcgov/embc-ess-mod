@@ -66,6 +66,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
     data:
       Dynamics__ADFS__OAuth2TokenEndpoint: ${OAUTH_ENDPOINT}
       Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
@@ -83,6 +84,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
       Dynamics__ADFS__ClientId: ${OAUTH_CLIENT_ID}
       Dynamics__ADFS__ClientSecret: ${OAUTH_CLIENT_SECRET}
@@ -96,6 +98,7 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-suppliers-portal-api
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
@@ -113,6 +116,7 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-suppliers-portal-ui
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
@@ -130,6 +134,7 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-suppliers-portal-api
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
@@ -151,6 +156,7 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-suppliers-portal-ui
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
@@ -172,6 +178,7 @@ objects:
       name: ${APP_NAME}-suppliers-portal
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       podSelector:
@@ -189,12 +196,12 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-suppliers-portal-api
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-suppliers-portal
         deploymentconfig: ${APP_NAME}-suppliers-portal-api
       strategy:
         activeDeadlineSeconds: 21600
@@ -210,6 +217,7 @@ objects:
         metadata:
           labels:
             app: ${APP_NAME}-suppliers-portal
+            app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-suppliers-portal-api
         spec:
           containers:
@@ -255,17 +263,18 @@ objects:
               kind: ImageStreamTag
               name: suppliers-portal-api:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
+
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-suppliers-portal-ui
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-suppliers-portal
         deploymentconfig: ${APP_NAME}-suppliers-portal-ui
       strategy:
         activeDeadlineSeconds: 21600
@@ -281,6 +290,7 @@ objects:
         metadata:
           labels:
             app: ${APP_NAME}-suppliers-portal
+            app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-suppliers-portal-ui
         spec:
           containers:
@@ -310,12 +320,14 @@ objects:
               kind: ImageStreamTag
               name: suppliers-portal-ui:${TAG}
               namespace: ${NAMESPACE_PREFIX}-tools
+
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
       name: "${APP_NAME}-suppliers-submissions"
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       accessModes:
@@ -329,6 +341,7 @@ objects:
       name: "${APP_NAME}-suppliers-key-ring"
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       accessModes:
@@ -342,6 +355,7 @@ objects:
       name: "${APP_NAME}-suppliers-cache"
       labels:
         app: ${APP_NAME}-suppliers-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       accessModes:
