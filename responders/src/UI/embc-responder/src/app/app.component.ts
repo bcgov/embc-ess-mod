@@ -1,9 +1,11 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
 import { AuthenticationService } from './core/services/authentication.service';
-import { LoadLocationsService } from './core/services/load-locations.service';
+import { ConfigService } from './core/services/config.service';
 import { UserService } from './core/services/user.service';
+import { AlertService } from './shared/components/alert/alert.service';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +20,17 @@ export class AppComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private configService: ConfigService,
+    private alertService: AlertService
   ) {
+    this.configService.load().subscribe(
+      (result) => result,
+      (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', "The service is temporarily unavailable. Please try again later");
+      }
+    );
   }
 
   public async ngOnInit(): Promise<void> {
@@ -30,12 +41,12 @@ export class AppComponent implements OnInit {
         ? 'electronic-agreement'
         : nextUrl || 'responder-access');
       await this.router.navigate([nextRoute]);
-    } catch (e) {
+    } catch (error) {
       // if (e as HttpErrorResponse && e.status === 403) {
       //   await this.router.navigate(['access-denied']);
       // }
       // throw e;
-      console.error(e);
+      console.error(error);
     } finally {
       this.isLoading = false;
     }

@@ -16,7 +16,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         if (error.status === 403) {
           return from(this.router.navigate(['access-denied']));
         } else {
-          this.errorDialogService.openDialog(error.message ?? JSON.stringify(error), error.status);
           return throwError(error);
         }
       })
