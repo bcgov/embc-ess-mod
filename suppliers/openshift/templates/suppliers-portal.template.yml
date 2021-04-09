@@ -4,6 +4,12 @@ metadata:
   name: suppliers-portal-template
 
 parameters:
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+  - description: openshift namespace env name
+    name: ENV
+    required: true
   - description: app name
     name: APP_NAME
     required: true
@@ -46,16 +52,18 @@ parameters:
     value: "60"
   - description: Reverse proxy known network
     name: KNOWN_NETWORKS
-    value: ::ffff:172.51.0.0/16
+    value: ::ffff:10.97.0.0/16
   - description: ASPNET runtime environment (Development/Staging/Production)
     name: RUNTIME_ENVIRONMENT
     value: Staging
 
 objects:
+
   - kind: ConfigMap
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-suppliers-api-config
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-suppliers-portal
     data:
@@ -66,11 +74,13 @@ objects:
       Dynamics__Cache__UpdateFrequency: ${DYNAMICS_LISTS_CACHE_UPDATE_FREQUENCY}
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
+
   - kind: Secret
     apiVersion: v1
     type: Opaque
     metadata:
       name: ${APP_NAME}-suppliers-api-secrets
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-suppliers-portal
     stringData:
@@ -80,12 +90,14 @@ objects:
       Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
       Dynamics__ADFS__serviceAccountName: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_NAME}
       Dynamics__ADFS__serviceAccountPassword: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
+
   - kind: Service
     apiVersion: v1
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
       name: ${APP_NAME}-suppliers-portal-api
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       ports:
         - name: 8080-tcp
@@ -95,12 +107,14 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-suppliers-portal-api
       type: ClusterIP
+
   - kind: Service
     apiVersion: v1
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
       name: ${APP_NAME}-suppliers-portal-ui
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       ports:
         - name: 2015-tcp
@@ -110,14 +124,16 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-suppliers-portal-ui
       type: ClusterIP
+
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
       name: ${APP_NAME}-suppliers-portal-api
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
-      host: ${APP_NAME}-embc-suppliers.pathfinder.gov.bc.ca
+      host: ${APP_NAME}-embc-suppliers.apps.silver.devops.gov.bc.ca
       path: /api
       port:
         targetPort: 8080-tcp
@@ -129,14 +145,16 @@ objects:
         name: ${APP_NAME}-suppliers-portal-api
         weight: 100
       wildcardPolicy: None
+
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
       name: ${APP_NAME}-suppliers-portal-ui
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
-      host: ${APP_NAME}-embc-suppliers.pathfinder.gov.bc.ca
+      host: ${APP_NAME}-embc-suppliers.apps.silver.devops.gov.bc.ca
       path: /
       port:
         targetPort: 2015-tcp
@@ -147,12 +165,32 @@ objects:
         kind: Service
         name: ${APP_NAME}-suppliers-portal-ui
         weight: 100
+
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: ${APP_NAME}-suppliers-portal
+      labels:
+        app: ${APP_NAME}-suppliers-portal
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    spec:
+      podSelector:
+        matchLabels:
+          app: ${APP_NAME}-suppliers-portal
+      ingress:
+      - ports:
+        - protocol: TCP
+          port: 2015
+        - protocol: TCP
+          port: 8080
+
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
       name: ${APP_NAME}-suppliers-portal-api
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
@@ -181,7 +219,7 @@ objects:
                     name: ${APP_NAME}-suppliers-api-config
                 - secretRef:
                     name: ${APP_NAME}-suppliers-api-secrets
-              image: docker-registry.default.svc:5000/pbiizm-tools/suppliers-portal-api:${TAG}
+              image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/suppliers-portal-api:${TAG}
               imagePullPolicy: Always
               volumeMounts:
                 - mountPath: ${SUBMISSIONS_STORAGE_DIR}
@@ -216,13 +254,14 @@ objects:
             from:
               kind: ImageStreamTag
               name: suppliers-portal-api:${TAG}
-              namespace: pbiizm-tools
+              namespace: ${NAMESPACE_PREFIX}-tools
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-suppliers-portal
       name: ${APP_NAME}-suppliers-portal-ui
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
@@ -246,7 +285,7 @@ objects:
         spec:
           containers:
             - name: suppliers-portal-ui
-              image: docker-registry.default.svc:5000/pbiizm-tools/suppliers-portal-ui:${TAG}
+              image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/suppliers-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:
                 - containerPort: 2015
@@ -270,13 +309,14 @@ objects:
             from:
               kind: ImageStreamTag
               name: suppliers-portal-ui:${TAG}
-              namespace: pbiizm-tools
+              namespace: ${NAMESPACE_PREFIX}-tools
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
       name: "${APP_NAME}-suppliers-submissions"
       labels:
         app: ${APP_NAME}-suppliers-portal
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       accessModes:
         - "ReadWriteMany"
@@ -289,6 +329,7 @@ objects:
       name: "${APP_NAME}-suppliers-key-ring"
       labels:
         app: ${APP_NAME}-suppliers-portal
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       accessModes:
         - "ReadWriteMany"
@@ -301,6 +342,7 @@ objects:
       name: "${APP_NAME}-suppliers-cache"
       labels:
         app: ${APP_NAME}-suppliers-portal
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       accessModes:
         - "ReadWriteMany"
