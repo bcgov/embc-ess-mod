@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
       (result) => result,
       (error) => {
         this.alertService.clearAlert();
-        this.alertService.setAlert('danger', "The service is temporarily unavailable. Please try again later");
+        this.alertService.setAlert('danger', 'The service is temporarily unavailable. Please try again later');
       }
     );
   }
@@ -42,10 +42,6 @@ export class AppComponent implements OnInit {
         : nextUrl || 'responder-access');
       await this.router.navigate([nextRoute]);
     } catch (error) {
-      // if (e as HttpErrorResponse && e.status === 403) {
-      //   await this.router.navigate(['access-denied']);
-      // }
-      // throw e;
       console.error(error);
     } finally {
       this.isLoading = false;
