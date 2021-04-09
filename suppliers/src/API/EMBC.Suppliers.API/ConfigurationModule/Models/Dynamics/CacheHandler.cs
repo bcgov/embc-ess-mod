@@ -62,6 +62,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics
             {
                 logger.LogError(e, "Failed to refresh cached lists from Dynamics");
             }
+
             await messageContext.Schedule(new RefreshCacheCommand(), DateTime.Now.AddMinutes(options.UpdateFrequency).AddSeconds(random.Next(-5, 5)));
         }
     }
