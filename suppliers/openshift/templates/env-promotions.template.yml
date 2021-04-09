@@ -25,14 +25,14 @@ objects:
                     openshift.withProject('b5e079-test') {
                         def uiAppName = 'test-suppliers-portal-ui'
                         def apiAppName = 'test-suppliers-portal-api'
-                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
                         def uiLastVersion = openshift.selector('dc', uiAppName).object().status.latestVersion
-                        def uiRc = openshift.selector('rc', uiAppName + '-${latestDeploymentVersion}')
+                        def uiRc = openshift.selector('rc', uiAppName + '-' + + uiLastVersion)
                         uiRc.untilEach(1) {
                             def rcMap = it.object()
                             return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
                         }
-                        def apiRc = openshift.selector('rc', uiAppName + '-${latestDeploymentVersion}')
+                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
+                        def apiRc = openshift.selector('rc', apiAppName + '-' + apiLastVersion)
                         apiRc.untilEach(1) {
                             def rcMap = it.object()
                             return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
@@ -60,14 +60,14 @@ objects:
                     openshift.withProject('b5e079-test') {
                         def uiAppName = 'training-suppliers-portal-ui'
                         def apiAppName = 'training-suppliers-portal-api'
-                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
                         def uiLastVersion = openshift.selector('dc', uiAppName).object().status.latestVersion
-                        def uiRc = openshift.selector('rc', uiAppName + '-${latestDeploymentVersion}')
+                        def uiRc = openshift.selector('rc', uiAppName + '-' + + uiLastVersion)
                         uiRc.untilEach(1) {
                             def rcMap = it.object()
                             return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
                         }
-                        def apiRc = openshift.selector('rc', uiAppName + '-${latestDeploymentVersion}')
+                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
+                        def apiRc = openshift.selector('rc', apiAppName + '-' + apiLastVersion)
                         apiRc.untilEach(1) {
                             def rcMap = it.object()
                             return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
@@ -94,20 +94,20 @@ objects:
               stage('tag image'){
                 openshift.withCluster() {
                     openshift.withCredentials() {
-                        openshift.tag('suppliers-portal-api:test', 'suppliers-portal-api:training')
-                        openshift.tag('suppliers-portal-ui:test', 'suppliers-portal-ui:training')
+                        openshift.tag('suppliers-portal-api:training', 'suppliers-portal-api:prod')
+                        openshift.tag('suppliers-portal-ui:training', 'suppliers-portal-ui:prod')
                     }
-                    openshift.withProject('b5e079-test') {
-                        def uiAppName = 'training-suppliers-portal-ui'
-                        def apiAppName = 'training-suppliers-portal-api'
-                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
+                    openshift.withProject('b5e079-prod') {
+                        def uiAppName = 'production-suppliers-portal-ui'
+                        def apiAppName = 'production-suppliers-portal-api'
                         def uiLastVersion = openshift.selector('dc', uiAppName).object().status.latestVersion
-                        def uiRc = openshift.selector('rc', uiAppName + '-${latestDeploymentVersion}')
+                        def uiRc = openshift.selector('rc', uiAppName + '-' + + uiLastVersion)
                         uiRc.untilEach(1) {
                             def rcMap = it.object()
                             return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
                         }
-                        def apiRc = openshift.selector('rc', uiAppName + '-${latestDeploymentVersion}')
+                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
+                        def apiRc = openshift.selector('rc', apiAppName + '-' + apiLastVersion)
                         apiRc.untilEach(1) {
                             def rcMap = it.object()
                             return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
