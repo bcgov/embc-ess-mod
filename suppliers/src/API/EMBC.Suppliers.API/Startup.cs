@@ -35,8 +35,6 @@ using Xrm.Tools.WebAPI.Requests;
 
 namespace EMBC.Suppliers.API
 {
-#pragma warning disable CA1822 // Mark members as static
-
     public class Startup
     {
         private readonly IHostEnvironment env;
@@ -142,6 +140,4 @@ namespace EMBC.Suppliers.API
             });
         }
     }
-
-#pragma warning restore CA1822 // Mark members as static
 }

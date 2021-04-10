@@ -22,6 +22,6 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Models
 {
     public interface IJurisdictionsListProvider
     {
-        Task<IEnumerable<Jurisdiction>> GetJurisdictionsAsync(JurisdictionType[] type, string stateProvinceCode, string countryCode);
+        Task<IEnumerable<Jurisdiction>> GetJurisdictionsAsync(JurisdictionType[] types, string stateProvinceCode, string countryCode);
     }
 }

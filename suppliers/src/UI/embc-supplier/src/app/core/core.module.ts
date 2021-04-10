@@ -13,6 +13,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastsComponent } from './components/toasts/toasts.component';
 import { DecimalCurrencyDirective } from './directives/DecimalCurrency.directive';
 import { WarningModalComponent } from './components/warningModal/warningModal.component';
+import { BannerComponent } from './components/banner/banner.component';
 
 @NgModule({
   imports: [
@@ -21,28 +22,30 @@ import { WarningModalComponent } from './components/warningModal/warningModal.co
     NgbModule
   ],
   declarations: [
-      DragDropDirective,
-      FileUploadComponent,
-      PhoneMaskDirective,
-      GSTCodeDirective,
-      ModalComponent,
-      CaptchaComponent,
-      LoaderComponent,
-      AlertComponent,
-      ToastsComponent,
-      DecimalCurrencyDirective,
-      WarningModalComponent
-    ],
+    DragDropDirective,
+    BannerComponent,
+    FileUploadComponent,
+    PhoneMaskDirective,
+    GSTCodeDirective,
+    ModalComponent,
+    CaptchaComponent,
+    LoaderComponent,
+    AlertComponent,
+    ToastsComponent,
+    DecimalCurrencyDirective,
+    WarningModalComponent
+  ],
   exports: [
-      DragDropDirective,
-      FileUploadComponent,
-      PhoneMaskDirective,
-      GSTCodeDirective,
-      CaptchaComponent,
-      LoaderComponent,
-      AlertComponent,
-      ToastsComponent,
-      DecimalCurrencyDirective
-    ]
+    DragDropDirective,
+    BannerComponent,
+    FileUploadComponent,
+    PhoneMaskDirective,
+    GSTCodeDirective,
+    CaptchaComponent,
+    LoaderComponent,
+    AlertComponent,
+    ToastsComponent,
+    DecimalCurrencyDirective
+  ]
 })
 export class CoreModule { }
