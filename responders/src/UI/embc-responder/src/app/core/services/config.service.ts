@@ -25,6 +25,7 @@ export class ConfigService {
   }
 
   public async getAuthConfig(): Promise<AuthConfig> {
+    console.log(this.config);
     return await this.load().then(c => ({
       issuer: c.oidc.issuer,
       clientId: c.oidc.clientId,

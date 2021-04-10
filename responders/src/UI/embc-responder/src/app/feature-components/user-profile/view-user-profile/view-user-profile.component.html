@@ -1,0 +1,73 @@
+<mat-card>
+    <div class="content-align">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="details-heading">User Details</p>
+            </div>
+        </div>
+        <br>
+
+        <div class="row row-align">
+            <div class="col-md-4 detail-label">First Name</div>
+            <div class="col-md-8"> {{userTeamMember?.firstName}}</div>
+        </div>
+
+        <div class="row row-align">
+            <div class="col-md-4 detail-label">Last Name</div>
+            <div class="col-md-8"> {{userTeamMember?.lastName}}</div>
+        </div>
+
+        <div class="row row-align">
+            <div class="col-md-4 detail-label">BCeID</div>
+            <div class="col-md-8"> {{userTeamMember?.userName}}</div>
+        </div>
+
+        <div class="row row-align">
+            <div class="col-md-4 detail-label">ESS Team</div>
+            <div class="col-md-8"> {{userTeamMember?.teamName}}</div>
+        </div>
+
+        <div class="row row-align">
+            <div class="col-md-4 detail-label">Role</div>
+            <div class="col-md-8"> {{userTeamMember?.role}}</div>
+        </div>
+
+        <div class="row row-align">
+            <div class="col-md-4 detail-label">Electronic Access Agreement Signed</div>
+            <div class="col-md-8"> {{userTeamMember?.agreementSignDate | date:'dd-MMM-yyyy'}}</div>
+        </div>
+
+        <div class="row row-align">
+            <div class="col-md-4 detail-label">Last Login Date & Time</div>
+            <div class="col-md-8"> {{userTeamMember?.lastSuccessfulLogin | date:'dd-MMM-yyyy HH:mm'}}</div>
+        </div>
+        <br>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <p class="details-heading">Contact Details</p>
+            </div>
+        </div>
+        <br>
+
+        <div class="row row-align">
+            <div class="col-md-4 detail-label">Email Address</div>
+            <div class="col-md-8"> {{userTeamMember?.email || 'n/a'}}</div>
+        </div>
+
+        <div class="row row-align">
+            <div class="col-md-4 detail-label">Contact Number</div>
+            <div class="col-md-8"> {{userTeamMember?.phone || 'n/a'}}</div>
+        </div>
+        <br>
+        <br>
+
+        <div class="row">
+            <div class="col-md-5">
+                <button class="button-p edit-button" mat-button (click)="editProfile()">Edit Profile</button>
+            </div>
+        </div>
+    </div>
+    <br>
+</mat-card>
