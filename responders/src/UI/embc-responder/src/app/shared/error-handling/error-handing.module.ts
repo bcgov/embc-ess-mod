@@ -1,5 +1,4 @@
-import { ErrorHandler, ModuleWithProviders, NgModule } from '@angular/core';
-import { GlobalErrorHandler } from './error-handler';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorDialogService } from './error-dialog/error-dialog.service';
 import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
@@ -19,7 +18,6 @@ export class ErrorHandlingModule {
       ngModule: ErrorHandlingModule,
       providers: [
         ErrorDialogService,
-        { provide: ErrorHandler, useClass: GlobalErrorHandler },
         { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
       ]
     };

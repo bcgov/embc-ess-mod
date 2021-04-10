@@ -28,8 +28,8 @@ namespace EMBC.Suppliers.API.SubmissionModule.Models
     {
         private static readonly RandomNumberGenerator crypto = new RNGCryptoServiceProvider();
 
-        private DateTime? now = null;
-        private string presetReferenceNumber = null;
+        private DateTime? now;
+        private string presetReferenceNumber;
 
         public string CreateNew()
         {

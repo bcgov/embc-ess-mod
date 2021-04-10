@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 
 import { LayoutModule } from './layout/layout.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     BrowserModule,
+    CoreModule,
     AppRoutingModule,
     LayoutModule,
     HttpClientModule,
@@ -22,4 +24,4 @@ import { ReactiveFormsModule } from '@angular/forms';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

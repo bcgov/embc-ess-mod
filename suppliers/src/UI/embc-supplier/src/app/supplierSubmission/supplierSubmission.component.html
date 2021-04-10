@@ -32,8 +32,8 @@
         <div class="formHeading">
           Supplier Information
         </div>
-        <div>
 
+        <div>
           <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
 
             <div class="row">
@@ -355,7 +355,6 @@
                     </div>
                   </div>
 
-
                   <div *ngIf="selectedRemitCountry !== 'United States of America' && selectedRemitCountry !== 'Canada'"
                     class="row">
                     <div class="form-group col-lg-4">
@@ -563,10 +562,10 @@
 
         <div class="card sidebox-card-info text-white">
           <div class="card-body">
-              <div class="card-title side-box-title">
-               <span class="icon"><img src="/assets/images/checkIcon.svg" width="32" height="32">&nbsp;&nbsp;</span>
-               <span class="icon-text">Supplier Invoice Checklist</span>
-              </div>
+            <div class="card-title side-box-title">
+              <span class="icon"><img src="/assets/images/checkIcon.svg" width="32" height="32">&nbsp;&nbsp;</span>
+              <span class="icon-text">Supplier Invoice Checklist</span>
+            </div>
             <span class="side-box-body">
               <p class="card-text">The following checklist is provided for your convenience to ensure your invoice &
                 receipt documentation is complete and accurate prior to submitting to Emergency Management BC (EMBC) for
@@ -587,12 +586,13 @@
           </div>
         </div>
         <br>
+
         <div class="card">
           <div class="card-body">
             <div class="card-title side-box-title">
               <span class="icon"><img src="/assets/images/questionIcon.svg" width="32" height="33">&nbsp;&nbsp;</span>
               <span class="icon-text">Questions about submitting</span>
-             </div>
+            </div>
             <span class="side-box-body">
               <p class="card-text">If you have any questions or need assistance regarding the navigation and submission
                 of
@@ -602,6 +602,7 @@
           </div>
         </div>
         <br>
+
         <div class="card">
           <div class="card-body">
             <div class="card-title side-box-title">

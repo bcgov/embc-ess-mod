@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EvacuationFile, NeedsAssessment } from 'src/app/core/api/models';
+import { EvacuationFile } from 'src/app/core/api/models';
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';

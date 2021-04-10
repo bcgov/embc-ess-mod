@@ -60,6 +60,7 @@ export class EditService {
                 this.needsAssessmentDataService.haveMedication = form.get('haveMedication').value;
                 this.needsAssessmentDataService.specialDietDetails = form.get('specialDietDetails').value;
                 this.needsAssessmentDataService.setHouseHoldMembers(form.get('householdMembers').value);
+                this.needsAssessmentDataService.addMainHouseholdMembers();
                 break;
             case 'pets':
                 this.needsAssessmentDataService.pets = form.get('pets').value;
@@ -130,7 +131,8 @@ export class EditService {
                     this.needsAssessmentDataService.haveMedication !== undefined &&
                     this.needsAssessmentDataService.haveSpecialDiet !== undefined &&
                     this.needsAssessmentDataService.specialDietDetails !== undefined) {
-                    form.get('householdMembers').patchValue(this.needsAssessmentDataService.householdMembers);
+                    form.get('householdMembers').patchValue(
+                        this.needsAssessmentMapping.convertHouseholdMembers(this.needsAssessmentDataService.householdMembers));
                     form.get('haveMedication').patchValue(this.needsAssessmentDataService.haveMedication);
                     form.get('haveSpecialDiet').patchValue(this.needsAssessmentDataService.haveSpecialDiet);
                     form.get('specialDietDetails').patchValue(this.needsAssessmentDataService.specialDietDetails);
