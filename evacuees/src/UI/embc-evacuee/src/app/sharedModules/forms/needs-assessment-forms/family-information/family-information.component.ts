@@ -15,7 +15,6 @@ import { MatIconModule } from '@angular/material/icon';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
-import { HouseholdMember } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-family-information',
@@ -56,6 +55,8 @@ export default class FamilyInformationComponent implements OnInit {
     this.dataSource.next(this.householdMemberForm.get('householdMembers').value);
     this.data = this.householdMemberForm.get('householdMembers').value;
 
+    console.log(this.dataSource);
+    console.log(this.data);
   }
 
   addMembers(): void {
@@ -109,7 +110,7 @@ export default class FamilyInformationComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe(result => {
       if (result === 'remove') {
-        console.log(result);
+        // console.log(result);
         this.data.splice(index, 1);
         this.dataSource.next(this.data);
         this.householdMemberForm.get('householdMember').setValue(this.data);

@@ -11,7 +11,7 @@ export class NeedsAssessmentService {
     private _insurance: InsuranceOption;
     private _haveMedication: boolean;
     private _haveSpecialDiet: boolean;
-    private _householdMembers: Array<HouseholdMember>;
+    private _householdMembers: Array<HouseholdMember> = [];
     private _specialDietDetails: string;
     private _pets: Array<Pet> = [];
     private _hasPetsFood: boolean;
@@ -20,6 +20,7 @@ export class NeedsAssessmentService {
     private _canEvacueeProvideIncidentals: boolean;
     private _canEvacueeProvideLodging: boolean;
     private _canEvacueeProvideTransportation: boolean;
+    private _mainHouseholdMember: HouseholdMember;
     private registrationResult: RegistrationResult;
     private verifiedRegistrationResult: string;
 
@@ -126,19 +127,31 @@ export class NeedsAssessmentService {
         this._specialDietDetails = value;
     }
 
+    public get mainHouseholdMember(): HouseholdMember {
+        return this._mainHouseholdMember;
+    }
+
+    public set mainHouseHoldMember(value: HouseholdMember) {
+        this._mainHouseholdMember = value;
+    }
+
     public setHouseHoldMembers(members: PersonDetails[]): void {
-        const householdMembers: Array<HouseholdMember> = [];
+        const householdMembersArray: Array<HouseholdMember> = [];
         for (const member of members) {
             const houseHoldMember: HouseholdMember = {
                 id: null,
                 details: member
             };
 
-            householdMembers.push(houseHoldMember);
+            householdMembersArray.push(houseHoldMember);
         }
-
-        this.householdMembers = householdMembers;
+        this.householdMembers = householdMembersArray;
     }
+
+    public addMainHouseholdMembers(): void {
+        this._householdMembers.push(this._mainHouseholdMember);
+    }
+
 
     public setNeedsDetails(formGroup: FormGroup): void {
         this.canEvacueeProvideClothing = formGroup.get('canEvacueeProvideClothing').value === 'null' ? null : formGroup.get('canEvacueeProvideClothing').value;

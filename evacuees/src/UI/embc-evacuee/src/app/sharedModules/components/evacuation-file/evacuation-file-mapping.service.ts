@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Address, EvacuationFile } from 'src/app/core/api/models';
+import { EvacuationFile } from 'src/app/core/api/models';
 import { NeedsAssessmentMappingService } from '../needs-assessment/needs-assessment-mapping.service';
 import { EvacuationFileDataService } from './evacuation-file-data.service';
 
@@ -16,10 +16,6 @@ export class EvacuationFileMappingService {
         this.evacuationFileDataService.evacuatedFromAddress = evacuationFile.evacuatedFromAddress;
         this.evacuationFileDataService.evacuationFileDate = evacuationFile.evacuationFileDate;
         this.needsAssessmentMapService.setNeedsAssessment(evacuationFile.evacuatedFromAddress, evacuationFile.needsAssessments[0]);
-    }
-
-    private setEvacAddress(evacuationAddress: Address): void {
-
     }
 
 }

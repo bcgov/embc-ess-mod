@@ -9,6 +9,7 @@
             </div>
         </div>
         <hr>
+
         <div>
             <p>Please read through this summary to make sure all your information is correct before submitting.</p>
             <p style="font-weight: bold;">Please print this page for your records.</p>
@@ -49,6 +50,7 @@
                 <p>{{supplier?.remittanceAddress?.otherCode}}</p>
                 <p>{{supplier?.businessCountry?.name}}</p>
             </div>
+
             <div *ngIf="supplierSubmissionType === 'invoice'">
                 <div class="formHeading">
                     Invoice Submitted
@@ -137,7 +139,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div *ngIf="supplierSubmissionType === 'receipt'">

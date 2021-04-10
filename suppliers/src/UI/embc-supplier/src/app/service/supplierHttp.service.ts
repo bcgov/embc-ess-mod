@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
+import { ServerConfig } from '../model/server-config';
 import { Community } from '../model/community';
 import { catchError, map } from 'rxjs/operators';
 import { Suppliers } from '../model/suppliers';
@@ -33,6 +34,15 @@ export class SupplierHttpService {
   }
 
   constructor(private http: HttpClient, private supplierService: SupplierService) { }
+
+  getServerConfig() {
+    return this.http
+      .get<ServerConfig>(`/api/Config`, { headers: this.headers })
+      .pipe(
+        catchError(error => {
+          return this.handleError(error);
+        }));
+  }
 
   getListOfCities() {
     return this.http
