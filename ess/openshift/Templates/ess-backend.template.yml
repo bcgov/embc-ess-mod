@@ -47,6 +47,7 @@ parameters:
     required: true
 
 objects:
+
   - kind: ConfigMap
     apiVersion: v1
     metadata:
@@ -54,6 +55,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-ess-backend
+        app.kubernetes.io/part-of: ${APP_NAME}
     data:     
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
@@ -69,6 +71,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-ess-backend
+        app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
       Dynamics__ADFS__ClientId: ${DYNAMICS_OAUTH_CLIENT_ID}
       Dynamics__ADFS__ClientSecret: ${DYNAMICS_OAUTH_CLIENT_SECRET}
@@ -82,6 +85,7 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-ess-backend
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-ess-backend
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       annotations:
@@ -96,17 +100,36 @@ objects:
         deploymentconfig: ${APP_NAME}-ess-backend
       type: ClusterIP
 
+  #- kind: NetworkPolicy
+  #  apiVersion: networking.k8s.io/v1
+  #  metadata:
+  #    name: ${APP_NAME}-registrants-portal
+  #    labels:
+  #      app: ${APP_NAME}-registrants-portal
+  #      app.kubernetes.io/part-of: ${APP_NAME}
+  #    namespace: ${NAMESPACE_PREFIX}-${ENV}
+  #  spec:
+  #    podSelector:
+  #      matchLabels:
+  #        app: ${APP_NAME}-registrants-portal
+  #    ingress:
+  #    - ports:
+  #      - protocol: TCP
+  #        port: 2015
+  #      - protocol: TCP
+  #        port: 8080
+
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-ess-backend
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-ess-backend
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-ess-backend
         deploymentconfig: ${APP_NAME}-ess-backend
       strategy:
         activeDeadlineSeconds: 21600
@@ -122,6 +145,7 @@ objects:
         metadata:
           labels:
             app: ${APP_NAME}-ess-backend
+            app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-ess-backend
         spec:
           containers:
@@ -136,7 +160,7 @@ objects:
                     name: ${APP_NAME}-ess-backend-config
                 - secretRef:
                     name: ${APP_NAME}-ess-backend-secrets
-              image: docker-registry.default.svc:5000/pbiizm-tools/ess-backend:${TAG}
+              image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/ess-backend:${TAG}
               imagePullPolicy: Always
               volumeMounts:
                 - mountPath: /dpkeys
@@ -176,6 +200,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-ess-backend
+        app.kubernetes.io/part-of: ${APP_NAME}
     spec:
       accessModes:
         - "ReadWriteMany"
