@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { TeamMember } from 'src/app/core/api/models';
 import { TeamMembersService } from 'src/app/core/api/services';
 
 @Injectable({ providedIn: 'root' })
@@ -9,5 +10,9 @@ export class TeamMemberDetailsService {
 
     deleteTeamMember(memberId: string): Observable<void> {
        return this.teamMembersService.teamMembersDeleteTeamMember({memberId});
+    }
+
+    public getTeamMember(memberId: string): Observable<TeamMember> {
+        return this.teamMembersService.teamMembersGetTeamMember({memberId});
     }
 }
