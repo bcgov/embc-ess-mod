@@ -11,7 +11,6 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 export class TaskSearchComponent implements OnInit {
 
   taskSearchForm: FormGroup;
- // showSearch = true;
 
   constructor(private builder: FormBuilder, private customValidation: CustomValidationService,
     private router: Router) { }
@@ -31,12 +30,7 @@ export class TaskSearchComponent implements OnInit {
   }
 
   submitTask(): void {
-    this.router.navigate(['/responder-access/search/task-details']);
-    // this.showSearch = !this.showSearch;
-    // this.isActive = !this.isActive;
-    // this.isExpired = !this.isExpired;
+    this.router.navigate(['/responder-access/search/task-details'], {state: {taskNumber: this.taskSearchForm.get('taskNumber').value}});
   }
-
-  
 
 }
