@@ -5,7 +5,7 @@ import { DataService } from './data.service';
 import { Country, SupportItems } from '../model/country';
 import { Observable } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalComponent } from '../core/components/modal/modal.component';
+import { ModalComponent } from '../components/modal/modal.component';
 import { ServerConfig } from '../model/server-config';
 
 @Injectable({

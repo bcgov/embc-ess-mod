@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { SupplierService } from '../service/supplier.service';
+import { SupplierService } from '../../core/services/supplier.service';
 import { Router } from '@angular/router';
-import { SupplierHttpService } from '../service/supplierHttp.service';
-import * as globalConst from 'src/app/service/globalConstants';
-import { AlertService } from '../service/alert.service';
+import { SupplierHttpService } from '../../core/services/supplierHttp.service';
+import * as globalConst from 'src/app/core/services/globalConstants';
+import { AlertService } from '../../core/services/alert.service';
 
 @Component({
     selector: 'app-review',

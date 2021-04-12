@@ -5,10 +5,10 @@ import { SupplierSubmissionComponent } from './supplierSubmission.component';
 import { SupplierRoutingModule } from './supplier-routing.module';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { ReferralComponent } from './referral/referral.component';
-import { CoreModule } from '../core/core.module';
+import { CoreModule } from '../../core/core.module';
 import { ReceiptComponent } from './receipt/receipt.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ModalComponent } from '../core/components/modal/modal.component';
+import { ModalComponent } from '../../core/components/modal/modal.component';
 
 @NgModule({
   imports: [

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { WarningModalComponent } from '../core/components/warningModal/warningModal.component';
+import { WarningModalComponent } from '../components/warningModal/warningModal.component';
 
 
 @Injectable({

@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { NgbDateParserFormatter, NgbCalendar, NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
-import { DateParserService } from 'src/app/service/dateParser.service';
-import { SupplierService } from 'src/app/service/supplier.service';
-import { CustomDateAdapterService } from 'src/app/service/customDateAdapter.service';
-import { CustomValidationService } from 'src/app/service/customValidation.service';
+import { DateParserService } from 'src/app/core/services/dateParser.service';
+import { SupplierService } from 'src/app/core/services/supplier.service';
+import { CustomDateAdapterService } from 'src/app/core/services/customDateAdapter.service';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 
 @Component({
     selector: 'app-referral',

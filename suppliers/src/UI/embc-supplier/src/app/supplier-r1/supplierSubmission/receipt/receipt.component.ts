@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
-import { SupplierService } from 'src/app/service/supplier.service';
-import * as globalConst from 'src/app/service/globalConstants';
-import { CustomValidationService } from 'src/app/service/customValidation.service';
+import { SupplierService } from 'src/app/core/services/supplier.service';
+import * as globalConst from 'src/app/core/services/globalConstants';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 
 @Component({
     selector: 'app-receipt',

@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
-import { ToastService } from 'src/app/service/toast.service';
-import {WarningService} from 'src/app/service/warning.service'
-import * as constant from 'src/app/service/globalConstants'
+import { ToastService } from 'src/app/core/services/toast.service';
+import {WarningService} from 'src/app/core/services/warning.service'
+import * as constant from 'src/app/core/services/globalConstants'
 
 @Component({
     selector: 'app-file-upload',

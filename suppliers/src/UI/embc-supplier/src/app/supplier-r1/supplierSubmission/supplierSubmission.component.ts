@@ -1,14 +1,14 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { SupplierService } from '../service/supplier.service';
+import { SupplierService } from '../../core/services/supplier.service';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { NgbModal, NgbTypeaheadConfig } from '@ng-bootstrap/ng-bootstrap';
-import { ModalComponent } from '../core/components/modal/modal.component';
-import { Country } from '../model/country';
-import { CustomValidationService } from '../service/customValidation.service';
-import * as globalConst from 'src/app/service/globalConstants';
+import { ModalComponent } from '../../core/components/modal/modal.component';
+import { Country } from '../../core/model/country';
+import { CustomValidationService } from '../../core/services/customValidation.service';
+import * as globalConst from 'src/app/core/services/globalConstants';
 
 @Component({
     selector: 'app-supplier-submission',

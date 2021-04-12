@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ConfigGuard } from './service/config.guard';
-import { ReviewGuard } from './service/review.guard';
+import { ConfigGuard } from './core/guards/config.guard';
+import { ReviewGuard } from './core/guards/review.guard';
 
 const routes: Routes = [
   {
@@ -19,16 +19,16 @@ const routes: Routes = [
       },
       {
         path: 'submission',
-        loadChildren: () => import('./supplierSubmission/supplierSubmission.module').then(m => m.SupplierSubmissionModule)
+        loadChildren: () => import('./supplier-r1/supplierSubmission/supplierSubmission.module').then(m => m.SupplierSubmissionModule)
       },
       {
         path: 'review',
         canActivate: [ReviewGuard],
-        loadChildren: () => import('./review/review.module').then(m => m.ReviewModule)
+        loadChildren: () => import('./supplier-r1/review/review.module').then(m => m.ReviewModule)
       },
       {
         path: 'thankyou',
-        loadChildren: () => import('./reference/reference.module').then(m => m.ReferenceModule)
+        loadChildren: () => import('./supplier-r1/reference/reference.module').then(m => m.ReferenceModule)
       },
       {
         path: '**',
