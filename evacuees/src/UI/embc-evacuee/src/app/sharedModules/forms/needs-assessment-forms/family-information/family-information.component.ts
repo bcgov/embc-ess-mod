@@ -54,9 +54,6 @@ export default class FamilyInformationComponent implements OnInit {
       this.updateOnVisibility());
     this.dataSource.next(this.householdMemberForm.get('householdMembers').value);
     this.data = this.householdMemberForm.get('householdMembers').value;
-
-    console.log(this.dataSource);
-    console.log(this.data);
   }
 
   addMembers(): void {

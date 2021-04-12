@@ -164,6 +164,23 @@ export class NeedsAssessmentService {
     }
 
     public createNeedsAssessmentDTO(): NeedsAssessment {
+        console.log({
+            id: this.id,
+            canEvacueeProvideClothing: this.canEvacueeProvideClothing,
+            canEvacueeProvideFood: this.canEvacueeProvideFood,
+            canEvacueeProvideIncidentals: this.canEvacueeProvideIncidentals,
+            canEvacueeProvideLodging: this.canEvacueeProvideLodging,
+            canEvacueeProvideTransportation: this.canEvacueeProvideTransportation,
+            householdMembers: this.householdMembers,
+            hasPetsFood: this.hasPetsFood,
+            haveMedication: this.haveMedication,
+            haveSpecialDiet: this.haveSpecialDiet,
+            specialDietDetails: this.specialDietDetails,
+            insurance: this.insurance,
+            pets: this.pets,
+            type: NeedsAssessmentType.Preliminary
+        });
+
         return {
             id: this.id,
             canEvacueeProvideClothing: this.canEvacueeProvideClothing,
@@ -175,6 +192,7 @@ export class NeedsAssessmentService {
             hasPetsFood: this.hasPetsFood,
             haveMedication: this.haveMedication,
             haveSpecialDiet: this.haveSpecialDiet,
+            specialDietDetails: this.specialDietDetails,
             insurance: this.insurance,
             pets: this.pets,
             type: NeedsAssessmentType.Preliminary

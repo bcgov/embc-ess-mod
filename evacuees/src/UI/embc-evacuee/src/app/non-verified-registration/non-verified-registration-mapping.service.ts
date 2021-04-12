@@ -36,6 +36,7 @@ export class NonVerifiedRegistrationMappingService {
             hasPetsFood: null,
             haveMedication: null,
             haveSpecialDiet: null,
+            specialDietDetails: null,
             insurance: null,
             pets: null,
         };
