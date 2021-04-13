@@ -30,16 +30,16 @@ const routes: Routes = [
       },
       {
         path: 'submission',
-        loadChildren: () => import('./supplier-r1/submission/submission.module').then(m => m.SubmissionModule)
+        loadChildren: () => import('./fire-and-forget/submission/submission.module').then(m => m.SubmissionModule)
       },
       {
         path: 'review',
         canActivate: [ReviewGuard],
-        loadChildren: () => import('./supplier-r1/review/review.module').then(m => m.ReviewModule)
+        loadChildren: () => import('./fire-and-forget/review/review.module').then(m => m.ReviewModule)
       },
       {
         path: 'thankyou',
-        loadChildren: () => import('./supplier-r1/reference/reference.module').then(m => m.ReferenceModule)
+        loadChildren: () => import('./fire-and-forget/reference/reference.module').then(m => m.ReferenceModule)
       },
       {
         path: '**',
