@@ -1,0 +1,47 @@
+@import '../../../../styles/styles.scss';
+
+//.referral-template{
+//  margin-top: 10px;
+//}
+
+.referral-header{
+   background-color: #96B0C8;
+   padding: 10px;
+}
+
+.table-header{
+   background-color: #CAD7E3;
+}
+
+.referral-border {
+   margin: 15px;
+   border: 2px #96B0C8 solid;
+   background-color: white;
+}
+
+.attach-header {
+   font-weight: bold;
+}
+
+.add-line {
+   color: gray !important;
+   font-weight: normal !important;
+}
+
+.dollar-line {
+   line-height: 20px;
+}
+
+.items-dollar-line {
+   line-height: 40px;
+}
+
+.line-number {
+   padding-top: 1.2rem !important;
+   font-size: 16px;
+   color: theme-color(primary)
+}
+
+input.form-control, select.form-control {
+   width: auto;
+}
