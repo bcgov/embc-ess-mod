@@ -46,7 +46,7 @@ oc process -f .\env-promotions.template.yml | oc -n <openshift namespace>-tools 
 
 | name       | namespace   | purpose                                                          
 | ---------- | ----------- | ---------------------------------------------------------------- 
-| dev1       | pbiizm-dev  | continiuous deployment from master branch for QA and integration 
-| test       | pbiizm-test | regression and UAT environment                                   
-| training   | pbiizm-test | training env for field users                                     
-| production | pbiizm-prod | production environment                                           
+| dev1       | b5e079-dev  | continiuous deployment from master branch for QA and integration 
+| test       | b5e079-test | regression and UAT environment                                   
+| training   | b5e079-test | training env for field users                                     
+| production | b5e079-prod | production environment                                           
