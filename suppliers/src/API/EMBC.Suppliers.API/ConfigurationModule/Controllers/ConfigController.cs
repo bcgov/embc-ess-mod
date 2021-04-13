@@ -47,6 +47,8 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             var maintPage = conf["MAINTENANCE_PAGEDOWN"] ?? string.Empty;
             var maintTimeStr = conf["MAINTENANCE_START"] ?? string.Empty;
 
+            var envStr = conf["ASPNETCORE_ENVIRONMENT"] ?? string.Empty;
+
             DateTime maintTime;
 
             var siteDown = false;
@@ -80,7 +82,8 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             {
                 noticeMsg = noticeMsg,
                 maintMsg = maintMsg,
-                siteDown = siteDown
+                siteDown = siteDown,
+                environment = envStr
             };
 
             return Ok(result);
@@ -103,6 +106,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             public string noticeMsg { get; set; }
             public string maintMsg { get; set; }
             public bool siteDown { get; set; }
+            public string environment { get; set; }
         }
     }
 }

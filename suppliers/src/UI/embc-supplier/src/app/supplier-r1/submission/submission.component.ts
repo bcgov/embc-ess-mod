@@ -12,11 +12,11 @@ import * as globalConst from 'src/app/core/services/globalConstants';
 
 @Component({
     selector: 'app-supplier-submission',
-    templateUrl: './supplierSubmission.component.html',
-    styleUrls: ['./supplierSubmission.component.scss'],
+    templateUrl: './submission.component.html',
+    styleUrls: ['./submission.component.scss'],
     providers: [CustomValidationService, NgbTypeaheadConfig]
 })
-export class SupplierSubmissionComponent implements OnInit {
+export class SubmissionComponent implements OnInit {
 
     constructor(private router: Router, private builder: FormBuilder, private supplierService: SupplierService,
                 private cd: ChangeDetectorRef, private modalService: NgbModal, private customValidator: CustomValidationService,

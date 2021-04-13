@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SupplierSubmissionComponent } from './supplierSubmission.component';
-import { SupplierRoutingModule } from './supplier-routing.module';
+import { SubmissionComponent } from './submission.component';
+import { SupplierRoutingModule } from './submission-routing.module';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { ReferralComponent } from './referral/referral.component';
 import { CoreModule } from '../../core/core.module';
@@ -19,10 +19,10 @@ import { ModalComponent } from '../../core/components/modal/modal.component';
     NgbModule
   ],
   declarations: [
-    SupplierSubmissionComponent,
+    SubmissionComponent,
     InvoiceComponent,
     ReferralComponent,
     ReceiptComponent
-    ]
+  ]
 })
-export class SupplierSubmissionModule { }
+export class SubmissionModule { }
