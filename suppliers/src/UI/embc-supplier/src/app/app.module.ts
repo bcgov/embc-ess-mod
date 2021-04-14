@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { LayoutModule } from './core/layout/layout.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from './core/core.module';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,13 @@ import { CoreModule } from './core/core.module';
     AppRoutingModule,
     LayoutModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    OAuthModule.forRoot({
+      resourceServer: {
+        customUrlValidation: url => url.startsWith('/api') && !url.endsWith('/configuration'),
+        sendAccessToken: true
+      }
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]

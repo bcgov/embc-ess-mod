@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
 using Jasper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -28,6 +29,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 {
     [ApiController]
     [Route("api/config")]
+    [AllowAnonymous]
     public class ConfigController : ControllerBase
     {
         private readonly IConfiguration conf;
@@ -38,6 +40,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
         }
 
         [HttpGet("")]
+        [AllowAnonymous]
         public ActionResult<Config> GetConfig()
         {
             string maintMsg = string.Empty;
@@ -89,6 +92,22 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             return Ok(result);
         }
 
+        [HttpGet("auth_config")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Configuration>> GetConfiguration()
+        {
+            var config = new Configuration
+            {
+                Oidc = new OidcConfiguration
+                {
+                    ClientId = conf["oidc:clientId"],
+                    Issuer = conf["oidc:issuer"]
+                }
+            };
+
+            return Ok(await Task.FromResult(config));
+        }
+
         /// <summary>
         /// Checks if CRM can be accessed
         /// </summary>
@@ -107,6 +126,17 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             public string maintMsg { get; set; }
             public bool siteDown { get; set; }
             public string environment { get; set; }
+        }
+
+        public class Configuration
+        {
+            public OidcConfiguration Oidc { get; set; }
+        }
+
+        public class OidcConfiguration
+        {
+            public string Issuer { get; set; }
+            public string ClientId { get; set; }
         }
     }
 }

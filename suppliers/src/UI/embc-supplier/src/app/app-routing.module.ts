@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './core/guards/auth.guard';
 import { ConfigGuard } from './core/guards/config.guard';
 import { DevGuard } from './core/guards/dev.guard';
 import { ReviewGuard } from './core/guards/review.guard';
@@ -16,7 +17,7 @@ const routes: Routes = [
       },
       {
         path: 'auth',
-        canActivate: [DevGuard],
+        canActivate: [AuthGuard, DevGuard],
         loadChildren: () => import('./supplier-auth/supplier-auth.module').then(m => m.SupplierAuthModule)
       },
       {
