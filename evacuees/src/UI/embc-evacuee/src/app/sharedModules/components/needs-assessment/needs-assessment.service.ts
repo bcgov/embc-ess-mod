@@ -131,7 +131,7 @@ export class NeedsAssessmentService {
         return this._mainHouseholdMember;
     }
 
-    public set mainHouseHoldMember(value: HouseholdMember) {
+    public set mainHouseholdMember(value: HouseholdMember) {
         this._mainHouseholdMember = value;
     }
 
@@ -146,10 +146,6 @@ export class NeedsAssessmentService {
             householdMembersArray.push(houseHoldMember);
         }
         this.householdMembers = householdMembersArray;
-    }
-
-    public addMainHouseholdMembers(): void {
-        this._householdMembers.push(this._mainHouseholdMember);
     }
 
 

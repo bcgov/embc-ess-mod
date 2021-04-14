@@ -60,7 +60,7 @@ export class EditService {
                 this.needsAssessmentDataService.haveMedication = form.get('haveMedication').value;
                 this.needsAssessmentDataService.specialDietDetails = form.get('specialDietDetails').value;
                 this.needsAssessmentDataService.setHouseHoldMembers(form.get('householdMembers').value);
-                this.needsAssessmentDataService.addMainHouseholdMembers();
+                this.needsAssessmentMapping.addMainHouseholdMembers();
                 break;
             case 'pets':
                 this.needsAssessmentDataService.pets = form.get('pets').value;
@@ -171,7 +171,4 @@ export class EditService {
             default:
         }
     }
-
-
-
 }

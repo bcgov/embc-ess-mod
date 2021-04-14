@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { Address, HouseholdMember, InsuranceOption, NeedsAssessment, Pet } from 'src/app/core/api/models';
 import { PersonDetails } from 'src/app/core/model/profile.model';
@@ -125,8 +126,19 @@ export class NeedsAssessmentMappingService {
     }
 
     private isSameLastName(lastname: string): boolean {
-        const userPersonalDetails = this.profileDataService.personalDetails;
-        const userLastname = userPersonalDetails.lastName;
+        const pathname = window.location.pathname;
+        let userLastname: string;
+
+        if (pathname.includes('non-verified-registration')) {
+            this.formCreationService.getPersonalDetailsForm().pipe(first()).subscribe(
+                personalDetails => {
+                    userLastname = personalDetails.get('lastName').value;
+                }
+            );
+        } else {
+            const userPersonalDetails = this.profileDataService.personalDetails;
+            userLastname = userPersonalDetails.lastName;
+        }
 
         return (userLastname === lastname);
     }
@@ -153,10 +165,11 @@ export class NeedsAssessmentMappingService {
     }
 
     public convertHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
+        const pathname = window.location.pathname;
         const householdMembersFormArray: Array<PersonDetails> = [];
 
-        for (const member of householdMembers) {
-            if (!this.isSameUser(member.details)) {
+        if (pathname.includes('non-verified-registration')) {
+            for (const member of householdMembers) {
                 const memberDetails: PersonDetails = {
                     firstName: member.details.firstName,
                     lastName: member.details.lastName,
@@ -167,12 +180,34 @@ export class NeedsAssessmentMappingService {
                 };
 
                 householdMembersFormArray.push(memberDetails);
-            } else {
-                this.needsAssessmentService.mainHouseHoldMember = member;
+            }
+        } else {
+            for (const member of householdMembers) {
+                if (!this.isSameUser(member.details)) {
+                    const memberDetails: PersonDetails = {
+                        firstName: member.details.firstName,
+                        lastName: member.details.lastName,
+                        initials: member.details.initials,
+                        gender: member.details.gender,
+                        dateOfBirth: member.details.dateOfBirth,
+                        sameLastNameCheck: this.isSameLastName(member.details.lastName)
+                    };
+
+                    householdMembersFormArray.push(memberDetails);
+                } else {
+                    this.needsAssessmentService.mainHouseholdMember = member;
+                }
             }
         }
+
         return householdMembersFormArray;
     }
 
-
+    public addMainHouseholdMembers(): void {
+        if (this.needsAssessmentService.mainHouseholdMember !== undefined) {
+            if (!this.needsAssessmentService.householdMembers.includes(this.needsAssessmentService.mainHouseholdMember)) {
+                this.needsAssessmentService.householdMembers.push(this.needsAssessmentService.mainHouseholdMember);
+            }
+        }
+    }
 }

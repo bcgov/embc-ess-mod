@@ -5,6 +5,7 @@ import { DialogService } from 'src/app/core/services/dialog.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-evacuation-file-list',
@@ -35,7 +36,7 @@ export class EvacuationFileListComponent implements OnInit {
       this.showLoading = true;
       this.evacuationFileService.getCurrentEvacuationFiles().subscribe(files => {
         this.dataSourceActive = files;
-        this.dataSourceActive.sort((a, b) => parseInt(b.essFileNumber, 10) - parseInt(a.essFileNumber, 10));
+        this.dataSourceActive.sort((a, b) => new Date(b.evacuationFileDate).valueOf() - new Date(a.evacuationFileDate).valueOf());
         console.log(this.dataSourceActive);
         this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
         this.evacuatedFrom = this.dataSourceActive[0].evacuatedFromAddress.jurisdiction.name;
@@ -46,7 +47,7 @@ export class EvacuationFileListComponent implements OnInit {
       this.showLoading = true;
       this.evacuationFileService.getPastEvacuationFiles().subscribe(files => {
         this.dataSourceInactive = files;
-        this.dataSourceInactive.sort((a, b) => parseInt(b.essFileNumber, 10) - parseInt(a.essFileNumber, 10));
+        this.dataSourceInactive.sort((a, b) => new Date(b.evacuationFileDate).valueOf() - new Date(a.evacuationFileDate).valueOf());
         // console.log(this.dataSourceInactive);
         this.showLoading = false;
       });
