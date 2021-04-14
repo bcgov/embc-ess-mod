@@ -4,7 +4,9 @@ metadata:
   name: registrants-portal-env-promotions
   annotations:
     description: "Pipelines to promote images to higher environments"
+
 objects:
+
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
@@ -15,12 +17,31 @@ objects:
           jenkinsfile: |-
             node {
               stage('tag image'){
-                openshiftTag(srcStream: 'registrants-portal-api', srcTag: 'latest', destStream: 'registrants-portal-api', destTag: 'test')
-                openshiftTag(srcStream: 'registrants-portal-ui', srcTag: 'latest', destStream: 'registrants-portal-ui', destTag: 'test')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'test-registrants-portal-api')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'test-registrants-portal-ui')
+                openshift.withCluster() {
+                    openshift.withCredentials() {
+                        openshift.tag('registrants-portal-api:latest', 'registrants-portal-api:test')
+                        openshift.tag('registrants-portal-ui:latest', 'registrants-portal-ui:test')
+                    }
+                    openshift.withProject('b5e079-test') {
+                        def uiAppName = 'test-registrants-portal-ui'
+                        def apiAppName = 'test-registrants-portal-api'
+                        def uiLastVersion = openshift.selector('dc', uiAppName).object().status.latestVersion
+                        def uiRc = openshift.selector('rc', uiAppName + '-' + + uiLastVersion)
+                        uiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
+                        def apiRc = openshift.selector('rc', apiAppName + '-' + apiLastVersion)
+                        apiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                    }
+                }
               }
             }
+
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
@@ -30,18 +51,32 @@ objects:
         jenkinsPipelineStrategy:
           jenkinsfile: |-
             node {
-              stage('approval') {
-                timeout(time: 30, unit: 'DAYS') {
-                  input message: "Deploy to training?"
+              stage('tag image'){
+                openshift.withCluster() {
+                    openshift.withCredentials() {
+                        openshift.tag('registrants-portal-api:test', 'registrants-portal-api:training')
+                        openshift.tag('registrants-portal-ui:test', 'registrants-portal-ui:training')
+                    }
+                    openshift.withProject('b5e079-test') {
+                        def uiAppName = 'training-registrants-portal-ui'
+                        def apiAppName = 'training-registrants-portal-api'
+                        def uiLastVersion = openshift.selector('dc', uiAppName).object().status.latestVersion
+                        def uiRc = openshift.selector('rc', uiAppName + '-' + + uiLastVersion)
+                        uiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
+                        def apiRc = openshift.selector('rc', apiAppName + '-' + apiLastVersion)
+                        apiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                    }
                 }
               }
-              stage('tag image'){
-                openshiftTag(srcStream: 'registrants-portal-api', srcTag: 'test', destStream: 'registrants-portal-api', destTag: 'training')
-                openshiftTag(srcStream: 'registrants-portal-ui', srcTag: 'test', destStream: 'registrants-portal-ui', destTag: 'training')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'training-registrants-portal-api')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'training-registrants-portal-ui')
-              }
             }
+
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
@@ -50,16 +85,34 @@ objects:
       strategy:
         jenkinsPipelineStrategy:
           jenkinsfile: |-
-            node {
+             node {
               stage('approval') {
                 timeout(time: 30, unit: 'DAYS') {
                   input message: "Deploy to prod?"
                 }    
               }
-               stage('tag image'){
-                openshiftTag(srcStream: 'registrants-portal-api', srcTag: 'training', destStream: 'registrants-portal-api', destTag: 'prod')
-                openshiftTag(srcStream: 'registrants-portal-ui', srcTag: 'training', destStream: 'registrants-portal-ui', destTag: 'prod')
-                openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-registrants-portal-api')
-                openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-registrants-portal-ui')
+              stage('tag image'){
+                openshift.withCluster() {
+                    openshift.withCredentials() {
+                        openshift.tag('registrants-portal-api:training', 'registrants-portal-api:prod')
+                        openshift.tag('registrants-portal-ui:training', 'registrants-portal-ui:prod')
+                    }
+                    openshift.withProject('b5e079-prod') {
+                        def uiAppName = 'production-registrants-portal-ui'
+                        def apiAppName = 'production-registrants-portal-api'
+                        def uiLastVersion = openshift.selector('dc', uiAppName).object().status.latestVersion
+                        def uiRc = openshift.selector('rc', uiAppName + '-' + + uiLastVersion)
+                        uiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
+                        def apiRc = openshift.selector('rc', apiAppName + '-' + apiLastVersion)
+                        apiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                    }
+                }
               }
-            }
+             }

@@ -54,7 +54,7 @@ oc process -f .\env-promotions.template.yml | oc -n <openshift namespace>-tools 
 
 | name       | namespace   | purpose                                                          | url                                                                                                   |
 | ---------- | ----------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| dev1       | pbiizm-dev  | continiuous deployment from master branch for QA and integration | https://dev1-embc-responders.pathfinder.gov.bc.ca/, https://era-responders-dev.embc.gov.bc.ca/          |
-| test       | pbiizm-test | regression and UAT environment                                   | https://test-embc-responders.pathfinder.gov.bc.ca/, https://era-responders-test.embc.gov.bc.ca/         |
-| training   | pbiizm-test | training env for field users                                     | https://training-embc-responders.pathfinder.gov.bc.ca/, https://era-responders-training.embc.gov.bc.ca/ |
-| production | pbiizm-prod | production environment                                           | https://production-embc-responders.pathfinder.gov.bc.ca/, https://era-responders.embc.gov.bc.ca/        |
+| dev1       | b5e079-dev  | continiuous deployment from master branch for QA and integration | https://dev1-embc-responders.apps.silver.devops.gov.bc.ca/, https://era-responders-dev.embc.gov.bc.ca/          |
+| test       | b5e079-test | regression and UAT environment                                   | https://test-embc-responders.apps.silver.devops.gov.bc.ca/, https://era-responders-test.embc.gov.bc.ca/         |
+| training   | b5e079-test | training env for field users                                     | https://training-embc-responders.apps.silver.devops.gov.bc.ca/, https://era-responders-training.embc.gov.bc.ca/ |
+| production | b5e079-prod | production environment                                           | https://production-embc-responders.apps.silver.devops.gov.bc.ca/, https://era-responders.embc.gov.bc.ca/        |

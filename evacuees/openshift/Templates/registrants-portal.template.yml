@@ -4,6 +4,12 @@ metadata:
   name: registrants-portal-template
 
 parameters:
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+  - description: openshift namespace env name
+    name: ENV
+    required: true
   - description: app name
     name: APP_NAME
     required: true
@@ -12,7 +18,7 @@ parameters:
     required: true
   - description: Reverse proxy known network
     name: KNOWN_NETWORKS
-    value: ::ffff:172.51.0.0/16
+    value: ::ffff:10.97.0.0/16
   - description: ASPNET runtime environment (Development|Staging|Production)
     name: RUNTIME_ENVIRONMENT
     value: Staging
@@ -82,12 +88,15 @@ parameters:
     required: true
 
 objects:
+
   - kind: ConfigMap
     apiVersion: v1
     metadata:
       name: ${APP_NAME}-registrants-api-config
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-registrants-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
     data:     
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
@@ -103,13 +112,16 @@ objects:
       auth__jwt__audience: ${JWT_AUDIENCE}
       auth__jwt__expiryInMinutes: ${JWT_TOKEN_EXPIRY}
       smtp__server: ${SMTP_SERVER}
+
   - kind: Secret
     apiVersion: v1
     type: Opaque
     metadata:
       name: ${APP_NAME}-registrants-api-secrets
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-registrants-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
       Dynamics__ADFS__ClientId: ${OAUTH_CLIENT_ID}
       Dynamics__ADFS__ClientSecret: ${OAUTH_CLIENT_SECRET}
@@ -121,12 +133,15 @@ objects:
       auth__bcsc__clientSecret: ${BCSC_CLIENT_SECRET}
       auth__jwt__signingKey: ${JWT_SIGNING_KEY}
       auth__jwt__encryptingKey: ${JWT_ENCRYPTING_KEY}
+
   - kind: Service
     apiVersion: v1
     metadata:
       labels:
         app: ${APP_NAME}-registrants-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-registrants-portal-api
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       ports:
         - name: 8080-tcp
@@ -136,12 +151,15 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-registrants-portal-api
       type: ClusterIP
+
   - kind: Service
     apiVersion: v1
     metadata:
       labels:
         app: ${APP_NAME}-registrants-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-registrants-portal-ui
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       ports:
         - name: 2015-tcp
@@ -151,14 +169,17 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-registrants-portal-ui
       type: ClusterIP
+
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-registrants-portal
-      name: era-registrants-${APP_NAME}-portal-api-pathfinder
+        app.kubernetes.io/part-of: ${APP_NAME}
+      name: ${APP_NAME}-era-registrants-portal-api
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
-      host: era-registrants-${APP_NAME}.pathfinder.gov.bc.ca
+      host: ${APP_NAME}-era-registrants.apps.silver.devops.gov.bc.ca
       path: /api
       port:
         targetPort: 8080-tcp
@@ -170,14 +191,17 @@ objects:
         name: ${APP_NAME}-registrants-portal-api
         weight: 100
       wildcardPolicy: None
+
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-registrants-portal
-      name: era-registrants-${APP_NAME}-portal-ui-pathfinder
+        app.kubernetes.io/part-of: ${APP_NAME}
+      name: ${APP_NAME}-era-registrants-portal-ui
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
-      host: era-registrants-${APP_NAME}.pathfinder.gov.bc.ca
+      host: ${APP_NAME}-era-registrants.apps.silver.devops.gov.bc.ca
       path: /
       port:
         targetPort: 2015-tcp
@@ -188,16 +212,37 @@ objects:
         kind: Service
         name: ${APP_NAME}-registrants-portal-ui
         weight: 100
+
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: ${APP_NAME}-registrants-portal
+      labels:
+        app: ${APP_NAME}-registrants-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    spec:
+      podSelector:
+        matchLabels:
+          app: ${APP_NAME}-registrants-portal
+      ingress:
+      - ports:
+        - protocol: TCP
+          port: 2015
+        - protocol: TCP
+          port: 8080
+
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-registrants-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-registrants-portal-api
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-registrants-portal
         deploymentconfig: ${APP_NAME}-registrants-portal-api
       strategy:
         activeDeadlineSeconds: 21600
@@ -213,6 +258,7 @@ objects:
         metadata:
           labels:
             app: ${APP_NAME}-registrants-portal
+            app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-registrants-portal-api
         spec:
           containers:
@@ -222,7 +268,7 @@ objects:
                     name: ${APP_NAME}-registrants-api-config
                 - secretRef:
                     name: ${APP_NAME}-registrants-api-secrets
-              image: docker-registry.default.svc:5000/pbiizm-tools/registrants-portal-api:${TAG}
+              image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/registrants-portal-api:${TAG}
               imagePullPolicy: Always
               volumeMounts:
                 - mountPath: /dpkeys
@@ -247,17 +293,19 @@ objects:
             from:
               kind: ImageStreamTag
               name: registrants-portal-api:${TAG}
-              namespace: pbiizm-tools
+              namespace: ${NAMESPACE_PREFIX}-tools
+
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-registrants-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-registrants-portal-ui
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-registrants-portal
         deploymentconfig: ${APP_NAME}-registrants-portal-ui
       strategy:
         activeDeadlineSeconds: 21600
@@ -273,6 +321,7 @@ objects:
         metadata:
           labels:
             app: ${APP_NAME}-registrants-portal
+            app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-registrants-portal-ui
         spec:
           containers:
@@ -280,7 +329,7 @@ objects:
               env:
                 - name: API_URL
                   value: ${APP_NAME}-registrants-portal-api:8080
-              image: docker-registry.default.svc:5000/pbiizm-tools/registrants-portal-ui:${TAG}
+              image: docker-registry.default.svc:5000/${NAMESPACE_PREFIX}-tools/registrants-portal-ui:${TAG}
               imagePullPolicy: Always
               ports:
                 - containerPort: 2015
@@ -304,13 +353,16 @@ objects:
             from:
               kind: ImageStreamTag
               name: registrants-portal-ui:${TAG}
-              namespace: pbiizm-tools
+              namespace: ${NAMESPACE_PREFIX}-tools
+
   - kind: "PersistentVolumeClaim"
     apiVersion: "v1"
     metadata:
       name: ${APP_NAME}-registrants-key-ring
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-registrants-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
     spec:
       accessModes:
         - "ReadWriteMany"

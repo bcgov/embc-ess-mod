@@ -172,13 +172,13 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<bool> DeleteMember(string teamId, string teamMemberId)
         {
-            var query = EssTeamUsers
+            var member = EssTeamUsers
                 .Where(u => u._era_essteamid_value == Guid.Parse(teamId) && u.era_essteamuserid == Guid.Parse(teamMemberId))
                 .SingleOrDefault();
 
-            if (query == null) return false;
+            if (member == null) return false;
 
-            context.SoftDeleteObject(query);
+            context.SoftDeleteObject(member);
 
             await context.SaveChangesAsync();
             context.DetachAll();

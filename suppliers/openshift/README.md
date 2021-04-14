@@ -31,7 +31,7 @@ To create an environment:
 3. run the following command (modify the Openshift project to the one you want to deploy to):
 
 ```
-oc process -f .\suppliers-portal.template.yml --param-file .\suppliers-portal.yml.<app name>.params | oc -n <openshift project name> apply -f -
+oc process -f .\suppliers-portal.template.yml --param-file .\suppliers-portal.yml.<app name>.params | oc apply -f -
 ```
 
 4. to update an existing environment, modify the templates and params, then execute the same command.
@@ -54,7 +54,7 @@ oc process -f .\env-promotions.template.yml | oc -n <openshift namespace>-tools 
 
 | name       | namespace   | purpose                                                          | url                                                                                                   |
 | ---------- | ----------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| dev1       | pbiizm-dev  | continiuous deployment from master branch for QA and integration | https://dev1-embc-suppliers.pathfinder.gov.bc.ca/, https://era-suppliers-dev.embc.gov.bc.ca/          |
-| test       | pbiizm-test | regression and UAT environment                                   | https://test-embc-suppliers.pathfinder.gov.bc.ca/, https://era-suppliers-test.embc.gov.bc.ca/         |
-| training   | pbiizm-test | training env for field users                                     | https://training-embc-suppliers.pathfinder.gov.bc.ca/, https://era-suppliers-training.embc.gov.bc.ca/ |
-| production | pbiizm-prod | production environment                                           | https://production-embc-suppliers.pathfinder.gov.bc.ca/, https://era-suppliers.embc.gov.bc.ca/        |
+| dev1       | b5e079-dev  | continiuous deployment from master branch for QA and integration | https://dev1-embc-suppliers.apps.silver.devops.gov.bc.ca/, https://era-suppliers-dev.embc.gov.bc.ca/          |
+| test       | b5e079-test | regression and UAT environment                                   | https://test-embc-suppliers.apps.silver.devops.gov.bc.ca/, https://era-suppliers-test.embc.gov.bc.ca/         |
+| training   | b5e079-test | training env for field users                                     | https://training-embc-suppliers.apps.silver.devops.gov.bc.ca/, https://era-suppliers-training.embc.gov.bc.ca/ |
+| production | b5e079-prod | production environment                                           | https://production-embc-suppliers.apps.silver.devops.gov.bc.ca/, https://era-suppliers.embc.gov.bc.ca/        |

@@ -15,10 +15,28 @@ objects:
           jenkinsfile: |-
             node {
               stage('tag image'){
-                openshiftTag(srcStream: 'responders-portal-api', srcTag: 'latest', destStream: 'responders-portal-api', destTag: 'test')
-                openshiftTag(srcStream: 'responders-portal-ui', srcTag: 'latest', destStream: 'responders-portal-ui', destTag: 'test')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'test-responders-portal-api')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'test-responders-portal-ui')
+                openshift.withCluster() {
+                    openshift.withCredentials() {
+                        openshift.tag('responders-portal-api:latest', 'responders-portal-api:test')
+                        openshift.tag('responders-portal-ui:latest', 'responders-portal-ui:test')
+                    }
+                    openshift.withProject('b5e079-test') {
+                        def uiAppName = 'test-responders-portal-ui'
+                        def apiAppName = 'test-responders-portal-api'
+                        def uiLastVersion = openshift.selector('dc', uiAppName).object().status.latestVersion
+                        def uiRc = openshift.selector('rc', uiAppName + '-' + + uiLastVersion)
+                        uiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
+                        def apiRc = openshift.selector('rc', apiAppName + '-' + apiLastVersion)
+                        apiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                    }
+                }
               }
             }
   - kind: "BuildConfig"
@@ -30,16 +48,29 @@ objects:
         jenkinsPipelineStrategy:
           jenkinsfile: |-
             node {
-              stage('approval') {
-                timeout(time: 30, unit: 'DAYS') {
-                  input message: "Deploy to training?"
-                }
-              }
               stage('tag image'){
-                openshiftTag(srcStream: 'responders-portal-api', srcTag: 'test', destStream: 'responders-portal-api', destTag: 'training')
-                openshiftTag(srcStream: 'responders-portal-ui', srcTag: 'test', destStream: 'responders-portal-ui', destTag: 'training')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'training-responders-portal-api')
-                openshiftVerifyDeployment(namespace: 'pbiizm-test', depCfg: 'training-responders-portal-ui')
+                openshift.withCluster() {
+                    openshift.withCredentials() {
+                        openshift.tag('responders-portal-api:test', 'responders-portal-api:training')
+                        openshift.tag('responders-portal-ui:test', 'responders-portal-ui:training')
+                    }
+                    openshift.withProject('b5e079-test') {
+                        def uiAppName = 'training-responders-portal-ui'
+                        def apiAppName = 'training-responders-portal-api'
+                        def uiLastVersion = openshift.selector('dc', uiAppName).object().status.latestVersion
+                        def uiRc = openshift.selector('rc', uiAppName + '-' + + uiLastVersion)
+                        uiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
+                        def apiRc = openshift.selector('rc', apiAppName + '-' + apiLastVersion)
+                        apiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                    }
+                }
               }
             }
   - kind: "BuildConfig"
@@ -57,9 +88,27 @@ objects:
                 }    
               }
                stage('tag image'){
-                openshiftTag(srcStream: 'responders-portal-api', srcTag: 'test', destStream: 'responders-portal-api', destTag: 'prod')
-                openshiftTag(srcStream: 'responders-portal-ui', srcTag: 'test', destStream: 'responders-portal-ui', destTag: 'prod')
-                openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-responders-portal-api')
-                openshiftVerifyDeployment(namespace: 'pbiizm-prod', depCfg: 'production-responders-portal-ui')
-              }
+                openshift.withCluster() {
+                    openshift.withCredentials() {
+                        openshift.tag('responders-portal-api:training', 'responders-portal-api:prod')
+                        openshift.tag('responders-portal-ui:training', 'responders-portal-ui:prod')
+                    }
+                    openshift.withProject('b5e079-prod') {
+                        def uiAppName = 'production-responders-portal-ui'
+                        def apiAppName = 'production-responders-portal-api'
+                        def uiLastVersion = openshift.selector('dc', uiAppName).object().status.latestVersion
+                        def uiRc = openshift.selector('rc', uiAppName + '-' + + uiLastVersion)
+                        uiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                        def apiLastVersion = openshift.selector('dc',apiAppName).object().status.latestVersion
+                        def apiRc = openshift.selector('rc', apiAppName + '-' + apiLastVersion)
+                        apiRc.untilEach(1) {
+                            def rcMap = it.object()
+                            return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+                        }
+                    }
+                }
+               }
             }
