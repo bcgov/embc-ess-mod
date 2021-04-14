@@ -1,0 +1,33 @@
+@import '../../../styles/styles.scss';
+
+.box{
+  padding-left: 13px;
+  padding-top: 13px;
+  border: 3px #FCBA19 solid;
+}
+
+.remit-box{
+  padding:10px;
+  border: 4px lightgray solid;
+}
+
+.sidebox-card-info {
+  background-color: #245079;
+  border-radius: 0px;
+  border: 0;
+}
+
+.tips-section{
+padding: 10px
+
+}
+
+.required::after {
+  content: "*";
+  color: red;
+}
+
+.add-button {
+  padding-left: 13px;
+}
+

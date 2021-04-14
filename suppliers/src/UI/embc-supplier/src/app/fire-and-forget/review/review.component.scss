@@ -1,0 +1,39 @@
+@import '../../../styles/styles.scss';
+
+  .box{
+    //margin: 20px;
+    border: 3px #DFDFDF solid;
+  }
+
+  .attach-box {
+    //margin: 20px;
+    border: 3px #DFDFDF solid;
+    background-color: #F0F4F6;
+  }
+
+  .header {
+    background-color: #E5EAEE;
+    height: 70px;
+    margin-right: 1px;
+    margin-left: 1px;
+  }
+
+  .nestedHeader {
+    background-color: #F0F4F6;
+    height: 40px;
+    padding: 10px;
+    margin-left: 1px;
+    margin-right: 1px;
+  }
+
+  p{
+    margin-bottom: 0px !important;
+  }
+
+  .total {
+    padding: 10px;
+    background-color: #E5EAEE;
+    height: 50px;
+    margin-right: 1px;
+    margin-left: 1px;
+  }
