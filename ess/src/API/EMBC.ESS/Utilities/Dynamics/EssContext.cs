@@ -113,10 +113,18 @@ namespace EMBC.ESS.Utilities.Dynamics
             var stateProp = entity.GetType().GetProperty("statecode");
 
             statusProp.SetValue(entity, (int)status);
-            stateProp.SetValue(entity, (int)(status == EntityStatus.Active ? EntityState.Active : EntityState.Inactive));
+            stateProp.SetValue(entity, (int)MapStatusToState(status));
 
             context.UpdateObject(entity);
         }
+
+        private static EntityState MapStatusToState(EntityStatus state) => state switch
+        {
+            EntityStatus.Active => EntityState.Active,
+            EntityStatus.Inactive => EntityState.Active,
+            EntityStatus.SoftDelete => EntityState.Inactive,
+            _ => throw new NotImplementedException()
+        };
     }
 
     public static class EssContextLookupHelpers
