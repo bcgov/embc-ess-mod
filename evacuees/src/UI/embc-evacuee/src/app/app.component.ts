@@ -12,13 +12,17 @@ export class AppComponent implements OnInit {
     apiConfig.rootUrl = '';
   }
 
-  ngOnInit() {
-    window.addEventListener("keyup", this.disableF5);
-    window.addEventListener("keydown", this.disableF5);
+  ngOnInit(): void {
+    window.addEventListener('keyup', this.disableF5);
+    window.addEventListener('keydown', this.disableF5);
+    // window.onbeforeunload
   }
 
   private disableF5(e: any): void {
-    if ((e.which || e.keyCode) == 116) e.preventDefault();
-  };
+    if ((e.which || e.keyCode) === 116) {
+      e.preventDefault();
+    }
+
+  }
 }
 
