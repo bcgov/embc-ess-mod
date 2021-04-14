@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../../core/services/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -6,8 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  constructor() { }
+  constructor(private authService: AuthenticationService) { }
 
-  ngOnInit(): void {
+  public async ngOnInit(): Promise<void> {
+    try {
+      const nextUrl = await this.authService.login();
+    }
+    catch (error) {
+      console.error(error);
+    } finally {
+      console.log("something");
+    }
   }
 }
