@@ -23,7 +23,7 @@ import { OAuthModule } from 'angular-oauth2-oidc';
     ReactiveFormsModule,
     OAuthModule.forRoot({
       resourceServer: {
-        customUrlValidation: url => url.startsWith('/api') && !url.endsWith('/configuration'),
+        customUrlValidation: url => url.startsWith('/api') && !url.endsWith('/Config'),
         sendAccessToken: true
       }
     }),
@@ -31,4 +31,4 @@ import { OAuthModule } from 'angular-oauth2-oidc';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

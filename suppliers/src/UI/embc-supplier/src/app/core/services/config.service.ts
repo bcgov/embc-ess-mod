@@ -18,7 +18,7 @@ export class ConfigService {
         if (this.config != null) {
             return of(this.config);
         }
-        return this.supplierHttp.getAuthConfig().pipe(tap((c: any) => {
+        return this.supplierHttp.getServerConfig().pipe(tap((c: any) => {
             this.config = { ...c };
         }));
     }

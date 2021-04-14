@@ -86,18 +86,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
                 noticeMsg = noticeMsg,
                 maintMsg = maintMsg,
                 siteDown = siteDown,
-                environment = envStr
-            };
-
-            return Ok(result);
-        }
-
-        [HttpGet("auth_config")]
-        [AllowAnonymous]
-        public async Task<ActionResult<Configuration>> GetConfiguration()
-        {
-            var config = new Configuration
-            {
+                environment = envStr,
                 Oidc = new OidcConfiguration
                 {
                     ClientId = conf["oidc:clientId"],
@@ -105,7 +94,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
                 }
             };
 
-            return Ok(await Task.FromResult(config));
+            return Ok(result);
         }
 
         /// <summary>
@@ -126,10 +115,6 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             public string maintMsg { get; set; }
             public bool siteDown { get; set; }
             public string environment { get; set; }
-        }
-
-        public class Configuration
-        {
             public OidcConfiguration Oidc { get; set; }
         }
 

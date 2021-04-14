@@ -44,15 +44,6 @@ export class SupplierHttpService {
         }));
   }
 
-  getAuthConfig() {
-    return this.http
-      .get<ServerConfig>(`/api/Config/auth_config`, { headers: this.headers })
-      .pipe(
-        catchError(error => {
-          return this.handleError(error);
-        }));
-  }
-
   getListOfCities() {
     return this.http
       .get<Community[]>(`/api/Lists/jurisdictions`, { headers: this.headers })

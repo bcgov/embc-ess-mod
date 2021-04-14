@@ -30,9 +30,13 @@ export class AuthenticationService {
     }
 
     private async configureOAuthService(): Promise<void> {
-        return this.configService.getAuthConfig().then(authConfig => {
+        return this.configService.getAuthConfig().then(config => {
+            let authConfig = {
+                issuer: config.issuer,
+                clientid: config.clientId
+            }
             // this.oauthService.tokenValidationHandler = new NullValidationHandler();
-            this.oauthService.configure(authConfig);
+            this.oauthService.configure(config);
             this.oauthService.setupAutomaticSilentRefresh();
         });
     }
