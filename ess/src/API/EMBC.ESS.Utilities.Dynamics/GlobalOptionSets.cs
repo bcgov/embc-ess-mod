@@ -3,7 +3,7 @@
     public enum EntityStatus
     {
         Active = 1,
-        Inactive = 2,
+        Inactive = 174360001,
         SoftDelete = 174360000
     }
 
