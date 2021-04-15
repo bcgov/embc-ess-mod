@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ApiConfiguration } from './core/api/api-configuration';
 
 @Component({
@@ -6,23 +6,9 @@ import { ApiConfiguration } from './core/api/api-configuration';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
   constructor(apiConfig: ApiConfiguration) {
     apiConfig.rootUrl = '';
   }
-
-  ngOnInit(): void {
-    window.addEventListener('keyup', this.disableF5);
-    window.addEventListener('keydown', this.disableF5);
-    // window.onbeforeunload
-  }
-
-  private disableF5(e: any): void {
-    if ((e.which || e.keyCode) === 116) {
-      e.preventDefault();
-    }
-
-  }
 }
-

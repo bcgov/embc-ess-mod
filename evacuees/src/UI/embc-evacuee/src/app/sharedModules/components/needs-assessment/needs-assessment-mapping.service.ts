@@ -64,7 +64,7 @@ export class NeedsAssessmentMappingService {
                     haveMedication,
                     haveSpecialDiet,
                     specialDietDetails,
-                    householdMembers: this.convertHouseholdMembers(householdMembers),
+                    householdMembers: this.convertVerifiedHouseholdMembers(householdMembers),
                     householdMember:
                     {
                         dateOfBirth: '',
@@ -164,12 +164,11 @@ export class NeedsAssessmentMappingService {
         }
     }
 
-    public convertHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
-        const pathname = window.location.pathname;
+    public convertVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
         const householdMembersFormArray: Array<PersonDetails> = [];
 
-        if (pathname.includes('non-verified-registration')) {
-            for (const member of householdMembers) {
+        for (const member of householdMembers) {
+            if (!this.isSameUser(member.details)) {
                 const memberDetails: PersonDetails = {
                     firstName: member.details.firstName,
                     lastName: member.details.lastName,
@@ -180,34 +179,38 @@ export class NeedsAssessmentMappingService {
                 };
 
                 householdMembersFormArray.push(memberDetails);
-            }
-        } else {
-            for (const member of householdMembers) {
-                if (!this.isSameUser(member.details)) {
-                    const memberDetails: PersonDetails = {
-                        firstName: member.details.firstName,
-                        lastName: member.details.lastName,
-                        initials: member.details.initials,
-                        gender: member.details.gender,
-                        dateOfBirth: member.details.dateOfBirth,
-                        sameLastNameCheck: this.isSameLastName(member.details.lastName)
-                    };
-
-                    householdMembersFormArray.push(memberDetails);
-                } else {
-                    this.needsAssessmentService.mainHouseholdMember = member;
-                }
+            } else {
+                this.needsAssessmentService.mainHouseholdMember = member;
             }
         }
 
         return householdMembersFormArray;
     }
 
+    public convertNonVerifiedHouseholdMembers(householdMembers: Array<HouseholdMember>): Array<PersonDetails> {
+
+        const householdMembersFormArray: Array<PersonDetails> = [];
+
+        for (const member of householdMembers) {
+            const memberDetails: PersonDetails = {
+                firstName: member.details.firstName,
+                lastName: member.details.lastName,
+                initials: member.details.initials,
+                gender: member.details.gender,
+                dateOfBirth: member.details.dateOfBirth,
+                sameLastNameCheck: this.isSameLastName(member.details.lastName)
+            };
+
+            householdMembersFormArray.push(memberDetails);
+        }
+
+        return householdMembersFormArray;
+    }
+
     public addMainHouseholdMembers(): void {
-        if (this.needsAssessmentService.mainHouseholdMember !== undefined) {
-            if (!this.needsAssessmentService.householdMembers.includes(this.needsAssessmentService.mainHouseholdMember)) {
-                this.needsAssessmentService.householdMembers.push(this.needsAssessmentService.mainHouseholdMember);
-            }
+
+        if (!this.needsAssessmentService.householdMembers.includes(this.needsAssessmentService.mainHouseholdMember)) {
+            this.needsAssessmentService.householdMembers.push(this.needsAssessmentService.mainHouseholdMember);
         }
     }
 }

@@ -5,7 +5,6 @@ import { DialogService } from 'src/app/core/services/dialog.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-evacuation-file-list',

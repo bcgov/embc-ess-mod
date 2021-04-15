@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { EvacuationFile, NeedsAssessment } from 'src/app/core/api/models';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
-import { NeedsAssessmentMappingService } from '../../needs-assessment/needs-assessment-mapping.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
 

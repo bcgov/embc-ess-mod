@@ -77,7 +77,7 @@ export class EditComponent implements OnInit, OnDestroy {
    * page
    */
   save(): void {
-    this.editService.saveFormData(this.componentToLoad, this.form);
+    this.editService.saveFormData(this.componentToLoad, this.form, this.currentFlow);
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {
@@ -115,7 +115,7 @@ export class EditComponent implements OnInit, OnDestroy {
    * page
    */
   cancel(): void {
-    this.editService.cancelFormData(this.componentToLoad, this.form);
+    this.editService.cancelFormData(this.componentToLoad, this.form, this.currentFlow);
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {
