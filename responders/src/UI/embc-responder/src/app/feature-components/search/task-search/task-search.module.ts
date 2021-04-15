@@ -3,10 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { TaskSearchRoutingModule } from './task-search-routing.module';
 import { TaskSearchComponent } from './task-search.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MaterialModule } from 'src/app/material.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,10 +13,8 @@ import { MatInputModule } from '@angular/material/input';
   imports: [
     CommonModule,
     TaskSearchRoutingModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule
+    MaterialModule,
+    ReactiveFormsModule
   ]
 })
 export class TaskSearchModule { }
