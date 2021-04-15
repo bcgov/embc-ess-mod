@@ -17,19 +17,22 @@ export class TeamMemberReviewComponent {
   isSubmitted = false;
 
   constructor(private router: Router, private teamDataService: TeamListDataService,
-              private teamMemberReviewService: TeamMemberReviewService, private alertService: AlertService) {
-    if (this.router.getCurrentNavigation().extras.state !== undefined) {
-      const state = this.router.getCurrentNavigation().extras.state as TeamMember;
-      console.log(state);
-      this.teamMember = state;
+    private teamMemberReviewService: TeamMemberReviewService, private alertService: AlertService) {
+    if (this.router.getCurrentNavigation() !== null) {
+      if (this.router.getCurrentNavigation().extras.state !== undefined) {
+        const state = this.router.getCurrentNavigation().extras.state as TeamMember;
+        console.log(state);
+        this.teamMember = state;
+      }
     } else {
       this.teamMember = this.teamDataService.getSelectedTeamMember();
     }
+
   }
 
   goBack(): void {
     if (this.teamMember.id) {
-    this.router.navigate(['/responder-access/responder-management/details/edit'], { state: this.teamMember });
+      this.router.navigate(['/responder-access/responder-management/details/edit'], { state: this.teamMember });
     } else {
       this.router.navigate(['/responder-access/responder-management/add-member']);
     }

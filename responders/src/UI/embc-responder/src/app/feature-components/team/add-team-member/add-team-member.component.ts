@@ -37,7 +37,7 @@ export class AddTeamMemberComponent implements OnInit {
     if (this.addTeamMemberService.getAddedTeamMember() !== undefined) {
       this.addForm.patchValue(this.addTeamMemberService.getAddedTeamMember());
     }
-    this.roles = this.listService.getMemberRoles();
+    this.roles = this.filteredRoleList();
     this.labels = this.listService.getMemberLabels();
     this.addForm.get('role').setValue(this.defaultRole.code);
     this.detailsText = globalConst.tier1Notes;
@@ -94,6 +94,17 @@ export class AddTeamMemberComponent implements OnInit {
       this.showLoader = !this.showLoader;
       this.alertService.setAlert('danger', error.error.title);
     });
+  }
+
+  filteredRoleList(): MemberRoleDescription[]{
+    let loggedInRole = this.userService.currentProfile.role;
+    if(loggedInRole === 'Tier2'){
+     return this.listService.getMemberRoles().filter(role => role.code === 'Tier1');
+    } else if(loggedInRole === 'Tier3') {
+      return this.listService.getMemberRoles().filter(role => role.code === 'Tier1' || role.code === 'Tier2');
+    } else if(loggedInRole === 'Tier4') {
+      return this.listService.getMemberRoles().filter(role => role.code === 'Tier1' || role.code === 'Tier2' || role.code === 'Tier3');
+    }
   }
 
 }

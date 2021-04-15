@@ -10,6 +10,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { TeamListDataService } from './team-list-data.service';
 import { TeamListService } from './team-list.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-team-list',
@@ -18,38 +19,45 @@ import * as globalConst from '../../../core/services/global-constants';
 })
 export class TeamListComponent implements OnInit {
 
-  constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService,
-              private dialog: MatDialog) {
-    if (this.router.getCurrentNavigation().extras.state !== undefined) {
-      const state = this.router.getCurrentNavigation().extras.state;
-      let displayText = '';
-      if (state?.action === 'delete') {
-        console.log(state?.action);
-        displayText = globalConst.deleteMessage;
-      } else if (state?.action === 'edit') {
-        displayText = globalConst.editMessage;
-      } else {
-        displayText = globalConst.addMessage;
-      }
-      setTimeout(() => {
-        this.openConfirmation(displayText);
-      }, 500);
-    }
-  }
-
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
   displayedColumns: TableColumnModel[];
   filterPredicate: (data: TeamMember, filter: string) => boolean;
   teamMembers: TeamMember[];
+  isLoading = false;
+  statusLoading = true;
+  loggedInRole: string;
+
+  constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService,
+    private dialog: MatDialog, private userService: UserService) {
+    if (this.router.getCurrentNavigation() !== null) {
+      if (this.router.getCurrentNavigation().extras.state !== undefined) {
+        const state = this.router.getCurrentNavigation().extras.state;
+        let displayText = '';
+        if (state?.action === 'delete') {
+          console.log(state?.action);
+          displayText = globalConst.deleteMessage;
+        } else if (state?.action === 'edit') {
+          displayText = globalConst.editMessage;
+        } else {
+          displayText = globalConst.addMessage;
+        }
+        setTimeout(() => {
+          this.openConfirmation(displayText);
+        }, 500);
+      }
+    }
+  }
 
   ngOnInit(): void {
     this.teamDataService.clear();
     this.teamListService.getTeamMembers().subscribe(values => {
+      this.isLoading = !this.isLoading;
       this.teamMembers = values;
     });
     this.filtersToLoad = this.teamDataService.filtersToLoad;
     this.displayedColumns = this.teamDataService.displayedColumns;
+    this.loggedInRole = this.userService.currentProfile.role;
   }
 
   filter(event: TableFilterValueModel): void {
@@ -62,8 +70,10 @@ export class TeamListComponent implements OnInit {
   }
 
   activateTeamMember($event: string): void {
+    this.statusLoading = !this.statusLoading;
     this.teamListService.activateTeamMember($event).subscribe(value => {
       console.log(value);
+      this.statusLoading = !this.statusLoading;
       this.teamMembers = value;
     }, (error) => {
       console.log('here');
@@ -71,8 +81,10 @@ export class TeamListComponent implements OnInit {
   }
 
   deactivateTeamMember($event: string): void {
+    this.statusLoading = !this.statusLoading;
     this.teamListService.deactivatedTeamMember($event).subscribe(value => {
       console.log(value);
+      this.statusLoading = !this.statusLoading;
       this.teamMembers = value;
     });
   }

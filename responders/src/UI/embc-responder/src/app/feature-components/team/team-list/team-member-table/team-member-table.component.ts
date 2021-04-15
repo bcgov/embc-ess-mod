@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
@@ -18,15 +18,18 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   @Input() displayedColumns: TableColumnModel[];
   @Input() incomingData = [];
   @Input() filterTerm: TableFilterValueModel;
+  @Input() isLoading: boolean;
+  @Input() statusLoading: boolean;
+  @Input() loggedInRole: string;
   @Output() toggleActive = new EventEmitter<string>();
   @Output() toggleInactive = new EventEmitter<string>();
   @Output() clickedRow = new EventEmitter<TeamMember>();
 
   dataSource = new MatTableDataSource();
   columns: string[];
-  isLoading = true;
   color = '#169BD5';
   data: any;
+  selectedIndex: number;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -35,8 +38,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
-      console.log(this.isLoading);
-      this.isLoading = !this.isLoading;
+      this.dataSource.sort = this.sort;
     }
 
     if (changes.displayedColumns) {
@@ -50,11 +52,6 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    // if(this.incomingData !== undefined) {
-    //   if(this.incomingData.length !== 0) {
-    //     this.isLoading = false;
-    //   }
-    // }
   }
 
   filter(term: TableFilterValueModel): void {
@@ -102,7 +99,8 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  slideToggle($event: MatSlideToggleChange, row): void {
+  slideToggle($event: MatSlideToggleChange, row, index): void {
+    this.selectedIndex = index
     if ($event.checked) {
       this.toggleActive.emit(row.id);
     } else {
@@ -110,4 +108,54 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  isToggleAllowed(row: TeamMember): boolean {
+    if(this.loggedInRole === 'Tier2'){
+      if(row.role === 'Tier1') {
+        return true;
+      } else {
+        return false
+      }
+    } else if(this.loggedInRole === 'Tier3') {
+      if(row.role === 'Tier1' || row.role === 'Tier2') {
+        return true;
+      } else {
+        return false
+      }
+    } else if(this.loggedInRole === 'Tier4') {
+      if(row.role === 'Tier1' || row.role === 'Tier2' || row.role === 'Tier3') {
+        return true;
+      } else {
+        return false
+      }
+    }
+  }
+
 }
+
+// enum TIER2ALLOWED {
+//   TIER1
+// }
+
+// enum TIER3ALLOWED {
+//   TIER1,
+//   TIER2
+// }
+
+// enum TIER4ALLOWED {
+//   TIER1,
+//   TIER2,
+//   TIER3
+// }
+
+// enum AllRoles {
+//   None,
+//   TIER1,
+//   TIER2 = checkForAllowed(),
+//   TIER3,
+//   TIER4
+
+// }
+
+// function checkForAllowed(): number {
+    
+// }
