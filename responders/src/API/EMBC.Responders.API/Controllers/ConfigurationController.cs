@@ -46,6 +46,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <returns>Configuration settings object</returns>
         [HttpGet]
+        [ResponseCache(Duration = 60 * 10)]
         public async Task<ActionResult<Configuration>> GetConfiguration()
         {
             var config = new Configuration
@@ -66,6 +67,7 @@ namespace EMBC.Responders.API.Controllers
         /// <param name="forEnumType">enum type name</param>
         /// <returns>list of codes and their respective descriptions</returns>
         [HttpGet("codes")]
+        [ResponseCache(Duration = 60 * 10)]
         public ActionResult<CodeValues> GetCodes(string forEnumType)
         {
             if (string.IsNullOrEmpty(forEnumType)) return BadRequest();
