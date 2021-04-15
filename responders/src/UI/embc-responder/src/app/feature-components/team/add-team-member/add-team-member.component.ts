@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { MemberLabelDescription, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
+import { MemberLabelDescription, MemberRole, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -23,15 +23,14 @@ export class AddTeamMemberComponent implements OnInit {
   detailsText: string;
   showLoader = false;
   color = '#169BD5';
-  defaultRole = {
-    code: 'Tier1',
-    description: 'Tier 1 (Responder)'
-  };
 
   constructor(private builder: FormBuilder, private router: Router, private listService: LoadTeamListService,
-              private customValidation: CustomValidationService, private addTeamMemberService: AddTeamMemberService,
-              private alertService: AlertService, private userService: UserService) { }
-
+    private customValidation: CustomValidationService, private addTeamMemberService: AddTeamMemberService,
+    private alertService: AlertService, private userService: UserService) { }
+    
+  /**
+   * On component init, constructs the form and loads the lists
+   */
   ngOnInit(): void {
     this.constructAddForm();
     if (this.addTeamMemberService.getAddedTeamMember() !== undefined) {
@@ -39,14 +38,20 @@ export class AddTeamMemberComponent implements OnInit {
     }
     this.roles = this.filteredRoleList();
     this.labels = this.listService.getMemberLabels();
-    this.addForm.get('role').setValue(this.defaultRole.code);
+    this.addForm.get('role').setValue(globalConst.defaultRole.code);
     this.detailsText = globalConst.tier1Notes;
   }
 
+  /**
+   * Returns form control
+   */
   get addFormControl(): { [key: string]: AbstractControl; } {
     return this.addForm.controls;
   }
 
+  /**
+   * Builds the form
+   */
   constructAddForm(): void {
     this.addForm = this.builder.group({
       firstName: ['', [this.customValidation.whitespaceValidator()]],
@@ -57,10 +62,16 @@ export class AddTeamMemberComponent implements OnInit {
     });
   }
 
+  /**
+   * Navigates to the team members list
+   */
   cancel(): void {
     this.router.navigate(['/responder-access/responder-management/details/member-list']);
   }
 
+  /**
+   * Navigates to the review page
+   */
   next(): void {
     const newTeamMember: TeamMember = this.addForm.getRawValue();
     newTeamMember.teamName = this.userService.currentProfile.teamName;
@@ -68,16 +79,24 @@ export class AddTeamMemberComponent implements OnInit {
     this.router.navigate(['/responder-access/responder-management/details/review'], { state: newTeamMember });
   }
 
+  /**
+   * Display notes for the role selected
+   * @param selectedRole role selected from dropdown
+   */
   roleSelectionChange(selectedRole: MatSelectChange): void {
-    if (selectedRole.value === 'Tier1') {
+    if (selectedRole.value === MemberRole.Tier1) {
       this.detailsText = globalConst.tier1Notes;
-    } else if (selectedRole.value === 'Tier2') {
+    } else if (selectedRole.value === MemberRole.Tier2) {
       this.detailsText = globalConst.tier2Notes;
-    } else if (selectedRole.value === 'Tier3') {
+    } else if (selectedRole.value === MemberRole.Tier3) {
       this.detailsText = globalConst.tier3Notes;
     }
   }
 
+  /**
+   * Checks if the bceid username exists in the ERA system
+   * @param $event username input change event
+   */
   checkUserName($event): void {
     this.showLoader = !this.showLoader;
     this.addTeamMemberService.checkUserNameExists($event.target.value).subscribe(value => {
@@ -92,18 +111,24 @@ export class AddTeamMemberComponent implements OnInit {
       }
     }, (error) => {
       this.showLoader = !this.showLoader;
-      this.alertService.setAlert('danger', error.error.title);
+      this.alertService.clearAlert();
+      this.alertService.setAlert('danger', globalConst.usernameCheckerror);
     });
   }
 
-  filteredRoleList(): MemberRoleDescription[]{
+  /**
+   * Filters the list based on user role
+   * @returns member role list
+   */
+  filteredRoleList(): MemberRoleDescription[] {
     let loggedInRole = this.userService.currentProfile.role;
-    if(loggedInRole === 'Tier2'){
-     return this.listService.getMemberRoles().filter(role => role.code === 'Tier1');
-    } else if(loggedInRole === 'Tier3') {
-      return this.listService.getMemberRoles().filter(role => role.code === 'Tier1' || role.code === 'Tier2');
-    } else if(loggedInRole === 'Tier4') {
-      return this.listService.getMemberRoles().filter(role => role.code === 'Tier1' || role.code === 'Tier2' || role.code === 'Tier3');
+    if (loggedInRole === MemberRole.Tier2) {
+      return this.listService.getMemberRoles().filter(role => role.code === MemberRole.Tier1);
+    } else if (loggedInRole === MemberRole.Tier3) {
+      return this.listService.getMemberRoles().filter(role => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2);
+    } else if (loggedInRole === MemberRole.Tier4) {
+      return this.listService.getMemberRoles().filter(role => role.code === MemberRole.Tier1
+        || role.code === MemberRole.Tier2 || role.code === MemberRole.Tier3);
     }
   }
 

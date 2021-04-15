@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { TeamMember } from 'src/app/core/api/models';
-import { ActionPermission, ClaimType, ModulePermission } from 'src/app/core/services/authorization.service';
+import { MemberRole, TeamMember } from 'src/app/core/api/models';
+import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { DeleteConfirmationDialogComponent } from 'src/app/shared/components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -14,7 +14,7 @@ import { TeamMemberDetailsService } from './team-member-details.service';
   templateUrl: './team-member-detail.component.html',
   styleUrls: ['./team-member-detail.component.scss']
 })
-export class TeamMemberDetailComponent implements OnInit {
+export class TeamMemberDetailComponent {
 
   teamMember: TeamMember;
 
@@ -30,9 +30,10 @@ export class TeamMemberDetailComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-  }
-
+  /**
+   * Opens the delete confirmation modal, deletes the team member and 
+   * navigates to team member list
+   */
   deleteUser(): void {
     this.dialog.open(DialogComponent, {
       data: {
@@ -50,38 +51,42 @@ export class TeamMemberDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Checks if the user can permission to perform given action
+   * @param action user action
+   * @returns true/false
+   */
   public hasPermission(action: string): boolean {
     return this.userService.hasClaim(ClaimType.action, ActionPermission[action]);
   }
 
+  /**
+   * Navigates to edit team member component
+   */
   editUser(): void {
     this.router.navigate(['/responder-access/responder-management/details/edit'], { state: this.teamMember });
   }
 
+  /**
+   * Navigates to team members list
+   */
   cancel(): void {
     this.router.navigate(['/responder-access/responder-management/details/member-list']);
   }
 
+  /**
+   * Role based access to edit button
+   * @param row selected team member
+   * @returns true/false
+   */
   isEditAllowed(row: TeamMember): boolean {
     let loggedInRole = this.userService.currentProfile.role;
-    if(loggedInRole === 'Tier2'){
-      if(row.role === 'Tier1') {
-        return true;
-      } else {
-        return false
-      }
-    } else if(loggedInRole === 'Tier3') {
-      if(row.role === 'Tier1' || row.role === 'Tier2') {
-        return true;
-      } else {
-        return false
-      }
-    } else if(loggedInRole === 'Tier4') {
-      if(row.role === 'Tier1' || row.role === 'Tier2' || row.role === 'Tier3') {
-        return true;
-      } else {
-        return false
-      }
+    if(loggedInRole === MemberRole.Tier2){
+      return row.role === MemberRole.Tier1 ? true : false;  
+    } else if(loggedInRole === MemberRole.Tier3) {
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;
+    } else if(loggedInRole === MemberRole.Tier4) {
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3 ? true : false;
     }
   }
 

@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { TeamMember } from 'src/app/core/api/models';
+import { MemberRole, TeamMember } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TeamMemberModel } from 'src/app/core/models/team-member.model';
@@ -16,7 +16,7 @@ import { TeamMemberModel } from 'src/app/core/models/team-member.model';
 export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   @Input() displayedColumns: TableColumnModel[];
-  @Input() incomingData = [];
+  @Input() incomingData: TeamMember[] = [];
   @Input() filterTerm: TableFilterValueModel;
   @Input() isLoading: boolean;
   @Input() statusLoading: boolean;
@@ -34,6 +34,10 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  /**
+   * Listens to input events and popluate values
+   * @param changes input event change object
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
@@ -49,11 +53,18 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  /**
+   * Sets paginator and sort on tables
+   */
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
+  /**
+   * Filters the datatable
+   * @param term user selected filters
+   */
   filter(term: TableFilterValueModel): void {
     this.data = this.dataSource.filteredData;
     this.dataSource.filterPredicate = this.teamFilterPredicate;
@@ -64,6 +75,12 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  /**
+   * custom filter predicate for string and dropdown filters
+   * @param data table data
+   * @param filter filter term
+   * @returns true/false
+   */
   teamFilterPredicate = (data: TeamMemberModel, filter: string): boolean => {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'text') {
@@ -89,16 +106,32 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  /**
+   * Captures the row click event
+   * @param row team member row
+   */
   rowClicked(row): void {
     this.clickedRow.emit(row);
   }
 
+  /**
+   * Stops the entire row from being clicked if the user interacts with
+   * the toggle button
+   * @param $event click event
+   * @param columnLabel table column name
+   */
   disableRowInteraction($event, columnLabel): void {
     if (columnLabel === 'isActive') {
       $event.stopPropagation();
     }
   }
 
+  /**
+   * Emits active/inactive events based on user interaction with the toggle
+   * @param $event slide toggle event
+   * @param row row affected
+   * @param index index of the affected row
+   */
   slideToggle($event: MatSlideToggleChange, row, index): void {
     this.selectedIndex = index
     if ($event.checked) {
@@ -108,54 +141,19 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  /**
+   * Role based access to toggle users active/inactive
+   * @param row selected row
+   * @returns true/false
+   */
   isToggleAllowed(row: TeamMember): boolean {
-    if(this.loggedInRole === 'Tier2'){
-      if(row.role === 'Tier1') {
-        return true;
-      } else {
-        return false
-      }
-    } else if(this.loggedInRole === 'Tier3') {
-      if(row.role === 'Tier1' || row.role === 'Tier2') {
-        return true;
-      } else {
-        return false
-      }
-    } else if(this.loggedInRole === 'Tier4') {
-      if(row.role === 'Tier1' || row.role === 'Tier2' || row.role === 'Tier3') {
-        return true;
-      } else {
-        return false
-      }
+    if (this.loggedInRole === MemberRole.Tier2) {
+      return row.role === MemberRole.Tier1 ? true : false;
+    } else if (this.loggedInRole === MemberRole.Tier3) {
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;
+    } else if (this.loggedInRole === MemberRole.Tier4) {
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3 ? true : false;
     }
   }
 
 }
-
-// enum TIER2ALLOWED {
-//   TIER1
-// }
-
-// enum TIER3ALLOWED {
-//   TIER1,
-//   TIER2
-// }
-
-// enum TIER4ALLOWED {
-//   TIER1,
-//   TIER2,
-//   TIER3
-// }
-
-// enum AllRoles {
-//   None,
-//   TIER1,
-//   TIER2 = checkForAllowed(),
-//   TIER3,
-//   TIER4
-
-// }
-
-// function checkForAllowed(): number {
-    
-// }

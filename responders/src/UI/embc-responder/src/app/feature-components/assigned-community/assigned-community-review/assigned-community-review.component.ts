@@ -20,9 +20,9 @@ export class AssignedCommunityReviewComponent implements OnInit {
   isSubmitted = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private addCommunityService: AddCommunityService,
-              private assignedCommunityDataService: AssignedCommunityListDataService,
-              private assignedCommunityReviewService: AssignedCommunityReviewService,
-              private alertService: AlertService) {
+    private assignedCommunityDataService: AssignedCommunityListDataService,
+    private assignedCommunityReviewService: AssignedCommunityReviewService,
+    private alertService: AlertService) {
   }
 
   ngOnInit(): void {

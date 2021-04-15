@@ -30,6 +30,11 @@ export class TeamMemberReviewComponent {
 
   }
 
+  /**
+   * Navigates to edit page if team member id exists, else
+   * navigates to the add member page
+   * 
+   */
   goBack(): void {
     if (this.teamMember.id) {
       this.router.navigate(['/responder-access/responder-management/details/edit'], { state: this.teamMember });
@@ -38,6 +43,9 @@ export class TeamMemberReviewComponent {
     }
   }
 
+  /**
+   * Save the changes
+   */
   save(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
@@ -48,6 +56,9 @@ export class TeamMemberReviewComponent {
     }
   }
 
+  /**
+   * Updates the team member and navigates to team list
+   */
   updateTeamMember(): void {
     this.teamMemberReviewService.updateTeamMember(this.teamMember.id, this.teamMember).subscribe(value => {
       const stateIndicator = { action: 'edit' };
@@ -63,6 +74,9 @@ export class TeamMemberReviewComponent {
     });
   }
 
+  /**
+   * Adds the team member and navigates to team list
+   */
   addTeamMember(): void {
     this.teamMemberReviewService.addTeamMember(this.teamMember).subscribe(value => {
       const stateIndicator = { action: 'add' };
