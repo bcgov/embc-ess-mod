@@ -50,23 +50,43 @@ namespace EMBC.Responders.API.Controllers
                 StateProvinceCode = "BC"
             };
 
+            var householdMember = new EvacuationFileHouseholdMember
+            {
+                FirstName = "first",
+                LastName = "last",
+                Type = HouseholdMemberType.HouseholdMember,
+                IsMatch = false
+            };
+
+            var applicant = new EvacuationFileHouseholdMember
+            {
+                FirstName = "first",
+                LastName = "last",
+                Type = HouseholdMemberType.MainApplicant,
+                IsMatch = true
+            };
+
             var file = new EvacuationFileSearchResult
             {
                 Id = "1234",
                 TaskId = "t1234",
                 CreatedOn = new DateTime(2021, 1, 1),
                 Status = EvacuationFileStatus.Active,
-                EvacuatedFrom = address
+                EvacuatedFrom = address,
+                IsRestricted = false,
+                HouseholdMembers = new[] { applicant, householdMember }
             };
 
             var registrant = new RegistrantProfileSearchResult
             {
+                Id = "12345",
                 FirstName = searchParameters.FirstName,
                 LastName = searchParameters.LastName,
                 CreatedOn = new DateTime(2021, 1, 1),
                 Status = RegistrantStatus.Verified,
                 PrimaryAddress = address,
-                EvacuationFiles = new[] { file, file }
+                EvacuationFiles = new[] { file, file },
+                IsRestricted = false
             };
 
             var registrants = new[] { registrant, registrant };
@@ -113,13 +133,15 @@ namespace EMBC.Responders.API.Controllers
         public Address EvacuatedFrom { get; set; }
         public DateTime CreatedOn { get; set; }
         public EvacuationFileStatus Status { get; set; }
+        public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; }
     }
 
     public class EvacuationFileHouseholdMember
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public EvacuationFileHouseholdMember Type { get; set; }
+        public HouseholdMemberType Type { get; set; }
+        public bool IsMatch { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
