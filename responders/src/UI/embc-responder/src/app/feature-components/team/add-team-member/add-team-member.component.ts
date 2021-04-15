@@ -25,9 +25,9 @@ export class AddTeamMemberComponent implements OnInit {
   color = '#169BD5';
 
   constructor(private builder: FormBuilder, private router: Router, private listService: LoadTeamListService,
-    private customValidation: CustomValidationService, private addTeamMemberService: AddTeamMemberService,
-    private alertService: AlertService, private userService: UserService) { }
-    
+              private customValidation: CustomValidationService, private addTeamMemberService: AddTeamMemberService,
+              private alertService: AlertService, private userService: UserService) { }
+
   /**
    * On component init, constructs the form and loads the lists
    */
@@ -121,7 +121,7 @@ export class AddTeamMemberComponent implements OnInit {
    * @returns member role list
    */
   filteredRoleList(): MemberRoleDescription[] {
-    let loggedInRole = this.userService.currentProfile.role;
+    const loggedInRole = this.userService.currentProfile.role;
     if (loggedInRole === MemberRole.Tier2) {
       return this.listService.getMemberRoles().filter(role => role.code === MemberRole.Tier1);
     } else if (loggedInRole === MemberRole.Tier3) {

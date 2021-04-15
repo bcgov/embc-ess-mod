@@ -17,7 +17,7 @@ export class TeamMemberReviewComponent {
   isSubmitted = false;
 
   constructor(private router: Router, private teamDataService: TeamListDataService,
-    private teamMemberReviewService: TeamMemberReviewService, private alertService: AlertService) {
+              private teamMemberReviewService: TeamMemberReviewService, private alertService: AlertService) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as TeamMember;
@@ -33,7 +33,7 @@ export class TeamMemberReviewComponent {
   /**
    * Navigates to edit page if team member id exists, else
    * navigates to the add member page
-   * 
+   *
    */
   goBack(): void {
     if (this.teamMember.id) {

@@ -13,7 +13,7 @@ export class TaskSearchComponent implements OnInit {
   taskSearchForm: FormGroup;
 
   constructor(private builder: FormBuilder, private customValidation: CustomValidationService,
-    private router: Router) { }
+              private router: Router) { }
 
   ngOnInit(): void {
     this.constructTaskSearchForm();
@@ -26,7 +26,7 @@ export class TaskSearchComponent implements OnInit {
   constructTaskSearchForm(): void {
     this.taskSearchForm = this.builder.group({
       taskNumber: ['', [this.customValidation.whitespaceValidator()]]
-    })
+    });
   }
 
   submitTask(): void {

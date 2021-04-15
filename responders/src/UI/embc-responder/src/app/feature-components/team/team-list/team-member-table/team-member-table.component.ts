@@ -133,7 +133,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
    * @param index index of the affected row
    */
   slideToggle($event: MatSlideToggleChange, row, index): void {
-    this.selectedIndex = index
+    this.selectedIndex = index;
     if ($event.checked) {
       this.toggleActive.emit(row.id);
     } else {

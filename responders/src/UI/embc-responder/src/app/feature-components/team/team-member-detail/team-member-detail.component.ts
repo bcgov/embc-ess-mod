@@ -19,7 +19,7 @@ export class TeamMemberDetailComponent {
   teamMember: TeamMember;
 
   constructor(private router: Router, private dialog: MatDialog, private teamDetailsService: TeamMemberDetailsService,
-    private teamDataService: TeamListDataService, private userService: UserService) {
+              private teamDataService: TeamListDataService, private userService: UserService) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as TeamMember;
@@ -31,7 +31,7 @@ export class TeamMemberDetailComponent {
   }
 
   /**
-   * Opens the delete confirmation modal, deletes the team member and 
+   * Opens the delete confirmation modal, deletes the team member and
    * navigates to team member list
    */
   deleteUser(): void {
@@ -80,12 +80,12 @@ export class TeamMemberDetailComponent {
    * @returns true/false
    */
   isEditAllowed(row: TeamMember): boolean {
-    let loggedInRole = this.userService.currentProfile.role;
-    if(loggedInRole === MemberRole.Tier2){
-      return row.role === MemberRole.Tier1 ? true : false;  
-    } else if(loggedInRole === MemberRole.Tier3) {
+    const loggedInRole = this.userService.currentProfile.role;
+    if (loggedInRole === MemberRole.Tier2){
+      return row.role === MemberRole.Tier1 ? true : false;
+    } else if (loggedInRole === MemberRole.Tier3) {
       return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;
-    } else if(loggedInRole === MemberRole.Tier4) {
+    } else if (loggedInRole === MemberRole.Tier4) {
       return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3 ? true : false;
     }
   }

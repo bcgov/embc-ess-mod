@@ -25,8 +25,8 @@ export class EditTeamMemberComponent implements OnInit {
   color = '#169BD5';
 
   constructor(private builder: FormBuilder, private router: Router, private teamDataService: TeamListDataService,
-    private listService: LoadTeamListService, private customValidation: CustomValidationService,
-    private editTeamMemberService: EditTeamMemberService, private alertService: AlertService, private userService: UserService) {
+              private listService: LoadTeamListService, private customValidation: CustomValidationService,
+              private editTeamMemberService: EditTeamMemberService, private alertService: AlertService, private userService: UserService) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as TeamMember;
@@ -121,7 +121,7 @@ export class EditTeamMemberComponent implements OnInit {
    * @returns member role list
    */
    filteredRoleList(): MemberRoleDescription[] {
-    let loggedInRole = this.userService.currentProfile.role;
+    const loggedInRole = this.userService.currentProfile.role;
     if (loggedInRole === MemberRole.Tier2) {
       return this.listService.getMemberRoles().filter(role => role.code === MemberRole.Tier1);
     } else if (loggedInRole === MemberRole.Tier3) {

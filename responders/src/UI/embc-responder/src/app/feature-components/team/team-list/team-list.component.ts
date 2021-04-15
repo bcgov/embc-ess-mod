@@ -29,7 +29,7 @@ export class TeamListComponent implements OnInit {
   loggedInRole: string;
 
   constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService,
-    private dialog: MatDialog, private userService: UserService, private alertService: AlertService) {
+              private dialog: MatDialog, private userService: UserService, private alertService: AlertService) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state;

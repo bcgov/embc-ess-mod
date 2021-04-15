@@ -9,7 +9,7 @@ export const defaultRole = {
     description: 'Tier 1 (Responder)'
   };
 
-//Generic error messages
+// Generic error messages
 export const teamMemberListError = 'Unable to retrieve team members at this time. Please try again later';
 export const activateTeamMemberError = 'Unable to activate team member at this time. Please try again later';
 export const deActivateTeamMemberError = 'Unable to deactivate team member at this time. Please try again later';

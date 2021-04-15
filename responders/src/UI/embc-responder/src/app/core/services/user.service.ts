@@ -14,13 +14,13 @@ export class UserService {
   private profile?: LoggedInUserProfile = null;
 
   constructor(private profileService: ProfileService, private authorizationService: AuthorizationService,
-    private cacheService: CacheService) { }
+              private cacheService: CacheService) { }
 
   public async loadUserProfile(): Promise<UserProfile> {
     return await this.profileService.profileGetCurrentUserProfile().pipe(tap(response => {
       const userClaims = this.authorizationService.getClaimsForRole(MemberRole[response.role]);
-      let taskNumber = this.cacheService.get('loggedInTask') === null || undefined ? null : this.cacheService.get('loggedInTask');
-      this.profile = { ...response, taskNumber: taskNumber, claims: [...userClaims] };
+      const taskNumber = this.cacheService.get('loggedInTask') === null || undefined ? null : this.cacheService.get('loggedInTask');
+      this.profile = { ...response, taskNumber, claims: [...userClaims] };
       return this.profile;
     })).toPromise();
   }
@@ -33,13 +33,15 @@ export class UserService {
     return this.profile && this.profile.claims.findIndex(c => c.claimType === claimType && c.claimValue === value) >= 0;
   }
 
-  public updateTaskNumber(taskNumber: string) {
+  public updateTaskNumber(taskNumber: string): void {
     this.cacheService.set('loggedInTask', taskNumber);
-    this.profile = { ...this.profile, taskNumber: taskNumber }
+    this.profile = { ...this.profile, taskNumber };
   }
 
-  public clearAppStorage() {
+  public clearAppStorage(): void {
     this.cacheService.remove('loggedInTask');
+    this.cacheService.remove('memberRoles');
+    this.cacheService.remove('memberLabels');
   }
 
 }
