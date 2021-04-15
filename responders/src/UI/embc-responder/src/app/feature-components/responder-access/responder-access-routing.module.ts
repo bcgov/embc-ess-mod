@@ -30,7 +30,7 @@ const routes: Routes = [
       },
       {
         path: 'responder-management',
-        loadChildren: () => import('../team/team-management/team-management.module').then(m => m.TeamManagementModule)
+        loadChildren: () => import('../team/team-member-management/team-member-management.module').then(m => m.TeamMemberManagementModule)
       }
     ]
   }
