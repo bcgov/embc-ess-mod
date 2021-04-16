@@ -102,7 +102,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CommunityTypeDescription>>> GetCommunityTypes()
         {
-            var enumList = EnumHelper.GetEnumDescriptions<CommunityType>();
+            var enumList = EnumDescriptionHelper.GetEnumDescriptions<CommunityType>();
             return Ok(await Task.FromResult(enumList.Select(e => new CommunityTypeDescription { Code = e.value, Description = e.description }).ToArray()));
         }
 

@@ -14,22 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-
-namespace EMBC.Responders.API.Utilities
+namespace EMBC.Responders.API.Controllers
 {
-    public static class EnumHelper
+    public class Address
     {
-        public static IEnumerable<(TEnum value, string description)> GetEnumDescriptions<TEnum>()
-            where TEnum : struct =>
-           Enum.GetNames(typeof(TEnum)).Select(e => (Enum.Parse<TEnum>(e), GetEnumDescription(typeof(TEnum), e)));
-
-        private static string GetEnumDescription(Type enumType, string value) =>
-            (enumType.GetField(value.ToString())
-                .GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[])
-                .FirstOrDefault().Description;
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string City { get; set; }
+        public string CommunityCode { get; set; }
+        public string StateProvinceCode { get; set; }
+        public string CountryCode { get; set; }
+        public string PostalCode { get; set; }
     }
 }

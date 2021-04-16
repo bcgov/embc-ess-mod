@@ -7,37 +7,15 @@
     <br>
     <div class="row">
         <div class="col-md-8">
-            <mat-card *ngIf="showSearch">
-                <p class="heading">Sign in to a Task Number</p>
-                <p>All Evacuee Registration & Assistance (ERA) Responders are required to <b>sign in to a task
-                        number</b>
-                    before accessing the Evacuee Search and Registration pages.</p>
-                <br>
-                <p>Please enter the task number that you are working under below and click "<b>Submit</b>".</p>
-                <div class="row">
-                    <div class="col-md-4">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Enter Task #</mat-label>
-                            <input matInput placeholder="Enter Task #">
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <button class="button-p submit" mat-button (click)="submitTask()">Submit</button>
-                    </div>
-                </div>
-            </mat-card>
             <div *ngIf="isActive">
                 <ng-container *ngTemplateOutlet="activeTask"></ng-container>
             </div>
             <div *ngIf="isExpired">
                 <ng-container *ngTemplateOutlet="expiredTask"></ng-container>
             </div>
-            <!-- <div *ngIf="isIncorrect">
-                <ng-container *ngTemplateOutlet="incorrectTask"></ng-container>
-            </div> -->
+            <div *ngIf="isInvalid">
+                <ng-container *ngTemplateOutlet="invalidTask"></ng-container>
+            </div>
         </div>
 
         <div class="col-md-3">
@@ -64,7 +42,7 @@
         <div class="row">
             <div class="col-md-2 task-details">Task Number:
             </div>
-            <div class="col-md-4 task-details"><b>123456 - Kamloops</b>
+            <div class="col-md-4 task-details"><b>{{taskNumber}} - Kamloops</b>
             </div>
         </div>
 
@@ -77,10 +55,10 @@
         <br>
         <div class="row">
             <div class="col-md-4">
-                <button class="button-p submit" mat-button (click)="signInTask()">Sign in to Task</button>
+                <button class="button-p submit" type="button" mat-button (click)="signInTask()">Sign in to Task</button>
             </div>
             <div class="col-md-4">
-                <button mat-button class="link-button" (click)="searchTask()">Incorrect Task?</button>
+                <button mat-button type="button" class="link-button" (click)="searchTask()">Incorrect Task?</button>
             </div>
         </div>
     </mat-card>
@@ -94,7 +72,7 @@
         <div class="row">
             <div class="col-md-2 task-details">Task Number:
             </div>
-            <div class="col-md-4 task-details"><b>123456 - Kamloops</b>
+            <div class="col-md-4 task-details"><b>{{taskNumber}} - Kamloops</b>
             </div>
         </div>
 
@@ -107,7 +85,28 @@
         <br>
         <div class="row">
             <div class="col-md-4">
-                <button class="button-p submit" mat-button (click)="searchTask()">Go Back & Search Again</button>
+                <button class="button-p submit" type="button" mat-button (click)="searchTask()">Go Back & Search Again</button>
+            </div>
+        </div>
+    </mat-card>
+</ng-template>
+<ng-template #invalidTask>
+    <mat-card>
+        <p class="heading">Sign in to a Task Number</p>
+        <p>The task number entered does not exist within the ERA Tool.</p>
+        <p>Please contact your supervisor or Local Government if you believe this is an error.</p>
+
+        <div class="row">
+            <div class="col-md-2 task-details"><b>{{taskNumber}} - </b>
+            </div>
+            <div class="col-md-4 task-details">Task Number not found
+            </div>
+        </div>
+
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <button class="button-p submit" type="button" mat-button (click)="searchTask()">Go Back & Search Again</button>
             </div>
         </div>
     </mat-card>
