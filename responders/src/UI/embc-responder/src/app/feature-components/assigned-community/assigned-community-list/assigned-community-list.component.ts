@@ -30,7 +30,7 @@ export class AssignedCommunityListComponent implements OnInit {
 
   /**
    * On component init, loads the assigned community list and filters
-   */  
+   */
   ngOnInit(): void {
     this.communitiesFilterPredicate();
     this.assignedCommunityListService.getAssignedCommunityList().subscribe(values => {
@@ -39,8 +39,8 @@ export class AssignedCommunityListComponent implements OnInit {
       this.assignedCommunityListDataService.setTeamCommunityList(values);
     }, (error) => {
       this.isLoading = !this.isLoading;
-        this.alertService.clearAlert();
-        this.alertService.setAlert('danger', globalConst.communityListError);
+      this.alertService.clearAlert();
+      this.alertService.setAlert('danger', globalConst.communityListError);
     });
 
     this.assignedCommunityListService.getAllAssignedCommunityList().subscribe(values => {

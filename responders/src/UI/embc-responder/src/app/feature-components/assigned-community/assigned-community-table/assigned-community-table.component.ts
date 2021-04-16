@@ -1,7 +1,9 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input,
+  OnChanges, Output, SimpleChanges, ViewChild, ViewEncapsulation
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
@@ -16,10 +18,8 @@ import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 })
 export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges {
 
-  // add optional clickable rows
-
   @Input() displayedColumns: TableColumnModel[];
-  @Input() incomingData : TeamCommunityModel[] = [];
+  @Input() incomingData: TeamCommunityModel[] = [];
   @Input() filterTerm: TableFilterValueModel;
   @Input() filterPredicate: any;
   @Input() disableRow = false;
@@ -34,7 +34,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(private cd: ChangeDetectorRef) { }
 
   /**
    * Listens to input events and popluate values

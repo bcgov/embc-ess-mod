@@ -67,7 +67,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
   }
 
   /**
-   * Removes the selected communities from the assigned 
+   * Removes the selected communities from the assigned
    * community list
    */
   remove(): void {
