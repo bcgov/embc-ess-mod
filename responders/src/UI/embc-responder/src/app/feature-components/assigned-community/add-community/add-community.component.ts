@@ -25,10 +25,12 @@ export class AddCommunityComponent implements OnInit {
   filterPredicate: (data: Community, filter: string) => boolean;
   filtersToLoad: TableFilterModel;
   displayedColumns: TableColumnModel[];
+  isLoading = false;
 
   ngOnInit(): void {
     this.communitiesFilterPredicate();
     this.assignedCommunityListDataService.getCommunitiesToAddList().pipe(delay(1000)).subscribe(values => {
+      this.isLoading = !this.isLoading;
       this.communities = values;
     });
     this.filtersToLoad = this.addCommunityService.filtersToLoad;

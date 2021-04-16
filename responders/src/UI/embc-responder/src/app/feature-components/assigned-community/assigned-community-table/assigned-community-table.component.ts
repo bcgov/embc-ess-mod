@@ -9,12 +9,12 @@ import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.mo
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 
 @Component({
-  selector: 'app-data-table',
-  templateUrl: './data-table.component.html',
-  styleUrls: ['./data-table.component.scss'],
+  selector: 'app-assigned-community-table',
+  templateUrl: './assigned-community-table.component.html',
+  styleUrls: ['./assigned-community-table.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
+export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges {
 
   // add optional clickable rows
 
@@ -23,31 +23,28 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
   @Input() filterTerm: TableFilterValueModel;
   @Input() filterPredicate: any;
   @Input() disableRow = false;
-  @Input() allowClickableRows: boolean;
+  @Input() isLoading: boolean;
+  // @Input() allowClickableRows: boolean;
   @Output() selectedRows = new EventEmitter<any[]>();
-  @Output() toggleActive = new EventEmitter<string>();
-  @Output() toggleInactive = new EventEmitter<string>();
-  @Output() clickedRow = new EventEmitter<any>();
+  // @Output() toggleActive = new EventEmitter<string>();
+  // @Output() toggleInactive = new EventEmitter<string>();
+  //@Output() clickedRow = new EventEmitter<any>();
 
 
   dataSource = new MatTableDataSource();
   columns: string[];
   selection = new SelectionModel<any>(true, []);
-  isLoading = true;
   color = '#169BD5';
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  ngOnInit(): void {
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
-      console.log(this.isLoading);
-      this.isLoading = !this.isLoading;
+      this.dataSource.sort = this.sort;
+      //this.isLoading = !this.isLoading;
     }
 
     if (changes.displayedColumns) {
@@ -130,26 +127,26 @@ export class DataTableComponent implements AfterViewInit, OnChanges, OnInit {
     this.selectedRows.emit(this.selection.selected);
   }
 
-  rowClicked(row): void {
-    if (this.allowClickableRows) {
-      console.log(row);
-      this.clickedRow.emit(row);
-    }
-  }
+  // rowClicked(row): void {
+  //   if (this.allowClickableRows) {
+  //     console.log(row);
+  //     this.clickedRow.emit(row);
+  //   }
+  // }
 
-  disableRowInteraction($event, columnLabel): void {
-    if (columnLabel === 'isActive') {
-      $event.stopPropagation();
-    }
-  }
+  // disableRowInteraction($event, columnLabel): void {
+  //   if (columnLabel === 'isActive') {
+  //     $event.stopPropagation();
+  //   }
+  // }
 
-  slideToggle($event: MatSlideToggleChange, row): void {
-    console.log($event);
-    console.log(row);
-    if ($event.checked) {
-      this.toggleActive.emit(row.id);
-    } else {
-      this.toggleInactive.emit(row.id);
-    }
-  }
+  // slideToggle($event: MatSlideToggleChange, row): void {
+  //   console.log($event);
+  //   console.log(row);
+  //   if ($event.checked) {
+  //     this.toggleActive.emit(row.id);
+  //   } else {
+  //     this.toggleInactive.emit(row.id);
+  //   }
+  // }
 }

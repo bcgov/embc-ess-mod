@@ -5,8 +5,10 @@ import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AssignedCommunityListDataService } from './assigned-community-list-data.service';
 import { AssignedCommunityListService } from './assigned-community-list.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-assigned-community-list',
@@ -23,14 +25,19 @@ export class AssignedCommunityListComponent implements OnInit {
   communitiesToDeleteList: Community[] = [];
   isLoading = false;
 
-  constructor(private assignedCommunityListService: AssignedCommunityListService,
+  constructor(private assignedCommunityListService: AssignedCommunityListService, private alertService: AlertService,
               private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
 
   ngOnInit(): void {
     this.communitiesFilterPredicate();
     this.assignedCommunityListService.getAssignedCommunityList().subscribe(values => {
+      this.isLoading = !this.isLoading;
       this.assignedCommunities = values;
       this.assignedCommunityListDataService.setTeamCommunityList(values);
+    }, (error) => {
+      this.isLoading = !this.isLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.communityListError);
     });
 
     this.assignedCommunityListService.getAllAssignedCommunityList().subscribe(values => {
