@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
@@ -19,17 +19,12 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
   // add optional clickable rows
 
   @Input() displayedColumns: TableColumnModel[];
-  @Input() incomingData = [];
+  @Input() incomingData : TeamCommunityModel[] = [];
   @Input() filterTerm: TableFilterValueModel;
   @Input() filterPredicate: any;
   @Input() disableRow = false;
   @Input() isLoading: boolean;
-  // @Input() allowClickableRows: boolean;
   @Output() selectedRows = new EventEmitter<any[]>();
-  // @Output() toggleActive = new EventEmitter<string>();
-  // @Output() toggleInactive = new EventEmitter<string>();
-  //@Output() clickedRow = new EventEmitter<any>();
-
 
   dataSource = new MatTableDataSource();
   columns: string[];
@@ -39,12 +34,18 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  constructor(private cd: ChangeDetectorRef) {}
+
+  /**
+   * Listens to input events and popluate values
+   * @param changes input event change object
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      //this.isLoading = !this.isLoading;
+      this.cd.detectChanges();
     }
 
     if (changes.displayedColumns) {
@@ -55,11 +56,18 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
     }
   }
 
+  /**
+   * Sets paginator and sort on tables
+   */
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
+  /**
+   * Filters the datatable
+   * @param term user selected filters
+   */
   filter(term: TableFilterValueModel): void {
     this.dataSource.filterPredicate = this.filterPredicate;
     this.dataSource.filter = JSON.stringify(term);
@@ -69,8 +77,12 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
     }
   }
 
+  /**
+   * Disables the row that is already assigned to the team
+   * @param row community model
+   * @returns true/false
+   */
   disable(row?): boolean {
-    // this.disableRow = true;
     if (this.disableRow) {
       return !row?.allowSelect;
     }
@@ -122,31 +134,12 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
+  /**
+   * Emits the selected communities to parent component
+   * @param row community model
+   */
   selectionToggle(row): void {
     this.selection.toggle(row);
     this.selectedRows.emit(this.selection.selected);
   }
-
-  // rowClicked(row): void {
-  //   if (this.allowClickableRows) {
-  //     console.log(row);
-  //     this.clickedRow.emit(row);
-  //   }
-  // }
-
-  // disableRowInteraction($event, columnLabel): void {
-  //   if (columnLabel === 'isActive') {
-  //     $event.stopPropagation();
-  //   }
-  // }
-
-  // slideToggle($event: MatSlideToggleChange, row): void {
-  //   console.log($event);
-  //   console.log(row);
-  //   if ($event.checked) {
-  //     this.toggleActive.emit(row.id);
-  //   } else {
-  //     this.toggleInactive.emit(row.id);
-  //   }
-  // }
 }

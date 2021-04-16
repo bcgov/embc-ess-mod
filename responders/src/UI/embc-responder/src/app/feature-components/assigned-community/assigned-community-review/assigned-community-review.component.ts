@@ -25,6 +25,9 @@ export class AssignedCommunityReviewComponent implements OnInit {
               private alertService: AlertService) {
   }
 
+  /**
+   * Loads the added/removed community lists
+   */
   ngOnInit(): void {
     const params = this.route.snapshot.queryParams;
     if (params) {
@@ -34,10 +37,16 @@ export class AssignedCommunityReviewComponent implements OnInit {
     this.deleteCommunityList = this.assignedCommunityDataService.getCommunitiesToDelete();
   }
 
+  /**
+   * Navigates to add communities component
+   */
   goBack(): void {
     this.router.navigate(['/responder-access/community-management/add-communities']);
   }
 
+  /**
+   * Adds the selected communities to assigned community list
+   */
   save(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
@@ -50,10 +59,17 @@ export class AssignedCommunityReviewComponent implements OnInit {
     });
   }
 
+  /**
+   * Navigates to cummity list page
+   */
   cancel(): void {
     this.router.navigate(['/responder-access/community-management/list-communities']);
   }
 
+  /**
+   * Removes the selected communities from the assigned 
+   * community list
+   */
   remove(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;

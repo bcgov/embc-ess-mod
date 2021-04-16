@@ -28,6 +28,9 @@ export class AssignedCommunityListComponent implements OnInit {
   constructor(private assignedCommunityListService: AssignedCommunityListService, private alertService: AlertService,
               private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
 
+  /**
+   * On component init, loads the assigned community list and filters
+   */  
   ngOnInit(): void {
     this.communitiesFilterPredicate();
     this.assignedCommunityListService.getAssignedCommunityList().subscribe(values => {
@@ -49,14 +52,24 @@ export class AssignedCommunityListComponent implements OnInit {
 
   }
 
+  /**
+   * Sets the user selected filers
+   * @param event user selected filters
+   */
   filter(event: TableFilterValueModel): void {
     this.filterTerm = event;
   }
 
+  /**
+   * Navigates to add communities component
+   */
   addCommunities(): void {
     this.router.navigate(['/responder-access/community-management/add-communities']);
   }
 
+  /**
+   * Custom filter predicate for assigned community list
+   */
   communitiesFilterPredicate(): void {
     const filterPredicate = (data: TeamCommunityModel, filter: string): boolean => {
       const searchString: TableFilterValueModel = JSON.parse(filter);
@@ -77,11 +90,18 @@ export class AssignedCommunityListComponent implements OnInit {
     this.filterPredicate = filterPredicate;
   }
 
+  /**
+   * Sets the list of assigned comminities to delete
+   * @param $event list of communites to remove
+   */
   communitiesToDelete($event): void {
     this.communitiesToDeleteList = $event;
     this.assignedCommunityListDataService.setCommunitiesToDelete($event);
   }
 
+  /**
+   * Navigates to review page for community removal
+   */
   deleteCommunities(): void {
     this.router.navigate(['/responder-access/community-management/review'], { queryParams: { action: 'delete' } });
   }
