@@ -38,6 +38,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
 
   /**
    * Listens to input events and popluate values
+   *
    * @param changes input event change object
    */
   ngOnChanges(changes: SimpleChanges): void {
@@ -66,6 +67,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
 
   /**
    * Filters the datatable
+   *
    * @param term user selected filters
    */
   filter(term: TableFilterValueModel): void {
@@ -79,6 +81,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
 
   /**
    * Disables the row that is already assigned to the team
+   *
    * @param row community model
    * @returns true/false
    */
@@ -136,6 +139,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
 
   /**
    * Emits the selected communities to parent component
+   *
    * @param row community model
    */
   selectionToggle(row): void {

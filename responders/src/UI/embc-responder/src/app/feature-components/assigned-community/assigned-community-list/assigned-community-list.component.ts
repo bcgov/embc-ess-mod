@@ -54,6 +54,7 @@ export class AssignedCommunityListComponent implements OnInit {
 
   /**
    * Sets the user selected filers
+   *
    * @param event user selected filters
    */
   filter(event: TableFilterValueModel): void {
@@ -92,6 +93,7 @@ export class AssignedCommunityListComponent implements OnInit {
 
   /**
    * Sets the list of assigned comminities to delete
+   *
    * @param $event list of communites to remove
    */
   communitiesToDelete($event): void {

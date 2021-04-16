@@ -49,7 +49,7 @@ export class EditTeamMemberComponent implements OnInit {
   /**
    * Returns form control
    */
-  get editFormControl(): { [key: string]: AbstractControl; } {
+  get editFormControl(): { [key: string]: AbstractControl } {
     return this.editForm.controls;
   }
 
@@ -78,6 +78,7 @@ export class EditTeamMemberComponent implements OnInit {
 
   /**
    * Checks if the username is editable
+   *
    * @returns true/false
    */
   isEditAllowed(): boolean {
@@ -95,6 +96,7 @@ export class EditTeamMemberComponent implements OnInit {
 
   /**
    * Checks if the bceid username exists in the ERA system
+   *
    * @param $event username input change event
    */
   checkUserName($event): void {
@@ -118,6 +120,7 @@ export class EditTeamMemberComponent implements OnInit {
 
   /**
    * Filters the list based on user role
+   *
    * @returns member role list
    */
    filteredRoleList(): MemberRoleDescription[] {
@@ -134,6 +137,7 @@ export class EditTeamMemberComponent implements OnInit {
 
   /**
    * Checks if the logged in user role is not Tier2
+   *
    * @returns true/false
    */
   isNotTier2(): boolean {

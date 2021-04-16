@@ -59,6 +59,7 @@ export class TeamListComponent implements OnInit {
 
   /**
    * Sets the user selected filers
+   *
    * @param event user selected filters
    */
   filter(event: TableFilterValueModel): void {
@@ -67,6 +68,7 @@ export class TeamListComponent implements OnInit {
 
   /**
    * Sets the selected team member to the services and navigates to the details page
+   *
    * @param $event Selected team member object
    */
   openMemberDetails($event: TeamMember): void {
@@ -76,6 +78,7 @@ export class TeamListComponent implements OnInit {
 
   /**
    * Activates an inactive user
+   *
    * @param $event team member id
    */
   activateTeamMember($event: string): void {
@@ -92,6 +95,7 @@ export class TeamListComponent implements OnInit {
 
   /**
    * Inactivate an active user
+   *
    * @param $event team member id
    */
   deactivateTeamMember($event: string): void {
@@ -115,9 +119,10 @@ export class TeamListComponent implements OnInit {
 
   /**
    * Populates action basec notification and open confirmation box
+   *
    * @param state navigation state string
    */
-  enableActionNotification(state: { [k: string]: any; }): void {
+  enableActionNotification(state: { [k: string]: any }): void {
     let displayText = '';
     if (state?.action === 'delete') {
       displayText = globalConst.deleteMessage;
@@ -133,6 +138,7 @@ export class TeamListComponent implements OnInit {
 
   /**
    * Open confirmation modal window
+   *
    * @param text text to display
    */
   openConfirmation(text: string): void {

@@ -60,6 +60,7 @@ export class AddCommunityComponent implements OnInit {
 
   /**
    * Sets the user selected filers
+   *
    * @param event user selected filters
    */
   filter(event: TableFilterValueModel): void {
@@ -68,6 +69,7 @@ export class AddCommunityComponent implements OnInit {
 
   /**
    * Sets the list of assigned comminities to add
+   *
    * @param $event list of communities to add
    */
   selectedCommunities($event): void {

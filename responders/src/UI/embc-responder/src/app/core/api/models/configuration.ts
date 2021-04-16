@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 /* eslint-disable */
 import { OidcConfiguration } from './oidc-configuration';
 export interface Configuration {

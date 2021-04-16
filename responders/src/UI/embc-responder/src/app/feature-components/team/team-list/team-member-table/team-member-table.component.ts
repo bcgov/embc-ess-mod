@@ -36,6 +36,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   /**
    * Listens to input events and popluate values
+   *
    * @param changes input event change object
    */
   ngOnChanges(changes: SimpleChanges): void {
@@ -63,6 +64,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   /**
    * Filters the datatable
+   *
    * @param term user selected filters
    */
   filter(term: TableFilterValueModel): void {
@@ -77,6 +79,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   /**
    * custom filter predicate for string and dropdown filters
+   *
    * @param data table data
    * @param filter filter term
    * @returns true/false
@@ -104,10 +107,11 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
       matchFilter.push(labelBoolean);
       return matchFilter.every(Boolean);
     }
-  }
+  };
 
   /**
    * Captures the row click event
+   *
    * @param row team member row
    */
   rowClicked(row): void {
@@ -117,6 +121,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   /**
    * Stops the entire row from being clicked if the user interacts with
    * the toggle button
+   *
    * @param $event click event
    * @param columnLabel table column name
    */
@@ -128,6 +133,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   /**
    * Emits active/inactive events based on user interaction with the toggle
+   *
    * @param $event slide toggle event
    * @param row row affected
    * @param index index of the affected row
@@ -143,6 +149,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   /**
    * Role based access to toggle users active/inactive
+   *
    * @param row selected row
    * @returns true/false
    */

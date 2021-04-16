@@ -45,7 +45,7 @@ export class AddTeamMemberComponent implements OnInit {
   /**
    * Returns form control
    */
-  get addFormControl(): { [key: string]: AbstractControl; } {
+  get addFormControl(): { [key: string]: AbstractControl } {
     return this.addForm.controls;
   }
 
@@ -81,6 +81,7 @@ export class AddTeamMemberComponent implements OnInit {
 
   /**
    * Display notes for the role selected
+   *
    * @param selectedRole role selected from dropdown
    */
   roleSelectionChange(selectedRole: MatSelectChange): void {
@@ -95,6 +96,7 @@ export class AddTeamMemberComponent implements OnInit {
 
   /**
    * Checks if the bceid username exists in the ERA system
+   *
    * @param $event username input change event
    */
   checkUserName($event): void {
@@ -118,6 +120,7 @@ export class AddTeamMemberComponent implements OnInit {
 
   /**
    * Filters the list based on user role
+   *
    * @returns member role list
    */
   filteredRoleList(): MemberRoleDescription[] {

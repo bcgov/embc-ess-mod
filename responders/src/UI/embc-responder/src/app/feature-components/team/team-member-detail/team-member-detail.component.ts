@@ -53,6 +53,7 @@ export class TeamMemberDetailComponent {
 
   /**
    * Checks if the user can permission to perform given action
+   *
    * @param action user action
    * @returns true/false
    */
@@ -76,6 +77,7 @@ export class TeamMemberDetailComponent {
 
   /**
    * Role based access to edit button
+   *
    * @param row selected team member
    * @returns true/false
    */

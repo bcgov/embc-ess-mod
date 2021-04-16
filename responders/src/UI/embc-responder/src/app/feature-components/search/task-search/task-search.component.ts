@@ -19,7 +19,7 @@ export class TaskSearchComponent implements OnInit {
     this.constructTaskSearchForm();
   }
 
-  get taskSearchFormControl(): { [key: string]: AbstractControl; } {
+  get taskSearchFormControl(): { [key: string]: AbstractControl } {
     return this.taskSearchForm.controls;
   }
 
