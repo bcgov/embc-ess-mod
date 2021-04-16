@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OAuthErrorEvent, OAuthService } from 'angular-oauth2-oidc';
-import { filter, map, tap } from 'rxjs/operators';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
