@@ -1,22 +1,39 @@
 <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
         <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column?.ref">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column?.label}} </th>
-                <td mat-cell *matCellDef="let row; let index = index" (click)="disableRowInteraction($event, column?.ref)">
-                    <span *ngIf="column?.ref === 'lastName' ">
-                        <span [ngClass]="{'lastName-active': row.isActive, 'lastName-inactive': !row.isActive}">{{row[column?.ref] }}</span>
-                    </span>
-                    <span *ngIf="column?.ref !== 'isActive' && column?.ref !== 'lastName'">
-                        <span>{{row[column?.ref] }}</span>
-                    </span>
-                    <span *ngIf="column?.ref === 'isActive'">
-                        <mat-slide-toggle [checked]="row[column?.ref]" (change)="slideToggle($event, row)">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column?.label}} </th>
+            <td mat-cell *matCellDef="let row; let index = index" (click)="disableRowInteraction($event, column?.ref)">
+                <span *ngIf="column?.ref === 'lastName' ">
+                    <span
+                        [ngClass]="{'lastName-active': row.isActive, 'lastName-inactive': !row.isActive}">{{row[column?.ref]
+                        }}</span>
+                </span>
+                <span *ngIf="column?.ref !== 'isActive' && column?.ref !== 'lastName'">
+                    <span>{{row[column?.ref] }}</span>
+                </span>
+                <span *ngIf="column?.ref === 'isActive'">
+                    <span *ngIf="isToggleAllowed(row) else status">
+                        <mat-slide-toggle [checked]="row[column?.ref]" (change)="slideToggle($event, row, index)">
                             <span
                                 [ngClass]="{'active-style': row[column?.ref], 'inactive-style': !row[column?.ref]}">{{row[column?.ref]
                                 ? 'Active' : 'Deactivated'}}</span>
+                            <span>
+                                <app-loader *ngIf="index === selectedIndex"
+                                    style="display: inline; justify-content: center; align-items: center;"
+                                    class="mat-progress" [showLoader]="!statusLoading" [strokeWidth]="3" [diameter]="20"
+                                    [color]="color">
+                                </app-loader>
+                            </span>
                         </mat-slide-toggle>
+
                     </span>
-                </td>
+                    <ng-template #status>
+                        <span
+                            [ngClass]="{'active-style': row[column?.ref], 'inactive-style': !row[column?.ref]}">{{row[column?.ref]
+                            ? 'Active' : 'Deactivated'}}</span>
+                    </ng-template>
+                </span>
+            </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columns"></tr>
@@ -30,4 +47,3 @@
     <mat-paginator [pageSize]="20" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons></mat-paginator>
 </div>
 <br>
-

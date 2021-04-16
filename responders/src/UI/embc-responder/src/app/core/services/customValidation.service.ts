@@ -79,40 +79,40 @@ export class CustomValidationService {
     /**
      * Checks if the email and confirm email field matches
      */
-    confirmEmailValidator(): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: boolean } | null => {
-            if (control) {
-                const email = control.get('email').value;
-                const confirmEmail = control.get('confirmEmail').value;
-                if (email !== undefined && confirmEmail !== undefined &&
-                    email !== null && confirmEmail !== null &&
-                    email !== '' && confirmEmail !== '') {
-                    if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
-                        return { emailMatch: true };
-                    }
-                }
-            }
-            return null;
-        };
-    }
+    // confirmEmailValidator(): ValidatorFn {
+    //     return (control: AbstractControl): { [key: string]: boolean } | null => {
+    //         if (control) {
+    //             const email = control.get('email').value;
+    //             const confirmEmail = control.get('confirmEmail').value;
+    //             if (email !== undefined && confirmEmail !== undefined &&
+    //                 email !== null && confirmEmail !== null &&
+    //                 email !== '' && confirmEmail !== '') {
+    //                 if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
+    //                     return { emailMatch: true };
+    //                 }
+    //             }
+    //         }
+    //         return null;
+    //     };
+    // }
 
-    requiredConfirmEmailValidator(): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: boolean } | null => {
-            if (control) {
-                const email = control.get('email').value;
-                const confirmEmail = control.get('confirmEmail').value;
-                const phone = control.get('phone').value;
+    // requiredConfirmEmailValidator(): ValidatorFn {
+    //     return (control: AbstractControl): { [key: string]: boolean } | null => {
+    //         if (control) {
+    //             const email = control.get('email').value;
+    //             const confirmEmail = control.get('confirmEmail').value;
+    //             const phone = control.get('phone').value;
 
-                if (control.get('showContacts').value === true && (phone === null || phone === undefined || phone === '')) {
-                    if ((email !== undefined || email !== null || email === '') &&
-                        (confirmEmail === null || confirmEmail === '' || confirmEmail === undefined)) {
-                        return { confirmEmailRequired: true };
-                    }
-                }
-                return null;
-            }
-        };
-    }
+    //             if (control.get('showContacts').value === true && (phone === null || phone === undefined || phone === '')) {
+    //                 if ((email !== undefined || email !== null || email === '') &&
+    //                     (confirmEmail === null || confirmEmail === '' || confirmEmail === undefined)) {
+    //                     return { confirmEmailRequired: true };
+    //                 }
+    //             }
+    //             return null;
+    //         }
+    //     };
+    // }
 
     /**
      * Checks the postal address pattern for Canada and USA
@@ -135,16 +135,16 @@ export class CustomValidationService {
     /**
      * Checks length of masked fields
      */
-    maskedNumberLengthValidator(): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: boolean } | null => {
-            if (control.value !== null && control.value !== undefined) {
-                if (control.value.indexOf('_') !== -1) {
-                    return { incorrectLength: true };
-                }
-            }
-            return null;
-        };
-    }
+    // maskedNumberLengthValidator(): ValidatorFn {
+    //     return (control: AbstractControl): { [key: string]: boolean } | null => {
+    //         if (control.value !== null && control.value !== undefined) {
+    //             if (control.value.indexOf('_') !== -1) {
+    //                 return { incorrectLength: true };
+    //             }
+    //         }
+    //         return null;
+    //     };
+    // }
 
     /**
      * Checks if the quantity inserted is between 1 and 999

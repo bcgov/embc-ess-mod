@@ -1,4 +1,4 @@
-<div class="row heading-container responsive-heading">
+<div class="row heading-container responsive-heading align-items-center">
     <div class="col-md-1">
         <img class="logo" width="82px" height="108px" src="/assets/images/logoBlueNew.png">
     </div>
@@ -9,7 +9,7 @@
 <br>
 <div class="row">
     <div class="col-md-12">
-        <mat-card>
+        <mat-card *ngIf="!isTaskSignedIn() else signedIn">
             <div class="row">
                 <div class="col-md-8">
                     <p class="card-heading-text">Are you currently assisting evacuees in an <span
@@ -25,10 +25,28 @@
                         </div>
                 </div>
                 <div class="col-md-4 align-self-center">
-                    <img class="img-align" src="/assets/images/era_tool.svg" height="154" width="147">
+                    <img class="img-align" src="/assets/images/dashboard-2.svg" height="227" width="279">
                 </div>
             </div>
         </mat-card>
+        <ng-template #signedIn>
+            <mat-card>
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="card-heading-text">You are signed in to active task #<span
+                                class="highlighted-word">{{profile?.taskNumber}}</span></p>
+                    </div>
+                    <div class="col-md-4 align-self-center">
+                        <button class="button-yellow" (click)="evacueeSearch()" mat-stroked-button type="button">Evacuee Search & Registration</button>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a class="signIn-link" (click)="signinTask()"><p class="highlighted-word">Sign in a different task # <img src="/assets/images/right_arrow_head.svg" height="11" width="7"></p></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </ng-template>
     </div>
 </div>
 <br>
