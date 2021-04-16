@@ -51,16 +51,6 @@ namespace EMBC.ESS.Shared.Contracts.Profile
     {
     }
 
-    public class SuccessfulUpdateUser : UpdateUserResponse
-    {
-        public string UserId { get; set; }
-    }
-
-    public class FailedUpdateUser : UpdateUserResponse
-    {
-        public string Reason { get; set; }
-    }
-
     public class SignResponderAgreementCommand : Command<SignResponderAgreementResponse>
     {
         public string UserName { get; set; }
