@@ -27,7 +27,7 @@ export class AssignedCommunityListDataService {
     {
       type: 'type',
       label: this.defaultTypes,
-      values: Object.keys(CommunityType).filter(e => e)
+      values: Object.keys(CommunityType).filter(e => e === 'Undefined' ? '' : e)
     }],
     loadInputFilter: {
       type: 'Search by city, town, village or community',

@@ -19,8 +19,8 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <app-data-table [incomingData]='communities' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm"
-            [filterPredicate]="filterPredicate" (selectedRows)="selectedCommunities($event)" [disableRow]="true"></app-data-table>
+            <app-assigned-community-table [incomingData]='communities' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm" [isLoading]='isLoading'
+            [filterPredicate]="filterPredicate" (selectedRows)="selectedCommunities($event)" [disableRow]="true"></app-assigned-community-table>
         </div>
     </div>
     <div class="row">
