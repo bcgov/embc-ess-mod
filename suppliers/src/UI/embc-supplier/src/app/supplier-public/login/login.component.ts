@@ -18,7 +18,6 @@ export class LoginComponent implements OnInit {
     catch (error) {
       console.error(error);
     } finally {
-      console.log("something");
       this.router.navigate(['auth']);
     }
   }

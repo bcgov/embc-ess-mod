@@ -32,6 +32,16 @@ export class AuthenticationService {
         return this.oauthService.getAccessToken();
     }
 
+    public hasValidToken(): Promise<boolean> {
+        if (this.oauthService.hasValidIdToken()) {
+            return Promise.resolve(true);
+        }
+
+        return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
+            return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+        });
+    }
+
     private async configureOAuthService(): Promise<void> {
         return this.configService.getAuthConfig().then(config => {
             let authConfig = {
