@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthenticationService } from '../../core/services/authentication.service';
 
 @Component({
@@ -7,7 +8,8 @@ import { AuthenticationService } from '../../core/services/authentication.servic
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  constructor(private authService: AuthenticationService) { }
+  constructor(private authService: AuthenticationService,
+    private router: Router) { }
 
   public async ngOnInit(): Promise<void> {
     try {
@@ -17,6 +19,7 @@ export class LoginComponent implements OnInit {
       console.error(error);
     } finally {
       console.log("something");
+      this.router.navigate(['auth']);
     }
   }
 }

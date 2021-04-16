@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { OAuthErrorEvent, OAuthService } from 'angular-oauth2-oidc';
+import { filter, map, tap } from 'rxjs/operators';
 import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-
     constructor(
         private oauthService: OAuthService,
         private configService: ConfigService
     ) { }
+
+    public init(): Promise<void> {
+        return this.configureOAuthService();
+    }
 
     public async login(): Promise<string> {
         await this.configureOAuthService();
@@ -40,6 +44,4 @@ export class AuthenticationService {
             this.oauthService.setupAutomaticSilentRefresh();
         });
     }
-
 }
-
