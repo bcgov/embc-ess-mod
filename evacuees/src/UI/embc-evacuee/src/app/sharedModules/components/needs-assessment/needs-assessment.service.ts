@@ -131,7 +131,7 @@ export class NeedsAssessmentService {
         return this._mainHouseholdMember;
     }
 
-    public set mainHouseHoldMember(value: HouseholdMember) {
+    public set mainHouseholdMember(value: HouseholdMember) {
         this._mainHouseholdMember = value;
     }
 
@@ -148,10 +148,6 @@ export class NeedsAssessmentService {
         this.householdMembers = householdMembersArray;
     }
 
-    public addMainHouseholdMembers(): void {
-        this._householdMembers.push(this._mainHouseholdMember);
-    }
-
 
     public setNeedsDetails(formGroup: FormGroup): void {
         this.canEvacueeProvideClothing = formGroup.get('canEvacueeProvideClothing').value === 'null' ? null : formGroup.get('canEvacueeProvideClothing').value;
@@ -164,6 +160,23 @@ export class NeedsAssessmentService {
     }
 
     public createNeedsAssessmentDTO(): NeedsAssessment {
+        console.log({
+            id: this.id,
+            canEvacueeProvideClothing: this.canEvacueeProvideClothing,
+            canEvacueeProvideFood: this.canEvacueeProvideFood,
+            canEvacueeProvideIncidentals: this.canEvacueeProvideIncidentals,
+            canEvacueeProvideLodging: this.canEvacueeProvideLodging,
+            canEvacueeProvideTransportation: this.canEvacueeProvideTransportation,
+            householdMembers: this.householdMembers,
+            hasPetsFood: this.hasPetsFood,
+            haveMedication: this.haveMedication,
+            haveSpecialDiet: this.haveSpecialDiet,
+            specialDietDetails: this.specialDietDetails,
+            insurance: this.insurance,
+            pets: this.pets,
+            type: NeedsAssessmentType.Preliminary
+        });
+
         return {
             id: this.id,
             canEvacueeProvideClothing: this.canEvacueeProvideClothing,
@@ -175,6 +188,7 @@ export class NeedsAssessmentService {
             hasPetsFood: this.hasPetsFood,
             haveMedication: this.haveMedication,
             haveSpecialDiet: this.haveSpecialDiet,
+            specialDietDetails: this.specialDietDetails,
             insurance: this.insurance,
             pets: this.pets,
             type: NeedsAssessmentType.Preliminary

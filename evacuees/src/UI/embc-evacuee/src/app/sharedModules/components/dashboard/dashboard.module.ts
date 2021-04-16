@@ -23,4 +23,4 @@ import { ProfileRoutingModule } from '../evacuation-file/profile/profile-routing
     MatTabsModule
   ]
 })
-export class ViewAuthProfileModule { }
+export class DashboardModule { }

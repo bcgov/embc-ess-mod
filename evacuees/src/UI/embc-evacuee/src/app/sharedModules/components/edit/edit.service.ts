@@ -20,7 +20,7 @@ export class EditService {
      * Updates the form with latest values
      * @param component current component name
      */
-    saveFormData(component: string, form: FormGroup): void {
+    saveFormData(component: string, form: FormGroup, path: string): void {
         switch (component) {
             case 'restriction':
                 this.restrictionService.restrictedAccess = form.get('restrictedAccess').value;
@@ -60,7 +60,9 @@ export class EditService {
                 this.needsAssessmentDataService.haveMedication = form.get('haveMedication').value;
                 this.needsAssessmentDataService.specialDietDetails = form.get('specialDietDetails').value;
                 this.needsAssessmentDataService.setHouseHoldMembers(form.get('householdMembers').value);
-                this.needsAssessmentDataService.addMainHouseholdMembers();
+                if (path === 'verified-registration') {
+                    this.needsAssessmentMapping.addMainHouseholdMembers();
+                }
                 break;
             case 'pets':
                 this.needsAssessmentDataService.pets = form.get('pets').value;
@@ -78,7 +80,7 @@ export class EditService {
      * @param component current component name
      * @param form  form to update
      */
-    cancelFormData(component: string, form: FormGroup): void {
+    cancelFormData(component: string, form: FormGroup, path: string): void {
         switch (component) {
             case 'restriction':
                 if (this.restrictionService.restrictedAccess !== undefined) {
@@ -131,11 +133,20 @@ export class EditService {
                     this.needsAssessmentDataService.haveMedication !== undefined &&
                     this.needsAssessmentDataService.haveSpecialDiet !== undefined &&
                     this.needsAssessmentDataService.specialDietDetails !== undefined) {
-                    form.get('householdMembers').patchValue(
-                        this.needsAssessmentMapping.convertHouseholdMembers(this.needsAssessmentDataService.householdMembers));
+
                     form.get('haveMedication').patchValue(this.needsAssessmentDataService.haveMedication);
                     form.get('haveSpecialDiet').patchValue(this.needsAssessmentDataService.haveSpecialDiet);
                     form.get('specialDietDetails').patchValue(this.needsAssessmentDataService.specialDietDetails);
+
+                    if (path === 'verified-registration') {
+                        form.get('householdMembers').patchValue(
+                            this.needsAssessmentMapping.convertVerifiedHouseholdMembers(this.needsAssessmentDataService.householdMembers));
+                    } else {
+                        form.get('householdMembers').patchValue(
+                            this.needsAssessmentMapping.
+                                convertNonVerifiedHouseholdMembers(this.needsAssessmentDataService.householdMembers));
+                    }
+
                 } else {
                     form.get('householdMembers').patchValue([]);
                     form.get('haveMedication').reset();
@@ -171,7 +182,4 @@ export class EditService {
             default:
         }
     }
-
-
-
 }
