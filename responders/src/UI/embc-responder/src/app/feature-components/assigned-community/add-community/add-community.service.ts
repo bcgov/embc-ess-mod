@@ -7,6 +7,8 @@ import { LocationsService } from 'src/app/core/services/locations.service';
 @Injectable({ providedIn: 'root' })
 export class AddCommunityService {
 
+  private addedCommunities: TeamCommunityModel[];
+
   public defaultDistrict: ObjectWrapper = { code: 'All Districts', description: 'All Regional Districts' };
 
   public filtersToLoad: TableFilterModel = {
@@ -28,8 +30,6 @@ export class AddCommunityService {
     { label: 'Regional District', ref: 'districtName' },
     { label: 'Type', ref: 'type' }
   ];
-
-  private addedCommunities: TeamCommunityModel[];
 
   constructor(private loadLocationService: LocationsService) { }
 
