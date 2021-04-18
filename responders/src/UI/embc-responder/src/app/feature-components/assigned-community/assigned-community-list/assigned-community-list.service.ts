@@ -3,13 +3,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TeamCommunitiesAssignmentsService } from 'src/app/core/api/services';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
-import { LoadLocationsService } from 'src/app/core/services/load-locations.service';
+import { LocationsService } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class AssignedCommunityListService {
 
     constructor(private teamCommunitiesAssignmentsService: TeamCommunitiesAssignmentsService,
-                private loadLocationService: LoadLocationsService) { }
+        private loadLocationService: LocationsService) { }
 
     public getAssignedCommunityList(): Observable<TeamCommunityModel[]> {
         return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsGetAssignedCommunities().pipe(

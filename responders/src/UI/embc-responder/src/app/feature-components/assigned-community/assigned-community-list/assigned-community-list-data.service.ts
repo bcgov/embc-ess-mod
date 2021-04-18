@@ -5,18 +5,18 @@ import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { LoadLocationsService } from 'src/app/core/services/load-locations.service';
+import { LocationsService } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class AssignedCommunityListDataService {
 
-  constructor(private loadLocationService: LoadLocationsService, private cacheService: CacheService) { }
+  constructor(private loadLocationService: LocationsService, private cacheService: CacheService) { }
 
   private teamCommunityList: TeamCommunityModel[];
   private allTeamCommunityList: TeamCommunityModel[];
   private communitiesToDelete: TeamCommunityModel[];
-  defaultDistrict: ObjectWrapper = {code: 'All Districts', description: 'All Regional Districts'};
-  defaultTypes: ObjectWrapper = {code: 'All Types', description: 'All Types'};
+  defaultDistrict: ObjectWrapper = { code: 'All Districts', description: 'All Regional Districts' };
+  defaultTypes: ObjectWrapper = { code: 'All Types', description: 'All Types' };
 
   public filtersToLoad: TableFilterModel = {
     loadDropdownFilters: [{

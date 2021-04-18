@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { delay } from 'rxjs/operators';
-import { Community } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
-import { AssignedCommunityListDataService } from 'src/app/feature-components/assigned-community/assigned-community-list/assigned-community-list-data.service';
+import { Community } from 'src/app/core/services/locations.service';
+import {
+  AssignedCommunityListDataService
+} from 'src/app/feature-components/assigned-community/assigned-community-list/assigned-community-list-data.service';
 import { AddCommunityService } from './add-community.service';
 
 @Component({
@@ -16,9 +18,6 @@ import { AddCommunityService } from './add-community.service';
 })
 export class AddCommunityComponent implements OnInit {
 
-  constructor(private assignedCommunityListDataService: AssignedCommunityListDataService,
-              private router: Router, private addCommunityService: AddCommunityService) { }
-
   communities: TeamCommunityModel[];
   filterTerm: TableFilterValueModel;
   selectedCommunitiesList: Community[] = [];
@@ -26,6 +25,12 @@ export class AddCommunityComponent implements OnInit {
   filtersToLoad: TableFilterModel;
   displayedColumns: TableColumnModel[];
   isLoading = false;
+
+  constructor(
+    private assignedCommunityListDataService: AssignedCommunityListDataService,
+    private router: Router,
+    private addCommunityService: AddCommunityService) { }
+
 
   /**
    * On component init, loads the eligible communities list and filters
@@ -67,7 +72,7 @@ export class AddCommunityComponent implements OnInit {
   }
 
   /**
-   * Sets the list of assigned comminities to add
+   * Sets the list of assigned communities to add
    * @param $event list of communities to add
    */
   selectedCommunities($event): void {

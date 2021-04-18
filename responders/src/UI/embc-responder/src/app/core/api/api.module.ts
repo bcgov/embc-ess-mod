@@ -6,7 +6,6 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { ErrorService } from './services/error.service';
 import { ConfigurationService } from './services/configuration.service';
-import { LocationsService } from './services/locations.service';
 import { ProfileService } from './services/profile.service';
 import { TeamCommunitiesAssignmentsService } from './services/team-communities-assignments.service';
 import { TeamMembersService } from './services/team-members.service';
@@ -21,7 +20,6 @@ import { TeamMembersService } from './services/team-members.service';
   providers: [
     ErrorService,
     ConfigurationService,
-    LocationsService,
     ProfileService,
     TeamCommunitiesAssignmentsService,
     TeamMembersService,

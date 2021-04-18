@@ -98,7 +98,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("codes/communities")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Community>>> GetCommunities([FromQuery] string stateProvinceId, [FromQuery] string countryId, [FromQuery] CommunityType[] types)
+        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCommunities([FromQuery] string stateProvinceId, [FromQuery] string countryId, [FromQuery] CommunityType[] types)
         {
             var items = (await client.Send(new CommunitiesQueryCommand()
             {
@@ -107,13 +107,13 @@ namespace EMBC.Responders.API.Controllers
                 Types = types.Select(t => (EMBC.ESS.Shared.Contracts.Location.CommunityType)t)
             })).Items;
 
-            return Ok(mapper.Map<IEnumerable<Community>>(items));
+            return Ok(mapper.Map<IEnumerable<CommunityCode>>(items));
         }
 
         [HttpGet("codes/stateprovinces")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Community>>> GetStateProvinces([FromQuery] string countryId)
+        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetStateProvinces([FromQuery] string countryId)
         {
             var items = (await client.Send(new StateProvincesQueryCommand()
             {
@@ -126,7 +126,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("codes/countries")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Community>>> GetCountries()
+        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCountries()
         {
             var items = (await client.Send(new CountriesQueryCommand())).Items;
 
@@ -153,7 +153,7 @@ namespace EMBC.Responders.API.Controllers
         public Code ParentCode { get; set; }
     }
 
-    public class Community : Code
+    public class CommunityCode : Code
     {
         public CommunityType CommunityType { get; set; }
         public string DistrictName { get; set; }
@@ -229,7 +229,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.ParentCode, opts => opts.MapFrom(s => new Code { Value = s.CountryCode, Type = nameof(Country) }))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Location.Community, Community>()
+            CreateMap<ESS.Shared.Contracts.Location.Community, CommunityCode>()
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => nameof(ESS.Shared.Contracts.Location.Community)))
                 .ForMember(d => d.Value, opts => opts.MapFrom(s => s.Code))
                 .ForMember(d => d.Description, opts => opts.MapFrom(s => s.Name))
