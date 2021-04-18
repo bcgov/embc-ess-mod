@@ -10,12 +10,12 @@ export class AssignedCommunityListService {
 
   constructor(
     private teamCommunitiesAssignmentsService: TeamCommunitiesAssignmentsService,
-    private loadLocationService: LocationsService) { }
+    private locationsService: LocationsService) { }
 
   public getAssignedCommunityList(): Observable<TeamCommunityModel[]> {
     return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsGetAssignedCommunities().pipe(
       map((assignedCommunities: TeamCommunityModel[]) => {
-        const allCommunities = this.loadLocationService.getCommunityList();
+        const allCommunities = this.locationsService.getCommunityList();
         return assignedCommunities.map(list => {
           const found = allCommunities.find(x => x.code === list.communityCode);
           if (found) {
@@ -31,7 +31,7 @@ export class AssignedCommunityListService {
   public getAllAssignedCommunityList(): Observable<TeamCommunityModel[]> {
     return this.teamCommunitiesAssignmentsService.teamCommunitiesAssignmentsGetAssignedCommunities({ forAllTeams: true }).pipe(
       map((assignedCommunities: TeamCommunityModel[]) => {
-        const allCommunities = this.loadLocationService.getCommunityList();
+        const allCommunities = this.locationsService.getCommunityList();
         return assignedCommunities.map(list => {
           const found = allCommunities.find(x => x.code === list.communityCode);
           if (found) {

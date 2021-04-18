@@ -90,21 +90,21 @@ export class LocationsService {
       })));
       this.setRegionalDistricts(communities.map(comm => comm.districtName));
     });
-    return this.communityList;
+    return this.communityList || [];
   }
 
   private getStateProvinces(): StateProvince[] {
     this.configService.configurationGetStateProvinces().subscribe((stateProvinces: Code[]) => {
       this.setStateProvinceList([...stateProvinces].map((sp) => ({ code: sp.value, name: sp.description })));
     });
-    return this.stateProvinceList;
+    return this.stateProvinceList || [];
   }
 
   private getCountries(): Country[] {
     this.configService.configurationGetCountries().subscribe((countries: Code[]) => {
       this.setCountriesList([...countries].map((c) => ({ code: c.value, name: c.description })));
     });
-    return this.countriesList;
+    return this.countriesList || [];
   }
 
 }
