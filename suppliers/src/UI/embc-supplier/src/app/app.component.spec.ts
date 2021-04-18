@@ -4,6 +4,8 @@ import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SupplierHttpService } from './core/services/supplierHttp.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthenticationService } from './core/services/authentication.service';
+import { OAuthLogger, OAuthService, UrlHelperService } from 'angular-oauth2-oidc';
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
@@ -17,7 +19,7 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
-      providers: [SupplierHttpService]
+      providers: [SupplierHttpService, AuthenticationService, OAuthService, UrlHelperService, OAuthLogger]
     }).compileComponents();
   }));
 

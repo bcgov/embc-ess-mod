@@ -12,8 +12,8 @@
         </div>
     </div>
     <div class="data-margin">
-        <app-data-table [incomingData]='assignedCommunities' [displayedColumns]='displayedColumns'
+        <app-assigned-community-table [incomingData]='assignedCommunities' [displayedColumns]='displayedColumns' [isLoading]='isLoading'
             [filterTerm]="filterTerm" [filterPredicate]="filterPredicate" (selectedRows)="communitiesToDelete($event)">
-        </app-data-table>
+        </app-assigned-community-table>
     </div>
 </mat-card>
