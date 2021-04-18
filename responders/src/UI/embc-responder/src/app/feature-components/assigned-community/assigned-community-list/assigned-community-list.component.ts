@@ -94,8 +94,8 @@ export class AssignedCommunityListComponent implements OnInit {
   }
 
   /**
-   * Sets the list of assigned comminities to delete
-   * @param $event list of communites to remove
+   * Sets the list of assigned communities to delete
+   * @param $event list of communities to remove
    */
   communitiesToDelete($event): void {
     this.communitiesToDeleteList = $event;
