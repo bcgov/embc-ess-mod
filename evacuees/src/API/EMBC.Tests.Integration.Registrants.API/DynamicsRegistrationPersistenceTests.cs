@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
 using EMBC.Registrants.API.EvacuationsModule;
 using EMBC.Registrants.API.ProfilesModule;
 using EMBC.Registrants.API.RegistrationsModule;
-using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,13 +17,6 @@ namespace EMBC.Tests.Integration.Registrants.API
     {
         public DynamicsRegistrationPersistenceTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task GetSecurityToken()
-        {
-            var tokenProvider = services.GetRequiredService<ISecurityTokenProvider>();
-            testLogger.LogDebug("Authorization: Bearer {0}", await tokenProvider.AcquireToken());
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -121,33 +112,6 @@ namespace EMBC.Tests.Integration.Registrants.API
             testLogger.LogDebug("ESS File #: " + result);
             Assert.NotNull(result);
             Assert.True(int.Parse(result) > 0);
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetListOfJurisdictions()
-        {
-            var repo = services.GetRequiredService<EMBC.Registrants.API.LocationModule.IListsRepository>();
-            var jurisdictions = await repo.GetJurisdictions();
-
-            Assert.NotEmpty(jurisdictions);
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetListOfStateProvinces()
-        {
-            var repo = services.GetRequiredService<EMBC.Registrants.API.LocationModule.IListsRepository>();
-            var jurisdictions = await repo.GetStateProvinces();
-
-            Assert.NotEmpty(jurisdictions);
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetListOfCountries()
-        {
-            var repo = services.GetRequiredService<EMBC.Registrants.API.LocationModule.IListsRepository>();
-            var jurisdictions = await repo.GetCountries();
-
-            Assert.NotEmpty(jurisdictions);
         }
     }
 }

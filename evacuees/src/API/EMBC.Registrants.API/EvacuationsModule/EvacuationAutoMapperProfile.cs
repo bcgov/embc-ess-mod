@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EMBC.Registrants.API.LocationModule;
+using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Shared;
 using Microsoft.Dynamics.CRM;
 
@@ -148,11 +148,11 @@ namespace EMBC.Registrants.API.EvacuationsModule
         private readonly StateProvince[] stateProvinces;
         private readonly Country[] countries;
 
-        public LocationConverter(ILocationManager locationManager)
+        public LocationConverter(IAddressService addressService)
         {
-            jurisdictions = locationManager.GetJurisdictions().GetAwaiter().GetResult().ToArray();
-            stateProvinces = locationManager.GetStateProvinces().GetAwaiter().GetResult().ToArray();
-            countries = locationManager.GetCountries().GetAwaiter().GetResult().ToArray();
+            jurisdictions = addressService.GetCommunities().GetAwaiter().GetResult().ToArray();
+            stateProvinces = addressService.GetStateProvinces().GetAwaiter().GetResult().ToArray();
+            countries = addressService.GetCountries().GetAwaiter().GetResult().ToArray();
         }
 
         public Jurisdiction Convert(era_jurisdiction sourceMember, ResolutionContext context)

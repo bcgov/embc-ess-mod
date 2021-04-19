@@ -21,11 +21,11 @@ using System.Net;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using EMBC.Registrants.API.EvacuationsModule;
-using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.ProfilesModule;
 using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.SecurityModule;
+using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Builder;
@@ -63,7 +63,6 @@ namespace EMBC.Registrants.API
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
-            services.Configure<LocationCacheHostedServiceOptions>(configuration.GetSection("Location:Cache"));
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardLimit = 2;
@@ -99,7 +98,6 @@ namespace EMBC.Registrants.API
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
             services.AddDistributedMemoryCache(); // TODO: configure proper distributed cache
             services.AddRegistrationModule();
-            services.AddLocationModule();
             services.AddProfileModule();
             services.AddSecurityModule();
             services.AddEvacuationsModule();
@@ -116,6 +114,10 @@ namespace EMBC.Registrants.API
             services.AddSingleton<IEmailConfiguration>(configuration.GetSection("SMTP").Get<EmailConfiguration>());
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ITemplateEmailService, TemplateEmailService>();
+            services.AddTransient<IAddressService, AddressService>();
+
+            services.Configure<MessagingOptions>(configuration.GetSection("backend"));
+            services.AddMessaging();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

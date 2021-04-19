@@ -18,8 +18,8 @@ using System;
 using System.Globalization;
 using System.Linq;
 using AutoMapper;
-using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.SecurityModule;
+using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Shared;
 using Microsoft.Dynamics.CRM;
 using Microsoft.OData.Edm;
@@ -185,9 +185,9 @@ namespace EMBC.Registrants.API.ProfilesModule
     {
         private readonly Jurisdiction[] jurisdictions;
 
-        public BcscCityConverter(ILocationManager locationManager)
+        public BcscCityConverter(IAddressService addressService)
         {
-            jurisdictions = locationManager.GetJurisdictions("CAN", "BC").GetAwaiter().GetResult().ToArray();
+            jurisdictions = addressService.GetCommunities("CAN", "BC").GetAwaiter().GetResult().ToArray();
         }
 
         public Jurisdiction Convert(string sourceMember, ResolutionContext context) =>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.ProfilesModule;
+using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Shared;
 using FakeItEasy;
 using Microsoft.Dynamics.CRM;
@@ -17,14 +17,14 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
         public MappingTests()
         {
-            var locationManager = A.Fake<ILocationManager>();
-            A.CallTo(() => locationManager.GetJurisdictions("CAN", "BC", null)).Returns(FakeGenerator.Jurisdictions);
+            var addressService = A.Fake<IAddressService>();
+            A.CallTo(() => addressService.GetCommunities("CAN", "BC", null)).Returns(FakeGenerator.Jurisdictions);
             mapperConfig = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.AddMaps(typeof(ProfileAutoMapperProfile));
                 cfg.ConstructServicesUsing(t => t switch
                 {
-                    Type st when st == typeof(BcscCityConverter) => new BcscCityConverter(locationManager),
+                    Type st when st == typeof(BcscCityConverter) => new BcscCityConverter(addressService),
                     Type st => Activator.CreateInstance(st),
                     _ => null
                 });

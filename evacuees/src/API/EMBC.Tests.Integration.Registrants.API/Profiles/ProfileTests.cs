@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
-using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.ProfilesModule;
+using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,12 +16,12 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
     public class ProfileTests : WebAppTestBase
     {
         private readonly IProfileManager profileManager;
-        private readonly IListsRepository listsRepository;
+        private readonly IAddressService addressService;
 
         public ProfileTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             profileManager = services.GetRequiredService<IProfileManager>();
-            listsRepository = services.GetRequiredService<IListsRepository>();
+            addressService = services.GetRequiredService<IAddressService>();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -44,7 +44,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         {
             var profile = await profileManager.GetProfileByBcscid("test");
             var currentCity = profile.PrimaryAddress.Jurisdiction;
-            var newCity = (await listsRepository.GetJurisdictions()).Skip(new Random().Next(100)).Take(1).First();
+            var newCity = (await addressService.GetCommunities()).Skip(new Random().Next(100)).Take(1).First();
 
             profile.PrimaryAddress.Jurisdiction = new Jurisdiction { Code = newCity.Code };
 
@@ -75,9 +75,9 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         {
             var baseProfile = await profileManager.GetProfileByBcscid("ChrisTest3");
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
-            var country = (await listsRepository.GetCountries()).First(c => c.Code == "CAN");
-            var province = (await listsRepository.GetStateProvinces()).First(c => c.Code == "BC");
-            var city = (await listsRepository.GetJurisdictions()).Skip(new Random().Next(100)).Take(1).First();
+            var country = (await addressService.GetCountries()).First(c => c.Code == "CAN");
+            var province = (await addressService.GetStateProvinces()).First(c => c.Code == "BC");
+            var city = (await addressService.GetCommunities()).Skip(new Random().Next(100)).Take(1).First();
 
             baseProfile.Id = newProfileBceId;
             baseProfile.PrimaryAddress.Country = new Country { Code = country.Code };

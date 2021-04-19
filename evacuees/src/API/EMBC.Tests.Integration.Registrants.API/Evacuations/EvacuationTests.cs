@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
 using EMBC.Registrants.API.EvacuationsModule;
-using EMBC.Registrants.API.LocationModule;
 using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,18 +16,17 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
     public class EvacuationTests : WebAppTestBase
     {
         private readonly IEvacuationManager evacuationManager;
-        private readonly IListsRepository listsRepository;
         private EvacuationFile baseTestEvacuation;
         private EvacuationFile updatedTestEvacuation;
 
         // Constants
-        const string TestUserId = "CHRIS-TEST";
-        const string TestEssFileNumber = "100615";
+        private const string TestUserId = "CHRIS-TEST";
+
+        private const string TestEssFileNumber = "100615";
 
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             evacuationManager = services.GetRequiredService<IEvacuationManager>();
-            listsRepository = services.GetRequiredService<IListsRepository>();
             CreateTestEvacuations();
         }
 
