@@ -148,7 +148,9 @@ namespace EMBC.Responders.API.Controllers
     {
         public SecurityMapping()
         {
-            CreateMap<EMBC.ESS.Shared.Contracts.Profile.UserProfile, UserProfile>();
+            CreateMap<EMBC.ESS.Shared.Contracts.Team.TeamMember, UserProfile>()
+                .ForMember(d => d.LastLoginDate, opts => opts.MapFrom(s => s.LastSuccessfulLogin))
+                .ForMember(d => d.RequiredToSignAgreement, opts => opts.MapFrom(s => !s.AgreementSignDate.HasValue));
         }
     }
 }
