@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------
-//  Copyright © 2020 Province of British Columbia
+//  Copyright © 2021 Province of British Columbia
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ namespace EMBC.Registrants.API.LocationModule
         private Timer timer;
         private bool disposedValue;
 
-        public LocationCacheHostedService(IDistributedCache cache, IServiceProvider serviceProvider,  ILogger<LocationCacheHostedService> logger, IOptions<LocationCacheHostedServiceOptions> options)
+        public LocationCacheHostedService(IDistributedCache cache, IServiceProvider serviceProvider, ILogger<LocationCacheHostedService> logger, IOptions<LocationCacheHostedServiceOptions> options)
         {
             this.cache = cache;
             this.serviceProvider = serviceProvider;

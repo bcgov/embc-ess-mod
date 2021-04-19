@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------
-//  Copyright © 2020 Province of British Columbia
+//  Copyright © 2021 Province of British Columbia
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -14,17 +14,14 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace EMBC.Registrants.API.Utils
 {
     public interface ITemplateEmailService
     {
         EmailMessage GetRegistrationNotificationEmailMessage(EmailAddress toAddress);
+
         EmailMessage GetAnonEvacuationSubmissionNotificationEmailMessage(EmailAddress toAddress, string essFileNumber);
+
         EmailMessage GetEvacuationSubmissionNotificationEmailMessage(EmailAddress toAddress, string essFileNumber);
     }
 

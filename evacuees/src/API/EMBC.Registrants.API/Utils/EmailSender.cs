@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------
-//  Copyright © 2020 Province of British Columbia
+//  Copyright © 2021 Province of British Columbia
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,6 +54,7 @@ namespace EMBC.Registrants.API.Utils
             FromAddresses = fromAddresses;
         }
     }
+
     public interface IEmailConfiguration
     {
         string Server { get; }
@@ -71,11 +71,13 @@ namespace EMBC.Registrants.API.Utils
         public int SmtpPort { get; set; } = 25;
         public string SmtpUsername { get; set; } = string.Empty;
         public string SmtpPassword { get; set; } = string.Empty;
+
         public EmailAddress SmtpDefaultSender { get; set; } = new EmailAddress()
         {
             Name = "Do Not Reply",
             Address = "no-reply@gov.bc.ca"
         };
+
         public bool EnableSSL { get; set; } = false;
     }
 
