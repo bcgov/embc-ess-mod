@@ -39,11 +39,20 @@ export class HeaderComponent implements OnInit {
   }
 
   public signOut(): void {
+    this.userService.clearAppStorage();
     this.authService.logout();
   }
 
   public showUserProfile(): boolean {
     return this.profile != null;
+  }
+
+  newTaskSignIn(): void {
+    this.router.navigate(['/responder-access/search/task']);
+  }
+
+  allowSignIn(): boolean {
+    return this.profile.taskNumber !== null;
   }
 
 }

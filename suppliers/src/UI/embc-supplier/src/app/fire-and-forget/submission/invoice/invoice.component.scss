@@ -1,0 +1,41 @@
+@import '../../../../styles/styles.scss';
+
+.invoice-template{
+  margin-top: 10px;
+}
+
+.requiredField::after {
+    content: "*";
+    color: red;
+ }
+
+.note {
+  color: grey;
+  font-weight: lighter;
+  font-style: italic;
+  font-size: 15px;
+}
+
+.referral-button {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.add-referral-button {
+  font-weight: bold;
+  color: #2F6699 !important;
+  border: 1px #2F6699 solid;
+  background-color: white;
+  margin-top: 1rem;
+  &:hover,
+  &:focus {
+    color: white;
+  }
+  &:active {
+    border: 2px solid rgba(white, 0.8);
+  }
+}
+
+.total-dollar-line {
+  line-height: 49px;
+}

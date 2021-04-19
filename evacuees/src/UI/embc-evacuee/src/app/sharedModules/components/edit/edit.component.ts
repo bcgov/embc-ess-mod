@@ -29,7 +29,7 @@ export class EditComponent implements OnInit, OnDestroy {
   nonVerfiedRoute = '/non-verified-registration/needs-assessment';
   verifiedRoute = '/verified-registration/create-profile';
   verifiedNeedsAssessments = '/verified-registration/needs-assessment';
-  disabledSavedButton = false;
+  // disabledSavedButton = false;
 
   constructor(
     private router: Router, private route: ActivatedRoute,
@@ -53,30 +53,31 @@ export class EditComponent implements OnInit, OnDestroy {
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
     });
-    this.onChanges();
+    // this.onChanges();
   }
 
 
-  onChanges(): void {
-    this.form.statusChanges.subscribe(val => {
-      if (val === 'VALID') {
-        setTimeout(() => {
-          this.disabledSavedButton = false;
-        }, 0);
-      } else {
-        setTimeout(() => {
-          this.disabledSavedButton = true;
-        }, 0);
-      }
-    });
-  }
+  // onChanges(): void {
+  //   console.log(this.form);
+  //   this.form.statusChanges.subscribe(val => {
+  //     if (val === 'VALID') {
+  //       setTimeout(() => {
+  //         this.disabledSavedButton = false;
+  //       }, 0);
+  //     } else {
+  //       setTimeout(() => {
+  //         this.disabledSavedButton = true;
+  //       }, 0);
+  //     }
+  //   });
+  // }
 
   /**
    * Saves the updates information and navigates to review
    * page
    */
   save(): void {
-    this.editService.saveFormData(this.componentToLoad, this.form);
+    this.editService.saveFormData(this.componentToLoad, this.form, this.currentFlow);
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {
@@ -114,7 +115,7 @@ export class EditComponent implements OnInit, OnDestroy {
    * page
    */
   cancel(): void {
-    this.editService.cancelFormData(this.componentToLoad, this.form);
+    this.editService.cancelFormData(this.componentToLoad, this.form, this.currentFlow);
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {

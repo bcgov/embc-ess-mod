@@ -14,20 +14,27 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.IO;
 using System.IO.Abstractions;
 using System.Net;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using EMBC.Suppliers.API.DynamicsModule;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.Models.Dynamics;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using NSwag.AspNetCore;
 using Serilog;
 using Xrm.Tools.WebAPI;
@@ -48,9 +55,63 @@ namespace EMBC.Suppliers.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                configuration.GetSection("jwt").Bind(options);
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    RequireSignedTokens = true,
+                    RequireAudience = true,
+                    RequireExpirationTime = true,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromSeconds(60),
+                    NameClaimType = ClaimTypes.Upn,
+                    RoleClaimType = ClaimTypes.Role,
+                    ValidateActor = true,
+                    ValidateIssuerSigningKey = true,
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = async c =>
+                    {
+                        await Task.CompletedTask;
+                        var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                        logger.LogError(c.Exception, $"Error authenticating token");
+                    },
+                    OnTokenValidated = async c =>
+                    {
+                        await Task.CompletedTask;
+                        var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
+                        logger.LogDebug("Token validated for {0}", c.ToString());
+                        // var userService = c.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                        // c.Principal = await userService.CreatePrincipalForUser(c.Principal);
+                        // logger.LogDebug("Token validated for {0}", c.Principal.Identity.Name);
+                    }
+                };
+                options.Validate();
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(JwtBearerDefaults.AuthenticationScheme, policy =>
+                {
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                        .RequireAuthenticatedUser();
+                        // .RequireClaim("user_role")
+                        // .RequireClaim("user_team");
+                });
+                options.DefaultPolicy = options.GetPolicy(JwtBearerDefaults.AuthenticationScheme);
+            });
+
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
+                options.Filters.Add(new AuthorizeFilter());
             });
             var dpBuilder = services.AddDataProtection();
             var keyRingPath = configuration.GetValue("KEY_RING_PATH", string.Empty);
