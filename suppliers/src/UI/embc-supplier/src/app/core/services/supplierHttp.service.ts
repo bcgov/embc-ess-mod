@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { ServerConfig } from '../model/server-config';
 import { Community } from '../model/community';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, publishReplay, refCount } from 'rxjs/operators';
 import { Suppliers } from '../model/suppliers';
 import { Country, SupportItems } from '../model/country';
 import { SupplierService } from './supplier.service';
@@ -39,6 +39,8 @@ export class SupplierHttpService {
     return this.http
       .get<ServerConfig>(`/api/Config`, { headers: this.headers })
       .pipe(
+        publishReplay(1),
+        refCount(),
         catchError(error => {
           return this.handleError(error);
         }));

@@ -27,7 +27,7 @@ export class SupplierService extends DataService {
     }
 
     setServerConfig(serverConfig: Observable<ServerConfig>) {
-        this.serverConfig = serverConfig
+        this.serverConfig = serverConfig;
     }
 
     getServerConfig() {
