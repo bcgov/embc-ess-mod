@@ -3,10 +3,10 @@
         <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column?.ref">
             <div *ngIf="column?.ref === 'select' else noSelect">
                 <th mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                    <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
                         [checked]="selection.hasValue() && isAllSelected()"
                         [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-                    </mat-checkbox>
+                    </mat-checkbox> -->
                 </th>
                 <td mat-cell *matCellDef="let row">
                     <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionToggle(row) : null"
@@ -17,24 +17,20 @@
             </div>
             <ng-template #noSelect>
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column?.label}} </th>
-                <td mat-cell *matCellDef="let row; let index = index" (click)="disableRowInteraction($event, column?.ref)">
-                    <span *ngIf="column?.ref !== 'isActive'">
+                <td mat-cell *matCellDef="let row; let index = index">
+                    <span *ngIf="column?.ref !== 'dateAssigned'">
                         <span *ngIf="!row?.allowSelect && disableRow else data" style="color:#b0b0b0">{{row[column?.ref]
                             }}</span>
-                        <ng-template #data>
-                            <span>{{row[column?.ref] }}</span>
-                        </ng-template>
                     </span>
+                    <ng-template #data>
+                        <span>{{row[column?.ref] }}</span>
+                    </ng-template>
                     <span *ngIf="column?.ref === 'action' && row.conflict">
                         <img matTooltip="This communtiy is claimed by {{row?.teamName}}" matTooltipClass="tooltip-red"
                             src="/assets/images/exclaimation.svg" height="25" width="25">
                     </span>
-                    <span *ngIf="column?.ref === 'isActive'">
-                        <mat-slide-toggle [checked]="row[column?.ref]" (change)="slideToggle($event, row)">
-                            <span
-                                [ngClass]="{'active-style': row[column?.ref], 'inactive-style': !row[column?.ref]}">{{row[column?.ref]
-                                ? 'Active' : 'Deactivated'}}</span>
-                        </mat-slide-toggle>
+                    <span *ngIf="column?.ref === 'dateAssigned'">
+                        <span>{{row[column?.ref] | date:'dd-MMM-yyyy'}}</span>
                     </span>
                 </td>
             </ng-template>
@@ -42,7 +38,7 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columns"></tr>
-        <tr mat-row *matRowDef="let row; columns: columns;" (click)="rowClicked(row)"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns;"></tr>
     </table>
 
     <app-loader style="display: flex; justify-content: center; align-items: center;" class="mat-progress"

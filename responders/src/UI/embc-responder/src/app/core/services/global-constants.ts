@@ -14,3 +14,4 @@ export const teamMemberListError = 'Unable to retrieve team members at this time
 export const activateTeamMemberError = 'Unable to activate team member at this time. Please try again later';
 export const deActivateTeamMemberError = 'Unable to deactivate team member at this time. Please try again later';
 export const usernameCheckerror = 'Unable to check username at this time. Please try again later';
+export const communityListError = 'Unable to retrieve assigned communities at this time. Please try again later';

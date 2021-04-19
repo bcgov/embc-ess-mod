@@ -4,7 +4,6 @@ import { TopNavMenuComponent } from './components/top-nav-menu/top-nav-menu.comp
 import { RouterModule } from '@angular/router';
 import { ToggleSideNavComponent } from './components/toggle-side-nav/toggle-side-nav.component';
 import { MaterialModule } from '../material.module';
-import { DataTableComponent } from './components/data-table/data-table.component';
 import { SearchFilterComponent } from './components/search-filter/search-filter.component';
 import { FormsModule } from '@angular/forms';
 import { DialogComponent } from './components/dialog/dialog.component';
@@ -19,7 +18,6 @@ import { InformationDialogComponent } from './components/dialog-components/infor
   declarations: [
     TopNavMenuComponent,
     ToggleSideNavComponent,
-    DataTableComponent,
     SearchFilterComponent,
     DialogComponent,
     AlertComponent,
@@ -36,7 +34,6 @@ import { InformationDialogComponent } from './components/dialog-components/infor
   exports: [
     TopNavMenuComponent,
     ToggleSideNavComponent,
-    DataTableComponent,
     SearchFilterComponent,
     DialogComponent,
     AlertComponent,

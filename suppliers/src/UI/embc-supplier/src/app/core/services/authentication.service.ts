@@ -4,11 +4,14 @@ import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-
     constructor(
         private oauthService: OAuthService,
         private configService: ConfigService
     ) { }
+
+    public init(): Promise<void> {
+        return this.configureOAuthService();
+    }
 
     public async login(): Promise<string> {
         await this.configureOAuthService();
@@ -29,6 +32,16 @@ export class AuthenticationService {
         return this.oauthService.getAccessToken();
     }
 
+    public hasValidToken(): Promise<boolean> {
+        if (this.oauthService.hasValidIdToken()) {
+            return Promise.resolve(true);
+        }
+
+        return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
+            return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+        });
+    }
+
     private async configureOAuthService(): Promise<void> {
         return this.configService.getAuthConfig().then(config => {
             let authConfig = {
@@ -40,6 +53,4 @@ export class AuthenticationService {
             this.oauthService.setupAutomaticSilentRefresh();
         });
     }
-
 }
-

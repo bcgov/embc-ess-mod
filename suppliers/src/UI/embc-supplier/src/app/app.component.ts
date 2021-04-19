@@ -4,6 +4,7 @@ import { SupplierService } from './core/services/supplier.service';
 import { ConfigGuard } from './core/guards/config.guard';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { AuthenticationService } from './core/services/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -19,9 +20,11 @@ export class AppComponent{
 
   constructor(
     private supplierHttp: SupplierHttpService,
-    private supplierService: SupplierService
+    private supplierService: SupplierService,
+    private authService: AuthenticationService
   ) {
     this.setUpData();
+    this.authService.init();
   }
 
   ngOnInit() {
