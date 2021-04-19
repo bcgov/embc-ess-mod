@@ -315,20 +315,20 @@
                 <div class="row info-detail">
                     <div class="col-md-3">Evacuated From:</div>
                     <div class="col-md-3">
-                        <span>{{(formCreationService.evacuatedForm$ |
-                            async)?.value?.evacuatedFromAddress?.addressLine1}},</span>
-                        <span>&nbsp;{{(formCreationService.evacuatedForm$ |
-                            async)?.value?.evacuatedFromAddress?.addressLine2}}</span>
-                        <span
-                            [hidden]="(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.addressLine2 == '' || (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.addressLine2 == null">,&nbsp;</span>
-                        <span>{{(formCreationService.evacuatedForm$
-                            |async)?.value?.evacuatedFromAddress?.jurisdiction?.name}}, </span>
-                        <span> &nbsp; {{(formCreationService.evacuatedForm$
-                            |async)?.value?.evacuatedFromAddress?.stateProvince?.name}}</span>
-                        <span
-                            [hidden]="(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode == '' || (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode == null">,&nbsp;</span>
-                        <span>{{(formCreationService.evacuatedForm$
-                            |async)?.value?.evacuatedFromAddress?.postalCode}}</span>
+                        <p class="no-bottom-margin"><span>{{(formCreationService.evacuatedForm$ |
+                                async)?.value?.evacuatedFromAddress?.addressLine1}},</span>
+                            <span>&nbsp;{{(formCreationService.evacuatedForm$ |
+                                async)?.value?.evacuatedFromAddress?.addressLine2}}</span>
+                        </p>
+                        <p><span>{{(formCreationService.evacuatedForm$
+                                |async)?.value?.evacuatedFromAddress?.jurisdiction?.name}}, </span>
+                            <span>{{(formCreationService.evacuatedForm$
+                                |async)?.value?.evacuatedFromAddress?.stateProvince?.name}}</span>
+                            <span
+                                [hidden]="(formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode == '' || (formCreationService.evacuatedForm$ | async).value?.evacuatedFromAddress?.postalCode == null">,&nbsp;</span>
+                            <span>{{(formCreationService.evacuatedForm$
+                                |async).value?.evacuatedFromAddress?.postalCode}}</span>
+                        </p>
                     </div>
                 </div>
             </mat-card-content>
@@ -429,7 +429,7 @@
                 <div class="row info-detail"
                     *ngIf="(formCreationService.householdMembersForm$ | async)?.value.haveSpecialDiet">
                     <div class="col-md-3">Special Dietary Details:</div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 wrap-text">
                         {{(formCreationService.householdMembersForm$ | async)?.value.specialDietDetails}}
                     </div>
                 </div>

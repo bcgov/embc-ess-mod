@@ -19,12 +19,14 @@ using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
 using Jasper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
 #if RELEASE
     [ResponseCache(Duration = 60 * 5)]
 #endif

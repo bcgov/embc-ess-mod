@@ -98,8 +98,8 @@ objects:
                         openshift.tag('suppliers-portal-ui:training', 'suppliers-portal-ui:prod')
                     }
                     openshift.withProject('b5e079-prod') {
-                        def uiAppName = 'production-suppliers-portal-ui'
-                        def apiAppName = 'production-suppliers-portal-api'
+                        def uiAppName = 'prod-suppliers-portal-ui'
+                        def apiAppName = 'prod-suppliers-portal-api'
                         def uiLastVersion = openshift.selector('dc', uiAppName).object().status.latestVersion
                         def uiRc = openshift.selector('rc', uiAppName + '-' + + uiLastVersion)
                         uiRc.untilEach(1) {

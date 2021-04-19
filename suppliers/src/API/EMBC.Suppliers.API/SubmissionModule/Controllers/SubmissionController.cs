@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Jasper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 
@@ -30,6 +31,7 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class SubmissionController : ControllerBase
     {
         private readonly ICommandBus commandBus;

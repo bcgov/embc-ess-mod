@@ -25,16 +25,24 @@ export class AddCommunityComponent implements OnInit {
   filterPredicate: (data: Community, filter: string) => boolean;
   filtersToLoad: TableFilterModel;
   displayedColumns: TableColumnModel[];
+  isLoading = false;
 
+  /**
+   * On component init, loads the eligible communities list and filters
+   */
   ngOnInit(): void {
     this.communitiesFilterPredicate();
     this.assignedCommunityListDataService.getCommunitiesToAddList().pipe(delay(1000)).subscribe(values => {
+      this.isLoading = !this.isLoading;
       this.communities = values;
     });
     this.filtersToLoad = this.addCommunityService.filtersToLoad;
     this.displayedColumns = this.addCommunityService.displayedColumns;
   }
 
+  /**
+   * Custom filter predicate for eligible community list
+   */
   communitiesFilterPredicate(): void {
     const filterPredicate = (data: Community, filter: string): boolean => {
       const searchString: TableFilterValueModel = JSON.parse(filter);
@@ -50,19 +58,33 @@ export class AddCommunityComponent implements OnInit {
     this.filterPredicate = filterPredicate;
   }
 
+  /**
+   * Sets the user selected filers
+   * @param event user selected filters
+   */
   filter(event: TableFilterValueModel): void {
     this.filterTerm = event;
   }
 
+  /**
+   * Sets the list of assigned comminities to add
+   * @param $event list of communities to add
+   */
   selectedCommunities($event): void {
     this.selectedCommunitiesList = $event;
     this.addCommunityService.setAddedCommunities($event);
   }
 
+  /**
+   * Navigates to review page for adding new communities
+   */
   addToMyList(): void {
     this.router.navigate(['/responder-access/community-management/review'], { queryParams: { action: 'add' } });
   }
 
+  /**
+   * Navigates to assigned community list
+   */
   goToList(): void {
     this.router.navigate(['/responder-access/community-management/list-communities']);
   }

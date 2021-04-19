@@ -1,17 +1,13 @@
 <mat-card>
+    <app-alert></app-alert>
+    
     <div class="filter-margin">
         <app-search-filter [filtersToLoad]='filtersToLoad' (filterEvent)="filter($event)"></app-search-filter>
     </div>
 
-    <!-- <div class="row data-margin">
-        <div class="col-md-12">
-            <button class="button-s add-button" mat-stroked-button (click)="addTeamMember()">Add Team Member</button>
-        </div>
-    </div> -->
-
     <div class="data-margin">
-        <app-team-member-table [incomingData]='teamMembers' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm"
-             (clickedRow)="openMemberDetails($event)"
+        <app-team-member-table [incomingData]='teamMembers' [displayedColumns]='displayedColumns' [filterTerm]='filterTerm'
+            [isLoading]='isLoading' [statusLoading]='statusLoading' [loggedInRole]="loggedInRole" (clickedRow)="openMemberDetails($event)"
             (toggleActive)="activateTeamMember($event)" (toggleInactive)="deactivateTeamMember($event)">
         </app-team-member-table>
     </div>

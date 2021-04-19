@@ -99,25 +99,28 @@ objects:
       selector:
         deploymentconfig: ${APP_NAME}-ess-backend
       type: ClusterIP
-
-  #- kind: NetworkPolicy
-  #  apiVersion: networking.k8s.io/v1
-  #  metadata:
-  #    name: ${APP_NAME}-registrants-portal
-  #    labels:
-  #      app: ${APP_NAME}-registrants-portal
-  #      app.kubernetes.io/part-of: ${APP_NAME}
-  #    namespace: ${NAMESPACE_PREFIX}-${ENV}
-  #  spec:
-  #    podSelector:
-  #      matchLabels:
-  #        app: ${APP_NAME}-registrants-portal
-  #    ingress:
-  #    - ports:
-  #      - protocol: TCP
-  #        port: 2015
-  #      - protocol: TCP
-  #        port: 8080
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: ${APP_NAME}-ess-backend
+      labels:
+        app: ${APP_NAME}-ess-backend
+        app.kubernetes.io/part-of: ${APP_NAME}
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    spec:
+      podSelector:
+        matchLabels:
+          app: ${APP_NAME}-ess-backend
+      policyTypes:
+      - Ingress
+      ingress:
+      - from:
+        - podSelector:
+            matchLabels:
+                app: ${APP_NAME}-responders-portal
+        ports:
+        - protocol: TCP
+          port: 8080
 
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1

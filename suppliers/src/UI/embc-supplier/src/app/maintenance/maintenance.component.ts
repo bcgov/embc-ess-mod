@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ConfigGuard } from '../service/config.guard';
+import { ConfigGuard } from '../core/guards/config.guard';
 
 @Component({
   selector: 'app-maintenance',
