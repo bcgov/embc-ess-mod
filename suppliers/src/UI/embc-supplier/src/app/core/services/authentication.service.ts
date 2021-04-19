@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { ConfigService } from './config.service';
+import { AuthConfigService } from './auth-config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
     constructor(
         private oauthService: OAuthService,
-        private configService: ConfigService
+        private configService: AuthConfigService
     ) { }
 
     public init(): Promise<void> {
