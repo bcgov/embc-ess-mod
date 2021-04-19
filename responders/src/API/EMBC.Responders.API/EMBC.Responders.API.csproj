@@ -27,7 +27,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <!--<PackageReference Include="EMBC.ESS.Shared.Contracts" Version="1.0.*" />-->
+    <PackageReference Include="EMBC.ESS.Shared.Contracts" Version="1.0.*" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.36.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.*" />
@@ -42,9 +42,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\ess\src\API\EMBC.ESS.Shared.Contracts\EMBC.ESS.Shared.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="Protos\Dispatcher.proto" GrpcServices="Client">
