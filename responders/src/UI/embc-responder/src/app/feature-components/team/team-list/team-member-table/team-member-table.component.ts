@@ -15,6 +15,8 @@ import { TeamMemberModel } from 'src/app/core/models/team-member.model';
 })
 export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   @Input() displayedColumns: TableColumnModel[];
   @Input() incomingData: TeamMember[] = [];
   @Input() filterTerm: TableFilterValueModel;
@@ -30,9 +32,6 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   color = '#169BD5';
   data: any;
   selectedIndex: number;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   /**
    * Listens to input events and popluate values

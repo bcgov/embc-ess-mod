@@ -10,10 +10,10 @@ import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 })
 export class SearchFilterComponent implements OnInit {
 
+  @ViewChildren('matRef') matRef: QueryList<MatSelect>;
   @Output() filterEvent = new EventEmitter<TableFilterValueModel>();
   @Input() filtersToLoad: TableFilterModel;
   searchTerm: string;
-  @ViewChildren('matRef') matRef: QueryList<MatSelect>;
 
   constructor() { }
 

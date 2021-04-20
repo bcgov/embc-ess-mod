@@ -18,6 +18,8 @@ import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 })
 export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges {
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   @Input() displayedColumns: TableColumnModel[];
   @Input() incomingData: TeamCommunityModel[] = [];
   @Input() filterTerm: TableFilterValueModel;
@@ -30,9 +32,6 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
   columns: string[];
   selection = new SelectionModel<any>(true, []);
   color = '#169BD5';
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private cd: ChangeDetectorRef) { }
 

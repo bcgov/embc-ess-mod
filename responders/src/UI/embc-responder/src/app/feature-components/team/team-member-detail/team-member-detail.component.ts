@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MemberRole, TeamMember } from 'src/app/core/api/models';
 import { ActionPermission, ClaimType } from 'src/app/core/services/authorization.service';
 import { UserService } from 'src/app/core/services/user.service';
-import { DeleteConfirmationDialogComponent } from 'src/app/shared/components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { DeleteConfirmationDialogComponent } from
+  'src/app/shared/components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { TeamListDataService } from '../team-list/team-list-data.service';
 import { TeamMemberDetailsService } from './team-member-details.service';
@@ -19,7 +20,7 @@ export class TeamMemberDetailComponent {
   teamMember: TeamMember;
 
   constructor(private router: Router, private dialog: MatDialog, private teamDetailsService: TeamMemberDetailsService,
-              private teamDataService: TeamListDataService, private userService: UserService) {
+    private teamDataService: TeamListDataService, private userService: UserService) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as TeamMember;
@@ -83,7 +84,7 @@ export class TeamMemberDetailComponent {
    */
   isEditAllowed(row: TeamMember): boolean {
     const loggedInRole = this.userService.currentProfile.role;
-    if (loggedInRole === MemberRole.Tier2){
+    if (loggedInRole === MemberRole.Tier2) {
       return row.role === MemberRole.Tier1 ? true : false;
     } else if (loggedInRole === MemberRole.Tier3) {
       return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;

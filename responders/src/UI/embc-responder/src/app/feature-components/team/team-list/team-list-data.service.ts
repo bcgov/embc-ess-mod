@@ -8,19 +8,15 @@ import { LoadTeamListService } from 'src/app/core/services/load-team-list.servic
 @Injectable({ providedIn: 'root' })
 export class TeamListDataService {
 
-  private selectedTeamMember: TeamMember;
-
-  constructor(private cacheService: CacheService, private listService: LoadTeamListService) { }
-
   rolesList: MemberRoleDescription[] = this.listService.getMemberRoles();
-  defaultRole: ObjectWrapper = {code: 'All Roles', description: 'All User Roles'};
+  defaultRole: ObjectWrapper = { code: 'All Roles', description: 'All User Roles' };
   defaultStatus: ObjectWrapper = { code: null, description: 'Active & Deactivated Users' };
-  statusList: Array<{}> = [
+  statusList: Array<{ code: boolean; description: string }> = [
     { code: true, description: 'Active' },
     { code: false, description: 'Deactivated' }
   ];
   labelsList: MemberLabelDescription[] = this.listService.getMemberLabels();
-  defaultLabel: ObjectWrapper = {code: 'All Labels', description: 'All Labels'};
+  defaultLabel: ObjectWrapper = { code: 'All Labels', description: 'All Labels' };
 
   public filtersToLoad: TableFilterModel = {
     loadDropdownFilters: [{
@@ -52,6 +48,10 @@ export class TeamListDataService {
     { label: 'Label', ref: 'labelDescription' },
     { label: 'Status', ref: 'isActive' },
   ];
+
+  private selectedTeamMember: TeamMember;
+
+  constructor(private cacheService: CacheService, private listService: LoadTeamListService) { }
 
   public getSelectedTeamMember(): TeamMember {
     return this.selectedTeamMember ? this.selectedTeamMember :
