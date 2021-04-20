@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, AfterViewInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { LocationService } from '../../../../core/api/services/location.service';
 import { startWith, map } from 'rxjs/operators';
 import * as globalConst from '../../../../core/services/globalConstants';
-import { Jurisdiction } from '../../../../core/api/models/jurisdiction';
+import { Community, LocationService } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-bc-address',
@@ -14,16 +13,14 @@ import { Jurisdiction } from '../../../../core/api/models/jurisdiction';
 export class BcAddressComponent implements OnInit, AfterViewChecked {
 
   @Input() addressForm: FormGroup;
-  filteredOptions: Observable<Jurisdiction[]>;
-  city: Jurisdiction[] = [];
+  filteredOptions: Observable<Community[]>;
+  city: Community[] = [];
   province = [globalConst.defaultProvince];
 
-  constructor(private service: LocationService, private cd: ChangeDetectorRef) { }
+  constructor(private locationService: LocationService, private cd: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.service.locationGetJurisdictions().subscribe(juris => {
-      this.city = juris;
-    });
+    this.city = this.locationService.getCommunityList();
 
     this.filteredOptions = this.addressForm.get('jurisdiction').valueChanges.pipe(
       startWith(''),
@@ -71,7 +68,7 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
   //   return invalidCity;
   // }
 
-  compareObjects<T extends Jurisdiction>(c1: T, c2: T): boolean {
+  compareObjects<T extends Community>(c1: T, c2: T): boolean {
     if (c1 === null || c2 === null || c1 === undefined || c2 === undefined) {
       return null;
     }
@@ -82,7 +79,7 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
    * Filters the city list for autocomplete field
    * @param value : User typed value
    */
-  private filter(value?: string): Jurisdiction[] {
+  private filter(value?: string): Community[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
       return this.city.filter(option => option.name.toLowerCase().includes(filterValue));
@@ -93,7 +90,7 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
    * Returns the display value of autocomplete
    * @param city : Selected city object
    */
-  cityDisplayFn(city: Jurisdiction): string {
+  cityDisplayFn(city: Community): string {
     if (city) { return city.name; }
   }
 

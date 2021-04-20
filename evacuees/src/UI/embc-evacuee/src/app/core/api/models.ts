@@ -20,3 +20,7 @@ export { NameDataConflict } from './models/name-data-conflict';
 export { ValueTupleOfStringAndString } from './models/value-tuple-of-string-and-string';
 export { AddressDataConflict } from './models/address-data-conflict';
 export { EvacuationFile } from './models/evacuation-file';
+export { Configuration } from './models/configuration';
+export { Code } from './models/code';
+export { CommunityCode } from './models/community-code';
+export { CommunityType } from './models/community-type';
