@@ -12,7 +12,6 @@ import { ServerConfig } from '../model/server-config';
     providedIn: 'root'
 })
 export class SupplierService extends DataService {
-
     private serverConfig: Observable<ServerConfig>;
     private supplierDetails: any;
     private cityList: Observable<Community[]>;
@@ -27,7 +26,7 @@ export class SupplierService extends DataService {
     }
 
     setServerConfig(serverConfig: Observable<ServerConfig>) {
-        this.serverConfig = serverConfig
+        this.serverConfig = serverConfig;
     }
 
     getServerConfig() {

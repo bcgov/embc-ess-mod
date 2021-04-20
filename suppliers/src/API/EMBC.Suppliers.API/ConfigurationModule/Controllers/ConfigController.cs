@@ -20,6 +20,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
+using EMBC.Suppliers.API.Utilities;
 using Jasper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -61,7 +62,10 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             // Check that maintTimeStr is valid datetime format
             if (DateTime.TryParse(maintTimeStr, out maintTime))
             {
-                if (maintTime <= DateTime.Now)
+                // Timestamp will be in Pacific, so convert local time for comparison
+                var curtime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.ToUniversalTime(), TimeZoneProvider.GetPSTTimeZone());
+
+                if (maintTime <= curtime)
                     siteDown = true;
                 else
                     maintMsg = maintWarn;
