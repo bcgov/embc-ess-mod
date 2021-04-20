@@ -19,6 +19,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -95,19 +96,17 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update(UpdateUserProfileRequest request)
         {
             var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
-            var userId = User.FindFirstValue(ClaimTypes.Sid);
-            var sourceSystem = User.FindFirstValue("identity_source");
 
             // Get the current user
             var reply = await messagingClient.Send(new TeamMembersQueryCommand { UserName = userName, IncludeActiveUsersOnly = false });
             var currentMember = reply.TeamMembers.SingleOrDefault();
             if (currentMember == null)
             {
-                logger.LogError("Profile update failure userName {0}, user ID {1}, sourceSystem: {2}: {3}", userName, userId, sourceSystem, $"User {userName} not found");
-                return Unauthorized();
+                throw new NotFoundException($"team member not found", userName);
             }
 
             // Set the updateable fields
@@ -132,20 +131,17 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("agreement")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SignAgreement()
         {
             var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
-            var userId = User.FindFirstValue(ClaimTypes.Sid);
-            var sourceSystem = User.FindFirstValue("identity_source");
 
             // Get the current user
             var reply = await messagingClient.Send(new TeamMembersQueryCommand { UserName = userName, IncludeActiveUsersOnly = true });
             var currentMember = reply.TeamMembers.SingleOrDefault();
-
             if (currentMember == null)
             {
-                logger.LogError("Sign agreement failure userName {0}, user ID {1}, sourceSystem: {2}: {3}", userName, userId, sourceSystem, $"User {userName} not found");
-                return Unauthorized();
+                throw new NotFoundException($"team member not found", userName);
             }
 
             // Set the Agreement Sign Date
