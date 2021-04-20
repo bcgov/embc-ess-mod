@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EvacueeSearchComponent implements OnInit {
 
+  showPhotoIDComponent = true;
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  changeComponent(value: boolean) {
+    this.showPhotoIDComponent = value;
   }
 
 }

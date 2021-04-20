@@ -7,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EvacueeNameSearchComponent implements OnInit {
 
+  panel1OpenState = false;
+  panel2OpenState = false;
+  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
+
   constructor() { }
 
   ngOnInit(): void {

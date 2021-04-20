@@ -135,16 +135,16 @@ export class CustomValidationService {
     /**
      * Checks length of masked fields
      */
-    // maskedNumberLengthValidator(): ValidatorFn {
-    //     return (control: AbstractControl): { [key: string]: boolean } | null => {
-    //         if (control.value !== null && control.value !== undefined) {
-    //             if (control.value.indexOf('_') !== -1) {
-    //                 return { incorrectLength: true };
-    //             }
-    //         }
-    //         return null;
-    //     };
-    // }
+    maskedNumberLengthValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: boolean } | null => {
+            if (control.value !== null && control.value !== undefined) {
+                if (control.value.indexOf('_') !== -1) {
+                    return { incorrectLength: true };
+                }
+            }
+            return null;
+        };
+    }
 
     /**
      * Checks if the quantity inserted is between 1 and 999
