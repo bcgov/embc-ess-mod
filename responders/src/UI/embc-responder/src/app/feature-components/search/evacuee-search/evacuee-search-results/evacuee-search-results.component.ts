@@ -16,7 +16,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
   evacueeSearchContext: EvacueeSearchContextModel;
 
   constructor(private evacueeSearchResultsService: EvacueeSearchResultsService, private evacueeSearchService: EvacueeSearchService) {
-    this.evacueeSearchService.setEvacueeSearchContext({ hasShownIdentification: true, evacueeSearchParameters: { firstName: 'string', lastName: 'string', dateOfBirth: 'string' } })
+    this.evacueeSearchService.setEvacueeSearchContext({
+      hasShownIdentification: true,
+      evacueeSearchParameters: { firstName: 'string', lastName: 'string', dateOfBirth: 'string' }
+    });
   }
 
   ngOnInit(): void {
@@ -24,16 +27,16 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   searchAgain(): void {
-    console.log("here")
+    console.log('here');
   }
 
-  searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel) {
+  searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
     this.evacueeSearchResultsService.searchForEvacuee(evacueeSearchContext.evacueeSearchParameters).subscribe((results) => {
       this.matchedFiles = results.files;
       this.matchedRegistrants = results.registrants;
     }, (error) => {
-      console.log(error)
-    })
+      console.log(error);
+    });
   }
 
 }
