@@ -19,7 +19,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Profile;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -51,14 +51,31 @@ namespace EMBC.Responders.API.Controllers
         /// <returns>current user profile</returns>
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<UserProfile>> GetCurrentUserProfile()
         {
-            var memberId = User.FindFirstValue(ClaimTypes.Sid);
-            var teamId = User.FindFirstValue("user_team");
+            var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
+            var userId = User.FindFirstValue(ClaimTypes.Sid);
+            var sourceSystem = User.FindFirstValue("identity_source");
 
             // Get the current user
-            var reply = await messagingClient.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = true });
+            var reply = await messagingClient.Send(new TeamMembersQueryCommand { UserName = userName, IncludeActiveUsersOnly = true });
             var currentMember = reply.TeamMembers.SingleOrDefault();
+
+            if (currentMember == null)
+            {
+                logger.LogError("Login failure userName {0}, user ID {1}, sourceSystem: {2}: {3}", userName, userId, sourceSystem, $"User {userName} not found");
+                return Unauthorized();
+            }
+            if (currentMember.ExternalUserId != null && currentMember.ExternalUserId != userId)
+                throw new Exception($"User {userName} has external id {currentMember.ExternalUserId} but trying to log in with user id {userId}");
+            if (currentMember.ExternalUserId == null && currentMember.LastSuccessfulLogin.HasValue)
+                throw new Exception($"User {userName} has no external id but somehow logged in already");
+
+            if (!currentMember.LastSuccessfulLogin.HasValue || string.IsNullOrEmpty(currentMember.ExternalUserId))
+            {
+                currentMember.ExternalUserId = userId;
+            }
 
             currentMember.LastSuccessfulLogin = DateTime.Now;
 
@@ -78,14 +95,19 @@ namespace EMBC.Responders.API.Controllers
         /// <returns>profile id</returns>
         [HttpPost("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> Update(UpdateUserProfileRequest request)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Update(UpdateUserProfileRequest request)
         {
-            var memberId = User.FindFirstValue(ClaimTypes.Sid);
-            var teamId = User.FindFirstValue("user_team");
+            var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
 
             // Get the current user
-            var reply = await messagingClient.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = false });
+            var reply = await messagingClient.Send(new TeamMembersQueryCommand { UserName = userName, IncludeActiveUsersOnly = false });
             var currentMember = reply.TeamMembers.SingleOrDefault();
+            if (currentMember == null)
+            {
+                throw new NotFoundException($"team member not found", userName);
+            }
 
             // Set the updateable fields
             currentMember.FirstName = request.FirstName;
@@ -99,7 +121,7 @@ namespace EMBC.Responders.API.Controllers
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(currentMember)
             });
 
-            return Ok(new { Id = memberId });
+            return Ok();
         }
 
         /// <summary>
@@ -108,14 +130,19 @@ namespace EMBC.Responders.API.Controllers
         /// <returns>Ok when successful</returns>
         [HttpPost("agreement")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SignAgreement()
         {
-            var memberId = User.FindFirstValue(ClaimTypes.Sid);
-            var teamId = User.FindFirstValue("user_team");
+            var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
 
             // Get the current user
-            var reply = await messagingClient.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = true });
+            var reply = await messagingClient.Send(new TeamMembersQueryCommand { UserName = userName, IncludeActiveUsersOnly = true });
             var currentMember = reply.TeamMembers.SingleOrDefault();
+            if (currentMember == null)
+            {
+                throw new NotFoundException($"team member not found", userName);
+            }
 
             // Set the Agreement Sign Date
             currentMember.AgreementSignDate = DateTime.Now;
