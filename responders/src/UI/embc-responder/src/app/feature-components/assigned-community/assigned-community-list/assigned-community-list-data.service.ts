@@ -5,19 +5,23 @@ import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { LoadLocationsService } from 'src/app/core/services/load-locations.service';
+import { LocationsService } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class AssignedCommunityListDataService {
 
-  defaultDistrict: ObjectWrapper = { code: 'All Districts', description: 'All Regional Districts' };
-  defaultTypes: ObjectWrapper = { code: 'All Types', description: 'All Types' };
+  private defaultDistrict: ObjectWrapper = { code: 'All Districts', description: 'All Regional Districts' };
+  private defaultTypes: ObjectWrapper = { code: 'All Types', description: 'All Types' };
+
+  private teamCommunityList: TeamCommunityModel[];
+  private allTeamCommunityList: TeamCommunityModel[];
+  private communitiesToDelete: TeamCommunityModel[];
 
   public filtersToLoad: TableFilterModel = {
     loadDropdownFilters: [{
       type: 'regionalDistrict',
       label: this.defaultDistrict,
-      values: this.loadLocationService.getRegionalDistricts()
+      values: this.locationsService.getRegionalDistricts()
     },
     {
       type: 'type',
@@ -38,11 +42,8 @@ export class AssignedCommunityListDataService {
     { label: 'Date Added to List', ref: 'dateAssigned' },
   ];
 
-  private teamCommunityList: TeamCommunityModel[];
-  private allTeamCommunityList: TeamCommunityModel[];
-  private communitiesToDelete: TeamCommunityModel[];
 
-  constructor(private loadLocationService: LoadLocationsService, private cacheService: CacheService) { }
+  constructor(private locationsService: LocationsService, private cacheService: CacheService) { }
 
   public setCommunitiesToDelete(communitiesToDelete: TeamCommunityModel[]): void {
     this.communitiesToDelete = communitiesToDelete;
@@ -57,6 +58,11 @@ export class AssignedCommunityListDataService {
     this.teamCommunityList = teamCommunityList;
   }
 
+  public setAllTeamCommunityList(allTeamCommunityList: TeamCommunityModel[]): void {
+    this.cacheService.set('allTeamCommunityList', allTeamCommunityList);
+    this.allTeamCommunityList = allTeamCommunityList;
+  }
+
   public getCommunitiesToAddList(): Observable<TeamCommunityModel[]> {
     const conflictMap: TeamCommunityModel[] = this.mergedCommunityList().map(values => {
       const conflicts = this.getAllTeamCommunityList().find(x => x.code === values.code);
@@ -67,11 +73,6 @@ export class AssignedCommunityListDataService {
       return this.mergeData(values, existing);
     });
     return of(addMap);
-  }
-
-  public setAllTeamCommunityList(allTeamCommunityList: TeamCommunityModel[]): void {
-    this.cacheService.set('allTeamCommunityList', allTeamCommunityList);
-    this.allTeamCommunityList = allTeamCommunityList;
   }
 
   private getTeamCommunityList(): TeamCommunityModel[] {
@@ -89,7 +90,7 @@ export class AssignedCommunityListDataService {
       allowSelect: true,
       conflict: false
     };
-    return this.loadLocationService.getCommunityList().map(community => this.mergeData(teamModel, community));
+    return this.locationsService.getCommunityList().map(community => this.mergeData(teamModel, community));
   }
 
   private mergeData<T>(finalValue: T, incomingValue: Partial<T>): T {

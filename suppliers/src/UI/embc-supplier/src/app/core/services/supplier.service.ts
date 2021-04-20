@@ -6,14 +6,11 @@ import { Country, SupportItems } from '../model/country';
 import { Observable } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalComponent } from '../components/modal/modal.component';
-import { ServerConfig } from '../model/server-config';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SupplierService extends DataService {
-
-    private serverConfig: Observable<ServerConfig>;
     private supplierDetails: any;
     private cityList: Observable<Community[]>;
     private provinceList: Observable<Province[]>;
@@ -24,14 +21,6 @@ export class SupplierService extends DataService {
 
     constructor(private modalService: NgbModal) {
         super();
-    }
-
-    setServerConfig(serverConfig: Observable<ServerConfig>) {
-        this.serverConfig = serverConfig
-    }
-
-    getServerConfig() {
-        return this.serverConfig;
     }
 
     setSupplierDetails(supplierDetails: any) {

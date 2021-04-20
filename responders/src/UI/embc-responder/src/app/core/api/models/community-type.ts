@@ -1,9 +1,5 @@
 /* eslint-disable */
 /* eslint-disable */
-
-/**
- * Community type enumeration
- */
 export enum CommunityType {
   Undefined = 'Undefined',
   City = 'City',

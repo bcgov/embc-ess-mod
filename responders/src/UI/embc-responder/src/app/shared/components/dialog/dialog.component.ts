@@ -1,6 +1,6 @@
 import {
-  Component, ComponentFactoryResolver, ComponentRef, Inject, OnDestroy,
-  OnInit, ViewChild, ViewContainerRef, ViewEncapsulation
+  Component, ComponentFactoryResolver, ComponentRef, Inject, OnDestroy, OnInit,
+  ViewChild, ViewContainerRef, ViewEncapsulation
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
@@ -16,7 +16,9 @@ export class DialogComponent implements OnInit, OnDestroy {
 
   componentRef: ComponentRef<any>;
 
-  constructor(public dialogRef: MatDialogRef<DialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any,
+  constructor(
+    public dialogRef: MatDialogRef<DialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private resolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {

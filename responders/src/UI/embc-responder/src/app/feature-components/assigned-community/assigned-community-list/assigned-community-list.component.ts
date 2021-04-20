@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Community } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
@@ -9,6 +8,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AssignedCommunityListDataService } from './assigned-community-list-data.service';
 import { AssignedCommunityListService } from './assigned-community-list.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { Community } from 'src/app/core/services/locations.service';
 
 @Component({
   selector: 'app-assigned-community-list',
@@ -25,8 +25,11 @@ export class AssignedCommunityListComponent implements OnInit {
   communitiesToDeleteList: Community[] = [];
   isLoading = false;
 
-  constructor(private assignedCommunityListService: AssignedCommunityListService, private alertService: AlertService,
-              private assignedCommunityListDataService: AssignedCommunityListDataService, private router: Router) { }
+  constructor(
+    private assignedCommunityListService: AssignedCommunityListService,
+    private alertService: AlertService,
+    private assignedCommunityListDataService: AssignedCommunityListDataService,
+    private router: Router) { }
 
   /**
    * On component init, loads the assigned community list and filters
@@ -82,7 +85,7 @@ export class AssignedCommunityListComponent implements OnInit {
         const typeTerm = terms[1];
         const matchFilter = [];
         const districtBoolean = data.districtName.trim().toLowerCase().indexOf(districtTerm.trim().toLowerCase()) !== -1;
-        const typeBoolean =  data.type.trim().toLowerCase().indexOf(typeTerm.trim().toLowerCase()) !== -1;
+        const typeBoolean = data.type.trim().toLowerCase().indexOf(typeTerm.trim().toLowerCase()) !== -1;
         matchFilter.push(districtBoolean);
         matchFilter.push(typeBoolean);
         return matchFilter.every(Boolean);
@@ -92,9 +95,8 @@ export class AssignedCommunityListComponent implements OnInit {
   }
 
   /**
-   * Sets the list of assigned comminities to delete
-   *
-   * @param $event list of communites to remove
+   * Sets the list of assigned communities to delete
+   * @param $event list of communities to remove
    */
   communitiesToDelete($event): void {
     this.communitiesToDeleteList = $event;
