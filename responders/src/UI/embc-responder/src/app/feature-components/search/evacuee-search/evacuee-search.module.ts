@@ -6,6 +6,9 @@ import { EvacueeSearchComponent } from './evacuee-search.component';
 import { EvacueeIdVerifyComponent } from './evacuee-id-verify/evacuee-id-verify.component';
 import { EvacueeNameSearchComponent } from './evacuee-name-search/evacuee-name-search.component';
 import { EvacueeSearchResultsComponent } from './evacuee-search-results/evacuee-search-results.component';
+import { EssFilesResultsComponent } from './ess-files-results/ess-files-results.component';
+import { ProfileResultsComponent } from './profile-results/profile-results.component';
+import { MaterialModule } from 'src/app/material.module';
 
 
 @NgModule({
@@ -13,11 +16,14 @@ import { EvacueeSearchResultsComponent } from './evacuee-search-results/evacuee-
     EvacueeSearchComponent,
     EvacueeIdVerifyComponent,
     EvacueeNameSearchComponent,
-    EvacueeSearchResultsComponent
+    EvacueeSearchResultsComponent,
+    EssFilesResultsComponent,
+    ProfileResultsComponent
   ],
   imports: [
     CommonModule,
-    EvacueeSearchRoutingModule
+    EvacueeSearchRoutingModule,
+    MaterialModule
   ],
   exports: [
     EvacueeIdVerifyComponent,
