@@ -5,6 +5,7 @@ import { ConfigGuard } from './core/guards/config.guard';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from './core/services/authentication.service';
+import { ConfigService } from './core/services/config.service';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ export class AppComponent{
 
   constructor(
     private supplierHttp: SupplierHttpService,
+    private configService: ConfigService,
     private supplierService: SupplierService,
     private authService: AuthenticationService
   ) {
@@ -30,10 +32,10 @@ export class AppComponent{
 
   ngOnInit() {
     // This is set in constructor
-    if (!this.supplierService.getServerConfig())
-      this.supplierService.setServerConfig(this.supplierHttp.getServerConfig());
+    if (!this.configService.getServerConfig())
+      this.configService.setServerConfig(this.supplierHttp.getServerConfig());
       
-    this.bannerSubscription = this.supplierService.getServerConfig().subscribe(config => {
+    this.bannerSubscription = this.configService.getServerConfig().subscribe(config => {
       this.noticeMsg = config.noticeMsg;
       this.maintMsg = config.maintMsg;
       this.siteDown = config.siteDown;
@@ -43,7 +45,7 @@ export class AppComponent{
   }
 
   setUpData() {
-    this.supplierService.setServerConfig(this.supplierHttp.getServerConfig());
+    this.configService.setServerConfig(this.supplierHttp.getServerConfig());
 
     this.supplierService.setCityList(this.supplierHttp.getListOfCities());
     this.supplierService.setProvinceList(this.supplierHttp.getListOfProvinces());
