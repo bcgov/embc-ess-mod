@@ -52,20 +52,25 @@ namespace EMBC.Responders.API.Utilities
                 if (value != null) return value;
 
                 value = await getter();
-                await Set(key, value, expiration);
+                if (value == null)
+                    await Remove(key);
+                else
+                    await Set(key, value, expiration);
                 return value;
             }
             finally
             {
                 locker.Release();
+                if (locker.CurrentCount == 0) keyLocks.TryRemove(key, out var _);
             }
         }
 
-        private async Task<T> Get<T>(string key) =>
-            Deserialize<T>(await distributedCache.GetAsync(key));
+        private async Task<T> Get<T>(string key) => Deserialize<T>(await distributedCache.GetAsync(key));
 
         private async Task Set<T>(string key, T item, DateTimeOffset? expiration = null) =>
             await distributedCache.SetAsync(key, Serialize(item), new DistributedCacheEntryOptions { AbsoluteExpiration = expiration });
+
+        private async Task Remove(string key) => await distributedCache.RemoveAsync(key);
 
         private static T Deserialize<T>(byte[] data) =>
             data == null ? default(T) : JsonSerializer.Deserialize<T>(data);

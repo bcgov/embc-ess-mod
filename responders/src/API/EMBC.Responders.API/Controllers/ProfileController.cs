@@ -15,11 +15,12 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Profile;
-using Microsoft.AspNetCore.Authorization;
+using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -50,25 +51,55 @@ namespace EMBC.Responders.API.Controllers
         /// <returns>current user profile</returns>
         [HttpGet("current")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UserProfile>> GetCurrentUserProfile()
         {
-            var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
-            var userId = User.FindFirstValue(ClaimTypes.Sid);
-            var sourceSystem = User.FindFirstValue("identity_source");
+            var memberId = User.FindFirstValue(ClaimTypes.Sid);
+            var teamId = User.FindFirstValue("user_team");
 
-            var response = await messagingClient.Send(new LogInUserCommand { UserId = userId, UserName = userName, SourceSystem = sourceSystem });
+            // Get the current user
+            var reply = await messagingClient.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = true });
+            var currentMember = reply.TeamMembers.SingleOrDefault();
 
-            if (response is FailedLogin failedLogin)
+            currentMember.LastSuccessfulLogin = DateTime.Now;
+
+            // Update current user
+            await messagingClient.Send(new SaveTeamMemberCommand
             {
-                logger.LogError("Login failure userName {0}, user ID {1}, sourceSystem: {2}: {3}", userName, userId, sourceSystem, failedLogin.Reason);
-                return Unauthorized();
-            }
+                Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(currentMember)
+            });
 
-            var successfulLogin = response as SuccessfulLogin;
+            return Ok(mapper.Map<UserProfile>(currentMember));
+        }
 
-            return Ok(mapper.Map<UserProfile>(successfulLogin.Profile));
+        /// <summary>
+        /// Update the current user's profile
+        /// </summary>
+        /// <param name="request">The profile information</param>
+        /// <returns>profile id</returns>
+        [HttpPost("current")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> Update(UpdateUserProfileRequest request)
+        {
+            var memberId = User.FindFirstValue(ClaimTypes.Sid);
+            var teamId = User.FindFirstValue("user_team");
+
+            // Get the current user
+            var reply = await messagingClient.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = false });
+            var currentMember = reply.TeamMembers.SingleOrDefault();
+
+            // Set the updateable fields
+            currentMember.FirstName = request.FirstName;
+            currentMember.LastName = request.LastName;
+            currentMember.Email = request.Email;
+            currentMember.Phone = request.Phone;
+
+            // Update current user
+            await messagingClient.Send(new SaveTeamMemberCommand
+            {
+                Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(currentMember)
+            });
+
+            return Ok(new { Id = memberId });
         }
 
         /// <summary>
@@ -77,15 +108,24 @@ namespace EMBC.Responders.API.Controllers
         /// <returns>Ok when successful</returns>
         [HttpPost("agreement")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SignAgreement()
         {
-            var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
-            await messagingClient.Send(new SignResponderAgreementCommand
+            var memberId = User.FindFirstValue(ClaimTypes.Sid);
+            var teamId = User.FindFirstValue("user_team");
+
+            // Get the current user
+            var reply = await messagingClient.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = true });
+            var currentMember = reply.TeamMembers.SingleOrDefault();
+
+            // Set the Agreement Sign Date
+            currentMember.AgreementSignDate = DateTime.Now;
+
+            // Update current user
+            await messagingClient.Send(new SaveTeamMemberCommand
             {
-                UserName = userName,
-                SignatureDate = DateTime.Now
+                Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(currentMember)
             });
+
             return Ok();
         }
     }
@@ -100,13 +140,26 @@ namespace EMBC.Responders.API.Controllers
         public string TeamName { get; set; }
         public string Role { get; set; }
         public bool RequiredToSignAgreement { get; set; }
+        public DateTime? LastLoginDate { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+    }
+
+    public class UpdateUserProfileRequest
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
     }
 
     public class SecurityMapping : Profile
     {
         public SecurityMapping()
         {
-            CreateMap<EMBC.ESS.Shared.Contracts.Profile.UserProfile, UserProfile>();
+            CreateMap<EMBC.ESS.Shared.Contracts.Team.TeamMember, UserProfile>()
+                .ForMember(d => d.LastLoginDate, opts => opts.MapFrom(s => s.LastSuccessfulLogin))
+                .ForMember(d => d.RequiredToSignAgreement, opts => opts.MapFrom(s => !s.AgreementSignDate.HasValue));
         }
     }
 }

@@ -17,6 +17,7 @@ export class AppComponent{
   maintMsg = '';
   siteDown = false;
   bannerSubscription: Subscription;
+  listItemSubscription: Subscription;
 
   constructor(
     private supplierHttp: SupplierHttpService,
@@ -28,10 +29,16 @@ export class AppComponent{
   }
 
   ngOnInit() {
+    // This is set in constructor
+    if (!this.supplierService.getServerConfig())
+      this.supplierService.setServerConfig(this.supplierHttp.getServerConfig());
+      
     this.bannerSubscription = this.supplierService.getServerConfig().subscribe(config => {
       this.noticeMsg = config.noticeMsg;
       this.maintMsg = config.maintMsg;
       this.siteDown = config.siteDown;
+    }, err => {
+      console.log(err);
     });
   }
 
@@ -43,12 +50,13 @@ export class AppComponent{
     this.supplierService.setStateList(this.supplierHttp.getListOfStates());
     this.supplierService.setCountryList(this.supplierHttp.getListOfCountries());
 
-    this.supplierHttp.getListOfSupportItems().subscribe((data: any[]) => {
+    this.listItemSubscription = this.supplierHttp.getListOfSupportItems().subscribe((data: any[]) => {
       this.supplierService.setSupportItems(data);
     });
   }
 
   ngOnDestroy() {
     this.bannerSubscription.unsubscribe();
+    this.listItemSubscription.unsubscribe();
   }
 }
