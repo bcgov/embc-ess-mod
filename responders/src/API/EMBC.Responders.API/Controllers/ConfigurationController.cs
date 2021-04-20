@@ -16,11 +16,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
+using EMBC.ESS.Shared.Contracts.Location;
 using EMBC.Responders.API.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -32,13 +37,19 @@ namespace EMBC.Responders.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [AllowAnonymous]
+    [ResponseCache(Duration = cacheDuration)]
     public class ConfigurationController : ControllerBase
     {
         private readonly IConfiguration configuration;
+        private readonly IMessagingClient client;
+        private readonly IMapper mapper;
+        private const int cacheDuration = 5 * 60; //5 minutes
 
-        public ConfigurationController(IConfiguration configuration)
+        public ConfigurationController(IConfiguration configuration, IMessagingClient client, IMapper mapper)
         {
             this.configuration = configuration;
+            this.client = client;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -46,7 +57,8 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <returns>Configuration settings object</returns>
         [HttpGet]
-        [ResponseCache(Duration = 60 * 10)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<Configuration>> GetConfiguration()
         {
             var config = new Configuration
@@ -67,41 +79,164 @@ namespace EMBC.Responders.API.Controllers
         /// <param name="forEnumType">enum type name</param>
         /// <returns>list of codes and their respective descriptions</returns>
         [HttpGet("codes")]
-        [ResponseCache(Duration = 60 * 10)]
-        public ActionResult<CodeValues> GetCodes(string forEnumType)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<Code>> GetCodes(string forEnumType)
         {
-            if (string.IsNullOrEmpty(forEnumType)) return BadRequest();
-            var type = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.Name.Equals(forEnumType, StringComparison.OrdinalIgnoreCase) && t.IsEnum).FirstOrDefault();
-            if (type == null) return NotFound(type);
-            var values = EnumDescriptionHelper.GetEnumDescriptions(type);
-            return Ok(new CodeValues
+            if (!string.IsNullOrEmpty(forEnumType))
             {
-                ListName = type.Name,
-                Codes = values.Select(e => new Code { Value = e.value, Description = e.description }).ToArray()
-            });
+                var type = Assembly.GetExecutingAssembly().ExportedTypes.Where(t => t.Name.Equals(forEnumType, StringComparison.OrdinalIgnoreCase) && t.IsEnum).FirstOrDefault();
+                if (type == null) return NotFound(new ProblemDetails { Detail = $"enum '{forEnumType}' not found" });
+                var values = EnumDescriptionHelper.GetEnumDescriptions(type);
+                return Ok(values.Select(e => new Code { Type = type.Name, Value = e.value, Description = e.description }).ToArray());
+            }
+            return BadRequest(new ProblemDetails { Detail = "empty query parameter" });
         }
 
-        public class Configuration
+        [HttpGet("codes/communities")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCommunities([FromQuery] string stateProvinceId, [FromQuery] string countryId, [FromQuery] CommunityType[] types)
         {
-            public OidcConfiguration Oidc { get; set; }
+            var items = (await client.Send(new CommunitiesQueryCommand()
+            {
+                CountryCode = countryId,
+                StateProvinceCode = stateProvinceId,
+                Types = types.Select(t => (EMBC.ESS.Shared.Contracts.Location.CommunityType)t)
+            })).Items;
+
+            return Ok(mapper.Map<IEnumerable<CommunityCode>>(items));
         }
 
-        public class OidcConfiguration
+        [HttpGet("codes/stateprovinces")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetStateProvinces([FromQuery] string countryId)
         {
-            public string Issuer { get; set; }
-            public string ClientId { get; set; }
+            var items = (await client.Send(new StateProvincesQueryCommand()
+            {
+                CountryCode = countryId,
+            })).Items;
+
+            return Ok(mapper.Map<IEnumerable<Code>>(items));
         }
 
-        public class CodeValues
+        [HttpGet("codes/countries")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCountries()
         {
-            public string ListName { get; set; }
-            public IEnumerable<Code> Codes { get; set; }
-        }
+            var items = (await client.Send(new CountriesQueryCommand())).Items;
 
-        public class Code
+            return Ok(mapper.Map<IEnumerable<Code>>(items));
+        }
+    }
+
+    public class Configuration
+    {
+        public OidcConfiguration Oidc { get; set; }
+    }
+
+    public class OidcConfiguration
+    {
+        public string Issuer { get; set; }
+        public string ClientId { get; set; }
+    }
+
+    public class Code
+    {
+        public string Type { get; set; }
+        public string Value { get; set; }
+        public string Description { get; set; }
+        public Code ParentCode { get; set; }
+    }
+
+    public class CommunityCode : Code
+    {
+        public CommunityType CommunityType { get; set; }
+        public string DistrictName { get; set; }
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum CommunityType
+    {
+        [Description("Undefined")]
+        Undefined,
+
+        [Description("City")]
+        City,
+
+        [Description("Town")]
+        Town,
+
+        [Description("Village")]
+        Village,
+
+        [Description("District")]
+        District,
+
+        [Description("District Municipality")]
+        DistrictMunicipality,
+
+        [Description("Township")]
+        Township,
+
+        [Description("Indian GovernmentDistrict")]
+        IndianGovernmentDistrict,
+
+        [Description("Island Municipality")]
+        IslandMunicipality,
+
+        [Description("Island Trust")]
+        IslandTrust,
+
+        [Description("Mountain Resort Municipality")]
+        MountainResortMunicipality,
+
+        [Description("Municipality District")]
+        MunicipalityDistrict,
+
+        [Description("Regional District")]
+        RegionalDistrict,
+
+        [Description("Regional Municipality")]
+        RegionalMunicipality,
+
+        [Description("Resort Municipality")]
+        ResortMunicipality,
+
+        [Description("Rural Municipalities")]
+        RuralMunicipalities
+    }
+
+    public class ConfigurationMapping : Profile
+    {
+        public ConfigurationMapping()
         {
-            public string Value { get; set; }
-            public string Description { get; set; }
+            CreateMap<Country, Code>()
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => nameof(Country)))
+                .ForMember(d => d.Value, opts => opts.MapFrom(s => s.Code))
+                .ForMember(d => d.Description, opts => opts.MapFrom(s => s.Name))
+                .ForMember(d => d.ParentCode, opts => opts.Ignore())
+                ;
+
+            CreateMap<StateProvince, Code>()
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => nameof(StateProvince)))
+                .ForMember(d => d.Value, opts => opts.MapFrom(s => s.Code))
+                .ForMember(d => d.Description, opts => opts.MapFrom(s => s.Name))
+                .ForMember(d => d.ParentCode, opts => opts.MapFrom(s => new Code { Value = s.CountryCode, Type = nameof(Country) }))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Location.Community, CommunityCode>()
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => nameof(ESS.Shared.Contracts.Location.Community)))
+                .ForMember(d => d.Value, opts => opts.MapFrom(s => s.Code))
+                .ForMember(d => d.Description, opts => opts.MapFrom(s => s.Name))
+                .ForMember(d => d.DistrictName, opts => opts.MapFrom(s => s.DistrictName))
+                .ForMember(d => d.CommunityType, opts => opts.MapFrom(s => s.Type))
+                .ForMember(d => d.ParentCode, opts => opts.MapFrom(s => new Code { Value = s.StateProvinceCode, Type = nameof(StateProvince), ParentCode = new Code { Value = s.CountryCode, Type = nameof(Country) } }))
+                ;
         }
     }
 }

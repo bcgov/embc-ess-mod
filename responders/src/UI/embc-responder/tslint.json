@@ -49,9 +49,11 @@
       {
         "order": [
           "static-field",
+          "private-instance-field",
           "instance-field",
           "static-method",
-          "instance-method"
+          "instance-method",
+          "private-instance-method"
         ]
       }
     ],
