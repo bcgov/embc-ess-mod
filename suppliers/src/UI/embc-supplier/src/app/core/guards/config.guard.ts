@@ -4,7 +4,7 @@ import { SupplierHttpService } from '../services/supplierHttp.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ServerConfig } from '../model/server-config';
-import { SupplierService } from '../services/supplier.service';
+import { ConfigService } from '../services/config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,16 +14,16 @@ export class ConfigGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private supplierService: SupplierService,
+    private configService: ConfigService,
     private supplierHttp: SupplierHttpService
   ) {}
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     // This is set in app.component.ts
-    if (!this.supplierService.getServerConfig())
-      this.supplierService.setServerConfig(this.supplierHttp.getServerConfig());
+    if (!this.configService.getServerConfig())
+      this.configService.setServerConfig(this.supplierHttp.getServerConfig());
 
-    return this.supplierService.getServerConfig().pipe(
+    return this.configService.getServerConfig().pipe(
       map(config => {
         // Set global maint/notice vars and redirect if site down
         this.configResult = config;
