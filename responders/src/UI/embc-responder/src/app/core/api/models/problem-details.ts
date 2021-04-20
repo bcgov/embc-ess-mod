@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* tslint:disable */
 /* eslint-disable */
 export interface ProblemDetails {
   detail?: null | string;

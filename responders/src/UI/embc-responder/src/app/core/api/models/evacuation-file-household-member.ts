@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* tslint:disable */
 /* eslint-disable */
 import { HouseholdMemberType } from './household-member-type';
 export interface EvacuationFileHouseholdMember {

@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* tslint:disable */
 /* eslint-disable */
 export enum EvacuationFileStatus {
   InProgress = 'InProgress',
