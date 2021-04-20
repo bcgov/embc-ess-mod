@@ -10,12 +10,8 @@ import { LocationsService } from 'src/app/core/services/locations.service';
 @Injectable({ providedIn: 'root' })
 export class AssignedCommunityListDataService {
 
-  private defaultDistrict: ObjectWrapper = { code: 'All Districts', description: 'All Regional Districts' };
-  private defaultTypes: ObjectWrapper = { code: 'All Types', description: 'All Types' };
-
-  private teamCommunityList: TeamCommunityModel[];
-  private allTeamCommunityList: TeamCommunityModel[];
-  private communitiesToDelete: TeamCommunityModel[];
+  defaultDistrict: ObjectWrapper = { code: 'All Districts', description: 'All Regional Districts' };
+  defaultTypes: ObjectWrapper = { code: 'All Types', description: 'All Types' };
 
   public filtersToLoad: TableFilterModel = {
     loadDropdownFilters: [{
@@ -42,6 +38,9 @@ export class AssignedCommunityListDataService {
     { label: 'Date Added to List', ref: 'dateAssigned' },
   ];
 
+  private teamCommunityList: TeamCommunityModel[];
+  private allTeamCommunityList: TeamCommunityModel[];
+  private communitiesToDelete: TeamCommunityModel[];
 
   constructor(private locationsService: LocationsService, private cacheService: CacheService) { }
 

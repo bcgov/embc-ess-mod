@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SearchResults } from 'src/app/core/api/models';
+import { SearchResults } from 'src/app/core/api/models/search-results';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { EvacueeDetailsModel } from 'src/app/core/models/evacuee-search-context.model';
 
@@ -13,8 +13,8 @@ export class EvacueeSearchResultsService {
 
     public searchForEvacuee(evacueeSearchParameters: EvacueeDetailsModel): Observable<SearchResults> {
         return this.registrationService.registrationsSearch({
-            FirstName: evacueeSearchParameters.firstName, LastName: evacueeSearchParameters.lastName,
-            DateOfBirth: evacueeSearchParameters.dateOfBirth
+            firstName: evacueeSearchParameters.firstName, lastName: evacueeSearchParameters.lastName,
+            dateOfBirth: evacueeSearchParameters.dateOfBirth
         });
     }
 

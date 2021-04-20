@@ -73,6 +73,7 @@ export class AddCommunityComponent implements OnInit {
 
   /**
    * Sets the list of assigned communities to add
+   *
    * @param $event list of communities to add
    */
   selectedCommunities($event): void {
