@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 /* eslint-disable */
 export interface UpdateUserProfileRequest {
   email?: null | string;
