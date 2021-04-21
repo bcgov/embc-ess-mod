@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfiguration {
-  rootUrl: string = 'http://localhost:6020';
+  rootUrl: string = 'https://dev1-embc-responders.apps.silver.devops.gov.bc.ca';
 }
 
 /**

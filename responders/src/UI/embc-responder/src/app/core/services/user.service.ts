@@ -42,6 +42,8 @@ export class UserService {
     this.cacheService.remove('loggedInTask');
     this.cacheService.remove('memberRoles');
     this.cacheService.remove('memberLabels');
+    this.cacheService.remove('allTeamCommunityList');
+    this.cacheService.remove('teamCommunityList');
   }
 
 }
