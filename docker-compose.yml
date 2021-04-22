@@ -4,6 +4,9 @@ services:
   suppliers-portal-api:
     build:
       context: ./suppliers/src/API
+      args:
+      - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
+      - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
     image: embcess-suppliers-api:dev
     ports:
       - 7020:8080
@@ -24,6 +27,9 @@ services:
   registrants-portal-api:
     build:
       context: ./evacuees/src/API
+      args:
+      - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
+      - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
     image: embcess-registrants-api:dev
     ports:
       - 5020:8080
