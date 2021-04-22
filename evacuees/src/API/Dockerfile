@@ -12,6 +12,8 @@ COPY ["EMBC.Tests.Unit.Registrants.API/EMBC.Tests.Unit.Registrants.API.csproj", 
 COPY ["EMBC.Tests.Integration.Registrants.API/EMBC.Tests.Integration.Registrants.API.csproj", "EMBC.Tests.Integration.Registrants.API/"]
 COPY ["EMBC.Registrants.sln", "stylecop.json", ".editorconfig", "./"]
 
+RUN dotnet nuget add source "https://nuget.pkg.github.com/bcgov/index.json" --name "github" --username "${GITHUB_NUGET_USERNAME}" --password "${GITHUB_NUGET_PAT}" --store-password-in-clear-text
+
 RUN dotnet restore .
 COPY . .
 RUN dotnet test -c Release
