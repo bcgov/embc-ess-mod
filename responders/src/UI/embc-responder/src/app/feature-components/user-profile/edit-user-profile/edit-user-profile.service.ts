@@ -18,7 +18,6 @@ export class EditUserProfileService {
         }).pipe(
             mergeMap(() => this.getUserProfile()),
             map(profile => {
-                console.log(profile);
                 this.userProfileService.setUserProfile(profile);
                 return profile;
             })
