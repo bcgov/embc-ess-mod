@@ -21,7 +21,6 @@ export class TeamMemberReviewComponent {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state as TeamMember;
-        console.log(state);
         this.teamMember = state;
       }
     } else {

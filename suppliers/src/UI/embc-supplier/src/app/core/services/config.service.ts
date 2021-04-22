@@ -3,33 +3,40 @@ import { AuthConfig } from 'angular-oauth2-oidc';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { SupplierService } from './supplier.service';
+import { ServerConfig } from '../model/server-config';
 import { SupplierHttpService } from './supplierHttp.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AuthConfigService {
-
-    private config?: Configuration = null;
+export class ConfigService {
+    private authConfig?: Configuration = null;
+    private serverConfig: Observable<ServerConfig>;
 
     constructor(
-        private supplierHttp: SupplierHttpService,
-        private supplierService: SupplierService
+        private supplierHttp: SupplierHttpService
     ) { }
 
     public load(): Observable<Configuration> {
-        if (this.config != null) {
-            return of(this.config);
+        if (this.authConfig != null) {
+            return of(this.authConfig);
         }
         
         // This is set in app.component.ts
-        if (!this.supplierService.getServerConfig())
-            this.supplierService.setServerConfig(this.supplierHttp.getServerConfig());
+        if (!this.getServerConfig())
+            this.setServerConfig(this.supplierHttp.getServerConfig());
 
-        return this.supplierService.getServerConfig().pipe(tap((c: any) => {
-            this.config = { ...c };
+        return this.getServerConfig().pipe(tap((c: any) => {
+            this.authConfig = { ...c };
         }));
+    }
+
+    public setServerConfig(serverConfig: Observable<ServerConfig>) {
+        this.serverConfig = serverConfig;
+    }
+
+    public getServerConfig() {
+        return this.serverConfig;
     }
 
     public async getAuthConfig(): Promise<AuthConfig> {
@@ -48,7 +55,7 @@ export class AuthConfigService {
     }
 
     public isConfigured(): boolean {
-        return this.config === null;
+        return this.authConfig === null;
     }
 }
 
