@@ -5,6 +5,8 @@ ENV ASPNETCORE_URLS=http://*:8080
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+ARG GITHUB_NUGET_USERNAME
+ARG GITHUB_NUGET_PAT
 WORKDIR /src
 COPY ["EMBC.Registrants.API/EMBC.Registrants.API.csproj", "EMBC.Registrants.API/"]
 COPY ["EMBC.ResourceAccess.Dynamics/EMBC.ResourceAccess.Dynamics.csproj", "EMBC.ResourceAccess.Dynamics/"]
