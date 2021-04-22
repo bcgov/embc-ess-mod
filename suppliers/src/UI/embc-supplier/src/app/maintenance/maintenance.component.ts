@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { ConfigGuard } from '../core/guards/config.guard';
 
 @Component({
@@ -7,11 +8,16 @@ import { ConfigGuard } from '../core/guards/config.guard';
   styleUrls: ['./maintenance.component.scss']
 })
 export class MaintenanceComponent implements OnInit {
-  @Input() bannerMsg: string = "The ERA Supplier Portal is currently undergoing maintenance and will be back as soon as possible. We apologize for any inconvenience.";
+  @Input() bannerMsg: SafeHtml = "The ERA Supplier Portal is currently undergoing maintenance and will be back as soon as possible.";
   
-  constructor(configGuard: ConfigGuard) {
-    let configResult = configGuard.configResult;
-    this.bannerMsg = configResult.maintMsg;
+  constructor(
+    private configGuard: ConfigGuard,
+    private sanitizer: DomSanitizer
+  ) {
+    let configResult = this.configGuard.configResult;
+
+    if (configResult.maintMsg)
+      this.bannerMsg = this.sanitizer.bypassSecurityTrustHtml(configResult.maintMsg);
   }
 
   ngOnInit(): void {
