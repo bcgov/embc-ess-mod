@@ -19,7 +19,9 @@ export class EvacueeNameSearchComponent implements OnInit {
   nameSearchForm: FormGroup;
   evacueeSearchContextModel: EvacueeSearchContextModel;
 
-  constructor(private customValidation: CustomValidationService, private builder: FormBuilder, private evacueeSearchService: EvacueeSearchService) { }
+  constructor(
+    private customValidation: CustomValidationService, private builder: FormBuilder,
+    private evacueeSearchService: EvacueeSearchService) { }
 
   ngOnInit(): void {
     this.constructNameForm();
@@ -31,22 +33,25 @@ export class EvacueeNameSearchComponent implements OnInit {
 
   constructNameForm(): void {
     this.nameSearchForm = this.builder.group({
-      firstName: [this.evacueeSearchContextModel?.evacueeSearchParameters.firstName, [Validators.required, this.customValidation.whitespaceValidator()]],
-      lastName: [this.evacueeSearchContextModel?.evacueeSearchParameters.lastName, [Validators.required, this.customValidation.whitespaceValidator()]],
-      dateOfBirth: [this.evacueeSearchContextModel?.evacueeSearchParameters.dateOfBirth, [Validators.required, this.customValidation.dateOfBirthValidator()]],
+      firstName: [this.evacueeSearchContextModel?.evacueeSearchParameters.firstName,
+        [Validators.required, this.customValidation.whitespaceValidator()]],
+      lastName: [this.evacueeSearchContextModel?.evacueeSearchParameters.lastName,
+        [Validators.required, this.customValidation.whitespaceValidator()]],
+      dateOfBirth: [this.evacueeSearchContextModel?.evacueeSearchParameters.dateOfBirth,
+        [Validators.required, this.customValidation.dateOfBirthValidator()]],
     });
   }
 
-  search() {
-    if(this.nameSearchForm.status == 'VALID') {
-      
-      let searchParams: EvacueeDetailsModel = {
+  search(): void {
+    if (this.nameSearchForm.status === 'VALID') {
+
+      const searchParams: EvacueeDetailsModel = {
         firstName: this.nameSearchForm.get('firstName').value,
         lastName: this.nameSearchForm.get('lastName').value,
         dateOfBirth: this.nameSearchForm.get('dateOfBirth').value,
-      }
-  
-      this.evacueeSearchService.evacueeSearchParameters = searchParams;
+      };
+
+      this.evacueeSearchService.setEvacueeSearchParameters(searchParams);
       this.showResultsComponent.emit(true);
 
     } else {

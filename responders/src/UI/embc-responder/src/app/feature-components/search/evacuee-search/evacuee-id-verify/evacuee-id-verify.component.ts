@@ -35,10 +35,10 @@ export class EvacueeIdVerifyComponent implements OnInit {
     });
   }
 
-  next() {
-    if(this.idVerifyForm.status == 'VALID') {
-      console.log(this.idVerifyForm.get('photoId').value)
-      this.evacueeSearchService.hasShownIdentification = this.idVerifyForm.get('photoId').value;
+  next(): void {
+    if (this.idVerifyForm.status === 'VALID') {
+      console.log(this.idVerifyForm.get('photoId').value);
+      this.evacueeSearchService.setHasShownIdentification(this.idVerifyForm.get('photoId').value);
       this.showIDPhotoComponent.emit(false);
     } else {
       this.idVerifyForm.markAllAsTouched();

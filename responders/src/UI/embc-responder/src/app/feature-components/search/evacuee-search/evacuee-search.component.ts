@@ -16,11 +16,11 @@ export class EvacueeSearchComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  changeVerifyIdComponent(value: boolean) {
+  changeVerifyIdComponent(value: boolean): void {
     this.showPhotoIDComponent = value;
   }
 
-  changeResultsComponent(value: boolean) {
+  changeResultsComponent(value: boolean): void {
     this.showResultsComponent = value;
   }
 

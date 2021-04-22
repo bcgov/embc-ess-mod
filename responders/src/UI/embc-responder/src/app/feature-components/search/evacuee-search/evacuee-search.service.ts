@@ -6,37 +6,31 @@ import { EvacueeDetailsModel, EvacueeSearchContextModel } from 'src/app/core/mod
 })
 export class EvacueeSearchService {
 
-    private _evacueeSearchContext: EvacueeSearchContextModel;
+    private hasShownIdentification: boolean;
+    private evacueeSearchParameters: EvacueeDetailsModel = {firstName: null, lastName: null, dateOfBirth: null};
 
-    private _hasShownIdentification: boolean;
-    private _evacueeSearchParameters: EvacueeDetailsModel;
 
-    public get hasShownIdentification(): boolean {
-        return this._hasShownIdentification;
+    public getHasShownIdentification(): boolean {
+        return this.hasShownIdentification;
     }
 
-    public set hasShownIdentification(value: boolean) {
-        this._hasShownIdentification = value;
+    public setHasShownIdentification(value: boolean): void {
+        this.hasShownIdentification = value;
     }
 
-    public get evacueeSearchParameters(): EvacueeDetailsModel {
-        return this._evacueeSearchParameters;
+    public getEvacueeSearchParameters(): EvacueeDetailsModel {
+        return this.evacueeSearchParameters;
     }
 
-    public set evacueeSearchParameters(value: EvacueeDetailsModel) {
-        this._evacueeSearchParameters = value;
+    public setEvacueeSearchParameters(value: EvacueeDetailsModel): void {
+        this.evacueeSearchParameters = value;
     }
-
 
     public getEvacueeSearchContext(): EvacueeSearchContextModel {
         return {
-            hasShownIdentification: this._hasShownIdentification,
-            evacueeSearchParameters: this._evacueeSearchParameters
+            hasShownIdentification: this.hasShownIdentification,
+            evacueeSearchParameters: this.evacueeSearchParameters
         };
-    }
-
-    public setEvacueeSearchContext(evacueeSearchContext: EvacueeSearchContextModel): void {
-        this._evacueeSearchContext = evacueeSearchContext;
     }
 
 }
