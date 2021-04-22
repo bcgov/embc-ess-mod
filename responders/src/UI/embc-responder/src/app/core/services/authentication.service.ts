@@ -16,8 +16,6 @@ export class AuthenticationService {
     const isLoggedIn = await this.oauthService.loadDiscoveryDocumentAndLogin({ state: returnRoute });
     if (isLoggedIn) {
       return Promise.resolve(this.oauthService.state || returnRoute);
-    } else {
-      return Promise.reject('Not logged in');
     }
   }
 
