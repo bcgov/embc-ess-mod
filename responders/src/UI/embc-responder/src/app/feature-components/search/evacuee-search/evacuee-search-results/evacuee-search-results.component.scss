@@ -1,0 +1,82 @@
+.result-heading {
+    font-size: 21px;
+    line-height: 30px;
+    padding-left: 7px;
+}
+
+.result-text {
+    font-size: 21px;
+    color: #234075;
+}
+
+.back-info {
+    background-color: rgba(238, 238, 238, 1);
+    border: none;
+    border-radius: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    //height: 65px;
+}
+
+.highlight {
+    color: rgb(22, 155, 213);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.highlight:hover {
+    text-decoration: underline;
+}
+
+.sub-text {
+    padding-left: 7px;
+}
+
+.registration {
+    background-color: rgba(252, 186, 25, 1);
+}
+
+.card-heading {
+    font-size: 21px;
+}
+
+.new-search {
+    width: 100%
+}
+
+.ess-status {
+    background-color: rgba(242, 242, 242, 1);
+}
+
+.pending-status {
+    color: #F28200;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.active-status {
+    color: #169BD5;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.complete-status {
+    color: #3C9D0F;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.expired-status {
+    color: #696969;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.dotted-hr {
+    border: 0.7px dashed rgba(0, 0, 0, 0.2);
+}
+
+.status-heading {
+    padding-left: 7px;
+}

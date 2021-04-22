@@ -1,10 +1,3 @@
-<!-- <div class="row heading-container">
-    <div class="col-md-12">
-        <span class="page-heading">View Responder</span>
-    </div>
-</div>
-<br> -->
-
 <mat-card>
     <div class="content-align">
         <div class="row">
@@ -66,24 +59,14 @@
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">Status in ERA Tool</div>
-            <div class="col-md-8"> {{teamMember?.isActive}}</div>
+            <div class="col-md-8"> {{teamMember?.isActive ? 'Active' : 'Inactive'}}</div>
         </div>
         <br>
 
         <div class="row">
-            <button class="button-s button-float button-margin" mat-button (click)="deleteUser()">Delete User</button>
-            <button class="button-p button-float" mat-button (click)="editUser()">Edit User
+            <button *ngIf="hasPermission('canDeleteTeamMembers') && teamMember?.role !== 'Tier4'" class="button-s button-float button-margin" mat-button (click)="deleteUser()">Delete User</button>
+            <button *ngIf="isEditAllowed(teamMember)" class="button-p button-float" mat-button (click)="editUser()">Edit User
                 Details</button>
         </div>
-
-        <!-- <div class="row justify-content-between">
-            <div class="col-md-6">
-                <button class="button-s" mat-button (click)="cancel()">Cancel</button>
-            </div>
-            <div class="col-md-6">
-                <button class="button-s button-float" mat-button (click)="deleteUser()">Delete User</button>
-                <button class="button-p button-float button-margin" mat-button (click)="editUser()">Edit User Details</button>
-            </div>
-        </div> -->
     </div>
 </mat-card>

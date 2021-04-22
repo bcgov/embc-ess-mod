@@ -17,7 +17,7 @@ const routes: Routes = [
       },
       {
         path: 'search',
-        loadChildren: () => import('../search-registartion/search-registartion.module').then(m => m.SearchRegistartionModule)
+        loadChildren: () => import('../search/search-registartion/search-registartion.module').then(m => m.SearchRegistartionModule)
       },
       {
         path: 'user-profile',
@@ -30,7 +30,7 @@ const routes: Routes = [
       },
       {
         path: 'responder-management',
-        loadChildren: () => import('../team/team-management/team-management.module').then(m => m.TeamManagementModule)
+        loadChildren: () => import('../team/team-member-management/team-member-management.module').then(m => m.TeamMemberManagementModule)
       }
     ]
   }

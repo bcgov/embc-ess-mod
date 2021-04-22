@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { TeamMember } from 'src/app/core/api/models';
+import { MemberRole, TeamMember } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TeamMemberModel } from 'src/app/core/models/team-member.model';
@@ -16,27 +16,33 @@ import { TeamMemberModel } from 'src/app/core/models/team-member.model';
 export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   @Input() displayedColumns: TableColumnModel[];
-  @Input() incomingData = [];
+  @Input() incomingData: TeamMember[] = [];
   @Input() filterTerm: TableFilterValueModel;
+  @Input() isLoading: boolean;
+  @Input() statusLoading: boolean;
+  @Input() loggedInRole: string;
   @Output() toggleActive = new EventEmitter<string>();
   @Output() toggleInactive = new EventEmitter<string>();
   @Output() clickedRow = new EventEmitter<TeamMember>();
 
   dataSource = new MatTableDataSource();
   columns: string[];
-  isLoading = true;
   color = '#169BD5';
   data: any;
+  selectedIndex: number;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  /**
+   * Listens to input events and popluate values
+   * @param changes input event change object
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.incomingData) {
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
-      console.log(this.isLoading);
-      this.isLoading = !this.isLoading;
+      this.dataSource.sort = this.sort;
     }
 
     if (changes.displayedColumns) {
@@ -47,16 +53,18 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  /**
+   * Sets paginator and sort on tables
+   */
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    // if(this.incomingData !== undefined) {
-    //   if(this.incomingData.length !== 0) {
-    //     this.isLoading = false;
-    //   }
-    // }
   }
 
+  /**
+   * Filters the datatable
+   * @param term user selected filters
+   */
   filter(term: TableFilterValueModel): void {
     this.data = this.dataSource.filteredData;
     this.dataSource.filterPredicate = this.teamFilterPredicate;
@@ -67,6 +75,12 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  /**
+   * custom filter predicate for string and dropdown filters
+   * @param data table data
+   * @param filter filter term
+   * @returns true/false
+   */
   teamFilterPredicate = (data: TeamMemberModel, filter: string): boolean => {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'text') {
@@ -92,21 +106,53 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  /**
+   * Captures the row click event
+   * @param row team member row
+   */
   rowClicked(row): void {
     this.clickedRow.emit(row);
   }
 
+  /**
+   * Stops the entire row from being clicked if the user interacts with
+   * the toggle button
+   * @param $event click event
+   * @param columnLabel table column name
+   */
   disableRowInteraction($event, columnLabel): void {
     if (columnLabel === 'isActive') {
       $event.stopPropagation();
     }
   }
 
-  slideToggle($event: MatSlideToggleChange, row): void {
+  /**
+   * Emits active/inactive events based on user interaction with the toggle
+   * @param $event slide toggle event
+   * @param row row affected
+   * @param index index of the affected row
+   */
+  slideToggle($event: MatSlideToggleChange, row, index): void {
+    this.selectedIndex = index;
     if ($event.checked) {
       this.toggleActive.emit(row.id);
     } else {
       this.toggleInactive.emit(row.id);
+    }
+  }
+
+  /**
+   * Role based access to toggle users active/inactive
+   * @param row selected row
+   * @returns true/false
+   */
+  isToggleAllowed(row: TeamMember): boolean {
+    if (this.loggedInRole === MemberRole.Tier2) {
+      return row.role === MemberRole.Tier1 ? true : false;
+    } else if (this.loggedInRole === MemberRole.Tier3) {
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;
+    } else if (this.loggedInRole === MemberRole.Tier4) {
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3 ? true : false;
     }
   }
 

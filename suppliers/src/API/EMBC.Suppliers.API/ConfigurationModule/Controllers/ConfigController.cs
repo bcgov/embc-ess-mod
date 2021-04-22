@@ -20,7 +20,9 @@ using System.Globalization;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
+using EMBC.Suppliers.API.Utilities;
 using Jasper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -28,6 +30,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 {
     [ApiController]
     [Route("api/config")]
+    [AllowAnonymous]
     public class ConfigController : ControllerBase
     {
         private readonly IConfiguration conf;
@@ -38,6 +41,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
         }
 
         [HttpGet("")]
+        [AllowAnonymous]
         public ActionResult<Config> GetConfig()
         {
             string maintMsg = string.Empty;
@@ -46,6 +50,8 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             var maintWarn = conf["MAINTENANCE_WARNING"] ?? string.Empty;
             var maintPage = conf["MAINTENANCE_PAGEDOWN"] ?? string.Empty;
             var maintTimeStr = conf["MAINTENANCE_START"] ?? string.Empty;
+
+            var envStr = conf["ASPNETCORE_ENVIRONMENT"] ?? string.Empty;
 
             DateTime maintTime;
 
@@ -56,7 +62,10 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             // Check that maintTimeStr is valid datetime format
             if (DateTime.TryParse(maintTimeStr, out maintTime))
             {
-                if (maintTime <= DateTime.Now)
+                // Timestamp will be in Pacific, so convert local time for comparison
+                var curtime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now.ToUniversalTime(), TimeZoneProvider.GetPSTTimeZone());
+
+                if (maintTime <= curtime)
                     siteDown = true;
                 else
                     maintMsg = maintWarn;
@@ -80,7 +89,13 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             {
                 noticeMsg = noticeMsg,
                 maintMsg = maintMsg,
-                siteDown = siteDown
+                siteDown = siteDown,
+                environment = envStr,
+                Oidc = new OidcConfiguration
+                {
+                    ClientId = conf["oidc:clientId"],
+                    Issuer = conf["oidc:issuer"]
+                }
             };
 
             return Ok(result);
@@ -103,6 +118,14 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             public string noticeMsg { get; set; }
             public string maintMsg { get; set; }
             public bool siteDown { get; set; }
+            public string environment { get; set; }
+            public OidcConfiguration Oidc { get; set; }
+        }
+
+        public class OidcConfiguration
+        {
+            public string Issuer { get; set; }
+            public string ClientId { get; set; }
         }
     }
 }

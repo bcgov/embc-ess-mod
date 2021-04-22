@@ -4,7 +4,7 @@
 
 ### env-promotions.template.yml
 
-Template for an entire evacuees portal deployment. Contains 2 deployment configs and attached resources.
+Template for an entire registrants portal deployment. Contains 2 deployment configs and attached resources.
 
 API
 
@@ -29,7 +29,7 @@ To create an environment:
 3. run the following command from cmd/powershell console (modify the Openshift project to the one you want to deploy to):
 
 ```cmd
-oc process -f .\registrants-portal.template.yml --param-file .\registrants-portal.yml.<app name>.params | oc -n <openshift project name> apply -f -
+oc process -f .\registrants-portal.template.yml --param-file .\registrants-portal.yml.<app name>.params | oc apply -f -
 ```
 
 4. to update an existing environment, modify the templates and params, then execute the same command.
@@ -52,7 +52,7 @@ oc process -f .\env-promotions.template.yml | oc -n <openshift namespace>-tools 
 
 | name       | namespace   | purpose                                                          | url                                                                                                   |
 | ---------- | ----------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| dev1       | pbiizm-dev  | continiuous deployment from master branch for QA and integration | https://dev1-embc-registrants.pathfinder.gov.bc.ca/, https://era-registrants-dev.embc.gov.bc.ca/          |
-| test       | pbiizm-test | regression and UAT environment                                   | https://test-embc-registrants.pathfinder.gov.bc.ca/, https://era-registrants-test.embc.gov.bc.ca/         |
-| training   | pbiizm-test | training env for field users                                     | https://training-embc-registrants.pathfinder.gov.bc.ca/, https://era-registrants-training.embc.gov.bc.ca/ |
-| production | pbiizm-prod | production environment                                           | https://production-embc-registrants.pathfinder.gov.bc.ca/, https://era-registrants.embc.gov.bc.ca/        |
+| dev1       | b5e079-dev  | continiuous deployment from master branch for QA and integration | https://dev1-embc-registrants.apps.silver.devops.gov.bc.ca/, https://era-registrants-dev.embc.gov.bc.ca/          |
+| test       | b5e079-test | regression and UAT environment                                   | https://test-embc-registrants.apps.silver.devops.gov.bc.ca/, https://era-registrants-test.embc.gov.bc.ca/         |
+| training   | b5e079-test | training env for field users                                     | https://training-embc-registrants.apps.silver.devops.gov.bc.ca/, https://era-registrants-training.embc.gov.bc.ca/ |
+| production | b5e079-prod | production environment                                           | https://production-embc-registrants.apps.silver.devops.gov.bc.ca/, https://era-registrants.embc.gov.bc.ca/        |

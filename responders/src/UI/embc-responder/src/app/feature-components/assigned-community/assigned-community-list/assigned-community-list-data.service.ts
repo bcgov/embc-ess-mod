@@ -5,29 +5,28 @@ import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { ObjectWrapper, TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { LoadLocationsService } from 'src/app/core/services/load-locations.service';
+import { LocationsService } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class AssignedCommunityListDataService {
 
-  constructor(private loadLocationService: LoadLocationsService, private cacheService: CacheService) { }
+  private defaultDistrict: ObjectWrapper = { code: 'All Districts', description: 'All Regional Districts' };
+  private defaultTypes: ObjectWrapper = { code: 'All Types', description: 'All Types' };
 
   private teamCommunityList: TeamCommunityModel[];
   private allTeamCommunityList: TeamCommunityModel[];
   private communitiesToDelete: TeamCommunityModel[];
-  defaultDistrict: ObjectWrapper = {code: 'All Districts', description: 'All Regional Districts'};
-  defaultTypes: ObjectWrapper = {code: 'All Types', description: 'All Types'};
 
   public filtersToLoad: TableFilterModel = {
     loadDropdownFilters: [{
       type: 'regionalDistrict',
       label: this.defaultDistrict,
-      values: this.loadLocationService.getRegionalDistricts()
+      values: this.locationsService.getRegionalDistricts()
     },
     {
       type: 'type',
       label: this.defaultTypes,
-      values: Object.keys(CommunityType).filter(e => e)
+      values: Object.keys(CommunityType).filter(e => e === 'Undefined' ? '' : e)
     }],
     loadInputFilter: {
       type: 'Search by city, town, village or community',
@@ -43,6 +42,9 @@ export class AssignedCommunityListDataService {
     { label: 'Date Added to List', ref: 'dateAssigned' },
   ];
 
+
+  constructor(private locationsService: LocationsService, private cacheService: CacheService) { }
+
   public setCommunitiesToDelete(communitiesToDelete: TeamCommunityModel[]): void {
     this.communitiesToDelete = communitiesToDelete;
   }
@@ -56,19 +58,9 @@ export class AssignedCommunityListDataService {
     this.teamCommunityList = teamCommunityList;
   }
 
-  private getTeamCommunityList(): TeamCommunityModel[] {
-    return this.teamCommunityList ? this.teamCommunityList :
-      JSON.parse(this.cacheService.get('teamCommunityList'));
-  }
-
   public setAllTeamCommunityList(allTeamCommunityList: TeamCommunityModel[]): void {
     this.cacheService.set('allTeamCommunityList', allTeamCommunityList);
     this.allTeamCommunityList = allTeamCommunityList;
-  }
-
-  private getAllTeamCommunityList(): TeamCommunityModel[] {
-    return this.allTeamCommunityList ? this.allTeamCommunityList :
-      JSON.parse(this.cacheService.get('allTeamCommunityList'));
   }
 
   public getCommunitiesToAddList(): Observable<TeamCommunityModel[]> {
@@ -83,12 +75,22 @@ export class AssignedCommunityListDataService {
     return of(addMap);
   }
 
+  private getTeamCommunityList(): TeamCommunityModel[] {
+    return this.teamCommunityList ? this.teamCommunityList :
+      JSON.parse(this.cacheService.get('teamCommunityList'));
+  }
+
+  private getAllTeamCommunityList(): TeamCommunityModel[] {
+    return this.allTeamCommunityList ? this.allTeamCommunityList :
+      JSON.parse(this.cacheService.get('allTeamCommunityList'));
+  }
+
   private mergedCommunityList(): TeamCommunityModel[] {
     const teamModel: TeamCommunityModel = {
       allowSelect: true,
       conflict: false
     };
-    return this.loadLocationService.getCommunityList().map(community => this.mergeData(teamModel, community));
+    return this.locationsService.getCommunityList().map(community => this.mergeData(teamModel, community));
   }
 
   private mergeData<T>(finalValue: T, incomingValue: Partial<T>): T {

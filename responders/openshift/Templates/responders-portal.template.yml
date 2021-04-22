@@ -18,7 +18,7 @@ parameters:
     required: true
   - description: Reverse proxy known network
     name: KNOWN_NETWORKS
-    value: ::ffff:172.51.0.0/16
+    value: ::ffff:10.97.0.0/16
   - description: ASPNET runtime environment (Development/Staging/Production)
     name: RUNTIME_ENVIRONMENT
     value: Staging
@@ -42,6 +42,7 @@ parameters:
     required: true
 
 objects:
+
   - kind: ConfigMap
     apiVersion: v1
     metadata:
@@ -49,6 +50,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-responders-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
     data:     
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
@@ -67,6 +69,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-responders-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
 
   - kind: Service
@@ -74,6 +77,7 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-responders-portal-api
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
@@ -91,6 +95,7 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-responders-portal-ui
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
@@ -108,10 +113,11 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-responders-portal-api
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
-      host: ${APP_NAME}-embc-responders.pathfinder.gov.bc.ca
+      host: ${APP_NAME}-embc-responders.apps.silver.devops.gov.bc.ca
       path: /api
       port:
         targetPort: 8080-tcp
@@ -129,10 +135,11 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-responders-portal-ui
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
-      host: ${APP_NAME}-embc-responders.pathfinder.gov.bc.ca
+      host: ${APP_NAME}-embc-responders.apps.silver.devops.gov.bc.ca
       path: /
       port:
         targetPort: 2015-tcp
@@ -144,17 +151,36 @@ objects:
         name: ${APP_NAME}-responders-portal-ui
         weight: 100
 
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: ${APP_NAME}-responders-portal
+      labels:
+        app: ${APP_NAME}-responders-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    spec:
+      podSelector:
+        matchLabels:
+          app: ${APP_NAME}-responders-portal
+      ingress:
+      - ports:
+        - protocol: TCP
+          port: 2015
+        - protocol: TCP
+          port: 8080
+
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-responders-portal-api
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-responders-portal
         deploymentconfig: ${APP_NAME}-responders-portal-api
       strategy:
         activeDeadlineSeconds: 21600
@@ -170,6 +196,7 @@ objects:
         metadata:
           labels:
             app: ${APP_NAME}-responders-portal
+            app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-responders-portal-api
         spec:
           containers:
@@ -220,12 +247,12 @@ objects:
     metadata:
       labels:
         app: ${APP_NAME}-responders-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
       name: ${APP_NAME}-responders-portal-ui
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       replicas: 2
       selector:
-        app: ${APP_NAME}-responders-portal
         deploymentconfig: ${APP_NAME}-responders-portal-ui
       strategy:
         activeDeadlineSeconds: 21600
@@ -241,6 +268,7 @@ objects:
         metadata:
           labels:
             app: ${APP_NAME}-responders-portal
+            app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-responders-portal-ui
         spec:
           containers:
@@ -278,6 +306,7 @@ objects:
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-responders-portal
+        app.kubernetes.io/part-of: ${APP_NAME}
     spec:
       accessModes:
         - "ReadWriteMany"

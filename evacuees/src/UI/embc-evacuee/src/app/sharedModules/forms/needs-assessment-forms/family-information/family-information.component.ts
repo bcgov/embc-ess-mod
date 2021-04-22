@@ -54,9 +54,6 @@ export default class FamilyInformationComponent implements OnInit {
       this.updateOnVisibility());
     this.dataSource.next(this.householdMemberForm.get('householdMembers').value);
     this.data = this.householdMemberForm.get('householdMembers').value;
-
-    console.log(this.dataSource);
-    console.log(this.data);
   }
 
   addMembers(): void {
@@ -110,10 +107,9 @@ export default class FamilyInformationComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe(result => {
       if (result === 'remove') {
-        // console.log(result);
         this.data.splice(index, 1);
         this.dataSource.next(this.data);
-        this.householdMemberForm.get('householdMember').setValue(this.data);
+        this.householdMemberForm.get('householdMembers').setValue(this.data);
         if (this.data.length === 0) {
           this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
         }

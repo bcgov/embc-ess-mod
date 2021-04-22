@@ -15,17 +15,16 @@
                 <mat-radio-button value="Yes">Yes
                 </mat-radio-button>
                 <div class="prim-address">
-
+                  <p>{{(formCreationService.addressForm$ |
+                    async)?.value?.address?.addressLine1}}</p>
+                  <p>
                   <p *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.addressLine2 !== null">
                     {{(formCreationService.addressForm$ |async)?.value?.address?.addressLine2}}</p>
-                  <p>{{(formCreationService.addressForm$ |
-                    async)?.value?.address?.addressLine1}},&nbsp;{{(formCreationService.addressForm$ |
-                    async)?.value?.address?.jurisdiction?.name}}</p>
                   <p>
                     <span>{{(formCreationService.addressForm$ |
-                      async)?.value?.address?.stateProvince?.name}}</span>
+                      async)?.value?.address?.jurisdiction?.name}}</span>
                     <span
-                      *ngIf="(formCreationService.addressForm$ | async)?.value?.address?.postalCode !== null">,&nbsp;{{(formCreationService.addressForm$
+                      *ngIf="!((formCreationService.addressForm$ | async)?.value?.address?.postalCode =='' || (formCreationService.addressForm$ | async)?.value?.address?.postalCode ==null)">,&nbsp;{{(formCreationService.addressForm$
                       | async)?.value?.address?.postalCode}}</span>
                   </p>
                 </div>
