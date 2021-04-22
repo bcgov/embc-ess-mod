@@ -37,7 +37,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
+using NSwag;
 using NSwag.AspNetCore;
+using NSwag.Generation.Processors.Security;
 using Serilog;
 
 namespace EMBC.Registrants.API
@@ -200,7 +202,18 @@ namespace EMBC.Registrants.API
                     options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
                 });
 
-                services.AddOpenApiDocument();
+                services.AddOpenApiDocument(document =>
+                {
+                    document.AddSecurity("bearer token", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                    {
+                        Type = OpenApiSecuritySchemeType.Http,
+                        Scheme = "Bearer",
+                        BearerFormat = "paste token here",
+                        In = OpenApiSecurityApiKeyLocation.Header
+                    });
+
+                    document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
+                });
             }
         }
     }

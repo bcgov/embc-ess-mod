@@ -97,6 +97,7 @@ namespace EMBC.Registrants.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<ActionResult<string>> CreateEvacuation(EvacuationFile evacuationFile)
         {
             if (evacuationFile == null)
@@ -117,6 +118,7 @@ namespace EMBC.Registrants.API.Controllers
         [HttpPost("{essFileNumber}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<ActionResult<string>> UpdateEvacuation(string essFileNumber, EvacuationFile evacuationFile)
         {
             if (evacuationFile == null)
