@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 
 @Component({
   selector: 'app-evacuee-search',
@@ -8,14 +9,19 @@ import { Component, OnInit } from '@angular/core';
 export class EvacueeSearchComponent implements OnInit {
 
   showPhotoIDComponent = true;
+  showResultsComponent = false;
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  changeComponent(value: boolean) {
+  changeVerifyIdComponent(value: boolean) {
     this.showPhotoIDComponent = value;
+  }
+
+  changeResultsComponent(value: boolean) {
+    this.showResultsComponent = value;
   }
 
 }

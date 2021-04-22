@@ -36,13 +36,11 @@ export class AppComponent implements OnInit {
   public async ngOnInit(): Promise<void> {
     try {
       const nextUrl = await this.authenticationService.login();
-      // const userProfile = await this.userService.loadUserProfile();
-      // const nextRoute = decodeURIComponent(userProfile.requiredToSignAgreement
-      //   ? 'electronic-agreement'
-      //   : nextUrl || 'responder-access');
-      // await this.router.navigate([nextRoute]);
-      this.router.navigate(['/responder-access/search/evacuee']);
-      // this.router.navigate(['/task']);
+      const userProfile = await this.userService.loadUserProfile();
+      const nextRoute = decodeURIComponent(userProfile.requiredToSignAgreement
+        ? 'electronic-agreement'
+        : nextUrl || 'responder-access');
+      await this.router.navigate([nextRoute]);
     } catch (error) {
       console.error(error);
     } finally {

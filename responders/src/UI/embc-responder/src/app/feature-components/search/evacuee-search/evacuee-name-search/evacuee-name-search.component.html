@@ -2,43 +2,62 @@
     <div class="col-md-8">
         <mat-card>
             <p class="heading">Enter the evacuees' <b>first name, last name & date of birth.</b></p>
-            <p>If the evacuee presented identification, please enter the details below as they appear on their governement-issued identity document.</p>
+            <p>If the evacuee presented identification, please enter the details below as they appear on their
+                governement-issued identity document.</p>
 
-            <form [formGroup]="">
+            <form [formGroup]="nameSearchForm">
                 <div class="row">
                     <div class="col-md-4">
-                      <mat-form-field appearance="outline">
-                        <mat-label>First Name</mat-label>
-                        <input formControlName="firstName" matInput placeholder="First Name" required>
-                      </mat-form-field>
+                        <mat-form-field appearance="outline">
+                            <mat-label>First Name</mat-label>
+                            <input formControlName="firstName" matInput placeholder="First Name" required>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.firstName.invalid && nameSearchFormControl.firstName.hasError('whitespaceError')">
+                                First Name is required</mat-error>
+                        </mat-form-field>
                     </div>
-                  </div>
-            
-                  <div class="row">
+                </div>
+
+                <div class="row">
                     <div class="col-md-4">
-                      <mat-form-field appearance="outline">
-                        <mat-label>Last Name</mat-label>
-                        <input formControlName="lastName" matInput placeholder="Last Name" required>
-                      </mat-form-field>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Last Name</mat-label>
+                            <input formControlName="lastName" matInput placeholder="Last Name" required>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.lastName.invalid && nameSearchFormControl.lastName.hasError('whitespaceError')">
+                                Last Name is required</mat-error>
+                        </mat-form-field>
                     </div>
-                  </div>
-            
-                  <div class="row">
+                </div>
+
+                <div class="row">
                     <div class="col-md-3">
-                      <mat-form-field type="date" appearance="outline">
-                        <mat-label>Date of Birth</mat-label>
-                        <input formControlName="dateOfBirth" matInput placeholder="mm/dd/yyyy"
-                          [textMask]="{mask: dateMask, keepCharPositions: true}" required>
-                        <mat-hint>Allowed Date format: mm/dd/yyyy</mat-hint>
-                      </mat-form-field>
+                        <mat-form-field type="date" appearance="outline">
+                            <mat-label>Date of Birth</mat-label>
+                            <input formControlName="dateOfBirth" matInput placeholder="mm/dd/yyyy"
+                                [textMask]="{mask: dateMask, keepCharPositions: true}" required>
+                            <mat-hint>Allowed Date format: mm/dd/yyyy</mat-hint>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('required')">
+                                Date of Birth is required</mat-error>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('invalidDate')">
+                                Date of Birth is invalid</mat-error>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('futureDate')">
+                                Date of Birth should be in the past</mat-error>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('invalidYear')">
+                                Invalid year. The Year must be between 1800-2100</mat-error>
+                        </mat-form-field>
                     </div>
-                  </div>
+                </div>
             </form>
 
             <br>
             <div class="row">
                 <div class="col-md-4">
-                    <button class="button-p submit" type="button" mat-button>Search</button>
+                    <button class="button-p submit" type="button" (click)="search()" mat-button>Search</button>
                 </div>
             </div>
         </mat-card>

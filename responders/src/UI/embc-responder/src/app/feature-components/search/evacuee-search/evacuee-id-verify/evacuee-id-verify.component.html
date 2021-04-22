@@ -3,8 +3,8 @@
         <mat-card>
             <p class="heading">Can you present any <b>government-issued photo ID</b> to verify your identity?</p>
 
-            <form [formGroup]="">
-                <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="photoID"
+            <form [formGroup]="idVerifyForm">
+                <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="photoId"
                     class="primary-radio-group" required>
                     <mat-radio-button class="primary-radio-button" [value]=true>
                         <span class="highlight">Yes</span> - the evacuee has provided valid government issued photo
@@ -14,6 +14,9 @@
                         <span class="highlight">No</span> - the evacuee did not provide valid government issued photo
                         identification.
                     </mat-radio-button>
+                    <mat-error class="custom-mat-error"
+                        *ngIf="idVerifyFormControl?.photoId?.touched && idVerifyFormControl?.photoId?.invalid && idVerifyFormControl?.photoId?.hasError('required')">
+                        A selected option is required</mat-error>
                 </mat-radio-group>
             </form>
 
