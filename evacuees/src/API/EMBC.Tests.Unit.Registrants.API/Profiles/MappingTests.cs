@@ -110,7 +110,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             contact.era_MailingProvinceState.ShouldBeNull();
             contact.era_MailingCountry.ShouldBeNull();
 
-            contact.era_issamemailingaddress.ShouldBe(profile.IsMailingAddressSameAsPrimaryAddress);
+            contact.era_issamemailingaddress.ShouldBe(profile.PrimaryAddress.AddressLine1 == profile.MailingAddress.AddressLine1);
         }
 
         [Fact]
