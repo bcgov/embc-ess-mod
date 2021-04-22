@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
 import { AuthenticationService } from './core/services/authentication.service';
 import { ConfigService } from './core/services/config.service';
 import { UserService } from './core/services/user.service';
@@ -42,7 +40,8 @@ export class AppComponent implements OnInit {
         : nextUrl || 'responder-access');
       await this.router.navigate([nextRoute]);
     } catch (error) {
-      console.error(error);
+      this.alertService.clearAlert();
+      this.alertService.setAlert('danger', 'The service is temporarily unavailable. Please try again later');
     } finally {
       this.isLoading = false;
     }
