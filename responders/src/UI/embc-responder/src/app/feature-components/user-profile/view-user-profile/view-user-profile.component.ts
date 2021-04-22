@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TeamMember, UserProfile } from 'src/app/core/api/models';
+import { UserProfile } from 'src/app/core/api/models';
 import { UserService } from 'src/app/core/services/user.service';
 import { UserProfileService } from '../user-profile.service';
 
@@ -12,7 +12,6 @@ import { UserProfileService } from '../user-profile.service';
 export class ViewUserProfileComponent implements OnInit {
 
   userProfile: UserProfile;
-  userTeamMember: TeamMember;
 
   constructor(
     private userService: UserService, private router: Router,
