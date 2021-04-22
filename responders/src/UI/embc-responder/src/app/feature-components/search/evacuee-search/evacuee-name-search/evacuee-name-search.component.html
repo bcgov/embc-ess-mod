@@ -1,1 +1,125 @@
-<p>evacuee-name-search works!</p>
+<div class="row">
+    <div class="col-md-8">
+        <mat-card>
+            <p class="heading">Enter the evacuees' <b>first name, last name & date of birth.</b></p>
+            <p>If the evacuee presented identification, please enter the details below as they appear on their
+                governement-issued identity document.</p>
+
+            <form [formGroup]="nameSearchForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>First Name</mat-label>
+                            <input formControlName="firstName" matInput placeholder="First Name" required>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.firstName.invalid && nameSearchFormControl.firstName.hasError('whitespaceError')">
+                                First Name is required</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Last Name</mat-label>
+                            <input formControlName="lastName" matInput placeholder="Last Name" required>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.lastName.invalid && nameSearchFormControl.lastName.hasError('whitespaceError')">
+                                Last Name is required</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <mat-form-field type="date" appearance="outline">
+                            <mat-label>Date of Birth</mat-label>
+                            <input formControlName="dateOfBirth" matInput placeholder="mm/dd/yyyy"
+                                [textMask]="{mask: dateMask, keepCharPositions: true}" required>
+                            <mat-hint>Allowed Date format: mm/dd/yyyy</mat-hint>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('required')">
+                                Date of Birth is required</mat-error>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('invalidDate')">
+                                Date of Birth is invalid</mat-error>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('futureDate')">
+                                Date of Birth should be in the past</mat-error>
+                            <mat-error
+                                *ngIf="nameSearchFormControl.dateOfBirth.invalid && nameSearchFormControl.dateOfBirth.hasError('invalidYear')">
+                                Invalid year. The Year must be between 1800-2100</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+
+            <br>
+            <div class="row">
+                <div class="col-md-4">
+                    <button class="button-p submit" type="button" (click)="search()" mat-button>Search</button>
+                </div>
+            </div>
+        </mat-card>
+        <br>
+    </div>
+    <div class="col-md-3">
+        <mat-expansion-panel class="tips-card" (opened)="panel1OpenState = true" (closed)="panel1OpenState = false"
+            hideToggle="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div>
+                        <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62">
+                        <span class="tips-heading"><b>Tips: </b>Why ID?</span>
+                    </div>
+                </mat-panel-title>
+                <mat-panel-description>
+                    <span class="tip-icon" *ngIf="!panel1OpenState">+</span>
+                    <span class="tip-icon" *ngIf="panel1OpenState">-</span>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p class="tips-info">Emergency Responders ask for ID so that they are able to access your Profile or
+                Evacuation file, as well as issue you and your family with supports in the form of e-Transfer should you
+                be eligible.</p>
+            <p class="tips-info title-p"><b>Unable to present ID?</b></p>
+            <p class="tips-info adjacent-p">If you are unable to present ID, you will still be
+                provided with supports if you are eligible.</p>
+            <p class="tips-info">If you have a profile or evacuation file, you will be asked to confirm your security
+                questions or security phrase to allow Emergency Responders to access your profile.</p>
+        </mat-expansion-panel>
+        <br>
+        <mat-expansion-panel class="tips-card" (opened)="panel2OpenState = true" (closed)="panel2OpenState = false"
+            hideToggle="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div>
+                        <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62">
+                        <span class="tips-heading"><b>Tips: </b>Accepted ID</span>
+                    </div>
+                </mat-panel-title>
+                <mat-panel-description>
+                    <span class="tip-icon" *ngIf="!panel2OpenState">+</span>
+                    <span class="tip-icon" *ngIf="panel2OpenState">-</span>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p class="tips-info">ID must include a photograph of the evacuee as well as their full name and date of
+                birth.</p>
+            <p class="tips-info">List of accepted government-issued ID:</p>
+            <ul class="tips-info list-info adjacent-p">
+                <li>Indigenous status card</li>
+                <li>Passport (an international passport is acceptable if it includes the name, date of birth, photo and
+                    signature of the applicant and is accompanied by a professionally translated version if not in
+                    French or English)</li>
+                <li>Driver's license</li>
+                <li>Enhanced Driver's License</li>
+                <li>Canadian military ID card</li>
+                <li>Government-issued ID card</li>
+                <li>Government-issued enhanced ID card</li>
+                <li>Health card Canadian citizenship card (issued before February 1, 2012)</li>
+                <li>Canadian permanent resident card</li>
+                <li>U.S. permanent resident card (green card)</li>
+            </ul>
+        </mat-expansion-panel>
+        <br>
+    </div>
+</div>
