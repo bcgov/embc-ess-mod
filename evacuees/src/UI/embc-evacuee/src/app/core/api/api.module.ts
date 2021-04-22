@@ -5,10 +5,9 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { ErrorService } from './services/error.service';
+import { EvacuationsService } from './services/evacuations.service';
 import { LoginService } from './services/login.service';
-import { RegistrationService } from './services/registration.service';
 import { ProfileService } from './services/profile.service';
-import { EvacuationService } from './services/evacuation.service';
 import { ConfigurationService } from './services/configuration.service';
 
 /**
@@ -20,10 +19,9 @@ import { ConfigurationService } from './services/configuration.service';
   declarations: [],
   providers: [
     ErrorService,
+    EvacuationsService,
     LoginService,
-    RegistrationService,
     ProfileService,
-    EvacuationService,
     ConfigurationService,
     ApiConfiguration
   ],

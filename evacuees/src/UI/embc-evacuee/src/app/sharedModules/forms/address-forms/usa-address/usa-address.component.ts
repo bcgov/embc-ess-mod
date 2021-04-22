@@ -1,9 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { StateProvince } from '../../../../core/api/models/state-province';
 import { startWith, map } from 'rxjs/operators';
-import { LocationService } from 'src/app/core/services/location.service';
+import { LocationService, StateProvince } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-usa-address',

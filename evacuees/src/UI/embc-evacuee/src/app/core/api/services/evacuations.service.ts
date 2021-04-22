@@ -9,12 +9,14 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { AnonymousRegistration } from '../models/anonymous-registration';
 import { EvacuationFile } from '../models/evacuation-file';
+import { RegistrationResult } from '../models/registration-result';
 
 @Injectable({
   providedIn: 'root',
 })
-export class EvacuationService extends BaseService {
+export class EvacuationsService extends BaseService {
   constructor(
     config: ApiConfiguration,
     http: HttpClient
@@ -23,9 +25,71 @@ export class EvacuationService extends BaseService {
   }
 
   /**
-   * Path part for operation evacuationGetCurrentEvacuations
+   * Path part for operation evacuationsCreate
    */
-  static readonly EvacuationGetCurrentEvacuationsPath = '/api/evacuations/current';
+  static readonly EvacuationsCreatePath = '/api/Evacuations/create-registration-anonymous';
+
+  /**
+   * Anonymously Create a Registrant Profile and Evacuation File.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `evacuationsCreate()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  evacuationsCreate$Response(params: {
+
+    /**
+     * Anonymous registration form
+     */
+    body: AnonymousRegistration
+  }): Observable<StrictHttpResponse<RegistrationResult>> {
+
+    const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsCreatePath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<RegistrationResult>;
+      })
+    );
+  }
+
+  /**
+   * Anonymously Create a Registrant Profile and Evacuation File.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `evacuationsCreate$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  evacuationsCreate(params: {
+
+    /**
+     * Anonymous registration form
+     */
+    body: AnonymousRegistration
+  }): Observable<RegistrationResult> {
+
+    return this.evacuationsCreate$Response(params).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+    );
+  }
+
+  /**
+   * Path part for operation evacuationsGetCurrentEvacuations
+   */
+  static readonly EvacuationsGetCurrentEvacuationsPath = '/api/Evacuations/current';
 
   /**
    * Get the currently logged in user's current list of evacuations.
@@ -33,14 +97,14 @@ export class EvacuationService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `evacuationGetCurrentEvacuations()` instead.
+   * To access only the response body, use `evacuationsGetCurrentEvacuations()` instead.
    *
    * This method doesn't expect any request body.
    */
-  evacuationGetCurrentEvacuations$Response(params?: {
+  evacuationsGetCurrentEvacuations$Response(params?: {
   }): Observable<StrictHttpResponse<Array<EvacuationFile>>> {
 
-    const rb = new RequestBuilder(this.rootUrl, EvacuationService.EvacuationGetCurrentEvacuationsPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsGetCurrentEvacuationsPath, 'get');
     if (params) {
     }
 
@@ -61,22 +125,22 @@ export class EvacuationService extends BaseService {
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `evacuationGetCurrentEvacuations$Response()` instead.
+   * To access the full response (for headers, for example), `evacuationsGetCurrentEvacuations$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  evacuationGetCurrentEvacuations(params?: {
+  evacuationsGetCurrentEvacuations(params?: {
   }): Observable<Array<EvacuationFile>> {
 
-    return this.evacuationGetCurrentEvacuations$Response(params).pipe(
+    return this.evacuationsGetCurrentEvacuations$Response(params).pipe(
       map((r: StrictHttpResponse<Array<EvacuationFile>>) => r.body as Array<EvacuationFile>)
     );
   }
 
   /**
-   * Path part for operation evacuationGetPastEvacuations
+   * Path part for operation evacuationsGetPastEvacuations
    */
-  static readonly EvacuationGetPastEvacuationsPath = '/api/evacuations/past';
+  static readonly EvacuationsGetPastEvacuationsPath = '/api/Evacuations/past';
 
   /**
    * Get the currently logged in user's past list of evacuations.
@@ -84,14 +148,14 @@ export class EvacuationService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `evacuationGetPastEvacuations()` instead.
+   * To access only the response body, use `evacuationsGetPastEvacuations()` instead.
    *
    * This method doesn't expect any request body.
    */
-  evacuationGetPastEvacuations$Response(params?: {
+  evacuationsGetPastEvacuations$Response(params?: {
   }): Observable<StrictHttpResponse<Array<EvacuationFile>>> {
 
-    const rb = new RequestBuilder(this.rootUrl, EvacuationService.EvacuationGetPastEvacuationsPath, 'get');
+    const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsGetPastEvacuationsPath, 'get');
     if (params) {
     }
 
@@ -112,22 +176,22 @@ export class EvacuationService extends BaseService {
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `evacuationGetPastEvacuations$Response()` instead.
+   * To access the full response (for headers, for example), `evacuationsGetPastEvacuations$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  evacuationGetPastEvacuations(params?: {
+  evacuationsGetPastEvacuations(params?: {
   }): Observable<Array<EvacuationFile>> {
 
-    return this.evacuationGetPastEvacuations$Response(params).pipe(
+    return this.evacuationsGetPastEvacuations$Response(params).pipe(
       map((r: StrictHttpResponse<Array<EvacuationFile>>) => r.body as Array<EvacuationFile>)
     );
   }
 
   /**
-   * Path part for operation evacuationCreateEvacuation
+   * Path part for operation evacuationsCreateEvacuation
    */
-  static readonly EvacuationCreateEvacuationPath = '/api/evacuations';
+  static readonly EvacuationsCreateEvacuationPath = '/api/Evacuations';
 
   /**
    * Create a verified Evacuation.
@@ -135,11 +199,11 @@ export class EvacuationService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `evacuationCreateEvacuation()` instead.
+   * To access only the response body, use `evacuationsCreateEvacuation()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  evacuationCreateEvacuation$Response(params: {
+  evacuationsCreateEvacuation$Response(params: {
 
     /**
      * Evacuation data
@@ -147,7 +211,7 @@ export class EvacuationService extends BaseService {
     body: EvacuationFile
   }): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, EvacuationService.EvacuationCreateEvacuationPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsCreateEvacuationPath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -169,11 +233,11 @@ export class EvacuationService extends BaseService {
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `evacuationCreateEvacuation$Response()` instead.
+   * To access the full response (for headers, for example), `evacuationsCreateEvacuation$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  evacuationCreateEvacuation(params: {
+  evacuationsCreateEvacuation(params: {
 
     /**
      * Evacuation data
@@ -181,15 +245,15 @@ export class EvacuationService extends BaseService {
     body: EvacuationFile
   }): Observable<string> {
 
-    return this.evacuationCreateEvacuation$Response(params).pipe(
+    return this.evacuationsCreateEvacuation$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
   }
 
   /**
-   * Path part for operation evacuationUpdateEvacuation
+   * Path part for operation evacuationsUpdateEvacuation
    */
-  static readonly EvacuationUpdateEvacuationPath = '/api/evacuations/{essFileNumber}';
+  static readonly EvacuationsUpdateEvacuationPath = '/api/Evacuations/{essFileNumber}';
 
   /**
    * Update a verified Evacuation.
@@ -197,11 +261,11 @@ export class EvacuationService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `evacuationUpdateEvacuation()` instead.
+   * To access only the response body, use `evacuationsUpdateEvacuation()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  evacuationUpdateEvacuation$Response(params: {
+  evacuationsUpdateEvacuation$Response(params: {
 
     /**
      * ESS File Number
@@ -214,7 +278,7 @@ export class EvacuationService extends BaseService {
     body: EvacuationFile
   }): Observable<StrictHttpResponse<string>> {
 
-    const rb = new RequestBuilder(this.rootUrl, EvacuationService.EvacuationUpdateEvacuationPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsUpdateEvacuationPath, 'post');
     if (params) {
       rb.path('essFileNumber', params.essFileNumber, {});
       rb.body(params.body, 'application/json');
@@ -237,11 +301,11 @@ export class EvacuationService extends BaseService {
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `evacuationUpdateEvacuation$Response()` instead.
+   * To access the full response (for headers, for example), `evacuationsUpdateEvacuation$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  evacuationUpdateEvacuation(params: {
+  evacuationsUpdateEvacuation(params: {
 
     /**
      * ESS File Number
@@ -254,7 +318,7 @@ export class EvacuationService extends BaseService {
     body: EvacuationFile
   }): Observable<string> {
 
-    return this.evacuationUpdateEvacuation$Response(params).pipe(
+    return this.evacuationsUpdateEvacuation$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
     );
   }
