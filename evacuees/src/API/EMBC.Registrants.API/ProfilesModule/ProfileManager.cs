@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
+using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Utils;
 
@@ -40,11 +40,11 @@ namespace EMBC.Registrants.API.ProfilesModule
     {
         private readonly IProfileRepository profileRepository;
         private readonly IUserRepository userRepository;
-        private readonly IMapper mapper;
+        private readonly AutoMapper.IMapper mapper;
         private readonly ITemplateEmailService emailService;
         private readonly IEmailSender emailSender;
 
-        public ProfileManager(IProfileRepository profileRepository, IUserRepository userRepository, IMapper mapper, ITemplateEmailService emailService, IEmailSender emailSender)
+        public ProfileManager(IProfileRepository profileRepository, IUserRepository userRepository, AutoMapper.IMapper mapper, ITemplateEmailService emailService, IEmailSender emailSender)
         {
             this.profileRepository = profileRepository;
             this.userRepository = userRepository;

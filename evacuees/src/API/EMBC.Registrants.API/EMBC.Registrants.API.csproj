@@ -58,8 +58,4 @@
       <SourceUri>https://raw.githubusercontent.com/bcgov/embc-ess-mod/master/ess/src/API/EMBC.ESS/Utilities/Messaging/Dispatcher.proto</SourceUri>
     </Protobuf>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
 </Project>

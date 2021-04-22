@@ -17,7 +17,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
+using EMBC.Registrants.API.Controllers;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.Dynamics.CRM;
 using Microsoft.OData.Client;
@@ -40,9 +40,9 @@ namespace EMBC.Registrants.API.ProfilesModule
     public class ProfileRepository : IProfileRepository
     {
         private readonly DynamicsClientContext dynamicsClient;
-        private readonly IMapper mapper;
+        private readonly AutoMapper.IMapper mapper;
 
-        public ProfileRepository(DynamicsClientContext dynamicsClient, IMapper mapper)
+        public ProfileRepository(DynamicsClientContext dynamicsClient, AutoMapper.IMapper mapper)
         {
             this.dynamicsClient = dynamicsClient;
             this.mapper = mapper;
@@ -62,13 +62,13 @@ namespace EMBC.Registrants.API.ProfilesModule
 
             dynamicsClient.AddTocontacts(contact);
 
-            dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.PrimaryAddress.Country.Code), nameof(era_country.era_contact_Country), contact);
-            dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.PrimaryAddress.StateProvince.Code), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact);
-            dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.PrimaryAddress.Jurisdiction.Code), nameof(era_jurisdiction.era_jurisdiction_contact_City), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.PrimaryAddress.Country), nameof(era_country.era_contact_Country), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.PrimaryAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.PrimaryAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_City), contact);
 
-            dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.MailingAddress.Country.Code), nameof(era_country.era_country_contact_MailingCountry), contact);
-            dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.MailingAddress.StateProvince.Code), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact);
-            dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.MailingAddress.Jurisdiction.Code), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.MailingAddress.Country), nameof(era_country.era_country_contact_MailingCountry), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.MailingAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.MailingAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), contact);
 
             var results = await dynamicsClient.SaveChangesAsync<contact>(SaveChangesOptions.BatchWithSingleChangeset);
 
@@ -106,13 +106,13 @@ namespace EMBC.Registrants.API.ProfilesModule
 
             dynamicsClient.AttachTo(nameof(dynamicsClient.contacts), contact);
 
-            dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.PrimaryAddress.Country.Code), nameof(era_country.era_contact_Country), contact);
-            dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.PrimaryAddress.StateProvince.Code), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact);
-            dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.PrimaryAddress.Jurisdiction.Code), nameof(era_jurisdiction.era_jurisdiction_contact_City), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.PrimaryAddress.Country), nameof(era_country.era_contact_Country), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.PrimaryAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.PrimaryAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_City), contact);
 
-            dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.MailingAddress.Country.Code), nameof(era_country.era_country_contact_MailingCountry), contact);
-            dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.MailingAddress.StateProvince.Code), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact);
-            dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.MailingAddress.Jurisdiction.Code), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.MailingAddress.Country), nameof(era_country.era_country_contact_MailingCountry), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.MailingAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.MailingAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), contact);
 
             dynamicsClient.UpdateObject(contact);
 

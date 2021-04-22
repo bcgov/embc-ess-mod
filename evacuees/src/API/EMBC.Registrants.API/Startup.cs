@@ -25,7 +25,6 @@ using EMBC.Registrants.API.ProfilesModule;
 using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.SecurityModule;
-using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Builder;
@@ -114,7 +113,6 @@ namespace EMBC.Registrants.API
             services.AddSingleton<IEmailConfiguration>(configuration.GetSection("SMTP").Get<EmailConfiguration>());
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ITemplateEmailService, TemplateEmailService>();
-            services.AddTransient<IAddressService, AddressService>();
 
             services.Configure<MessagingOptions>(configuration.GetSection("backend"));
             services.AddMessaging();

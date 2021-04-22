@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.ProfilesModule;
 using EMBC.Registrants.API.Utils;
 

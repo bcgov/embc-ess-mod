@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Globalization;
 using Bogus;
-using EMBC.Registrants.API.ProfilesModule;
+using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.SecurityModule;
-using EMBC.Registrants.API.Shared;
 using Microsoft.Dynamics.CRM;
 
 namespace EMBC.Tests.Unit.Registrants.API.Profiles
 {
     public class FakeGenerator
     {
-        public static Jurisdiction[] Jurisdictions = new[]
-        {
-            new Jurisdiction{Code="j1", Name="JUR1"},
-            new Jurisdiction{Code="j2", Name="JUR2"},
-            new Jurisdiction{Code="j3", Name="JUR3"},
-            new Jurisdiction{Code="j4", Name="JUR4"},
-            new Jurisdiction{Code="j5", Name="JUR5"},
-            new Jurisdiction{Code="j6", Name="JUR6"},
-            new Jurisdiction{Code="j7", Name="JUR7"},
-            new Jurisdiction{Code="j8", Name="JUR8"},
-        };
+        //public static (string Code, string Name)[] Jurisdictions = new[]
+        //{
+        //    (Code:"j1", Name:"JUR1"),
+        //    (Code:"j2", Name:"JUR2"),
+        //    (Code:"j3", Name:"JUR3"),
+        //    (Code:"j4", Name:"JUR4"),
+        //    (Code:"j5", Name:"JUR5"),
+        //    (Code:"j6", Name:"JUR6"),
+        //    (Code:"j7", Name:"JUR7"),
+        //    (Code:"j8", Name:"JUR8"),
+        //};
 
         public static contact CreateDynamicsContact()
         {
@@ -86,17 +85,17 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .RuleFor(o => o.PrimaryAddress, f => new Faker<Address>()
                     .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
                     .RuleFor(o => o.AddressLine2, f => f.Address.SecondaryAddress())
-                    .RuleFor(o => o.Jurisdiction, f => f.PickRandom(Jurisdictions))
-                    .RuleFor(o => o.StateProvince, f => new StateProvince { Code = f.Address.StateAbbr(), Name = f.Address.State() })
-                    .RuleFor(o => o.Country, f => new Country { Code = f.Address.CountryCode(), Name = f.Address.Country() })
+                    .RuleFor(o => o.Jurisdiction, f => f.Address.CityPrefix())
+                    .RuleFor(o => o.StateProvince, f => f.Address.StateAbbr())
+                    .RuleFor(o => o.Country, f => f.Address.CountryCode())
                     .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
                     .Generate())
                 .RuleFor(o => o.MailingAddress, f => new Faker<Address>()
                     .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
                     .RuleFor(o => o.AddressLine2, f => f.Address.SecondaryAddress())
-                    .RuleFor(o => o.Jurisdiction, f => f.PickRandom(Jurisdictions))
-                    .RuleFor(o => o.StateProvince, f => new StateProvince { Code = f.Address.StateAbbr(), Name = f.Address.State() })
-                    .RuleFor(o => o.Country, f => new Country { Code = f.Address.CountryCode(), Name = f.Address.Country() })
+                    .RuleFor(o => o.Jurisdiction, f => f.Address.CityPrefix())
+                    .RuleFor(o => o.StateProvince, f => f.Address.StateAbbr())
+                    .RuleFor(o => o.Country, f => f.Address.CountryCode())
                     .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
                     .Generate())
 
@@ -105,7 +104,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .Generate();
         }
 
-        public static User CreateUser()
+        public static User CreateUser(string stateProvince, string country)
         {
             return new Faker<User>()
                 .RuleFor(u => u.Id, f => f.Random.String(10))
@@ -117,9 +116,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .RuleFor(u => u.BirthDate, f => f.Date.Past(20).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))
                 .RuleFor(u => u.StreetAddress, f => f.Address.StreetAddress())
                 .RuleFor(u => u.PostalCode, f => f.Address.ZipCode())
-                .RuleFor(u => u.City, f => f.PickRandom(Jurisdictions).Name)
-                .RuleFor(u => u.StateProvince, f => "BC")
-                .RuleFor(u => u.Country, f => "CA")
+                .RuleFor(u => u.StateProvince, f => stateProvince)
+                .RuleFor(u => u.Country, f => country)
                 .Generate();
         }
     }

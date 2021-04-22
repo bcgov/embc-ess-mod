@@ -15,15 +15,12 @@
 // -------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
-using EMBC.Registrants.API.Services;
-using EMBC.Registrants.API.Shared;
+using EMBC.Registrants.API.Controllers;
 using Microsoft.Dynamics.CRM;
 
 namespace EMBC.Registrants.API.EvacuationsModule
 {
-    public class EvacuationAutoMapperProfile : Profile
+    public class EvacuationAutoMapperProfile : AutoMapper.Profile
     {
         public EvacuationAutoMapperProfile()
         {
@@ -39,18 +36,18 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForPath(d => d.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine1))
                 .ForPath(d => d.era_addressline2, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine2))
                 .ForPath(d => d.era_postalcode, opts => opts.MapFrom(s => s.EvacuatedFromAddress.PostalCode))
-                .ForPath(d => d.era_city, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction.Name))
-                .ForPath(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Country.Name))
-                .ForPath(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvince.Name))
+                .ForPath(d => d.era_city, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction))
+                .ForPath(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Country))
+                .ForPath(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvince))
                 ;
 
-            CreateMap<era_evacuationfile, Address>(MemberList.None)
+            CreateMap<era_evacuationfile, Address>(AutoMapper.MemberList.None)
                 .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.era_addressline1))
                 .ForMember(d => d.AddressLine2, opts => opts.MapFrom(s => s.era_addressline2))
                 .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.era_postalcode))
-                .ForMember(d => d.Jurisdiction, opts => opts.ConvertUsing<LocationConverter, era_jurisdiction>(s => s.era_Jurisdiction))
-                .ForMember(d => d.StateProvince, opts => opts.ConvertUsing<LocationConverter, era_jurisdiction>(s => s.era_Jurisdiction))
-                .ForMember(d => d.Country, opts => opts.ConvertUsing<LocationConverter, era_jurisdiction>(s => s.era_Jurisdiction))
+                .ForMember(d => d.Jurisdiction, opts => opts.MapFrom(s => s.era_Jurisdiction.era_jurisdictionid))
+                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_code))
+                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_RelatedCountry.era_countrycode))
                 .ReverseMap();
 
             CreateMap<era_needassessment, NeedsAssessment>()
@@ -100,14 +97,14 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => new List<HouseholdMember>()))
                 .ForMember(d => d.Pets, opts => opts.MapFrom(s => new List<Pet>()));
 
-            CreateMap<HouseholdMember, contact>(MemberList.None).IncludeMembers(s => s.Details)
+            CreateMap<HouseholdMember, contact>(AutoMapper.MemberList.None).IncludeMembers(s => s.Details)
                 .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.Id))
 
                 .ReverseMap()
 
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.contactid));
 
-            CreateMap<HouseholdMember, era_needsassessmentevacuee>(MemberList.None)
+            CreateMap<HouseholdMember, era_needsassessmentevacuee>(AutoMapper.MemberList.None)
                 .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => s.isUnder19))
                 .ForPath(d => d.era_RegistrantID.contactid, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_RegistrantID, opts => opts.MapFrom(s => s.Details))
@@ -137,41 +134,5 @@ namespace EMBC.Registrants.API.EvacuationsModule
             174360002 => null,
             _ => null
         };
-    }
-
-    public class LocationConverter :
-        IValueConverter<era_jurisdiction, Jurisdiction>,
-        IValueConverter<era_jurisdiction, StateProvince>,
-        IValueConverter<era_jurisdiction, Country>
-    {
-        private readonly Jurisdiction[] jurisdictions;
-        private readonly StateProvince[] stateProvinces;
-        private readonly Country[] countries;
-
-        public LocationConverter(IAddressService addressService)
-        {
-            jurisdictions = addressService.GetCommunities().GetAwaiter().GetResult().ToArray();
-            stateProvinces = addressService.GetStateProvinces().GetAwaiter().GetResult().ToArray();
-            countries = addressService.GetCountries().GetAwaiter().GetResult().ToArray();
-        }
-
-        public Jurisdiction Convert(era_jurisdiction sourceMember, ResolutionContext context)
-        {
-            return jurisdictions.FirstOrDefault(j => j.Code == sourceMember.era_jurisdictionid?.ToString()) ?? null;
-        }
-
-        StateProvince IValueConverter<era_jurisdiction, StateProvince>.Convert(era_jurisdiction sourceMember, ResolutionContext context)
-        {
-            var jurisdiction = jurisdictions.FirstOrDefault(j => j.Code == sourceMember.era_jurisdictionid?.ToString());
-            if (jurisdiction == null) return null;
-            return stateProvinces.FirstOrDefault(sp => sp.Code == jurisdiction.StateProvinceCode);
-        }
-
-        Country IValueConverter<era_jurisdiction, Country>.Convert(era_jurisdiction sourceMember, ResolutionContext context)
-        {
-            var jurisdiction = jurisdictions.FirstOrDefault(j => j.Code == sourceMember.era_jurisdictionid?.ToString());
-            if (jurisdiction == null) return null;
-            return countries.FirstOrDefault(c => c.Code == jurisdiction.CountryCode);
-        }
     }
 }

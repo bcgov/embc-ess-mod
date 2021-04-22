@@ -1,9 +1,6 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.ProfilesModule;
-using EMBC.Registrants.API.Services;
-using EMBC.Registrants.API.Shared;
-using FakeItEasy;
 using Microsoft.Dynamics.CRM;
 using Shouldly;
 using Xunit;
@@ -17,17 +14,9 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
         public MappingTests()
         {
-            var addressService = A.Fake<IAddressService>();
-            A.CallTo(() => addressService.GetCommunities("CAN", "BC", null)).Returns(FakeGenerator.Jurisdictions);
             mapperConfig = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.AddMaps(typeof(ProfileAutoMapperProfile));
-                cfg.ConstructServicesUsing(t => t switch
-                {
-                    Type st when st == typeof(BcscCityConverter) => new BcscCityConverter(addressService),
-                    Type st => Activator.CreateInstance(st),
-                    _ => null
-                });
             });
         }
 
@@ -64,21 +53,15 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
             profile.PrimaryAddress.AddressLine1.ShouldBe(contact.address1_line1);
             profile.PrimaryAddress.AddressLine2.ShouldBe(contact.address1_line2);
-            profile.PrimaryAddress.Jurisdiction.ShouldNotBeNull().Code.ShouldBe(contact.era_City?.era_jurisdictionid.ToString());
-            profile.PrimaryAddress.Jurisdiction.Name.ShouldBe(contact.era_City?.era_jurisdictionname ?? contact.address1_city);
-            profile.PrimaryAddress.StateProvince.ShouldNotBeNull().Code.ShouldBe(contact.era_ProvinceState?.era_code.ToString());
-            profile.PrimaryAddress.StateProvince.Name.ShouldBe(contact.era_ProvinceState?.era_name ?? contact.address1_stateorprovince);
-            profile.PrimaryAddress.Country.ShouldNotBeNull().Code.ShouldBe(contact.era_Country?.era_countrycode.ToString());
-            profile.PrimaryAddress.Country.Name.ShouldBe(contact.era_Country?.era_name ?? contact.address1_country);
+            profile.PrimaryAddress.Jurisdiction.ShouldNotBeNull().ShouldBe(contact.era_City?.era_jurisdictionid.ToString() ?? contact.address1_city);
+            profile.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldBe(contact.era_ProvinceState?.era_code.ToString() ?? contact.address1_stateorprovince);
+            profile.PrimaryAddress.Country.ShouldNotBeNull().ShouldBe(contact.era_Country?.era_countrycode.ToString() ?? contact.address1_country);
 
             profile.MailingAddress.AddressLine1.ShouldBe(contact.address2_line1);
             profile.MailingAddress.AddressLine2.ShouldBe(contact.address2_line2);
-            profile.MailingAddress.Jurisdiction.ShouldNotBeNull().Code.ShouldBe(contact.era_MailingCity?.era_jurisdictionid.ToString());
-            profile.MailingAddress.Jurisdiction.Name.ShouldBe(contact.era_MailingCity?.era_jurisdictionname ?? contact.address2_city);
-            profile.MailingAddress.StateProvince.ShouldNotBeNull().Code.ShouldBe(contact.era_MailingProvinceState?.era_code.ToString());
-            profile.MailingAddress.StateProvince.Name.ShouldBe(contact.era_MailingProvinceState?.era_name ?? contact.address2_stateorprovince);
-            profile.MailingAddress.Country.ShouldNotBeNull().Code.ShouldBe(contact.era_MailingCountry?.era_countrycode.ToString());
-            profile.MailingAddress.Country.Name.ShouldBe(contact.era_MailingCountry?.era_name ?? contact.address2_country);
+            profile.MailingAddress.Jurisdiction.ShouldNotBeNull().ShouldBe(contact.era_MailingCity?.era_jurisdictionid.ToString() ?? contact.address2_city);
+            profile.MailingAddress.StateProvince.ShouldNotBeNull().ShouldBe(contact.era_MailingProvinceState?.era_code.ToString() ?? contact.address2_stateorprovince);
+            profile.MailingAddress.Country.ShouldNotBeNull().ShouldBe(contact.era_MailingCountry?.era_countrycode.ToString() ?? contact.address2_country);
 
             profile.IsMailingAddressSameAsPrimaryAddress.ShouldBe(contact.era_issamemailingaddress.Value);
         }
@@ -111,18 +94,18 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
             contact.address1_line1.ShouldBe(profile.PrimaryAddress.AddressLine1);
             contact.address1_line2.ShouldBe(profile.PrimaryAddress.AddressLine2);
-            contact.address1_city.ShouldBe(profile.PrimaryAddress.Jurisdiction.Name);
-            contact.address1_stateorprovince.ShouldBe(profile.PrimaryAddress.StateProvince.Name);
-            contact.address1_country.ShouldBe(profile.PrimaryAddress.Country.Name);
+            contact.address1_city.ShouldBe(profile.PrimaryAddress.Jurisdiction);
+            contact.address1_stateorprovince.ShouldBe(profile.PrimaryAddress.StateProvince);
+            contact.address1_country.ShouldBe(profile.PrimaryAddress.Country);
             contact.era_City.ShouldBeNull();
             contact.era_ProvinceState.ShouldBeNull();
             contact.era_Country.ShouldBeNull();
 
             contact.address2_line1.ShouldBe(profile.MailingAddress.AddressLine1);
             contact.address2_line2.ShouldBe(profile.MailingAddress.AddressLine2);
-            contact.address2_city.ShouldBe(profile.MailingAddress.Jurisdiction.Name);
-            contact.address2_stateorprovince.ShouldBe(profile.MailingAddress.StateProvince.Name);
-            contact.address2_country.ShouldBe(profile.MailingAddress.Country.Name);
+            contact.address2_city.ShouldBe(profile.MailingAddress.Jurisdiction);
+            contact.address2_stateorprovince.ShouldBe(profile.MailingAddress.StateProvince);
+            contact.address2_country.ShouldBe(profile.MailingAddress.Country);
             contact.era_MailingCity.ShouldBeNull();
             contact.era_MailingProvinceState.ShouldBeNull();
             contact.era_MailingCountry.ShouldBeNull();
@@ -131,27 +114,9 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         }
 
         [Fact]
-        public void CanMapCountryFromEntity()
-        {
-            var entity = new era_country { era_countrycode = "CAN", era_name = "Canada" };
-            var country = mapper.Map<Country>(entity);
-            country.Code.ShouldBe(entity.era_countrycode);
-            country.Name.ShouldBe(entity.era_name);
-        }
-
-        [Fact]
-        public void CanMapCountryToEntity()
-        {
-            var country = new Country { Code = "CAN", Name = "Canada" };
-            var entity = mapper.Map<era_country>(country);
-            entity.era_countrycode.ShouldBe(country.Code);
-            entity.era_name.ShouldBe(country.Name);
-        }
-
-        [Fact]
         public void CanMapBcscUserToProfile()
         {
-            var bcscUser = FakeGenerator.CreateUser();
+            var bcscUser = FakeGenerator.CreateUser("BC", "CAN");
             var profile = mapper.Map<Profile>(bcscUser);
 
             profile.Id.ShouldBe(bcscUser.Id);
@@ -163,9 +128,9 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
              @"\b(?<year>\d{2,4})-(?<month>\d{1,2})-(?<day>\d{1,2})\b", "${month}/${day}/${year}", RegexOptions.None));
             profile.PrimaryAddress.AddressLine1.ShouldBe(bcscUser.StreetAddress);
             profile.PrimaryAddress.PostalCode.ShouldBe(bcscUser.PostalCode);
-            profile.PrimaryAddress.Jurisdiction.Name.ShouldBe(bcscUser.City);
-            profile.PrimaryAddress.StateProvince.ShouldNotBeNull().Code.ShouldBe("BC");
-            profile.PrimaryAddress.Country.ShouldNotBeNull().Code.ShouldBe("CAN");
+            profile.PrimaryAddress.Jurisdiction.ShouldBe(bcscUser.City);
+            profile.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldBe("BC");
+            profile.PrimaryAddress.Country.ShouldNotBeNull().ShouldBe("CAN");
         }
     }
 }

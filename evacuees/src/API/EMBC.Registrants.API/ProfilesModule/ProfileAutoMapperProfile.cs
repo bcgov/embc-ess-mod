@@ -16,11 +16,8 @@
 
 using System;
 using System.Globalization;
-using System.Linq;
-using AutoMapper;
+using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.SecurityModule;
-using EMBC.Registrants.API.Services;
-using EMBC.Registrants.API.Shared;
 using Microsoft.Dynamics.CRM;
 using Microsoft.OData.Edm;
 
@@ -41,16 +38,16 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForPath(d => d.PrimaryAddress.AddressLine1, opts => opts.MapFrom(s => s.address1_line1))
                 .ForPath(d => d.PrimaryAddress.AddressLine2, opts => opts.MapFrom(s => s.address1_line2))
                 .ForPath(d => d.PrimaryAddress.PostalCode, opts => opts.MapFrom(s => s.address1_postalcode))
-                .ForPath(d => d.PrimaryAddress.Country, opts => opts.MapFrom(s => s.era_Country ?? new era_country { era_name = s.address1_country }))
-                .ForPath(d => d.PrimaryAddress.Jurisdiction, opts => opts.MapFrom(s => s.era_City ?? new era_jurisdiction { era_jurisdictionname = s.address1_city }))
-                .ForPath(d => d.PrimaryAddress.StateProvince, opts => opts.MapFrom(s => s.era_ProvinceState ?? new era_provinceterritories { era_name = s.address1_stateorprovince }))
+                .ForPath(d => d.PrimaryAddress.Country, opts => opts.MapFrom(s => s.era_Country != null ? s.era_Country.era_countrycode : s.address1_country))
+                .ForPath(d => d.PrimaryAddress.StateProvince, opts => opts.MapFrom(s => s.era_ProvinceState != null ? s.era_ProvinceState.era_code : s.address1_stateorprovince))
+                .ForPath(d => d.PrimaryAddress.Jurisdiction, opts => opts.MapFrom(s => s.era_City != null ? s.era_City.era_jurisdictionid.ToString() : s.address1_city))
 
                 .ForPath(d => d.MailingAddress.AddressLine1, opts => opts.MapFrom(s => s.address2_line1))
                 .ForPath(d => d.MailingAddress.AddressLine2, opts => opts.MapFrom(s => s.address2_line2))
                 .ForPath(d => d.MailingAddress.PostalCode, opts => opts.MapFrom(s => s.address2_postalcode))
-                .ForPath(d => d.MailingAddress.Country, opts => opts.MapFrom(s => s.era_MailingCountry ?? new era_country { era_name = s.address2_country }))
-                .ForPath(d => d.MailingAddress.Jurisdiction, opts => opts.MapFrom(s => s.era_MailingCity ?? new era_jurisdiction { era_jurisdictionname = s.address2_city }))
-                .ForPath(d => d.MailingAddress.StateProvince, opts => opts.MapFrom(s => s.era_MailingProvinceState ?? new era_provinceterritories { era_name = s.address2_stateorprovince }))
+                .ForPath(d => d.MailingAddress.Country, opts => opts.MapFrom(s => s.era_MailingCountry != null ? s.era_MailingCountry.era_countrycode : s.address2_country))
+                .ForPath(d => d.MailingAddress.StateProvince, opts => opts.MapFrom(s => s.era_MailingProvinceState != null ? s.era_MailingProvinceState.era_code : s.address2_stateorprovince))
+                .ForPath(d => d.MailingAddress.Jurisdiction, opts => opts.MapFrom(s => s.era_MailingCity != null ? s.era_MailingCity.era_jurisdictionid.ToString() : s.address2_city))
 
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s => s.era_issamemailingaddress))
 
@@ -60,19 +57,19 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForMember(d => d.era_collectionandauthorization, opts => opts.MapFrom(s => true))
                 .ForMember(d => d.era_restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
 
-                .ForMember(d => d.address1_country, opts => opts.MapFrom(s => s.PrimaryAddress.Country.Name))
-                .ForMember(d => d.address1_stateorprovince, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince.Name))
-                .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.Jurisdiction.Name))
-                .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince.Code == "BC"))
+                .ForMember(d => d.address1_country, opts => opts.MapFrom(s => s.PrimaryAddress.Country))
+                .ForMember(d => d.address1_stateorprovince, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince))
+                .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.Jurisdiction))
+                .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince == "BC"))
 
-                .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country.Name))
-                .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => s.MailingAddress.StateProvince.Name))
-                .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.Jurisdiction.Name))
-                .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince.Code == "BC"))
+                .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
+                .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => s.MailingAddress.StateProvince))
+                .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.Jurisdiction))
+                .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince == "BC"))
                 .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s =>
-                    s.MailingAddress.Country.Name == s.PrimaryAddress.Country.Name &&
-                    s.MailingAddress.StateProvince.Name == s.PrimaryAddress.StateProvince.Name &&
-                    s.MailingAddress.Jurisdiction.Name == s.PrimaryAddress.Jurisdiction.Name &&
+                    s.MailingAddress.Country == s.PrimaryAddress.Country &&
+                    s.MailingAddress.StateProvince == s.PrimaryAddress.StateProvince &&
+                    s.MailingAddress.Jurisdiction == s.PrimaryAddress.Jurisdiction &&
                     s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
                     s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
                     s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
@@ -105,7 +102,7 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForPath(d => d.era_emailrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Email)))
                 .ForPath(d => d.era_phonenumberrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Phone)))
 ;
-            CreateMap<User, Profile>(MemberList.None)
+            CreateMap<User, Profile>(AutoMapper.MemberList.None)
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.ContactDetails, opts => opts.MapFrom(s => new ContactDetails()))
                 // Email is not mapped from BCSC
@@ -117,12 +114,12 @@ namespace EMBC.Registrants.API.ProfilesModule
             CreateMap<User, Address>()
                 .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.StreetAddress))
                 .ForMember(d => d.AddressLine2, opts => opts.Ignore())
-                .ForMember(d => d.Jurisdiction, opts => opts.ConvertUsing<BcscCityConverter, string>(s => s.City))
-                .ForMember(d => d.StateProvince, opts => opts.ConvertUsing<BcscStateProvinceConverter, string>(s => s.StateProvince))
-                .ForMember(d => d.Country, opts => opts.ConvertUsing<BcscCountryConverter, string>(s => s.Country))
+                .ForMember(d => d.Jurisdiction, opts => opts.MapFrom(s => s.City))
+                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvince))
+                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.Country))
                 .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.PostalCode));
 
-            CreateMap<User, PersonDetails>(MemberList.None)
+            CreateMap<User, PersonDetails>(AutoMapper.MemberList.None)
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.BirthDate)
                     ? null
                     : DateTime.ParseExact(s.BirthDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)))
@@ -134,7 +131,7 @@ namespace EMBC.Registrants.API.ProfilesModule
         }
     }
 
-    public class GenderConverter : IValueConverter<string, int?>, IValueConverter<int?, string>
+    public class GenderConverter : AutoMapper.IValueConverter<string, int?>, AutoMapper.IValueConverter<int?, string>
     {
         public int? Convert(string sourceMember, AutoMapper.ResolutionContext context) => sourceMember switch
         {
@@ -153,44 +150,13 @@ namespace EMBC.Registrants.API.ProfilesModule
         };
     }
 
-    public class BcscGenderConverter : IValueConverter<string, string>
+    public class BcscGenderConverter : AutoMapper.IValueConverter<string, string>
     {
-        public string Convert(string sourceMember, ResolutionContext context) => sourceMember.ToLowerInvariant() switch
+        public string Convert(string sourceMember, AutoMapper.ResolutionContext context) => sourceMember.ToLowerInvariant() switch
         {
             "male" => "Male",
             "female" => "Female",
             _ => "X"
         };
-    }
-
-    public class BcscCountryConverter : IValueConverter<string, Country>
-    {
-        public Country Convert(string sourceMember, ResolutionContext context) => sourceMember.ToUpperInvariant() switch
-        {
-            "CA" => new Country { Code = "CAN", Name = "Canada" },
-            _ => null
-        };
-    }
-
-    public class BcscStateProvinceConverter : IValueConverter<string, StateProvince>
-    {
-        public StateProvince Convert(string sourceMember, ResolutionContext context) => sourceMember.ToUpperInvariant() switch
-        {
-            "BC" => new StateProvince { Code = "BC", Name = "British Columbia" },
-            _ => null
-        };
-    }
-
-    public class BcscCityConverter : IValueConverter<string, Jurisdiction>
-    {
-        private readonly Jurisdiction[] jurisdictions;
-
-        public BcscCityConverter(IAddressService addressService)
-        {
-            jurisdictions = addressService.GetCommunities("CAN", "BC").GetAwaiter().GetResult().ToArray();
-        }
-
-        public Jurisdiction Convert(string sourceMember, ResolutionContext context) =>
-            this.jurisdictions.FirstOrDefault(j => j.Name.Equals(sourceMember, System.StringComparison.CurrentCultureIgnoreCase)) ?? null;
     }
 }

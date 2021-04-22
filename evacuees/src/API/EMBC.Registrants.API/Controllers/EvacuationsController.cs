@@ -19,29 +19,44 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using EMBC.Registrants.API.Shared;
+using EMBC.Registrants.API.EvacuationsModule;
+using EMBC.Registrants.API.RegistrationsModule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
-namespace EMBC.Registrants.API.EvacuationsModule
+namespace EMBC.Registrants.API.Controllers
 {
-    [Route("api/evacuations")]
     [ApiController]
-    [Authorize]
-    public class EvacuationController : ControllerBase
+    [Route("api/[controller]")]
+    public class EvacuationsController : ControllerBase
     {
+        private readonly IRegistrationManager registrationManager;
         private readonly IEvacuationManager evacuationManager;
-        private readonly IHostEnvironment env;
 
-        public EvacuationController(IEvacuationManager evacuationManager, IHostEnvironment env)
+        public EvacuationsController(IRegistrationManager registrationManager, IEvacuationManager evacuationManager)
         {
+            this.registrationManager = registrationManager;
             this.evacuationManager = evacuationManager;
-            this.env = env;
+        }
+
+        /// <summary>
+        /// Anonymously Create a Registrant Profile and Evacuation File
+        /// </summary>
+        /// <param name="registration">Anonymous registration form</param>
+        /// <returns>ESS number</returns>
+        [HttpPost("create-registration-anonymous")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [AllowAnonymous]
+        public async Task<ActionResult<RegistrationResult>> Create(AnonymousRegistration registration)
+        {
+            if (registration == null) return BadRequest();
+            var referenceNumber = await registrationManager.CreateRegistrationAnonymous(registration);
+
+            return CreatedAtAction(nameof(Create), new RegistrationResult { ReferenceNumber = referenceNumber });
         }
 
         /// <summary>
@@ -153,7 +168,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
         public bool? HasPetsFood { get; set; }
         public NeedsAssessmentType Type { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum InsuranceOption
         {
             [EnumMember(Value = "No")]
@@ -169,7 +184,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
             Unknown = 174360003
         }
 
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum NeedsAssessmentType
         {
             Preliminary = 174360000,
@@ -194,5 +209,34 @@ namespace EMBC.Registrants.API.EvacuationsModule
     {
         public string Type { get; set; }
         public string Quantity { get; set; }
+    }
+
+    /// <summary>
+    /// Registration form for anonymous registrants
+    /// </summary>
+    public class AnonymousRegistration
+    {
+        [Required]
+        public Profile RegistrationDetails { get; set; }
+
+        [Required]
+        public Address EvacuatedFromAddress { get; set; }
+
+        [Required]
+        public NeedsAssessment PreliminaryNeedsAssessment { get; set; }
+
+        [Required]
+        public bool InformationCollectionConsent { get; set; }
+
+        [Required]
+        public string Captcha { get; set; }
+    }
+
+    /// <summary>
+    /// Reference number of a new registration submission
+    /// </summary>
+    public class RegistrationResult
+    {
+        public string ReferenceNumber { get; set; }
     }
 }

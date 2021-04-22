@@ -17,6 +17,7 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.SecurityModule;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +25,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 
-namespace EMBC.Registrants.API.SecurityModule
+namespace EMBC.Registrants.API.Controllers
 {
     [Route("")]
     [ApiController]

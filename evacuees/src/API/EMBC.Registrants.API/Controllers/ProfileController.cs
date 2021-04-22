@@ -19,7 +19,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using EMBC.Registrants.API.Shared;
+using EMBC.Registrants.API.ProfilesModule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +27,7 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using NJsonSchema.Converters;
 
-namespace EMBC.Registrants.API.ProfilesModule
+namespace EMBC.Registrants.API.Controllers
 {
     [Route("api/profiles")]
     [ApiController]
@@ -181,8 +181,10 @@ namespace EMBC.Registrants.API.ProfilesModule
     {
         [Required]
         public abstract string DataElementName { get; }
+
         [Required]
         public virtual object ConflictingValue { get; set; }
+
         [Required]
         public virtual object OriginalValue { get; set; }
     }
@@ -194,8 +196,10 @@ namespace EMBC.Registrants.API.ProfilesModule
     {
         [Required]
         public override string DataElementName => "DateOfBirth";
+
         [Required]
         public new string ConflictingValue { get; set; }
+
         [Required]
         public new string OriginalValue { get; set; }
     }
@@ -207,8 +211,10 @@ namespace EMBC.Registrants.API.ProfilesModule
     {
         [Required]
         public override string DataElementName => "Name";
+
         [Required]
         public new (string firstName, string lastName) ConflictingValue { get; set; }
+
         [Required]
         public new (string firstName, string lastName) OriginalValue { get; set; }
     }
@@ -220,8 +226,10 @@ namespace EMBC.Registrants.API.ProfilesModule
     {
         [Required]
         public override string DataElementName => "Address";
+
         [Required]
         public new Address ConflictingValue { get; set; }
+
         [Required]
         public new Address OriginalValue { get; set; }
     }

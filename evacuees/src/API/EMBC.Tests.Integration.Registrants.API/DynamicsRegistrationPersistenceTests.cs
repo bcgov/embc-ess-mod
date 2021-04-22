@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
-using EMBC.Registrants.API.EvacuationsModule;
+using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.ProfilesModule;
 using EMBC.Registrants.API.RegistrationsModule;
-using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -50,19 +49,19 @@ namespace EMBC.Tests.Integration.Registrants.API
                     {
                         AddressLine1 = $"paddr1-{textContextIdentifier}",
                         AddressLine2 = "paddr2",
-                        Country = new Country { Code = "CAN", Name = "Canada" },
-                        StateProvince = new StateProvince { Code = "BC", Name = "British Columbia" },
+                        Country = "CAN",
+                        StateProvince = "BC",
                         PostalCode = "v1v 1v1",
-                        Jurisdiction = new Jurisdiction { Code = "226adfaf-9f97-ea11-b813-005056830319", Name = "North Vancouver" }
+                        Jurisdiction = "226adfaf-9f97-ea11-b813-005056830319"
                     },
                     MailingAddress = new Address
                     {
                         AddressLine1 = $"maddr1-{textContextIdentifier}",
                         AddressLine2 = "maddr2",
-                        Country = new Country { Code = "USA", Name = "USA" },
-                        StateProvince = new StateProvince { Code = "WA", Name = "Washington" },
+                        Country = "USA",
+                        StateProvince = "WA",
                         PostalCode = "12345",
-                        Jurisdiction = new Jurisdiction { Code = null, Name = "Seattle" }
+                        Jurisdiction = "Seattle"
                     }
                 },
                 PreliminaryNeedsAssessment = new NeedsAssessment
@@ -99,9 +98,9 @@ namespace EMBC.Tests.Integration.Registrants.API
                 EvacuatedFromAddress = new Address
                 {
                     AddressLine1 = $"addr1-{textContextIdentifier}",
-                    Country = new Country { Code = "CA" },
-                    Jurisdiction = new Jurisdiction { Code = "226adfaf-9f97-ea11-b813-005056830319" },
-                    StateProvince = new StateProvince { Code = "BC", Name = "British Columbia" },
+                    Country = "CAN",
+                    Jurisdiction = "226adfaf-9f97-ea11-b813-005056830319",
+                    StateProvince = "BC",
                     PostalCode = "v1v 1v1"
                 }
             };

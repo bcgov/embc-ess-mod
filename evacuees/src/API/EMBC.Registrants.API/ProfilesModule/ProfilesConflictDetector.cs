@@ -16,7 +16,7 @@
 
 using System;
 using System.Collections.Generic;
-using EMBC.Registrants.API.Shared;
+using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.ProfilesModule
 {
@@ -57,9 +57,9 @@ namespace EMBC.Registrants.API.ProfilesModule
             (address != null &&
             address.AddressLine1.StringSafeEquals(other?.AddressLine1) &&
             address.PostalCode.StringSafeEquals(other?.PostalCode) &&
-            address.Jurisdiction.Code.StringSafeEquals(other?.Jurisdiction?.Code) &&
-            address.StateProvince.Code.StringSafeEquals(other?.StateProvince?.Code) &&
-            address.Country.Code.StringSafeEquals(other?.Country?.Code));
+            address.Jurisdiction.StringSafeEquals(other?.Jurisdiction) &&
+            address.StateProvince.StringSafeEquals(other?.StateProvince) &&
+            address.Country.StringSafeEquals(other?.Country));
 
         private static bool NameEquals(this PersonDetails personDetails, PersonDetails other) =>
             personDetails != null &&

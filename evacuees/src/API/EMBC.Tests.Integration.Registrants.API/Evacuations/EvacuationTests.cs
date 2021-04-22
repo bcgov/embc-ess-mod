@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
+using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.EvacuationsModule;
-using EMBC.Registrants.API.Shared;
+using EMBC.Registrants.API.ProfilesModule;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -42,9 +43,9 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
                 {
                     AddressLine1 = "9837 Douglas St",
                     AddressLine2 = "Apt 249",
-                    Jurisdiction = new Jurisdiction { Code = "406adfaf-9f97-ea11-b813-005056830319", Name = "Port Edward" },
-                    StateProvince = new StateProvince { Code = "BC", Name = "British Columbia" },
-                    Country = new Country { Code = "CAN", Name = "Canada" },
+                    Jurisdiction = "406adfaf-9f97-ea11-b813-005056830319",
+                    StateProvince = "BC",
+                    Country = "CAN",
                     PostalCode = "V8T 2W1"
                 },
                 NeedsAssessments = new[]
@@ -107,9 +108,9 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
                 {
                     AddressLine1 = newAddress,
                     AddressLine2 = "Apt 249",
-                    Jurisdiction = new Jurisdiction { Code = "406adfaf-9f97-ea11-b813-005056830319", Name = "Port Edward" },
-                    StateProvince = new StateProvince { Code = "BC", Name = "British Columbia" },
-                    Country = new Country { Code = "CAN", Name = "Canada" },
+                    Jurisdiction = "406adfaf-9f97-ea11-b813-005056830319",
+                    StateProvince = "BC",
+                    Country = "CAN",
                     PostalCode = "V8T 2W1"
                 },
                 NeedsAssessments = new[]
@@ -193,9 +194,8 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
             evacuationFile.EvacuatedFromAddress.ShouldNotBeNull();
             evacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1);
             evacuationFile.EvacuatedFromAddress.AddressLine2.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine2);
-            evacuationFile.EvacuatedFromAddress.Jurisdiction.ShouldNotBeNull().Name.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.Jurisdiction.Name);
-            evacuationFile.EvacuatedFromAddress.StateProvince.ShouldNotBeNull().Code.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.StateProvince.Code);
-            evacuationFile.EvacuatedFromAddress.Country.ShouldNotBeNull().Code.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.Country.Code);
+            evacuationFile.EvacuatedFromAddress.StateProvince.ShouldNotBeNull().ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.StateProvince);
+            evacuationFile.EvacuatedFromAddress.Country.ShouldNotBeNull().ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.Country);
 
             // Needs Assessment
             var needsAssessment = evacuationFile.NeedsAssessments.ShouldHaveSingleItem();
@@ -315,9 +315,8 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
             updatedEvacuationFile.EvacuatedFromAddress.ShouldNotBeNull();
             updatedEvacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(this.updatedTestEvacuation.EvacuatedFromAddress.AddressLine1);
             updatedEvacuationFile.EvacuatedFromAddress.AddressLine2.ShouldBe(this.updatedTestEvacuation.EvacuatedFromAddress.AddressLine2);
-            updatedEvacuationFile.EvacuatedFromAddress.Jurisdiction.ShouldNotBeNull().Name.ShouldBe(this.updatedTestEvacuation.EvacuatedFromAddress.Jurisdiction.Name);
-            updatedEvacuationFile.EvacuatedFromAddress.StateProvince.ShouldNotBeNull().Code.ShouldBe(this.updatedTestEvacuation.EvacuatedFromAddress.StateProvince.Code);
-            updatedEvacuationFile.EvacuatedFromAddress.Country.ShouldNotBeNull().Code.ShouldBe(this.updatedTestEvacuation.EvacuatedFromAddress.Country.Code);
+            updatedEvacuationFile.EvacuatedFromAddress.StateProvince.ShouldNotBeNull().ShouldBe(this.updatedTestEvacuation.EvacuatedFromAddress.StateProvince);
+            updatedEvacuationFile.EvacuatedFromAddress.Country.ShouldNotBeNull().ShouldBe(this.updatedTestEvacuation.EvacuatedFromAddress.Country);
 
             // Needs Assessment
             var updatedNeedsAssessment = updatedEvacuationFile.NeedsAssessments.ShouldHaveSingleItem();

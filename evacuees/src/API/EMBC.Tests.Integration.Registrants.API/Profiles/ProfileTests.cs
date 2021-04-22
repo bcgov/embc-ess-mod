@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Registrants.API;
 using EMBC.Registrants.API.ProfilesModule;
-using EMBC.Registrants.API.Services;
-using EMBC.Registrants.API.Shared;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -16,12 +13,10 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
     public class ProfileTests : WebAppTestBase
     {
         private readonly IProfileManager profileManager;
-        private readonly IAddressService addressService;
 
         public ProfileTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             profileManager = services.GetRequiredService<IProfileManager>();
-            addressService = services.GetRequiredService<IAddressService>();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -31,12 +26,12 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
 
             profile.ShouldNotBeNull();
 
-            profile.PrimaryAddress.Country.ShouldNotBeNull().Code.ShouldNotBeNull();
-            profile.PrimaryAddress.Country.Name.ShouldNotBeNull();
-            profile.PrimaryAddress.StateProvince.ShouldNotBeNull().Code.ShouldNotBeNull();
-            profile.PrimaryAddress.StateProvince.Name.ShouldNotBeNull();
-            profile.PrimaryAddress.Jurisdiction.ShouldNotBeNull().Code.ShouldNotBeNull();
-            profile.PrimaryAddress.Jurisdiction.Name.ShouldNotBeNull();
+            profile.PrimaryAddress.Country.ShouldNotBeNull().ShouldNotBeNull();
+            profile.PrimaryAddress.Country.ShouldNotBeNull();
+            profile.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldNotBeNull();
+            profile.PrimaryAddress.StateProvince.ShouldNotBeNull();
+            profile.PrimaryAddress.Jurisdiction.ShouldNotBeNull().ShouldNotBeNull();
+            profile.PrimaryAddress.Jurisdiction.ShouldNotBeNull();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -44,15 +39,16 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         {
             var profile = await profileManager.GetProfileByBcscid("test");
             var currentCity = profile.PrimaryAddress.Jurisdiction;
-            var newCity = (await addressService.GetCommunities()).Skip(new Random().Next(100)).Take(1).First();
+            var newCity = currentCity == "406adfaf-9f97-ea11-b813-005056830319"
+                ? "226adfaf-9f97-ea11-b813-005056830319"
+                : "406adfaf-9f97-ea11-b813-005056830319";
 
-            profile.PrimaryAddress.Jurisdiction = new Jurisdiction { Code = newCity.Code };
+            profile.PrimaryAddress.Jurisdiction = newCity;
 
             await profileManager.SaveProfile(profile);
 
             var updatedProfile = await profileManager.GetProfileByBcscid("test");
-            updatedProfile.PrimaryAddress.Jurisdiction.Code.ShouldBe(newCity.Code);
-            updatedProfile.PrimaryAddress.Jurisdiction.Name.ShouldBe(newCity.Name);
+            updatedProfile.PrimaryAddress.Jurisdiction.ShouldBe(newCity);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -75,35 +71,29 @@ namespace EMBC.Tests.Integration.Registrants.API.Profiles
         {
             var baseProfile = await profileManager.GetProfileByBcscid("ChrisTest3");
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
-            var country = (await addressService.GetCountries()).First(c => c.Code == "CAN");
-            var province = (await addressService.GetStateProvinces()).First(c => c.Code == "BC");
-            var city = (await addressService.GetCommunities()).Skip(new Random().Next(100)).Take(1).First();
+            var country = "CAN";
+            var province = "BC";
+            var city = "226adfaf-9f97-ea11-b813-005056830319";
 
             baseProfile.Id = newProfileBceId;
-            baseProfile.PrimaryAddress.Country = new Country { Code = country.Code };
-            baseProfile.PrimaryAddress.StateProvince = new StateProvince { Code = province.Code };
-            baseProfile.PrimaryAddress.Jurisdiction = new Jurisdiction { Code = city.Code };
-            baseProfile.MailingAddress.Country = new Country { Code = country.Code };
-            baseProfile.MailingAddress.StateProvince = new StateProvince { Code = province.Code };
-            baseProfile.MailingAddress.Jurisdiction = new Jurisdiction { Code = city.Code };
+            baseProfile.PrimaryAddress.Country = country;
+            baseProfile.PrimaryAddress.StateProvince = province;
+            baseProfile.PrimaryAddress.Jurisdiction = city;
+            baseProfile.MailingAddress.Country = country;
+            baseProfile.MailingAddress.StateProvince = province;
+            baseProfile.MailingAddress.Jurisdiction = city;
 
             var id = await profileManager.SaveProfile(baseProfile);
 
             var profile = await profileManager.GetProfileByBcscid(newProfileBceId);
 
-            profile.PrimaryAddress.Country.Code.ShouldBe(country.Code);
-            profile.PrimaryAddress.Country.Name.ShouldBe(country.Name);
-            profile.PrimaryAddress.StateProvince.Code.ShouldBe(province.Code);
-            profile.PrimaryAddress.StateProvince.Name.ShouldBe(province.Name);
-            profile.PrimaryAddress.Jurisdiction.Code.ShouldBe(city.Code);
-            profile.PrimaryAddress.Jurisdiction.Name.ShouldBe(city.Name);
+            profile.PrimaryAddress.Country.ShouldBe(country);
+            profile.PrimaryAddress.StateProvince.ShouldBe(province);
+            profile.PrimaryAddress.Jurisdiction.ShouldBe(city);
 
-            profile.MailingAddress.Country.Code.ShouldBe(country.Code);
-            profile.MailingAddress.Country.Name.ShouldBe(country.Name);
-            profile.MailingAddress.StateProvince.Code.ShouldBe(province.Code);
-            profile.MailingAddress.StateProvince.Name.ShouldBe(province.Name);
-            profile.MailingAddress.Jurisdiction.Code.ShouldBe(city.Code);
-            profile.MailingAddress.Jurisdiction.Name.ShouldBe(city.Name);
+            profile.MailingAddress.Country.ShouldBe(country);
+            profile.MailingAddress.StateProvince.ShouldBe(province);
+            profile.MailingAddress.Jurisdiction.ShouldBe(city);
         }
 
         [Fact(Skip = RequiresDynamics)]
