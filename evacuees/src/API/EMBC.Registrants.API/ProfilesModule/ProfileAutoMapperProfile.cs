@@ -73,8 +73,6 @@ namespace EMBC.Registrants.API.ProfilesModule
                     s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
                     s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
                     s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
-
-                //.ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s => s.IsMailingAddressSameAsPrimaryAddress))
                 ;
 
             CreateMap<contact, PersonDetails>()

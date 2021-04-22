@@ -36,14 +36,16 @@ namespace EMBC.Registrants.API.RegistrationsModule
         private readonly DynamicsClientContext dynamicsClient;
         private readonly ITemplateEmailService emailService;
         private readonly IEmailSender emailSender;
+        private readonly AutoMapper.IMapper mapper;
         private DateTimeOffset now;
 
-        public RegistrationManager(DynamicsClientContext dynamicsClient, ITemplateEmailService emailService, IEmailSender emailSender)
+        public RegistrationManager(DynamicsClientContext dynamicsClient, ITemplateEmailService emailService, IEmailSender emailSender, AutoMapper.IMapper mapper)
         {
             this.dynamicsClient = dynamicsClient;
             this.now = DateTimeOffset.UtcNow;
             this.emailService = emailService;
             this.emailSender = emailSender;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -95,7 +97,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             };
 
             // New Contact (Primary Registrant)
-            var newPrimaryRegistrant = CreateNewContact(registration.RegistrationDetails, true);
+            var newPrimaryRegistrant = CreateNewPrimaryContact(registration.RegistrationDetails);
             newPrimaryRegistrant.era_collectionandauthorization = registration.InformationCollectionConsent;
 
             // New Contacts (Household Members)
@@ -281,46 +283,42 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
         private Date? FromDateTime(DateTime? dateTime) => dateTime.HasValue ? new Date(dateTime.Value.Year, dateTime.Value.Month, dateTime.Value.Day) : (Date?)null;
 
-        /// <summary>
-        /// Create a new Dynamics Contact (Profile)
-        /// </summary>
-        /// <param name="profile">Registration values</param>
-        /// <param name="isPrimary">Primary or Member Registrant</param>
-        /// <returns>Contact</returns>
-        private contact CreateNewContact(Profile profile, bool isPrimary)
+        private contact CreateNewPrimaryContact(Profile profile)
         {
-            var contact = new contact();
+            //var contact = new contact();
+            var contact = mapper.Map<contact>(profile);
             contact.contactid = Guid.NewGuid();
-            if (isPrimary)
-                contact.era_registranttype = (int?)RegistrantType.Primary;
-            else
-                contact.era_registranttype = (int?)RegistrantType.Member;
-            contact.era_authenticated = true;
+            //if (isPrimary)
+            //    contact.era_registranttype = (int?)RegistrantType.Primary;
+            //else
+            //    contact.era_registranttype = (int?)RegistrantType.Member;
+            contact.era_authenticated = false;
             contact.era_verified = false;
+
             contact.era_registrationdate = now;
-            contact.firstname = profile.PersonalDetails.FirstName;
-            contact.lastname = profile.PersonalDetails.LastName;
-            contact.era_preferredname = profile.PersonalDetails.PreferredName;
-            contact.era_initial = profile.PersonalDetails.Initials;
-            contact.gendercode = LookupGender(profile.PersonalDetails.Gender);
-            contact.birthdate = FromDateTime(DateTime.Parse(profile.PersonalDetails.DateOfBirth));
-            contact.era_sharingrestriction = profile.RestrictedAccess;
+            //contact.firstname = profile.PersonalDetails.FirstName;
+            //contact.lastname = profile.PersonalDetails.LastName;
+            //contact.era_preferredname = profile.PersonalDetails.PreferredName;
+            //contact.era_initial = profile.PersonalDetails.Initials;
+            //contact.gendercode = LookupGender(profile.PersonalDetails.Gender);
+            //contact.birthdate = FromDateTime(DateTime.Parse(profile.PersonalDetails.DateOfBirth));
+            //contact.era_sharingrestriction = profile.RestrictedAccess;
             contact.era_bcservicescardid = profile.Id;
 
-            contact.address1_line1 = profile.PrimaryAddress.AddressLine1;
-            contact.address1_line2 = profile.PrimaryAddress.AddressLine2;
-            contact.address1_postalcode = profile.PrimaryAddress.PostalCode;
+            //contact.address1_line1 = profile.PrimaryAddress.AddressLine1;
+            //contact.address1_line2 = profile.PrimaryAddress.AddressLine2;
+            //contact.address1_postalcode = profile.PrimaryAddress.PostalCode;
 
-            contact.address2_line1 = profile.MailingAddress.AddressLine1;
-            contact.address2_line2 = profile.MailingAddress.AddressLine2;
-            contact.address2_postalcode = profile.MailingAddress.PostalCode;
+            //contact.address2_line1 = profile.MailingAddress.AddressLine1;
+            //contact.address2_line2 = profile.MailingAddress.AddressLine2;
+            //contact.address2_postalcode = profile.MailingAddress.PostalCode;
 
-            contact.emailaddress1 = profile.ContactDetails.Email;
-            contact.address1_telephone1 = profile.ContactDetails.Phone;
+            //contact.emailaddress1 = profile.ContactDetails.Email;
+            //contact.address1_telephone1 = profile.ContactDetails.Phone;
 
-            contact.era_phonenumberrefusal = string.IsNullOrEmpty(profile.ContactDetails.Phone);
-            contact.era_emailrefusal = string.IsNullOrEmpty(profile.ContactDetails.Email);
-            contact.era_secrettext = profile.SecretPhrase;
+            //contact.era_phonenumberrefusal = string.IsNullOrEmpty(profile.ContactDetails.Phone);
+            //contact.era_emailrefusal = string.IsNullOrEmpty(profile.ContactDetails.Email);
+            //contact.era_secrettext = profile.SecretPhrase;
 
             // add contact to dynamics client
             dynamicsClient.AddTocontacts(contact);
@@ -351,6 +349,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             }
             else
             {
+                contact.address1_city = null;
                 dynamicsClient.AddLink(primaryAddressCity, nameof(primaryAddressCity.era_jurisdiction_contact_City), contact);
             }
 
@@ -371,6 +370,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             }
             else
             {
+                contact.address2_city = null;
                 dynamicsClient.AddLink(mailingAddressCity, nameof(mailingAddressCity.era_jurisdiction_contact_MailingCity), contact);
             }
 
