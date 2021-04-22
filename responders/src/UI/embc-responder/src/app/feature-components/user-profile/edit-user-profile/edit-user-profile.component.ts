@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TeamMember } from 'src/app/core/api/models';
-import { CacheService } from 'src/app/core/services/cache.service';
+import { UserProfile } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { UserProfileService } from '../user-profile.service';
+import { EditUserProfileService } from './edit-user-profile.service';
 
 
 @Component({
@@ -14,16 +15,19 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 export class EditUserProfileComponent implements OnInit {
 
   editForm: FormGroup;
-  teamMember: TeamMember;
   readonly phoneMask = [/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
+  userProfile: UserProfile;
+  showLoader = false;
+  color = 'white';
 
 
   constructor(
-    private builder: FormBuilder, private router: Router, private customValidation: CustomValidationService,
-    private cacheService: CacheService) { }
+    private builder: FormBuilder, private router: Router,
+    private customValidation: CustomValidationService, private userProfileServices: UserProfileService,
+    private editUserProfileService: EditUserProfileService) { }
 
   ngOnInit(): void {
-    this.teamMember = JSON.parse(this.cacheService.get('userMemberTeamInfo'));
+    this.userProfile = this.userProfileServices.getUserProfile();
     this.constructEditForm();
   }
 
@@ -33,13 +37,13 @@ export class EditUserProfileComponent implements OnInit {
 
   constructEditForm(): void {
     this.editForm = this.builder.group({
-      firstName: [this.teamMember?.firstName, [this.customValidation.whitespaceValidator()]],
-      lastName: [this.teamMember?.lastName, [this.customValidation.whitespaceValidator()]],
-      userName: [{ value: this.teamMember?.userName, disabled: true }],
-      role: [{ value: this.teamMember?.role, disabled: true }],
-      label: [{ value: this.teamMember?.label, disabled: true }],
-      email: [this.teamMember?.email, [Validators.email]],
-      phone: [this.teamMember?.phone, [this.customValidation.maskedNumberLengthValidator()]]
+      firstName: [this.userProfile.firstName, [this.customValidation.whitespaceValidator()]],
+      lastName: [this.userProfile.lastName, [this.customValidation.whitespaceValidator()]],
+      userName: [{ value: this.userProfile.userName, disabled: true }],
+      role: [{ value: this.userProfile.role, disabled: true }],
+      label: [{ value: this.userProfile.role, disabled: true }],
+      email: [this.userProfile.email, [Validators.email]],
+      phone: [this.userProfile.phone, [this.customValidation.maskedNumberLengthValidator()]]
     });
   }
 
@@ -48,7 +52,21 @@ export class EditUserProfileComponent implements OnInit {
   }
 
   save(): void {
+    this.showLoader = !this.showLoader;
+    if (this.editForm.status === 'VALID') {
+      this.userProfileServices.setFirstName(this.editForm.get('firstName').value);
+      this.userProfileServices.setLastName(this.editForm.get('lastName').value);
+      this.userProfileServices.setEmail(this.editForm.get('email').value);
+      this.userProfileServices.setPhone(this.editForm.get('phone').value);
 
+      this.editUserProfileService.editUserProfile().subscribe(() => {
+        this.showLoader = !this.showLoader;
+        this.router.navigate(['/responder-access/user-profile']);
+      });
+
+    } else {
+      this.editForm.markAllAsTouched();
+    }
   }
 
 }

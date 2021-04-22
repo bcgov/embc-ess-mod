@@ -9,37 +9,37 @@
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">First Name</div>
-            <div class="col-md-8"> {{userTeamMember?.firstName}}</div>
+            <div class="col-md-8"> {{userProfile?.firstName}}</div>
         </div>
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">Last Name</div>
-            <div class="col-md-8"> {{userTeamMember?.lastName}}</div>
+            <div class="col-md-8"> {{userProfile?.lastName}}</div>
         </div>
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">BCeID</div>
-            <div class="col-md-8"> {{userTeamMember?.userName}}</div>
+            <div class="col-md-8"> {{userProfile?.userName}}</div>
         </div>
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">ESS Team</div>
-            <div class="col-md-8"> {{userTeamMember?.teamName}}</div>
+            <div class="col-md-8"> {{userProfile?.teamName}}</div>
         </div>
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">Role</div>
-            <div class="col-md-8"> {{userTeamMember?.role}}</div>
+            <div class="col-md-8"> {{userProfile?.role}}</div>
         </div>
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">Electronic Access Agreement Signed</div>
-            <div class="col-md-8"> {{userTeamMember?.agreementSignDate | date:'dd-MMM-yyyy'}}</div>
+            <div class="col-md-8"> {{userProfile?.requiredToSignAgreement}}</div>
         </div>
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">Last Login Date & Time</div>
-            <div class="col-md-8"> {{userTeamMember?.lastSuccessfulLogin | date:'dd-MMM-yyyy HH:mm'}}</div>
+            <div class="col-md-8"> {{userProfile?.lastLoginDate | date:'dd-MMM-yyyy HH:mm'}}</div>
         </div>
         <br>
 
@@ -53,12 +53,12 @@
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">Email Address</div>
-            <div class="col-md-8"> {{userTeamMember?.email || 'n/a'}}</div>
+            <div class="col-md-8"> {{userProfile?.email || 'n/a'}}</div>
         </div>
 
         <div class="row row-align">
             <div class="col-md-4 detail-label">Contact Number</div>
-            <div class="col-md-8"> {{userTeamMember?.phone || 'n/a'}}</div>
+            <div class="col-md-8"> {{userProfile?.phone || 'n/a'}}</div>
         </div>
         <br>
         <br>
