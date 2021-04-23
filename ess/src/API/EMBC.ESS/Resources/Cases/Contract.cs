@@ -75,7 +75,6 @@ namespace EMBC.ESS.Resources.Evacuation
     public class HouseholdMember
     {
         public string Id { get; set; }
-        public PersonDetails Details { get; set; }
         public bool isUnder19 { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
