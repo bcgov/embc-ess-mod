@@ -16,9 +16,11 @@ export class EvacueeSearchResultsComponent implements OnInit {
   registrantResults: Array<RegistrantProfileSearchResult>;
   fileResults: Array<EvacuationFileSearchResult>;
   evacueeSearchContext: EvacueeSearchContextModel;
+  isLoading = false;
+  color = '#169BD5';
 
   constructor(private evacueeSearchResultsService: EvacueeSearchResultsService, private evacueeSearchService: EvacueeSearchService,
-    private userService: UserService) {
+              private userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -40,9 +42,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
 
   searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
     this.evacueeSearchResultsService.searchForEvacuee(evacueeSearchContext.evacueeSearchParameters).subscribe((results) => {
+      this.isLoading = !this.isLoading;
       this.fileResults = results.files;
       this.registrantResults = results.registrants;
-      //.sort((a, b) => new Date(b.createdOn).valueOf() - new Date(a.createdOn).valueOf())
+      // .sort((a, b) => new Date(b.createdOn).valueOf() - new Date(a.createdOn).valueOf())
     }, (error) => {
       console.log(error);
     });

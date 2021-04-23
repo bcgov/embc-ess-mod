@@ -15,6 +15,8 @@ export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit
   @Input() registrantResults: Array<RegistrantProfileSearchResult>;
   matchedRegistrants = new MatTableDataSource();
   matchedRegistrants$: Observable<Array<RegistrantProfileSearchResult>>;
+  @Input() isLoading: boolean;
+  color = '#169BD5';
 
   constructor() { }
 
@@ -33,8 +35,8 @@ export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit
   ngOnInit(): void {
   }
 
-  openProfile():  void {
-    
+  openProfile(): void {
+
   }
 
 }

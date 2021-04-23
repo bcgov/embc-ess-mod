@@ -1,4 +1,9 @@
-<p>Search Results</p>
+<div class="row heading-container">
+    <div class="col-md-12">
+        <span class="page-heading">Search Results</span>
+    </div>
+</div>
+<br>
 
 <mat-card>
     <div class="row">
@@ -6,7 +11,7 @@
             <p class="result-text">Results for "<b>{{evacueeSearchContext?.evacueeSearchParameters?.lastName |
                     uppercase}},
                     {{evacueeSearchContext?.evacueeSearchParameters?.firstName}}</b>" with a date of birth
-                "02-Oct-1987".</p>
+                "{{evacueeSearchContext?.evacueeSearchParameters?.dateOfBirth | date:'dd-MMM-yyyy'}}".</p>
             <p>If the evacuee provided ID and there is a profile result, go to the profile. Otherwise, go to the ESS
                 File.</p>
             <br>
@@ -93,7 +98,7 @@
     <br>
     <div *ngIf="registrantResults?.length >0 else noMatchingProfiles" class="row">
         <div class="col-md-12">
-            <app-profile-results [registrantResults]="registrantResults"></app-profile-results>
+            <app-profile-results [isLoading]='isLoading' [registrantResults]="registrantResults"></app-profile-results>
         </div>
     </div>
 
@@ -135,7 +140,7 @@
     <br>
     <div *ngIf="registrantResults?.length >0 else noMatchingProfiles" class="row">
         <div class="col-md-12">
-            <app-profile-results [registrantResults]="registrantResults"></app-profile-results>
+            <app-profile-results [isLoading]='isLoading' [registrantResults]="registrantResults"></app-profile-results>
         </div>
     </div>
 </ng-template>
@@ -163,3 +168,6 @@
         </div>
     </div>
 </ng-template>
+
+<!-- <app-loader style="display: flex; justify-content: center; align-items: center;"
+        [showLoader]="!isLoading" [strokeWidth]="3" [diameter]="50" [color]="color"></app-loader> -->

@@ -34,7 +34,7 @@ export class EssFilesResultsComponent implements OnInit, OnChanges, AfterViewIni
   }
 
   openESSFile(): void {
-    
+
   }
 
 }
