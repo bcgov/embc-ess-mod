@@ -48,6 +48,8 @@ export class AuthenticationService {
                 issuer: config.issuer,
                 clientid: config.clientId
             }
+            console.log("setting auth config");
+            console.log(config);
             // this.oauthService.tokenValidationHandler = new NullValidationHandler();
             this.oauthService.configure(config);
             this.oauthService.setupAutomaticSilentRefresh();
