@@ -1,9 +1,17 @@
-<p>Search Results</p>
+<div class="row heading-container">
+    <div class="col-md-12">
+        <span class="page-heading">Search Results</span>
+    </div>
+</div>
+<br>
 
 <mat-card>
     <div class="row">
         <div class="col-md-8">
-            <p class="result-text">Results for "<b>LASTNAME, Firstname</b>" with a date of birth "02-Oct-1987".</p>
+            <p class="result-text">Results for "<b>{{evacueeSearchContext?.evacueeSearchParameters?.lastName |
+                    uppercase}},
+                    {{evacueeSearchContext?.evacueeSearchParameters?.firstName}}</b>" with a date of birth
+                "{{evacueeSearchContext?.evacueeSearchParameters?.dateOfBirth | date:'dd-MMM-yyyy'}}".</p>
             <p>If the evacuee provided ID and there is a profile result, go to the profile. Otherwise, go to the ESS
                 File.</p>
             <br>
@@ -12,6 +20,18 @@
             </div>
             <div *ngIf="!evacueeSearchContext?.hasShownIdentification">
                 <ng-container *ngTemplateOutlet="noIdentification"></ng-container>
+            </div>
+            <br>
+            <div class="row" *ngIf="registrantResults?.length === 0 && fileResults?.length === 0">
+                <div class="col-md-12">
+                    <p class="p-custom">IF the evacuee does <b>NOT</b> have either a profile or ESS File result, please <span class="highlight">Start a New
+                            Evacuee
+                            Registration.</span></p>
+                    <p class="p-custom"><b>Restricted File?</b> If the evacuee has indicated they have restricted their file request help
+                        from your
+                        ESS Supervisor.</p>
+                    <p class="p-custom">Evacuee might be under the legal age.</p>
+                </div>
             </div>
         </div>
         <div class="col-md-4">
@@ -37,7 +57,7 @@
                             class="status-heading">Active ESS File</span></p>
                     <p>An ESS File associated with an active task number.</p>
                 </div>
-                <div>
+                <div *ngIf="hasPermission('canViewCompletedESSFiles')">
                     <hr class="dotted-hr">
                     <p class="complete-status"><img src="/assets/images/complete-flag.svg" height="40" width="33"><span
                             class="status-heading">Completed ESS File</span></p>
@@ -66,31 +86,32 @@
             </div>
         </div>
     </div>
-
 </mat-card>
 
 <ng-template #identification>
     <div class="row">
         <div class="col-md-12">
             <img src="/assets/images/profile-user.svg" height="36" width="36">
-            <span class="result-heading"><b>Profile Results </b>({{matchedRegistrants?.length}})</span>
+            <span class="result-heading"><b>Profile Results </b>({{registrantResults?.length}})</span>
         </div>
     </div>
-    <div class="row">
+    <br>
+    <div *ngIf="registrantResults?.length >0 else noMatchingProfiles" class="row">
         <div class="col-md-12">
-            <app-profile-results [matchedRegistrants]="matchedRegistrants"></app-profile-results>
+            <app-profile-results [isLoading]='isLoading' [registrantResults]="registrantResults"></app-profile-results>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
             <img src="/assets/images/file.svg" height="36" width="36">
-            <span class="result-heading"><b>ESS File Results </b>({{matchedFiles?.length}})</span>
+            <span class="result-heading"><b>ESS File Results </b>({{fileResults?.length}})</span>
         </div>
     </div>
-    <div class="row">
+    <br>
+    <div *ngIf="fileResults?.length >0 else noMatchingFiles" class="row">
         <div class="col-md-12">
-            <app-ess-files-results [matchedFiles]="matchedFiles"></app-ess-files-results>
+            <app-ess-files-results [fileResults]="fileResults"></app-ess-files-results>
         </div>
     </div>
 
@@ -100,24 +121,53 @@
     <div class="row">
         <div class="col-md-12">
             <img src="/assets/images/file.svg" height="36" width="36">
-            <span class="result-heading"><b>ESS File Results </b>({{matchedFiles?.length}})</span>
+            <span class="result-heading"><b>ESS File Results </b>({{fileResults?.length}})</span>
         </div>
     </div>
-    <div class="row">
+    <br>
+    <div class="row" *ngIf="fileResults?.length >0 else noMatchingFiles">
         <div class="col-md-12">
-            <app-ess-files-results [matchedFiles]="matchedFiles"></app-ess-files-results>
+            <app-ess-files-results [fileResults]="fileResults"></app-ess-files-results>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
             <img src="/assets/images/profile-user.svg" height="36" width="36">
-            <span class="result-heading"><b>Profile Results </b>({{matchedRegistrants?.length}})</span>
+            <span class="result-heading"><b>Profile Results </b>({{registrantResults?.length}})</span>
         </div>
     </div>
-    <div class="row">
+    <br>
+    <div *ngIf="registrantResults?.length >0 else noMatchingProfiles" class="row">
         <div class="col-md-12">
-            <app-profile-results [matchedRegistrants]="matchedRegistrants"></app-profile-results>
+            <app-profile-results [isLoading]='isLoading' [registrantResults]="registrantResults"></app-profile-results>
         </div>
     </div>
 </ng-template>
+
+<ng-template #noMatchingProfiles>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="no-results">
+                <p>{{evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase}},
+                    {{evacueeSearchContext?.evacueeSearchParameters?.firstName}} does not have a Profile in the ERA
+                    Tool. </p>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #noMatchingFiles>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="no-results">
+                <p>{{evacueeSearchContext?.evacueeSearchParameters?.lastName | uppercase}},
+                    {{evacueeSearchContext?.evacueeSearchParameters?.firstName}} does not have any ESS Files in the ERA
+                    Tool. </p>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<!-- <app-loader style="display: flex; justify-content: center; align-items: center;"
+        [showLoader]="!isLoading" [strokeWidth]="3" [diameter]="50" [color]="color"></app-loader> -->
