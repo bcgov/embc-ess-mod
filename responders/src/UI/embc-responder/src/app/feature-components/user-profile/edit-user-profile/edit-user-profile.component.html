@@ -51,14 +51,14 @@
                 </div>
             </div>
 
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-md-3">
                     <mat-form-field appearance="outline">
                         <mat-label>Optional Label</mat-label>
                         <input formControlName="label" matInput placeholder="Optional Label">
                     </mat-form-field>
                 </div>
-            </div>
+            </div> -->
 
             <div class="row">
                 <div class="col-md-12">
@@ -99,7 +99,9 @@
     </form>
     <div>
         <button class="button-s button-margin width-button" mat-button (click)="cancel()">Cancel</button>
-        <button class="button-p width-button" [disabled]="!editForm.valid" mat-button>Save</button>
+        <button class="button-p width-button" [disabled]="(!editForm.valid || !isSubmitted)" mat-button (click)="save()">Save
+            <app-loader [showLoader]="showLoader" class="spinner" [strokeWidth]="10" [diameter]="25" [color]="color"></app-loader>
+        </button>
     </div>
     <br>
     <br>

@@ -1,3 +1,9 @@
+<div class="row heading-container">
+    <div class="col-md-12">
+        <span class="page-heading">Evacuee Search & Registration</span>
+    </div>
+</div>
+<br>
 <div class="row">
     <div class="col-md-8">
         <mat-card>
@@ -57,7 +63,7 @@
             <br>
             <div class="row">
                 <div class="col-md-4">
-                    <button class="button-p submit" type="button" (click)="search()" mat-button>Search</button>
+                    <button class="button-p submit" type="button" (click)="search()" mat-button [disabled]="!nameSearchForm.valid">Search</button>
                 </div>
             </div>
         </mat-card>

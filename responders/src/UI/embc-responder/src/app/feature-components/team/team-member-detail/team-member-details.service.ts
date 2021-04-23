@@ -11,8 +11,4 @@ export class TeamMemberDetailsService {
     deleteTeamMember(memberId: string): Observable<void> {
        return this.teamMembersService.teamMembersDeleteTeamMember({memberId});
     }
-
-    public getTeamMember(memberId: string): Observable<TeamMember> {
-        return this.teamMembersService.teamMembersGetTeamMember({memberId});
-    }
 }

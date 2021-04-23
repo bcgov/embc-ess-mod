@@ -13,10 +13,9 @@
     background-color: rgba(238, 238, 238, 1);
     border: none;
     border-radius: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    //height: 65px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
 }
 
 .highlight {
@@ -31,6 +30,7 @@
 
 .sub-text {
     padding-left: 7px;
+    font-size: 16px;
 }
 
 .registration {
@@ -79,4 +79,17 @@
 
 .status-heading {
     padding-left: 7px;
+}
+
+.no-results {
+    border: 1px solid rgb(187, 187, 187);
+    line-height: 24px;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.p-custom {
+    margin-bottom: 0px !important;
 }

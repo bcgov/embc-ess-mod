@@ -16,32 +16,39 @@ export class EvacueeIdVerifyComponent implements OnInit {
   idVerifyForm: FormGroup;
   evacueeSearchContextModel: EvacueeSearchContextModel;
 
-  panel1OpenState = false;
-  panel2OpenState = false;
+  tipsPanel1State = false;
+  tipsPanel2State = false;
 
   constructor(private builder: FormBuilder, private evacueeSearchService: EvacueeSearchService) { }
 
+  /**
+   * On component init, constructs the form
+   */
   ngOnInit(): void {
     this.constructIdVerifyForm();
   }
 
+  /**
+   * Returns form control
+   */
   get idVerifyFormControl(): { [key: string]: AbstractControl; } {
     return this.idVerifyForm.controls;
   }
 
+  /**
+   * Builds the form
+   */
   constructIdVerifyForm(): void {
     this.idVerifyForm = this.builder.group({
       photoId: [this.evacueeSearchContextModel?.hasShownIdentification, [Validators.required]]
     });
   }
 
-  next() {
-    if(this.idVerifyForm.status == 'VALID') {
-      console.log(this.idVerifyForm.get('photoId').value)
-      this.evacueeSearchService.hasShownIdentification = this.idVerifyForm.get('photoId').value;
-      this.showIDPhotoComponent.emit(false);
-    } else {
-      this.idVerifyForm.markAllAsTouched();
-    }
+  /**
+   * Saves the seach parameter into the model and Navigates to the evacuee-name-search component
+   */
+  next(): void {
+    this.evacueeSearchService.setHasShownIdentification(this.idVerifyForm.get('photoId').value);
+    this.showIDPhotoComponent.emit(false);
   }
 }
