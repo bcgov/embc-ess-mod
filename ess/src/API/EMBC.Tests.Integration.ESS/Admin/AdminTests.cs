@@ -188,9 +188,11 @@ namespace EMBC.Tests.Integration.ESS.Admin
             var locationManager = services.GetRequiredService<LocationManager>();
             var communities = (await locationManager.Handle(new CommunitiesQueryCommand())).Items;
 
+            var assignedCommunities = (await adminManager.Handle(new TeamsQueryCommand())).Teams.SelectMany(t => t.AssignedCommunities);
+
             var team = (await adminManager.Handle(new TeamsQueryCommand { TeamId = teamId })).Teams.ShouldHaveSingleItem();
 
-            var newCommunities = communities.Where(c => !team.AssignedCommunities.Select(c => c.Code).Contains(c.Code)).Take(5).Select(c => c.Code);
+            var newCommunities = communities.Where(c => !assignedCommunities.Select(c => c.Code).Contains(c.Code)).Take(5).Select(c => c.Code);
 
             await adminManager.Handle(new AssignCommunitiesToTeamCommand { TeamId = teamId, Communities = newCommunities });
 
