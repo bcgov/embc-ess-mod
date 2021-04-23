@@ -16,10 +16,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
   evacueeSearchContext: EvacueeSearchContextModel;
 
   constructor(private evacueeSearchResultsService: EvacueeSearchResultsService, private evacueeSearchService: EvacueeSearchService) {
-    this.evacueeSearchService.setEvacueeSearchContext({
-      hasShownIdentification: true,
-      evacueeSearchParameters: { firstName: 'string', lastName: 'string', dateOfBirth: 'string' }
-    });
+    // this.evacueeSearchService.setEvacueeSearchContext({
+    //   hasShownIdentification: true,
+    //   evacueeSearchParameters: { firstName: 'string', lastName: 'string', dateOfBirth: 'string' }
+    // });
   }
 
   ngOnInit(): void {
