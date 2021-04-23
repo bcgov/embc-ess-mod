@@ -5,7 +5,6 @@ import { UserProfile } from '../api/models/user-profile';
 import { ProfileService } from '../api/services';
 import { AuthorizationService, ClaimModel, ClaimType } from './authorization.service';
 import { CacheService } from './cache.service';
-import { UserProfileService } from '../../feature-components/user-profile/user-profile.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,14 +14,13 @@ export class UserService {
   private profile?: LoggedInUserProfile = null;
 
   constructor(private profileService: ProfileService, private authorizationService: AuthorizationService,
-              private cacheService: CacheService, private userProfileServices: UserProfileService) { }
+              private cacheService: CacheService) { }
 
   public async loadUserProfile(): Promise<UserProfile> {
     return await this.profileService.profileGetCurrentUserProfile().pipe(tap(response => {
       const userClaims = this.authorizationService.getClaimsForRole(MemberRole[response.role]);
       const taskNumber = this.cacheService.get('loggedInTask') === null || undefined ? null : this.cacheService.get('loggedInTask');
       this.profile = { ...response, taskNumber, claims: [...userClaims] };
-      this.userProfileServices.setUserProfile(response);
       return this.profile;
     })).toPromise();
   }

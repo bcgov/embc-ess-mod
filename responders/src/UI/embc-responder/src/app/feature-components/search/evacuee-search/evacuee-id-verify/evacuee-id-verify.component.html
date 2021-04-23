@@ -23,14 +23,14 @@
             <br>
             <div class="row">
                 <div class="col-md-4">
-                    <button class="button-p submit" type="button" mat-button (click)="next()">Next</button>
+                    <button class="button-p submit" type="button" mat-button (click)="next()" [disabled]="!idVerifyForm.valid">Next</button>
                 </div>
             </div>
         </mat-card>
         <br>
     </div>
     <div class="col-md-3">
-        <mat-expansion-panel class="tips-card" (opened)="panel1OpenState = true" (closed)="panel1OpenState = false"
+        <mat-expansion-panel class="tips-card" (opened)="tipsPanel1State = true" (closed)="tipsPanel1State = false"
             hideToggle="true">
             <mat-expansion-panel-header>
                 <mat-panel-title>
@@ -40,8 +40,8 @@
                     </div>
                 </mat-panel-title>
                 <mat-panel-description>
-                    <span class="tip-icon" *ngIf="!panel1OpenState">+</span>
-                    <span class="tip-icon" *ngIf="panel1OpenState">-</span>
+                    <span class="tip-icon" *ngIf="!tipsPanel1State">+</span>
+                    <span class="tip-icon" *ngIf="tipsPanel1State">-</span>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <p class="tips-info">Emergency Responders ask for ID so that they are able to access your Profile or
@@ -54,7 +54,7 @@
                 questions or security phrase to allow Emergency Responders to access your profile.</p>
         </mat-expansion-panel>
         <br>
-        <mat-expansion-panel class="tips-card" (opened)="panel2OpenState = true" (closed)="panel2OpenState = false"
+        <mat-expansion-panel class="tips-card" (opened)="tipsPanel2State = true" (closed)="tipsPanel2State = false"
             hideToggle="true">
             <mat-expansion-panel-header>
                 <mat-panel-title>
@@ -64,8 +64,8 @@
                     </div>
                 </mat-panel-title>
                 <mat-panel-description>
-                    <span class="tip-icon" *ngIf="!panel2OpenState">+</span>
-                    <span class="tip-icon" *ngIf="panel2OpenState">-</span>
+                    <span class="tip-icon" *ngIf="!tipsPanel2State">+</span>
+                    <span class="tip-icon" *ngIf="tipsPanel2State">-</span>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <p class="tips-info">ID must include a photograph of the evacuee as well as their full name and date of

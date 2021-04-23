@@ -99,7 +99,7 @@
     </form>
     <div>
         <button class="button-s button-margin width-button" mat-button (click)="cancel()">Cancel</button>
-        <button class="button-p width-button" [disabled]="!editForm.valid" mat-button (click)="save()">Save
+        <button class="button-p width-button" [disabled]="(!editForm.valid || !isSubmitted)" mat-button (click)="save()">Save
             <app-loader [showLoader]="showLoader" class="spinner" [strokeWidth]="10" [diameter]="25" [color]="color"></app-loader>
         </button>
     </div>

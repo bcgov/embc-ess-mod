@@ -3,8 +3,10 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { Router } from '@angular/router';
 import { UserProfile } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { UserProfileService } from '../user-profile.service';
+import { UserService } from 'src/app/core/services/user.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EditUserProfileService } from './edit-user-profile.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 
 @Component({
@@ -19,54 +21,70 @@ export class EditUserProfileComponent implements OnInit {
   userProfile: UserProfile;
   showLoader = false;
   color = 'white';
+  isSubmitted = true;
 
 
   constructor(
     private builder: FormBuilder, private router: Router,
-    private customValidation: CustomValidationService, private userProfileServices: UserProfileService,
-    private editUserProfileService: EditUserProfileService) { }
+    private customValidation: CustomValidationService, private userService: UserService,
+    private editUserProfileService: EditUserProfileService, private alertService: AlertService) { }
 
+  /**
+   * Calls the currentProfile to get the data and display it on screen. Builds the form
+   */
   ngOnInit(): void {
-    this.userProfile = this.userProfileServices.getUserProfile();
+    this.userProfile = this.userService.currentProfile;
     this.constructEditForm();
   }
 
+  /**
+   * Returns form control
+   */
   get editFormControl(): { [key: string]: AbstractControl; } {
     return this.editForm.controls;
   }
 
+  /**
+   * Builds the form
+   */
   constructEditForm(): void {
     this.editForm = this.builder.group({
-      firstName: [this.userProfile.firstName, [this.customValidation.whitespaceValidator()]],
-      lastName: [this.userProfile.lastName, [this.customValidation.whitespaceValidator()]],
-      userName: [{ value: this.userProfile.userName, disabled: true }],
-      role: [{ value: this.userProfile.role, disabled: true }],
-      label: [{ value: this.userProfile.role, disabled: true }],
-      email: [this.userProfile.email, [Validators.email]],
-      phone: [this.userProfile.phone, [this.customValidation.maskedNumberLengthValidator()]]
+      firstName: [this.userProfile?.firstName, [this.customValidation.whitespaceValidator()]],
+      lastName: [this.userProfile?.lastName, [this.customValidation.whitespaceValidator()]],
+      userName: [{ value: this.userProfile?.userName, disabled: true }],
+      role: [{ value: this.userProfile?.role, disabled: true }],
+      label: [{ value: this.userProfile?.role, disabled: true }],
+      email: [this.userProfile?.email, [Validators.email]],
+      phone: [this.userProfile?.phone, [this.customValidation.maskedNumberLengthValidator()]]
     });
   }
 
+  /**
+   * Goes back to the view profile screen without saving changes
+   */
   cancel(): void {
     this.router.navigate(['/responder-access/user-profile']);
   }
 
+  /**
+   * Saves changes into the Back-end and goes back to view profile screen
+   */
   save(): void {
     this.showLoader = !this.showLoader;
-    if (this.editForm.status === 'VALID') {
-      this.userProfileServices.setFirstName(this.editForm.get('firstName').value);
-      this.userProfileServices.setLastName(this.editForm.get('lastName').value);
-      this.userProfileServices.setEmail(this.editForm.get('email').value);
-      this.userProfileServices.setPhone(this.editForm.get('phone').value);
 
-      this.editUserProfileService.editUserProfile().subscribe(() => {
-        this.showLoader = !this.showLoader;
-        this.router.navigate(['/responder-access/user-profile']);
-      });
+    const firstName = this.editForm.get('firstName').value;
+    const lastName = this.editForm.get('lastName').value;
+    const phone = this.editForm.get('phone').value;
+    const email = this.editForm.get('email').value;
 
-    } else {
-      this.editForm.markAllAsTouched();
-    }
+    this.editUserProfileService.editUserProfile(firstName, lastName, phone, email).subscribe(async () => {
+      this.showLoader = !this.showLoader;
+      await this.userService.loadUserProfile();
+      this.router.navigate(['/responder-access/user-profile']);
+    }, (error) => {
+      this.showLoader = !this.showLoader;
+      this.isSubmitted = !this.isSubmitted;
+      this.alertService.setAlert('danger', globalConst.editProfileError);
+    });
   }
-
 }
