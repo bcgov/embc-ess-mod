@@ -11,7 +11,7 @@ import { ProfileResultsComponent } from './profile-results/profile-results.compo
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TextMaskModule } from 'angular2-text-mask';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -27,8 +27,8 @@ import { TextMaskModule } from 'angular2-text-mask';
     EvacueeSearchRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    TextMaskModule
-
+    TextMaskModule,
+    SharedModule
   ],
   exports: [
     EvacueeIdVerifyComponent,
