@@ -166,7 +166,8 @@ namespace EMBC.Responders.API.Controllers
         public string TeamId { get; set; }
         public string TeamName { get; set; }
         public string Role { get; set; }
-        public bool RequiredToSignAgreement { get; set; }
+        public string Label { get; set; }
+        public DateTime? AgreementSignDate { get; set; }
         public DateTime? LastLoginDate { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
@@ -185,8 +186,7 @@ namespace EMBC.Responders.API.Controllers
         public SecurityMapping()
         {
             CreateMap<EMBC.ESS.Shared.Contracts.Team.TeamMember, UserProfile>()
-                .ForMember(d => d.LastLoginDate, opts => opts.MapFrom(s => s.LastSuccessfulLogin))
-                .ForMember(d => d.RequiredToSignAgreement, opts => opts.MapFrom(s => !s.AgreementSignDate.HasValue));
+                .ForMember(d => d.LastLoginDate, opts => opts.MapFrom(s => s.LastSuccessfulLogin));
         }
     }
 }
