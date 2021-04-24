@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Team
 {
-    public class TeamMembersQueryCommand : Command<TeamMembersQueryResponse>
+    public class TeamMembersQuery : Query<TeamMembersQueryResponse>
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
@@ -27,82 +27,65 @@ namespace EMBC.ESS.Shared.Contracts.Team
         public bool IncludeActiveUsersOnly { get; set; } = true;
     }
 
-    public class TeamMembersQueryResponse : Response
+    public class TeamMembersQueryResponse
     {
         public IEnumerable<TeamMember> TeamMembers { get; set; }
     }
 
-    public class TeamsQueryCommand : Command<TeamsQueryResponse>
+    public class TeamsQuery : Query<TeamsQueryResponse>
     {
         public string TeamId { get; set; }
     }
 
-    public class TeamsQueryResponse : Response
+    public class TeamsQueryResponse
     {
         public IEnumerable<Team> Teams { get; set; }
     }
 
-    public class SaveTeamMemberCommand : Command<SaveTeamMemberResponse>
+    public class SaveTeamMemberCommand : Command
     {
         public TeamMember Member { get; set; }
     }
 
-    public class SaveTeamMemberResponse : Response
-    {
-        public string TeamId { get; set; }
-
-        public string MemberId { get; set; }
-    }
-
-    public class DeactivateTeamMemberCommand : Command<DeactivateTeamMemberResponse>
+    public class DeactivateTeamMemberCommand : Command
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class DeactivateTeamMemberResponse : Response { }
-
-    public class ActivateTeamMemberCommand : Command<ActivateTeamMemberResponse>
+    public class ActivateTeamMemberCommand : Command
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class ActivateTeamMemberResponse : Response { }
-
-    public class DeleteTeamMemberCommand : Command<DeleteTeamMemberResponse>
+    public class DeleteTeamMemberCommand : Command
     {
         public string TeamId { get; set; }
         public string MemberId { get; set; }
     }
 
-    public class DeleteTeamMemberResponse : Response { }
-
-    public class ValidateTeamMemberCommand : Command<ValidateTeamMemberResponse>
+    public class ValidateTeamMemberCommand : Query<ValidateTeamMemberResponse>
     {
         public TeamMember TeamMember { get; set; }
     }
 
-    public class ValidateTeamMemberResponse : Response
+    public class ValidateTeamMemberResponse
     {
         public bool UniqueUserName { get; set; }
     }
 
-    public class AssignCommunitiesToTeamCommand : Command<AssignCommunitiesToTeamResponse>
+    public class AssignCommunitiesToTeamCommand : Command
     {
         public string TeamId { get; set; }
         public IEnumerable<string> Communities { get; set; }
     }
 
-    public class AssignCommunitiesToTeamResponse : Response { }
-
-    public class UnassignCommunitiesFromTeamCommand : Command<UnassignCommunitiesFromTeamResponse>
+    public class UnassignCommunitiesFromTeamCommand : Command
     {
         public string TeamId { get; set; }
         public IEnumerable<string> Communities { get; set; }
     }
-
-    public class UnassignCommunitiesFromTeamResponse : Response { }
 
     public class Team
     {

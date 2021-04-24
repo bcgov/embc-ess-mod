@@ -18,14 +18,14 @@ using System;
 
 namespace EMBC.ESS.Shared.Contracts.Profile
 {
-    public class LogInUserCommand : Command<LogInUserResponse>
+    public class LogInUserCommand : Query<LogInUserResponse>
     {
         public string UserId { get; set; }
         public string UserName { get; set; }
         public string SourceSystem { get; set; }
     }
 
-    public abstract class LogInUserResponse : Response
+    public abstract class LogInUserResponse
     {
     }
 
@@ -39,13 +39,11 @@ namespace EMBC.ESS.Shared.Contracts.Profile
         public string Reason { get; set; }
     }
 
-    public class SignResponderAgreementCommand : Command<SignResponderAgreementResponse>
+    public class SignResponderAgreementCommand : Command
     {
         public string UserName { get; set; }
         public DateTime SignatureDate { get; set; }
     }
-
-    public class SignResponderAgreementResponse : Response { }
 
     public class UserProfile
     {

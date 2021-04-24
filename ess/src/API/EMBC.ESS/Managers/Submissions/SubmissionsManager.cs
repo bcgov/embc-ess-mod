@@ -14,25 +14,10 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-
-namespace EMBC.ESS.Shared.Contracts
+namespace EMBC.ESS.Managers.Submissions
 {
-#pragma warning disable SA1302 // Interface names should begin with I
-
-    public interface Command { }
-
-    public interface Query<TResponse> { }
-
-#pragma warning restore SA1302 // Interface names should begin with I
-
-    public class NotFoundException : Exception
+    public class SubmissionsManager
     {
-        public NotFoundException(string message, string id) : base(message)
-        {
-            Id = id;
-        }
-
-        public string Id { get; }
+        //public async Task<> Handle()
     }
 }
