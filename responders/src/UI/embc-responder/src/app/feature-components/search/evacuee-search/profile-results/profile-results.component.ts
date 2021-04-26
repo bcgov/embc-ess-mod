@@ -13,9 +13,9 @@ export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() registrantResults: Array<RegistrantProfileSearchResult>;
+  @Input() isLoading: boolean;
   matchedRegistrants = new MatTableDataSource();
   matchedRegistrants$: Observable<Array<RegistrantProfileSearchResult>>;
-  @Input() isLoading: boolean;
   color = '#169BD5';
 
   constructor() { }

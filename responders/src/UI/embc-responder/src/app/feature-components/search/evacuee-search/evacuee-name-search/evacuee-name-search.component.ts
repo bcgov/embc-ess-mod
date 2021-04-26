@@ -33,7 +33,7 @@ export class EvacueeNameSearchComponent implements OnInit {
   /**
    * Returns form control
    */
-  get nameSearchFormControl(): { [key: string]: AbstractControl; } {
+  get nameSearchFormControl(): { [key: string]: AbstractControl } {
     return this.nameSearchForm.controls;
   }
 

@@ -29,6 +29,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
 
   /**
    * Checks if the user can permission to perform given action
+   *
    * @param action user action
    * @returns true/false
    */

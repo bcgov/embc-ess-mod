@@ -31,7 +31,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
   /**
    * Returns form control
    */
-  get idVerifyFormControl(): { [key: string]: AbstractControl; } {
+  get idVerifyFormControl(): { [key: string]: AbstractControl } {
     return this.idVerifyForm.controls;
   }
 

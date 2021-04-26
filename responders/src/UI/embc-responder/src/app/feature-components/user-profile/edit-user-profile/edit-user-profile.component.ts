@@ -40,7 +40,7 @@ export class EditUserProfileComponent implements OnInit {
   /**
    * Returns form control
    */
-  get editFormControl(): { [key: string]: AbstractControl; } {
+  get editFormControl(): { [key: string]: AbstractControl } {
     return this.editForm.controls;
   }
 
