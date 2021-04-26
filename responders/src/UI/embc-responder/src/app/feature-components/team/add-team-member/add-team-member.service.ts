@@ -24,4 +24,8 @@ export class AddTeamMemberService {
         return this.addedTeamMember;
     }
 
+    clear(): void {
+        this.addedTeamMember = null;
+    }
+
 }

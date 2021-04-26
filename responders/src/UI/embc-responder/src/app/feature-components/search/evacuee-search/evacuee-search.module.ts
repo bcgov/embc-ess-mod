@@ -9,7 +9,9 @@ import { EvacueeSearchResultsComponent } from './evacuee-search-results/evacuee-
 import { EssFilesResultsComponent } from './ess-files-results/ess-files-results.component';
 import { ProfileResultsComponent } from './profile-results/profile-results.component';
 import { MaterialModule } from 'src/app/material.module';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { TextMaskModule } from 'angular2-text-mask';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,10 @@ import { MaterialModule } from 'src/app/material.module';
   imports: [
     CommonModule,
     EvacueeSearchRoutingModule,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule,
+    TextMaskModule,
+    SharedModule
   ],
   exports: [
     EvacueeIdVerifyComponent,
