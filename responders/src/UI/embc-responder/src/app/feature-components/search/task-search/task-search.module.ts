@@ -7,14 +7,12 @@ import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    TaskSearchComponent
-  ],
+  declarations: [TaskSearchComponent],
   imports: [
     CommonModule,
     TaskSearchRoutingModule,
     MaterialModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+  ],
 })
-export class TaskSearchModule { }
+export class TaskSearchModule {}

@@ -8,9 +8,8 @@ describe('SearchRegistartionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SearchRegistartionComponent ]
-    })
-    .compileComponents();
+      declarations: [SearchRegistartionComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -13,9 +13,8 @@ describe('TopNavMenuComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [TopNavMenuComponent],
-      providers: [{ provide: UserService, useValue: userServiceSpy }]
-    })
-      .compileComponents();
+      providers: [{ provide: UserService, useValue: userServiceSpy }],
+    }).compileComponents();
   });
 
   beforeEach(() => {

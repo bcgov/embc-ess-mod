@@ -10,10 +10,9 @@ describe('AssignedCommunityListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, RouterTestingModule ],
-      declarations: [ AssignedCommunityListComponent ]
-    })
-    .compileComponents();
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      declarations: [AssignedCommunityListComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

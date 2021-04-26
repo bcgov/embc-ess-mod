@@ -11,11 +11,14 @@ describe('TaskSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TaskSearchComponent ],
-      imports: [ ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule ],
-      providers: [ FormBuilder ]
-    })
-    .compileComponents();
+      declarations: [TaskSearchComponent],
+      imports: [
+        ReactiveFormsModule,
+        RouterTestingModule,
+        HttpClientTestingModule,
+      ],
+      providers: [FormBuilder],
+    }).compileComponents();
   });
 
   beforeEach(() => {

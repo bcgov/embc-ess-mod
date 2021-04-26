@@ -11,11 +11,14 @@ describe('AddTeamMemberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddTeamMemberComponent ],
-      imports: [ ReactiveFormsModule, RouterTestingModule, HttpClientTestingModule ],
-      providers: [ FormBuilder ]
-    })
-    .compileComponents();
+      declarations: [AddTeamMemberComponent],
+      imports: [
+        ReactiveFormsModule,
+        RouterTestingModule,
+        HttpClientTestingModule,
+      ],
+      providers: [FormBuilder],
+    }).compileComponents();
   });
 
   beforeEach(() => {

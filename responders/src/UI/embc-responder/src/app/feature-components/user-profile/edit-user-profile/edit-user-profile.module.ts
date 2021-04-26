@@ -7,8 +7,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/app/material.module';
 import { TextMaskModule } from 'angular2-text-mask';
 
-
-
 @NgModule({
   declarations: [EditUserProfileComponent],
   imports: [
@@ -17,7 +15,7 @@ import { TextMaskModule } from 'angular2-text-mask';
     ReactiveFormsModule,
     MaterialModule,
     SharedModule,
-    TextMaskModule
-  ]
+    TextMaskModule,
+  ],
 })
-export class EditUserProfileModule { }
+export class EditUserProfileModule {}

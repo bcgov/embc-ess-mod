@@ -7,14 +7,12 @@ import { SharedModule } from '../../../shared/shared.module';
 import { MaterialModule } from '../../../material.module';
 
 @NgModule({
-  declarations: [
-    TeamMemberDetailComponent
-  ],
+  declarations: [TeamMemberDetailComponent],
   imports: [
     CommonModule,
     TeamMemberDetailRoutingModule,
     SharedModule,
-    MaterialModule
-  ]
+    MaterialModule,
+  ],
 })
-export class TeamMemberDetailModule { }
+export class TeamMemberDetailModule {}

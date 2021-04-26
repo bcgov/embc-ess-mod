@@ -5,10 +5,9 @@ import { UserService } from 'src/app/core/services/user.service';
 @Component({
   selector: 'app-task-details',
   templateUrl: './task-details.component.html',
-  styleUrls: ['./task-details.component.scss']
+  styleUrls: ['./task-details.component.scss'],
 })
 export class TaskDetailsComponent implements OnInit {
-
   taskNumber: string;
   isActive = true;
   isExpired = false;
@@ -17,14 +16,14 @@ export class TaskDetailsComponent implements OnInit {
   constructor(private router: Router, private userService: UserService) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
-        const state = this.router.getCurrentNavigation().extras.state.taskNumber as string;
+        const state = this.router.getCurrentNavigation().extras.state
+          .taskNumber as string;
         this.taskNumber = state;
       }
     }
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   searchTask(): void {
     this.router.navigate(['/responder-access/search/task']);
@@ -34,5 +33,4 @@ export class TaskDetailsComponent implements OnInit {
     this.userService.updateTaskNumber(this.taskNumber);
     this.router.navigate(['/responder-access/search/evacuee']);
   }
-
 }

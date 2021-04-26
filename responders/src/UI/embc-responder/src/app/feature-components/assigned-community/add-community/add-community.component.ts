@@ -6,18 +6,15 @@ import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.mo
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { Community } from 'src/app/core/services/locations.service';
-import {
-  AssignedCommunityListDataService
-} from 'src/app/feature-components/assigned-community/assigned-community-list/assigned-community-list-data.service';
+import { AssignedCommunityListDataService } from 'src/app/feature-components/assigned-community/assigned-community-list/assigned-community-list-data.service';
 import { AddCommunityService } from './add-community.service';
 
 @Component({
   selector: 'app-add-community',
   templateUrl: './add-community.component.html',
-  styleUrls: ['./add-community.component.scss']
+  styleUrls: ['./add-community.component.scss'],
 })
 export class AddCommunityComponent implements OnInit {
-
   communities: TeamCommunityModel[];
   filterTerm: TableFilterValueModel;
   selectedCommunitiesList: Community[] = [];
@@ -28,18 +25,21 @@ export class AddCommunityComponent implements OnInit {
   constructor(
     private assignedCommunityListDataService: AssignedCommunityListDataService,
     private router: Router,
-    private addCommunityService: AddCommunityService) { }
-
+    private addCommunityService: AddCommunityService
+  ) {}
 
   /**
    * On component init, loads the eligible communities list and filters
    */
   ngOnInit(): void {
     this.communitiesFilterPredicate();
-    this.assignedCommunityListDataService.getCommunitiesToAddList().pipe(delay(1000)).subscribe(values => {
-      this.isLoading = !this.isLoading;
-      this.communities = values;
-    });
+    this.assignedCommunityListDataService
+      .getCommunitiesToAddList()
+      .pipe(delay(1000))
+      .subscribe((values) => {
+        this.isLoading = !this.isLoading;
+        this.communities = values;
+      });
     this.filtersToLoad = this.addCommunityService.filtersToLoad;
     this.displayedColumns = this.addCommunityService.displayedColumns;
   }
@@ -54,9 +54,19 @@ export class AddCommunityComponent implements OnInit {
         return true;
       }
       if (searchString.type === 'text') {
-        return (data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1);
+        return (
+          data.name
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        );
       } else {
-        return data.districtName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1;
+        return (
+          data.districtName
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        );
       }
     };
     this.filterPredicate = filterPredicate;
@@ -85,13 +95,17 @@ export class AddCommunityComponent implements OnInit {
    * Navigates to review page for adding new communities
    */
   addToMyList(): void {
-    this.router.navigate(['/responder-access/community-management/review'], { queryParams: { action: 'add' } });
+    this.router.navigate(['/responder-access/community-management/review'], {
+      queryParams: { action: 'add' },
+    });
   }
 
   /**
    * Navigates to assigned community list
    */
   goToList(): void {
-    this.router.navigate(['/responder-access/community-management/list-communities']);
+    this.router.navigate([
+      '/responder-access/community-management/list-communities',
+    ]);
   }
 }

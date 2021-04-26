@@ -4,17 +4,15 @@ import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-co
 @Component({
   selector: 'app-evacuee-search',
   templateUrl: './evacuee-search.component.html',
-  styleUrls: ['./evacuee-search.component.scss']
+  styleUrls: ['./evacuee-search.component.scss'],
 })
 export class EvacueeSearchComponent implements OnInit {
-
   showPhotoIDComponent = true;
   showResultsComponent = false;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   /**
    * Receives the emitted event from evacuee-id-verify child and changes the component to show
@@ -29,5 +27,4 @@ export class EvacueeSearchComponent implements OnInit {
   changeResultsComponent(value: boolean): void {
     this.showResultsComponent = value;
   }
-
 }

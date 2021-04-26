@@ -8,35 +8,39 @@ import { Configuration } from '../api/models';
 import { ConfigurationService } from '../api/services';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigService {
-
   private config?: Configuration = null;
 
-  constructor(private configurationService: ConfigurationService) { }
+  constructor(private configurationService: ConfigurationService) {}
 
   public load(): Observable<Configuration> {
     if (this.config != null) {
       return of(this.config);
     }
-    return this.configurationService.configurationGetConfiguration().pipe(tap(c => {
-      this.config = { ...c };
-    }));
+    return this.configurationService.configurationGetConfiguration().pipe(
+      tap((c) => {
+        this.config = { ...c };
+      })
+    );
   }
 
   public async getAuthConfig(): Promise<AuthConfig> {
-    return await this.load().pipe(map(c => (
-      {
-      issuer: c.oidc.issuer,
-      clientId: c.oidc.clientId,
-      redirectUri: window.location.origin + '/',
-      responseType: 'code',
-      scope: 'openid profile email offline_access',
-      showDebugInformation: !environment.production,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      customQueryParams: { kc_idp_hint: 'bceid' },
-    }))).toPromise();
+    return await this.load()
+      .pipe(
+        map((c) => ({
+          issuer: c.oidc.issuer,
+          clientId: c.oidc.clientId,
+          redirectUri: window.location.origin + '/',
+          responseType: 'code',
+          scope: 'openid profile email offline_access',
+          showDebugInformation: !environment.production,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          customQueryParams: { kc_idp_hint: 'bceid' },
+        }))
+      )
+      .toPromise();
   }
 
   public isConfigured(): boolean {

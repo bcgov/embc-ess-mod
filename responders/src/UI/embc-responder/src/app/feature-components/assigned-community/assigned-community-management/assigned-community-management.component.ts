@@ -4,11 +4,10 @@ import { CacheService } from 'src/app/core/services/cache.service';
 @Component({
   selector: 'app-assigned-community-management',
   templateUrl: './assigned-community-management.component.html',
-  styleUrls: ['./assigned-community-management.component.scss']
+  styleUrls: ['./assigned-community-management.component.scss'],
 })
 export class AssignedCommunityManagementComponent implements OnDestroy {
-
-  constructor(private cacheService: CacheService) { }
+  constructor(private cacheService: CacheService) {}
 
   /**
    * Removes cached items
@@ -17,5 +16,4 @@ export class AssignedCommunityManagementComponent implements OnDestroy {
     this.cacheService.remove('allTeamCommunityList');
     this.cacheService.remove('teamCommunityList');
   }
-
 }

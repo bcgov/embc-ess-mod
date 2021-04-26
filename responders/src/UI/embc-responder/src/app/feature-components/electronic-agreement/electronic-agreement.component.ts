@@ -7,22 +7,25 @@ import { ElectronicAgreementService } from './electronic-agreement.service';
 @Component({
   selector: 'app-electronic-agreement',
   templateUrl: './electronic-agreement.component.html',
-  styleUrls: ['./electronic-agreement.component.scss']
+  styleUrls: ['./electronic-agreement.component.scss'],
 })
 export class ElectronicAgreementComponent implements OnInit {
-
   agreementAccepted = false;
 
-  constructor(private router: Router, private eaaService: ElectronicAgreementService) { }
+  constructor(
+    private router: Router,
+    private eaaService: ElectronicAgreementService
+  ) {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   submitEAA(): void {
-    this.eaaService.signAgreement().subscribe(() => { this.router.navigateByUrl('responder-access'); });
+    this.eaaService.signAgreement().subscribe(() => {
+      this.router.navigateByUrl('responder-access');
+    });
   }
 
   agreementChangeEvent(event: MatCheckboxChange): void {
     this.agreementAccepted = event.checked;
   }
-
 }

@@ -5,18 +5,8 @@ import { FooterComponent } from './layout/footer/footer.component';
 import { MaterialModule } from '../material.module';
 
 @NgModule({
-  declarations: [
-    HeaderComponent,
-    FooterComponent,
-  ],
-  imports: [
-     CommonModule,
-     MaterialModule
-  ],
-  exports: [
-    HeaderComponent,
-    FooterComponent,
-  ],
-
+  declarations: [HeaderComponent, FooterComponent],
+  imports: [CommonModule, MaterialModule],
+  exports: [HeaderComponent, FooterComponent],
 })
-export class CoreModule { }
+export class CoreModule {}

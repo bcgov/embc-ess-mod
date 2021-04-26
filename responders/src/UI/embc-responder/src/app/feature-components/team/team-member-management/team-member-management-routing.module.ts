@@ -4,27 +4,34 @@ import { TeamMemberManagementComponent } from './team-member-management.componen
 
 const routes: Routes = [
   {
-    path: '', component: TeamMemberManagementComponent,
+    path: '',
+    component: TeamMemberManagementComponent,
     children: [
       {
         path: '',
         redirectTo: 'details',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'details',
-        loadChildren: () => import('../team-list-wrapper/team-list-wrapper.module').then(m => m.TeamListWrapperModule)
+        loadChildren: () =>
+          import('../team-list-wrapper/team-list-wrapper.module').then(
+            (m) => m.TeamListWrapperModule
+          ),
       },
       {
         path: 'add-member',
-        loadChildren: () => import('../add-team-member/add-team-member.module').then(m => m.AddTeamMemberModule)
-      }
-    ]
-  }
+        loadChildren: () =>
+          import('../add-team-member/add-team-member.module').then(
+            (m) => m.AddTeamMemberModule
+          ),
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class TeamMemberManagementRoutingModule { }
+export class TeamMemberManagementRoutingModule {}

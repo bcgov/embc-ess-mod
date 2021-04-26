@@ -10,10 +10,9 @@ describe('ResponderDashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ResponderDashboardComponent ],
-      imports: [ RouterTestingModule, HttpClientTestingModule ]
-    })
-    .compileComponents();
+      declarations: [ResponderDashboardComponent],
+      imports: [RouterTestingModule, HttpClientTestingModule],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -21,5 +20,4 @@ describe('ResponderDashboardComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
 });

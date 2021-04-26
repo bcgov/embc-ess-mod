@@ -1,7 +1,15 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
-  AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input,
-  OnChanges, Output, SimpleChanges, ViewChild, ViewEncapsulation
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -14,10 +22,10 @@ import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
   selector: 'app-assigned-community-table',
   templateUrl: './assigned-community-table.component.html',
   styleUrls: ['./assigned-community-table.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
-export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges {
-
+export class AssignedCommunityTableComponent
+  implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() displayedColumns: TableColumnModel[];
@@ -33,7 +41,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
   selection = new SelectionModel<any>(true, []);
   color = '#169BD5';
 
-  constructor(private cd: ChangeDetectorRef) { }
+  constructor(private cd: ChangeDetectorRef) {}
 
   /**
    * Listens to input events and popluate values
@@ -49,7 +57,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
     }
 
     if (changes.displayedColumns) {
-      this.columns = this.displayedColumns.map(column => column.ref);
+      this.columns = this.displayedColumns.map((column) => column.ref);
     }
     if (changes.filterTerm && this.filterTerm !== undefined) {
       this.filter(this.filterTerm);
@@ -103,7 +111,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
       if (this.selection.selected.length !== 0) {
         this.selection.clear();
       } else {
-        this.dataSource.filteredData.forEach(row => {
+        this.dataSource.filteredData.forEach((row) => {
           if (row.hasOwnProperty('allowSelect')) {
             const r: TeamCommunityModel = row;
             if (r.allowSelect) {
@@ -116,7 +124,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
       if (this.selection.selected.length !== 0 || this.isAllSelected()) {
         this.selection.clear();
       } else {
-        this.dataSource.filteredData.forEach(row => {
+        this.dataSource.filteredData.forEach((row) => {
           if (row.hasOwnProperty('allowSelect')) {
             const r: TeamCommunityModel = row;
             this.selection.select(row);
@@ -133,7 +141,9 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+      row.position + 1
+    }`;
   }
 
   /**

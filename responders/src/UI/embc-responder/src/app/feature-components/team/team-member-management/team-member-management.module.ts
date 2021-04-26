@@ -6,13 +6,7 @@ import { TeamMemberManagementComponent } from './team-member-management.componen
 import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
-  declarations: [
-    TeamMemberManagementComponent
-  ],
-  imports: [
-    CommonModule,
-    TeamMemberManagementRoutingModule,
-    MaterialModule
-  ]
+  declarations: [TeamMemberManagementComponent],
+  imports: [CommonModule, TeamMemberManagementRoutingModule, MaterialModule],
 })
-export class TeamMemberManagementModule { }
+export class TeamMemberManagementModule {}

@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { MemberLabelDescription, MemberRole, MemberRoleDescription, TeamMember } from 'src/app/core/api/models';
+import {
+  MemberLabelDescription,
+  MemberRole,
+  MemberRoleDescription,
+  TeamMember,
+} from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -13,10 +18,9 @@ import { AddTeamMemberService } from './add-team-member.service';
 @Component({
   selector: 'app-add-team-member',
   templateUrl: './add-team-member.component.html',
-  styleUrls: ['./add-team-member.component.scss']
+  styleUrls: ['./add-team-member.component.scss'],
 })
 export class AddTeamMemberComponent implements OnInit {
-
   addForm: FormGroup;
   roles: MemberRoleDescription[];
   labels: MemberLabelDescription[];
@@ -24,9 +28,15 @@ export class AddTeamMemberComponent implements OnInit {
   showLoader = false;
   color = '#169BD5';
 
-  constructor(private builder: FormBuilder, private router: Router, private listService: LoadTeamListService,
-              private customValidation: CustomValidationService, private addTeamMemberService: AddTeamMemberService,
-              private alertService: AlertService, private userService: UserService) { }
+  constructor(
+    private builder: FormBuilder,
+    private router: Router,
+    private listService: LoadTeamListService,
+    private customValidation: CustomValidationService,
+    private addTeamMemberService: AddTeamMemberService,
+    private alertService: AlertService,
+    private userService: UserService
+  ) {}
 
   /**
    * On component init, constructs the form and loads the lists
@@ -58,7 +68,7 @@ export class AddTeamMemberComponent implements OnInit {
       lastName: ['', [this.customValidation.whitespaceValidator()]],
       userName: ['', [this.customValidation.whitespaceValidator()]],
       role: ['', [this.customValidation.whitespaceValidator()]],
-      label: ['']
+      label: [''],
     });
   }
 
@@ -66,7 +76,9 @@ export class AddTeamMemberComponent implements OnInit {
    * Navigates to the team members list
    */
   cancel(): void {
-    this.router.navigate(['/responder-access/responder-management/details/member-list']);
+    this.router.navigate([
+      '/responder-access/responder-management/details/member-list',
+    ]);
   }
 
   /**
@@ -76,7 +88,10 @@ export class AddTeamMemberComponent implements OnInit {
     const newTeamMember: TeamMember = this.addForm.getRawValue();
     newTeamMember.teamName = this.userService.currentProfile.teamName;
     this.addTeamMemberService.setAddedTeamMember(newTeamMember);
-    this.router.navigate(['/responder-access/responder-management/details/review'], { state: newTeamMember });
+    this.router.navigate(
+      ['/responder-access/responder-management/details/review'],
+      { state: newTeamMember }
+    );
   }
 
   /**
@@ -101,21 +116,32 @@ export class AddTeamMemberComponent implements OnInit {
    */
   checkUserName($event): void {
     this.showLoader = !this.showLoader;
-    this.addTeamMemberService.checkUserNameExists($event.target.value).subscribe(value => {
-      this.showLoader = !this.showLoader;
-      this.addForm.get('userName').setValidators([this.customValidation.whitespaceValidator(),
-      this.customValidation.userNameExistsValidator(value).bind(this.customValidation)]);
-      this.addForm.get('userName').updateValueAndValidity();
-      if (value) {
-        this.addForm.get('userName').updateValueAndValidity();
-      } else {
-        this.addForm.updateValueAndValidity();
-      }
-    }, (error) => {
-      this.showLoader = !this.showLoader;
-      this.alertService.clearAlert();
-      this.alertService.setAlert('danger', globalConst.usernameCheckerror);
-    });
+    this.addTeamMemberService
+      .checkUserNameExists($event.target.value)
+      .subscribe(
+        (value) => {
+          this.showLoader = !this.showLoader;
+          this.addForm
+            .get('userName')
+            .setValidators([
+              this.customValidation.whitespaceValidator(),
+              this.customValidation
+                .userNameExistsValidator(value)
+                .bind(this.customValidation),
+            ]);
+          this.addForm.get('userName').updateValueAndValidity();
+          if (value) {
+            this.addForm.get('userName').updateValueAndValidity();
+          } else {
+            this.addForm.updateValueAndValidity();
+          }
+        },
+        (error) => {
+          this.showLoader = !this.showLoader;
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.usernameCheckerror);
+        }
+      );
   }
 
   /**
@@ -126,13 +152,25 @@ export class AddTeamMemberComponent implements OnInit {
   filteredRoleList(): MemberRoleDescription[] {
     const loggedInRole = this.userService.currentProfile.role;
     if (loggedInRole === MemberRole.Tier2) {
-      return this.listService.getMemberRoles().filter(role => role.code === MemberRole.Tier1);
+      return this.listService
+        .getMemberRoles()
+        .filter((role) => role.code === MemberRole.Tier1);
     } else if (loggedInRole === MemberRole.Tier3) {
-      return this.listService.getMemberRoles().filter(role => role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2);
+      return this.listService
+        .getMemberRoles()
+        .filter(
+          (role) =>
+            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2
+        );
     } else if (loggedInRole === MemberRole.Tier4) {
-      return this.listService.getMemberRoles().filter(role => role.code === MemberRole.Tier1
-        || role.code === MemberRole.Tier2 || role.code === MemberRole.Tier3);
+      return this.listService
+        .getMemberRoles()
+        .filter(
+          (role) =>
+            role.code === MemberRole.Tier1 ||
+            role.code === MemberRole.Tier2 ||
+            role.code === MemberRole.Tier3
+        );
     }
   }
-
 }

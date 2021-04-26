@@ -9,11 +9,10 @@ describe('EvacueeIdVerifyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EvacueeIdVerifyComponent ],
+      declarations: [EvacueeIdVerifyComponent],
       imports: [ReactiveFormsModule],
-      providers: [ FormBuilder ]
-    })
-    .compileComponents();
+      providers: [FormBuilder],
+    }).compileComponents();
   });
 
   beforeEach(() => {

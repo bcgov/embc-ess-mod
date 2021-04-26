@@ -17,10 +17,9 @@ import { AddTeamMemberService } from '../add-team-member/add-team-member.service
 @Component({
   selector: 'app-team-list',
   templateUrl: './team-list.component.html',
-  styleUrls: ['./team-list.component.scss']
+  styleUrls: ['./team-list.component.scss'],
 })
 export class TeamListComponent implements OnInit {
-
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
   displayedColumns: TableColumnModel[];
@@ -29,9 +28,15 @@ export class TeamListComponent implements OnInit {
   statusLoading = true;
   loggedInRole: string;
 
-  constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService,
-              private dialog: MatDialog, private userService: UserService, private alertService: AlertService,
-              private addTeamMemberService: AddTeamMemberService) {
+  constructor(
+    private teamListService: TeamListService,
+    private router: Router,
+    private teamDataService: TeamListDataService,
+    private dialog: MatDialog,
+    private userService: UserService,
+    private alertService: AlertService,
+    private addTeamMemberService: AddTeamMemberService
+  ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state;
@@ -46,15 +51,17 @@ export class TeamListComponent implements OnInit {
   ngOnInit(): void {
     this.teamDataService.clear();
     this.addTeamMemberService.clear();
-    this.teamListService.getTeamMembers().subscribe(values => {
-      this.isLoading = !this.isLoading;
-      this.teamMembers = values;
-    },
+    this.teamListService.getTeamMembers().subscribe(
+      (values) => {
+        this.isLoading = !this.isLoading;
+        this.teamMembers = values;
+      },
       (error) => {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.teamMemberListError);
-      });
+      }
+    );
     this.filtersToLoad = this.teamDataService.filtersToLoad;
     this.displayedColumns = this.teamDataService.displayedColumns;
     this.loggedInRole = this.userService.currentProfile.role;
@@ -76,7 +83,10 @@ export class TeamListComponent implements OnInit {
    */
   openMemberDetails($event: TeamMember): void {
     this.teamDataService.setSelectedTeamMember($event);
-    this.router.navigate(['/responder-access/responder-management/details/member-details'], { state: $event });
+    this.router.navigate(
+      ['/responder-access/responder-management/details/member-details'],
+      { state: $event }
+    );
   }
 
   /**
@@ -86,14 +96,20 @@ export class TeamListComponent implements OnInit {
    */
   activateTeamMember($event: string): void {
     this.statusLoading = !this.statusLoading;
-    this.teamListService.activateTeamMember($event).subscribe(value => {
-      this.statusLoading = !this.statusLoading;
-      this.teamMembers = value;
-    }, (error) => {
-      this.statusLoading = !this.statusLoading;
-      this.alertService.clearAlert();
-      this.alertService.setAlert('danger', globalConst.activateTeamMemberError);
-    });
+    this.teamListService.activateTeamMember($event).subscribe(
+      (value) => {
+        this.statusLoading = !this.statusLoading;
+        this.teamMembers = value;
+      },
+      (error) => {
+        this.statusLoading = !this.statusLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.activateTeamMemberError
+        );
+      }
+    );
   }
 
   /**
@@ -103,14 +119,20 @@ export class TeamListComponent implements OnInit {
    */
   deactivateTeamMember($event: string): void {
     this.statusLoading = !this.statusLoading;
-    this.teamListService.deactivatedTeamMember($event).subscribe(value => {
-      this.statusLoading = !this.statusLoading;
-      this.teamMembers = value;
-    }, (error) => {
-      this.statusLoading = !this.statusLoading;
-      this.alertService.clearAlert();
-      this.alertService.setAlert('danger', globalConst.deActivateTeamMemberError);
-    });
+    this.teamListService.deactivatedTeamMember($event).subscribe(
+      (value) => {
+        this.statusLoading = !this.statusLoading;
+        this.teamMembers = value;
+      },
+      (error) => {
+        this.statusLoading = !this.statusLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.deActivateTeamMemberError
+        );
+      }
+    );
   }
 
   /**
@@ -148,12 +170,10 @@ export class TeamListComponent implements OnInit {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text
+        text,
       },
       height: '230px',
-      width: '530px'
+      width: '530px',
     });
   }
 }
-
-

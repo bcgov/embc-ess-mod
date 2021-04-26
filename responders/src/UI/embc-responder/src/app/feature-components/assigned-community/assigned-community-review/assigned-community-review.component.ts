@@ -9,21 +9,23 @@ import { AssignedCommunityReviewService } from './assigned-community-review.serv
 @Component({
   selector: 'app-assigned-community-review',
   templateUrl: './assigned-community-review.component.html',
-  styleUrls: ['./assigned-community-review.component.scss']
+  styleUrls: ['./assigned-community-review.component.scss'],
 })
 export class AssignedCommunityReviewComponent implements OnInit {
-
   reviewAction: string;
   addedCommunityList: TeamCommunityModel[];
   deleteCommunityList: TeamCommunityModel[];
   showLoader = false;
   isSubmitted = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, private addCommunityService: AddCommunityService,
-              private assignedCommunityDataService: AssignedCommunityListDataService,
-              private assignedCommunityReviewService: AssignedCommunityReviewService,
-              private alertService: AlertService) {
-  }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private addCommunityService: AddCommunityService,
+    private assignedCommunityDataService: AssignedCommunityListDataService,
+    private assignedCommunityReviewService: AssignedCommunityReviewService,
+    private alertService: AlertService
+  ) {}
 
   /**
    * Loads the added/removed community lists
@@ -41,7 +43,9 @@ export class AssignedCommunityReviewComponent implements OnInit {
    * Navigates to add communities component
    */
   goBack(): void {
-    this.router.navigate(['/responder-access/community-management/add-communities']);
+    this.router.navigate([
+      '/responder-access/community-management/add-communities',
+    ]);
   }
 
   /**
@@ -50,20 +54,29 @@ export class AssignedCommunityReviewComponent implements OnInit {
   save(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.assignedCommunityReviewService.addCommunities(this.addedCommunityList.map(comm => comm.code)).subscribe(response => {
-      this.router.navigate(['/responder-access/community-management/list-communities']);
-    }, (error) => {
-      this.showLoader = !this.showLoader;
-      this.isSubmitted = !this.isSubmitted;
-      this.alertService.setAlert('danger', error.error.title);
-    });
+    this.assignedCommunityReviewService
+      .addCommunities(this.addedCommunityList.map((comm) => comm.code))
+      .subscribe(
+        (response) => {
+          this.router.navigate([
+            '/responder-access/community-management/list-communities',
+          ]);
+        },
+        (error) => {
+          this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
+          this.alertService.setAlert('danger', error.error.title);
+        }
+      );
   }
 
   /**
    * Navigates to cummity list page
    */
   cancel(): void {
-    this.router.navigate(['/responder-access/community-management/list-communities']);
+    this.router.navigate([
+      '/responder-access/community-management/list-communities',
+    ]);
   }
 
   /**
@@ -73,13 +86,21 @@ export class AssignedCommunityReviewComponent implements OnInit {
   remove(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
-    this.assignedCommunityReviewService.removeCommunities(this.deleteCommunityList.map(comm => comm.communityCode)).subscribe(response => {
-      this.router.navigate(['/responder-access/community-management/list-communities']);
-    }, (error) => {
-      this.showLoader = !this.showLoader;
-      this.isSubmitted = !this.isSubmitted;
-      this.alertService.setAlert('danger', error.error.title);
-    });
+    this.assignedCommunityReviewService
+      .removeCommunities(
+        this.deleteCommunityList.map((comm) => comm.communityCode)
+      )
+      .subscribe(
+        (response) => {
+          this.router.navigate([
+            '/responder-access/community-management/list-communities',
+          ]);
+        },
+        (error) => {
+          this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
+          this.alertService.setAlert('danger', error.error.title);
+        }
+      );
   }
-
 }

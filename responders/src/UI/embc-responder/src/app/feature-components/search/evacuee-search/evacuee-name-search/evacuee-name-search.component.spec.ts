@@ -9,11 +9,10 @@ describe('EvacueeNameSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EvacueeNameSearchComponent ],
+      declarations: [EvacueeNameSearchComponent],
       imports: [ReactiveFormsModule],
-      providers: [ FormBuilder ]
-    })
-    .compileComponents();
+      providers: [FormBuilder],
+    }).compileComponents();
   });
 
   beforeEach(() => {

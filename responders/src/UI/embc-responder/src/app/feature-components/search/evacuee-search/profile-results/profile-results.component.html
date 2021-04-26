@@ -1,74 +1,116 @@
 <div *ngFor="let registrantResult of matchedRegistrants$ | async">
-    <mat-card class="outer-card">
-        <div class="row result-heading-background">
-            <div class="col-md-9">
-                <a class="result-heading" (click)="openProfile()"><b>{{registrantResult?.lastName | uppercase}},</b>
-                    {{registrantResult?.firstName}}</a>
-            </div>
-            <div class="col-md-3">
-                <div class="row">
-                    <div class="col-md-12 metaData-align">
-                        <p>Restricted File: <b>{{registrantResult?.isRestricted ? 'Yes' : 'No'}}</b></p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 metaData-align">
-                        <p>Profile Created: <b>{{registrantResult?.createdOn | date:'dd-MMM-yyyy'}}</b></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
+  <mat-card class="outer-card">
+    <div class="row result-heading-background">
+      <div class="col-md-9">
+        <a class="result-heading" (click)="openProfile()"
+          ><b>{{ registrantResult?.lastName | uppercase }},</b>
+          {{ registrantResult?.firstName }}</a
+        >
+      </div>
+      <div class="col-md-3">
         <div class="row">
-            <div class="col-md-5">
-                <div class="row">
-                    <div class="col-md-1">
-                        <img src="/assets/images/location-pointer.svg" height="34" width="21">
-                    </div>
-                    <div class="col-md-10">
-                        <p class="p-custom section-heading">Physical Address</p>
-                        <p class="p-custom"><b>{{registrantResult?.primaryAddress?.addressLine1}}</b></p>
-                        <p class="p-custom"><b>{{registrantResult?.primaryAddress?.addressLine2}},</b></p>
-                        <p class="p-custom"><b>{{registrantResult?.primaryAddress?.city}},
-                                {{registrantResult?.primaryAddress?.stateProvinceCode}},
-                                {{registrantResult?.primaryAddress?.postalCode}}</b></p>
-                        <p class="p-custom"><b>{{registrantResult?.primaryAddress?.countryCode}}</b></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-1">
-                <img src="/assets/images/vertical-line.svg" height="136" width="2">
-            </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-md-1">
-                        <img src="/assets/images/file.svg" height="37" width="28">
-                    </div>
-                    <div class="col-md-10">
-                        <p class="p-custom section-heading">Most Recent ESS File/s</p>
-                        <span *ngFor="let files of registrantResult?.evacuationFiles">
-                            <p *ngIf="files?.status === 'Active'" class="p-custom file-active"><b>ESS
-                                    File #
-                                    {{files?.id}} -
-                                    {{files?.evacuatedFrom?.city}}</b></p>
-                            <p *ngIf="files?.status === 'InProgress'" class="p-custom file-pending">
-                                <b>ESS File #
-                                    {{files?.id}} -
-                                    {{files?.evacuatedFrom?.city}}</b></p>
-                            <p *ngIf="files?.status === 'Completed'" class="p-custom file-complete">
-                                <b>ESS File #
-                                    {{files?.id}} -
-                                    {{files?.evacuatedFrom?.city}}</b></p>
-                            <p *ngIf="files?.status === 'Expired'" class="p-custom file-expired"><b>ESS
-                                    File #
-                                    {{files?.id}} -
-                                    {{files?.evacuatedFrom?.city}}</b></p>
-                        </span>
-                    </div>
-                </div>
-            </div>
+          <div class="col-md-12 metaData-align">
+            <p>
+              Restricted File:
+              <b>{{ registrantResult?.isRestricted ? "Yes" : "No" }}</b>
+            </p>
+          </div>
         </div>
-    </mat-card>
-    <br>
+        <div class="row">
+          <div class="col-md-12 metaData-align">
+            <p>
+              Profile Created:
+              <b>{{ registrantResult?.createdOn | date: "dd-MMM-yyyy" }}</b>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-5">
+        <div class="row">
+          <div class="col-md-1">
+            <img
+              src="/assets/images/location-pointer.svg"
+              height="34"
+              width="21"
+            />
+          </div>
+          <div class="col-md-10">
+            <p class="p-custom section-heading">Physical Address</p>
+            <p class="p-custom">
+              <b>{{ registrantResult?.primaryAddress?.addressLine1 }}</b>
+            </p>
+            <p class="p-custom">
+              <b>{{ registrantResult?.primaryAddress?.addressLine2 }},</b>
+            </p>
+            <p class="p-custom">
+              <b
+                >{{ registrantResult?.primaryAddress?.city }},
+                {{ registrantResult?.primaryAddress?.stateProvinceCode }},
+                {{ registrantResult?.primaryAddress?.postalCode }}</b
+              >
+            </p>
+            <p class="p-custom">
+              <b>{{ registrantResult?.primaryAddress?.countryCode }}</b>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <img src="/assets/images/vertical-line.svg" height="136" width="2" />
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-1">
+            <img src="/assets/images/file.svg" height="37" width="28" />
+          </div>
+          <div class="col-md-10">
+            <p class="p-custom section-heading">Most Recent ESS File/s</p>
+            <span *ngFor="let files of registrantResult?.evacuationFiles">
+              <p
+                *ngIf="files?.status === 'Active'"
+                class="p-custom file-active"
+              >
+                <b
+                  >ESS File # {{ files?.id }} -
+                  {{ files?.evacuatedFrom?.city }}</b
+                >
+              </p>
+              <p
+                *ngIf="files?.status === 'InProgress'"
+                class="p-custom file-pending"
+              >
+                <b
+                  >ESS File # {{ files?.id }} -
+                  {{ files?.evacuatedFrom?.city }}</b
+                >
+              </p>
+              <p
+                *ngIf="files?.status === 'Completed'"
+                class="p-custom file-complete"
+              >
+                <b
+                  >ESS File # {{ files?.id }} -
+                  {{ files?.evacuatedFrom?.city }}</b
+                >
+              </p>
+              <p
+                *ngIf="files?.status === 'Expired'"
+                class="p-custom file-expired"
+              >
+                <b
+                  >ESS File # {{ files?.id }} -
+                  {{ files?.evacuatedFrom?.city }}</b
+                >
+              </p>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+  <br />
 </div>
 <mat-paginator class="custom-paginator" [pageSizeOptions]="[3]"></mat-paginator>

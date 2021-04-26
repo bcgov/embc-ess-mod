@@ -11,9 +11,7 @@ import { ErrorHandlingModule } from './shared/error-handling/error-handing.modul
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -22,14 +20,15 @@ import { SharedModule } from './shared/shared.module';
     HttpClientModule,
     OAuthModule.forRoot({
       resourceServer: {
-        customUrlValidation: url => url.startsWith('/api') && !url.endsWith('/configuration'),
-        sendAccessToken: true
-      }
+        customUrlValidation: (url) =>
+          url.startsWith('/api') && !url.endsWith('/configuration'),
+        sendAccessToken: true,
+      },
     }),
     ApiModule.forRoot({ rootUrl: '' }),
     ErrorHandlingModule.forRoot(),
-    SharedModule
+    SharedModule,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,6 +1,13 @@
 import {
-  Component, ComponentFactoryResolver, ComponentRef, Inject, OnDestroy, OnInit,
-  ViewChild, ViewContainerRef, ViewEncapsulation
+  Component,
+  ComponentFactoryResolver,
+  ComponentRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
@@ -11,15 +18,16 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   encapsulation: ViewEncapsulation.None,
 })
 export class DialogComponent implements OnInit, OnDestroy {
-
-  @ViewChild('target', { read: ViewContainerRef, static: true }) vcRef: ViewContainerRef;
+  @ViewChild('target', { read: ViewContainerRef, static: true })
+  vcRef: ViewContainerRef;
 
   componentRef: ComponentRef<any>;
 
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private resolver: ComponentFactoryResolver) { }
+    private resolver: ComponentFactoryResolver
+  ) {}
 
   ngOnInit(): void {
     const factory = this.resolver.resolveComponentFactory(this.data.component);
@@ -27,7 +35,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     if (this.data.text !== undefined && this.data.text !== null) {
       this.componentRef.instance.inputEvent = this.data.text;
     }
-    this.componentRef.instance.outputEvent.subscribe(value => {
+    this.componentRef.instance.outputEvent.subscribe((value) => {
       this.buttonAction(value);
     });
   }
@@ -41,5 +49,4 @@ export class DialogComponent implements OnInit, OnDestroy {
       this.componentRef.destroy();
     }
   }
-
 }

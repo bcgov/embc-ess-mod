@@ -1,72 +1,95 @@
 <mat-card>
-    <div class="content-align">
-        <div class="row">
-            <div class="col-md-12">
-                <p class="details-heading">Responder Details</p>
-            </div>
-        </div>
-
-        <br>
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">First Name</div>
-            <div class="col-md-8"> {{teamMember?.firstName}}</div>
-        </div>
-
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">Last Name</div>
-            <div class="col-md-8"> {{teamMember?.lastName}}</div>
-        </div>
-
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">Email Address</div>
-            <div class="col-md-8"> {{teamMember?.email}}</div>
-        </div>
-
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">Phone</div>
-            <div class="col-md-8"> {{teamMember?.phone}}</div>
-        </div>
-
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">BCeID Username</div>
-            <div class="col-md-8"> {{teamMember?.userName}}</div>
-        </div>
-
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">ESS Team</div>
-            <div class="col-md-8"> {{teamMember?.teamName}}</div>
-        </div>
-
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">Role</div>
-            <div class="col-md-8"> {{teamMember?.role}}</div>
-        </div>
-
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">Label</div>
-            <div class="col-md-8"> {{teamMember?.label}}</div>
-        </div>
-
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">Electronic Access Agreement Signed</div>
-            <div class="col-md-8"> {{teamMember?.agreementSignDate | date:'dd-MMM-yyyy HH:mm'}}</div>
-        </div>
-
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">Last Login Date & Time</div>
-            <div class="col-md-8"> {{teamMember?.lastSuccessfulLogin | date:'dd-MMM-yyyy HH:mm'}}</div>
-        </div>
-
-        <div class="row row-align">
-            <div class="col-md-4 detail-label">Status in ERA Tool</div>
-            <div class="col-md-8"> {{teamMember?.isActive ? 'Active' : 'Inactive'}}</div>
-        </div>
-        <br>
-
-        <div class="row">
-            <button *ngIf="hasPermission('canDeleteTeamMembers') && teamMember?.role !== 'Tier4'" class="button-s button-float button-margin" mat-button (click)="deleteUser()">Delete User</button>
-            <button *ngIf="isEditAllowed(teamMember)" class="button-p button-float" mat-button (click)="editUser()">Edit User
-                Details</button>
-        </div>
+  <div class="content-align">
+    <div class="row">
+      <div class="col-md-12">
+        <p class="details-heading">Responder Details</p>
+      </div>
     </div>
+
+    <br />
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">First Name</div>
+      <div class="col-md-8">{{ teamMember?.firstName }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Last Name</div>
+      <div class="col-md-8">{{ teamMember?.lastName }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Email Address</div>
+      <div class="col-md-8">{{ teamMember?.email }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Phone</div>
+      <div class="col-md-8">{{ teamMember?.phone }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">BCeID Username</div>
+      <div class="col-md-8">{{ teamMember?.userName }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">ESS Team</div>
+      <div class="col-md-8">{{ teamMember?.teamName }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Role</div>
+      <div class="col-md-8">{{ teamMember?.role }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Label</div>
+      <div class="col-md-8">{{ teamMember?.label }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">
+        Electronic Access Agreement Signed
+      </div>
+      <div class="col-md-8">
+        {{ teamMember?.agreementSignDate | date: "dd-MMM-yyyy HH:mm" }}
+      </div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Last Login Date & Time</div>
+      <div class="col-md-8">
+        {{ teamMember?.lastSuccessfulLogin | date: "dd-MMM-yyyy HH:mm" }}
+      </div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Status in ERA Tool</div>
+      <div class="col-md-8">
+        {{ teamMember?.isActive ? "Active" : "Inactive" }}
+      </div>
+    </div>
+    <br />
+
+    <div class="row">
+      <button
+        *ngIf="
+          hasPermission('canDeleteTeamMembers') && teamMember?.role !== 'Tier4'
+        "
+        class="button-s button-float button-margin"
+        mat-button
+        (click)="deleteUser()"
+      >
+        Delete User
+      </button>
+      <button
+        *ngIf="isEditAllowed(teamMember)"
+        class="button-p button-float"
+        mat-button
+        (click)="editUser()"
+      >
+        Edit User Details
+      </button>
+    </div>
+  </div>
 </mat-card>

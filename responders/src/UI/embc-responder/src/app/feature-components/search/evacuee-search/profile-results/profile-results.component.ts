@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
@@ -7,10 +15,10 @@ import { RegistrantProfileSearchResult } from 'src/app/core/api/models';
 @Component({
   selector: 'app-profile-results',
   templateUrl: './profile-results.component.html',
-  styleUrls: ['./profile-results.component.scss']
+  styleUrls: ['./profile-results.component.scss'],
 })
-export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit {
-
+export class ProfileResultsComponent
+  implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @Input() registrantResults: Array<RegistrantProfileSearchResult>;
   @Input() isLoading: boolean;
@@ -18,7 +26,7 @@ export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit
   matchedRegistrants$: Observable<Array<RegistrantProfileSearchResult>>;
   color = '#169BD5';
 
-  constructor() { }
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.registrantResults) {
@@ -32,11 +40,7 @@ export class ProfileResultsComponent implements OnInit, OnChanges, AfterViewInit
     this.matchedRegistrants.paginator = this.paginator;
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  openProfile(): void {
-
-  }
-
+  openProfile(): void {}
 }

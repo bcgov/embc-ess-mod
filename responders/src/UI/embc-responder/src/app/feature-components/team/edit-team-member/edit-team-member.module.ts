@@ -14,7 +14,7 @@ import { SharedModule } from '../../../shared/shared.module';
     ReactiveFormsModule,
     EditTeamMemberRoutingModule,
     MaterialModule,
-    SharedModule
-  ]
+    SharedModule,
+  ],
 })
-export class EditTeamMemberModule { }
+export class EditTeamMemberModule {}

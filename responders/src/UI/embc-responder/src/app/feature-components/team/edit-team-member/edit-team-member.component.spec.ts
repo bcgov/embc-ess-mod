@@ -10,11 +10,10 @@ describe('EditTeamMemberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditTeamMemberComponent ],
-      imports: [ ReactiveFormsModule, RouterTestingModule ],
-      providers: [ FormBuilder ]
-    })
-    .compileComponents();
+      declarations: [EditTeamMemberComponent],
+      imports: [ReactiveFormsModule, RouterTestingModule],
+      providers: [FormBuilder],
+    }).compileComponents();
   });
 
   beforeEach(() => {
