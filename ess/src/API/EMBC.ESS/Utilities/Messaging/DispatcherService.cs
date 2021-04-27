@@ -43,7 +43,9 @@ namespace EMBC.ESS.Utilities.Messaging
         {
             try
             {
-                var (requestType, messageHandler) = serviceRegistry.Resolve(request.Type);
+                logger.LogDebug("Dispatching request {0}, correlation id {1}", request.Type, request.CorrelationId);
+                var requestType = System.Type.GetType(request.Type, true, true);
+                var messageHandler = serviceRegistry.Resolve(requestType);
                 var handlerInstance = serviceProvider.GetRequiredService(messageHandler.DeclaringType);
                 var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType);
                 var replyMessage = await messageHandler.InvokeAsync(handlerInstance, new object[] { requestMessage });

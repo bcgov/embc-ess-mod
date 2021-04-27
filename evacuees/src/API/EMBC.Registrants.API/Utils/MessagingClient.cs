@@ -15,20 +15,18 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using EMBC.ESS;
 using EMBC.ESS.Shared.Contracts;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace EMBC.Registrants.API.Utils
 {
     public interface IMessagingClient
     {
-        Task<TResponse> Send<TResponse>(Command<TResponse> command)
-            where TResponse : Response;
+        Task<TResponse> Send<TResponse>(Query<TResponse> command);
+
+        Task<string> Send(Command command);
     }
 
     public class MessagingClient : IMessagingClient
@@ -42,17 +40,12 @@ namespace EMBC.Registrants.API.Utils
             this.logger = logger;
         }
 
-        public async Task<TResponse> Send<TResponse>(Command<TResponse> command)
-            where TResponse : Response
+        public async Task<string> Send(Command command)
         {
             try
             {
-                var response = await dispatcherClient.DispatchAsync<TResponse>(command);
+                var response = await dispatcherClient.DispatchAsync<string>(command);
                 return response;
-            }
-            catch (ServerException e) when (e.Type == typeof(NotFoundException).FullName)
-            {
-                return default;
             }
             catch (ServerException e)
             {
@@ -65,38 +58,28 @@ namespace EMBC.Registrants.API.Utils
                 throw;
             }
         }
-    }
 
-    public static class MessageingConfiguration
-    {
-        public static IServiceCollection AddMessaging(this IServiceCollection services)
+        public async Task<TResponse> Send<TResponse>(Query<TResponse> command)
         {
-            var configuration = services.BuildServiceProvider().GetRequiredService<IOptions<MessagingOptions>>().Value;
-
-            var httpClientBuilder = services.AddGrpcClient<Dispatcher.DispatcherClient>(opts =>
+            try
             {
-                opts.Address = configuration.Url;
-            });
-
-            if (configuration.AllowInvalidServerCertificate)
-            {
-                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
-                {
-                    return new HttpClientHandler
-                    {
-                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                    };
-                });
+                var response = await dispatcherClient.DispatchAsync<TResponse>(command);
+                return response;
             }
-            services.AddTransient<IMessagingClient, MessagingClient>();
-            return services;
+            catch (ServerException e) when (e.Type == typeof(NotFoundException).FullName)
+            {
+                return default;
+            }
+            catch (ServerException e)
+            {
+                logger.LogError(e, "Server error when sending query {0}, correlation id {1}", command.GetType().FullName, e.CorrelationId);
+                throw;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "General error when sending query {0}", command.GetType().FullName);
+                throw;
+            }
         }
-    }
-
-    public class MessagingOptions
-    {
-        public Uri Url { get; set; }
-
-        public bool AllowInvalidServerCertificate { get; set; } = false;
     }
 }

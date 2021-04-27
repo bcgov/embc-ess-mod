@@ -16,7 +16,10 @@
 
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Managers.Location;
+using EMBC.ESS.Managers.Submissions;
+using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Metadata;
+using EMBC.ESS.Resources.Profiles;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
@@ -41,6 +44,9 @@ namespace EMBC.ESS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
+
+            services.Configure<MessageHandlerRegistryOptions>(opts => { });
+            services.AddSingleton<MessageHandlerRegistry>();
             services.AddGrpc(opts =>
             {
                 opts.EnableDetailedErrors = true;
@@ -48,19 +54,13 @@ namespace EMBC.ESS
 
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
 
-            services.AddSingleton(sp =>
-            {
-                var registry = new MessageHandlerRegistry();
-                registry.Register<AdminManager>();
-                registry.Register<LocationManager>();
-
-                return registry;
-            });
-
             services.AddAdminManager();
             services.AddLocationManager();
+            //services.AddSubmissionManager();
             services.AddTeamRepository();
             services.AddMetadataRepository();
+            //services.AddProfileRepository();
+            //services.AddCaseRepository();
             services.Configure<DynamicsOptions>(configuration.GetSection("Dynamics"));
             services.AddDynamics();
             services.AddCache();
