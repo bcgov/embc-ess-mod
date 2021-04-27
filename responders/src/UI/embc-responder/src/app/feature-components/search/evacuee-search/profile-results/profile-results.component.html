@@ -1,5 +1,10 @@
 <div *ngFor="let registrantResult of matchedRegistrants$ | async">
-  <mat-card class="outer-card">
+  <mat-card
+    [ngClass]="{
+      'outer-card': !registrantResult?.isRestricted,
+      'restricted-card': registrantResult?.isRestricted
+    }"
+  >
     <div class="row result-heading-background">
       <div class="col-md-9">
         <a class="result-heading" (click)="openProfile()"
@@ -109,6 +114,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div *ngIf="registrantResult?.isRestricted" class="row restricted-div">
+      <span class="restricted-text">RESTRICTED FILE</span>
     </div>
   </mat-card>
   <br />

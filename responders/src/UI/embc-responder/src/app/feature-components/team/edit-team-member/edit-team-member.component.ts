@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   MemberLabelDescription,
@@ -19,6 +14,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TeamListDataService } from '../team-list/team-list-data.service';
 import { EditTeamMemberService } from './edit-team-member.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-edit-team-member',
@@ -32,6 +28,7 @@ export class EditTeamMemberComponent implements OnInit {
   labels: MemberLabelDescription[];
   showLoader = false;
   color = '#169BD5';
+  detailsText: string;
 
   constructor(
     private builder: FormBuilder,
@@ -61,6 +58,16 @@ export class EditTeamMemberComponent implements OnInit {
     this.constructEditForm();
     this.roles = this.filteredRoleList();
     this.labels = this.listService.getMemberLabels();
+    const defaultText = (): string => {
+      if (this.teamMember.role === MemberRole.Tier1) {
+        return globalConst.tier1Notes;
+      } else if (this.teamMember.role === MemberRole.Tier2) {
+        return globalConst.tier2Notes;
+      } else if (this.teamMember.role === MemberRole.Tier3) {
+        return globalConst.tier3Notes;
+      }
+    };
+    this.detailsText = defaultText();
   }
 
   /**
@@ -114,6 +121,21 @@ export class EditTeamMemberComponent implements OnInit {
    */
   isEditAllowed(): boolean {
     return this.teamMember.isUserNameEditable;
+  }
+
+  /**
+   * Display notes for the role selected
+   *
+   * @param selectedRole role selected from dropdown
+   */
+  roleSelectionChange(selectedRole: MatSelectChange): void {
+    if (selectedRole.value === MemberRole.Tier1) {
+      this.detailsText = globalConst.tier1Notes;
+    } else if (selectedRole.value === MemberRole.Tier2) {
+      this.detailsText = globalConst.tier2Notes;
+    } else if (selectedRole.value === MemberRole.Tier3) {
+      this.detailsText = globalConst.tier3Notes;
+    }
   }
 
   /**

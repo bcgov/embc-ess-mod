@@ -30,6 +30,23 @@
     border-bottom: 0px !important;
 }
 
+.restricted-card {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border: 1px solid rgba(201, 0, 0, 1);
+}
+
+.restricted-text {
+    text-align: center;
+    background-color: rgba(201, 0, 0, 1);
+    width: 100%;
+    color: white;
+}
+
+.restricted-div {
+    padding-top: 10px;
+}
+
 .status-align {
     padding-left: 11px;
 }

@@ -1,5 +1,10 @@
 <div *ngFor="let fileResult of matchedFiles$ | async">
-  <mat-card class="outer-card">
+  <mat-card
+    [ngClass]="{
+      'outer-card': !fileResult?.isRestricted,
+      'restricted-card': fileResult?.isRestricted
+    }"
+  >
     <div class="row result-heading-background">
       <div class="col-md-9">
         <div class="row">
@@ -140,6 +145,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div *ngIf="fileResult?.isRestricted" class="row restricted-div">
+      <span class="restricted-text">RESTRICTED FILE</span>
     </div>
   </mat-card>
   <br />

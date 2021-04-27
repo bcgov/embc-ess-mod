@@ -116,7 +116,11 @@
             <div class="col-md-3">
               <mat-form-field appearance="outline">
                 <mat-label>Role</mat-label>
-                <mat-select formControlName="role" required>
+                <mat-select
+                  formControlName="role"
+                  (selectionChange)="roleSelectionChange($event)"
+                  required
+                >
                   <mat-option>--Select Role</mat-option>
                   <mat-option *ngFor="let role of roles" [value]="role.code">
                     {{ role?.description }}
@@ -131,6 +135,17 @@
                   Role is required</mat-error
                 >
               </mat-form-field>
+            </div>
+            <div class="col-md-9">
+              <div
+                *ngIf="
+                  editFormControl.role.value !== '' &&
+                  editFormControl.role.value !== undefined
+                "
+                class="role-details"
+              >
+                {{ detailsText }}
+              </div>
             </div>
           </div>
 
