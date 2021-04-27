@@ -30,7 +30,7 @@
   <ItemGroup>
     <PackageReference Include="automapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="EMBC.ESS.Shared.Contracts" Version="1.0.*" />
+    <!--<PackageReference Include="EMBC.ESS.Shared.Contracts" Version="1.0.*" />-->
     <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
     <PackageReference Include="MailKit" Version="2.11.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.*" />
@@ -57,5 +57,11 @@
     <Protobuf Include="Protos\Dispatcher.proto" GrpcServices="Client">
       <SourceUri>https://raw.githubusercontent.com/bcgov/embc-ess-mod/master/ess/src/API/EMBC.ESS/Utilities/Messaging/Dispatcher.proto</SourceUri>
     </Protobuf>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EMBC.ESS.Shared.Contracts">
+      <HintPath>..\..\..\..\ess\src\API\EMBC.ESS.Shared.Contracts\bin\Debug\netstandard2.1\EMBC.ESS.Shared.Contracts.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
