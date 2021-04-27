@@ -14,28 +14,52 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Resources.Profiles
+namespace EMBC.ESS.Resources.Contacts
 {
-    public interface IProfileRepository
+    public interface IContactRepository
     {
-        Task<string> Create(Profile profile);
+        Task<ContactCommandResult> ManageContact(ContactCommand cmd);
 
-        Task<Profile> Read(string profileId);
-
-        Task Update(Profile profile);
-
-        Task Delete(string profileId);
+        Task<ContactQueryResult> QueryContact(ContactQuery cmd);
     }
 
-    public class Profile
+    public abstract class ContactCommand { }
+
+    public class ContactCommandResult
+    {
+        public string ContactId { get; set; }
+    }
+
+    public class ContactQuery
+    {
+        public string ContactId { get; set; }
+        public string UserName { get; set; }
+    }
+
+    public class ContactQueryResult
+    {
+        public IEnumerable<Contact> Items { get; set; }
+    }
+
+    public class SaveContact : ContactCommand
+    {
+        public Contact Contact { get; set; }
+    }
+
+    public class DeleteContact : ContactCommand
+    {
+        public string ContactId { get; set; }
+    }
+
+    public class Contact
     {
         public PersonDetails PersonalDetails { get; set; }
-        public ContactDetails ContactDetails { get; set; }
+        public CommunicationDetails ContactDetails { get; set; }
         public Address PrimaryAddress { get; set; }
         public Address MailingAddress { get; set; }
-        public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public string SecretPhrase { get; set; }
     }
@@ -44,7 +68,7 @@ namespace EMBC.ESS.Resources.Profiles
     {
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
-        public string Jurisdiction { get; set; }
+        public string Community { get; set; }
         public string StateProvince { get; set; }
         public string Country { get; set; }
         public string PostalCode { get; set; }
@@ -66,11 +90,9 @@ namespace EMBC.ESS.Resources.Profiles
     /// <summary>
     /// Profile contact information
     /// </summary>
-    public class ContactDetails
+    public class CommunicationDetails
     {
         public string Email { get; set; }
         public string Phone { get; set; }
-        public bool HidePhoneRequired { get; set; }
-        public bool HideEmailRequired { get; set; }
     }
 }

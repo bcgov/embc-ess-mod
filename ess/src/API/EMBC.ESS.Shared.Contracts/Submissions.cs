@@ -16,72 +16,43 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace EMBC.ESS.Resources.Cases
+namespace EMBC.ESS.Shared.Contracts.Submissions
 {
-    public interface ICaseRepository
+    public class SubmitFileCommand : Command
     {
-        Task<ManageCaseCommandResult> ManageCase(ManageCaseCommand cmd);
-
-        Task<CaseQueryResult> QueryCase(CaseQuery query);
+        public File File { get; set; }
+        public NeedsAssessment InitialNeedsAssessment { get; set; }
     }
 
-    public abstract class ManageCaseCommand { }
-
-    public class ManageCaseCommandResult
+    public class SubmitAnonymousFileCommand : Command
     {
-        public string CaseId { get; set; }
+        public Profile SubmitterProfile { get; set; }
+        public File File { get; set; }
+        public NeedsAssessment InitialNeedsAssessment { get; set; }
     }
 
-    public class CaseQuery
-    {
-        public string ById { get; set; }
-        public string ByIdentifier { get; set; }
-    }
+    public class EvacuationFilesQuery : Query<EvacuationFilesQueryResult> { }
 
-    public class CaseQueryResult
-    {
-        public IEnumerable<Case> Items { get; set; }
-    }
+    public class EvacuationFilesQueryResult { }
 
-    public abstract class Case
+    public class RegistrantsQuery : Query<RegistrantsQueryResult> { }
+
+    public class RegistrantsQueryResult { }
+
+    public class File
     {
         public string Id { get; set; }
-    }
-
-    public class SaveEvacuationFile : ManageCaseCommand
-    {
-        public EvacuationFile EvacuationFile { get; set; }
-    }
-
-    public class DeleteEvacuationFile : ManageCaseCommand
-    {
-        public string Id { get; set; }
-    }
-
-    public class EvacuationFile : Case
-    {
-        public EvacuationAddress EvacuatedFromAddress { get; set; }
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
-    }
-
-    public class EvacuationAddress
-    {
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string Jurisdiction { get; set; }
-        public string StateProvince { get; set; }
-        public string Country { get; set; }
-        public string PostalCode { get; set; }
+        public DateTime EvacuationDate { get; set; }
+        public Address EvacuatedFromAddress { get; set; }
     }
 
     public class NeedsAssessment
     {
         public string Id { get; set; }
-
+        public string FileId { get; set; }
+        public NeedsAssessmentType Type { get; set; }
         public InsuranceOption Insurance { get; set; }
-
         public bool? CanEvacueeProvideFood { get; set; }
         public bool? CanEvacueeProvideLodging { get; set; }
         public bool? CanEvacueeProvideClothing { get; set; }
@@ -93,19 +64,36 @@ namespace EMBC.ESS.Resources.Cases
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }
-        public NeedsAssessmentType Type { get; set; }
     }
 
-    public class HouseholdMember
+    public class Profile
     {
         public string Id { get; set; }
-        public bool isUnder19 { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
         public string PreferredName { get; set; }
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public Address PrimaryAddress { get; set; }
+        public Address MailingAddress { get; set; }
+        public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
+        public bool RestrictedAccess { get; set; }
+        public string SecretPhrase { get; set; }
+    }
+
+    public class HouseholdMember
+    {
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Initials { get; set; }
+        public string PreferredName { get; set; }
+        public string Gender { get; set; }
+        public string DateOfBirth { get; set; }
+        public bool isUnder19 { get; set; }
     }
 
     public class Pet
@@ -126,5 +114,15 @@ namespace EMBC.ESS.Resources.Cases
     {
         Preliminary,
         Assessed
+    }
+
+    public class Address
+    {
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string Jurisdiction { get; set; }
+        public string StateProvince { get; set; }
+        public string Country { get; set; }
+        public string PostalCode { get; set; }
     }
 }

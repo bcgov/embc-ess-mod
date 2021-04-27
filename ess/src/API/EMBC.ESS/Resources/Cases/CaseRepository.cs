@@ -14,31 +14,21 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
-using EMBC.ESS.Shared.Contracts.Submissions;
 
-namespace EMBC.ESS.Managers.Submissions
+namespace EMBC.ESS.Resources.Cases
 {
-    public class SubmissionsManager
+    public class CaseRepository : ICaseRepository
     {
-        public async Task<string> Handle(SubmitAnonymousFileCommand cmd)
+        public Task<ManageCaseCommandResult> ManageCase(ManageCaseCommand cmd)
         {
-            return await Task.FromResult("new ess number");
+            throw new NotImplementedException();
         }
 
-        public async Task<string> Handle(SubmitFileCommand cmd)
+        public Task<CaseQueryResult> QueryCase(CaseQuery query)
         {
-            return await Task.FromResult("new ess number");
-        }
-
-        public async Task<EvacuationFilesQueryResult> Handle(EvacuationFilesQuery query)
-        {
-            return await Task.FromResult(new EvacuationFilesQueryResult());
-        }
-
-        public async Task<RegistrantsQueryResult> Handle(RegistrantsQuery query)
-        {
-            return await Task.FromResult(new RegistrantsQueryResult());
+            throw new NotImplementedException();
         }
     }
 }

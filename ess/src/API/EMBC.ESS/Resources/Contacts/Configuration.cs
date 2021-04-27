@@ -14,31 +14,16 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System.Threading.Tasks;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Managers.Submissions
+namespace EMBC.ESS.Resources.Contacts
 {
-    public class SubmissionsManager
+    public static class Configuration
     {
-        public async Task<string> Handle(SubmitAnonymousFileCommand cmd)
+        public static IServiceCollection AddContactRepository(this IServiceCollection services)
         {
-            return await Task.FromResult("new ess number");
-        }
-
-        public async Task<string> Handle(SubmitFileCommand cmd)
-        {
-            return await Task.FromResult("new ess number");
-        }
-
-        public async Task<EvacuationFilesQueryResult> Handle(EvacuationFilesQuery query)
-        {
-            return await Task.FromResult(new EvacuationFilesQueryResult());
-        }
-
-        public async Task<RegistrantsQueryResult> Handle(RegistrantsQuery query)
-        {
-            return await Task.FromResult(new RegistrantsQueryResult());
+            services.AddTransient<IContactRepository, ContactRepository>();
+            return services;
         }
     }
 }

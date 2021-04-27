@@ -18,8 +18,8 @@ using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Managers.Location;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Resources.Cases;
+using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Resources.Metadata;
-using EMBC.ESS.Resources.Profiles;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
@@ -56,11 +56,11 @@ namespace EMBC.ESS
 
             services.AddAdminManager();
             services.AddLocationManager();
-            //services.AddSubmissionManager();
+            services.AddSubmissionManager();
             services.AddTeamRepository();
             services.AddMetadataRepository();
-            //services.AddProfileRepository();
-            //services.AddCaseRepository();
+            services.AddContactRepository();
+            services.AddCaseRepository();
             services.Configure<DynamicsOptions>(configuration.GetSection("Dynamics"));
             services.AddDynamics();
             services.AddCache();
