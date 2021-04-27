@@ -3,11 +3,11 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import {
   EvacueeDetailsModel,
-  EvacueeSearchContextModel,
+  EvacueeSearchContextModel
 } from 'src/app/core/models/evacuee-search-context.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
@@ -15,7 +15,7 @@ import { EvacueeSearchService } from '../evacuee-search.service';
 @Component({
   selector: 'app-evacuee-name-search',
   templateUrl: './evacuee-name-search.component.html',
-  styleUrls: ['./evacuee-name-search.component.scss'],
+  styleUrls: ['./evacuee-name-search.component.scss']
 })
 export class EvacueeNameSearchComponent implements OnInit {
   @Output() showResultsComponent = new EventEmitter<boolean>();
@@ -32,7 +32,7 @@ export class EvacueeNameSearchComponent implements OnInit {
     /\d/,
     /\d/,
     /\d/,
-    /\d/,
+    /\d/
   ];
   nameSearchForm: FormGroup;
   evacueeSearchContextModel: EvacueeSearchContextModel;
@@ -40,7 +40,7 @@ export class EvacueeNameSearchComponent implements OnInit {
   constructor(
     private customValidation: CustomValidationService,
     private builder: FormBuilder,
-    private evacueeSearchService: EvacueeSearchService,
+    private evacueeSearchService: EvacueeSearchService
   ) {}
 
   /**
@@ -64,16 +64,16 @@ export class EvacueeNameSearchComponent implements OnInit {
     this.nameSearchForm = this.builder.group({
       firstName: [
         this.evacueeSearchContextModel?.evacueeSearchParameters.firstName,
-        [Validators.required, this.customValidation.whitespaceValidator()],
+        [Validators.required, this.customValidation.whitespaceValidator()]
       ],
       lastName: [
         this.evacueeSearchContextModel?.evacueeSearchParameters.lastName,
-        [Validators.required, this.customValidation.whitespaceValidator()],
+        [Validators.required, this.customValidation.whitespaceValidator()]
       ],
       dateOfBirth: [
         this.evacueeSearchContextModel?.evacueeSearchParameters.dateOfBirth,
-        [Validators.required, this.customValidation.dateOfBirthValidator()],
-      ],
+        [Validators.required, this.customValidation.dateOfBirthValidator()]
+      ]
     });
   }
 
@@ -84,7 +84,7 @@ export class EvacueeNameSearchComponent implements OnInit {
     const searchParams: EvacueeDetailsModel = {
       firstName: this.nameSearchForm.get('firstName').value,
       lastName: this.nameSearchForm.get('lastName').value,
-      dateOfBirth: this.nameSearchForm.get('dateOfBirth').value,
+      dateOfBirth: this.nameSearchForm.get('dateOfBirth').value
     };
 
     this.evacueeSearchService.setEvacueeSearchParameters(searchParams);

@@ -8,7 +8,7 @@ import { AlertService } from './shared/components/alert/alert.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   public isLoading = true;
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private configService: ConfigService,
-    private alertService: AlertService,
+    private alertService: AlertService
   ) {
     this.configService.load().subscribe(
       (result) => result,
@@ -27,9 +27,9 @@ export class AppComponent implements OnInit {
         this.alertService.clearAlert();
         this.alertService.setAlert(
           'danger',
-          'The service is temporarily unavailable. Please try again later',
+          'The service is temporarily unavailable. Please try again later'
         );
-      },
+      }
     );
   }
 
@@ -40,14 +40,14 @@ export class AppComponent implements OnInit {
       const nextRoute = decodeURIComponent(
         userProfile.requiredToSignAgreement
           ? 'electronic-agreement'
-          : nextUrl || 'responder-access',
+          : nextUrl || 'responder-access'
       );
       await this.router.navigate([nextRoute]);
     } catch (error) {
       this.alertService.clearAlert();
       this.alertService.setAlert(
         'danger',
-        'The service is temporarily unavailable. Please try again later',
+        'The service is temporarily unavailable. Please try again later'
       );
     } finally {
       this.isLoading = false;

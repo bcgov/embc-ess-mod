@@ -8,7 +8,7 @@ import { AccessDeniedComponent } from './access-denied/access-denied.component';
 
 @NgModule({
   declarations: [ErrorDialogComponent, AccessDeniedComponent],
-  imports: [CommonModule],
+  imports: [CommonModule]
 })
 export class ErrorHandlingModule {
   public static forRoot(): ModuleWithProviders<ErrorHandlingModule> {
@@ -19,9 +19,9 @@ export class ErrorHandlingModule {
         {
           provide: HTTP_INTERCEPTORS,
           useClass: HttpErrorInterceptor,
-          multi: true,
-        },
-      ],
+          multi: true
+        }
+      ]
     };
   }
 }

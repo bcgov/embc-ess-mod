@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import {
   MemberLabelDescription,
   MemberRoleDescription,
-  TeamMember,
+  TeamMember
 } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import {
   ObjectWrapper,
-  TableFilterModel,
+  TableFilterModel
 } from 'src/app/core/models/table-filter.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
@@ -17,20 +17,20 @@ export class TeamListDataService {
   rolesList: MemberRoleDescription[] = this.listService.getMemberRoles();
   defaultRole: ObjectWrapper = {
     code: 'All Roles',
-    description: 'All User Roles',
+    description: 'All User Roles'
   };
   defaultStatus: ObjectWrapper = {
     code: null,
-    description: 'Active & Deactivated Users',
+    description: 'Active & Deactivated Users'
   };
   statusList: Array<{ code: boolean; description: string }> = [
     { code: true, description: 'Active' },
-    { code: false, description: 'Deactivated' },
+    { code: false, description: 'Deactivated' }
   ];
   labelsList: MemberLabelDescription[] = this.listService.getMemberLabels();
   defaultLabel: ObjectWrapper = {
     code: 'All Labels',
-    description: 'All Labels',
+    description: 'All Labels'
   };
 
   public filtersToLoad: TableFilterModel = {
@@ -38,23 +38,23 @@ export class TeamListDataService {
       {
         type: 'role',
         label: this.defaultRole,
-        values: this.rolesList,
+        values: this.rolesList
       },
       {
         type: 'status',
         label: this.defaultStatus,
-        values: this.statusList,
+        values: this.statusList
       },
       {
         type: 'label',
         label: this.defaultLabel,
-        values: this.labelsList,
-      },
+        values: this.labelsList
+      }
     ],
     loadInputFilter: {
       type: 'Search by last name or BCeID',
-      label: 'Search by last name or BCeID',
-    },
+      label: 'Search by last name or BCeID'
+    }
   };
 
   public displayedColumns: TableColumnModel[] = [
@@ -63,14 +63,14 @@ export class TeamListDataService {
     { label: 'BCeID Username', ref: 'userName' },
     { label: 'Role', ref: 'roleDescription' },
     { label: 'Label', ref: 'labelDescription' },
-    { label: 'Status', ref: 'isActive' },
+    { label: 'Status', ref: 'isActive' }
   ];
 
   private selectedTeamMember: TeamMember;
 
   constructor(
     private cacheService: CacheService,
-    private listService: LoadTeamListService,
+    private listService: LoadTeamListService
   ) {}
 
   public getSelectedTeamMember(): TeamMember {

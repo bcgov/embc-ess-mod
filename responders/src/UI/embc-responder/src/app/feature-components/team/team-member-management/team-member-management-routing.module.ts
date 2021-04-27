@@ -10,28 +10,28 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'details',
-        pathMatch: 'full',
+        pathMatch: 'full'
       },
       {
         path: 'details',
         loadChildren: () =>
           import('../team-list-wrapper/team-list-wrapper.module').then(
-            (m) => m.TeamListWrapperModule,
-          ),
+            (m) => m.TeamListWrapperModule
+          )
       },
       {
         path: 'add-member',
         loadChildren: () =>
           import('../add-team-member/add-team-member.module').then(
-            (m) => m.AddTeamMemberModule,
-          ),
-      },
-    ],
-  },
+            (m) => m.AddTeamMemberModule
+          )
+      }
+    ]
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class TeamMemberManagementRoutingModule {}

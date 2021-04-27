@@ -12,7 +12,7 @@ describe('TeamListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule, MatDialogModule],
-      declarations: [TeamListComponent],
+      declarations: [TeamListComponent]
     }).compileComponents();
   });
 

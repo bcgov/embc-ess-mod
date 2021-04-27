@@ -12,7 +12,7 @@ describe('EditTeamMemberComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [EditTeamMemberComponent],
       imports: [ReactiveFormsModule, RouterTestingModule],
-      providers: [FormBuilder],
+      providers: [FormBuilder]
     }).compileComponents();
   });
 

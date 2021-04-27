@@ -8,6 +8,6 @@ import { AssignedCommunityTableComponent } from './assigned-community-table.comp
 @NgModule({
   declarations: [AssignedCommunityTableComponent],
   imports: [CommonModule, SharedModule, MaterialModule],
-  exports: [AssignedCommunityTableComponent],
+  exports: [AssignedCommunityTableComponent]
 })
 export class AssignedCommunityTableModule {}

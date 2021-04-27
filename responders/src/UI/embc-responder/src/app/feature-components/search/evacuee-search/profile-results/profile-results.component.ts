@@ -5,7 +5,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,7 +15,7 @@ import { RegistrantProfileSearchResult } from 'src/app/core/api/models';
 @Component({
   selector: 'app-profile-results',
   templateUrl: './profile-results.component.html',
-  styleUrls: ['./profile-results.component.scss'],
+  styleUrls: ['./profile-results.component.scss']
 })
 export class ProfileResultsComponent
   implements OnInit, OnChanges, AfterViewInit {

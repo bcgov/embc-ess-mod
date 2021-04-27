@@ -21,7 +21,7 @@ export enum ActionPermission {
   canViewSummaryReports,
   canViewDetailedReports,
 
-  canViewCompletedESSFiles,
+  canViewCompletedESSFiles
 }
 
 export enum ModulePermission {
@@ -30,12 +30,12 @@ export enum ModulePermission {
   team,
   suppliers,
   assignedCommunities,
-  reports,
+  reports
 }
 
 export enum ClaimType {
   action,
-  module,
+  module
 }
 
 export interface ClaimModel {
@@ -49,7 +49,7 @@ export interface AuthorizationRoleModel {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthorizationService {
   private static permissionSet = AuthorizationService.initializeRoleClaims();
@@ -65,66 +65,66 @@ export class AuthorizationService {
     permissionSet.tier1 = [
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canSignIntoActiveTask,
+        claimValue: ActionPermission.canSignIntoActiveTask
       },
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canManageFiles,
+        claimValue: ActionPermission.canManageFiles
       },
       { claimType: ClaimType.module, claimValue: ModulePermission.dashboard },
-      { claimType: ClaimType.module, claimValue: ModulePermission.search },
+      { claimType: ClaimType.module, claimValue: ModulePermission.search }
     ];
     permissionSet.tier2 = [
       ...permissionSet.tier1,
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canSignInToExpiredTask,
+        claimValue: ActionPermission.canSignInToExpiredTask
       },
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canViewSummaryReports,
+        claimValue: ActionPermission.canViewSummaryReports
       },
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canViewCompletedESSFiles,
+        claimValue: ActionPermission.canViewCompletedESSFiles
       },
       { claimType: ClaimType.module, claimValue: ModulePermission.team },
       { claimType: ClaimType.module, claimValue: ModulePermission.suppliers },
-      { claimType: ClaimType.module, claimValue: ModulePermission.reports },
+      { claimType: ClaimType.module, claimValue: ModulePermission.reports }
     ];
     permissionSet.tier3 = [
       ...permissionSet.tier2,
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canViewRestrictedFiles,
+        claimValue: ActionPermission.canViewRestrictedFiles
       },
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canViewPastFiles,
+        claimValue: ActionPermission.canViewPastFiles
       },
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canViewDetailedReports,
-      },
+        claimValue: ActionPermission.canViewDetailedReports
+      }
     ];
     permissionSet.tier4 = [
       ...permissionSet.tier3,
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canManageTeamsCommunities,
+        claimValue: ActionPermission.canManageTeamsCommunities
       },
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canDeleteSuppliers,
+        claimValue: ActionPermission.canDeleteSuppliers
       },
       {
         claimType: ClaimType.action,
-        claimValue: ActionPermission.canDeleteTeamMembers,
+        claimValue: ActionPermission.canDeleteTeamMembers
       },
       {
         claimType: ClaimType.module,
-        claimValue: ModulePermission.assignedCommunities,
-      },
+        claimValue: ModulePermission.assignedCommunities
+      }
     ];
     return permissionSet;
   }

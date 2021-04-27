@@ -11,7 +11,7 @@ describe('EvacueeIdVerifyComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [EvacueeIdVerifyComponent],
       imports: [ReactiveFormsModule],
-      providers: [FormBuilder],
+      providers: [FormBuilder]
     }).compileComponents();
   });
 

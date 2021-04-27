@@ -3,14 +3,14 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
   MemberLabelDescription,
   MemberRole,
   MemberRoleDescription,
-  TeamMember,
+  TeamMember
 } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
@@ -23,7 +23,7 @@ import * as globalConst from '../../../core/services/global-constants';
 @Component({
   selector: 'app-edit-team-member',
   templateUrl: './edit-team-member.component.html',
-  styleUrls: ['./edit-team-member.component.scss'],
+  styleUrls: ['./edit-team-member.component.scss']
 })
 export class EditTeamMemberComponent implements OnInit {
   editForm: FormGroup;
@@ -41,7 +41,7 @@ export class EditTeamMemberComponent implements OnInit {
     private customValidation: CustomValidationService,
     private editTeamMemberService: EditTeamMemberService,
     private alertService: AlertService,
-    private userService: UserService,
+    private userService: UserService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -77,23 +77,23 @@ export class EditTeamMemberComponent implements OnInit {
     this.editForm = this.builder.group({
       firstName: [
         this.teamMember.firstName,
-        [this.customValidation.whitespaceValidator()],
+        [this.customValidation.whitespaceValidator()]
       ],
       lastName: [
         this.teamMember.lastName,
-        [this.customValidation.whitespaceValidator()],
+        [this.customValidation.whitespaceValidator()]
       ],
       userName: [
         { value: this.teamMember.userName, disabled: this.isEditAllowed() },
-        [this.customValidation.whitespaceValidator()],
+        [this.customValidation.whitespaceValidator()]
       ],
       role: [
         { value: this.teamMember.role, disabled: this.isNotTier2() },
-        [this.customValidation.whitespaceValidator()],
+        [this.customValidation.whitespaceValidator()]
       ],
       label: [this.teamMember.label],
       email: [{ value: this.teamMember.email, disabled: true }],
-      phone: [{ value: this.teamMember.phone, disabled: true }],
+      phone: [{ value: this.teamMember.phone, disabled: true }]
     });
   }
 
@@ -103,7 +103,7 @@ export class EditTeamMemberComponent implements OnInit {
   cancel(): void {
     this.router.navigate(
       ['/responder-access/responder-management/details/member-details'],
-      { state: this.teamMember },
+      { state: this.teamMember }
     );
   }
 
@@ -123,7 +123,7 @@ export class EditTeamMemberComponent implements OnInit {
     const updatedTeamMember: TeamMember = this.editForm.getRawValue();
     this.router.navigate(
       ['/responder-access/responder-management/details/review'],
-      { state: { ...this.teamMember, ...updatedTeamMember } },
+      { state: { ...this.teamMember, ...updatedTeamMember } }
     );
   }
 
@@ -145,7 +145,7 @@ export class EditTeamMemberComponent implements OnInit {
               this.customValidation.whitespaceValidator(),
               this.customValidation
                 .userNameExistsValidator(value)
-                .bind(this.customValidation),
+                .bind(this.customValidation)
             ]);
           this.editForm.get('userName').updateValueAndValidity();
           if (value) {
@@ -158,7 +158,7 @@ export class EditTeamMemberComponent implements OnInit {
           this.showLoader = !this.showLoader;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.usernameCheckerror);
-        },
+        }
       );
   }
 
@@ -178,7 +178,7 @@ export class EditTeamMemberComponent implements OnInit {
         .getMemberRoles()
         .filter(
           (role) =>
-            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2,
+            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2
         );
     } else if (loggedInRole === MemberRole.Tier4) {
       return this.listService
@@ -187,7 +187,7 @@ export class EditTeamMemberComponent implements OnInit {
           (role) =>
             role.code === MemberRole.Tier1 ||
             role.code === MemberRole.Tier2 ||
-            role.code === MemberRole.Tier3,
+            role.code === MemberRole.Tier3
         );
     }
   }

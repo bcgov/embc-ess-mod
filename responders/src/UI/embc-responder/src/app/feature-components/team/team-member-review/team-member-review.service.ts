@@ -10,13 +10,13 @@ export class TeamMemberReviewService {
   updateTeamMember(memberId: string, teamMember: TeamMember): Observable<void> {
     return this.teamMembersService.teamMembersUpdateTeamMember({
       memberId,
-      body: teamMember,
+      body: teamMember
     });
   }
 
   addTeamMember(teamMember: TeamMember): Observable<void> {
     return this.teamMembersService.teamMembersCreateTeamMember({
-      body: teamMember,
+      body: teamMember
     });
   }
 }

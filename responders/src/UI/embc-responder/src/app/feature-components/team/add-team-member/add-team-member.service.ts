@@ -11,7 +11,7 @@ export class AddTeamMemberService {
 
   constructor(
     private teamMembersService: TeamMembersService,
-    private cacheService: CacheService,
+    private cacheService: CacheService
   ) {}
 
   checkUserNameExists(userName: string): Observable<boolean> {

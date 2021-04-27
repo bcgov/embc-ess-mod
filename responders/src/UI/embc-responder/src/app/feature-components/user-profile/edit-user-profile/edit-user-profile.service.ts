@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ProfileService } from 'src/app/core/api/services';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EditUserProfileService {
   constructor(private profileService: ProfileService) {}
@@ -20,15 +20,15 @@ export class EditUserProfileService {
     firstName: string,
     lastName: string,
     phone: string,
-    email: string,
+    email: string
   ): Observable<void> {
     return this.profileService.profileUpdate({
       body: {
         firstName,
         lastName,
         phone,
-        email,
-      },
+        email
+      }
     });
   }
 }

@@ -12,7 +12,7 @@ describe('TeamMemberDetailComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, MatDialogModule, HttpClientTestingModule],
-      declarations: [TeamMemberDetailComponent],
+      declarations: [TeamMemberDetailComponent]
     }).compileComponents();
   });
 

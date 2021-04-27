@@ -13,7 +13,7 @@ import { Community } from 'src/app/core/services/locations.service';
 @Component({
   selector: 'app-assigned-community-list',
   templateUrl: './assigned-community-list.component.html',
-  styleUrls: ['./assigned-community-list.component.scss'],
+  styleUrls: ['./assigned-community-list.component.scss']
 })
 export class AssignedCommunityListComponent implements OnInit {
   filterTerm: TableFilterValueModel;
@@ -28,7 +28,7 @@ export class AssignedCommunityListComponent implements OnInit {
     private assignedCommunityListService: AssignedCommunityListService,
     private alertService: AlertService,
     private assignedCommunityListDataService: AssignedCommunityListDataService,
-    private router: Router,
+    private router: Router
   ) {}
 
   /**
@@ -46,7 +46,7 @@ export class AssignedCommunityListComponent implements OnInit {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.communityListError);
-      },
+      }
     );
 
     this.assignedCommunityListService
@@ -73,7 +73,7 @@ export class AssignedCommunityListComponent implements OnInit {
    */
   addCommunities(): void {
     this.router.navigate([
-      '/responder-access/community-management/add-communities',
+      '/responder-access/community-management/add-communities'
     ]);
   }
 
@@ -83,7 +83,7 @@ export class AssignedCommunityListComponent implements OnInit {
   communitiesFilterPredicate(): void {
     const filterPredicate = (
       data: TeamCommunityModel,
-      filter: string,
+      filter: string
     ): boolean => {
       const searchString: TableFilterValueModel = JSON.parse(filter);
       if (searchString.type === 'text') {
@@ -131,7 +131,7 @@ export class AssignedCommunityListComponent implements OnInit {
    */
   deleteCommunities(): void {
     this.router.navigate(['/responder-access/community-management/review'], {
-      queryParams: { action: 'delete' },
+      queryParams: { action: 'delete' }
     });
   }
 }

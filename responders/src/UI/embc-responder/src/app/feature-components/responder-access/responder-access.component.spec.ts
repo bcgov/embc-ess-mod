@@ -8,7 +8,7 @@ describe('ResponderAccessComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ResponderAccessComponent],
+      declarations: [ResponderAccessComponent]
     }).compileComponents();
   });
 

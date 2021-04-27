@@ -12,7 +12,7 @@ import { SharedModule } from '../../../shared/shared.module';
     CommonModule,
     AssignedCommunityReviewRoutingModule,
     MaterialModule,
-    SharedModule,
-  ],
+    SharedModule
+  ]
 })
 export class AssignedCommunityReviewModule {}

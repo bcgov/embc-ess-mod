@@ -8,23 +8,23 @@ const routes: Routes = [
     loadChildren: () =>
       import(
         './feature-components/responder-access/responder-access.module'
-      ).then((m) => m.ResponderAccessModule),
+      ).then((m) => m.ResponderAccessModule)
   },
   {
     path: 'electronic-agreement',
     loadChildren: () =>
       import(
         './feature-components/electronic-agreement/electronic-agreement.module'
-      ).then((m) => m.ElectronicAgreementModule),
+      ).then((m) => m.ElectronicAgreementModule)
   },
   {
     path: 'access-denied',
-    component: AccessDeniedComponent,
-  },
+    component: AccessDeniedComponent
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

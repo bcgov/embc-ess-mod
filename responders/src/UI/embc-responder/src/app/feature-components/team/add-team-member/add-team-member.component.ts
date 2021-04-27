@@ -6,7 +6,7 @@ import {
   MemberLabelDescription,
   MemberRole,
   MemberRoleDescription,
-  TeamMember,
+  TeamMember
 } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { LoadTeamListService } from 'src/app/core/services/load-team-list.service';
@@ -18,7 +18,7 @@ import { AddTeamMemberService } from './add-team-member.service';
 @Component({
   selector: 'app-add-team-member',
   templateUrl: './add-team-member.component.html',
-  styleUrls: ['./add-team-member.component.scss'],
+  styleUrls: ['./add-team-member.component.scss']
 })
 export class AddTeamMemberComponent implements OnInit {
   addForm: FormGroup;
@@ -35,7 +35,7 @@ export class AddTeamMemberComponent implements OnInit {
     private customValidation: CustomValidationService,
     private addTeamMemberService: AddTeamMemberService,
     private alertService: AlertService,
-    private userService: UserService,
+    private userService: UserService
   ) {}
 
   /**
@@ -68,7 +68,7 @@ export class AddTeamMemberComponent implements OnInit {
       lastName: ['', [this.customValidation.whitespaceValidator()]],
       userName: ['', [this.customValidation.whitespaceValidator()]],
       role: ['', [this.customValidation.whitespaceValidator()]],
-      label: [''],
+      label: ['']
     });
   }
 
@@ -77,7 +77,7 @@ export class AddTeamMemberComponent implements OnInit {
    */
   cancel(): void {
     this.router.navigate([
-      '/responder-access/responder-management/details/member-list',
+      '/responder-access/responder-management/details/member-list'
     ]);
   }
 
@@ -90,7 +90,7 @@ export class AddTeamMemberComponent implements OnInit {
     this.addTeamMemberService.setAddedTeamMember(newTeamMember);
     this.router.navigate(
       ['/responder-access/responder-management/details/review'],
-      { state: newTeamMember },
+      { state: newTeamMember }
     );
   }
 
@@ -127,7 +127,7 @@ export class AddTeamMemberComponent implements OnInit {
               this.customValidation.whitespaceValidator(),
               this.customValidation
                 .userNameExistsValidator(value)
-                .bind(this.customValidation),
+                .bind(this.customValidation)
             ]);
           this.addForm.get('userName').updateValueAndValidity();
           if (value) {
@@ -140,7 +140,7 @@ export class AddTeamMemberComponent implements OnInit {
           this.showLoader = !this.showLoader;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.usernameCheckerror);
-        },
+        }
       );
   }
 
@@ -160,7 +160,7 @@ export class AddTeamMemberComponent implements OnInit {
         .getMemberRoles()
         .filter(
           (role) =>
-            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2,
+            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2
         );
     } else if (loggedInRole === MemberRole.Tier4) {
       return this.listService
@@ -169,7 +169,7 @@ export class AddTeamMemberComponent implements OnInit {
           (role) =>
             role.code === MemberRole.Tier1 ||
             role.code === MemberRole.Tier2 ||
-            role.code === MemberRole.Tier3,
+            role.code === MemberRole.Tier3
         );
     }
   }

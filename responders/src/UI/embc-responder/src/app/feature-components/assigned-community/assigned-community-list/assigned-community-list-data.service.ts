@@ -4,7 +4,7 @@ import { CommunityType } from 'src/app/core/api/models';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import {
   ObjectWrapper,
-  TableFilterModel,
+  TableFilterModel
 } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { CacheService } from 'src/app/core/services/cache.service';
@@ -14,7 +14,7 @@ import { LocationsService } from 'src/app/core/services/locations.service';
 export class AssignedCommunityListDataService {
   defaultDistrict: ObjectWrapper = {
     code: 'All Districts',
-    description: 'All Regional Districts',
+    description: 'All Regional Districts'
   };
   defaultTypes: ObjectWrapper = { code: 'All Types', description: 'All Types' };
 
@@ -23,20 +23,20 @@ export class AssignedCommunityListDataService {
       {
         type: 'regionalDistrict',
         label: this.defaultDistrict,
-        values: this.locationsService.getRegionalDistricts(),
+        values: this.locationsService.getRegionalDistricts()
       },
       {
         type: 'type',
         label: this.defaultTypes,
         values: Object.keys(CommunityType).filter((e) =>
-          e === 'Undefined' ? '' : e,
-        ),
-      },
+          e === 'Undefined' ? '' : e
+        )
+      }
     ],
     loadInputFilter: {
       type: 'Search by city, town, village or community',
-      label: 'Search by city, town, village or community',
-    },
+      label: 'Search by city, town, village or community'
+    }
   };
 
   public displayedColumns: TableColumnModel[] = [
@@ -44,7 +44,7 @@ export class AssignedCommunityListDataService {
     { label: 'Community', ref: 'name' },
     { label: 'Regional District', ref: 'districtName' },
     { label: 'Type', ref: 'type' },
-    { label: 'Date Added to List', ref: 'dateAssigned' },
+    { label: 'Date Added to List', ref: 'dateAssigned' }
   ];
 
   private teamCommunityList: TeamCommunityModel[];
@@ -53,11 +53,11 @@ export class AssignedCommunityListDataService {
 
   constructor(
     private locationsService: LocationsService,
-    private cacheService: CacheService,
+    private cacheService: CacheService
   ) {}
 
   public setCommunitiesToDelete(
-    communitiesToDelete: TeamCommunityModel[],
+    communitiesToDelete: TeamCommunityModel[]
   ): void {
     this.communitiesToDelete = communitiesToDelete;
   }
@@ -72,7 +72,7 @@ export class AssignedCommunityListDataService {
   }
 
   public setAllTeamCommunityList(
-    allTeamCommunityList: TeamCommunityModel[],
+    allTeamCommunityList: TeamCommunityModel[]
   ): void {
     this.cacheService.set('allTeamCommunityList', allTeamCommunityList);
     this.allTeamCommunityList = allTeamCommunityList;
@@ -82,14 +82,14 @@ export class AssignedCommunityListDataService {
     const conflictMap: TeamCommunityModel[] = this.mergedCommunityList().map(
       (values) => {
         const conflicts = this.getAllTeamCommunityList().find(
-          (x) => x.code === values.code,
+          (x) => x.code === values.code
         );
         return this.mergeData(values, conflicts);
-      },
+      }
     );
     const addMap: TeamCommunityModel[] = conflictMap.map((values) => {
       const existing = this.getTeamCommunityList().find(
-        (x) => x.code === values.code,
+        (x) => x.code === values.code
       );
       return this.mergeData(values, existing);
     });
@@ -111,7 +111,7 @@ export class AssignedCommunityListDataService {
   private mergedCommunityList(): TeamCommunityModel[] {
     const teamModel: TeamCommunityModel = {
       allowSelect: true,
-      conflict: false,
+      conflict: false
     };
     return this.locationsService
       .getCommunityList()

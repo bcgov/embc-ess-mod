@@ -11,7 +11,7 @@ describe('EvacueeNameSearchComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [EvacueeNameSearchComponent],
       imports: [ReactiveFormsModule],
-      providers: [FormBuilder],
+      providers: [FormBuilder]
     }).compileComponents();
   });
 

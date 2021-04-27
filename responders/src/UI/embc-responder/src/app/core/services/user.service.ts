@@ -6,12 +6,12 @@ import { ProfileService } from '../api/services';
 import {
   AuthorizationService,
   ClaimModel,
-  ClaimType,
+  ClaimType
 } from './authorization.service';
 import { CacheService } from './cache.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UserService {
   private profile?: LoggedInUserProfile = null;
@@ -19,7 +19,7 @@ export class UserService {
   constructor(
     private profileService: ProfileService,
     private authorizationService: AuthorizationService,
-    private cacheService: CacheService,
+    private cacheService: CacheService
   ) {}
 
   public async loadUserProfile(): Promise<UserProfile> {
@@ -28,7 +28,7 @@ export class UserService {
       .pipe(
         tap((response) => {
           const userClaims = this.authorizationService.getClaimsForRole(
-            MemberRole[response.role],
+            MemberRole[response.role]
           );
           const taskNumber =
             this.cacheService.get('loggedInTask') === null || undefined
@@ -36,7 +36,7 @@ export class UserService {
               : this.cacheService.get('loggedInTask');
           this.profile = { ...response, taskNumber, claims: [...userClaims] };
           return this.profile;
-        }),
+        })
       )
       .toPromise();
   }
@@ -49,7 +49,7 @@ export class UserService {
     return (
       this.profile &&
       this.profile.claims.findIndex(
-        (c) => c.claimType === claimType && c.claimValue === value,
+        (c) => c.claimType === claimType && c.claimValue === value
       ) >= 0
     );
   }

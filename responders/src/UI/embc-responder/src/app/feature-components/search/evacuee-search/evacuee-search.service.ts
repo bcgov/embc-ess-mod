@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import {
   EvacueeDetailsModel,
-  EvacueeSearchContextModel,
+  EvacueeSearchContextModel
 } from 'src/app/core/models/evacuee-search-context.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class EvacueeSearchService {
   private hasShownIdentification: boolean;
   private evacueeSearchParameters: EvacueeDetailsModel = {
     firstName: null,
     lastName: null,
-    dateOfBirth: null,
+    dateOfBirth: null
   };
 
   public getHasShownIdentification(): boolean {
@@ -34,7 +34,7 @@ export class EvacueeSearchService {
   public getEvacueeSearchContext(): EvacueeSearchContextModel {
     return {
       hasShownIdentification: this.hasShownIdentification,
-      evacueeSearchParameters: this.evacueeSearchParameters,
+      evacueeSearchParameters: this.evacueeSearchParameters
     };
   }
 }

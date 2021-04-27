@@ -15,9 +15,9 @@ describe('AddTeamMemberComponent', () => {
       imports: [
         ReactiveFormsModule,
         RouterTestingModule,
-        HttpClientTestingModule,
+        HttpClientTestingModule
       ],
-      providers: [FormBuilder],
+      providers: [FormBuilder]
     }).compileComponents();
   });
 

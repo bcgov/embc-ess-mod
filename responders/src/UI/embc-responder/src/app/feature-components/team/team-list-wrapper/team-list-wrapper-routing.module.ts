@@ -5,38 +5,38 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'member-list',
-    pathMatch: 'full',
+    pathMatch: 'full'
   },
   {
     path: 'member-list',
     loadChildren: () =>
-      import('../team-list/team-list.module').then((m) => m.TeamListModule),
+      import('../team-list/team-list.module').then((m) => m.TeamListModule)
   },
   {
     path: 'member-details',
     loadChildren: () =>
       import('../team-member-detail/team-member-detail.module').then(
-        (m) => m.TeamMemberDetailModule,
-      ),
+        (m) => m.TeamMemberDetailModule
+      )
   },
   {
     path: 'edit',
     loadChildren: () =>
       import('../edit-team-member/edit-team-member.module').then(
-        (m) => m.EditTeamMemberModule,
-      ),
+        (m) => m.EditTeamMemberModule
+      )
   },
   {
     path: 'review',
     loadChildren: () =>
       import('../team-member-review/team-member-review.module').then(
-        (m) => m.TeamMemberReviewModule,
-      ),
-  },
+        (m) => m.TeamMemberReviewModule
+      )
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class TeamListWrapperRoutingModule {}

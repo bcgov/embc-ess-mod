@@ -15,7 +15,7 @@ import { TextMaskModule } from 'angular2-text-mask';
     ReactiveFormsModule,
     MaterialModule,
     SharedModule,
-    TextMaskModule,
-  ],
+    TextMaskModule
+  ]
 })
 export class EditUserProfileModule {}

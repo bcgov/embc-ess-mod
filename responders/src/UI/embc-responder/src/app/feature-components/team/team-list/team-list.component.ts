@@ -17,7 +17,7 @@ import { AddTeamMemberService } from '../add-team-member/add-team-member.service
 @Component({
   selector: 'app-team-list',
   templateUrl: './team-list.component.html',
-  styleUrls: ['./team-list.component.scss'],
+  styleUrls: ['./team-list.component.scss']
 })
 export class TeamListComponent implements OnInit {
   filterTerm: TableFilterValueModel;
@@ -35,7 +35,7 @@ export class TeamListComponent implements OnInit {
     private dialog: MatDialog,
     private userService: UserService,
     private alertService: AlertService,
-    private addTeamMemberService: AddTeamMemberService,
+    private addTeamMemberService: AddTeamMemberService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -60,7 +60,7 @@ export class TeamListComponent implements OnInit {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.teamMemberListError);
-      },
+      }
     );
     this.filtersToLoad = this.teamDataService.filtersToLoad;
     this.displayedColumns = this.teamDataService.displayedColumns;
@@ -85,7 +85,7 @@ export class TeamListComponent implements OnInit {
     this.teamDataService.setSelectedTeamMember($event);
     this.router.navigate(
       ['/responder-access/responder-management/details/member-details'],
-      { state: $event },
+      { state: $event }
     );
   }
 
@@ -106,9 +106,9 @@ export class TeamListComponent implements OnInit {
         this.alertService.clearAlert();
         this.alertService.setAlert(
           'danger',
-          globalConst.activateTeamMemberError,
+          globalConst.activateTeamMemberError
         );
-      },
+      }
     );
   }
 
@@ -129,9 +129,9 @@ export class TeamListComponent implements OnInit {
         this.alertService.clearAlert();
         this.alertService.setAlert(
           'danger',
-          globalConst.deActivateTeamMemberError,
+          globalConst.deActivateTeamMemberError
         );
-      },
+      }
     );
   }
 
@@ -170,10 +170,10 @@ export class TeamListComponent implements OnInit {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text,
+        text
       },
       height: '230px',
-      width: '530px',
+      width: '530px'
     });
   }
 }

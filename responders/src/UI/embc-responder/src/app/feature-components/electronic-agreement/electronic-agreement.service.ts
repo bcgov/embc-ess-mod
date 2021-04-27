@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ProfileService } from 'src/app/core/api/services';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ElectronicAgreementService {
   constructor(private profileService: ProfileService) {}

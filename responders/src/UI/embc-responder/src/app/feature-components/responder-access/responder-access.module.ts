@@ -12,7 +12,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     CommonModule,
     ResponderAccessRoutingModule,
     SharedModule,
-    MatSidenavModule,
-  ],
+    MatSidenavModule
+  ]
 })
 export class ResponderAccessModule {}

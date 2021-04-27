@@ -14,7 +14,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ElectronicAgreementRoutingModule,
     MatCardModule,
     MatButtonModule,
-    MatCheckboxModule,
-  ],
+    MatCheckboxModule
+  ]
 })
 export class ElectronicAgreementModule {}

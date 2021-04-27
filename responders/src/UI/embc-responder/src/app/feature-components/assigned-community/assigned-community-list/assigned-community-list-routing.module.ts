@@ -3,11 +3,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { AssignedCommunityListComponent } from './assigned-community-list.component';
 
 const routes: Routes = [
-  { path: '', component: AssignedCommunityListComponent },
+  { path: '', component: AssignedCommunityListComponent }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AssignedCommunityListRoutingModule {}

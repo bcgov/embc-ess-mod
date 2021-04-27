@@ -10,7 +10,7 @@ import { MaterialModule } from 'src/app/material.module';
   imports: [
     CommonModule,
     AssignedCommunityManagementRoutingModule,
-    MaterialModule,
-  ],
+    MaterialModule
+  ]
 })
 export class AssignedCommunityManagementModule {}

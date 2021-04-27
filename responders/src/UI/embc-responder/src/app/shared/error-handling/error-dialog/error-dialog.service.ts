@@ -19,7 +19,7 @@ export class ErrorDialogService {
         width: '540px',
         maxWidth: '100%',
         disableClose: true,
-        hasBackdrop: true,
+        hasBackdrop: true
       });
 
       dialogRef.afterClosed().subscribe((d) => {

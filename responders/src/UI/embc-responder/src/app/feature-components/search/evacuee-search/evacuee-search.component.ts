@@ -4,7 +4,7 @@ import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-co
 @Component({
   selector: 'app-evacuee-search',
   templateUrl: './evacuee-search.component.html',
-  styleUrls: ['./evacuee-search.component.scss'],
+  styleUrls: ['./evacuee-search.component.scss']
 })
 export class EvacueeSearchComponent implements OnInit {
   showPhotoIDComponent = true;

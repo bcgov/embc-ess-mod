@@ -3,7 +3,7 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserProfile } from 'src/app/core/api/models';
@@ -16,7 +16,7 @@ import * as globalConst from '../../../core/services/global-constants';
 @Component({
   selector: 'app-edit-user-profile',
   templateUrl: './edit-user-profile.component.html',
-  styleUrls: ['./edit-user-profile.component.scss'],
+  styleUrls: ['./edit-user-profile.component.scss']
 })
 export class EditUserProfileComponent implements OnInit {
   editForm: FormGroup;
@@ -32,7 +32,7 @@ export class EditUserProfileComponent implements OnInit {
     /\d/,
     /\d/,
     /\d/,
-    /\d/,
+    /\d/
   ];
   userProfile: UserProfile;
   showLoader = false;
@@ -45,7 +45,7 @@ export class EditUserProfileComponent implements OnInit {
     private customValidation: CustomValidationService,
     private userService: UserService,
     private editUserProfileService: EditUserProfileService,
-    private alertService: AlertService,
+    private alertService: AlertService
   ) {}
 
   /**
@@ -70,11 +70,11 @@ export class EditUserProfileComponent implements OnInit {
     this.editForm = this.builder.group({
       firstName: [
         this.userProfile?.firstName,
-        [this.customValidation.whitespaceValidator()],
+        [this.customValidation.whitespaceValidator()]
       ],
       lastName: [
         this.userProfile?.lastName,
-        [this.customValidation.whitespaceValidator()],
+        [this.customValidation.whitespaceValidator()]
       ],
       userName: [{ value: this.userProfile?.userName, disabled: true }],
       role: [{ value: this.userProfile?.role, disabled: true }],
@@ -82,8 +82,8 @@ export class EditUserProfileComponent implements OnInit {
       email: [this.userProfile?.email, [Validators.email]],
       phone: [
         this.userProfile?.phone,
-        [this.customValidation.maskedNumberLengthValidator()],
-      ],
+        [this.customValidation.maskedNumberLengthValidator()]
+      ]
     });
   }
 
@@ -117,7 +117,7 @@ export class EditUserProfileComponent implements OnInit {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.setAlert('danger', globalConst.editProfileError);
-        },
+        }
       );
   }
 }

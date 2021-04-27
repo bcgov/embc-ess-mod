@@ -7,6 +7,6 @@ import { MaterialModule } from '../material.module';
 @NgModule({
   declarations: [HeaderComponent, FooterComponent],
   imports: [CommonModule, MaterialModule],
-  exports: [HeaderComponent, FooterComponent],
+  exports: [HeaderComponent, FooterComponent]
 })
 export class CoreModule {}

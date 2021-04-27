@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MemberRole, TeamMember } from 'src/app/core/api/models';
 import {
   ActionPermission,
-  ClaimType,
+  ClaimType
 } from 'src/app/core/services/authorization.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { DeleteConfirmationDialogComponent } from 'src/app/shared/components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
@@ -15,7 +15,7 @@ import { TeamMemberDetailsService } from './team-member-details.service';
 @Component({
   selector: 'app-team-member-detail',
   templateUrl: './team-member-detail.component.html',
-  styleUrls: ['./team-member-detail.component.scss'],
+  styleUrls: ['./team-member-detail.component.scss']
 })
 export class TeamMemberDetailComponent {
   teamMember: TeamMember;
@@ -25,7 +25,7 @@ export class TeamMemberDetailComponent {
     private dialog: MatDialog,
     private teamDetailsService: TeamMemberDetailsService,
     private teamDataService: TeamListDataService,
-    private userService: UserService,
+    private userService: UserService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -46,10 +46,10 @@ export class TeamMemberDetailComponent {
     this.dialog
       .open(DialogComponent, {
         data: {
-          component: DeleteConfirmationDialogComponent,
+          component: DeleteConfirmationDialogComponent
         },
         height: '300px',
-        width: '650px',
+        width: '650px'
       })
       .afterClosed()
       .subscribe((event) => {
@@ -60,7 +60,7 @@ export class TeamMemberDetailComponent {
               const stateIndicator = { action: 'delete' };
               this.router.navigate(
                 ['/responder-access/responder-management/details/member-list'],
-                { state: stateIndicator },
+                { state: stateIndicator }
               );
             });
         }
@@ -76,7 +76,7 @@ export class TeamMemberDetailComponent {
   public hasPermission(action: string): boolean {
     return this.userService.hasClaim(
       ClaimType.action,
-      ActionPermission[action],
+      ActionPermission[action]
     );
   }
 
@@ -86,7 +86,7 @@ export class TeamMemberDetailComponent {
   editUser(): void {
     this.router.navigate(
       ['/responder-access/responder-management/details/edit'],
-      { state: this.teamMember },
+      { state: this.teamMember }
     );
   }
 
@@ -95,7 +95,7 @@ export class TeamMemberDetailComponent {
    */
   cancel(): void {
     this.router.navigate([
-      '/responder-access/responder-management/details/member-list',
+      '/responder-access/responder-management/details/member-list'
     ]);
   }
 

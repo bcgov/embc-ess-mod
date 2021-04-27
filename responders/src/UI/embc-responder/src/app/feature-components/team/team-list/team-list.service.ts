@@ -10,7 +10,7 @@ import { LoadTeamListService } from 'src/app/core/services/load-team-list.servic
 export class TeamListService {
   constructor(
     private teamMembersService: TeamMembersService,
-    private listService: LoadTeamListService,
+    private listService: LoadTeamListService
   ) {}
 
   public getTeamMembers(): Observable<TeamMemberModel[]> {
@@ -20,10 +20,10 @@ export class TeamListService {
         const labels: MemberLabelDescription[] = this.listService.getMemberLabels();
         return members.map((teamMember: TeamMemberModel) => {
           const matchedLabel = labels.find(
-            (label) => label.code === teamMember.label,
+            (label) => label.code === teamMember.label
           );
           const matchedRole = roles.find(
-            (role) => role.code === teamMember.role,
+            (role) => role.code === teamMember.role
           );
           if (matchedLabel) {
             teamMember.labelDescription = matchedLabel.description;
@@ -31,7 +31,7 @@ export class TeamListService {
           }
           return teamMember;
         });
-      }),
+      })
     );
   }
 
@@ -42,7 +42,7 @@ export class TeamListService {
         mergeMap((result) => {
           console.log(result);
           return this.getTeamMembers();
-        }),
+        })
       );
   }
 
@@ -53,7 +53,7 @@ export class TeamListService {
         mergeMap((result) => {
           console.log(result);
           return this.getTeamMembers();
-        }),
+        })
       );
   }
 }

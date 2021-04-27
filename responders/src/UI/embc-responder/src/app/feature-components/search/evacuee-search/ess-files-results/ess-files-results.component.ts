@@ -5,7 +5,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,7 +15,7 @@ import { EvacuationFileSearchResult } from 'src/app/core/api/models';
 @Component({
   selector: 'app-ess-files-results',
   templateUrl: './ess-files-results.component.html',
-  styleUrls: ['./ess-files-results.component.scss'],
+  styleUrls: ['./ess-files-results.component.scss']
 })
 export class EssFilesResultsComponent
   implements OnInit, OnChanges, AfterViewInit {

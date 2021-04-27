@@ -9,6 +9,6 @@ import { TeamMemberTableComponent } from './team-member-table/team-member-table.
 
 @NgModule({
   declarations: [TeamListComponent, TeamMemberTableComponent],
-  imports: [CommonModule, TeamListRoutingModule, SharedModule, MaterialModule],
+  imports: [CommonModule, TeamListRoutingModule, SharedModule, MaterialModule]
 })
 export class TeamListModule {}

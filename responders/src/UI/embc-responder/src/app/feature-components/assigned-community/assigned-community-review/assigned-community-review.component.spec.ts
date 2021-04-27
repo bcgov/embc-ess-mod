@@ -11,7 +11,7 @@ describe('AssignedCommunityReviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule],
-      declarations: [AssignedCommunityReviewComponent],
+      declarations: [AssignedCommunityReviewComponent]
     }).compileComponents();
   });
 

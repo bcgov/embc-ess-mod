@@ -8,7 +8,7 @@ describe('CommunityManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AssignedCommunityManagementComponent],
+      declarations: [AssignedCommunityManagementComponent]
     }).compileComponents();
   });
 

@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     ResponderDashboardRoutingModule,
     MatCardModule,
-    MatButtonModule,
-  ],
+    MatButtonModule
+  ]
 })
 export class ResponderDashboardModule {}

@@ -6,7 +6,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 @Component({
   selector: 'app-task-search',
   templateUrl: './task-search.component.html',
-  styleUrls: ['./task-search.component.scss'],
+  styleUrls: ['./task-search.component.scss']
 })
 export class TaskSearchComponent implements OnInit {
   taskSearchForm: FormGroup;
@@ -14,7 +14,7 @@ export class TaskSearchComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private customValidation: CustomValidationService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -27,13 +27,13 @@ export class TaskSearchComponent implements OnInit {
 
   constructTaskSearchForm(): void {
     this.taskSearchForm = this.builder.group({
-      taskNumber: ['', [this.customValidation.whitespaceValidator()]],
+      taskNumber: ['', [this.customValidation.whitespaceValidator()]]
     });
   }
 
   submitTask(): void {
     this.router.navigate(['/responder-access/search/task-details'], {
-      state: { taskNumber: this.taskSearchForm.get('taskNumber').value },
+      state: { taskNumber: this.taskSearchForm.get('taskNumber').value }
     });
   }
 }

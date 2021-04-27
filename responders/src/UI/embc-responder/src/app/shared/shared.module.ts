@@ -21,7 +21,7 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     AlertComponent,
     AppLoaderComponent,
     DeleteConfirmationDialogComponent,
-    InformationDialogComponent,
+    InformationDialogComponent
   ],
   imports: [CommonModule, RouterModule, MaterialModule, FormsModule],
   exports: [
@@ -32,7 +32,7 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     AlertComponent,
     AppLoaderComponent,
     DeleteConfirmationDialogComponent,
-    InformationDialogComponent,
-  ],
+    InformationDialogComponent
+  ]
 })
 export class SharedModule {}

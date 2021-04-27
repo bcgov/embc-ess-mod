@@ -6,7 +6,7 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -20,7 +20,7 @@ import { TeamMemberModel } from 'src/app/core/models/team-member.model';
 @Component({
   selector: 'app-team-member-table',
   templateUrl: './team-member-table.component.html',
-  styleUrls: ['./team-member-table.component.scss'],
+  styleUrls: ['./team-member-table.component.scss']
 })
 export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;

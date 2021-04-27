@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   MatDialogModule,
   MatDialogRef,
-  MAT_DIALOG_DATA,
+  MAT_DIALOG_DATA
 } from '@angular/material/dialog';
 import { ErrorDialogComponent } from './error-dialog.component';
 
@@ -16,8 +16,8 @@ describe('ErrorDialogComponent', () => {
       imports: [MatDialogModule],
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: MatDialogRef, useValue: {} },
-      ],
+        { provide: MatDialogRef, useValue: {} }
+      ]
     }).compileComponents();
   });
 

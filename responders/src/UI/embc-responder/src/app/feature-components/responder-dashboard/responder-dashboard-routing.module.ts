@@ -6,6 +6,6 @@ const routes: Routes = [{ path: '', component: ResponderDashboardComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class ResponderDashboardRoutingModule {}

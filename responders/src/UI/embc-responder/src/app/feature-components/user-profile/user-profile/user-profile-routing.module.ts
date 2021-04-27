@@ -11,22 +11,22 @@ const routes: Routes = [
         path: '',
         loadChildren: () =>
           import('../view-user-profile/view-user-profile.module').then(
-            (m) => m.ViewUserProfileModule,
-          ),
+            (m) => m.ViewUserProfileModule
+          )
       },
       {
         path: 'edit',
         loadChildren: () =>
           import('../edit-user-profile/edit-user-profile.module').then(
-            (m) => m.EditUserProfileModule,
-          ),
-      },
-    ],
-  },
+            (m) => m.EditUserProfileModule
+          )
+      }
+    ]
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class UserProfileRoutingModule {}

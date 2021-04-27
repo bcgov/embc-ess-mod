@@ -49,7 +49,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatCheckboxModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
-    MatRadioModule,
+    MatRadioModule
   ],
   exports: [
     CommonModule,
@@ -75,7 +75,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatRadioModule,
-    MatExpansionModule,
-  ],
+    MatExpansionModule
+  ]
 })
 export class MaterialModule {}

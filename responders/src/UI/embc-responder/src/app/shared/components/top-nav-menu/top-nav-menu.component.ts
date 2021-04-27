@@ -1,14 +1,14 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   ClaimType,
-  ModulePermission,
+  ModulePermission
 } from 'src/app/core/services/authorization.service';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-top-nav-menu',
   templateUrl: './top-nav-menu.component.html',
-  styleUrls: ['./top-nav-menu.component.scss'],
+  styleUrls: ['./top-nav-menu.component.scss']
 })
 export class TopNavMenuComponent implements OnInit {
   @Output() public sidenavToggle = new EventEmitter();
@@ -24,7 +24,7 @@ export class TopNavMenuComponent implements OnInit {
   public hasPermission(module: string): boolean {
     return this.userService.hasClaim(
       ClaimType.module,
-      ModulePermission[module],
+      ModulePermission[module]
     );
   }
 }

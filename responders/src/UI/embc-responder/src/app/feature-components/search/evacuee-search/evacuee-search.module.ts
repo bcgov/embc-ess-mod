@@ -20,7 +20,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     EvacueeNameSearchComponent,
     EvacueeSearchResultsComponent,
     EssFilesResultsComponent,
-    ProfileResultsComponent,
+    ProfileResultsComponent
   ],
   imports: [
     CommonModule,
@@ -28,12 +28,12 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MaterialModule,
     ReactiveFormsModule,
     TextMaskModule,
-    SharedModule,
+    SharedModule
   ],
   exports: [
     EvacueeIdVerifyComponent,
     EvacueeNameSearchComponent,
-    EvacueeSearchResultsComponent,
-  ],
+    EvacueeSearchResultsComponent
+  ]
 })
 export class EvacueeSearchModule {}

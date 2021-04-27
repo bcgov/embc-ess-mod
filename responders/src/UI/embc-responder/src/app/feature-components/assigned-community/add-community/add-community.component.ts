@@ -12,7 +12,7 @@ import { AddCommunityService } from './add-community.service';
 @Component({
   selector: 'app-add-community',
   templateUrl: './add-community.component.html',
-  styleUrls: ['./add-community.component.scss'],
+  styleUrls: ['./add-community.component.scss']
 })
 export class AddCommunityComponent implements OnInit {
   communities: TeamCommunityModel[];
@@ -25,7 +25,7 @@ export class AddCommunityComponent implements OnInit {
   constructor(
     private assignedCommunityListDataService: AssignedCommunityListDataService,
     private router: Router,
-    private addCommunityService: AddCommunityService,
+    private addCommunityService: AddCommunityService
   ) {}
 
   /**
@@ -96,7 +96,7 @@ export class AddCommunityComponent implements OnInit {
    */
   addToMyList(): void {
     this.router.navigate(['/responder-access/community-management/review'], {
-      queryParams: { action: 'add' },
+      queryParams: { action: 'add' }
     });
   }
 
@@ -105,7 +105,7 @@ export class AddCommunityComponent implements OnInit {
    */
   goToList(): void {
     this.router.navigate([
-      '/responder-access/community-management/list-communities',
+      '/responder-access/community-management/list-communities'
     ]);
   }
 }

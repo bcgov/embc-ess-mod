@@ -5,7 +5,7 @@ import { UserService } from 'src/app/core/services/user.service';
 @Component({
   selector: 'app-task-details',
   templateUrl: './task-details.component.html',
-  styleUrls: ['./task-details.component.scss'],
+  styleUrls: ['./task-details.component.scss']
 })
 export class TaskDetailsComponent implements OnInit {
   taskNumber: string;

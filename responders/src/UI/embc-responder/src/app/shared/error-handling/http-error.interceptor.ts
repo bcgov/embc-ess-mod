@@ -3,7 +3,7 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest,
+  HttpRequest
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -15,12 +15,12 @@ import { ErrorDialogService } from './error-dialog/error-dialog.service';
 export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(
     private errorDialogService: ErrorDialogService,
-    private router: Router,
+    private router: Router
   ) {}
 
   public intercept(
     request: HttpRequest<any>,
-    next: HttpHandler,
+    next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       this.delayedRetry(2000, 2),
@@ -30,13 +30,13 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         } else {
           return throwError(error);
         }
-      }),
+      })
     ) as Observable<HttpEvent<any>>;
   }
 
   private delayedRetry(
     delayMs: number,
-    maxRetry: number,
+    maxRetry: number
   ): (src: Observable<any>) => Observable<any> {
     let retries = maxRetry;
     return (src: Observable<any>) =>
@@ -44,11 +44,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         retryWhen((errors) =>
           errors.pipe(
             delay(delayMs),
-            mergeMap((error) =>
-              retries-- > 0 ? of(error) : throwError(error),
-            ),
-          ),
-        ),
+            mergeMap((error) => (retries-- > 0 ? of(error) : throwError(error)))
+          )
+        )
       );
   }
 }

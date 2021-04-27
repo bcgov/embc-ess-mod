@@ -7,14 +7,14 @@ import { ElectronicAgreementService } from './electronic-agreement.service';
 @Component({
   selector: 'app-electronic-agreement',
   templateUrl: './electronic-agreement.component.html',
-  styleUrls: ['./electronic-agreement.component.scss'],
+  styleUrls: ['./electronic-agreement.component.scss']
 })
 export class ElectronicAgreementComponent implements OnInit {
   agreementAccepted = false;
 
   constructor(
     private router: Router,
-    private eaaService: ElectronicAgreementService,
+    private eaaService: ElectronicAgreementService
   ) {}
 
   ngOnInit(): void {}

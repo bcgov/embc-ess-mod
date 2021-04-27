@@ -8,7 +8,7 @@ describe('EvacueeSearchComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EvacueeSearchComponent],
+      declarations: [EvacueeSearchComponent]
     }).compileComponents();
   });
 

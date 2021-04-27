@@ -14,7 +14,7 @@ import { SharedModule } from '../../../shared/shared.module';
     AddTeamMemberRoutingModule,
     ReactiveFormsModule,
     MaterialModule,
-    SharedModule,
-  ],
+    SharedModule
+  ]
 })
 export class AddTeamMemberModule {}

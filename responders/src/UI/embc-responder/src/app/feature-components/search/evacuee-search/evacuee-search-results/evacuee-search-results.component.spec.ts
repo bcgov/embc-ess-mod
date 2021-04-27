@@ -10,7 +10,7 @@ describe('EvacueeSearchResultsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EvacueeSearchResultsComponent],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule]
     }).compileComponents();
   });
 

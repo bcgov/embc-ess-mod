@@ -6,7 +6,7 @@ import { LoggedInUserProfile, UserService } from '../../services/user.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
   public get profile(): LoggedInUserProfile {
@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthenticationService,
-    private userService: UserService,
+    private userService: UserService
   ) {}
 
   public ngOnInit(): void {}

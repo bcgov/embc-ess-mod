@@ -11,11 +11,11 @@ describe('AppComponent', () => {
         imports: [
           RouterTestingModule,
           HttpClientTestingModule,
-          OAuthModule.forRoot(),
+          OAuthModule.forRoot()
         ],
-        declarations: [AppComponent],
+        declarations: [AppComponent]
       }).compileComponents();
-    }),
+    })
   );
 
   it('should create the app', () => {

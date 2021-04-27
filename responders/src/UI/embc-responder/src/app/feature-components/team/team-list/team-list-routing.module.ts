@@ -5,12 +5,12 @@ import { TeamListComponent } from './team-list.component';
 const routes: Routes = [
   {
     path: '',
-    component: TeamListComponent,
-  },
+    component: TeamListComponent
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class TeamListRoutingModule {}

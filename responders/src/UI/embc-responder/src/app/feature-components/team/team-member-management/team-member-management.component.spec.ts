@@ -8,7 +8,7 @@ describe('TeamMemberManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TeamMemberManagementComponent],
+      declarations: [TeamMemberManagementComponent]
     }).compileComponents();
   });
 

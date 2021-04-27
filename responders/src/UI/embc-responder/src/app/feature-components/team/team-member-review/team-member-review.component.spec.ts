@@ -11,7 +11,7 @@ describe('TeamMemberReviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [TeamMemberReviewComponent],
+      declarations: [TeamMemberReviewComponent]
     }).compileComponents();
   });
 

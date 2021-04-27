@@ -12,7 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     TaskSearchRoutingModule,
     MaterialModule,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+  ]
 })
 export class TaskSearchModule {}

@@ -6,6 +6,6 @@ const routes: Routes = [{ path: '', component: EvacueeSearchComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class EvacueeSearchRoutingModule {}

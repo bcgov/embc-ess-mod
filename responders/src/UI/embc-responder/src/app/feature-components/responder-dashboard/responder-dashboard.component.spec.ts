@@ -11,7 +11,7 @@ describe('ResponderDashboardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ResponderDashboardComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule]
     }).compileComponents();
   });
 

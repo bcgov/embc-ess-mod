@@ -12,7 +12,7 @@ import { MaterialModule } from '../../../material.module';
     CommonModule,
     TeamMemberDetailRoutingModule,
     SharedModule,
-    MaterialModule,
-  ],
+    MaterialModule
+  ]
 })
 export class TeamMemberDetailModule {}

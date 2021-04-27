@@ -9,7 +9,7 @@ export class LoadTeamListService {
   private memberLabels: MemberLabelDescription[];
   constructor(
     private teamMembersService: TeamMembersService,
-    private cacheService: CacheService,
+    private cacheService: CacheService
   ) {}
 
   public getMemberLabels(): MemberLabelDescription[] {

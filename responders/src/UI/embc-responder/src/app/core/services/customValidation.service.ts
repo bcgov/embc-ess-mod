@@ -63,7 +63,7 @@ export class CustomValidationService {
   conditionalValidation(
     predicate: () => boolean,
     validator: ValidatorFn,
-    errorName?: string,
+    errorName?: string
   ): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (control.parent) {

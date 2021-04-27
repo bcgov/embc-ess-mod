@@ -5,7 +5,7 @@ import {
   OnInit,
   Output,
   QueryList,
-  ViewChildren,
+  ViewChildren
 } from '@angular/core';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
@@ -14,7 +14,7 @@ import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 @Component({
   selector: 'app-search-filter',
   templateUrl: './search-filter.component.html',
-  styleUrls: ['./search-filter.component.scss'],
+  styleUrls: ['./search-filter.component.scss']
 })
 export class SearchFilterComponent implements OnInit {
   @ViewChildren('matRef') matRef: QueryList<MatSelect>;
@@ -35,7 +35,7 @@ export class SearchFilterComponent implements OnInit {
           ? ''
           : select.value.description !== undefined
           ? select.value.description
-          : select.value,
+          : select.value
       );
     });
     this.filterEvent.emit({ type: 'array', value: filterArray.join(',') });

@@ -9,7 +9,7 @@ import { AssignedCommunityReviewService } from './assigned-community-review.serv
 @Component({
   selector: 'app-assigned-community-review',
   templateUrl: './assigned-community-review.component.html',
-  styleUrls: ['./assigned-community-review.component.scss'],
+  styleUrls: ['./assigned-community-review.component.scss']
 })
 export class AssignedCommunityReviewComponent implements OnInit {
   reviewAction: string;
@@ -24,7 +24,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
     private addCommunityService: AddCommunityService,
     private assignedCommunityDataService: AssignedCommunityListDataService,
     private assignedCommunityReviewService: AssignedCommunityReviewService,
-    private alertService: AlertService,
+    private alertService: AlertService
   ) {}
 
   /**
@@ -44,7 +44,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
    */
   goBack(): void {
     this.router.navigate([
-      '/responder-access/community-management/add-communities',
+      '/responder-access/community-management/add-communities'
     ]);
   }
 
@@ -59,14 +59,14 @@ export class AssignedCommunityReviewComponent implements OnInit {
       .subscribe(
         (response) => {
           this.router.navigate([
-            '/responder-access/community-management/list-communities',
+            '/responder-access/community-management/list-communities'
           ]);
         },
         (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.setAlert('danger', error.error.title);
-        },
+        }
       );
   }
 
@@ -75,7 +75,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
    */
   cancel(): void {
     this.router.navigate([
-      '/responder-access/community-management/list-communities',
+      '/responder-access/community-management/list-communities'
     ]);
   }
 
@@ -88,19 +88,19 @@ export class AssignedCommunityReviewComponent implements OnInit {
     this.isSubmitted = !this.isSubmitted;
     this.assignedCommunityReviewService
       .removeCommunities(
-        this.deleteCommunityList.map((comm) => comm.communityCode),
+        this.deleteCommunityList.map((comm) => comm.communityCode)
       )
       .subscribe(
         (response) => {
           this.router.navigate([
-            '/responder-access/community-management/list-communities',
+            '/responder-access/community-management/list-communities'
           ]);
         },
         (error) => {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.setAlert('danger', error.error.title);
-        },
+        }
       );
   }
 }

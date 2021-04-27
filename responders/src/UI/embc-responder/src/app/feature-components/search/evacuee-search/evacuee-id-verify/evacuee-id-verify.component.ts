@@ -3,7 +3,7 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { EvacueeSearchService } from '../evacuee-search.service';
@@ -11,7 +11,7 @@ import { EvacueeSearchService } from '../evacuee-search.service';
 @Component({
   selector: 'app-evacuee-id-verify',
   templateUrl: './evacuee-id-verify.component.html',
-  styleUrls: ['./evacuee-id-verify.component.scss'],
+  styleUrls: ['./evacuee-id-verify.component.scss']
 })
 export class EvacueeIdVerifyComponent implements OnInit {
   @Output() showIDPhotoComponent = new EventEmitter<boolean>();
@@ -24,7 +24,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
 
   constructor(
     private builder: FormBuilder,
-    private evacueeSearchService: EvacueeSearchService,
+    private evacueeSearchService: EvacueeSearchService
   ) {}
 
   /**
@@ -48,8 +48,8 @@ export class EvacueeIdVerifyComponent implements OnInit {
     this.idVerifyForm = this.builder.group({
       photoId: [
         this.evacueeSearchContextModel?.hasShownIdentification,
-        [Validators.required],
-      ],
+        [Validators.required]
+      ]
     });
   }
 
@@ -58,7 +58,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
    */
   next(): void {
     this.evacueeSearchService.setHasShownIdentification(
-      this.idVerifyForm.get('photoId').value,
+      this.idVerifyForm.get('photoId').value
     );
     this.showIDPhotoComponent.emit(false);
   }

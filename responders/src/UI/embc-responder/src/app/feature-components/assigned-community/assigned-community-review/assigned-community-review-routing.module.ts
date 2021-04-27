@@ -3,11 +3,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { AssignedCommunityReviewComponent } from './assigned-community-review.component';
 
 const routes: Routes = [
-  { path: '', component: AssignedCommunityReviewComponent },
+  { path: '', component: AssignedCommunityReviewComponent }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AssignedCommunityReviewRoutingModule {}

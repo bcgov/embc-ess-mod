@@ -6,14 +6,14 @@ import { ConfigService } from './config.service';
 export class AuthenticationService {
   constructor(
     private oauthService: OAuthService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {}
 
   public async login(): Promise<string> {
     await this.configureOAuthService();
     const returnRoute = location.pathname.substring(1);
     const isLoggedIn = await this.oauthService.loadDiscoveryDocumentAndLogin({
-      state: returnRoute,
+      state: returnRoute
     });
     if (isLoggedIn) {
       return Promise.resolve(this.oauthService.state || returnRoute);

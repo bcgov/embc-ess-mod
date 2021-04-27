@@ -8,7 +8,7 @@ import { Configuration } from '../api/models';
 import { ConfigurationService } from '../api/services';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ConfigService {
   private config?: Configuration = null;
@@ -22,7 +22,7 @@ export class ConfigService {
     return this.configurationService.configurationGetConfiguration().pipe(
       tap((c) => {
         this.config = { ...c };
-      }),
+      })
     );
   }
 
@@ -37,8 +37,8 @@ export class ConfigService {
           scope: 'openid profile email offline_access',
           showDebugInformation: !environment.production,
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          customQueryParams: { kc_idp_hint: 'bceid' },
-        })),
+          customQueryParams: { kc_idp_hint: 'bceid' }
+        }))
       )
       .toPromise();
   }

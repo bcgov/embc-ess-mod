@@ -14,7 +14,7 @@ import { AssignedCommunityTableModule } from '../assigned-community-table/assign
     AssignedCommunityListRoutingModule,
     SharedModule,
     MaterialModule,
-    AssignedCommunityTableModule,
-  ],
+    AssignedCommunityTableModule
+  ]
 })
 export class AssignedCommunityListModule {}

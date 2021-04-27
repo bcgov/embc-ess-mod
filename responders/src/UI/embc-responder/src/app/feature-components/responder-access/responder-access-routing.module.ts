@@ -10,49 +10,49 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'responder-dashboard',
-        pathMatch: 'full',
+        pathMatch: 'full'
       },
       {
         path: 'responder-dashboard',
         loadChildren: () =>
           import('../responder-dashboard/responder-dashboard.module').then(
-            (m) => m.ResponderDashboardModule,
-          ),
+            (m) => m.ResponderDashboardModule
+          )
       },
       {
         path: 'search',
         loadChildren: () =>
           import(
             '../search/search-registartion/search-registartion.module'
-          ).then((m) => m.SearchRegistartionModule),
+          ).then((m) => m.SearchRegistartionModule)
       },
       {
         path: 'user-profile',
         loadChildren: () =>
           import('../user-profile/user-profile/user-profile.module').then(
-            (m) => m.UserProfileModule,
-          ),
+            (m) => m.UserProfileModule
+          )
       },
       {
         path: 'community-management',
         loadChildren: () =>
           import(
             '../assigned-community/assigned-community-management/assigned-community-management.module'
-          ).then((m) => m.AssignedCommunityManagementModule),
+          ).then((m) => m.AssignedCommunityManagementModule)
       },
       {
         path: 'responder-management',
         loadChildren: () =>
           import(
             '../team/team-member-management/team-member-management.module'
-          ).then((m) => m.TeamMemberManagementModule),
-      },
-    ],
-  },
+          ).then((m) => m.TeamMemberManagementModule)
+      }
+    ]
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class ResponderAccessRoutingModule {}

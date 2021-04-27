@@ -7,6 +7,6 @@ import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
   declarations: [TaskDetailsComponent],
-  imports: [CommonModule, TaskDetailsRoutingModule, MaterialModule],
+  imports: [CommonModule, TaskDetailsRoutingModule, MaterialModule]
 })
 export class TaskDetailsModule {}

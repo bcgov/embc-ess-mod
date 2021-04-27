@@ -15,9 +15,9 @@ describe('EditUserProfileComponent', () => {
       imports: [
         ReactiveFormsModule,
         RouterTestingModule,
-        HttpClientTestingModule,
+        HttpClientTestingModule
       ],
-      providers: [FormBuilder],
+      providers: [FormBuilder]
     }).compileComponents();
   });
 
