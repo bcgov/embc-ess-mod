@@ -42,7 +42,7 @@
     <div class="row row-align">
       <div class="col-md-4 detail-label">Last Login Date & Time</div>
       <div class="col-md-8">
-        {{ userProfile?.lastLoginDate | date: "dd-MMM-yyyy HH:mm" }}
+        {{ userProfile?.lastLoginDate | date: 'dd-MMM-yyyy HH:mm' }}
       </div>
     </div>
     <br />
@@ -56,12 +56,12 @@
 
     <div class="row row-align">
       <div class="col-md-4 detail-label">Email Address</div>
-      <div class="col-md-8">{{ userProfile?.email || "n/a" }}</div>
+      <div class="col-md-8">{{ userProfile?.email || 'n/a' }}</div>
     </div>
 
     <div class="row row-align">
       <div class="col-md-4 detail-label">Contact Number</div>
-      <div class="col-md-8">{{ userProfile?.phone || "n/a" }}</div>
+      <div class="col-md-8">{{ userProfile?.phone || 'n/a' }}</div>
     </div>
     <br />
     <br />

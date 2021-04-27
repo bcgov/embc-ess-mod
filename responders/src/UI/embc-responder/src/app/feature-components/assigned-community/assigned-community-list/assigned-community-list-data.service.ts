@@ -29,7 +29,7 @@ export class AssignedCommunityListDataService {
         type: 'type',
         label: this.defaultTypes,
         values: Object.keys(CommunityType).filter((e) =>
-          e === 'Undefined' ? '' : e
+          e === 'Undefined' ? '' : e,
         ),
       },
     ],
@@ -53,11 +53,11 @@ export class AssignedCommunityListDataService {
 
   constructor(
     private locationsService: LocationsService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
   ) {}
 
   public setCommunitiesToDelete(
-    communitiesToDelete: TeamCommunityModel[]
+    communitiesToDelete: TeamCommunityModel[],
   ): void {
     this.communitiesToDelete = communitiesToDelete;
   }
@@ -72,7 +72,7 @@ export class AssignedCommunityListDataService {
   }
 
   public setAllTeamCommunityList(
-    allTeamCommunityList: TeamCommunityModel[]
+    allTeamCommunityList: TeamCommunityModel[],
   ): void {
     this.cacheService.set('allTeamCommunityList', allTeamCommunityList);
     this.allTeamCommunityList = allTeamCommunityList;
@@ -82,14 +82,14 @@ export class AssignedCommunityListDataService {
     const conflictMap: TeamCommunityModel[] = this.mergedCommunityList().map(
       (values) => {
         const conflicts = this.getAllTeamCommunityList().find(
-          (x) => x.code === values.code
+          (x) => x.code === values.code,
         );
         return this.mergeData(values, conflicts);
-      }
+      },
     );
     const addMap: TeamCommunityModel[] = conflictMap.map((values) => {
       const existing = this.getTeamCommunityList().find(
-        (x) => x.code === values.code
+        (x) => x.code === values.code,
       );
       return this.mergeData(values, existing);
     });

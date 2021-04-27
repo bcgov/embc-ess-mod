@@ -24,7 +24,7 @@ export class TopNavMenuComponent implements OnInit {
   public hasPermission(module: string): boolean {
     return this.userService.hasClaim(
       ClaimType.module,
-      ModulePermission[module]
+      ModulePermission[module],
     );
   }
 }

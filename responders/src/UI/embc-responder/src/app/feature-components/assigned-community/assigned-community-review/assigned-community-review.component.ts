@@ -24,7 +24,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
     private addCommunityService: AddCommunityService,
     private assignedCommunityDataService: AssignedCommunityListDataService,
     private assignedCommunityReviewService: AssignedCommunityReviewService,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {}
 
   /**
@@ -66,7 +66,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.setAlert('danger', error.error.title);
-        }
+        },
       );
   }
 
@@ -88,7 +88,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
     this.isSubmitted = !this.isSubmitted;
     this.assignedCommunityReviewService
       .removeCommunities(
-        this.deleteCommunityList.map((comm) => comm.communityCode)
+        this.deleteCommunityList.map((comm) => comm.communityCode),
       )
       .subscribe(
         (response) => {
@@ -100,7 +100,7 @@ export class AssignedCommunityReviewComponent implements OnInit {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.setAlert('danger', error.error.title);
-        }
+        },
       );
   }
 }

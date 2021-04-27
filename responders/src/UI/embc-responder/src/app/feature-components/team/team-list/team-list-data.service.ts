@@ -70,7 +70,7 @@ export class TeamListDataService {
 
   constructor(
     private cacheService: CacheService,
-    private listService: LoadTeamListService
+    private listService: LoadTeamListService,
   ) {}
 
   public getSelectedTeamMember(): TeamMember {

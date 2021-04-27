@@ -14,7 +14,7 @@ export class ElectronicAgreementComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private eaaService: ElectronicAgreementService
+    private eaaService: ElectronicAgreementService,
   ) {}
 
   ngOnInit(): void {}

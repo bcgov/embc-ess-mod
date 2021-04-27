@@ -24,7 +24,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
 
   constructor(
     private builder: FormBuilder,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSearchService: EvacueeSearchService,
   ) {}
 
   /**
@@ -58,7 +58,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
    */
   next(): void {
     this.evacueeSearchService.setHasShownIdentification(
-      this.idVerifyForm.get('photoId').value
+      this.idVerifyForm.get('photoId').value,
     );
     this.showIDPhotoComponent.emit(false);
   }

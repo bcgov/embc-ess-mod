@@ -28,7 +28,7 @@ export class AssignedCommunityListComponent implements OnInit {
     private assignedCommunityListService: AssignedCommunityListService,
     private alertService: AlertService,
     private assignedCommunityListDataService: AssignedCommunityListDataService,
-    private router: Router
+    private router: Router,
   ) {}
 
   /**
@@ -46,7 +46,7 @@ export class AssignedCommunityListComponent implements OnInit {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.communityListError);
-      }
+      },
     );
 
     this.assignedCommunityListService
@@ -83,7 +83,7 @@ export class AssignedCommunityListComponent implements OnInit {
   communitiesFilterPredicate(): void {
     const filterPredicate = (
       data: TeamCommunityModel,
-      filter: string
+      filter: string,
     ): boolean => {
       const searchString: TableFilterValueModel = JSON.parse(filter);
       if (searchString.type === 'text') {

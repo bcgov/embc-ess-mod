@@ -26,7 +26,7 @@ export class DialogComponent implements OnInit, OnDestroy {
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private resolver: ComponentFactoryResolver
+    private resolver: ComponentFactoryResolver,
   ) {}
 
   ngOnInit(): void {

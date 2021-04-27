@@ -16,21 +16,21 @@ const routes: Routes = [
         path: 'task',
         loadChildren: () =>
           import('../task-search/task-search.module').then(
-            (m) => m.TaskSearchModule
+            (m) => m.TaskSearchModule,
           ),
       },
       {
         path: 'task-details',
         loadChildren: () =>
           import('../task-details/task-details.module').then(
-            (m) => m.TaskDetailsModule
+            (m) => m.TaskDetailsModule,
           ),
       },
       {
         path: 'evacuee',
         loadChildren: () =>
           import('../evacuee-search/evacuee-search.module').then(
-            (m) => m.EvacueeSearchModule
+            (m) => m.EvacueeSearchModule,
           ),
       },
     ],

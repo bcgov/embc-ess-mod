@@ -41,7 +41,7 @@ export class EditTeamMemberComponent implements OnInit {
     private customValidation: CustomValidationService,
     private editTeamMemberService: EditTeamMemberService,
     private alertService: AlertService,
-    private userService: UserService
+    private userService: UserService,
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -103,7 +103,7 @@ export class EditTeamMemberComponent implements OnInit {
   cancel(): void {
     this.router.navigate(
       ['/responder-access/responder-management/details/member-details'],
-      { state: this.teamMember }
+      { state: this.teamMember },
     );
   }
 
@@ -123,7 +123,7 @@ export class EditTeamMemberComponent implements OnInit {
     const updatedTeamMember: TeamMember = this.editForm.getRawValue();
     this.router.navigate(
       ['/responder-access/responder-management/details/review'],
-      { state: { ...this.teamMember, ...updatedTeamMember } }
+      { state: { ...this.teamMember, ...updatedTeamMember } },
     );
   }
 
@@ -158,7 +158,7 @@ export class EditTeamMemberComponent implements OnInit {
           this.showLoader = !this.showLoader;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.usernameCheckerror);
-        }
+        },
       );
   }
 
@@ -178,7 +178,7 @@ export class EditTeamMemberComponent implements OnInit {
         .getMemberRoles()
         .filter(
           (role) =>
-            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2
+            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2,
         );
     } else if (loggedInRole === MemberRole.Tier4) {
       return this.listService
@@ -187,7 +187,7 @@ export class EditTeamMemberComponent implements OnInit {
           (role) =>
             role.code === MemberRole.Tier1 ||
             role.code === MemberRole.Tier2 ||
-            role.code === MemberRole.Tier3
+            role.code === MemberRole.Tier3,
         );
     }
   }

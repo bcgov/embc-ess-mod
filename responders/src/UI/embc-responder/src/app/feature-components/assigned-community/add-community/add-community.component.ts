@@ -25,7 +25,7 @@ export class AddCommunityComponent implements OnInit {
   constructor(
     private assignedCommunityListDataService: AssignedCommunityListDataService,
     private router: Router,
-    private addCommunityService: AddCommunityService
+    private addCommunityService: AddCommunityService,
   ) {}
 
   /**

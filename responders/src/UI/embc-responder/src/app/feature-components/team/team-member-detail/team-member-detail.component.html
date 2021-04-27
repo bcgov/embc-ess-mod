@@ -52,21 +52,21 @@
         Electronic Access Agreement Signed
       </div>
       <div class="col-md-8">
-        {{ teamMember?.agreementSignDate | date: "dd-MMM-yyyy HH:mm" }}
+        {{ teamMember?.agreementSignDate | date: 'dd-MMM-yyyy HH:mm' }}
       </div>
     </div>
 
     <div class="row row-align">
       <div class="col-md-4 detail-label">Last Login Date & Time</div>
       <div class="col-md-8">
-        {{ teamMember?.lastSuccessfulLogin | date: "dd-MMM-yyyy HH:mm" }}
+        {{ teamMember?.lastSuccessfulLogin | date: 'dd-MMM-yyyy HH:mm' }}
       </div>
     </div>
 
     <div class="row row-align">
       <div class="col-md-4 detail-label">Status in ERA Tool</div>
       <div class="col-md-8">
-        {{ teamMember?.isActive ? "Active" : "Inactive" }}
+        {{ teamMember?.isActive ? 'Active' : 'Inactive' }}
       </div>
     </div>
     <br />

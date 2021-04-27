@@ -22,7 +22,7 @@ export class ConfigService {
     return this.configurationService.configurationGetConfiguration().pipe(
       tap((c) => {
         this.config = { ...c };
-      })
+      }),
     );
   }
 
@@ -38,7 +38,7 @@ export class ConfigService {
           showDebugInformation: !environment.production,
           // eslint-disable-next-line @typescript-eslint/naming-convention
           customQueryParams: { kc_idp_hint: 'bceid' },
-        }))
+        })),
       )
       .toPromise();
   }

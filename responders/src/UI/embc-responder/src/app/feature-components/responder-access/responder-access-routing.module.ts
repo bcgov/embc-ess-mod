@@ -16,7 +16,7 @@ const routes: Routes = [
         path: 'responder-dashboard',
         loadChildren: () =>
           import('../responder-dashboard/responder-dashboard.module').then(
-            (m) => m.ResponderDashboardModule
+            (m) => m.ResponderDashboardModule,
           ),
       },
       {
@@ -30,7 +30,7 @@ const routes: Routes = [
         path: 'user-profile',
         loadChildren: () =>
           import('../user-profile/user-profile/user-profile.module').then(
-            (m) => m.UserProfileModule
+            (m) => m.UserProfileModule,
           ),
       },
       {

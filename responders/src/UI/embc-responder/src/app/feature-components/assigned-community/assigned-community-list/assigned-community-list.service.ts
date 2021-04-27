@@ -9,7 +9,7 @@ import { LocationsService } from 'src/app/core/services/locations.service';
 export class AssignedCommunityListService {
   constructor(
     private teamCommunitiesAssignmentsService: TeamCommunitiesAssignmentsService,
-    private locationsService: LocationsService
+    private locationsService: LocationsService,
   ) {}
 
   public getAssignedCommunityList(): Observable<TeamCommunityModel[]> {
@@ -20,7 +20,7 @@ export class AssignedCommunityListService {
           const allCommunities = this.locationsService.getCommunityList();
           return assignedCommunities.map((list) => {
             const found = allCommunities.find(
-              (x) => x.code === list.communityCode
+              (x) => x.code === list.communityCode,
             );
             if (found) {
               list.allowSelect = false;
@@ -28,7 +28,7 @@ export class AssignedCommunityListService {
             }
             return this.mergeData(list, found);
           });
-        })
+        }),
       );
   }
 
@@ -40,7 +40,7 @@ export class AssignedCommunityListService {
           const allCommunities = this.locationsService.getCommunityList();
           return assignedCommunities.map((list) => {
             const found = allCommunities.find(
-              (x) => x.code === list.communityCode
+              (x) => x.code === list.communityCode,
             );
             if (found) {
               list.allowSelect = false;
@@ -48,7 +48,7 @@ export class AssignedCommunityListService {
             }
             return this.mergeData(list, found);
           });
-        })
+        }),
       );
   }
 

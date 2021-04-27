@@ -11,7 +11,7 @@ describe('AppLoaderComponent', () => {
       TestBed.configureTestingModule({
         declarations: [AppLoaderComponent],
       }).compileComponents();
-    })
+    }),
   );
 
   beforeEach(() => {

@@ -45,7 +45,7 @@ export class EditUserProfileComponent implements OnInit {
     private customValidation: CustomValidationService,
     private userService: UserService,
     private editUserProfileService: EditUserProfileService,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {}
 
   /**
@@ -117,7 +117,7 @@ export class EditUserProfileComponent implements OnInit {
           this.showLoader = !this.showLoader;
           this.isSubmitted = !this.isSubmitted;
           this.alertService.setAlert('danger', globalConst.editProfileError);
-        }
+        },
       );
   }
 }

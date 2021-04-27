@@ -35,7 +35,7 @@ export class AddTeamMemberComponent implements OnInit {
     private customValidation: CustomValidationService,
     private addTeamMemberService: AddTeamMemberService,
     private alertService: AlertService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   /**
@@ -90,7 +90,7 @@ export class AddTeamMemberComponent implements OnInit {
     this.addTeamMemberService.setAddedTeamMember(newTeamMember);
     this.router.navigate(
       ['/responder-access/responder-management/details/review'],
-      { state: newTeamMember }
+      { state: newTeamMember },
     );
   }
 
@@ -140,7 +140,7 @@ export class AddTeamMemberComponent implements OnInit {
           this.showLoader = !this.showLoader;
           this.alertService.clearAlert();
           this.alertService.setAlert('danger', globalConst.usernameCheckerror);
-        }
+        },
       );
   }
 
@@ -160,7 +160,7 @@ export class AddTeamMemberComponent implements OnInit {
         .getMemberRoles()
         .filter(
           (role) =>
-            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2
+            role.code === MemberRole.Tier1 || role.code === MemberRole.Tier2,
         );
     } else if (loggedInRole === MemberRole.Tier4) {
       return this.listService
@@ -169,7 +169,7 @@ export class AddTeamMemberComponent implements OnInit {
           (role) =>
             role.code === MemberRole.Tier1 ||
             role.code === MemberRole.Tier2 ||
-            role.code === MemberRole.Tier3
+            role.code === MemberRole.Tier3,
         );
     }
   }

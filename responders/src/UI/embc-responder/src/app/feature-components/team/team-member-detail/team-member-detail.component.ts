@@ -25,7 +25,7 @@ export class TeamMemberDetailComponent {
     private dialog: MatDialog,
     private teamDetailsService: TeamMemberDetailsService,
     private teamDataService: TeamListDataService,
-    private userService: UserService
+    private userService: UserService,
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -60,7 +60,7 @@ export class TeamMemberDetailComponent {
               const stateIndicator = { action: 'delete' };
               this.router.navigate(
                 ['/responder-access/responder-management/details/member-list'],
-                { state: stateIndicator }
+                { state: stateIndicator },
               );
             });
         }
@@ -76,7 +76,7 @@ export class TeamMemberDetailComponent {
   public hasPermission(action: string): boolean {
     return this.userService.hasClaim(
       ClaimType.action,
-      ActionPermission[action]
+      ActionPermission[action],
     );
   }
 
@@ -86,7 +86,7 @@ export class TeamMemberDetailComponent {
   editUser(): void {
     this.router.navigate(
       ['/responder-access/responder-management/details/edit'],
-      { state: this.teamMember }
+      { state: this.teamMember },
     );
   }
 

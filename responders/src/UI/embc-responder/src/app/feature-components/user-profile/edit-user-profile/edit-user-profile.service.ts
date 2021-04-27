@@ -20,7 +20,7 @@ export class EditUserProfileService {
     firstName: string,
     lastName: string,
     phone: string,
-    email: string
+    email: string,
   ): Observable<void> {
     return this.profileService.profileUpdate({
       body: {

@@ -6,7 +6,7 @@ import { ConfigService } from './config.service';
 export class AuthenticationService {
   constructor(
     private oauthService: OAuthService,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {}
 
   public async login(): Promise<string> {

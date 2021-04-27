@@ -40,7 +40,7 @@ export class EvacueeNameSearchComponent implements OnInit {
   constructor(
     private customValidation: CustomValidationService,
     private builder: FormBuilder,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSearchService: EvacueeSearchService,
   ) {}
 
   /**

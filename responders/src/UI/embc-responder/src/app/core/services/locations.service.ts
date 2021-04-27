@@ -33,7 +33,7 @@ export class LocationsService {
 
   constructor(
     private configService: ConfigurationService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
   ) {}
 
   public getCommunityList(): Community[] {
@@ -98,7 +98,7 @@ export class LocationsService {
             stateProvinceCode: c.parentCode.value,
             countryCode: c.parentCode.parentCode.value,
             type: c.communityType,
-          }))
+          })),
         );
         this.setRegionalDistricts(communities.map((comm) => comm.districtName));
       });
@@ -113,7 +113,7 @@ export class LocationsService {
           [...stateProvinces].map((sp) => ({
             code: sp.value,
             name: sp.description,
-          }))
+          })),
         );
       });
     return this.stateProvinceList || [];
@@ -124,7 +124,7 @@ export class LocationsService {
       .configurationGetCountries()
       .subscribe((countries: Code[]) => {
         this.setCountriesList(
-          [...countries].map((c) => ({ code: c.value, name: c.description }))
+          [...countries].map((c) => ({ code: c.value, name: c.description })),
         );
       });
     return this.countriesList || [];

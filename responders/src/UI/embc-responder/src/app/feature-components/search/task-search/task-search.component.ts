@@ -14,7 +14,7 @@ export class TaskSearchComponent implements OnInit {
   constructor(
     private builder: FormBuilder,
     private customValidation: CustomValidationService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {

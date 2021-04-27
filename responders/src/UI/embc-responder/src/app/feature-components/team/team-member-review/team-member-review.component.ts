@@ -19,7 +19,7 @@ export class TeamMemberReviewComponent {
     private router: Router,
     private teamDataService: TeamListDataService,
     private teamMemberReviewService: TeamMemberReviewService,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -41,7 +41,7 @@ export class TeamMemberReviewComponent {
     if (this.teamMember.id) {
       this.router.navigate(
         ['/responder-access/responder-management/details/edit'],
-        { state: this.teamMember }
+        { state: this.teamMember },
       );
     } else {
       this.router.navigate([
@@ -74,7 +74,7 @@ export class TeamMemberReviewComponent {
           const stateIndicator = { action: 'edit' };
           this.router.navigate(
             ['/responder-access/responder-management/details/member-list'],
-            { state: stateIndicator }
+            { state: stateIndicator },
           );
         },
         (error) => {
@@ -85,7 +85,7 @@ export class TeamMemberReviewComponent {
           } else {
             this.alertService.setAlert('danger', error.statusText);
           }
-        }
+        },
       );
   }
 
@@ -98,7 +98,7 @@ export class TeamMemberReviewComponent {
         const stateIndicator = { action: 'add' };
         this.router.navigate(
           ['/responder-access/responder-management/details/member-list'],
-          { state: stateIndicator }
+          { state: stateIndicator },
         );
       },
       (error) => {
@@ -109,7 +109,7 @@ export class TeamMemberReviewComponent {
         } else {
           this.alertService.setAlert('danger', error.statusText);
         }
-      }
+      },
     );
   }
 }

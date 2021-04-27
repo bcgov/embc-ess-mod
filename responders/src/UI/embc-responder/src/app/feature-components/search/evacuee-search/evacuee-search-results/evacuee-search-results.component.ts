@@ -27,12 +27,12 @@ export class EvacueeSearchResultsComponent implements OnInit {
   constructor(
     private evacueeSearchResultsService: EvacueeSearchResultsService,
     private evacueeSearchService: EvacueeSearchService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
     this.searchForEvacuee(
-      (this.evacueeSearchContext = this.evacueeSearchService.getEvacueeSearchContext())
+      (this.evacueeSearchContext = this.evacueeSearchService.getEvacueeSearchContext()),
     );
   }
 
@@ -45,7 +45,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
   public hasPermission(action: string): boolean {
     return this.userService.hasClaim(
       ClaimType.action,
-      ActionPermission[action]
+      ActionPermission[action],
     );
   }
 
@@ -65,7 +65,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 }

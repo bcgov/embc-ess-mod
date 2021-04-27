@@ -23,7 +23,7 @@ const routes: Routes = [
         path: 'add-communities',
         loadChildren: () =>
           import('../add-community/add-community.module').then(
-            (m) => m.AddCommunityModule
+            (m) => m.AddCommunityModule,
           ),
       },
       {

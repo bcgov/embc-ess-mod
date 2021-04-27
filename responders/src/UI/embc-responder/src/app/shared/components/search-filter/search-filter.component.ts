@@ -35,7 +35,7 @@ export class SearchFilterComponent implements OnInit {
           ? ''
           : select.value.description !== undefined
           ? select.value.description
-          : select.value
+          : select.value,
       );
     });
     this.filterEvent.emit({ type: 'array', value: filterArray.join(',') });

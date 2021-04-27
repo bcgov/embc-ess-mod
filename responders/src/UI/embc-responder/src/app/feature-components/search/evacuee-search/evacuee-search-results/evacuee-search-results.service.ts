@@ -11,7 +11,7 @@ export class EvacueeSearchResultsService {
   constructor(private registrationService: RegistrationsService) {}
 
   public searchForEvacuee(
-    evacueeSearchParameters: EvacueeDetailsModel
+    evacueeSearchParameters: EvacueeDetailsModel,
   ): Observable<SearchResults> {
     return this.registrationService.registrationsSearch({
       firstName: evacueeSearchParameters.firstName,
