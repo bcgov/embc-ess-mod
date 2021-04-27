@@ -10,7 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gen-api": "ng-openapi-gen -i https://dev1-embc-responders.pathfinder.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false",
+    "gen-api": "ng-openapi-gen -i https://dev1-embc-responders.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false",
     "gen-api-local": "ng-openapi-gen -i http://localhost:6020/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
   },
   "private": true,
@@ -31,6 +31,7 @@
     "angular2-text-mask": "^9.0.0",
     "bootstrap": "^4.6.0",
     "jquery": "^3.6.0",
+    "moment": "^2.29.1",
     "rxjs": "~6.6.6",
     "tslib": "^2.1.0",
     "zone.js": "~0.10.3"

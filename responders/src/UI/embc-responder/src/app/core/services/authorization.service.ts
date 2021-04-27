@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MemberRole } from '../api/models';
 
-
 export enum ActionPermission {
   canSignIntoActiveTask,
   canSignInToExpiredTask,
@@ -20,7 +19,9 @@ export enum ActionPermission {
   canDeleteTeamMembers,
 
   canViewSummaryReports,
-  canViewDetailedReports
+  canViewDetailedReports,
+
+  canViewCompletedESSFiles
 }
 
 export enum ModulePermission {
@@ -67,6 +68,7 @@ export class AuthorizationService {
       ...permissionSet.tier1,
       { claimType: ClaimType.action, claimValue: ActionPermission.canSignInToExpiredTask },
       { claimType: ClaimType.action, claimValue: ActionPermission.canViewSummaryReports },
+      { claimType: ClaimType.action, claimValue: ActionPermission.canViewCompletedESSFiles },
       { claimType: ClaimType.module, claimValue: ModulePermission.team },
       { claimType: ClaimType.module, claimValue: ModulePermission.suppliers },
       { claimType: ClaimType.module, claimValue: ModulePermission.reports },

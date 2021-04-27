@@ -12,6 +12,7 @@ import { TeamListService } from './team-list.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { AddTeamMemberService } from '../add-team-member/add-team-member.service';
 
 @Component({
   selector: 'app-team-list',
@@ -29,7 +30,8 @@ export class TeamListComponent implements OnInit {
   loggedInRole: string;
 
   constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService,
-              private dialog: MatDialog, private userService: UserService, private alertService: AlertService) {
+              private dialog: MatDialog, private userService: UserService, private alertService: AlertService,
+              private addTeamMemberService: AddTeamMemberService) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state;
@@ -43,6 +45,7 @@ export class TeamListComponent implements OnInit {
    */
   ngOnInit(): void {
     this.teamDataService.clear();
+    this.addTeamMemberService.clear();
     this.teamListService.getTeamMembers().subscribe(values => {
       this.isLoading = !this.isLoading;
       this.teamMembers = values;

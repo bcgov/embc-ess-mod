@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { AuthConfigService } from './auth-config.service';
+import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+    private isConfigSet: boolean = false;
     constructor(
         private oauthService: OAuthService,
-        private configService: AuthConfigService
+        private configService: ConfigService
     ) { }
 
     public init(): Promise<void> {
@@ -37,9 +38,20 @@ export class AuthenticationService {
             return Promise.resolve(true);
         }
 
-        return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
-            return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
-        });
+        console.log("has valid token - is config set", this.isConfigSet);
+
+        if (!this.isConfigSet) {
+            return this.configureOAuthService().then(() => {
+                return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
+                    return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+                });
+            });
+        }
+        else {
+            return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
+                return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+            });
+        }
     }
 
     private async configureOAuthService(): Promise<void> {
@@ -48,9 +60,12 @@ export class AuthenticationService {
                 issuer: config.issuer,
                 clientid: config.clientId
             }
+            console.log("setting auth config");
+            console.log(config);
             // this.oauthService.tokenValidationHandler = new NullValidationHandler();
             this.oauthService.configure(config);
             this.oauthService.setupAutomaticSilentRefresh();
+            this.isConfigSet = true;
         });
     }
 }

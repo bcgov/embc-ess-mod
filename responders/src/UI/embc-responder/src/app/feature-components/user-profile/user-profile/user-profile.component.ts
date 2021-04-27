@@ -7,15 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserProfileComponent implements OnInit {
 
-  showProfile = true;
-
   constructor() { }
 
   ngOnInit(): void {
-  }
-
-  editProfile(): void {
-
   }
 
 }
