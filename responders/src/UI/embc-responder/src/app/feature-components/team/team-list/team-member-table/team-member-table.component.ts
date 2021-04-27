@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
@@ -14,7 +23,8 @@ import { TeamMemberModel } from 'src/app/core/models/team-member.model';
   styleUrls: ['./team-member-table.component.scss']
 })
 export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
-
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   @Input() displayedColumns: TableColumnModel[];
   @Input() incomingData: TeamMember[] = [];
   @Input() filterTerm: TableFilterValueModel;
@@ -31,11 +41,9 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   data: any;
   selectedIndex: number;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
   /**
    * Listens to input events and popluate values
+   *
    * @param changes input event change object
    */
   ngOnChanges(changes: SimpleChanges): void {
@@ -46,7 +54,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     }
 
     if (changes.displayedColumns) {
-      this.columns = this.displayedColumns.map(column => column.ref);
+      this.columns = this.displayedColumns.map((column) => column.ref);
     }
     if (changes.filterTerm && this.filterTerm !== undefined) {
       this.filter(this.filterTerm);
@@ -63,6 +71,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   /**
    * Filters the datatable
+   *
    * @param term user selected filters
    */
   filter(term: TableFilterValueModel): void {
@@ -77,6 +86,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   /**
    * custom filter predicate for string and dropdown filters
+   *
    * @param data table data
    * @param filter filter term
    * @returns true/false
@@ -84,30 +94,50 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   teamFilterPredicate = (data: TeamMemberModel, filter: string): boolean => {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'text') {
-      if (data.lastName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
-        data.userName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1) {
+      if (
+        data.lastName
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.value.trim().toLowerCase()) !== -1 ||
+        data.userName
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.value.trim().toLowerCase()) !== -1
+      ) {
         return true;
       }
-    }
-    else if (searchString.type === 'array') {
+    } else if (searchString.type === 'array') {
       const terms = searchString.value.split(',');
       const roleTerm = terms[0];
       const statusTerm = terms[1];
       const labelTerm = terms[2];
       const matchFilter = [];
       const isActive = data.isActive === true ? 'Active' : 'Deactivated';
-      const roleBoolean = data.roleDescription.trim().toLowerCase().indexOf(roleTerm.trim().toLowerCase()) !== -1;
-      const statusBoolean = isActive.trim().toLowerCase().indexOf(statusTerm.trim().toLowerCase()) !== -1;
-      const labelBoolean = data.labelDescription.trim().toLowerCase().indexOf(labelTerm.trim().toLowerCase()) !== -1;
+      const roleBoolean =
+        data.roleDescription
+          .trim()
+          .toLowerCase()
+          .indexOf(roleTerm.trim().toLowerCase()) !== -1;
+      const statusBoolean =
+        isActive
+          .trim()
+          .toLowerCase()
+          .indexOf(statusTerm.trim().toLowerCase()) !== -1;
+      const labelBoolean =
+        data.labelDescription
+          .trim()
+          .toLowerCase()
+          .indexOf(labelTerm.trim().toLowerCase()) !== -1;
       matchFilter.push(roleBoolean);
       matchFilter.push(statusBoolean);
       matchFilter.push(labelBoolean);
       return matchFilter.every(Boolean);
     }
-  }
+  };
 
   /**
    * Captures the row click event
+   *
    * @param row team member row
    */
   rowClicked(row): void {
@@ -117,6 +147,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
   /**
    * Stops the entire row from being clicked if the user interacts with
    * the toggle button
+   *
    * @param $event click event
    * @param columnLabel table column name
    */
@@ -128,6 +159,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   /**
    * Emits active/inactive events based on user interaction with the toggle
+   *
    * @param $event slide toggle event
    * @param row row affected
    * @param index index of the affected row
@@ -143,6 +175,7 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
 
   /**
    * Role based access to toggle users active/inactive
+   *
    * @param row selected row
    * @returns true/false
    */
@@ -150,10 +183,15 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
     if (this.loggedInRole === MemberRole.Tier2) {
       return row.role === MemberRole.Tier1 ? true : false;
     } else if (this.loggedInRole === MemberRole.Tier3) {
-      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 ? true : false;
+      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2
+        ? true
+        : false;
     } else if (this.loggedInRole === MemberRole.Tier4) {
-      return row.role === MemberRole.Tier1 || row.role === MemberRole.Tier2 || row.role === MemberRole.Tier3 ? true : false;
+      return row.role === MemberRole.Tier1 ||
+        row.role === MemberRole.Tier2 ||
+        row.role === MemberRole.Tier3
+        ? true
+        : false;
     }
   }
-
 }

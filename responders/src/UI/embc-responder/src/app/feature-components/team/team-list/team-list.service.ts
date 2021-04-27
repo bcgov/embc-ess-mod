@@ -8,42 +8,52 @@ import { LoadTeamListService } from 'src/app/core/services/load-team-list.servic
 
 @Injectable({ providedIn: 'root' })
 export class TeamListService {
+  constructor(
+    private teamMembersService: TeamMembersService,
+    private listService: LoadTeamListService
+  ) {}
 
-    constructor(private teamMembersService: TeamMembersService, private listService: LoadTeamListService) { }
+  public getTeamMembers(): Observable<TeamMemberModel[]> {
+    return this.teamMembersService.teamMembersGetTeamMembers().pipe(
+      map((members: TeamMemberModel[]) => {
+        const roles = this.listService.getMemberRoles();
+        const labels: MemberLabelDescription[] = this.listService.getMemberLabels();
+        return members.map((teamMember: TeamMemberModel) => {
+          const matchedLabel = labels.find(
+            (label) => label.code === teamMember.label
+          );
+          const matchedRole = roles.find(
+            (role) => role.code === teamMember.role
+          );
+          if (matchedLabel) {
+            teamMember.labelDescription = matchedLabel.description;
+            teamMember.roleDescription = matchedRole.description;
+          }
+          return teamMember;
+        });
+      })
+    );
+  }
 
-    public getTeamMembers(): Observable<TeamMemberModel[]> {
-        return this.teamMembersService.teamMembersGetTeamMembers().pipe(
-            map((members: TeamMemberModel[]) => {
-                const roles = this.listService.getMemberRoles();
-                const labels: MemberLabelDescription[] = this.listService.getMemberLabels();
-                return members.map((teamMember: TeamMemberModel) => {
-                    const matchedLabel = labels.find(label => label.code === teamMember.label);
-                    const matchedRole = roles.find(role => role.code === teamMember.role);
-                    if (matchedLabel) {
-                        teamMember.labelDescription = matchedLabel.description;
-                        teamMember.roleDescription = matchedRole.description;
-                    }
-                    return teamMember;
-                });
-            })
-        );
-    }
+  public activateTeamMember(memberId: string): Observable<TeamMember[]> {
+    return this.teamMembersService
+      .teamMembersActivateTeamMember({ memberId })
+      .pipe(
+        mergeMap((result) => {
+          console.log(result);
+          return this.getTeamMembers();
+        })
+      );
+  }
 
-    public activateTeamMember(memberId: string): Observable<TeamMember[]> {
-        return this.teamMembersService.teamMembersActivateTeamMember({ memberId }).pipe(
-            mergeMap((result) => {
-                console.log(result);
-                return this.getTeamMembers();
-            })
-        );
-    }
-
-    public deactivatedTeamMember(memberId: string): Observable<TeamMember[]> {
-        return this.teamMembersService.teamMembersDeactivateTeamMember({ memberId }).pipe(
-            mergeMap((result) => {
-                console.log(result);
-                return this.getTeamMembers();
-            })
-        );
-    }
+  public deactivatedTeamMember(memberId: string): Observable<TeamMember[]> {
+    return this.teamMembersService
+      .teamMembersDeactivateTeamMember({ memberId })
+      .pipe(
+        mergeMap((result) => {
+          console.log(result);
+          return this.getTeamMembers();
+        })
+      );
+  }
 }

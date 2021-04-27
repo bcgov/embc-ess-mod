@@ -1,50 +1,77 @@
 <div class="container">
-    <div class="row heading-container">
-        <div class="col-md-12">
-            <span class="page-heading">Evacuee Search & Registration</span>
-        </div>
+  <div class="row heading-container">
+    <div class="col-md-12">
+      <span class="page-heading">Evacuee Search & Registration</span>
     </div>
-    <br>
-    <div class="row">
-        <div class="col-md-8">
-            <mat-card>
-                <p class="heading">Sign in to a Task Number</p>
-                <p>All Evacuee Registration & Assistance (ERA) Responders are required to <b>sign in to a task
-                        number</b>
-                    before accessing the Evacuee Search and Registration pages.</p>
-                <p>Please enter the task number that you are working under below and click "<b>Submit</b>".</p>
-                <form [formGroup]="taskSearchForm">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Enter Task #</mat-label>
-                                <input formControlName="taskNumber" matInput placeholder="Enter Task #">
-                                <mat-error
-                                    *ngIf="taskSearchFormControl.taskNumber.invalid && taskSearchFormControl.taskNumber.hasError('whitespaceError')">
-                                    Task Number is required</mat-error>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </form>
-                <div class="row">
-                    <div class="col-md-4">
-                        <button class="button-p submit" mat-button [disabled]="!taskSearchForm.valid"
-                            (click)="submitTask()">Submit</button>
-                    </div>
-                </div>
-            </mat-card>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-md-8">
+      <mat-card>
+        <p class="heading">Sign in to a Task Number</p>
+        <p>
+          All Evacuee Registration & Assistance (ERA) Responders are required to
+          <b>sign in to a task number</b> before accessing the Evacuee Search
+          and Registration pages.
+        </p>
+        <p>
+          Please enter the task number that you are working under below and
+          click "<b>Submit</b>".
+        </p>
+        <form [formGroup]="taskSearchForm">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Enter Task #</mat-label>
+                <input
+                  formControlName="taskNumber"
+                  matInput
+                  placeholder="Enter Task #"
+                />
+                <mat-error
+                  *ngIf="
+                    taskSearchFormControl.taskNumber.invalid &&
+                    taskSearchFormControl.taskNumber.hasError('whitespaceError')
+                  "
+                >
+                  Task Number is required</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-md-4">
+            <button
+              class="button-p submit"
+              mat-button
+              [disabled]="!taskSearchForm.valid"
+              (click)="submitTask()"
+            >
+              Submit
+            </button>
+          </div>
         </div>
+      </mat-card>
+    </div>
 
-        <div class="col-md-3">
-            <mat-card class="tips-card">
-                <div>
-                    <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62">
-                    <span class="tips-heading"><b>Tips: </b>Task Numbers</span>
-                </div>
-                <p class="tips-info">If you have not been provided with a task number, please contact your supervisor.
-                </p>
-            </mat-card>
+    <div class="col-md-3">
+      <mat-card class="tips-card">
+        <div>
+          <img
+            class="img-align"
+            src="/assets/images/tips-lightbulb.svg"
+            height="63"
+            width="62"
+          />
+          <span class="tips-heading"><b>Tips: </b>Task Numbers</span>
         </div>
+        <p class="tips-info">
+          If you have not been provided with a task number, please contact your
+          supervisor.
+        </p>
+      </mat-card>
     </div>
+  </div>
 </div>
-<br>
+<br />

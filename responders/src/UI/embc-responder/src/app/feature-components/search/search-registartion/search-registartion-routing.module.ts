@@ -4,7 +4,8 @@ import { SearchRegistartionComponent } from './search-registartion.component';
 
 const routes: Routes = [
   {
-    path: '', component: SearchRegistartionComponent,
+    path: '',
+    component: SearchRegistartionComponent,
     children: [
       {
         path: '',
@@ -13,15 +14,24 @@ const routes: Routes = [
       },
       {
         path: 'task',
-        loadChildren: () => import('../task-search/task-search.module').then(m => m.TaskSearchModule)
+        loadChildren: () =>
+          import('../task-search/task-search.module').then(
+            (m) => m.TaskSearchModule
+          )
       },
       {
         path: 'task-details',
-        loadChildren: () => import('../task-details/task-details.module').then(m => m.TaskDetailsModule)
+        loadChildren: () =>
+          import('../task-details/task-details.module').then(
+            (m) => m.TaskDetailsModule
+          )
       },
       {
         path: 'evacuee',
-        loadChildren: () => import('../evacuee-search/evacuee-search.module').then(m => m.EvacueeSearchModule)
+        loadChildren: () =>
+          import('../evacuee-search/evacuee-search.module').then(
+            (m) => m.EvacueeSearchModule
+          )
       }
     ]
   }
@@ -31,4 +41,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class SearchRegistartionRoutingModule { }
+export class SearchRegistartionRoutingModule {}

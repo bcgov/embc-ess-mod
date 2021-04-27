@@ -4,7 +4,8 @@ import { TeamListComponent } from './team-list.component';
 
 const routes: Routes = [
   {
-    path: '', component: TeamListComponent
+    path: '',
+    component: TeamListComponent
   }
 ];
 
@@ -12,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TeamListRoutingModule { }
+export class TeamListRoutingModule {}

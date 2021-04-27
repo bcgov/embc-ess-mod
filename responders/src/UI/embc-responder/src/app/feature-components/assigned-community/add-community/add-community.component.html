@@ -1,39 +1,61 @@
 <mat-card>
-    <div class="row">
-        <div class="col-md-12">
-            <p>Please use the list below to search for communtities to add to your "Areas of Responsibility" list. If
-                the community you are looking for if not on the list below,
-                please report it to your Local Government or First Nations Authority. Filtering or searching will remove
-                any selections you have made in the community list.</p>
-        </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        Please use the list below to search for communtities to add to your
+        "Areas of Responsibility" list. If the community you are looking for if
+        not on the list below, please report it to your Local Government or
+        First Nations Authority. Filtering or searching will remove any
+        selections you have made in the community list.
+      </p>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <app-search-filter [filtersToLoad]='filtersToLoad' (filterEvent)="filter($event)"></app-search-filter>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <app-search-filter
+        [filtersToLoad]="filtersToLoad"
+        (filterEvent)="filter($event)"
+      ></app-search-filter>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <p class="selected-text">Number of communities selected: {{selectedCommunitiesList.length}}</p>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p class="selected-text">
+        Number of communities selected: {{ selectedCommunitiesList.length }}
+      </p>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <app-assigned-community-table [incomingData]='communities' [displayedColumns]='displayedColumns' [filterTerm]="filterTerm" [isLoading]='isLoading'
-            [filterPredicate]="filterPredicate" (selectedRows)="selectedCommunities($event)" [disableRow]="true"></app-assigned-community-table>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <app-assigned-community-table
+        [incomingData]="communities"
+        [displayedColumns]="displayedColumns"
+        [filterTerm]="filterTerm"
+        [isLoading]="isLoading"
+        [filterPredicate]="filterPredicate"
+        (selectedRows)="selectedCommunities($event)"
+        [disableRow]="true"
+      ></app-assigned-community-table>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <app-alert></app-alert>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <app-alert></app-alert>
     </div>
-    <div class="row justify-content-between">
-        <div class="col-md-6">
-            <button class="button-s" mat-button (click)="goToList()">Cancel</button>
-        </div>
-        <div class="col-md-6">
-            <button class="button-p add-button" mat-button [disabled]="selectedCommunitiesList.length == 0" (click)="addToMyList()">Add to my List</button>
-        </div>
+  </div>
+  <div class="row justify-content-between">
+    <div class="col-md-6">
+      <button class="button-s" mat-button (click)="goToList()">Cancel</button>
     </div>
+    <div class="col-md-6">
+      <button
+        class="button-p add-button"
+        mat-button
+        [disabled]="selectedCommunitiesList.length == 0"
+        (click)="addToMyList()"
+      >
+        Add to my List
+      </button>
+    </div>
+  </div>
 </mat-card>

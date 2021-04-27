@@ -8,9 +8,8 @@ describe('DataTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AssignedCommunityTableComponent ]
-    })
-    .compileComponents();
+      declarations: [AssignedCommunityTableComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {
