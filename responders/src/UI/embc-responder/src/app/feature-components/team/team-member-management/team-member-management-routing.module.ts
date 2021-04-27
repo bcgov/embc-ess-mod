@@ -4,7 +4,8 @@ import { TeamMemberManagementComponent } from './team-member-management.componen
 
 const routes: Routes = [
   {
-    path: '', component: TeamMemberManagementComponent,
+    path: '',
+    component: TeamMemberManagementComponent,
     children: [
       {
         path: '',
@@ -13,11 +14,17 @@ const routes: Routes = [
       },
       {
         path: 'details',
-        loadChildren: () => import('../team-list-wrapper/team-list-wrapper.module').then(m => m.TeamListWrapperModule)
+        loadChildren: () =>
+          import('../team-list-wrapper/team-list-wrapper.module').then(
+            (m) => m.TeamListWrapperModule
+          )
       },
       {
         path: 'add-member',
-        loadChildren: () => import('../add-team-member/add-team-member.module').then(m => m.AddTeamMemberModule)
+        loadChildren: () =>
+          import('../add-team-member/add-team-member.module').then(
+            (m) => m.AddTeamMemberModule
+          )
       }
     ]
   }
@@ -27,4 +34,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TeamMemberManagementRoutingModule { }
+export class TeamMemberManagementRoutingModule {}

@@ -9,20 +9,29 @@ const routes: Routes = [
   },
   {
     path: 'member-list',
-    loadChildren: () => import('../team-list/team-list.module')
-      .then(m => m.TeamListModule)
+    loadChildren: () =>
+      import('../team-list/team-list.module').then((m) => m.TeamListModule)
   },
   {
     path: 'member-details',
-    loadChildren: () => import('../team-member-detail/team-member-detail.module').then(m => m.TeamMemberDetailModule)
+    loadChildren: () =>
+      import('../team-member-detail/team-member-detail.module').then(
+        (m) => m.TeamMemberDetailModule
+      )
   },
   {
     path: 'edit',
-    loadChildren: () => import('../edit-team-member/edit-team-member.module').then(m => m.EditTeamMemberModule)
+    loadChildren: () =>
+      import('../edit-team-member/edit-team-member.module').then(
+        (m) => m.EditTeamMemberModule
+      )
   },
   {
     path: 'review',
-    loadChildren: () => import('../team-member-review/team-member-review.module').then(m => m.TeamMemberReviewModule)
+    loadChildren: () =>
+      import('../team-member-review/team-member-review.module').then(
+        (m) => m.TeamMemberReviewModule
+      )
   }
 ];
 
@@ -30,4 +39,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TeamListWrapperRoutingModule { }
+export class TeamListWrapperRoutingModule {}

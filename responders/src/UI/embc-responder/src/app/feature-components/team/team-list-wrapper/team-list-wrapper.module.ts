@@ -3,12 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { TeamListWrapperRoutingModule } from './team-list-wrapper-routing.module';
 
-
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    TeamListWrapperRoutingModule
-  ]
+  imports: [CommonModule, TeamListWrapperRoutingModule]
 })
-export class TeamListWrapperModule { }
+export class TeamListWrapperModule {}

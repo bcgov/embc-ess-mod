@@ -10,10 +10,9 @@ describe('TaskDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TaskDetailsComponent ],
+      declarations: [TaskDetailsComponent],
       imports: [RouterTestingModule, HttpClientTestingModule]
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {

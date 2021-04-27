@@ -11,7 +11,6 @@ import { AlertService } from './shared/components/alert/alert.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-
   public isLoading = true;
   public color = '#169BD5';
 
@@ -26,7 +25,10 @@ export class AppComponent implements OnInit {
       (result) => result,
       (error) => {
         this.alertService.clearAlert();
-        this.alertService.setAlert('danger', 'The service is temporarily unavailable. Please try again later');
+        this.alertService.setAlert(
+          'danger',
+          'The service is temporarily unavailable. Please try again later'
+        );
       }
     );
   }
@@ -35,16 +37,20 @@ export class AppComponent implements OnInit {
     try {
       const nextUrl = await this.authenticationService.login();
       const userProfile = await this.userService.loadUserProfile();
-      const nextRoute = decodeURIComponent(userProfile.requiredToSignAgreement
-        ? 'electronic-agreement'
-        : nextUrl || 'responder-access');
+      const nextRoute = decodeURIComponent(
+        userProfile.requiredToSignAgreement
+          ? 'electronic-agreement'
+          : nextUrl || 'responder-access'
+      );
       await this.router.navigate([nextRoute]);
     } catch (error) {
       this.alertService.clearAlert();
-      this.alertService.setAlert('danger', 'The service is temporarily unavailable. Please try again later');
+      this.alertService.setAlert(
+        'danger',
+        'The service is temporarily unavailable. Please try again later'
+      );
     } finally {
       this.isLoading = false;
     }
   }
-
 }

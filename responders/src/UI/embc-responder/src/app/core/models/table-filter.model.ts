@@ -1,20 +1,20 @@
 export interface TableFilterModel {
-    loadDropdownFilters: DropdownFilterModel[];
-    loadInputFilter: InputFilterModel;
+  loadDropdownFilters: DropdownFilterModel[];
+  loadInputFilter: InputFilterModel;
 }
 
 export interface DropdownFilterModel {
-    type: string;
-    label: ObjectWrapper;
-    values: any[];
+  type: string;
+  label: ObjectWrapper;
+  values: any[];
 }
 
 export interface InputFilterModel {
-    type: string;
-    label: string;
+  type: string;
+  label: string;
 }
 
 export class ObjectWrapper {
-    code: string;
-    description: string;
+  code: string;
+  description: string;
 }

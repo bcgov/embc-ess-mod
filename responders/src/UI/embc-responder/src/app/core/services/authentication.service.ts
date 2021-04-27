@@ -4,16 +4,17 @@ import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-
   constructor(
     private oauthService: OAuthService,
     private configService: ConfigService
-  ) { }
+  ) {}
 
   public async login(): Promise<string> {
     await this.configureOAuthService();
     const returnRoute = location.pathname.substring(1);
-    const isLoggedIn = await this.oauthService.loadDiscoveryDocumentAndLogin({ state: returnRoute });
+    const isLoggedIn = await this.oauthService.loadDiscoveryDocumentAndLogin({
+      state: returnRoute
+    });
     if (isLoggedIn) {
       return Promise.resolve(this.oauthService.state || returnRoute);
     }
@@ -28,12 +29,10 @@ export class AuthenticationService {
   }
 
   private async configureOAuthService(): Promise<void> {
-    return this.configService.getAuthConfig().then(authConfig => {
+    return this.configService.getAuthConfig().then((authConfig) => {
       // this.oauthService.tokenValidationHandler = new NullValidationHandler();
       this.oauthService.configure(authConfig);
       this.oauthService.setupAutomaticSilentRefresh();
     });
   }
-
 }
-
