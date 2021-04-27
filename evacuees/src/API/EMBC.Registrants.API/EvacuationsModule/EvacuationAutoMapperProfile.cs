@@ -32,6 +32,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.era_evacuationfiledate))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => s.era_needsassessment_EvacuationFile))
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s))
+                .ForMember(d => d.HasRestriction, opts => opts.MapFrom(s => false)) // TODO: Connect to dynamics
                 .ReverseMap()
                 .ForMember(d => d.era_essfilenumber, opts => opts.MapFrom(s => s.EssFileNumber))
                 .ForMember(d => d.era_evacuationfiledate, opts => opts.MapFrom(s => s.EvacuationFileDate))
