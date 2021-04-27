@@ -5,7 +5,6 @@
 export const environment = {
   production: false,
   version: '1.0.0'
-
 };
 
 /*
@@ -16,4 +15,4 @@ export const environment = {
  * on performance if an error is thrown.
  */
 
-import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+import 'zone.js/dist/zone-error'; // Included with Angular CLI.

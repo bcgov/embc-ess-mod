@@ -10,10 +10,9 @@ describe('UserProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ViewUserProfileComponent ],
-      imports: [ HttpClientTestingModule, RouterTestingModule]
-    })
-    .compileComponents();
+      declarations: [ViewUserProfileComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule]
+    }).compileComponents();
   });
 
   beforeEach(() => {

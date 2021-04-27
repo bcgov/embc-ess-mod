@@ -6,9 +6,7 @@ import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.mo
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
 import { Community } from 'src/app/core/services/locations.service';
-import {
-  AssignedCommunityListDataService
-} from 'src/app/feature-components/assigned-community/assigned-community-list/assigned-community-list-data.service';
+import { AssignedCommunityListDataService } from 'src/app/feature-components/assigned-community/assigned-community-list/assigned-community-list-data.service';
 import { AddCommunityService } from './add-community.service';
 
 @Component({
@@ -17,7 +15,6 @@ import { AddCommunityService } from './add-community.service';
   styleUrls: ['./add-community.component.scss']
 })
 export class AddCommunityComponent implements OnInit {
-
   communities: TeamCommunityModel[];
   filterTerm: TableFilterValueModel;
   selectedCommunitiesList: Community[] = [];
@@ -25,22 +22,24 @@ export class AddCommunityComponent implements OnInit {
   filtersToLoad: TableFilterModel;
   displayedColumns: TableColumnModel[];
   isLoading = false;
-
   constructor(
     private assignedCommunityListDataService: AssignedCommunityListDataService,
     private router: Router,
-    private addCommunityService: AddCommunityService) { }
-
+    private addCommunityService: AddCommunityService
+  ) {}
 
   /**
    * On component init, loads the eligible communities list and filters
    */
   ngOnInit(): void {
     this.communitiesFilterPredicate();
-    this.assignedCommunityListDataService.getCommunitiesToAddList().pipe(delay(1000)).subscribe(values => {
-      this.isLoading = !this.isLoading;
-      this.communities = values;
-    });
+    this.assignedCommunityListDataService
+      .getCommunitiesToAddList()
+      .pipe(delay(1000))
+      .subscribe((values) => {
+        this.isLoading = !this.isLoading;
+        this.communities = values;
+      });
     this.filtersToLoad = this.addCommunityService.filtersToLoad;
     this.displayedColumns = this.addCommunityService.displayedColumns;
   }
@@ -55,9 +54,19 @@ export class AddCommunityComponent implements OnInit {
         return true;
       }
       if (searchString.type === 'text') {
-        return (data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1);
+        return (
+          data.name
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        );
       } else {
-        return data.districtName.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1;
+        return (
+          data.districtName
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        );
       }
     };
     this.filterPredicate = filterPredicate;
@@ -65,6 +74,7 @@ export class AddCommunityComponent implements OnInit {
 
   /**
    * Sets the user selected filers
+   *
    * @param event user selected filters
    */
   filter(event: TableFilterValueModel): void {
@@ -73,6 +83,7 @@ export class AddCommunityComponent implements OnInit {
 
   /**
    * Sets the list of assigned communities to add
+   *
    * @param $event list of communities to add
    */
   selectedCommunities($event): void {
@@ -84,13 +95,17 @@ export class AddCommunityComponent implements OnInit {
    * Navigates to review page for adding new communities
    */
   addToMyList(): void {
-    this.router.navigate(['/responder-access/community-management/review'], { queryParams: { action: 'add' } });
+    this.router.navigate(['/responder-access/community-management/review'], {
+      queryParams: { action: 'add' }
+    });
   }
 
   /**
    * Navigates to assigned community list
    */
   goToList(): void {
-    this.router.navigate(['/responder-access/community-management/list-communities']);
+    this.router.navigate([
+      '/responder-access/community-management/list-communities'
+    ]);
   }
 }

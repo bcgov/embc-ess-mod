@@ -43,7 +43,9 @@
           </div>
         </button>
         <mat-menu #menu="matMenu">
-          <button *ngIf="allowSignIn()" mat-menu-item (click)="newTaskSignIn()">Sign in to a different task #</button>
+          <button *ngIf="allowSignIn()" mat-menu-item (click)="newTaskSignIn()">
+            Sign in to a different task #
+          </button>
           <button mat-menu-item (click)="openUserProfile()">My Profile</button>
           <button mat-menu-item (click)="signOut()">Sign out</button>
         </mat-menu>

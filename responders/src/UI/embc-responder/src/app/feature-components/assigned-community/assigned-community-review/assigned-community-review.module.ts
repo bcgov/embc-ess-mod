@@ -7,9 +7,7 @@ import { MaterialModule } from '../../../material.module';
 import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
-  declarations: [
-    AssignedCommunityReviewComponent
-  ],
+  declarations: [AssignedCommunityReviewComponent],
   imports: [
     CommonModule,
     AssignedCommunityReviewRoutingModule,
@@ -17,4 +15,4 @@ import { SharedModule } from '../../../shared/shared.module';
     SharedModule
   ]
 })
-export class AssignedCommunityReviewModule { }
+export class AssignedCommunityReviewModule {}

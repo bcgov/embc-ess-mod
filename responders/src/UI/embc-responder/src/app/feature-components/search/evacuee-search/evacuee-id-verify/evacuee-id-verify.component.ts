@@ -1,5 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { EvacueeSearchService } from '../evacuee-search.service';
 
@@ -8,9 +13,7 @@ import { EvacueeSearchService } from '../evacuee-search.service';
   templateUrl: './evacuee-id-verify.component.html',
   styleUrls: ['./evacuee-id-verify.component.scss']
 })
-
 export class EvacueeIdVerifyComponent implements OnInit {
-
   @Output() showIDPhotoComponent = new EventEmitter<boolean>();
 
   idVerifyForm: FormGroup;
@@ -19,7 +22,10 @@ export class EvacueeIdVerifyComponent implements OnInit {
   tipsPanel1State = false;
   tipsPanel2State = false;
 
-  constructor(private builder: FormBuilder, private evacueeSearchService: EvacueeSearchService) { }
+  constructor(
+    private builder: FormBuilder,
+    private evacueeSearchService: EvacueeSearchService
+  ) {}
 
   /**
    * On component init, constructs the form
@@ -31,7 +37,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
   /**
    * Returns form control
    */
-  get idVerifyFormControl(): { [key: string]: AbstractControl; } {
+  get idVerifyFormControl(): { [key: string]: AbstractControl } {
     return this.idVerifyForm.controls;
   }
 
@@ -40,7 +46,10 @@ export class EvacueeIdVerifyComponent implements OnInit {
    */
   constructIdVerifyForm(): void {
     this.idVerifyForm = this.builder.group({
-      photoId: [this.evacueeSearchContextModel?.hasShownIdentification, [Validators.required]]
+      photoId: [
+        this.evacueeSearchContextModel?.hasShownIdentification,
+        [Validators.required]
+      ]
     });
   }
 
@@ -48,7 +57,9 @@ export class EvacueeIdVerifyComponent implements OnInit {
    * Saves the seach parameter into the model and Navigates to the evacuee-name-search component
    */
   next(): void {
-    this.evacueeSearchService.setHasShownIdentification(this.idVerifyForm.get('photoId').value);
+    this.evacueeSearchService.setHasShownIdentification(
+      this.idVerifyForm.get('photoId').value
+    );
     this.showIDPhotoComponent.emit(false);
   }
 }

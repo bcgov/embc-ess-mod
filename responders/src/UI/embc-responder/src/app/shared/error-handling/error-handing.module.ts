@@ -6,11 +6,9 @@ import { HttpErrorInterceptor } from './http-error.interceptor';
 import { CommonModule } from '@angular/common';
 import { AccessDeniedComponent } from './access-denied/access-denied.component';
 
-
-
 @NgModule({
   declarations: [ErrorDialogComponent, AccessDeniedComponent],
-  imports: [CommonModule],
+  imports: [CommonModule]
 })
 export class ErrorHandlingModule {
   public static forRoot(): ModuleWithProviders<ErrorHandlingModule> {
@@ -18,7 +16,11 @@ export class ErrorHandlingModule {
       ngModule: ErrorHandlingModule,
       providers: [
         ErrorDialogService,
-        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: HttpErrorInterceptor,
+          multi: true
+        }
       ]
     };
   }
