@@ -7,9 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [
-    ResponderDashboardComponent
-  ],
+  declarations: [ResponderDashboardComponent],
   imports: [
     CommonModule,
     ResponderDashboardRoutingModule,
@@ -17,4 +15,4 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ]
 })
-export class ResponderDashboardModule { }
+export class ResponderDashboardModule {}

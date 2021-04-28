@@ -52,39 +52,79 @@ export interface AuthorizationRoleModel {
   providedIn: 'root'
 })
 export class AuthorizationService {
-
   private static permissionSet = AuthorizationService.initializeRoleClaims();
 
-  private static initializeRoleClaims(): { tier1: ClaimModel[]; tier2: ClaimModel[]; tier3: ClaimModel[]; tier4: ClaimModel[] } {
+  private static initializeRoleClaims(): {
+    tier1: ClaimModel[];
+    tier2: ClaimModel[];
+    tier3: ClaimModel[];
+    tier4: ClaimModel[];
+  } {
     const permissionSet = { tier1: [], tier2: [], tier3: [], tier4: [] };
 
     permissionSet.tier1 = [
-      { claimType: ClaimType.action, claimValue: ActionPermission.canSignIntoActiveTask },
-      { claimType: ClaimType.action, claimValue: ActionPermission.canManageFiles },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canSignIntoActiveTask
+      },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canManageFiles
+      },
       { claimType: ClaimType.module, claimValue: ModulePermission.dashboard },
-      { claimType: ClaimType.module, claimValue: ModulePermission.search },
+      { claimType: ClaimType.module, claimValue: ModulePermission.search }
     ];
     permissionSet.tier2 = [
       ...permissionSet.tier1,
-      { claimType: ClaimType.action, claimValue: ActionPermission.canSignInToExpiredTask },
-      { claimType: ClaimType.action, claimValue: ActionPermission.canViewSummaryReports },
-      { claimType: ClaimType.action, claimValue: ActionPermission.canViewCompletedESSFiles },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canSignInToExpiredTask
+      },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canViewSummaryReports
+      },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canViewCompletedESSFiles
+      },
       { claimType: ClaimType.module, claimValue: ModulePermission.team },
       { claimType: ClaimType.module, claimValue: ModulePermission.suppliers },
-      { claimType: ClaimType.module, claimValue: ModulePermission.reports },
+      { claimType: ClaimType.module, claimValue: ModulePermission.reports }
     ];
     permissionSet.tier3 = [
       ...permissionSet.tier2,
-      { claimType: ClaimType.action, claimValue: ActionPermission.canViewRestrictedFiles },
-      { claimType: ClaimType.action, claimValue: ActionPermission.canViewPastFiles },
-      { claimType: ClaimType.action, claimValue: ActionPermission.canViewDetailedReports }
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canViewRestrictedFiles
+      },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canViewPastFiles
+      },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canViewDetailedReports
+      }
     ];
     permissionSet.tier4 = [
       ...permissionSet.tier3,
-      { claimType: ClaimType.action, claimValue: ActionPermission.canManageTeamsCommunities },
-      { claimType: ClaimType.action, claimValue: ActionPermission.canDeleteSuppliers },
-      { claimType: ClaimType.action, claimValue: ActionPermission.canDeleteTeamMembers },
-      { claimType: ClaimType.module, claimValue: ModulePermission.assignedCommunities },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canManageTeamsCommunities
+      },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canDeleteSuppliers
+      },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canDeleteTeamMembers
+      },
+      {
+        claimType: ClaimType.module,
+        claimValue: ModulePermission.assignedCommunities
+      }
     ];
     return permissionSet;
   }
@@ -129,6 +169,4 @@ export class AuthorizationService {
   //   }
   //   return false;
   // }
-
 }
-

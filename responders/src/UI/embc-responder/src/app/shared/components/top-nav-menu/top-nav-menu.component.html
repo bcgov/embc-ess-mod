@@ -3,16 +3,62 @@
     <mat-icon>menu</mat-icon>
   </button>
   <div fxShow="true" fxHide.lt-md>
-    <a *ngIf="hasPermission('dashboard')" class="top-nav" mat-button routerLinkActive="active-list-item" [routerLink]="'/responder-access/responder-dashboard'"> Dashboard </a>
+    <a
+      *ngIf="hasPermission('dashboard')"
+      class="top-nav"
+      mat-button
+      routerLinkActive="active-list-item"
+      [routerLink]="'/responder-access/responder-dashboard'"
+    >
+      Dashboard
+    </a>
     <span class="divider"></span>
-    <a *ngIf="hasPermission('search')" class="top-nav" mat-button routerLinkActive="active-list-item" [routerLink]="'/responder-access/search'"> Evacuee Search & Registration </a>
+    <a
+      *ngIf="hasPermission('search')"
+      class="top-nav"
+      mat-button
+      routerLinkActive="active-list-item"
+      [routerLink]="'/responder-access/search'"
+    >
+      Evacuee Search & Registration
+    </a>
     <span class="divider"></span>
-    <a *ngIf="hasPermission('team')" class="top-nav" mat-button routerLinkActive="active-list-item" [routerLink]="'/responder-access/responder-management'"> Responder Management </a>
+    <a
+      *ngIf="hasPermission('team')"
+      class="top-nav"
+      mat-button
+      routerLinkActive="active-list-item"
+      [routerLink]="'/responder-access/responder-management'"
+    >
+      Responder Management
+    </a>
     <span class="divider"></span>
-    <a *ngIf="hasPermission('suppliers')" class="top-nav" mat-button [routerLink]="'/create-contact'"> Supplier Management </a>
+    <a
+      *ngIf="hasPermission('suppliers')"
+      class="top-nav"
+      mat-button
+      [routerLink]="'/create-contact'"
+    >
+      Supplier Management
+    </a>
     <span class="divider"></span>
-    <a *ngIf="hasPermission('assignedCommunities')" class="top-nav" mat-button routerLinkActive="active-list-item" [routerLink]="'/responder-access/community-management'"> Community Management </a>
+    <a
+      *ngIf="hasPermission('assignedCommunities')"
+      class="top-nav"
+      mat-button
+      routerLinkActive="active-list-item"
+      [routerLink]="'/responder-access/community-management'"
+    >
+      Community Management
+    </a>
     <span class="divider"></span>
-    <a *ngIf="hasPermission('reports')" class="top-nav" mat-button [routerLink]="'/create-activity'"> Reporting </a>
+    <a
+      *ngIf="hasPermission('reports')"
+      class="top-nav"
+      mat-button
+      [routerLink]="'/create-activity'"
+    >
+      Reporting
+    </a>
   </div>
 </mat-toolbar>

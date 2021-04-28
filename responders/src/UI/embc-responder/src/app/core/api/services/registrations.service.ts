@@ -38,16 +38,16 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsSearch$Response(params?: {
-    FirstName?: string;
-    LastName?: string;
-    DateOfBirth?: string;
+    firstName?: string;
+    lastName?: string;
+    dateOfBirth?: string;
   }): Observable<StrictHttpResponse<SearchResults>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchPath, 'get');
     if (params) {
-      rb.query('FirstName', params.FirstName, {});
-      rb.query('LastName', params.LastName, {});
-      rb.query('DateOfBirth', params.DateOfBirth, {});
+      rb.query('firstName', params.firstName, {});
+      rb.query('lastName', params.lastName, {});
+      rb.query('dateOfBirth', params.dateOfBirth, {});
     }
 
     return this.http.request(rb.build({
@@ -72,9 +72,9 @@ export class RegistrationsService extends BaseService {
    * This method doesn't expect any request body.
    */
   registrationsSearch(params?: {
-    FirstName?: string;
-    LastName?: string;
-    DateOfBirth?: string;
+    firstName?: string;
+    lastName?: string;
+    dateOfBirth?: string;
   }): Observable<SearchResults> {
 
     return this.registrationsSearch$Response(params).pipe(

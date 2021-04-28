@@ -6,17 +6,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./information-dialog.component.scss']
 })
 export class InformationDialogComponent implements OnInit {
-
   @Output() outputEvent = new EventEmitter<string>();
   @Input() inputEvent: string;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   close(): void {
     this.outputEvent.emit('close');
   }
-
 }

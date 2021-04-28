@@ -7,19 +7,17 @@ import { TabModel } from 'src/app/core/models/tab.model';
   styleUrls: ['./team-member-management.component.scss']
 })
 export class TeamMemberManagementComponent {
-
   /**
    * Team Management wrapper component to enable routing via tabs
    */
   tabs: TabModel[] = [
     {
       label: 'ESS Team',
-      route: 'details',
+      route: 'details'
     },
     {
       label: 'Add Team Members',
-      route: 'add-member',
+      route: 'add-member'
     }
   ];
-
 }
