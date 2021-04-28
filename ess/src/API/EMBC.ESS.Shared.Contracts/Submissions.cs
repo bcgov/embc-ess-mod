@@ -19,32 +19,92 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Submissions
 {
-    public class SubmitFileCommand : Command
+    /// <summary>
+    /// Evacuation file submission command
+    /// </summary>
+    public class SubmitEvacuationFileCommand : Command
     {
-        public File File { get; set; }
-        public NeedsAssessment InitialNeedsAssessment { get; set; }
+        public EvacuationFile File { get; set; }
     }
 
-    public class SubmitAnonymousFileCommand : Command
+    /// <summary>
+    /// Evacuation file and registrant profile for anonymous file submission
+    /// </summary>
+    public class SubmitAnonymousEvacuationFileCommand : Command
     {
-        public Profile SubmitterProfile { get; set; }
-        public File File { get; set; }
-        public NeedsAssessment InitialNeedsAssessment { get; set; }
+        public RegistrantProfile SubmitterProfile { get; set; }
+        public EvacuationFile File { get; set; }
     }
 
-    public class EvacuationFilesQuery : Query<EvacuationFilesQueryResult> { }
+    /// <summary>
+    /// Query specific evacuation files
+    /// </summary>
+    public class EvacuationFilesQuery : Query<EvacuationFilesQueryResult>
+    {
+        public string ByFileId { get; set; }
+        public string ByRegistrantId { get; set; }
+    }
 
-    public class EvacuationFilesQueryResult { }
+    /// <summary>
+    /// Search matching evacuation files
+    /// </summary>
+    public class EvacuationFilesSearchQuery : Query<EvacuationFilesQueryResult>
+    {
+        public string FirstName { get; set; }
+        public string lastName { get; set; }
+        public string DateOfBirth { get; set; }
+    }
 
-    public class RegistrantsQuery : Query<RegistrantsQueryResult> { }
+    public class EvacuationFilesQueryResult
+    {
+        public IEnumerable<EvacuationFile> Items { get; set; }
+    }
 
-    public class RegistrantsQueryResult { }
+    /// <summary>
+    /// Query specific regitrants
+    /// </summary>
+    public class RegistrantsQuery : Query<RegistrantsQueryResult>
+    {
+        public string ByUserName { get; set; }
+    }
 
-    public class File
+    /// <summary>
+    /// Search matching registrants
+    /// </summary>
+    public class RegistrantsSearchQuery : Query<EvacuationFilesQueryResult>
+    {
+        public string FirstName { get; set; }
+        public string lastName { get; set; }
+        public string DateOfBirth { get; set; }
+    }
+
+    public class RegistrantsQueryResult
+    {
+        public IEnumerable<RegistrantProfile> Items { get; set; }
+    }
+
+    /// <summary>
+    /// Save registrant's profile
+    /// </summary>
+    public class SaveRegistrantCommand : Command
+    {
+        public RegistrantProfile Profile { get; set; }
+    }
+
+    /// <summary>
+    /// Delete registrant's profile
+    /// </summary>
+    public class DeleteRegistrantCommand : Command
+    {
+        public string RegistrantId { get; set; }
+    }
+
+    public class EvacuationFile
     {
         public string Id { get; set; }
         public DateTime EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
+        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; }
     }
 
     public class NeedsAssessment
@@ -66,7 +126,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool? HasPetsFood { get; set; }
     }
 
-    public class Profile
+    public class RegistrantProfile
     {
         public string Id { get; set; }
         public string FirstName { get; set; }

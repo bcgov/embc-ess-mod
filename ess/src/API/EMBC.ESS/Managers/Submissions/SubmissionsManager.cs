@@ -14,19 +14,31 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Shared.Contracts.Submissions;
 
 namespace EMBC.ESS.Managers.Submissions
 {
     public class SubmissionsManager
     {
-        public async Task<string> Handle(SubmitAnonymousFileCommand cmd)
+        private readonly IMapper mapper;
+        private readonly IContactRepository contactRepository;
+
+        public SubmissionsManager(IMapper mapper, IContactRepository contactRepository)
+        {
+            this.mapper = mapper;
+            this.contactRepository = contactRepository;
+        }
+
+        public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
         {
             return await Task.FromResult("new ess number");
         }
 
-        public async Task<string> Handle(SubmitFileCommand cmd)
+        public async Task<string> Handle(SubmitEvacuationFileCommand cmd)
         {
             return await Task.FromResult("new ess number");
         }
@@ -36,9 +48,31 @@ namespace EMBC.ESS.Managers.Submissions
             return await Task.FromResult(new EvacuationFilesQueryResult());
         }
 
+        public async Task<EvacuationFilesQueryResult> Handle(EvacuationFilesSearchQuery query)
+        {
+            return await Task.FromResult(new EvacuationFilesQueryResult());
+        }
+
         public async Task<RegistrantsQueryResult> Handle(RegistrantsQuery query)
         {
+            var items = (await contactRepository.QueryContact(new ContactQuery { UserName = query.ByUserName })).Items;
+
+            return new RegistrantsQueryResult { Items = mapper.Map<IEnumerable<RegistrantProfile>>(items) };
+        }
+
+        public async Task<RegistrantsQueryResult> Handle(RegistrantsSearchQuery query)
+        {
             return await Task.FromResult(new RegistrantsQueryResult());
+        }
+
+        public async Task<string> Handle(SaveRegistrantCommand cmd)
+        {
+            return await Task.FromResult("registrant id");
+        }
+
+        public async Task Handle(DeleteRegistrantCommand cmd)
+        {
+            await Task.CompletedTask;
         }
     }
 }

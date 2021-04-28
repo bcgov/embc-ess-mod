@@ -16,10 +16,13 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Registrants.API.ProfilesModule;
+using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,11 +39,13 @@ namespace EMBC.Registrants.API.Controllers
     {
         private readonly IProfileManager profileManager;
         private readonly IHostEnvironment env;
+        private readonly IMessagingClient messagingClient;
 
-        public ProfileController(IProfileManager profileManager, IHostEnvironment env)
+        public ProfileController(IProfileManager profileManager, IHostEnvironment env, IMessagingClient messagingClient)
         {
             this.profileManager = profileManager;
             this.env = env;
+            this.messagingClient = messagingClient;
         }
 
         /// <summary>
@@ -54,7 +59,7 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<Profile>> GetProfile()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var profile = await profileManager.GetProfileByBcscid(userId);
+            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserName = userId })).Items.SingleOrDefault();
             if (profile == null) return NotFound();
             return Ok(profile);
         }
