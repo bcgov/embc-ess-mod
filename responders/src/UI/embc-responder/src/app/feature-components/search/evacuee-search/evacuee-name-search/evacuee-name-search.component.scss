@@ -81,3 +81,15 @@ mat-card {
 .list-info {
     margin-left: 15px;
 }
+
+@media (max-width: 1051px) {
+    .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .col-md-8 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
