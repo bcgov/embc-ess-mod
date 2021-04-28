@@ -123,6 +123,8 @@ namespace EMBC.Registrants.API.EvacuationsModule
 
         public string EvacuationFileDate { get; set; }
 
+        public bool IsRestricted { get; set; }
+
         [Required]
         public Address EvacuatedFromAddress { get; set; }
 
