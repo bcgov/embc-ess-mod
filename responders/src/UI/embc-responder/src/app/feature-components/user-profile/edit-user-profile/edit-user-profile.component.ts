@@ -78,7 +78,7 @@ export class EditUserProfileComponent implements OnInit {
       ],
       userName: [{ value: this.userProfile?.userName, disabled: true }],
       role: [{ value: this.userProfile?.role, disabled: true }],
-      label: [{ value: this.userProfile?.role, disabled: true }],
+      label: [{ value: this.userProfile?.label, disabled: true }],
       email: [this.userProfile?.email, [Validators.email]],
       phone: [
         this.userProfile?.phone,

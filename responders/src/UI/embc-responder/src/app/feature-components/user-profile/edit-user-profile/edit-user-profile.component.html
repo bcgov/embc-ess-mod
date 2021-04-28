@@ -18,14 +18,15 @@
               placeholder="First Name"
               required
             />
+
             <mat-error
               *ngIf="
                 editFormControl.firstName.invalid &&
                 editFormControl.firstName.hasError('whitespaceError')
               "
             >
-              First Name is required</mat-error
-            >
+              First Name is required
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -47,8 +48,8 @@
                 editFormControl.lastName.hasError('whitespaceError')
               "
             >
-              Last Name is required</mat-error
-            >
+              Last Name is required
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -81,14 +82,18 @@
         </div>
       </div>
 
-      <!-- <div class="row">
-                <div class="col-md-3">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Optional Label</mat-label>
-                        <input formControlName="label" matInput placeholder="Optional Label">
-                    </mat-form-field>
-                </div>
-            </div> -->
+      <div class="row">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Optional Label</mat-label>
+            <input
+              formControlName="label"
+              matInput
+              placeholder="Optional Label"
+            />
+          </mat-form-field>
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-md-12">
@@ -120,8 +125,8 @@
                 editFormControl.email.hasError('email')
               "
             >
-              Invalid email</mat-error
-            >
+              Invalid email
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -142,8 +147,8 @@
                 editFormControl.phone.hasError('incorrectLength')
               "
             >
-              Telephone number must have 10 digits</mat-error
-            >
+              Telephone number must have 10 digits
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -170,7 +175,8 @@
         [strokeWidth]="10"
         [diameter]="25"
         [color]="color"
-      ></app-loader>
+      >
+      </app-loader>
     </button>
   </div>
   <br />
