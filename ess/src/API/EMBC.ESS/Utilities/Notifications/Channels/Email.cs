@@ -17,6 +17,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EMBC.ESS.Utilities.Notifications;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;

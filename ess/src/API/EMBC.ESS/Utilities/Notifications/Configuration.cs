@@ -19,7 +19,7 @@ using EMBC.ESS.Utilities.NotificationSender.Channels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Utilities.NotificationSender
+namespace EMBC.ESS.Utilities.Notifications
 {
     public static class Configuration
     {
@@ -29,7 +29,7 @@ namespace EMBC.ESS.Utilities.NotificationSender
             services.AddTransient<Email>();
 
             // runtime channel resolver
-            services.AddTransient<Func<Type, INotificationChannel>>(sp => (Type type) => type.Name switch
+            services.AddTransient<Func<Type, INotificationChannel>>(sp => (type) => type.Name switch
             {
                 nameof(EmailNotification) => sp.GetRequiredService<Email>(),
                 _ => throw new NotSupportedException($"{type} is not a configured notification channel")

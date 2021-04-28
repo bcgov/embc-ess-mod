@@ -17,7 +17,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace EMBC.ESS.Utilities.NotificationSender
+namespace EMBC.ESS.Utilities.Notifications
 {
     public interface INotificationSender
     {
