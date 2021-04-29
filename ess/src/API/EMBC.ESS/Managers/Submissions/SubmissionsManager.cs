@@ -59,7 +59,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).CaseId;
 
-            if (contact.ContactDetails.Email != null)
+            if (contact.Email != null)
             {
                 var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(SubmissionTemplateType.NewAnonymousEvacuationFileSubmission);
                 var emailContent = (await transformator.Transform(new TransformationData
@@ -73,7 +73,7 @@ namespace EMBC.ESS.Managers.Submissions
                     Content = emailContent,
                     To = new[]
                     {
-                        new EmailAddress { Name = $"{contact.PersonalDetails.LastName}, {contact.PersonalDetails.FirstName}", Address = contact.ContactDetails.Email }
+                        new EmailAddress { Name = $"{contact.LastName}, {contact.FirstName}", Address = contact.Email }
                     }
                 });
             }

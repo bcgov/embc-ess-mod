@@ -56,8 +56,15 @@ namespace EMBC.ESS.Resources.Contacts
 
     public class Contact
     {
-        public PersonDetails PersonalDetails { get; set; }
-        public CommunicationDetails ContactDetails { get; set; }
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Initials { get; set; }
+        public string PreferredName { get; set; }
+        public string Gender { get; set; }
+        public string DateOfBirth { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
         public Address PrimaryAddress { get; set; }
         public Address MailingAddress { get; set; }
         public bool RestrictedAccess { get; set; }
@@ -72,27 +79,5 @@ namespace EMBC.ESS.Resources.Contacts
         public string StateProvince { get; set; }
         public string Country { get; set; }
         public string PostalCode { get; set; }
-    }
-
-    /// <summary>
-    /// Profile personal details
-    /// </summary>
-    public class PersonDetails
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Initials { get; set; }
-        public string PreferredName { get; set; }
-        public string Gender { get; set; }
-        public string DateOfBirth { get; set; }
-    }
-
-    /// <summary>
-    /// Profile contact information
-    /// </summary>
-    public class CommunicationDetails
-    {
-        public string Email { get; set; }
-        public string Phone { get; set; }
     }
 }

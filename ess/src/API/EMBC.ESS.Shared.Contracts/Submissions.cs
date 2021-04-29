@@ -180,7 +180,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
-        public string Jurisdiction { get; set; }
+        public string Community { get; set; }
         public string StateProvince { get; set; }
         public string Country { get; set; }
         public string PostalCode { get; set; }

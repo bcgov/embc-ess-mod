@@ -66,13 +66,14 @@ namespace EMBC.ESS.Resources.Cases
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
         public string PrimaryRegistrantId { get; set; }
         public string SecretPhrase { get; set; }
+        public object EvacuationDate { get; internal set; }
     }
 
     public class EvacuationAddress
     {
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
-        public string Jurisdiction { get; set; }
+        public string Community { get; set; }
         public string StateProvince { get; set; }
         public string Country { get; set; }
         public string PostalCode { get; set; }

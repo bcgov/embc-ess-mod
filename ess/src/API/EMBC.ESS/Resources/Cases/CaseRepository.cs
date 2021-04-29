@@ -52,34 +52,43 @@ namespace EMBC.ESS.Resources.Cases
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)
         {
-            // New era evacuation file mapped from incoming evacuation file
             var evacuationFile = cmd.EvacuationFile;
-            var dynamicsContact = essContext.contacts.FirstOrDefault(c => c.externaluseridentifier == evacuationFile.PrimaryRegistrantId);
+
+            var primaryContact = essContext.contacts.FirstOrDefault(c => c.externaluseridentifier == evacuationFile.PrimaryRegistrantId);
             var eraEvacuationFile = mapper.Map<era_evacuationfile>(evacuationFile);
 
             eraEvacuationFile.era_evacuationfileid = Guid.NewGuid();
             eraEvacuationFile.era_evacuationfiledate = DateTimeOffset.UtcNow;
-            eraEvacuationFile.era_secrettext = evacuationFile.SecretPhrase;
 
-            // add evacuation file to dynamics context
             essContext.AddToera_evacuationfiles(eraEvacuationFile);
-            // link primary registrant to evacuation file
-            essContext.AddLink(dynamicsContact, nameof(dynamicsContact.era_evacuationfile_Registrant), eraEvacuationFile);
-            // add jurisdiction/city to evacuation
-            essContext.AddLink(essContext.LookupJurisdictionByCode(evacuationFile.EvacuatedFromAddress.Jurisdiction), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
+            essContext.AddLink(primaryContact, nameof(primaryContact.era_evacuationfile_Registrant), eraEvacuationFile);
+            essContext.AddLink(essContext.LookupJurisdictionByCode(evacuationFile.EvacuatedFromAddress.Community), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
 
             foreach (var needsAssessment in evacuationFile.NeedsAssessments)
             {
-                // New needs assessment mapped from incoming evacuation file Needs Assessment
                 var eraNeedsAssessment = mapper.Map<era_needassessment>(needsAssessment);
 
                 eraNeedsAssessment.era_needassessmentid = Guid.NewGuid();
                 eraNeedsAssessment.era_needsassessmentdate = DateTimeOffset.UtcNow;
                 eraNeedsAssessment.era_EvacuationFile = eraEvacuationFile;
 
-                // New Contacts (Household Members)
+                essContext.AddToera_needassessments(eraNeedsAssessment);
+                essContext.AddLink(eraEvacuationFile, nameof(eraEvacuationFile.era_needsassessment_EvacuationFile), eraNeedsAssessment);
+
+                var primaryRegistrant = new era_needsassessmentevacuee
+                {
+                    era_needsassessmentevacueeid = Guid.NewGuid(),
+                    era_isprimaryregistrant = true,
+                    era_evacueetype = (int?)EvacueeType.Person,
+                    era_isunder19 = CheckIfUnder19Years(primaryContact.birthdate.Value, Date.Now)
+                };
+                essContext.AddToera_needsassessmentevacuees(primaryRegistrant);
+                essContext.AddLink(primaryContact, nameof(primaryContact.era_NeedsAssessmentEvacuee_RegistrantID), primaryRegistrant);
+                essContext.AddLink(eraNeedsAssessment, nameof(eraNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), primaryRegistrant);
+
                 var members = mapper.Map<IEnumerable<contact>>(needsAssessment.HouseholdMembers);
 
+                // TODO: move into mapper
                 foreach (var member in members)
                 {
                     member.contactid = Guid.NewGuid();
@@ -88,48 +97,19 @@ namespace EMBC.ESS.Resources.Cases
                     member.era_verified = false;
                     member.era_registrationdate = DateTimeOffset.UtcNow;
                 }
-
-                // New needs assessment evacuee as pet
-                var pets = mapper.Map<IEnumerable<era_needsassessmentevacuee>>(needsAssessment.Pets);
-
-                foreach (var pet in pets)
-                {
-                    pet.era_needsassessmentevacueeid = Guid.NewGuid();
-                    pet.era_evacueetype = (int?)EvacueeType.Pet;
-                }
-
-                // add needs assessment to dynamics context
-                essContext.AddToera_needassessments(eraNeedsAssessment);
-                // link evacuation file to needs assessment
-                essContext.AddLink(eraEvacuationFile, nameof(eraEvacuationFile.era_needsassessment_EvacuationFile), eraNeedsAssessment);
-
-                // New needs assessment evacuee as primary registrant
-                var newNeedsAssessmentEvacueeRegistrant = new era_needsassessmentevacuee
-                {
-                    era_needsassessmentevacueeid = Guid.NewGuid(),
-                    era_isprimaryregistrant = true,
-                    era_evacueetype = (int?)EvacueeType.Person,
-                    era_isunder19 = CheckIfUnder19Years(dynamicsContact.birthdate.Value, Date.Now)
-                };
-                essContext.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeRegistrant);
-                // link registrant (contact) and needs assessment to evacuee record
-                essContext.AddLink(dynamicsContact, nameof(dynamicsContact.era_NeedsAssessmentEvacuee_RegistrantID), newNeedsAssessmentEvacueeRegistrant);
-                essContext.AddLink(eraNeedsAssessment, nameof(eraNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), newNeedsAssessmentEvacueeRegistrant);
-
                 // Add New needs assessment evacuee members to dynamics context
                 foreach (var member in members)
                 {
                     essContext.AddTocontacts(member);
-                    var newNeedsAssessmentEvacueeMember = new era_needsassessmentevacuee
+                    var needsAssessmentMember = new era_needsassessmentevacuee
                     {
                         era_needsassessmentevacueeid = Guid.NewGuid(),
                         era_isprimaryregistrant = false,
                         era_evacueetype = (int?)EvacueeType.Person
                     };
-                    essContext.AddToera_needsassessmentevacuees(newNeedsAssessmentEvacueeMember);
-                    // link members and needs assessment to evacuee record
-                    essContext.AddLink(member, nameof(member.era_NeedsAssessmentEvacuee_RegistrantID), newNeedsAssessmentEvacueeMember);
-                    essContext.AddLink(eraNeedsAssessment, nameof(eraNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), newNeedsAssessmentEvacueeMember);
+                    essContext.AddToera_needsassessmentevacuees(needsAssessmentMember);
+                    essContext.AddLink(member, nameof(member.era_NeedsAssessmentEvacuee_RegistrantID), needsAssessmentMember);
+                    essContext.AddLink(eraNeedsAssessment, nameof(eraNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), needsAssessmentMember);
 
                     // link registrant primary and mailing address city, province, country
                     //essContext.AddLink(essContext.LookupCountryByCode(profile.PrimaryAddress.Country), nameof(era_country.era_contact_Country), member);
@@ -141,11 +121,18 @@ namespace EMBC.ESS.Resources.Cases
                     //essContext.AddLink(essContext.LookupJurisdictionByCode(profile.MailingAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), member);
                 }
 
-                // Add New needs assessment evacuee pets to dynamics context
+                var pets = mapper.Map<IEnumerable<era_needsassessmentevacuee>>(needsAssessment.Pets);
+
+                // TODO: move into mapper
+                foreach (var pet in pets)
+                {
+                    pet.era_needsassessmentevacueeid = Guid.NewGuid();
+                    pet.era_evacueetype = (int?)EvacueeType.Pet;
+                }
+
                 foreach (var petMember in pets)
                 {
                     essContext.AddToera_needsassessmentevacuees(petMember);
-                    // link pet to evacuee record
                     essContext.AddLink(eraNeedsAssessment, nameof(eraNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), petMember);
                 }
             }
@@ -153,7 +140,6 @@ namespace EMBC.ESS.Resources.Cases
             //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
             var results = await essContext.SaveChangesAsync();
 
-            essContext.Detach(eraEvacuationFile.era_needsassessment_EvacuationFile);
             essContext.Detach(eraEvacuationFile);
 
             var queryResult = essContext.era_evacuationfiles.Where(f => f.era_evacuationfileid == eraEvacuationFile.era_evacuationfileid).FirstOrDefault();
