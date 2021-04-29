@@ -19,12 +19,16 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using EMBC.Suppliers.API.ConfigurationModule.Models;
+using EMBC.Suppliers.API.ConfigurationModule.Models.Dynamics;
 using EMBC.Suppliers.API.ConfigurationModule.ViewModels;
 using EMBC.Suppliers.API.Utilities;
 using Jasper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Xrm.Tools.WebAPI;
+using Xrm.Tools.WebAPI.Requests;
+using Xrm.Tools.WebAPI.Results;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 {
@@ -34,15 +38,17 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
     public class ConfigController : ControllerBase
     {
         private readonly IConfiguration conf;
+        private readonly CRMWebAPI api;
 
-        public ConfigController(IConfiguration configuration)
+        public ConfigController(IConfiguration configuration, CRMWebAPI api)
         {
             conf = configuration;
+            this.api = api;
         }
 
         [HttpGet("")]
         [AllowAnonymous]
-        public ActionResult<Config> GetConfig()
+        public async Task<ActionResult<Config>> GetConfig()
         {
             string maintMsg = string.Empty;
             var noticeMsg = conf["NOTICE_MESSAGE"] ?? string.Empty;
@@ -55,9 +61,9 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 
             DateTime maintTime;
 
-            var siteDown = false;
+            Task<bool> healthCheck = CRMHealthcheck();
 
-            // TODO: Perform healthcheck against CRM, set Sitedown=true if can't connect
+            var siteDown = await healthCheck;
 
             // Check that maintTimeStr is valid datetime format
             if (DateTime.TryParse(maintTimeStr, out maintTime))
@@ -105,9 +111,27 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
         /// Checks if CRM can be accessed
         /// </summary>
         /// <returns>True/False, based on CRM connectivity</returns>
-        private bool CRMHealthcheck()
+        private async Task<bool> CRMHealthcheck()
         {
-            return true;
+            bool siteDown = true;
+            try
+            {
+                CRMGetListResult<SupportEntity> list = await api.GetList<SupportEntity>("era_supports", new CRMGetListOptions
+                {
+                    Select = new[] { "era_name", "era_supportid" }
+                });
+
+                if (list.List.Count > 0)
+                {
+                    siteDown = false;
+                }
+                return siteDown;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return siteDown;
+            }
         }
 
         /// <summary>
