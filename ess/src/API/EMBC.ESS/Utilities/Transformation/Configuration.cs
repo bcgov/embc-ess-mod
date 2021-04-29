@@ -14,29 +14,15 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using EMBC.ESS.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Managers.Submissions
+namespace EMBC.ESS.Utilities.Transformation
 {
     public static class Configuration
     {
-        public static IServiceCollection AddSubmissionManager(this IServiceCollection services)
+        public static IServiceCollection AddTransformator(this IServiceCollection services)
         {
-            services.AddTransient<SubmissionsManager>();
-            services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(SubmissionsManager)));
-            services.AddTransient<EmailTemplateProvider>();
-            services.AddTransient<ITemplateProviderResolver>(sp =>
-           {
-               Func<NotificationChannelType, ITemplateProvider> resolverFunc = (type) => type switch
-               {
-                   NotificationChannelType.Email => sp.GetRequiredService<EmailTemplateProvider>(),
-                   _ => throw new NotImplementedException($"No template provider was registered for {type}")
-               };
-               return new TemplateProviderResolver(resolverFunc);
-           });
-
+            services.AddTransient<ITransformator, SuperSimpleTransformator>();
             return services;
         }
     }

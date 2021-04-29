@@ -17,8 +17,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Utilities.Notifications;
+using EMBC.ESS.Utilities.Transformation;
 
 namespace EMBC.ESS.Managers.Submissions
 {
@@ -26,16 +29,56 @@ namespace EMBC.ESS.Managers.Submissions
     {
         private readonly IMapper mapper;
         private readonly IContactRepository contactRepository;
+        private readonly ITemplateProviderResolver templateProviderResolver;
+        private readonly ICaseRepository caseRepository;
+        private readonly ITransformator transformator;
+        private readonly INotificationSender notificationSender;
 
-        public SubmissionsManager(IMapper mapper, IContactRepository contactRepository)
+        public SubmissionsManager(
+            IMapper mapper,
+            IContactRepository contactRepository,
+            ITemplateProviderResolver templateProviderResolver,
+            ICaseRepository caseRepository,
+            ITransformator transformator,
+            INotificationSender notificationSender)
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
+            this.templateProviderResolver = templateProviderResolver;
+            this.caseRepository = caseRepository;
+            this.transformator = transformator;
+            this.notificationSender = notificationSender;
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
         {
-            return await Task.FromResult("new ess number");
+            var file = mapper.Map<Resources.Cases.EvacuationFile>(cmd.File);
+            var contact = mapper.Map<Contact>(cmd.SubmitterProfile);
+
+            file.PrimaryRegistrantId = (await contactRepository.ManageContact(new SaveContact { Contact = contact })).ContactId;
+
+            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).CaseId;
+
+            if (contact.ContactDetails.Email != null)
+            {
+                var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(SubmissionTemplateType.NewAnonymousEvacuationFileSubmission);
+                var emailContent = (await transformator.Transform(new TransformationData
+                {
+                    Template = template.Content,
+                    Tokens = new[] { KeyValuePair.Create("fileNumber", caseId) }
+                })).Content;
+                await notificationSender.Send(new EmailNotification
+                {
+                    Subject = template.Subject,
+                    Content = emailContent,
+                    To = new[]
+                    {
+                        new EmailAddress { Name = $"{contact.PersonalDetails.LastName}, {contact.PersonalDetails.FirstName}", Address = contact.ContactDetails.Email }
+                    }
+                });
+            }
+
+            return caseId;
         }
 
         public async Task<string> Handle(SubmitEvacuationFileCommand cmd)
