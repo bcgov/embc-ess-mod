@@ -36,7 +36,9 @@
       <div class="col-md-4 detail-label">
         Electronic Access Agreement Signed
       </div>
-      <div class="col-md-8">{{ userProfile?.requiredToSignAgreement }}</div>
+      <div class="col-md-8">
+        {{ userProfile?.agreementSignDate | date: 'dd-MMM-yyyy HH:mm' }}
+      </div>
     </div>
 
     <div class="row row-align">
