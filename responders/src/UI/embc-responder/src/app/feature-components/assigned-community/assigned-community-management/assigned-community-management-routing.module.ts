@@ -4,7 +4,8 @@ import { AssignedCommunityManagementComponent } from './assigned-community-manag
 
 const routes: Routes = [
   {
-    path: '', component: AssignedCommunityManagementComponent,
+    path: '',
+    component: AssignedCommunityManagementComponent,
     children: [
       {
         path: '',
@@ -13,16 +14,24 @@ const routes: Routes = [
       },
       {
         path: 'list-communities',
-        loadChildren: () => import('../assigned-community-list/assigned-community-list.module').then(m => m.AssignedCommunityListModule)
+        loadChildren: () =>
+          import(
+            '../assigned-community-list/assigned-community-list.module'
+          ).then((m) => m.AssignedCommunityListModule)
       },
       {
         path: 'add-communities',
-        loadChildren: () => import('../add-community/add-community.module').then(m => m.AddCommunityModule)
+        loadChildren: () =>
+          import('../add-community/add-community.module').then(
+            (m) => m.AddCommunityModule
+          )
       },
       {
         path: 'review',
-        loadChildren: () => import('../assigned-community-review/assigned-community-review.module')
-        .then(m => m.AssignedCommunityReviewModule)
+        loadChildren: () =>
+          import(
+            '../assigned-community-review/assigned-community-review.module'
+          ).then((m) => m.AssignedCommunityReviewModule)
       }
     ]
   }
@@ -32,4 +41,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AssignedCommunityManagementRoutingModule { }
+export class AssignedCommunityManagementRoutingModule {}

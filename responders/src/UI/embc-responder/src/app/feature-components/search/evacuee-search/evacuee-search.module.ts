@@ -36,4 +36,4 @@ import { SharedModule } from 'src/app/shared/shared.module';
     EvacueeSearchResultsComponent
   ]
 })
-export class EvacueeSearchModule { }
+export class EvacueeSearchModule {}

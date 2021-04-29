@@ -16,7 +16,6 @@ import { Community } from 'src/app/core/services/locations.service';
   styleUrls: ['./assigned-community-list.component.scss']
 })
 export class AssignedCommunityListComponent implements OnInit {
-
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
   assignedCommunities: TeamCommunityModel[];
@@ -29,34 +28,40 @@ export class AssignedCommunityListComponent implements OnInit {
     private assignedCommunityListService: AssignedCommunityListService,
     private alertService: AlertService,
     private assignedCommunityListDataService: AssignedCommunityListDataService,
-    private router: Router) { }
+    private router: Router
+  ) {}
 
   /**
    * On component init, loads the assigned community list and filters
    */
   ngOnInit(): void {
     this.communitiesFilterPredicate();
-    this.assignedCommunityListService.getAssignedCommunityList().subscribe(values => {
-      this.isLoading = !this.isLoading;
-      this.assignedCommunities = values;
-      this.assignedCommunityListDataService.setTeamCommunityList(values);
-    }, (error) => {
-      this.isLoading = !this.isLoading;
-      this.alertService.clearAlert();
-      this.alertService.setAlert('danger', globalConst.communityListError);
-    });
+    this.assignedCommunityListService.getAssignedCommunityList().subscribe(
+      (values) => {
+        this.isLoading = !this.isLoading;
+        this.assignedCommunities = values;
+        this.assignedCommunityListDataService.setTeamCommunityList(values);
+      },
+      (error) => {
+        this.isLoading = !this.isLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.communityListError);
+      }
+    );
 
-    this.assignedCommunityListService.getAllAssignedCommunityList().subscribe(values => {
-      this.assignedCommunityListDataService.setAllTeamCommunityList(values);
-    });
+    this.assignedCommunityListService
+      .getAllAssignedCommunityList()
+      .subscribe((values) => {
+        this.assignedCommunityListDataService.setAllTeamCommunityList(values);
+      });
 
     this.filtersToLoad = this.assignedCommunityListDataService.filtersToLoad;
     this.displayedColumns = this.assignedCommunityListDataService.displayedColumns;
-
   }
 
   /**
    * Sets the user selected filers
+   *
    * @param event user selected filters
    */
   filter(event: TableFilterValueModel): void {
@@ -67,24 +72,42 @@ export class AssignedCommunityListComponent implements OnInit {
    * Navigates to add communities component
    */
   addCommunities(): void {
-    this.router.navigate(['/responder-access/community-management/add-communities']);
+    this.router.navigate([
+      '/responder-access/community-management/add-communities'
+    ]);
   }
 
   /**
    * Custom filter predicate for assigned community list
    */
   communitiesFilterPredicate(): void {
-    const filterPredicate = (data: TeamCommunityModel, filter: string): boolean => {
+    const filterPredicate = (
+      data: TeamCommunityModel,
+      filter: string
+    ): boolean => {
       const searchString: TableFilterValueModel = JSON.parse(filter);
       if (searchString.type === 'text') {
-        return (data.name.trim().toLowerCase().indexOf(searchString.value.trim().toLowerCase()) !== -1);
+        return (
+          data.name
+            .trim()
+            .toLowerCase()
+            .indexOf(searchString.value.trim().toLowerCase()) !== -1
+        );
       } else if (searchString.type === 'array') {
         const terms = searchString.value.split(',');
         const districtTerm = terms[0];
         const typeTerm = terms[1];
         const matchFilter = [];
-        const districtBoolean = data.districtName.trim().toLowerCase().indexOf(districtTerm.trim().toLowerCase()) !== -1;
-        const typeBoolean = data.type.trim().toLowerCase().indexOf(typeTerm.trim().toLowerCase()) !== -1;
+        const districtBoolean =
+          data.districtName
+            .trim()
+            .toLowerCase()
+            .indexOf(districtTerm.trim().toLowerCase()) !== -1;
+        const typeBoolean =
+          data.type
+            .trim()
+            .toLowerCase()
+            .indexOf(typeTerm.trim().toLowerCase()) !== -1;
         matchFilter.push(districtBoolean);
         matchFilter.push(typeBoolean);
         return matchFilter.every(Boolean);
@@ -95,6 +118,7 @@ export class AssignedCommunityListComponent implements OnInit {
 
   /**
    * Sets the list of assigned communities to delete
+   *
    * @param $event list of communities to remove
    */
   communitiesToDelete($event): void {
@@ -106,7 +130,8 @@ export class AssignedCommunityListComponent implements OnInit {
    * Navigates to review page for community removal
    */
   deleteCommunities(): void {
-    this.router.navigate(['/responder-access/community-management/review'], { queryParams: { action: 'delete' } });
+    this.router.navigate(['/responder-access/community-management/review'], {
+      queryParams: { action: 'delete' }
+    });
   }
-
 }

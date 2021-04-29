@@ -1,7 +1,15 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
-  AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input,
-  OnChanges, Output, SimpleChanges, ViewChild, ViewEncapsulation
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -16,8 +24,10 @@ import { TeamCommunityModel } from 'src/app/core/models/team-community.model';
   styleUrls: ['./assigned-community-table.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges {
-
+export class AssignedCommunityTableComponent
+  implements AfterViewInit, OnChanges {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   @Input() displayedColumns: TableColumnModel[];
   @Input() incomingData: TeamCommunityModel[] = [];
   @Input() filterTerm: TableFilterValueModel;
@@ -31,13 +41,11 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
   selection = new SelectionModel<any>(true, []);
   color = '#169BD5';
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
-  constructor(private cd: ChangeDetectorRef) { }
+  constructor(private cd: ChangeDetectorRef) {}
 
   /**
    * Listens to input events and popluate values
+   *
    * @param changes input event change object
    */
   ngOnChanges(changes: SimpleChanges): void {
@@ -49,7 +57,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
     }
 
     if (changes.displayedColumns) {
-      this.columns = this.displayedColumns.map(column => column.ref);
+      this.columns = this.displayedColumns.map((column) => column.ref);
     }
     if (changes.filterTerm && this.filterTerm !== undefined) {
       this.filter(this.filterTerm);
@@ -66,6 +74,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
 
   /**
    * Filters the datatable
+   *
    * @param term user selected filters
    */
   filter(term: TableFilterValueModel): void {
@@ -79,6 +88,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
 
   /**
    * Disables the row that is already assigned to the team
+   *
    * @param row community model
    * @returns true/false
    */
@@ -101,7 +111,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
       if (this.selection.selected.length !== 0) {
         this.selection.clear();
       } else {
-        this.dataSource.filteredData.forEach(row => {
+        this.dataSource.filteredData.forEach((row) => {
           if (row.hasOwnProperty('allowSelect')) {
             const r: TeamCommunityModel = row;
             if (r.allowSelect) {
@@ -114,7 +124,7 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
       if (this.selection.selected.length !== 0 || this.isAllSelected()) {
         this.selection.clear();
       } else {
-        this.dataSource.filteredData.forEach(row => {
+        this.dataSource.filteredData.forEach((row) => {
           if (row.hasOwnProperty('allowSelect')) {
             const r: TeamCommunityModel = row;
             this.selection.select(row);
@@ -131,11 +141,14 @@ export class AssignedCommunityTableComponent implements AfterViewInit, OnChanges
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+      row.position + 1
+    }`;
   }
 
   /**
    * Emits the selected communities to parent component
+   *
    * @param row community model
    */
   selectionToggle(row): void {

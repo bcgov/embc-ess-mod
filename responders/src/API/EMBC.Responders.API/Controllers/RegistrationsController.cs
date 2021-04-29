@@ -80,8 +80,8 @@ namespace EMBC.Responders.API.Controllers
             var registrant = new RegistrantProfileSearchResult
             {
                 Id = "12345",
-                FirstName = searchParameters.FirstName,
-                LastName = searchParameters.LastName,
+                FirstName = searchParameters.firstName,
+                LastName = searchParameters.lastName,
                 CreatedOn = new DateTime(2021, 1, 1),
                 Status = RegistrantStatus.Verified,
                 PrimaryAddress = address,
@@ -98,13 +98,13 @@ namespace EMBC.Responders.API.Controllers
     public class SearchParameters
     {
         [Required]
-        public string FirstName { get; set; }
+        public string firstName { get; set; }
 
         [Required]
-        public string LastName { get; set; }
+        public string lastName { get; set; }
 
         [Required]
-        public string DateOfBirth { get; set; }
+        public string dateOfBirth { get; set; }
     }
 
     public class SearchResults

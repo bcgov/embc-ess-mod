@@ -6,13 +6,7 @@ import { ViewUserProfileComponent } from './view-user-profile.component';
 import { MaterialModule } from 'src/app/material.module';
 
 @NgModule({
-  declarations: [
-    ViewUserProfileComponent
-  ],
-  imports: [
-    CommonModule,
-    ViewUserProfileRoutingModule,
-    MaterialModule
-  ]
+  declarations: [ViewUserProfileComponent],
+  imports: [CommonModule, ViewUserProfileRoutingModule, MaterialModule]
 })
-export class ViewUserProfileModule { }
+export class ViewUserProfileModule {}
