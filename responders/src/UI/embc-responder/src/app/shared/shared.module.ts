@@ -9,9 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
-import {
-  DeleteConfirmationDialogComponent
-} from './components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import { DeleteConfirmationDialogComponent } from './components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { InformationDialogComponent } from './components/dialog-components/information-dialog/information-dialog.component';
 
 @NgModule({
@@ -25,12 +23,7 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     DeleteConfirmationDialogComponent,
     InformationDialogComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    MaterialModule,
-    FormsModule
-  ],
+  imports: [CommonModule, RouterModule, MaterialModule, FormsModule],
   exports: [
     TopNavMenuComponent,
     ToggleSideNavComponent,
@@ -39,7 +32,7 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     AlertComponent,
     AppLoaderComponent,
     DeleteConfirmationDialogComponent,
-    InformationDialogComponent,
+    InformationDialogComponent
   ]
 })
-export class SharedModule { }
+export class SharedModule {}

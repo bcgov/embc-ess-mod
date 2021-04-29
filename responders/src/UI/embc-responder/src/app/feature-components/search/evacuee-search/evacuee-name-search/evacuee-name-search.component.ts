@@ -1,4 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+import {
+  EvacueeDetailsModel,
+  EvacueeSearchContextModel
+} from 'src/app/core/models/evacuee-search-context.model';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { EvacueeSearchService } from '../evacuee-search.service';
 
 @Component({
   selector: 'app-evacuee-name-search',
@@ -6,10 +18,76 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./evacuee-name-search.component.scss']
 })
 export class EvacueeNameSearchComponent implements OnInit {
+  @Output() showResultsComponent = new EventEmitter<boolean>();
 
-  constructor() { }
+  panel1OpenState = false;
+  panel2OpenState = false;
+  readonly dateMask = [
+    /\d/,
+    /\d/,
+    '/',
+    /\d/,
+    /\d/,
+    '/',
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/
+  ];
+  nameSearchForm: FormGroup;
+  evacueeSearchContextModel: EvacueeSearchContextModel;
 
+  constructor(
+    private customValidation: CustomValidationService,
+    private builder: FormBuilder,
+    private evacueeSearchService: EvacueeSearchService
+  ) {}
+
+  /**
+   * On component init, constructs the form
+   */
   ngOnInit(): void {
+    this.constructNameForm();
   }
 
+  /**
+   * Returns form control
+   */
+  get nameSearchFormControl(): { [key: string]: AbstractControl } {
+    return this.nameSearchForm.controls;
+  }
+
+  /**
+   * Builds the form
+   */
+  constructNameForm(): void {
+    this.nameSearchForm = this.builder.group({
+      firstName: [
+        this.evacueeSearchContextModel?.evacueeSearchParameters.firstName,
+        [Validators.required, this.customValidation.whitespaceValidator()]
+      ],
+      lastName: [
+        this.evacueeSearchContextModel?.evacueeSearchParameters.lastName,
+        [Validators.required, this.customValidation.whitespaceValidator()]
+      ],
+      dateOfBirth: [
+        this.evacueeSearchContextModel?.evacueeSearchParameters.dateOfBirth,
+        [Validators.required, this.customValidation.dateOfBirthValidator()]
+      ]
+    });
+  }
+
+  /**
+   * Saves the search params into the model and navigates to the search result component
+   */
+  search(): void {
+    const searchParams: EvacueeDetailsModel = {
+      firstName: this.nameSearchForm.get('firstName').value,
+      lastName: this.nameSearchForm.get('lastName').value,
+      dateOfBirth: this.nameSearchForm.get('dateOfBirth').value
+    };
+
+    this.evacueeSearchService.setEvacueeSearchParameters(searchParams);
+    this.showResultsComponent.emit(true);
+  }
 }

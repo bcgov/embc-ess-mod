@@ -17,4 +17,4 @@ import { SharedModule } from '../../../shared/shared.module';
     SharedModule
   ]
 })
-export class EditTeamMemberModule { }
+export class EditTeamMemberModule {}

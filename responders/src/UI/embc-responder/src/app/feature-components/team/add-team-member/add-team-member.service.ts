@@ -7,25 +7,26 @@ import { CacheService } from 'src/app/core/services/cache.service';
 
 @Injectable({ providedIn: 'root' })
 export class AddTeamMemberService {
+  private addedTeamMember: TeamMember;
 
-    private addedTeamMember: TeamMember;
+  constructor(
+    private teamMembersService: TeamMembersService,
+    private cacheService: CacheService
+  ) {}
 
-    constructor(private teamMembersService: TeamMembersService, private cacheService: CacheService) { }
+  checkUserNameExists(userName: string): Observable<boolean> {
+    return this.teamMembersService.teamMembersIsUserNameExists({ userName });
+  }
 
-    checkUserNameExists(userName: string): Observable<boolean> {
-        return this.teamMembersService.teamMembersIsUserNameExists({ userName });
-    }
+  setAddedTeamMember(addedTeamMember: TeamMember): void {
+    this.addedTeamMember = addedTeamMember;
+  }
 
-    setAddedTeamMember(addedTeamMember: TeamMember): void {
-        this.addedTeamMember = addedTeamMember;
-    }
+  getAddedTeamMember(): TeamMember {
+    return this.addedTeamMember;
+  }
 
-    getAddedTeamMember(): TeamMember {
-        return this.addedTeamMember;
-    }
-
-    clear(): void {
-        this.addedTeamMember = null;
-    }
-
+  clear(): void {
+    this.addedTeamMember = null;
+  }
 }

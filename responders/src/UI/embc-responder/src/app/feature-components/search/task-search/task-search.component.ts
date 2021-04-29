@@ -9,17 +9,19 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
   styleUrls: ['./task-search.component.scss']
 })
 export class TaskSearchComponent implements OnInit {
-
   taskSearchForm: FormGroup;
 
-  constructor(private builder: FormBuilder, private customValidation: CustomValidationService,
-              private router: Router) { }
+  constructor(
+    private builder: FormBuilder,
+    private customValidation: CustomValidationService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.constructTaskSearchForm();
   }
 
-  get taskSearchFormControl(): { [key: string]: AbstractControl; } {
+  get taskSearchFormControl(): { [key: string]: AbstractControl } {
     return this.taskSearchForm.controls;
   }
 
@@ -30,7 +32,8 @@ export class TaskSearchComponent implements OnInit {
   }
 
   submitTask(): void {
-    this.router.navigate(['/responder-access/search/task-details'], {state: {taskNumber: this.taskSearchForm.get('taskNumber').value}});
+    this.router.navigate(['/responder-access/search/task-details'], {
+      state: { taskNumber: this.taskSearchForm.get('taskNumber').value }
+    });
   }
-
 }

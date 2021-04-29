@@ -1,1 +1,155 @@
-<p>ess-files-results works!</p>
+<div *ngFor="let fileResult of matchedFiles$ | async">
+  <mat-card
+    [ngClass]="{
+      'outer-card': !fileResult?.isRestricted,
+      'restricted-card': fileResult?.isRestricted
+    }"
+  >
+    <div class="row result-heading-background">
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-md-12">
+            <a
+              *ngIf="fileResult?.status === 'Active'"
+              class="file-active highlight"
+              (click)="openESSFile()"
+            >
+              ESS File:<b>{{ fileResult?.id }}</b>
+              <span class="status-align"
+                ><img
+                  src="/assets/images/active-flag.svg"
+                  height="40"
+                  width="33"
+              /></span>
+            </a>
+            <a
+              *ngIf="fileResult?.status === 'InProgress'"
+              class="file-pending highlight"
+              (click)="openESSFile()"
+              >ESS File: <b>{{ fileResult?.id }}</b
+              ><span class="status-align"
+                ><img
+                  src="/assets/images/pending-flag.svg"
+                  height="40"
+                  width="33"
+              /></span>
+            </a>
+            <a
+              *ngIf="fileResult?.status === 'Completed'"
+              class="file-complete highlight"
+              (click)="openESSFile()"
+              >ESS File: <b>{{ fileResult?.id }}</b
+              ><span class="status-align"
+                ><img
+                  src="/assets/images/complete-flag.svg"
+                  height="40"
+                  width="33"
+              /></span>
+            </a>
+            <a
+              *ngIf="fileResult?.status === 'Expired'"
+              class="file-expired highlight"
+              (click)="openESSFile()"
+              >ESS File: <b>{{ fileResult?.id }}</b
+              ><span class="status-align"
+                ><img
+                  src="/assets/images/expired-flag.svg"
+                  height="40"
+                  width="33"
+              /></span>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <p class="result-subHeading">
+              Task # <b>{{ fileResult?.taskId }}</b>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="row">
+          <div class="col-md-12 metaData-align">
+            <p>
+              Restricted File:
+              <b>{{ fileResult?.isRestricted ? 'Yes' : 'No' }}</b>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 metaData-align">
+            <p>
+              ESS File Created:
+              <b>{{ fileResult?.createdOn | date: 'dd-MMM-yyyy' }}</b>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-5">
+        <div class="row">
+          <div class="col-md-1">
+            <img
+              src="/assets/images/location-pointer.svg"
+              height="34"
+              width="21"
+            />
+          </div>
+          <div class="col-md-10">
+            <p class="p-custom section-heading">Evacuated From Address:</p>
+            <p class="p-custom">
+              <b>{{ fileResult?.evacuatedFrom?.addressLine1 }}</b>
+            </p>
+            <p class="p-custom">
+              <b>{{ fileResult?.evacuatedFrom?.addressLine2 }},</b>
+            </p>
+            <p class="p-custom">
+              <b
+                >{{ fileResult?.evacuatedFrom?.city }},
+                {{ fileResult?.evacuatedFrom?.stateProvinceCode }},
+                {{ fileResult?.evacuatedFrom?.postalCode }}</b
+              >
+            </p>
+            <p class="p-custom">
+              <b>{{ fileResult?.evacuatedFrom?.countryCode }}</b>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <img src="/assets/images/vertical-line.svg" height="136" width="2" />
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-1">
+            <img src="/assets/images/house.svg" height="35" width="36" />
+          </div>
+          <div class="col-md-10">
+            <p class="p-custom section-heading members-margin">
+              Household Members:
+            </p>
+            <span *ngFor="let members of fileResult?.householdMembers">
+              <p
+                [ngClass]="{
+                  'member-match': members?.isMatch,
+                  'p-custom members-margin': !members?.isMatch
+                }"
+              >
+                {{ members?.lastName | uppercase }}, {{ members?.firstName }}
+                <span class="member-type">({{ members?.type }})</span>
+              </p>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="fileResult?.isRestricted" class="row restricted-div">
+      <span class="restricted-text">RESTRICTED FILE</span>
+    </div>
+  </mat-card>
+  <br />
+</div>
+<mat-paginator class="custom-paginator" [pageSizeOptions]="[3]"></mat-paginator>

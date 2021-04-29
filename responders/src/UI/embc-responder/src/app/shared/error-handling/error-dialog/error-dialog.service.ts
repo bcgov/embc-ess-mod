@@ -8,7 +8,7 @@ import { ErrorDialogComponent } from './error-dialog.component';
 export class ErrorDialogService {
   private opened = false;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog) {}
 
   public openDialog(message: string, status?: number): void {
     if (!this.opened) {
@@ -22,7 +22,7 @@ export class ErrorDialogService {
         hasBackdrop: true
       });
 
-      dialogRef.afterClosed().subscribe(d => {
+      dialogRef.afterClosed().subscribe((d) => {
         this.opened = false;
       });
     }

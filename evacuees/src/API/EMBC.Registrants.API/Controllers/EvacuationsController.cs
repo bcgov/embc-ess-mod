@@ -140,6 +140,8 @@ namespace EMBC.Registrants.API.Controllers
 
         public string EvacuationFileDate { get; set; }
 
+        public bool IsRestricted { get; set; }
+
         [Required]
         public Address EvacuatedFromAddress { get; set; }
 
