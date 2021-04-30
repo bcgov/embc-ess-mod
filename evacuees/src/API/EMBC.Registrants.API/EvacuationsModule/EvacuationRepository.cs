@@ -78,7 +78,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
             // link primary registrant to evacuation file
             dynamicsClient.TryAddLink(dynamicsContact, nameof(dynamicsContact.era_evacuationfile_Registrant), eraEvacuationFile);
             // add jurisdiction/city to evacuation
-            dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(evacuationFile.EvacuatedFromAddress.Jurisdiction), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
+            dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(evacuationFile.EvacuatedFromAddress.Community), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
 
             foreach (var needsAssessment in evacuationFile.NeedsAssessments)
             {
@@ -146,11 +146,11 @@ namespace EMBC.Registrants.API.EvacuationsModule
                     // link registrant primary and mailing address city, province, country
                     dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.PrimaryAddress.Country), nameof(era_country.era_contact_Country), member);
                     dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.PrimaryAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), member);
-                    dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.PrimaryAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_City), member);
+                    dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.PrimaryAddress.Community), nameof(era_jurisdiction.era_jurisdiction_contact_City), member);
 
                     dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.MailingAddress.Country), nameof(era_country.era_country_contact_MailingCountry), member);
                     dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.MailingAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), member);
-                    dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.MailingAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), member);
+                    dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.MailingAddress.Community), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), member);
                 }
 
                 // Add New needs assessment evacuee pets to dynamics context
@@ -303,9 +303,9 @@ namespace EMBC.Registrants.API.EvacuationsModule
             dynamicsClient.UpdateObject(updatedEvacuationFile);
 
             // add jurisdiction/city to evacuation
-            if (!string.IsNullOrEmpty(evacuationFileIn.EvacuatedFromAddress.Jurisdiction))
+            if (!string.IsNullOrEmpty(evacuationFileIn.EvacuatedFromAddress.Community))
             {
-                var evacuatedFromJurisdiction = dynamicsClient.LookupJurisdictionByCode(evacuationFileIn.EvacuatedFromAddress.Jurisdiction);
+                var evacuatedFromJurisdiction = dynamicsClient.LookupJurisdictionByCode(evacuationFileIn.EvacuatedFromAddress.Community);
                 dynamicsClient.TryAddLink(evacuatedFromJurisdiction, nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), updatedEvacuationFile);
             }
 
@@ -362,11 +362,11 @@ namespace EMBC.Registrants.API.EvacuationsModule
                         // link registrant primary and mailing address city, province, country
                         dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.PrimaryAddress.Country), nameof(era_country.era_contact_Country), contact);
                         dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.PrimaryAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact);
-                        dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.PrimaryAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_City), contact);
+                        dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.PrimaryAddress.Community), nameof(era_jurisdiction.era_jurisdiction_contact_City), contact);
 
                         dynamicsClient.TryAddLink(dynamicsClient.LookupCountryByCode(profile.MailingAddress.Country), nameof(era_country.era_country_contact_MailingCountry), contact);
                         dynamicsClient.TryAddLink(dynamicsClient.LookupStateProvinceByCode(profile.MailingAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact);
-                        dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.MailingAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), contact);
+                        dynamicsClient.TryAddLink(dynamicsClient.LookupJurisdictionByCode(profile.MailingAddress.Community), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), contact);
                     }
                     else
                     {

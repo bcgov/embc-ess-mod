@@ -147,10 +147,10 @@ namespace EMBC.Registrants.API.RegistrationsModule
             // link primary registrant to evacuation file
             dynamicsClient.AddLink(newPrimaryRegistrant, nameof(newPrimaryRegistrant.era_evacuationfile_Registrant), evacuationFile);
             // add jurisdiction/city to evacuation
-            var evacuationJurisdiction = LookupJurisdiction(registration.EvacuatedFromAddress.Jurisdiction);
+            var evacuationJurisdiction = LookupJurisdiction(registration.EvacuatedFromAddress.Community);
             if (evacuationJurisdiction == null || !evacuationJurisdiction.era_jurisdictionid.HasValue)
             {
-                evacuationFile.era_city = registration.EvacuatedFromAddress.Jurisdiction;
+                evacuationFile.era_city = registration.EvacuatedFromAddress.Community;
             }
             else
             {
@@ -194,7 +194,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 // link registrant primary and mailing address city, province, country
                 var primaryAddressCountry = LookupCountry(registration.RegistrationDetails.PrimaryAddress.Country);
                 var primaryAddressProvince = LookupStateProvince(registration.RegistrationDetails.PrimaryAddress.StateProvince);
-                var primaryAddressCity = LookupJurisdiction(registration.RegistrationDetails.PrimaryAddress.Jurisdiction);
+                var primaryAddressCity = LookupJurisdiction(registration.RegistrationDetails.PrimaryAddress.Community);
                 // country
                 dynamicsClient.AddLink(primaryAddressCountry, nameof(primaryAddressCountry.era_contact_Country), member);
                 // province
@@ -205,7 +205,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 // city
                 if (primaryAddressCity == null || !primaryAddressCity.era_jurisdictionid.HasValue)
                 {
-                    member.address1_city = registration.RegistrationDetails.PrimaryAddress.Jurisdiction;
+                    member.address1_city = registration.RegistrationDetails.PrimaryAddress.Community;
                 }
                 else
                 {
@@ -214,7 +214,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
                 var mailingAddressCountry = LookupCountry(registration.RegistrationDetails.MailingAddress.Country);
                 var mailingAddressProvince = LookupStateProvince(registration.RegistrationDetails.MailingAddress.StateProvince);
-                var mailingAddressCity = LookupJurisdiction(registration.RegistrationDetails.MailingAddress.Jurisdiction);
+                var mailingAddressCity = LookupJurisdiction(registration.RegistrationDetails.MailingAddress.Community);
                 // country
                 dynamicsClient.AddLink(mailingAddressCountry, nameof(mailingAddressCountry.era_country_contact_MailingCountry), member);
                 // province
@@ -225,7 +225,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
                 // city
                 if (mailingAddressCity == null || !mailingAddressCity.era_jurisdictionid.HasValue)
                 {
-                    member.address2_city = registration.RegistrationDetails.MailingAddress.Jurisdiction;
+                    member.address2_city = registration.RegistrationDetails.MailingAddress.Community;
                 }
                 else
                 {
@@ -334,7 +334,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             // link registrant primary and mailing address city, province, country
             var primaryAddressCountry = LookupCountry(profile.PrimaryAddress.Country);
             var primaryAddressProvince = LookupStateProvince(profile.PrimaryAddress.StateProvince);
-            var primaryAddressCity = LookupJurisdiction(profile.PrimaryAddress.Jurisdiction);
+            var primaryAddressCity = LookupJurisdiction(profile.PrimaryAddress.Community);
             // country
             dynamicsClient.AddLink(primaryAddressCountry, nameof(primaryAddressCountry.era_contact_Country), contact);
             // province
@@ -345,7 +345,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             // city
             if (primaryAddressCity == null || !primaryAddressCity.era_jurisdictionid.HasValue)
             {
-                contact.address1_city = profile.PrimaryAddress.Jurisdiction;
+                contact.address1_city = profile.PrimaryAddress.Community;
             }
             else
             {
@@ -355,7 +355,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
 
             var mailingAddressCountry = LookupCountry(profile.MailingAddress.Country);
             var mailingAddressProvince = LookupStateProvince(profile.MailingAddress.StateProvince);
-            var mailingAddressCity = LookupJurisdiction(profile.MailingAddress.Jurisdiction);
+            var mailingAddressCity = LookupJurisdiction(profile.MailingAddress.Community);
             // country
             dynamicsClient.AddLink(mailingAddressCountry, nameof(mailingAddressCountry.era_country_contact_MailingCountry), contact);
             // province
@@ -366,7 +366,7 @@ namespace EMBC.Registrants.API.RegistrationsModule
             // city
             if (mailingAddressCity == null || !mailingAddressCity.era_jurisdictionid.HasValue)
             {
-                contact.address2_city = profile.MailingAddress.Jurisdiction;
+                contact.address2_city = profile.MailingAddress.Community;
             }
             else
             {

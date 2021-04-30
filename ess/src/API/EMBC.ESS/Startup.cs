@@ -24,6 +24,8 @@ using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Messaging;
+using EMBC.ESS.Utilities.Notifications;
+using EMBC.ESS.Utilities.Transformation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -54,16 +56,22 @@ namespace EMBC.ESS
 
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
 
-            services.AddAdminManager();
-            services.AddLocationManager();
-            services.AddSubmissionManager();
-            services.AddTeamRepository();
-            services.AddMetadataRepository();
-            services.AddContactRepository();
-            services.AddCaseRepository();
-            services.Configure<DynamicsOptions>(configuration.GetSection("Dynamics"));
-            services.AddDynamics();
-            services.AddCache();
+            services
+                .AddAdminManager()
+                .AddLocationManager()
+                .AddSubmissionManager();
+
+            services
+                .AddTeamRepository()
+                .AddMetadataRepository()
+                .AddContactRepository()
+                .AddCaseRepository();
+
+            services
+                .AddDynamics(configuration)
+                .AddCache()
+                .AddTransformator()
+                .AddNotificationSenders(configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -37,7 +37,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForPath(d => d.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine1))
                 .ForPath(d => d.era_addressline2, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine2))
                 .ForPath(d => d.era_postalcode, opts => opts.MapFrom(s => s.EvacuatedFromAddress.PostalCode))
-                .ForPath(d => d.era_city, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Jurisdiction))
+                .ForPath(d => d.era_city, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Community))
                 .ForPath(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Country))
                 .ForPath(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvince))
                 ;
@@ -46,7 +46,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
                 .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.era_addressline1))
                 .ForMember(d => d.AddressLine2, opts => opts.MapFrom(s => s.era_addressline2))
                 .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.era_postalcode))
-                .ForMember(d => d.Jurisdiction, opts => opts.MapFrom(s => s.era_Jurisdiction.era_jurisdictionid))
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.era_Jurisdiction.era_jurisdictionid))
                 .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_code))
                 .ForMember(d => d.Country, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_RelatedCountry.era_countrycode))
                 .ReverseMap();

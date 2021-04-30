@@ -43,7 +43,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
                 {
                     AddressLine1 = "9837 Douglas St",
                     AddressLine2 = "Apt 249",
-                    Jurisdiction = "406adfaf-9f97-ea11-b813-005056830319",
+                    Community = "406adfaf-9f97-ea11-b813-005056830319",
                     StateProvince = "BC",
                     Country = "CAN",
                     PostalCode = "V8T 2W1"
@@ -108,7 +108,7 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
                 {
                     AddressLine1 = newAddress,
                     AddressLine2 = "Apt 249",
-                    Jurisdiction = "406adfaf-9f97-ea11-b813-005056830319",
+                    Community = "406adfaf-9f97-ea11-b813-005056830319",
                     StateProvince = "BC",
                     Country = "CAN",
                     PostalCode = "V8T 2W1"

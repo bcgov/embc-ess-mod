@@ -52,7 +52,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                         Country = "CAN",
                         StateProvince = "BC",
                         PostalCode = "v1v 1v1",
-                        Jurisdiction = "226adfaf-9f97-ea11-b813-005056830319"
+                        Community = "226adfaf-9f97-ea11-b813-005056830319"
                     },
                     MailingAddress = new Address
                     {
@@ -61,7 +61,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                         Country = "USA",
                         StateProvince = "WA",
                         PostalCode = "12345",
-                        Jurisdiction = "Seattle"
+                        Community = "Seattle"
                     }
                 },
                 PreliminaryNeedsAssessment = new NeedsAssessment
@@ -99,7 +99,7 @@ namespace EMBC.Tests.Integration.Registrants.API
                 {
                     AddressLine1 = $"addr1-{textContextIdentifier}",
                     Country = "CAN",
-                    Jurisdiction = "226adfaf-9f97-ea11-b813-005056830319",
+                    Community = "226adfaf-9f97-ea11-b813-005056830319",
                     StateProvince = "BC",
                     PostalCode = "v1v 1v1"
                 }

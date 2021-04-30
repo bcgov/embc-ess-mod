@@ -57,7 +57,7 @@ namespace EMBC.Registrants.API.ProfilesModule
             (address != null &&
             address.AddressLine1.StringSafeEquals(other?.AddressLine1) &&
             address.PostalCode.StringSafeEquals(other?.PostalCode) &&
-            address.Jurisdiction.StringSafeEquals(other?.Jurisdiction) &&
+            address.Community.StringSafeEquals(other?.Community) &&
             address.StateProvince.StringSafeEquals(other?.StateProvince) &&
             address.Country.StringSafeEquals(other?.Country));
 

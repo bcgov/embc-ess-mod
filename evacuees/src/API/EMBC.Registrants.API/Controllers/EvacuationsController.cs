@@ -21,8 +21,10 @@ using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
+using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Registrants.API.EvacuationsModule;
-using EMBC.Registrants.API.RegistrationsModule;
+using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,13 +35,15 @@ namespace EMBC.Registrants.API.Controllers
     [Route("api/[controller]")]
     public class EvacuationsController : ControllerBase
     {
-        private readonly IRegistrationManager registrationManager;
+        private readonly IMessagingClient messagingClient;
         private readonly IEvacuationManager evacuationManager;
+        private readonly IMapper mapper;
 
-        public EvacuationsController(IRegistrationManager registrationManager, IEvacuationManager evacuationManager)
+        public EvacuationsController(IMessagingClient messagingClient, IEvacuationManager evacuationManager, IMapper mapper)
         {
-            this.registrationManager = registrationManager;
+            this.messagingClient = messagingClient;
             this.evacuationManager = evacuationManager;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -48,15 +52,18 @@ namespace EMBC.Registrants.API.Controllers
         /// <param name="registration">Anonymous registration form</param>
         /// <returns>ESS number</returns>
         [HttpPost("create-registration-anonymous")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [AllowAnonymous]
         public async Task<ActionResult<RegistrationResult>> Create(AnonymousRegistration registration)
         {
             if (registration == null) return BadRequest();
-            var referenceNumber = await registrationManager.CreateRegistrationAnonymous(registration);
+            var id = await messagingClient.Send(new SubmitAnonymousEvacuationFileCommand
+            {
+                File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(registration),
+                SubmitterProfile = mapper.Map<RegistrantProfile>(registration)
+            });
 
-            return CreatedAtAction(nameof(Create), new RegistrationResult { ReferenceNumber = referenceNumber });
+            return Ok(new RegistrationResult { ReferenceNumber = id });
         }
 
         /// <summary>

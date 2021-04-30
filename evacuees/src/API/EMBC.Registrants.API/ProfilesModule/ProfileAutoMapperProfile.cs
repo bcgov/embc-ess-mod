@@ -40,14 +40,14 @@ namespace EMBC.Registrants.API.ProfilesModule
                 .ForPath(d => d.PrimaryAddress.PostalCode, opts => opts.MapFrom(s => s.address1_postalcode))
                 .ForPath(d => d.PrimaryAddress.Country, opts => opts.MapFrom(s => s.era_Country != null ? s.era_Country.era_countrycode : s.address1_country))
                 .ForPath(d => d.PrimaryAddress.StateProvince, opts => opts.MapFrom(s => s.era_ProvinceState != null ? s.era_ProvinceState.era_code : s.address1_stateorprovince))
-                .ForPath(d => d.PrimaryAddress.Jurisdiction, opts => opts.MapFrom(s => s.era_City != null ? s.era_City.era_jurisdictionid.ToString() : s.address1_city))
+                .ForPath(d => d.PrimaryAddress.Community, opts => opts.MapFrom(s => s.era_City != null ? s.era_City.era_jurisdictionid.ToString() : s.address1_city))
 
                 .ForPath(d => d.MailingAddress.AddressLine1, opts => opts.MapFrom(s => s.address2_line1))
                 .ForPath(d => d.MailingAddress.AddressLine2, opts => opts.MapFrom(s => s.address2_line2))
                 .ForPath(d => d.MailingAddress.PostalCode, opts => opts.MapFrom(s => s.address2_postalcode))
                 .ForPath(d => d.MailingAddress.Country, opts => opts.MapFrom(s => s.era_MailingCountry != null ? s.era_MailingCountry.era_countrycode : s.address2_country))
                 .ForPath(d => d.MailingAddress.StateProvince, opts => opts.MapFrom(s => s.era_MailingProvinceState != null ? s.era_MailingProvinceState.era_code : s.address2_stateorprovince))
-                .ForPath(d => d.MailingAddress.Jurisdiction, opts => opts.MapFrom(s => s.era_MailingCity != null ? s.era_MailingCity.era_jurisdictionid.ToString() : s.address2_city))
+                .ForPath(d => d.MailingAddress.Community, opts => opts.MapFrom(s => s.era_MailingCity != null ? s.era_MailingCity.era_jurisdictionid.ToString() : s.address2_city))
 
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s => s.era_issamemailingaddress))
 
@@ -59,17 +59,17 @@ namespace EMBC.Registrants.API.ProfilesModule
 
                 .ForMember(d => d.address1_country, opts => opts.MapFrom(s => s.PrimaryAddress.Country))
                 .ForMember(d => d.address1_stateorprovince, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince))
-                .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.Jurisdiction))
+                .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.Community))
                 .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince == "BC"))
 
                 .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
                 .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => s.MailingAddress.StateProvince))
-                .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.Jurisdiction))
+                .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.Community))
                 .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince == "BC"))
                 .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s =>
                     s.MailingAddress.Country == s.PrimaryAddress.Country &&
                     s.MailingAddress.StateProvince == s.PrimaryAddress.StateProvince &&
-                    s.MailingAddress.Jurisdiction == s.PrimaryAddress.Jurisdiction &&
+                    s.MailingAddress.Community == s.PrimaryAddress.Community &&
                     s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
                     s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
                     s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
@@ -112,7 +112,7 @@ namespace EMBC.Registrants.API.ProfilesModule
             CreateMap<User, Address>()
                 .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.StreetAddress))
                 .ForMember(d => d.AddressLine2, opts => opts.Ignore())
-                .ForMember(d => d.Jurisdiction, opts => opts.MapFrom(s => s.City))
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.City))
                 .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvince))
                 .ForMember(d => d.Country, opts => opts.MapFrom(s => s.Country))
                 .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.PostalCode));

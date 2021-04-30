@@ -23,7 +23,7 @@ namespace EMBC.ESS.Utilities.Notifications
 {
     public static class Configuration
     {
-        public static IServiceCollection AddNotifiationSender(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddNotificationSenders(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<EmailChannelOptions>(configuration.GetSection("notifications:email"));
             services.AddTransient<Email>();
