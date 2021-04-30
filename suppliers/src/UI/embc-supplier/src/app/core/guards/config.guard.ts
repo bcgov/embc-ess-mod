@@ -28,8 +28,12 @@ export class ConfigGuard implements CanActivate {
         // Set global maint/notice vars and redirect if site down
         this.configResult = config;
 
-        if (this.configResult.siteDown && state.url !== '/maintenance') {
+        if (this.configResult.siteDown && this.configResult.maintMsg !== '' && state.url !== '/maintenance') {
           this.router.navigate(['/maintenance']);
+          return false;
+        }
+        else if (this.configResult.siteDown && this.configResult.maintMsg === '' && state.url !== '/error') {
+          this.router.navigate(['/error']);
           return false;
         }
         else if (!this.configResult.siteDown && state.url === '/maintenance') {
