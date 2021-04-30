@@ -1,85 +1,138 @@
 <div class="row heading-container responsive-heading align-items-center">
-    <div class="col-md-1">
-        <img class="logo" width="82px" height="108px" src="/assets/images/logoBlueNew.png">
-    </div>
-    <div class="col-md-11">
-        <span class="page-heading">Emergency Responder Dashboard</span>
-    </div>
+  <div class="col-md-1">
+    <img
+      class="logo"
+      width="82px"
+      height="108px"
+      src="/assets/images/logoBlueNew.png"
+    />
+  </div>
+  <div class="col-md-11">
+    <span class="page-heading">Emergency Responder Dashboard</span>
+  </div>
 </div>
-<br>
+<br />
 <div class="row">
-    <div class="col-md-12">
-        <mat-card *ngIf="!isTaskSignedIn() else signedIn">
+  <div class="col-md-12">
+    <mat-card *ngIf="!isTaskSignedIn(); else signedIn">
+      <div class="row">
+        <div class="col-md-8">
+          <p class="card-heading-text">
+            Are you currently assisting evacuees in an
+            <span class="highlighted-word">evacuation</span>?
+          </p>
+          <p class="card-text">
+            To search for an evacuee within the ERA Tool or start a new evacuee
+            registration, please sign in to the task number.
+          </p>
+          <div class="row">
+            <div class="col-md-8">
+              <button
+                class="button-yellow signin-button"
+                (click)="signinTask()"
+                mat-stroked-button
+                type="button"
+              >
+                Sign in to the Task #
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 align-self-center">
+          <img
+            class="img-align"
+            src="/assets/images/dashboard-2.svg"
+            height="227"
+            width="279"
+          />
+        </div>
+      </div>
+    </mat-card>
+    <ng-template #signedIn>
+      <mat-card>
+        <div class="row">
+          <div class="col-md-8">
+            <p class="card-heading-text">
+              You are signed in to active task #<span
+                class="highlighted-word"
+                >{{ profile?.taskNumber }}</span
+              >
+            </p>
+          </div>
+          <div class="col-md-4 align-self-center">
+            <button
+              class="button-yellow"
+              (click)="evacueeSearch()"
+              mat-stroked-button
+              type="button"
+            >
+              Evacuee Search & Registration
+            </button>
             <div class="row">
-                <div class="col-md-8">
-                    <p class="card-heading-text">Are you currently assisting evacuees in an <span
-                            class="highlighted-word">evacuation</span>?</p>
-                    <p class="card-text">To search for an evacuee within the ERA Tool or start a new evacuee
-                        registration, please sign in
-                        to
-                        the task number.</p>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <button class="button-yellow signin-button" (click)="signinTask()" mat-stroked-button type="button">Sign in to the Task #</button>
-                            </div>
-                        </div>
-                </div>
-                <div class="col-md-4 align-self-center">
-                    <img class="img-align" src="/assets/images/dashboard-2.svg" height="227" width="279">
-                </div>
+              <div class="col-md-12">
+                <a class="signIn-link" (click)="signinTask()"
+                  ><p class="highlighted-word">
+                    Sign in to a different task #
+                    <img
+                      src="/assets/images/right_arrow_head.svg"
+                      height="11"
+                      width="7"
+                    /></p
+                ></a>
+              </div>
             </div>
-        </mat-card>
-        <ng-template #signedIn>
-            <mat-card>
-                <div class="row">
-                    <div class="col-md-8">
-                        <p class="card-heading-text">You are signed in to active task #<span
-                                class="highlighted-word">{{profile?.taskNumber}}</span></p>
-                    </div>
-                    <div class="col-md-4 align-self-center">
-                        <button class="button-yellow" (click)="evacueeSearch()" mat-stroked-button type="button">Evacuee Search & Registration</button>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <a class="signIn-link" (click)="signinTask()"><p class="highlighted-word">Sign in a different task # <img src="/assets/images/right_arrow_head.svg" height="11" width="7"></p></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </mat-card>
-        </ng-template>
-    </div>
+          </div>
+        </div>
+      </mat-card>
+    </ng-template>
+  </div>
 </div>
-<br>
+<br />
 <div class="row">
-    <div class="col-md-4">
-        <mat-card style="background-color: rgba(0, 51, 102, 1);">
-            <img class="img-align" src="/assets/images/training.svg" height="76" width="69">
-            <p class="info-card">Latest Training Materials</p>
-            <p class="info-card-text">Some text here.</p>
-            <div class="external-links">
-                <a href="">View Training Material</a>
-            </div>
-        </mat-card>
-    </div>
-    <div class="col-md-4">
-        <mat-card style="background-color: rgba(35, 64, 117, 1);">
-            <img class="img-align" src="/assets/images/updates.svg" height="76" width="69">
-            <p class="info-card">Latest ERA Updates</p>
-            <p class="info-card-text">Some text here.</p>
-            <div class="external-links">
-                <a href="">View Latest Updates</a>
-            </div>
-        </mat-card>
-    </div>
-    <div class="col-md-4">
-        <mat-card style="background-color: rgba(51, 51, 51, 1);">
-            <img class="img-align" src="/assets/images/tips.svg" height="76" width="69">
-            <p class="info-card">Tips for Emergency Responders</p>
-            <p class="info-card-text">Some text here.</p>
-            <div class="external-links">
-                <a href="">View Useful Tips for ERA Users</a>
-            </div>
-        </mat-card>
-    </div>
+  <div class="col-md-4">
+    <mat-card style="background-color: rgba(0, 51, 102, 1)">
+      <img
+        class="img-align"
+        src="/assets/images/training.svg"
+        height="76"
+        width="69"
+      />
+      <p class="info-card">Latest Training Materials</p>
+      <p class="info-card-text">Some text here.</p>
+      <div class="external-links">
+        <a href="">View Training Material</a>
+      </div>
+    </mat-card>
+  </div>
+  <div class="col-md-4">
+    <mat-card style="background-color: rgba(35, 64, 117, 1)">
+      <img
+        class="img-align"
+        src="/assets/images/updates.svg"
+        height="76"
+        width="69"
+      />
+      <p class="info-card">Latest ERA Updates</p>
+      <p class="info-card-text">Some text here.</p>
+      <div class="external-links">
+        <a href="">View Latest Updates</a>
+      </div>
+    </mat-card>
+  </div>
+  <div class="col-md-4">
+    <mat-card style="background-color: rgba(51, 51, 51, 1)">
+      <img
+        class="img-align"
+        src="/assets/images/tips.svg"
+        height="76"
+        width="69"
+      />
+      <p class="info-card">Tips for Emergency Responders</p>
+      <p class="info-card-text">Some text here.</p>
+      <div class="external-links">
+        <a href="">View Useful Tips for ERA Users</a>
+      </div>
+    </mat-card>
+  </div>
 </div>
-<br>
+<br />

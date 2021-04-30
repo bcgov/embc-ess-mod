@@ -4,6 +4,7 @@ import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+    private isConfigSet: boolean = false;
     constructor(
         private oauthService: OAuthService,
         private configService: ConfigService
@@ -37,20 +38,25 @@ export class AuthenticationService {
             return Promise.resolve(true);
         }
 
-        return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
-            return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
-        });
+        if (!this.isConfigSet) {
+            return this.configureOAuthService().then(() => {
+                return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
+                    return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+                });
+            });
+        }
+        else {
+            return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
+                return this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+            });
+        }
     }
 
     private async configureOAuthService(): Promise<void> {
         return this.configService.getAuthConfig().then(config => {
-            let authConfig = {
-                issuer: config.issuer,
-                clientid: config.clientId
-            }
-            // this.oauthService.tokenValidationHandler = new NullValidationHandler();
             this.oauthService.configure(config);
             this.oauthService.setupAutomaticSilentRefresh();
+            this.isConfigSet = true;
         });
     }
 }

@@ -10,10 +10,9 @@ describe('TeamMemberReviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, RouterTestingModule ],
-      declarations: [ TeamMemberReviewComponent ]
-    })
-    .compileComponents();
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      declarations: [TeamMemberReviewComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

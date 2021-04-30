@@ -27,23 +27,34 @@
 
       <ng-container *ngIf="showUserProfile()">
         <button mat-button [matMenuTriggerFor]="menu">
-          <div class="row align-content">
-            <div>
+          <div class="row">
+            <div class="col-md-2">
               <img
                 class="img-align"
                 src="/assets/images/user.svg"
                 height="34"
                 width="34"
               />
+            </div>
+            <div class="col-md-8">
               <span style="color: white"
                 ><b>{{ this.userName }}</b> ({{ this.teamName }})</span
               >
+              <p class="text">{{ this.signedInTask }}</p>
             </div>
-            <span class="text">{{ this.signedInTask }}</span>
+            <div class="col-md-2">
+              <img
+                src="/assets/images/down-arrow-head.svg"
+                height="7"
+                width="12"
+              />
+            </div>
           </div>
         </button>
         <mat-menu #menu="matMenu">
-          <button *ngIf="allowSignIn()" mat-menu-item (click)="newTaskSignIn()">Sign in to a different task #</button>
+          <button *ngIf="allowSignIn()" mat-menu-item (click)="newTaskSignIn()">
+            Sign in to a different task #
+          </button>
           <button mat-menu-item (click)="openUserProfile()">My Profile</button>
           <button mat-menu-item (click)="signOut()">Sign out</button>
         </mat-menu>

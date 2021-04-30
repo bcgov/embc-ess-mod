@@ -12,6 +12,7 @@ import { TeamListService } from './team-list.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { AddTeamMemberService } from '../add-team-member/add-team-member.service';
 
 @Component({
   selector: 'app-team-list',
@@ -19,7 +20,6 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
   styleUrls: ['./team-list.component.scss']
 })
 export class TeamListComponent implements OnInit {
-
   filterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
   displayedColumns: TableColumnModel[];
@@ -28,8 +28,15 @@ export class TeamListComponent implements OnInit {
   statusLoading = true;
   loggedInRole: string;
 
-  constructor(private teamListService: TeamListService, private router: Router, private teamDataService: TeamListDataService,
-              private dialog: MatDialog, private userService: UserService, private alertService: AlertService) {
+  constructor(
+    private teamListService: TeamListService,
+    private router: Router,
+    private teamDataService: TeamListDataService,
+    private dialog: MatDialog,
+    private userService: UserService,
+    private alertService: AlertService,
+    private addTeamMemberService: AddTeamMemberService
+  ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         const state = this.router.getCurrentNavigation().extras.state;
@@ -43,15 +50,18 @@ export class TeamListComponent implements OnInit {
    */
   ngOnInit(): void {
     this.teamDataService.clear();
-    this.teamListService.getTeamMembers().subscribe(values => {
-      this.isLoading = !this.isLoading;
-      this.teamMembers = values;
-    },
+    this.addTeamMemberService.clear();
+    this.teamListService.getTeamMembers().subscribe(
+      (values) => {
+        this.isLoading = !this.isLoading;
+        this.teamMembers = values;
+      },
       (error) => {
         this.isLoading = !this.isLoading;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.teamMemberListError);
-      });
+      }
+    );
     this.filtersToLoad = this.teamDataService.filtersToLoad;
     this.displayedColumns = this.teamDataService.displayedColumns;
     this.loggedInRole = this.userService.currentProfile.role;
@@ -59,6 +69,7 @@ export class TeamListComponent implements OnInit {
 
   /**
    * Sets the user selected filers
+   *
    * @param event user selected filters
    */
   filter(event: TableFilterValueModel): void {
@@ -67,43 +78,61 @@ export class TeamListComponent implements OnInit {
 
   /**
    * Sets the selected team member to the services and navigates to the details page
+   *
    * @param $event Selected team member object
    */
   openMemberDetails($event: TeamMember): void {
     this.teamDataService.setSelectedTeamMember($event);
-    this.router.navigate(['/responder-access/responder-management/details/member-details'], { state: $event });
+    this.router.navigate(
+      ['/responder-access/responder-management/details/member-details'],
+      { state: $event }
+    );
   }
 
   /**
    * Activates an inactive user
+   *
    * @param $event team member id
    */
   activateTeamMember($event: string): void {
     this.statusLoading = !this.statusLoading;
-    this.teamListService.activateTeamMember($event).subscribe(value => {
-      this.statusLoading = !this.statusLoading;
-      this.teamMembers = value;
-    }, (error) => {
-      this.statusLoading = !this.statusLoading;
-      this.alertService.clearAlert();
-      this.alertService.setAlert('danger', globalConst.activateTeamMemberError);
-    });
+    this.teamListService.activateTeamMember($event).subscribe(
+      (value) => {
+        this.statusLoading = !this.statusLoading;
+        this.teamMembers = value;
+      },
+      (error) => {
+        this.statusLoading = !this.statusLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.activateTeamMemberError
+        );
+      }
+    );
   }
 
   /**
    * Inactivate an active user
+   *
    * @param $event team member id
    */
   deactivateTeamMember($event: string): void {
     this.statusLoading = !this.statusLoading;
-    this.teamListService.deactivatedTeamMember($event).subscribe(value => {
-      this.statusLoading = !this.statusLoading;
-      this.teamMembers = value;
-    }, (error) => {
-      this.statusLoading = !this.statusLoading;
-      this.alertService.clearAlert();
-      this.alertService.setAlert('danger', globalConst.deActivateTeamMemberError);
-    });
+    this.teamListService.deactivatedTeamMember($event).subscribe(
+      (value) => {
+        this.statusLoading = !this.statusLoading;
+        this.teamMembers = value;
+      },
+      (error) => {
+        this.statusLoading = !this.statusLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.deActivateTeamMemberError
+        );
+      }
+    );
   }
 
   /**
@@ -115,9 +144,10 @@ export class TeamListComponent implements OnInit {
 
   /**
    * Populates action basec notification and open confirmation box
+   *
    * @param state navigation state string
    */
-  enableActionNotification(state: { [k: string]: any; }): void {
+  enableActionNotification(state: { [k: string]: any }): void {
     let displayText = '';
     if (state?.action === 'delete') {
       displayText = globalConst.deleteMessage;
@@ -133,6 +163,7 @@ export class TeamListComponent implements OnInit {
 
   /**
    * Open confirmation modal window
+   *
    * @param text text to display
    */
   openConfirmation(text: string): void {
@@ -146,5 +177,3 @@ export class TeamListComponent implements OnInit {
     });
   }
 }
-
-

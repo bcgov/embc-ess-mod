@@ -5,14 +5,18 @@ import { TeamMembersService } from 'src/app/core/api/services';
 
 @Injectable({ providedIn: 'root' })
 export class TeamMemberReviewService {
+  constructor(private teamMembersService: TeamMembersService) {}
 
-    constructor(private teamMembersService: TeamMembersService) { }
+  updateTeamMember(memberId: string, teamMember: TeamMember): Observable<void> {
+    return this.teamMembersService.teamMembersUpdateTeamMember({
+      memberId,
+      body: teamMember
+    });
+  }
 
-    updateTeamMember(memberId: string, teamMember: TeamMember): Observable<void> {
-        return this.teamMembersService.teamMembersUpdateTeamMember({ memberId, body: teamMember });
-    }
-
-    addTeamMember(teamMember: TeamMember): Observable<void> {
-        return this.teamMembersService.teamMembersCreateTeamMember({ body: teamMember });
-    }
+  addTeamMember(teamMember: TeamMember): Observable<void> {
+    return this.teamMembersService.teamMembersCreateTeamMember({
+      body: teamMember
+    });
+  }
 }

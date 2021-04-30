@@ -1,4 +1,4 @@
 export interface TableColumnModel {
-    label: string;
-    ref: string;
+  label: string;
+  ref: string;
 }
