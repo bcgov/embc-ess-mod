@@ -8,9 +8,8 @@ describe('StepCreateEssFileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StepCreateEssFileComponent ]
-    })
-    .compileComponents();
+      declarations: [StepCreateEssFileComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

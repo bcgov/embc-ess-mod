@@ -4,12 +4,8 @@ import { CommonModule } from '@angular/common';
 import { StepCreateEssFileRoutingModule } from './step-create-ess-file-routing.module';
 import { StepCreateEssFileComponent } from './step-create-ess-file.component';
 
-
 @NgModule({
   declarations: [StepCreateEssFileComponent],
-  imports: [
-    CommonModule,
-    StepCreateEssFileRoutingModule
-  ]
+  imports: [CommonModule, StepCreateEssFileRoutingModule]
 })
-export class StepCreateEssFileModule { }
+export class StepCreateEssFileModule {}
