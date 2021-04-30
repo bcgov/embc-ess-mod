@@ -1,6 +1,9 @@
+import { OidcConfiguration } from "../services/config.service";
+
 export class ServerConfig {
-    noticeMsg: string;
-    maintMsg: string;
-    siteDown: boolean;
     environment: string;
+    maintMsg: string;
+    noticeMsg: string;
+    oidc: OidcConfiguration;
+    siteDown: boolean;
 }

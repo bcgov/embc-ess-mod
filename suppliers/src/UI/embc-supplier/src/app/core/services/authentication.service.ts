@@ -38,8 +38,6 @@ export class AuthenticationService {
             return Promise.resolve(true);
         }
 
-        console.log("has valid token - is config set", this.isConfigSet);
-
         if (!this.isConfigSet) {
             return this.configureOAuthService().then(() => {
                 return this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
@@ -56,13 +54,6 @@ export class AuthenticationService {
 
     private async configureOAuthService(): Promise<void> {
         return this.configService.getAuthConfig().then(config => {
-            let authConfig = {
-                issuer: config.issuer,
-                clientid: config.clientId
-            }
-            console.log("setting auth config");
-            console.log(config);
-            // this.oauthService.tokenValidationHandler = new NullValidationHandler();
             this.oauthService.configure(config);
             this.oauthService.setupAutomaticSilentRefresh();
             this.isConfigSet = true;
