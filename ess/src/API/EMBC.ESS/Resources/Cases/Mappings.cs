@@ -91,6 +91,44 @@ namespace EMBC.ESS.Resources.Cases
                 .ForMember(d => d.Pets, opts => opts.MapFrom(s => Array.Empty<Pet>()))
                ;
 
+            CreateMap<HouseholdMember, contact>(AutoMapper.MemberList.None)
+                .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.Id))
+
+                .ReverseMap()
+
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.contactid));
+
+            CreateMap<HouseholdMember, era_needsassessmentevacuee>(AutoMapper.MemberList.None)
+                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => s.isUnder19))
+                .ForPath(d => d.era_RegistrantID.contactid, opts => opts.MapFrom(s => s.Id))
+                .ForPath(d => d.era_RegistrantID.firstname, opts => opts.MapFrom(s => s.FirstName))
+                .ForPath(d => d.era_RegistrantID.lastname, opts => opts.MapFrom(s => s.LastName))
+                .ForPath(d => d.era_RegistrantID.era_initial, opts => opts.MapFrom(s => s.Initials))
+                .ForPath(d => d.era_RegistrantID.era_preferredname, opts => opts.MapFrom(s => s.PreferredName))
+                .ForPath(d => d.era_RegistrantID.gendercode, opts => opts.MapFrom(s => s.Gender))
+                .ForPath(d => d.era_RegistrantID.birthdate, opts => opts.MapFrom(s => s.DateOfBirth))
+
+                .ReverseMap()
+
+                .ForMember(d => d.isUnder19, opts => opts.MapFrom(s => s.era_isunder19))
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_RegistrantID.contactid))
+                .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_RegistrantID.firstname))
+                .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_RegistrantID.lastname))
+                .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_RegistrantID.era_initial))
+                .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.era_RegistrantID.era_preferredname))
+                .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.era_RegistrantID.gendercode))
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.era_RegistrantID.birthdate))
+                ;
+
+            CreateMap<era_needsassessmentevacuee, Pet>()
+                .ForMember(d => d.Quantity, opts => opts.MapFrom(s => s.era_numberofpets))
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_typeofpet))
+
+                .ReverseMap()
+
+                .ForMember(d => d.era_numberofpets, opts => opts.MapFrom(s => s.Quantity))
+                .ForMember(d => d.era_typeofpet, opts => opts.MapFrom(s => s.Type));
+
             //CreateMap<HouseholdMember, contact>()
             //    .ReverseMap()
             //    ;
@@ -127,5 +165,24 @@ namespace EMBC.ESS.Resources.Cases
             Preliminary = 174360000,
             Assessed = 174360001
         }
+    }
+
+    public class GenderConverter : AutoMapper.IValueConverter<string, int?>, AutoMapper.IValueConverter<int?, string>
+    {
+        public int? Convert(string sourceMember, AutoMapper.ResolutionContext context) => sourceMember switch
+        {
+            "Male" => 1,
+            "Female" => 2,
+            "X" => 3,
+            _ => null
+        };
+
+        public string Convert(int? sourceMember, AutoMapper.ResolutionContext context) => sourceMember switch
+        {
+            1 => "Male",
+            2 => "Female",
+            3 => "X",
+            _ => null
+        };
     }
 }

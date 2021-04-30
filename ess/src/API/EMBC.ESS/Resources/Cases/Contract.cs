@@ -60,6 +60,11 @@ namespace EMBC.ESS.Resources.Cases
         public string Id { get; set; }
     }
 
+    public class QueryEvacuationFile : CaseQuery
+    {
+        public EvacuationFile EvacuationFile { get; set; }
+    }
+
     public class EvacuationFile : Case
     {
         public EvacuationAddress EvacuatedFromAddress { get; set; }

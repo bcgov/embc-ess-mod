@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Resources.Cases.Evacuations;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Edm;
@@ -27,11 +28,13 @@ namespace EMBC.ESS.Resources.Cases
 {
     public class CaseRepository : ICaseRepository
     {
+        private readonly IEvacuationRepository evacuationRepository;
         private readonly EssContext essContext;
         private readonly IMapper mapper;
 
-        public CaseRepository(EssContext essContext, IMapper mapper)
+        public CaseRepository(IEvacuationRepository evacuationRepository, EssContext essContext, IMapper mapper)
         {
+            this.evacuationRepository = evacuationRepository;
             this.essContext = essContext;
             this.mapper = mapper;
         }
@@ -45,9 +48,18 @@ namespace EMBC.ESS.Resources.Cases
             };
         }
 
-        public Task<CaseQueryResult> QueryCase(CaseQuery query)
+        public async Task<CaseQueryResult> QueryCase(CaseQuery query)
         {
-            throw new NotImplementedException();
+            return query.GetType().Name switch
+            {
+                nameof(QueryEvacuationFile) => await HandleQueryEvacuationFile((QueryEvacuationFile)query),
+                _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
+            };
+        }
+
+        public async Task<CaseQueryResult> HandleQueryEvacuationFile(QueryEvacuationFile cmd)
+        {
+            return new CaseQueryResult { Items = await evacuationRepository.Read(cmd.ById) };
         }
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)

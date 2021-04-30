@@ -14,18 +14,35 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using EMBC.ESS.Resources.Cases.Evacuations;
-using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace EMBC.ESS.Resources.Cases
+namespace EMBC.ESS.Resources.Cases.Evacuations
 {
-    public static class Configuration
+    public interface IEvacuationRepository
     {
-        public static IServiceCollection AddCaseRepository(this IServiceCollection services)
-        {
-            services.AddTransient<ICaseRepository, CaseRepository>();
+        Task<string> Create(string userId, EvacuationFile evacuationFile);
 
-            return services;
-        }
+        Task<IEnumerable<EvacuationFile>> Read(string userId);
+
+        Task<EvacuationFile> Read(string userId, string essFileNumber);
+
+        Task<string> Update(string userId, string essFileNumber, EvacuationFile evacuationFile);
+
+        Task Delete(string userId, string essFileNumber);
+    }
+
+    public enum EvacueeType
+    {
+        Person = 174360000,
+        Pet = 174360001
+    }
+
+    public enum RegistrantType
+    {
+        Primary = 174360000,
+        Member = 174360001
     }
 }
