@@ -54,7 +54,7 @@ namespace EMBC.ESS.Resources.Cases
         {
             var evacuationFile = cmd.EvacuationFile;
 
-            var primaryContact = essContext.contacts.FirstOrDefault(c => c.externaluseridentifier == evacuationFile.PrimaryRegistrantId);
+            var primaryContact = essContext.contacts.Where(c => c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
             var eraEvacuationFile = mapper.Map<era_evacuationfile>(evacuationFile);
 
             eraEvacuationFile.era_evacuationfileid = Guid.NewGuid();
@@ -137,18 +137,16 @@ namespace EMBC.ESS.Resources.Cases
                 }
             }
 
-            //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
-            var results = await essContext.SaveChangesAsync();
+            await essContext.SaveChangesAsync();
 
             essContext.Detach(eraEvacuationFile);
+            var createdFile = essContext.era_evacuationfiles.Where(f => f.era_evacuationfileid == eraEvacuationFile.era_evacuationfileid).Single();
 
-            var queryResult = essContext.era_evacuationfiles.Where(f => f.era_evacuationfileid == eraEvacuationFile.era_evacuationfileid).FirstOrDefault();
-
-            var essFileNumber = (int)queryResult?.era_essfilenumber;
+            var essFileNumber = createdFile.era_name;
 
             essContext.DetachAll();
 
-            return new ManageCaseCommandResult { CaseId = essFileNumber.ToString() };
+            return new ManageCaseCommandResult { CaseId = essFileNumber };
         }
 
         private bool CheckIfUnder19Years(Date birthdate, Date currentDate)

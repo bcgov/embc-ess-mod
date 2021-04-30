@@ -61,7 +61,7 @@ namespace EMBC.ESS.Resources.Cases
 
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)
                 .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => s.Id))
-                .ForMember(d => d.era_needsassessmenttype, opts => opts.MapFrom(s => s.Type))
+                .ForMember(d => d.era_needsassessmenttype, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentTypeOptionSet>(s.Type.ToString())))
                 .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => Lookup(s.CanEvacueeProvideFood)))
                 .ForMember(d => d.era_canevacueeprovideclothing, opts => opts.MapFrom(s => Lookup(s.CanEvacueeProvideClothing)))
                 .ForMember(d => d.era_canevacueeprovideincidentals, opts => opts.MapFrom(s => Lookup(s.CanEvacueeProvideIncidentals)))
@@ -70,20 +70,20 @@ namespace EMBC.ESS.Resources.Cases
                 .ForMember(d => d.era_dietaryrequirement, opts => opts.MapFrom(s => s.HaveSpecialDiet))
                 .ForMember(d => d.era_dietaryrequirementdetails, opts => opts.MapFrom(s => s.SpecialDietDetails))
                 .ForMember(d => d.era_medicationrequirement, opts => opts.MapFrom(s => s.HaveMedication))
-                .ForMember(d => d.era_insurancecoverage, opts => opts.MapFrom(s => (int?)s.Insurance))
+                .ForMember(d => d.era_insurancecoverage, opts => opts.MapFrom(s => (int?)Enum.Parse<InsuranceOptionOptionSet>(s.Insurance.ToString())))
                 .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => Lookup(s.HasPetsFood)))
                 ;
 
             CreateMap<era_needassessment, NeedsAssessment>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_needassessmentid))
-                .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_needsassessmenttype))
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentType>(((NeedsAssessmentTypeOptionSet)s.era_needsassessmenttype).ToString())))
                 .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovideclothing)))
                 .ForMember(d => d.CanEvacueeProvideFood, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidefood)))
                 .ForMember(d => d.CanEvacueeProvideIncidentals, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovideincidentals)))
                 .ForMember(d => d.CanEvacueeProvideLodging, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidelodging)))
                 .ForMember(d => d.CanEvacueeProvideTransportation, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidetransportation)))
                 .ForMember(d => d.HaveMedication, opts => opts.MapFrom(s => s.era_medicationrequirement))
-                .ForMember(d => d.Insurance, opts => opts.MapFrom(s => (InsuranceOption)s.era_insurancecoverage))
+                .ForMember(d => d.Insurance, opts => opts.MapFrom(s => Enum.Parse<InsuranceOption>(((InsuranceOptionOptionSet)s.era_insurancecoverage).ToString())))
                 .ForMember(d => d.HaveSpecialDiet, opts => opts.MapFrom(s => s.era_dietaryrequirement))
                 .ForMember(d => d.SpecialDietDetails, opts => opts.MapFrom(s => s.era_dietaryrequirementdetails))
                 .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => Lookup(s.era_haspetfood)))
@@ -113,5 +113,19 @@ namespace EMBC.ESS.Resources.Cases
             174360002 => null,
             _ => null
         };
+
+        public enum InsuranceOptionOptionSet
+        {
+            No = 174360000,
+            Yes = 174360001,
+            Unsure = 174360002,
+            Unknown = 174360003
+        }
+
+        public enum NeedsAssessmentTypeOptionSet
+        {
+            Preliminary = 174360000,
+            Assessed = 174360001
+        }
     }
 }

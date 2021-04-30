@@ -60,7 +60,7 @@ namespace EMBC.Registrants.API.Controllers
             var id = await messagingClient.Send(new SubmitAnonymousEvacuationFileCommand
             {
                 File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(registration),
-                SubmitterProfile = mapper.Map<RegistrantProfile>(registration)
+                SubmitterProfile = mapper.Map<RegistrantProfile>(registration.RegistrationDetails)
             });
 
             return Ok(new RegistrationResult { ReferenceNumber = id });
