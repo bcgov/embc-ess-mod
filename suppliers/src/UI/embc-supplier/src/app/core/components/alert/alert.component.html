@@ -1,3 +1,8 @@
-<p *ngFor="let alert of alerts"><!---->
-    <ngb-alert [type]="alert?.type" (close)="close(alert)">{{ alert?.message }}</ngb-alert>
-</p>
+<div *ngFor="let alert of alerts">
+    <div *ngIf="alert.type ==='danger'" class="alert alert-danger" role="alert">
+        {{ alert?.message }}
+    </div>
+    <div *ngIf="alert.type ==='warning'" class="alert alert-warning" role="alert">
+        {{ alert?.message }}
+    </div>
+</div>
