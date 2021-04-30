@@ -116,7 +116,6 @@
                     </div>
                 </div>
                 <hr>
-
                 <div class="row info-detail">
                     <div class="col-md-3">Address line 1:</div>
                     <div class="col-md-3">{{(formCreationService.addressForm$ | async)?.value?.address?.addressLine1}}
@@ -129,8 +128,13 @@
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">City:</div>
-                    <div class="col-md-3">
+                    <div class="col-md-3"
+                        *ngIf="(formCreationService.addressForm$ | async)?.value?.isBcAddress === 'Yes'">
                         {{(formCreationService.addressForm$ | async)?.value?.address?.jurisdiction?.name}}
+                    </div>
+                    <div class="col-md-3"
+                        *ngIf="(formCreationService.addressForm$ | async)?.value?.isBcAddress === 'No'">
+                        {{(formCreationService.addressForm$ | async)?.value?.address?.jurisdiction}}
                     </div>
                 </div>
                 <div class="row info-detail">
@@ -178,8 +182,14 @@
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">City:</div>
-                    <div class="col-md-3">
-                        {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.jurisdiction?.name}}</div>
+                    <div class="col-md-3"
+                        *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.jurisdiction.name !== undefined">
+                        {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.jurisdiction?.name}}
+                    </div>
+                    <div class="col-md-3"
+                        *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.jurisdiction.name === undefined">
+                        {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.jurisdiction}}
+                    </div>
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">Postal Code:</div>
@@ -401,7 +411,7 @@
             <mat-card-content>
                 <div class="row justify-content-between">
                     <div class="col-md-6 card-heading">
-                        Family Medication & Dietary Requirements
+                        Household Medication & Dietary Requirements
                     </div>
                     <div class="col-md-2">
                         <button class="edit-image" mat-icon-button aria-label="Edit"
@@ -438,7 +448,7 @@
             <mat-card-content>
                 <div class="row justify-content-between">
                     <div class="col-md-6 card-heading">
-                        Pets
+                        Animals
                     </div>
                     <div class="col-md-2">
                         <button class="edit-image" mat-icon-button aria-label="Edit" (click)="editDetails('pets')">

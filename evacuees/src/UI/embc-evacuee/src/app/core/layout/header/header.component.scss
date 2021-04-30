@@ -4,6 +4,7 @@
 
 .app-heading {
     font-size: 30px;
+    margin: 0px 270px 0px 0px;
 }
 
 .heading-text1 {
@@ -35,7 +36,6 @@
 }
 
 .menuButton {
-    margin: 0px 50px 0px 150px;
     background: #036;
     color: white;
     font-size: 15px;
@@ -44,7 +44,7 @@
 ::ng-deep .mat-menu-panel {
     border-radius: 0px !important;
     background: #036 !important;
-    min-width: 320px !important;
+    min-width: 200px !important;
 }
 
 .mat-menu-item {
@@ -66,9 +66,15 @@
     line-height: 0;
 }
 
+@media (max-width: 1200px) {
+    .app-heading {
+        margin: 0px 100px 0px 0px;
+    }
+}
+
 @media (max-width: 900px) {
-    .menuButton {
-        margin: 0px 10px 0px 600px;
+    .app-heading {
+        margin: 0px 100px 0px 0px;
     }
 
     .img-align {
@@ -82,13 +88,41 @@
         width: 0px;
     }
 
+    .app-heading {
+        margin: 0px 0px 0px 0px;
+    }
+
     .menuButton {
-        margin: 0px 10px 0px 370px;
+        margin: 0px 0px 0px 600px;
     }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 766px) {
     .menuButton {
-        margin: 0px 10px 0px 200px;
+        margin: 0px 0px 0px 420px;
+    }
+}
+
+@media (max-width: 500px) {
+    .menuButton {
+        margin: 0px 0px 0px 270px;
+    }
+}
+
+@media (max-width: 380px) {
+    .menuButton {
+        margin: 0px 0px 0px 220px;
+    }
+}
+
+@media (max-width: 320px) {
+    .menuButton {
+        margin: 0px 0px 0px 180px;
+    }
+}
+
+@media (max-width: 280px) {
+    .menuButton {
+        margin: 0px 0px 0px 130px;
     }
 }
