@@ -27,6 +27,8 @@ export class TeamListService {
           );
           if (matchedLabel) {
             teamMember.labelDescription = matchedLabel.description;
+          }
+          if (matchedRole) {
             teamMember.roleDescription = matchedRole.description;
           }
           return teamMember;

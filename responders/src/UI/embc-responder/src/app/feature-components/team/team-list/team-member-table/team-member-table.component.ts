@@ -124,10 +124,12 @@ export class TeamMemberTableComponent implements AfterViewInit, OnChanges {
           .toLowerCase()
           .indexOf(statusTerm.trim().toLowerCase()) !== -1;
       const labelBoolean =
-        data.labelDescription
-          .trim()
-          .toLowerCase()
-          .indexOf(labelTerm.trim().toLowerCase()) !== -1;
+        data.labelDescription === null || data.labelDescription === undefined
+          ? false
+          : data.labelDescription
+              .trim()
+              .toLowerCase()
+              .indexOf(labelTerm.trim().toLowerCase()) !== -1;
       matchFilter.push(roleBoolean);
       matchFilter.push(statusBoolean);
       matchFilter.push(labelBoolean);

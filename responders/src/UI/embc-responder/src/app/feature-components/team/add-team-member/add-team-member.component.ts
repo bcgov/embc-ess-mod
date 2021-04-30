@@ -68,7 +68,7 @@ export class AddTeamMemberComponent implements OnInit {
       lastName: ['', [this.customValidation.whitespaceValidator()]],
       userName: ['', [this.customValidation.whitespaceValidator()]],
       role: ['', [this.customValidation.whitespaceValidator()]],
-      label: ['']
+      label: [null]
     });
   }
 
