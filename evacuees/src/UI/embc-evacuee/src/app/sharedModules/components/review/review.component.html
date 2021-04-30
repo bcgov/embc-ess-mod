@@ -182,10 +182,12 @@
                 </div>
                 <div class="row info-detail">
                     <div class="col-md-3">City:</div>
-                    <div class="col-md-3" *ngIf="displayBCJuridictionName">
+                    <div class="col-md-3"
+                        *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.jurisdiction.name !== undefined">
                         {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.jurisdiction?.name}}
                     </div>
-                    <div class="col-md-3" *ngIf="!displayBCJuridictionName">
+                    <div class="col-md-3"
+                        *ngIf="(formCreationService.addressForm$ | async)?.value?.mailingAddress?.jurisdiction.name === undefined">
                         {{(formCreationService.addressForm$ | async)?.value?.mailingAddress?.jurisdiction}}
                     </div>
                 </div>

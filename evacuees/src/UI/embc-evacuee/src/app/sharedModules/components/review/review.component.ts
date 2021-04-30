@@ -19,7 +19,6 @@ export class ReviewComponent implements OnInit {
   hideCard = false;
   captchaVerified = false;
   captchaFilled = false;
-  displayBCJuridictionName = false;
   navigationExtras: NavigationExtras;
   @Output() captchaPassed = new EventEmitter<boolean>(false);
   @Input() type: string;
@@ -32,7 +31,6 @@ export class ReviewComponent implements OnInit {
     if (this.currentFlow === 'verified-registration') {
       this.captchaPassed.emit(true);
     }
-    this.displayJuridictionName();
   }
 
   editDetails(componentToEdit: string): void {
@@ -60,24 +58,5 @@ export class ReviewComponent implements OnInit {
     console.log('Server error: ', error);
     this.captchaVerified = true;
     this.captchaFilled = true;
-  }
-
-  private displayJuridictionName(): boolean {
-    this.formCreationService.getAddressForm().pipe(first()).subscribe(addressForm => {
-      if (addressForm.get('isBcAddress').value === 'Yes' && addressForm.get('isNewMailingAddress').value === 'Yes') {
-        this.displayBCJuridictionName = true;
-      } else if (addressForm.get('isBcAddress').value === 'Yes' && addressForm.get('isNewMailingAddress').value === 'No' && addressForm.get('isBcMailingAddress').value === 'Yes') {
-        this.displayBCJuridictionName = true;
-      } else if (addressForm.get('isBcAddress').value === 'No' && addressForm.get('isNewMailingAddress').value === 'Yes') {
-        this.displayBCJuridictionName = false;
-      } else if (addressForm.get('isBcAddress').value === 'No' && addressForm.get('isNewMailingAddress').value === 'No' && addressForm.get('isBcMailingAddress').value === 'Yes') {
-        this.displayBCJuridictionName = true;
-      } else if (addressForm.get('isBcAddress').value === 'No' && addressForm.get('isNewMailingAddress').value === 'No' && addressForm.get('isBcMailingAddress').value === 'No') {
-        this.displayBCJuridictionName = false;
-      }
-
-    });
-
-    return this.displayBCJuridictionName;
   }
 }
