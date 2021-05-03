@@ -22,7 +22,6 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using EMBC.Registrants.API.EvacuationsModule;
 using EMBC.Registrants.API.ProfilesModule;
-using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Utils;
@@ -98,7 +97,6 @@ namespace EMBC.Registrants.API
             services.AddPortalAuthentication(configuration);
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
             services.AddDistributedMemoryCache(); // TODO: configure proper distributed cache
-            services.AddRegistrationModule();
             services.AddProfileModule();
             services.AddSecurityModule();
             services.AddEvacuationsModule();
