@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Notifications;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
@@ -28,11 +29,13 @@ namespace EMBC.ESS.Utilities.NotificationSender.Channels
 {
     public class Email : INotificationChannel
     {
+        private readonly ILogger<Email> logger;
         private EmailChannelOptions settings;
 
-        public Email(IOptions<EmailChannelOptions> options)
+        public Email(IOptions<EmailChannelOptions> options, ILogger<Email> logger)
         {
             settings = options.Value;
+            this.logger = logger;
         }
 
         public async Task Send(Notification notification)
@@ -44,48 +47,53 @@ namespace EMBC.ESS.Utilities.NotificationSender.Channels
                     nameof(notification));
             }
 
-            using (var emailClient = new SmtpClient())
+            if (string.IsNullOrEmpty(settings.SmtpServer))
             {
-                var message = new MimeMessage();
-                message.To.AddRange(emailNotification.To.Select(x => new MailboxAddress(x.Name, x.Address)));
-                if (emailNotification.From != null)
-                {
-                    message.From.Add(new MailboxAddress(emailNotification.From.Name, emailNotification.From.Address));
-                }
-                else
-                {
-                    // Add default sender to from list
-                    message.From.Add(new MailboxAddress(settings.DefaultSender.Name, settings.DefaultSender.Address));
-                }
-
-                message.Subject = emailNotification.Subject;
-                message.Body = new TextPart(TextFormat.Html)
-                {
-                    Text = emailNotification.Content
-                };
-
-                emailClient.Connect(settings.SmtpServer, settings.SmtpPort, settings.SmtpEnableSSL ? SecureSocketOptions.Auto : SecureSocketOptions.None);
-
-                if (settings.HasCredentials)
-                {
-                    emailClient.Authenticate(settings.SmtpUsername, settings.SmtpPassword);
-                }
-
-                await emailClient.SendAsync(message);
-
-                emailClient.Disconnect(true);
+                logger.LogWarning("SMTP server is not configured, skipping sending email notification");
+                return;
             }
+
+            using var emailClient = new SmtpClient();
+
+            var message = new MimeMessage();
+            message.To.AddRange(emailNotification.To.Select(x => new MailboxAddress(x.Name, x.Address)));
+            if (emailNotification.From != null)
+            {
+                message.From.Add(new MailboxAddress(emailNotification.From.Name, emailNotification.From.Address));
+            }
+            else
+            {
+                // Add default sender to from list
+                message.From.Add(new MailboxAddress(settings.DefaultSender.Name, settings.DefaultSender.Address));
+            }
+
+            message.Subject = emailNotification.Subject;
+            message.Body = new TextPart(TextFormat.Html)
+            {
+                Text = emailNotification.Content
+            };
+
+            emailClient.Connect(settings.SmtpServer, settings.SmtpPort, settings.SmtpEnableSSL ? SecureSocketOptions.Auto : SecureSocketOptions.None);
+
+            if (settings.HasCredentials)
+            {
+                emailClient.Authenticate(settings.SmtpUsername, settings.SmtpPassword);
+            }
+
+            await emailClient.SendAsync(message);
+
+            emailClient.Disconnect(true);
         }
     }
 
     public class EmailChannelOptions
     {
         public string SmtpServer { get; }
-        public int SmtpPort { get; }
+        public int SmtpPort { get; } = 25;
         public string SmtpUsername { get; set; }
         public string SmtpPassword { get; set; }
         public bool SmtpEnableSSL { get; set; }
-        public EmailAddress DefaultSender { get; set; }
+        public EmailAddress DefaultSender { get; set; } = new EmailAddress { Name = "Do Not Reply", Address = "no-reply@embc.gov.bc.ca" };
 
         public bool HasCredentials => !string.IsNullOrEmpty(SmtpUsername) && !string.IsNullOrEmpty(SmtpPassword);
     }

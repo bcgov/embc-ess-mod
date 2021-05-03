@@ -65,11 +65,11 @@ namespace EMBC.ESS.Resources.Contacts
 
             essContext.AddLink(essContext.LookupCountryByCode(contact.PrimaryAddress.Country), nameof(era_country.era_contact_Country), mappedContact);
             essContext.AddLink(essContext.LookupStateProvinceByCode(contact.PrimaryAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), mappedContact);
-            essContext.AddLink(essContext.LookupJurisdictionByCode(contact.PrimaryAddress.Community), nameof(era_jurisdiction.era_jurisdiction_contact_City), mappedContact);
+            AddJurisdictionLink(contact.PrimaryAddress.Community, nameof(era_jurisdiction.era_jurisdiction_contact_City), mappedContact);
 
             essContext.AddLink(essContext.LookupCountryByCode(contact.MailingAddress.Country), nameof(era_country.era_country_contact_MailingCountry), mappedContact);
             essContext.AddLink(essContext.LookupStateProvinceByCode(contact.MailingAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), mappedContact);
-            essContext.AddLink(essContext.LookupJurisdictionByCode(contact.MailingAddress.Community), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), mappedContact);
+            AddJurisdictionLink(contact.MailingAddress.Community, nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), mappedContact);
 
             var results = await essContext.SaveChangesAsync();
 
@@ -93,6 +93,15 @@ namespace EMBC.ESS.Resources.Contacts
                 await essContext.SaveChangesAsync();
             }
             return new ContactCommandResult { ContactId = cmd.ContactId };
+        }
+
+        private void AddJurisdictionLink(string jurisdictionCode, string sourceProperty, object target)
+        {
+            var jurisdiction = essContext.LookupJurisdictionByCode(jurisdictionCode);
+            if (jurisdiction != null)
+            {
+                essContext.AddLink(jurisdiction, sourceProperty, target);
+            }
         }
     }
 }
