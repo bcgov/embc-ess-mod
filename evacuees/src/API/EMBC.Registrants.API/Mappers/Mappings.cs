@@ -19,9 +19,9 @@ using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.Mappers
 {
-    public class EvacuationFileMappings : AutoMapper.Profile
+    public class Mappings : AutoMapper.Profile
     {
-        public EvacuationFileMappings()
+        public Mappings()
         {
             CreateMap<AnonymousRegistration, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
