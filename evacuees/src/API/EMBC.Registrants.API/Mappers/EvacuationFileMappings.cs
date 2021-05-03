@@ -19,14 +19,15 @@ using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.Mappers
 {
-    public class AnonymousEvacuationFileMappings : AutoMapper.Profile
+    public class EvacuationFileMappings : AutoMapper.Profile
     {
-        public AnonymousEvacuationFileMappings()
+        public EvacuationFileMappings()
         {
             CreateMap<AnonymousRegistration, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => DateTime.Now.ToString("yyyy/MM/dd")))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => new[] { s.PreliminaryNeedsAssessment }))
+                .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => (string)null))
                 ;
 
             CreateMap<Profile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
@@ -57,6 +58,12 @@ namespace EMBC.Registrants.API.Mappers
                 ;
 
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
+                ;
+
+            CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
+                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
+                .ForMember(d => d.PrimaryRegistrantId, opts => opts.Ignore())
                 ;
         }
     }

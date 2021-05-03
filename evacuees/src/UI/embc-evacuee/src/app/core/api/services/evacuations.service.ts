@@ -189,29 +189,29 @@ export class EvacuationsService extends BaseService {
   }
 
   /**
-   * Path part for operation evacuationsCreateEvacuation
+   * Path part for operation evacuationsUpsertEvacuationFile
    */
-  static readonly EvacuationsCreateEvacuationPath = '/api/Evacuations';
+  static readonly EvacuationsUpsertEvacuationFilePath = '/api/Evacuations';
 
   /**
-   * Create a verified Evacuation.
+   * Create or update a verified Evacuation file.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `evacuationsCreateEvacuation()` instead.
+   * To access only the response body, use `evacuationsUpsertEvacuationFile()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  evacuationsCreateEvacuation$Response(params: {
+  evacuationsUpsertEvacuationFile$Response(params: {
 
     /**
      * Evacuation data
      */
     body: EvacuationFile
-  }): Observable<StrictHttpResponse<string>> {
+  }): Observable<StrictHttpResponse<RegistrationResult>> {
 
-    const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsCreateEvacuationPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsUpsertEvacuationFilePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -222,104 +222,31 @@ export class EvacuationsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<RegistrationResult>;
       })
     );
   }
 
   /**
-   * Create a verified Evacuation.
+   * Create or update a verified Evacuation file.
    *
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `evacuationsCreateEvacuation$Response()` instead.
+   * To access the full response (for headers, for example), `evacuationsUpsertEvacuationFile$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  evacuationsCreateEvacuation(params: {
+  evacuationsUpsertEvacuationFile(params: {
 
     /**
      * Evacuation data
      */
     body: EvacuationFile
-  }): Observable<string> {
+  }): Observable<RegistrationResult> {
 
-    return this.evacuationsCreateEvacuation$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
-    );
-  }
-
-  /**
-   * Path part for operation evacuationsUpdateEvacuation
-   */
-  static readonly EvacuationsUpdateEvacuationPath = '/api/Evacuations/{essFileNumber}';
-
-  /**
-   * Update a verified Evacuation.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `evacuationsUpdateEvacuation()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  evacuationsUpdateEvacuation$Response(params: {
-
-    /**
-     * ESS File Number
-     */
-    essFileNumber: string;
-
-    /**
-     * Evacuation data
-     */
-    body: EvacuationFile
-  }): Observable<StrictHttpResponse<string>> {
-
-    const rb = new RequestBuilder(this.rootUrl, EvacuationsService.EvacuationsUpdateEvacuationPath, 'post');
-    if (params) {
-      rb.path('essFileNumber', params.essFileNumber, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
-      })
-    );
-  }
-
-  /**
-   * Update a verified Evacuation.
-   *
-   *
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `evacuationsUpdateEvacuation$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  evacuationsUpdateEvacuation(params: {
-
-    /**
-     * ESS File Number
-     */
-    essFileNumber: string;
-
-    /**
-     * Evacuation data
-     */
-    body: EvacuationFile
-  }): Observable<string> {
-
-    return this.evacuationsUpdateEvacuation$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+    return this.evacuationsUpsertEvacuationFile$Response(params).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
   }
 

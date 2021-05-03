@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Address, EvacuationFile, NeedsAssessment } from 'src/app/core/api/models';
 import { EvacuationsService } from 'src/app/core/api/services';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
@@ -85,6 +86,7 @@ export class EvacuationFileDataService {
 
   public createEvacuationFileDTO(): EvacuationFile {
     return {
+      essFileNumber: this._essFileNumber,
       evacuatedFromAddress: this.setAddressObject(this.evacuatedFromAddress),
       needsAssessments: this.getNeedsAssessment(),
       evacuationFileDate: this.evacuationFileDate
@@ -92,7 +94,9 @@ export class EvacuationFileDataService {
   }
 
   public createEvacuationFile(): Observable<string> {
-    return this.evacuationService.evacuationsCreateEvacuation({ body: this.createEvacuationFileDTO() });
+    return this.evacuationService
+      .evacuationsUpsertEvacuationFile({ body: this.createEvacuationFileDTO() })
+      .pipe(map(response => response.referenceNumber));
   }
 
   private setAddressObject(addressObject): Address {

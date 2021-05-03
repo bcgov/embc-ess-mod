@@ -102,6 +102,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class EvacuationFile
     {
         public string Id { get; set; }
+        public string PrimaryRegistrantId { get; set; }
         public DateTime EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; }
