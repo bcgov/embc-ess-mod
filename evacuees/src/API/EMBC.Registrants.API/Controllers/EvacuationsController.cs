@@ -53,6 +53,7 @@ namespace EMBC.Registrants.API.Controllers
         /// <returns>ESS number</returns>
         [HttpPost("create-registration-anonymous")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         public async Task<ActionResult<RegistrationResult>> Create(AnonymousRegistration registration)
         {

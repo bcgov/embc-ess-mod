@@ -16,10 +16,6 @@
 
 using System;
 using System.Globalization;
-using EMBC.Registrants.API.Controllers;
-using EMBC.Registrants.API.SecurityModule;
-using Microsoft.Dynamics.CRM;
-using Microsoft.OData.Edm;
 
 namespace EMBC.Registrants.API.ProfilesModule
 {
@@ -112,6 +108,7 @@ namespace EMBC.Registrants.API.ProfilesModule
             CreateMap<User, Address>()
                 .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.StreetAddress))
                 .ForMember(d => d.AddressLine2, opts => opts.Ignore())
+                .ForMember(d => d.Jurisdiction, opts => opts.Ignore())
                 .ForMember(d => d.Community, opts => opts.MapFrom(s => s.City))
                 .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvince))
                 .ForMember(d => d.Country, opts => opts.MapFrom(s => s.Country))

@@ -24,6 +24,7 @@ namespace EMBC.ESS.Resources.Cases
         public static IServiceCollection AddCaseRepository(this IServiceCollection services)
         {
             services.AddTransient<ICaseRepository, CaseRepository>();
+            services.AddTransient<IEvacuationRepository, EvacuationRepository>();
 
             return services;
         }

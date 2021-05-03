@@ -14,24 +14,22 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EMBC.ESS.Resources.Cases.Evacuations
 {
     public interface IEvacuationRepository
     {
-        Task<string> Create(string userId, EvacuationFile evacuationFile);
+        Task<string> Create(EvacuationFile evacuationFile);
 
-        Task<IEnumerable<EvacuationFile>> Read(string userId);
+        Task<IEnumerable<EvacuationFile>> ReadAll(string userId);
 
-        Task<EvacuationFile> Read(string userId, string essFileNumber);
+        Task<EvacuationFile> Read(string essFileNumber);
 
-        Task<string> Update(string userId, string essFileNumber, EvacuationFile evacuationFile);
+        Task<string> Update(EvacuationFile evacuationFile);
 
-        Task Delete(string userId, string essFileNumber);
+        Task Delete(string essFileNumber);
     }
 
     public enum EvacueeType
