@@ -1,0 +1,26 @@
+.step-id {
+    color: rgb(187, 187, 187);
+}
+
+.wizard-border {
+    padding-top: 20px;
+}
+
+.content-container {
+    padding-bottom: 24px;
+}
+
+.active-step-tab {
+    background-color: white !important;
+    min-width: 200px !important;
+    text-decoration: none !important;
+    color: #169BD5 !important;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+.tab-status {
+    margin-left: 7px;
+}

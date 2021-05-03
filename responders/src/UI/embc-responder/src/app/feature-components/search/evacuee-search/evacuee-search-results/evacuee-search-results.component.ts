@@ -11,6 +11,7 @@ import {
   ActionPermission,
   ClaimType
 } from 'src/app/core/services/authorization.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -27,7 +28,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
   constructor(
     private evacueeSearchResultsService: EvacueeSearchResultsService,
     private evacueeSearchService: EvacueeSearchService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -67,5 +69,9 @@ export class EvacueeSearchResultsComponent implements OnInit {
           console.log(error);
         }
       );
+  }
+
+  openWizard(): void {
+    this.router.navigate(['/ess-wizard']);
   }
 }
