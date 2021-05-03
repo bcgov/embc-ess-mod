@@ -172,23 +172,23 @@ namespace EMBC.Registrants.API.Controllers
         public enum InsuranceOption
         {
             [EnumMember(Value = "No")]
-            No,
+            No = 174360000,
 
             [EnumMember(Value = "Yes")]
-            Yes,
+            Yes = 174360001,
 
             [EnumMember(Value = "Unsure")]
-            Unsure,
+            Unsure = 174360002,
 
             [EnumMember(Value = "Unknown")]
-            Unknown
+            Unknown = 174360003
         }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum NeedsAssessmentType
         {
-            Preliminary,
-            Assessed
+            Preliminary = 174360000,
+            Assessed = 174360001
         }
     }
 

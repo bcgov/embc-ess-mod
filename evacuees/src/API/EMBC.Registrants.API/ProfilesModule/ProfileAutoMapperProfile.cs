@@ -110,23 +110,23 @@ namespace EMBC.Registrants.API.ProfilesModule
                 ;
 
             CreateMap<User, Address>()
-                .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.StreetAddress))
+                .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.PrimaryAddress.AddressLine1))
                 .ForMember(d => d.AddressLine2, opts => opts.Ignore())
                 .ForMember(d => d.Jurisdiction, opts => opts.Ignore())
-                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.City))
-                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvince))
-                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.Country))
-                .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.PostalCode));
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.PrimaryAddress.Community))
+                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince))
+                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.PrimaryAddress.Country))
+                .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.PrimaryAddress.PostalCode));
 
             CreateMap<User, PersonDetails>(AutoMapper.MemberList.None)
-                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.BirthDate)
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.PersonalDetails.DateOfBirth)
                     ? null
-                    : DateTime.ParseExact(s.BirthDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)))
+                    : DateTime.ParseExact(s.PersonalDetails.DateOfBirth, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)))
                 // Gender is not mapped from BCSC
                 //.ForMember(d => d.Gender, opts => opts.ConvertUsing<BcscGenderConverter, string>(s => s.Gender))
                 .ForMember(d => d.Gender, opts => opts.Ignore())
-                .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.FirstName))
-                .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.LastName));
+                .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
+                .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.PersonalDetails.LastName));
         }
     }
 

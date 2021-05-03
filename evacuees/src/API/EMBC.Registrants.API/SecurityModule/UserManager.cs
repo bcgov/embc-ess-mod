@@ -14,7 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace EMBC.Registrants.API.SecurityModule
@@ -23,7 +22,7 @@ namespace EMBC.Registrants.API.SecurityModule
     {
         Task<User> Get(string userId);
 
-        Task<string> Save(string userId, JsonDocument userData);
+        Task<string> Save(User userProfile);
     }
 
     public class UserManager : IUserManager
@@ -40,40 +39,18 @@ namespace EMBC.Registrants.API.SecurityModule
             return await userRepository.Read(userId);
         }
 
-        public async Task<string> Save(string userId, JsonDocument userData)
+        public async Task<string> Save(User userProfile)
         {
-            var user = new User()
+            if (await userRepository.Read(userProfile.Id) == null)
             {
-                Id = userId,
-                DisplayName = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.DisplayName)?.GetString(),
-                Email = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Email)?.GetString(),
-                FirstName = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.GivenName)?.GetString(),
-                LastName = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.FamilyName)?.GetString(),
-                StreetAddress = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Address)?.AttemptToGetProperty(BcscTokenKeys.AddressStreet)?.GetString(),
-                StateProvince = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Address)?.AttemptToGetProperty(BcscTokenKeys.AddressRegion)?.GetString(),
-                Country = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Address)?.AttemptToGetProperty(BcscTokenKeys.AddressCountry)?.GetString(),
-                PostalCode = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Address)?.AttemptToGetProperty(BcscTokenKeys.AddressPostalCode)?.GetString(),
-                City = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Address)?.AttemptToGetProperty(BcscTokenKeys.AddressLocality)?.GetString(),
-                Gender = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Gender)?.GetString(),
-                BirthDate = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.BirthDate)?.GetString(),
-            };
-
-            if (await userRepository.Read(userId) == null)
-            {
-                await userRepository.Create(user);
+                await userRepository.Create(userProfile);
             }
             else
             {
-                await userRepository.Update(user);
+                await userRepository.Update(userProfile);
             }
 
-            return user.Id;
+            return userProfile.Id;
         }
-    }
-
-    public static class JsonEx
-    {
-        public static JsonElement? AttemptToGetProperty(this JsonElement jsonElement, string propertyName) =>
-           jsonElement.TryGetProperty(propertyName, out var underlyingJsonElement) ? (JsonElement?)underlyingJsonElement : null;
     }
 }

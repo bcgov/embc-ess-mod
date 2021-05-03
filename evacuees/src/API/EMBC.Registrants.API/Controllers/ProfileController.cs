@@ -20,8 +20,10 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Registrants.API.ProfilesModule;
+using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -37,15 +39,17 @@ namespace EMBC.Registrants.API.Controllers
     [Authorize]
     public class ProfileController : ControllerBase
     {
-        private readonly IProfileManager profileManager;
         private readonly IHostEnvironment env;
         private readonly IMessagingClient messagingClient;
+        private readonly IMapper mapper;
+        private readonly IUserManager userManager;
 
-        public ProfileController(IProfileManager profileManager, IHostEnvironment env, IMessagingClient messagingClient)
+        public ProfileController(IHostEnvironment env, IMessagingClient messagingClient, IMapper mapper, IUserManager userManager)
         {
-            this.profileManager = profileManager;
             this.env = env;
             this.messagingClient = messagingClient;
+            this.mapper = mapper;
+            this.userManager = userManager;
         }
 
         /// <summary>
@@ -74,8 +78,7 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<bool>> GetDoesUserExists()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            // TODO: optimize the check to not require the entire profile
-            var profile = await profileManager.GetProfileByBcscid(userId);
+            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserName = userId })).Items.SingleOrDefault();
             return Ok(profile != null);
         }
 
@@ -91,7 +94,7 @@ namespace EMBC.Registrants.API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!env.IsProduction())
             {
-                await profileManager.DeleteProfile(userId);
+                await messagingClient.Send(new DeleteRegistrantCommand { RegistrantId = userId });
             }
             return Ok(userId);
         }
@@ -114,8 +117,8 @@ namespace EMBC.Registrants.API.Controllers
                 //TODO: replace with bad request response
                 profile.Id = userId;
             }
-            await profileManager.SaveProfile(profile);
-            return Ok(profile.Id);
+            var profileId = await messagingClient.Send(new SaveRegistrantCommand { Profile = mapper.Map<RegistrantProfile>(profile) });
+            return Ok(profileId);
         }
 
         /// <summary>
@@ -130,26 +133,13 @@ namespace EMBC.Registrants.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var userProfileWithConflicts = await profileManager.GetProfileConflicts(userId);
-            if (userProfileWithConflicts == null) return NotFound();
-            return Ok(userProfileWithConflicts);
-        }
+            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserName = userId })).Items.SingleOrDefault();
+            if (profile == null) return NotFound();
 
-        /// <summary>
-        /// Get the authentication profile of the logged in user
-        /// </summary>
-        /// <returns>a profile representing the authentication user data</returns>
-        [HttpGet("current/login")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize]
-        public async Task<ActionResult<Profile>> GetLoggedInProfile()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var loginProfile = await profileManager.GetLoginProfile(userId);
-            if (loginProfile == null) return NotFound();
-            return Ok(loginProfile);
+            //TODO: map to user profile from BCSC
+            var userProfile = await userManager.Get(userId);
+            var conflicts = ProfilesConflictDetector.DetectConflicts(mapper.Map<Profile>(profile), userProfile);
+            return Ok(conflicts);
         }
     }
 
