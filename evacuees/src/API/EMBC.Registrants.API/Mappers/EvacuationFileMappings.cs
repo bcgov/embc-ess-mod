@@ -25,6 +25,7 @@ namespace EMBC.Registrants.API.Mappers
         {
             CreateMap<AnonymousRegistration, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => EvacuationFileStatus.Pending))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => DateTime.Now.ToString("yyyy/MM/dd")))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => new[] { s.PreliminaryNeedsAssessment }))
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => (string)null))

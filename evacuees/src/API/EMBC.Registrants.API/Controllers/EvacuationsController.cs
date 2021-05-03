@@ -23,7 +23,6 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using EMBC.Registrants.API.EvacuationsModule;
 using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -36,13 +35,11 @@ namespace EMBC.Registrants.API.Controllers
     public class EvacuationsController : ControllerBase
     {
         private readonly IMessagingClient messagingClient;
-        private readonly IEvacuationManager evacuationManager;
         private readonly IMapper mapper;
 
-        public EvacuationsController(IMessagingClient messagingClient, IEvacuationManager evacuationManager, IMapper mapper)
+        public EvacuationsController(IMessagingClient messagingClient, IMapper mapper)
         {
             this.messagingClient = messagingClient;
-            this.evacuationManager = evacuationManager;
             this.mapper = mapper;
         }
 
@@ -77,9 +74,13 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetCurrentEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var evacuationList = await evacuationManager.GetEvacuations(userId);
+            var evacuationList = (await messagingClient.Send(new EvacuationFilesQuery
+            {
+                ByRegistrantId = userId,
+                ByStatuses = new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Active, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Pending }
+            })).Items;
 
-            return Ok(evacuationList);
+            return Ok(mapper.Map<IEnumerable<EvacuationFile>>(evacuationList));
         }
 
         /// <summary>
@@ -92,9 +93,13 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetPastEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var evacuationList = await evacuationManager.GetEvacuations(userId);
+            var evacuationList = (await messagingClient.Send(new EvacuationFilesQuery
+            {
+                ByRegistrantId = userId,
+                ByStatuses = new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Expired, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Completed }
+            })).Items;
 
-            return Ok(evacuationList);
+            return Ok(mapper.Map<IEnumerable<EvacuationFile>>(evacuationList));
         }
 
         /// <summary>
@@ -127,6 +132,7 @@ namespace EMBC.Registrants.API.Controllers
     public class EvacuationFile
     {
         public string EssFileNumber { get; set; }
+        public EvacuationFileStatus Status { get; set; }
 
         public string EvacuationFileDate { get; set; }
 
@@ -166,23 +172,23 @@ namespace EMBC.Registrants.API.Controllers
         public enum InsuranceOption
         {
             [EnumMember(Value = "No")]
-            No = 174360000,
+            No,
 
             [EnumMember(Value = "Yes")]
-            Yes = 174360001,
+            Yes,
 
             [EnumMember(Value = "Unsure")]
-            Unsure = 174360002,
+            Unsure,
 
             [EnumMember(Value = "Unknown")]
-            Unknown = 174360003
+            Unknown
         }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum NeedsAssessmentType
         {
-            Preliminary = 174360000,
-            Assessed = 174360001
+            Preliminary,
+            Assessed
         }
     }
 
@@ -232,5 +238,20 @@ namespace EMBC.Registrants.API.Controllers
     public class RegistrationResult
     {
         public string ReferenceNumber { get; set; }
+    }
+
+    public enum EvacuationFileStatus
+    {
+        [EnumMember(Value = "Pending")]
+        Pending,
+
+        [EnumMember(Value = "Active")]
+        Active,
+
+        [EnumMember(Value = "Expired")]
+        Expired,
+
+        [EnumMember(Value = "Completed")]
+        Completed
     }
 }
