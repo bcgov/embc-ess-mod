@@ -16,6 +16,10 @@
 
 using System;
 using System.Globalization;
+using EMBC.Registrants.API.Controllers;
+using EMBC.Registrants.API.SecurityModule;
+using Microsoft.Dynamics.CRM;
+using Microsoft.OData.Edm;
 
 namespace EMBC.Registrants.API.ProfilesModule
 {

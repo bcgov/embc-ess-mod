@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.Mappers
 {
