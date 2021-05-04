@@ -10,7 +10,8 @@ export const defaultRole = {
   code: 'Tier1',
   description: 'Tier 1 (Responder)'
 };
-export const wizardProfileMessage = 'Please complete all sections of the Evacuee Profile prior to submitting.';
+export const wizardProfileMessage =
+  'Please complete all sections of the Evacuee Profile prior to submitting.';
 
 // Generic error messages
 export const teamMemberListError =
