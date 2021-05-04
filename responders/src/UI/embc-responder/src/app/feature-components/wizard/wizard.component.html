@@ -1,0 +1,68 @@
+<mat-sidenav-container class="wizard-container">
+  <mat-sidenav
+    #sidenav
+    mode="side"
+    opened
+    class="wizard-sideNav"
+    [fixedInViewport]="true"
+    [fixedTopGap]="0"
+    [fixedBottomGap]="0"
+  >
+    <div class="row logo">
+      <div class="col-md-12">
+        <img src="/assets/images/bc-logo-wizard.png" width="168" height="62" />
+      </div>
+    </div>
+    <div *ngFor="let menu of sideNavMenu">
+      <button
+        mat-button
+        class="a-mat-button"
+        routerLinkActive="active-side-item"
+        [routerLink]="menu?.route"
+        [state]="{ step: menu?.step, title: menu?.title }"
+        [disabled]="menu?.isLocked"
+      >
+        <!-- [disabled]= "menu?.isLocked" -->
+        <div class="row">
+          <div class="col-md-3">
+            <img
+              class="img-align"
+              src="{{ menu?.img?.imgSrc }}"
+              width="{{ menu?.img?.width }}"
+              height="{{ menu?.img?.height }}"
+            />
+            <img
+              class="img-align"
+              src="{{ menu?.img?.altSrc }}"
+              width="{{ menu?.img?.width }}"
+              height="{{ menu?.img?.height }}"
+            />
+          </div>
+          <div class="col-md-6">
+            <p class="menu-p">
+              <b>{{ menu?.step }}</b>
+            </p>
+            <p class="menu-p">{{ menu?.title }}</p>
+          </div>
+          <div class="col-md-3 img-lock-col" *ngIf="menu?.isLocked">
+            <img
+              class="img-lock"
+              src="/assets/images/lock.svg"
+              width="10"
+              height="12"
+            />
+          </div>
+        </div>
+      </button>
+    </div>
+    <div class="row button-container">
+      <div class="col-md-12">
+        <button class="exit-button" mat-stroked-button>Exit Wizard</button>
+      </div>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="wizard-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

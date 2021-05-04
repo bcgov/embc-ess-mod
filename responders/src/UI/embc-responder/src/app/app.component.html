@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header *ngIf="show"></app-header>
 <main class="fill-body">
   <div class="app-error">
     <app-alert></app-alert>
@@ -8,7 +8,7 @@
     <router-outlet></router-outlet>
   </div>
 </main>
-<div class="footer mt-auto">
+<div *ngIf="show" class="footer mt-auto">
   <app-footer></app-footer>
 </div>
 <app-loader
