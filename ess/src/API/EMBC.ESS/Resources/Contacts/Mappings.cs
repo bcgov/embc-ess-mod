@@ -29,6 +29,8 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.era_registranttype, opts => opts.MapFrom(s => 174360000))
                 .ForMember(d => d.era_collectionandauthorization, opts => opts.MapFrom(s => true))
                 .ForMember(d => d.era_restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.era_authenticated, opts => opts.MapFrom(s => s.Authenticated))
+                .ForMember(d => d.era_verified, opts => opts.MapFrom(s => s.Verified))
 
                 .ForMember(d => d.address1_country, opts => opts.MapFrom(s => s.PrimaryAddress.Country))
                 .ForMember(d => d.address1_stateorprovince, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince))
@@ -64,6 +66,8 @@ namespace EMBC.ESS.Resources.Contacts
 
             CreateMap<contact, Contact>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_bcservicescardid))
+                .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.era_verified))
+                .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.era_authenticated))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_restriction ?? false))
                 .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.era_secrettext))
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_initial))

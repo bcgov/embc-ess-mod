@@ -44,12 +44,14 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Shared.Contracts.Submissions.RegistrantProfile, Resources.Contacts.Contact>()
+                .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.AuthenticatedUser))
+                .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.VerifiedUser))
                 .ReverseMap()
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Address, Resources.Contacts.Address>()
-                  .ReverseMap()
-                  ;
+                .ReverseMap()
+                ;
         }
     }
 }

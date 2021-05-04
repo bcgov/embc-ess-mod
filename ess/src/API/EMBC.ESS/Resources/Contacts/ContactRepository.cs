@@ -55,15 +55,17 @@ namespace EMBC.ESS.Resources.Contacts
 
         private async Task<ContactCommandResult> HandleSaveContact(SaveContact cmd)
         {
-            // var existingContactId = GetContactIdForBcscId(profile.Id);
-
             var contact = cmd.Contact;
+
             var mappedContact = mapper.Map<contact>(cmd.Contact);
 
-            mappedContact.contactid = Guid.NewGuid();
-            mappedContact.era_authenticated = true;
-            mappedContact.era_verified = false;
-            mappedContact.era_registrationdate = DateTimeOffset.UtcNow;
+            if (string.IsNullOrEmpty(contact.Id))
+            {
+                mappedContact.contactid = Guid.NewGuid();
+                //mappedContact.era_authenticated = true;
+                //mappedContact.era_verified = false;
+                //mappedContact.era_registrationdate = DateTimeOffset.UtcNow;
+            }
 
             essContext.AddTocontacts(mappedContact);
 

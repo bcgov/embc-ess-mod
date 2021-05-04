@@ -60,6 +60,8 @@ namespace EMBC.ESS.Resources.Contacts
     public class Contact
     {
         public string Id { get; set; }
+        public bool Authenticated { get; set; }
+        public bool Verified { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }

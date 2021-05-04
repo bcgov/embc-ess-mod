@@ -14,7 +14,9 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Cases;
@@ -61,21 +63,11 @@ namespace EMBC.ESS.Managers.Submissions
 
             if (contact.Email != null)
             {
-                var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(SubmissionTemplateType.NewAnonymousEvacuationFileSubmission);
-                var emailContent = (await transformator.Transform(new TransformationData
-                {
-                    Template = template.Content,
-                    Tokens = new[] { KeyValuePair.Create("fileNumber", caseId) }
-                })).Content;
-                await notificationSender.Send(new EmailNotification
-                {
-                    Subject = template.Subject,
-                    Content = emailContent,
-                    To = new[]
-                    {
-                        new EmailAddress { Name = $"{contact.LastName}, {contact.FirstName}", Address = contact.Email }
-                    }
-                });
+                await SendEmailNotification(
+                    SubmissionTemplateType.NewAnonymousEvacuationFileSubmission,
+                    email: contact.Email,
+                    name: $"{contact.LastName}, {contact.FirstName}",
+                    tokens: new[] { KeyValuePair.Create("fileNumber", caseId) });
             }
 
             return caseId;
@@ -83,7 +75,24 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<string> Handle(SubmitEvacuationFileCommand cmd)
         {
-            return await Task.FromResult("new ess number");
+            var file = mapper.Map<Resources.Cases.EvacuationFile>(cmd.File);
+            var contact = (await contactRepository.QueryContact(new ContactQuery { ContactId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
+
+            if (contact == null) throw new Exception($"Registrant not found '{file.PrimaryRegistrantId}'");
+
+            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).CaseId;
+
+            if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
+            {
+                //notify registrant of the new file and has email
+                await SendEmailNotification(
+                    SubmissionTemplateType.NewEvacuationFileSubmission,
+                    email: contact.Email,
+                    name: $"{contact.LastName}, {contact.FirstName}",
+                    tokens: new[] { KeyValuePair.Create("fileNumber", caseId) });
+            }
+
+            return caseId;
         }
 
         public async Task<EvacuationFilesQueryResult> Handle(EvacuationFilesQuery query)
@@ -110,12 +119,45 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)
         {
-            return await Task.FromResult("registrant id");
+            var contact = mapper.Map<Contact>(cmd.Profile);
+            var result = await contactRepository.ManageContact(new SaveContact { Contact = contact });
+
+            if (string.IsNullOrEmpty(cmd.Profile.Id))
+            {
+                //send email when creating a new registrant profile
+                if (contact.Email != null)
+                {
+                    await SendEmailNotification(
+                        SubmissionTemplateType.newProfileRegistration,
+                        email: contact.Email,
+                        name: $"{contact.LastName}, {contact.FirstName}",
+                        tokens: Array.Empty<KeyValuePair<string, string>>());
+                }
+            }
+
+            return result.ContactId;
         }
 
         public async Task Handle(DeleteRegistrantCommand cmd)
         {
-            await Task.CompletedTask;
+            await contactRepository.ManageContact(new DeleteContact { ContactId = cmd.RegistrantId });
+        }
+
+        private async Task SendEmailNotification(SubmissionTemplateType notificationType, string email, string name, IEnumerable<KeyValuePair<string, string>> tokens)
+        {
+            var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(notificationType);
+            var emailContent = (await transformator.Transform(new TransformationData
+            {
+                Template = template.Content,
+                Tokens = tokens
+            })).Content;
+
+            await notificationSender.Send(new EmailNotification
+            {
+                Subject = template.Subject,
+                Content = emailContent,
+                To = new[] { new EmailAddress { Name = name, Address = email } }
+            });
         }
     }
 }

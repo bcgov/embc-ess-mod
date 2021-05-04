@@ -153,6 +153,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public string SecretPhrase { get; set; }
+        public bool AuthenticatedUser { get; set; }
+        public bool VerifiedUser { get; set; }
     }
 
     public class HouseholdMember

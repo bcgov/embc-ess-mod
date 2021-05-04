@@ -55,10 +55,15 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<RegistrationResult>> Create(AnonymousRegistration registration)
         {
             if (registration == null) return BadRequest();
+
+            var profile = mapper.Map<RegistrantProfile>(registration.RegistrationDetails);
+            profile.AuthenticatedUser = false;
+            profile.VerifiedUser = false;
+            var file = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(registration);
             var id = await messagingClient.Send(new SubmitAnonymousEvacuationFileCommand
             {
-                File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(registration),
-                SubmitterProfile = mapper.Map<RegistrantProfile>(registration.RegistrationDetails)
+                File = file,
+                SubmitterProfile = profile
             });
 
             return Ok(new RegistrationResult { ReferenceNumber = id });

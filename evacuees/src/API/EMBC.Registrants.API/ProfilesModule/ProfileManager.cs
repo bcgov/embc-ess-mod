@@ -14,8 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.SecurityModule;
@@ -29,11 +27,11 @@ namespace EMBC.Registrants.API.ProfilesModule
 
         Task<string> SaveProfile(Profile profile);
 
-        Task<IEnumerable<ProfileDataConflict>> GetProfileConflicts(string userId);
+        //Task<IEnumerable<ProfileDataConflict>> GetProfileConflicts(string userId);
 
         Task DeleteProfile(string userId);
 
-        Task<Profile> GetLoginProfile(string userId);
+        //Task<Profile> GetLoginProfile(string userId);
     }
 
     public class ProfileManager : IProfileManager
@@ -58,17 +56,17 @@ namespace EMBC.Registrants.API.ProfilesModule
             await profileRepository.Delete(userId);
         }
 
-        public async Task<IEnumerable<ProfileDataConflict>> GetProfileConflicts(string userId)
-        {
-            var user = await userRepository.Read(userId);
-            if (user == null) return null;
+        //public async Task<IEnumerable<ProfileDataConflict>> GetProfileConflicts(string userId)
+        //{
+        //    var user = await userRepository.Read(userId);
+        //    if (user == null) return null;
 
-            var userProfile = mapper.Map<Profile>(user);
-            var profile = await profileRepository.Read(user.Id);
-            var conflicts = ProfilesConflictDetector.DetectConflicts(profile, userProfile);
+        //    var userProfile = mapper.Map<Profile>(user);
+        //    var profile = await profileRepository.Read(user.Id);
+        //    var conflicts = ProfilesConflictDetector.DetectConflicts(profile, userProfile);
 
-            return conflicts.ToArray();
-        }
+        //    return conflicts.ToArray();
+        //}
 
         public async Task<Profile> GetProfileByBcscid(string userId)
         {
@@ -103,11 +101,11 @@ namespace EMBC.Registrants.API.ProfilesModule
             return profile.Id;
         }
 
-        public async Task<Profile> GetLoginProfile(string userId)
-        {
-            var user = await userRepository.Read(userId);
-            if (user == null) return null;
-            return mapper.Map<Profile>(user);
-        }
+        //public async Task<Profile> GetLoginProfile(string userId)
+        //{
+        //    var user = await userRepository.Read(userId);
+        //    if (user == null) return null;
+        //    return mapper.Map<Profile>(user);
+        //}
     }
 }
