@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
+import { WizardService } from '../../wizard.service';
 
 @Component({
   selector: 'app-profile-review',
@@ -6,7 +9,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile-review.component.scss']
 })
 export class ProfileReviewComponent implements OnInit {
-  constructor() {}
+  constructor(
+    private router: Router,
+    private wizardService: WizardService,
+    private stepCreateProfileService: StepCreateProfileService
+  ) {}
 
   ngOnInit(): void {}
+
+  /**
+   * Updates the tab status, step status and navigates
+   * to the next step
+   */
+  save(): void {
+    this.stepCreateProfileService.setTabStatus('review', 'complete');
+    this.wizardService.setStepStatus('/ess-wizard/create-ess-file', false);
+    this.router.navigate(['/ess-wizard/create-ess-file']);
+  }
 }
