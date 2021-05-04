@@ -9,8 +9,10 @@ import {
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { RegistrantProfileSearchResult } from 'src/app/core/api/models';
+import { EvacueeSearchService } from '../evacuee-search.service';
 
 @Component({
   selector: 'app-profile-results',
@@ -26,7 +28,10 @@ export class ProfileResultsComponent
   matchedRegistrants$: Observable<Array<RegistrantProfileSearchResult>>;
   color = '#169BD5';
 
-  constructor() {}
+  constructor(
+    private evacueeSearchService: EvacueeSearchService,
+    private router: Router
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.registrantResults) {
@@ -42,5 +47,11 @@ export class ProfileResultsComponent
 
   ngOnInit(): void {}
 
-  openProfile(): void {}
+  openProfile(): void {
+    if (this.evacueeSearchService.getHasShownIdentification()) {
+      this.router.navigate(['responder-access/search/evacuee-profile']);
+    } else {
+      this.router.navigate(['responder-access/search/security-questions']);
+    }
+  }
 }

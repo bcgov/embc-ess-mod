@@ -1,0 +1,51 @@
+<div class="container wizard-border">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="step-id">{{ stepId }}</p>
+    </div>
+  </div>
+  <div class="row heading-container">
+    <div class="col-md-12">
+      <span class="page-heading">{{ stepName }}</span>
+    </div>
+  </div>
+  <br />
+  <nav mat-tab-nav-bar dynamicHeight>
+    <a
+      mat-tab-link
+      #tabNavLinks
+      *ngFor="let tabItem of tabs"
+      [routerLink]="tabItem.route"
+      routerLinkActive="active-step-tab"
+    >
+      <span (click)="isAllowed(tabItem.route, $event)">{{
+        tabItem.label
+      }}</span>
+      <img
+        class="tab-status"
+        *ngIf="tabItem.status === 'complete'"
+        src="/assets/images/status/complete.svg"
+        width="20"
+        height="20"
+      />
+      <img
+        class="tab-status"
+        *ngIf="tabItem.status === 'incomplete'"
+        src="/assets/images/status/incomplete.svg"
+        width="20"
+        height="20"
+      />
+      <img
+        class="tab-status"
+        *ngIf="tabItem.status === 'not-started'"
+        src="/assets/images/status/not-started.svg"
+        width="20"
+        height="20"
+      />
+    </a>
+  </nav>
+
+  <div class="content-container">
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { EssFilesResultsComponent } from './ess-files-results.component';
 
@@ -8,7 +9,8 @@ describe('EssFilesResultsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EssFilesResultsComponent]
+      declarations: [EssFilesResultsComponent],
+      imports: [RouterTestingModule]
     }).compileComponents();
   });
 
