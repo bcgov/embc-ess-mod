@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RestrictionComponent } from './restriction.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('RestrictionComponent', () => {
   let component: RestrictionComponent;
@@ -8,6 +9,7 @@ describe('RestrictionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
       declarations: [RestrictionComponent]
     }).compileComponents();
   });

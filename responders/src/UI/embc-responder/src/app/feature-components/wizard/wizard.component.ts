@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  WizardSidenavModel,
-  WizardSidenavModelValues
-} from 'src/app/core/models/wizard-sidenav.model';
+import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
+import { WizardService } from './wizard.service';
 
 @Component({
   selector: 'app-wizard',
@@ -11,19 +9,19 @@ import {
   styleUrls: ['./wizard.component.scss']
 })
 export class WizardComponent implements OnInit {
-  sideNavMenu: Array<WizardSidenavModel> =
-    WizardSidenavModelValues.newRegistrationMenu;
+  sideNavMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
 
-  constructor(private router: Router) {
-    // for (const items of WizardSidenavModelValues.newRegistrationMenu) {
-    //   this.sideNavMenu.push(Object.assign(new WizardSidenavModel(), items));
-    // }
+  constructor(private router: Router, private wizardService: WizardService) {
+    this.sideNavMenu = this.wizardService.menuItems;
   }
 
   ngOnInit(): void {
     this.loadDefaultStep();
   }
 
+  /**
+   * Constructs the first step to be loaded by the wizard
+   */
   loadDefaultStep(): void {
     if (this.sideNavMenu !== null && this.sideNavMenu !== undefined) {
       const firstStepUrl = this.sideNavMenu[0].route;
