@@ -26,10 +26,6 @@ const routes: Routes = [
         loadChildren: () => import('./supplier-public/supplier-public.module').then(m => m.SupplierPublicModule)
       },
       {
-        path: 'maintenance',
-        loadChildren: () => import('./maintenance/maintenance.module').then(m => m.MaintenanceModule)
-      },
-      {
         path: 'submission',
         loadChildren: () => import('./fire-and-forget/submission/submission.module').then(m => m.SubmissionModule)
       },
@@ -41,6 +37,14 @@ const routes: Routes = [
       {
         path: 'thankyou',
         loadChildren: () => import('./fire-and-forget/reference/reference.module').then(m => m.ReferenceModule)
+      },
+      {
+        path: 'maintenance',
+        loadChildren: () => import('./maintenance/maintenance.module').then(m => m.MaintenanceModule)
+      },
+      {
+        path: 'error',
+        loadChildren: () => import('./error/error.module').then(m => m.ErrorModule)
       },
       {
         path: '**',
