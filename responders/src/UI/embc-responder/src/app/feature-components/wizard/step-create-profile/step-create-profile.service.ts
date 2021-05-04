@@ -5,7 +5,7 @@ import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 export class StepCreateProfileService {
   private profileTabs: Array<TabModel> =
     WizardTabModelValues.evacueeProfileTabs;
-    
+
   public get tabs(): Array<TabModel> {
     return this.profileTabs;
   }
@@ -13,7 +13,7 @@ export class StepCreateProfileService {
     this.profileTabs = tabs;
   }
 
-  public setTabStatus(name: string, status: string) : void {
+  public setTabStatus(name: string, status: string): void {
     this.tabs.map((tab) => {
       if (tab.route === name) {
         tab.status = status;

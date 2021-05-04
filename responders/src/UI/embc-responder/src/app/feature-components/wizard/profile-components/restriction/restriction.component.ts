@@ -9,7 +9,6 @@ import { StepCreateProfileService } from '../../step-create-profile/step-create-
   styleUrls: ['./restriction.component.scss']
 })
 export class RestrictionComponent implements OnInit {
-
   constructor(
     private router: Router,
     private stepCreateProfileService: StepCreateProfileService

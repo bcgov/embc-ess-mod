@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  WizardSidenavModel
-} from 'src/app/core/models/wizard-sidenav.model';
+import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
 import { WizardService } from './wizard.service';
 
 @Component({

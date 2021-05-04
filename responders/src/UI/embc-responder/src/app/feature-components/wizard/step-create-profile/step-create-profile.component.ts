@@ -37,6 +37,7 @@ export class StepCreateProfileComponent {
 
   /**
    * Determines if the tab navigation is allowed or not
+   *
    * @param tabRoute clicked route
    * @param $event mouse click event
    * @returns true/false
@@ -57,6 +58,7 @@ export class StepCreateProfileComponent {
 
   /**
    * Open information modal window
+   *
    * @param text text to display
    */
   openModal(text: string): void {
