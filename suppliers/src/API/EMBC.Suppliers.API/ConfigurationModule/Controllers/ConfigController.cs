@@ -26,6 +26,7 @@ using Jasper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Xrm.Tools.WebAPI;
 using Xrm.Tools.WebAPI.Requests;
 using Xrm.Tools.WebAPI.Results;
@@ -39,11 +40,13 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
     {
         private readonly IConfiguration conf;
         private readonly CRMWebAPI api;
+        private readonly ILogger<ConfigController> logger;
 
-        public ConfigController(IConfiguration configuration, CRMWebAPI api)
+        public ConfigController(IConfiguration configuration, CRMWebAPI api, ILogger<ConfigController> logger)
         {
             conf = configuration;
             this.api = api;
+            this.logger = logger;
         }
 
         [HttpGet("")]
@@ -62,8 +65,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             DateTime maintTime;
 
             // Check for CRM connectivity, immediately return error if fails
-            Task<bool> healthCheck = CRMHealthcheck();
-            var crmHealthy = await healthCheck;
+            bool crmHealthy = await CRMHealthcheck();
 
             if (!crmHealthy)
             {
@@ -118,13 +120,11 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
                 {
                     Select = new[] { "era_name", "era_supportid" }
                 });
-
-                // If query returns list with items in it, site is healthy
                 return list.List.Count > 0;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.LogError(e, "Failed to connect to CRM during health check.");
                 return false;
             }
         }
