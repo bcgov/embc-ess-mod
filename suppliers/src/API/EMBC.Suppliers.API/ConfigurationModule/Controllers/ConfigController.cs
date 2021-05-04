@@ -26,6 +26,7 @@ using Jasper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Xrm.Tools.WebAPI;
 using Xrm.Tools.WebAPI.Requests;
 using Xrm.Tools.WebAPI.Results;
@@ -39,11 +40,13 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
     {
         private readonly IConfiguration conf;
         private readonly CRMWebAPI api;
+        private readonly ILogger<ConfigController> logger;
 
-        public ConfigController(IConfiguration configuration, CRMWebAPI api)
+        public ConfigController(IConfiguration configuration, CRMWebAPI api, ILogger<ConfigController> logger)
         {
             conf = configuration;
             this.api = api;
+            this.logger = logger;
         }
 
         [HttpGet("")]
@@ -61,9 +64,11 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 
             DateTime maintTime;
 
-            Task<bool> healthCheck = CRMHealthcheck();
+            var siteDown = false;
 
-            var siteDown = await healthCheck;
+            bool crmHealthy = await CRMHealthcheck();
+
+            if (!crmHealthy) siteDown = true;
 
             // Check that maintTimeStr is valid datetime format
             if (DateTime.TryParse(maintTimeStr, out maintTime))
@@ -113,7 +118,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
         /// <returns>True/False, based on CRM connectivity</returns>
         private async Task<bool> CRMHealthcheck()
         {
-            bool siteDown = true;
+            bool crmHealthy = false;
             try
             {
                 CRMGetListResult<SupportEntity> list = await api.GetList<SupportEntity>("era_supports", new CRMGetListOptions
@@ -123,14 +128,14 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 
                 if (list.List.Count > 0)
                 {
-                    siteDown = false;
+                    crmHealthy = true;
                 }
-                return siteDown;
+                return crmHealthy;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return siteDown;
+                logger.LogError(e, "Failed to connect to CRM during health check.");
+                return crmHealthy;
             }
         }
 
