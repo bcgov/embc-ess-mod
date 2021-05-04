@@ -48,7 +48,7 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
 
         [HttpGet("")]
         [AllowAnonymous]
-        public async Task<ActionResult<Config>> GetConfig()
+        public async Task<ActionResult<ConfigResult>> GetConfig()
         {
             string maintMsg = string.Empty;
             var noticeMsg = conf["NOTICE_MESSAGE"] ?? string.Empty;
@@ -60,16 +60,6 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             var envStr = conf["ASPNETCORE_ENVIRONMENT"] ?? string.Empty;
 
             DateTime maintTime;
-
-            // Check for CRM connectivity, immediately return error if fails
-            Task<bool> healthCheck = CRMHealthcheck();
-            var crmHealthy = await healthCheck;
-
-            if (!crmHealthy)
-            {
-                var crmFailResult = GetConfigResult(string.Empty, string.Empty, true, envStr);
-                return Ok(crmFailResult);
-            }
 
             // Check for maintenance or other causes of outage
             var siteDown = false;
@@ -97,6 +87,17 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
             {
                 maintMsg = maintPageMsg;
                 noticeMsg = string.Empty;
+            }
+            else
+            {
+                // Only run Dynamics healthcheck if site isn't already going down for maintenance. Check for CRM connectivity, immediately return error if fails
+                var crmHealthy = await CRMHealthcheck();
+
+                if (!crmHealthy)
+                {
+                    var crmFailResult = GetConfigResult(string.Empty, string.Empty, true, envStr);
+                    return Ok(crmFailResult);
+                }
             }
 
             // Return object with details needed for frontend routing
@@ -141,34 +142,16 @@ namespace EMBC.Suppliers.API.ConfigurationModule.Controllers
         {
             return new ConfigResult()
             {
-                noticeMsg = noticeMsg,
-                maintMsg = maintMsg,
-                siteDown = siteDown,
-                environment = environment,
+                NoticeMsg = noticeMsg,
+                MaintMsg = maintMsg,
+                SiteDown = siteDown,
+                Environment = environment,
                 Oidc = new OidcConfiguration
                 {
                     ClientId = conf["oidc:clientId"],
                     Issuer = conf["oidc:issuer"]
                 }
             };
-        }
-
-        /// <summary>
-        /// Class declaring objects to be returned from the ConfigController
-        /// </summary>
-        private class ConfigResult
-        {
-            public string noticeMsg { get; set; }
-            public string maintMsg { get; set; }
-            public bool siteDown { get; set; }
-            public string environment { get; set; }
-            public OidcConfiguration Oidc { get; set; }
-        }
-
-        public class OidcConfiguration
-        {
-            public string Issuer { get; set; }
-            public string ClientId { get; set; }
         }
     }
 }
