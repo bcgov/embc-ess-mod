@@ -191,7 +191,7 @@ namespace EMBC.Responders.API
                     options.DocumentName = "Responders Portal API";
                     options.PostProcess = (document, req) =>
                     {
-                        document.Info.Title = "Registrants Portal API";
+                        document.Info.Title = "Responders Portal API";
                     };
                 });
 
