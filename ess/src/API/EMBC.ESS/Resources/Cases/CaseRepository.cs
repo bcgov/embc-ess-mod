@@ -56,7 +56,19 @@ namespace EMBC.ESS.Resources.Cases
 
         public async Task<CaseQueryResult> HandleQueryEvacuationFile(QueryEvacuationFile cmd)
         {
-            return new CaseQueryResult { Items = await evacuationRepository.ReadAll(cmd.ById) };
+            var result = new CaseQueryResult();
+            if (cmd?.ById != null)
+            {
+                if (cmd?.ByIdentifier != null)
+                {
+                    result.Items = new EvacuationFile[] { await evacuationRepository.Read(cmd.ByIdentifier) };
+                }
+                else
+                {
+                    result.Items = await evacuationRepository.ReadAll(cmd.ById);
+                }
+            }
+            return result;
         }
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)

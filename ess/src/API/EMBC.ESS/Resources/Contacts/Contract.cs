@@ -54,6 +54,9 @@ namespace EMBC.ESS.Resources.Contacts
         public string ContactId { get; set; }
     }
 
+    public class GetContact : ContactQuery
+    { }
+
     public class Contact
     {
         public string Id { get; set; }

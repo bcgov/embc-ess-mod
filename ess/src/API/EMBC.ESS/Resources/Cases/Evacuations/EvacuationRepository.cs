@@ -37,16 +37,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             this.mapper = mapper;
         }
 
-        public Task<ManageCaseCommandResult> ManageCase(ManageCaseCommand cmd)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<CaseQueryResult> QueryCase(CaseQuery query)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<string> Create(EvacuationFile evacuationFile)
         {
             var primaryContact = essContext.contacts.Where(c => c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();

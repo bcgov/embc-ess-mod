@@ -42,7 +42,7 @@ namespace EMBC.ESS.Resources.Cases
 
     public class CaseQueryResult
     {
-        public IEnumerable<Case> Items { get; set; }
+        public IEnumerable<Case> Items { get; set; } = Array.Empty<Case>();
     }
 
     public abstract class Case

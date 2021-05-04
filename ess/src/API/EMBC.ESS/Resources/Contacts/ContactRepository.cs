@@ -44,9 +44,13 @@ namespace EMBC.ESS.Resources.Contacts
             };
         }
 
-        public Task<ContactQueryResult> QueryContact(ContactQuery cmd)
+        public async Task<ContactQueryResult> QueryContact(ContactQuery query)
         {
-            throw new NotImplementedException();
+            return query.GetType().Name switch
+            {
+                nameof(GetContact) => await HandleGetContact((GetContact)query),
+                _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
+            };
         }
 
         private async Task<ContactCommandResult> HandleSaveContact(SaveContact cmd)
@@ -93,6 +97,26 @@ namespace EMBC.ESS.Resources.Contacts
                 await essContext.SaveChangesAsync();
             }
             return new ContactCommandResult { ContactId = cmd.ContactId };
+        }
+
+        private async Task<ContactQueryResult> HandleGetContact(GetContact query)
+        {
+            await Task.CompletedTask;
+            var contact = essContext.contacts
+                  .Expand(c => c.era_City)
+                  .Expand(c => c.era_ProvinceState)
+                  .Expand(c => c.era_Country)
+                  .Expand(c => c.era_MailingCity)
+                  .Expand(c => c.era_MailingProvinceState)
+                  .Expand(c => c.era_MailingCountry)
+                  .Where(c => c.era_bcservicescardid == query.ContactId)
+                  .SingleOrDefault();
+
+            if (contact == null) return null;
+
+            essContext.Detach(contact);
+
+            return new ContactQueryResult { Items = new Contact[] { mapper.Map<Contact>(contact) } };
         }
 
         private void AddJurisdictionLink(string jurisdictionCode, string sourceProperty, object target)
