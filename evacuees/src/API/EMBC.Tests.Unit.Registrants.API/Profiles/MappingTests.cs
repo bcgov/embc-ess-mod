@@ -121,14 +121,14 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
 
             profile.Id.ShouldBe(bcscUser.Id);
             profile.ContactDetails.Email.ShouldBeNull();
-            profile.PersonalDetails.FirstName.ShouldBe(bcscUser.FirstName);
-            profile.PersonalDetails.LastName.ShouldBe(bcscUser.LastName);
+            profile.PersonalDetails.FirstName.ShouldBe(bcscUser.PersonalDetails.FirstName);
+            profile.PersonalDetails.LastName.ShouldBe(bcscUser.PersonalDetails.LastName);
             profile.PersonalDetails.Gender.ShouldBeNull();
-            profile.PersonalDetails.DateOfBirth.ShouldBe(Regex.Replace(bcscUser.BirthDate,
-             @"\b(?<year>\d{2,4})-(?<month>\d{1,2})-(?<day>\d{1,2})\b", "${month}/${day}/${year}", RegexOptions.None));
-            profile.PrimaryAddress.AddressLine1.ShouldBe(bcscUser.StreetAddress);
-            profile.PrimaryAddress.PostalCode.ShouldBe(bcscUser.PostalCode);
-            profile.PrimaryAddress.Community.ShouldBe(bcscUser.City);
+            profile.PersonalDetails.DateOfBirth.ShouldBe(Regex.Replace(bcscUser.PersonalDetails.DateOfBirth,
+                @"\b(?<year>\d{2,4})-(?<month>\d{1,2})-(?<day>\d{1,2})\b", "${month}/${day}/${year}", RegexOptions.None));
+            profile.PrimaryAddress.AddressLine1.ShouldBe(bcscUser.PrimaryAddress.AddressLine1);
+            profile.PrimaryAddress.PostalCode.ShouldBe(bcscUser.PrimaryAddress.PostalCode);
+            profile.PrimaryAddress.Community.ShouldBe(bcscUser.PrimaryAddress.Community);
             profile.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldBe("BC");
             profile.PrimaryAddress.Country.ShouldNotBeNull().ShouldBe("CAN");
         }

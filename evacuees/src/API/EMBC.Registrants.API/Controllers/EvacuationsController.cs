@@ -23,7 +23,6 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using EMBC.Registrants.API.EvacuationsModule;
 using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -36,13 +35,11 @@ namespace EMBC.Registrants.API.Controllers
     public class EvacuationsController : ControllerBase
     {
         private readonly IMessagingClient messagingClient;
-        private readonly IEvacuationManager evacuationManager;
         private readonly IMapper mapper;
 
-        public EvacuationsController(IMessagingClient messagingClient, IEvacuationManager evacuationManager, IMapper mapper)
+        public EvacuationsController(IMessagingClient messagingClient, IMapper mapper)
         {
             this.messagingClient = messagingClient;
-            this.evacuationManager = evacuationManager;
             this.mapper = mapper;
         }
 
@@ -77,9 +74,13 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetCurrentEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var evacuationList = await evacuationManager.GetEvacuations(userId);
+            var evacuationList = (await messagingClient.Send(new EvacuationFilesQuery
+            {
+                ByRegistrantId = userId,
+                ByStatuses = new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Active, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Pending }
+            })).Items;
 
-            return Ok(evacuationList);
+            return Ok(mapper.Map<IEnumerable<EvacuationFile>>(evacuationList));
         }
 
         /// <summary>
@@ -92,50 +93,36 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetPastEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var evacuationList = await evacuationManager.GetEvacuations(userId);
+            var evacuationList = (await messagingClient.Send(new EvacuationFilesQuery
+            {
+                ByRegistrantId = userId,
+                ByStatuses = new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Expired, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Completed }
+            })).Items;
 
-            return Ok(evacuationList);
+            return Ok(mapper.Map<IEnumerable<EvacuationFile>>(evacuationList));
         }
 
         /// <summary>
-        /// Create a verified Evacuation
+        /// Create or update a verified Evacuation file
         /// </summary>
         /// <param name="evacuationFile">Evacuation data</param>
         /// <returns>ESS number</returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<ActionResult<string>> CreateEvacuation(EvacuationFile evacuationFile)
+        public async Task<ActionResult<RegistrationResult>> UpsertEvacuationFile(EvacuationFile evacuationFile)
         {
             if (evacuationFile == null)
                 return BadRequest();
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var essFileNumber = await evacuationManager.SaveEvacuation(userId, null, evacuationFile);
+            var file = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(evacuationFile);
+            file.PrimaryRegistrantId = userId;
+            var fileId = await messagingClient.Send(new SubmitEvacuationFileCommand { File = file });
 
-            return Ok(essFileNumber);
-        }
-
-        /// <summary>
-        /// Update a verified Evacuation
-        /// </summary>
-        /// <param name="essFileNumber">ESS File Number</param>
-        /// <param name="evacuationFile">Evacuation data</param>
-        /// <returns>ESS number</returns>
-        [HttpPost("{essFileNumber}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize]
-        public async Task<ActionResult<string>> UpdateEvacuation(string essFileNumber, EvacuationFile evacuationFile)
-        {
-            if (evacuationFile == null)
-                return BadRequest();
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            essFileNumber = await evacuationManager.SaveEvacuation(userId, essFileNumber, evacuationFile);
-
-            return Ok(essFileNumber);
+            return Ok(new RegistrationResult { ReferenceNumber = fileId });
         }
     }
 
@@ -145,6 +132,7 @@ namespace EMBC.Registrants.API.Controllers
     public class EvacuationFile
     {
         public string EssFileNumber { get; set; }
+        public EvacuationFileStatus Status { get; set; }
 
         public string EvacuationFileDate { get; set; }
 
@@ -250,5 +238,20 @@ namespace EMBC.Registrants.API.Controllers
     public class RegistrationResult
     {
         public string ReferenceNumber { get; set; }
+    }
+
+    public enum EvacuationFileStatus
+    {
+        [EnumMember(Value = "Pending")]
+        Pending,
+
+        [EnumMember(Value = "Active")]
+        Active,
+
+        [EnumMember(Value = "Expired")]
+        Expired,
+
+        [EnumMember(Value = "Completed")]
+        Completed
     }
 }

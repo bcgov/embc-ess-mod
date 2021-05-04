@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using EMBC.Registrants.API.Controllers;
 using EMBC.ResourceAccess.Dynamics;
 using Microsoft.Dynamics.CRM;
 
@@ -94,19 +95,8 @@ namespace EMBC.Registrants.API.SecurityModule
         private era_bcsc GetUserById(string userId) => dynamicsClient.era_bcscs.Where(e => e.era_identifier == userId).OrderByDescending(e => e.createdon).FirstOrDefault();
     }
 
-    public class User
+    public class User : Profile
     {
-        public string Id { get; set; }
         public string DisplayName { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string StreetAddress { get; set; }
-        public string City { get; set; }
-        public string StateProvince { get; set; }
-        public string Country { get; set; }
-        public string PostalCode { get; set; }
-        public string Email { get; set; }
-        public string Gender { get; set; }
-        public string BirthDate { get; set; }
     }
 }

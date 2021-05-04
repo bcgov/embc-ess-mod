@@ -25,6 +25,7 @@ namespace EMBC.Registrants.API.EvacuationsModule
         public EvacuationAutoMapperProfile()
         {
             CreateMap<era_evacuationfile, EvacuationFile>()
+                .ForMember(d => d.Status, opts => opts.Ignore())
                 .ForMember(d => d.EssFileNumber, opts => opts.MapFrom(s => s.era_essfilenumber))
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.era_evacuationfiledate))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => s.era_needsassessment_EvacuationFile))

@@ -26,8 +26,7 @@ export class EvacuationFileService {
     //     essFileNumber: this.evacuationFileDataService.essFileNumber,
     //     body: this.evacuationFileDataService.createEvacuationFileDTO()
     // });
-    return this.evacuationService.evacuationsUpdateEvacuation({
-      essFileNumber: this.evacuationFileDataService.essFileNumber,
+    return this.evacuationService.evacuationsUpsertEvacuationFile({
       body: this.evacuationFileDataService.createEvacuationFileDTO()
     }).pipe(
       mergeMap(essFileNumber => this.getCurrentEvacuationFiles()),

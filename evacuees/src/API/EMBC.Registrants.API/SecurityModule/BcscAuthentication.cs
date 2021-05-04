@@ -100,7 +100,8 @@ namespace EMBC.Registrants.API.SecurityModule
                      OnUserInformationReceived = async c =>
                      {
                          var userManager = c.HttpContext.RequestServices.GetRequiredService<IUserManager>();
-                         var id = await userManager.Save(c.Principal.FindFirstValue(ClaimTypes.NameIdentifier), c.User);
+                         var profile = Mappings.MapBCSCUserDataToProfile(c.Principal.FindFirstValue(ClaimTypes.NameIdentifier), c.User);
+                         var id = await userManager.Save(profile);
                      }
                  };
 

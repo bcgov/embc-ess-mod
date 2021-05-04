@@ -43,6 +43,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string ByFileId { get; set; }
         public string ByRegistrantId { get; set; }
+        public EvacuationFileStatus[] ByStatuses { get; set; }
     }
 
     /// <summary>
@@ -102,9 +103,19 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class EvacuationFile
     {
         public string Id { get; set; }
+        public EvacuationFileStatus Status { get; set; }
+        public string PrimaryRegistrantId { get; set; }
         public DateTime EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; }
+    }
+
+    public enum EvacuationFileStatus
+    {
+        Pending,
+        Active,
+        Expired,
+        Completed
     }
 
     public class NeedsAssessment
