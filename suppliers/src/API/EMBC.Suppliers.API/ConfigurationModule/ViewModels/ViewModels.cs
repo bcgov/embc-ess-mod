@@ -18,11 +18,20 @@ using System.Text.Json.Serialization;
 
 namespace EMBC.Suppliers.API.ConfigurationModule.ViewModels
 {
-    public class Config
+    public class ConfigResult
     {
+        public string NoticeMsg { get; set; }
         public string MaintMsg { get; set; }
         public string MaintTime { get; set; }
-        public string MaintWarn { get; set; }
+        public bool SiteDown { get; set; }
+        public string Environment { get; set; }
+        public OidcConfiguration Oidc { get; set; }
+    }
+
+    public class OidcConfiguration
+    {
+        public string Issuer { get; set; }
+        public string ClientId { get; set; }
     }
 
     public class Country
