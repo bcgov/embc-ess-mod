@@ -3,8 +3,7 @@ import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
-  private essTabs: Array<TabModel> =
-    WizardTabModelValues.essFileTabs;
+  private essTabs: Array<TabModel> = WizardTabModelValues.essFileTabs;
 
   public get tabs(): Array<TabModel> {
     return this.essTabs;

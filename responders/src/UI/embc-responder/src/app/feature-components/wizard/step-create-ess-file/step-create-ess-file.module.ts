@@ -8,6 +8,11 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [StepCreateEssFileComponent],
-  imports: [CommonModule, StepCreateEssFileRoutingModule, MaterialModule, SharedModule]
+  imports: [
+    CommonModule,
+    StepCreateEssFileRoutingModule,
+    MaterialModule,
+    SharedModule
+  ]
 })
 export class StepCreateEssFileModule {}

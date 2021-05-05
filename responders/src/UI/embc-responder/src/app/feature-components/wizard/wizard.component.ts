@@ -12,7 +12,11 @@ import { WizardService } from './wizard.service';
 export class WizardComponent implements OnInit {
   sideNavMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
 
-  constructor(private router: Router, private wizardService: WizardService, private cacheService: CacheService) {
+  constructor(
+    private router: Router,
+    private wizardService: WizardService,
+    private cacheService: CacheService
+  ) {
     this.sideNavMenu = this.wizardService.menuItems;
   }
 

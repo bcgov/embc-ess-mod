@@ -74,7 +74,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   openWizard(): void {
-    this.cacheService.set('wizardOpenedFrom', '/responder-access/search/evacuee');
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/evacuee'
+    );
     this.router.navigate(['/ess-wizard']);
   }
 }

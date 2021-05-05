@@ -22,7 +22,7 @@ export class ProfileReviewComponent implements OnInit {
    * to the next step
    */
   save(): void {
-    console.log("in save")
+    console.log('in save');
     this.stepCreateProfileService.setTabStatus('review', 'complete');
     this.wizardService.setStepStatus('/ess-wizard/create-ess-file', false);
     this.router.navigate(['/ess-wizard/create-ess-file'], {
