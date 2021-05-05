@@ -150,6 +150,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             {
                 File = new EvacuationFile
                 {
+                    Id = null,
                     EvacuatedFromAddress = new Address
                     {
                         AddressLine1 = $"addr1-{textContextIdentifier}",
@@ -175,6 +176,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanUpdateEvacuation()
         {
             var now = DateTime.UtcNow;
+            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
+
             var registrant = (await manager.Handle(new RegistrantsQuery { ByUserId = "ChrisTest3" })).Items.Single();
             var file = (await manager.Handle(new EvacuationFilesQuery { ByUserId = registrant.UserId })).Items.Last();
 
@@ -185,6 +188,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             fileId.ShouldNotBeNullOrEmpty();
             var updatedFile = (await manager.Handle(new EvacuationFilesQuery { ByFileId = fileId })).Items.ShouldHaveSingleItem();
+            updatedFile.Id.ShouldBe(file.Id);
             updatedFile.EvacuationDate.ShouldBe(now);
         }
 
@@ -233,9 +237,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var newRegistrantId = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
             newRegistrantId.ShouldNotBeNull();
 
-            await manager.Handle(new DeleteRegistrantCommand { UserId = newRegistrantId });
+            await manager.Handle(new DeleteRegistrantCommand { UserId = baseRegistrant.UserId });
 
-            (await manager.Handle(new RegistrantsQuery { ByUserId = newRegistrantId })).Items.ShouldBeEmpty();
+            (await manager.Handle(new RegistrantsQuery { ByUserId = baseRegistrant.UserId })).Items.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -272,6 +276,16 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             registrant.PrimaryAddress.StateProvince.ShouldNotBeNull();
             registrant.PrimaryAddress.Community.ShouldNotBeNull().ShouldNotBeNull();
             registrant.PrimaryAddress.Community.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetEvacuationFiles()
+        {
+            var registrant = (await manager.Handle(new RegistrantsQuery { ByUserId = "ChrisTest3" })).Items.Single();
+            var files = (await manager.Handle(new EvacuationFilesQuery { ByUserId = registrant.UserId })).Items;
+
+            files.ShouldNotBeEmpty();
+            files.ShouldAllBe(f => f.PrimaryRegistrantId == registrant.Id);
         }
     }
 }

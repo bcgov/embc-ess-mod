@@ -51,7 +51,7 @@ namespace EMBC.ESS.Resources.Contacts
                     s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
                     s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
                 .ForMember(d => d.gendercode, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))
-                .ForMember(d => d.birthdate, opts => opts.MapFrom(s => Date.Parse(s.DateOfBirth)))
+                .ForMember(d => d.birthdate, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.DateOfBirth) ? (Date?)null : Date.Parse(s.DateOfBirth)))
                 .ForMember(d => d.emailaddress1, opts => opts.MapFrom(s => s.Email ?? string.Empty))
                 .ForMember(d => d.telephone1, opts => opts.MapFrom(s => s.Phone ?? string.Empty))
                 .ForMember(d => d.era_emailrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Email)))

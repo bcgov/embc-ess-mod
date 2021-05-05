@@ -68,7 +68,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                     era_needsassessmentevacueeid = Guid.NewGuid(),
                     era_isprimaryregistrant = true,
                     era_evacueetype = (int?)EvacueeType.Person,
-                    era_isunder19 = CheckIfUnder19Years(primaryContact.birthdate.Value, Date.Now)
+                    era_isunder19 = primaryContact.birthdate.HasValue ? CheckIfUnder19Years(primaryContact.birthdate.Value, Date.Now) : (bool?)null
                 };
                 essContext.AddToera_needsassessmentevacuees(primaryRegistrant);
                 essContext.AddLink(primaryContact, nameof(primaryContact.era_NeedsAssessmentEvacuee_RegistrantID), primaryRegistrant);
@@ -130,8 +130,11 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task Delete(string essFileNumber)
         {
+            //TODO: change to single
             var evacuationFile = essContext.era_evacuationfiles
-                .Where(ef => ef.era_name == essFileNumber).FirstOrDefault();
+                .Where(ef => ef.era_name == essFileNumber)
+                .ToArray()
+                .LastOrDefault();
 
             if (evacuationFile != null)
             {
@@ -205,7 +208,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             //TODO: change to singleordefault
             var evacuationFileId = essContext.era_evacuationfiles
                 .Where(f => f.era_name == essFileNumber)
-                .FirstOrDefault()?.era_evacuationfileid;
+                .ToArray()
+                .LastOrDefault()?.era_evacuationfileid;
 
             if (!evacuationFileId.HasValue) return null;
 
@@ -223,12 +227,13 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             //TODO: change to single
             var existingEvacuationFile = essContext.era_evacuationfiles
-                .Expand(e => e.era_needsassessment_EvacuationFile)
                 .Where(e => e.era_name == file.Id)
-                .FirstOrDefault();
+                .ToArray()
+                .LastOrDefault();
+
             if (existingEvacuationFile == null) throw new Exception($"File {file.Id} not found");
 
-            //essContext.LoadProperty(existingEvacuationFile, nameof(era_evacuationfile.era_needsassessment_EvacuationFile));
+            essContext.LoadProperty(existingEvacuationFile, nameof(era_evacuationfile.era_needsassessment_EvacuationFile));
             var existingNeedsAssessments = existingEvacuationFile.era_needsassessment_EvacuationFile.ToArray();
 
             essContext.Detach(existingEvacuationFile);
@@ -344,20 +349,11 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 }
             }
 
-            //post as batch is not accepted by SSG. Sending with default option (multiple requests to the server stopping on the first failure)
             await essContext.SaveChangesAsync();
-
-            essContext.Detach(existingEvacuationFile);
-
-            var queryResult = essContext.era_evacuationfiles
-                .Expand(f => f.era_needsassessment_EvacuationFile)
-                .Where(f => f.era_evacuationfileid == updatedEvacuationFile.era_evacuationfileid).FirstOrDefault();
-
-            var essFileNumber = queryResult?.era_essfilenumber.ToString();
 
             essContext.DetachAll();
 
-            return $"{essFileNumber:D9}";
+            return updatedEvacuationFile.era_name;
         }
 
         private Guid? GetContactIdForBcscId(string bcscId) =>

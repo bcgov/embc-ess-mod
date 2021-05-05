@@ -17,6 +17,7 @@
 using System;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -25,7 +26,7 @@ namespace EMBC.ESS.Resources.Cases
         public Mappings()
         {
             CreateMap<EvacuationFile, era_evacuationfile>(MemberList.None)
-                .ForMember(d => d.era_essfilenumber, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_evacuationfiledate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.era_needsassessment_EvacuationFile, opts => opts.MapFrom(s => s.NeedsAssessments))
                 .ForMember(d => d.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine1))
@@ -37,10 +38,10 @@ namespace EMBC.ESS.Resources.Cases
                 ;
 
             CreateMap<era_evacuationfile, EvacuationFile>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_essfilenumber))
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => s.era_Registrant.contactid.ToString()))
                 .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.era_secrettext))
-                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.era_evacuationfiledate.HasValue ? s.era_evacuationfiledate.Value.DateTime : (DateTime?)null))
+                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.era_evacuationfiledate.HasValue ? s.era_evacuationfiledate.Value.UtcDateTime : (DateTime?)null))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => s.era_needsassessment_EvacuationFile))
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s))
                 ;
@@ -91,33 +92,32 @@ namespace EMBC.ESS.Resources.Cases
                 .ForMember(d => d.Pets, opts => opts.MapFrom(s => Array.Empty<Pet>()))
                ;
 
-            CreateMap<HouseholdMember, contact>(AutoMapper.MemberList.None)
-                .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.Id))
-
-                .ReverseMap()
-
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.contactid));
-
-            CreateMap<HouseholdMember, era_needsassessmentevacuee>(AutoMapper.MemberList.None)
+            CreateMap<HouseholdMember, era_needsassessmentevacuee>(MemberList.None)
+                .ForMember(d => d.era_RegistrantID, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => s.isUnder19))
-                .ForPath(d => d.era_RegistrantID.contactid, opts => opts.MapFrom(s => s.Id))
-                .ForPath(d => d.era_RegistrantID.firstname, opts => opts.MapFrom(s => s.FirstName))
-                .ForPath(d => d.era_RegistrantID.lastname, opts => opts.MapFrom(s => s.LastName))
-                .ForPath(d => d.era_RegistrantID.era_initial, opts => opts.MapFrom(s => s.Initials))
-                .ForPath(d => d.era_RegistrantID.era_preferredname, opts => opts.MapFrom(s => s.PreferredName))
-                .ForPath(d => d.era_RegistrantID.gendercode, opts => opts.MapFrom(s => s.Gender))
-                .ForPath(d => d.era_RegistrantID.birthdate, opts => opts.MapFrom(s => s.DateOfBirth))
+                ;
 
-                .ReverseMap()
-
+            CreateMap<era_needsassessmentevacuee, HouseholdMember>()
                 .ForMember(d => d.isUnder19, opts => opts.MapFrom(s => s.era_isunder19))
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_RegistrantID.contactid))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_RegistrantID.firstname))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_RegistrantID.lastname))
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_RegistrantID.era_initial))
                 .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.era_RegistrantID.era_preferredname))
-                .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.era_RegistrantID.gendercode))
-                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.era_RegistrantID.birthdate))
+                .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.era_RegistrantID == null ? null : s.era_RegistrantID.gendercode))
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.era_RegistrantID.birthdate.HasValue
+                    ? $"{s.era_RegistrantID.birthdate.Value.Month:D2}/{s.era_RegistrantID.birthdate.Value.Day:D2}/{s.era_RegistrantID.birthdate.Value.Year:D2}"
+                    : null))
+                ;
+
+            CreateMap<HouseholdMember, contact>(MemberList.Source)
+                .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.firstname, opts => opts.MapFrom(s => s.FirstName))
+                .ForMember(d => d.lastname, opts => opts.MapFrom(s => s.LastName))
+                .ForMember(d => d.era_initial, opts => opts.MapFrom(s => s.Initials))
+                .ForMember(d => d.era_preferredname, opts => opts.MapFrom(s => s.PreferredName))
+                .ForMember(d => d.gendercode, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))
+                .ForMember(d => d.birthdate, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.DateOfBirth) ? (Date?)null : Date.Parse(s.DateOfBirth)))
                 ;
 
             CreateMap<era_needsassessmentevacuee, Pet>()
@@ -167,9 +167,9 @@ namespace EMBC.ESS.Resources.Cases
         }
     }
 
-    public class GenderConverter : AutoMapper.IValueConverter<string, int?>, AutoMapper.IValueConverter<int?, string>
+    public class GenderConverter : IValueConverter<string, int?>, IValueConverter<int?, string>
     {
-        public int? Convert(string sourceMember, AutoMapper.ResolutionContext context) => sourceMember switch
+        public int? Convert(string sourceMember, ResolutionContext context) => sourceMember?.ToLower() switch
         {
             "Male" => 1,
             "Female" => 2,
@@ -177,7 +177,7 @@ namespace EMBC.ESS.Resources.Cases
             _ => null
         };
 
-        public string Convert(int? sourceMember, AutoMapper.ResolutionContext context) => sourceMember switch
+        public string Convert(int? sourceMember, ResolutionContext context) => sourceMember switch
         {
             1 => "Male",
             2 => "Female",

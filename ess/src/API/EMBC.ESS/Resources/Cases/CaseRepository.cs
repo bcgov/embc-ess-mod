@@ -72,7 +72,14 @@ namespace EMBC.ESS.Resources.Cases
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)
         {
-            return new ManageCaseCommandResult { CaseId = await evacuationRepository.Create(mapper.Map<EvacuationFile>(cmd.EvacuationFile)) };
+            if (string.IsNullOrEmpty(cmd.EvacuationFile.Id))
+            {
+                return new ManageCaseCommandResult { CaseId = await evacuationRepository.Create(cmd.EvacuationFile) };
+            }
+            else
+            {
+                return new ManageCaseCommandResult { CaseId = await evacuationRepository.Update(cmd.EvacuationFile) };
+            }
         }
 
         private bool CheckIfUnder19Years(Date birthdate, Date currentDate)
