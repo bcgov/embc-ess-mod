@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
+import { CacheService } from 'src/app/core/services/cache.service';
 import { WizardService } from './wizard.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { WizardService } from './wizard.service';
 export class WizardComponent implements OnInit {
   sideNavMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
 
-  constructor(private router: Router, private wizardService: WizardService) {
+  constructor(private router: Router, private wizardService: WizardService, private cacheService: CacheService) {
     this.sideNavMenu = this.wizardService.menuItems;
   }
 
@@ -31,5 +32,13 @@ export class WizardComponent implements OnInit {
         state: { step: firstStepId, title: firstStepTitle }
       });
     }
+  }
+
+  /**
+   * Exits the wizards and navigates to last page
+   */
+  exit(): void {
+    const navigateTo = this.cacheService.get('wizardOpenedFrom');
+    this.router.navigate([navigateTo]);
   }
 }
