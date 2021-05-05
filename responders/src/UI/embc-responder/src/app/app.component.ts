@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { AuthenticationService } from './core/services/authentication.service';
 import { ConfigService } from './core/services/config.service';
 import { UserService } from './core/services/user.service';
@@ -13,6 +13,7 @@ import { AlertService } from './shared/components/alert/alert.service';
 export class AppComponent implements OnInit {
   public isLoading = true;
   public color = '#169BD5';
+  public show = true;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -21,6 +22,12 @@ export class AppComponent implements OnInit {
     private configService: ConfigService,
     private alertService: AlertService
   ) {
+    this.router.events.subscribe((e) => {
+      if (e instanceof NavigationEnd) {
+        this.show = !e.url.startsWith('/ess-wizard', 0);
+      }
+    });
+
     this.configService.load().subscribe(
       (result) => result,
       (error) => {

@@ -9,8 +9,10 @@ import {
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { EvacuationFileSearchResult } from 'src/app/core/api/models';
+import { EvacueeSearchService } from '../evacuee-search.service';
 
 @Component({
   selector: 'app-ess-files-results',
@@ -24,7 +26,10 @@ export class EssFilesResultsComponent
   matchedFiles = new MatTableDataSource();
   matchedFiles$: Observable<Array<EvacuationFileSearchResult>>;
 
-  constructor() {}
+  constructor(
+    private evacueeSearchService: EvacueeSearchService,
+    private router: Router
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.fileResults) {
@@ -40,5 +45,11 @@ export class EssFilesResultsComponent
 
   ngOnInit(): void {}
 
-  openESSFile(): void {}
+  openESSFile(): void {
+    if (this.evacueeSearchService.getHasShownIdentification()) {
+      this.router.navigate(['responder-access/search/essfile']);
+    } else {
+      this.router.navigate(['responder-access/search/security-phrase']);
+    }
+  }
 }
