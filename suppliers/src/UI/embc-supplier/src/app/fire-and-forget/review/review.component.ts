@@ -53,7 +53,7 @@ export class ReviewComponent implements OnInit {
                 this.isSubmitted = !this.isSubmitted;
                 this.showLoader = !this.showLoader;
 
-                if (error.title && error.title !== '') {
+                if (error?.title && error.title !== '') {
                     this.alertService.setAlert('danger', error.title);
                 } else {
                     this.alertService.setAlert('danger', globalConst.appSubmitErr);
