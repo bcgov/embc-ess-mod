@@ -42,7 +42,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class EvacuationFilesQuery : Query<EvacuationFilesQueryResult>
     {
         public string ByFileId { get; set; }
-        public string ByRegistrantId { get; set; }
+        public string ByUserId { get; set; }
         public EvacuationFileStatus[] ByStatuses { get; set; }
     }
 
@@ -66,7 +66,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// </summary>
     public class RegistrantsQuery : Query<RegistrantsQueryResult>
     {
-        public string ById { get; set; }
+        public string ByUserId { get; set; }
     }
 
     /// <summary>

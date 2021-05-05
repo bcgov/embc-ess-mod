@@ -97,7 +97,9 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<EvacuationFilesQueryResult> Handle(EvacuationFilesQuery query)
         {
-            return await Task.FromResult(new EvacuationFilesQueryResult());
+            var cases = (await caseRepository.QueryCase(new QueryEvacuationFiles { UserId = query.ByUserId, FileId = query.ByFileId })).Items;
+
+            return new EvacuationFilesQueryResult { Items = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases) };
         }
 
         public async Task<EvacuationFilesQueryResult> Handle(EvacuationFilesSearchQuery query)
@@ -107,7 +109,7 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<RegistrantsQueryResult> Handle(RegistrantsQuery query)
         {
-            var items = (await contactRepository.QueryContact(new ContactQuery { ByUserId = query.ById })).Items;
+            var items = (await contactRepository.QueryContact(new ContactQuery { ByUserId = query.ByUserId })).Items;
 
             return new RegistrantsQueryResult { Items = mapper.Map<IEnumerable<RegistrantProfile>>(items) };
         }
@@ -140,7 +142,9 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task Handle(DeleteRegistrantCommand cmd)
         {
-            await contactRepository.ManageContact(new DeleteContact { ContactId = cmd.UserId });
+            var contact = (await contactRepository.QueryContact(new ContactQuery { ByUserId = cmd.UserId })).Items.SingleOrDefault();
+            if (contact == null) return;
+            await contactRepository.ManageContact(new DeleteContact { ContactId = contact.Id });
         }
 
         private async Task SendEmailNotification(SubmissionTemplateType notificationType, string email, string name, IEnumerable<KeyValuePair<string, string>> tokens)

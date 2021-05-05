@@ -34,10 +34,8 @@ namespace EMBC.ESS.Resources.Cases
         public string CaseId { get; set; }
     }
 
-    public class CaseQuery
+    public abstract class CaseQuery
     {
-        public string ById { get; set; }
-        public string ByIdentifier { get; set; }
     }
 
     public class CaseQueryResult
@@ -60,9 +58,10 @@ namespace EMBC.ESS.Resources.Cases
         public string Id { get; set; }
     }
 
-    public class QueryEvacuationFile : CaseQuery
+    public class QueryEvacuationFiles : CaseQuery
     {
-        public EvacuationFile EvacuationFile { get; set; }
+        public string FileId { get; set; }
+        public string UserId { get; set; }
     }
 
     public class EvacuationFile : Case
@@ -71,7 +70,7 @@ namespace EMBC.ESS.Resources.Cases
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
         public string PrimaryRegistrantId { get; set; }
         public string SecretPhrase { get; set; }
-        public object EvacuationDate { get; internal set; }
+        public DateTime EvacuationDate { get; internal set; }
     }
 
     public class EvacuationAddress

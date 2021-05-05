@@ -40,7 +40,7 @@ namespace EMBC.ESS.Resources.Cases
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_essfilenumber))
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => s.era_Registrant.contactid.ToString()))
                 .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.era_secrettext))
-                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.era_evacuationfiledate))
+                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.era_evacuationfiledate.HasValue ? s.era_evacuationfiledate.Value.DateTime : (DateTime?)null))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => s.era_needsassessment_EvacuationFile))
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s))
                 ;

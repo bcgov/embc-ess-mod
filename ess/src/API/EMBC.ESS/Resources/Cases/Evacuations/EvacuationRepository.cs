@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Edm;
@@ -39,7 +38,11 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<string> Create(EvacuationFile evacuationFile)
         {
+            if (string.IsNullOrEmpty(evacuationFile.PrimaryRegistrantId)) throw new Exception($"The file has no associated primary registrant");
+
             var primaryContact = essContext.contacts.Where(c => c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
+            if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
+
             var eraEvacuationFile = mapper.Map<era_evacuationfile>(evacuationFile);
 
             eraEvacuationFile.era_evacuationfileid = Guid.NewGuid();
@@ -95,15 +98,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                     essContext.AddToera_needsassessmentevacuees(needsAssessmentMember);
                     essContext.AddLink(member, nameof(member.era_NeedsAssessmentEvacuee_RegistrantID), needsAssessmentMember);
                     essContext.AddLink(eraNeedsAssessment, nameof(eraNeedsAssessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), needsAssessmentMember);
-
-                    // link registrant primary and mailing address city, province, country
-                    //essContext.AddLink(essContext.LookupCountryByCode(profile.PrimaryAddress.Country), nameof(era_country.era_contact_Country), member);
-                    //essContext.AddLink(essContext.LookupStateProvinceByCode(profile.PrimaryAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), member);
-                    //essContext.AddLink(essContext.LookupJurisdictionByCode(profile.PrimaryAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_City), member);
-
-                    //essContext.AddLink(essContext.LookupCountryByCode(profile.MailingAddress.Country), nameof(era_country.era_country_contact_MailingCountry), member);
-                    //essContext.AddLink(essContext.LookupStateProvinceByCode(profile.MailingAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), member);
-                    //essContext.AddLink(essContext.LookupJurisdictionByCode(profile.MailingAddress.Jurisdiction), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), member);
                 }
 
                 var pets = mapper.Map<IEnumerable<era_needsassessmentevacuee>>(needsAssessment.Pets);
@@ -154,6 +148,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ByKey(id)
                 .Expand(f => f.era_Jurisdiction)
                 .Expand(f => f.era_needsassessment_EvacuationFile)
+                .Expand(f => f.era_Registrant)
                 .GetValueAsync();
 
             essContext.LoadProperty(dynamicsFile.era_Jurisdiction, nameof(era_jurisdiction.era_RelatedProvinceState));
@@ -207,9 +202,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<EvacuationFile> Read(string essFileNumber)
         {
+            //TODO: change to singleordefault
             var evacuationFileId = essContext.era_evacuationfiles
                 .Where(f => f.era_name == essFileNumber)
-                .SingleOrDefault()?.era_evacuationfileid;
+                .FirstOrDefault()?.era_evacuationfileid;
 
             if (!evacuationFileId.HasValue) return null;
 
@@ -223,21 +219,19 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<string> Update(EvacuationFile file)
         {
-            var primaryRegistrant = GetDynamicsContactByBCSC(file.PrimaryRegistrantId);
+            if (string.IsNullOrEmpty(file.PrimaryRegistrantId)) throw new Exception($"The file has no associated primary registrant");
 
-            if (primaryRegistrant == null) throw new Exception($"Primary registrant {file.PrimaryRegistrantId} not found");
-
-            essContext.Detach(primaryRegistrant);
-
+            //TODO: change to single
             var existingEvacuationFile = essContext.era_evacuationfiles
-                .Where(e => e.era_name == file.Id).FirstOrDefault();
+                .Expand(e => e.era_needsassessment_EvacuationFile)
+                .Where(e => e.era_name == file.Id)
+                .FirstOrDefault();
+            if (existingEvacuationFile == null) throw new Exception($"File {file.Id} not found");
 
-            essContext.LoadProperty(existingEvacuationFile, nameof(era_evacuationfile.era_needsassessment_EvacuationFile));
+            //essContext.LoadProperty(existingEvacuationFile, nameof(era_evacuationfile.era_needsassessment_EvacuationFile));
+            var existingNeedsAssessments = existingEvacuationFile.era_needsassessment_EvacuationFile.ToArray();
 
             essContext.Detach(existingEvacuationFile);
-
-            // return contact
-            var contact = mapper.Map<Contact>(primaryRegistrant);
 
             // New evacuation file mapped from entered evacaution file
             var updatedEvacuationFile = mapper.Map<era_evacuationfile>(file);
@@ -254,8 +248,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 var evacuatedFromJurisdiction = essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.Community);
                 essContext.AddLink(evacuatedFromJurisdiction, nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), updatedEvacuationFile);
             }
-
-            var existingNeedsAssessments = existingEvacuationFile.era_needsassessment_EvacuationFile.ToArray();
 
             foreach (var needsAssessment in file.NeedsAssessments)
             {
@@ -304,15 +296,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                         // link members and needs assessment to evacuee record
                         essContext.AddLink(era_contact, nameof(era_contact.era_NeedsAssessmentEvacuee_RegistrantID), evacuee);
                         essContext.AddLink(updatedNeedsAssessment, nameof(era_needassessment.era_NeedsAssessmentEvacuee_NeedsAssessmentID), evacuee);
-
-                        // link registrant primary and mailing address city, province, country
-                        essContext.AddLink(essContext.LookupCountryByCode(contact.PrimaryAddress.Country), nameof(era_country.era_contact_Country), era_contact);
-                        essContext.AddLink(essContext.LookupStateProvinceByCode(contact.PrimaryAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), era_contact);
-                        essContext.AddLink(essContext.LookupJurisdictionByCode(contact.PrimaryAddress.Community), nameof(era_jurisdiction.era_jurisdiction_contact_City), era_contact);
-
-                        essContext.AddLink(essContext.LookupCountryByCode(contact.MailingAddress.Country), nameof(era_country.era_country_contact_MailingCountry), era_contact);
-                        essContext.AddLink(essContext.LookupStateProvinceByCode(contact.MailingAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), era_contact);
-                        essContext.AddLink(essContext.LookupJurisdictionByCode(contact.MailingAddress.Community), nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), era_contact);
                     }
                     else
                     {
@@ -377,17 +360,13 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return $"{essFileNumber:D9}";
         }
 
-        private contact GetDynamicsContactByBCSC(string BCServicesCardId)
-        {
-            return essContext.contacts
-                               .Expand(c => c.era_City)
-                               .Expand(c => c.era_ProvinceState)
-                               .Expand(c => c.era_Country)
-                               .Expand(c => c.era_MailingCity)
-                               .Expand(c => c.era_MailingProvinceState)
-                               .Expand(c => c.era_MailingCountry)
-                               .Where(c => c.era_bcservicescardid == BCServicesCardId).FirstOrDefault();
-        }
+        private Guid? GetContactIdForBcscId(string bcscId) =>
+      string.IsNullOrEmpty(bcscId)
+          ? null
+          : essContext.contacts
+              .Where(c => c.era_bcservicescardid == bcscId)
+              .Select(c => new { c.contactid, c.era_bcservicescardid })
+              .SingleOrDefault()?.contactid;
 
         public bool CheckIfUnder19Years(Date birthdate, Date currentDate)
         {

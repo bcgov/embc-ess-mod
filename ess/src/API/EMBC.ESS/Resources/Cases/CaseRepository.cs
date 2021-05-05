@@ -49,26 +49,25 @@ namespace EMBC.ESS.Resources.Cases
         {
             return query.GetType().Name switch
             {
-                nameof(QueryEvacuationFile) => await HandleQueryEvacuationFile((QueryEvacuationFile)query),
+                nameof(QueryEvacuationFiles) => await HandleQueryEvacuationFile((QueryEvacuationFiles)query),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
         }
 
-        public async Task<CaseQueryResult> HandleQueryEvacuationFile(QueryEvacuationFile cmd)
+        public async Task<CaseQueryResult> HandleQueryEvacuationFile(QueryEvacuationFiles cmd)
         {
-            var result = new CaseQueryResult();
-            if (cmd?.ById != null)
+            if (!string.IsNullOrEmpty(cmd.FileId))
             {
-                if (cmd?.ByIdentifier != null)
-                {
-                    result.Items = new EvacuationFile[] { await evacuationRepository.Read(cmd.ByIdentifier) };
-                }
-                else
-                {
-                    result.Items = await evacuationRepository.ReadAll(cmd.ById);
-                }
+                return new CaseQueryResult { Items = new EvacuationFile[] { await evacuationRepository.Read(cmd.FileId) } };
             }
-            return result;
+            else if (!string.IsNullOrEmpty(cmd.UserId))
+            {
+                return new CaseQueryResult { Items = await evacuationRepository.ReadAll(cmd.UserId) };
+            }
+            else
+            {
+                throw new NotImplementedException("Need to refactor this method");
+            }
         }
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)

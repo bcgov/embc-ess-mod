@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS;
@@ -20,8 +19,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         // Constants
         private const string TestUserId = "CHRIS-TEST";
-        private const string TestEssFileNumber = "100615";
 
+        private const string TestEssFileNumber = "100615";
 
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -165,9 +164,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetEvacuations()
         {
-            var caseQuery = new QueryEvacuationFile
+            var caseQuery = new QueryEvacuationFiles
             {
-                ById = TestUserId
+                UserId = TestUserId
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
 
@@ -232,10 +231,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetEvacuation()
         {
-            var caseQuery = new QueryEvacuationFile
+            var caseQuery = new QueryEvacuationFiles
             {
-                ById = TestUserId,
-                ByIdentifier = TestEssFileNumber
+                UserId = TestUserId,
+                FileId = TestEssFileNumber
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
             queryResult.Items.ShouldNotBeEmpty();

@@ -27,8 +27,11 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var textContextIdentifier = DateTime.Now.ToShortTimeString();
             var profile = new RegistrantProfile
             {
-                //InformationCollectionConsent = true,
-                RestrictedAccess = true,
+                UserId = null,
+                Id = null,
+                AuthenticatedUser = false,
+                VerifiedUser = false,
+                RestrictedAccess = false,
                 SecretPhrase = "secret phrase",
 
                 FirstName = $"PriRegTestFirst-{textContextIdentifier}",
@@ -112,7 +115,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSubmitNewEvacuation()
         {
-            var registrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
+            var registrant = (await manager.Handle(new RegistrantsQuery { ByUserId = "ChrisTest3" })).Items.Single();
             var textContextIdentifier = DateTime.Now.ToShortTimeString();
             var needsAssessment = new NeedsAssessment
             {
@@ -163,14 +166,17 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var fileId = await manager.Handle(cmd);
             fileId.ShouldNotBeNull();
+
+            var file = (await manager.Handle(new EvacuationFilesQuery { ByFileId = fileId })).Items.ShouldHaveSingleItem();
+            file.PrimaryRegistrantId.ShouldBe(registrant.Id);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateEvacuation()
         {
             var now = DateTime.UtcNow;
-            var registrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
-            var file = (await manager.Handle(new EvacuationFilesQuery { ByRegistrantId = registrant.Id })).Items.Last();
+            var registrant = (await manager.Handle(new RegistrantsQuery { ByUserId = "ChrisTest3" })).Items.Single();
+            var file = (await manager.Handle(new EvacuationFilesQuery { ByUserId = registrant.UserId })).Items.Last();
 
             file.Id.ShouldNotBeNullOrEmpty();
             file.EvacuationDate.ShouldNotBe(now);
@@ -185,7 +191,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateNewRegistrantProfile()
         {
-            var baseRegistrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
+            var baseRegistrant = (await manager.Handle(new RegistrantsQuery { ByUserId = "ChrisTest3" })).Items.Single();
 
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             var country = "CAN";
@@ -203,7 +209,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
 
-            var newRegistrant = (await manager.Handle(new RegistrantsQuery { ById = newProfileBceId })).Items.ShouldHaveSingleItem();
+            var newRegistrant = (await manager.Handle(new RegistrantsQuery { ByUserId = newProfileBceId })).Items.ShouldHaveSingleItem();
 
             newRegistrant.Id.ShouldBe(id);
             newRegistrant.Id.ShouldNotBe(baseRegistrant.Id);
@@ -219,7 +225,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteRegistrantProfile()
         {
-            var baseRegistrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
+            var baseRegistrant = (await manager.Handle(new RegistrantsQuery { ByUserId = "ChrisTest3" })).Items.Single();
 
             baseRegistrant.Id = null;
             baseRegistrant.UserId = Guid.NewGuid().ToString("N").Substring(0, 10);
@@ -229,13 +235,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             await manager.Handle(new DeleteRegistrantCommand { UserId = newRegistrantId });
 
-            (await manager.Handle(new RegistrantsQuery { ById = newRegistrantId })).Items.ShouldBeEmpty();
+            (await manager.Handle(new RegistrantsQuery { ByUserId = newRegistrantId })).Items.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateProfile()
         {
-            var registrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
+            var registrant = (await manager.Handle(new RegistrantsQuery { ByUserId = "ChrisTest3" })).Items.Single();
             var currentCity = registrant.PrimaryAddress.Community;
             var newCity = currentCity == "406adfaf-9f97-ea11-b813-005056830319"
                 ? "226adfaf-9f97-ea11-b813-005056830319"
@@ -246,7 +252,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
-            var updatedRegistrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.ShouldHaveSingleItem();
+            var updatedRegistrant = (await manager.Handle(new RegistrantsQuery { ByUserId = "ChrisTest3" })).Items.ShouldHaveSingleItem();
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
             updatedRegistrant.Email.ShouldBe(registrant.Email);
@@ -256,7 +262,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetRegistrantProfile()
         {
-            var registrant = (await manager.Handle(new RegistrantsQuery { ById = "test" })).Items.Single();
+            var registrant = (await manager.Handle(new RegistrantsQuery { ByUserId = "test" })).Items.Single();
 
             registrant.ShouldNotBeNull();
 

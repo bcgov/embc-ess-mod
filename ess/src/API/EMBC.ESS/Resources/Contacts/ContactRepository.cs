@@ -137,14 +137,5 @@ namespace EMBC.ESS.Resources.Contacts
                 essContext.AddLink(jurisdiction, sourceProperty, target);
             }
         }
-
-        private void SetJurisdictionLink(string jurisdictionCode, string sourceProperty, object target)
-        {
-            var jurisdiction = essContext.LookupJurisdictionByCode(jurisdictionCode);
-            if (jurisdiction != null)
-            {
-                essContext.SetLink(jurisdiction, sourceProperty, target);
-            }
-        }
     }
 }
