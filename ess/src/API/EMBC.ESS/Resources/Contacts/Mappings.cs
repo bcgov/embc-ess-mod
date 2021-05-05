@@ -25,7 +25,7 @@ namespace EMBC.ESS.Resources.Contacts
         public Mappings()
         {
             CreateMap<Contact, contact>(MemberList.None)
-                .ForMember(d => d.externaluseridentifier, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.era_bcservicescardid, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_registranttype, opts => opts.MapFrom(s => 174360000))
                 .ForMember(d => d.era_collectionandauthorization, opts => opts.MapFrom(s => true))
                 .ForMember(d => d.era_restriction, opts => opts.MapFrom(s => s.RestrictedAccess))

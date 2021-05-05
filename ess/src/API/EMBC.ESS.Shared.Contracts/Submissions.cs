@@ -66,7 +66,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// </summary>
     public class RegistrantsQuery : Query<RegistrantsQueryResult>
     {
-        public string ByUserName { get; set; }
+        public string ById { get; set; }
     }
 
     /// <summary>

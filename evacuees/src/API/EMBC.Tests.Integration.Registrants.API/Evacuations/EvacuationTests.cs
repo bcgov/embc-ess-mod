@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using EMBC.Registrants.API;
 using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.EvacuationsModule;
-using EMBC.Registrants.API.ProfilesModule;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -416,21 +415,6 @@ namespace EMBC.Tests.Integration.Registrants.API.Evacuations
 
             updatedEvacuationFile = await evacuationManager.GetEvacuation(TestUserId, TestEssFileNumber);
             updatedEvacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1);
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task CanCreateEvacuation()
-        {
-            var evacuationFile = await evacuationManager.GetEvacuation(TestUserId, TestEssFileNumber);
-            evacuationFile.NeedsAssessments.First().HouseholdMembers.ShouldNotBeEmpty();
-            var newEssFileNumber = await evacuationManager.SaveEvacuation(TestUserId, null, evacuationFile);
-
-            var createdEvacuationFile = await evacuationManager.GetEvacuation(TestUserId, newEssFileNumber);
-            evacuationFile.NeedsAssessments.First().HouseholdMembers.ShouldNotBeEmpty();
-
-            createdEvacuationFile.ShouldNotBeNull();
-
-            await evacuationManager.DeleteEvacuation(TestUserId, newEssFileNumber);
         }
 
         [Fact(Skip = RequiresDynamics)]

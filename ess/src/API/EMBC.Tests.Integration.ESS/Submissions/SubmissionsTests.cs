@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS;
 using EMBC.ESS.Managers.Submissions;
@@ -21,7 +22,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task Anonymous_Registration()
+        public async Task CanSubmitAnonymousRegistration()
         {
             var textContextIdentifier = DateTime.Now.ToShortTimeString();
             var profile = new RegistrantProfile
@@ -106,6 +107,159 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var fileId = await manager.Handle(cmd);
             fileId.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSubmitNewEvacuation()
+        {
+            var registrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
+            var textContextIdentifier = DateTime.Now.ToShortTimeString();
+            var needsAssessment = new NeedsAssessment
+            {
+                HouseholdMembers = new[]
+                {
+                    new HouseholdMember
+                    {
+                        Id = null,
+
+                            FirstName = $"MemRegTestFirst-{textContextIdentifier}",
+                            LastName = $"MemRegTestLast-{textContextIdentifier}",
+                            Gender = "X",
+                            DateOfBirth = "2010-01-01"
+                    }
+                },
+                HaveMedication = false,
+                Insurance = InsuranceOption.Yes,
+                HaveSpecialDiet = true,
+                SpecialDietDetails = "Gluten Free",
+                HasPetsFood = true,
+                CanEvacueeProvideClothing = false,
+                CanEvacueeProvideFood = true,
+                CanEvacueeProvideIncidentals = null,
+                CanEvacueeProvideLodging = false,
+                CanEvacueeProvideTransportation = true,
+                Pets = new[]
+                {
+                    new Pet{ Type = $"dog{textContextIdentifier}", Quantity = "4" }
+                }
+            };
+            var cmd = new SubmitEvacuationFileCommand
+            {
+                File = new EvacuationFile
+                {
+                    EvacuatedFromAddress = new Address
+                    {
+                        AddressLine1 = $"addr1-{textContextIdentifier}",
+                        Country = "CAN",
+                        Community = "226adfaf-9f97-ea11-b813-005056830319",
+                        StateProvince = "BC",
+                        PostalCode = "v1v 1v1"
+                    },
+                    EvacuationDate = DateTime.Now,
+                    NeedsAssessments = new[] { needsAssessment },
+                    PrimaryRegistrantId = registrant.Id
+                },
+            };
+
+            var fileId = await manager.Handle(cmd);
+            fileId.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanUpdateEvacuation()
+        {
+            var now = DateTime.UtcNow;
+            var registrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
+            var file = (await manager.Handle(new EvacuationFilesQuery { ByRegistrantId = registrant.Id })).Items.Last();
+
+            file.Id.ShouldNotBeNullOrEmpty();
+            file.EvacuationDate.ShouldNotBe(now);
+            file.EvacuationDate = now;
+            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+
+            fileId.ShouldNotBeNullOrEmpty();
+            var updatedFile = (await manager.Handle(new EvacuationFilesQuery { ByFileId = fileId })).Items.ShouldHaveSingleItem();
+            updatedFile.EvacuationDate.ShouldBe(now);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanCreateNewRegistrantProfile()
+        {
+            var baseRegistrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
+
+            var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
+            var country = "CAN";
+            var province = "BC";
+            var city = "226adfaf-9f97-ea11-b813-005056830319";
+
+            baseRegistrant.Id = newProfileBceId;
+            baseRegistrant.PrimaryAddress.Country = country;
+            baseRegistrant.PrimaryAddress.StateProvince = province;
+            baseRegistrant.PrimaryAddress.Community = city;
+            baseRegistrant.MailingAddress.Country = country;
+            baseRegistrant.MailingAddress.StateProvince = province;
+            baseRegistrant.MailingAddress.Community = city;
+
+            var id = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
+
+            var newRegistrant = (await manager.Handle(new RegistrantsQuery { ById = id })).Items.ShouldHaveSingleItem();
+
+            newRegistrant.ShouldNotBeNull().Id.ShouldBe(id);
+            newRegistrant.Id.ShouldBe(baseRegistrant.Id);
+            newRegistrant.PrimaryAddress.Country.ShouldBe(country);
+            newRegistrant.PrimaryAddress.StateProvince.ShouldBe(province);
+            newRegistrant.PrimaryAddress.Community.ShouldBe(city);
+
+            newRegistrant.MailingAddress.Country.ShouldBe(country);
+            newRegistrant.MailingAddress.StateProvince.ShouldBe(province);
+            newRegistrant.MailingAddress.Community.ShouldBe(city);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanDeleteRegistrantProfile()
+        {
+            var baseRegistrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
+
+            baseRegistrant.Id = Guid.NewGuid().ToString("N").Substring(0, 10);
+
+            var newRegistrantId = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
+            newRegistrantId.ShouldNotBeNull();
+
+            await manager.Handle(new DeleteRegistrantCommand { RegistrantId = newRegistrantId });
+
+            (await manager.Handle(new RegistrantsQuery { ById = newRegistrantId })).Items.ShouldBeEmpty();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanUpdateProfile()
+        {
+            var registrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
+            var currentCity = registrant.PrimaryAddress.Community;
+            var newCity = currentCity == "406adfaf-9f97-ea11-b813-005056830319"
+                ? "226adfaf-9f97-ea11-b813-005056830319"
+                : "406adfaf-9f97-ea11-b813-005056830319";
+
+            registrant.PrimaryAddress.Community = newCity;
+
+            var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
+
+            var updatedRegistrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.ShouldHaveSingleItem();
+            updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCity);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetRegistrantProfile()
+        {
+            var registrant = (await manager.Handle(new RegistrantsQuery { ById = "test" })).Items.Single();
+
+            registrant.ShouldNotBeNull();
+
+            registrant.PrimaryAddress.Country.ShouldNotBeNull().ShouldNotBeNull();
+            registrant.PrimaryAddress.Country.ShouldNotBeNull();
+            registrant.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldNotBeNull();
+            registrant.PrimaryAddress.StateProvince.ShouldNotBeNull();
+            registrant.PrimaryAddress.Community.ShouldNotBeNull().ShouldNotBeNull();
+            registrant.PrimaryAddress.Community.ShouldNotBeNull();
         }
     }
 }

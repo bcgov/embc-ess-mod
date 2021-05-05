@@ -76,7 +76,7 @@ namespace EMBC.ESS.Managers.Submissions
         public async Task<string> Handle(SubmitEvacuationFileCommand cmd)
         {
             var file = mapper.Map<Resources.Cases.EvacuationFile>(cmd.File);
-            var contact = (await contactRepository.QueryContact(new ContactQuery { ContactId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
+            var contact = (await contactRepository.QueryContact(new ContactQuery { ByUserId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
 
             if (contact == null) throw new Exception($"Registrant not found '{file.PrimaryRegistrantId}'");
 
@@ -107,7 +107,7 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<RegistrantsQueryResult> Handle(RegistrantsQuery query)
         {
-            var items = (await contactRepository.QueryContact(new ContactQuery { UserName = query.ByUserName })).Items;
+            var items = (await contactRepository.QueryContact(new ContactQuery { ByUserId = query.ById })).Items;
 
             return new RegistrantsQueryResult { Items = mapper.Map<IEnumerable<RegistrantProfile>>(items) };
         }
@@ -135,7 +135,7 @@ namespace EMBC.ESS.Managers.Submissions
                 }
             }
 
-            return result.ContactId;
+            return contact.Id;
         }
 
         public async Task Handle(DeleteRegistrantCommand cmd)

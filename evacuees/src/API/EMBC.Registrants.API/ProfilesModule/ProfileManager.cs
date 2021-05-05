@@ -29,7 +29,7 @@ namespace EMBC.Registrants.API.ProfilesModule
 
         //Task<IEnumerable<ProfileDataConflict>> GetProfileConflicts(string userId);
 
-        Task DeleteProfile(string userId);
+        //Task DeleteProfile(string userId);
 
         //Task<Profile> GetLoginProfile(string userId);
     }
@@ -51,10 +51,10 @@ namespace EMBC.Registrants.API.ProfilesModule
             this.emailSender = emailSender;
         }
 
-        public async Task DeleteProfile(string userId)
-        {
-            await profileRepository.Delete(userId);
-        }
+        //public async Task DeleteProfile(string userId)
+        //{
+        //    await profileRepository.Delete(userId);
+        //}
 
         //public async Task<IEnumerable<ProfileDataConflict>> GetProfileConflicts(string userId)
         //{
