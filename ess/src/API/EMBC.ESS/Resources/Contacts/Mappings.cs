@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Edm;
@@ -25,8 +26,9 @@ namespace EMBC.ESS.Resources.Contacts
         public Mappings()
         {
             CreateMap<Contact, contact>(MemberList.None)
-                .ForMember(d => d.era_bcservicescardid, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.contactid, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Id) ? (Guid?)null : Guid.Parse(s.Id)))
                 .ForMember(d => d.era_registranttype, opts => opts.MapFrom(s => 174360000))
+                .ForMember(d => d.era_bcservicescardid, opts => opts.MapFrom(s => s.UserId))
                 .ForMember(d => d.era_collectionandauthorization, opts => opts.MapFrom(s => true))
                 .ForMember(d => d.era_restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.era_authenticated, opts => opts.MapFrom(s => s.Authenticated))
@@ -65,7 +67,8 @@ namespace EMBC.ESS.Resources.Contacts
                 ;
 
             CreateMap<contact, Contact>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_bcservicescardid))
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.contactid.ToString()))
+                .ForMember(d => d.UserId, opts => opts.MapFrom(s => s.era_bcservicescardid))
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.era_verified))
                 .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.era_authenticated))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_restriction ?? false))

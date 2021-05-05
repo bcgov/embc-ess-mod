@@ -192,7 +192,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var province = "BC";
             var city = "226adfaf-9f97-ea11-b813-005056830319";
 
-            baseRegistrant.Id = newProfileBceId;
+            baseRegistrant.Id = null;
+            baseRegistrant.UserId = newProfileBceId;
             baseRegistrant.PrimaryAddress.Country = country;
             baseRegistrant.PrimaryAddress.StateProvince = province;
             baseRegistrant.PrimaryAddress.Community = city;
@@ -202,10 +203,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
 
-            var newRegistrant = (await manager.Handle(new RegistrantsQuery { ById = id })).Items.ShouldHaveSingleItem();
+            var newRegistrant = (await manager.Handle(new RegistrantsQuery { ById = newProfileBceId })).Items.ShouldHaveSingleItem();
 
-            newRegistrant.ShouldNotBeNull().Id.ShouldBe(id);
-            newRegistrant.Id.ShouldBe(baseRegistrant.Id);
+            newRegistrant.Id.ShouldBe(id);
+            newRegistrant.Id.ShouldNotBe(baseRegistrant.Id);
             newRegistrant.PrimaryAddress.Country.ShouldBe(country);
             newRegistrant.PrimaryAddress.StateProvince.ShouldBe(province);
             newRegistrant.PrimaryAddress.Community.ShouldBe(city);
@@ -220,12 +221,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var baseRegistrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.Single();
 
-            baseRegistrant.Id = Guid.NewGuid().ToString("N").Substring(0, 10);
+            baseRegistrant.Id = null;
+            baseRegistrant.UserId = Guid.NewGuid().ToString("N").Substring(0, 10);
 
             var newRegistrantId = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
             newRegistrantId.ShouldNotBeNull();
 
-            await manager.Handle(new DeleteRegistrantCommand { RegistrantId = newRegistrantId });
+            await manager.Handle(new DeleteRegistrantCommand { UserId = newRegistrantId });
 
             (await manager.Handle(new RegistrantsQuery { ById = newRegistrantId })).Items.ShouldBeEmpty();
         }
@@ -239,11 +241,15 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 ? "226adfaf-9f97-ea11-b813-005056830319"
                 : "406adfaf-9f97-ea11-b813-005056830319";
 
+            registrant.Email = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
             registrant.PrimaryAddress.Community = newCity;
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
             var updatedRegistrant = (await manager.Handle(new RegistrantsQuery { ById = "ChrisTest3" })).Items.ShouldHaveSingleItem();
+            updatedRegistrant.Id.ShouldBe(id);
+            updatedRegistrant.Id.ShouldBe(registrant.Id);
+            updatedRegistrant.Email.ShouldBe(registrant.Email);
             updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCity);
         }
 

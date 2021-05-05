@@ -97,7 +97,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// </summary>
     public class DeleteRegistrantCommand : Command
     {
-        public string RegistrantId { get; set; }
+        public string UserId { get; set; }
     }
 
     public class EvacuationFile
@@ -140,6 +140,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class RegistrantProfile
     {
         public string Id { get; set; }
+        public string UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }

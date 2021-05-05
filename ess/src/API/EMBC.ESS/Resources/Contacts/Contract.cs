@@ -71,6 +71,7 @@ namespace EMBC.ESS.Resources.Contacts
         public Address MailingAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public string SecretPhrase { get; set; }
+        public object UserId { get; set; }
     }
 
     public class Address
