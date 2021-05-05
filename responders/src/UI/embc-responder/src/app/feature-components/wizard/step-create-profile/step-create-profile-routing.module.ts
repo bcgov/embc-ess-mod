@@ -1,0 +1,44 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { StepCreateProfileComponent } from './step-create-profile.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: StepCreateProfileComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'collection-notice',
+        pathMatch: 'full'
+      },
+      {
+        path: 'collection-notice',
+        loadChildren: () =>
+          import(
+            '../profile-components/collection-notice/collection-notice.module'
+          ).then((m) => m.CollectionNoticeModule)
+      },
+      {
+        path: 'restriction',
+        loadChildren: () =>
+          import('../profile-components/restriction/restriction.module').then(
+            (m) => m.RestrictionModule
+          )
+      },
+      {
+        path: 'review',
+        loadChildren: () =>
+          import(
+            '../profile-components/profile-review/profile-review.module'
+          ).then((m) => m.ProfileReviewModule)
+      }
+    ]
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class StepCreateProfileRoutingModule {}

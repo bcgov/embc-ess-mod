@@ -18,13 +18,20 @@ const routes: Routes = [
       ).then((m) => m.ElectronicAgreementModule)
   },
   {
+    path: 'ess-wizard',
+    loadChildren: () =>
+      import('./feature-components/wizard/wizard.module').then(
+        (m) => m.WizardModule
+      )
+  },
+  {
     path: 'access-denied',
     component: AccessDeniedComponent
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

@@ -32,6 +32,34 @@ const routes: Routes = [
           import('../evacuee-search/evacuee-search.module').then(
             (m) => m.EvacueeSearchModule
           )
+      },
+      {
+        path: 'security-phrase',
+        loadChildren: () =>
+          import(
+            '../essfile-security-phrase/essfile-security-phrase.module'
+          ).then((m) => m.EssfileSecurityPhraseModule)
+      },
+      {
+        path: 'essfile',
+        loadChildren: () =>
+          import('../selected-essfile/selected-essfile.module').then(
+            (m) => m.SelectedEssfileModule
+          )
+      },
+      {
+        path: 'security-questions',
+        loadChildren: () =>
+          import(
+            '../profile-security-questions/profile-security-questions.module'
+          ).then((m) => m.ProfileSecurityQuestionsModule)
+      },
+      {
+        path: 'evacuee-profile',
+        loadChildren: () =>
+          import('../selected-profile/selected-profile.module').then(
+            (m) => m.SelectedProfileModule
+          )
       }
     ]
   }
