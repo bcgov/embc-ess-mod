@@ -81,7 +81,7 @@ namespace EMBC.Registrants.API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var evacuationList = (await messagingClient.Send(new EvacuationFilesQuery
             {
-                ByRegistrantId = userId,
+                ByUserId = userId,
                 ByStatuses = new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Active, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Pending }
             })).Items;
 
@@ -100,7 +100,7 @@ namespace EMBC.Registrants.API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var evacuationList = (await messagingClient.Send(new EvacuationFilesQuery
             {
-                ByRegistrantId = userId,
+                ByUserId = userId,
                 ByStatuses = new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Expired, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Completed }
             })).Items;
 
