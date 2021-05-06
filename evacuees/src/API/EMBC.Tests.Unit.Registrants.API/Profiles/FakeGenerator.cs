@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using Bogus;
+using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.SecurityModule;
-using Microsoft.Dynamics.CRM;
 
 namespace EMBC.Tests.Unit.Registrants.API.Profiles
 {
@@ -21,47 +21,42 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         //    (Code:"j8", Name:"JUR8"),
         //};
 
-        public static contact CreateDynamicsContact()
+        public static RegistrantProfile CreateServerRegistrantProfile()
         {
-            return new Faker<contact>()
-                .RuleFor(o => o.contactid, f => Guid.NewGuid())
-                .RuleFor(o => o.era_bcservicescardid, f => f.Random.String(10))
-                .RuleFor(o => o.era_secrettext, f => f.Internet.Password())
-                .RuleFor(o => o.era_restriction, f => f.Random.Bool())
+            return new Faker<RegistrantProfile>()
+                .RuleFor(o => o.Id, f => Guid.NewGuid().ToString())
+                .RuleFor(o => o.UserId, f => f.Random.String(10))
+                .RuleFor(o => o.SecretPhrase, f => f.Internet.Password())
+                .RuleFor(o => o.RestrictedAccess, f => f.Random.Bool())
 
-                .RuleFor(o => o.birthdate, f => f.Date.Past(20))
-                .RuleFor(o => o.firstname, f => f.Name.FirstName())
-                .RuleFor(o => o.lastname, f => f.Name.LastName())
-                .RuleFor(o => o.gendercode, f => f.Random.Number(1, 4))
-                .RuleFor(o => o.era_initial, f => f.Name.Prefix())
-                .RuleFor(o => o.era_preferredname, f => f.Name.Suffix())
+                .RuleFor(o => o.DateOfBirth, f => f.Date.Past(20).ToString("MM-dd-yyyy"))
+                .RuleFor(o => o.FirstName, f => f.Name.FirstName())
+                .RuleFor(o => o.LastName, f => f.Name.LastName())
+                .RuleFor(o => o.Gender, f => f.PickRandom("Male", "Female", "X"))
+                .RuleFor(o => o.Initials, f => f.Name.Prefix())
+                .RuleFor(o => o.PreferredName, f => f.Name.Suffix())
 
-                .RuleFor(o => o.telephone1, f => f.Phone.PhoneNumber())
-                .RuleFor(o => o.era_phonenumberrefusal, f => f.Random.Bool())
-                .RuleFor(o => o.emailaddress1, f => f.Internet.Email())
-                .RuleFor(o => o.era_emailrefusal, f => f.Random.Bool())
+                .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
+                .RuleFor(o => o.Email, f => f.Internet.Email())
 
-                .RuleFor(o => o.address1_line1, f => f.Address.StreetAddress())
-                .RuleFor(o => o.address1_city, f => f.Address.City())
-                .RuleFor(o => o.address1_country, f => f.Address.CountryCode())
-                .RuleFor(o => o.address1_stateorprovince, f => f.Address.State())
-                .RuleFor(o => o.era_City, f => null)
-                .RuleFor(o => o.era_ProvinceState, f => null)
-                .RuleFor(o => o.era_Country, f => null)
+                .RuleFor(o => o.PrimaryAddress, f => FakeAddress())
+                .RuleFor(o => o.MailingAddress, f => FakeAddress())
 
-                .RuleFor(o => o.address2_line1, f => f.Address.StreetAddress())
-                .RuleFor(o => o.address2_city, f => f.Address.City())
-                .RuleFor(o => o.address2_country, f => f.Address.CountryCode())
-                .RuleFor(o => o.address2_stateorprovince, f => f.Address.State())
-                .RuleFor(o => o.era_MailingCity, f => null)
-                .RuleFor(o => o.era_MailingProvinceState, f => null)
-                .RuleFor(o => o.era_MailingCountry, f => null)
-
-                .RuleFor(o => o.era_issamemailingaddress, f => f.Random.Bool())
                 .Generate();
         }
 
-        public static Profile CreateRegistrantProfile()
+        private static ESS.Shared.Contracts.Submissions.Address FakeAddress()
+        {
+            return new Faker<ESS.Shared.Contracts.Submissions.Address>()
+                .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
+                .RuleFor(o => o.Community, f => f.Address.City())
+                .RuleFor(o => o.Country, f => f.Address.CountryCode())
+                .RuleFor(o => o.StateProvince, f => f.Address.State())
+                .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
+                .Generate();
+        }
+
+        public static Profile CreateClientRegistrantProfile()
         {
             return new Faker<Profile>()
                 .RuleFor(o => o.Id, f => f.Random.String(10))
@@ -82,25 +77,22 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                     .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
                     .RuleFor(o => o.HidePhoneRequired, f => f.Random.Bool())
                     .Generate())
-                .RuleFor(o => o.PrimaryAddress, f => new Faker<Address>()
-                    .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
-                    .RuleFor(o => o.AddressLine2, f => f.Address.SecondaryAddress())
-                    .RuleFor(o => o.Community, f => f.Address.CityPrefix())
-                    .RuleFor(o => o.StateProvince, f => f.Address.StateAbbr())
-                    .RuleFor(o => o.Country, f => f.Address.CountryCode())
-                    .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
-                    .Generate())
-                .RuleFor(o => o.MailingAddress, f => new Faker<Address>()
-                    .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
-                    .RuleFor(o => o.AddressLine2, f => f.Address.SecondaryAddress())
-                    .RuleFor(o => o.Community, f => f.Address.CityPrefix())
-                    .RuleFor(o => o.StateProvince, f => f.Address.StateAbbr())
-                    .RuleFor(o => o.Country, f => f.Address.CountryCode())
-                    .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
-                    .Generate())
 
+                .RuleFor(o => o.PrimaryAddress, f => FakeClientEnteredAddress())
+                .RuleFor(o => o.MailingAddress, f => FakeClientEnteredAddress())
                 .RuleFor(o => o.IsMailingAddressSameAsPrimaryAddress, f => f.Random.Bool())
 
+                .Generate();
+        }
+
+        private static EMBC.Registrants.API.Controllers.Address FakeClientEnteredAddress()
+        {
+            return new Faker<EMBC.Registrants.API.Controllers.Address>()
+                .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
+                .RuleFor(o => o.Community, f => f.Address.City())
+                .RuleFor(o => o.Country, f => f.Address.CountryCode())
+                .RuleFor(o => o.StateProvince, f => f.Address.State())
+                .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
                 .Generate();
         }
 
@@ -116,7 +108,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                       .RuleFor(u => u.FirstName, f => f.Name.FirstName())
                       .RuleFor(u => u.LastName, f => f.Name.LastName())
                       .RuleFor(u => u.DateOfBirth, f => f.Date.Past(20).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture))
-                ).RuleFor(u => u.PrimaryAddress, f => new Faker<Address>()
+                ).RuleFor(u => u.PrimaryAddress, f => new Faker<EMBC.Registrants.API.Controllers.Address>()
                       .RuleFor(u => u.AddressLine1, f => f.Address.StreetAddress())
                       .RuleFor(u => u.PostalCode, f => f.Address.ZipCode())
                       .RuleFor(u => u.StateProvince, f => stateProvince)
@@ -124,5 +116,23 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 )
                 .Generate();
         }
+
+        //public static string GenderResolver(int? genderCode) =>
+        //    genderCode switch
+        //    {
+        //        0 => "Male",
+        //        1 => "Female",
+        //        2 => "X",
+        //        _ => null
+        //    };
+
+        //public static int? GenderResolver(string gender) =>
+        //    gender switch
+        //    {
+        //        "Male" => 0,
+        //        "Female" => 1,
+        //        "X" => 2,
+        //        _ => null
+        //    };
     }
 }

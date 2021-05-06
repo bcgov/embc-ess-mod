@@ -34,12 +34,16 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.era_authenticated, opts => opts.MapFrom(s => s.Authenticated))
                 .ForMember(d => d.era_verified, opts => opts.MapFrom(s => s.Verified))
 
+                .ForMember(d => d.address1_line1, opts => opts.MapFrom(s => s.PrimaryAddress.AddressLine1))
+                .ForMember(d => d.address1_line2, opts => opts.MapFrom(s => s.PrimaryAddress.AddressLine2))
                 .ForMember(d => d.address1_country, opts => opts.MapFrom(s => s.PrimaryAddress.Country))
                 .ForMember(d => d.address1_stateorprovince, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince))
                 .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.Community))
                 .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince == "BC"))
 
-                .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
+                  .ForMember(d => d.address2_line1, opts => opts.MapFrom(s => s.MailingAddress.AddressLine1))
+                .ForMember(d => d.address2_line2, opts => opts.MapFrom(s => s.MailingAddress.AddressLine2))
+              .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
                 .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => s.MailingAddress.StateProvince))
                 .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.Community))
                 .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince == "BC"))

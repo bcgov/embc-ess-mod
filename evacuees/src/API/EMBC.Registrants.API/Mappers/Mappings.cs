@@ -26,12 +26,17 @@ namespace EMBC.Registrants.API.Mappers
             CreateMap<AnonymousRegistration, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => EvacuationFileStatus.Pending))
-                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => DateTime.Now.ToString("yyyy/MM/dd")))
+                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => DateTime.Now))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => new[] { s.PreliminaryNeedsAssessment }))
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => (string)null))
                 ;
 
             CreateMap<Profile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
+                .ForMember(d => d.Id, opts => opts.Ignore())
+                .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
+                .ForMember(d => d.VerifiedUser, opts => opts.Ignore())
+                .ForMember(d => d.UserId, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.PersonalDetails.DateOfBirth))
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.PersonalDetails.DateOfBirth))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.PersonalDetails.LastName))
@@ -40,9 +45,12 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.PersonalDetails.PreferredName))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
+
+                .ReverseMap()
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
+                .ReverseMap()
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()

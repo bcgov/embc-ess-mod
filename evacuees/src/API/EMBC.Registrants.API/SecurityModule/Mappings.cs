@@ -31,12 +31,12 @@ namespace EMBC.Registrants.API.SecurityModule
                 {
                     FirstName = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.GivenName)?.GetString(),
                     LastName = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.FamilyName)?.GetString(),
-                    Gender = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Gender)?.GetString(),
+                    //Gender = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Gender)?.GetString(),
                     DateOfBirth = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.BirthDate)?.GetString(),
                 },
                 ContactDetails = new ContactDetails
                 {
-                    Email = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Email)?.GetString(),
+                    //Email = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Email)?.GetString(),
                 },
                 PrimaryAddress = new Address
                 {

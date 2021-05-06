@@ -11,8 +11,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         [Fact]
         public void CanDetectConflicts()
         {
-            var source = FakeGenerator.CreateRegistrantProfile();
-            var target = FakeGenerator.CreateRegistrantProfile();
+            var source = FakeGenerator.CreateClientRegistrantProfile();
+            var target = FakeGenerator.CreateClientRegistrantProfile();
 
             var conflicts = ProfilesConflictDetector.DetectConflicts(source, target).ToArray();
 

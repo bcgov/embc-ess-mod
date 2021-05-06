@@ -208,10 +208,10 @@ namespace EMBC.Registrants.API.Controllers
         public override string DataElementName => "Name";
 
         [Required]
-        public new(string firstName, string lastName) ConflictingValue { get; set; }
+        public new (string firstName, string lastName) ConflictingValue { get; set; }
 
         [Required]
-        public new(string firstName, string lastName) OriginalValue { get; set; }
+        public new (string firstName, string lastName) OriginalValue { get; set; }
     }
 
     /// <summary>
