@@ -17,6 +17,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
+using EMBC.Suppliers.API.ConfigurationModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.Models;
 using EMBC.Suppliers.API.SubmissionModule.ViewModels;
 using Jasper;
@@ -36,11 +37,13 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
     {
         private readonly ICommandBus commandBus;
         private readonly IHostEnvironment env;
+        private readonly ConfigHealthProvider healthcheck;
 
-        public SubmissionController(ICommandBus commandBus, IHostEnvironment env)
+        public SubmissionController(ICommandBus commandBus, IHostEnvironment env, ConfigHealthProvider healthcheck)
         {
             this.commandBus = commandBus;
             this.env = env;
+            this.healthcheck = healthcheck;
         }
 
         /// <summary>
@@ -53,6 +56,17 @@ namespace EMBC.Suppliers.API.SubmissionModule.Controllers
         {
             try
             {
+                // If site is in maintenance mode, return special message
+                var maintResult = healthcheck.GetMaintenanceState();
+
+                if (maintResult.SiteDown)
+                {
+                    Response.StatusCode = 503;
+
+                    return new JsonResult(new { title = "The site is undergoing scheduled maintenance. Please try submitting later." });
+                }
+
+                // Submit supplier form
                 var referenceNumber = await commandBus.Invoke<string>(new PersistSupplierSubmissionCommand(submission));
 
                 return new JsonResult(new { submissionId = referenceNumber, referenceNumber });

@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StepCreateEssFileComponent } from './step-create-ess-file.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('StepCreateEssFileComponent', () => {
   let component: StepCreateEssFileComponent;
@@ -8,6 +10,7 @@ describe('StepCreateEssFileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [RouterTestingModule, MatDialogModule],
       declarations: [StepCreateEssFileComponent]
     }).compileComponents();
   });
