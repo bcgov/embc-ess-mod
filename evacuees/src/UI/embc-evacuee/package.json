@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 5200 --configuration=local --proxy-config proxy.conf.json",
-    "startlocal": "npm run gen-api-local && npm start",
+    "start": "ng serve --port 5200 --proxy-config proxy.conf.json",
+    "startlocal": "npm run gen-api-local && npm start --  --configuration=local",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

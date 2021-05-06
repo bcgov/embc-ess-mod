@@ -63,8 +63,13 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<Profile>> GetProfile()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserId = userId })).Items.SingleOrDefault();
-            if (profile == null) return NotFound();
+            var profile = mapper.Map<Profile>((await messagingClient.Send(new RegistrantsQuery { ByUserId = userId })).Items.SingleOrDefault());
+            if (profile == null)
+            {
+                //try get BCSC profile
+                profile = mapper.Map<Profile>(await userManager.Get(userId));
+            }
+            if (profile == null) return NotFound(userId);
             return Ok(profile);
         }
 
@@ -134,7 +139,7 @@ namespace EMBC.Registrants.API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserId = userId })).Items.SingleOrDefault();
-            if (profile == null) return NotFound();
+            if (profile == null) return NotFound(userId);
 
             //TODO: map to user profile from BCSC
             var userProfile = await userManager.Get(userId);

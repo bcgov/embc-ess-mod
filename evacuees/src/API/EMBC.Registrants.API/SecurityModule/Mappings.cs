@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Text.Json;
 using EMBC.Registrants.API.Controllers;
 
@@ -32,7 +33,7 @@ namespace EMBC.Registrants.API.SecurityModule
                     FirstName = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.GivenName)?.GetString(),
                     LastName = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.FamilyName)?.GetString(),
                     //Gender = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Gender)?.GetString(),
-                    DateOfBirth = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.BirthDate)?.GetString(),
+                    DateOfBirth = FormatDateOfBirth(userData.RootElement.AttemptToGetProperty(BcscTokenKeys.BirthDate)?.GetString()),
                 },
                 ContactDetails = new ContactDetails
                 {
@@ -47,6 +48,13 @@ namespace EMBC.Registrants.API.SecurityModule
                     Community = userData.RootElement.AttemptToGetProperty(BcscTokenKeys.Address)?.AttemptToGetProperty(BcscTokenKeys.AddressLocality)?.GetString()
                 }
             };
+        }
+
+        private static string FormatDateOfBirth(string bcscFormattedBirthDate)
+        {
+            if (string.IsNullOrEmpty(bcscFormattedBirthDate)) return null;
+            if (!DateTime.TryParse("yyyy-MM-dd", out var date)) return null;
+            return date.ToString("MM/dd/yyyy");
         }
     }
 
