@@ -17,10 +17,12 @@
       *ngFor="let tabItem of tabs"
       [routerLink]="tabItem.route"
       routerLinkActive="active-step-tab"
+      [ngClass]="{
+        'tab-highlight': tabItem.name === 'review',
+        'tab-margin': tabItem.name !== 'review'
+      }"
     >
-      <span (click)="isAllowed(tabItem.route, $event)">{{
-        tabItem.label
-      }}</span>
+      <span (click)="isAllowed(tabItem.name, $event)">{{ tabItem.label }}</span>
       <img
         class="tab-status"
         *ngIf="tabItem.status === 'complete'"

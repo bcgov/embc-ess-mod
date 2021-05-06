@@ -12,6 +12,10 @@ export const defaultRole = {
 };
 export const wizardProfileMessage =
   'Please complete all sections of the Evacuee Profile prior to submitting.';
+export const wizardESSFileMessage =
+  'Please complete all sections of the ESS File prior to submitting.';
+export const lockedStepMessage =
+  'Please complete the ESS File prior to proceeding to the next steps.';
 
 // Generic error messages
 export const teamMemberListError =

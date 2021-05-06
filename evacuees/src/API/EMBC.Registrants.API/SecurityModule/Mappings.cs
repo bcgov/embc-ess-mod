@@ -53,8 +53,8 @@ namespace EMBC.Registrants.API.SecurityModule
         private static string FormatDateOfBirth(string bcscFormattedBirthDate)
         {
             if (string.IsNullOrEmpty(bcscFormattedBirthDate)) return null;
-            if (!DateTime.TryParse("yyyy-MM-dd", out var date)) return null;
-            return date.ToString("MM/dd/yyyy");
+            if (!DateTime.TryParse(bcscFormattedBirthDate, out var date)) return null;
+            return date.ToString("MM'/'dd'/'yyyy");
         }
     }
 

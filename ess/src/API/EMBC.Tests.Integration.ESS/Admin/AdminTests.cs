@@ -18,12 +18,11 @@ namespace EMBC.Tests.Integration.ESS.Admin
     {
         private readonly AdminManager adminManager;
 
-        public string teamId { get; }
+        private string teamId = "98275853-2581-eb11-b825-00505683fbf4";
 
         public AdminTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             adminManager = services.GetRequiredService<AdminManager>();
-            teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
         }
 
         [Fact(Skip = RequiresDynamics)]
