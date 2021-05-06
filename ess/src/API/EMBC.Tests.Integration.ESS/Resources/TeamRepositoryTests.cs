@@ -15,6 +15,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
     public class TeamRepositoryTests : WebAppTestBase
     {
         private readonly ITeamRepository teamRepository;
+        private string teamId = "98275853-2581-eb11-b825-00505683fbf4";
 
         public TeamRepositoryTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -24,8 +25,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetTeam()
         {
-            var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
-
             var team = (await teamRepository.GetTeams(teamId)).ShouldHaveSingleItem();
             team.ShouldNotBeNull();
             team.Name.ShouldNotBeNull();
@@ -36,7 +35,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task CanSaveTeam()
         {
             var metaDataRepository = services.GetRequiredService<IMetadataRepository>();
-            var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
 
             var team = (await teamRepository.GetTeams(teamId)).ShouldHaveSingleItem();
 
@@ -51,7 +49,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetTeamMembers()
         {
-            var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
             var members = await teamRepository.GetMembers(teamId);
 
             members.ShouldNotBeEmpty();
@@ -60,7 +57,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanAddTeamMember()
         {
-            var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
             var now = DateTime.Now;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
 
@@ -104,7 +100,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateTeamMember()
         {
-            var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
             var members = await teamRepository.GetMembers(teamId);
 
             var now = DateTime.Now;
@@ -125,8 +120,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteTeamMember()
         {
-            var teamId = "3f132f42-b74f-eb11-b822-00505683fbf4";
-
             var memberId = await teamRepository.SaveMember(new TeamMember { FirstName = "to delete", LastName = "to delete", TeamId = teamId, IsActive = true });
 
             await teamRepository.DeleteMember(teamId, memberId);
