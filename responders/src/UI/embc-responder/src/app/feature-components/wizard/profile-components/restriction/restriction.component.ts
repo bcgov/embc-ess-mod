@@ -20,6 +20,6 @@ export class RestrictionComponent implements OnInit {
    */
   next(): void {
     this.stepCreateProfileService.setTabStatus('restriction', 'complete');
-    this.router.navigate(['/ess-wizard/create-evacuee-profile/review']);
+    this.router.navigate(['/ess-wizard/create-evacuee-profile/security-questions']);
   }
 }

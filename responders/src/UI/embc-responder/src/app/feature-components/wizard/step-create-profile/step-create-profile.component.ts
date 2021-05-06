@@ -2,10 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { StepCreateProfileService } from './step-create-profile.service';
-import * as globalConst from '../../../core/services/global-constants';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-step-create-profile',
@@ -19,8 +15,7 @@ export class StepCreateProfileComponent {
 
   constructor(
     private router: Router,
-    private stepCreateProfileService: StepCreateProfileService,
-    private dialog: MatDialog
+    private stepCreateProfileService: StepCreateProfileService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -42,33 +37,11 @@ export class StepCreateProfileComponent {
    * @param $event mouse click event
    * @returns true/false
    */
-  isAllowed(tabRoute: string, $event: MouseEvent): boolean {
-    if (tabRoute === 'review') {
-      const allow = this.tabs.some(
-        (tab) => tab.status === 'not-started' || tab.status === 'incomplete'
-      );
-      if (allow) {
-        $event.stopPropagation();
-        $event.preventDefault();
-        this.openModal(globalConst.wizardProfileMessage);
-      }
-      return allow;
-    }
+  isAllowed(tabRoute: string, $event: MouseEvent): void {
+    this.stepCreateProfileService.isAllowed(tabRoute, $event);
   }
 
-  /**
-   * Open information modal window
-   *
-   * @param text text to display
-   */
-  openModal(text: string): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        text
-      },
-      height: '230px',
-      width: '530px'
-    });
+  test(){
+    console.log('well')
   }
 }
