@@ -63,7 +63,7 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<Profile>> GetProfile()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserName = userId })).Items.SingleOrDefault();
+            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserId = userId })).Items.SingleOrDefault();
             if (profile == null) return NotFound();
             return Ok(profile);
         }
@@ -78,7 +78,7 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<bool>> GetDoesUserExists()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserName = userId })).Items.SingleOrDefault();
+            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserId = userId })).Items.SingleOrDefault();
             return Ok(profile != null);
         }
 
@@ -94,7 +94,7 @@ namespace EMBC.Registrants.API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!env.IsProduction())
             {
-                await messagingClient.Send(new DeleteRegistrantCommand { RegistrantId = userId });
+                await messagingClient.Send(new DeleteRegistrantCommand { UserId = userId });
             }
             return Ok(userId);
         }
@@ -133,7 +133,7 @@ namespace EMBC.Registrants.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserName = userId })).Items.SingleOrDefault();
+            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserId = userId })).Items.SingleOrDefault();
             if (profile == null) return NotFound();
 
             //TODO: map to user profile from BCSC
@@ -208,10 +208,10 @@ namespace EMBC.Registrants.API.Controllers
         public override string DataElementName => "Name";
 
         [Required]
-        public new (string firstName, string lastName) ConflictingValue { get; set; }
+        public new(string firstName, string lastName) ConflictingValue { get; set; }
 
         [Required]
-        public new (string firstName, string lastName) OriginalValue { get; set; }
+        public new(string firstName, string lastName) OriginalValue { get; set; }
     }
 
     /// <summary>
