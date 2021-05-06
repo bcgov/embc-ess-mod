@@ -11,6 +11,7 @@ import { AlertComponent } from './components/alert/alert.component';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 import { DeleteConfirmationDialogComponent } from './components/dialog-components/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import { InformationDialogComponent } from './components/dialog-components/information-dialog/information-dialog.component';
+import { ExitWizardDialogComponent } from './components/dialog-components/exit-wizard-dialog/exit-wizard-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     AlertComponent,
     AppLoaderComponent,
     DeleteConfirmationDialogComponent,
-    InformationDialogComponent
+    InformationDialogComponent,
+    ExitWizardDialogComponent
   ],
   imports: [CommonModule, RouterModule, MaterialModule, FormsModule],
   exports: [
@@ -32,7 +34,8 @@ import { InformationDialogComponent } from './components/dialog-components/infor
     AlertComponent,
     AppLoaderComponent,
     DeleteConfirmationDialogComponent,
-    InformationDialogComponent
+    InformationDialogComponent,
+    ExitWizardDialogComponent
   ]
 })
 export class SharedModule {}

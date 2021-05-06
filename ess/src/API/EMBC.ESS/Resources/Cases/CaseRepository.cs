@@ -41,6 +41,7 @@ namespace EMBC.ESS.Resources.Cases
             return cmd.GetType().Name switch
             {
                 nameof(SaveEvacuationFile) => await HandleSaveEvacuationFile((SaveEvacuationFile)cmd),
+                nameof(DeleteEvacuationFile) => await HandleDeleteEvacuationFile((DeleteEvacuationFile)cmd),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
@@ -80,6 +81,11 @@ namespace EMBC.ESS.Resources.Cases
             {
                 return new ManageCaseCommandResult { CaseId = await evacuationRepository.Update(cmd.EvacuationFile) };
             }
+        }
+
+        private async Task<ManageCaseCommandResult> HandleDeleteEvacuationFile(DeleteEvacuationFile cmd)
+        {
+            return new ManageCaseCommandResult { CaseId = await evacuationRepository.Delete(cmd.Id) };
         }
 
         private bool CheckIfUnder19Years(Date birthdate, Date currentDate)

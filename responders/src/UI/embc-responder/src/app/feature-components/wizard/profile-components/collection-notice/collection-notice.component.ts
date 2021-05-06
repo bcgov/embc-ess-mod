@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TabModel } from 'src/app/core/models/tab.model';
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
 
 @Component({

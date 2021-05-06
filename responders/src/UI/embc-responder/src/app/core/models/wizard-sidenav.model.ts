@@ -36,7 +36,7 @@ export class WizardSidenavModelValues {
         imgSrc: '/assets/images/wizard/locked-ess-file.svg',
         altSrc: '/assets/images/wizard/ess-file.svg',
         height: '29',
-        width: '29'
+        width: '28'
       }
     },
     {

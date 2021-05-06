@@ -12,6 +12,7 @@ import {
   ClaimType
 } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -29,7 +30,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
     private evacueeSearchResultsService: EvacueeSearchResultsService,
     private evacueeSearchService: EvacueeSearchService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +74,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   openWizard(): void {
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/evacuee'
+    );
     this.router.navigate(['/ess-wizard']);
   }
 }
