@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using EMBC.Registrants.API.Controllers;
 
-namespace EMBC.Registrants.API.ProfilesModule
+namespace EMBC.Registrants.API.Services
 {
     public static class ProfilesConflictDetector
     {

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using EMBC.Registrants.API.Controllers;
-using EMBC.Registrants.API.ProfilesModule;
+using EMBC.Registrants.API.Services;
 using Shouldly;
 using Xunit;
 
