@@ -18,45 +18,71 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EMBC.ESS.Utilities.Messaging
 {
     public class MessageHandlerRegistry
     {
         private Dictionary<Type, MethodInfo> registry = new Dictionary<Type, MethodInfo>();
+        private readonly ILogger<MessageHandlerRegistry> logger;
 
-        public (Type Type, MethodInfo Method) Resolve(string messageTypeQualifiedName)
+        public MessageHandlerRegistry(ILogger<MessageHandlerRegistry> logger, IOptions<MessageHandlerRegistryOptions> options)
         {
-            var type = registry.Keys.SingleOrDefault(k => k.AssemblyQualifiedName == messageTypeQualifiedName);
-            if (type == null) throw new InvalidOperationException($"message type {messageTypeQualifiedName} has no handler registered");
-            return (type, registry[type]);
-        }
-
-        private void Register(MethodInfo method)
-        {
-            var parameters = method.GetParameters();
-            if (parameters.Length != 1)
+            this.logger = logger;
+            foreach (var type in options.Value.RegisteredHandlers)
             {
-                throw new InvalidOperationException($"handler {method.DeclaringType.FullName}.{method.Name} can only have a single parameter");
-            }
-            var requestType = method.GetParameters().Single().ParameterType;
-
-            if (!registry.TryAdd(requestType, method))
-            {
-                throw new InvalidOperationException($"handler {method.DeclaringType.FullName}.{method.Name}'s parameter type {requestType.FullName} " +
-                    $"already has a registered handler: {registry[requestType].DeclaringType.FullName}.{registry[requestType].Name})");
+                Register(type);
             }
         }
 
-        public void Register<THandlerService>()
+        public MethodInfo Resolve(Type requestType)
         {
-            var type = typeof(THandlerService);
-            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            var type = registry.Keys.SingleOrDefault(k => k.Equals(requestType));
+            if (type == null) throw new ArgumentException($"Request type '{requestType.AssemblyQualifiedName}' has no registered handlers");
+            var method = registry[type];
 
+            logger.LogDebug("Resolved handler {0} for type {1}", $"{method.DeclaringType.FullName}.{method.Name}", type);
+
+            return method;
+        }
+
+        public void Register<THandlerService>() => Register(typeof(THandlerService));
+
+        public void Register(Type handlerType)
+        {
+            var methods = handlerType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (var method in methods)
             {
                 Register(method);
             }
         }
+
+        private void Register(MethodInfo method)
+        {
+            var methodName = $"{method.DeclaringType.FullName}.{method.Name}";
+            var requestType = method.GetParameters().Single().ParameterType;
+            var parameters = method.GetParameters();
+            if (parameters.Length != 1)
+            {
+                throw new InvalidOperationException($"Handler {methodName} can only have a single parameter");
+            }
+
+            if (!registry.TryAdd(requestType, method))
+            {
+                throw new InvalidOperationException($"Type '{requestType.AssemblyQualifiedName}' already has a registered handler: " +
+                    $"{registry[requestType].DeclaringType.FullName}.{registry[requestType].Name}, cannot register {methodName})");
+            }
+            logger.LogDebug("Registered {0} to handle type '{1}'", methodName, requestType.AssemblyQualifiedName);
+        }
+    }
+
+    public class MessageHandlerRegistryOptions
+    {
+        private List<Type> handlerTypes = new List<Type>();
+        public IEnumerable<Type> RegisteredHandlers => handlerTypes;
+
+        public void Add(Type handlerType) => handlerTypes.Add(handlerType);
     }
 }

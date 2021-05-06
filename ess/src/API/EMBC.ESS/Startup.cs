@@ -16,11 +16,16 @@
 
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Managers.Location;
+using EMBC.ESS.Managers.Submissions;
+using EMBC.ESS.Resources.Cases;
+using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Resources.Metadata;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Messaging;
+using EMBC.ESS.Utilities.Notifications;
+using EMBC.ESS.Utilities.Transformation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +46,9 @@ namespace EMBC.ESS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
+
+            services.Configure<MessageHandlerRegistryOptions>(opts => { });
+            services.AddSingleton<MessageHandlerRegistry>();
             services.AddGrpc(opts =>
             {
                 opts.EnableDetailedErrors = true;
@@ -48,22 +56,22 @@ namespace EMBC.ESS
 
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
 
-            services.AddSingleton(sp =>
-            {
-                var registry = new MessageHandlerRegistry();
-                registry.Register<AdminManager>();
-                registry.Register<LocationManager>();
+            services
+                .AddAdminManager()
+                .AddLocationManager()
+                .AddSubmissionManager();
 
-                return registry;
-            });
+            services
+                .AddTeamRepository()
+                .AddMetadataRepository()
+                .AddContactRepository()
+                .AddCaseRepository();
 
-            services.AddAdminManager();
-            services.AddLocationManager();
-            services.AddTeamRepository();
-            services.AddMetadataRepository();
-            services.Configure<DynamicsOptions>(configuration.GetSection("Dynamics"));
-            services.AddDynamics();
-            services.AddCache();
+            services
+                .AddDynamics(configuration)
+                .AddCache()
+                .AddTransformator()
+                .AddNotificationSenders(configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

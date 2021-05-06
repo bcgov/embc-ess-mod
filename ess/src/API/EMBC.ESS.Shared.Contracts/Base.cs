@@ -20,15 +20,11 @@ namespace EMBC.ESS.Shared.Contracts
 {
 #pragma warning disable SA1302 // Interface names should begin with I
 
-    public interface Command<TResponse>
-#pragma warning restore SA1302 // Interface names should begin with I
-        where TResponse : Response
-    {
-    }
+    public interface Command { }
 
-    public abstract class Response
-    {
-    }
+    public interface Query<TResponse> { }
+
+#pragma warning restore SA1302 // Interface names should begin with I
 
     public class NotFoundException : Exception
     {

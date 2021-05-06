@@ -1,21 +1,21 @@
 {
   "/api/*": {
-    "target": "http://localhost:2010",
+    "target": "http://localhost:5020",
     "secure": false,
     "logLevel": "debug"
   },
   "/login": {
-    "target": "http://localhost:2010",
+    "target": "http://localhost:5020",
     "secure": false,
     "logLevel": "debug"
   },
   "/token": {
-    "target": "http://localhost:2010",
+    "target": "http://localhost:5020",
     "secure": false,
     "logLevel": "debug"
   },
   "/signin-oidc": {
-    "target": "http://localhost:2010",
+    "target": "http://localhost:5020",
     "secure": false,
     "logLevel": "debug"
   }

@@ -24,8 +24,9 @@ namespace EMBC.Responders.API
 {
     public interface IMessagingClient
     {
-        Task<TResponse> Send<TResponse>(Command<TResponse> command)
-            where TResponse : Response;
+        Task<TResponse> Send<TResponse>(Query<TResponse> command);
+
+        Task<string> Send(Command command);
     }
 
     public class MessagingClient : IMessagingClient
@@ -39,8 +40,26 @@ namespace EMBC.Responders.API
             this.logger = logger;
         }
 
-        public async Task<TResponse> Send<TResponse>(Command<TResponse> command)
-            where TResponse : Response
+        public async Task<string> Send(Command command)
+        {
+            try
+            {
+                var response = await dispatcherClient.DispatchAsync<string>(command);
+                return response;
+            }
+            catch (ServerException e)
+            {
+                logger.LogError(e, "Server error when sending command {0}, correlation id {1}", command.GetType().FullName, e.CorrelationId);
+                throw;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "General error when sending command {0}", command.GetType().FullName);
+                throw;
+            }
+        }
+
+        public async Task<TResponse> Send<TResponse>(Query<TResponse> command)
         {
             try
             {
@@ -53,12 +72,12 @@ namespace EMBC.Responders.API
             }
             catch (ServerException e)
             {
-                logger.LogError(e, "Server error when sending command {0}, correlation id {1}", command.GetType().FullName, e.CorrelationId);
+                logger.LogError(e, "Server error when sending query {0}, correlation id {1}", command.GetType().FullName, e.CorrelationId);
                 throw;
             }
             catch (Exception e)
             {
-                logger.LogError(e, "General error when sending command {0}", command.GetType().FullName);
+                logger.LogError(e, "General error when sending query {0}", command.GetType().FullName);
                 throw;
             }
         }

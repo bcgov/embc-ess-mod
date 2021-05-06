@@ -18,4 +18,4 @@ jobs:
 
       - name: Build image
         working-directory: ./evacuees/src/API
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --build-arg GITHUB_NUGET_USERNAME=github --build-arg GITHUB_NUGET_PAT=${{ secrets.GITHUB_TOKEN }}

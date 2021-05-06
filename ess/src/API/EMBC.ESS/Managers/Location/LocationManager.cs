@@ -29,7 +29,7 @@ namespace EMBC.ESS.Managers.Location
         private readonly ICache cache;
         private readonly IMapper mapper;
         private readonly Resources.Metadata.IMetadataRepository metadataRepository;
-        private static readonly TimeSpan cacheEntryLifetime = TimeSpan.FromMinutes(60);
+        private static readonly TimeSpan cacheEntryLifetime = TimeSpan.FromMinutes(5);
 
         public LocationManager(ICache cache, IMapper mapper, Resources.Metadata.IMetadataRepository metadataRepository)
         {
@@ -38,14 +38,14 @@ namespace EMBC.ESS.Managers.Location
             this.metadataRepository = metadataRepository;
         }
 
-        public async Task<CountriesQueryResponse> Handle(CountriesQueryCommand _)
+        public async Task<CountriesQueryResponse> Handle(CountriesQuery _)
         {
             var countries = await cache.GetOrAdd("location:countries", () => metadataRepository.GetCountries(), DateTimeOffset.Now.Add(cacheEntryLifetime));
 
             return new CountriesQueryResponse { Items = mapper.Map<IEnumerable<Country>>(countries) };
         }
 
-        public async Task<StateProvincesQueryResponse> Handle(StateProvincesQueryCommand req)
+        public async Task<StateProvincesQueryResponse> Handle(StateProvincesQuery req)
         {
             var stateProvinces = await cache.GetOrAdd("location:state_provinces", () => metadataRepository.GetStateProvinces(), DateTimeOffset.Now.Add(cacheEntryLifetime));
 
@@ -57,7 +57,7 @@ namespace EMBC.ESS.Managers.Location
             return new StateProvincesQueryResponse { Items = mapper.Map<IEnumerable<StateProvince>>(stateProvinces) };
         }
 
-        public async Task<CommunitiesQueryResponse> Handle(CommunitiesQueryCommand req)
+        public async Task<CommunitiesQueryResponse> Handle(CommunitiesQuery req)
         {
             var communities = await cache.GetOrAdd("location:communities", () => metadataRepository.GetCommunities(), DateTimeOffset.Now.Add(cacheEntryLifetime));
 

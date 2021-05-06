@@ -34,6 +34,8 @@ namespace EMBC.ESS.Utilities.Dynamics
         {
             this.logger = logger;
             this.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
+            this.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
+
             BuildingRequest += (sender, args) =>
             {
                 args.Headers.Add("Authorization", $"Bearer {tokenFactory().GetAwaiter().GetResult()}");
@@ -70,10 +72,10 @@ namespace EMBC.ESS.Utilities.Dynamics
 
     public static class EssContextEx
     {
-        public static async Task<T> SaveChangesAsync<T>(this EssContext context, SaveChangesOptions options)
+        public static async Task<T> SaveChangesAsync<T>(this EssContext context, SaveChangesOptions? options = null)
             where T : BaseEntityType
         {
-            var response = await context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+            var response = await context.SaveChangesAsync(options ?? SaveChangesOptions.BatchWithSingleChangeset);
 
             //TODO: handle errors properly
             var change = response.First() as ChangeOperationResponse;
@@ -143,8 +145,8 @@ namespace EMBC.ESS.Utilities.Dynamics
 
         public static era_jurisdiction LookupJurisdictionByCode(this EssContext context, string code)
         {
-            if (string.IsNullOrEmpty(code)) return null;
-            return context.era_jurisdictions.Where(p => p.era_jurisdictionid == Guid.Parse(code)).FirstOrDefault();
+            if (string.IsNullOrEmpty(code) || !Guid.TryParse(code, out var parsedCode)) return null;
+            return context.era_jurisdictions.Where(p => p.era_jurisdictionid == parsedCode).FirstOrDefault();
         }
     }
 }
