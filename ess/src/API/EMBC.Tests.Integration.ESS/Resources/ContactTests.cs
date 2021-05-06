@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS;
 using EMBC.ESS.Resources.Contacts;
@@ -15,7 +16,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         private readonly IContactRepository contactRepository;
 
         // Constants
-        private const string TestUserId = "test";
+        private const string TestUserId = "CHRIS-TEST";
 
         public ContactTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -45,82 +46,160 @@ namespace EMBC.Tests.Integration.ESS.Resources
             contact.PrimaryAddress.Community.ShouldNotBeNull();
         }
 
-        /*
-                    [Fact(Skip = RequiresDynamics)]
-                    public async Task CanUpdateProfile()
-                    {
-                        var profile = await contactRepository.GetProfileByBcscid("test");
-                        var currentCity = profile.PrimaryAddress.Community;
-                        var newCity = currentCity == "406adfaf-9f97-ea11-b813-005056830319"
-                            ? "226adfaf-9f97-ea11-b813-005056830319"
-                            : "406adfaf-9f97-ea11-b813-005056830319";
+        
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanUpdateContact()
+        {
+            /* Get Contact */
+            var contactQuery = new ContactQuery
+            {
+                ByUserId = TestUserId
+            };
+            var queryResult = await contactRepository.QueryContact(contactQuery);
+            var contact = queryResult.Items.FirstOrDefault();
+            
+            var currentCity = contact.PrimaryAddress.Community;
+            var newCity = currentCity == "406adfaf-9f97-ea11-b813-005056830319"
+                ? "226adfaf-9f97-ea11-b813-005056830319"
+                : "406adfaf-9f97-ea11-b813-005056830319";
 
-                        profile.PrimaryAddress.Community = newCity;
+            contact.PrimaryAddress.Community = newCity;
 
-                        await contactRepository.SaveProfile(profile);
+            /* Update Contact */
+            SaveContact saveContactCmd = new SaveContact
+            {
+                Contact = contact
+            };
+            var saveResult = await contactRepository.ManageContact(saveContactCmd);
+            var updatedContactId = saveResult.ContactId;
 
-                        var updatedProfile = await contactRepository.GetProfileByBcscid("test");
-                        updatedProfile.PrimaryAddress.Community.ShouldBe(newCity);
-                    }
+            /* Get Updated Contact */
+            var updatedContactQuery = new ContactQuery
+            {
+                ByContactId = updatedContactId
+            };
+            var updatedQueryResult = await contactRepository.QueryContact(updatedContactQuery);
+            var updatedContact = updatedQueryResult.Items.FirstOrDefault();
 
-                    [Fact(Skip = RequiresDynamics)]
-                    public async Task CanCreateProfile()
-                    {
-                        var baseProfile = await contactRepository.GetProfileByBcscid("ChrisTest3");
-                        var newProfileId = Guid.NewGuid().ToString("N").Substring(0, 10);
-                        baseProfile.Id = newProfileId;
+            updatedContact.PrimaryAddress.Community.ShouldBe(newCity);
+        }
 
-                        var id = await contactRepository.SaveProfile(baseProfile);
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanCreateContact()
+        {
+            /* Get Contact */
+            var contactQuery = new ContactQuery
+            {
+                ByUserId = TestUserId
+            };
+            var queryResult = await contactRepository.QueryContact(contactQuery);
+            var baseContact = queryResult.Items.FirstOrDefault();
+            baseContact.Id = null;
+            baseContact.UserId = TestUserId + Guid.NewGuid().ToString("N").Substring(0, 4);
 
-                        var profile = await contactRepository.GetProfileByBcscid(newProfileId);
+            /* Create Contact */
+            SaveContact saveContactCmd = new SaveContact
+            {
+                Contact = baseContact
+            };
+            var saveResult = await contactRepository.ManageContact(saveContactCmd);
+            var newContactId = saveResult.ContactId;
 
-                        profile.ShouldNotBeNull().Id.ShouldBe(newProfileId);
-                        profile.Id.ShouldBe(baseProfile.Id);
-                    }
+            /* Get New Contact */
+            var newContactQuery = new ContactQuery
+            {
+                ByContactId = newContactId
+            };
+            var newQueryResult = await contactRepository.QueryContact(newContactQuery);
+            var newContact = newQueryResult.Items.FirstOrDefault();
 
-                    [Fact(Skip = RequiresDynamics)]
-                    public async Task CanCreateProfileWithAddressLookupValues()
-                    {
-                        var baseProfile = await contactRepository.GetProfileByBcscid("ChrisTest3");
-                        var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
-                        var country = "CAN";
-                        var province = "BC";
-                        var city = "226adfaf-9f97-ea11-b813-005056830319";
+            newContact.ShouldNotBeNull().Id.ShouldBe(newContactId);
 
-                        baseProfile.Id = newProfileBceId;
-                        baseProfile.PrimaryAddress.Country = country;
-                        baseProfile.PrimaryAddress.StateProvince = province;
-                        baseProfile.PrimaryAddress.Community = city;
-                        baseProfile.MailingAddress.Country = country;
-                        baseProfile.MailingAddress.StateProvince = province;
-                        baseProfile.MailingAddress.Community = city;
+            /* Delete New Contact */
+            DeleteContact deleteCmd = new DeleteContact
+            {
+                ContactId = newContactId
+            };
+            var deleteResult = await contactRepository.ManageContact(deleteCmd);
+            var deletedContactId = deleteResult.ContactId;
 
-                        var id = await contactRepository.SaveProfile(baseProfile);
+            /* Get Deleted Contact */
+            var deletedCaseQuery = new ContactQuery
+            {
+                ByContactId = deletedContactId
+            };
+            var deletedQueryResult = await contactRepository.QueryContact(deletedCaseQuery);
+            var deletedContact = (Contact)deletedQueryResult.Items.LastOrDefault();
+            deletedContact.ShouldBeNull();          
+        }
+        
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanCreateContactWithAddressLookupValues()
+        {
+            var country = "CAN";
+            var province = "BC";
+            var city = "226adfaf-9f97-ea11-b813-005056830319";
 
-                        var profile = await contactRepository.GetProfileByBcscid(newProfileBceId);
+            /* Get Contact */
+            var contactQuery = new ContactQuery
+            {
+                ByUserId = TestUserId
+            };
+            var queryResult = await contactRepository.QueryContact(contactQuery);
+            var baseContact = queryResult.Items.FirstOrDefault();
+            baseContact.ShouldNotBeNull();
 
-                        profile.PrimaryAddress.Country.ShouldBe(country);
-                        profile.PrimaryAddress.StateProvince.ShouldBe(province);
-                        profile.PrimaryAddress.Community.ShouldBe(city);
+            baseContact.Id = null;
+            baseContact.UserId = TestUserId + Guid.NewGuid().ToString("N").Substring(0, 4);
+            baseContact.PrimaryAddress.Country = country;
+            baseContact.PrimaryAddress.StateProvince = province;
+            baseContact.PrimaryAddress.Community = city;
+            baseContact.MailingAddress.Country = country;
+            baseContact.MailingAddress.StateProvince = province;
+            baseContact.MailingAddress.Community = city;
 
-                        profile.MailingAddress.Country.ShouldBe(country);
-                        profile.MailingAddress.StateProvince.ShouldBe(province);
-                        profile.MailingAddress.Community.ShouldBe(city);
-                    }
+            /* Create Contact */
+            SaveContact saveContactCmd = new SaveContact
+            {
+                Contact = baseContact
+            };
+            var saveResult = await contactRepository.ManageContact(saveContactCmd);
+            var newContactId = saveResult.ContactId;
 
-                    [Fact(Skip = RequiresDynamics)]
-                    public async Task CanDeleteProfile()
-                    {
-                        var baseProfile = await contactRepository.GetProfileByBcscid("ChrisTest3");
-                        var newProfileId = Guid.NewGuid().ToString("N").Substring(0, 10);
-                        baseProfile.Id = newProfileId;
+            /* Get New Contact */
+            var newContactQuery = new ContactQuery
+            {
+                ByContactId = newContactId
+            };
+            var newQueryResult = await contactRepository.QueryContact(newContactQuery);
+            var newContact = newQueryResult.Items.FirstOrDefault();
 
-                        await contactRepository.SaveProfile(baseProfile);
+            newContact.ShouldNotBeNull().Id.ShouldBe(newContactId);
 
-                        await contactRepository.DeleteProfile(newProfileId);
+            newContact.PrimaryAddress.Country.ShouldBe(country);
+            newContact.PrimaryAddress.StateProvince.ShouldBe(province);
+            newContact.PrimaryAddress.Community.ShouldBe(city);
 
-                        (await contactRepository.GetProfileByBcscid(newProfileId)).ShouldBeNull();
-                    }
-        */
+            newContact.MailingAddress.Country.ShouldBe(country);
+            newContact.MailingAddress.StateProvince.ShouldBe(province);
+            newContact.MailingAddress.Community.ShouldBe(city);
+
+            /* Delete New Contact */
+            DeleteContact deleteCmd = new DeleteContact
+            {
+                ContactId = newContactId
+            };
+            var deleteResult = await contactRepository.ManageContact(deleteCmd);
+            var deletedContactId = deleteResult.ContactId;
+
+            /* Get deleted contact */
+            var deletedCaseQuery = new ContactQuery
+            {
+                ByContactId = deletedContactId
+            };
+            var deletedQueryResult = await contactRepository.QueryContact(deletedCaseQuery);
+            var deletedContact = (Contact)deletedQueryResult.Items.LastOrDefault();
+            deletedContact.ShouldBeNull();
+        }            
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS;
@@ -20,7 +21,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         // Constants
         private const string TestUserId = "CHRIS-TEST";
 
-        private const string TestEssFileNumber = "100615";
+        private const string TestEssFileNumber = "100487";
 
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -34,16 +35,16 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             baseTestEvacuation = new EvacuationFile()
             {
-                Id = "100615",
+                Id = "100487",
                 //EvacuationDate = "2021-03-11",
                 EvacuatedFromAddress = new EvacuationAddress()
                 {
-                    AddressLine1 = "9837 Douglas St",
-                    AddressLine2 = "Apt 249",
-                    Community = "406adfaf-9f97-ea11-b813-005056830319",
+                    AddressLine1 = "3738 Main St",
+                    AddressLine2 = "Suite 3",
+                    Community = "9e6adfaf-9f97-ea11-b813-005056830319",
                     StateProvince = "BC",
                     Country = "CAN",
-                    PostalCode = "V8T 2W1"
+                    PostalCode = "V8V 2W3"
                 },
                 NeedsAssessments = new[]
                 {
@@ -74,8 +75,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                             },
                             new HouseholdMember
                             {
-                                FirstName = "EVAC",
-                                LastName = "SIX",
+                                FirstName = "Johnny",
+                                LastName = "SEVEN",
                                 PreferredName = "",
                                 Initials = "",
                                 Gender = "Male",
@@ -93,7 +94,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             updatedTestEvacuation = new EvacuationFile()
             {
-                Id = "100615",
+                Id = "100487",
                 //EvacuationDate = "2021-03-11",
                 EvacuatedFromAddress = new EvacuationAddress()
                 {
@@ -161,72 +162,72 @@ namespace EMBC.Tests.Integration.ESS.Resources
             };
         }
 
-        [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetEvacuations()
-        {
-            var caseQuery = new QueryEvacuationFiles
-            {
-                UserId = TestUserId
-            };
-            var queryResult = await caseRepository.QueryCase(caseQuery);
+        //[Fact(Skip = RequiresDynamics)]
+        //public async Task CanGetEvacuations()
+        //{
+        //    var caseQuery = new QueryEvacuationFiles
+        //    {
+        //        UserId = TestUserId
+        //    };
+        //    var queryResult = await caseRepository.QueryCase(caseQuery);
 
-            queryResult.Items.ShouldNotBeEmpty();
+        //    queryResult.Items.ShouldNotBeEmpty();
 
-            var evacuationFile = (EvacuationFile)queryResult.Items.First();
-            evacuationFile.ShouldNotBeNull();
+        //    var evacuationFile = (EvacuationFile)queryResult.Items.Where(f => f.Id == this.baseTestEvacuation.Id).FirstOrDefault();
+        //    evacuationFile.ShouldNotBeNull();
 
-            // Evacuation
-            evacuationFile.Id.ShouldNotBeNull().ShouldBe(this.baseTestEvacuation.Id);
-            // evacuationFile.EvacuationDate.ShouldStartWith(this.baseTestEvacuation.EvacuationDate);
-            evacuationFile.EvacuatedFromAddress.ShouldNotBeNull();
-            evacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1);
-            evacuationFile.EvacuatedFromAddress.AddressLine2.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine2);
-            evacuationFile.EvacuatedFromAddress.StateProvince.ShouldNotBeNull().ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.StateProvince);
-            evacuationFile.EvacuatedFromAddress.Country.ShouldNotBeNull().ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.Country);
+        //    // Evacuation
+        //    evacuationFile.Id.ShouldNotBeNull().ShouldBe(this.baseTestEvacuation.Id);
+        //    // evacuationFile.EvacuationDate.ShouldStartWith(this.baseTestEvacuation.EvacuationDate);
+        //    evacuationFile.EvacuatedFromAddress.ShouldNotBeNull();
+        //    evacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1);
+        //    evacuationFile.EvacuatedFromAddress.AddressLine2.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine2);
+        //    evacuationFile.EvacuatedFromAddress.StateProvince.ShouldNotBeNull().ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.StateProvince);
+        //    evacuationFile.EvacuatedFromAddress.Country.ShouldNotBeNull().ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.Country);
 
-            // Needs Assessment
-            var needsAssessment = evacuationFile.NeedsAssessments.ShouldHaveSingleItem();
-            needsAssessment.Insurance.ShouldBe(InsuranceOption.Yes);
-            needsAssessment.CanEvacueeProvideClothing.ShouldBe(true);
-            needsAssessment.CanEvacueeProvideFood.ShouldBe(true);
-            needsAssessment.CanEvacueeProvideIncidentals.ShouldBe(true);
-            needsAssessment.CanEvacueeProvideLodging.ShouldBe(true);
-            needsAssessment.CanEvacueeProvideTransportation.ShouldBe(true);
-            needsAssessment.HaveMedication.ShouldBe(false);
-            needsAssessment.HasPetsFood.ShouldBe(true);
-            needsAssessment.HaveSpecialDiet.ShouldBe(true);
-            needsAssessment.SpecialDietDetails.ShouldBe(this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().SpecialDietDetails);
-            needsAssessment.HouseholdMembers.ShouldNotBeEmpty();
+        //    // Needs Assessment
+        //    var needsAssessment = evacuationFile.NeedsAssessments.ShouldHaveSingleItem();
+        //    needsAssessment.Insurance.ShouldBe(InsuranceOption.Yes);
+        //    needsAssessment.CanEvacueeProvideClothing.ShouldBe(true);
+        //    needsAssessment.CanEvacueeProvideFood.ShouldBe(true);
+        //    needsAssessment.CanEvacueeProvideIncidentals.ShouldBe(true);
+        //    needsAssessment.CanEvacueeProvideLodging.ShouldBe(true);
+        //    needsAssessment.CanEvacueeProvideTransportation.ShouldBe(true);
+        //    needsAssessment.HaveMedication.ShouldBe(false);
+        //    needsAssessment.HasPetsFood.ShouldBe(true);
+        //    needsAssessment.HaveSpecialDiet.ShouldBe(true);
+        //    needsAssessment.SpecialDietDetails.ShouldBe(this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().SpecialDietDetails);
+        //    needsAssessment.HouseholdMembers.ShouldNotBeEmpty();
 
-            //Household Members
-            var members = needsAssessment.HouseholdMembers.ToArray();
-            members.ShouldNotBeEmpty();
+        //    //Household Members
+        //    var members = needsAssessment.HouseholdMembers.ToArray();
+        //    members.ShouldNotBeEmpty();
 
-            var testDetails = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HouseholdMembers.ElementAt(0);
-            var member = (HouseholdMember)members.GetValue(0);
-            member.ShouldNotBeNull();
-            member.FirstName.ShouldBe(testDetails.FirstName);
-            member.LastName.ShouldBe(testDetails.LastName);
-            member.PreferredName.ShouldBe(testDetails.PreferredName);
-            member.Initials.ShouldBe(testDetails.Initials);
-            member.Gender.ShouldBe(testDetails.Gender);
-            member.DateOfBirth.ShouldStartWith(testDetails.DateOfBirth);
+        //    var testDetails = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HouseholdMembers.ElementAt(0);
+        //    var member = (HouseholdMember)members.GetValue(0);
+        //    member.ShouldNotBeNull();
+        //    member.FirstName.ShouldBe(testDetails.FirstName);
+        //    member.LastName.ShouldBe(testDetails.LastName);
+        //    member.PreferredName.ShouldBe(testDetails.PreferredName);
+        //    member.Initials.ShouldBe(testDetails.Initials);
+        //    member.Gender.ShouldBe(testDetails.Gender);
+        //    member.DateOfBirth.ShouldStartWith(testDetails.DateOfBirth);
 
-            testDetails = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HouseholdMembers.ElementAt(1);
-            member = (HouseholdMember)members.GetValue(1);
-            member.ShouldNotBeNull();
-            member.FirstName.ShouldBe(testDetails.FirstName);
-            member.LastName.ShouldBe(testDetails.LastName);
-            member.PreferredName.ShouldBeNullOrEmpty();
-            member.Initials.ShouldBeNullOrEmpty();
-            member.Gender.ShouldBe(testDetails.Gender);
-            member.DateOfBirth.ShouldStartWith(testDetails.DateOfBirth);
+        //    testDetails = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HouseholdMembers.ElementAt(1);
+        //    member = (HouseholdMember)members.GetValue(1);
+        //    member.ShouldNotBeNull();
+        //    member.FirstName.ShouldBe(testDetails.FirstName);
+        //    member.LastName.ShouldBe(testDetails.LastName);
+        //    member.PreferredName.ShouldBeNullOrEmpty();
+        //    member.Initials.ShouldBeNullOrEmpty();
+        //    member.Gender.ShouldBe(testDetails.Gender);
+        //    member.DateOfBirth.ShouldStartWith(testDetails.DateOfBirth);
 
-            // Pets
-            var pet = needsAssessment.Pets.ShouldHaveSingleItem();
-            pet.Quantity.ShouldBe(this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().Pets.FirstOrDefault().Quantity);
-            pet.Type.ShouldBe(this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().Pets.FirstOrDefault().Type);
-        }
+        //    // Pets
+        //    var pet = needsAssessment.Pets.ShouldHaveSingleItem();
+        //    pet.Quantity.ShouldBe(this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().Pets.FirstOrDefault().Quantity);
+        //    pet.Type.ShouldBe(this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().Pets.FirstOrDefault().Type);
+        //}
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetEvacuation()
@@ -238,25 +239,29 @@ namespace EMBC.Tests.Integration.ESS.Resources
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
             queryResult.Items.ShouldNotBeEmpty();
+            queryResult.Items.FirstOrDefault().ShouldNotBeNull();
 
-            var evacuationFile = (EvacuationFile)queryResult.Items.First();
+            var evacuationFile = (EvacuationFile)queryResult.Items.Where(f => f.Id == TestEssFileNumber).FirstOrDefault();
             evacuationFile.ShouldNotBeNull();
         }
 
         //[Fact(Skip = RequiresDynamics)]
         //public async Task CanUpdateEvacuation()
         //{
-        //    var caseQuery = new QueryEvacuationFile
+        //    var caseQuery = new QueryEvacuationFiles
         //    {
-        //        ById = TestUserId,
-        //        ByIdentifier = TestEssFileNumber
+        //        UserId = TestUserId,
+        //        FileId = TestEssFileNumber
         //    };
         //    var queryResult = await caseRepository.QueryCase(caseQuery);
-        //    var evacuationFile = (EvacuationFile)queryResult.Items.First();
+        //    var evacuationFile = (EvacuationFile)queryResult.Items.LastOrDefault();
 
         //    /* Step One - Set New Values */
         //    // Evacuation
         //    evacuationFile.EvacuatedFromAddress.AddressLine1 = this.updatedTestEvacuation.EvacuatedFromAddress.AddressLine1;
+        //    evacuationFile.EvacuatedFromAddress.AddressLine2 = this.updatedTestEvacuation.EvacuatedFromAddress.AddressLine2;
+        //    evacuationFile.EvacuatedFromAddress.StateProvince = this.updatedTestEvacuation.EvacuatedFromAddress.StateProvince;
+        //    evacuationFile.EvacuatedFromAddress.Country = this.updatedTestEvacuation.EvacuatedFromAddress.Country;
 
         //    // Needs Assessment
         //    var needsAssessment = evacuationFile.NeedsAssessments.ShouldHaveSingleItem();
@@ -308,6 +313,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         //    /* TODO: Update Pet */
         //    /* TODO: Add New Pet */
 
+        //    /* Update evacuation */
         //    SaveEvacuationFile saveEvacuationCmd = new SaveEvacuationFile
         //    {
         //        EvacuationFile = evacuationFile
@@ -317,8 +323,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
         //    var essFileNumber = saveResult.CaseId;
         //    essFileNumber.ShouldBe(TestEssFileNumber);
 
+        //    /* Get updated evacuation */
         //    queryResult = await caseRepository.QueryCase(caseQuery);
-        //    var updatedEvacuationFile = (EvacuationFile)queryResult.Items.First();
+        //    var updatedEvacuationFile = (EvacuationFile)queryResult.Items.LastOrDefault();
 
         //    /* Step Two - Check Updated Values */
         //    // Evacuation
@@ -390,6 +397,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         //    /* Step Three - Reset Previous Values */
         //    evacuationFile.EvacuatedFromAddress.AddressLine1 = this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1;
+        //    evacuationFile.EvacuatedFromAddress.AddressLine2 = this.baseTestEvacuation.EvacuatedFromAddress.AddressLine2;
+        //    evacuationFile.EvacuatedFromAddress.StateProvince = this.baseTestEvacuation.EvacuatedFromAddress.StateProvince;
+        //    evacuationFile.EvacuatedFromAddress.Country = this.baseTestEvacuation.EvacuatedFromAddress.Country;
+
         //    // Needs Assessment
         //    needsAssessment = evacuationFile.NeedsAssessments.ShouldHaveSingleItem();
         //    needsAssessment.Insurance = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().Insurance;
@@ -433,88 +444,125 @@ namespace EMBC.Tests.Integration.ESS.Resources
         //    essFileNumber.ShouldBe(TestEssFileNumber);
 
         //    queryResult = await caseRepository.QueryCase(caseQuery);
-        //    updatedEvacuationFile = (EvacuationFile)queryResult.Items.First();
+        //    updatedEvacuationFile = (EvacuationFile)queryResult.Items.LastOrDefault();
         //    updatedEvacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1);
         //}
-        /*
-                [Fact(Skip = RequiresDynamics)]
-                public async Task CanCreateEvacuation()
-                {
-                    var caseQuery = new QueryEvacuationFile
-                    {
-                        ById = TestUserId,
-                        ByIdentifier = TestEssFileNumber
-                    };
-                    var queryResult = await caseRepository.QueryCase(caseQuery);
-                    var evacuationFile = (EvacuationFile)queryResult.Items.First();
+        
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanCreateEvacuation()
+        {
+            /* Get existing evacuation */
+            var caseQuery = new QueryEvacuationFiles
+            {
+                UserId = TestUserId,
+                FileId = TestEssFileNumber
+            };
+            var queryResult = await caseRepository.QueryCase(caseQuery);
+            var evacuationFile = (EvacuationFile)queryResult.Items.LastOrDefault();
 
-                    SaveEvacuationFile saveEvacuationCmd = new SaveEvacuationFile
-                    {
-                        EvacuationFile = evacuationFile
-                    };
-                    var saveResult = await caseRepository.ManageCase(saveEvacuationCmd);
+            /* remove the ID to create a new evacuation. */
+            evacuationFile.Id = null;
 
-                    var essFileNumber = saveResult.CaseId;
+            /* Create new evacuation */
+            SaveEvacuationFile saveEvacuationCmd = new SaveEvacuationFile
+            {
+                EvacuationFile = evacuationFile
+            };
+            var saveResult = await caseRepository.ManageCase(saveEvacuationCmd);
+            var newEssFileNumber = saveResult.CaseId;
 
-                    evacuationFile.NeedsAssessments.First().HouseholdMembers.ShouldNotBeEmpty();
-                    var newEssFileNumber = await caseRepository.SaveEvacuation(TestUserId, null, evacuationFile);
+            /* Get created evacuation. */
+            var createdCaseQuery = new QueryEvacuationFiles
+            {
+                UserId = TestUserId,
+                FileId = newEssFileNumber
+            };
+            var createdQueryResult = await caseRepository.QueryCase(createdCaseQuery);
+            var createdEvacuationFile = (EvacuationFile)createdQueryResult.Items.LastOrDefault();
 
-                    var createdEvacuationFile = await caseRepository.GetEvacuation(TestUserId, newEssFileNumber);
-                    evacuationFile.NeedsAssessments.First().HouseholdMembers.ShouldNotBeEmpty();
+            createdEvacuationFile.ShouldNotBeNull();
 
-                    createdEvacuationFile.ShouldNotBeNull();
+            /* Delete new evacuation */
+            DeleteEvacuationFile deleteEvacuationCmd = new DeleteEvacuationFile
+            {
+                Id = newEssFileNumber
+            };
+            var deleteResult = await caseRepository.ManageCase(deleteEvacuationCmd);
+            var deletedEssFileNumber = deleteResult.CaseId;
 
-                    await caseRepository.DeleteEvacuation(TestUserId, newEssFileNumber);
-                }
+            /* Get deleted evacuation */
+            var deletedCaseQuery = new QueryEvacuationFiles
+            {
+                UserId = TestUserId,
+                FileId = deletedEssFileNumber
+            };
+            var deletedQueryResult = await caseRepository.QueryCase(deletedCaseQuery);
+            var deletedEvacuationFile = (EvacuationFile)deletedQueryResult.Items.LastOrDefault();
+            deletedEvacuationFile.ShouldBeNull();
+        }
 
-                [Fact(Skip = RequiresDynamics)]
-                public async Task ResetTestEvacuation()
-                {
-                    var evacuationFile = await caseRepository.GetEvacuation(TestUserId, TestEssFileNumber);
+        [Fact(Skip = RequiresDynamics)]
+        public async Task ResetTestEvacuation()
+        {
+            /* Get existing evacuation */
+            var caseQuery = new QueryEvacuationFiles
+            {
+                UserId = TestUserId,
+                FileId = TestEssFileNumber
+            };
+            var queryResult = await caseRepository.QueryCase(caseQuery);
+            var evacuationFile = (EvacuationFile)queryResult.Items.LastOrDefault();
 
-                    // Reset to Default Values
-                    evacuationFile.EvacuatedFromAddress.AddressLine1 = this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1;
+            // Reset to Default Values
+            evacuationFile.EvacuatedFromAddress.AddressLine1 = this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1;
 
-                    // Needs Assessment
-                    var needsAssessment = evacuationFile.NeedsAssessments.ShouldHaveSingleItem();
-                    needsAssessment.Insurance = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().Insurance;
-                    needsAssessment.CanEvacueeProvideClothing = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().CanEvacueeProvideClothing;
-                    needsAssessment.CanEvacueeProvideFood = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().CanEvacueeProvideFood;
-                    needsAssessment.CanEvacueeProvideIncidentals = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().CanEvacueeProvideIncidentals;
-                    needsAssessment.CanEvacueeProvideLodging = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().CanEvacueeProvideLodging;
-                    needsAssessment.CanEvacueeProvideTransportation = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().CanEvacueeProvideTransportation;
-                    needsAssessment.HaveMedication = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HaveMedication;
-                    needsAssessment.HasPetsFood = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HasPetsFood;
-                    needsAssessment.HaveSpecialDiet = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HaveSpecialDiet;
-                    needsAssessment.SpecialDietDetails = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().SpecialDietDetails;
+            // Needs Assessment
+            var needsAssessment = evacuationFile.NeedsAssessments.ShouldHaveSingleItem();
+            needsAssessment.Insurance = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().Insurance;
+            needsAssessment.CanEvacueeProvideClothing = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().CanEvacueeProvideClothing;
+            needsAssessment.CanEvacueeProvideFood = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().CanEvacueeProvideFood;
+            needsAssessment.CanEvacueeProvideIncidentals = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().CanEvacueeProvideIncidentals;
+            needsAssessment.CanEvacueeProvideLodging = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().CanEvacueeProvideLodging;
+            needsAssessment.CanEvacueeProvideTransportation = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().CanEvacueeProvideTransportation;
+            needsAssessment.HaveMedication = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HaveMedication;
+            needsAssessment.HasPetsFood = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HasPetsFood;
+            needsAssessment.HaveSpecialDiet = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HaveSpecialDiet;
+            needsAssessment.SpecialDietDetails = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().SpecialDietDetails;
 
-                    // Household Members
-                    // Reset Member
-                    var members = needsAssessment.HouseholdMembers.ToList();
-                    members.ShouldNotBeEmpty();
+            // Household Members
+            // Reset Member
+            var members = needsAssessment.HouseholdMembers.ToList();
+            members.ShouldNotBeEmpty();
 
-                    var testDetails = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HouseholdMembers.ElementAt(0).Details;
-                    var memberOne = (HouseholdMember)members.ElementAt(0);
-                    memberOne.FirstName = testDetails.FirstName;
-                    memberOne.LastName = testDetails.LastName;
-                    memberOne.PreferredName = testDetails.PreferredName;
-                    memberOne.Initials = testDetails.Initials;
-                    memberOne.Gender = testDetails.Gender;
-                    memberOne.DateOfBirth = testDetails.DateOfBirth;
+            var testDetails = this.baseTestEvacuation.NeedsAssessments.FirstOrDefault().HouseholdMembers.ElementAt(0);
+            var memberOne = (HouseholdMember)members.ElementAt(0);
+            memberOne.FirstName = testDetails.FirstName;
+            memberOne.LastName = testDetails.LastName;
+            memberOne.PreferredName = testDetails.PreferredName;
+            memberOne.Initials = testDetails.Initials;
+            memberOne.Gender = testDetails.Gender;
+            memberOne.DateOfBirth = testDetails.DateOfBirth;
 
-                    // Remove Member
-                    if (members.Count > 2)
-                    {
-                        needsAssessment.HouseholdMembers = members.Take(2);
-                    }
-
-                    var essFileNumber = await caseRepository.SaveEvacuation(TestUserId, evacuationFile.EssFileNumber, evacuationFile);
-                    essFileNumber.ShouldBe(TestEssFileNumber);
-
-                    var updatedEvacuationFile = await caseRepository.GetEvacuation(TestUserId, TestEssFileNumber);
-                    updatedEvacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1);
-                }
+            // Remove Member
+            if (members.Count > 2)
+            {
+                needsAssessment.HouseholdMembers = members.Take(2);
             }
-        */
+
+            /* Update evacuation */
+            SaveEvacuationFile saveEvacuationCmd = new SaveEvacuationFile
+            {
+                EvacuationFile = evacuationFile
+            };
+            var saveResult = await caseRepository.ManageCase(saveEvacuationCmd);
+
+            var essFileNumber = saveResult.CaseId;
+            essFileNumber.ShouldBe(TestEssFileNumber);
+
+            /* Get updated evacuation */
+            var updatedQueryResult = await caseRepository.QueryCase(caseQuery);
+            var updatedEvacuationFile = (EvacuationFile)queryResult.Items.LastOrDefault();
+            updatedEvacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1);
+        }    
     }
 }

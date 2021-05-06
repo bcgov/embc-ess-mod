@@ -29,7 +29,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         Task<string> Update(EvacuationFile evacuationFile);
 
-        Task Delete(string essFileNumber);
+        Task<string> Delete(string essFileNumber);
     }
 
     public enum EvacueeType

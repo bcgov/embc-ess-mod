@@ -128,7 +128,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return essFileNumber;
         }
 
-        public async Task Delete(string essFileNumber)
+        public async Task<string> Delete(string essFileNumber)
         {
             //TODO: change to single
             var evacuationFile = essContext.era_evacuationfiles
@@ -141,8 +141,9 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 essContext.DeleteObject(evacuationFile);
                 await essContext.SaveChangesAsync();
             }
-
             essContext.DetachAll();
+
+            return essFileNumber;
         }
 
         private async Task<EvacuationFile> GetEvacuationFileById(Guid id)
