@@ -1,0 +1,38 @@
+.step-id {
+    color: rgb(187, 187, 187);
+}
+
+.wizard-border {
+    padding-top: 20px;
+}
+
+.content-container {
+    padding-bottom: 24px;
+}
+
+.active-step-tab {
+    background-color: white !important;
+    min-width: 200px !important;
+    text-decoration: none !important;
+    color: #169BD5 !important;
+    border-left: 1px solid rgba(0,0,0,.12);
+    border-top: 1px solid rgba(0,0,0,.12);
+    border-right: 1px solid rgba(0,0,0,.12);
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+.tab-status {
+    margin-left: 7px;
+}
+
+.tab-highlight {
+    background-color:#fcba19 !important;
+    color: black !important;
+}
+
+.tab-margin {
+    margin-right: 7px;
+}
