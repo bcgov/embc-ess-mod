@@ -50,7 +50,7 @@ export class StepCreateEssFileComponent {
       if (allow) {
         $event.stopPropagation();
         $event.preventDefault();
-        this.openModal(globalConst.wizardProfileMessage);
+        this.openModal(globalConst.wizardESSFileMessage);
       }
       return allow;
     }
