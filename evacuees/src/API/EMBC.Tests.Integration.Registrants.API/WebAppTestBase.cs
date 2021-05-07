@@ -29,7 +29,6 @@ namespace EMBC.Tests.Integration.Registrants.API
 
         public WebAppTestBase(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory)
         {
-            Environment.SetEnvironmentVariable("location__cache__AutoRefreshEnabled", "false");
             loggerFactory = new LoggerFactory(new[] { new XUnitLoggerProvider(output) });
 
             this.webApplicationFactory = webApplicationFactory.WithWebHostBuilder(builder =>
