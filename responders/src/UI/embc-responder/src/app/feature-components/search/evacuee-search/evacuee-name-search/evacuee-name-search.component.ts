@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   EvacueeDetailsModel,
   EvacueeSearchContextModel
@@ -18,7 +19,7 @@ import { EvacueeSearchService } from '../evacuee-search.service';
   styleUrls: ['./evacuee-name-search.component.scss']
 })
 export class EvacueeNameSearchComponent implements OnInit {
-  @Output() showResultsComponent = new EventEmitter<boolean>();
+  // @Output() showResultsComponent = new EventEmitter<boolean>();
 
   panel1OpenState = false;
   panel2OpenState = false;
@@ -40,7 +41,8 @@ export class EvacueeNameSearchComponent implements OnInit {
   constructor(
     private customValidation: CustomValidationService,
     private builder: FormBuilder,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSearchService: EvacueeSearchService,
+    private router: Router
   ) {}
 
   /**
@@ -88,6 +90,7 @@ export class EvacueeNameSearchComponent implements OnInit {
     };
 
     this.evacueeSearchService.setEvacueeSearchParameters(searchParams);
-    this.showResultsComponent.emit(true);
+    // this.showResultsComponent.emit(true);
+    this.router.navigate(['responder-access/search/evacuee-results']);
   }
 }

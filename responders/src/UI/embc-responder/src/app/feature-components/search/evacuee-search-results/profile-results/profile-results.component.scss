@@ -4,24 +4,15 @@
     padding-bottom: 7px;
 }
 
-.file-active {
+.result-heading {
+    font-size: 35px;
     color: #1595CD;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-.file-pending {
-    color: #F28200;
-}
-
-.file-complete {
-    color: #3C9D0F;
-}
-
-.file-expired {
-    color: #696969;
-}
-
-.result-subHeading {
-    font-size: 21px;
+.result-heading:hover {
+    text-decoration: underline;
 }
 
 .outer-card {
@@ -47,26 +38,12 @@
     padding-top: 10px;
 }
 
-.status-align {
-    padding-left: 11px;
-}
-
 .p-custom {
     margin-bottom: 0px !important;
 }
 
 .metaData-align {
     text-align: right;
-}
-
-.member-type {
-    color: #696969;
-}
-
-.member-match {
-    margin-bottom: 0px !important;
-    font-weight: bold;
-    margin-left: 7px;
 }
 
 .custom-paginator {
@@ -77,15 +54,18 @@
     font-size: 16px;
 }
 
-.members-margin {
-    margin-left: 7px;
+.file-active {
+    color: #1595CD;
 }
 
-.highlight {
-    font-size: 35px;
-    text-decoration: none;
+.file-pending {
+    color: #F28200;
 }
 
-.highlight:hover {
-    text-decoration: underline;
+.file-complete {
+    color: #3C9D0F;
+}
+
+.file-expired {
+    color: #696969;
 }

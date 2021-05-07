@@ -4,14 +4,24 @@
     padding-bottom: 7px;
 }
 
-.result-heading {
-    font-size: 35px;
+.file-active {
     color: #1595CD;
-    text-decoration: none;
 }
 
-.result-heading:hover {
-    text-decoration: underline;
+.file-pending {
+    color: #F28200;
+}
+
+.file-complete {
+    color: #3C9D0F;
+}
+
+.file-expired {
+    color: #696969;
+}
+
+.result-subHeading {
+    font-size: 21px;
 }
 
 .outer-card {
@@ -37,12 +47,26 @@
     padding-top: 10px;
 }
 
+.status-align {
+    padding-left: 11px;
+}
+
 .p-custom {
     margin-bottom: 0px !important;
 }
 
 .metaData-align {
     text-align: right;
+}
+
+.member-type {
+    color: #696969;
+}
+
+.member-match {
+    margin-bottom: 0px !important;
+    font-weight: bold;
+    margin-left: 7px;
 }
 
 .custom-paginator {
@@ -53,18 +77,16 @@
     font-size: 16px;
 }
 
-.file-active {
-    color: #1595CD;
+.members-margin {
+    margin-left: 7px;
 }
 
-.file-pending {
-    color: #F28200;
+.highlight {
+    font-size: 35px;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-.file-complete {
-    color: #3C9D0F;
-}
-
-.file-expired {
-    color: #696969;
+.highlight:hover {
+    text-decoration: underline;
 }

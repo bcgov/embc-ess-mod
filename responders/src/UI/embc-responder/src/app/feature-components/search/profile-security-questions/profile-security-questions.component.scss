@@ -1,0 +1,34 @@
+.heading {
+    color: #234075;
+    font-size: 21px;
+    line-height: 30px;
+}
+
+mat-card {
+    border: none !important;
+}
+
+.submit {
+    width: 25%;
+    font-size: 16px;
+}
+
+.button-space {
+    margin-right: 20px;
+}
+
+.paragraphSpace {
+    margin-bottom: 0px;
+    margin-top: 50px;
+}
+
+.correct {
+    color: #3C9D0F;
+    font-size:small;
+}
+
+@media (min-width: 768px) {
+    .col-md-8 {
+        max-width: 100%;
+    }
+}

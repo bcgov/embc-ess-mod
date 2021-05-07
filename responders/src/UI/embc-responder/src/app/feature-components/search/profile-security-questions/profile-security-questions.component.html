@@ -1,1 +1,195 @@
-<p>profile-security-questions works!</p>
+<div class="row heading-container">
+  <div
+    class="col-md-12"
+    *ngIf="securityQuestionResult === undefined || securityQuestionResult === 1"
+  >
+    <span class="page-heading">Please Answer Your Security Questions</span>
+  </div>
+  <div class="col-md-12" *ngIf="securityQuestionResult === 0">
+    <span class="page-heading">Unable to Verify Security Questions</span>
+  </div>
+</div>
+<br />
+<div class="row">
+  <ng-container *ngIf="securityQuestionResult === undefined">
+    <div class="col-md-12">
+      <mat-card>
+        <p class="heading">
+          Please ask the evacuee to answer their security questions.
+        </p>
+        <p>
+          The answers are not case sensitive and do not include any special
+          characters.
+        </p>
+        <br />
+        <div class="row">
+          <div class="col-md-8">
+            <app-security-question-card
+              [question]="securityQuestions[0]"
+              (questionEvent)="getAnswers($event)"
+            ></app-security-question-card>
+          </div>
+        </div>
+
+        <br />
+        <div class="row">
+          <div class="col-md-8">
+            <app-security-question-card
+              [question]="securityQuestions[1]"
+              (questionEvent)="getAnswers($event)"
+            ></app-security-question-card>
+          </div>
+        </div>
+        <br />
+        <br />
+        <div *ngIf="correctAnswerFlag">
+          <img
+            width="20px"
+            height="20px"
+            src="/assets/images/status/complete.svg"
+          />
+          <span class="correct"> Correct!</span>
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-8">
+            <button
+              class="button-s submit button-space"
+              type="button"
+              mat-button
+              (click)="goToSearchResults()"
+            >
+              Back to Search Results
+            </button>
+            <button
+              class="button-p submit"
+              type="button"
+              mat-button
+              (click)="next()"
+            >
+              Continue
+              <app-loader
+                [strokeWidth]="3"
+                [diameter]="25"
+                [showLoader]="showLoader"
+              ></app-loader>
+            </button>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+      </mat-card>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="securityQuestionResult === 1">
+    <div class="col-md-12">
+      <mat-card>
+        <p class="heading">
+          We're having trouble verifying your identity. Please answer an
+          additional security question.
+        </p>
+        <p>
+          The answers are not case sensitive and do not include any special
+          characters.
+        </p>
+        <br />
+        <div class="row">
+          <div class="col-md-8">
+            <app-security-question-card
+              [question]="securityQuestions[2]"
+              (questionEvent)="getAnswers($event)"
+            ></app-security-question-card>
+          </div>
+        </div>
+        <br />
+        <br />
+        <div *ngIf="correctAnswerFlag">
+          <img
+            width="20px"
+            height="20px"
+            src="/assets/images/status/complete.svg"
+          />
+          <span class="correct"> Correct!</span>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+          <div class="col-md-8">
+            <button
+              class="button-s submit button-space"
+              type="button"
+              mat-button
+              (click)="goToSearchResults()"
+            >
+              Back to Search Results
+            </button>
+            <button
+              class="button-p submit"
+              type="button"
+              mat-button
+              (click)="next()"
+            >
+              Continue
+              <app-loader
+                [strokeWidth]="3"
+                [diameter]="25"
+                [showLoader]="showLoader"
+              ></app-loader>
+            </button>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+      </mat-card>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="securityQuestionResult === 0">
+    <div class="col-md-12">
+      <mat-card>
+        <p class="heading">
+          The evacuee was unable to answer the security questions correctly.
+        </p>
+        <p class="paragraphSpace">
+          If the evacuee also has an <b>ESS File</b>, go back to the search
+          results page and try to access their ESS File.
+        </p>
+        <p>
+          Please start a new Evacuee Registration if you cannot access the
+          evacuees ESS File or Profile.
+        </p>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="row">
+          <div class="col-md-8">
+            <button
+              class="button-s submit button-space"
+              type="button"
+              mat-button
+              (click)="goToSearchResults()"
+            >
+              Back to Search Results
+            </button>
+            <button
+              class="button-p submit"
+              type="button"
+              mat-button
+              (click)="goToEvacRegistration()"
+            >
+              New Evacuee Registration
+            </button>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+      </mat-card>
+    </div>
+  </ng-container>
+</div>
