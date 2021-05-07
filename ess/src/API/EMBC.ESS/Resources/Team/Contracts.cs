@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace EMBC.ESS.Resources.Team
 {
+    //TODO: refactor to message based interface
     public interface ITeamRepository
     {
         Task<IEnumerable<Team>> GetTeams(string id = null);
