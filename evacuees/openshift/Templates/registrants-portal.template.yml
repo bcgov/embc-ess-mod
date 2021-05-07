@@ -48,12 +48,6 @@ parameters:
   - description: Dynamics service account password
     name: OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD
     required: true
-  - description: Location lists - enable cache auto refresh
-    name: LOCATION_CACHE_REFRESH_ENABLED
-    value: "true"
-  - description: Locations lists - cache frequency refresh in minutes
-    name: LOCATION_CACHE_REFRESH_INTERVAL
-    value: "00:01:00"
   - description: BCSC client id
     name: BCSC_CLIENT_ID
     required: true
@@ -83,12 +77,14 @@ parameters:
     required: true
   - description: CORS policy list of allowed origins
     name: CORS_ORIGINS
-  - description: SMTP Server
-    name: SMTP_SERVER
+  - description: ESS backend url
+    name: BACKEND_URL
     required: true
+  - description: ESS backend allow invalid server cert
+    name: BACKEND_ALLOW_INVALID_CERT
+    value: "false"
 
 objects:
-
   - kind: ConfigMap
     apiVersion: v1
     metadata:
@@ -97,21 +93,20 @@ objects:
       labels:
         app: ${APP_NAME}-registrants-portal
         app.kubernetes.io/part-of: ${APP_NAME}
-    data:     
+    data:
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
       Dynamics__ADFS__OAuth2TokenEndpoint: ${OAUTH_ENDPOINT}
       Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
       Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
-      location__cache__AutoRefreshEnabled: ${LOCATION_CACHE_REFRESH_ENABLED}
-      location__cache__RefreshInterval: ${LOCATION_CACHE_REFRESH_INTERVAL}
       auth__bcsc__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
       app__knownNetwork: ${APP_KNOWN_NETWORK}
       app__cors__origins: ${CORS_ORIGINS}
       auth__jwt__ClaimsIssuer: ${JWT_ISSUER}
       auth__jwt__audience: ${JWT_AUDIENCE}
       auth__jwt__expiryInMinutes: ${JWT_TOKEN_EXPIRY}
-      smtp__server: ${SMTP_SERVER}
+      backend__url: ${BACKEND_URL}
+      backend__allowInvalidServerCertificate: ${BACKEND_ALLOW_INVALID_CERT}
 
   - kind: Secret
     apiVersion: v1
@@ -226,11 +221,11 @@ objects:
         matchLabels:
           app: ${APP_NAME}-registrants-portal
       ingress:
-      - ports:
-        - protocol: TCP
-          port: 2015
-        - protocol: TCP
-          port: 8080
+        - ports:
+            - protocol: TCP
+              port: 2015
+            - protocol: TCP
+              port: 8080
 
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
@@ -258,6 +253,7 @@ objects:
         metadata:
           labels:
             app: ${APP_NAME}-registrants-portal
+            role: api
             app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-registrants-portal-api
         spec:
