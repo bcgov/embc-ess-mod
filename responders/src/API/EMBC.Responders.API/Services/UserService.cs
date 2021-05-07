@@ -68,7 +68,7 @@ namespace EMBC.Responders.API.Services
 
         private async Task<TeamMember> GetTeamMember(string userName)
         {
-            var reply = await messagingClient.Send(new TeamMembersQueryCommand { UserName = userName, IncludeActiveUsersOnly = true });
+            var reply = await messagingClient.Send(new TeamMembersQuery { UserName = userName, IncludeActiveUsersOnly = true });
             return reply.TeamMembers.SingleOrDefault();
         }
     }

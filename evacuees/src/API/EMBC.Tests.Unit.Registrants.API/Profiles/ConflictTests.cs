@@ -1,5 +1,6 @@
 ﻿using System.Linq;
-using EMBC.Registrants.API.ProfilesModule;
+using EMBC.Registrants.API.Controllers;
+using EMBC.Registrants.API.Services;
 using Shouldly;
 using Xunit;
 
@@ -10,8 +11,8 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         [Fact]
         public void CanDetectConflicts()
         {
-            var source = FakeGenerator.CreateRegistrantProfile();
-            var target = FakeGenerator.CreateRegistrantProfile();
+            var source = FakeGenerator.CreateClientRegistrantProfile();
+            var target = FakeGenerator.CreateClientRegistrantProfile();
 
             var conflicts = ProfilesConflictDetector.DetectConflicts(source, target).ToArray();
 

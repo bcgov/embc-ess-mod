@@ -56,7 +56,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TeamMember>>> GetTeamMembers()
         {
-            var response = await client.Send(new TeamMembersQueryCommand { TeamId = teamId, IncludeActiveUsersOnly = false });
+            var response = await client.Send(new TeamMembersQuery { TeamId = teamId, IncludeActiveUsersOnly = false });
             return Ok(mapper.Map<IEnumerable<TeamMember>>(response.TeamMembers));
         }
 
@@ -70,7 +70,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TeamMember>> GetTeamMember(string memberId)
         {
-            var reply = await client.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = false });
+            var reply = await client.Send(new TeamMembersQuery { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = false });
             var teamMember = reply.TeamMembers.SingleOrDefault();
             if (teamMember == null) return NotFound(memberId);
 
@@ -88,11 +88,11 @@ namespace EMBC.Responders.API.Controllers
         public async Task<IActionResult> CreateTeamMember([FromBody] TeamMember teamMember)
         {
             teamMember.TeamId = teamId;
-            var reply = await client.Send(new SaveTeamMemberCommand
+            var memberId = await client.Send(new SaveTeamMemberCommand
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
             });
-            return Ok(new { Id = reply.MemberId });
+            return Ok(new { Id = memberId });
         }
 
         /// <summary>
@@ -110,12 +110,12 @@ namespace EMBC.Responders.API.Controllers
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
             teamMember.TeamId = teamId;
-            var reply = await client.Send(new SaveTeamMemberCommand
+            var updatedMemberId = await client.Send(new SaveTeamMemberCommand
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
             });
-            if (reply == null) return NotFound(memberId);
-            return Ok(new { Id = reply.MemberId });
+            if (updatedMemberId == null) return NotFound(updatedMemberId);
+            return Ok(new { Id = updatedMemberId });
         }
 
         /// <summary>
@@ -148,7 +148,6 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("{memberId}/active")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ActivateTeamMember(string memberId)
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
@@ -158,7 +157,6 @@ namespace EMBC.Responders.API.Controllers
                 TeamId = teamId,
                 MemberId = memberId
             });
-            if (reply == null) return NotFound(memberId);
             return Ok(new { Id = memberId });
         }
 
@@ -170,7 +168,6 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("{memberId}/inactive")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeactivateTeamMember(string memberId)
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
@@ -180,7 +177,6 @@ namespace EMBC.Responders.API.Controllers
                 TeamId = teamId,
                 MemberId = memberId
             });
-            if (reply == null) return NotFound(memberId);
             return Ok(new { Id = memberId });
         }
 

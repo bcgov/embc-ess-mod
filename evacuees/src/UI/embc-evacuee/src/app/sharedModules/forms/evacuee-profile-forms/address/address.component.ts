@@ -12,9 +12,8 @@ import { FormCreationService } from '../../../../core/services/formCreation.serv
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { LocationService } from '../../../../core/api/services/location.service';
-import { Country } from '../../../../core/api/models/country';
 import * as globalConst from '../../../../core/services/globalConstants';
+import { Country, LocationService } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-address',
@@ -33,17 +32,18 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
   mailingFilteredOptions: Observable<Country[]>;
   countries: Country[] = [];
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-              private service: LocationService, private cd: ChangeDetectorRef) {
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formCreationService') formCreationService: FormCreationService,
+    private locationService: LocationService,
+    private cd: ChangeDetectorRef) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
 
   ngOnInit(): void {
 
-    this.service.locationGetCountries().subscribe(countries => {
-      this.countries = countries;
-    });
+    this.countries = this.locationService.getCountriesList();
 
     this.primaryAddressForm$ = this.formCreationService.getAddressForm().subscribe(primaryAddress => {
       this.primaryAddressForm = primaryAddress;

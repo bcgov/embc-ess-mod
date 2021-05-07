@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------
-//  Copyright © 2020 Province of British Columbia
+//  Copyright © 2021 Province of British Columbia
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -100,7 +100,8 @@ namespace EMBC.Registrants.API.SecurityModule
                      OnUserInformationReceived = async c =>
                      {
                          var userManager = c.HttpContext.RequestServices.GetRequiredService<IUserManager>();
-                         var id = await userManager.Save(c.Principal.FindFirstValue(ClaimTypes.NameIdentifier), c.User);
+                         var profile = Mappings.MapBCSCUserDataToProfile(c.Principal.FindFirstValue(ClaimTypes.NameIdentifier), c.User);
+                         var id = await userManager.Save(profile);
                      }
                  };
 

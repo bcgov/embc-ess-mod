@@ -1,9 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { StateProvince } from '../../../../core/api/models/state-province';
-import { LocationService } from '../../../../core/api/services/location.service';
 import { startWith, map } from 'rxjs/operators';
+import { LocationService, StateProvince } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-can-address',
@@ -17,12 +16,10 @@ export class CanAddressComponent implements OnInit {
   provinces: StateProvince[] = [];
   country = { countryCode: 'CAN' };
 
-  constructor(private service: LocationService) { }
+  constructor(private locationService: LocationService) { }
 
   ngOnInit(): void {
-    this.service.locationGetStateProvinces(this.country).subscribe(provinces => {
-      this.provinces = provinces;
-    });
+    this.provinces = this.locationService.getStateProvinceList().filter(sp => sp.countryCode === this.country.countryCode);
 
     this.filteredOptions = this.addressForm.get('stateProvince').valueChanges.pipe(
       startWith(''),

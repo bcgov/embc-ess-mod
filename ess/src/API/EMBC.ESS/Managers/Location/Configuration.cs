@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using EMBC.ESS.Utilities.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Managers.Location
@@ -23,6 +24,7 @@ namespace EMBC.ESS.Managers.Location
         public static IServiceCollection AddLocationManager(this IServiceCollection services)
         {
             services.AddTransient<LocationManager>();
+            services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(LocationManager)));
             return services;
         }
     }

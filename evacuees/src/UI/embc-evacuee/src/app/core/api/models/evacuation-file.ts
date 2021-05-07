@@ -10,5 +10,6 @@ export interface EvacuationFile {
   essFileNumber?: null | string;
   evacuatedFromAddress: Address;
   evacuationFileDate?: null | string;
+  isRestricted?: boolean;
   needsAssessments: Array<NeedsAssessment>;
 }

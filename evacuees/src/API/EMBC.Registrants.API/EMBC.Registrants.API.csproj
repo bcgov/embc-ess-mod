@@ -30,15 +30,17 @@
   <ItemGroup>
     <PackageReference Include="automapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="MailKit" Version="2.10.1" />
+    <!--<PackageReference Include="EMBC.ESS.Shared.Contracts" Version="1.0.*" />-->
+    <PackageReference Include="Grpc.AspNetCore" Version="2.36.0" />
+    <PackageReference Include="MailKit" Version="2.11.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.*" />
-    <PackageReference Include="NSwag.AspNetCore" Version="13.10.2" />
-    <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="NSwag.AspNetCore" Version="13.10.9" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
     <PackageReference Include="Serilog.Enrichers.Process" Version="2.0.1" />
-    <PackageReference Include="Serilog.Exceptions" Version="6.0.0" />
+    <PackageReference Include="Serilog.Exceptions" Version="6.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Splunk" Version="3.6.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
@@ -49,5 +51,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EMBC.ResourceAccess.Dynamics\EMBC.ResourceAccess.Dynamics.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\Dispatcher.proto" GrpcServices="Client">
+      <SourceUri>https://raw.githubusercontent.com/bcgov/embc-ess-mod/master/ess/src/API/EMBC.ESS/Utilities/Messaging/Dispatcher.proto</SourceUri>
+    </Protobuf>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EMBC.ESS.Shared.Contracts">
+      <HintPath>..\..\..\..\ess\src\API\EMBC.ESS.Shared.Contracts\bin\Debug\netstandard2.1\EMBC.ESS.Shared.Contracts.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

@@ -38,7 +38,7 @@ export class EvacuationFileListComponent implements OnInit {
         this.dataSourceActive.sort((a, b) => new Date(b.evacuationFileDate).valueOf() - new Date(a.evacuationFileDate).valueOf());
         console.log(this.dataSourceActive);
         this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
-        this.evacuatedFrom = this.dataSourceActive[0].evacuatedFromAddress.jurisdiction.name;
+        this.evacuatedFrom = this.dataSourceActive[0].evacuatedFromAddress.jurisdiction;
         this.showLoading = false;
       });
 

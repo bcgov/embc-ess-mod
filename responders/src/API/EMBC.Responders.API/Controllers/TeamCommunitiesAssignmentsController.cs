@@ -50,7 +50,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<AssignedCommunity>>> GetAssignedCommunities([FromQuery] bool forAllTeams = false)
         {
-            var query = new TeamsQueryCommand();
+            var query = new TeamsQuery();
             if (!forAllTeams) query.TeamId = teamId;
 
             var teams = (await messagingClient.Send(query)).Teams;

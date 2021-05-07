@@ -27,8 +27,8 @@ namespace EMBC.Tests.Integration.Registrants.API.Security
 
             (await userManager.Get(userId)).ShouldBeNull();
 
-            var userDocument = CreateUserDocument(userId, userId);
-            var id = await userManager.Save(userId, userDocument);
+            var newUser = Mappings.MapBCSCUserDataToProfile(userId, CreateUserDocument(userId, userId));
+            var id = await userManager.Save(newUser);
             id.ShouldNotBeNull().ShouldBe(userId);
 
             var user = (await userManager.Get(userId)).ShouldNotBeNull();
@@ -41,14 +41,14 @@ namespace EMBC.Tests.Integration.Registrants.API.Security
         public async Task ExistingUser_Updated()
         {
             var userId = $"test_user_{Guid.NewGuid().ToString("N").Substring(0, 5)}";
-            var userDocument = CreateUserDocument(userId, userId);
+            var newUser = Mappings.MapBCSCUserDataToProfile(userId, CreateUserDocument(userId, userId));
 
             //create
-            await userManager.Save(userId, userDocument);
+            await userManager.Save(newUser);
 
             //update
-            var updatedUserDocument = CreateUserDocument(userId, userId + "_updated");
-            (await userManager.Save(userId, updatedUserDocument)).ShouldBe(userId);
+            var updatedUser = Mappings.MapBCSCUserDataToProfile(userId, CreateUserDocument(userId, userId + "_updated"));
+            (await userManager.Save(updatedUser)).ShouldBe(userId);
 
             var user = (await userManager.Get(userId)).ShouldNotBeNull();
             user.Id.ShouldBe(userId);

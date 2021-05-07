@@ -5,12 +5,16 @@ ENV ASPNETCORE_URLS=http://*:8080
 ENV ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+ARG GITHUB_NUGET_USERNAME
+ARG GITHUB_NUGET_PAT
 WORKDIR /src
 COPY ["EMBC.Registrants.API/EMBC.Registrants.API.csproj", "EMBC.Registrants.API/"]
 COPY ["EMBC.ResourceAccess.Dynamics/EMBC.ResourceAccess.Dynamics.csproj", "EMBC.ResourceAccess.Dynamics/"]
 COPY ["EMBC.Tests.Unit.Registrants.API/EMBC.Tests.Unit.Registrants.API.csproj", "EMBC.Tests.Unit.Registrants.API/"]
 COPY ["EMBC.Tests.Integration.Registrants.API/EMBC.Tests.Integration.Registrants.API.csproj", "EMBC.Tests.Integration.Registrants.API/"]
 COPY ["EMBC.Registrants.sln", "stylecop.json", ".editorconfig", "./"]
+
+RUN dotnet nuget add source "https://nuget.pkg.github.com/bcgov/index.json" --name "github" --username "${GITHUB_NUGET_USERNAME}" --password "${GITHUB_NUGET_PAT}" --store-password-in-clear-text
 
 RUN dotnet restore .
 COPY . .
