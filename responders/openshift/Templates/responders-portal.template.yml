@@ -42,7 +42,6 @@ parameters:
     required: true
 
 objects:
-
   - kind: ConfigMap
     apiVersion: v1
     metadata:
@@ -51,7 +50,7 @@ objects:
       labels:
         app: ${APP_NAME}-responders-portal
         app.kubernetes.io/part-of: ${APP_NAME}
-    data:     
+    data:
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
       BACKEND__URL: ${BACKEND_URL}
@@ -164,11 +163,11 @@ objects:
         matchLabels:
           app: ${APP_NAME}-responders-portal
       ingress:
-      - ports:
-        - protocol: TCP
-          port: 2015
-        - protocol: TCP
-          port: 8080
+        - ports:
+            - protocol: TCP
+              port: 2015
+            - protocol: TCP
+              port: 8080
 
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
@@ -196,6 +195,7 @@ objects:
         metadata:
           labels:
             app: ${APP_NAME}-responders-portal
+            role: api
             app.kubernetes.io/part-of: ${APP_NAME}
             deploymentconfig: ${APP_NAME}-responders-portal-api
         spec:
