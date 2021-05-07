@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -23,8 +24,9 @@ namespace EMBC.ESS.Utilities.Dynamics
 {
     public static class Configuration
     {
-        public static IServiceCollection AddDynamics(this IServiceCollection services)
+        public static IServiceCollection AddDynamics(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<DynamicsOptions>(configuration.GetSection("Dynamics"));
             services.AddHttpClient("adfs_token", (sp, c) =>
             {
                 var options = sp.GetRequiredService<IOptions<DynamicsOptions>>().Value;

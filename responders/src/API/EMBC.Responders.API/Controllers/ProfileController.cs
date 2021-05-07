@@ -59,7 +59,7 @@ namespace EMBC.Responders.API.Controllers
             var sourceSystem = User.FindFirstValue("identity_source");
 
             // Get the current user
-            var reply = await messagingClient.Send(new TeamMembersQueryCommand { UserName = userName, IncludeActiveUsersOnly = true });
+            var reply = await messagingClient.Send(new TeamMembersQuery { UserName = userName, IncludeActiveUsersOnly = true });
             var currentMember = reply.TeamMembers.SingleOrDefault();
 
             if (currentMember == null)
@@ -102,7 +102,7 @@ namespace EMBC.Responders.API.Controllers
             var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
 
             // Get the current user
-            var reply = await messagingClient.Send(new TeamMembersQueryCommand { UserName = userName, IncludeActiveUsersOnly = false });
+            var reply = await messagingClient.Send(new TeamMembersQuery { UserName = userName, IncludeActiveUsersOnly = false });
             var currentMember = reply.TeamMembers.SingleOrDefault();
             if (currentMember == null)
             {
@@ -137,7 +137,7 @@ namespace EMBC.Responders.API.Controllers
             var userName = User.FindFirstValue(ClaimTypes.Upn).Split('@')[0];
 
             // Get the current user
-            var reply = await messagingClient.Send(new TeamMembersQueryCommand { UserName = userName, IncludeActiveUsersOnly = true });
+            var reply = await messagingClient.Send(new TeamMembersQuery { UserName = userName, IncludeActiveUsersOnly = true });
             var currentMember = reply.TeamMembers.SingleOrDefault();
             if (currentMember == null)
             {

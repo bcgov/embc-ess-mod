@@ -100,7 +100,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCommunities([FromQuery] string stateProvinceId, [FromQuery] string countryId, [FromQuery] CommunityType[] types)
         {
-            var items = (await client.Send(new CommunitiesQueryCommand()
+            var items = (await client.Send(new CommunitiesQuery()
             {
                 CountryCode = countryId,
                 StateProvinceCode = stateProvinceId,
@@ -115,7 +115,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CommunityCode>>> GetStateProvinces([FromQuery] string countryId)
         {
-            var items = (await client.Send(new StateProvincesQueryCommand()
+            var items = (await client.Send(new StateProvincesQuery()
             {
                 CountryCode = countryId,
             })).Items;
@@ -128,7 +128,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CommunityCode>>> GetCountries()
         {
-            var items = (await client.Send(new CountriesQueryCommand())).Items;
+            var items = (await client.Send(new CountriesQuery())).Items;
 
             return Ok(mapper.Map<IEnumerable<Code>>(items));
         }

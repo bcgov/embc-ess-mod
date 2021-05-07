@@ -43,7 +43,9 @@ namespace EMBC.ESS.Utilities.Messaging
         {
             try
             {
-                var (requestType, messageHandler) = serviceRegistry.Resolve(request.Type);
+                logger.LogDebug("Dispatching request {0}, correlation id {1}", request.Type, request.CorrelationId);
+                var requestType = System.Type.GetType(request.Type, true, true);
+                var messageHandler = serviceRegistry.Resolve(requestType);
                 var handlerInstance = serviceProvider.GetRequiredService(messageHandler.DeclaringType);
                 var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType);
                 var replyMessage = await messageHandler.InvokeAsync(handlerInstance, new object[] { requestMessage });
@@ -51,8 +53,10 @@ namespace EMBC.ESS.Utilities.Messaging
                 return new ReplyEnvelope
                 {
                     CorrelationId = request.CorrelationId,
-                    Type = replyMessage.GetType().AssemblyQualifiedName,
-                    Content = Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
+                    Type = replyMessage?.GetType().AssemblyQualifiedName ?? string.Empty,
+                    Content = replyMessage == null
+                        ? Value.ForNull()
+                        : Value.Parser.ParseJson(JsonSerializer.Serialize(replyMessage)),
                     Empty = replyMessage == null
                 };
             }
@@ -73,11 +77,13 @@ namespace EMBC.ESS.Utilities.Messaging
 
     public static class DispatcherServiceEx
     {
-        public static async Task<object> InvokeAsync(this MethodBase method, object obj, params object[] parameters)
+        public static async Task<object> InvokeAsync(this MethodInfo method, object obj, params object[] parameters)
         {
             var task = (Task)method.Invoke(obj, parameters);
             await task.ConfigureAwait(false);
-            return task.GetType().GetProperty("Result").GetValue(task);
+            return method.ReturnType.IsGenericType
+                ? task.GetType().GetProperty("Result").GetValue(task)
+                : null;
         }
     }
 }

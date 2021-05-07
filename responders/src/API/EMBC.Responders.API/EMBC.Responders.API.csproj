@@ -18,12 +18,15 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <UserSecretsId>53250042-ca59-4400-b4aa-80f4757b5d02</UserSecretsId>
   </PropertyGroup>
+
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
+
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
@@ -43,6 +46,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
   <ItemGroup>
     <Protobuf Include="Protos\Dispatcher.proto" GrpcServices="Client">
       <SourceUri>https://raw.githubusercontent.com/bcgov/embc-ess-mod/master/ess/src/API/EMBC.ESS/Utilities/Messaging/Dispatcher.proto</SourceUri>

@@ -7,16 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bogus" Version="33.0.1" />
-    <PackageReference Include="fakeiteasy" Version="6.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="bogus" Version="33.0.2" />
+    <PackageReference Include="fakeiteasy" Version="7.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="shouldly" Version="4.0.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="3.0.2">
+    <PackageReference Include="coverlet.collector" Version="3.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -24,5 +24,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EMBC.Registrants.API\EMBC.Registrants.API.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EMBC.ESS.Shared.Contracts">
+      <HintPath>..\..\..\..\ess\src\API\EMBC.ESS.Shared.Contracts\bin\Debug\netstandard2.1\EMBC.ESS.Shared.Contracts.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

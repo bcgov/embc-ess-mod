@@ -147,7 +147,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
         {
             var team = stagedTeams.First().Value;
             var updatedAssignedCommunities = team.AssignedCommunities.Select(c => c.Code).Append("c5").ToArray();
-            var response = await adminManager.Handle(new AssignCommunitiesToTeamCommand
+            await adminManager.Handle(new AssignCommunitiesToTeamCommand
             {
                 TeamId = team.Id,
                 Communities = updatedAssignedCommunities
@@ -169,10 +169,9 @@ namespace EMBC.Tests.Unit.ESS.Admin
                 TeamId = team.Id
             };
 
-            var result = await adminManager.Handle(new SaveTeamMemberCommand { Member = teamMember });
-            result.TeamId.ShouldBe(team.Id);
-            result.MemberId.ShouldNotBeNull();
-            stagedTeamMembers.Keys.ShouldContain(result.MemberId);
+            var memberId = await adminManager.Handle(new SaveTeamMemberCommand { Member = teamMember });
+            memberId.ShouldNotBeNull();
+            stagedTeamMembers.Keys.ShouldContain(memberId);
         }
 
         [Fact]

@@ -27,6 +27,13 @@ const routes: Routes = [
           )
       },
       {
+        path: 'security-questions',
+        loadChildren: () =>
+          import(
+            '../profile-components/security-questions/security-questions.module'
+          ).then((m) => m.SecurityQuestionsModule)
+      },
+      {
         path: 'review',
         loadChildren: () =>
           import(

@@ -36,21 +36,21 @@ namespace EMBC.ESS.Managers.Admin
             this.mapper = mapper;
         }
 
-        public async Task<TeamsQueryResponse> Handle(TeamsQueryCommand cmd)
+        public async Task<TeamsQueryResponse> Handle(TeamsQuery cmd)
         {
             var teams = await teamRepository.GetTeams(id: cmd.TeamId);
 
             return new TeamsQueryResponse { Teams = mapper.Map<IEnumerable<Team>>(teams) };
         }
 
-        public async Task<TeamMembersQueryResponse> Handle(TeamMembersQueryCommand cmd)
+        public async Task<TeamMembersQueryResponse> Handle(TeamMembersQuery cmd)
         {
             var members = await teamRepository.GetMembers(cmd.TeamId, cmd.UserName, cmd.MemberId, cmd.IncludeActiveUsersOnly);
 
             return new TeamMembersQueryResponse { TeamMembers = mapper.Map<IEnumerable<TeamMember>>(members) };
         }
 
-        public async Task<SaveTeamMemberResponse> Handle(SaveTeamMemberCommand cmd)
+        public async Task<string> Handle(SaveTeamMemberCommand cmd)
         {
             var teamMembersWithSameUserName = await teamRepository.GetMembers(userName: cmd.Member.UserName);
             //filter this user if exists
@@ -59,37 +59,31 @@ namespace EMBC.ESS.Managers.Admin
 
             var id = await teamRepository.SaveMember(mapper.Map<Resources.Team.TeamMember>(cmd.Member));
 
-            return new SaveTeamMemberResponse { TeamId = cmd.Member.TeamId, MemberId = id };
+            return id;
         }
 
-        public async Task<DeleteTeamMemberResponse> Handle(DeleteTeamMemberCommand cmd)
+        public async Task Handle(DeleteTeamMemberCommand cmd)
         {
             var result = await teamRepository.DeleteMember(cmd.TeamId, cmd.MemberId);
             if (!result) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
-
-            return new DeleteTeamMemberResponse();
         }
 
-        public async Task<DeactivateTeamMemberResponse> Handle(DeactivateTeamMemberCommand cmd)
+        public async Task Handle(DeactivateTeamMemberCommand cmd)
         {
             var member = (await teamRepository.GetMembers(cmd.TeamId, onlyActive: false)).SingleOrDefault(m => m.Id == cmd.MemberId);
             if (member == null) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             member.IsActive = false;
             await teamRepository.SaveMember(member);
-
-            return new DeactivateTeamMemberResponse();
         }
 
-        public async Task<ActivateTeamMemberResponse> Handle(ActivateTeamMemberCommand cmd)
+        public async Task Handle(ActivateTeamMemberCommand cmd)
         {
             var member = (await teamRepository.GetMembers(cmd.TeamId, onlyActive: false)).SingleOrDefault(m => m.Id == cmd.MemberId);
             if (member == null) throw new NotFoundException($"Member {cmd.MemberId} not found in team {cmd.TeamId}", cmd.MemberId);
 
             member.IsActive = true;
             await teamRepository.SaveMember(member);
-
-            return new ActivateTeamMemberResponse();
         }
 
         public async Task<ValidateTeamMemberResponse> Handle(ValidateTeamMemberCommand cmd)
@@ -103,7 +97,7 @@ namespace EMBC.ESS.Managers.Admin
             };
         }
 
-        public async Task<AssignCommunitiesToTeamResponse> Handle(AssignCommunitiesToTeamCommand cmd)
+        public async Task Handle(AssignCommunitiesToTeamCommand cmd)
         {
             var allTeams = await teamRepository.GetTeams();
             var team = allTeams.SingleOrDefault(t => t.Id == cmd.TeamId);
@@ -119,19 +113,15 @@ namespace EMBC.ESS.Managers.Admin
                 .Select(c => new Resources.Team.AssignedCommunity { Code = c, DateAssigned = now });
             team.AssignedCommunities = team.AssignedCommunities.Concat(newCommunities).ToArray();
             await teamRepository.SaveTeam(team);
-
-            return new AssignCommunitiesToTeamResponse();
         }
 
-        public async Task<UnassignCommunitiesFromTeamResponse> Handle(UnassignCommunitiesFromTeamCommand cmd)
+        public async Task Handle(UnassignCommunitiesFromTeamCommand cmd)
         {
             var team = (await teamRepository.GetTeams(id: cmd.TeamId)).SingleOrDefault();
             if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
 
             team.AssignedCommunities = team.AssignedCommunities.Where(c => !cmd.Communities.Contains(c.Code));
             await teamRepository.SaveTeam(team);
-
-            return new UnassignCommunitiesFromTeamResponse();
         }
 
         public async Task<LogInUserResponse> Handle(LogInUserCommand cmd)
@@ -155,14 +145,13 @@ namespace EMBC.ESS.Managers.Admin
             return new SuccessfulLogin { Profile = mapper.Map<UserProfile>(member) };
         }
 
-        public async Task<SignResponderAgreementResponse> Handle(SignResponderAgreementCommand cmd)
+        public async Task Handle(SignResponderAgreementCommand cmd)
         {
             var member = (await teamRepository.GetMembers(userName: cmd.UserName, onlyActive: true)).SingleOrDefault();
             if (member == null) throw new NotFoundException($"team member not found", cmd.UserName);
 
             member.AgreementSignDate = cmd.SignatureDate;
             await teamRepository.SaveMember(member);
-            return new SignResponderAgreementResponse();
         }
     }
 }

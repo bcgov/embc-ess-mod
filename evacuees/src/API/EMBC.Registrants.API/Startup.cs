@@ -1,5 +1,5 @@
 ﻿// -------------------------------------------------------------------------
-//  Copyright © 2020 Province of British Columbia
+//  Copyright © 2021 Province of British Columbia
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,11 +20,6 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
-using AutoMapper;
-using EMBC.Registrants.API.EvacuationsModule;
-using EMBC.Registrants.API.LocationModule;
-using EMBC.Registrants.API.ProfilesModule;
-using EMBC.Registrants.API.RegistrationsModule;
 using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Utils;
@@ -39,7 +34,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
+using NSwag;
 using NSwag.AspNetCore;
+using NSwag.Generation.Processors.Security;
 using Serilog;
 
 namespace EMBC.Registrants.API
@@ -64,7 +61,6 @@ namespace EMBC.Registrants.API
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
             services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
-            services.Configure<LocationCacheHostedServiceOptions>(configuration.GetSection("Location:Cache"));
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardLimit = 2;
@@ -99,11 +95,7 @@ namespace EMBC.Registrants.API
             services.AddPortalAuthentication(configuration);
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
             services.AddDistributedMemoryCache(); // TODO: configure proper distributed cache
-            services.AddRegistrationModule();
-            services.AddLocationModule();
-            services.AddProfileModule();
             services.AddSecurityModule();
-            services.AddEvacuationsModule();
             services.AddADFSTokenProvider();
             services.AddScoped(sp =>
             {
@@ -114,9 +106,9 @@ namespace EMBC.Registrants.API
                 var logger = sp.GetRequiredService<ILogger<DynamicsClientContext>>();
                 return new DynamicsClientContext(new Uri(dynamicsApiBaseUri), new Uri(dynamicsApiEndpoint), async () => await tokenProvider.AcquireToken(), logger);
             });
-            services.AddSingleton<IEmailConfiguration>(configuration.GetSection("SMTP").Get<EmailConfiguration>());
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.AddTransient<ITemplateEmailService, TemplateEmailService>();
+
+            services.Configure<MessagingOptions>(configuration.GetSection("backend"));
+            services.AddMessaging();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
@@ -201,7 +193,18 @@ namespace EMBC.Registrants.API
                     options.DocumentPath = "/api/openapi/{documentName}/openapi.json";
                 });
 
-                services.AddOpenApiDocument();
+                services.AddOpenApiDocument(document =>
+                {
+                    document.AddSecurity("bearer token", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                    {
+                        Type = OpenApiSecuritySchemeType.Http,
+                        Scheme = "Bearer",
+                        BearerFormat = "paste token here",
+                        In = OpenApiSecurityApiKeyLocation.Header
+                    });
+
+                    document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
+                });
             }
         }
     }
