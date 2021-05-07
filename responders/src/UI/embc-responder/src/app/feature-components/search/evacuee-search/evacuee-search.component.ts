@@ -8,6 +8,7 @@ import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-co
 })
 export class EvacueeSearchComponent implements OnInit {
   showPhotoIDComponent = true;
+  showResultsComponent = false;
 
   constructor() {}
 
@@ -23,7 +24,7 @@ export class EvacueeSearchComponent implements OnInit {
   /**
    * Receives the emitted event from evacuee-name-search child and changes the component to show
    */
-  // changeResultsComponent(value: boolean): void {
-  //   this.showResultsComponent = value;
-  // }
+  changeResultsComponent(value: boolean): void {
+    this.showResultsComponent = value;
+  }
 }

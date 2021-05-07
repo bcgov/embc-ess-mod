@@ -34,13 +34,6 @@ const routes: Routes = [
           )
       },
       {
-        path: 'evacuee-results',
-        loadChildren: () =>
-          import(
-            '../evacuee-search-results/evacuee-search-results.module'
-          ).then((m) => m.EvacueeSearchResultsModule)
-      },
-      {
         path: 'security-phrase',
         loadChildren: () =>
           import(
