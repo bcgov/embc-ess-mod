@@ -10,7 +10,7 @@ describe('ProfileSecurityQuestionsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ProfileSecurityQuestionsComponent],
-      imports:[RouterTestingModule]
+      imports: [RouterTestingModule]
     }).compileComponents();
   });
 

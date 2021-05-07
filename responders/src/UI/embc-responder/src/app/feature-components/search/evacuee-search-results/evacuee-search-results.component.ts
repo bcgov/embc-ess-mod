@@ -5,7 +5,7 @@ import {
 } from 'src/app/core/api/models';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { UserService } from 'src/app/core/services/user.service';
-import { EvacueeSearchService } from '../evacuee-search.service';
+import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
 import { EvacueeSearchResultsService } from './evacuee-search-results.service';
 import {
   ActionPermission,

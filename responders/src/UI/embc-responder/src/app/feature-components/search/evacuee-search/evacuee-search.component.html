@@ -6,14 +6,12 @@
       ></app-evacuee-id-verify>
     </ng-container>
 
-    <ng-container *ngIf="!showPhotoIDComponent && !showResultsComponent">
-      <app-evacuee-name-search
-        (showResultsComponent)="changeResultsComponent($event)"
-      ></app-evacuee-name-search>
+    <ng-container *ngIf="!showPhotoIDComponent">
+      <app-evacuee-name-search></app-evacuee-name-search>
     </ng-container>
 
-    <ng-container *ngIf="showResultsComponent">
+    <!-- <ng-container *ngIf="showResultsComponent">
       <app-evacuee-search-results></app-evacuee-search-results>
-    </ng-container>
+    </ng-container> -->
   </div>
 </div>
