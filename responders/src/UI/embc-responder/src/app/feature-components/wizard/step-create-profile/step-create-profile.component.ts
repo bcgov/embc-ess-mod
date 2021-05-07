@@ -40,8 +40,4 @@ export class StepCreateProfileComponent {
   isAllowed(tabRoute: string, $event: MouseEvent): void {
     this.stepCreateProfileService.isAllowed(tabRoute, $event);
   }
-
-  test(){
-    console.log('well')
-  }
 }

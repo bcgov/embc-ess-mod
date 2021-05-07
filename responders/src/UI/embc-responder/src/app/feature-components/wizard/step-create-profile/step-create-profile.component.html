@@ -21,33 +21,32 @@
         'tab-highlight': tabItem.name === 'review',
         'tab-margin custom-tab-link': tabItem.name !== 'review'
       }"
-     
     >
       <!-- {{ tabItem.label }} -->
-      <span class="span-height" (click)="isAllowed(tabItem.name, $event)">{{ tabItem.label }}
+      <span class="span-height" (click)="isAllowed(tabItem.name, $event)"
+        >{{ tabItem.label }}
         <img
-        class="tab-status"
-        *ngIf="tabItem.status === 'complete'"
-        src="/assets/images/status/complete.svg"
-        width="20"
-        height="20"
-      />
-      <img
-        class="tab-status"
-        *ngIf="tabItem.status === 'incomplete'"
-        src="/assets/images/status/incomplete.svg"
-        width="20"
-        height="20"
-      />
-      <img
-        class="tab-status"
-        *ngIf="tabItem.status === 'not-started'"
-        src="/assets/images/status/not-started.svg"
-        width="20"
-        height="20"
-      />
+          class="tab-status"
+          *ngIf="tabItem.status === 'complete'"
+          src="/assets/images/status/complete.svg"
+          width="20"
+          height="20"
+        />
+        <img
+          class="tab-status"
+          *ngIf="tabItem.status === 'incomplete'"
+          src="/assets/images/status/incomplete.svg"
+          width="20"
+          height="20"
+        />
+        <img
+          class="tab-status"
+          *ngIf="tabItem.status === 'not-started'"
+          src="/assets/images/status/not-started.svg"
+          width="20"
+          height="20"
+        />
       </span>
-      
     </a>
   </nav>
 

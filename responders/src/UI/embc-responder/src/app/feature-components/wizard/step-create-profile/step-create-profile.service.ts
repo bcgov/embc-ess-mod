@@ -49,6 +49,7 @@ export class StepCreateProfileService {
 
   /**
    * Checks the status of the tabs
+   *
    * @returns true/false
    */
   checkTabsStatus(): boolean {

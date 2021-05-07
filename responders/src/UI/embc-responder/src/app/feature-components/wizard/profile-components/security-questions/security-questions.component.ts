@@ -17,8 +17,11 @@ export class SecurityQuestionsComponent implements OnInit {
   ngOnInit(): void {}
 
   next(): void {
-    this.stepCreateProfileService.setTabStatus('security-questions', 'complete');
-    if(this.stepCreateProfileService.checkTabsStatus()) {
+    this.stepCreateProfileService.setTabStatus(
+      'security-questions',
+      'complete'
+    );
+    if (this.stepCreateProfileService.checkTabsStatus()) {
       this.stepCreateProfileService.openModal(globalConst.wizardProfileMessage);
     } else {
       this.router.navigate(['/ess-wizard/create-evacuee-profile/review']);
