@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import {
   EvacueeDetailsModel,
   EvacueeSearchContextModel
@@ -40,7 +41,8 @@ export class EvacueeNameSearchComponent implements OnInit {
   constructor(
     private customValidation: CustomValidationService,
     private builder: FormBuilder,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSearchService: EvacueeSearchService,
+    private router: Router
   ) {}
 
   /**
@@ -89,5 +91,6 @@ export class EvacueeNameSearchComponent implements OnInit {
 
     this.evacueeSearchService.setEvacueeSearchParameters(searchParams);
     this.showResultsComponent.emit(true);
+    this.router.navigate(['responder-access/search/evacuee-results']);
   }
 }
