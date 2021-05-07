@@ -1,1 +1,131 @@
-<p>essfile-security-phrase works!</p>
+<div class="row heading-container">
+  <div class="col-md-12" *ngIf="attemptsRemaning > 0">
+    <span class="page-heading">Answer Evacuation File Security Phrase</span>
+  </div>
+  <div class="col-md-12" *ngIf="attemptsRemaning === 0">
+    <span class="page-heading">Unable to Verify Security Phrase</span>
+  </div>
+</div>
+<br />
+<div class="row">
+  <ng-container *ngIf="attemptsRemaning > 0">
+    <div class="col-md-12">
+      <mat-card>
+        <p class="heading">
+          Please ask the evacuee to provide the security phrase for this ESS
+          File.
+        </p>
+        <p>
+          If the evacuee cannot remember the security phrase, emergency
+          responders are required to start a new evacuee registration.
+        </p>
+        <br />
+        <div class="row">
+          <div class="col-md-8">
+            <app-security-phrase-card
+              [phrase]="dummyPhrase"
+              (answerEvent)="getAnswer($event)"
+            ></app-security-phrase-card>
+          </div>
+        </div>
+
+        <br />
+        <br />
+        <div *ngIf="correctAnswerFlag">
+          <img
+            width="20px"
+            height="20px"
+            src="/assets/images/status/complete.svg"
+          />
+          <span class="correct"> Correct!</span>
+        </div>
+        <div *ngIf="wrongAnswerFlag">
+          <img
+            width="20px"
+            height="20px"
+            src="/assets/images/wrong-answer.svg"
+          />
+          <span class="incorrect">
+            Incorrect answer. You have {{ attemptsRemaning }} attempts
+            remaining. Please try again.</span
+          >
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-md-8">
+            <button
+              class="button-s submit button-space"
+              type="button"
+              mat-button
+              (click)="goToSearchResults()"
+            >
+              Back to Search Results
+            </button>
+            <button
+              class="button-p submit"
+              type="button"
+              mat-button
+              (click)="next()"
+            >
+              Continue
+              <app-loader
+                [strokeWidth]="3"
+                [diameter]="25"
+                [showLoader]="showLoader"
+              ></app-loader>
+            </button>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+      </mat-card>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="attemptsRemaning === 0">
+    <div class="col-md-12">
+      <mat-card>
+        <p class="heading">
+          The evacuee was unable to answer the security phrase correctly.
+        </p>
+        <p class="paragraphSpace">
+          If the evacuee also has a <b>profile</b>, go back to the search
+          results page and try to access their profile.
+        </p>
+        <p>
+          Please start a new Evacuee Registration if you cannot access the
+          evacuees ESS File or Profile.
+        </p>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="row">
+          <div class="col-md-8">
+            <button
+              class="button-s submit button-space"
+              type="button"
+              mat-button
+              (click)="goToSearchResults()"
+            >
+              Back to Search Results
+            </button>
+            <button
+              class="button-p submit"
+              type="button"
+              mat-button
+              (click)="goToEvacRegistration()"
+            >
+              New Evacuee Registration
+            </button>
+          </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+      </mat-card>
+    </div>
+  </ng-container>
+</div>
