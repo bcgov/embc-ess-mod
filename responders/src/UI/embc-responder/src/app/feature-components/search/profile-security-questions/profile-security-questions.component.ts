@@ -81,7 +81,7 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
    * Function that redirects to Search Results page
    */
   goToSearchResults() {
-    this.router.navigate(['responder-access/search/evacuee-results']);
+    this.router.navigate(['responder-access/search/evacuee']);
   }
 
   /**

@@ -8,12 +8,18 @@ import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TextMaskModule } from 'angular2-text-mask';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { EvacueeSearchResultsComponent } from './evacuee-search-results/evacuee-search-results.component';
+import { EssFilesResultsComponent } from './ess-files-results/ess-files-results.component';
+import { ProfileResultsComponent } from './profile-results/profile-results.component';
 
 @NgModule({
   declarations: [
     EvacueeSearchComponent,
     EvacueeIdVerifyComponent,
-    EvacueeNameSearchComponent
+    EvacueeNameSearchComponent,
+    EvacueeSearchResultsComponent,
+    EssFilesResultsComponent,
+    ProfileResultsComponent
   ],
   imports: [
     CommonModule,

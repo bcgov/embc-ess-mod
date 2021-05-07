@@ -19,7 +19,7 @@ import { EvacueeSearchService } from '../evacuee-search.service';
   styleUrls: ['./evacuee-name-search.component.scss']
 })
 export class EvacueeNameSearchComponent implements OnInit {
-  // @Output() showResultsComponent = new EventEmitter<boolean>();
+  @Output() showResultsComponent = new EventEmitter<boolean>();
 
   panel1OpenState = false;
   panel2OpenState = false;
@@ -90,7 +90,7 @@ export class EvacueeNameSearchComponent implements OnInit {
     };
 
     this.evacueeSearchService.setEvacueeSearchParameters(searchParams);
-    // this.showResultsComponent.emit(true);
+    this.showResultsComponent.emit(true);
     this.router.navigate(['responder-access/search/evacuee-results']);
   }
 }
