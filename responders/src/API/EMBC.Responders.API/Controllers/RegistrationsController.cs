@@ -18,8 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Responders.API.Controllers
@@ -37,6 +39,7 @@ namespace EMBC.Responders.API.Controllers
         /// <param name="searchParameters">search parameters to filter the results</param>
         /// <returns>matching files list and registrants list</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<SearchResults> Search([FromQuery] SearchParameters searchParameters)
         {
             var address = new Address
@@ -92,6 +95,73 @@ namespace EMBC.Responders.API.Controllers
             var registrants = new[] { registrant, registrant };
             var files = new[] { file, file };
             return await Task.FromResult(new SearchResults { Registrants = registrants, Files = files });
+        }
+
+        /// <summary>
+        /// Get security questions for a registrant
+        /// </summary>
+        /// <param name="registrantId">registrant id</param>
+        /// <returns>list of security questions and masked answers</returns>
+        [HttpGet("registrants/{registrantId}/security")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<GetSecurityQuestionsResponse>> GetSecurityQuestions(string registrantId)
+        {
+            var questions = new[]
+            {
+                new SecurityQuestion { Id = 1, Question = "question1", Answer = "a***1" },
+                new SecurityQuestion { Id = 2, Question = "question2", Answer = "a***2" },
+                new SecurityQuestion { Id = 3, Question = "question3", Answer = "a***3" },
+            };
+
+            return Ok(await Task.FromResult(new GetSecurityQuestionsResponse { Questions = questions }));
+        }
+
+        /// <summary>
+        /// verify answers for security questions
+        /// </summary>
+        /// <param name="registrantId">registrant id</param>
+        /// <param name="request">array of questions and their answers</param>
+        /// <returns>number of correct answers</returns>
+        [HttpPost("registrants/{registrantId}/security")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<VerifySecurityQuestionsResponse>> VerifySecurityQuestions(string registrantId, VerifySecurityQuestionsRequest request)
+        {
+            return Ok(await Task.FromResult(new VerifySecurityQuestionsResponse
+            {
+                NumberOfCorrectAnswers = request.Answers.Where(q => q.Answer.EndsWith(q.Id.ToString())).Count()
+            }));
+        }
+
+        /// <summary>
+        /// get the security phrase of an evacuation file
+        /// </summary>
+        /// <param name="fileId">file id</param>
+        /// <returns>masked security phrase</returns>
+        [HttpGet("files/{fileId}/security")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<GetSecurityPhraseResponse>> GetSecurityPhrase(string fileId)
+        {
+            var phrase = "a*****z";
+
+            return Ok(await Task.FromResult(new GetSecurityPhraseResponse { SecurityPhrase = phrase }));
+        }
+
+        /// <summary>
+        /// verify an evacuation file's security phrase
+        /// </summary>
+        /// <param name="fileId">file id</param>
+        /// <param name="request">security phrase to verify</param>
+        /// <returns>result of verification</returns>
+        [HttpPost("files/{fileId}/security")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<VerifySecurityPhraseResponse>> VerifySecurityPhrase(string fileId, VerifySecurityPhraseRequest request)
+        {
+            var isCorrect = request.Answer.Equals("true", StringComparison.InvariantCultureIgnoreCase);
+            return Ok(await Task.FromResult(new VerifySecurityPhraseResponse { IsCorrect = isCorrect }));
         }
     }
 
@@ -178,5 +248,42 @@ namespace EMBC.Responders.API.Controllers
 
         [Description("Household Member")]
         HouseholdMember
+    }
+
+    public class SecurityQuestion
+    {
+        public int Id { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
+    }
+
+    public class GetSecurityQuestionsResponse
+    {
+        public IEnumerable<SecurityQuestion> Questions { get; set; }
+    }
+
+    public class VerifySecurityQuestionsRequest
+    {
+        public IEnumerable<SecurityQuestion> Answers { get; set; }
+    }
+
+    public class VerifySecurityQuestionsResponse
+    {
+        public int NumberOfCorrectAnswers { get; set; }
+    }
+
+    public class GetSecurityPhraseResponse
+    {
+        public string SecurityPhrase { get; set; }
+    }
+
+    public class VerifySecurityPhraseRequest
+    {
+        public string Answer { get; set; }
+    }
+
+    public class VerifySecurityPhraseResponse
+    {
+        public bool IsCorrect { get; set; }
     }
 }

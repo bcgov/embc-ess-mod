@@ -97,6 +97,7 @@ namespace EMBC.ESS.Resources.Team
                 .SingleOrDefault();
             if (essTeamUser == null) throw new Exception($"team member {teamMember.Id} not found in team {teamMember.TeamId}");
 
+            //TODO: move to automapper profile
             essTeamUser.era_firstname = teamMember.FirstName;
             essTeamUser.era_lastname = teamMember.LastName;
             essTeamUser.era_email = teamMember.Email;

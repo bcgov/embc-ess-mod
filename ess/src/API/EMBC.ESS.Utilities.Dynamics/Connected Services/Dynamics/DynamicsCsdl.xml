@@ -1780,6 +1780,9 @@
         <NavigationProperty Name="regardingobjectid_era_householdmember" Type="mscrm.era_householdmember" Nullable="false" Partner="era_householdmember_AsyncOperations">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_householdmemberid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_AsyncOperations">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="new_casresponseid" />
+        </NavigationProperty>
         <NavigationProperty Name="regardingobjectid_report" Type="mscrm.report" Nullable="false" Partner="Report_AsyncOperations">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="reportid" />
         </NavigationProperty>
@@ -3016,6 +3019,9 @@
         <NavigationProperty Name="regardingobjectid_era_householdmember" Type="mscrm.era_householdmember" Nullable="false" Partner="era_householdmember_BulkDeleteFailures">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_householdmemberid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_BulkDeleteFailures">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="new_casresponseid" />
+        </NavigationProperty>
         <NavigationProperty Name="regardingobjectid_customeraddress" Type="mscrm.customeraddress" Nullable="false" Partner="CustomerAddress_BulkDeleteFailures">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="customeraddressid" />
         </NavigationProperty>
@@ -3502,6 +3508,7 @@
         <NavigationProperty Name="business_unit_era_bcsc" Type="Collection(mscrm.era_bcsc)" Partner="owningbusinessunit" />
         <NavigationProperty Name="business_unit_era_needsassessmentanimal" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="owningbusinessunit" />
         <NavigationProperty Name="business_unit_era_householdmember" Type="Collection(mscrm.era_householdmember)" Partner="owningbusinessunit" />
+        <NavigationProperty Name="business_unit_new_casresponse" Type="Collection(mscrm.new_casresponse)" Partner="owningbusinessunit" />
         <NavigationProperty Name="BusinessUnit_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_businessunit_syncerror" />
         <NavigationProperty Name="transactioncurrencyid" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_BusinessUnit">
           <ReferentialConstraint Property="_transactioncurrencyid_value" ReferencedProperty="transactioncurrencyid" />
@@ -4912,6 +4919,7 @@
         <Property Name="participatesinworkflow" Type="Edm.Boolean" />
         <Property Name="timespentbymeonemailandmeetings" Type="Edm.String" Unicode="false" />
         <Property Name="followemail" Type="Edm.Boolean" />
+        <Property Name="_accountid_value" Type="Edm.Guid" />
         <Property Name="aging60" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="era_providedemail" Type="Edm.Boolean" />
         <Property Name="entityimage" Type="Edm.Binary" />
@@ -4927,6 +4935,7 @@
         <Property Name="address1_addresstypecode" Type="Edm.Int32" />
         <Property Name="emailaddress2" Type="Edm.String" Unicode="false" />
         <Property Name="middlename" Type="Edm.String" Unicode="false" />
+        <Property Name="era_securityquestion2" Type="Edm.Int32" />
         <Property Name="address2_county" Type="Edm.String" Unicode="false" />
         <Property Name="birthdate" Type="Edm.Date" />
         <Property Name="marketingonly" Type="Edm.Boolean" />
@@ -4970,12 +4979,14 @@
         <Property Name="entityimage_url" Type="Edm.String" Unicode="false" />
         <Property Name="address3_shippingmethodcode" Type="Edm.Int32" />
         <Property Name="_era_provincestate_value" Type="Edm.Guid" />
+        <Property Name="era_securityquestion3answer" Type="Edm.String" Unicode="false" />
         <Property Name="ftpsiteurl" Type="Edm.String" Unicode="false" />
         <Property Name="address1_name" Type="Edm.String" Unicode="false" />
         <Property Name="educationcode" Type="Edm.Int32" />
         <Property Name="address3_stateorprovince" Type="Edm.String" Unicode="false" />
         <Property Name="address1_line2" Type="Edm.String" Unicode="false" />
         <Property Name="address1_fax" Type="Edm.String" Unicode="false" />
+        <Property Name="firstname" Type="Edm.String" Unicode="false" />
         <Property Name="lastusedincampaign" Type="Edm.DateTimeOffset" />
         <Property Name="yomifirstname" Type="Edm.String" Unicode="false" />
         <Property Name="callback" Type="Edm.String" Unicode="false" />
@@ -4988,7 +4999,7 @@
         <Property Name="mobilephone" Type="Edm.String" Unicode="false" />
         <Property Name="era_authenticated" Type="Edm.Boolean" />
         <Property Name="aging30" Type="Edm.Decimal" Scale="Variable" />
-        <Property Name="_accountid_value" Type="Edm.Guid" />
+        <Property Name="era_securityquestion2answer" Type="Edm.String" Unicode="false" />
         <Property Name="address1_telephone1" Type="Edm.String" Unicode="false" />
         <Property Name="jobtitle" Type="Edm.String" Unicode="false" />
         <Property Name="address1_stateorprovince" Type="Edm.String" Unicode="false" />
@@ -5015,7 +5026,7 @@
         <Property Name="address1_city" Type="Edm.String" Unicode="false" />
         <Property Name="customertypecode" Type="Edm.Int32" />
         <Property Name="address1_shippingmethodcode" Type="Edm.Int32" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="address3_composite" Type="Edm.String" Unicode="false" />
         <Property Name="era_providedcontactnumber" Type="Edm.Boolean" />
         <Property Name="address1_utcoffset" Type="Edm.Int32" />
         <Property Name="address2_telephone2" Type="Edm.String" Unicode="false" />
@@ -5023,6 +5034,7 @@
         <Property Name="yomimiddlename" Type="Edm.String" Unicode="false" />
         <Property Name="stageid" Type="Edm.Guid" />
         <Property Name="donotbulkpostalmail" Type="Edm.Boolean" />
+        <Property Name="era_securityquestion1" Type="Edm.Int32" />
         <Property Name="_ownerid_value" Type="Edm.Guid" />
         <Property Name="donotsendmm" Type="Edm.Boolean" />
         <Property Name="numberofchildren" Type="Edm.Int32" />
@@ -5034,13 +5046,14 @@
         <Property Name="assistantphone" Type="Edm.String" Unicode="false" />
         <Property Name="address1_county" Type="Edm.String" Unicode="false" />
         <Property Name="donotpostalmail" Type="Edm.Boolean" />
-        <Property Name="firstname" Type="Edm.String" Unicode="false" />
+        <Property Name="era_securityquestion3" Type="Edm.Int32" />
         <Property Name="era_registranttype" Type="Edm.Int32" />
         <Property Name="yomifullname" Type="Edm.String" Unicode="false" />
         <Property Name="address3_name" Type="Edm.String" Unicode="false" />
         <Property Name="address2_country" Type="Edm.String" Unicode="false" />
         <Property Name="address1_upszone" Type="Edm.String" Unicode="false" />
         <Property Name="telephone2" Type="Edm.String" Unicode="false" />
+        <Property Name="era_securityquestion1answer" Type="Edm.String" Unicode="false" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
         <Property Name="era_preferredname" Type="Edm.String" Unicode="false" />
         <Property Name="address1_postalcode" Type="Edm.String" Unicode="false" />
@@ -5094,7 +5107,6 @@
         <Property Name="managerphone" Type="Edm.String" Unicode="false" />
         <Property Name="aging60_base" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="_defaultpricelevelid_value" Type="Edm.Guid" />
-        <Property Name="address3_composite" Type="Edm.String" Unicode="false" />
         <Property Name="address2_city" Type="Edm.String" Unicode="false" />
         <Property Name="address3_addressid" Type="Edm.Guid" />
         <Property Name="familystatuscode" Type="Edm.Int32" />
@@ -5105,6 +5117,7 @@
         <Property Name="address3_freighttermscode" Type="Edm.Int32" />
         <Property Name="shippingmethodcode" Type="Edm.Int32" />
         <Property Name="address3_city" Type="Edm.String" Unicode="false" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="address1_postofficebox" Type="Edm.String" Unicode="false" />
         <Property Name="_era_mailingcountry_value" Type="Edm.Guid" />
         <Property Name="era_issamemailingaddress" Type="Edm.Boolean" />
@@ -6369,6 +6382,12 @@
         </NavigationProperty>
         <NavigationProperty Name="baserecordid_era_householdmember" Type="mscrm.era_householdmember" Nullable="false" Partner="era_householdmember_DuplicateBaseRecord">
           <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="era_householdmemberid" />
+        </NavigationProperty>
+        <NavigationProperty Name="duplicaterecordid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_DuplicateMatchingRecord">
+          <ReferentialConstraint Property="_duplicaterecordid_value" ReferencedProperty="new_casresponseid" />
+        </NavigationProperty>
+        <NavigationProperty Name="baserecordid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_DuplicateBaseRecord">
+          <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="new_casresponseid" />
         </NavigationProperty>
         <NavigationProperty Name="baserecordid_goalrollupquery" Type="mscrm.goalrollupquery" Nullable="false" Partner="GoalRollupQuery_DuplicateBaseRecord">
           <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="goalrollupqueryid" />
@@ -7924,6 +7943,7 @@
         <Key>
           <PropertyRef Name="era_essteamsupplierid" />
         </Key>
+        <Property Name="_era_supplierid_value" Type="Edm.Guid" />
         <Property Name="_owninguser_value" Type="Edm.Guid" />
         <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="_ownerid_value" Type="Edm.Guid" />
@@ -7938,6 +7958,7 @@
         <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_isprimarysupplier" Type="Edm.Boolean" />
         <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="versionnumber" Type="Edm.Int64" />
@@ -7979,6 +8000,9 @@
         <NavigationProperty Name="era_essteamsupplier_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_era_essteamsupplier" />
         <NavigationProperty Name="era_ESSTeamID" Type="mscrm.era_essteam" Nullable="false" Partner="era_essteam_essteamsupplier_ESSTeamID">
           <ReferentialConstraint Property="_era_essteamid_value" ReferencedProperty="era_essteamid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_SupplierId" Type="mscrm.era_supplier" Nullable="false" Partner="era_era_supplier_era_essteamsupplier_SupplierId">
+          <ReferentialConstraint Property="_era_supplierid_value" ReferencedProperty="era_supplierid" />
         </NavigationProperty>
       </EntityType>
       <EntityType Name="era_essteamuser" BaseType="mscrm.crmbaseentity">
@@ -8057,38 +8081,43 @@
         <Key>
           <PropertyRef Name="era_evacuationfileid" />
         </Key>
-        <Property Name="_era_jurisdiction_value" Type="Edm.Guid" />
-        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
         <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="era_province" Type="Edm.String" Unicode="false" />
+        <Property Name="era_city" Type="Edm.String" Unicode="false" />
+        <Property Name="_era_jurisdiction_value" Type="Edm.Guid" />
+        <Property Name="era_securityphrase" Type="Edm.String" Unicode="false" />
+        <Property Name="statecode" Type="Edm.Int32" />
         <Property Name="era_postalcode" Type="Edm.String" Unicode="false" />
         <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="versionnumber" Type="Edm.Int64" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="era_evacuationfileid" Type="Edm.Guid" />
-        <Property Name="era_city" Type="Edm.String" Unicode="false" />
-        <Property Name="_owningteam_value" Type="Edm.Guid" />
-        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
-        <Property Name="era_essfilenumber" Type="Edm.Int32" />
-        <Property Name="_era_autonumberid_value" Type="Edm.Guid" />
-        <Property Name="era_province" Type="Edm.String" Unicode="false" />
-        <Property Name="era_secrettext" Type="Edm.String" Unicode="false" />
-        <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_evacuationfiledate" Type="Edm.DateTimeOffset" />
-        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
-        <Property Name="statuscode" Type="Edm.Int32" />
-        <Property Name="statecode" Type="Edm.Int32" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="_era_registrant_value" Type="Edm.Guid" />
-        <Property Name="era_addressline1" Type="Edm.String" Unicode="false" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="era_addressline2" Type="Edm.String" Unicode="false" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_addressline1" Type="Edm.String" Unicode="false" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="era_country" Type="Edm.String" Unicode="false" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="era_evacuationfiledate" Type="Edm.DateTimeOffset" />
+        <Property Name="era_paperbasedessfile" Type="Edm.String" Unicode="false" />
+        <Property Name="era_essfilenumber" Type="Edm.Int32" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="era_secrettext" Type="Edm.String" Unicode="false" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="era_registrationlocation" Type="Edm.String" Unicode="false" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
         <Property Name="_era_taskid_value" Type="Edm.Guid" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="era_essfilestatus" Type="Edm.Int32" />
+        <Property Name="era_evacuationfileid" Type="Edm.Guid" />
+        <Property Name="_era_registrant_value" Type="Edm.Guid" />
+        <Property Name="_era_autonumberid_value" Type="Edm.Guid" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="era_dayssincecreated" Type="Edm.Int32" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_evacuationfile_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -8283,49 +8312,59 @@
         <Key>
           <PropertyRef Name="era_needassessmentid" />
         </Key>
-        <Property Name="era_sharingrestriction" Type="Edm.Boolean" />
-        <Property Name="era_householdanimalstypecount_date" Type="Edm.DateTimeOffset" />
         <Property Name="era_haspetfood" Type="Edm.Int32" />
-        <Property Name="era_canevacueeprovideincidentals" Type="Edm.Int32" />
-        <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_canevacueeprovidetransportation" Type="Edm.Int32" />
-        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="era_dietaryrequirementdetails" Type="Edm.String" Unicode="false" />
-        <Property Name="era_canevacueeprovidefood" Type="Edm.Int32" />
-        <Property Name="era_canevacueeprovidelodging" Type="Edm.Int32" />
-        <Property Name="era_householdanimalstypecount_state" Type="Edm.Int32" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_emailrefusal" Type="Edm.Boolean" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_totalhouseholdanimals_state" Type="Edm.Int32" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
-        <Property Name="era_householdanimalstypecount" Type="Edm.Int32" />
-        <Property Name="era_needassessmentid" Type="Edm.Guid" />
+        <Property Name="era_hasinquiryreferral" Type="Edm.Boolean" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="era_phonenumberrefusal" Type="Edm.Boolean" />
+        <Property Name="era_haschildcarereferral" Type="Edm.Boolean" />
+        <Property Name="era_dietaryrequirementdetails" Type="Edm.String" Unicode="false" />
         <Property Name="era_medicationrequirement" Type="Edm.Boolean" />
+        <Property Name="era_canevacueeprovideclothing" Type="Edm.Int32" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="era_totalhouseholdanimals" Type="Edm.Int32" />
+        <Property Name="era_canevacueeprovidetransportation" Type="Edm.Int32" />
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="era_needsassessmenttype" Type="Edm.Int32" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_needassessmentid" Type="Edm.Guid" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
         <Property Name="_era_evacuationfile_value" Type="Edm.Guid" />
         <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
-        <Property Name="era_needsassessmentdate" Type="Edm.DateTimeOffset" />
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
-        <Property Name="era_phonenumberrefusal" Type="Edm.Boolean" />
-        <Property Name="era_totalhouseholdanimals_date" Type="Edm.DateTimeOffset" />
-        <Property Name="statecode" Type="Edm.Int32" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="_owningteam_value" Type="Edm.Guid" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="era_collectionandauthorization" Type="Edm.Boolean" />
-        <Property Name="era_emailrefusal" Type="Edm.Boolean" />
-        <Property Name="era_totalhouseholdanimals" Type="Edm.Int32" />
-        <Property Name="era_dietaryrequirement" Type="Edm.Boolean" />
-        <Property Name="statuscode" Type="Edm.Int32" />
-        <Property Name="era_canevacueeprovideclothing" Type="Edm.Int32" />
-        <Property Name="era_transportationrequirement" Type="Edm.Int32" />
-        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
-        <Property Name="era_needsassessmenttype" Type="Edm.Int32" />
-        <Property Name="era_insurancecoverage" Type="Edm.Int32" />
         <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="era_householdanimalstypecount" Type="Edm.Int32" />
+        <Property Name="era_haspetcarereferral" Type="Edm.Boolean" />
+        <Property Name="era_evacuationimpacttohousehold" Type="Edm.String" Unicode="false" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="era_canevacueeprovidelodging" Type="Edm.Int32" />
+        <Property Name="era_hashealthservicesreferral" Type="Edm.Boolean" />
+        <Property Name="era_haspersonalservicesreferral" Type="Edm.Boolean" />
+        <Property Name="era_totalhouseholdanimals_date" Type="Edm.DateTimeOffset" />
+        <Property Name="era_householdanimalstypecount_date" Type="Edm.DateTimeOffset" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="era_canevacueeprovidefood" Type="Edm.Int32" />
+        <Property Name="era_hasenoughsupply" Type="Edm.Boolean" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_sharingrestriction" Type="Edm.Boolean" />
+        <Property Name="era_insurancecoverage" Type="Edm.Int32" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="era_collectionandauthorization" Type="Edm.Boolean" />
+        <Property Name="era_transportationrequirement" Type="Edm.Int32" />
+        <Property Name="era_householdanimalstypecount_state" Type="Edm.Int32" />
+        <Property Name="era_canevacueeprovideincidentals" Type="Edm.Int32" />
+        <Property Name="era_externalreferralsdetails" Type="Edm.String" Unicode="false" />
+        <Property Name="era_totalhouseholdanimals_state" Type="Edm.Int32" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_householdrecoveryplan" Type="Edm.String" Unicode="false" />
+        <Property Name="era_hasfirstaidreferral" Type="Edm.Boolean" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="era_needsassessmentdate" Type="Edm.DateTimeOffset" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_dietaryrequirement" Type="Edm.Boolean" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needassessment_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -8776,7 +8815,6 @@
         <Property Name="_ownerid_value" Type="Edm.Guid" />
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="era_contactemail" Type="Edm.String" Unicode="false" />
-        <Property Name="era_invoicenumber" Type="Edm.String" Unicode="false" />
         <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
         <Property Name="era_legalbusinessname" Type="Edm.String" Unicode="false" />
         <Property Name="era_approvedtotalamount_base" Type="Edm.Decimal" Scale="Variable" />
@@ -8789,6 +8827,7 @@
         <Property Name="_era_sendpaymenttosupplier_value" Type="Edm.Guid" />
         <Property Name="era_contactfax" Type="Edm.String" Unicode="false" />
         <Property Name="era_totalinvoiceamount_base" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="era_invoicenumber" Type="Edm.String" Unicode="false" />
         <Property Name="era_storenumber" Type="Edm.String" Unicode="false" />
         <Property Name="era_remitpostalcode" Type="Edm.String" Unicode="false" />
         <Property Name="_owninguser_value" Type="Edm.Guid" />
@@ -8803,6 +8842,7 @@
         <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="era_remitpaymenttootherbusiness" Type="Edm.Boolean" />
         <Property Name="era_totalgst_base" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="_new_esstask_value" Type="Edm.Guid" />
         <Property Name="_era_relatedjurisdiction_value" Type="Edm.Guid" />
         <Property Name="versionnumber" Type="Edm.Int64" />
         <Property Name="_era_province_value" Type="Edm.Guid" />
@@ -8816,6 +8856,7 @@
         <Property Name="era_remitprovincestate" Type="Edm.String" Unicode="false" />
         <Property Name="importsequencenumber" Type="Edm.Int32" />
         <Property Name="era_remitaddress1" Type="Edm.String" Unicode="false" />
+        <Property Name="new_referralno" Type="Edm.String" Unicode="false" />
         <Property Name="_era_qualifiedreceiver_value" Type="Edm.Guid" />
         <Property Name="era_invoiceref" Type="Edm.String" Unicode="false" />
         <Property Name="era_totalinvoiceamount" Type="Edm.Decimal" Scale="Variable" />
@@ -8905,43 +8946,49 @@
         <NavigationProperty Name="era_ExpenseAuditor" Type="mscrm.systemuser" Nullable="false" Partner="era_systemuser_era_supplierinvoice_ExpenseAuditor">
           <ReferentialConstraint Property="_era_expenseauditor_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
+        <NavigationProperty Name="new_essTask" Type="mscrm.era_task" Nullable="false" Partner="new_era_task_era_supplierinvoice_Task">
+          <ReferentialConstraint Property="_new_esstask_value" ReferencedProperty="era_taskid" />
+        </NavigationProperty>
       </EntityType>
       <EntityType Name="era_supplierpayments" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="era_supplierpaymentsid" />
         </Key>
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="era_batchnumber" Type="Edm.String" Unicode="false" />
-        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
-        <Property Name="era_project" Type="Edm.String" Unicode="false" />
-        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="era_resp" Type="Edm.String" Unicode="false" />
-        <Property Name="era_stob" Type="Edm.String" Unicode="false" />
-        <Property Name="_era_relatedsupplierinvoice_value" Type="Edm.Guid" />
-        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="statecode" Type="Edm.Int32" />
-        <Property Name="era_supplierpaymentsid" Type="Edm.Guid" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="era_actualamount_base" Type="Edm.Decimal" Scale="Variable" />
-        <Property Name="exchangerate" Type="Edm.Decimal" Scale="Variable" />
-        <Property Name="era_actualamount" Type="Edm.Decimal" Scale="Variable" />
-        <Property Name="statuscode" Type="Edm.Int32" />
-        <Property Name="_owningteam_value" Type="Edm.Guid" />
-        <Property Name="_transactioncurrencyid_value" Type="Edm.Guid" />
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
-        <Property Name="era_account" Type="Edm.String" Unicode="false" />
         <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
-        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="_transactioncurrencyid_value" Type="Edm.Guid" />
+        <Property Name="era_resp" Type="Edm.String" Unicode="false" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_stob" Type="Edm.String" Unicode="false" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
         <Property Name="era_documentnumber" Type="Edm.String" Unicode="false" />
-        <Property Name="_era_relatedsupplier_value" Type="Edm.Guid" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
-        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_project" Type="Edm.String" Unicode="false" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="era_batchnumber" Type="Edm.String" Unicode="false" />
+        <Property Name="era_account" Type="Edm.String" Unicode="false" />
+        <Property Name="_era_relatedsupplierinvoice_value" Type="Edm.Guid" />
+        <Property Name="exchangerate" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="era_actualamount" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="new_remittancemessage" Type="Edm.String" Unicode="false" />
+        <Property Name="new_paymenttasknumber" Type="Edm.String" Unicode="false" />
         <Property Name="era_tasknumber" Type="Edm.String" Unicode="false" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="_era_relatedsupplier_value" Type="Edm.Guid" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_supplierpaymentsid" Type="Edm.Guid" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="era_actualamount_base" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="_new_casresponse_value" Type="Edm.Guid" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_supplierpayments_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -8982,6 +9029,10 @@
         </NavigationProperty>
         <NavigationProperty Name="transactioncurrencyid" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_era_supplierpayments">
           <ReferentialConstraint Property="_transactioncurrencyid_value" ReferencedProperty="transactioncurrencyid" />
+        </NavigationProperty>
+        <NavigationProperty Name="new_era_supplierpayments_new_casresponse_SupplierPayment" Type="Collection(mscrm.new_casresponse)" Partner="new_SupplierPayment" />
+        <NavigationProperty Name="new_CASResponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_new_casresponse_era_supplierpayments_CASResponse">
+          <ReferentialConstraint Property="_new_casresponse_value" ReferencedProperty="new_casresponseid" />
         </NavigationProperty>
       </EntityType>
       <EntityType Name="era_supplier" BaseType="mscrm.crmbaseentity">
@@ -9073,6 +9124,7 @@
         <NavigationProperty Name="era_supplier_DuplicateBaseRecord" Type="Collection(mscrm.duplicaterecord)" Partner="baserecordid_era_supplier" />
         <NavigationProperty Name="era_supplierpayments_relatedsupplier" Type="Collection(mscrm.era_supplierpayments)" Partner="era_relatedsupplier" />
         <NavigationProperty Name="era_supplierinvoice_SendPaymenttoSupplier" Type="Collection(mscrm.era_supplierinvoice)" Partner="era_SendPaymenttoSupplier" />
+        <NavigationProperty Name="era_era_supplier_era_essteamsupplier_SupplierId" Type="Collection(mscrm.era_essteamsupplier)" Partner="era_SupplierId" />
       </EntityType>
       <EntityType Name="era_supportlineitem" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -9281,32 +9333,33 @@
         <Key>
           <PropertyRef Name="era_taskid" />
         </Key>
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_currentd" Type="Edm.DateTimeOffset" />
-        <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_taskid" Type="Edm.Guid" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="statecode" Type="Edm.Int32" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
         <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
-        <Property Name="statuscode" Type="Edm.Int32" />
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
-        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
-        <Property Name="era_taskstatus" Type="Edm.String" Unicode="false" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="era_currentdateandtime" Type="Edm.DateTimeOffset" />
-        <Property Name="_era_jurisdictionid_value" Type="Edm.Guid" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
-        <Property Name="era_taskdetails" Type="Edm.String" Unicode="false" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="era_taskstartdate" Type="Edm.DateTimeOffset" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_currentdateandtime" Type="Edm.DateTimeOffset" />
         <Property Name="era_taskenddate" Type="Edm.DateTimeOffset" />
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
-        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_isreferencedbyessfile" Type="Edm.Boolean" />
+        <Property Name="era_taskdetails" Type="Edm.String" Unicode="false" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
         <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_era_jurisdictionid_value" Type="Edm.Guid" />
+        <Property Name="era_taskid" Type="Edm.Guid" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="era_currentd" Type="Edm.DateTimeOffset" />
+        <Property Name="era_taskstatus" Type="Edm.String" Unicode="false" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="statuscode" Type="Edm.Int32" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_task_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -9343,6 +9396,7 @@
           <ReferentialConstraint Property="_era_jurisdictionid_value" ReferencedProperty="era_jurisdictionid" />
         </NavigationProperty>
         <NavigationProperty Name="era_era_task_era_evacuationfileId" Type="Collection(mscrm.era_evacuationfile)" Partner="era_TaskId" />
+        <NavigationProperty Name="new_era_task_era_supplierinvoice_Task" Type="Collection(mscrm.era_supplierinvoice)" Partner="new_essTask" />
       </EntityType>
       <EntityType Name="exchangesyncidmapping" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -12717,6 +12771,9 @@
         <NavigationProperty Name="regardingobjectid_era_householdmember" Type="mscrm.era_householdmember" Nullable="false" Partner="era_householdmember_MailboxTrackingFolders">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_householdmemberid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_MailboxTrackingFolders">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="new_casresponseid" />
+        </NavigationProperty>
         <NavigationProperty Name="modifiedonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_mailboxtrackingfolder_modifiedonbehalfby">
           <ReferentialConstraint Property="_modifiedonbehalfby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -13764,6 +13821,71 @@
         <NavigationProperty Name="adminsettingsentity_ProcessSession" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_adminsettingsentity" />
         <NavigationProperty Name="adminsettingsentity_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_adminsettingsentity" />
         <NavigationProperty Name="adminsettingsentity_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_adminsettingsentity" />
+      </EntityType>
+      <EntityType Name="new_casresponse" BaseType="mscrm.crmbaseentity">
+        <Key>
+          <PropertyRef Name="new_casresponseid" />
+        </Key>
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="new_caspaymentstatus" Type="Edm.Int32" />
+        <Property Name="new_errorcode" Type="Edm.Int32" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="new_casresponseid" Type="Edm.Guid" />
+        <Property Name="new_description" Type="Edm.String" Unicode="false" />
+        <Property Name="_new_supplierpayment_value" Type="Edm.Guid" />
+        <Property Name="new_name" Type="Edm.String" Unicode="false" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="new_errordetails" Type="Edm.String" Unicode="false" />
+        <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_new_casresponse_createdby">
+          <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="createdonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_new_casresponse_createdonbehalfby">
+          <ReferentialConstraint Property="_createdonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedby" Type="mscrm.systemuser" Nullable="false" Partner="lk_new_casresponse_modifiedby">
+          <ReferentialConstraint Property="_modifiedby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_new_casresponse_modifiedonbehalfby">
+          <ReferentialConstraint Property="_modifiedonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owninguser" Type="mscrm.systemuser" Nullable="false" Partner="user_new_casresponse">
+          <ReferentialConstraint Property="_owninguser_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningteam" Type="mscrm.team" Nullable="false" Partner="team_new_casresponse">
+          <ReferentialConstraint Property="_owningteam_value" ReferencedProperty="teamid" />
+        </NavigationProperty>
+        <NavigationProperty Name="ownerid" Type="mscrm.principal" Nullable="false" Partner="owner_new_casresponse">
+          <ReferentialConstraint Property="_ownerid_value" ReferencedProperty="ownerid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningbusinessunit" Type="mscrm.businessunit" Nullable="false" Partner="business_unit_new_casresponse">
+          <ReferentialConstraint Property="_owningbusinessunit_value" ReferencedProperty="businessunitid" />
+        </NavigationProperty>
+        <NavigationProperty Name="new_casresponse_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_new_casresponse" />
+        <NavigationProperty Name="new_casresponse_DuplicateMatchingRecord" Type="Collection(mscrm.duplicaterecord)" Partner="duplicaterecordid_new_casresponse" />
+        <NavigationProperty Name="new_casresponse_DuplicateBaseRecord" Type="Collection(mscrm.duplicaterecord)" Partner="baserecordid_new_casresponse" />
+        <NavigationProperty Name="new_casresponse_AsyncOperations" Type="Collection(mscrm.asyncoperation)" Partner="regardingobjectid_new_casresponse" />
+        <NavigationProperty Name="new_casresponse_MailboxTrackingFolders" Type="Collection(mscrm.mailboxtrackingfolder)" Partner="regardingobjectid_new_casresponse" />
+        <NavigationProperty Name="new_casresponse_ProcessSession" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_new_casresponse" />
+        <NavigationProperty Name="new_casresponse_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_new_casresponse" />
+        <NavigationProperty Name="new_casresponse_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_new_casresponse" />
+        <NavigationProperty Name="new_SupplierPayment" Type="mscrm.era_supplierpayments" Nullable="false" Partner="new_era_supplierpayments_new_casresponse_SupplierPayment">
+          <ReferentialConstraint Property="_new_supplierpayment_value" ReferencedProperty="era_supplierpaymentsid" />
+        </NavigationProperty>
+        <NavigationProperty Name="new_new_casresponse_era_supplierpayments_CASResponse" Type="Collection(mscrm.era_supplierpayments)" Partner="new_CASResponse" />
       </EntityType>
       <EntityType Name="newprocess" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -14942,6 +15064,7 @@
         <NavigationProperty Name="owner_era_bcsc" Type="Collection(mscrm.era_bcsc)" Partner="ownerid" />
         <NavigationProperty Name="owner_era_needsassessmentanimal" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="ownerid" />
         <NavigationProperty Name="owner_era_householdmember" Type="Collection(mscrm.era_householdmember)" Partner="ownerid" />
+        <NavigationProperty Name="owner_new_casresponse" Type="Collection(mscrm.new_casresponse)" Partner="ownerid" />
         <NavigationProperty Name="owner_personaldocumenttemplates" Type="Collection(mscrm.personaldocumenttemplate)" Partner="ownerid" />
         <NavigationProperty Name="owner_accounts" Type="Collection(mscrm.account)" Partner="ownerid" />
         <NavigationProperty Name="owner_goalrollupquery" Type="Collection(mscrm.goalrollupquery)" Partner="ownerid" />
@@ -16129,6 +16252,9 @@
         <NavigationProperty Name="objectid_era_householdmember" Type="mscrm.era_householdmember" Nullable="false" Partner="era_householdmember_PrincipalObjectAttributeAccesses">
           <ReferentialConstraint Property="_objectid_value" ReferencedProperty="era_householdmemberid" />
         </NavigationProperty>
+        <NavigationProperty Name="objectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_PrincipalObjectAttributeAccesses">
+          <ReferentialConstraint Property="_objectid_value" ReferencedProperty="new_casresponseid" />
+        </NavigationProperty>
         <NavigationProperty Name="objectid_letter" Type="mscrm.letter" Nullable="false" Partner="letter_principalobjectattributeaccess" />
         <NavigationProperty Name="objectid_reportcategory" Type="mscrm.reportcategory" Nullable="false" Partner="reportcategory_principalobjectattributeaccess">
           <ReferentialConstraint Property="_objectid_value" ReferencedProperty="reportcategoryid" />
@@ -16516,6 +16642,9 @@
         </NavigationProperty>
         <NavigationProperty Name="regardingobjectid_era_householdmember" Type="mscrm.era_householdmember" Nullable="false" Partner="era_householdmember_ProcessSession">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_householdmemberid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_ProcessSession">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="new_casresponseid" />
         </NavigationProperty>
         <NavigationProperty Name="regardingobjectid_queue" Type="mscrm.queue" Nullable="false" Partner="Queue_ProcessSessions">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="queueid" />
@@ -21014,6 +21143,9 @@
         <NavigationProperty Name="regardingobjectid_era_householdmember" Type="mscrm.era_householdmember" Nullable="false" Partner="era_householdmember_SyncErrors">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_householdmemberid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_SyncErrors">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="new_casresponseid" />
+        </NavigationProperty>
         <NavigationProperty Name="regardingobjectid_ExpiredProcess_syncerror" Type="mscrm.expiredprocess" Nullable="false" Partner="ExpiredProcess_SyncErrors">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="businessprocessflowinstanceid" />
         </NavigationProperty>
@@ -22005,6 +22137,11 @@
         <NavigationProperty Name="user_era_householdmember" Type="Collection(mscrm.era_householdmember)" Partner="owninguser" />
         <NavigationProperty Name="era_systemuser_era_supplierinvoice_QualifiedReceiver" Type="Collection(mscrm.era_supplierinvoice)" Partner="era_QualifiedReceiver" />
         <NavigationProperty Name="era_systemuser_era_supplierinvoice_ExpenseAuditor" Type="Collection(mscrm.era_supplierinvoice)" Partner="era_ExpenseAuditor" />
+        <NavigationProperty Name="lk_new_casresponse_createdby" Type="Collection(mscrm.new_casresponse)" Partner="createdby" />
+        <NavigationProperty Name="lk_new_casresponse_createdonbehalfby" Type="Collection(mscrm.new_casresponse)" Partner="createdonbehalfby" />
+        <NavigationProperty Name="lk_new_casresponse_modifiedby" Type="Collection(mscrm.new_casresponse)" Partner="modifiedby" />
+        <NavigationProperty Name="lk_new_casresponse_modifiedonbehalfby" Type="Collection(mscrm.new_casresponse)" Partner="modifiedonbehalfby" />
+        <NavigationProperty Name="user_new_casresponse" Type="Collection(mscrm.new_casresponse)" Partner="owninguser" />
         <NavigationProperty Name="lk_slakpiinstancebase_createdonbehalfby" Type="Collection(mscrm.slakpiinstance)" Partner="createdonbehalfby" />
         <NavigationProperty Name="lk_mobileofflineprofileitemassocaition_modifiedonbehalfby" Type="Collection(mscrm.mobileofflineprofileitemassociation)" Partner="modifiedonbehalfby" />
         <NavigationProperty Name="lk_userqueryvisualizationbase_modifiedonbehalfby" Type="Collection(mscrm.userqueryvisualization)" Partner="modifiedonbehalfby" />
@@ -22807,6 +22944,7 @@
         <NavigationProperty Name="team_era_bcsc" Type="Collection(mscrm.era_bcsc)" Partner="owningteam" />
         <NavigationProperty Name="team_era_needsassessmentanimal" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="owningteam" />
         <NavigationProperty Name="team_era_householdmember" Type="Collection(mscrm.era_householdmember)" Partner="owningteam" />
+        <NavigationProperty Name="team_new_casresponse" Type="Collection(mscrm.new_casresponse)" Partner="owningteam" />
         <NavigationProperty Name="team_DuplicateRules" Type="Collection(mscrm.duplicaterule)" Partner="owningteam" />
         <NavigationProperty Name="team_Imports" Type="Collection(mscrm.import)" Partner="owningteam" />
         <NavigationProperty Name="OwningTeam_postfollows" Type="Collection(mscrm.postfollow)" Partner="owningteam" />
@@ -29582,6 +29720,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_bcsc" Target="era_bcscs" />
           <NavigationPropertyBinding Path="regardingobjectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="regardingobjectid_era_householdmember" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="regardingobjectid_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="regardingobjectid_report" Target="reports" />
           <NavigationPropertyBinding Path="AsyncOperation_Emails" Target="emails" />
           <NavigationPropertyBinding Path="regardingobjectid_recurringappointmentmaster" Target="recurringappointmentmasters" />
@@ -30010,6 +30149,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_bcsc" Target="era_bcscs" />
           <NavigationPropertyBinding Path="regardingobjectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="regardingobjectid_era_householdmember" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="regardingobjectid_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="regardingobjectid_customeraddress" Target="customeraddresses" />
           <NavigationPropertyBinding Path="regardingobjectid_annualfiscalcalendar" Target="annualfiscalcalendars" />
           <NavigationPropertyBinding Path="regardingobjectid_fax" Target="faxes" />
@@ -30215,6 +30355,7 @@
           <NavigationPropertyBinding Path="business_unit_era_bcsc" Target="era_bcscs" />
           <NavigationPropertyBinding Path="business_unit_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="business_unit_era_householdmember" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="business_unit_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="BusinessUnit_SyncErrors" Target="syncerrors" />
           <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
           <NavigationPropertyBinding Path="BulkDeleteOperation_BusinessUnit" Target="bulkdeleteoperations" />
@@ -31115,6 +31256,8 @@
           <NavigationPropertyBinding Path="baserecordid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="duplicaterecordid_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="baserecordid_era_householdmember" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="duplicaterecordid_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="baserecordid_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="baserecordid_goalrollupquery" Target="goalrollupqueries" />
           <NavigationPropertyBinding Path="duplicaterecordid_publisher" Target="publishers" />
           <NavigationPropertyBinding Path="baserecordid_transactioncurrency" Target="transactioncurrencies" />
@@ -31647,6 +31790,7 @@
           <NavigationPropertyBinding Path="era_essteamsupplier_BulkDeleteFailures" Target="bulkdeletefailures" />
           <NavigationPropertyBinding Path="era_essteamsupplier_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
           <NavigationPropertyBinding Path="era_ESSTeamID" Target="era_essteams" />
+          <NavigationPropertyBinding Path="era_SupplierId" Target="era_suppliers" />
         </EntitySet>
         <EntitySet Name="era_essteamusers" EntityType="Microsoft.Dynamics.CRM.era_essteamuser">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31943,6 +32087,7 @@
           <NavigationPropertyBinding Path="era_SendPaymenttoSupplier" Target="era_suppliers" />
           <NavigationPropertyBinding Path="era_QualifiedReceiver" Target="systemusers" />
           <NavigationPropertyBinding Path="era_ExpenseAuditor" Target="systemusers" />
+          <NavigationPropertyBinding Path="new_essTask" Target="era_tasks" />
         </EntitySet>
         <EntitySet Name="era_supplierpaymentses" EntityType="Microsoft.Dynamics.CRM.era_supplierpayments">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31964,6 +32109,8 @@
           <NavigationPropertyBinding Path="era_RelatedSupplierInvoice" Target="era_supplierinvoices" />
           <NavigationPropertyBinding Path="era_relatedsupplier" Target="era_suppliers" />
           <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
+          <NavigationPropertyBinding Path="new_era_supplierpayments_new_casresponse_SupplierPayment" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="new_CASResponse" Target="new_casresponses" />
         </EntitySet>
         <EntitySet Name="era_suppliers" EntityType="Microsoft.Dynamics.CRM.era_supplier">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -32000,6 +32147,7 @@
           <NavigationPropertyBinding Path="era_supplier_DuplicateBaseRecord" Target="duplicaterecords" />
           <NavigationPropertyBinding Path="era_supplierpayments_relatedsupplier" Target="era_supplierpaymentses" />
           <NavigationPropertyBinding Path="era_supplierinvoice_SendPaymenttoSupplier" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="era_era_supplier_era_essteamsupplier_SupplierId" Target="era_essteamsuppliers" />
         </EntitySet>
         <EntitySet Name="era_supportlineitems" EntityType="Microsoft.Dynamics.CRM.era_supportlineitem">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -32079,6 +32227,7 @@
           <NavigationPropertyBinding Path="era_task_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
           <NavigationPropertyBinding Path="era_JurisdictionID" Target="era_jurisdictions" />
           <NavigationPropertyBinding Path="era_era_task_era_evacuationfileId" Target="era_evacuationfiles" />
+          <NavigationPropertyBinding Path="new_era_task_era_supplierinvoice_Task" Target="era_supplierinvoices" />
         </EntitySet>
         <EntitySet Name="exchangesyncidmappings" EntityType="Microsoft.Dynamics.CRM.exchangesyncidmapping">
           <NavigationPropertyBinding Path="owninguser" Target="systemusers" />
@@ -33087,6 +33236,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_bcsc" Target="era_bcscs" />
           <NavigationPropertyBinding Path="regardingobjectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="regardingobjectid_era_householdmember" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="regardingobjectid_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
           <NavigationPropertyBinding Path="ownerid" Target="owners" />
           <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
@@ -33337,6 +33487,26 @@
           <NavigationPropertyBinding Path="adminsettingsentity_ProcessSession" Target="processsessions" />
           <NavigationPropertyBinding Path="adminsettingsentity_BulkDeleteFailures" Target="bulkdeletefailures" />
           <NavigationPropertyBinding Path="adminsettingsentity_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
+        </EntitySet>
+        <EntitySet Name="new_casresponses" EntityType="Microsoft.Dynamics.CRM.new_casresponse">
+          <NavigationPropertyBinding Path="createdby" Target="systemusers" />
+          <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="owninguser" Target="systemusers" />
+          <NavigationPropertyBinding Path="owningteam" Target="teams" />
+          <NavigationPropertyBinding Path="ownerid" Target="owners" />
+          <NavigationPropertyBinding Path="owningbusinessunit" Target="businessunits" />
+          <NavigationPropertyBinding Path="new_casresponse_SyncErrors" Target="syncerrors" />
+          <NavigationPropertyBinding Path="new_casresponse_DuplicateMatchingRecord" Target="duplicaterecords" />
+          <NavigationPropertyBinding Path="new_casresponse_DuplicateBaseRecord" Target="duplicaterecords" />
+          <NavigationPropertyBinding Path="new_casresponse_AsyncOperations" Target="asyncoperations" />
+          <NavigationPropertyBinding Path="new_casresponse_MailboxTrackingFolders" Target="mailboxtrackingfolders" />
+          <NavigationPropertyBinding Path="new_casresponse_ProcessSession" Target="processsessions" />
+          <NavigationPropertyBinding Path="new_casresponse_BulkDeleteFailures" Target="bulkdeletefailures" />
+          <NavigationPropertyBinding Path="new_casresponse_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
+          <NavigationPropertyBinding Path="new_SupplierPayment" Target="era_supplierpaymentses" />
+          <NavigationPropertyBinding Path="new_new_casresponse_era_supplierpayments_CASResponse" Target="era_supplierpaymentses" />
         </EntitySet>
         <EntitySet Name="newprocesses" EntityType="Microsoft.Dynamics.CRM.newprocess">
           <NavigationPropertyBinding Path="createdbyname" Target="systemusers" />
@@ -34039,6 +34209,7 @@
           <NavigationPropertyBinding Path="objectid_era_bcsc" Target="era_bcscs" />
           <NavigationPropertyBinding Path="objectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="objectid_era_householdmember" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="objectid_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="objectid_letter" Target="letters" />
           <NavigationPropertyBinding Path="objectid_reportcategory" Target="reportcategories" />
           <NavigationPropertyBinding Path="objectid_sharepointdocumentlocation" Target="sharepointdocumentlocations" />
@@ -34162,6 +34333,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_bcsc" Target="era_bcscs" />
           <NavigationPropertyBinding Path="regardingobjectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="regardingobjectid_era_householdmember" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="regardingobjectid_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="regardingobjectid_queue" Target="queues" />
           <NavigationPropertyBinding Path="canceledby" Target="systemusers" />
           <NavigationPropertyBinding Path="regardingobjectid_contact" Target="contacts" />
@@ -35533,6 +35705,7 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_bcsc" Target="era_bcscs" />
           <NavigationPropertyBinding Path="regardingobjectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="regardingobjectid_era_householdmember" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="regardingobjectid_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="regardingobjectid_ExpiredProcess_syncerror" Target="expiredprocesses" />
           <NavigationPropertyBinding Path="regardingobjectid_email_syncerror" Target="emails" />
           <NavigationPropertyBinding Path="regardingobjectid_systemuser" Target="systemusers" />
@@ -36186,6 +36359,11 @@
           <NavigationPropertyBinding Path="user_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="era_systemuser_era_supplierinvoice_QualifiedReceiver" Target="era_supplierinvoices" />
           <NavigationPropertyBinding Path="era_systemuser_era_supplierinvoice_ExpenseAuditor" Target="era_supplierinvoices" />
+          <NavigationPropertyBinding Path="lk_new_casresponse_createdby" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="lk_new_casresponse_createdonbehalfby" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="lk_new_casresponse_modifiedby" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="lk_new_casresponse_modifiedonbehalfby" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="user_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="lk_slakpiinstancebase_createdonbehalfby" Target="slakpiinstances" />
           <NavigationPropertyBinding Path="lk_mobileofflineprofileitemassocaition_modifiedonbehalfby" Target="mobileofflineprofileitemassociations" />
           <NavigationPropertyBinding Path="lk_userqueryvisualizationbase_modifiedonbehalfby" Target="userqueryvisualizations" />
@@ -36885,6 +37063,7 @@
           <NavigationPropertyBinding Path="team_era_bcsc" Target="era_bcscs" />
           <NavigationPropertyBinding Path="team_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="team_era_householdmember" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="team_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="team_DuplicateRules" Target="duplicaterules" />
           <NavigationPropertyBinding Path="team_Imports" Target="imports" />
           <NavigationPropertyBinding Path="OwningTeam_postfollows" Target="postfollows" />
