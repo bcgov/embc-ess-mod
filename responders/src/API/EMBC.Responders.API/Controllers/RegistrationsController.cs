@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -92,6 +93,26 @@ namespace EMBC.Responders.API.Controllers
             var registrants = new[] { registrant, registrant };
             var files = new[] { file, file };
             return await Task.FromResult(new SearchResults { Registrants = registrants, Files = files });
+        }
+
+        [HttpGet("profile/security")]
+        public async Task<ActionResult<IEnumerable<SecurityQuestion>>> GetSecurityQuestions()
+        {
+            return Ok(await Task.FromResult(new[]
+            {
+                new SecurityQuestion { Id = 1, Question = "question1", Answer = "a***1" },
+                new SecurityQuestion { Id = 2, Question = "question2", Answer = "a***2" },
+                new SecurityQuestion { Id = 3, Question = "question3", Answer = "a***3" },
+            }));
+        }
+
+        [HttpPost("profile/security")]
+        public async Task<ActionResult<SecurityQuestionsVerificationResult>> GetSecurityQuestions(IEnumerable<SecurityQuestion> questionsToVerify)
+        {
+            return Ok(await Task.FromResult(new SecurityQuestionsVerificationResult
+            {
+                NumberOfCorrectAnswers = questionsToVerify.Where(q => q.Answer.EndsWith(q.Id.ToString())).Count()
+            }));
         }
     }
 
@@ -178,5 +199,17 @@ namespace EMBC.Responders.API.Controllers
 
         [Description("Household Member")]
         HouseholdMember
+    }
+
+    public class SecurityQuestion
+    {
+        public int Id { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
+    }
+
+    public class SecurityQuestionsVerificationResult
+    {
+        public int NumberOfCorrectAnswers { get; set; }
     }
 }
