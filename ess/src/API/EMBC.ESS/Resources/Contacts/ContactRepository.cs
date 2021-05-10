@@ -120,7 +120,7 @@ namespace EMBC.ESS.Resources.Contacts
                   .Where(c => c.statecode == (int)EntityState.Active);
 
             if (!string.IsNullOrEmpty(query.ByContactId)) contactQuery = contactQuery.Where(c => c.contactid == Guid.Parse(query.ByContactId));
-            if (!string.IsNullOrEmpty(query.ByUserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.ByUserId, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.UserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.UserId, StringComparison.OrdinalIgnoreCase));
 
             var contacts = await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync();
 

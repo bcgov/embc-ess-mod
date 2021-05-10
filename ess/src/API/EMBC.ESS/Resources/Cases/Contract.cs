@@ -62,6 +62,7 @@ namespace EMBC.ESS.Resources.Cases
     {
         public string FileId { get; set; }
         public string UserId { get; set; }
+        public string PrimaryRegistrantId { get; set; }
     }
 
     public class EvacuationFile : Case
