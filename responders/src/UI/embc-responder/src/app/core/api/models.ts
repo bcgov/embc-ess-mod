@@ -14,6 +14,13 @@ export { EvacuationFileSearchResult } from './models/evacuation-file-search-resu
 export { EvacuationFileStatus } from './models/evacuation-file-status';
 export { EvacuationFileHouseholdMember } from './models/evacuation-file-household-member';
 export { HouseholdMemberType } from './models/household-member-type';
+export { GetSecurityQuestionsResponse } from './models/get-security-questions-response';
+export { SecurityQuestion } from './models/security-question';
+export { VerifySecurityQuestionsResponse } from './models/verify-security-questions-response';
+export { VerifySecurityQuestionsRequest } from './models/verify-security-questions-request';
+export { GetSecurityPhraseResponse } from './models/get-security-phrase-response';
+export { VerifySecurityPhraseResponse } from './models/verify-security-phrase-response';
+export { VerifySecurityPhraseRequest } from './models/verify-security-phrase-request';
 export { EssTask } from './models/ess-task';
 export { AssignedCommunity } from './models/assigned-community';
 export { TeamMember } from './models/team-member';
