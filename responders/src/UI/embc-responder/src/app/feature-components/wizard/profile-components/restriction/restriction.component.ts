@@ -28,7 +28,12 @@ export class RestrictionComponent implements OnInit {
 
   createRestrictionForm(): void {
     this.restrictionForm = this.formBuilder.group({
-      restrictedAccess: ['', [Validators.required]]
+      restrictedAccess: [
+        this.stepCreateProfileService.restrictedAccess !== null
+          ? this.stepCreateProfileService.restrictedAccess
+          : '',
+        [Validators.required]
+      ]
     });
   }
 
@@ -44,8 +49,17 @@ export class RestrictionComponent implements OnInit {
    */
   next(): void {
     this.stepCreateProfileService.setTabStatus('restriction', 'complete');
+    this.stepCreateProfileService.restrictedAccess = this.restrictionForm.get(
+      'restrictedAccess'
+    ).value;
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/security-questions'
+    ]);
+  }
+
+  back(): void {
+    this.router.navigate([
+      '/ess-wizard/create-evacuee-profile/collection-notice'
     ]);
   }
 }

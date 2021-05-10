@@ -14,6 +14,7 @@ export { EvacuationFileSearchResult } from './models/evacuation-file-search-resu
 export { EvacuationFileStatus } from './models/evacuation-file-status';
 export { EvacuationFileHouseholdMember } from './models/evacuation-file-household-member';
 export { HouseholdMemberType } from './models/household-member-type';
+export { EssTask } from './models/ess-task';
 export { AssignedCommunity } from './models/assigned-community';
 export { TeamMember } from './models/team-member';
 export { MemberRole } from './models/member-role';
