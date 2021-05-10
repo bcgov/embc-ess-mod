@@ -41,19 +41,10 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// </summary>
     public class EvacuationFilesQuery : Query<EvacuationFilesQueryResult>
     {
+        public bool IncludeRestrictedAccess { get; set; }
         public string ByFileId { get; set; }
         public string ByUserId { get; set; }
         public EvacuationFileStatus[] ByStatuses { get; set; }
-    }
-
-    /// <summary>
-    /// Search matching evacuation files
-    /// </summary>
-    public class EvacuationFilesSearchQuery : Query<EvacuationFilesQueryResult>
-    {
-        public string FirstName { get; set; }
-        public string lastName { get; set; }
-        public string DateOfBirth { get; set; }
     }
 
     public class EvacuationFilesQueryResult
@@ -66,22 +57,31 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// </summary>
     public class RegistrantsQuery : Query<RegistrantsQueryResult>
     {
+        public bool IncludeRestrictedAccess { get; set; }
         public string ByUserId { get; set; }
-    }
-
-    /// <summary>
-    /// Search matching registrants
-    /// </summary>
-    public class RegistrantsSearchQuery : Query<EvacuationFilesQueryResult>
-    {
-        public string FirstName { get; set; }
-        public string lastName { get; set; }
-        public string DateOfBirth { get; set; }
     }
 
     public class RegistrantsQueryResult
     {
         public IEnumerable<RegistrantProfile> Items { get; set; }
+    }
+
+    /// <summary>
+    /// Search matching evacuation files
+    /// </summary>
+    public class SearchQuery : Query<SearchQueryResult>
+    {
+        public bool IncludeRestrictedAccess { get; set; }
+        public IEnumerable<EvacuationFileStatus> IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
+        public string FirstName { get; set; }
+        public string lastName { get; set; }
+        public string DateOfBirth { get; set; }
+    }
+
+    public class SearchQueryResult
+    {
+        public IEnumerable<EvacuationFile> MatchingFiles { get; set; }
+        public IEnumerable<RegistrantProfile> MatchingRegistrants { get; set; }
     }
 
     /// <summary>
@@ -104,6 +104,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string Id { get; set; }
         public EvacuationFileStatus Status { get; set; }
+        public bool RestrictedAccess { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public DateTime EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }

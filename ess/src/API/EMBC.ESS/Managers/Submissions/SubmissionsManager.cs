@@ -102,11 +102,6 @@ namespace EMBC.ESS.Managers.Submissions
             return new EvacuationFilesQueryResult { Items = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases) };
         }
 
-        public async Task<EvacuationFilesQueryResult> Handle(EvacuationFilesSearchQuery query)
-        {
-            return await Task.FromResult(new EvacuationFilesQueryResult());
-        }
-
         public async Task<RegistrantsQueryResult> Handle(RegistrantsQuery query)
         {
             var items = (await contactRepository.QueryContact(new ContactQuery { ByUserId = query.ByUserId })).Items;
@@ -114,9 +109,13 @@ namespace EMBC.ESS.Managers.Submissions
             return new RegistrantsQueryResult { Items = mapper.Map<IEnumerable<RegistrantProfile>>(items) };
         }
 
-        public async Task<RegistrantsQueryResult> Handle(RegistrantsSearchQuery query)
+        public async Task<SearchQueryResult> Handle(SearchQuery query)
         {
-            return await Task.FromResult(new RegistrantsQueryResult());
+            return await Task.FromResult(new SearchQueryResult()
+            {
+                MatchingFiles = Array.Empty<Shared.Contracts.Submissions.EvacuationFile>(),
+                MatchingRegistrants = Array.Empty<RegistrantProfile>()
+            });
         }
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)
