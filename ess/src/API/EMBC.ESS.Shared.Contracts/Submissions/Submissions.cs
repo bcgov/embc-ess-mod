@@ -37,28 +37,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     }
 
     /// <summary>
-    /// Search matching evacuation files
-    /// </summary>
-    public class SearchQuery : Query<SearchQueryResult>
-    {
-        public string ByFileId { get; set; }
-        public string ByRegistrantId { get; set; }
-        public string ByUserId { get; set; }
-        public string ByFirstName { get; set; }
-        public string ByLastName { get; set; }
-        public string ByDateOfBirth { get; set; }
-        public bool IncludeRestrictedAccess { get; set; }
-        public bool IncludeHouseholdMembers { get; set; }
-        public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
-    }
-
-    public class SearchQueryResult
-    {
-        public IEnumerable<EvacuationFile> MatchingFiles { get; set; }
-        public IEnumerable<RegistrantProfile> MatchingRegistrants { get; set; }
-    }
-
-    /// <summary>
     /// Save registrant's profile
     /// </summary>
     public class SaveRegistrantCommand : Command

@@ -97,8 +97,24 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<SearchQueryResult> Handle(SearchQuery query)
         {
-            var cases = (await caseRepository.QueryCase(new QueryEvacuationFiles { UserId = query.ByUserId, FileId = query.ByFileId })).Items;
-            var contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = query.ByUserId })).Items;
+            IEnumerable<Contact> contacts = Array.Empty<Contact>();
+            IEnumerable<Case> cases = Array.Empty<Case>();
+            foreach (var criteria in query.SearchParameters)
+            {
+                if (criteria is RegistrantsSearchCriteria registrantsSearchCriteria)
+                {
+                    contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = registrantsSearchCriteria.UserId })).Items;
+                }
+                else if (criteria is EvacuationFilesSearchCriteria evacuationFilesSearchCriteria)
+                {
+                    cases = (await caseRepository.QueryCase(new QueryEvacuationFiles
+                    {
+                        PrimaryRegistrantId = evacuationFilesSearchCriteria.PrimaryRegistrantId,
+                        UserId = evacuationFilesSearchCriteria.PrimaryRegistrantUserId,
+                        FileId = evacuationFilesSearchCriteria.FileId
+                    })).Items;
+                }
+            }
 
             return await Task.FromResult(new SearchQueryResult()
             {
