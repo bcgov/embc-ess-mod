@@ -36,29 +36,9 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public EvacuationFile File { get; set; }
     }
 
-    /// <summary>
-    /// Query specific evacuation files
-    /// </summary>
-    public class EvacuationFilesQuery : Query<EvacuationFilesQueryResult>
-    {
-        public bool IncludeRestrictedAccess { get; set; }
-        public string ByFileId { get; set; }
-        public string ByUserId { get; set; }
-        public EvacuationFileStatus[] ByStatuses { get; set; }
-    }
-
     public class EvacuationFilesQueryResult
     {
         public IEnumerable<EvacuationFile> Items { get; set; }
-    }
-
-    /// <summary>
-    /// Query specific regitrants
-    /// </summary>
-    public class RegistrantsQuery : Query<RegistrantsQueryResult>
-    {
-        public bool IncludeRestrictedAccess { get; set; }
-        public string ByUserId { get; set; }
     }
 
     public class RegistrantsQueryResult
@@ -71,11 +51,13 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// </summary>
     public class SearchQuery : Query<SearchQueryResult>
     {
+        public string ByFileId { get; set; }
+        public string ByUserId { get; set; }
+        public string ByFirstName { get; set; }
+        public string ByLastName { get; set; }
+        public string ByDateOfBirth { get; set; }
         public bool IncludeRestrictedAccess { get; set; }
-        public IEnumerable<EvacuationFileStatus> IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
-        public string FirstName { get; set; }
-        public string lastName { get; set; }
-        public string DateOfBirth { get; set; }
+        public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
     }
 
     public class SearchQueryResult
