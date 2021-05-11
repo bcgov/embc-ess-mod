@@ -364,7 +364,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.PersonalDetails.PreferredName))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
-                .ReverseMap()
                 ;
         }
     }
