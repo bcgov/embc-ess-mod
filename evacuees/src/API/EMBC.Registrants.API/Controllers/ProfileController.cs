@@ -43,13 +43,15 @@ namespace EMBC.Registrants.API.Controllers
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IUserManager userManager;
+        private readonly IEvacuationSearchService evacuationSearchService;
 
-        public ProfileController(IHostEnvironment env, IMessagingClient messagingClient, IMapper mapper, IUserManager userManager)
+        public ProfileController(IHostEnvironment env, IMessagingClient messagingClient, IMapper mapper, IUserManager userManager, IEvacuationSearchService evacuationSearchService)
         {
             this.env = env;
             this.messagingClient = messagingClient;
             this.mapper = mapper;
             this.userManager = userManager;
+            this.evacuationSearchService = evacuationSearchService;
         }
 
         /// <summary>
@@ -63,7 +65,7 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<Profile>> GetProfile()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var profile = mapper.Map<Profile>((await messagingClient.Send(new RegistrantsQuery { ByUserId = userId })).Items.SingleOrDefault());
+            var profile = mapper.Map<Profile>(await evacuationSearchService.GetRegistrantByUserId(userId));
             if (profile == null)
             {
                 //try get BCSC profile
@@ -83,7 +85,7 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<bool>> GetDoesUserExists()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserId = userId })).Items.SingleOrDefault();
+            var profile = await evacuationSearchService.GetRegistrantByUserId(userId);
             return Ok(profile != null);
         }
 
@@ -138,7 +140,7 @@ namespace EMBC.Registrants.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var profile = (await messagingClient.Send(new RegistrantsQuery { ByUserId = userId })).Items.SingleOrDefault();
+            var profile = await evacuationSearchService.GetRegistrantByUserId(userId);
             if (profile == null) return NotFound(userId);
 
             //TODO: map to user profile from BCSC
