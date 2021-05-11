@@ -27,6 +27,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => EvacuationFileStatus.Pending))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => DateTime.Now))
+                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => new[] { s.PreliminaryNeedsAssessment }))
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => (string)null))
                 ;
@@ -72,6 +73,7 @@ namespace EMBC.Registrants.API.Mappers
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
+                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.Ignore())
                 ;
         }
