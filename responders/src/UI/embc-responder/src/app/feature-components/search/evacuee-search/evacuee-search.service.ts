@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  EvacueeDetailsModel,
-  EvacueeSearchContextModel
-} from 'src/app/core/models/evacuee-search-context.model';
+import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 
 @Injectable({
