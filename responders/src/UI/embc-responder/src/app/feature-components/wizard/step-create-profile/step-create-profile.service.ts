@@ -17,7 +17,6 @@ export class StepCreateProfileService {
     WizardTabModelValues.evacueeProfileTabs;
 
   private restricted: boolean;
-
   private personalDetail: PersonDetails;
   private primaryAddressDetail: Address;
   private mailingAddressDetail: Address;
