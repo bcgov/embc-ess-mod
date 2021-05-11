@@ -46,7 +46,9 @@ export class EssFilesResultsComponent
   ngOnInit(): void {}
 
   openESSFile(): void {
-    if (this.evacueeSearchService.getHasShownIdentification()) {
+    if (
+      this.evacueeSearchService.getEvacueeSearchContext().hasShownIdentification
+    ) {
       this.router.navigate(['responder-access/search/essfile']);
     } else {
       this.router.navigate(['responder-access/search/security-phrase']);

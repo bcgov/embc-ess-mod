@@ -89,8 +89,10 @@ export class EvacueeNameSearchComponent implements OnInit {
       dateOfBirth: this.nameSearchForm.get('dateOfBirth').value
     };
 
-    this.evacueeSearchService.setEvacueeSearchParameters(searchParams);
+    this.evacueeSearchService.setEvacueeSearchContext({
+      evacueeSearchParameters: searchParams
+    });
     this.showResultsComponent.emit(true);
-    this.router.navigate(['responder-access/search/evacuee-results']);
+    this.router.navigate(['/responder-access/search/evacuee-results']);
   }
 }

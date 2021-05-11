@@ -1,6 +1,6 @@
-export class EvacueeSearchContextModel {
-  hasShownIdentification: boolean;
-  evacueeSearchParameters: EvacueeDetailsModel;
+export interface EvacueeSearchContextModel {
+  hasShownIdentification?: boolean;
+  evacueeSearchParameters?: EvacueeDetailsModel;
 }
 
 export class EvacueeDetailsModel {
