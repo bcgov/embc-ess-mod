@@ -36,7 +36,7 @@ namespace EMBC.ESS.Resources.Contacts
     public class ContactQuery
     {
         public string ByContactId { get; set; }
-        public string ByUserId { get; set; }
+        public string UserId { get; set; }
     }
 
     public class ContactQueryResult
