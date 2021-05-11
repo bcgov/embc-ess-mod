@@ -350,6 +350,8 @@ namespace EMBC.Responders.API.Controllers
         public RegistrationsMapping()
         {
             CreateMap<EvacueeProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
+                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
+                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.VerifiedUser))
@@ -362,7 +364,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.PersonalDetails.PreferredName))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
-
                 .ReverseMap()
                 ;
         }
