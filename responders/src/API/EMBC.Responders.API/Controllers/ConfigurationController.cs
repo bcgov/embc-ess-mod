@@ -132,6 +132,29 @@ namespace EMBC.Responders.API.Controllers
 
             return Ok(mapper.Map<IEnumerable<Code>>(items));
         }
+
+        [HttpGet("security-questions")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult GetSecurityQuestions()
+        {
+            //TODO - actually get the option set from dynamics
+            string[] questions =
+            {
+                "What was the name of your first pet?",
+                "What was your first car's make and model? (e.g. Ford Taurus)",
+                "Where was your first job?",
+                "What is your favorite children's book?",
+                "In what city or town was your mother born?",
+                "What is your favorite movie?",
+                "What is your oldest sibling's middle name?",
+                "What month and day is your anniversary?",
+                "What was your childhood nickname?",
+                "What were the last four digits of your childhood telephone number?",
+                "In what town or city did you meet your spouse or partner?"
+            };
+            return Ok(new { Questions = questions });
+        }
     }
 
     public class Configuration
