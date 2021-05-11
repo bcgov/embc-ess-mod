@@ -48,7 +48,9 @@ export class ProfileResultsComponent
   ngOnInit(): void {}
 
   openProfile(): void {
-    if (this.evacueeSearchService.getHasShownIdentification()) {
+    if (
+      this.evacueeSearchService.getEvacueeSearchContext().hasShownIdentification
+    ) {
       this.router.navigate(['responder-access/search/evacuee-profile']);
     } else {
       this.router.navigate(['responder-access/search/security-questions']);
