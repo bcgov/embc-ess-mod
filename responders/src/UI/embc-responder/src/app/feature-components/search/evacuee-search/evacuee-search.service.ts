@@ -11,7 +11,7 @@ export class EvacueeSearchService {
   constructor(private cacheService: CacheService) {}
 
   public getEvacueeSearchContext(): EvacueeSearchContextModel {
-    return this.evacueeSearchContext === null
+    return this.evacueeSearchContext === null || this.evacueeSearchContext === undefined
       ? JSON.parse(this.cacheService.get('evacueeSearchContext'))
       : this.evacueeSearchContext;
   }
