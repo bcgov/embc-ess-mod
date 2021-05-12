@@ -1,0 +1,21 @@
+button.back {
+  float: left;
+  width: 20%;
+}
+button.next {
+  float: right;
+  width: 20%;
+}
+
+p {
+  margin: 1.8em 0;
+}
+
+.row.nav-buttons {
+  margin-top: 1em;
+}
+
+.requiredField::after {
+  content: "*";
+  color: red;
+}
