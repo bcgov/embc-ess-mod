@@ -112,7 +112,8 @@ export class LocationsService {
         this.setStateProvinceList(
           [...stateProvinces].map((sp) => ({
             code: sp.value,
-            name: sp.description
+            name: sp.description,
+            countryCode: sp.parentCode.value
           }))
         );
       });

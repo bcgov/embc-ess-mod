@@ -34,21 +34,6 @@ export class CanAddressComponent implements OnInit {
     return this.addressForm.controls;
   }
 
-  /**
-   * Checks if the province value exists in the list
-   */
-  // validateProvince(): boolean {
-  //   const currentProvince = this.addressForm.get('stateProvince').value;
-  //   let invalidProvince = false;
-  //   if (currentProvince) {
-  //     if (this.provinces.indexOf(currentProvince) === -1) {
-  //       invalidProvince = !invalidProvince;
-  //       this.addressForm.get('stateProvince').setErrors({ invalidProvince: true });
-  //     }
-  //   }
-  //   return invalidProvince;
-  // }
-
   validateProvince(): boolean {
     const currentProvince = this.addressForm.get('stateProvince').value;
     let invalidProvince = false;
