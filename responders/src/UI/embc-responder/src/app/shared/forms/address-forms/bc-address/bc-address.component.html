@@ -1,0 +1,76 @@
+<div [formGroup]="addressForm">
+    <div class="row">
+        <div class="col-md-5">
+            <mat-form-field appearance="outline">
+                <mat-label>Address Line 1</mat-label>
+                <input [formControlName]="'addressLine1'" matInput placeholder="Address Line 1" maxlength="100"
+                    required>
+                <mat-error
+                    *ngIf="addressFormControl?.addressLine1.invalid && addressFormControl?.addressLine1.hasError('required')">
+                    Address Line 1 is required</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <mat-form-field appearance="outline">
+                <mat-label>Address Line 2</mat-label>
+                <input [formControlName]="'addressLine2'" matInput placeholder="Address Line 2" maxlength="100">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <input maxlength="100" type="text" [formControlName]="'jurisdiction'" matInput placeholder="City"
+                    [matAutocomplete]="auto" required>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="cityDisplayFn">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option.name}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error
+                    *ngIf="addressFormControl?.jurisdiction.invalid && addressFormControl?.jurisdiction.hasError('required')">
+                    City is required</mat-error>
+                <mat-error *ngIf="validateCity()">
+                    City is invalid</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <mat-form-field appearance="outline">
+                <mat-label>Province</mat-label>
+                <input matInput placeholder="Province" readonly value="British Columbia">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <mat-form-field appearance="outline">
+                <mat-label>Postal Code</mat-label>
+                <input [formControlName]="'postalCode'" matInput placeholder="Postal Code">
+                <!-- <mat-error
+                    *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('required')">
+                    Postal Code is required</mat-error> -->
+                <mat-error
+                    *ngIf="addressFormControl?.postalCode.invalid && addressFormControl?.postalCode.hasError('pattern')">
+                    Postal Code is invalid</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <mat-form-field appearance="outline">
+                <mat-label>Country</mat-label>
+                <input matInput placeholder="Country" readonly value="Canada">
+            </mat-form-field>
+        </div>
+    </div>
+</div>
