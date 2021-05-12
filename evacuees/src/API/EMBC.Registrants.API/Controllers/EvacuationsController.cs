@@ -23,6 +23,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -36,11 +37,13 @@ namespace EMBC.Registrants.API.Controllers
     {
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
+        private readonly IEvacuationSearchService evacuationSearchService;
 
-        public EvacuationsController(IMessagingClient messagingClient, IMapper mapper)
+        public EvacuationsController(IMessagingClient messagingClient, IMapper mapper, IEvacuationSearchService evacuationSearchService)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
+            this.evacuationSearchService = evacuationSearchService;
         }
 
         /// <summary>
@@ -79,13 +82,10 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetCurrentEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var evacuationList = (await messagingClient.Send(new EvacuationFilesQuery
-            {
-                ByUserId = userId,
-                ByStatuses = new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Active, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Pending }
-            })).Items;
+            var files = await evacuationSearchService.GetFiles(userId,
+                new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Active, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Pending });
 
-            return Ok(mapper.Map<IEnumerable<EvacuationFile>>(evacuationList));
+            return Ok(mapper.Map<IEnumerable<EvacuationFile>>(files));
         }
 
         /// <summary>
@@ -98,13 +98,10 @@ namespace EMBC.Registrants.API.Controllers
         public async Task<ActionResult<IEnumerable<EvacuationFile>>> GetPastEvacuations()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var evacuationList = (await messagingClient.Send(new EvacuationFilesQuery
-            {
-                ByUserId = userId,
-                ByStatuses = new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Expired, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Completed }
-            })).Items;
+            var files = await evacuationSearchService.GetFiles(userId,
+               new[] { ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Expired, ESS.Shared.Contracts.Submissions.EvacuationFileStatus.Completed });
 
-            return Ok(mapper.Map<IEnumerable<EvacuationFile>>(evacuationList));
+            return Ok(mapper.Map<IEnumerable<EvacuationFile>>(files));
         }
 
         /// <summary>
@@ -177,23 +174,23 @@ namespace EMBC.Registrants.API.Controllers
         public enum InsuranceOption
         {
             [EnumMember(Value = "No")]
-            No = 174360000,
+            No,
 
             [EnumMember(Value = "Yes")]
-            Yes = 174360001,
+            Yes,
 
             [EnumMember(Value = "Unsure")]
-            Unsure = 174360002,
+            Unsure,
 
             [EnumMember(Value = "Unknown")]
-            Unknown = 174360003
+            Unknown
         }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum NeedsAssessmentType
         {
-            Preliminary = 174360000,
-            Assessed = 174360001
+            Preliminary,
+            Assessed
         }
     }
 

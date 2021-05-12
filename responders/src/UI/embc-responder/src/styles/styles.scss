@@ -287,10 +287,10 @@ mat-card {
   background-color: #169BD5 !important;
 }
 
-// .requiredField::after {
-//     content: "*";
-//     color: red;
-//  }
+.requiredField::after {
+    content: "*";
+    color: red;
+ }
 
  .custom-mat-error {
    font-size: 75%;
@@ -300,9 +300,9 @@ mat-card {
    border-radius: 0px !important;
  }
 
-//  .mat-radio-label {
-//    white-space: normal !important;
-//  }
+ .mat-radio-label {
+   white-space: normal !important;
+ }
 
 //  .note-box {
 //   background-color: #F2F2F2;

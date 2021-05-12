@@ -95,28 +95,32 @@ namespace EMBC.ESS.Managers.Submissions
             return caseId;
         }
 
-        public async Task<EvacuationFilesQueryResult> Handle(EvacuationFilesQuery query)
+        public async Task<SearchQueryResult> Handle(SearchQuery query)
         {
-            var cases = (await caseRepository.QueryCase(new QueryEvacuationFiles { UserId = query.ByUserId, FileId = query.ByFileId })).Items;
+            IEnumerable<Contact> contacts = Array.Empty<Contact>();
+            IEnumerable<Case> cases = Array.Empty<Case>();
+            foreach (var criteria in query.SearchParameters)
+            {
+                if (criteria is RegistrantsSearchCriteria registrantsSearchCriteria)
+                {
+                    contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = registrantsSearchCriteria.UserId })).Items;
+                }
+                else if (criteria is EvacuationFilesSearchCriteria evacuationFilesSearchCriteria)
+                {
+                    cases = (await caseRepository.QueryCase(new QueryEvacuationFiles
+                    {
+                        PrimaryRegistrantId = evacuationFilesSearchCriteria.PrimaryRegistrantId,
+                        UserId = evacuationFilesSearchCriteria.PrimaryRegistrantUserId,
+                        FileId = evacuationFilesSearchCriteria.FileId
+                    })).Items;
+                }
+            }
 
-            return new EvacuationFilesQueryResult { Items = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases) };
-        }
-
-        public async Task<EvacuationFilesQueryResult> Handle(EvacuationFilesSearchQuery query)
-        {
-            return await Task.FromResult(new EvacuationFilesQueryResult());
-        }
-
-        public async Task<RegistrantsQueryResult> Handle(RegistrantsQuery query)
-        {
-            var items = (await contactRepository.QueryContact(new ContactQuery { ByUserId = query.ByUserId })).Items;
-
-            return new RegistrantsQueryResult { Items = mapper.Map<IEnumerable<RegistrantProfile>>(items) };
-        }
-
-        public async Task<RegistrantsQueryResult> Handle(RegistrantsSearchQuery query)
-        {
-            return await Task.FromResult(new RegistrantsQueryResult());
+            return await Task.FromResult(new SearchQueryResult()
+            {
+                MatchingFiles = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases),
+                MatchingRegistrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts),
+            });
         }
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)
@@ -142,7 +146,7 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task Handle(DeleteRegistrantCommand cmd)
         {
-            var contact = (await contactRepository.QueryContact(new ContactQuery { ByUserId = cmd.UserId })).Items.SingleOrDefault();
+            var contact = (await contactRepository.QueryContact(new ContactQuery { UserId = cmd.UserId })).Items.SingleOrDefault();
             if (contact == null) return;
             await contactRepository.ManageContact(new DeleteContact { ContactId = contact.Id });
         }

@@ -28,7 +28,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var contactQuery = new ContactQuery
             {
-                ByUserId = TestUserId
+                UserId = TestUserId
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
 
@@ -53,7 +53,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get Contact */
             var contactQuery = new ContactQuery
             {
-                ByUserId = TestUserId
+                UserId = TestUserId
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
             var contact = queryResult.Items.FirstOrDefault();
@@ -90,7 +90,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get Contact */
             var contactQuery = new ContactQuery
             {
-                ByUserId = TestUserId
+                UserId = TestUserId
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
             var baseContact = queryResult.Items.FirstOrDefault();
@@ -143,7 +143,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get Contact */
             var contactQuery = new ContactQuery
             {
-                ByUserId = TestUserId
+                UserId = TestUserId
             };
             var queryResult = await contactRepository.QueryContact(contactQuery);
             var baseContact = queryResult.Items.FirstOrDefault();

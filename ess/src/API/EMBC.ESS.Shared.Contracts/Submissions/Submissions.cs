@@ -37,54 +37,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     }
 
     /// <summary>
-    /// Query specific evacuation files
-    /// </summary>
-    public class EvacuationFilesQuery : Query<EvacuationFilesQueryResult>
-    {
-        public string ByFileId { get; set; }
-        public string ByUserId { get; set; }
-        public EvacuationFileStatus[] ByStatuses { get; set; }
-    }
-
-    /// <summary>
-    /// Search matching evacuation files
-    /// </summary>
-    public class EvacuationFilesSearchQuery : Query<EvacuationFilesQueryResult>
-    {
-        public string FirstName { get; set; }
-        public string lastName { get; set; }
-        public string DateOfBirth { get; set; }
-    }
-
-    public class EvacuationFilesQueryResult
-    {
-        public IEnumerable<EvacuationFile> Items { get; set; }
-    }
-
-    /// <summary>
-    /// Query specific regitrants
-    /// </summary>
-    public class RegistrantsQuery : Query<RegistrantsQueryResult>
-    {
-        public string ByUserId { get; set; }
-    }
-
-    /// <summary>
-    /// Search matching registrants
-    /// </summary>
-    public class RegistrantsSearchQuery : Query<EvacuationFilesQueryResult>
-    {
-        public string FirstName { get; set; }
-        public string lastName { get; set; }
-        public string DateOfBirth { get; set; }
-    }
-
-    public class RegistrantsQueryResult
-    {
-        public IEnumerable<RegistrantProfile> Items { get; set; }
-    }
-
-    /// <summary>
     /// Save registrant's profile
     /// </summary>
     public class SaveRegistrantCommand : Command
@@ -104,6 +56,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string Id { get; set; }
         public EvacuationFileStatus Status { get; set; }
+        public bool RestrictedAccess { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public DateTime EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }

@@ -12,7 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { EvacuationFileSearchResult } from 'src/app/core/api/models';
-import { EvacueeSearchService } from '../evacuee-search.service';
+import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 @Component({
   selector: 'app-ess-files-results',
@@ -46,7 +46,9 @@ export class EssFilesResultsComponent
   ngOnInit(): void {}
 
   openESSFile(): void {
-    if (this.evacueeSearchService.getHasShownIdentification()) {
+    if (
+      this.evacueeSearchService.getEvacueeSearchContext().hasShownIdentification
+    ) {
       this.router.navigate(['responder-access/search/essfile']);
     } else {
       this.router.navigate(['responder-access/search/security-phrase']);

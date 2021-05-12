@@ -57,9 +57,13 @@ export class EvacueeIdVerifyComponent implements OnInit {
    * Saves the seach parameter into the model and Navigates to the evacuee-name-search component
    */
   next(): void {
-    this.evacueeSearchService.setHasShownIdentification(
-      this.idVerifyForm.get('photoId').value
-    );
+    // this.evacueeSearchService.setHasShownIdentification(
+    //   this.idVerifyForm.get('photoId').value
+    // );
+    const idVerify = {
+      hasShownIdentification: this.idVerifyForm.get('photoId').value
+    };
+    this.evacueeSearchService.setEvacueeSearchContext(idVerify);
     this.showIDPhotoComponent.emit(false);
   }
 }

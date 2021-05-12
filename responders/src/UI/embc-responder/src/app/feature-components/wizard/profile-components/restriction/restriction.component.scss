@@ -1,0 +1,27 @@
+.content-container {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.primary-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.primary-radio-button {
+  margin: 5px;
+}
+
+.field-error {
+  color: red;
+}
+
+.next {
+  float: right;
+  width: 40%;
+}
+
+.back {
+    width: 40%;
+}

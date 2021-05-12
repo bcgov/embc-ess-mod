@@ -12,7 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { RegistrantProfileSearchResult } from 'src/app/core/api/models';
-import { EvacueeSearchService } from '../evacuee-search.service';
+import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 @Component({
   selector: 'app-profile-results',
@@ -48,7 +48,9 @@ export class ProfileResultsComponent
   ngOnInit(): void {}
 
   openProfile(): void {
-    if (this.evacueeSearchService.getHasShownIdentification()) {
+    if (
+      this.evacueeSearchService.getEvacueeSearchContext().hasShownIdentification
+    ) {
       this.router.navigate(['responder-access/search/evacuee-profile']);
     } else {
       this.router.navigate(['responder-access/search/security-questions']);
