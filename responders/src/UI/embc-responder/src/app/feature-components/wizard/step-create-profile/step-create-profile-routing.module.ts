@@ -27,6 +27,13 @@ const routes: Routes = [
           )
       },
       {
+        path: 'evacuee-details',
+        loadChildren: () =>
+          import(
+            '../profile-components/evacuee-details/evacuee-details.module'
+          ).then((m) => m.EvacueeDetailsModule)
+      },
+      {
         path: 'security-questions',
         loadChildren: () =>
           import(
