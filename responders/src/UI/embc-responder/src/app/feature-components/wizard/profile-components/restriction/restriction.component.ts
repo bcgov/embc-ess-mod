@@ -48,18 +48,25 @@ export class RestrictionComponent implements OnInit {
    * Updates the tab status and navigate to next tab
    */
   next(): void {
-    this.stepCreateProfileService.setTabStatus('restriction', 'complete');
-    this.stepCreateProfileService.restrictedAccess = this.restrictionForm.get(
-      'restrictedAccess'
-    ).value;
+    this.updateTabStatus();
     this.router.navigate([
-      '/ess-wizard/create-evacuee-profile/security-questions'
+      '/ess-wizard/create-evacuee-profile/evacuee-details'
     ]);
   }
 
   back(): void {
+    this.updateTabStatus();
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/collection-notice'
     ]);
+  }
+
+  updateTabStatus() {
+    if (this.restrictionForm.valid) {
+      this.stepCreateProfileService.setTabStatus('restriction', 'complete');
+    }
+    this.stepCreateProfileService.restrictedAccess = this.restrictionForm.get(
+      'restrictedAccess'
+    ).value;
   }
 }

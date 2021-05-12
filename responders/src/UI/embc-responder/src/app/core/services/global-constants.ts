@@ -10,6 +10,12 @@ export const defaultRole = {
   code: 'Tier1',
   description: 'Tier 1 (Responder)'
 };
+
+export const gender = [
+  { name: 'Male', value: 'Male' },
+  { name: 'Female', value: 'Female' },
+  { name: 'X', value: 'X' }
+];
 export const wizardProfileMessage =
   'Please complete all sections of the Evacuee Profile prior to submitting.';
 export const wizardESSFileMessage =
