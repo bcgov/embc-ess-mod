@@ -96,9 +96,7 @@ export class EvacueeDetailsComponent implements OnInit {
    */
   next(): void {
     this.updateTabStatus();
-    this.router.navigate([
-      '/ess-wizard/create-evacuee-profile/security-questions'
-    ]);
+    this.router.navigate(['/ess-wizard/create-evacuee-profile/address']);
   }
 
   back(): void {

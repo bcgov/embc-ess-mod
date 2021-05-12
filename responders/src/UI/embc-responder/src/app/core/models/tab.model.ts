@@ -25,10 +25,12 @@ export class WizardTabModelValues {
       name: 'evacuee-details',
       status: 'incomplete'
     },
-    // {
-    //   label: 'Address',
-    //   route: ''
-    // },
+    {
+      label: 'Address',
+      route: 'address',
+      name: 'address',
+      status: 'not-started'
+    },
     // {
     //   label: 'Contact',
     //   route: ''
