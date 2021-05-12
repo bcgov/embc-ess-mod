@@ -7,16 +7,13 @@ import { FormGroup, AbstractControl } from '@angular/forms';
   styleUrls: ['./other-address.component.scss']
 })
 export class OtherAddressComponent implements OnInit {
-
   @Input() addressForm: FormGroup;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  get addressFormControl(): { [key: string]: AbstractControl; } {
+  get addressFormControl(): { [key: string]: AbstractControl } {
     return this.addressForm.controls;
   }
-
 }

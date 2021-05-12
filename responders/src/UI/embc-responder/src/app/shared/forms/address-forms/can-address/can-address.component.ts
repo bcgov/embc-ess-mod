@@ -2,7 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { LocationsService, StateProvince } from '../../../../core/services/locations.service';
+import {
+  LocationsService,
+  StateProvince
+} from '../../../../core/services/locations.service';
 
 @Component({
   selector: 'app-can-address',
@@ -10,27 +13,30 @@ import { LocationsService, StateProvince } from '../../../../core/services/locat
   styleUrls: ['./can-address.component.scss']
 })
 export class CanAddressComponent implements OnInit {
-
   @Input() addressForm: FormGroup;
   filteredOptions: Observable<StateProvince[]>;
   provinces: StateProvince[] = [];
   country = { countryCode: 'CAN' };
 
-  constructor(private locationService: LocationsService) { }
+  constructor(private locationService: LocationsService) {}
 
   ngOnInit(): void {
-    this.provinces = this.locationService.getStateProvinceList().filter(sp => sp.countryCode === this.country.countryCode);
+    this.provinces = this.locationService
+      .getStateProvinceList()
+      .filter((sp) => sp.countryCode === this.country.countryCode);
 
-    this.filteredOptions = this.addressForm.get('stateProvince').valueChanges.pipe(
-      startWith(''),
-      map(value => value ? this.filter(value) : this.provinces.slice())
-    );
+    this.filteredOptions = this.addressForm
+      .get('stateProvince')
+      .valueChanges.pipe(
+        startWith(''),
+        map((value) => (value ? this.filter(value) : this.provinces.slice()))
+      );
   }
 
   /**
    * Returns the control of the form
    */
-  get addressFormControl(): { [key: string]: AbstractControl; } {
+  get addressFormControl(): { [key: string]: AbstractControl } {
     return this.addressForm.controls;
   }
 
@@ -39,29 +45,35 @@ export class CanAddressComponent implements OnInit {
     let invalidProvince = false;
     if (currentProvince !== null && currentProvince.name === undefined) {
       invalidProvince = !invalidProvince;
-      this.addressForm.get('stateProvince').setErrors({ invalidProvince: true });
+      this.addressForm
+        .get('stateProvince')
+        .setErrors({ invalidProvince: true });
     }
     return invalidProvince;
   }
 
+  /**
+   * Returns the display value of autocomplete
+   *
+   * @param province : Selected state province object
+   */
+  provinceDisplayFn(province: StateProvince): string {
+    if (province) {
+      return province.name;
+    }
+  }
 
   /**
    * Filters the province list for autocomplete field
+   *
    * @param value : User typed value
    */
   private filter(value?: string): StateProvince[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.provinces.filter(option => option.name.toLowerCase().includes(filterValue));
+      return this.provinces.filter((option) =>
+        option.name.toLowerCase().includes(filterValue)
+      );
     }
   }
-
-  /**
-   * Returns the display value of autocomplete
-   * @param province : Selected state province object
-   */
-  provinceDisplayFn(province: StateProvince): string {
-    if (province) { return province.name; }
-  }
-
 }
