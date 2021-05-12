@@ -31,7 +31,7 @@ export class WizardSidenavModelValues {
       step: 'STEP 2',
       title: 'Create ESS File',
       route: '/ess-wizard/create-ess-file',
-      isLocked: true,
+      isLocked: false, //Erased later
       img: {
         imgSrc: '/assets/images/wizard/locked-ess-file.svg',
         altSrc: '/assets/images/wizard/ess-file.svg',

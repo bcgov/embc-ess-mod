@@ -12,7 +12,7 @@ mat-card {
 }
 
 .divider {
-    width: 520px;
+    width: 34vw;
     height: 2px;
 }
 
@@ -25,7 +25,7 @@ mat-card {
 }
 
 input {
-    width: 315px;
+    width: 20vw;
     height: 40px;
     padding: 2px;
     font-size: 14px;
@@ -44,15 +44,12 @@ input {
 
 @media (max-width: 768px) {
 
-    .col-md-8 {
-        max-width: 100%;
-    }
-
-    .divider {
-        width: 200px;
-    }
 
     .lineSpace {
         padding: 15px 30px 0px;
+    }
+
+    input {
+        width: 5em;
     }
 }

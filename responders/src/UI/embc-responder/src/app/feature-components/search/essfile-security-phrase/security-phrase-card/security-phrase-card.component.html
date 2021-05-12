@@ -1,25 +1,21 @@
-<div class="row">
-  <div class="col-md-8">
-    <mat-card>
-      <div class="row lineSpace">
-        <div class="col-md-4">
-          <p>Answer Hint:</p>
-        </div>
-        <div class="col-md-8">
-          <p>
-            <b> {{ phrase }} </b>
-          </p>
-        </div>
-      </div>
-
-      <div class="row lineSpace">
-        <div class="col-md-4">
-          <p>Answer:</p>
-        </div>
-        <div class="col-md-8">
-          <input matInput #answer type="text" (focusout)="sendAnswer($event)" />
-        </div>
-      </div>
-    </mat-card>
+<mat-card>
+  <div class="row lineSpace">
+    <div class="col-md-4">
+      <p>Answer Hint:</p>
+    </div>
+    <div class="col-md-8">
+      <p>
+        <b> {{ phrase }} </b>
+      </p>
+    </div>
   </div>
-</div>
+
+  <div class="row lineSpace">
+    <div class="col-md-4">
+      <p>Answer:</p>
+    </div>
+    <div class="col-md-8">
+      <input matInput #answer type="text" (focusout)="sendAnswer($event)" />
+    </div>
+  </div>
+</mat-card>
