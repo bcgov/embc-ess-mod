@@ -1,3 +1,20 @@
+export const insuranceOptions = [
+  { name: 'Yes', value: 'Yes' },
+  {
+    name: 'Unsure',
+    value: 'Yes, but I am unsure if I have coverage for this event.'
+  },
+  { name: 'No', value: 'No' },
+  { name: 'Unknown', value: "I don't know" }
+];
+export const referredServiceOptions = [
+  { name: 'Inquiry' },
+  { name: 'Health Services' },
+  { name: 'First Aid' },
+  { name: 'Personal Services' },
+  { name: 'Child Care' },
+  { name: 'Pet Care' }
+];
 export const deleteMessage =
   'User has been successfully deleted from the ERA Tool.';
 export const editMessage = 'User has been edited successfully.';

@@ -1,1 +1,242 @@
-<p>evacuation-details works!</p>
+<div class="container container-frame">
+  <div class="heading-container">
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-tab-heading">Evacuation Details</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 content-container">
+      <form [formGroup]="evacDetailsForm">
+        <div class="row">
+          <div class="col-8">
+            <div class="row">
+              <div class="col-12">
+                <span class="tab-subtitle">Paper Based ESS File #</span>
+                <br /><br />
+                <p>
+                  If you are entering a paper-based ESS File into the ERA Tool,
+                  please add the ESS File # as it appears on the paper
+                  registration below.
+                </p>
+                <br />
+                <input
+                  class="simple-input"
+                  formControlName="paperESSFile"
+                  matInput
+                  placeholder="Paper Based ESS File #"
+                />
+                <br /><br />
+              </div>
+              <br />
+
+              <div class="col-12 divider"></div>
+
+              <div class="col-12">
+                <span class="tab-subtitle"
+                  >Are you being evacuated from your primary address? </span
+                ><span class="required-symbol">*</span> <br /><br />
+                <mat-radio-group
+                  formControlName="evacuatedFromPrimary"
+                  aria-labelledby="primary-radio-group-label"
+                  class="options-group"
+                  (change)="evacPrimaryAddressChange($event)"
+                  required
+                >
+                  <mat-radio-button value="Yes">Yes </mat-radio-button>
+                  <div class="prim-address">
+                    <p>Unit 1200, 1230 Main Street</p>
+                    <p>North Vancouver</p>
+                    <p>V8Y 6U8</p>
+                  </div>
+                  <mat-radio-button value="No">No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+              <br />
+              <div class="col-12" *ngIf="showBCAddressForm">
+                <p>Where are you being evacuated from?</p>
+                BC-ADDRESS COMPONENT HERE!!!
+              </div>
+
+              <div class="col-12 divider"></div>
+
+              <div class="col-12">
+                <span class="tab-subtitle"
+                  >Facility Name / Registration Location </span
+                ><span class="required-symbol">*</span> <br /><br />
+                <p>
+                  A facility is the location of the
+                  <b>Reception Centre</b> (i.e. rec centre). If there is no
+                  Reception Centre, please use the street name on Level 1
+                  Activations.
+                </p>
+                <br />
+                <input
+                  class="simple-input"
+                  formControlName="facilityName"
+                  matInput
+                />
+                <br />
+              </div>
+
+              <div class="col-12 divider"></div>
+
+              <div class="col-12">
+                <span class="tab-subtitle"
+                  >Do you have insurance to cover your immediate needs? </span
+                ><span class="required-symbol">*</span> <br /><br />
+                <p>
+                  If you have <b>insurance</b>, please keep all of your
+                  receipts, and contact your insurance provider as soon as
+                  possible. If you are having difficulty contacting your
+                  insurance provider, please contact the Insurance Bureau of
+                  Canada at 1-844-227-5422.
+                </p>
+                <mat-radio-group
+                  formControlName="insurance"
+                  class="options-group"
+                  required
+                >
+                  <mat-radio-button
+                    *ngFor="let option of insuranceOption"
+                    [value]="option.name"
+                  >
+                    {{ option.value }}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+
+              <div class="col-12 divider"></div>
+
+              <div class="col-12">
+                <span class="tab-subtitle"
+                  >How have you and your household been affected by the
+                  evacuation?
+                </span>
+                <br /><br />
+                <p>
+                  Please do not include any personal/medical information
+                  pertaining to the evacuee and their household members.
+                </p>
+                <br />
+                <textarea
+                  class="simple-textarea"
+                  formControlName="householdAffected"
+                  placeholder="Please write in the evacuees own words as mush as possible."
+                  matInput
+                ></textarea>
+              </div>
+
+              <div class="col-12 divider"></div>
+
+              <div class="col-12">
+                <span class="tab-subtitle"
+                  >Emergency Support Services provides short term assistance to
+                  give evacuees' a chance to recover. Have you thought about
+                  what you will do after that time?
+                </span>
+                <br /><br />
+                <p>
+                  Please do not include any personal/medical information
+                  pertaining to the evacuee and their family.
+                </p>
+                <br />
+                <textarea
+                  class="simple-textarea"
+                  formControlName="emergencySupportServices"
+                  placeholder="Please write in the evacuees own words as mush as possible."
+                  matInput
+                ></textarea>
+              </div>
+
+              <div class="col-12 divider"></div>
+
+              <div class="col-12">
+                <span class="tab-subtitle"
+                  >Has the evacuee been referred to any services available in
+                  your reception centre?
+                </span>
+                <br /><br />
+                <mat-radio-group
+                  formControlName="referredServices"
+                  class="options-group"
+                  required
+                  (change)="referredServiceChange($event)"
+                >
+                  <mat-radio-button value="Yes">Yes</mat-radio-button>
+                  <mat-radio-button value="No">No</mat-radio-button>
+                </mat-radio-group>
+              </div>
+              <div
+                class="col-12 additional-form"
+                *ngIf="showReferredServicesForm"
+              >
+                <p>
+                  <b
+                    >Please select the ones you have recommended for the evacuee </b
+                  ><span class="required-symbol">*</span>
+                </p>
+                <section class="options-group">
+                  <mat-checkbox
+                    class="checkbox-option"
+                    *ngFor="let option of referredServicesOption"
+                    [value]="option.name"
+                    (change)="referredServiceDetailsChange($event)"
+                    >{{ option.name }}</mat-checkbox
+                  >
+                </section>
+              </div>
+
+              <div class="col-12 divider"></div>
+
+              <div class="col-12">
+                <span class="tab-subtitle"
+                  >Has the evacuee been referred to any services outside of the
+                  reception centre?
+                </span>
+                <br /><br />
+                <textarea
+                  class="simple-textarea"
+                  formControlName="externalServices"
+                  placeholder="Please specify."
+                  matInput
+                ></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <mat-card class="tips-card">
+              <div>
+                <img
+                  class="img-align"
+                  src="/assets/images/tips-lightbulb.svg"
+                  height="63"
+                  width="62"
+                />
+                <span class="tips-heading"><b>Tip: </b>Task Number</span>
+              </div>
+              <p class="tips-info">
+                This ESS File will be associated with the Task Number that you
+                are signed in under.
+              </p>
+              <p class="tips-info">
+                If this is not the correct task number, please sign in under the
+                correct task number.
+              </p>
+              <br />
+            </mat-card>
+          </div>
+        </div>
+      </form>
+      <br />
+      <div class="row">
+        <div class="col-12">
+          <button class="button-p next" mat-button (click)="next()">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

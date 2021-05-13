@@ -93,6 +93,6 @@ export class EvacueeNameSearchComponent implements OnInit {
       evacueeSearchParameters: searchParams
     });
     this.showResultsComponent.emit(true);
-    this.router.navigate(['/responder-access/search/evacuee-results']);
+    this.router.navigate(['/responder-access/search/evacuee']);
   }
 }
