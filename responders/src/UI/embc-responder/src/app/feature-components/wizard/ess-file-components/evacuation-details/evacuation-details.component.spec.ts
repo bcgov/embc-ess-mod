@@ -11,7 +11,7 @@ describe('EvacuationDetailsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EvacuationDetailsComponent],
-      imports:[RouterTestingModule, ReactiveFormsModule]
+      imports: [RouterTestingModule, ReactiveFormsModule]
     }).compileComponents();
   });
 
