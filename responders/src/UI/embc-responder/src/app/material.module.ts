@@ -51,7 +51,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatRadioModule,
-    MatAutocompleteModule,
+    MatAutocompleteModule
   ],
   exports: [
     CommonModule,
@@ -78,7 +78,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatProgressSpinnerModule,
     MatRadioModule,
     MatExpansionModule,
-    MatAutocompleteModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule {}

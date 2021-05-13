@@ -21,8 +21,34 @@ export class StepCreateProfileService {
   private primaryAddressDetail: Address;
   private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
+  private isBcAddresS: boolean;
+  private isBcMailingAddresS: boolean;
+  private isMailingAddressSameAsPrimaryAddresS: boolean;
 
   constructor(private dialog: MatDialog) {}
+
+  public get isMailingAddressSameAsPrimaryAddress(): boolean {
+    return this.isMailingAddressSameAsPrimaryAddresS;
+  }
+  public set isMailingAddressSameAsPrimaryAddress(
+    isMailingAddressSameAsPrimaryAddresS: boolean
+  ) {
+    this.isMailingAddressSameAsPrimaryAddresS = isMailingAddressSameAsPrimaryAddresS;
+  }
+
+  public get isBcMailingAddress(): boolean {
+    return this.isBcMailingAddresS;
+  }
+  public set isBcMailingAddress(isBcMailingAddresS: boolean) {
+    this.isBcMailingAddresS = isBcMailingAddresS;
+  }
+
+  public get isBcAddress(): boolean {
+    return this.isBcAddresS;
+  }
+  public set isBcAddress(isBcAddresS: boolean) {
+    this.isBcAddresS = isBcAddresS;
+  }
 
   public get restrictedAccess(): boolean {
     return this.restricted;
