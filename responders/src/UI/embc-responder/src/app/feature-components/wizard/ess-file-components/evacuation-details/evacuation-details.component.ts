@@ -33,15 +33,15 @@ export class EvacuationDetailsComponent implements OnInit {
 
   createEvacDetailsForm(): void {
     this.evacDetailsForm = this.formBuilder.group({
-      paperESSFile: [''],
-      evacuatedFromPrimary: ['', Validators.required],
-      facilityName: ['', [this.customValidation.whitespaceValidator()]],
-      insurance: ['', Validators.required],
-      householdAffected: [''],
-      emergencySupportServices: [''],
-      referredServices: [''],
-      referredServiceDetails: new FormArray([]),
-      servicesOutside: ['']
+      paperESSFile: [this.stepCreateEssFileService.paperESSFiles !== null ? this.stepCreateEssFileService.paperESSFiles : ''],
+      evacuatedFromPrimary: [this.stepCreateEssFileService.evacuatedFromPrimaryAddress !== null ? this.stepCreateEssFileService.evacuatedFromPrimaryAddress : '', Validators.required],
+      facilityName: [this.stepCreateEssFileService.facilityNames !== null ? this.stepCreateEssFileService.facilityNames : '', [this.customValidation.whitespaceValidator()]],
+      insurance: [this.stepCreateEssFileService.insuranceInfo !== null ? this.stepCreateEssFileService.insuranceInfo : '', Validators.required],
+      householdAffected: [this.stepCreateEssFileService.householdAffectedInfo !== null ? this.stepCreateEssFileService.householdAffectedInfo : ''],
+      emergencySupportServices: [this.stepCreateEssFileService.emergencySupportServiceS !== null ? this.stepCreateEssFileService.emergencySupportServiceS : ''],
+      referredServices: [this.stepCreateEssFileService.referredServiceS !== null ? this.stepCreateEssFileService.referredServiceS : ''],
+      referredServiceDetails: [this.stepCreateEssFileService.referredServiceDetailS.length !== 0 ? this.stepCreateEssFileService.referredServiceDetailS : new FormArray([])],
+      externalServices: [this.stepCreateEssFileService.externalServiceS !== null ? this.stepCreateEssFileService.externalServiceS : '']
     });
   }
 
