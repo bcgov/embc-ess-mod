@@ -1,4 +1,3 @@
-export const defaultProvince = { code: 'BC', name: 'British Columbia' };
 export const insuranceOptions = [
   { name: 'Yes', value: 'Yes' },
   { name: 'Unsure', value: 'Yes, but I am unsure if I have coverage for this event.' },
