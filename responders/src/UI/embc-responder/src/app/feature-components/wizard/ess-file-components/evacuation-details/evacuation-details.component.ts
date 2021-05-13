@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
@@ -24,6 +25,7 @@ export class EvacuationDetailsComponent implements OnInit {
   referredServicesOption = globalConst.referredServiceOptions;
   showReferredServicesForm = false;
   showBCAddressForm = false;
+  selection = new SelectionModel<any>(true, []);
 
   constructor(
     private router: Router,
@@ -112,24 +114,15 @@ export class EvacuationDetailsComponent implements OnInit {
     }
   }
 
-  referredServiceDetailsChange(event: MatCheckboxChange): void {
-    const formArray: FormArray = this.evacDetailsForm.get(
-      'referredServiceDetails'
-    ) as FormArray;
-
-    if (event.checked) {
-      formArray.push(new FormControl(event.source.value));
-    } else {
-      let i = 0;
-      formArray.controls.forEach((ctrl: FormControl) => {
-        if (ctrl.value === event.source.value) {
-          formArray.removeAt(i);
-          return;
-        }
-
-        i++;
-      });
-    }
+  /**
+   * Emits the selected communities to parent component
+   *
+   * @param option Referred Services
+   */
+  selectionToggle(option): void {
+    this.selection.toggle(option);
+    // this.selectedRows.emit(this.selection.selected);
+    console.log(this.selection.selected);
   }
 
   /**
