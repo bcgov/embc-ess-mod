@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LocationsService } from 'src/app/core/services/locations.service';
 
 @Component({
   selector: 'app-responder-access',
@@ -6,7 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./responder-access.component.scss']
 })
 export class ResponderAccessComponent implements OnInit {
-  constructor() {}
+  constructor(private locationService: LocationsService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadLists();
+  }
+
+  private loadLists(): void {
+    this.locationService.getCommunityList();
+    this.locationService.getCountriesList();
+    this.locationService.getRegionalDistricts();
+    this.locationService.getStateProvinceList();
+  }
 }
