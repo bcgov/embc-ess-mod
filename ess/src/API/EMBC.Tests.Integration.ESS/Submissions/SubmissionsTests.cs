@@ -33,7 +33,12 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 AuthenticatedUser = false,
                 VerifiedUser = false,
                 RestrictedAccess = false,
-                SecretPhrase = "secret phrase",
+                SecurityQuestion1 = "question1",
+                SecurityQuestion2 = "question2",
+                SecurityQuestion3 = "question3",
+                SecurityAnswer1 = "answer1",
+                SecurityAnswer2 = "answer2",
+                SecurityAnswer3 = "answer3",
 
                 FirstName = $"PriRegTestFirst-{textContextIdentifier}",
                 LastName = $"PriRegTestLast-{textContextIdentifier}",
