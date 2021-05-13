@@ -3,6 +3,7 @@ mat-card {
     background-color: rgba(242, 242, 242, 1);
     height: auto;
     box-shadow: none !important;
+    width: 70%;
 }
 
 .questionHighlight {
@@ -12,7 +13,7 @@ mat-card {
 }
 
 .divider {
-    width: 70%;
+    width: 34vw;
     height: 2px;
 }
 
@@ -42,10 +43,17 @@ input {
     outline: none;
 }
 
-@media (max-width: 768px) {
+@media(max-width: 830px) {
+    
+    mat-card {
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
 
     .divider {
-        width: 25em;
+        width: 60vw;
     }
 
     .lineSpace {
@@ -53,6 +61,6 @@ input {
     }
 
     input {
-        width: 15em;
+        width: 57vw;
     }
 }
