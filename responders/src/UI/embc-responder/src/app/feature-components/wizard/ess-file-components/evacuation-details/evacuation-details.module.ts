@@ -8,6 +8,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [EvacuationDetailsComponent],
-  imports: [CommonModule, EvacuationDetailsRoutingModule, MaterialModule, ReactiveFormsModule]
+  imports: [
+    CommonModule,
+    EvacuationDetailsRoutingModule,
+    MaterialModule,
+    ReactiveFormsModule
+  ]
 })
 export class EvacuationDetailsModule {}
