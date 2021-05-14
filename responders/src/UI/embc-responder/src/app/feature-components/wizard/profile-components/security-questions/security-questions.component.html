@@ -60,10 +60,10 @@
                 <mat-error *ngIf="questionFormControl?.answer1.hasError('required')">
                   Answer is required.
                 </mat-error>
-                <mat-error *ngIf="questionFormControl?.answer1.hasError('length')">
+                <mat-error *ngIf="(questionFormControl?.answer1.hasError('minlength') || questionFormControl?.answer1.hasError('maxlength'))">
                   Answer must be between 3 and 50 characters long.
                 </mat-error>
-                <mat-error *ngIf="questionFormControl?.answer1.hasError('characters')">
+                <mat-error *ngIf="questionFormControl?.answer1.hasError('pattern')">
                   Answer cannot contain special characters.
                 </mat-error>
               </mat-form-field>
@@ -95,10 +95,10 @@
                 <mat-error *ngIf="questionFormControl?.answer2.hasError('required')">
                   Answer is required.
                 </mat-error>
-                <mat-error *ngIf="questionFormControl?.answer2.hasError('length')">
+                <mat-error *ngIf="(questionFormControl?.answer2.hasError('minlength') || questionFormControl?.answer2.hasError('maxlength'))">
                   Answer must be between 3 and 50 characters long.
                 </mat-error>
-                <mat-error *ngIf="questionFormControl?.answer2.hasError('characters')">
+                <mat-error *ngIf="questionFormControl?.answer2.hasError('pattern')">
                   Answer cannot contain special characters.
                 </mat-error>
               </mat-form-field>
@@ -127,13 +127,13 @@
     
                 <input matInput maxlength="50" formControlName="answer3">
                 
-                <mat-error *ngIf="questionFormControl?.answer3.invalid && questionFormControl?.answer3.hasError('required')">
+                <mat-error *ngIf="questionFormControl?.answer3.hasError('required')">
                   Answer is required.
                 </mat-error>
-                <mat-error *ngIf="questionFormControl?.answer3.invalid && questionFormControl?.answer3.hasError('length')">
+                <mat-error *ngIf="(questionFormControl?.answer3.hasError('minlength') || questionFormControl?.answer3.hasError('maxlength'))">
                   Answer must be between 3 and 50 characters long.
                 </mat-error>
-                <mat-error *ngIf="questionFormControl?.answer3.invalid && questionFormControl?.answer3.hasError('characters')">
+                <mat-error *ngIf="questionFormControl?.answer3.hasError('pattern')">
                   Answer cannot contain special characters.
                 </mat-error>
               </mat-form-field>

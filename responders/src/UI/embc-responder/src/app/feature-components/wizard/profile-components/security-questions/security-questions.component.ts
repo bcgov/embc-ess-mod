@@ -17,22 +17,9 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 })
 export class SecurityQuestionsComponent implements OnInit {
   questionForm: FormGroup = null;
+  secQuestions: string[];
 
   bypassQuestions = false;
-
-  secQuestions = [
-    'What was the name of your first pet?',
-    'What was your first car’s make and model? (e.g. Ford Taurus)',
-    'Where was your first job?',
-    'What is your favourite children\'s book?',
-    'In what city or town was your mother born?',
-    'What is your favourite movie?',
-    'What is your oldest sibling\'s middle name?',
-    'What month and day is your anniversary?',
-    'What was your childhood nickname?',
-    'What were the last four digits of your childhood telephone number?',
-    'In what town or city did you meet your spouse or partner?'
-  ];
 
   constructor(
     private router: Router,
@@ -42,6 +29,20 @@ export class SecurityQuestionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.secQuestions = [
+      'What was the name of your first pet?',
+      'What was your first car’s make and model? (e.g. Ford Taurus)',
+      'Where was your first job?',
+      'What is your favourite children\'s book?',
+      'In what city or town was your mother born?',
+      'What is your favourite movie?',
+      'What is your oldest sibling\'s middle name?',
+      'What month and day is your anniversary?',
+      'What was your childhood nickname?',
+      'What were the last four digits of your childhood telephone number?',
+      'In what town or city did you meet your spouse or partner?'
+    ];
+
     this.createQuestionForm();
   }
   
@@ -55,7 +56,7 @@ export class SecurityQuestionsComponent implements OnInit {
         this.stepCreateProfileService.securityQuestions?.answer1 ?? '',
         [
           Validators.required, Validators.minLength(3), Validators.maxLength(50), 
-          Validators.pattern("//S"), Validators.pattern("^[a-zA-Z0-9 ]+$")
+          Validators.pattern(/^[a-zA-Z0-9 ]+$/)
         ]
       ],
       question2: [
@@ -66,7 +67,7 @@ export class SecurityQuestionsComponent implements OnInit {
         this.stepCreateProfileService.securityQuestions?.answer2 ?? '',
         [
           Validators.required, Validators.minLength(3), Validators.maxLength(50), 
-          Validators.pattern("//S"), Validators.pattern("^[a-zA-Z0-9 ]+$")
+          Validators.pattern(/^[a-zA-Z0-9 ]+$/)
         ]
       ],
       question3: [
@@ -77,7 +78,7 @@ export class SecurityQuestionsComponent implements OnInit {
         this.stepCreateProfileService.securityQuestions?.answer3 ?? '',
         [
           Validators.required, Validators.minLength(3), Validators.maxLength(50), 
-          Validators.pattern("//S"), Validators.pattern("^[a-zA-Z0-9 ]+$")
+          Validators.pattern(/^[a-zA-Z0-9 ]+$/)
         ]
       ]
     },
@@ -126,8 +127,6 @@ export class SecurityQuestionsComponent implements OnInit {
   
   updateTabStatus() {
     this.questionForm.updateValueAndValidity();
-    console.log(this.questionForm.errors);
-    console.log(this.questionForm.hasError("notUnique-question3"));
 
     let curSecurityQuestions: SecurityQuestions = {
       question1: this.questionForm.get('question1').value?.trim(),
