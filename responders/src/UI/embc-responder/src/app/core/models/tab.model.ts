@@ -31,10 +31,12 @@ export class WizardTabModelValues {
       name: 'address',
       status: 'not-started'
     },
-    // {
-    //   label: 'Contact',
-    //   route: ''
-    // },
+    {
+      label: 'Contact',
+      route: 'contact',
+      name: 'contact',
+      status: 'not-started'
+    },
     {
       label: 'Security Questions',
       route: 'security-questions',

@@ -15,6 +15,8 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Edm;
@@ -67,7 +69,12 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.era_preferredname, opts => opts.MapFrom(s => s.PreferredName))
                 .ForMember(d => d.emailaddress1, opts => opts.MapFrom(s => s.Email))
                 .ForMember(d => d.telephone1, opts => opts.MapFrom(s => s.Phone))
-                .ForMember(d => d.era_secrettext, opts => opts.MapFrom(s => s.SecretPhrase))
+                .ForMember(d => d.era_securityquestion1answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer))
+                .ForMember(d => d.era_securityquestion2answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer))
+                .ForMember(d => d.era_securityquestion3answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer))
+                .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question))
+                .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question))
+                .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question))
                 ;
 
             CreateMap<contact, Contact>()
@@ -76,7 +83,7 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.era_verified))
                 .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.era_authenticated))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_restriction ?? false))
-                .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.era_secrettext))
+                .ForMember(d => d.SecurityQuestions, opts => opts.ConvertUsing<SecurityQuestionConverter, contact>(s => s))
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_initial))
                 .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.era_preferredname))
                 .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.gendercode))
@@ -120,5 +127,23 @@ namespace EMBC.ESS.Resources.Contacts
             3 => "X",
             _ => null
         };
+    }
+
+    public class SecurityQuestionConverter : IValueConverter<contact, IEnumerable<SecurityQuestion>>
+    {
+        public IEnumerable<SecurityQuestion> Convert(contact sourceMember, ResolutionContext context)
+        {
+            List<SecurityQuestion> ret = new List<SecurityQuestion>();
+            if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext1) && !string.IsNullOrEmpty(sourceMember.era_securityquestion1answer))
+                ret.Add(new SecurityQuestion { Id = 1, Question = sourceMember.era_securityquestiontext1, Answer = sourceMember.era_securityquestion1answer });
+
+            if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext2) && !string.IsNullOrEmpty(sourceMember.era_securityquestion2answer))
+                ret.Add(new SecurityQuestion { Id = 2, Question = sourceMember.era_securityquestiontext2, Answer = sourceMember.era_securityquestion2answer });
+
+            if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext3) && !string.IsNullOrEmpty(sourceMember.era_securityquestion3answer))
+                ret.Add(new SecurityQuestion { Id = 3, Question = sourceMember.era_securityquestiontext3, Answer = sourceMember.era_securityquestion3answer });
+
+            return ret;
+        }
     }
 }

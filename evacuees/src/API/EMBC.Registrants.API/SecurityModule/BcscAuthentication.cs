@@ -16,6 +16,7 @@
 
 using System;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -26,24 +27,6 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace EMBC.Registrants.API.SecurityModule
 {
-    public static class BcscTokenKeys
-    {
-        public const string Id = "sub";
-        public const string GivenName = "given_name";
-        public const string FamilyName = "family_name";
-        public const string Address = "address";
-        public const string AddressStreet = "street_address";
-        public const string AddressCountry = "country";
-        public const string AddressLocality = "locality";
-        public const string AddressRegion = "region";
-        public const string AddressPostalCode = "postal_code";
-        public const string AddressFormatted = "formatted";
-        public const string DisplayName = "display_name";
-        public const string BirthDate = "birthdate";
-        public const string Gender = "gender";
-        public const string Email = "email";
-    }
-
     public static class BcscAuthenticationDefaults
     {
         public const string AuthenticationScheme = "BcscOidc";
@@ -99,9 +82,18 @@ namespace EMBC.Registrants.API.SecurityModule
                      },
                      OnUserInformationReceived = async c =>
                      {
-                         var userManager = c.HttpContext.RequestServices.GetRequiredService<IUserManager>();
+                         await Task.CompletedTask;
+                         var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger(BcscAuthenticationDefaults.LoggerCategory);
                          var profile = Mappings.MapBCSCUserDataToProfile(c.Principal.FindFirstValue(ClaimTypes.NameIdentifier), c.User);
-                         var id = await userManager.Save(profile);
+                         logger.LogDebug("BCSC user {0} information received", profile.Id);
+
+                         c.Principal = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                             {
+                                 new Claim(TokenClaimTypes.Id, profile.Id),
+                                 new Claim(TokenClaimTypes.UserData, JsonSerializer.Serialize(profile))
+                             }, c.Principal.Identity.AuthenticationType,
+                             ClaimTypes.NameIdentifier,
+                             ClaimTypes.Role));
                      }
                  };
 
