@@ -1,0 +1,206 @@
+<div class="container container-frame">
+  <div class="heading-container">
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-tab-heading requiredField"
+          >Contact Information</span
+        >
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 content-container">
+      <div class="row">
+        <div class="col-8">
+          <p>
+            Your telephone number and email address will <b>ONLY</b> be used to
+            contact you about your current registration.
+          </p>
+          <p>
+            It is strongly encouraged to provide your telephone number and/ or
+            email address as a point of contact, so your local Emergency Support
+            Services (ESS) team can easily support you.
+          </p>
+          <br />
+          <p>
+            Do you authorize Emergency Management British Columbia and your
+            Local Emergency Program to communicate with you by email or phone
+            regarding your emergency situation. Note: if you do not authorize
+            communications, you can still complete your registration and receive
+            emergency supports, however you will not receive your ESS file
+            number confirmation and will not be able to receive e-transfer based
+            supports.
+          </p>
+
+          <form [formGroup]="contactInfoForm">
+            <mat-radio-group
+              aria-labelledby="primary-radio-group-label"
+              formControlName="showContacts"
+              class="primary-radio-group"
+              (change)="hideContact($event)"
+              required
+            >
+              <mat-radio-button class="primary-radio-button" [value]="true">
+                <span class="highlight">Yes</span> - you may contact me
+                regarding the emergency situation.
+              </mat-radio-button>
+              <mat-radio-button class="primary-radio-button" [value]="false">
+                <span class="highlight">No</span> - you may <b>NOT</b> contact
+                me.
+              </mat-radio-button>
+            </mat-radio-group>
+            <ng-container
+              *ngIf="contactFormControl?.showContacts.value === true"
+            >
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="sub-heading">Contact Telephone Number</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Telephone Number</mat-label>
+                    <input
+                      formControlName="phone"
+                      matInput
+                      placeholder="Telephone Number"
+                      [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+                    />
+                    <mat-error
+                      *ngIf="
+                        contactFormControl.phone.invalid &&
+                        contactFormControl.phone.hasError('whitespaceError')
+                      "
+                    >
+                      Telephone Number is required</mat-error
+                    >
+                    <mat-error
+                      *ngIf="
+                        contactFormControl.phone.invalid &&
+                        contactFormControl.phone.hasError('incorrectLength')
+                      "
+                    >
+                      Telephone number must have 10 digits</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="sub-heading">Email Address</p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-5">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Email Address</mat-label>
+                    <input
+                      formControlName="email"
+                      matInput
+                      placeholder="Email Address"
+                    />
+                    <mat-error
+                      *ngIf="
+                        contactFormControl.email.invalid &&
+                        contactFormControl.email.hasError('whitespaceError')
+                      "
+                    >
+                      Email is required</mat-error
+                    >
+                    <mat-error
+                      *ngIf="
+                        contactFormControl.email.invalid &&
+                        contactFormControl.email.hasError('email')
+                      "
+                      >Invalid email</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-5">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Confirm Email Address</mat-label>
+                    <input
+                      formControlName="confirmEmail"
+                      matInput
+                      placeholder="Confirm Email Address"
+                      [errorStateMatcher]="emailMatcher"
+                    />
+                    <mat-error
+                      *ngIf="
+                        contactFormControl.confirmEmail.invalid &&
+                        contactFormControl.confirmEmail.hasError(
+                          'whitespaceError'
+                        )
+                      "
+                    >
+                      Confirm Email is required</mat-error
+                    >
+                    <mat-error
+                      *ngIf="
+                        contactFormControl.confirmEmail.invalid &&
+                        contactFormControl.confirmEmail.hasError('email')
+                      "
+                    >
+                      Invalid email</mat-error
+                    >
+                    <mat-error
+                      *ngIf="
+                        contactFormControl?.confirmEmail?.parent?.hasError(
+                          'emailMatch'
+                        )
+                      "
+                    >
+                      Email address mismatch</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+            </ng-container>
+          </form>
+        </div>
+
+        <div class="col-md-4">
+          <mat-card class="tips-card">
+            <div>
+              <img
+                class="img-align"
+                src="/assets/images/tips-lightbulb.svg"
+                height="63"
+                width="62"
+              />
+              <span class="tips-heading"><b>Tip: </b>Contact Details</span>
+            </div>
+            <p class="tips-info">
+              If the evacuee is not able to provide an email address or contact
+              telephone number, should they be eligible for emergency supports
+              due to an evacuation, they will not be able to receive an
+              e-Transfer. They will instead receive referrals.
+            </p>
+          </mat-card>
+        </div>
+      </div>
+
+      <br />
+      <br />
+      <div class="row">
+        <div class="col-md-6">
+          <button class="button-s back" mat-button (click)="back()">
+            Back
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button class="button-p next" mat-button (click)="next()">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
