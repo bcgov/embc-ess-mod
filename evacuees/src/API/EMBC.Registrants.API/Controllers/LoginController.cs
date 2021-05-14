@@ -61,7 +61,11 @@ namespace EMBC.Registrants.API.Controllers
             if (!env.IsProduction() && !string.IsNullOrEmpty(loginAs))
             {
                 //support for user impersonation for automated testing and better development experience
-                var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, loginAs), }, CookieAuthenticationDefaults.AuthenticationScheme);
+                var identity = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, loginAs),
+                    new Claim("bcsc-profile", string.Empty)
+                }, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
                 {
                     AllowRefresh = false,
@@ -93,11 +97,9 @@ namespace EMBC.Registrants.API.Controllers
         {
             await Task.CompletedTask;
 
-            foreach (var cookie in Request.Cookies)
-            {
-                Response.Cookies.Delete(cookie.Key);
-            }
             var token = tokenManager.Create(User);
+
+            foreach (var cookie in Request.Cookies) Response.Cookies.Delete(cookie.Key);
             return Ok(token);
         }
 

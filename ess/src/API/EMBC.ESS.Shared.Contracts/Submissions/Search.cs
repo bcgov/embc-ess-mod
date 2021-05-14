@@ -16,6 +16,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace EMBC.ESS.Shared.Contracts.Submissions
 {
@@ -27,6 +29,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public IEnumerable<SearchCriteria> SearchParameters { get; set; }
     }
 
+    [JsonConverter(typeof(SearchCriteriaJsonConverter))]
     public abstract class SearchCriteria { }
 
     public class EvacuationFilesSearchCriteria : SearchCriteria
@@ -56,5 +59,86 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public IEnumerable<EvacuationFile> MatchingFiles { get; set; }
         public IEnumerable<RegistrantProfile> MatchingRegistrants { get; set; }
+    }
+
+    public class SearchCriteriaJsonConverter : JsonConverter<SearchCriteria>
+    {
+        public override SearchCriteria Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType != JsonTokenType.StartObject)
+            {
+                throw new JsonException();
+            }
+
+            if (!reader.Read()
+                    || reader.TokenType != JsonTokenType.PropertyName
+                    || reader.GetString() != "TypeDiscriminator")
+            {
+                throw new JsonException();
+            }
+
+            if (!reader.Read() || reader.TokenType != JsonTokenType.String)
+            {
+                throw new JsonException();
+            }
+
+            SearchCriteria baseClass;
+            var typeDiscriminator = (string)reader.GetString();
+            switch (typeDiscriminator)
+            {
+                case nameof(RegistrantsSearchCriteria):
+                    if (!reader.Read() || reader.GetString() != "TypeValue")
+                    {
+                        throw new JsonException();
+                    }
+                    if (!reader.Read() || reader.TokenType != JsonTokenType.StartObject)
+                    {
+                        throw new JsonException();
+                    }
+                    baseClass = (RegistrantsSearchCriteria)JsonSerializer.Deserialize(ref reader, typeof(RegistrantsSearchCriteria));
+                    break;
+
+                case nameof(EvacuationFilesSearchCriteria):
+                    if (!reader.Read() || reader.GetString() != "TypeValue")
+                    {
+                        throw new JsonException();
+                    }
+                    if (!reader.Read() || reader.TokenType != JsonTokenType.StartObject)
+                    {
+                        throw new JsonException();
+                    }
+                    baseClass = (EvacuationFilesSearchCriteria)JsonSerializer.Deserialize(ref reader, typeof(EvacuationFilesSearchCriteria));
+                    break;
+
+                default:
+                    throw new NotSupportedException();
+            }
+
+            if (!reader.Read() || reader.TokenType != JsonTokenType.EndObject)
+            {
+                throw new JsonException();
+            }
+
+            return baseClass;
+        }
+
+        public override void Write(Utf8JsonWriter writer, SearchCriteria value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+
+            if (value is RegistrantsSearchCriteria registrantsSearchCriteria)
+            {
+                writer.WriteString("TypeDiscriminator", nameof(RegistrantsSearchCriteria));
+                writer.WritePropertyName("TypeValue");
+                JsonSerializer.Serialize(writer, registrantsSearchCriteria);
+            }
+            else if (value is EvacuationFilesSearchCriteria evacuationFilesSearchCriteria)
+            {
+                writer.WriteString("TypeDiscriminator", nameof(EvacuationFilesSearchCriteria));
+                writer.WritePropertyName("TypeValue");
+                JsonSerializer.Serialize(writer, evacuationFilesSearchCriteria);
+            }
+            writer.WriteEndObject();
+        }
     }
 }
