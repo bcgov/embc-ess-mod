@@ -7,7 +7,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TextMaskModule } from 'angular2-text-mask';
 
-
 @NgModule({
   declarations: [ContactComponent],
   imports: [
@@ -18,4 +17,4 @@ import { TextMaskModule } from 'angular2-text-mask';
     TextMaskModule
   ]
 })
-export class ContactModule { }
+export class ContactModule {}
