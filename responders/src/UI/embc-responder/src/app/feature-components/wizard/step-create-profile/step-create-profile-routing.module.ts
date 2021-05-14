@@ -41,6 +41,13 @@ const routes: Routes = [
           )
       },
       {
+        path: 'contact',
+        loadChildren: () =>
+          import('../profile-components/contact/contact.module').then(
+            (m) => m.ContactModule
+          )
+      },
+      {
         path: 'security-questions',
         loadChildren: () =>
           import(
