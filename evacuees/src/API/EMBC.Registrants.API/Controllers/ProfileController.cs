@@ -16,9 +16,9 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
@@ -29,7 +29,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 using NJsonSchema.Converters;
 
 namespace EMBC.Registrants.API.Controllers
@@ -42,15 +41,13 @@ namespace EMBC.Registrants.API.Controllers
         private readonly IHostEnvironment env;
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
-        private readonly IUserManager userManager;
         private readonly IEvacuationSearchService evacuationSearchService;
 
-        public ProfileController(IHostEnvironment env, IMessagingClient messagingClient, IMapper mapper, IUserManager userManager, IEvacuationSearchService evacuationSearchService)
+        public ProfileController(IHostEnvironment env, IMessagingClient messagingClient, IMapper mapper, IEvacuationSearchService evacuationSearchService)
         {
             this.env = env;
             this.messagingClient = messagingClient;
             this.mapper = mapper;
-            this.userManager = userManager;
             this.evacuationSearchService = evacuationSearchService;
         }
 
@@ -69,7 +66,7 @@ namespace EMBC.Registrants.API.Controllers
             if (profile == null)
             {
                 //try get BCSC profile
-                profile = mapper.Map<Profile>(await userManager.Get(userId));
+                profile = GetUserFromPrincipal();
             }
             if (profile == null) return NotFound(userId);
             return Ok(profile);
@@ -84,7 +81,7 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<bool>> GetDoesUserExists()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(TokenClaimTypes.Id);
             var profile = await evacuationSearchService.GetRegistrantByUserId(userId);
             return Ok(profile != null);
         }
@@ -144,9 +141,17 @@ namespace EMBC.Registrants.API.Controllers
             if (profile == null) return NotFound(userId);
 
             //TODO: map to user profile from BCSC
-            var userProfile = await userManager.Get(userId);
+            var userProfile = GetUserFromPrincipal();
             var conflicts = ProfilesConflictDetector.DetectConflicts(mapper.Map<Profile>(profile), userProfile);
             return Ok(conflicts);
+        }
+
+        private Profile GetUserFromPrincipal()
+        {
+            var userData = User.FindFirstValue(TokenClaimTypes.UserData);
+            return userData == null
+                ? null
+                : JsonSerializer.Deserialize<Profile>(userData);
         }
     }
 
@@ -175,7 +180,7 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Base class for profile data conflicts
     /// </summary>
-    [JsonConverter(typeof(JsonInheritanceConverter), "dataElementName")]
+    [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "dataElementName")]
     [KnownType(typeof(DateOfBirthDataConflict))]
     [KnownType(typeof(NameDataConflict))]
     [KnownType(typeof(AddressDataConflict))]
@@ -215,10 +220,14 @@ namespace EMBC.Registrants.API.Controllers
         public override string DataElementName => "Name";
 
         [Required]
-        public new (string firstName, string lastName) ConflictingValue { get; set; }
+        public new
+            (string firstName, string lastName) ConflictingValue
+        { get; set; }
 
         [Required]
-        public new (string firstName, string lastName) OriginalValue { get; set; }
+        public new
+            (string firstName, string lastName) OriginalValue
+        { get; set; }
     }
 
     /// <summary>
