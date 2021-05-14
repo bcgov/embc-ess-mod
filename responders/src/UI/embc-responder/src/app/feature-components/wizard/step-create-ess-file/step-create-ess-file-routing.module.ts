@@ -22,9 +22,9 @@ const routes: Routes = [
       {
         path: 'household-members',
         loadChildren: () =>
-          import('../ess-file-components/household-members/household-members.module').then(
-            (m) => m.HouseholdMembersModule
-          )
+          import(
+            '../ess-file-components/household-members/household-members.module'
+          ).then((m) => m.HouseholdMembersModule)
       },
       {
         path: 'animals',

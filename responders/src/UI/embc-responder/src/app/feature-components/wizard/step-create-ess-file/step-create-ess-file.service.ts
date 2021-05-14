@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { InsuranceOption, NeedsAssessment } from 'src/app/core/models/evacuation-file';
 import {
-  Address
-} from 'src/app/core/models/profile';
+  InsuranceOption,
+  NeedsAssessment
+} from 'src/app/core/models/evacuation-file';
+import { Address } from 'src/app/core/models/profile';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
 
@@ -20,9 +21,7 @@ export class StepCreateEssFileService {
   private referredServiceDetails: string[] = [];
   private externalServices: string;
 
-  constructor(
-    private strepCreateProfileService: StepCreateProfileService
-  ) {}
+  constructor(private strepCreateProfileService: StepCreateProfileService) {}
 
   public get paperESSFiles(): string {
     return this.paperESSFile;
@@ -120,10 +119,12 @@ export class StepCreateEssFileService {
       referredServices: this.referredServices,
       referredServiceDetails: this.referredServiceDetails,
       externalServices: this.externalServices,
-      evacAddress: this.strepCreateProfileService.setAddressObject(this.evacAddress)
+      evacAddress: this.strepCreateProfileService.setAddressObject(
+        this.evacAddress
+      )
     });
 
-    return {  
+    return {
       paperESSFile: this.paperESSFile,
       facilityName: this.facilityName,
       insurance: this.insurance,

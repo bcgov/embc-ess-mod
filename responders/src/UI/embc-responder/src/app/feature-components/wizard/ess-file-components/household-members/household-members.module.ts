@@ -3,12 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { HouseholdMembersRoutingModule } from './household-members-routing.module';
 
-
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    HouseholdMembersRoutingModule
-  ]
+  imports: [CommonModule, HouseholdMembersRoutingModule]
 })
-export class HouseholdMembersModule { }
+export class HouseholdMembersModule {}

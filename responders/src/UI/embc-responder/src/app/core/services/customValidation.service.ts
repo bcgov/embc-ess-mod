@@ -171,5 +171,4 @@ export class CustomValidationService {
   //         return Validators.pattern(globalConst.petsQuantityPattern)(control);
   //     };
   // }
-
 }
