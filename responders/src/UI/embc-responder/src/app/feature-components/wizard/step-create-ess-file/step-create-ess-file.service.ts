@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import {
+  Address
+} from 'src/app/core/models/profile';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 
 @Injectable({ providedIn: 'root' })
@@ -6,6 +9,7 @@ export class StepCreateEssFileService {
   private essTabs: Array<TabModel> = WizardTabModelValues.essFileTabs;
   private paperESSFile: string;
   private evacuatedFromPrimary: boolean;
+  private evacAddress: Address;
   private facilityName: string;
   private insurance: string;
   private householdAffected: string;
@@ -26,6 +30,13 @@ export class StepCreateEssFileService {
   }
   public set evacuatedFromPrimaryAddress(evacuatedFromPrimary: boolean) {
     this.evacuatedFromPrimary = evacuatedFromPrimary;
+  }
+
+  public get evacAddresS(): Address {
+    return this.evacAddress;
+  }
+  public set evacAddresS(evacAddress: Address) {
+    this.evacAddress = evacAddress;
   }
 
   public get facilityNames(): string {

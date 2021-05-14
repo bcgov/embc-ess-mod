@@ -46,17 +46,19 @@
                 >
                   <mat-radio-button value="Yes">Yes </mat-radio-button>
                   <div class="prim-address">
-                    <p>Unit 1200, 1230 Main Street</p>
-                    <p>North Vancouver</p>
-                    <p>V8Y 6U8</p>
+                    <p>{{dummyAddress.addressLine1}}, {{dummyAddress.addressLine2}}</p>
+                    <p>{{dummyAddress.jurisdiction}}</p>
+                    <p>{{dummyAddress.postalCode}}</p>
                   </div>
                   <mat-radio-button value="No">No</mat-radio-button>
                 </mat-radio-group>
               </div>
               <br />
-              <div class="col-12" *ngIf="showBCAddressForm">
-                <p>Where are you being evacuated from?</p>
-                BC-ADDRESS COMPONENT HERE!!!
+              <div class="col-12 additional-form" *ngIf="showBCAddressForm">
+                <p><b>Where are you being evacuated from?</b></p>
+                <app-bc-address
+              [addressForm]="evacAddressFormGroup"
+            ></app-bc-address>
               </div>
 
               <div class="col-12 divider"></div>
@@ -164,8 +166,13 @@
                   required
                   (change)="referredServiceChange($event)"
                 >
-                  <mat-radio-button value="Yes">Yes</mat-radio-button>
-                  <mat-radio-button value="No">No</mat-radio-button>
+                <mat-radio-button
+                class="primary-radio-button"
+                *ngFor="let option of radioOption"
+                [value]="option"
+              >
+                {{ option }}
+              </mat-radio-button>
                 </mat-radio-group>
               </div>
               <div
