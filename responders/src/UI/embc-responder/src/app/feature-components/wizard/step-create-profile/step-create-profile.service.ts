@@ -102,7 +102,7 @@ export class StepCreateProfileService {
   public set contactDetails(contactDetail: ContactDetails) {
     this.contactDetail = contactDetail;
   }
-  
+
   public get securityQuestions(): SecurityQuestions {
     return this.securityQuestion;
   }

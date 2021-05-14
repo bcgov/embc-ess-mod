@@ -1,13 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, ValidationErrors, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { ErrorStateMatcher } from '@angular/material/core';
 
-import { SecurityQuestions } from 'src/app/core/models/profile';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ConfigurationService } from 'src/app/core/api/services';
 import { Subscription } from 'rxjs';
@@ -17,7 +20,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './security-questions.component.html',
   styleUrls: ['./security-questions.component.scss']
 })
-export class SecurityQuestionsComponent implements OnInit {
+export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   questionListSubscription: Subscription;
   questionForm: FormGroup = null;
   secQuestions: string[];
@@ -48,67 +51,82 @@ export class SecurityQuestionsComponent implements OnInit {
     // ];
 
     // Set security question values from API
-    this.questionListSubscription = this.configurationService.configurationGetSecurityQuestions().subscribe((questions) => {
-      this.secQuestions = questions;
-    });
+    this.questionListSubscription = this.configurationService
+      .configurationGetSecurityQuestions()
+      .subscribe((questions) => {
+        this.secQuestions = questions;
+      });
 
     this.createQuestionForm();
   }
-  
+
   createQuestionForm(): void {
-    this.questionForm = this.formBuilder.group({
-      question1: [
-        this.stepCreateProfileService.securityQuestions?.question1 ?? '',
-        [Validators.required]
-      ],
-      answer1: [
-        this.stepCreateProfileService.securityQuestions?.answer1 ?? '',
-        [
-          Validators.minLength(3), Validators.maxLength(50), 
-          Validators.pattern(/^[a-zA-Z0-9 ]+$/), this.customValidationService.whitespaceValidator()
+    this.questionForm = this.formBuilder.group(
+      {
+        question1: [
+          this.stepCreateProfileService.securityQuestions?.question1 ?? '',
+          [Validators.required]
+        ],
+        answer1: [
+          this.stepCreateProfileService.securityQuestions?.answer1 ?? '',
+          [
+            Validators.minLength(3),
+            Validators.maxLength(50),
+            Validators.pattern(/^[a-zA-Z0-9 ]+$/),
+            this.customValidationService.whitespaceValidator()
+          ]
+        ],
+        question2: [
+          this.stepCreateProfileService.securityQuestions?.question2 ?? '',
+          [Validators.required]
+        ],
+        answer2: [
+          this.stepCreateProfileService.securityQuestions?.answer2 ?? '',
+          [
+            Validators.minLength(3),
+            Validators.maxLength(50),
+            Validators.pattern(/^[a-zA-Z0-9 ]+$/),
+            this.customValidationService.whitespaceValidator()
+          ]
+        ],
+        question3: [
+          this.stepCreateProfileService.securityQuestions?.question3 ?? '',
+          [Validators.required]
+        ],
+        answer3: [
+          this.stepCreateProfileService.securityQuestions?.answer3 ?? '',
+          [
+            Validators.minLength(3),
+            Validators.maxLength(50),
+            Validators.pattern(/^[a-zA-Z0-9 ]+$/),
+            this.customValidationService.whitespaceValidator()
+          ]
         ]
-      ],
-      question2: [
-        this.stepCreateProfileService.securityQuestions?.question2 ?? '',
-        [Validators.required]
-      ],
-      answer2: [
-        this.stepCreateProfileService.securityQuestions?.answer2 ?? '',
-        [
-          Validators.minLength(3), Validators.maxLength(50), 
-          Validators.pattern(/^[a-zA-Z0-9 ]+$/), this.customValidationService.whitespaceValidator()
+      },
+      {
+        validators: [
+          this.customValidationService.uniqueValueValidator([
+            'question1',
+            'question2',
+            'question3'
+          ])
         ]
-      ],
-      question3: [
-        this.stepCreateProfileService.securityQuestions?.question3 ?? '',
-        [Validators.required]
-      ],
-      answer3: [
-        this.stepCreateProfileService.securityQuestions?.answer3 ?? '',
-        [
-          Validators.minLength(3), Validators.maxLength(50), 
-          Validators.pattern(/^[a-zA-Z0-9 ]+$/), this.customValidationService.whitespaceValidator()
-        ]
-      ]
-    },
-    {
-      validators: [this.customValidationService.uniqueValueValidator(["question1", "question2", "question3"])]
-    });
+      }
+    );
   }
-  
-  get questionFormControl(): { [key: string]: AbstractControl; } {
+
+  get questionFormControl(): { [key: string]: AbstractControl } {
     return this.questionForm.controls;
   }
 
-  changeBypass(event:MatCheckboxChange) {
+  changeBypass(event: MatCheckboxChange) {
     this.bypassQuestions = event.checked;
 
     if (this.bypassQuestions) {
       // Reset dropdowns/inputs
       this.questionForm.disable();
       this.questionForm.reset();
-    }
-    else {
+    } else {
       this.questionForm.enable();
     }
   }
@@ -124,11 +142,9 @@ export class SecurityQuestionsComponent implements OnInit {
   }
 
   back(): void {
-    this.router.navigate([
-      '/ess-wizard/create-evacuee-profile/contact'
-    ]);
+    this.router.navigate(['/ess-wizard/create-evacuee-profile/contact']);
   }
-  
+
   updateTabStatus() {
     this.questionForm.updateValueAndValidity();
 
@@ -138,28 +154,38 @@ export class SecurityQuestionsComponent implements OnInit {
     this.stepCreateProfileService.securityQuestions = {};
 
     // Write each control from questionForm to shared object, and check if any have value set
-    Object.keys(this.questionForm.controls).forEach(key => {
-      let control = this.questionForm.get(key);
+    Object.keys(this.questionForm.controls).forEach((key) => {
+      const control = this.questionForm.get(key);
 
-      this.stepCreateProfileService.securityQuestions[key] = control.value?.trim();
+      this.stepCreateProfileService.securityQuestions[
+        key
+      ] = control.value?.trim();
 
-      if (control.value?.trim().length > 0)
+      if (control.value?.trim().length > 0) {
         anyValueSet = true;
+      }
     });
 
     // Based on state of form, set tab status
     if (this.questionForm.valid || this.bypassQuestions) {
-      this.stepCreateProfileService.setTabStatus('security-questions', 'complete');
-    }
-    else if (anyValueSet) {
-      this.stepCreateProfileService.setTabStatus('security-questions', 'incomplete');
-    }
-    else {
-      this.stepCreateProfileService.setTabStatus('security-questions', 'not-started');
+      this.stepCreateProfileService.setTabStatus(
+        'security-questions',
+        'complete'
+      );
+    } else if (anyValueSet) {
+      this.stepCreateProfileService.setTabStatus(
+        'security-questions',
+        'incomplete'
+      );
+    } else {
+      this.stepCreateProfileService.setTabStatus(
+        'security-questions',
+        'not-started'
+      );
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.updateTabStatus();
 
     this.questionListSubscription.unsubscribe();

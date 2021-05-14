@@ -11,9 +11,7 @@ import { SecurityQuestionsComponent } from './security-questions.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    SecurityQuestionsComponent
-  ],
+  declarations: [SecurityQuestionsComponent],
   imports: [
     CommonModule,
     MatFormFieldModule,

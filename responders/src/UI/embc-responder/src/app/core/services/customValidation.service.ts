@@ -1,4 +1,9 @@
-import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormGroup,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import * as globalConst from './global-constants';
@@ -172,29 +177,27 @@ export class CustomValidationService {
   //     };
   // }
 
-  
   /**
    * Checks an array of controls by name, to see if they all have different values (unless empty)
-   * 
+   *
    * @param controlNames : Array of Control names in FormGroup that cannot contain duplicate values
    */
   uniqueValueValidator(controlNames: string[]): ValidatorFn {
     return (formGroup: FormGroup): null => {
-      let values = [];
+      const values = [];
 
       // Fill array of values
-      for (let controlName of controlNames) {
+      for (const controlName of controlNames) {
         values.push(formGroup.get(controlName).value.trim());
       }
 
       // Get index of every repeated value in array
-      let dupeIndexes = [];
+      const dupeIndexes = [];
       for (let i = 0; i < values.length; i++) {
         // Skip empty strings
-        if (values[i].length === 0)
-          continue;
+        if (values[i].length === 0) continue;
 
-        let iFirst = values.indexOf(values[i]);
+        const iFirst = values.indexOf(values[i]);
 
         if (iFirst !== i) {
           dupeIndexes.push(i);
@@ -202,12 +205,12 @@ export class CustomValidationService {
       }
 
       // For each duplicate, set notUnique error
-      for (let dupeIndex of dupeIndexes) {
-        let control = formGroup.get(controlNames[dupeIndex]);
-        control.setErrors({ 'notUnique': true });
+      for (const dupeIndex of dupeIndexes) {
+        const control = formGroup.get(controlNames[dupeIndex]);
+        control.setErrors({ notUnique: true });
       }
 
       return null;
-    }
+    };
   }
 }
