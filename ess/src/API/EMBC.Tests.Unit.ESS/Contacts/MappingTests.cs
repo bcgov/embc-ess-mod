@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Shouldly;
@@ -29,7 +30,12 @@ namespace EMBC.Tests.Unit.ESS.Contacts
 
             profile.Id.ShouldBe(contact.contactid.ToString());
             profile.UserId.ShouldBe(contact.era_bcservicescardid);
-            profile.SecretPhrase.ShouldBe(contact.era_secrettext);
+            profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer.ShouldBe(contact.era_securityquestion1answer);
+            profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer.ShouldBe(contact.era_securityquestion2answer);
+            profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer.ShouldBe(contact.era_securityquestion3answer);
+            profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question.ShouldBe(contact.era_securityquestiontext1);
+            profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question.ShouldBe(contact.era_securityquestiontext2);
+            profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question.ShouldBe(contact.era_securityquestiontext3);
             profile.RestrictedAccess.ShouldBe(contact.era_restriction.Value);
 
             profile.DateOfBirth.ShouldBe(Regex.Replace(contact.birthdate.ToString(),
@@ -66,7 +72,12 @@ namespace EMBC.Tests.Unit.ESS.Contacts
 
             contact.contactid.ShouldNotBeNull().ToString().ShouldBe(profile.Id);
             contact.era_bcservicescardid.ShouldBe(profile.UserId);
-            contact.era_secrettext.ShouldBe(profile.SecretPhrase);
+            contact.era_securityquestion1answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer);
+            contact.era_securityquestion2answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer);
+            contact.era_securityquestion3answer.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer);
+            contact.era_securityquestiontext1.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question);
+            contact.era_securityquestiontext2.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question);
+            contact.era_securityquestiontext3.ShouldBe(profile.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question);
             contact.era_restriction.ShouldBe(profile.RestrictedAccess);
 
             contact.firstname.ShouldBe(profile.FirstName);
