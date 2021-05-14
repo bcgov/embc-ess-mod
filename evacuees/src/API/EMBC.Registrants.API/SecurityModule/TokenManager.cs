@@ -29,6 +29,12 @@ namespace EMBC.Registrants.API.SecurityModule
         string Create(ClaimsPrincipal principal);
     }
 
+    public static class TokenClaimTypes
+    {
+        public const string Id = ClaimTypes.NameIdentifier;
+        public const string UserData = ClaimTypes.UserData;
+    }
+
     public class TokenManager : ITokenManager
     {
         private readonly SymmetricSecurityKey encryptingSecurityKey;
@@ -58,13 +64,7 @@ namespace EMBC.Registrants.API.SecurityModule
             {
                 Audience = audience,
                 Issuer = issuer,
-                Subject = new ClaimsIdentity(new[]
-                    {
-                        new Claim(ClaimTypes.NameIdentifier, principal.FindFirstValue(ClaimTypes.NameIdentifier))
-                    },
-                    principal.Identity.AuthenticationType,
-                    ClaimTypes.NameIdentifier,
-                    ClaimTypes.Role),
+                Subject = (ClaimsIdentity)principal.Identity,
                 EncryptingCredentials = new EncryptingCredentials(encryptingSecurityKey, SecurityAlgorithms.Aes256KW, SecurityAlgorithms.Aes128CbcHmacSha256),
                 SigningCredentials = new SigningCredentials(signingSecurityKey, SecurityAlgorithms.HmacSha256),
                 IssuedAt = now,
