@@ -27,8 +27,12 @@
     <div class="col-md-4">
       <p>Answer:</p>
     </div>
-    <div class="col-md-8">
-      <input matInput #answer type="text" (focusout)="sendAnswer($event)" />
+    <div class="col-md-6">
+      <mat-form-field appearance="outline">
+        <!-- <mat-label>Answer</mat-label> -->
+        <input matInput #answer type="text" (focusout)="sendAnswer($event)" />
+      </mat-form-field>
+      
     </div>
   </div>
 </mat-card>
