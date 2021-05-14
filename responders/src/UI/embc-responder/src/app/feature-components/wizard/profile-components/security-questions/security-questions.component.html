@@ -1,3 +1,236 @@
-<p>security-questions works!</p>
+<div class="container container-frame">
+  <div class="heading-container">
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-tab-heading requiredField">
+          Security Questions
+        </span>
+      </div>
+    </div>
+  </div>
 
-<button class="button-p" mat-button (click)="next()">Next</button>
+  <div class="row">
+    <div class="col-12 content-container">
+      <form [formGroup]="questionForm">
+        <div class="row">
+          <div class="col-10">
+            <p>
+              You will be asked to answer your questions should you meet with an
+              Emergency Support Services (ESS) Responder again.<br />
+              If you are unable to answer your security questions, you will be
+              asked to provide government issue identification to confirm your
+              identity.
+            </p>
+
+            <p>
+              <span class="bold"
+                >Tips for creating strong security questions:</span
+              ><br />
+              1. Choose answers that are easy to remember, but difficult for
+              others to guess.<br />
+              2. Try not to choose questions that you have answered on public
+              sites or social media.
+            </p>
+
+            <p>
+              Please select <span class="bold">3 security questions</span> from
+              the list of options below.
+            </p>
+
+            <p>
+              Please Note: Your answers need to be greater than 2 characters and
+              should not include any special characters.<br />
+              You may include numbers and letters. Your security answers are not
+              case sensitive.
+            </p>
+
+            <div class="row question-row">
+              <mat-form-field class="col-6" appearance="outline">
+                <mat-label>Security Question 1</mat-label>
+
+                <mat-select formControlName="question1">
+                  <mat-option
+                    *ngFor="let question of secQuestions"
+                    [value]="question"
+                  >
+                    {{ question }}
+                  </mat-option>
+                </mat-select>
+
+                <mat-error
+                  *ngIf="questionFormControl?.question1.hasError('required')"
+                >
+                  Security Question is required.
+                </mat-error>
+                <mat-error
+                  *ngIf="questionFormControl?.question1.hasError('notUnique')"
+                >
+                  Security Questions must all be different.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="col-6" appearance="outline">
+                <mat-label>Question 1 Answer</mat-label>
+
+                <input matInput maxlength="50" formControlName="answer1" />
+
+                <mat-error
+                  *ngIf="
+                    questionFormControl?.answer1.hasError('required') ||
+                    questionFormControl?.answer1.hasError('whitespaceError')
+                  "
+                >
+                  Answer is required.
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    questionFormControl?.answer1.hasError('minlength') ||
+                    questionFormControl?.answer1.hasError('maxlength')
+                  "
+                >
+                  Answer must be between 3 and 50 characters long.
+                </mat-error>
+                <mat-error
+                  *ngIf="questionFormControl?.answer1.hasError('pattern')"
+                >
+                  Answer cannot contain special characters.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="row question-row">
+              <mat-form-field class="col-6" appearance="outline">
+                <mat-label>Security Question 2</mat-label>
+
+                <mat-select formControlName="question2">
+                  <mat-option
+                    *ngFor="let question of secQuestions"
+                    [value]="question"
+                  >
+                    {{ question }}
+                  </mat-option>
+                </mat-select>
+
+                <mat-error
+                  *ngIf="questionFormControl?.question2.hasError('required')"
+                >
+                  Security Question is required.
+                </mat-error>
+                <mat-error
+                  *ngIf="questionFormControl?.question2.hasError('notUnique')"
+                >
+                  Security Questions must all be different.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="col-6" appearance="outline">
+                <mat-label>Question 2 Answer</mat-label>
+
+                <input matInput maxlength="50" formControlName="answer2" />
+
+                <mat-error
+                  *ngIf="
+                    questionFormControl?.answer2.hasError('required') ||
+                    questionFormControl?.answer2.hasError('whitespaceError')
+                  "
+                >
+                  Answer is required.
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    questionFormControl?.answer2.hasError('minlength') ||
+                    questionFormControl?.answer2.hasError('maxlength')
+                  "
+                >
+                  Answer must be between 3 and 50 characters long.
+                </mat-error>
+                <mat-error
+                  *ngIf="questionFormControl?.answer2.hasError('pattern')"
+                >
+                  Answer cannot contain special characters.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="row question-row">
+              <mat-form-field class="col-6" appearance="outline">
+                <mat-label>Security Question 3</mat-label>
+
+                <mat-select formControlName="question3">
+                  <mat-option
+                    *ngFor="let question of secQuestions"
+                    [value]="question"
+                  >
+                    {{ question }}
+                  </mat-option>
+                </mat-select>
+
+                <mat-error
+                  *ngIf="questionFormControl?.question3.hasError('required')"
+                >
+                  Security Question is required.
+                </mat-error>
+                <mat-error
+                  *ngIf="questionFormControl?.question3.hasError('notUnique')"
+                >
+                  Security Questions must all be different.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="col-6" appearance="outline">
+                <mat-label>Question 3 Answer</mat-label>
+
+                <input matInput maxlength="50" formControlName="answer3" />
+
+                <mat-error
+                  *ngIf="
+                    questionFormControl?.answer3.hasError('required') ||
+                    questionFormControl?.answer3.hasError('whitespaceError')
+                  "
+                >
+                  Answer is required.
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    questionFormControl?.answer3.hasError('minlength') ||
+                    questionFormControl?.answer3.hasError('maxlength')
+                  "
+                >
+                  Answer must be between 3 and 50 characters long.
+                </mat-error>
+                <mat-error
+                  *ngIf="questionFormControl?.answer3.hasError('pattern')"
+                >
+                  Answer cannot contain special characters.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="row checkbox-row">
+              <div class="col-12">
+                <mat-checkbox
+                  class="example-margin"
+                  (change)="changeBypass($event)"
+                  [checked]="bypassQuestions"
+                >
+                  Bypass security questions for manual entry of paper ESS file.
+                </mat-checkbox>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row nav-buttons">
+          <div class="col-12">
+            <button class="button-s back" mat-button (click)="back()">
+              Back
+            </button>
+            <button class="button-p next" mat-button (click)="next()">
+              Next
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
