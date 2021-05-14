@@ -110,7 +110,7 @@ namespace EMBC.ESS.Resources.Cases
                     : null))
                 ;
 
-            CreateMap<HouseholdMember, contact>()
+            CreateMap<HouseholdMember, contact>(MemberList.None)
                 .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.lastname, opts => opts.MapFrom(s => s.LastName))
