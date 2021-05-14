@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     return this.authService.isAuthenticated()
       ? of(true)
       : this.authService.getToken().pipe(map(token => {
-        console.debug('token', token);
+        // console.debug('token', token);
         if (token === null) {
           this.authService.login(state.url);
           return false;
