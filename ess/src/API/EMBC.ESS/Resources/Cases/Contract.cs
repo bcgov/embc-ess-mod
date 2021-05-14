@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EMBC.ESS.Shared.Contracts.Submissions;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -58,11 +59,22 @@ namespace EMBC.ESS.Resources.Cases
         public string Id { get; set; }
     }
 
-    public class QueryEvacuationFiles : CaseQuery
+    public class EvacuationFilesQuery : CaseQuery
     {
         public string FileId { get; set; }
         public string UserId { get; set; }
         public string PrimaryRegistrantId { get; set; }
+    }
+
+    public class SearchEvacuationFilesQuery : EvacuationFilesQuery
+    {
+        public string PrimaryRegistrantUserId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DateOfBirth { get; set; }
+        public bool IncludeRestrictedAccess { get; set; }
+        public bool IncludeHouseholdMembers { get; set; }
+        public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
     }
 
     public class EvacuationFile : Case

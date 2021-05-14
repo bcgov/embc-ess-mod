@@ -277,6 +277,12 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             registrant.PrimaryAddress.StateProvince.ShouldNotBeNull();
             registrant.PrimaryAddress.Community.ShouldNotBeNull().ShouldNotBeNull();
             registrant.PrimaryAddress.Community.ShouldNotBeNull();
+
+            var registrants = await GetRegistrantsByName("Elvis", "Presley");
+
+            registrants.ShouldNotBeNull();
+            registrants.ShouldAllBe(r => r.FirstName == "Elvis");
+            registrants.ShouldAllBe(r => r.LastName == "Presley");
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -287,6 +293,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.PrimaryRegistrantId == registrant.Id);
+
+            files = await GetRegistrantFilesByName("Elvis", "Presley");
+            files.ShouldNotBeEmpty();
+
         }
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)
@@ -300,6 +310,21 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             })).MatchingRegistrants.SingleOrDefault();
         }
 
+        private async Task<IEnumerable<RegistrantProfile>> GetRegistrantsByName(string firstName, string lastName)
+        {
+            return (await manager.Handle(new SearchQuery
+            {
+                SearchParameters = new[]
+                {
+                    new RegistrantsSearchCriteria
+                    { 
+                        FirstName = firstName,
+                        LastName = lastName
+                    }
+                }
+            })).MatchingRegistrants.ToList();
+        }
+
         private async Task<IEnumerable<EvacuationFile>> GetRegistrantFilesByPrimaryRegistrantId(string registrantUserId)
         {
             return (await manager.Handle(new SearchQuery
@@ -307,6 +332,21 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 SearchParameters = new[]
                 {
                     new EvacuationFilesSearchCriteria { PrimaryRegistrantUserId = registrantUserId }
+                }
+            })).MatchingFiles;
+        }
+
+        private async Task<IEnumerable<EvacuationFile>> GetRegistrantFilesByName(string firstName, string lastName)
+        {
+            return (await manager.Handle(new SearchQuery
+            {
+                SearchParameters = new[]
+                {
+                    new EvacuationFilesSearchCriteria 
+                    {
+                        FirstName = firstName,
+                        LastName = lastName
+                    }
                 }
             })).MatchingFiles;
         }

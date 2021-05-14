@@ -165,7 +165,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         //[Fact(Skip = RequiresDynamics)]
         //public async Task CanGetEvacuations()
         //{
-        //    var caseQuery = new QueryEvacuationFiles
+        //    var caseQuery = new EvacuationFilesQuery
         //    {
         //        UserId = TestUserId
         //    };
@@ -232,7 +232,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetEvacuation()
         {
-            var caseQuery = new QueryEvacuationFiles
+            var caseQuery = new EvacuationFilesQuery
             {
                 UserId = TestUserId,
                 FileId = TestEssFileNumber
@@ -248,7 +248,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         //[Fact(Skip = RequiresDynamics)]
         //public async Task CanUpdateEvacuation()
         //{
-        //    var caseQuery = new QueryEvacuationFiles
+        //    var caseQuery = new EvacuationFilesQuery
         //    {
         //        UserId = TestUserId,
         //        FileId = TestEssFileNumber
@@ -447,12 +447,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
         //    updatedEvacuationFile = (EvacuationFile)queryResult.Items.LastOrDefault();
         //    updatedEvacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(this.baseTestEvacuation.EvacuatedFromAddress.AddressLine1);
         //}
-        
+
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateEvacuation()
         {
             /* Get existing evacuation */
-            var caseQuery = new QueryEvacuationFiles
+            var caseQuery = new EvacuationFilesQuery
             {
                 UserId = TestUserId,
                 FileId = TestEssFileNumber
@@ -472,7 +472,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var newEssFileNumber = saveResult.CaseId;
 
             /* Get created evacuation. */
-            var createdCaseQuery = new QueryEvacuationFiles
+            var createdCaseQuery = new EvacuationFilesQuery
             {
                 UserId = TestUserId,
                 FileId = newEssFileNumber
@@ -491,7 +491,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var deletedEssFileNumber = deleteResult.CaseId;
 
             /* Get deleted evacuation */
-            var deletedCaseQuery = new QueryEvacuationFiles
+            var deletedCaseQuery = new EvacuationFilesQuery
             {
                 UserId = TestUserId,
                 FileId = deletedEssFileNumber
@@ -505,7 +505,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task ResetTestEvacuation()
         {
             /* Get existing evacuation */
-            var caseQuery = new QueryEvacuationFiles
+            var caseQuery = new EvacuationFilesQuery
             {
                 UserId = TestUserId,
                 FileId = TestEssFileNumber

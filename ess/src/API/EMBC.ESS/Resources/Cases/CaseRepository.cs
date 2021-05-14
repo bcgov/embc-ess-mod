@@ -15,10 +15,15 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Cases.Evacuations;
+using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Utilities.Dynamics;
+using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Resources.Cases
@@ -26,12 +31,14 @@ namespace EMBC.ESS.Resources.Cases
     public class CaseRepository : ICaseRepository
     {
         private readonly IEvacuationRepository evacuationRepository;
+        private readonly IContactRepository contactRepository;
         private readonly EssContext essContext;
         private readonly IMapper mapper;
 
-        public CaseRepository(IEvacuationRepository evacuationRepository, EssContext essContext, IMapper mapper)
+        public CaseRepository(IEvacuationRepository evacuationRepository, IContactRepository contactRepository, EssContext essContext, IMapper mapper)
         {
             this.evacuationRepository = evacuationRepository;
+            this.contactRepository = contactRepository;
             this.essContext = essContext;
             this.mapper = mapper;
         }
@@ -50,25 +57,33 @@ namespace EMBC.ESS.Resources.Cases
         {
             return query.GetType().Name switch
             {
-                nameof(QueryEvacuationFiles) => await HandleQueryEvacuationFile((QueryEvacuationFiles)query),
+                nameof(SearchEvacuationFilesQuery) => await HandleSearchEvacuationFilesQuery((SearchEvacuationFilesQuery)query),
+                nameof(EvacuationFilesQuery) => await HandleQueryEvacuationFile((EvacuationFilesQuery)query),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
         }
 
-        public async Task<CaseQueryResult> HandleQueryEvacuationFile(QueryEvacuationFiles cmd)
+        public async Task<CaseQueryResult> HandleQueryEvacuationFile(EvacuationFilesQuery query)
         {
-            if (!string.IsNullOrEmpty(cmd.FileId))
+            var result = new CaseQueryResult();
+            var evacuationFiles = new List<EvacuationFile>();
+
+            if (!string.IsNullOrEmpty(query.FileId))
             {
-                return new CaseQueryResult { Items = new EvacuationFile[] { await evacuationRepository.Read(cmd.FileId) } };
+                evacuationFiles.Add(await evacuationRepository.Read(query.FileId));
             }
-            else if (!string.IsNullOrEmpty(cmd.UserId))
+            else if (!string.IsNullOrEmpty(query.UserId))
             {
-                return new CaseQueryResult { Items = await evacuationRepository.ReadAll(cmd.UserId) };
+                evacuationFiles = (List<EvacuationFile>)await evacuationRepository.ReadAll(query.UserId);
             }
-            else
-            {
-                throw new NotImplementedException("Need to refactor this method");
-            }
+
+            result.Items = evacuationFiles;
+            return result;
+        }
+
+        public async Task<CaseQueryResult> HandleSearchEvacuationFilesQuery(SearchEvacuationFilesQuery query)
+        {
+            return new CaseQueryResult { Items = await evacuationRepository.ReadAll(query) };
         }
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)

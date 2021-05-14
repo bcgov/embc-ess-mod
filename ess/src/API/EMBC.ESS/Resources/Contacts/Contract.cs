@@ -35,7 +35,7 @@ namespace EMBC.ESS.Resources.Contacts
 
     public class ContactQuery
     {
-        public string ByContactId { get; set; }
+        public string ContactId { get; set; }
         public string UserId { get; set; }
     }
 
@@ -52,6 +52,15 @@ namespace EMBC.ESS.Resources.Contacts
     public class DeleteContact : ContactCommand
     {
         public string ContactId { get; set; }
+    }
+
+    public class SearchContactQuery : ContactQuery
+    {
+        public string FileId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DateOfBirth { get; set; }
+        public bool IncludeRestrictedAccess { get; set; }
     }
 
     public class Contact

@@ -76,7 +76,7 @@ namespace EMBC.ESS.Managers.Submissions
         public async Task<string> Handle(SubmitEvacuationFileCommand cmd)
         {
             var file = mapper.Map<Resources.Cases.EvacuationFile>(cmd.File);
-            var contact = (await contactRepository.QueryContact(new ContactQuery { ByContactId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
+            var contact = (await contactRepository.QueryContact(new ContactQuery { ContactId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
 
             if (contact == null) throw new Exception($"Registrant not found '{file.PrimaryRegistrantId}'");
 
@@ -103,15 +103,30 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 if (criteria is RegistrantsSearchCriteria registrantsSearchCriteria)
                 {
-                    contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = registrantsSearchCriteria.UserId })).Items;
+                    contacts = (await contactRepository.QueryContact(new SearchContactQuery
+                    {
+                        UserId = registrantsSearchCriteria.UserId,
+                        FirstName = registrantsSearchCriteria.FirstName,
+                        LastName = registrantsSearchCriteria.LastName,
+                        DateOfBirth = registrantsSearchCriteria.DateOfBirth,
+                        FileId = registrantsSearchCriteria.FileId,
+                        IncludeRestrictedAccess = registrantsSearchCriteria.IncludeRestrictedAccess
+                    })).Items;
                 }
                 else if (criteria is EvacuationFilesSearchCriteria evacuationFilesSearchCriteria)
                 {
-                    cases = (await caseRepository.QueryCase(new QueryEvacuationFiles
+                    cases = (await caseRepository.QueryCase(new SearchEvacuationFilesQuery
                     {
+                        FileId = evacuationFilesSearchCriteria.FileId,
                         PrimaryRegistrantId = evacuationFilesSearchCriteria.PrimaryRegistrantId,
                         UserId = evacuationFilesSearchCriteria.PrimaryRegistrantUserId,
-                        FileId = evacuationFilesSearchCriteria.FileId
+                        PrimaryRegistrantUserId = evacuationFilesSearchCriteria.PrimaryRegistrantUserId,
+                        FirstName = evacuationFilesSearchCriteria.FirstName,
+                        LastName = evacuationFilesSearchCriteria.LastName,
+                        DateOfBirth = evacuationFilesSearchCriteria.DateOfBirth,
+                        IncludeRestrictedAccess = evacuationFilesSearchCriteria.IncludeRestrictedAccess,
+                        IncludeHouseholdMembers = evacuationFilesSearchCriteria.IncludeHouseholdMembers,
+                        IncludeFilesInStatuses = evacuationFilesSearchCriteria.IncludeFilesInStatuses
                     })).Items;
                 }
             }

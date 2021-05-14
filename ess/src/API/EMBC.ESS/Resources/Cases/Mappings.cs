@@ -110,7 +110,7 @@ namespace EMBC.ESS.Resources.Cases
                     : null))
                 ;
 
-            CreateMap<HouseholdMember, contact>(MemberList.None)
+            CreateMap<HouseholdMember, contact>()
                 .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.lastname, opts => opts.MapFrom(s => s.LastName))
@@ -118,6 +118,10 @@ namespace EMBC.ESS.Resources.Cases
                 .ForMember(d => d.era_preferredname, opts => opts.MapFrom(s => s.PreferredName))
                 .ForMember(d => d.gendercode, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))
                 .ForMember(d => d.birthdate, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.DateOfBirth) ? (Date?)null : Date.Parse(s.DateOfBirth)))
+
+                .ReverseMap()
+
+                .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.gendercode))
                 ;
 
             CreateMap<era_needsassessmentevacuee, Pet>()

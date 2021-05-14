@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Resources.Cases.Evacuations
@@ -146,7 +147,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return essFileNumber;
         }
 
-        private async Task<EvacuationFile> GetEvacuationFileById(Guid id)
+        public async Task<EvacuationFile> GetEvacuationFileById(Guid id)
         {
             var dynamicsFile = await essContext.era_evacuationfiles
                 .ByKey(id)
@@ -188,17 +189,76 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 return Array.Empty<EvacuationFile>();
             }
 
-            var fileIds = essContext.era_needsassessmentevacuees
+            var evacuees = essContext.era_needsassessmentevacuees
+                .Expand(ev => ev.era_RegistrantID)
                 .Expand(ev => ev.era_NeedsAssessmentID)
                 .Where(ev => ev.era_RegistrantID.contactid == registrant.contactid)
-                .ToArray()
-                .Select(ev => ev.era_NeedsAssessmentID?._era_evacuationfile_value)
+                .ToArray();
+
+            var fileIds = evacuees.Select(ev => ev.era_NeedsAssessmentID?._era_evacuationfile_value)
                 .Where(id => id.HasValue)
                 .Distinct()
                 ;
             essContext.DetachAll();
 
             var evacuationFiles = fileIds.Select(id => GetEvacuationFileById(id.Value).GetAwaiter().GetResult()).ToArray();
+
+            essContext.DetachAll();
+            return await Task.FromResult(evacuationFiles);
+        }
+
+        public async Task<IEnumerable<EvacuationFile>> ReadAll(SearchEvacuationFilesQuery query)
+        {
+            IQueryable<contact> contactQuery = essContext.contacts
+                  .Expand(c => c.era_City)
+                  .Expand(c => c.era_ProvinceState)
+                  .Expand(c => c.era_Country)
+                  .Expand(c => c.era_MailingCity)
+                  .Expand(c => c.era_MailingProvinceState)
+                  .Expand(c => c.era_MailingCountry)
+                  .Where(c => c.statecode == (int)EntityState.Active);
+
+            if (!string.IsNullOrEmpty(query.UserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.UserId, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.LastName)) contactQuery = contactQuery.Where(c => c.lastname.Equals(query.LastName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.FirstName)) contactQuery = contactQuery.Where(c => c.firstname.Equals(query.FirstName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.DateOfBirth)) contactQuery = contactQuery.Where(c => c.birthdate.Equals(Date.Parse(query.DateOfBirth)));
+
+            /*
+            public bool IncludeRestrictedAccess
+            public bool IncludeHouseholdMembers
+            public EvacuationFileStatus[] IncludeFilesInStatuses
+            */
+
+            var contacts = await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync();
+
+            essContext.DetachAll();
+
+            if (contacts == null)
+            {
+                return Array.Empty<EvacuationFile>();
+            }
+
+            var contactIds = contacts.Select(c => c.contactid).Distinct().ToList();
+
+            var fileIds = new List<Guid?>();
+            foreach (Guid contactId in contactIds)
+            {
+                var evacuees = essContext.era_needsassessmentevacuees
+                    .Expand(ev => ev.era_RegistrantID)
+                    .Expand(ev => ev.era_NeedsAssessmentID)
+                    .Where(ev => ev.era_RegistrantID.contactid == contactId)
+                    .ToArray();
+
+                var ids = evacuees.Select(ev => ev.era_NeedsAssessmentID?._era_evacuationfile_value.Value).Where(id => id.HasValue).Distinct().ToList();
+                foreach (Guid fileId in ids)
+                {
+                    fileIds.Add(fileId);
+                }
+
+                essContext.DetachAll();
+            }
+            var evacuationFiles = fileIds.Select(id => GetEvacuationFileById(id.Value).GetAwaiter().GetResult()).ToArray();
+            if (!string.IsNullOrEmpty(query.FileId)) evacuationFiles = evacuationFiles.Where(c => c.Id.Equals(query.FileId, StringComparison.OrdinalIgnoreCase)).ToArray();
 
             essContext.DetachAll();
             return await Task.FromResult(evacuationFiles);

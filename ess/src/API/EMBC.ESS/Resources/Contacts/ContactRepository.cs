@@ -22,6 +22,7 @@ using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Client;
+using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Resources.Contacts
 {
@@ -50,6 +51,7 @@ namespace EMBC.ESS.Resources.Contacts
         {
             return query.GetType().Name switch
             {
+                nameof(SearchContactQuery) => await HandleSearchQuery((SearchContactQuery)query),
                 nameof(ContactQuery) => await HandleQuery((ContactQuery)query),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
@@ -119,8 +121,33 @@ namespace EMBC.ESS.Resources.Contacts
                   .Expand(c => c.era_MailingCountry)
                   .Where(c => c.statecode == (int)EntityState.Active);
 
-            if (!string.IsNullOrEmpty(query.ByContactId)) contactQuery = contactQuery.Where(c => c.contactid == Guid.Parse(query.ByContactId));
+            if (!string.IsNullOrEmpty(query.ContactId)) contactQuery = contactQuery.Where(c => c.contactid == Guid.Parse(query.ContactId));
             if (!string.IsNullOrEmpty(query.UserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.UserId, StringComparison.OrdinalIgnoreCase));
+
+            var contacts = await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync();
+
+            essContext.DetachAll();
+
+            return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts) };
+        }
+
+        private async Task<ContactQueryResult> HandleSearchQuery(SearchContactQuery query)
+        {
+            IQueryable<contact> contactQuery = essContext.contacts
+                  .Expand(c => c.era_City)
+                  .Expand(c => c.era_ProvinceState)
+                  .Expand(c => c.era_Country)
+                  .Expand(c => c.era_MailingCity)
+                  .Expand(c => c.era_MailingProvinceState)
+                  .Expand(c => c.era_MailingCountry)
+                  .Where(c => c.statecode == (int)EntityState.Active);
+
+            if (!string.IsNullOrEmpty(query.UserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.UserId, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.LastName)) contactQuery = contactQuery.Where(c => c.lastname.Equals(query.LastName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.FirstName)) contactQuery = contactQuery.Where(c => c.firstname.Equals(query.FirstName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.DateOfBirth)) contactQuery = contactQuery.Where(c => c.birthdate.Equals(Date.Parse(query.DateOfBirth)));
+            // query.FileId
+            // query.IncludeRestrictedAccess
 
             var contacts = await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync();
 
