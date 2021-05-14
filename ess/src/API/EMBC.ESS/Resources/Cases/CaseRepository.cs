@@ -31,14 +31,12 @@ namespace EMBC.ESS.Resources.Cases
     public class CaseRepository : ICaseRepository
     {
         private readonly IEvacuationRepository evacuationRepository;
-        private readonly IContactRepository contactRepository;
         private readonly EssContext essContext;
         private readonly IMapper mapper;
 
-        public CaseRepository(IEvacuationRepository evacuationRepository, IContactRepository contactRepository, EssContext essContext, IMapper mapper)
+        public CaseRepository(IEvacuationRepository evacuationRepository, EssContext essContext, IMapper mapper)
         {
             this.evacuationRepository = evacuationRepository;
-            this.contactRepository = contactRepository;
             this.essContext = essContext;
             this.mapper = mapper;
         }
