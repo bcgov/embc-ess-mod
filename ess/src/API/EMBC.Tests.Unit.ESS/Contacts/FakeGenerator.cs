@@ -103,9 +103,9 @@ namespace EMBC.Tests.Unit.ESS.Contacts
         private static IEnumerable<SecurityQuestion> FakeSecurityQuestions()
         {
             List<SecurityQuestion> ret = new List<SecurityQuestion>();
-            ret.Add(FakeSecurityQuestion(0));
             ret.Add(FakeSecurityQuestion(1));
             ret.Add(FakeSecurityQuestion(2));
+            ret.Add(FakeSecurityQuestion(3));
             return ret;
         }
 
