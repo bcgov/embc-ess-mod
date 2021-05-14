@@ -1,4 +1,9 @@
-import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormGroup,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import * as globalConst from './global-constants';
@@ -88,22 +93,27 @@ export class CustomValidationService {
   /**
    * Checks if the email and confirm email field matches
    */
-  // confirmEmailValidator(): ValidatorFn {
-  //     return (control: AbstractControl): { [key: string]: boolean } | null => {
-  //         if (control) {
-  //             const email = control.get('email').value;
-  //             const confirmEmail = control.get('confirmEmail').value;
-  //             if (email !== undefined && confirmEmail !== undefined &&
-  //                 email !== null && confirmEmail !== null &&
-  //                 email !== '' && confirmEmail !== '') {
-  //                 if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
-  //                     return { emailMatch: true };
-  //                 }
-  //             }
-  //         }
-  //         return null;
-  //     };
-  // }
+  confirmEmailValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control) {
+        const email = control.get('email').value;
+        const confirmEmail = control.get('confirmEmail').value;
+        if (
+          email !== undefined &&
+          confirmEmail !== undefined &&
+          email !== null &&
+          confirmEmail !== null &&
+          email !== '' &&
+          confirmEmail !== ''
+        ) {
+          if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
+            return { emailMatch: true };
+          }
+        }
+      }
+      return null;
+    };
+  }
 
   // requiredConfirmEmailValidator(): ValidatorFn {
   //     return (control: AbstractControl): { [key: string]: boolean } | null => {
@@ -166,4 +176,41 @@ export class CustomValidationService {
   //         return Validators.pattern(globalConst.petsQuantityPattern)(control);
   //     };
   // }
+
+  /**
+   * Checks an array of controls by name, to see if they all have different values (unless empty)
+   *
+   * @param controlNames : Array of Control names in FormGroup that cannot contain duplicate values
+   */
+  uniqueValueValidator(controlNames: string[]): ValidatorFn {
+    return (formGroup: FormGroup): null => {
+      const values = [];
+
+      // Fill array of values
+      for (const controlName of controlNames) {
+        values.push(formGroup.get(controlName).value.trim());
+      }
+
+      // Get index of every repeated value in array
+      const dupeIndexes = [];
+      for (let i = 0; i < values.length; i++) {
+        // Skip empty strings
+        if (values[i].length === 0) continue;
+
+        const iFirst = values.indexOf(values[i]);
+
+        if (iFirst !== i) {
+          dupeIndexes.push(i);
+        }
+      }
+
+      // For each duplicate, set notUnique error
+      for (const dupeIndex of dupeIndexes) {
+        const control = formGroup.get(controlNames[dupeIndex]);
+        control.setErrors({ notUnique: true });
+      }
+
+      return null;
+    };
+  }
 }

@@ -8,7 +8,8 @@ import {
   Address,
   ContactDetails,
   PersonDetails,
-  Profile
+  Profile,
+  SecurityQuestions
 } from 'src/app/core/models/profile';
 
 @Injectable({ providedIn: 'root' })
@@ -21,11 +22,28 @@ export class StepCreateProfileService {
   private primaryAddressDetail: Address;
   private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
+  private securityQuestion: SecurityQuestions;
+  private showContacts: boolean;
+  private confirmEmails: string;
   private isBcAddresS: boolean;
   private isBcMailingAddresS: boolean;
   private isMailingAddressSameAsPrimaryAddresS: boolean;
 
   constructor(private dialog: MatDialog) {}
+
+  public get showContact(): boolean {
+    return this.showContacts;
+  }
+  public set showContact(showContacts: boolean) {
+    this.showContacts = showContacts;
+  }
+
+  public get confirmEmail(): string {
+    return this.confirmEmails;
+  }
+  public set confirmEmail(value: string) {
+    this.confirmEmails = value;
+  }
 
   public get isMailingAddressSameAsPrimaryAddress(): boolean {
     return this.isMailingAddressSameAsPrimaryAddresS;
@@ -83,6 +101,13 @@ export class StepCreateProfileService {
   }
   public set contactDetails(contactDetail: ContactDetails) {
     this.contactDetail = contactDetail;
+  }
+
+  public get securityQuestions(): SecurityQuestions {
+    return this.securityQuestion;
+  }
+  public set securityQuestions(securityQuestion: SecurityQuestions) {
+    this.securityQuestion = securityQuestion;
   }
 
   public get tabs(): Array<TabModel> {

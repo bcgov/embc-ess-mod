@@ -12,8 +12,8 @@ export interface Profile {
 
 export interface ContactDetails {
   email?: null | string;
-  hideEmailRequired?: boolean;
-  hidePhoneRequired?: boolean;
+  hideEmailRequired?: false;
+  hidePhoneRequired?: false;
   phone?: null | string;
 }
 
@@ -34,4 +34,13 @@ export interface PersonDetails {
   initials?: null | string;
   lastName: string;
   preferredName?: null | string;
+}
+
+export interface SecurityQuestions {
+  question1?: null | string;
+  answer1?: null | string;
+  question2?: null | string;
+  answer2?: null | string;
+  question3?: null | string;
+  answer3?: null | string;
 }

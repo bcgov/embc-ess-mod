@@ -25,6 +25,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (whiteListed) {
       return next.handle(req);
     }
+    // console.debug('intercepting ', req.url);
     return this.authService.getToken()
       .pipe(switchMap(token => {
         if (!token) {
