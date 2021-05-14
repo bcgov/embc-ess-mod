@@ -35,3 +35,12 @@ export interface PersonDetails {
   lastName: string;
   preferredName?: null | string;
 }
+
+export interface SecurityQuestions {
+  question1?: null | string;
+  answer1?: null | string;
+  question2?: null | string;
+  answer2?: null | string;
+  question3?: null | string;
+  answer3?: null | string;
+}

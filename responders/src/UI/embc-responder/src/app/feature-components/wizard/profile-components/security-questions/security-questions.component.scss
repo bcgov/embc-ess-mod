@@ -15,7 +15,20 @@ p {
   margin-top: 1em;
 }
 
-.requiredField::after {
-  content: "*";
-  color: red;
+.question-row {
+  .mat-form-field:last-child {
+    padding-left: 0;
+  }
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0.25em;
+  }
+}
+
+.checkbox-row {
+  padding: 1.8em 0;
+
+  ::ng-deep .mat-checkbox-label {
+    margin-left: 0.8em;
+  }
 }

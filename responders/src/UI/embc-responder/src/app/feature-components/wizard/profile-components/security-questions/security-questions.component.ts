@@ -1,10 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+import { SecurityQuestions } from 'src/app/core/models/profile';
+import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 
 @Component({
   selector: 'app-security-questions',
@@ -12,7 +16,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./security-questions.component.scss']
 })
 export class SecurityQuestionsComponent implements OnInit {
-  evacueeDetailsForm: FormGroup = null;
+  questionForm: FormGroup = null;
 
   bypassQuestions = false;
 
@@ -32,37 +36,130 @@ export class SecurityQuestionsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private stepCreateProfileService: StepCreateProfileService
+    private stepCreateProfileService: StepCreateProfileService,
+    private formBuilder: FormBuilder,
+    private customValidationService: CustomValidationService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.createQuestionForm();
+  }
   
-  get evacueeFormControl(): { [key: string]: AbstractControl; } {
-    return this.evacueeDetailsForm?.controls;
+  createQuestionForm(): void {
+    this.questionForm = this.formBuilder.group({
+      question1: [
+        this.stepCreateProfileService.securityQuestions?.question1 ?? '',
+        [Validators.required]
+      ],
+      answer1: [
+        this.stepCreateProfileService.securityQuestions?.answer1 ?? '',
+        [
+          Validators.required, Validators.minLength(3), Validators.maxLength(50), 
+          Validators.pattern("//S"), Validators.pattern("^[a-zA-Z0-9 ]+$")
+        ]
+      ],
+      question2: [
+        this.stepCreateProfileService.securityQuestions?.question2 ?? '',
+        [Validators.required]
+      ],
+      answer2: [
+        this.stepCreateProfileService.securityQuestions?.answer2 ?? '',
+        [
+          Validators.required, Validators.minLength(3), Validators.maxLength(50), 
+          Validators.pattern("//S"), Validators.pattern("^[a-zA-Z0-9 ]+$")
+        ]
+      ],
+      question3: [
+        this.stepCreateProfileService.securityQuestions?.question3 ?? '',
+        [Validators.required]
+      ],
+      answer3: [
+        this.stepCreateProfileService.securityQuestions?.answer3 ?? '',
+        [
+          Validators.required, Validators.minLength(3), Validators.maxLength(50), 
+          Validators.pattern("//S"), Validators.pattern("^[a-zA-Z0-9 ]+$")
+        ]
+      ]
+    },
+    {
+      validators: [this.customValidationService.uniqueValueValidator(["question1", "question2", "question3"])]
+    });
+  }
+  
+  get questionFormControl(): { [key: string]: AbstractControl; } {
+    return this.questionForm.controls;
   }
 
   changeBypass(event:MatCheckboxChange) {
     this.bypassQuestions = event.checked;
 
-    if (!this.bypassQuestions) {
+    if (this.bypassQuestions) {
       // Reset dropdowns/inputs
+      this.questionForm.disable();
+      this.questionForm.reset();
     }
-  }
+    else {
+      this.questionForm.enable();
+    }
 
-  back(): void {
-
+    this.updateTabStatus();
   }
 
   next(): void {
-    this.stepCreateProfileService.setTabStatus(
-      'security-questions',
-      'complete'
-    );
+    this.updateTabStatus();
 
     if (this.stepCreateProfileService.checkTabsStatus()) {
       this.stepCreateProfileService.openModal(globalConst.wizardProfileMessage);
     } else {
       this.router.navigate(['/ess-wizard/create-evacuee-profile/review']);
     }
+  }
+
+  back(): void {
+    this.updateTabStatus();
+    /*
+    this.router.navigate([
+      '/ess-wizard/create-evacuee-profile/contact'
+    ]);
+    */
+  }
+  
+  updateTabStatus() {
+    this.questionForm.updateValueAndValidity();
+    console.log(this.questionForm.errors);
+    console.log(this.questionForm.hasError("notUnique-question3"));
+
+    let curSecurityQuestions: SecurityQuestions = {
+      question1: this.questionForm.get('question1').value?.trim(),
+      question2: this.questionForm.get('question2').value?.trim(),
+      question3: this.questionForm.get('question3').value?.trim(),
+  
+      answer1: this.questionForm.get('answer1').value?.trim(),
+      answer2: this.questionForm.get('answer2').value?.trim(),
+      answer3: this.questionForm.get('answer3').value?.trim()
+    }
+
+    if (this.questionForm.valid || this.bypassQuestions) {
+      this.stepCreateProfileService.setTabStatus('security-questions', 'complete');
+    }
+    else if (this.anyValueSet(curSecurityQuestions)) {
+      this.stepCreateProfileService.setTabStatus('security-questions', 'incomplete');
+    }
+    else {
+      this.stepCreateProfileService.setTabStatus('security-questions', 'not-started');
+    }
+
+    this.stepCreateProfileService.securityQuestions = curSecurityQuestions;
+  }
+
+  anyValueSet(sec: SecurityQuestions) {
+    return (
+      sec.question1 ||
+      sec.question2 || 
+      sec.question3 ||
+      sec.answer1 ||
+      sec.answer2 ||
+      sec.answer3
+    );
   }
 }

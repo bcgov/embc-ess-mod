@@ -8,7 +8,8 @@ import {
   Address,
   ContactDetails,
   PersonDetails,
-  Profile
+  Profile,
+  SecurityQuestions
 } from 'src/app/core/models/profile';
 
 @Injectable({ providedIn: 'root' })
@@ -21,6 +22,7 @@ export class StepCreateProfileService {
   private primaryAddressDetail: Address;
   private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
+  private securityQuestion: SecurityQuestions;
 
   constructor(private dialog: MatDialog) {}
 
@@ -57,6 +59,13 @@ export class StepCreateProfileService {
   }
   public set contactDetails(contactDetail: ContactDetails) {
     this.contactDetail = contactDetail;
+  }
+  
+  public get securityQuestions(): SecurityQuestions {
+    return this.securityQuestion;
+  }
+  public set securityQuestions(securityQuestion: SecurityQuestions) {
+    this.securityQuestion = securityQuestion;
   }
 
   public get tabs(): Array<TabModel> {

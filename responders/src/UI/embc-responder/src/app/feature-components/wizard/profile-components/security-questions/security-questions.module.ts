@@ -8,6 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { SecurityQuestionsRoutingModule } from './security-questions-routing.module';
 import { SecurityQuestionsComponent } from './security-questions.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { SecurityQuestionsComponent } from './security-questions.component';
     MatInputModule,
     MatSelectModule,
     MatCheckboxModule,
-    SecurityQuestionsRoutingModule
+    SecurityQuestionsRoutingModule,
+    ReactiveFormsModule
   ]
 })
 export class SecurityQuestionsModule {}
