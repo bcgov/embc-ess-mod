@@ -32,8 +32,6 @@ namespace EMBC.Registrants.API.SecurityModule
     {
         public static IServiceCollection AddSecurityModule(this IServiceCollection services)
         {
-            services.AddTransient<IUserManager, UserManager>();
-            services.AddTransient<IUserRepository, UserRepository>();
             services.AddSingleton<ITokenManager, TokenManager>();
             return services;
         }
