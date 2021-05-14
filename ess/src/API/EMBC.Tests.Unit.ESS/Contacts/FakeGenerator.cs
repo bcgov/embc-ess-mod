@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Bogus;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
@@ -57,6 +59,13 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 .RuleFor(o => o.era_MailingCountry, f => null)
 
                 .RuleFor(o => o.era_issamemailingaddress, f => f.Random.Bool())
+
+                .RuleFor(o => o.era_securityquestiontext1, f => f.Random.Words())
+                .RuleFor(o => o.era_securityquestiontext2, f => f.Random.Words())
+                .RuleFor(o => o.era_securityquestiontext3, f => f.Random.Words())
+                .RuleFor(o => o.era_securityquestion1answer, f => f.Random.Word())
+                .RuleFor(o => o.era_securityquestion2answer, f => f.Random.Word())
+                .RuleFor(o => o.era_securityquestion3answer, f => f.Random.Word())
                 .Generate();
         }
 
@@ -65,12 +74,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
             return new Faker<Contact>()
                 .RuleFor(o => o.Id, f => f.Random.Guid().ToString())
                 .RuleFor(o => o.UserId, f => f.Random.String(10))
-                .RuleFor(o => o.SecurityAnswer1, f => f.Random.Word())
-                .RuleFor(o => o.SecurityAnswer2, f => f.Random.Word())
-                .RuleFor(o => o.SecurityAnswer3, f => f.Random.Word())
-                .RuleFor(o => o.SecurityQuestion1, f => f.Random.Words())
-                .RuleFor(o => o.SecurityQuestion2, f => f.Random.Words())
-                .RuleFor(o => o.SecurityQuestion3, f => f.Random.Words())
+                .RuleFor(o => o.SecurityQuestions, f => FakeSecurityQuestions())
                 .RuleFor(o => o.RestrictedAccess, f => f.Random.Bool())
                 .RuleFor(o => o.FirstName, f => f.Name.FirstName())
                 .RuleFor(o => o.LastName, f => f.Name.LastName())
@@ -93,6 +97,24 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 .RuleFor(o => o.Country, f => f.Address.CountryCode())
                 .RuleFor(o => o.StateProvince, f => f.Address.State())
                 .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
+                .Generate();
+        }
+
+        private static IEnumerable<SecurityQuestion> FakeSecurityQuestions()
+        {
+            List<SecurityQuestion> ret = new List<SecurityQuestion>();
+            ret.Add(FakeSecurityQuestion(0));
+            ret.Add(FakeSecurityQuestion(1));
+            ret.Add(FakeSecurityQuestion(2));
+            return ret;
+        }
+
+        private static SecurityQuestion FakeSecurityQuestion(int id)
+        {
+            return new Faker<SecurityQuestion>()
+                .RuleFor(o => o.Id, id)
+                .RuleFor(o => o.Question, f => f.Random.Word())
+                .RuleFor(o => o.Answer, f => f.Random.Word())
                 .Generate();
         }
 

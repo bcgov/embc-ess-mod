@@ -26,6 +26,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanSubmitAnonymousRegistration()
         {
             var textContextIdentifier = DateTime.Now.ToShortTimeString();
+            List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
+            securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });
+            securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
+            securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3" });
             var profile = new RegistrantProfile
             {
                 UserId = null,
@@ -33,13 +37,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 AuthenticatedUser = false,
                 VerifiedUser = false,
                 RestrictedAccess = false,
-                SecurityQuestion1 = "question1",
-                SecurityQuestion2 = "question2",
-                SecurityQuestion3 = "question3",
-                SecurityAnswer1 = "answer1",
-                SecurityAnswer2 = "answer2",
-                SecurityAnswer3 = "answer3",
-
+                SecurityQuestions = securityQuestions,
                 FirstName = $"PriRegTestFirst-{textContextIdentifier}",
                 LastName = $"PriRegTestLast-{textContextIdentifier}",
                 DateOfBirth = "2000/01/01",
