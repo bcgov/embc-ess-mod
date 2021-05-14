@@ -1,6 +1,7 @@
-import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
+import * as globalConst from './global-constants';
 
 @Injectable({ providedIn: 'root' })
 export class CustomValidationService {
@@ -87,22 +88,27 @@ export class CustomValidationService {
   /**
    * Checks if the email and confirm email field matches
    */
-  // confirmEmailValidator(): ValidatorFn {
-  //     return (control: AbstractControl): { [key: string]: boolean } | null => {
-  //         if (control) {
-  //             const email = control.get('email').value;
-  //             const confirmEmail = control.get('confirmEmail').value;
-  //             if (email !== undefined && confirmEmail !== undefined &&
-  //                 email !== null && confirmEmail !== null &&
-  //                 email !== '' && confirmEmail !== '') {
-  //                 if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
-  //                     return { emailMatch: true };
-  //                 }
-  //             }
-  //         }
-  //         return null;
-  //     };
-  // }
+  confirmEmailValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control) {
+        const email = control.get('email').value;
+        const confirmEmail = control.get('confirmEmail').value;
+        if (
+          email !== undefined &&
+          confirmEmail !== undefined &&
+          email !== null &&
+          confirmEmail !== null &&
+          email !== '' &&
+          confirmEmail !== ''
+        ) {
+          if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
+            return { emailMatch: true };
+          }
+        }
+      }
+      return null;
+    };
+  }
 
   // requiredConfirmEmailValidator(): ValidatorFn {
   //     return (control: AbstractControl): { [key: string]: boolean } | null => {
@@ -125,20 +131,23 @@ export class CustomValidationService {
   /**
    * Checks the postal address pattern for Canada and USA
    */
-  // postalValidation(): ValidatorFn {
-  //     return (control: AbstractControl): { [key: string]: boolean } | null => {
-  //         if (control.parent) {
-  //             if (control.parent.get('country').value !== undefined && control.parent.get('country').value !== null) {
-  //                 if (control.parent.get('country').value.code === 'CAN') {
-  //                     return Validators.pattern(globalConst.postalPattern)(control);
-  //                 } else if (control.parent.get('country').value.code === 'USA') {
-  //                     return Validators.pattern(globalConst.zipCodePattern)(control);
-  //                 }
-  //             }
-  //         }
-  //         return null;
-  //     };
-  // }
+  postalValidation(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.parent) {
+        if (
+          control.parent.get('country').value !== undefined &&
+          control.parent.get('country').value !== null
+        ) {
+          if (control.parent.get('country').value.code === 'CAN') {
+            return Validators.pattern(globalConst.postalPattern)(control);
+          } else if (control.parent.get('country').value.code === 'USA') {
+            return Validators.pattern(globalConst.zipCodePattern)(control);
+          }
+        }
+      }
+      return null;
+    };
+  }
 
   /**
    * Checks length of masked fields

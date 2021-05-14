@@ -34,6 +34,20 @@ const routes: Routes = [
           ).then((m) => m.EvacueeDetailsModule)
       },
       {
+        path: 'address',
+        loadChildren: () =>
+          import('../profile-components/address/address.module').then(
+            (m) => m.AddressModule
+          )
+      },
+      {
+        path: 'contact',
+        loadChildren: () =>
+          import('../profile-components/contact/contact.module').then(
+            (m) => m.ContactModule
+          )
+      },
+      {
         path: 'security-questions',
         loadChildren: () =>
           import(

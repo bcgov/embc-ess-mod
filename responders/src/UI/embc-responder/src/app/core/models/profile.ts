@@ -12,8 +12,8 @@ export interface Profile {
 
 export interface ContactDetails {
   email?: null | string;
-  hideEmailRequired?: boolean;
-  hidePhoneRequired?: boolean;
+  hideEmailRequired?: false;
+  hidePhoneRequired?: false;
   phone?: null | string;
 }
 

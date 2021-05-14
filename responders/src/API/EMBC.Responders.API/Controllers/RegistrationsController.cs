@@ -21,6 +21,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
+using EMBC.ESS.Shared.Contracts.Submissions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +35,15 @@ namespace EMBC.Responders.API.Controllers
     [Route("api/[controller]")]
     public class RegistrationsController : ControllerBase
     {
+        private readonly IMessagingClient messagingClient;
+        private readonly IMapper mapper;
+
+        public RegistrationsController(IMessagingClient messagingClient, IMapper mapper)
+        {
+            this.messagingClient = messagingClient;
+            this.mapper = mapper;
+        }
+
         /// <summary>
         /// Search evacuation files and profiles matching the search parameters
         /// </summary>
@@ -163,6 +174,29 @@ namespace EMBC.Responders.API.Controllers
             var isCorrect = request.Answer.Equals("true", StringComparison.InvariantCultureIgnoreCase);
             return Ok(await Task.FromResult(new VerifySecurityPhraseResponse { IsCorrect = isCorrect }));
         }
+
+        /// <summary>
+        /// Creates or updates a Registrant Profile
+        /// </summary>
+        /// <param name="evacuee">Evacuee</param>
+        /// <returns>new registrant id</returns>
+        [HttpPost("profile")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpsertRegistrantProfile(EvacueeProfile evacuee)
+        {
+            //TODO - update SaveRegistrantCommand to accept security questions
+            //if (evacuee == null) return BadRequest();
+
+            //var profile = mapper.Map<RegistrantProfile>(evacuee);
+            //var id = await messagingClient.Send(new SaveRegistrantCommand
+            //{
+            //    Profile = profile
+            //});
+            //return Ok(new { Id = id });
+
+            return Ok(await Task.FromResult(new { Id = "123" }));
+        }
     }
 
     public class SearchParameters
@@ -285,5 +319,55 @@ namespace EMBC.Responders.API.Controllers
     public class VerifySecurityPhraseResponse
     {
         public bool IsCorrect { get; set; }
+    }
+
+    /// <summary>
+    /// Evacuee profile
+    /// </summary>
+    public class EvacueeProfile
+    {
+        public string Id { get; set; }
+
+        public bool Restriction { get; set; }
+
+        [Required]
+        public PersonDetails PersonalDetails { get; set; }
+
+        [Required]
+        public ContactDetails ContactDetails { get; set; }
+
+        [Required]
+        public Address PrimaryAddress { get; set; }
+
+        public Address MailingAddress { get; set; }
+        public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
+        public SecurityQuestion[] SecurityQuestions { get; set; }
+        public bool VerifiedUser { get; set; }
+    }
+
+    public class RegistrationsMapping : Profile
+    {
+        public RegistrationsMapping()
+        {
+            CreateMap<EvacueeProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
+                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
+                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
+                .ForMember(d => d.MailingAddress, opts => opts.Ignore())
+                .ForMember(d => d.PrimaryAddress, opts => opts.Ignore())
+                .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
+                .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.PersonalDetails.DateOfBirth))
+                .ForMember(d => d.Gender, opts => opts.MapFrom(s => s.PersonalDetails.Gender))
+                .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.PersonalDetails.PreferredName))
+                .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.PersonalDetails.Initials))
+                .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.PersonalDetails.LastName))
+                .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
+                .ForMember(d => d.UserId, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.Id, opts => opts.Ignore())
+                .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
+                .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.VerifiedUser))
+                ;
+        }
     }
 }

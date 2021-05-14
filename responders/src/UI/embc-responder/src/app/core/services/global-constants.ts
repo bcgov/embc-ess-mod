@@ -1,3 +1,20 @@
+export const insuranceOptions = [
+  { name: 'Yes', value: 'Yes' },
+  {
+    name: 'Unsure',
+    value: 'Yes, but I am unsure if I have coverage for this event.'
+  },
+  { name: 'No', value: 'No' },
+  { name: 'Unknown', value: "I don't know" }
+];
+export const referredServiceOptions = [
+  { name: 'Inquiry' },
+  { name: 'Health Services' },
+  { name: 'First Aid' },
+  { name: 'Personal Services' },
+  { name: 'Child Care' },
+  { name: 'Pet Care' }
+];
 export const deleteMessage =
   'User has been successfully deleted from the ERA Tool.';
 export const editMessage = 'User has been edited successfully.';
@@ -10,6 +27,15 @@ export const defaultRole = {
   code: 'Tier1',
   description: 'Tier 1 (Responder)'
 };
+
+export const postalPattern = '^[A-Za-z][0-9][A-Za-z][ ]?[0-9][A-Za-z][0-9]$';
+export const defaultProvince = { code: 'BC', name: 'British Columbia' };
+export const defaultCountry = { code: 'CAN', name: 'Canada' };
+export const usDefaultObject = {
+  code: 'USA',
+  name: 'United States of America'
+};
+export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
 
 export const gender = [
   { name: 'Male', value: 'Male' },
