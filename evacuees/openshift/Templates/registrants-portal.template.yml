@@ -22,32 +22,6 @@ parameters:
   - description: ASPNET runtime environment (Development|Staging|Production)
     name: RUNTIME_ENVIRONMENT
     value: Staging
-  - name: OAUTH_ENDPOINT
-    required: true
-  - description: Dynamics ADFS client ID
-    name: OAUTH_CLIENT_ID
-    required: true
-  - description: Dynamics ADFS client secret
-    name: OAUTH_CLIENT_SECRET
-    required: true
-  - description: Dynamics ADFS resource name
-    name: OAUTH_RESOURCE
-    required: true
-  - description: Dynamics API endpoint
-    name: DYNAMICS_ENDPOINT
-    required: true
-  - description: Dynamics entities base URI
-    name: DYNAMICS_URI
-    required: true
-  - description: Dynamics service account domain
-    name: DYNAMICS_SERVICE_ACCOUNT_DOMAIN
-    required: true
-  - description: Dynamics service account name
-    name: OAUTH_DYNAMICS_SERVICE_ACCOUNT_NAME
-    required: true
-  - description: Dynamics service account password
-    name: OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD
-    required: true
   - description: BCSC client id
     name: BCSC_CLIENT_ID
     required: true
@@ -96,9 +70,6 @@ objects:
     data:
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
       KEY_RING_PATH: "/dpkeys"
-      Dynamics__ADFS__OAuth2TokenEndpoint: ${OAUTH_ENDPOINT}
-      Dynamics__DynamicsApiEndpoint: ${DYNAMICS_ENDPOINT}
-      Dynamics__DynamicsApiBaseUri: ${DYNAMICS_URI}
       auth__bcsc__MetaDataAddress: ${BCSC_METADATA_ENDPOINT}
       app__knownNetwork: ${APP_KNOWN_NETWORK}
       app__cors__origins: ${CORS_ORIGINS}
@@ -118,12 +89,6 @@ objects:
         app: ${APP_NAME}-registrants-portal
         app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
-      Dynamics__ADFS__ClientId: ${OAUTH_CLIENT_ID}
-      Dynamics__ADFS__ClientSecret: ${OAUTH_CLIENT_SECRET}
-      Dynamics__ADFS__ResourceName: ${OAUTH_RESOURCE}
-      Dynamics__ADFS__serviceAccountDomain: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}
-      Dynamics__ADFS__serviceAccountName: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_NAME}
-      Dynamics__ADFS__serviceAccountPassword: ${OAUTH_DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
       auth__bcsc__clientId: ${BCSC_CLIENT_ID}
       auth__bcsc__clientSecret: ${BCSC_CLIENT_SECRET}
       auth__jwt__signingKey: ${JWT_SIGNING_KEY}
