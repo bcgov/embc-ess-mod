@@ -220,17 +220,15 @@ export class AddressComponent implements OnInit, AfterViewChecked {
   }
 
   /**
-   * Updates the tab status and navigate to next tab
+   * Navigate to next tab
    */
   public next(): void {
     this.updateTabStatus();
-    this.router.navigate([
-      '/ess-wizard/create-evacuee-profile/security-questions'
-    ]);
+    this.router.navigate(['/ess-wizard/create-evacuee-profile/contact']);
   }
 
   /**
-   * Updates the tab status and navigate to previous tab
+   * Navigate to previous tab
    */
   public back(): void {
     this.updateTabStatus();
@@ -436,6 +434,9 @@ export class AddressComponent implements OnInit, AfterViewChecked {
     this.cd.detectChanges();
   }
 
+  /**
+   * Updates the tab status
+   */
   private updateTabStatus() {
     if (this.primaryAddressForm.valid) {
       this.stepCreateProfileService.setTabStatus('address', 'complete');
@@ -444,6 +445,13 @@ export class AddressComponent implements OnInit, AfterViewChecked {
     } else {
       this.stepCreateProfileService.setTabStatus('address', 'not-started');
     }
+    this.saveFormUpdates();
+  }
+
+  /**
+   * Persists the form values to the service
+   */
+  private saveFormUpdates(): void {
     this.stepCreateProfileService.primaryAddressDetails = this.primaryAddressForm.get(
       'address'
     ).value;

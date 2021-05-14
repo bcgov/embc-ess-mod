@@ -21,11 +21,27 @@ export class StepCreateProfileService {
   private primaryAddressDetail: Address;
   private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
+  private showContacts: boolean;
+  private confirmEmails: string;
   private isBcAddresS: boolean;
   private isBcMailingAddresS: boolean;
   private isMailingAddressSameAsPrimaryAddresS: boolean;
 
   constructor(private dialog: MatDialog) {}
+
+  public get showContact(): boolean {
+    return this.showContacts;
+  }
+  public set showContact(showContacts: boolean) {
+    this.showContacts = showContacts;
+  }
+
+  public get confirmEmail(): string {
+    return this.confirmEmails;
+  }
+  public set confirmEmail(value: string) {
+    this.confirmEmails = value;
+  }
 
   public get isMailingAddressSameAsPrimaryAddress(): boolean {
     return this.isMailingAddressSameAsPrimaryAddresS;

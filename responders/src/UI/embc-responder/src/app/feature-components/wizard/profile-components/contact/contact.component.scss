@@ -1,0 +1,43 @@
+.content-container {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.tips-info {
+  color: white;
+  padding: 8px;
+  margin-top: 20px;
+}
+
+.tips-heading {
+  color: white;
+  font-size: 21px;
+  margin-left: 5px;
+}
+
+.tips-card {
+  background-color: rgba(35, 64, 117, 1);
+}
+
+.next {
+  float: right;
+  width: 40%;
+}
+
+.back {
+  width: 40%;
+}
+
+.primary-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.primary-radio-button {
+  margin: 5px;
+}
+
+.field-error {
+  color: red;
+}
