@@ -28,11 +28,13 @@ export class EvacuationDetailsComponent implements OnInit {
   referredServicesOption = globalConst.referredServiceOptions;
   defaultCountry = globalConst.defaultCountry;
   defaultProvince = globalConst.defaultProvince;
-  showReferredServicesForm = false;
-  showBCAddressForm = false;
+  showReferredServicesForm: boolean = false;
+  showBCAddressForm: boolean = false;
+  isBCAddress: boolean = true;
   selection = new SelectionModel<any>(true, []);
 
-  dummyAddress: Address = {addressLine1: 'Unit 1200', addressLine2: '1230 Main Street', jurisdiction: 'North Vancouver', stateProvince: 'British Columbia', postalCode: 'V8Y 6U8', country: 'Canada'};
+  bCDummyAddress: Address = {addressLine1: 'Unit 1200', addressLine2: '1230 Main Street', jurisdiction: 'North Vancouver', stateProvince: 'British Columbia', postalCode: 'V8Y 6U8', country: 'Canada'};
+  nonBcDummyAddress: Address = {addressLine1: 'Unit 2300', addressLine2: '1230 Oak Street', jurisdiction: 'Miami', stateProvince: 'Florida', postalCode: '33009', country: 'Unites States'};
 
   constructor(
     private router: Router,
@@ -40,11 +42,11 @@ export class EvacuationDetailsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
     private addressService: AddressService,
-    private cd: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.createEvacDetailsForm();
+    this.checkPrimaryAddress();
   }
 
   createEvacDetailsForm(): void {
@@ -75,7 +77,8 @@ export class EvacuationDetailsComponent implements OnInit {
       householdAffected: [
         this.stepCreateEssFileService.householdAffectedInfo !== null
           ? this.stepCreateEssFileService.householdAffectedInfo
-          : ''
+          : '',
+          [this.customValidation.whitespaceValidator()]
       ],
       emergencySupportServices: [
         this.stepCreateEssFileService.emergencySupportServiceS !== null
@@ -90,8 +93,16 @@ export class EvacuationDetailsComponent implements OnInit {
       referredServiceDetails: [
         this.stepCreateEssFileService.referredServiceDetailS.length !== 0
           ? this.stepCreateEssFileService.referredServiceDetailS
-          : new FormArray([]), [this.customValidation.referredServicesValidator()
-          .bind(this.customValidation)]
+          : new FormArray([]), [
+            this.customValidation
+              .conditionalValidation(
+                () =>
+                  this.evacDetailsForm.get('referredServices').value ===
+                  'Yes',
+                Validators.required
+              )
+              .bind(this.customValidation)
+          ]
       ],
       externalServices: [
         this.stepCreateEssFileService.externalServiceS !== null
@@ -105,14 +116,10 @@ export class EvacuationDetailsComponent implements OnInit {
   evacPrimaryAddressChange(event: MatRadioChange): void {
     if (event.value === 'Yes') {
       this.showBCAddressForm = false;
-      this.evacDetailsForm.get('evacAddress').setValue(this.dummyAddress);
+      this.evacDetailsForm.get('evacAddress').setValue(this.bCDummyAddress);
     } else {
       this.showBCAddressForm = true;
-
       this.evacDetailsForm.get('evacAddress').reset();
-      this.evacDetailsForm.get('evacAddress.stateProvince').setValue(globalConst.defaultProvince);
-      this.evacDetailsForm.get('evacAddress.country').setValue(globalConst.defaultCountry);
-      // console.log(this.evacuatedForm.get('evacuatedFromAddress'));
     }
   }
 
@@ -125,7 +132,11 @@ export class EvacuationDetailsComponent implements OnInit {
       this.showReferredServicesForm = true;
     } else {
       this.showReferredServicesForm = false;
+      this.selection.clear();
+      this.evacDetailsForm.get('referredServiceDetails').setValue(this.selection.selected);
     }
+
+    // this.evacDetailsForm.get('referredServiceDetails').updateValueAndValidity();
   }
 
   /**
@@ -148,9 +159,11 @@ export class EvacuationDetailsComponent implements OnInit {
    * Updates the tab status and navigate to next tab
    */
   next(): void {
-    console.log(this.evacDetailsForm.status);
+
+    this.evacDetailsForm.get('referredServiceDetails').setValue(this.selection.selected);
     this.updateTabStatus();
-    // this.router.navigate(['/ess-wizard//ess-wizard/create-ess-file/animals']);
+    this.stepCreateEssFileService.createNeedsAssessmentDTO();
+    this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
   }
 
    /**
@@ -180,15 +193,15 @@ export class EvacuationDetailsComponent implements OnInit {
             : '',
           [Validators.required]
         ],
-        stateProvince: [{ value: 
+        stateProvince: [ 
           this.stepCreateEssFileService?.evacAddresS?.stateProvince !==
           undefined
             ? this.stepCreateEssFileService.evacAddresS.stateProvince
-            : this.defaultProvince, disabled: true }],
-        country: [{ value: this.stepCreateEssFileService?.evacAddresS?.country !==
+            : this.defaultProvince],
+        country: [this.stepCreateEssFileService?.evacAddresS?.country !==
           undefined
             ? this.stepCreateEssFileService.evacAddresS.country
-            : this.defaultCountry, disabled: true }],
+            : this.defaultCountry],
         postalCode: [
           this.stepCreateEssFileService?.evacAddresS?.postalCode !==
           undefined
@@ -200,15 +213,19 @@ export class EvacuationDetailsComponent implements OnInit {
     }
 
     /**
-   * Updates the value and validity of the forms
-   */
-  private updateOnVisibility(): void {
-    this.evacDetailsForm = this.addressService.updateOnVisibility(
-      this.evacDetailsForm
-    );
-    this.cd.detectChanges();
-  }
+     * Checks if the inserted primary address is in BC Province
+     */
+    private checkPrimaryAddress() {
+      if(this.bCDummyAddress.stateProvince !== 'British Columbia') {
+        this.evacDetailsForm.get('evacuatedFromPrimary').setValue('No');
+        this.isBCAddress = false;
+      }
+    }
 
+
+  /**
+   * Updates the Tab Status from Incomplete, Complete or in Progress
+   */
   private updateTabStatus() {
     if (this.evacDetailsForm.valid) {
       this.stepCreateEssFileService.setTabStatus('evacuation-details', 'complete');
@@ -220,6 +237,9 @@ export class EvacuationDetailsComponent implements OnInit {
     this.saveFormData();
   }
 
+  /**
+   * Saves information inserted inthe form into the service
+   */
   saveFormData() {
     this.stepCreateEssFileService.paperESSFiles = this.evacDetailsForm.get(
       'paperESSFile'
@@ -228,7 +248,7 @@ export class EvacuationDetailsComponent implements OnInit {
       'evacuatedFromPrimary'
     ).value;
     this.stepCreateEssFileService.evacAddresS = this.evacDetailsForm.get(
-      'facilityName'
+      'evacAddress'
     ).value;
     this.stepCreateEssFileService.facilityNames = this.evacDetailsForm.get(
       'facilityName'

@@ -167,22 +167,4 @@ export class CustomValidationService {
   //     };
   // }
 
-  referredServicesValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean} | null => {
-      if(control.parent) {
-        console.log(control);
-        if(control.parent.get('referredServices').value === 'Yes' && control.value.value.length === 0) {
-          
-          console.log("HELLO CUSTOM VALIDATION!")
-        }
-        
-      }
-      
-      //  {
-        
-      // }
-      return null;
-      // return control.parent.get('referredServices').value === 'Yes' && control.value === null ? { emptyReferredServices: true} : null;
-    }
-  }
 }

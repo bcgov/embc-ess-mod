@@ -57,6 +57,12 @@ export class WizardTabModelValues {
       status: 'not-started'
     },
     {
+      label: 'Household Members',
+      route: 'household-members',
+      name: 'household-members',
+      status: 'not-started'
+    },
+    {
       label: 'Animals',
       route: 'animals',
       name: 'animals',

@@ -20,74 +20,69 @@
                   please add the ESS File # as it appears on the paper
                   registration below.
                 </p>
-                <br />
-                <input
-                  class="simple-input"
-                  formControlName="paperESSFile"
-                  matInput
-                  placeholder="Paper Based ESS File #"
-                />
-                <br /><br />
+
+                <div class="col-6">
+                  <br>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Paper Based ESS File #</mat-label>
+                    <input formControlName="paperESSFile" maxlength="100" matInput />
+                  </mat-form-field>
+                </div>
               </div>
               <br />
 
               <div class="col-12 divider"></div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Are you being evacuated from your primary address? </span
-                ><span class="required-symbol">*</span> <br /><br />
-                <mat-radio-group
-                  formControlName="evacuatedFromPrimary"
-                  aria-labelledby="primary-radio-group-label"
-                  class="options-group"
-                  (change)="evacPrimaryAddressChange($event)"
-                  required
-                >
+                <span class="tab-subtitle">Are you being evacuated from your primary address? </span><span
+                  class="required-symbol">*</span> <br /><br />
+                <ng-container *ngIf="isBCAddress">
+                <mat-radio-group formControlName="evacuatedFromPrimary" aria-labelledby="primary-radio-group-label"
+                  class="options-group" (change)="evacPrimaryAddressChange($event)" required>
                   <mat-radio-button value="Yes">Yes </mat-radio-button>
                   <div class="prim-address">
-                    <p>{{dummyAddress.addressLine1}}, {{dummyAddress.addressLine2}}</p>
-                    <p>{{dummyAddress.jurisdiction}}</p>
-                    <p>{{dummyAddress.postalCode}}</p>
+                    <p>{{bCDummyAddress.addressLine1}}, {{bCDummyAddress.addressLine2}}</p>
+                    <p>{{bCDummyAddress.jurisdiction}}</p>
+                    <p>{{bCDummyAddress.postalCode}}</p>
                   </div>
                   <mat-radio-button value="No">No</mat-radio-button>
                 </mat-radio-group>
+              </ng-container>
               </div>
               <br />
+              <div class="col-12" *ngIf="!isBCAddress">
+                <app-bc-address [addressForm]="evacAddressFormGroup"></app-bc-address>
+              </div>
               <div class="col-12 additional-form" *ngIf="showBCAddressForm">
                 <p><b>Where are you being evacuated from?</b></p>
-                <app-bc-address
-              [addressForm]="evacAddressFormGroup"
-            ></app-bc-address>
+                <app-bc-address [addressForm]="evacAddressFormGroup"></app-bc-address>
               </div>
 
               <div class="col-12 divider"></div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Facility Name / Registration Location </span
-                ><span class="required-symbol">*</span> <br /><br />
+                <span class="tab-subtitle">Facility Name / Registration Location </span><span
+                  class="required-symbol">*</span> <br /><br />
                 <p>
                   A facility is the location of the
                   <b>Reception Centre</b> (i.e. rec centre). If there is no
                   Reception Centre, please use the street name on Level 1
                   Activations.
                 </p>
-                <br />
-                <input
-                  class="simple-input"
-                  formControlName="facilityName"
-                  matInput
-                />
-                <br />
+                <div class="col-6">
+                  <br>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Facility Name/ Registration Location</mat-label>
+                    <input formControlName="facilityName" maxlength="100" matInput />
+                  </mat-form-field>
+                </div>
               </div>
 
               <div class="col-12 divider"></div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Do you have insurance to cover your immediate needs? </span
-                ><span class="required-symbol">*</span> <br /><br />
+                <span class="tab-subtitle">Do you have insurance to cover your immediate needs? </span><span
+                  class="required-symbol">*</span> <br /><br />
                 <p>
                   If you have <b>insurance</b>, please keep all of your
                   receipts, and contact your insurance provider as soon as
@@ -95,15 +90,8 @@
                   insurance provider, please contact the Insurance Bureau of
                   Canada at 1-844-227-5422.
                 </p>
-                <mat-radio-group
-                  formControlName="insurance"
-                  class="options-group"
-                  required
-                >
-                  <mat-radio-button
-                    *ngFor="let option of insuranceOption"
-                    [value]="option.name"
-                  >
+                <mat-radio-group formControlName="insurance" class="options-group" required>
+                  <mat-radio-button *ngFor="let option of insuranceOption" [value]="option.name">
                     {{ option.value }}
                   </mat-radio-button>
                 </mat-radio-group>
@@ -112,29 +100,26 @@
               <div class="col-12 divider"></div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >How have you and your household been affected by the
+                <span class="tab-subtitle">How have you and your household been affected by the
                   evacuation?
-                </span>
+                </span><span
+                class="required-symbol">*</span>
                 <br /><br />
                 <p>
                   Please do not include any personal/medical information
                   pertaining to the evacuee and their household members.
                 </p>
-                <br />
-                <textarea
-                  class="simple-textarea"
-                  formControlName="householdAffected"
-                  placeholder="Please write in the evacuees own words as mush as possible."
-                  matInput
-                ></textarea>
+                <div class="col-12">
+                  <mat-form-field appearance="outline">
+                    <textarea rows="10" formControlName="householdAffected"
+                  placeholder="Please write in the evacuees own words as mush as possible." maxlength="4000" matInput required></textarea>
+                  </mat-form-field></div>
               </div>
 
               <div class="col-12 divider"></div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Emergency Support Services provides short term assistance to
+                <span class="tab-subtitle">Emergency Support Services provides short term assistance to
                   give evacuees' a chance to recover. Have you thought about
                   what you will do after that time?
                 </span>
@@ -144,84 +129,57 @@
                   pertaining to the evacuee and their family.
                 </p>
                 <br />
-                <textarea
-                  class="simple-textarea"
-                  formControlName="emergencySupportServices"
-                  placeholder="Please write in the evacuees own words as mush as possible."
-                  matInput
-                ></textarea>
+                <mat-form-field appearance="outline">
+                <textarea rows="10" formControlName="emergencySupportServices"
+                  placeholder="Please write in the evacuees own words as mush as possible." maxlength="4000" matInput></textarea>
+                </mat-form-field>
               </div>
 
               <div class="col-12 divider"></div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Has the evacuee been referred to any services available in
+                <span class="tab-subtitle">Has the evacuee been referred to any services available in
                   your reception centre?
                 </span>
                 <br /><br />
-                <mat-radio-group
-                  formControlName="referredServices"
-                  class="options-group"
-                  required
-                  (change)="referredServiceChange($event)"
-                >
-                <mat-radio-button
-                class="primary-radio-button"
-                *ngFor="let option of radioOption"
-                [value]="option"
-              >
-                {{ option }}
-              </mat-radio-button>
+                <mat-radio-group formControlName="referredServices" class="options-group"
+                  (change)="referredServiceChange($event)">
+                  <mat-radio-button class="primary-radio-button" *ngFor="let option of radioOption" [value]="option">
+                    {{ option }}
+                  </mat-radio-button>
                 </mat-radio-group>
               </div>
-              <div
-                class="col-12 additional-form"
-                *ngIf="showReferredServicesForm"
-              >
+              <div class="col-12 additional-form" *ngIf="showReferredServicesForm">
                 <p>
-                  <b
-                    >Please select the ones you have recommended for the evacuee </b
-                  ><span class="required-symbol">*</span>
+                  <b>Please select the ones you have recommended for the evacuee </b><span
+                    class="required-symbol">*</span>
                 </p>
                 <section class="options-group">
-                  <mat-checkbox
-                    class="checkbox-option"
-                    *ngFor="let option of referredServicesOption"
-                    [value]="option.name"
-                    (change)="$event ? selectionToggle(option) : null"
-                    [checked]="selection.isSelected(option)"
-                    >{{ option.name }}</mat-checkbox
-                  >
+                  <mat-checkbox class="checkbox-option" *ngFor="let option of referredServicesOption"
+                    [value]="option.name" (change)="$event ? selectionToggle(option) : null"
+                    [checked]="selection.isSelected(option)">{{ option.name }}</mat-checkbox>
                 </section>
               </div>
 
               <div class="col-12 divider"></div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Has the evacuee been referred to any services outside of the
+                <span class="tab-subtitle">Has the evacuee been referred to any services outside of the
                   reception centre?
                 </span>
                 <br /><br />
-                <textarea
-                  class="simple-textarea"
-                  formControlName="externalServices"
-                  placeholder="Please specify."
-                  matInput
-                ></textarea>
+                <mat-form-field appearance="outline">
+                  <textarea rows="10" formControlName="externalServices" placeholder="Please specify." maxlength="4000"
+                  matInput></textarea>
+                </mat-form-field>
+                
               </div>
             </div>
           </div>
           <div class="col-md-4">
             <mat-card class="tips-card">
               <div>
-                <img
-                  class="img-align"
-                  src="/assets/images/tips-lightbulb.svg"
-                  height="63"
-                  width="62"
-                />
+                <img class="img-align" src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
                 <span class="tips-heading"><b>Tip: </b>Task Number</span>
               </div>
               <p class="tips-info">
