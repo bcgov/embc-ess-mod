@@ -55,8 +55,8 @@ export class SecurityQuestionsComponent implements OnInit {
       answer1: [
         this.stepCreateProfileService.securityQuestions?.answer1 ?? '',
         [
-          Validators.required, Validators.minLength(3), Validators.maxLength(50), 
-          Validators.pattern(/^[a-zA-Z0-9 ]+$/)
+          Validators.minLength(3), Validators.maxLength(50), 
+          Validators.pattern(/^[a-zA-Z0-9 ]+$/), this.customValidationService.whitespaceValidator()
         ]
       ],
       question2: [
@@ -66,8 +66,8 @@ export class SecurityQuestionsComponent implements OnInit {
       answer2: [
         this.stepCreateProfileService.securityQuestions?.answer2 ?? '',
         [
-          Validators.required, Validators.minLength(3), Validators.maxLength(50), 
-          Validators.pattern(/^[a-zA-Z0-9 ]+$/)
+          Validators.minLength(3), Validators.maxLength(50), 
+          Validators.pattern(/^[a-zA-Z0-9 ]+$/), this.customValidationService.whitespaceValidator()
         ]
       ],
       question3: [
@@ -77,8 +77,8 @@ export class SecurityQuestionsComponent implements OnInit {
       answer3: [
         this.stepCreateProfileService.securityQuestions?.answer3 ?? '',
         [
-          Validators.required, Validators.minLength(3), Validators.maxLength(50), 
-          Validators.pattern(/^[a-zA-Z0-9 ]+$/)
+          Validators.minLength(3), Validators.maxLength(50), 
+          Validators.pattern(/^[a-zA-Z0-9 ]+$/), this.customValidationService.whitespaceValidator()
         ]
       ]
     },
@@ -102,8 +102,6 @@ export class SecurityQuestionsComponent implements OnInit {
     else {
       this.questionForm.enable();
     }
-
-    this.updateTabStatus();
   }
 
   next(): void {
@@ -118,47 +116,38 @@ export class SecurityQuestionsComponent implements OnInit {
 
   back(): void {
     this.updateTabStatus();
-    /*
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/contact'
     ]);
-    */
   }
   
   updateTabStatus() {
     this.questionForm.updateValueAndValidity();
 
-    let curSecurityQuestions: SecurityQuestions = {
-      question1: this.questionForm.get('question1').value?.trim(),
-      question2: this.questionForm.get('question2').value?.trim(),
-      question3: this.questionForm.get('question3').value?.trim(),
-  
-      answer1: this.questionForm.get('answer1').value?.trim(),
-      answer2: this.questionForm.get('answer2').value?.trim(),
-      answer3: this.questionForm.get('answer3').value?.trim()
-    }
+    let anyValueSet = false;
 
+    // Reset Security Questions before writing to shared object
+    this.stepCreateProfileService.securityQuestions = {};
+
+    // Write each control from questionForm to shared object, and check if any have value set
+    Object.keys(this.questionForm.controls).forEach(key => {
+      let control = this.questionForm.get(key);
+
+      this.stepCreateProfileService.securityQuestions[key] = control.value?.trim();
+
+      if (control.value?.trim().length > 0)
+        anyValueSet = true;
+    });
+
+    // Based on state of form, set tab status
     if (this.questionForm.valid || this.bypassQuestions) {
       this.stepCreateProfileService.setTabStatus('security-questions', 'complete');
     }
-    else if (this.anyValueSet(curSecurityQuestions)) {
+    else if (anyValueSet) {
       this.stepCreateProfileService.setTabStatus('security-questions', 'incomplete');
     }
     else {
       this.stepCreateProfileService.setTabStatus('security-questions', 'not-started');
     }
-
-    this.stepCreateProfileService.securityQuestions = curSecurityQuestions;
-  }
-
-  anyValueSet(sec: SecurityQuestions) {
-    return (
-      sec.question1 ||
-      sec.question2 || 
-      sec.question3 ||
-      sec.answer1 ||
-      sec.answer2 ||
-      sec.answer3
-    );
   }
 }

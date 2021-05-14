@@ -57,10 +57,10 @@
     
                 <input matInput maxlength="50" formControlName="answer1">
                 
-                <mat-error *ngIf="questionFormControl?.answer1.hasError('required')">
+                <mat-error *ngIf="questionFormControl?.answer1.hasError('required') || questionFormControl?.answer1.hasError('whitespaceError')">
                   Answer is required.
                 </mat-error>
-                <mat-error *ngIf="(questionFormControl?.answer1.hasError('minlength') || questionFormControl?.answer1.hasError('maxlength'))">
+                <mat-error *ngIf="questionFormControl?.answer1.hasError('minlength') || questionFormControl?.answer1.hasError('maxlength')">
                   Answer must be between 3 and 50 characters long.
                 </mat-error>
                 <mat-error *ngIf="questionFormControl?.answer1.hasError('pattern')">
@@ -92,10 +92,10 @@
     
                 <input matInput maxlength="50" formControlName="answer2">
                 
-                <mat-error *ngIf="questionFormControl?.answer2.hasError('required')">
+                <mat-error *ngIf="questionFormControl?.answer2.hasError('required') || questionFormControl?.answer2.hasError('whitespaceError')">
                   Answer is required.
                 </mat-error>
-                <mat-error *ngIf="(questionFormControl?.answer2.hasError('minlength') || questionFormControl?.answer2.hasError('maxlength'))">
+                <mat-error *ngIf="questionFormControl?.answer2.hasError('minlength') || questionFormControl?.answer2.hasError('maxlength')">
                   Answer must be between 3 and 50 characters long.
                 </mat-error>
                 <mat-error *ngIf="questionFormControl?.answer2.hasError('pattern')">
@@ -127,10 +127,10 @@
     
                 <input matInput maxlength="50" formControlName="answer3">
                 
-                <mat-error *ngIf="questionFormControl?.answer3.hasError('required')">
+                <mat-error *ngIf="questionFormControl?.answer3.hasError('required') || questionFormControl?.answer3.hasError('whitespaceError')">
                   Answer is required.
                 </mat-error>
-                <mat-error *ngIf="(questionFormControl?.answer3.hasError('minlength') || questionFormControl?.answer3.hasError('maxlength'))">
+                <mat-error *ngIf="questionFormControl?.answer3.hasError('minlength') || questionFormControl?.answer3.hasError('maxlength')">
                   Answer must be between 3 and 50 characters long.
                 </mat-error>
                 <mat-error *ngIf="questionFormControl?.answer3.hasError('pattern')">
@@ -141,7 +141,9 @@
 
             <div class="row checkbox-row">
               <div class="col-12">
-                <mat-checkbox class="example-margin" (change)="changeBypass($event)" [checked]="bypassQuestions">Bypass security questions for manual entry of paper ESS file.</mat-checkbox>
+                <mat-checkbox class="example-margin" (change)="changeBypass($event)" [checked]="bypassQuestions">
+                  Bypass security questions for manual entry of paper ESS file.
+                </mat-checkbox>
               </div>
             </div>
           </div>
