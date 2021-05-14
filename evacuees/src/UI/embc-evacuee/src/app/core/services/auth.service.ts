@@ -27,8 +27,8 @@ export class AuthService {
     }
   }
 
-  public isAuthenticated(): Observable<boolean> {
-    return this.getToken().pipe(map(t => t != null));
+  public isAuthenticated(): boolean {
+    return this.token != null;
   }
 
   public login(returnPath: string): void {
@@ -50,6 +50,7 @@ export class AuthService {
   }
 
   public getToken(): Observable<string> {
+    // console.debug('getToken');
     return this.token
       ? of(this.token)
       : this.loginService.loginToken()

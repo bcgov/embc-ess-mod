@@ -14,7 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -24,7 +23,6 @@ using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
-using EMBC.ResourceAccess.Dynamics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -98,15 +96,6 @@ namespace EMBC.Registrants.API
             services.AddDistributedMemoryCache(); // TODO: configure proper distributed cache
             services.AddSecurityModule();
             services.AddADFSTokenProvider();
-            services.AddScoped(sp =>
-            {
-                var configuration = sp.GetRequiredService<IConfiguration>();
-                var dynamicsApiEndpoint = configuration.GetValue<string>("Dynamics:DynamicsApiEndpoint");
-                var dynamicsApiBaseUri = configuration.GetValue<string>("Dynamics:DynamicsApiBaseUri");
-                var tokenProvider = sp.GetRequiredService<ISecurityTokenProvider>();
-                var logger = sp.GetRequiredService<ILogger<DynamicsClientContext>>();
-                return new DynamicsClientContext(new Uri(dynamicsApiBaseUri), new Uri(dynamicsApiEndpoint), async () => await tokenProvider.AcquireToken(), logger);
-            });
 
             services.Configure<MessagingOptions>(configuration.GetSection("backend"));
             services.AddMessaging();

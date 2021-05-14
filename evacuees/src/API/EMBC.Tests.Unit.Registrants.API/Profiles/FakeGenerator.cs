@@ -3,7 +3,6 @@ using System.Globalization;
 using Bogus;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Registrants.API.Controllers;
-using EMBC.Registrants.API.SecurityModule;
 
 namespace EMBC.Tests.Unit.Registrants.API.Profiles
 {
@@ -96,11 +95,11 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .Generate();
         }
 
-        public static User CreateUser(string stateProvince, string country)
+        public static Profile CreateUser(string stateProvince, string country)
         {
-            return new Faker<User>()
+            return new Faker<Profile>()
                 .RuleFor(u => u.Id, f => f.Random.String(10))
-                .RuleFor(u => u.DisplayName, f => f.Name.FullName())
+                //.RuleFor(u => u.DisplayName, f => f.Name.FullName())
                 .RuleFor(u => u.ContactDetails, f => new Faker<ContactDetails>()
                      .RuleFor(o => o.Email, f => f.Internet.Email())
                 ).RuleFor(u => u.PersonalDetails, f => new Faker<PersonDetails>()
