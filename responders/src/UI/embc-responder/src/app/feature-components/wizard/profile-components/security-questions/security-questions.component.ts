@@ -9,6 +9,8 @@ import { ErrorStateMatcher } from '@angular/material/core';
 
 import { SecurityQuestions } from 'src/app/core/models/profile';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { ConfigurationService } from 'src/app/core/api/services';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-security-questions',
@@ -16,6 +18,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
   styleUrls: ['./security-questions.component.scss']
 })
 export class SecurityQuestionsComponent implements OnInit {
+  questionListSubscription: Subscription;
   questionForm: FormGroup = null;
   secQuestions: string[];
 
@@ -25,23 +28,29 @@ export class SecurityQuestionsComponent implements OnInit {
     private router: Router,
     private stepCreateProfileService: StepCreateProfileService,
     private formBuilder: FormBuilder,
-    private customValidationService: CustomValidationService
+    private customValidationService: CustomValidationService,
+    private configurationService: ConfigurationService
   ) {}
 
   ngOnInit(): void {
-    this.secQuestions = [
-      'What was the name of your first pet?',
-      'What was your first car’s make and model? (e.g. Ford Taurus)',
-      'Where was your first job?',
-      'What is your favourite children\'s book?',
-      'In what city or town was your mother born?',
-      'What is your favourite movie?',
-      'What is your oldest sibling\'s middle name?',
-      'What month and day is your anniversary?',
-      'What was your childhood nickname?',
-      'What were the last four digits of your childhood telephone number?',
-      'In what town or city did you meet your spouse or partner?'
-    ];
+    // this.secQuestions = [
+    //   'What was the name of your first pet?',
+    //   'What was your first car’s make and model? (e.g. Ford Taurus)',
+    //   'Where was your first job?',
+    //   'What is your favourite children\'s book?',
+    //   'In what city or town was your mother born?',
+    //   'What is your favourite movie?',
+    //   'What is your oldest sibling\'s middle name?',
+    //   'What month and day is your anniversary?',
+    //   'What was your childhood nickname?',
+    //   'What were the last four digits of your childhood telephone number?',
+    //   'In what town or city did you meet your spouse or partner?'
+    // ];
+
+    // Set security question values from API
+    this.questionListSubscription = this.configurationService.configurationGetSecurityQuestions().subscribe((questions) => {
+      this.secQuestions = questions;
+    });
 
     this.createQuestionForm();
   }
@@ -115,7 +124,6 @@ export class SecurityQuestionsComponent implements OnInit {
   }
 
   back(): void {
-    this.updateTabStatus();
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/contact'
     ]);
@@ -149,5 +157,11 @@ export class SecurityQuestionsComponent implements OnInit {
     else {
       this.stepCreateProfileService.setTabStatus('security-questions', 'not-started');
     }
+  }
+
+  ngOnDestroy() {
+    this.updateTabStatus();
+
+    this.questionListSubscription.unsubscribe();
   }
 }

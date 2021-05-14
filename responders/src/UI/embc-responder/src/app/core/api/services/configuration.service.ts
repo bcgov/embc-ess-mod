@@ -291,7 +291,7 @@ export class ConfigurationService extends BaseService {
   * This method doesn't expect any request body.
   */
   configurationGetSecurityQuestions$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<CommunityCode>>> {
+  }): Observable<StrictHttpResponse<string[]>> {
 
   const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetSecurityQuestionsPath, 'get');
   if (params) {
@@ -303,7 +303,7 @@ export class ConfigurationService extends BaseService {
   })).pipe(
     filter((r: any) => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<CommunityCode>>;
+      return r as StrictHttpResponse<string[]>;
     })
   );
   }
@@ -315,9 +315,9 @@ export class ConfigurationService extends BaseService {
   * This method doesn't expect any request body.
   */
   configurationGetSecurityQuestions(params?: {
-  }): Observable<Array<CommunityCode>> {
+  }): Observable<string[]> {
     return this.configurationGetSecurityQuestions$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<CommunityCode>>) => r.body as Array<CommunityCode>)
+      map((r: StrictHttpResponse<any>) => r.body?.questions as string[])
     );
   }
 }

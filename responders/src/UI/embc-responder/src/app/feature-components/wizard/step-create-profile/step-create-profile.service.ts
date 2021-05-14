@@ -22,12 +22,12 @@ export class StepCreateProfileService {
   private primaryAddressDetail: Address;
   private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
+  private securityQuestion: SecurityQuestions;
   private showContacts: boolean;
   private confirmEmails: string;
   private isBcAddresS: boolean;
   private isBcMailingAddresS: boolean;
   private isMailingAddressSameAsPrimaryAddresS: boolean;
-  private securityQuestion: SecurityQuestions;
 
   constructor(private dialog: MatDialog) {}
 
