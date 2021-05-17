@@ -44,7 +44,7 @@ namespace EMBC.ESS.Utilities.Messaging
             try
             {
                 logger.LogDebug("Dispatching request {0}, correlation id {1}", request.Type, request.CorrelationId);
-                var requestType = System.Type.GetType(request.Type, true, true);
+                var requestType = System.Type.GetType(request.Type, an => Assembly.Load(an.Name), null, true, true);
                 var messageHandler = serviceRegistry.Resolve(requestType);
                 var handlerInstance = serviceProvider.GetRequiredService(messageHandler.DeclaringType);
                 var requestMessage = JsonSerializer.Deserialize(JsonFormatter.Default.Format(request.Content), requestType);
