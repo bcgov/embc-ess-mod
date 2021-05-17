@@ -24,12 +24,20 @@ export class StepCreateProfileService {
   private contactDetail: ContactDetails;
   private securityQuestion: SecurityQuestion[];
   private showContacts: boolean;
+  private bypassQuestions: boolean;
   private confirmEmails: string;
   private isBcAddresS: boolean;
   private isBcMailingAddresS: boolean;
   private isMailingAddressSameAsPrimaryAddresS: boolean;
 
   constructor(private dialog: MatDialog) {}
+
+  public get bypassSecurityQuestions(): boolean {
+    return this.bypassQuestions;
+  }
+  public set bypassSecurityQuestions(bypassQuestions: boolean) {
+    this.bypassQuestions = bypassQuestions;
+  }
 
   public get showContact(): boolean {
     return this.showContacts;

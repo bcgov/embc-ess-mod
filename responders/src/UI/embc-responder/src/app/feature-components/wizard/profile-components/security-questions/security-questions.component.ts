@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   Validators
 } from '@angular/forms';
@@ -24,10 +25,10 @@ import { SecurityQuestionsService } from './security-questions.service';
 })
 export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   questionListSubscription: Subscription;
-  questionForm: FormGroup = null;
   secQuestions: string[];
 
-  bypassQuestions = false;
+  questionForm: FormGroup = null;
+  bypassQuestions: FormControl = null;
 
   constructor(
     private router: Router,
@@ -46,6 +47,13 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
       });
 
     this.createQuestionForm();
+
+    // Set "Bypass Questions" button and disable inputs if necessary
+    this.bypassQuestions = new FormControl(
+      this.stepCreateProfileService.bypassSecurityQuestions
+    );
+
+    this.setFormDisabled(this.stepCreateProfileService.bypassSecurityQuestions);
   }
 
   createQuestionForm(): void {
@@ -119,10 +127,14 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     return this.questionForm.controls;
   }
 
-  changeBypass(event: MatCheckboxChange) {
-    this.bypassQuestions = event.checked;
+  bypassCheckboxChanged(event: MatCheckboxChange) {
+    this.setFormDisabled(event.checked);
+  }
 
-    if (this.bypassQuestions) {
+  setFormDisabled(checked) {
+    this.stepCreateProfileService.bypassSecurityQuestions = checked;
+
+    if (this.stepCreateProfileService.bypassSecurityQuestions) {
       // Reset dropdowns/inputs
       this.questionForm.disable();
       this.questionForm.reset();
@@ -155,8 +167,10 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
 
     // Create SecurityQuestion objects and save to array, and check if any value set
     for (let i = 1; i <= 3; i++) {
-      const question = this.questionForm.get(`question${i}`).value?.trim();
-      const answer = this.questionForm.get(`answer${i}`).value?.trim();
+      const question =
+        this.questionForm.get(`question${i}`).value?.trim() ?? '';
+
+      const answer = this.questionForm.get(`answer${i}`).value?.trim() ?? '';
 
       if (question.length > 0 || answer.length > 0) {
         anyValueSet = true;
@@ -170,7 +184,10 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     }
 
     // Based on state of form, set tab status
-    if (this.questionForm.valid || this.bypassQuestions) {
+    if (
+      this.questionForm.valid ||
+      this.stepCreateProfileService.bypassSecurityQuestions
+    ) {
       this.stepCreateProfileService.setTabStatus(
         'security-questions',
         'complete'
