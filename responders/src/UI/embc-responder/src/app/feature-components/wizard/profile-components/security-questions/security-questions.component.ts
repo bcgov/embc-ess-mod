@@ -14,6 +14,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { ConfigurationService } from 'src/app/core/api/services';
 import { Subscription } from 'rxjs';
+import { SecurityQuestion } from 'src/app/core/api/models';
+import { SecurityQuestionsService } from './security-questions.service';
 
 @Component({
   selector: 'app-security-questions',
@@ -32,27 +34,13 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     private stepCreateProfileService: StepCreateProfileService,
     private formBuilder: FormBuilder,
     private customValidationService: CustomValidationService,
-    private configurationService: ConfigurationService
+    private securityQuestionsService: SecurityQuestionsService
   ) {}
 
   ngOnInit(): void {
-    // this.secQuestions = [
-    //   'What was the name of your first pet?',
-    //   'What was your first car’s make and model? (e.g. Ford Taurus)',
-    //   'Where was your first job?',
-    //   'What is your favourite children\'s book?',
-    //   'In what city or town was your mother born?',
-    //   'What is your favourite movie?',
-    //   'What is your oldest sibling\'s middle name?',
-    //   'What month and day is your anniversary?',
-    //   'What was your childhood nickname?',
-    //   'What were the last four digits of your childhood telephone number?',
-    //   'In what town or city did you meet your spouse or partner?'
-    // ];
-
     // Set security question values from API
-    this.questionListSubscription = this.configurationService
-      .configurationGetSecurityQuestions()
+    this.questionListSubscription = this.securityQuestionsService
+      .getSecurityQuestionList()
       .subscribe((questions) => {
         this.secQuestions = questions;
       });
@@ -61,14 +49,26 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   }
 
   createQuestionForm(): void {
+    if (!this.stepCreateProfileService.securityQuestions)
+      this.stepCreateProfileService.securityQuestions = [];
+
+    // Set up 3 blank security question values if not already there
+    while (this.stepCreateProfileService.securityQuestions.length < 3) {
+      this.stepCreateProfileService.securityQuestions.push({
+        id: this.stepCreateProfileService.securityQuestions.length + 1,
+        question: '',
+        answer: ''
+      });
+    }
+
     this.questionForm = this.formBuilder.group(
       {
         question1: [
-          this.stepCreateProfileService.securityQuestions?.question1 ?? '',
+          this.stepCreateProfileService.securityQuestions[0].question ?? '',
           [Validators.required]
         ],
         answer1: [
-          this.stepCreateProfileService.securityQuestions?.answer1 ?? '',
+          this.stepCreateProfileService.securityQuestions[0].answer ?? '',
           [
             Validators.minLength(3),
             Validators.maxLength(50),
@@ -77,11 +77,11 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
           ]
         ],
         question2: [
-          this.stepCreateProfileService.securityQuestions?.question2 ?? '',
+          this.stepCreateProfileService.securityQuestions[1].question ?? '',
           [Validators.required]
         ],
         answer2: [
-          this.stepCreateProfileService.securityQuestions?.answer2 ?? '',
+          this.stepCreateProfileService.securityQuestions[1].answer ?? '',
           [
             Validators.minLength(3),
             Validators.maxLength(50),
@@ -90,11 +90,11 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
           ]
         ],
         question3: [
-          this.stepCreateProfileService.securityQuestions?.question3 ?? '',
+          this.stepCreateProfileService.securityQuestions[2].question ?? '',
           [Validators.required]
         ],
         answer3: [
-          this.stepCreateProfileService.securityQuestions?.answer3 ?? '',
+          this.stepCreateProfileService.securityQuestions[2].answer ?? '',
           [
             Validators.minLength(3),
             Validators.maxLength(50),
@@ -151,20 +151,23 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     let anyValueSet = false;
 
     // Reset Security Questions before writing to shared object
-    this.stepCreateProfileService.securityQuestions = {};
+    this.stepCreateProfileService.securityQuestions = [];
 
-    // Write each control from questionForm to shared object, and check if any have value set
-    Object.keys(this.questionForm.controls).forEach((key) => {
-      const control = this.questionForm.get(key);
+    // Create SecurityQuestion objects and save to array, and check if any value set
+    for (let i = 1; i <= 3; i++) {
+      const question = this.questionForm.get(`question${i}`).value?.trim();
+      const answer = this.questionForm.get(`answer${i}`).value?.trim();
 
-      this.stepCreateProfileService.securityQuestions[
-        key
-      ] = control.value?.trim();
-
-      if (control.value?.trim().length > 0) {
+      if (question.length > 0 || answer.length > 0) {
         anyValueSet = true;
       }
-    });
+
+      this.stepCreateProfileService.securityQuestions.push({
+        id: i,
+        question,
+        answer
+      });
+    }
 
     // Based on state of form, set tab status
     if (this.questionForm.valid || this.bypassQuestions) {

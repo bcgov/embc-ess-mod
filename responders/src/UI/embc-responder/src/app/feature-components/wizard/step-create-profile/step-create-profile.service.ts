@@ -8,9 +8,9 @@ import {
   Address,
   ContactDetails,
   PersonDetails,
-  Profile,
-  SecurityQuestions
+  Profile
 } from 'src/app/core/models/profile';
+import { SecurityQuestion } from 'src/app/core/api/models';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {
@@ -22,7 +22,7 @@ export class StepCreateProfileService {
   private primaryAddressDetail: Address;
   private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
-  private securityQuestion: SecurityQuestions;
+  private securityQuestion: SecurityQuestion[];
   private showContacts: boolean;
   private confirmEmails: string;
   private isBcAddresS: boolean;
@@ -103,10 +103,10 @@ export class StepCreateProfileService {
     this.contactDetail = contactDetail;
   }
 
-  public get securityQuestions(): SecurityQuestions {
+  public get securityQuestions(): SecurityQuestion[] {
     return this.securityQuestion;
   }
-  public set securityQuestions(securityQuestion: SecurityQuestions) {
+  public set securityQuestions(securityQuestion: SecurityQuestion[]) {
     this.securityQuestion = securityQuestion;
   }
 

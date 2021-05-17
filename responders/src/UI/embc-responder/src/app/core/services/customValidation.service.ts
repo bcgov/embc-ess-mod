@@ -188,7 +188,7 @@ export class CustomValidationService {
 
       // Fill array of values
       for (const controlName of controlNames) {
-        values.push(formGroup.get(controlName).value.trim());
+        values.push(formGroup.get(controlName).value?.trim() ?? '');
       }
 
       // Get index of every repeated value in array
