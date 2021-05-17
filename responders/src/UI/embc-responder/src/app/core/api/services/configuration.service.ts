@@ -285,39 +285,41 @@ export class ConfigurationService extends BaseService {
   static readonly ConfigurationGetSecurityQuestionsPath = '/api/Configuration/security-questions';
 
   /**
-  * This method provides access to the full `HttpResponse`, allowing access to response headers.
-  * To access only the response body, use `configurationGetSecurityQuestions()` instead.
-  *
-  * This method doesn't expect any request body.
-  */
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `configurationGetSecurityQuestions()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
   configurationGetSecurityQuestions$Response(params?: {
-  }): Observable<StrictHttpResponse<string[]>> {
+  }): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetSecurityQuestionsPath, 'get');
     if (params) {
     }
 
     return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
+      responseType: 'text',
+      accept: '*/*'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string[]>;
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
       })
     );
   }
 
   /**
-  * This method provides access to only to the response body.
-  * To access the full response (for headers, for example), `configurationGetSecurityQuestions$Response()` instead.
-  *
-  * This method doesn't expect any request body.
-  */
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `configurationGetSecurityQuestions$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
   configurationGetSecurityQuestions(params?: {
-  }): Observable<string[]> {
+  }): Observable<void> {
+
     return this.configurationGetSecurityQuestions$Response(params).pipe(
-      map((r: StrictHttpResponse<any>) => r.body?.questions as string[])
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
+
 }
