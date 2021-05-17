@@ -136,7 +136,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("security-questions")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult GetSecurityQuestions()
+        public ActionResult<string[]> GetSecurityQuestions()
         {
             //TODO - actually get the option set from dynamics
             string[] questions =
@@ -153,7 +153,7 @@ namespace EMBC.Responders.API.Controllers
                 "What were the last four digits of your childhood telephone number?",
                 "In what town or city did you meet your spouse or partner?"
             };
-            return Ok(new { Questions = questions });
+            return Ok(questions);
         }
     }
 
