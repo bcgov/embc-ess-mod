@@ -293,19 +293,19 @@ export class ConfigurationService extends BaseService {
   configurationGetSecurityQuestions$Response(params?: {
   }): Observable<StrictHttpResponse<string[]>> {
 
-  const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetSecurityQuestionsPath, 'get');
-  if (params) {
-  }
+    const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetSecurityQuestionsPath, 'get');
+    if (params) {
+    }
 
-  return this.http.request(rb.build({
-    responseType: 'json',
-    accept: 'application/json'
-  })).pipe(
-    filter((r: any) => r instanceof HttpResponse),
-    map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<string[]>;
-    })
-  );
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<string[]>;
+      })
+    );
   }
 
   /**

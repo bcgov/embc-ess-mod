@@ -21,6 +21,9 @@ export { VerifySecurityQuestionsRequest } from './models/verify-security-questio
 export { GetSecurityPhraseResponse } from './models/get-security-phrase-response';
 export { VerifySecurityPhraseResponse } from './models/verify-security-phrase-response';
 export { VerifySecurityPhraseRequest } from './models/verify-security-phrase-request';
+export { EvacueeProfile } from './models/evacuee-profile';
+export { PersonDetails } from './models/person-details';
+export { ContactDetails } from './models/contact-details';
 export { EssTask } from './models/ess-task';
 export { AssignedCommunity } from './models/assigned-community';
 export { TeamMember } from './models/team-member';
