@@ -20,6 +20,13 @@ const routes: Routes = [
           ).then((m) => m.EvacuationDetailsModule)
       },
       {
+        path: 'household-members',
+        loadChildren: () =>
+          import(
+            '../ess-file-components/household-members/household-members.module'
+          ).then((m) => m.HouseholdMembersModule)
+      },
+      {
         path: 'animals',
         loadChildren: () =>
           import('../ess-file-components/animals/animals.module').then(

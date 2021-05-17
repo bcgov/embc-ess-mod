@@ -5,6 +5,7 @@ import { EvacuationDetailsRoutingModule } from './evacuation-details-routing.mod
 import { EvacuationDetailsComponent } from './evacuation-details.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [EvacuationDetailsComponent],
@@ -12,7 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     EvacuationDetailsRoutingModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ]
 })
 export class EvacuationDetailsModule {}
