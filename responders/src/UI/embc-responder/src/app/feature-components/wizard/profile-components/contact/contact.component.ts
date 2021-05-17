@@ -219,7 +219,9 @@ export class ContactComponent implements OnInit {
   private updateTabStatus() {
     if (this.contactInfoForm.valid) {
       this.stepCreateProfileService.setTabStatus('contact', 'complete');
-    } else if (this.contactInfoForm.touched) {
+    } else if (
+      this.stepCreateProfileService.checkForPartialUpdates(this.contactInfoForm)
+    ) {
       this.stepCreateProfileService.setTabStatus('contact', 'incomplete');
     } else {
       this.stepCreateProfileService.setTabStatus('contact', 'not-started');

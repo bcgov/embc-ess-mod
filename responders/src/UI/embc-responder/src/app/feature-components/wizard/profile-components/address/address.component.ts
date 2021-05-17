@@ -440,7 +440,11 @@ export class AddressComponent implements OnInit, AfterViewChecked {
   private updateTabStatus() {
     if (this.primaryAddressForm.valid) {
       this.stepCreateProfileService.setTabStatus('address', 'complete');
-    } else if (this.primaryAddressForm.touched) {
+    } else if (
+      this.stepCreateProfileService.checkForPartialUpdates(
+        this.primaryAddressForm
+      )
+    ) {
       this.stepCreateProfileService.setTabStatus('address', 'incomplete');
     } else {
       this.stepCreateProfileService.setTabStatus('address', 'not-started');

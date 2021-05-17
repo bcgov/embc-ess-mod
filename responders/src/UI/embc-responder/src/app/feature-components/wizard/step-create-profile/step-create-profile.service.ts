@@ -11,6 +11,7 @@ import {
   Profile,
   SecurityQuestions
 } from 'src/app/core/models/profile';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {
@@ -201,5 +202,32 @@ export class StepCreateProfileService {
     };
 
     return address;
+  }
+
+  /**
+   * Checks if the form is partially completed or not
+   * @param form form group
+   * @returns true/false
+   */
+  checkForPartialUpdates(form: FormGroup): boolean {
+    const fields = [];
+    Object.keys(form.controls).forEach((field) => {
+      const control = form.controls[field] as
+        | FormControl
+        | FormGroup
+        | FormArray;
+      if (control instanceof FormControl) {
+        fields.push(control.value);
+      } else if (control instanceof FormGroup || control instanceof FormArray) {
+        for (const key in control.controls) {
+          if (control.controls.hasOwnProperty(key)) {
+            fields.push(control.controls[key].value);
+          }
+        }
+      }
+    });
+
+    const result = fields.filter((field) => !!field);
+    return result.length !== 0;
   }
 }
