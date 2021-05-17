@@ -283,6 +283,14 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             registrants.ShouldNotBeNull();
             registrants.ShouldAllBe(r => r.FirstName == "Elvis");
             registrants.ShouldAllBe(r => r.LastName == "Presley");
+
+            registrants = await GetRegistrantsByNameAndBirthdate("Elvis", "Presley", "2010-01-01");
+
+            registrants.ShouldNotBeNull();
+            registrants.ShouldBeEmpty();
+            //registrants.ShouldAllBe(r => r.FirstName == "Elvis");
+            //registrants.ShouldAllBe(r => r.LastName == "Presley");
+
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -320,6 +328,22 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     { 
                         FirstName = firstName,
                         LastName = lastName
+                    }
+                }
+            })).MatchingRegistrants.ToList();
+        }
+
+        private async Task<IEnumerable<RegistrantProfile>> GetRegistrantsByNameAndBirthdate(string firstName, string lastName, string dateOfBirth)
+        {
+            return (await manager.Handle(new SearchQuery
+            {
+                SearchParameters = new[]
+                {
+                    new RegistrantsSearchCriteria
+                    {
+                        FirstName = firstName,
+                        LastName = lastName,
+                        DateOfBirth = dateOfBirth
                     }
                 }
             })).MatchingRegistrants.ToList();

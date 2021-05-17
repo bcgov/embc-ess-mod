@@ -64,10 +64,6 @@ namespace EMBC.ESS.Resources.Cases
         public string FileId { get; set; }
         public string UserId { get; set; }
         public string PrimaryRegistrantId { get; set; }
-    }
-
-    public class SearchEvacuationFilesQuery : EvacuationFilesQuery
-    {
         public string PrimaryRegistrantUserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -84,6 +80,7 @@ namespace EMBC.ESS.Resources.Cases
         public string PrimaryRegistrantId { get; set; }
         public string SecretPhrase { get; set; }
         public DateTime EvacuationDate { get; internal set; }
+        public EvacuationFileStatus Status { get; set; }
     }
 
     public class EvacuationAddress

@@ -146,8 +146,8 @@ namespace EMBC.ESS.Resources.Contacts
             if (!string.IsNullOrEmpty(query.LastName)) contactQuery = contactQuery.Where(c => c.lastname.Equals(query.LastName, StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrEmpty(query.FirstName)) contactQuery = contactQuery.Where(c => c.firstname.Equals(query.FirstName, StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrEmpty(query.DateOfBirth)) contactQuery = contactQuery.Where(c => c.birthdate.Equals(Date.Parse(query.DateOfBirth)));
+            if (!query.IncludeRestrictedAccess) contactQuery = contactQuery.Where(c => c.era_restriction.Equals(false));
             // query.FileId
-            // query.IncludeRestrictedAccess
 
             var contacts = await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync();
 

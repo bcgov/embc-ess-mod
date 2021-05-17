@@ -55,7 +55,6 @@ namespace EMBC.ESS.Resources.Cases
         {
             return query.GetType().Name switch
             {
-                nameof(SearchEvacuationFilesQuery) => await HandleSearchEvacuationFilesQuery((SearchEvacuationFilesQuery)query),
                 nameof(EvacuationFilesQuery) => await HandleQueryEvacuationFile((EvacuationFilesQuery)query),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
@@ -64,24 +63,17 @@ namespace EMBC.ESS.Resources.Cases
         public async Task<CaseQueryResult> HandleQueryEvacuationFile(EvacuationFilesQuery query)
         {
             var result = new CaseQueryResult();
-            var evacuationFiles = new List<EvacuationFile>();
-
             if (!string.IsNullOrEmpty(query.FileId))
             {
-                evacuationFiles.Add(await evacuationRepository.Read(query.FileId));
+                var evacuationFiles = new EvacuationFile[1];
+                evacuationFiles[0] = await evacuationRepository.Read(query.FileId);
+                result.Items = evacuationFiles;
             }
-            else if (!string.IsNullOrEmpty(query.UserId))
+            else
             {
-                evacuationFiles = (List<EvacuationFile>)await evacuationRepository.ReadAll(query.UserId);
+                result.Items = await evacuationRepository.ReadAll(query);
             }
-
-            result.Items = evacuationFiles;
             return result;
-        }
-
-        public async Task<CaseQueryResult> HandleSearchEvacuationFilesQuery(SearchEvacuationFilesQuery query)
-        {
-            return new CaseQueryResult { Items = await evacuationRepository.ReadAll(query) };
         }
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)

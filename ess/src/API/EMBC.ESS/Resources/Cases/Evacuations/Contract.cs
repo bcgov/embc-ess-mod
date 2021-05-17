@@ -24,9 +24,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
     {
         Task<string> Create(EvacuationFile evacuationFile);
 
-        Task<IEnumerable<EvacuationFile>> ReadAll(string userId);
-
-        Task<IEnumerable<EvacuationFile>> ReadAll(SearchEvacuationFilesQuery query);
+        Task<IEnumerable<EvacuationFile>> ReadAll(EvacuationFilesQuery query);
 
         Task<EvacuationFile> Read(string essFileNumber);
 

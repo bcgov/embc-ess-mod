@@ -115,7 +115,7 @@ namespace EMBC.ESS.Managers.Submissions
                 }
                 else if (criteria is EvacuationFilesSearchCriteria evacuationFilesSearchCriteria)
                 {
-                    cases = (await caseRepository.QueryCase(new SearchEvacuationFilesQuery
+                    cases = (await caseRepository.QueryCase(new EvacuationFilesQuery
                     {
                         FileId = evacuationFilesSearchCriteria.FileId,
                         PrimaryRegistrantId = evacuationFilesSearchCriteria.PrimaryRegistrantId,
