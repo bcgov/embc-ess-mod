@@ -1,18 +1,27 @@
 import { Injectable } from '@angular/core';
+import {
+  InsuranceOption,
+  NeedsAssessment
+} from 'src/app/core/models/evacuation-file';
+import { Address } from 'src/app/core/models/profile';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
+import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
   private essTabs: Array<TabModel> = WizardTabModelValues.essFileTabs;
   private paperESSFile: string;
   private evacuatedFromPrimary: boolean;
+  private evacAddress: Address;
   private facilityName: string;
-  private insurance: string;
+  private insurance: InsuranceOption;
   private householdAffected: string;
   private emergencySupportServices: string;
   private referredServices: boolean;
   private referredServiceDetails: string[] = [];
   private externalServices: string;
+
+  constructor(private strepCreateProfileService: StepCreateProfileService) {}
 
   public get paperESSFiles(): string {
     return this.paperESSFile;
@@ -28,6 +37,13 @@ export class StepCreateEssFileService {
     this.evacuatedFromPrimary = evacuatedFromPrimary;
   }
 
+  public get evacAddresS(): Address {
+    return this.evacAddress;
+  }
+  public set evacAddresS(evacAddress: Address) {
+    this.evacAddress = evacAddress;
+  }
+
   public get facilityNames(): string {
     return this.facilityName;
   }
@@ -35,10 +51,10 @@ export class StepCreateEssFileService {
     this.facilityName = facilityName;
   }
 
-  public get insuranceInfo(): string {
+  public get insuranceInfo(): InsuranceOption {
     return this.insurance;
   }
-  public set insuranceInfo(insurance: string) {
+  public set insuranceInfo(insurance: InsuranceOption) {
     this.insurance = insurance;
   }
 
@@ -91,5 +107,32 @@ export class StepCreateEssFileService {
       }
       return tab;
     });
+  }
+
+  public createNeedsAssessmentDTO(): NeedsAssessment {
+    console.log({
+      paperESSFile: this.paperESSFile,
+      facilityName: this.facilityName,
+      insurance: this.insurance,
+      householdAffected: this.householdAffected,
+      emergencySupportServices: this.emergencySupportServices,
+      referredServices: this.referredServices,
+      referredServiceDetails: this.referredServiceDetails,
+      externalServices: this.externalServices,
+      evacAddress: this.strepCreateProfileService.setAddressObject(
+        this.evacAddress
+      )
+    });
+
+    return {
+      paperESSFile: this.paperESSFile,
+      facilityName: this.facilityName,
+      insurance: this.insurance,
+      householdAffected: this.householdAffected,
+      emergencySupportServices: this.emergencySupportServices,
+      referredServices: this.referredServices,
+      referredServiceDetails: this.referredServiceDetails,
+      externalServices: this.externalServices
+    };
   }
 }
