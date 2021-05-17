@@ -4941,6 +4941,7 @@
         <Property Name="marketingonly" Type="Edm.Boolean" />
         <Property Name="subscriptionid" Type="Edm.Guid" />
         <Property Name="processid" Type="Edm.Guid" />
+        <Property Name="era_securityquestiontext1" Type="Edm.String" Unicode="false" />
         <Property Name="address2_latitude" Type="Edm.Double" />
         <Property Name="_parentcustomerid_value" Type="Edm.Guid" />
         <Property Name="address3_telephone2" Type="Edm.String" Unicode="false" />
@@ -5018,6 +5019,7 @@
         <Property Name="nickname" Type="Edm.String" Unicode="false" />
         <Property Name="childrensnames" Type="Edm.String" Unicode="false" />
         <Property Name="_preferredequipmentid_value" Type="Edm.Guid" />
+        <Property Name="era_securityquestiontext2" Type="Edm.String" Unicode="false" />
         <Property Name="_owninguser_value" Type="Edm.Guid" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="donotemail" Type="Edm.Boolean" />
@@ -5035,6 +5037,7 @@
         <Property Name="stageid" Type="Edm.Guid" />
         <Property Name="donotbulkpostalmail" Type="Edm.Boolean" />
         <Property Name="era_securityquestion1" Type="Edm.Int32" />
+        <Property Name="era_securityquestiontext3" Type="Edm.String" Unicode="false" />
         <Property Name="_ownerid_value" Type="Edm.Guid" />
         <Property Name="donotsendmm" Type="Edm.Boolean" />
         <Property Name="numberofchildren" Type="Edm.Int32" />
