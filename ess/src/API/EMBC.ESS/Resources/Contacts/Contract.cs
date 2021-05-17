@@ -70,7 +70,7 @@ namespace EMBC.ESS.Resources.Contacts
         public Address PrimaryAddress { get; set; }
         public Address MailingAddress { get; set; }
         public bool RestrictedAccess { get; set; }
-        public string SecretPhrase { get; set; }
+        public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
         public object UserId { get; set; }
     }
 
@@ -82,5 +82,12 @@ namespace EMBC.ESS.Resources.Contacts
         public string StateProvince { get; set; }
         public string Country { get; set; }
         public string PostalCode { get; set; }
+    }
+
+    public class SecurityQuestion
+    {
+        public int Id { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
     }
 }

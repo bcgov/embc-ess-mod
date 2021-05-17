@@ -291,19 +291,19 @@ export class ConfigurationService extends BaseService {
    * This method doesn't expect any request body.
    */
   configurationGetSecurityQuestions$Response(params?: {
-  }): Observable<StrictHttpResponse<void>> {
+  }): Observable<StrictHttpResponse<Array<string>>> {
 
     const rb = new RequestBuilder(this.rootUrl, ConfigurationService.ConfigurationGetSecurityQuestionsPath, 'get');
     if (params) {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<Array<string>>;
       })
     );
   }
@@ -315,10 +315,10 @@ export class ConfigurationService extends BaseService {
    * This method doesn't expect any request body.
    */
   configurationGetSecurityQuestions(params?: {
-  }): Observable<void> {
+  }): Observable<Array<string>> {
 
     return this.configurationGetSecurityQuestions$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<Array<string>>) => r.body as Array<string>)
     );
   }
 
