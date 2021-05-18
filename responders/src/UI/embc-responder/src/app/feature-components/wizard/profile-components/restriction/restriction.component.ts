@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -13,7 +13,7 @@ import { StepCreateProfileService } from '../../step-create-profile/step-create-
   templateUrl: './restriction.component.html',
   styleUrls: ['./restriction.component.scss']
 })
-export class RestrictionComponent implements OnInit {
+export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: FormGroup;
 
   constructor(
@@ -45,22 +45,26 @@ export class RestrictionComponent implements OnInit {
   }
 
   /**
-   * Updates the tab status and navigate to next tab
+   * Navigate to next tab
    */
   next(): void {
-    this.updateTabStatus();
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/evacuee-details'
     ]);
   }
 
+  /**
+   * Navigates to the previous tab
+   */
   back(): void {
-    this.updateTabStatus();
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/collection-notice'
     ]);
   }
 
+  /**
+   * Checks the form validity and updates the tab status
+   */
   updateTabStatus() {
     if (this.restrictionForm.valid) {
       this.stepCreateProfileService.setTabStatus('restriction', 'complete');
@@ -68,5 +72,9 @@ export class RestrictionComponent implements OnInit {
     this.stepCreateProfileService.restrictedAccess = this.restrictionForm.get(
       'restrictedAccess'
     ).value;
+  }
+
+  ngOnDestroy(): void {
+    this.updateTabStatus()
   }
 }

@@ -2,6 +2,7 @@ import {
   AfterViewChecked,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit
 } from '@angular/core';
 import {
@@ -29,7 +30,7 @@ import { AddressService } from './address.service';
   templateUrl: './address.component.html',
   styleUrls: ['./address.component.scss']
 })
-export class AddressComponent implements OnInit, AfterViewChecked {
+export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   primaryAddressForm: FormGroup;
   radioOption: string[] = ['Yes', 'No'];
   filteredOptions: Observable<Country[]>;
@@ -223,7 +224,6 @@ export class AddressComponent implements OnInit, AfterViewChecked {
    * Navigate to next tab
    */
   public next(): void {
-    this.updateTabStatus();
     this.router.navigate(['/ess-wizard/create-evacuee-profile/contact']);
   }
 
@@ -231,7 +231,6 @@ export class AddressComponent implements OnInit, AfterViewChecked {
    * Navigate to previous tab
    */
   public back(): void {
-    this.updateTabStatus();
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/evacuee-details'
     ]);
@@ -435,7 +434,7 @@ export class AddressComponent implements OnInit, AfterViewChecked {
   }
 
   /**
-   * Updates the tab status
+   * Checks the form validity and updates the tab status
    */
   private updateTabStatus() {
     if (this.primaryAddressForm.valid) {
@@ -471,5 +470,9 @@ export class AddressComponent implements OnInit, AfterViewChecked {
     this.stepCreateProfileService.isBcMailingAddress = this.primaryAddressForm.get(
       'isBcMailingAddress'
     ).value;
+  }
+
+  ngOnDestroy(): void {
+    this.updateTabStatus();
   }
 }
