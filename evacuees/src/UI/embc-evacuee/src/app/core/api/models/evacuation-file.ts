@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import { Address } from './address';
+import { EvacuationFileStatus } from './evacuation-file-status';
 import { NeedsAssessment } from './needs-assessment';
 
 /**
@@ -12,4 +13,5 @@ export interface EvacuationFile {
   evacuationFileDate?: null | string;
   isRestricted?: boolean;
   needsAssessments: Array<NeedsAssessment>;
+  status?: EvacuationFileStatus;
 }
