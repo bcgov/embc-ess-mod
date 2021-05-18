@@ -18,7 +18,7 @@ export class RestrictionFormComponent implements OnInit {
   /**
    * Returns the control of the form
    */
-  get restrFormControl(): { [key: string]: AbstractControl; } {
+  get restrFormControl(): { [key: string]: AbstractControl } {
     return this.restrictionForm.controls;
   }
 

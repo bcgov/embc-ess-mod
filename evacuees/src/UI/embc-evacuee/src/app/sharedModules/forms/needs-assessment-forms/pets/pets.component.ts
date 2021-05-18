@@ -98,7 +98,7 @@ export default class PetsComponent implements OnInit {
   /**
    * Returns the control of the form
    */
-  get petsFormControl(): { [key: string]: AbstractControl; } {
+  get petsFormControl(): { [key: string]: AbstractControl } {
     return this.petsForm.controls;
   }
 

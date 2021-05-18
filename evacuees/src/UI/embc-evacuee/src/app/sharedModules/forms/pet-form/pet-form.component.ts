@@ -20,7 +20,7 @@ export class PetFormComponent implements OnInit {
  /**
   * Returns the control of the form
   */
-  get petFormControl(): { [key: string]: AbstractControl; } {
+  get petFormControl(): { [key: string]: AbstractControl } {
     return this.petForm.controls;
   }
 

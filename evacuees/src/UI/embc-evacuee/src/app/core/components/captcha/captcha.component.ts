@@ -30,7 +30,7 @@ enum CAPTCHA_STATE {
 }
 
 @Component({
-  // tslint:disable-next-line: component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'captcha',
   templateUrl: './captcha.component.html',
   styleUrls: ['./captcha.component.scss']

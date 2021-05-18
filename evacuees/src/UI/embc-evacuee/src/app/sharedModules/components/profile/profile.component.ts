@@ -69,6 +69,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Loads form for every step based on index
+   *
    * @param index step index
    */
   currentStep(index: number): void {
@@ -78,6 +79,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Triggered on the step change animation event
+   *
    * @param event animation event
    * @param stepper stepper instance
    */
@@ -87,6 +89,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Custom back stepper function
+   *
    * @param stepper stepper instance
    * @param lastStep stepIndex
    */
@@ -103,6 +106,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Custom next stepper function
+   *
    * @param stepper stepper instance
    * @param isLast stepperIndex
    * @param component current component name
@@ -128,6 +132,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Sets the form data to the DTO services
+   *
    * @param component Name of the component
    */
   setFormData(component: string): void {
@@ -151,6 +156,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Loads appropriate forms based on the current step
+   *
    * @param index Step index
    */
   loadStepForm(index: number): void {

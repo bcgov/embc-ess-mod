@@ -34,6 +34,7 @@ export class CustomValidationService {
 
     /**
      * Validition for the fields that are conditional
+     *
      * @param predicate : condition to check
      * @param validator : validator to test again
      * @param errorName : custom error name
@@ -132,9 +133,7 @@ export class CustomValidationService {
      * Checks if the quantity inserted is between 1 and 999
      */
     quantityPetsValidator(): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: boolean } | null => {
-            return Validators.pattern(globalConst.petsQuantityPattern)(control);
-        };
+        return (control: AbstractControl): { [key: string]: boolean } | null => Validators.pattern(globalConst.petsQuantityPattern)(control);
     }
 
 }

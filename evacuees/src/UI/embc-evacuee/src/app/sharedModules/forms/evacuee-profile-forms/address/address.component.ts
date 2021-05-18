@@ -99,6 +99,7 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
 
   /**
    * Filters the coutry list for autocomplete field
+   *
    * @param value : User typed value
    */
   private filter(value?: string): Country[] {
@@ -111,7 +112,7 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
   /**
    * Returns the control of the form
    */
-  get primaryAddressFormControl(): { [key: string]: AbstractControl; } {
+  get primaryAddressFormControl(): { [key: string]: AbstractControl } {
     return this.primaryAddressForm.controls;
   }
 

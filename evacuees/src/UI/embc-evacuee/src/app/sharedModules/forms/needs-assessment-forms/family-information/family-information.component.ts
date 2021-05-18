@@ -96,7 +96,7 @@ export default class FamilyInformationComponent implements OnInit {
   /**
    * Returns the control of the form
    */
-  get householdFormControl(): { [key: string]: AbstractControl; } {
+  get householdFormControl(): { [key: string]: AbstractControl } {
     return this.householdMemberForm.controls;
   }
 

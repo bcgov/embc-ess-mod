@@ -55,12 +55,13 @@ export class UsaAddressComponent implements OnInit {
   /**
    * Returns the control of the form
    */
-  get addressFormControl(): { [key: string]: AbstractControl; } {
+  get addressFormControl(): { [key: string]: AbstractControl } {
     return this.addressForm.controls;
   }
 
   /**
    * Filters the states list for autocomplete field
+   *
    * @param value : User typed value
    */
   private filter(value?: string): StateProvince[] {
@@ -72,6 +73,7 @@ export class UsaAddressComponent implements OnInit {
 
   /**
    * Returns the display value of autocomplete
+   *
    * @param state : Selected state province object
    */
   stateDisplayFn(state: StateProvince): string {

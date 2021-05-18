@@ -30,6 +30,7 @@ export class AlertComponent implements OnInit{
 
     /**
      * Removes the alert from the array
+     *
      * @param alert Alert to be deleted
      */
     close(alert: Alert): void {

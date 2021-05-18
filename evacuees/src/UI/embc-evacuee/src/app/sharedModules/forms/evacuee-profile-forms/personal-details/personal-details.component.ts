@@ -54,7 +54,7 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   /**
    * Returns the control of the form
    */
-  get personalFormControl(): { [key: string]: AbstractControl; } {
+  get personalFormControl(): { [key: string]: AbstractControl } {
     return this.personalDetailsForm.controls;
   }
 

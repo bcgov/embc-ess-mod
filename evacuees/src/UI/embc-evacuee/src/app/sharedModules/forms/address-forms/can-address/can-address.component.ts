@@ -30,7 +30,7 @@ export class CanAddressComponent implements OnInit {
   /**
    * Returns the control of the form
    */
-  get addressFormControl(): { [key: string]: AbstractControl; } {
+  get addressFormControl(): { [key: string]: AbstractControl } {
     return this.addressForm.controls;
   }
 
@@ -62,6 +62,7 @@ export class CanAddressComponent implements OnInit {
 
   /**
    * Filters the province list for autocomplete field
+   *
    * @param value : User typed value
    */
   private filter(value?: string): StateProvince[] {
@@ -73,6 +74,7 @@ export class CanAddressComponent implements OnInit {
 
   /**
    * Returns the display value of autocomplete
+   *
    * @param province : Selected state province object
    */
   provinceDisplayFn(province: StateProvince): string {

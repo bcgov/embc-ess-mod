@@ -78,7 +78,7 @@ export default class EvacAddressComponent implements OnInit {
   /**
    * Returns the control of the form
    */
-  get evacuatedFormControl(): { [key: string]: AbstractControl; } {
+  get evacuatedFormControl(): { [key: string]: AbstractControl } {
     return this.evacuatedForm.controls;
   }
 

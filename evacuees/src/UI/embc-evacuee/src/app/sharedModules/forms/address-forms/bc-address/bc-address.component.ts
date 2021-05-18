@@ -35,7 +35,7 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
   /**
    * Returns the control of the form
    */
-  get addressFormControl(): { [key: string]: AbstractControl; } {
+  get addressFormControl(): { [key: string]: AbstractControl } {
     return this.addressForm.controls;
   }
 
@@ -77,6 +77,7 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
 
   /**
    * Filters the city list for autocomplete field
+   *
    * @param value : User typed value
    */
   private filter(value?: string): Community[] {
@@ -88,6 +89,7 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
 
   /**
    * Returns the display value of autocomplete
+   *
    * @param city : Selected city object
    */
   cityDisplayFn(city: Community): string {

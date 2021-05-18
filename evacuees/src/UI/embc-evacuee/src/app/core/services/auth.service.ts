@@ -70,14 +70,12 @@ export class AuthService {
     console.log('registerRefreshTokenInterval');
     this.refreshTokenSub = timer(0, this.refreshInterval)
       .pipe(
-        switchMap(_ => {
-          return this.token != null
+        switchMap(_ => this.token != null
             ? this.refreshToken().pipe(tap(res => {
               if (!res) { this.logout(this.router.url); }
               return EMPTY;
             }))
-            : EMPTY;
-        }),
+            : EMPTY),
         catchError(error => {
           console.error('registerRefreshTokenInterval', error);
           return EMPTY;

@@ -85,7 +85,7 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
   /**
    * Returns the control of the form
    */
-  get contactFormControl(): { [key: string]: AbstractControl; } {
+  get contactFormControl(): { [key: string]: AbstractControl } {
     return this.contactInfoForm.controls;
   }
 

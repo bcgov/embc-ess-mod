@@ -79,6 +79,7 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   /**
    * Loads appropriate forms based on the current step
+   *
    * @param index index of the step
    */
   loadStepForm(index: number): void {

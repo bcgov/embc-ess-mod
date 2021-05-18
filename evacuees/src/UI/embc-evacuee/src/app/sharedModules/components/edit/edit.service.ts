@@ -18,6 +18,7 @@ export class EditService {
 
     /**
      * Updates the form with latest values
+     *
      * @param component current component name
      */
     saveFormData(component: string, form: FormGroup, path: string): void {
@@ -77,6 +78,7 @@ export class EditService {
 
     /**
      * Cancels the updates and sets the form with existing values
+     *
      * @param component current component name
      * @param form  form to update
      */

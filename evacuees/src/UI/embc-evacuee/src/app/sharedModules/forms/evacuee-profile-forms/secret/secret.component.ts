@@ -34,7 +34,7 @@ export default class SecretComponent implements OnInit, OnDestroy {
   /**
    * Returns the control of the form
    */
-  get secretFormControl(): { [key: string]: AbstractControl; } {
+  get secretFormControl(): { [key: string]: AbstractControl } {
     return this.secretForm.controls;
   }
 

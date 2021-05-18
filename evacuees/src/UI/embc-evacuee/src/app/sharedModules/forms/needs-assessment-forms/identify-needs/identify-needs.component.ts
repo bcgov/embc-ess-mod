@@ -35,7 +35,7 @@ export default class IdentifyNeedsComponent implements OnInit {
     );
   }
 
-  get needsFormControl(): { [key: string]: AbstractControl; } {
+  get needsFormControl(): { [key: string]: AbstractControl } {
     return this.identifyNeedsForm.controls;
   }
 

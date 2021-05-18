@@ -133,6 +133,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   /**
    * Loads the form into view
+   *
    * @param component form name
    */
   loadForm(component: string): void {
