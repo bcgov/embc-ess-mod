@@ -15,7 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
     BcAddressComponent,
     CanAddressComponent,
     UsaAddressComponent,
-    OtherAddressComponent,
+    OtherAddressComponent
   ],
   imports: [
     CommonModule,
@@ -23,13 +23,13 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    MatSelectModule,
+    MatSelectModule
   ],
   exports: [
     BcAddressComponent,
     CanAddressComponent,
     UsaAddressComponent,
-    OtherAddressComponent,
-  ],
+    OtherAddressComponent
+  ]
 })
 export class AddressFormsModule {}

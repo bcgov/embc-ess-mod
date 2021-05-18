@@ -4,13 +4,13 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import {
   LocationService,
-  StateProvince,
+  StateProvince
 } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-usa-address',
   templateUrl: './usa-address.component.html',
-  styleUrls: ['./usa-address.component.scss'],
+  styleUrls: ['./usa-address.component.scss']
 })
 export class UsaAddressComponent implements OnInit {
   @Input() addressForm: FormGroup;

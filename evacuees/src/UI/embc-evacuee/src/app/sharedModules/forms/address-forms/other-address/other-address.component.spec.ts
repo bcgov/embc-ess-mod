@@ -9,7 +9,7 @@ describe('OtherAddressComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [OtherAddressComponent],
+        declarations: [OtherAddressComponent]
       }).compileComponents();
     })
   );

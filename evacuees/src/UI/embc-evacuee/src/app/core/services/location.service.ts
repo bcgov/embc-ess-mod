@@ -96,7 +96,7 @@ export class LocationService {
             districtName: c.districtName,
             stateProvinceCode: c.parentCode.value,
             countryCode: c.parentCode.parentCode.value,
-            type: c.communityType,
+            type: c.communityType
           }))
         );
         this.setRegionalDistricts(communities.map((comm) => comm.districtName));
@@ -112,7 +112,7 @@ export class LocationService {
           [...stateProvinces].map((sp) => ({
             code: sp.value,
             name: sp.description,
-            countryCode: sp.parentCode.value,
+            countryCode: sp.parentCode.value
           }))
         );
       });

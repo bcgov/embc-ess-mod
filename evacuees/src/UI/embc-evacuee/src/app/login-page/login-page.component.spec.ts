@@ -11,7 +11,7 @@ describe('LoginPageComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [LoginPageComponent],
-        imports: [RouterTestingModule],
+        imports: [RouterTestingModule]
       }).compileComponents();
     })
   );

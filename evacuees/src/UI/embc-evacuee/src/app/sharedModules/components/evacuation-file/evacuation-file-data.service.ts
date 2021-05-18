@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import {
   Address,
   EvacuationFile,
-  NeedsAssessment,
+  NeedsAssessment
 } from 'src/app/core/api/models';
 import { EvacuationsService } from 'src/app/core/api/services';
 import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
@@ -96,7 +96,7 @@ export class EvacuationFileDataService {
       essFileNumber: this.essFilenumber,
       evacuatedFromAddress: this.setAddressObject(this.evacuatedFromAddress),
       needsAssessments: this.getNeedsAssessment(),
-      evacuationFileDate: this.evacuationFileDate,
+      evacuationFileDate: this.evacuationFileDate
     };
   }
 
@@ -119,7 +119,7 @@ export class EvacuationFileDataService {
       stateProvince:
         addressObject.stateProvince === null
           ? addressObject.stateProvince
-          : addressObject.stateProvince.code,
+          : addressObject.stateProvince.code
     };
 
     return address;

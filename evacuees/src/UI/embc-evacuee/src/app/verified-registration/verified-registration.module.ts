@@ -6,6 +6,6 @@ import { VerifiedRegistrationComponent } from './verified-registration.component
 
 @NgModule({
   declarations: [VerifiedRegistrationComponent],
-  imports: [CommonModule, VerifiedRegistrationRoutingModule],
+  imports: [CommonModule, VerifiedRegistrationRoutingModule]
 })
 export class VerifiedRegistrationModule {}

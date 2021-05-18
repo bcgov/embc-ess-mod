@@ -16,8 +16,8 @@ import { CoreModule } from '../../../core/core.module';
     MatButtonModule,
     MatIconModule,
     CustomPipeModule,
-    CoreModule,
+    CoreModule
   ],
-  exports: [ReviewComponent],
+  exports: [ReviewComponent]
 })
 export class ReviewModule {}

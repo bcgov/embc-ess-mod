@@ -3,7 +3,7 @@ import {
   Address,
   AnonymousRegistration,
   NeedsAssessment,
-  Profile,
+  Profile
 } from '../core/api/models';
 import { EvacuationFileDataService } from '../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { NeedsAssessmentService } from '../sharedModules/components/needs-assessment/needs-assessment.service';
@@ -31,7 +31,7 @@ export class NonVerifiedRegistrationMappingService {
         this.createRegistration(),
         this.profileDataService.createProfileDTO()
       ),
-      captcha: 'abc',
+      captcha: 'abc'
     };
   }
 
@@ -52,7 +52,7 @@ export class NonVerifiedRegistrationMappingService {
       haveSpecialDiet: null,
       specialDietDetails: null,
       insurance: null,
-      pets: null,
+      pets: null
     };
   }
 
@@ -64,7 +64,7 @@ export class NonVerifiedRegistrationMappingService {
       personalDetails: null,
       primaryAddress: null,
       restrictedAccess: null,
-      secretPhrase: null,
+      secretPhrase: null
     };
   }
 
@@ -81,7 +81,7 @@ export class NonVerifiedRegistrationMappingService {
       stateProvince:
         addressObject.stateProvince === null
           ? addressObject.stateProvince
-          : addressObject.stateProvince.code,
+          : addressObject.stateProvince.code
     };
 
     return address;

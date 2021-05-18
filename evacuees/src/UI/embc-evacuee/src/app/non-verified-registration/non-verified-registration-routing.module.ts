@@ -11,7 +11,7 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'collection-notice',
-        pathMatch: 'full',
+        pathMatch: 'full'
       },
       {
         path: 'collection-notice',
@@ -19,7 +19,7 @@ const routes: Routes = [
           import(
             '../sharedModules/components/collection-notice/collection-notice.module'
           ).then((m) => m.CollectionNoticeModule),
-        data: { flow: 'non-verified-registration' },
+        data: { flow: 'non-verified-registration' }
       },
       {
         path: 'restriction',
@@ -27,7 +27,7 @@ const routes: Routes = [
           import(
             '../sharedModules/components/restriction/restriction.module'
           ).then((m) => m.RestrictionModule),
-        data: { flow: 'non-verified-registration' },
+        data: { flow: 'non-verified-registration' }
       },
       {
         path: 'create-profile',
@@ -35,7 +35,7 @@ const routes: Routes = [
           import('../sharedModules/components/profile/profile.module').then(
             (m) => m.ProfileModule
           ),
-        data: { flow: 'non-verified-registration' },
+        data: { flow: 'non-verified-registration' }
       },
       {
         path: 'needs-assessment',
@@ -43,7 +43,7 @@ const routes: Routes = [
           import(
             '../sharedModules/components/needs-assessment/needs-assessment.module'
           ).then((m) => m.NeedsAssessmentModule),
-        data: { flow: 'non-verified-registration' },
+        data: { flow: 'non-verified-registration' }
       },
       {
         path: 'edit/:type',
@@ -51,7 +51,7 @@ const routes: Routes = [
           import('../sharedModules/components/edit/edit.module').then(
             (m) => m.EditModule
           ),
-        data: { flow: 'non-verified-registration' },
+        data: { flow: 'non-verified-registration' }
       },
       {
         path: 'file-submission',
@@ -60,14 +60,14 @@ const routes: Routes = [
             '../sharedModules/components/file-submission/file-submission.module'
           ).then((m) => m.FileSubmissionModule),
         data: { flow: 'non-verified-registration' },
-        canDeactivate: [DisableBackGuard],
-      },
-    ],
-  },
+        canDeactivate: [DisableBackGuard]
+      }
+    ]
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class NonVerifiedRegistrationRoutingModule {}

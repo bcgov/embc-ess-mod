@@ -14,7 +14,7 @@ import { EditService } from './edit.service';
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss'],
+  styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit, OnDestroy {
   componentToLoad: string;
@@ -100,7 +100,7 @@ export class EditComponent implements OnInit, OnDestroy {
             (profileId) => {
               this.showLoader = !this.showLoader;
               this.router.navigate([
-                '/verified-registration/dashboard/profile',
+                '/verified-registration/dashboard/profile'
               ]);
             },
             (error) => {
@@ -120,7 +120,7 @@ export class EditComponent implements OnInit, OnDestroy {
             (essFileNumber) => {
               this.showLoader = !this.showLoader;
               this.router.navigate([
-                '/verified-registration/dashboard/current/' + essFileNumber,
+                '/verified-registration/dashboard/current/' + essFileNumber
               ]);
             },
             (error) => {
@@ -154,7 +154,7 @@ export class EditComponent implements OnInit, OnDestroy {
       } else if (this.parentPageName === 'needs-assessment') {
         this.router.navigate([
           '/verified-registration/dashboard/current/' +
-            this.evacuationFileDataService.essFileNumber,
+            this.evacuationFileDataService.essFileNumber
         ]);
       }
     }

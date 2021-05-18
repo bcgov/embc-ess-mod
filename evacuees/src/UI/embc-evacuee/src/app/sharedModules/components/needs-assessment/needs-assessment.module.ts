@@ -29,7 +29,7 @@ import { CoreModule } from '../../../core/core.module';
     MatSelectModule,
     MatAutocompleteModule,
     MatDialogModule,
-    CoreModule,
-  ],
+    CoreModule
+  ]
 })
 export class NeedsAssessmentModule {}

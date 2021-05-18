@@ -13,7 +13,7 @@ describe('AddressComponent', () => {
       TestBed.configureTestingModule({
         declarations: [AddressComponent],
         imports: [ReactiveFormsModule],
-        providers: [FormCreationService, FormBuilder],
+        providers: [FormCreationService, FormBuilder]
       }).compileComponents();
     })
   );

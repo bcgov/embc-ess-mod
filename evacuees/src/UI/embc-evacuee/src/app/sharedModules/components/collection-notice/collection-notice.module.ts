@@ -16,7 +16,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatCardModule,
     MatButtonModule,
     ReactiveFormsModule,
-    MatCheckboxModule,
-  ],
+    MatCheckboxModule
+  ]
 })
 export class CollectionNoticeModule {}

@@ -2,7 +2,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { HouseholdMember } from '../api/models';
 import { CustomValidationService } from '../services/customValidation.service';
@@ -34,8 +34,8 @@ export class EvacuatedForm {
       country: ['', [Validators.required]],
       postalCode: [
         '',
-        [customValidator.postalValidation().bind(customValidator)],
-      ],
+        [customValidator.postalValidation().bind(customValidator)]
+      ]
     });
 
     this.insurance.setValue(evacuated.insurance);
@@ -74,8 +74,8 @@ export class HouseholdMembersForm {
               () => this.addHouseholdMemberIndicator.value,
               Validators.required
             )
-            .bind(customValidator),
-        ],
+            .bind(customValidator)
+        ]
       ],
       lastName: [
         '',
@@ -85,8 +85,8 @@ export class HouseholdMembersForm {
               () => this.addHouseholdMemberIndicator.value,
               Validators.required
             )
-            .bind(customValidator),
-        ],
+            .bind(customValidator)
+        ]
       ],
       sameLastNameCheck: [''],
       initials: [''],
@@ -98,8 +98,8 @@ export class HouseholdMembersForm {
               () => this.addHouseholdMemberIndicator.value,
               Validators.required
             )
-            .bind(customValidator),
-        ],
+            .bind(customValidator)
+        ]
       ],
       dateOfBirth: [
         '',
@@ -115,9 +115,9 @@ export class HouseholdMembersForm {
               () => this.addHouseholdMemberIndicator.value,
               customValidator.dateOfBirthValidator().bind(customValidator)
             )
-            .bind(customValidator),
-        ],
-      ],
+            .bind(customValidator)
+        ]
+      ]
     });
 
     this.specialDietDetails.setValidators([
@@ -126,7 +126,7 @@ export class HouseholdMembersForm {
           () => this.haveSpecialDiet.value,
           Validators.required
         )
-        .bind(customValidator),
+        .bind(customValidator)
     ]);
   }
 }
@@ -161,8 +161,8 @@ export class PetForm {
               Validators.required
             )
             .bind(customValidator),
-          customValidator.quantityPetsValidator().bind(customValidator),
-        ],
+          customValidator.quantityPetsValidator().bind(customValidator)
+        ]
       ],
       type: [
         '',
@@ -172,9 +172,9 @@ export class PetForm {
               () => this.addPetIndicator.value,
               Validators.required
             )
-            .bind(customValidator),
-        ],
-      ],
+            .bind(customValidator)
+        ]
+      ]
     });
 
     this.hasPetsFood.setValue(pet.hasPetsFood);
@@ -184,7 +184,7 @@ export class PetForm {
           () => this.addPetFoodIndicator.value,
           Validators.required
         )
-        .bind(customValidator),
+        .bind(customValidator)
     ]);
   }
 }

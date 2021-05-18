@@ -9,7 +9,7 @@ describe('EvacuationCardComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [EvacuationCardComponent],
+        declarations: [EvacuationCardComponent]
       }).compileComponents();
     })
   );

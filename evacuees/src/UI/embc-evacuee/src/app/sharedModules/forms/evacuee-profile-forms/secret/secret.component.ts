@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
-  AbstractControl,
+  AbstractControl
 } from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-secret',
   templateUrl: './secret.component.html',
-  styleUrls: ['./secret.component.scss'],
+  styleUrls: ['./secret.component.scss']
 })
 export default class SecretComponent implements OnInit, OnDestroy {
   formBuilder: FormBuilder;
@@ -59,8 +59,8 @@ export default class SecretComponent implements OnInit, OnDestroy {
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
-  declarations: [SecretComponent],
+  declarations: [SecretComponent]
 })
 class SecretModule {}

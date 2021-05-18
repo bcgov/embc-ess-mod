@@ -6,7 +6,7 @@ import { FormCreationService } from '../../../core/services/formCreation.service
 @Component({
   selector: 'app-component-wrapper',
   templateUrl: './component-wrapper.component.html',
-  styleUrls: ['./component-wrapper.component.scss'],
+  styleUrls: ['./component-wrapper.component.scss']
 })
 export class ComponentWrapperComponent implements OnInit {
   @Input() componentName: string;
@@ -30,14 +30,14 @@ export class ComponentWrapperComponent implements OnInit {
         providers: [
           {
             provide: 'formBuilder',
-            useValue: this.formBuilder,
+            useValue: this.formBuilder
           },
           {
             provide: 'formCreationService',
-            useValue: this.formCreationService,
-          },
+            useValue: this.formCreationService
+          }
         ],
-        parent: this.injector,
+        parent: this.injector
       });
     }
     from(this.loadComponent()).subscribe((module) => {

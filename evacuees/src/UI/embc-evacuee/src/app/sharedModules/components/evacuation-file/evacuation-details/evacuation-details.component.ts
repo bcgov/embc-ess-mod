@@ -39,19 +39,19 @@ const REFERRALS: Referral[] = [
           'Smith, John',
           'Smith, Jenna',
           'Smith, Michael',
-          'Smith, Lily',
+          'Smith, Lily'
         ],
         providerDetails: 'e-Transfer issued to jsmith@gmail.com',
-        issuedBy: 'Oak Bay ESS Team',
-      },
-    ],
-  },
+        issuedBy: 'Oak Bay ESS Team'
+      }
+    ]
+  }
 ];
 
 @Component({
   selector: 'app-evacuation-details',
   templateUrl: './evacuation-details.component.html',
-  styleUrls: ['./evacuation-details.component.scss'],
+  styleUrls: ['./evacuation-details.component.scss']
 })
 export class EvacuationDetailsComponent implements OnInit {
   @Input() allExpandState = false;

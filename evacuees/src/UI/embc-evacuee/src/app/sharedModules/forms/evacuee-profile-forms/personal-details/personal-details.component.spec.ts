@@ -13,7 +13,7 @@ describe('PersonalDetailsComponent', () => {
       TestBed.configureTestingModule({
         declarations: [PersonalDetailsComponent],
         imports: [ReactiveFormsModule],
-        providers: [FormCreationService, FormBuilder],
+        providers: [FormCreationService, FormBuilder]
       }).compileComponents();
     })
   );

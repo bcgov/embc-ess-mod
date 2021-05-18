@@ -4,18 +4,18 @@ import {
   Input,
   ViewEncapsulation,
   Output,
-  EventEmitter,
+  EventEmitter
 } from '@angular/core';
 import {
   animate,
   state,
   style,
   transition,
-  trigger,
+  trigger
 } from '@angular/animations';
 import {
   Referral,
-  ReferralDetails,
+  ReferralDetails
 } from '../evacuation-details/evacuation-details.component';
 
 @Component({
@@ -29,10 +29,10 @@ import {
       transition(
         'expanded <=> collapsed',
         animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
+      )
+    ])
   ],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None
 })
 export class ReferralDetailsComponent implements OnInit {
   @Input() evacuationReferral: Referral;
@@ -45,7 +45,7 @@ export class ReferralDetailsComponent implements OnInit {
     'issuedTo',
     'expiry',
     'referral',
-    'amount',
+    'amount'
   ];
   expandedElement: ReferralDetails | null;
 

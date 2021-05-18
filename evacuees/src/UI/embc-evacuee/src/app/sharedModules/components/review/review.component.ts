@@ -7,7 +7,7 @@ import { first } from 'rxjs/operators';
 @Component({
   selector: 'app-review',
   templateUrl: './review.component.html',
-  styleUrls: ['./review.component.scss'],
+  styleUrls: ['./review.component.scss']
 })
 export class ReviewComponent implements OnInit {
   @Output() captchaPassed = new EventEmitter<boolean>(false);

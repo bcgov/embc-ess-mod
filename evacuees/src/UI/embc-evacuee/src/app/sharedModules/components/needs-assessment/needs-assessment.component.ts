@@ -4,7 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
@@ -22,7 +22,7 @@ import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-da
 @Component({
   selector: 'app-needs-assessment',
   templateUrl: './needs-assessment.component.html',
-  styleUrls: ['./needs-assessment.component.scss'],
+  styleUrls: ['./needs-assessment.component.scss']
 })
 export class NeedsAssessmentComponent
   implements OnInit, AfterViewInit, AfterViewChecked

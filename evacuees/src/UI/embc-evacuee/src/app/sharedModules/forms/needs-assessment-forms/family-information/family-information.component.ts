@@ -19,7 +19,7 @@ import { DialogComponent } from 'src/app/core/components/dialog/dialog.component
 @Component({
   selector: 'app-family-information',
   templateUrl: './family-information.component.html',
-  styleUrls: ['./family-information.component.scss'],
+  styleUrls: ['./family-information.component.scss']
 })
 export default class FamilyInformationComponent implements OnInit {
   householdMemberForm: FormGroup;
@@ -34,7 +34,7 @@ export default class FamilyInformationComponent implements OnInit {
     'initials',
     'gender',
     'dateOfBirth',
-    'buttons',
+    'buttons'
   ];
   dataSource = new BehaviorSubject([]);
   data = [];
@@ -116,7 +116,7 @@ export default class FamilyInformationComponent implements OnInit {
       .open(DialogComponent, {
         data: globalConst.deleteMemberInfoBody,
         height: '220px',
-        width: '500px',
+        width: '500px'
       })
       .afterClosed()
       .subscribe((result) => {
@@ -177,8 +177,8 @@ export default class FamilyInformationComponent implements OnInit {
     MatRadioModule,
     PersonDetailFormModule,
     MatTableModule,
-    MatIconModule,
+    MatIconModule
   ],
-  declarations: [FamilyInformationComponent],
+  declarations: [FamilyInformationComponent]
 })
 class FamilyInformationModule {}

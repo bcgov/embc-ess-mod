@@ -21,7 +21,7 @@ import { CoreModule } from '../../../core/core.module';
     MatAutocompleteModule,
     MatButtonModule,
     RestrictionFormModule,
-    CoreModule,
-  ],
+    CoreModule
+  ]
 })
 export class EditModule {}

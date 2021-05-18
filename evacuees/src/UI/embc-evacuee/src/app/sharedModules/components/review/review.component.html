@@ -614,15 +614,15 @@
           <div class="col-md-3">
             {{
               (formCreationService.evacuatedForm$ | async)?.value.insurance ===
-              "Unknown"
+              'Unknown'
                 ? "I don't know"
                 : (formCreationService.evacuatedForm$ | async)?.value
-                    .insurance === "Unsure"
-                ? "Yes, but I am unsure if I have coverage for this event."
+                    .insurance === 'Unsure'
+                ? 'Yes, but I am unsure if I have coverage for this event.'
                 : (formCreationService.evacuatedForm$ | async)?.value
-                    .insurance === "Yes"
-                ? "Yes"
-                : "No"
+                    .insurance === 'Yes'
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -707,8 +707,8 @@
             {{
               (formCreationService.householdMembersForm$ | async)?.value
                 .haveMedication === true
-                ? "Yes"
-                : "No"
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -718,8 +718,8 @@
             {{
               (formCreationService.householdMembersForm$ | async)?.value
                 .haveSpecialDiet === true
-                ? "Yes"
-                : "No"
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -786,8 +786,8 @@
             {{
               (formCreationService.petsForm$ | async)?.value.hasPetsFood ===
               true
-                ? "Yes"
-                : "No"
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -818,12 +818,12 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideFood === "null"
+                .canEvacueeProvideFood === 'null'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
                     .canEvacueeProvideFood === true
-                ? "Yes"
-                : "No"
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -832,12 +832,12 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideLodging === "null"
+                .canEvacueeProvideLodging === 'null'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
                     .canEvacueeProvideLodging === true
-                ? "Yes"
-                : "No"
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -846,12 +846,12 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideClothing === "null"
+                .canEvacueeProvideClothing === 'null'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
                     .canEvacueeProvideClothing === true
-                ? "Yes"
-                : "No"
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -860,12 +860,12 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideTransportation === "null"
+                .canEvacueeProvideTransportation === 'null'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
                     .canEvacueeProvideTransportation === true
-                ? "Yes"
-                : "No"
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>
@@ -874,12 +874,12 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideIncidentals === "null"
+                .canEvacueeProvideIncidentals === 'null'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
                     .canEvacueeProvideIncidentals === true
-                ? "Yes"
-                : "No"
+                ? 'Yes'
+                : 'No'
             }}
           </div>
         </div>

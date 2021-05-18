@@ -11,7 +11,7 @@ import { AuthInterceptor } from './core/services/auth.interceptor';
 export const AUTH_INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
   useExisting: forwardRef(() => AuthInterceptor),
-  multi: true,
+  multi: true
 };
 
 @NgModule({
@@ -22,9 +22,9 @@ export const AUTH_INTERCEPTOR_PROVIDER: Provider = {
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    CoreModule,
+    CoreModule
   ],
   providers: [AuthInterceptor, AUTH_INTERCEPTOR_PROVIDER],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

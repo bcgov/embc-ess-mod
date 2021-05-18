@@ -4,7 +4,7 @@ import {
   ViewChild,
   AfterViewInit,
   AfterViewChecked,
-  ChangeDetectorRef,
+  ChangeDetectorRef
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -20,7 +20,7 @@ import { ProfileService } from './profile.service';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent
   implements OnInit, AfterViewInit, AfterViewChecked

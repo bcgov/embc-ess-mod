@@ -16,9 +16,9 @@ describe('VerifiedRegistrationComponent', () => {
         imports: [
           ReactiveFormsModule,
           HttpClientTestingModule,
-          RouterTestingModule,
+          RouterTestingModule
         ],
-        providers: [FormBuilder],
+        providers: [FormBuilder]
       }).compileComponents();
     })
   );

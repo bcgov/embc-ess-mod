@@ -8,7 +8,7 @@ describe('EvacuationDetailsComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [EvacuationDetailsComponent],
+        declarations: [EvacuationDetailsComponent]
       }).compileComponents();
     })
   );

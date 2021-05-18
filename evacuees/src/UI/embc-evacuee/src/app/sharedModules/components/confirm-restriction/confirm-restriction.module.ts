@@ -16,7 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     RestrictionFormModule,
     MatCardModule,
     MatButtonModule,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+  ]
 })
 export class ConfirmRestrictionModule {}

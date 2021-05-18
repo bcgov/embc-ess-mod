@@ -14,7 +14,7 @@ describe('SecretComponent', () => {
       TestBed.configureTestingModule({
         declarations: [SecretComponent],
         imports: [ReactiveFormsModule],
-        providers: [FormCreationService, FormBuilder],
+        providers: [FormCreationService, FormBuilder]
       }).compileComponents();
     })
   );

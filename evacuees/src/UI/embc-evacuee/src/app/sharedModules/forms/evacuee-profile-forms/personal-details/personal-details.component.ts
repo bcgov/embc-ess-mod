@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-personal-details',
   templateUrl: './personal-details.component.html',
-  styleUrls: ['./personal-details.component.scss'],
+  styleUrls: ['./personal-details.component.scss']
 })
 export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   personalDetailsForm: FormGroup;
@@ -35,7 +35,7 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
     /\d/,
     /\d/,
     /\d/,
-    /\d/,
+    /\d/
   ];
   editVerifiedPersonalDetails = '/verified-registration/edit/personal-details';
   disableFields = false;
@@ -83,8 +83,8 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
     MatInputModule,
     ReactiveFormsModule,
     DirectivesModule,
-    TextMaskModule,
+    TextMaskModule
   ],
-  declarations: [PersonalDetailsComponent],
+  declarations: [PersonalDetailsComponent]
 })
 class PersonalDetailsModule {}

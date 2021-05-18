@@ -14,7 +14,7 @@ export class NonVerifiedRegistrationService {
   public submitRegistration(): Observable<RegistrationResult> {
     console.log(this.registrationMapping.mapAnonymousRegistration());
     return this.evacuationsService.evacuationsCreate({
-      body: this.registrationMapping.mapAnonymousRegistration(),
+      body: this.registrationMapping.mapAnonymousRegistration()
     });
   }
 }

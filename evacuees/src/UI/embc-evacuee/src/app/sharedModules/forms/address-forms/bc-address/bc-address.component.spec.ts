@@ -11,7 +11,7 @@ describe('BcAddressComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
-        declarations: [BcAddressComponent],
+        declarations: [BcAddressComponent]
       }).compileComponents();
     })
   );

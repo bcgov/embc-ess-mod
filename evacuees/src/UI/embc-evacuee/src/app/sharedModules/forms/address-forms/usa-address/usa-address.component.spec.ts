@@ -12,7 +12,7 @@ describe('UsaAddressComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule, MatAutocompleteModule],
-        declarations: [UsaAddressComponent],
+        declarations: [UsaAddressComponent]
       }).compileComponents();
     })
   );

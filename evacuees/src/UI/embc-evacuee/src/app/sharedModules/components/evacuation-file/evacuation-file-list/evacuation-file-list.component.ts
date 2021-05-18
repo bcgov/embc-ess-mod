@@ -9,7 +9,7 @@ import { EvacuationFileService } from '../evacuation-file.service';
 @Component({
   selector: 'app-evacuation-file-list',
   templateUrl: './evacuation-file-list.component.html',
-  styleUrls: ['./evacuation-file-list.component.scss'],
+  styleUrls: ['./evacuation-file-list.component.scss']
 })
 export class EvacuationFileListComponent implements OnInit {
   currentPath: string;

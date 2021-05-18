@@ -5,7 +5,7 @@ import {
   HouseholdMember,
   InsuranceOption,
   NeedsAssessment,
-  Pet,
+  Pet
 } from 'src/app/core/api/models';
 import { PersonDetails } from 'src/app/core/model/profile.model';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
@@ -62,7 +62,7 @@ export class NeedsAssessmentMappingService {
         details.setValue({
           evacuatedFromPrimary: this.isSameAddress(evacuatedFromAddress),
           evacuatedFromAddress,
-          insurance,
+          insurance
         });
       });
   }
@@ -94,9 +94,9 @@ export class NeedsAssessmentMappingService {
             gender: '',
             initials: '',
             lastName: '',
-            sameLastNameCheck: '',
+            sameLastNameCheck: ''
           },
-          addHouseholdMemberIndicator: null,
+          addHouseholdMemberIndicator: null
         });
       });
   }
@@ -113,11 +113,11 @@ export class NeedsAssessmentMappingService {
           pets,
           pet: {
             quantity: '',
-            type: '',
+            type: ''
           },
           addPetIndicator: null,
           hasPetsFood,
-          addPetFoodIndicator: null,
+          addPetFoodIndicator: null
         });
       });
   }
@@ -148,7 +148,7 @@ export class NeedsAssessmentMappingService {
           canEvacueeProvideFood,
           canEvacueeProvideIncidentals,
           canEvacueeProvideLodging,
-          canEvacueeProvideTransportation,
+          canEvacueeProvideTransportation
         });
       });
   }
@@ -166,7 +166,7 @@ export class NeedsAssessmentMappingService {
           initials: member.details.initials,
           gender: member.details.gender,
           dateOfBirth: member.details.dateOfBirth,
-          sameLastNameCheck: this.isSameLastName(member.details.lastName),
+          sameLastNameCheck: this.isSameLastName(member.details.lastName)
         };
 
         householdMembersFormArray.push(memberDetails);
@@ -190,7 +190,7 @@ export class NeedsAssessmentMappingService {
         initials: member.details.initials,
         gender: member.details.gender,
         dateOfBirth: member.details.dateOfBirth,
-        sameLastNameCheck: this.isSameLastName(member.details.lastName),
+        sameLastNameCheck: this.isSameLastName(member.details.lastName)
       };
 
       householdMembersFormArray.push(memberDetails);

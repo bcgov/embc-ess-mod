@@ -18,9 +18,9 @@ describe('EvacuationFileListComponent', () => {
         RouterTestingModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        MatDialogModule,
+        MatDialogModule
       ],
-      providers: [FormBuilder, DialogService, HttpClient, HttpHandler],
+      providers: [FormBuilder, DialogService, HttpClient, HttpHandler]
     }).compileComponents();
   });
 

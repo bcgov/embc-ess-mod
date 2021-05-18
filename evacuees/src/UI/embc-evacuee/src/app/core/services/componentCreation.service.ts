@@ -8,7 +8,7 @@ export class ComponentCreationService {
     { type: 'personal-details' },
     { type: 'address' },
     { type: 'contact-info' },
-    { type: 'secret' },
+    { type: 'secret' }
   ];
   profileComponents: Array<any> = [
     {
@@ -18,7 +18,7 @@ export class ComponentCreationService {
       isLast: false,
       loadWrapperButton: false,
       lastStep: -2,
-      stepName: 'Personal Details',
+      stepName: 'Personal Details'
     },
     {
       component: 'address',
@@ -27,7 +27,7 @@ export class ComponentCreationService {
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Address',
+      stepName: 'Address'
     },
     {
       component: 'contact-info',
@@ -36,7 +36,7 @@ export class ComponentCreationService {
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Contact',
+      stepName: 'Contact'
     },
     {
       component: 'secret',
@@ -45,8 +45,8 @@ export class ComponentCreationService {
       isLast: true,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Security Question',
-    },
+      stepName: 'Security Question'
+    }
   ];
 
   needsAssessmentComponents: Array<any> = [
@@ -57,7 +57,7 @@ export class ComponentCreationService {
       isLast: false,
       loadWrapperButton: false,
       lastStep: -1,
-      stepName: 'Evacuated From',
+      stepName: 'Evacuated From'
     },
     {
       component: 'family-information',
@@ -66,7 +66,7 @@ export class ComponentCreationService {
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Family Members',
+      stepName: 'Family Members'
     },
     {
       component: 'pets',
@@ -75,7 +75,7 @@ export class ComponentCreationService {
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Pets',
+      stepName: 'Pets'
     },
     {
       component: 'identify-needs',
@@ -84,8 +84,8 @@ export class ComponentCreationService {
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Needs',
-    },
+      stepName: 'Needs'
+    }
   ];
 
   getProfileComponents(): Observable<any> {

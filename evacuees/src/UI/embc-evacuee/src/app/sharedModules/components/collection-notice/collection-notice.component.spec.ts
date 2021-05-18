@@ -3,7 +3,7 @@ import {
   fakeAsync,
   TestBed,
   tick,
-  waitForAsync,
+  waitForAsync
 } from '@angular/core/testing';
 
 import { CollectionNoticeComponent } from './collection-notice.component';
@@ -30,9 +30,9 @@ describe('CollectionNoticeComponent', () => {
           MatDialogModule,
           MatCheckboxModule,
           BrowserAnimationsModule,
-          CoreModule,
+          CoreModule
         ],
-        providers: [FormBuilder],
+        providers: [FormBuilder]
       }).compileComponents();
     })
   );

@@ -3,7 +3,7 @@ import {
   OnInit,
   Input,
   ChangeDetectorRef,
-  AfterViewChecked,
+  AfterViewChecked
 } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -11,13 +11,13 @@ import { startWith, map } from 'rxjs/operators';
 import * as globalConst from '../../../../core/services/globalConstants';
 import {
   Community,
-  LocationService,
+  LocationService
 } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-bc-address',
   templateUrl: './bc-address.component.html',
-  styleUrls: ['./bc-address.component.scss'],
+  styleUrls: ['./bc-address.component.scss']
 })
 export class BcAddressComponent implements OnInit, AfterViewChecked {
   @Input() addressForm: FormGroup;

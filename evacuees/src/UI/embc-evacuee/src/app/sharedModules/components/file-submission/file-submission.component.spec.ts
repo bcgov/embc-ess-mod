@@ -12,7 +12,7 @@ describe('FileSubmissionComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [FileSubmissionComponent],
-        imports: [RouterTestingModule, HttpClientTestingModule],
+        imports: [RouterTestingModule, HttpClientTestingModule]
       }).compileComponents();
     })
   );

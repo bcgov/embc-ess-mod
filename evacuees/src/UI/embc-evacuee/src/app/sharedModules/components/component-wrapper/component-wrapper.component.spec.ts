@@ -9,7 +9,7 @@ describe('ComponentWrapperComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [ComponentWrapperComponent],
+        declarations: [ComponentWrapperComponent]
       }).compileComponents();
     })
   );

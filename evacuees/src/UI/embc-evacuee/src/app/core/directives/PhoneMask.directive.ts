@@ -7,13 +7,13 @@ import {
   OnDestroy,
   OnInit,
   Renderer2,
-  SimpleChanges,
+  SimpleChanges
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Directive({
-  selector: '[formControlName][appPhoneMask]',
+  selector: '[formControlName][appPhoneMask]'
 })
 export class PhoneMaskDirective {
   constructor(

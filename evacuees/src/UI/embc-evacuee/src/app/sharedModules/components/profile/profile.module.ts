@@ -21,7 +21,7 @@ import { CoreModule } from '../../../core/core.module';
     MatAutocompleteModule,
     ComponentWrapperModule,
     ReviewModule,
-    CoreModule,
-  ],
+    CoreModule
+  ]
 })
 export class ProfileModule {}

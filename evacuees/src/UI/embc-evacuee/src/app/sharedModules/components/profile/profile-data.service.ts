@@ -3,7 +3,7 @@ import {
   Address,
   Profile,
   PersonDetails,
-  ContactDetails,
+  ContactDetails
 } from 'src/app/core/api/models';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { RestrictionService } from '../restriction/restriction.service';
@@ -97,7 +97,7 @@ export class ProfileDataService {
       personalDetails: this.personalDetails,
       primaryAddress: this.setAddressObject(this.primaryAddressDetails),
       restrictedAccess: this.restrictionService.restrictedAccess,
-      secretPhrase: this.secretWordPhrase,
+      secretPhrase: this.secretWordPhrase
     };
   }
 
@@ -114,7 +114,7 @@ export class ProfileDataService {
       stateProvince:
         addressObject.stateProvince === null
           ? addressObject.stateProvince
-          : addressObject.stateProvince.code,
+          : addressObject.stateProvince.code
     };
 
     return address;

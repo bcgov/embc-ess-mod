@@ -6,6 +6,6 @@ import { PhoneMaskDirective } from './PhoneMask.directive';
 @NgModule({
   declarations: [DateMaskDirective, PhoneMaskDirective],
   imports: [CommonModule],
-  exports: [DateMaskDirective, PhoneMaskDirective],
+  exports: [DateMaskDirective, PhoneMaskDirective]
 })
 export class DirectivesModule {}

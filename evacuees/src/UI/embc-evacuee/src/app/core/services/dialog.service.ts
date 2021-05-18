@@ -29,17 +29,17 @@ export class DialogService {
             {
               name: 'No, Cancel',
               class: 'button-s',
-              function: 'close',
+              function: 'close'
             },
             {
               name: 'Yes, Continue',
               class: 'button-p',
-              function: 'add',
-            },
-          ],
+              function: 'add'
+            }
+          ]
         },
         height: '260px',
-        width: '800px',
+        width: '800px'
       })
       .afterClosed()
       .subscribe((result) => {
@@ -74,12 +74,12 @@ export class DialogService {
             {
               name: 'Close',
               class: 'button-p',
-              function: 'close',
-            },
-          ],
+              function: 'close'
+            }
+          ]
         },
         height: '810px',
-        width: '800px',
+        width: '800px'
       })
       .afterClosed()
       .subscribe(() => {
@@ -107,12 +107,12 @@ export class DialogService {
           {
             name: 'Continue',
             class: 'button-p',
-            function: 'close',
-          },
-        ],
+            function: 'close'
+          }
+        ]
       },
       height: '352px',
-      width: '699px',
+      width: '699px'
     });
   }
 
@@ -124,12 +124,12 @@ export class DialogService {
           {
             name: 'Ok',
             class: 'button-p',
-            function: 'ok',
-          },
-        ],
+            function: 'ok'
+          }
+        ]
       },
       height: '220px',
-      width: '400px',
+      width: '400px'
     });
   }
 }

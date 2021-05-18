@@ -4,7 +4,7 @@ import {
   CanActivate,
   Router,
   RouterStateSnapshot,
-  UrlTree,
+  UrlTree
 } from '@angular/router';
 import { ProfileService } from '../../sharedModules/components/profile/profile.service';
 import { ProfileMappingService } from '../../sharedModules/components/profile/profile-mapping.service';
@@ -59,7 +59,7 @@ export class AllowNavigationGuard implements CanActivate {
                 this.evacuationFileDataService.essFileNumber === undefined
               ) {
                 this.router.navigate([
-                  '/verified-registration/dashboard/current',
+                  '/verified-registration/dashboard/current'
                 ]);
               } else if (
                 state.url.match('/dashboard/past/') &&

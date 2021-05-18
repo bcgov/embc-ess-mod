@@ -19,7 +19,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatProgressSpinnerModule,
     MatDialogModule,
     MatIconModule,
-    MatMenuModule,
+    MatMenuModule
   ],
   declarations: [
     CaptchaComponent,
@@ -27,7 +27,7 @@ import { MatMenuModule } from '@angular/material/menu';
     AlertComponent,
     HeaderComponent,
     FooterComponent,
-    DialogComponent,
+    DialogComponent
   ],
   exports: [
     CaptchaComponent,
@@ -35,7 +35,7 @@ import { MatMenuModule } from '@angular/material/menu';
     AlertComponent,
     HeaderComponent,
     FooterComponent,
-    DialogComponent,
-  ],
+    DialogComponent
+  ]
 })
 export class CoreModule {}

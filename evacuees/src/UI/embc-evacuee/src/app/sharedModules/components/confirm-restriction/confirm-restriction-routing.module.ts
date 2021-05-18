@@ -6,6 +6,6 @@ const routes: Routes = [{ path: '', component: ConfirmRestrictionComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class ConfirmRestrictionRoutingModule {}

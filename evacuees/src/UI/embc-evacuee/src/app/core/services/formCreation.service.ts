@@ -11,7 +11,7 @@ import {
   AddressForm,
   Address,
   RestrictionForm,
-  Restriction,
+  Restriction
 } from '../model/profile.model';
 import { CustomValidationService } from './customValidation.service';
 import {
@@ -22,7 +22,7 @@ import {
   IdentifyNeeds,
   IdentifyNeedsForm,
   Pet,
-  PetForm,
+  PetForm
 } from '../model/needs.model';
 
 @Injectable({ providedIn: 'root' })

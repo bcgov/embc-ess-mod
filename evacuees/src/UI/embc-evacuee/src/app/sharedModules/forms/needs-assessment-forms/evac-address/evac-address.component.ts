@@ -3,7 +3,7 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -21,7 +21,7 @@ import { AddressFormsModule } from '../../address-forms/address-forms.module';
 @Component({
   selector: 'app-evac-address',
   templateUrl: './evac-address.component.html',
-  styleUrls: ['./evac-address.component.scss'],
+  styleUrls: ['./evac-address.component.scss']
 })
 export default class EvacAddressComponent implements OnInit {
   primaryAddressForm: FormGroup;
@@ -107,8 +107,8 @@ export default class EvacAddressComponent implements OnInit {
     ReactiveFormsModule,
     MatRadioModule,
     CustomPipeModule,
-    AddressFormsModule,
+    AddressFormsModule
   ],
-  declarations: [EvacAddressComponent],
+  declarations: [EvacAddressComponent]
 })
 class EvacAddressModule {}

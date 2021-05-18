@@ -11,7 +11,7 @@ describe('EditComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [EditComponent],
-        imports: [RouterTestingModule],
+        imports: [RouterTestingModule]
       }).compileComponents();
     })
   );

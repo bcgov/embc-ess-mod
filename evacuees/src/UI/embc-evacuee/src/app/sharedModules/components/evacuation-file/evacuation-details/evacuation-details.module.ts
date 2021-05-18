@@ -16,7 +16,7 @@ import { MatTableModule } from '@angular/material/table';
     ReviewModule,
     MatCardModule,
     MatExpansionModule,
-    MatTableModule,
-  ],
+    MatTableModule
+  ]
 })
 export class EvacuationDetailsModule {}

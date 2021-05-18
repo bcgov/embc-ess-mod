@@ -10,7 +10,7 @@ import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-da
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
   currentFlow: string;
@@ -22,20 +22,20 @@ export class DashboardComponent implements OnInit {
       label: 'Current Evacuations',
       route: 'current',
       activeImage: '/assets/images/curr-evac-active.svg',
-      inactiveImage: '/assets/images/curr-evac.svg',
+      inactiveImage: '/assets/images/curr-evac.svg'
     },
     {
       label: 'Past Evacuations',
       route: 'past',
       activeImage: '/assets/images/past-evac-active.svg',
-      inactiveImage: '/assets/images/past-evac.svg',
+      inactiveImage: '/assets/images/past-evac.svg'
     },
     {
       label: 'User Profile',
       route: 'profile',
       activeImage: '/assets/images/profile-active.svg',
-      inactiveImage: '/assets/images/profile.svg',
-    },
+      inactiveImage: '/assets/images/profile.svg'
+    }
   ];
 
   constructor(

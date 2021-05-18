@@ -12,7 +12,7 @@ describe('CanAddressComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule, MatAutocompleteModule],
-        declarations: [CanAddressComponent],
+        declarations: [CanAddressComponent]
       }).compileComponents();
     })
   );

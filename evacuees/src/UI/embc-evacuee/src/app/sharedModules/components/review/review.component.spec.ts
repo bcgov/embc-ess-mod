@@ -14,7 +14,7 @@ describe('ReviewComponent', () => {
       TestBed.configureTestingModule({
         declarations: [ReviewComponent],
         imports: [RouterTestingModule, ReactiveFormsModule],
-        providers: [FormBuilder, FormCreationService],
+        providers: [FormBuilder, FormCreationService]
       }).compileComponents();
     })
   );

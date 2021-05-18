@@ -16,8 +16,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
+    MatSelectModule
   ],
-  exports: [PetFormComponent],
+  exports: [PetFormComponent]
 })
 export class PetFormModule {}

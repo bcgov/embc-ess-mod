@@ -4,7 +4,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-pet-form',
   templateUrl: './pet-form.component.html',
-  styleUrls: ['./pet-form.component.scss'],
+  styleUrls: ['./pet-form.component.scss']
 })
 export class PetFormComponent implements OnInit {
   @Input() petForm: FormGroup;
@@ -24,7 +24,7 @@ export class PetFormComponent implements OnInit {
       '8',
       '9',
       '10',
-      'More than 10',
+      'More than 10'
     ];
   }
 

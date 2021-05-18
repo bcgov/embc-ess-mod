@@ -5,6 +5,6 @@ import { ComponentWrapperComponent } from './component-wrapper.component';
 @NgModule({
   declarations: [ComponentWrapperComponent],
   imports: [CommonModule],
-  exports: [ComponentWrapperComponent],
+  exports: [ComponentWrapperComponent]
 })
 export class ComponentWrapperModule {}

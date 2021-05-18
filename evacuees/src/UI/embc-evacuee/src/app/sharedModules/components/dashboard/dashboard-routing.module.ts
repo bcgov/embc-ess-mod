@@ -10,7 +10,7 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'current',
-        pathMatch: 'full',
+        pathMatch: 'full'
       },
       {
         path: 'current',
@@ -18,7 +18,7 @@ const routes: Routes = [
           import(
             'src/app/sharedModules/components/evacuation-file/evacuation-file-list/evacuation-file-list.module'
           ).then((m) => m.EvacuationFileListModule),
-        data: { flow: 'verified-registration' },
+        data: { flow: 'verified-registration' }
       },
       {
         path: 'past',
@@ -26,7 +26,7 @@ const routes: Routes = [
           import(
             'src/app/sharedModules/components/evacuation-file/evacuation-file-list/evacuation-file-list.module'
           ).then((m) => m.EvacuationFileListModule),
-        data: { flow: 'verified-registration' },
+        data: { flow: 'verified-registration' }
       },
       {
         path: 'profile',
@@ -34,7 +34,7 @@ const routes: Routes = [
           import(
             'src/app/sharedModules/components/evacuation-file/profile/profile.module'
           ).then((m) => m.ProfileModule),
-        data: { flow: 'verified-registration' },
+        data: { flow: 'verified-registration' }
       },
       {
         path: 'current/:essFile',
@@ -42,7 +42,7 @@ const routes: Routes = [
           import(
             'src/app/sharedModules/components/evacuation-file/evacuation-details/evacuation-details.module'
           ).then((m) => m.EvacuationDetailsModule),
-        data: { flow: 'verified-registration' },
+        data: { flow: 'verified-registration' }
       },
       {
         path: 'past/:essFile',
@@ -50,14 +50,14 @@ const routes: Routes = [
           import(
             'src/app/sharedModules/components/evacuation-file/evacuation-details/evacuation-details.module'
           ).then((m) => m.EvacuationDetailsModule),
-        data: { flow: 'verified-registration' },
-      },
-    ],
-  },
+        data: { flow: 'verified-registration' }
+      }
+    ]
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class DashboardRoutingModule {}

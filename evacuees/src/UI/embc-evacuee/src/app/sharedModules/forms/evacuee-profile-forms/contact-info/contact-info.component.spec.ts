@@ -14,7 +14,7 @@ describe('ContactInfoComponent', () => {
       TestBed.configureTestingModule({
         declarations: [ContactInfoComponent],
         imports: [ReactiveFormsModule],
-        providers: [FormCreationService, FormBuilder],
+        providers: [FormCreationService, FormBuilder]
       }).compileComponents();
     })
   );

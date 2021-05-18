@@ -13,7 +13,7 @@ describe('ViewAuthProfileComponent', () => {
       TestBed.configureTestingModule({
         declarations: [DashboardComponent],
         imports: [RouterTestingModule],
-        providers: [FormCreationService],
+        providers: [FormCreationService]
       }).compileComponents();
     })
   );

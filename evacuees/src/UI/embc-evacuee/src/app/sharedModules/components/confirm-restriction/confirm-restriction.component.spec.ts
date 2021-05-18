@@ -14,7 +14,7 @@ describe('ConfirmRestrictionComponent', () => {
       TestBed.configureTestingModule({
         declarations: [ConfirmRestrictionComponent],
         imports: [RouterTestingModule, ReactiveFormsModule],
-        providers: [FormBuilder, FormCreationService],
+        providers: [FormBuilder, FormCreationService]
       }).compileComponents();
     })
   );

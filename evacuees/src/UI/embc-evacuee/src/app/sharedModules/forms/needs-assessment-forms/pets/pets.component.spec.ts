@@ -13,7 +13,7 @@ describe('PetsComponent', () => {
       TestBed.configureTestingModule({
         declarations: [PetsComponent],
         imports: [ReactiveFormsModule],
-        providers: [FormCreationService, FormBuilder],
+        providers: [FormCreationService, FormBuilder]
       }).compileComponents();
     })
   );

@@ -5,12 +5,12 @@ import { EvacuationFileListComponent } from './evacuation-file-list.component';
 const routes: Routes = [
   {
     path: '',
-    component: EvacuationFileListComponent,
-  },
+    component: EvacuationFileListComponent
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class EvacuationFileListRoutingModule {}

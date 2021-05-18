@@ -29,7 +29,7 @@ export class EvacuationFileService {
     // });
     return this.evacuationService
       .evacuationsUpsertEvacuationFile({
-        body: this.evacuationFileDataService.createEvacuationFileDTO(),
+        body: this.evacuationFileDataService.createEvacuationFileDTO()
       })
       .pipe(
         mergeMap((essFileNumber) => this.getCurrentEvacuationFiles()),

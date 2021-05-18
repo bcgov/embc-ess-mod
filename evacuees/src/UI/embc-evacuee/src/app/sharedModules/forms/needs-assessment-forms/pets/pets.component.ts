@@ -17,7 +17,7 @@ import * as globalConst from '../../../../core/services/globalConstants';
 @Component({
   selector: 'app-pets',
   templateUrl: './pets.component.html',
-  styleUrls: ['./pets.component.scss'],
+  styleUrls: ['./pets.component.scss']
 })
 export default class PetsComponent implements OnInit {
   petsForm: FormGroup;
@@ -143,8 +143,8 @@ export default class PetsComponent implements OnInit {
     MatRadioModule,
     MatTableModule,
     MatIconModule,
-    PetFormModule,
+    PetFormModule
   ],
-  declarations: [PetsComponent],
+  declarations: [PetsComponent]
 })
 class PetsModule {}

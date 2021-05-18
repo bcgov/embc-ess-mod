@@ -24,7 +24,7 @@ import { CoreModule } from '../../../core/core.module';
     MatSelectModule,
     MatAutocompleteModule,
     CustomPipeModule,
-    CoreModule,
-  ],
+    CoreModule
+  ]
 })
 export class ConflictManagementModule {}

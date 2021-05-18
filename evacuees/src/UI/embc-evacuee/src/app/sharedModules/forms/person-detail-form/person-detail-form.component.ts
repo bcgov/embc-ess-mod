@@ -7,7 +7,7 @@ import * as globalConst from '../../../core/services/globalConstants';
 @Component({
   selector: 'app-person-detail-form',
   templateUrl: './person-detail-form.component.html',
-  styleUrls: ['./person-detail-form.component.scss'],
+  styleUrls: ['./person-detail-form.component.scss']
 })
 export class PersonDetailFormComponent implements OnInit {
   @Input() personalDetailsForm: FormGroup;
@@ -24,7 +24,7 @@ export class PersonDetailFormComponent implements OnInit {
     /\d/,
     /\d/,
     /\d/,
-    /\d/,
+    /\d/
   ];
   readOnlyInput = false;
 

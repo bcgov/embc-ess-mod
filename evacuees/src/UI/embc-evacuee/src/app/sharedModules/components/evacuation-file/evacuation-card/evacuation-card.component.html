@@ -19,16 +19,16 @@
             <tr>
               <td class="dataSpan">
                 {{
-                  evacuationFileCard?.evacuationFileDate | date: "dd-MMM-yyyy"
+                  evacuationFileCard?.evacuationFileDate | date: 'dd-MMM-yyyy'
                 }}
               </td>
               <td class="dataSpan">{{ evacuationFileCard?.essFileNumber }}</td>
               <td class="dataSpan">
                 {{
                   evacuationFileCard?.needsAssessments[0]?.type ===
-                  "Preliminary"
-                    ? "No"
-                    : "Yes"
+                  'Preliminary'
+                    ? 'No'
+                    : 'Yes'
                 }}
               </td>
               <td class="dataSpan">

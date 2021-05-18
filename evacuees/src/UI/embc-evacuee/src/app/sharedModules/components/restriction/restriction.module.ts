@@ -17,7 +17,7 @@ import { RestrictionFormModule } from '../../forms/restriction-form/restriction-
     MatButtonModule,
     MatRadioModule,
     ReactiveFormsModule,
-    RestrictionFormModule,
-  ],
+    RestrictionFormModule
+  ]
 })
 export class RestrictionModule {}

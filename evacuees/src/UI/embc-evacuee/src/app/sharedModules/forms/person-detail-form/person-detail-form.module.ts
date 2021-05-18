@@ -21,8 +21,8 @@ import { TextMaskModule } from 'angular2-text-mask';
     MatSelectModule,
     DirectivesModule,
     MatCheckboxModule,
-    TextMaskModule,
+    TextMaskModule
   ],
-  exports: [PersonDetailFormComponent],
+  exports: [PersonDetailFormComponent]
 })
 export class PersonDetailFormModule {}

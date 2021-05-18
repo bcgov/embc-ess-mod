@@ -7,7 +7,7 @@ import {
   Pet,
   RegistrationResult,
   NeedsAssessmentType,
-  HouseholdMember,
+  HouseholdMember
 } from 'src/app/core/api/models';
 
 @Injectable({ providedIn: 'root' })
@@ -145,7 +145,7 @@ export class NeedsAssessmentService {
     for (const member of members) {
       const houseHoldMember: HouseholdMember = {
         id: null,
-        details: member,
+        details: member
       };
 
       householdMembersArray.push(houseHoldMember);
@@ -191,7 +191,7 @@ export class NeedsAssessmentService {
       specialDietDetails: this.specialDietDetails,
       insurance: this.insurance,
       pets: this.pets,
-      type: NeedsAssessmentType.Preliminary,
+      type: NeedsAssessmentType.Preliminary
     });
 
     return {
@@ -208,7 +208,7 @@ export class NeedsAssessmentService {
       specialDietDetails: this.specialDietDetails,
       insurance: this.insurance,
       pets: this.pets,
-      type: NeedsAssessmentType.Preliminary,
+      type: NeedsAssessmentType.Preliminary
     };
   }
 

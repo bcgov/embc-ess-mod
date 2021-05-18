@@ -18,7 +18,7 @@ import { ProfileRoutingModule } from '../evacuation-file/profile/profile-routing
     EvacuationFileListRoutingModule,
     ProfileRoutingModule,
     MatCardModule,
-    MatTabsModule,
-  ],
+    MatTabsModule
+  ]
 })
 export class DashboardModule {}

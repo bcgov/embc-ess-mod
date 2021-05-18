@@ -9,7 +9,7 @@ describe('PersonDetailFormComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [PersonDetailFormComponent],
+        declarations: [PersonDetailFormComponent]
       }).compileComponents();
     })
   );

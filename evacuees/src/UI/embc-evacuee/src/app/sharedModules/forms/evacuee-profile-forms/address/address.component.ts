@@ -5,7 +5,7 @@ import {
   Inject,
   ChangeDetectorRef,
   AfterViewChecked,
-  OnDestroy,
+  OnDestroy
 } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,18 +21,18 @@ import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import {
   MatAutocompleteModule,
-  MatAutocompleteSelectedEvent,
+  MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import * as globalConst from '../../../../core/services/globalConstants';
 import {
   Country,
-  LocationService,
+  LocationService
 } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-address',
   templateUrl: './address.component.html',
-  styleUrls: ['./address.component.scss'],
+  styleUrls: ['./address.component.scss']
 })
 export default class AddressComponent
   implements OnInit, AfterViewChecked, OnDestroy
@@ -240,8 +240,8 @@ export default class AddressComponent
     ReactiveFormsModule,
     MatRadioModule,
     AddressFormsModule,
-    MatAutocompleteModule,
+    MatAutocompleteModule
   ],
-  declarations: [AddressComponent],
+  declarations: [AddressComponent]
 })
 class AddressModule {}

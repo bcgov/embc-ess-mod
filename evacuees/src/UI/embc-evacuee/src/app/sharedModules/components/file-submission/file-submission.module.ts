@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FileSubmissionRoutingModule,
     MatCardModule,
-    MatButtonModule,
-  ],
+    MatButtonModule
+  ]
 })
 export class FileSubmissionModule {}

@@ -4,7 +4,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-restriction-form',
   templateUrl: './restriction-form.component.html',
-  styleUrls: ['./restriction-form.component.scss'],
+  styleUrls: ['./restriction-form.component.scss']
 })
 export class RestrictionFormComponent implements OnInit {
   @Input() restrictionForm: FormGroup;

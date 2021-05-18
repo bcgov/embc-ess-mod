@@ -5,7 +5,7 @@ import { NeedsAssessmentService } from '../sharedModules/components/needs-assess
 @Component({
   selector: 'app-non-verified-registration',
   templateUrl: './non-verified-registration.component.html',
-  styleUrls: ['./non-verified-registration.component.scss'],
+  styleUrls: ['./non-verified-registration.component.scss']
 })
 export class NonVerifiedRegistrationComponent implements OnInit {
   constructor(

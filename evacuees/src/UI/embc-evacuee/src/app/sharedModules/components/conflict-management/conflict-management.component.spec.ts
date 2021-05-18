@@ -10,7 +10,7 @@ describe('ConflictManagementComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ConflictManagementComponent],
-      imports: [RouterTestingModule.withRoutes([])],
+      imports: [RouterTestingModule.withRoutes([])]
     }).compileComponents();
   });
 

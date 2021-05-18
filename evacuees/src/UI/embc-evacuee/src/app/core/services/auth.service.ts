@@ -11,7 +11,7 @@ import {
   retryWhen,
   switchMap,
   take,
-  tap,
+  tap
 } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { LoginService } from '../api/services';

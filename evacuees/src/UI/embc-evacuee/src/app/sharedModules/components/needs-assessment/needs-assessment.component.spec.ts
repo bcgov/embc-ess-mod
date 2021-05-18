@@ -13,7 +13,7 @@ describe('NeedsAssessmentComponent', () => {
       TestBed.configureTestingModule({
         declarations: [NeedsAssessmentComponent],
         imports: [RouterTestingModule],
-        providers: [ComponentCreationService, FormCreationService],
+        providers: [ComponentCreationService, FormCreationService]
       }).compileComponents();
     })
   );

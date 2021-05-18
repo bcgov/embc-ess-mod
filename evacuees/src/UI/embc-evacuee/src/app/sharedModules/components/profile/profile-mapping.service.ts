@@ -54,7 +54,7 @@ export class ProfileMappingService {
           dateOfBirth: profile.personalDetails.dateOfBirth,
           preferredName: null,
           initials: null,
-          gender: null,
+          gender: null
         });
       });
 
@@ -67,7 +67,7 @@ export class ProfileMappingService {
           isBcAddress: this.isBCAddress(profile.primaryAddress.stateProvince),
           isNewMailingAddress: null,
           isBcMailingAddress: null,
-          mailingAddress: profile.primaryAddress,
+          mailingAddress: profile.primaryAddress
         });
       });
   }
@@ -88,7 +88,7 @@ export class ProfileMappingService {
       .pipe(first())
       .subscribe((details) => {
         details.setValue({
-          ...profile.personalDetails,
+          ...profile.personalDetails
         });
         formGroup = details;
       });
@@ -110,7 +110,7 @@ export class ProfileMappingService {
           isBcMailingAddress: this.isBCAddress(
             profile.mailingAddress.stateProvince
           ),
-          mailingAddress: profile.mailingAddress,
+          mailingAddress: profile.mailingAddress
         });
         formGroup = address;
       });
@@ -131,7 +131,7 @@ export class ProfileMappingService {
           showContacts: this.setShowContactsInfo(
             profile.contactDetails.phone,
             profile.contactDetails.email
-          ),
+          )
         });
         formGroup = contact;
       });

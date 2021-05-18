@@ -3,7 +3,7 @@ import {
   Component,
   DoCheck,
   OnInit,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
@@ -18,7 +18,7 @@ import { ConflictManagementService } from './conflict-management.service';
 @Component({
   selector: 'app-conflict-management',
   templateUrl: './conflict-management.component.html',
-  styleUrls: ['./conflict-management.component.scss'],
+  styleUrls: ['./conflict-management.component.scss']
 })
 export class ConflictManagementComponent implements OnInit, DoCheck {
   @ViewChild('conflictStepper') conflictStepper: MatStepper;

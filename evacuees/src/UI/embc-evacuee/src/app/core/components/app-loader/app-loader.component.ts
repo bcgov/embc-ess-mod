@@ -4,7 +4,7 @@ import { ThemePalette } from '@angular/material/core';
 @Component({
   selector: 'app-loader',
   templateUrl: './app-loader.component.html',
-  styleUrls: ['./app-loader.component.scss'],
+  styleUrls: ['./app-loader.component.scss']
 })
 export class AppLoaderComponent implements OnInit {
   @Input() showLoader: boolean;

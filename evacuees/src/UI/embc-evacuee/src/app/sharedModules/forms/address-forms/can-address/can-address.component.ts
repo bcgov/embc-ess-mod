@@ -4,13 +4,13 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import {
   LocationService,
-  StateProvince,
+  StateProvince
 } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-can-address',
   templateUrl: './can-address.component.html',
-  styleUrls: ['./can-address.component.scss'],
+  styleUrls: ['./can-address.component.scss']
 })
 export class CanAddressComponent implements OnInit {
   @Input() addressForm: FormGroup;

@@ -8,7 +8,7 @@ import { RestrictionService } from '../restriction/restriction.service';
 @Component({
   selector: 'app-confirm-restriction',
   templateUrl: './confirm-restriction.component.html',
-  styleUrls: ['./confirm-restriction.component.scss'],
+  styleUrls: ['./confirm-restriction.component.scss']
 })
 export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: FormGroup;

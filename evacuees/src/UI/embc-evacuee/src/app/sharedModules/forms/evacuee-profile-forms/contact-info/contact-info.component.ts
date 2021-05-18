@@ -6,7 +6,7 @@ import {
   AbstractControl,
   FormControl,
   NgForm,
-  FormGroupDirective,
+  FormGroupDirective
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -16,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
   MatCheckboxModule,
-  MatCheckboxChange,
+  MatCheckboxChange
 } from '@angular/material/checkbox';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
@@ -46,7 +46,7 @@ export class CustomErrorMailMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-contact-info',
   templateUrl: './contact-info.component.html',
-  styleUrls: ['./contact-info.component.scss'],
+  styleUrls: ['./contact-info.component.scss']
 })
 export default class ContactInfoComponent implements OnInit, OnDestroy {
   contactInfoForm: FormGroup;
@@ -65,7 +65,7 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     /\d/,
     /\d/,
     /\d/,
-    /\d/,
+    /\d/
   ];
   emailMatcher = new CustomErrorMailMatcher();
 
@@ -86,7 +86,7 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
         this.contactInfoForm.setValidators([
           this.customValidator
             .confirmEmailValidator()
-            .bind(this.customValidator),
+            .bind(this.customValidator)
         ]);
         this.contactInfoForm.updateValueAndValidity();
       });
@@ -167,8 +167,8 @@ export default class ContactInfoComponent implements OnInit, OnDestroy {
     MatCheckboxModule,
     DirectivesModule,
     TextMaskModule,
-    MatRadioModule,
+    MatRadioModule
   ],
-  declarations: [ContactInfoComponent],
+  declarations: [ContactInfoComponent]
 })
 class ContactInfoModule {}

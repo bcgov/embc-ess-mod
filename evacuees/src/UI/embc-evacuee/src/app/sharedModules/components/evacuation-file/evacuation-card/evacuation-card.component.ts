@@ -8,7 +8,7 @@ import { EvacuationFileMappingService } from '../evacuation-file-mapping.service
 @Component({
   selector: 'app-evacuation-card',
   templateUrl: './evacuation-card.component.html',
-  styleUrls: ['./evacuation-card.component.scss'],
+  styleUrls: ['./evacuation-card.component.scss']
 })
 export class EvacuationCardComponent implements OnInit {
   @Input() evacuationFileCard: EvacuationFile;
@@ -45,12 +45,12 @@ export class EvacuationCardComponent implements OnInit {
     if (this.pathName === '/verified-registration/dashboard/current') {
       this.router.navigate([
         '/verified-registration/dashboard/current/' +
-          this.evacuationFileCard.essFileNumber,
+          this.evacuationFileCard.essFileNumber
       ]);
     } else {
       this.router.navigate([
         '/verified-registration/dashboard/past/' +
-          this.evacuationFileCard.essFileNumber,
+          this.evacuationFileCard.essFileNumber
       ]);
     }
   }

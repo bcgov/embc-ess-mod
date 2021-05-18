@@ -13,7 +13,7 @@ describe('EvacAddressComponent', () => {
       TestBed.configureTestingModule({
         declarations: [EvacAddressComponent],
         imports: [ReactiveFormsModule],
-        providers: [FormCreationService, FormBuilder],
+        providers: [FormCreationService, FormBuilder]
       }).compileComponents();
     })
   );

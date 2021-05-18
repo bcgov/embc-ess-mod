@@ -12,7 +12,7 @@ describe('IdentifyNeedsComponent', () => {
       TestBed.configureTestingModule({
         declarations: [IdentifyNeedsComponent],
         imports: [ReactiveFormsModule],
-        providers: [FormBuilder],
+        providers: [FormBuilder]
       }).compileComponents();
     })
   );

@@ -13,7 +13,7 @@ import { MatRadioModule } from '@angular/material/radio';
 @Component({
   selector: 'app-identify-needs',
   templateUrl: './identify-needs.component.html',
-  styleUrls: ['./identify-needs.component.scss'],
+  styleUrls: ['./identify-needs.component.scss']
 })
 export default class IdentifyNeedsComponent implements OnInit {
   identifyNeedsForm: FormGroup;
@@ -50,8 +50,8 @@ export default class IdentifyNeedsComponent implements OnInit {
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatRadioModule,
+    MatRadioModule
   ],
-  declarations: [IdentifyNeedsComponent],
+  declarations: [IdentifyNeedsComponent]
 })
 class IdentifyNeedsModule {}

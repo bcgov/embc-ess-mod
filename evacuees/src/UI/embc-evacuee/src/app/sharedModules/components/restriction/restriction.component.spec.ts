@@ -12,7 +12,7 @@ describe('RestrictionComponent', () => {
       TestBed.configureTestingModule({
         declarations: [RestrictionComponent],
         imports: [RouterTestingModule, ReactiveFormsModule],
-        providers: [FormBuilder],
+        providers: [FormBuilder]
       }).compileComponents();
     })
   );

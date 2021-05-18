@@ -12,7 +12,7 @@ describe('FamilyInformationComponent', () => {
       TestBed.configureTestingModule({
         declarations: [FamilyInformationComponent],
         imports: [ReactiveFormsModule],
-        providers: [FormBuilder],
+        providers: [FormBuilder]
       }).compileComponents();
     })
   );

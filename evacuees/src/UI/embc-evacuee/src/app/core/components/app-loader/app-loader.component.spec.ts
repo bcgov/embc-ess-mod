@@ -9,7 +9,7 @@ describe('AppLoaderComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        declarations: [AppLoaderComponent],
+        declarations: [AppLoaderComponent]
       }).compileComponents();
     })
   );

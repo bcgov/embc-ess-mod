@@ -16,7 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCardModule,
     MatButtonModule,
     MatTabsModule,
-    MatProgressSpinnerModule,
-  ],
+    MatProgressSpinnerModule
+  ]
 })
 export class EvacuationFileListModule {}

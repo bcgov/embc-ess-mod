@@ -15,7 +15,7 @@ describe('ProfileComponent', () => {
       TestBed.configureTestingModule({
         declarations: [ProfileComponent],
         imports: [RouterTestingModule, ReactiveFormsModule],
-        providers: [ComponentCreationService, FormCreationService],
+        providers: [ComponentCreationService, FormCreationService]
       }).compileComponents();
     })
   );

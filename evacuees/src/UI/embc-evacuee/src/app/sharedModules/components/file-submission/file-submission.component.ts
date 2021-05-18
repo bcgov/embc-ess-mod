@@ -8,7 +8,7 @@ import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.ser
 @Component({
   selector: 'app-file-submission',
   templateUrl: './file-submission.component.html',
-  styleUrls: ['./file-submission.component.scss'],
+  styleUrls: ['./file-submission.component.scss']
 })
 export class FileSubmissionComponent implements OnInit {
   referenceNumber: string;

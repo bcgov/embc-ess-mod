@@ -12,7 +12,7 @@ import { ArrayValueOf } from './arrayValueOf.pipe';
     MaskTextPipe,
     CustomDate,
     ArrayContains,
-    ArrayValueOf,
+    ArrayValueOf
   ],
   imports: [CommonModule],
   exports: [
@@ -20,7 +20,7 @@ import { ArrayValueOf } from './arrayValueOf.pipe';
     MaskTextPipe,
     CustomDate,
     ArrayContains,
-    ArrayValueOf,
-  ],
+    ArrayValueOf
+  ]
 })
 export class CustomPipeModule {}

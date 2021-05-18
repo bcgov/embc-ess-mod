@@ -7,7 +7,7 @@ export const environment = {
   version: '1.0.0',
   tokenRefreshPeriodInSeconds: 1 * 60,
   httpRetryNumber: 3,
-  httpRetryDelayInSeconds: 5,
+  httpRetryDelayInSeconds: 5
 };
 
 /*
