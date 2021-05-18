@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 /* eslint-disable */
 export enum EvacuationFileStatus {
   Pending = 0,
