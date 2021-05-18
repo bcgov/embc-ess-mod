@@ -8,6 +8,11 @@ import { ConfigurationService } from 'src/app/core/api/services';
 export class SecurityQuestionsService {
   constructor(private configurationService: ConfigurationService) {}
 
+  /**
+   * Get list of approved Security Questions from API to populate dropdown
+   *
+   * @returns string[] list of security questions
+   */
   getSecurityQuestionList(): Observable<string[]> {
     return this.configurationService.configurationGetSecurityQuestions();
   }

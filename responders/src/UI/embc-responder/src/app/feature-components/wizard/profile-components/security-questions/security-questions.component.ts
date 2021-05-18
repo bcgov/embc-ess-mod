@@ -13,9 +13,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { ConfigurationService } from 'src/app/core/api/services';
 import { Subscription } from 'rxjs';
-import { SecurityQuestion } from 'src/app/core/api/models';
 import { SecurityQuestionsService } from './security-questions.service';
 
 @Component({
@@ -56,6 +54,9 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     this.setFormDisabled(this.stepCreateProfileService.bypassSecurityQuestions);
   }
 
+  /**
+   * Set up main FormGroup with security Q&A inputs and validation
+   */
   createQuestionForm(): void {
     if (!this.stepCreateProfileService.securityQuestions)
       this.stepCreateProfileService.securityQuestions = [];
@@ -127,10 +128,20 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     return this.questionForm.controls;
   }
 
+  /**
+   * Handle changed state of "Bypass Security Questions" checkbox
+   *
+   * @param event Mat-checkbox change event, automatically passed in when triggered by form
+   */
   bypassCheckboxChanged(event: MatCheckboxChange) {
     this.setFormDisabled(event.checked);
   }
 
+  /**
+   * Disables or enables the Q&A inputs on the Security Questions form
+   *
+   * @param checked True = Disable the form, False = Enable the form
+   */
   setFormDisabled(checked) {
     this.stepCreateProfileService.bypassSecurityQuestions = checked;
 
@@ -143,6 +154,9 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Go to the Review tab if all tabs are complete, otherwise open modal
+   */
   next(): void {
     this.updateTabStatus();
 
@@ -153,10 +167,16 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Go back to the Contact tab
+   */
   back(): void {
     this.router.navigate(['/ess-wizard/create-evacuee-profile/contact']);
   }
 
+  /**
+   * Set Security Question values in global var, update tab's status indicator
+   */
   updateTabStatus() {
     this.questionForm.updateValueAndValidity();
 
@@ -205,6 +225,9 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * When navigating away from tab, update Security Question variable and status indicator
+   */
   ngOnDestroy(): void {
     this.updateTabStatus();
 
