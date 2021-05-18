@@ -15,16 +15,10 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Cases.Evacuations;
-using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Utilities.Dynamics;
-using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
-using Microsoft.OData.Client;
-using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -63,16 +57,9 @@ namespace EMBC.ESS.Resources.Cases
         public async Task<CaseQueryResult> HandleQueryEvacuationFile(EvacuationFilesQuery query)
         {
             var result = new CaseQueryResult();
-            if (!string.IsNullOrEmpty(query.FileId))
-            {
-                var evacuationFiles = new EvacuationFile[1];
-                evacuationFiles[0] = await evacuationRepository.Read(query.FileId);
-                result.Items = evacuationFiles;
-            }
-            else
-            {
-                result.Items = await evacuationRepository.ReadAll(query);
-            }
+
+            result.Items = await evacuationRepository.ReadAll(query);
+
             return result;
         }
 
@@ -92,22 +79,5 @@ namespace EMBC.ESS.Resources.Cases
         {
             return new ManageCaseCommandResult { CaseId = await evacuationRepository.Delete(cmd.Id) };
         }
-
-        private bool CheckIfUnder19Years(Date birthdate, Date currentDate)
-        {
-            return birthdate.AddYears(19) >= currentDate;
-        }
-    }
-
-    public enum EvacueeType
-    {
-        Person = 174360000,
-        Pet = 174360001
-    }
-
-    public enum RegistrantType
-    {
-        Primary = 174360000,
-        Member = 174360001
     }
 }

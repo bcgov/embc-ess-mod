@@ -234,7 +234,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var caseQuery = new EvacuationFilesQuery
             {
-                UserId = TestUserId,
+                PrimaryRegistrantId = TestUserId,
                 FileId = TestEssFileNumber
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
@@ -454,7 +454,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get existing evacuation */
             var caseQuery = new EvacuationFilesQuery
             {
-                UserId = TestUserId,
+                PrimaryRegistrantId = TestUserId,
                 FileId = TestEssFileNumber
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
@@ -474,7 +474,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get created evacuation. */
             var createdCaseQuery = new EvacuationFilesQuery
             {
-                UserId = TestUserId,
+                PrimaryRegistrantId = TestUserId,
                 FileId = newEssFileNumber
             };
             var createdQueryResult = await caseRepository.QueryCase(createdCaseQuery);
@@ -493,7 +493,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get deleted evacuation */
             var deletedCaseQuery = new EvacuationFilesQuery
             {
-                UserId = TestUserId,
+                PrimaryRegistrantId = TestUserId,
                 FileId = deletedEssFileNumber
             };
             var deletedQueryResult = await caseRepository.QueryCase(deletedCaseQuery);
@@ -507,7 +507,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get existing evacuation */
             var caseQuery = new EvacuationFilesQuery
             {
-                UserId = TestUserId,
+                PrimaryRegistrantId = TestUserId,
                 FileId = TestEssFileNumber
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);

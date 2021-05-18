@@ -109,7 +109,6 @@ namespace EMBC.ESS.Managers.Submissions
                         FirstName = registrantsSearchCriteria.FirstName,
                         LastName = registrantsSearchCriteria.LastName,
                         DateOfBirth = registrantsSearchCriteria.DateOfBirth,
-                        FileId = registrantsSearchCriteria.FileId,
                         IncludeRestrictedAccess = registrantsSearchCriteria.IncludeRestrictedAccess
                     })).Items;
                 }
@@ -119,7 +118,6 @@ namespace EMBC.ESS.Managers.Submissions
                     {
                         FileId = evacuationFilesSearchCriteria.FileId,
                         PrimaryRegistrantId = evacuationFilesSearchCriteria.PrimaryRegistrantId,
-                        UserId = evacuationFilesSearchCriteria.PrimaryRegistrantUserId,
                         PrimaryRegistrantUserId = evacuationFilesSearchCriteria.PrimaryRegistrantUserId,
                         FirstName = evacuationFilesSearchCriteria.FirstName,
                         LastName = evacuationFilesSearchCriteria.LastName,

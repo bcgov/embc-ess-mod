@@ -300,7 +300,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanGetEvacuationFiles()
         {
             var registrant = await GetRegistrantByUserId("CHRIS-TEST");
-            var files = await GetRegistrantFilesByPrimaryRegistrantId(registrant.UserId);
+            var files = await GetRegistrantFilesByPrimaryRegistrantId(registrant.Id);
 
             files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.PrimaryRegistrantId == registrant.Id);

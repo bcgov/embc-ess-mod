@@ -133,18 +133,6 @@ namespace EMBC.ESS.Resources.Cases
 
                 .ForMember(d => d.era_numberofpets, opts => opts.MapFrom(s => s.Quantity))
                 .ForMember(d => d.era_typeofpet, opts => opts.MapFrom(s => s.Type));
-
-            //CreateMap<HouseholdMember, contact>()
-            //    .ReverseMap()
-            //    ;
-
-            //CreateMap<HouseholdMember, era_householdmember>()
-            //   .ReverseMap()
-            //   ;
-
-            //CreateMap<Pet, era_householdmember>()
-            //   .ReverseMap()
-            //   ;
         }
 
         private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;

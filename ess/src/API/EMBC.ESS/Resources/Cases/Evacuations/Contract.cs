@@ -14,7 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,8 +24,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         Task<string> Create(EvacuationFile evacuationFile);
 
         Task<IEnumerable<EvacuationFile>> ReadAll(EvacuationFilesQuery query);
-
-        Task<EvacuationFile> Read(string essFileNumber);
 
         Task<string> Update(EvacuationFile evacuationFile);
 

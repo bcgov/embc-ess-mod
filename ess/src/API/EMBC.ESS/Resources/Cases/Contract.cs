@@ -62,7 +62,6 @@ namespace EMBC.ESS.Resources.Cases
     public class EvacuationFilesQuery : CaseQuery
     {
         public string FileId { get; set; }
-        public string UserId { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string PrimaryRegistrantUserId { get; set; }
         public string FirstName { get; set; }
@@ -96,9 +95,7 @@ namespace EMBC.ESS.Resources.Cases
     public class NeedsAssessment
     {
         public string Id { get; set; }
-
         public InsuranceOption Insurance { get; set; }
-
         public bool? CanEvacueeProvideFood { get; set; }
         public bool? CanEvacueeProvideLodging { get; set; }
         public bool? CanEvacueeProvideClothing { get; set; }

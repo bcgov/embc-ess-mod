@@ -56,7 +56,6 @@ namespace EMBC.ESS.Resources.Contacts
 
     public class SearchContactQuery : ContactQuery
     {
-        public string FileId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DateOfBirth { get; set; }

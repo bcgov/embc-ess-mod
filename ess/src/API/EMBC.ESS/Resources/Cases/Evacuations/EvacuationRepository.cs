@@ -191,15 +191,14 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                   .Expand(c => c.era_MailingCountry)
                   .Where(c => c.statecode == (int)EntityState.Active);
 
-            if (!string.IsNullOrEmpty(query.UserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.UserId, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.PrimaryRegistrantId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.PrimaryRegistrantId, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.PrimaryRegistrantUserId)) contactQuery = contactQuery.Where(c => c.contactid == Guid.Parse(query.PrimaryRegistrantUserId));
             if (!string.IsNullOrEmpty(query.LastName)) contactQuery = contactQuery.Where(c => c.lastname.Equals(query.LastName, StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrEmpty(query.FirstName)) contactQuery = contactQuery.Where(c => c.firstname.Equals(query.FirstName, StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrEmpty(query.DateOfBirth)) contactQuery = contactQuery.Where(c => c.birthdate.Equals(Date.Parse(query.DateOfBirth)));
-            if (!query.IncludeRestrictedAccess) contactQuery = contactQuery.Where(c => c.era_restriction.Equals(false));
-
             /*
+             * TODO - Add functionality for the following criteria
             public bool IncludeHouseholdMembers
-            public EvacuationFileStatus[] IncludeFilesInStatuses
             */
 
             var contacts = await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync();
@@ -236,24 +235,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             essContext.DetachAll();
             return await Task.FromResult(evacuationFiles);
-        }
-
-        public async Task<EvacuationFile> Read(string essFileNumber)
-        {
-            //TODO: change to singleordefault
-            var evacuationFileId = essContext.era_evacuationfiles
-                .Where(f => f.era_name == essFileNumber)
-                .ToArray()
-                .LastOrDefault()?.era_evacuationfileid;
-
-            if (!evacuationFileId.HasValue) return null;
-
-            essContext.DetachAll();
-
-            var file = await GetEvacuationFileById(evacuationFileId.Value);
-
-            essContext.DetachAll();
-            return file;
         }
 
         public async Task<string> Update(EvacuationFile file)
@@ -390,14 +371,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             return updatedEvacuationFile.era_name;
         }
-
-        private Guid? GetContactIdForBcscId(string bcscId) =>
-      string.IsNullOrEmpty(bcscId)
-          ? null
-          : essContext.contacts
-              .Where(c => c.era_bcservicescardid == bcscId)
-              .Select(c => new { c.contactid, c.era_bcservicescardid })
-              .SingleOrDefault()?.contactid;
 
         public bool CheckIfUnder19Years(Date birthdate, Date currentDate)
         {
