@@ -1,3 +1,5 @@
+/* eslint-disable */
+/* eslint-disable */
 import {
   Component, ElementRef, ViewChild, SimpleChanges, NgZone, ChangeDetectorRef,
   Output, Input, AfterViewInit, OnInit, OnChanges, EventEmitter, OnDestroy
