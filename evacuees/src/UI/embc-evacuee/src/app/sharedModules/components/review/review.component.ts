@@ -7,24 +7,26 @@ import { first } from 'rxjs/operators';
 @Component({
   selector: 'app-review',
   templateUrl: './review.component.html',
-  styleUrls: ['./review.component.scss']
+  styleUrls: ['./review.component.scss'],
 })
 export class ReviewComponent implements OnInit {
-
-  componentToLoad: Observable<any>;
-  cs: any;
-
-  constructor(private router: Router, public formCreationService: FormCreationService) { }
-
-  hideCard = false;
-  captchaVerified = false;
-  captchaFilled = false;
-  navigationExtras: NavigationExtras;
   @Output() captchaPassed = new EventEmitter<boolean>(false);
   @Input() type: string;
   @Input() showHeading: boolean;
   @Input() currentFlow: string;
   @Input() parentPageName: string;
+  componentToLoad: Observable<any>;
+  cs: any;
+
+  hideCard = false;
+  captchaVerified = false;
+  captchaFilled = false;
+  navigationExtras: NavigationExtras;
+
+  constructor(
+    private router: Router,
+    public formCreationService: FormCreationService
+  ) {}
 
   ngOnInit(): void {
     this.navigationExtras = { state: { parentPageName: this.parentPageName } };

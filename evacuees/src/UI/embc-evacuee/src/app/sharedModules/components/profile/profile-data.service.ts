@@ -10,45 +10,45 @@ export class ProfileDataService {
   private loginProfile: Profile;
   private profile: Profile;
   private profileId: string;
-  private _personalDetails: PersonDetails;
-  private _primaryAddressDetails: Address;
-  private _mailingAddressDetails: Address;
-  private _contactDetails: ContactDetails;
-  private _secretWordPhrase: string;
+  private personalDetail: PersonDetails;
+  private primaryAddressDetail: Address;
+  private mailingAddressDetail: Address;
+  private contactDetail: ContactDetails;
+  private secretPhrase: string;
 
   public get personalDetails(): PersonDetails {
-    return this._personalDetails;
+    return this.personalDetail;
   }
   public set personalDetails(value: PersonDetails) {
-    this._personalDetails = value;
+    this.personalDetail = value;
   }
 
   public get primaryAddressDetails(): Address {
-    return this._primaryAddressDetails;
+    return this.primaryAddressDetail;
   }
   public set primaryAddressDetails(value: Address) {
-    this._primaryAddressDetails = value;
+    this.primaryAddressDetail = value;
   }
 
   public get mailingAddressDetails(): Address {
-    return this._mailingAddressDetails;
+    return this.mailingAddressDetail;
   }
   public set mailingAddressDetails(value: Address) {
-    this._mailingAddressDetails = value;
+    this.mailingAddressDetail = value;
   }
 
   public get contactDetails(): ContactDetails {
-    return this._contactDetails;
+    return this.contactDetail;
   }
   public set contactDetails(value: ContactDetails) {
-    this._contactDetails = value;
+    this.contactDetail = value;
   }
 
   public get secretWordPhrase(): string {
-    return this._secretWordPhrase;
+    return this.secretPhrase;
   }
   public set secretWordPhrase(value: string) {
-    this._secretWordPhrase = value;
+    this.secretPhrase = value;
   }
 
   constructor(private cacheService: CacheService, private restrictionService: RestrictionService) { }

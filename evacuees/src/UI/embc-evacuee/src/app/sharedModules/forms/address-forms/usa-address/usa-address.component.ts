@@ -2,45 +2,36 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { LocationService, StateProvince } from 'src/app/core/services/location.service';
+import {
+  LocationService,
+  StateProvince,
+} from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-usa-address',
   templateUrl: './usa-address.component.html',
-  styleUrls: ['./usa-address.component.scss']
+  styleUrls: ['./usa-address.component.scss'],
 })
 export class UsaAddressComponent implements OnInit {
-
   @Input() addressForm: FormGroup;
   filteredOptions: Observable<StateProvince[]>;
   states: StateProvince[] = [];
   country = { countryCode: 'USA' };
 
-  constructor(private locationService: LocationService) { }
+  constructor(private locationService: LocationService) {}
 
   ngOnInit(): void {
-    this.states = this.locationService.getStateProvinceList().filter(sp => sp.countryCode === this.country.countryCode);
+    this.states = this.locationService
+      .getStateProvinceList()
+      .filter((sp) => sp.countryCode === this.country.countryCode);
 
-    this.filteredOptions = this.addressForm.get('stateProvince').valueChanges.pipe(
-      startWith(''),
-      map(value => value ? this.filter(value) : this.states.slice())
-    );
+    this.filteredOptions = this.addressForm
+      .get('stateProvince')
+      .valueChanges.pipe(
+        startWith(''),
+        map((value) => (value ? this.filter(value) : this.states.slice()))
+      );
   }
-
-  /**
-   * Checks if the state value exists in the list
-   */
-  // validateState(): boolean {
-  //   const currentState = this.addressForm.get('stateProvince').value;
-  //   let invalidState = false;
-  //   if (currentState) {
-  //     if (this.states.indexOf(currentState) === -1) {
-  //       invalidState = !invalidState;
-  //       this.addressForm.get('stateProvince').setErrors({ invalidState: true });
-  //     }
-  //   }
-  //   return invalidState;
-  // }
 
   validateState(): boolean {
     const currentState = this.addressForm.get('stateProvince').value;
@@ -60,6 +51,17 @@ export class UsaAddressComponent implements OnInit {
   }
 
   /**
+   * Returns the display value of autocomplete
+   *
+   * @param state : Selected state province object
+   */
+  stateDisplayFn(state: StateProvince): string {
+    if (state) {
+      return state.name;
+    }
+  }
+
+  /**
    * Filters the states list for autocomplete field
    *
    * @param value : User typed value
@@ -67,17 +69,9 @@ export class UsaAddressComponent implements OnInit {
   private filter(value?: string): StateProvince[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
-      return this.states.filter(option => option.name.toLowerCase().includes(filterValue));
+      return this.states.filter((option) =>
+        option.name.toLowerCase().includes(filterValue)
+      );
     }
   }
-
-  /**
-   * Returns the display value of autocomplete
-   *
-   * @param state : Selected state province object
-   */
-  stateDisplayFn(state: StateProvince): string {
-    if (state) { return state.name; }
-  }
-
 }

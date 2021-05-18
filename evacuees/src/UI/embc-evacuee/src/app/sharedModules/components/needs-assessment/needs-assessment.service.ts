@@ -1,137 +1,143 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { InsuranceOption, NeedsAssessment, PersonDetails, Pet, RegistrationResult, NeedsAssessmentType, HouseholdMember } from 'src/app/core/api/models';
-
+import {
+  InsuranceOption,
+  NeedsAssessment,
+  PersonDetails,
+  Pet,
+  RegistrationResult,
+  NeedsAssessmentType,
+  HouseholdMember,
+} from 'src/app/core/api/models';
 
 @Injectable({ providedIn: 'root' })
 export class NeedsAssessmentService {
-
-  private _needsAssessmentId: string = null;
-  private _insurance: InsuranceOption;
-  private _haveMedication: boolean;
-  private _haveSpecialDiet: boolean;
-  private _householdMembers: Array<HouseholdMember> = [];
-  private _specialDietDetails: string;
-  private _pets: Array<Pet> = [];
-  private _hasPetsFood: boolean;
-  private _canEvacueeProvideClothing: boolean;
-  private _canEvacueeProvideFood: boolean;
-  private _canEvacueeProvideIncidentals: boolean;
-  private _canEvacueeProvideLodging: boolean;
-  private _canEvacueeProvideTransportation: boolean;
-  private _mainHouseholdMember: HouseholdMember;
+  private needsAssessmentID: string = null;
+  private insuranceOption: InsuranceOption;
+  private haveMedications: boolean;
+  private haveSpecialDiets: boolean;
+  private householdMember: Array<HouseholdMember> = [];
+  private specialDietDetail: string;
+  private pet: Array<Pet> = [];
+  private hasPetFood: boolean;
+  private canEvacueesProvideClothing: boolean;
+  private canEvacueesProvideFood: boolean;
+  private canEvacueesProvideIncidentals: boolean;
+  private canEvacueesProvideLodging: boolean;
+  private canEvacueesProvideTransportation: boolean;
+  private mainHouseholdMembers: HouseholdMember;
   private registrationResult: RegistrationResult;
   private verifiedRegistrationResult: string;
 
-  constructor() { }
+  constructor() {}
 
   public get id(): string {
-    return this._needsAssessmentId;
+    return this.needsAssessmentID;
   }
   public set id(value: string) {
-    this._needsAssessmentId = value;
+    this.needsAssessmentID = value;
   }
 
   public get insurance(): InsuranceOption {
-    return this._insurance;
+    return this.insuranceOption;
   }
   public set insurance(value: InsuranceOption) {
-    this._insurance = value;
+    this.insuranceOption = value;
   }
 
   public get canEvacueeProvideClothing(): boolean {
-    return this._canEvacueeProvideClothing;
+    return this.canEvacueesProvideClothing;
   }
 
   public set canEvacueeProvideClothing(value: boolean) {
-    this._canEvacueeProvideClothing = value;
+    this.canEvacueesProvideClothing = value;
   }
 
   public get canEvacueeProvideFood(): boolean {
-    return this._canEvacueeProvideFood;
+    return this.canEvacueesProvideFood;
   }
 
   public set canEvacueeProvideFood(value: boolean) {
-    this._canEvacueeProvideFood = value;
+    this.canEvacueesProvideFood = value;
   }
 
   public get canEvacueeProvideIncidentals(): boolean {
-    return this._canEvacueeProvideIncidentals;
+    return this.canEvacueesProvideIncidentals;
   }
 
   public set canEvacueeProvideIncidentals(value: boolean) {
-    this._canEvacueeProvideIncidentals = value;
+    this.canEvacueesProvideIncidentals = value;
   }
 
   public get canEvacueeProvideLodging(): boolean {
-    return this._canEvacueeProvideLodging;
+    return this.canEvacueesProvideLodging;
   }
 
   public set canEvacueeProvideLodging(value: boolean) {
-    this._canEvacueeProvideLodging = value;
+    this.canEvacueesProvideLodging = value;
   }
 
   public get canEvacueeProvideTransportation(): boolean {
-    return this._canEvacueeProvideTransportation;
+    return this.canEvacueesProvideTransportation;
   }
 
   public set canEvacueeProvideTransportation(value: boolean) {
-    this._canEvacueeProvideTransportation = value;
+    this.canEvacueesProvideTransportation = value;
   }
 
   public get hasPetsFood(): boolean {
-    return this._hasPetsFood;
+    return this.hasPetFood;
   }
 
   public set hasPetsFood(value: boolean) {
-    this._hasPetsFood = value;
+    this.hasPetFood = value;
   }
 
   public get pets(): Array<Pet> {
-    return this._pets;
+    return this.pet;
   }
 
   public set pets(value: Array<Pet>) {
-    this._pets = value;
+    this.pet = value;
   }
 
   public get haveMedication(): boolean {
-    return this._haveMedication;
+    return this.haveMedications;
   }
 
   public set haveMedication(value: boolean) {
-    this._haveMedication = value;
+    this.haveMedications = value;
   }
 
   public get haveSpecialDiet(): boolean {
-    return this._haveSpecialDiet;
+    return this.haveSpecialDiets;
   }
 
   public set haveSpecialDiet(value: boolean) {
-    this._haveSpecialDiet = value;
+    this.haveSpecialDiets = value;
   }
 
   public get householdMembers(): Array<HouseholdMember> {
-    return this._householdMembers;
+    return this.householdMember;
   }
 
   public set householdMembers(value: Array<HouseholdMember>) {
-    this._householdMembers = value;
+    this.householdMember = value;
   }
 
   public get specialDietDetails(): string {
-    return this._specialDietDetails;
+    return this.specialDietDetail;
   }
   public set specialDietDetails(value: string) {
-    this._specialDietDetails = value;
+    this.specialDietDetail = value;
   }
 
   public get mainHouseholdMember(): HouseholdMember {
-    return this._mainHouseholdMember;
+    return this.mainHouseholdMembers;
   }
 
   public set mainHouseholdMember(value: HouseholdMember) {
-    this._mainHouseholdMember = value;
+    this.mainHouseholdMembers = value;
   }
 
   public setHouseHoldMembers(members: PersonDetails[]): void {
@@ -139,7 +145,7 @@ export class NeedsAssessmentService {
     for (const member of members) {
       const houseHoldMember: HouseholdMember = {
         id: null,
-        details: member
+        details: member,
       };
 
       householdMembersArray.push(houseHoldMember);
@@ -147,15 +153,27 @@ export class NeedsAssessmentService {
     this.householdMembers = householdMembersArray;
   }
 
-
   public setNeedsDetails(formGroup: FormGroup): void {
-    this.canEvacueeProvideClothing = formGroup.get('canEvacueeProvideClothing').value === 'null' ? null : formGroup.get('canEvacueeProvideClothing').value;
+    this.canEvacueeProvideClothing =
+      formGroup.get('canEvacueeProvideClothing').value === 'null'
+        ? null
+        : formGroup.get('canEvacueeProvideClothing').value;
     this.canEvacueeProvideFood =
-      formGroup.get('canEvacueeProvideFood').value === 'null' ? null : formGroup.get('canEvacueeProvideFood').value;
-    this.canEvacueeProvideIncidentals = formGroup.get('canEvacueeProvideIncidentals').value === 'null' ? null : formGroup.get('canEvacueeProvideIncidentals').value;
-    this.canEvacueeProvideLodging = formGroup.get('canEvacueeProvideLodging').value === 'null' ? null : formGroup.get('canEvacueeProvideLodging').value;
-    this.canEvacueeProvideTransportation = formGroup.get('canEvacueeProvideTransportation').value === 'null' ?
-      null : formGroup.get('canEvacueeProvideTransportation').value;
+      formGroup.get('canEvacueeProvideFood').value === 'null'
+        ? null
+        : formGroup.get('canEvacueeProvideFood').value;
+    this.canEvacueeProvideIncidentals =
+      formGroup.get('canEvacueeProvideIncidentals').value === 'null'
+        ? null
+        : formGroup.get('canEvacueeProvideIncidentals').value;
+    this.canEvacueeProvideLodging =
+      formGroup.get('canEvacueeProvideLodging').value === 'null'
+        ? null
+        : formGroup.get('canEvacueeProvideLodging').value;
+    this.canEvacueeProvideTransportation =
+      formGroup.get('canEvacueeProvideTransportation').value === 'null'
+        ? null
+        : formGroup.get('canEvacueeProvideTransportation').value;
   }
 
   public createNeedsAssessmentDTO(): NeedsAssessment {
@@ -173,7 +191,7 @@ export class NeedsAssessmentService {
       specialDietDetails: this.specialDietDetails,
       insurance: this.insurance,
       pets: this.pets,
-      type: NeedsAssessmentType.Preliminary
+      type: NeedsAssessmentType.Preliminary,
     });
 
     return {
@@ -190,12 +208,13 @@ export class NeedsAssessmentService {
       specialDietDetails: this.specialDietDetails,
       insurance: this.insurance,
       pets: this.pets,
-      type: NeedsAssessmentType.Preliminary
+      type: NeedsAssessmentType.Preliminary,
     };
   }
 
-
-  public setNonVerifiedEvacuationFileNo(registrationResult: RegistrationResult): void {
+  public setNonVerifiedEvacuationFileNo(
+    registrationResult: RegistrationResult
+  ): void {
     this.registrationResult = registrationResult;
   }
 
@@ -215,5 +234,4 @@ export class NeedsAssessmentService {
     this.registrationResult = { referenceNumber: null };
     this.verifiedRegistrationResult = null;
   }
-
 }

@@ -19,8 +19,8 @@ import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-da
 })
 export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
-  needsSteps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
   @ViewChild('needsStepper') private needsStepper: MatStepper;
+  needsSteps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
   needsFolderPath = 'needs-assessment-forms';
   isEditable = true;
   form$: Subscription;

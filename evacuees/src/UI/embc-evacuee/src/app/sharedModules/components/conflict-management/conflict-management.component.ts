@@ -16,11 +16,11 @@ import { ConflictManagementService } from './conflict-management.service';
 })
 export class ConflictManagementComponent implements OnInit, DoCheck {
 
+  @ViewChild('conflictStepper') conflictStepper: MatStepper;
   updateAddressIndicator = false;
   folderPath = 'evacuee-profile-forms';
   componentName = 'address';
   conflicts: Array<ProfileDataConflict> = [];
-  @ViewChild('conflictStepper') conflictStepper: MatStepper;
   showLoader = false;
   isSubmitted = false;
   form: FormGroup;

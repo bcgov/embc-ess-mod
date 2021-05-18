@@ -6,10 +6,10 @@ import { CacheService } from 'src/app/core/services/cache.service';
 @Injectable({ providedIn: 'root' })
 export class ConflictManagementService {
 
-    private hasVisitedConflictPage: boolean;
-    private conflicts: BehaviorSubject<Array<ProfileDataConflict>> = new BehaviorSubject<Array<ProfileDataConflict>>([]);
+    conflicts: BehaviorSubject<Array<ProfileDataConflict>> = new BehaviorSubject<Array<ProfileDataConflict>>([]);
     public conflicts$: Observable<Array<ProfileDataConflict>> = this.conflicts.asObservable();
     private count: number;
+    private hasVisitedConflictPage: boolean;
 
     constructor(private cacheService: CacheService) { }
 
