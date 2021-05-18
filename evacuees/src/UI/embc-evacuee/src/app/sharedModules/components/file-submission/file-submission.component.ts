@@ -8,10 +8,9 @@ import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.ser
 @Component({
   selector: 'app-file-submission',
   templateUrl: './file-submission.component.html',
-  styleUrls: ['./file-submission.component.scss']
+  styleUrls: ['./file-submission.component.scss'],
 })
 export class FileSubmissionComponent implements OnInit {
-
   referenceNumber: string;
   panelOpenState = false;
   currentFlow: string;
@@ -19,8 +18,11 @@ export class FileSubmissionComponent implements OnInit {
   subscription: Subscription;
 
   constructor(
-    private needsAssessmentService: NeedsAssessmentService, private route: ActivatedRoute, private router: Router,
-    public location: Location) { }
+    private needsAssessmentService: NeedsAssessmentService,
+    private route: ActivatedRoute,
+    private router: Router,
+    public location: Location
+  ) {}
 
   /**
    * Initializes the user flow and fetches the registration
@@ -28,7 +30,8 @@ export class FileSubmissionComponent implements OnInit {
    */
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    const registrationResult = this.needsAssessmentService.getNonVerifiedEvacuationFileNo();
+    const registrationResult =
+      this.needsAssessmentService.getNonVerifiedEvacuationFileNo();
     if (registrationResult) {
       this.referenceNumber = registrationResult.referenceNumber;
       if (!this.referenceNumber) {
@@ -52,5 +55,4 @@ export class FileSubmissionComponent implements OnInit {
   verifyUser(): void {
     window.location.replace('/verified-registration');
   }
-
 }

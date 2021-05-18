@@ -7,25 +7,35 @@ import * as globalConst from '../../../core/services/globalConstants';
 @Component({
   selector: 'app-person-detail-form',
   templateUrl: './person-detail-form.component.html',
-  styleUrls: ['./person-detail-form.component.scss']
+  styleUrls: ['./person-detail-form.component.scss'],
 })
 export class PersonDetailFormComponent implements OnInit {
-
   @Input() personalDetailsForm: FormGroup;
   gender = globalConst.gender;
   primaryApplicantLastName: string;
   sameLastNameOption: any;
-  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
+  readonly dateMask = [
+    /\d/,
+    /\d/,
+    '/',
+    /\d/,
+    /\d/,
+    '/',
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/,
+  ];
   readOnlyInput = false;
 
-  constructor(private formCreationService: FormCreationService) { }
+  constructor(private formCreationService: FormCreationService) {}
 
   ngOnInit(): void {
-    this.formCreationService.getPersonalDetailsForm().subscribe(
-      personalDetails => {
+    this.formCreationService
+      .getPersonalDetailsForm()
+      .subscribe((personalDetails) => {
         this.primaryApplicantLastName = personalDetails.get('lastName').value;
-      }
-    );
+      });
     this.sameLastNameEditForm();
   }
 
@@ -38,7 +48,9 @@ export class PersonDetailFormComponent implements OnInit {
 
   sameLastNameEvent(event: MatCheckboxChange): void {
     if (event.checked) {
-      this.personalDetailsForm.get('lastName').setValue(this.primaryApplicantLastName);
+      this.personalDetailsForm
+        .get('lastName')
+        .setValue(this.primaryApplicantLastName);
       this.readOnlyInput = true;
     } else {
       this.personalDetailsForm.get('lastName').setValue('');
@@ -53,5 +65,4 @@ export class PersonDetailFormComponent implements OnInit {
       this.readOnlyInput = false;
     }
   }
-
 }

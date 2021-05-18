@@ -9,19 +9,15 @@ import { CustomPipeModule } from '../../../core/pipe/customPipe.module';
 import { CoreModule } from '../../../core/core.module';
 
 @NgModule({
-  declarations: [
-    ReviewComponent
-  ],
+  declarations: [ReviewComponent],
   imports: [
     CommonModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     CustomPipeModule,
-    CoreModule
+    CoreModule,
   ],
-  exports: [
-    ReviewComponent
-  ]
+  exports: [ReviewComponent],
 })
-export class ReviewModule { }
+export class ReviewModule {}

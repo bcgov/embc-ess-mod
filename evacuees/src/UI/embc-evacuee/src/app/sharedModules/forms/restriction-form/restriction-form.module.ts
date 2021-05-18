@@ -15,8 +15,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatButtonModule,
     MatRadioModule,
     ReactiveFormsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
   ],
-  exports: [RestrictionFormComponent]
+  exports: [RestrictionFormComponent],
 })
-export class RestrictionFormModule { }
+export class RestrictionFormModule {}

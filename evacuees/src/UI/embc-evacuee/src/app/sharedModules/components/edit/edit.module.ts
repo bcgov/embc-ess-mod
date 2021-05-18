@@ -11,10 +11,7 @@ import { RestrictionFormModule } from '../../forms/restriction-form/restriction-
 import { CoreModule } from '../../../core/core.module';
 
 @NgModule({
-  declarations: [
-    EditComponent,
-
-  ],
+  declarations: [EditComponent],
   imports: [
     CommonModule,
     EditRoutingModule,
@@ -24,7 +21,7 @@ import { CoreModule } from '../../../core/core.module';
     MatAutocompleteModule,
     MatButtonModule,
     RestrictionFormModule,
-    CoreModule
-  ]
+    CoreModule,
+  ],
 })
-export class EditModule { }
+export class EditModule {}

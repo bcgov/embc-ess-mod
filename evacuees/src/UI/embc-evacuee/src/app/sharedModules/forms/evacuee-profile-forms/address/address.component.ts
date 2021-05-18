@@ -35,7 +35,8 @@ import {
   styleUrls: ['./address.component.scss'],
 })
 export default class AddressComponent
-  implements OnInit, AfterViewChecked, OnDestroy {
+  implements OnInit, AfterViewChecked, OnDestroy
+{
   primaryAddressForm: FormGroup;
   primaryAddressForm$: Subscription;
   radioOption: string[] = ['Yes', 'No'];

@@ -3,13 +3,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { EvacuationFileListComponent } from './evacuation-file-list.component';
 
 const routes: Routes = [
-    {
-        path: '', component: EvacuationFileListComponent
-    }
+  {
+    path: '',
+    component: EvacuationFileListComponent,
+  },
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class EvacuationFileListRoutingModule { }
+export class EvacuationFileListRoutingModule {}

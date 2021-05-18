@@ -10,12 +10,9 @@ import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-da
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
-
-
 export class DashboardComponent implements OnInit {
-
   currentFlow: string;
   activeFiles: number;
   evacuationFileWithTask: boolean;
@@ -25,28 +22,31 @@ export class DashboardComponent implements OnInit {
       label: 'Current Evacuations',
       route: 'current',
       activeImage: '/assets/images/curr-evac-active.svg',
-      inactiveImage: '/assets/images/curr-evac.svg'
+      inactiveImage: '/assets/images/curr-evac.svg',
     },
     {
       label: 'Past Evacuations',
       route: 'past',
       activeImage: '/assets/images/past-evac-active.svg',
-      inactiveImage: '/assets/images/past-evac.svg'
+      inactiveImage: '/assets/images/past-evac.svg',
     },
     {
       label: 'User Profile',
       route: 'profile',
       activeImage: '/assets/images/profile-active.svg',
-      inactiveImage: '/assets/images/profile.svg'
-    }
+      inactiveImage: '/assets/images/profile.svg',
+    },
   ];
 
-
   constructor(
-    private route: ActivatedRoute, private needsAssessmentService: NeedsAssessmentService, public formCreationService: FormCreationService,
-    private router: Router, private dialogService: DialogService, private cacheService: CacheService,
-    public evacuationFilesDataService: EvacuationFileDataService) { }
-
+    private route: ActivatedRoute,
+    private needsAssessmentService: NeedsAssessmentService,
+    public formCreationService: FormCreationService,
+    private router: Router,
+    private dialogService: DialogService,
+    private cacheService: CacheService,
+    public evacuationFilesDataService: EvacuationFileDataService
+  ) {}
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
@@ -62,8 +62,8 @@ export class DashboardComponent implements OnInit {
   }
 
   openReferenceNumberPopup(): void {
-
-    const registrationResult = this.needsAssessmentService.getVerifiedEvacuationFileNo();
+    const registrationResult =
+      this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
     if (registrationResult !== null) {
       this.dialogService.submissionCompleteDialog(registrationResult);

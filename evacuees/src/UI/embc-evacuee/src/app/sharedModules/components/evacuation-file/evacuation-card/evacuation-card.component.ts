@@ -8,11 +8,9 @@ import { EvacuationFileMappingService } from '../evacuation-file-mapping.service
 @Component({
   selector: 'app-evacuation-card',
   templateUrl: './evacuation-card.component.html',
-  styleUrls: ['./evacuation-card.component.scss']
+  styleUrls: ['./evacuation-card.component.scss'],
 })
-
 export class EvacuationCardComponent implements OnInit {
-
   @Input() evacuationFileCard: EvacuationFile;
   @Input() evacuationFileStatus: string;
 
@@ -20,9 +18,11 @@ export class EvacuationCardComponent implements OnInit {
   pathName: string;
 
   constructor(
-    private router: Router, private evacuationFileDataService: EvacuationFileDataService,
-    private needsAssessmentMappingService: NeedsAssessmentMappingService, private evacuationFileMapping: EvacuationFileMappingService) {
-
+    private router: Router,
+    private evacuationFileDataService: EvacuationFileDataService,
+    private needsAssessmentMappingService: NeedsAssessmentMappingService,
+    private evacuationFileMapping: EvacuationFileMappingService
+  ) {
     this.pathName = window.location.pathname;
     console.log(this.pathName);
   }
@@ -40,14 +40,18 @@ export class EvacuationCardComponent implements OnInit {
   }
 
   goToDetails(): void {
-
     this.evacuationFileMapping.mapEvacuationFile(this.evacuationFileCard);
 
     if (this.pathName === '/verified-registration/dashboard/current') {
-      this.router.navigate(['/verified-registration/dashboard/current/' + this.evacuationFileCard.essFileNumber]);
+      this.router.navigate([
+        '/verified-registration/dashboard/current/' +
+          this.evacuationFileCard.essFileNumber,
+      ]);
     } else {
-      this.router.navigate(['/verified-registration/dashboard/past/' + this.evacuationFileCard.essFileNumber]);
+      this.router.navigate([
+        '/verified-registration/dashboard/past/' +
+          this.evacuationFileCard.essFileNumber,
+      ]);
     }
   }
-
 }

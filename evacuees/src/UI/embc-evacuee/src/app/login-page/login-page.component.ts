@@ -4,14 +4,12 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.scss']
+  styleUrls: ['./login-page.component.scss'],
 })
 export class LoginPageComponent implements OnInit {
+  constructor(private router: Router) {}
 
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   verifyUser(): void {
     this.router.navigate(['/verified-registration']);
@@ -20,5 +18,4 @@ export class LoginPageComponent implements OnInit {
   nonVerifiedUser(): void {
     this.router.navigate(['/non-verified-registration/collection-notice']);
   }
-
 }

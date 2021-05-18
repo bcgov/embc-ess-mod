@@ -10,13 +10,12 @@ import { OtherAddressComponent } from './other-address/other-address.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
 
-
 @NgModule({
   declarations: [
     BcAddressComponent,
     CanAddressComponent,
     UsaAddressComponent,
-    OtherAddressComponent
+    OtherAddressComponent,
   ],
   imports: [
     CommonModule,
@@ -24,13 +23,13 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   exports: [
     BcAddressComponent,
     CanAddressComponent,
     UsaAddressComponent,
-    OtherAddressComponent
-  ]
+    OtherAddressComponent,
+  ],
 })
-export class AddressFormsModule { }
+export class AddressFormsModule {}

@@ -27,11 +27,11 @@ const routes: Routes = [
         (m) => m.VerifiedRegistrationModule
       ),
     canActivate: [AuthGuard],
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

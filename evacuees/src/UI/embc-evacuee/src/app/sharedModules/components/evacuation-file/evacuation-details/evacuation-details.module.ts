@@ -8,15 +8,15 @@ import { ReferralDetailsComponent } from '../referral-details/referral-details.c
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 
-
 @NgModule({
   declarations: [EvacuationDetailsComponent, ReferralDetailsComponent],
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     EvacuationDetailsRoutingModule,
     ReviewModule,
     MatCardModule,
     MatExpansionModule,
-    MatTableModule
-  ]
+    MatTableModule,
+  ],
 })
-export class EvacuationDetailsModule { }
+export class EvacuationDetailsModule {}

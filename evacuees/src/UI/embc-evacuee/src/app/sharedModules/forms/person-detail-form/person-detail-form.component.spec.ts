@@ -6,12 +6,13 @@ describe('PersonDetailFormComponent', () => {
   let component: PersonDetailFormComponent;
   let fixture: ComponentFixture<PersonDetailFormComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ PersonDetailFormComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [PersonDetailFormComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PersonDetailFormComponent);

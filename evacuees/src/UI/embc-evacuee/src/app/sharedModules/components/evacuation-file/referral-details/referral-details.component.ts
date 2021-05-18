@@ -1,6 +1,22 @@
-import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Referral, ReferralDetails } from '../evacuation-details/evacuation-details.component';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewEncapsulation,
+  Output,
+  EventEmitter,
+} from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import {
+  Referral,
+  ReferralDetails,
+} from '../evacuation-details/evacuation-details.component';
 
 @Component({
   selector: 'app-referral-details',
@@ -10,24 +26,32 @@ import { Referral, ReferralDetails } from '../evacuation-details/evacuation-deta
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
       state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
     ]),
   ],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class ReferralDetailsComponent implements OnInit {
-
   @Input() evacuationReferral: Referral;
   @Input() allExpandState: boolean;
 
   panelOpenState = false;
-  columnsToDisplay = ['provider', 'type', 'issuedTo', 'expiry', 'referral', 'amount'];
+  columnsToDisplay = [
+    'provider',
+    'type',
+    'issuedTo',
+    'expiry',
+    'referral',
+    'amount',
+  ];
   expandedElement: ReferralDetails | null;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     // console.log(this.evacuationReferral);
   }
-
 }

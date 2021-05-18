@@ -2,15 +2,24 @@
   <mat-card-content>
     <p class="card-heading">Personal Details</p>
     <form [formGroup]="personalDetailsForm">
-
       <div class="row">
         <div class="col-md-4">
           <mat-form-field appearance="outline">
             <mat-label>First Name</mat-label>
-            <input formControlName="firstName" matInput placeholder="First Name" required [readonly]="disableFields">
+            <input
+              formControlName="firstName"
+              matInput
+              placeholder="First Name"
+              required
+              [readonly]="disableFields"
+            />
             <mat-error
-              *ngIf="personalFormControl.firstName.invalid && personalFormControl.firstName.hasError('required')">First
-              Name is required</mat-error>
+              *ngIf="
+                personalFormControl.firstName.invalid &&
+                personalFormControl.firstName.hasError('required')
+              "
+              >First Name is required</mat-error
+            >
           </mat-form-field>
         </div>
       </div>
@@ -19,10 +28,20 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline">
             <mat-label>Last Name</mat-label>
-            <input formControlName="lastName" matInput placeholder="Last Name" required [readonly]="disableFields">
+            <input
+              formControlName="lastName"
+              matInput
+              placeholder="Last Name"
+              required
+              [readonly]="disableFields"
+            />
             <mat-error
-              *ngIf="personalFormControl.lastName.invalid && personalFormControl.lastName.hasError('required')">Last
-              Name is required</mat-error>
+              *ngIf="
+                personalFormControl.lastName.invalid &&
+                personalFormControl.lastName.hasError('required')
+              "
+              >Last Name is required</mat-error
+            >
           </mat-form-field>
         </div>
       </div>
@@ -31,7 +50,12 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline">
             <mat-label>Preferred Name</mat-label>
-            <input maxlength="100" formControlName="preferredName" matInput placeholder="Preferred Name">
+            <input
+              maxlength="100"
+              formControlName="preferredName"
+              matInput
+              placeholder="Preferred Name"
+            />
           </mat-form-field>
         </div>
       </div>
@@ -40,7 +64,12 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline">
             <mat-label>Initials</mat-label>
-            <input maxlength="100" formControlName="initials" matInput placeholder="Initials">
+            <input
+              maxlength="100"
+              formControlName="initials"
+              matInput
+              placeholder="Initials"
+            />
           </mat-form-field>
         </div>
       </div>
@@ -52,11 +81,17 @@
             <mat-select formControlName="gender" required>
               <mat-option>--Gender</mat-option>
               <mat-option *ngFor="let gen of gender" [value]="gen.value">
-                {{gen.name}}
+                {{ gen.name }}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="personalFormControl.gender.invalid && personalFormControl.gender.hasError('required')">
-              Gender is required</mat-error>
+            <mat-error
+              *ngIf="
+                personalFormControl.gender.invalid &&
+                personalFormControl.gender.hasError('required')
+              "
+            >
+              Gender is required</mat-error
+            >
           </mat-form-field>
         </div>
       </div>
@@ -66,27 +101,53 @@
           <mat-form-field type="date" appearance="outline">
             <!--maxlength="10"-->
             <mat-label>Date of Birth</mat-label>
-            <input formControlName="dateOfBirth" matInput placeholder="mm/dd/yyyy"
-              [textMask]="{mask: dateMask, keepCharPositions: true}" required [readonly]="disableFields">
+            <input
+              formControlName="dateOfBirth"
+              matInput
+              placeholder="mm/dd/yyyy"
+              [textMask]="{ mask: dateMask, keepCharPositions: true }"
+              required
+              [readonly]="disableFields"
+            />
             <mat-hint>Allowed Date format: mm/dd/yyyy</mat-hint>
             <mat-error
-              *ngIf="personalFormControl.dateOfBirth.invalid && personalFormControl.dateOfBirth.hasError('required')">
-              Date of Birth is required</mat-error>
+              *ngIf="
+                personalFormControl.dateOfBirth.invalid &&
+                personalFormControl.dateOfBirth.hasError('required')
+              "
+            >
+              Date of Birth is required</mat-error
+            >
             <mat-error
-              *ngIf="personalFormControl.dateOfBirth.invalid && personalFormControl.dateOfBirth.hasError('invalidDate')">
-              Date of Birth is invalid</mat-error>
+              *ngIf="
+                personalFormControl.dateOfBirth.invalid &&
+                personalFormControl.dateOfBirth.hasError('invalidDate')
+              "
+            >
+              Date of Birth is invalid</mat-error
+            >
             <mat-error
-              *ngIf="personalFormControl.dateOfBirth.invalid && personalFormControl.dateOfBirth.hasError('futureDate')">
-              Date of Birth should be in the past</mat-error>
+              *ngIf="
+                personalFormControl.dateOfBirth.invalid &&
+                personalFormControl.dateOfBirth.hasError('futureDate')
+              "
+            >
+              Date of Birth should be in the past</mat-error
+            >
             <mat-error
-              *ngIf="personalFormControl.dateOfBirth.invalid && personalFormControl.dateOfBirth.hasError('invalidYear')">
-              Invalid year. The Year must be between 1800-2100</mat-error>
+              *ngIf="
+                personalFormControl.dateOfBirth.invalid &&
+                personalFormControl.dateOfBirth.hasError('invalidYear')
+              "
+            >
+              Invalid year. The Year must be between 1800-2100</mat-error
+            >
           </mat-form-field>
         </div>
       </div>
     </form>
   </mat-card-content>
 </mat-card>
-<br>
+<br />
 <!-- {{personalDetailsForm.status}}
 {{personalDetailsForm.value | json}} -->

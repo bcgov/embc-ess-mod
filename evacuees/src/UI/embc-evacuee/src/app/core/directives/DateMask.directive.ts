@@ -5,8 +5,11 @@ import { NgControl } from '@angular/forms';
   selector: '[formControlName][appDateMask]',
 })
 export class DateMaskDirective {
-
-  constructor(public ngControl: NgControl, private el: ElementRef, private renderer: Renderer2) { }
+  constructor(
+    public ngControl: NgControl,
+    private el: ElementRef,
+    private renderer: Renderer2
+  ) {}
 
   @HostListener('ngModelChange', ['$event'])
   onModelChange(evt): void {
@@ -41,7 +44,9 @@ export class DateMaskDirective {
     }
     this.ngControl.valueAccessor.writeValue(newVal);
     if (current.length > start) {
-      this.renderer.selectRootElement(this.el).nativeElement.setSelectionRange(start, end);
+      this.renderer
+        .selectRootElement(this.el)
+        .nativeElement.setSelectionRange(start, end);
     }
   }
 }

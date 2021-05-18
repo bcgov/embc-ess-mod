@@ -11,8 +11,7 @@ describe('ConflictManagementComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ConflictManagementComponent],
       imports: [RouterTestingModule.withRoutes([])],
-    })
-      .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -8,24 +8,27 @@ import { RestrictionService } from '../restriction/restriction.service';
 @Component({
   selector: 'app-confirm-restriction',
   templateUrl: './confirm-restriction.component.html',
-  styleUrls: ['./confirm-restriction.component.scss']
+  styleUrls: ['./confirm-restriction.component.scss'],
 })
 export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
-
   restrictionForm: FormGroup;
   restrictionForm$: Subscription;
 
-  constructor(private router: Router, private formCreationService: FormCreationService, public restrictionService: RestrictionService) { }
+  constructor(
+    private router: Router,
+    private formCreationService: FormCreationService,
+    public restrictionService: RestrictionService
+  ) {}
 
   /**
    * Initializes and loads the confirm-restriction form
    */
   ngOnInit(): void {
-    this.restrictionForm$ = this.formCreationService.getRestrictionForm().subscribe(
-      restrictionForm => {
+    this.restrictionForm$ = this.formCreationService
+      .getRestrictionForm()
+      .subscribe((restrictionForm) => {
         this.restrictionForm = restrictionForm;
-      }
-    );
+      });
   }
 
   /**
@@ -40,7 +43,8 @@ export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
    */
   needsAssessment(): void {
     if (this.restrictionForm.status === 'VALID') {
-      this.restrictionService.restrictedAccess = this.restrictionForm.get('restrictedAccess').value;
+      this.restrictionService.restrictedAccess =
+        this.restrictionForm.get('restrictedAccess').value;
       console.log(this.restrictionForm.get('restrictedAccess').value);
       this.router.navigate(['/verified-registration/needs-assessment']);
     } else {
@@ -54,5 +58,4 @@ export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.restrictionForm$.unsubscribe();
   }
-
 }

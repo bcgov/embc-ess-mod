@@ -1,12 +1,15 @@
-
 import { Injectable } from '@angular/core';
-import { Address, Profile, PersonDetails, ContactDetails } from 'src/app/core/api/models';
+import {
+  Address,
+  Profile,
+  PersonDetails,
+  ContactDetails,
+} from 'src/app/core/api/models';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { RestrictionService } from '../restriction/restriction.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileDataService {
-
   private loginProfile: Profile;
   private profile: Profile;
   private profileId: string;
@@ -51,7 +54,10 @@ export class ProfileDataService {
     this.secretPhrase = value;
   }
 
-  constructor(private cacheService: CacheService, private restrictionService: RestrictionService) { }
+  constructor(
+    private cacheService: CacheService,
+    private restrictionService: RestrictionService
+  ) {}
 
   public getProfile(): Profile {
     if (this.profile === null || undefined) {
@@ -91,7 +97,7 @@ export class ProfileDataService {
       personalDetails: this.personalDetails,
       primaryAddress: this.setAddressObject(this.primaryAddressDetails),
       restrictedAccess: this.restrictionService.restrictedAccess,
-      secretPhrase: this.secretWordPhrase
+      secretPhrase: this.secretWordPhrase,
     };
   }
 
@@ -100,12 +106,17 @@ export class ProfileDataService {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
       country: addressObject.country.code,
-      jurisdiction: addressObject.jurisdiction.code === undefined ? null : addressObject.jurisdiction.code,
+      jurisdiction:
+        addressObject.jurisdiction.code === undefined
+          ? null
+          : addressObject.jurisdiction.code,
       postalCode: addressObject.postalCode,
-      stateProvince: addressObject.stateProvince === null ? addressObject.stateProvince : addressObject.stateProvince.code,
+      stateProvince:
+        addressObject.stateProvince === null
+          ? addressObject.stateProvince
+          : addressObject.stateProvince.code,
     };
 
     return address;
   }
-
 }

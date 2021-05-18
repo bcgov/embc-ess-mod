@@ -7,21 +7,23 @@ import { ProfileMappingService } from './profile-mapping.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-
-  constructor(private profileService: Service, private profileMapping: ProfileMappingService) { }
+  constructor(
+    private profileService: Service,
+    private profileMapping: ProfileMappingService
+  ) {}
 
   public profileExists(): Observable<boolean> {
     return this.profileService.profileGetDoesUserExists();
   }
 
   public getLoginProfile(): void {
-    this.profileService.profileGetProfile().subscribe(loginProfile => {
+    this.profileService.profileGetProfile().subscribe((loginProfile) => {
       this.profileMapping.mapLoginProfile(loginProfile);
     });
   }
 
   public getProfile(): void {
-    this.profileService.profileGetProfile().subscribe(profile => {
+    this.profileService.profileGetProfile().subscribe((profile) => {
       this.profileMapping.mapProfile(profile);
     });
   }
@@ -32,12 +34,11 @@ export class ProfileService {
 
   public upsertProfile(updatedProfile: Profile): Observable<string> {
     return this.profileService.profileUpsert({ body: updatedProfile }).pipe(
-      mergeMap(id => this.profileService.profileGetProfile()),
-      map(profile => {
+      mergeMap((id) => this.profileService.profileGetProfile()),
+      map((profile) => {
         this.profileMapping.mapProfile(profile);
         return profile.id;
       })
     );
   }
-
 }

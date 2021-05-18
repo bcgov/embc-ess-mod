@@ -8,14 +8,15 @@ describe('AddressComponent', () => {
   let component: AddressComponent;
   let fixture: ComponentFixture<AddressComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ AddressComponent ],
-      imports: [ ReactiveFormsModule ],
-      providers: [ FormCreationService, FormBuilder ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [AddressComponent],
+        imports: [ReactiveFormsModule],
+        providers: [FormCreationService, FormBuilder],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AddressComponent);

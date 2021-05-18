@@ -1,4 +1,10 @@
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
 
 import { CollectionNoticeComponent } from './collection-notice.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -14,15 +20,22 @@ describe('CollectionNoticeComponent', () => {
   let fixture: ComponentFixture<CollectionNoticeComponent>;
   let router: Router;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [CollectionNoticeComponent],
-      imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, MatDialogModule, MatCheckboxModule,
-        BrowserAnimationsModule, CoreModule],
-      providers: [FormBuilder]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [CollectionNoticeComponent],
+        imports: [
+          RouterTestingModule.withRoutes([]),
+          ReactiveFormsModule,
+          MatDialogModule,
+          MatCheckboxModule,
+          BrowserAnimationsModule,
+          CoreModule,
+        ],
+        providers: [FormBuilder],
+      }).compileComponents();
     })
-      .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CollectionNoticeComponent);
@@ -43,7 +56,6 @@ describe('CollectionNoticeComponent', () => {
 
     tick();
     expect(component.submitNotice).toHaveBeenCalled();
-
   }));
 
   // it('should open dialog box when collection notice not agreed', fakeAsync(() => {
@@ -86,5 +98,4 @@ describe('CollectionNoticeComponent', () => {
   //   })
   //   //expect(router.navigate).toHaveBeenCalledWith(['/non-verified-registration/restriction'])
   // }));
-
 });

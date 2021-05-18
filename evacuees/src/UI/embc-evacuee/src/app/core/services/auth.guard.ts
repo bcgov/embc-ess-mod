@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   public canActivate(
     route: ActivatedRouteSnapshot,
@@ -18,13 +18,15 @@ export class AuthGuard implements CanActivate {
   ): Observable<boolean> {
     return this.authService.isAuthenticated()
       ? of(true)
-      : this.authService.getToken().pipe(map(token => {
-        // console.debug('token', token);
-        if (token === null) {
-          this.authService.login(state.url);
-          return false;
-        }
-        return true;
-      }));
+      : this.authService.getToken().pipe(
+          map((token) => {
+            // console.debug('token', token);
+            if (token === null) {
+              this.authService.login(state.url);
+              return false;
+            }
+            return true;
+          })
+        );
   }
 }

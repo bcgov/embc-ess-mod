@@ -7,14 +7,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [
-    FileSubmissionComponent
-  ],
+  declarations: [FileSubmissionComponent],
   imports: [
     CommonModule,
     FileSubmissionRoutingModule,
     MatCardModule,
-    MatButtonModule
-  ]
+    MatButtonModule,
+  ],
 })
-export class FileSubmissionModule { }
+export class FileSubmissionModule {}

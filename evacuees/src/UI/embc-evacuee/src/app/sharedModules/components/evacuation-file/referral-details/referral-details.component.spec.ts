@@ -6,12 +6,13 @@ describe('ReferralDetailsComponent', () => {
   let component: ReferralDetailsComponent;
   let fixture: ComponentFixture<ReferralDetailsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ReferralDetailsComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ReferralDetailsComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ReferralDetailsComponent);

@@ -8,19 +8,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-
-
 @NgModule({
-  declarations: [
-    EvacuationFileListComponent,
-    EvacuationCardComponent],
+  declarations: [EvacuationFileListComponent, EvacuationCardComponent],
   imports: [
     CommonModule,
     EvacuationFileListRoutingModule,
     MatCardModule,
     MatButtonModule,
     MatTabsModule,
-    MatProgressSpinnerModule
-  ]
+    MatProgressSpinnerModule,
+  ],
 })
-export class EvacuationFileListModule { }
+export class EvacuationFileListModule {}

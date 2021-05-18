@@ -7,14 +7,15 @@ describe('FamilyInformationComponent', () => {
   let component: FamilyInformationComponent;
   let fixture: ComponentFixture<FamilyInformationComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FamilyInformationComponent ],
-      imports: [ ReactiveFormsModule ],
-      providers: [ FormBuilder ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [FamilyInformationComponent],
+        imports: [ReactiveFormsModule],
+        providers: [FormBuilder],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FamilyInformationComponent);

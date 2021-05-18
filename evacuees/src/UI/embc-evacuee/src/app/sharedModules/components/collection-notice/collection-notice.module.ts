@@ -9,16 +9,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
-  declarations: [
-    CollectionNoticeComponent
-  ],
+  declarations: [CollectionNoticeComponent],
   imports: [
     CommonModule,
     CollectionNoticeRoutingModule,
     MatCardModule,
     MatButtonModule,
     ReactiveFormsModule,
-    MatCheckboxModule
-  ]
+    MatCheckboxModule,
+  ],
 })
-export class CollectionNoticeModule { }
+export class CollectionNoticeModule {}

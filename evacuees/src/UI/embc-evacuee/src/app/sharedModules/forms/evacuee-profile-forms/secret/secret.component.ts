@@ -4,31 +4,40 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ReactiveFormsModule, FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  AbstractControl,
+} from '@angular/forms';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-secret',
   templateUrl: './secret.component.html',
-  styleUrls: ['./secret.component.scss']
+  styleUrls: ['./secret.component.scss'],
 })
 export default class SecretComponent implements OnInit, OnDestroy {
-
   formBuilder: FormBuilder;
   secretForm$: Subscription;
   secretForm: FormGroup;
   formCreationService: FormCreationService;
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formCreationService') formCreationService: FormCreationService
+  ) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
 
   ngOnInit(): void {
-    this.secretForm$ = this.formCreationService.getSecretForm().subscribe(secretForm => {
-      this.secretForm = secretForm;
-    });
+    this.secretForm$ = this.formCreationService
+      .getSecretForm()
+      .subscribe((secretForm) => {
+        this.secretForm = secretForm;
+      });
   }
 
   /**
@@ -41,7 +50,6 @@ export default class SecretComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.secretForm$.unsubscribe();
   }
-
 }
 
 @NgModule({
@@ -51,12 +59,8 @@ export default class SecretComponent implements OnInit, OnDestroy {
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
-  declarations: [
-    SecretComponent,
-  ]
+  declarations: [SecretComponent],
 })
-class SecretModule {
-
-}
+class SecretModule {}

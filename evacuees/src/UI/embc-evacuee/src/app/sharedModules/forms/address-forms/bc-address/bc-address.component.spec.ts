@@ -7,13 +7,14 @@ describe('BcAddressComponent', () => {
   let component: BcAddressComponent;
   let fixture: ComponentFixture<BcAddressComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ BcAddressComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule],
+        declarations: [BcAddressComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BcAddressComponent);

@@ -6,12 +6,13 @@ describe('PetFormComponent', () => {
   let component: PetFormComponent;
   let fixture: ComponentFixture<PetFormComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ PetFormComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [PetFormComponent],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PetFormComponent);

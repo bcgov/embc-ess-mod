@@ -61,8 +61,8 @@ export class DialogService {
             '</p><p>Thank you for submitting your online self-registration.</p><p class="highlight">Next Steps</p>' +
             '<p>Please keep a record of your Emergency Support Services File Number to receive emergency support services' +
             'that can be provided up to 72 hours starting from the time connecting in with a local ESS Responder at a Reception' +
-            'Centre.</p><p>After a need\'s assessment interview with a local ESS Responder has been completed, supports are' +
-            'provided to purchase goods and services if eligible.</p><p>Any goods and services purchased prior to a need\'s' +
+            "Centre.</p><p>After a need's assessment interview with a local ESS Responder has been completed, supports are" +
+            "provided to purchase goods and services if eligible.</p><p>Any goods and services purchased prior to a need's" +
             'assessment interview are not eligible for retroactive reimbursement.</p><br><p>If you are under <b>EVACUATION ALERT</b>' +
             'or <b>DO NOT</b> require emergency serves at this time, no further action is required.</p><br><p><p>If you are under' +
             '<b>EVACUATION ORDER</b>, and require emergency supports, proceed to the area designated by your local ESS team or your' +

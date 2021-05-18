@@ -13,29 +13,29 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        MatProgressSpinnerModule,
-        MatDialogModule,
-        MatIconModule,
-        MatMenuModule
-    ],
-    declarations: [
-        CaptchaComponent,
-        AppLoaderComponent,
-        AlertComponent,
-        HeaderComponent,
-        FooterComponent,
-        DialogComponent
-    ],
-    exports: [
-        CaptchaComponent,
-        AppLoaderComponent,
-        AlertComponent,
-        HeaderComponent,
-        FooterComponent,
-        DialogComponent
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatIconModule,
+    MatMenuModule,
+  ],
+  declarations: [
+    CaptchaComponent,
+    AppLoaderComponent,
+    AlertComponent,
+    HeaderComponent,
+    FooterComponent,
+    DialogComponent,
+  ],
+  exports: [
+    CaptchaComponent,
+    AppLoaderComponent,
+    AlertComponent,
+    HeaderComponent,
+    FooterComponent,
+    DialogComponent,
+  ],
 })
-export class CoreModule { }
+export class CoreModule {}

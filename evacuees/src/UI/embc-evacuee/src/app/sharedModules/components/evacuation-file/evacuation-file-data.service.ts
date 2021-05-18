@@ -11,10 +11,10 @@ import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.ser
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileDataService {
-  currentEvacuationFileCount: BehaviorSubject<number> = new BehaviorSubject<number>(
-    0
-  );
-  public currentEvacuationFileCount$: Observable<number> = this.currentEvacuationFileCount.asObservable();
+  currentEvacuationFileCount: BehaviorSubject<number> =
+    new BehaviorSubject<number>(0);
+  public currentEvacuationFileCount$: Observable<number> =
+    this.currentEvacuationFileCount.asObservable();
   private essFilenumber: string;
   private evacuatedFromAddres: Address;
   private evacuationFiledate: string;
@@ -126,7 +126,8 @@ export class EvacuationFileDataService {
   }
 
   private getNeedsAssessment(): Array<NeedsAssessment> {
-    const needsAssessment: NeedsAssessment = this.needsAssessmentService.createNeedsAssessmentDTO();
+    const needsAssessment: NeedsAssessment =
+      this.needsAssessmentService.createNeedsAssessmentDTO();
     this.needAssessments.splice(0, 1, needsAssessment);
     return this.needAssessments;
   }

@@ -14,10 +14,14 @@ describe('EvacuationFileListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EvacuationFileListComponent],
-      imports: [RouterTestingModule, ReactiveFormsModule, BrowserAnimationsModule, MatDialogModule],
-      providers: [FormBuilder, DialogService, HttpClient, HttpHandler]
-    })
-      .compileComponents();
+      imports: [
+        RouterTestingModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        MatDialogModule,
+      ],
+      providers: [FormBuilder, DialogService, HttpClient, HttpHandler],
+    }).compileComponents();
   });
 
   beforeEach(() => {

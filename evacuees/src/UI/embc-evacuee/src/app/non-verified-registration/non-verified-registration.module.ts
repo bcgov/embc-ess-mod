@@ -4,12 +4,7 @@ import { NonVerifiedRegistrationComponent } from './non-verified-registration.co
 import { NonVerifiedRegistrationRoutingModule } from './non-verified-registration-routing.module';
 
 @NgModule({
-  declarations: [
-    NonVerifiedRegistrationComponent
-  ],
-  imports: [
-    CommonModule,
-    NonVerifiedRegistrationRoutingModule
-  ]
+  declarations: [NonVerifiedRegistrationComponent],
+  imports: [CommonModule, NonVerifiedRegistrationRoutingModule],
 })
-export class NonVerifiedRegistrationModule { }
+export class NonVerifiedRegistrationModule {}

@@ -12,17 +12,15 @@ import { ArrayValueOf } from './arrayValueOf.pipe';
     MaskTextPipe,
     CustomDate,
     ArrayContains,
-    ArrayValueOf
+    ArrayValueOf,
   ],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   exports: [
     EnumToArrayPipe,
     MaskTextPipe,
     CustomDate,
     ArrayContains,
-    ArrayValueOf
-  ]
+    ArrayValueOf,
+  ],
 })
-export class CustomPipeModule { }
+export class CustomPipeModule {}

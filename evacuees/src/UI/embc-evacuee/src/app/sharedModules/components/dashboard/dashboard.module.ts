@@ -10,8 +10,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { EvacuationFileListRoutingModule } from '../evacuation-file/evacuation-file-list/evacuation-file-list-routing.module';
 import { ProfileRoutingModule } from '../evacuation-file/profile/profile-routing.module';
 
-
-
 @NgModule({
   declarations: [DashboardComponent],
   imports: [
@@ -20,7 +18,7 @@ import { ProfileRoutingModule } from '../evacuation-file/profile/profile-routing
     EvacuationFileListRoutingModule,
     ProfileRoutingModule,
     MatCardModule,
-    MatTabsModule
-  ]
+    MatTabsModule,
+  ],
 })
-export class DashboardModule { }
+export class DashboardModule {}

@@ -86,9 +86,8 @@ export class NeedsAssessmentMappingService {
           haveMedication,
           haveSpecialDiet,
           specialDietDetails,
-          householdMembers: this.convertVerifiedHouseholdMembers(
-            householdMembers
-          ),
+          householdMembers:
+            this.convertVerifiedHouseholdMembers(householdMembers),
           householdMember: {
             dateOfBirth: '',
             firstName: '',
@@ -130,11 +129,15 @@ export class NeedsAssessmentMappingService {
     canEvacueeProvideLodging: boolean,
     canEvacueeProvideTransportation: boolean
   ): void {
-    this.needsAssessmentService.canEvacueeProvideClothing = canEvacueeProvideClothing;
+    this.needsAssessmentService.canEvacueeProvideClothing =
+      canEvacueeProvideClothing;
     this.needsAssessmentService.canEvacueeProvideFood = canEvacueeProvideFood;
-    this.needsAssessmentService.canEvacueeProvideIncidentals = canEvacueeProvideIncidentals;
-    this.needsAssessmentService.canEvacueeProvideLodging = canEvacueeProvideLodging;
-    this.needsAssessmentService.canEvacueeProvideTransportation = canEvacueeProvideTransportation;
+    this.needsAssessmentService.canEvacueeProvideIncidentals =
+      canEvacueeProvideIncidentals;
+    this.needsAssessmentService.canEvacueeProvideLodging =
+      canEvacueeProvideLodging;
+    this.needsAssessmentService.canEvacueeProvideTransportation =
+      canEvacueeProvideTransportation;
 
     this.formCreationService
       .getIndentifyNeedsForm()

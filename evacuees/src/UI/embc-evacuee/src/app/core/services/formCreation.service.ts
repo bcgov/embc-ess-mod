@@ -33,25 +33,25 @@ export class FormCreationService {
 
   restrictionForm$: Observable<FormGroup> = this.restrictionForm.asObservable();
 
-  personalDetailsForm: BehaviorSubject<
-    FormGroup | undefined
-  > = new BehaviorSubject(
-    this.formBuilder.group(
-      new PersonDetailsForm(new PersonDetails(), this.customValidator)
-    )
-  );
+  personalDetailsForm: BehaviorSubject<FormGroup | undefined> =
+    new BehaviorSubject(
+      this.formBuilder.group(
+        new PersonDetailsForm(new PersonDetails(), this.customValidator)
+      )
+    );
 
-  personalDetailsForm$: Observable<FormGroup> = this.personalDetailsForm.asObservable();
+  personalDetailsForm$: Observable<FormGroup> =
+    this.personalDetailsForm.asObservable();
 
-  contactDetailsForm: BehaviorSubject<
-    FormGroup | undefined
-  > = new BehaviorSubject(
-    this.formBuilder.group(
-      new ContactDetailsForm(new ContactDetails(), this.customValidator)
-    )
-  );
+  contactDetailsForm: BehaviorSubject<FormGroup | undefined> =
+    new BehaviorSubject(
+      this.formBuilder.group(
+        new ContactDetailsForm(new ContactDetails(), this.customValidator)
+      )
+    );
 
-  contactDetailsForm$: Observable<FormGroup> = this.contactDetailsForm.asObservable();
+  contactDetailsForm$: Observable<FormGroup> =
+    this.contactDetailsForm.asObservable();
 
   secretForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
     this.formBuilder.group(new SecretForm(new Secret()))
@@ -75,19 +75,19 @@ export class FormCreationService {
 
   evacuatedForm$: Observable<FormGroup> = this.evacuatedForm.asObservable();
 
-  householdMembersForm: BehaviorSubject<
-    FormGroup | undefined
-  > = new BehaviorSubject(
-    this.formBuilder.group(
-      new HouseholdMembersForm(
-        new HouseholdMembers(),
-        this.customValidator,
-        this.formBuilder
+  householdMembersForm: BehaviorSubject<FormGroup | undefined> =
+    new BehaviorSubject(
+      this.formBuilder.group(
+        new HouseholdMembersForm(
+          new HouseholdMembers(),
+          this.customValidator,
+          this.formBuilder
+        )
       )
-    )
-  );
+    );
 
-  householdMembersForm$: Observable<FormGroup> = this.householdMembersForm.asObservable();
+  householdMembersForm$: Observable<FormGroup> =
+    this.householdMembersForm.asObservable();
 
   petsForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
     this.formBuilder.group(
@@ -97,13 +97,13 @@ export class FormCreationService {
 
   petsForm$: Observable<FormGroup> = this.petsForm.asObservable();
 
-  identifyNeedsForm: BehaviorSubject<
-    FormGroup | undefined
-  > = new BehaviorSubject(
-    this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds()))
-  );
+  identifyNeedsForm: BehaviorSubject<FormGroup | undefined> =
+    new BehaviorSubject(
+      this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds()))
+    );
 
-  identifyNeedsForm$: Observable<FormGroup> = this.identifyNeedsForm.asObservable();
+  identifyNeedsForm$: Observable<FormGroup> =
+    this.identifyNeedsForm.asObservable();
 
   constructor(
     private formBuilder: FormBuilder,

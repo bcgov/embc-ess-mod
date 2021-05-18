@@ -8,14 +8,15 @@ describe('PetsComponent', () => {
   let component: PetsComponent;
   let fixture: ComponentFixture<PetsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ PetsComponent ],
-      imports: [ ReactiveFormsModule ],
-      providers: [ FormCreationService, FormBuilder ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [PetsComponent],
+        imports: [ReactiveFormsModule],
+        providers: [FormCreationService, FormBuilder],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PetsComponent);

@@ -4,16 +4,14 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 @Component({
   selector: 'app-restriction-form',
   templateUrl: './restriction-form.component.html',
-  styleUrls: ['./restriction-form.component.scss']
+  styleUrls: ['./restriction-form.component.scss'],
 })
 export class RestrictionFormComponent implements OnInit {
-
   @Input() restrictionForm: FormGroup;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   /**
    * Returns the control of the form
@@ -21,5 +19,4 @@ export class RestrictionFormComponent implements OnInit {
   get restrFormControl(): { [key: string]: AbstractControl } {
     return this.restrictionForm.controls;
   }
-
 }

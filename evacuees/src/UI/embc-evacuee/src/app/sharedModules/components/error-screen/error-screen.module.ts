@@ -5,6 +5,6 @@ import { ErrorScreenRoutingModule } from './error-screen-routing.module';
 
 @NgModule({
   declarations: [ErrorScreenComponent],
-  imports: [CommonModule, ErrorScreenRoutingModule]
+  imports: [CommonModule, ErrorScreenRoutingModule],
 })
-export class ErrorScreenModule { }
+export class ErrorScreenModule {}

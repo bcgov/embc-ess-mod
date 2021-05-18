@@ -23,7 +23,8 @@ import { ProfileService } from './profile.service';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent
-  implements OnInit, AfterViewInit, AfterViewChecked {
+  implements OnInit, AfterViewInit, AfterViewChecked
+{
   @ViewChild('profileStepper') profileStepper: MatStepper;
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
@@ -153,20 +154,17 @@ export class ProfileComponent
         this.profileDataService.personalDetails = this.form.value;
         break;
       case 'address':
-        this.profileDataService.primaryAddressDetails = this.form.get(
-          'address'
-        ).value;
-        this.profileDataService.mailingAddressDetails = this.form.get(
-          'mailingAddress'
-        ).value;
+        this.profileDataService.primaryAddressDetails =
+          this.form.get('address').value;
+        this.profileDataService.mailingAddressDetails =
+          this.form.get('mailingAddress').value;
         break;
       case 'contact-info':
         this.profileDataService.contactDetails = this.form.value;
         break;
       case 'secret':
-        this.profileDataService.secretWordPhrase = this.form.get(
-          'secretPhrase'
-        ).value;
+        this.profileDataService.secretWordPhrase =
+          this.form.get('secretPhrase').value;
         break;
       default:
     }

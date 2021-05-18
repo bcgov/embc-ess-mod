@@ -9,14 +9,19 @@ describe('NonVerifiedRegistrationComponent', () => {
   let component: NonVerifiedRegistrationComponent;
   let fixture: ComponentFixture<NonVerifiedRegistrationComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [NonVerifiedRegistrationComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [FormBuilder]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [NonVerifiedRegistrationComponent],
+        imports: [
+          ReactiveFormsModule,
+          HttpClientTestingModule,
+          RouterTestingModule,
+        ],
+        providers: [FormBuilder],
+      }).compileComponents();
     })
-      .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NonVerifiedRegistrationComponent);
