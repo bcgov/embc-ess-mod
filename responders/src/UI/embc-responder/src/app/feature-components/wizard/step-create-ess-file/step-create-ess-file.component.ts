@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TabModel } from 'src/app/core/models/tab.model';
-import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import * as globalConst from '../../../core/services/global-constants';
 import { StepCreateEssFileService } from './step-create-ess-file.service';
 
 @Component({
@@ -19,8 +15,7 @@ export class StepCreateEssFileComponent {
 
   constructor(
     private router: Router,
-    private stepCreateEssFileService: StepCreateEssFileService,
-    private dialog: MatDialog
+    private stepCreateEssFileService: StepCreateEssFileService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -40,35 +35,8 @@ export class StepCreateEssFileComponent {
    *
    * @param tabRoute clicked route
    * @param $event mouse click event
-   * @returns true/false
    */
-  isAllowed(tabRoute: string, $event: MouseEvent): boolean {
-    if (tabRoute === 'review') {
-      const allow = this.tabs.some(
-        (tab) => tab.status === 'not-started' || tab.status === 'incomplete'
-      );
-      if (allow) {
-        $event.stopPropagation();
-        $event.preventDefault();
-        this.openModal(globalConst.wizardESSFileMessage);
-      }
-      return allow;
-    }
-  }
-
-  /**
-   * Open information modal window
-   *
-   * @param text text to display
-   */
-  openModal(text: string): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        text
-      },
-      height: '230px',
-      width: '530px'
-    });
+  isAllowed(tabRoute: string, $event: MouseEvent): void {
+    this.stepCreateEssFileService.isAllowed(tabRoute, $event);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -12,7 +12,7 @@ import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-co
   templateUrl: './evacuee-details.component.html',
   styleUrls: ['./evacuee-details.component.scss']
 })
-export class EvacueeDetailsComponent implements OnInit {
+export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   evacueeDetailsForm: FormGroup;
   gender = globalConst.gender;
   readonly dateMask = [
@@ -92,18 +92,22 @@ export class EvacueeDetailsComponent implements OnInit {
   }
 
   /**
-   * Updates the tab status and navigate to next tab
+   * Navigate to next tab
    */
   next(): void {
-    this.updateTabStatus();
     this.router.navigate(['/ess-wizard/create-evacuee-profile/address']);
   }
 
+  /**
+   * Navigates to the previous tab
+   */
   back(): void {
-    this.updateTabStatus();
     this.router.navigate(['/ess-wizard/create-evacuee-profile/restriction']);
   }
 
+  /**
+   * Checks the form validity and updates the tab status
+   */
   updateTabStatus() {
     if (this.evacueeDetailsForm.valid) {
       this.stepCreateProfileService.setTabStatus('evacuee-details', 'complete');
@@ -114,5 +118,9 @@ export class EvacueeDetailsComponent implements OnInit {
       );
     }
     this.stepCreateProfileService.personalDetails = this.evacueeDetailsForm.getRawValue();
+  }
+
+  ngOnDestroy(): void {
+    this.updateTabStatus();
   }
 }
