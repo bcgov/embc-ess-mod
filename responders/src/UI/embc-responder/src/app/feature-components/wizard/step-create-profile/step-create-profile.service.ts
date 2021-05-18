@@ -214,6 +214,7 @@ export class StepCreateProfileService {
 
   /**
    * Checks if the form is partially completed or not
+   *
    * @param form form group
    * @returns true/false
    */

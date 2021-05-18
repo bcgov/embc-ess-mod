@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { ExitWizardDialogComponent } from 'src/app/shared/components/dialog-components/exit-wizard-dialog/exit-wizard-dialog.component';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { WizardService } from './wizard.service';
+import * as globalConst from '../../core/services/global-constants';
 
 @Component({
   selector: 'app-wizard',
@@ -15,7 +20,8 @@ export class WizardComponent implements OnInit {
   constructor(
     private router: Router,
     private wizardService: WizardService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private dialog: MatDialog
   ) {
     this.sideNavMenu = this.wizardService.menuItems;
   }
@@ -39,10 +45,64 @@ export class WizardComponent implements OnInit {
   }
 
   /**
+   * Allows navigation if the step is not locked else
+   * displays modal window
+   *
+   * @param lockedIndicator
+   * @param $event
+   */
+  goToStep(lockedIndicator: boolean, $event: MouseEvent): void {
+    if (lockedIndicator) {
+      $event.stopPropagation();
+      $event.preventDefault();
+      this.openLockedModal(globalConst.lockedStepMessage);
+    }
+  }
+
+  /**
    * Exits the wizards and navigates to last page
    */
   exit(): void {
     const navigateTo = this.cacheService.get('wizardOpenedFrom');
-    this.router.navigate([navigateTo]);
+    this.openExitModal(navigateTo);
+  }
+
+  /**
+   * Opens exit modal window
+   *
+   * @param navigateTo navigateTo url
+   */
+  openExitModal(navigateTo: string): void {
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: ExitWizardDialogComponent
+        },
+        height: '270px',
+        width: '530px'
+      })
+      .afterClosed()
+      .subscribe((event) => {
+        if (event === 'exit') {
+          this.router.navigate([navigateTo]);
+        }
+      });
+  }
+
+  /**
+   * Opens information modal to display the step
+   * locked message
+   *
+   * @param text message to display
+   */
+  openLockedModal(text: string) {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        text
+      },
+      height: '230px',
+      width: '530px'
+    });
   }
 }

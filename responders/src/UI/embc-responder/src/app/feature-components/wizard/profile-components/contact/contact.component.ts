@@ -214,6 +214,10 @@ export class ContactComponent implements OnInit, OnDestroy {
     this.router.navigate(['/ess-wizard/create-evacuee-profile/address']);
   }
 
+  ngOnDestroy(): void {
+    this.updateTabStatus();
+  }
+
   /**
    * Checks the form validity and updates the tab status
    */
@@ -241,9 +245,5 @@ export class ContactComponent implements OnInit, OnDestroy {
     this.stepCreateProfileService.confirmEmail = this.contactInfoForm.get(
       'confirmEmail'
     ).value;
-  }
-
-  ngOnDestroy(): void {
-    this.updateTabStatus();
   }
 }

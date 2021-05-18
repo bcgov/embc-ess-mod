@@ -236,6 +236,10 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
     ]);
   }
 
+  ngOnDestroy(): void {
+    this.updateTabStatus();
+  }
+
   /**
    * Creates the address form
    */
@@ -470,9 +474,5 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.stepCreateProfileService.isBcMailingAddress = this.primaryAddressForm.get(
       'isBcMailingAddress'
     ).value;
-  }
-
-  ngOnDestroy(): void {
-    this.updateTabStatus();
   }
 }

@@ -75,6 +75,6 @@ export class RestrictionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.updateTabStatus()
+    this.updateTabStatus();
   }
 }
