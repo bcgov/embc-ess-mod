@@ -86,7 +86,6 @@
             <mat-form-field appearance="outline">
               <mat-label>Gender</mat-label>
               <mat-select formControlName="gender" required>
-                <mat-option>--Gender</mat-option>
                 <mat-option *ngFor="let gen of gender" [value]="gen.value">
                   {{ gen.name }}
                 </mat-option>
