@@ -9,6 +9,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { EvacueeProfile } from '../models/evacuee-profile';
 import { GetSecurityPhraseResponse } from '../models/get-security-phrase-response';
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
 import { SearchResults } from '../models/search-results';
@@ -355,6 +356,68 @@ export class RegistrationsService extends BaseService {
 
     return this.registrationsVerifySecurityPhrase$Response(params).pipe(
       map((r: StrictHttpResponse<VerifySecurityPhraseResponse>) => r.body as VerifySecurityPhraseResponse)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsUpsertRegistrantProfile
+   */
+  static readonly RegistrationsUpsertRegistrantProfilePath = '/api/Registrations/profile';
+
+  /**
+   * Creates or updates a Registrant Profile.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsUpsertRegistrantProfile()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsUpsertRegistrantProfile$Response(params: {
+
+    /**
+     * Evacuee
+     */
+    body: EvacueeProfile
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpsertRegistrantProfilePath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Creates or updates a Registrant Profile.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsUpsertRegistrantProfile$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsUpsertRegistrantProfile(params: {
+
+    /**
+     * Evacuee
+     */
+    body: EvacueeProfile
+  }): Observable<void> {
+
+    return this.registrationsUpsertRegistrantProfile$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 
