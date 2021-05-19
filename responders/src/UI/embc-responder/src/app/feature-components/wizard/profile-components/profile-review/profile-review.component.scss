@@ -1,0 +1,32 @@
+@import '../../../../../styles/defaults.scss';
+
+button.back {
+  float: left;
+  width: 20%;
+}
+button.save {
+  float: right;
+  width: 20%;
+}
+
+.wizard-panel {
+	h2 { font-size: 1.4em; }
+	
+	padding: 20px;
+	margin: 8px 0;
+}
+
+.review-panel {
+	@extend .wizard-panel;
+
+	h2 { color: #234075; }
+
+	background-color: #f2f2f2;
+}
+
+.confirm-panel {
+	@extend .wizard-panel;
+
+	background-color: #234075;
+	color: white;
+}
