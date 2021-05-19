@@ -6,6 +6,10 @@ import {
 import { Address } from 'src/app/core/models/profile';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
+import * as globalConst from '../../../core/services/global-constants';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -21,7 +25,10 @@ export class StepCreateEssFileService {
   private referredServiceDetails: string[] = [];
   private externalServices: string;
 
-  constructor(private strepCreateProfileService: StepCreateProfileService) {}
+  constructor(
+    private strepCreateProfileService: StepCreateProfileService,
+    private dialog: MatDialog
+  ) {}
 
   public get paperESSFiles(): string {
     return this.paperESSFile;
@@ -134,5 +141,53 @@ export class StepCreateEssFileService {
       referredServiceDetails: this.referredServiceDetails,
       externalServices: this.externalServices
     };
+  }
+
+  /**
+   * Determines if the tab navigation is allowed or not
+   *
+   * @param tabRoute clicked route
+   * @param $event mouse click event
+   * @returns true/false
+   */
+  isAllowed(tabRoute: string, $event: MouseEvent): boolean {
+    if (tabRoute === 'review') {
+      const allow = this.checkTabsStatus();
+      if (allow) {
+        $event.stopPropagation();
+        $event.preventDefault();
+        this.openModal(globalConst.wizardESSFileMessage);
+      }
+      return allow;
+    }
+  }
+
+  /**
+   * Checks the status of the tabs
+   *
+   * @returns true/false
+   */
+  checkTabsStatus(): boolean {
+    return this.tabs.some(
+      (tab) =>
+        (tab.status === 'not-started' || tab.status === 'incomplete') &&
+        tab.name !== 'review'
+    );
+  }
+
+  /**
+   * Open information modal window
+   *
+   * @param text text to display
+   */
+  openModal(text: string): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        text
+      },
+      height: '230px',
+      width: '530px'
+    });
   }
 }
