@@ -349,8 +349,12 @@ namespace EMBC.Responders.API.Controllers
     {
         public RegistrationsMapping()
         {
+            CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
+                .ReverseMap()
+                ;
+
             CreateMap<EvacueeProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
-                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
+                .ForMember(d => d.SecurityQuestions, opts => opts.MapFrom(s => s.SecurityQuestions))
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
                 .ForMember(d => d.MailingAddress, opts => opts.Ignore())
