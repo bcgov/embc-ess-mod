@@ -1,68 +1,114 @@
-<div style="background-color: #F2F2F2;">
-    <div class="container container-frame">
-        <div class="row heading-container">
-            <div class="col-md-12">
-                <span class="page-heading"><b>{{(formCreationService.personalDetailsForm$ |
-                        async)?.value?.lastName}}</b>,
-                    {{(formCreationService.personalDetailsForm$ | async)?.value?.firstName}}</span>
-            </div>
-        </div>
-        <div class="row align-banner">
-            <div class="col-md-12">
-                <mat-card class="view-banner">
-                    <mat-card-content>
-                        <div class="row"
-                            *ngIf="(evacuationFilesDataService.currentEvacuationFileCount$ |async ) === 0; else activeFileBanner">
-                            <div class="col-md-9">
-                                <p class="top-detail">If you are currently <b>evacuated</b>, please start an
-                                    <b>Evacuation File</b>.
-                                </p>
-                                <p>
-                                    Completing this now will save you time when you meet with an Emergency Support
-                                    Services
-                                    (ESS) Volunteer.</p>
-                            </div>
-                            <div class="col-md-3 button-align">
-                                <button class="button-p start-button" mat-stroked-button type="button"
-                                    (click)="startAssessment()">Get
-                                    Started</button>
-                            </div>
-                        </div>
-                    </mat-card-content>
-
-                    <ng-template #activeFileBanner>
-                        <ng-container *ngIf="!evacuationFileWithTask">
-                            <div class="col-md-12">
-                                <p class="top-detail"><b>Please connect with an Emergency Support Services Volunteer or
-                                        proceed to your closest Reception Center.</b></p>
-                                <p><b>Please remember to bring government-issued identification with you if you have
-                                        it.</b>
-                                </p>
-                                <p>All details pertaining to your evacuation can be found below, under the "Current
-                                    Evacuations" tab.</p>
-                            </div>
-                        </ng-container>
-
-                        <ng-container *ngIf="evacuationFileWithTask">
-                            <div class="col-md-12">
-                                <p class="top-detail"><b>Are you still on evacuation order and require additional
-                                        supports?</b></p>
-                                <p>Please connect with your Local Government for assistance.</p>
-                            </div>
-                        </ng-container>
-                    </ng-template>
-                </mat-card>
-            </div>
-        </div>
+<div style="background-color: #f2f2f2">
+  <div class="container container-frame">
+    <div class="row heading-container">
+      <div class="col-md-12">
+        <span class="page-heading"
+          ><b>{{
+            (formCreationService.personalDetailsForm$ | async)?.value?.lastName
+          }}</b
+          >,
+          {{
+            (formCreationService.personalDetailsForm$ | async)?.value?.firstName
+          }}</span
+        >
+      </div>
     </div>
+    <div class="row align-banner">
+      <div class="col-md-12">
+        <mat-card class="view-banner">
+          <mat-card-content>
+            <div
+              class="row"
+              *ngIf="
+                (evacuationFilesDataService.currentEvacuationFileCount$
+                  | async) === 0;
+                else activeFileBanner
+              "
+            >
+              <div class="col-md-9">
+                <p class="top-detail">
+                  If you are currently <b>evacuated</b>, please start an
+                  <b>Evacuation File</b>.
+                </p>
+                <p>
+                  Completing this now will save you time when you meet with an
+                  Emergency Support Services (ESS) Volunteer.
+                </p>
+              </div>
+              <div class="col-md-3 button-align">
+                <button
+                  class="button-p start-button"
+                  mat-stroked-button
+                  type="button"
+                  (click)="startAssessment()"
+                >
+                  Get Started
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <ng-template #activeFileBanner>
+            <ng-container *ngIf="!evacuationFileWithTask">
+              <div class="col-md-12">
+                <p class="top-detail">
+                  <b
+                    >Please connect with an Emergency Support Services Volunteer
+                    or proceed to your closest Reception Center.</b
+                  >
+                </p>
+                <p>
+                  <b
+                    >Please remember to bring government-issued identification
+                    with you if you have it.</b
+                  >
+                </p>
+                <p>
+                  All details pertaining to your evacuation can be found below,
+                  under the "Current Evacuations" tab.
+                </p>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="evacuationFileWithTask">
+              <div class="col-md-12">
+                <p class="top-detail">
+                  <b
+                    >Are you still on evacuation order and require additional
+                    supports?</b
+                  >
+                </p>
+                <p>Please connect with your Local Government for assistance.</p>
+              </div>
+            </ng-container>
+          </ng-template>
+        </mat-card>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="container" style="padding-bottom: 50px;">
-    <nav mat-tab-nav-bar dynamicHeight>
-        <a mat-tab-link *ngFor="let tabItem of tabs" [routerLink]="tabItem.route" routerLinkActive="active-tab">
-            <img class="inactive-curr" [src]="tabItem.inactiveImage" height="15" width="15">
-            <img class="active-curr" [src]="tabItem.activeImage" height="15" width="15">
-            &nbsp;&nbsp; {{tabItem.label}}
-        </a>
-    </nav>
-    <router-outlet></router-outlet>
+<div class="container" style="padding-bottom: 50px">
+  <nav mat-tab-nav-bar dynamicHeight>
+    <a
+      mat-tab-link
+      *ngFor="let tabItem of tabs"
+      [routerLink]="tabItem.route"
+      routerLinkActive="active-tab"
+    >
+      <img
+        class="inactive-curr"
+        [src]="tabItem.inactiveImage"
+        height="15"
+        width="15"
+      />
+      <img
+        class="active-curr"
+        [src]="tabItem.activeImage"
+        height="15"
+        width="15"
+      />
+      &nbsp;&nbsp; {{ tabItem.label }}
+    </a>
+  </nav>
+  <router-outlet></router-outlet>
 </div>

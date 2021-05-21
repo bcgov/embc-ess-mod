@@ -6,9 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./error-screen.component.scss']
 })
 export class ErrorScreenComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void { }
-
+  ngOnInit(): void {}
 }

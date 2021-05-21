@@ -1,4 +1,12 @@
-import { Component, OnInit, NgModule, Inject, ChangeDetectorRef, AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  NgModule,
+  Inject,
+  ChangeDetectorRef,
+  AfterViewChecked,
+  OnDestroy
+} from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -11,23 +19,29 @@ import { AddressFormsModule } from '../../address-forms/address-forms.module';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+  MatAutocompleteModule,
+  MatAutocompleteSelectedEvent
+} from '@angular/material/autocomplete';
 import * as globalConst from '../../../../core/services/globalConstants';
-import { Country, LocationService } from 'src/app/core/services/location.service';
+import {
+  Country,
+  LocationService
+} from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-address',
   templateUrl: './address.component.html',
   styleUrls: ['./address.component.scss']
 })
-export default class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
-
+export default class AddressComponent
+  implements OnInit, AfterViewChecked, OnDestroy
+{
   primaryAddressForm: FormGroup;
   primaryAddressForm$: Subscription;
   radioOption: string[] = ['Yes', 'No'];
   formBuilder: FormBuilder;
   formCreationService: FormCreationService;
-
   filteredOptions: Observable<Country[]>;
   mailingFilteredOptions: Observable<Country[]>;
   countries: Country[] = [];
@@ -36,46 +50,66 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
     @Inject('formBuilder') formBuilder: FormBuilder,
     @Inject('formCreationService') formCreationService: FormCreationService,
     private locationService: LocationService,
-    private cd: ChangeDetectorRef) {
+    private cd: ChangeDetectorRef
+  ) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
 
   ngOnInit(): void {
-
     this.countries = this.locationService.getCountriesList();
 
-    this.primaryAddressForm$ = this.formCreationService.getAddressForm().subscribe(primaryAddress => {
-      this.primaryAddressForm = primaryAddress;
-    });
+    this.primaryAddressForm$ = this.formCreationService
+      .getAddressForm()
+      .subscribe((primaryAddress) => {
+        this.primaryAddressForm = primaryAddress;
+      });
 
-    this.filteredOptions = this.primaryAddressForm.get('address.country').valueChanges.pipe(
-      startWith(''),
-      map(value => value ? this.filter(value) : this.countries.slice())
-    );
+    this.filteredOptions = this.primaryAddressForm
+      .get('address.country')
+      .valueChanges.pipe(
+        startWith(''),
+        map((value) => (value ? this.filter(value) : this.countries.slice()))
+      );
 
-    this.mailingFilteredOptions = this.primaryAddressForm.get('mailingAddress.country').valueChanges.pipe(
-      startWith(''),
-      map(value => value ? this.filter(value) : this.countries.slice())
-    );
+    this.mailingFilteredOptions = this.primaryAddressForm
+      .get('mailingAddress.country')
+      .valueChanges.pipe(
+        startWith(''),
+        map((value) => (value ? this.filter(value) : this.countries.slice()))
+      );
 
-    this.primaryAddressForm.get('address.country').valueChanges.subscribe(value => {
-      this.primaryAddressForm.get('address.stateProvince').updateValueAndValidity();
-    });
+    this.primaryAddressForm
+      .get('address.country')
+      .valueChanges.subscribe((value) => {
+        this.primaryAddressForm
+          .get('address.stateProvince')
+          .updateValueAndValidity();
+      });
 
-    this.primaryAddressForm.get('mailingAddress.country').valueChanges.subscribe(value => {
-      this.primaryAddressForm.get('mailingAddress.stateProvince').updateValueAndValidity();
-    });
+    this.primaryAddressForm
+      .get('mailingAddress.country')
+      .valueChanges.subscribe((value) => {
+        this.primaryAddressForm
+          .get('mailingAddress.stateProvince')
+          .updateValueAndValidity();
+      });
 
-    this.primaryAddressForm.get('isBcAddress').valueChanges.subscribe(value => {
-      this.updateOnVisibility();
-    });
+    this.primaryAddressForm
+      .get('isBcAddress')
+      .valueChanges.subscribe((value) => {
+        this.updateOnVisibility();
+      });
 
-    this.primaryAddressForm.get('isNewMailingAddress').valueChanges.subscribe(value => {
-      this.primaryAddressForm.get('isBcMailingAddress').updateValueAndValidity();
-    });
+    this.primaryAddressForm
+      .get('isNewMailingAddress')
+      .valueChanges.subscribe((value) => {
+        this.primaryAddressForm
+          .get('isBcMailingAddress')
+          .updateValueAndValidity();
+      });
 
-    this.primaryAddressForm.get('address').valueChanges.subscribe(value => {
+    this.primaryAddressForm.get('address').valueChanges.subscribe((value) => {
       if (this.primaryAddressForm.get('isNewMailingAddress').value === 'Yes') {
         const primaryAddress = this.primaryAddressForm.getRawValue().address;
         this.primaryAddressForm.get('mailingAddress').setValue(primaryAddress);
@@ -98,20 +132,9 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
   }
 
   /**
-   * Filters the coutry list for autocomplete field
-   * @param value : User typed value
-   */
-  private filter(value?: string): Country[] {
-    if (value !== null && value !== undefined && typeof value === 'string') {
-      const filterValue = value.toLowerCase();
-      return this.countries.filter(option => option.name.toLowerCase().includes(filterValue));
-    }
-  }
-
-  /**
    * Returns the control of the form
    */
-  get primaryAddressFormControl(): { [key: string]: AbstractControl; } {
+  get primaryAddressFormControl(): { [key: string]: AbstractControl } {
     return this.primaryAddressForm.controls;
   }
 
@@ -136,23 +159,37 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
   primaryAddressChange(event: MatRadioChange): void {
     this.primaryAddressForm.get('address').reset();
     if (event.value === 'Yes') {
-      this.primaryAddressForm.get('address.stateProvince').setValue(globalConst.defaultProvince);
-      this.primaryAddressForm.get('address.country').setValue(globalConst.defaultCountry);
+      this.primaryAddressForm
+        .get('address.stateProvince')
+        .setValue(globalConst.defaultProvince);
+      this.primaryAddressForm
+        .get('address.country')
+        .setValue(globalConst.defaultCountry);
     }
   }
 
   mailingAddressChange(event: MatRadioChange): void {
     this.primaryAddressForm.get('mailingAddress').reset();
     if (event.value === 'Yes') {
-      this.primaryAddressForm.get('mailingAddress.stateProvince').setValue(globalConst.defaultProvince);
-      this.primaryAddressForm.get('mailingAddress.country').setValue(globalConst.defaultCountry);
+      this.primaryAddressForm
+        .get('mailingAddress.stateProvince')
+        .setValue(globalConst.defaultProvince);
+      this.primaryAddressForm
+        .get('mailingAddress.country')
+        .setValue(globalConst.defaultCountry);
     }
   }
 
   updateOnVisibility(): void {
-    this.primaryAddressForm.get('address.addressLine1').updateValueAndValidity();
-    this.primaryAddressForm.get('address.jurisdiction').updateValueAndValidity();
-    this.primaryAddressForm.get('address.stateProvince').updateValueAndValidity();
+    this.primaryAddressForm
+      .get('address.addressLine1')
+      .updateValueAndValidity();
+    this.primaryAddressForm
+      .get('address.jurisdiction')
+      .updateValueAndValidity();
+    this.primaryAddressForm
+      .get('address.stateProvince')
+      .updateValueAndValidity();
     this.primaryAddressForm.get('address.country').updateValueAndValidity();
     this.primaryAddressForm.get('address.postalCode').updateValueAndValidity();
   }
@@ -169,13 +206,28 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
   }
 
   countryDisplayFn(country: Country): string {
-    if (country) { return country.name; }
+    if (country) {
+      return country.name;
+    }
   }
 
   ngOnDestroy(): void {
     this.primaryAddressForm$.unsubscribe();
   }
 
+  /**
+   * Filters the coutry list for autocomplete field
+   *
+   * @param value : User typed value
+   */
+  private filter(value?: string): Country[] {
+    if (value !== null && value !== undefined && typeof value === 'string') {
+      const filterValue = value.toLowerCase();
+      return this.countries.filter((option) =>
+        option.name.toLowerCase().includes(filterValue)
+      );
+    }
+  }
 }
 
 @NgModule({
@@ -190,10 +242,6 @@ export default class AddressComponent implements OnInit, AfterViewChecked, OnDes
     AddressFormsModule,
     MatAutocompleteModule
   ],
-  declarations: [
-    AddressComponent,
-  ],
+  declarations: [AddressComponent]
 })
-class AddressModule {
-
-}
+class AddressModule {}

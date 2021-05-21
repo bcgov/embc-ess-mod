@@ -8,9 +8,8 @@ describe('ErrorScreenComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ErrorScreenComponent ]
-    })
-    .compileComponents();
+      declarations: [ErrorScreenComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

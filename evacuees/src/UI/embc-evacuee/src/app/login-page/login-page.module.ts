@@ -6,13 +6,7 @@ import { LoginPageComponent } from './login-page.component';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [
-    LoginPageComponent
-  ],
-  imports: [
-    CommonModule,
-    LoginPageRoutingModule,
-    MatButtonModule
-  ]
+  declarations: [LoginPageComponent],
+  imports: [CommonModule, LoginPageRoutingModule, MatButtonModule]
 })
-export class LoginPageModule { }
+export class LoginPageModule {}

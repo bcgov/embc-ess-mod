@@ -2,16 +2,14 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class RestrictionService {
+  private restrictedAcces: boolean;
 
-    private _restrictedAccess: boolean;
+  constructor() {}
 
-    constructor() { }
-
-    public get restrictedAccess(): boolean {
-        return this._restrictedAccess;
-    }
-    public set restrictedAccess(value: boolean) {
-        this._restrictedAccess = value;
-    }
-
+  public get restrictedAccess(): boolean {
+    return this.restrictedAcces;
+  }
+  public set restrictedAccess(value: boolean) {
+    this.restrictedAcces = value;
+  }
 }

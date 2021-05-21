@@ -20,7 +20,6 @@ import * as globalConst from '../../../../core/services/globalConstants';
   styleUrls: ['./pets.component.scss']
 })
 export default class PetsComponent implements OnInit {
-
   petsForm: FormGroup;
   radioOption = globalConst.radioButton1;
   formBuilder: FormBuilder;
@@ -34,23 +33,27 @@ export default class PetsComponent implements OnInit {
   rowEdit = false;
   showTable = true;
 
-  constructor(@Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
+  constructor(
+    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formCreationService') formCreationService: FormCreationService
   ) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
 
   ngOnInit(): void {
-    this.petsForm$ = this.formCreationService.getPetsForm().subscribe(
-      petsForm => {
+    this.petsForm$ = this.formCreationService
+      .getPetsForm()
+      .subscribe((petsForm) => {
         this.petsForm = petsForm;
-      }
-    );
+      });
 
-    this.petsForm.get('addPetIndicator').valueChanges.subscribe(value =>
-      this.updateOnVisibility());
-    this.petsForm.get('addPetFoodIndicator').valueChanges.subscribe(value =>
-      this.updateOnVisibility());
+    this.petsForm
+      .get('addPetIndicator')
+      .valueChanges.subscribe((value) => this.updateOnVisibility());
+    this.petsForm
+      .get('addPetFoodIndicator')
+      .valueChanges.subscribe((value) => this.updateOnVisibility());
 
     this.dataSource.next(this.petsForm.get('pets').value);
     this.data = this.petsForm.get('pets').value;
@@ -80,7 +83,6 @@ export default class PetsComponent implements OnInit {
     } else {
       this.petsForm.get('pet').markAllAsTouched();
     }
-
   }
 
   cancel(): void {
@@ -98,7 +100,7 @@ export default class PetsComponent implements OnInit {
   /**
    * Returns the control of the form
    */
-  get petsFormControl(): { [key: string]: AbstractControl; } {
+  get petsFormControl(): { [key: string]: AbstractControl } {
     return this.petsForm.controls;
   }
 
@@ -106,7 +108,6 @@ export default class PetsComponent implements OnInit {
     this.data.splice(index, 1);
     this.dataSource.next(this.data);
     this.petsForm.get('pets').setValue(this.data);
-
 
     if (this.data.length === 0) {
       this.petsForm.get('addPetIndicator').setValue(false);
@@ -129,7 +130,6 @@ export default class PetsComponent implements OnInit {
     this.petsForm.get('pet.quantity').updateValueAndValidity();
     this.petsForm.get('hasPetsFood').updateValueAndValidity();
   }
-
 }
 
 @NgModule({
@@ -145,10 +145,6 @@ export default class PetsComponent implements OnInit {
     MatIconModule,
     PetFormModule
   ],
-  declarations: [
-    PetsComponent,
-  ]
+  declarations: [PetsComponent]
 })
-class PetsModule {
-
-}
+class PetsModule {}

@@ -23,14 +23,30 @@ export interface ReferralDetails {
   issuedBy: string;
 }
 
-const REFERRALS: Referral[] = [{
-  referralDate: '07-Sep-2020', referralDetails: [{
-    provider: 'e-Transfer', type: 'Food-Groceries', issuedTo: 'Smith, John',
-    expiry: 'n/a', code: 'P356211', amount: '$50', status: 'Active', providedTo: ['Smith, John', 'Smith, Jenna',
-      'Smith, Michael', 'Smith, Lily'], providerDetails: 'e-Transfer issued to jsmith@gmail.com',
-    issuedBy: 'Oak Bay ESS Team'
-  }]
-}];
+const REFERRALS: Referral[] = [
+  {
+    referralDate: '07-Sep-2020',
+    referralDetails: [
+      {
+        provider: 'e-Transfer',
+        type: 'Food-Groceries',
+        issuedTo: 'Smith, John',
+        expiry: 'n/a',
+        code: 'P356211',
+        amount: '$50',
+        status: 'Active',
+        providedTo: [
+          'Smith, John',
+          'Smith, Jenna',
+          'Smith, Michael',
+          'Smith, Lily'
+        ],
+        providerDetails: 'e-Transfer issued to jsmith@gmail.com',
+        issuedBy: 'Oak Bay ESS Team'
+      }
+    ]
+  }
+];
 
 @Component({
   selector: 'app-evacuation-details',
@@ -38,34 +54,32 @@ const REFERRALS: Referral[] = [{
   styleUrls: ['./evacuation-details.component.scss']
 })
 export class EvacuationDetailsComponent implements OnInit {
-
   @Input() allExpandState = false;
-
   previousUrl: string;
   evacuationFileTab: string;
-
-  constructor(
-    private route: ActivatedRoute, public formCreationService: FormCreationService,
-    public evacuationFilesService: EvacuationFileService, private router: Router,
-    public evacuationFileDataService: EvacuationFileDataService) {
-
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        console.log('prev:', event.url);
-        this.previousUrl = event.url;
-      });
-  }
-
   backArrowImgSrc = '/assets/images/back_arrow.svg';
   type = 'need';
   currentFlow: string;
   parentPageName = 'needs-assessment';
   referralDetailsText = 'expand all';
   referralData = [];
-
   showActiveList = true;
   showInactiveList = true;
+
+  constructor(
+    private route: ActivatedRoute,
+    public formCreationService: FormCreationService,
+    public evacuationFilesService: EvacuationFileService,
+    private router: Router,
+    public evacuationFileDataService: EvacuationFileDataService
+  ) {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        console.log('prev:', event.url);
+        this.previousUrl = event.url;
+      });
+  }
 
   ngOnInit(): void {
     if (this.previousUrl.includes('current')) {
@@ -107,5 +121,4 @@ export class EvacuationDetailsComponent implements OnInit {
       this.referralDetailsText = 'expand all';
     }
   }
-
 }
