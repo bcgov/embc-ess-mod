@@ -20,31 +20,41 @@ import { Router } from '@angular/router';
   styleUrls: ['./personal-details.component.scss']
 })
 export default class PersonalDetailsComponent implements OnInit, OnDestroy {
-
   personalDetailsForm: FormGroup;
   gender = globalConst.gender;
   formBuilder: FormBuilder;
   personalDetailsForm$: Subscription;
   formCreationService: FormCreationService;
-  readonly dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
+  readonly dateMask = [
+    /\d/,
+    /\d/,
+    '/',
+    /\d/,
+    /\d/,
+    '/',
+    /\d/,
+    /\d/,
+    /\d/,
+    /\d/
+  ];
   editVerifiedPersonalDetails = '/verified-registration/edit/personal-details';
   disableFields = false;
 
-
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-    private router: Router) {
+    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formCreationService') formCreationService: FormCreationService,
+    private router: Router
+  ) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
 
   ngOnInit(): void {
-    this.personalDetailsForm$ = this.formCreationService.getPersonalDetailsForm()
-      .subscribe(
-        personalDetails => {
-          this.personalDetailsForm = personalDetails;
-        }
-      );
+    this.personalDetailsForm$ = this.formCreationService
+      .getPersonalDetailsForm()
+      .subscribe((personalDetails) => {
+        this.personalDetailsForm = personalDetails;
+      });
 
     if (window.location.pathname === this.editVerifiedPersonalDetails) {
       this.disableFields = true;
@@ -54,16 +64,14 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
   /**
    * Returns the control of the form
    */
-  get personalFormControl(): { [key: string]: AbstractControl; } {
+  get personalFormControl(): { [key: string]: AbstractControl } {
     return this.personalDetailsForm.controls;
   }
 
   ngOnDestroy(): void {
     this.personalDetailsForm$.unsubscribe();
   }
-
 }
-
 
 @NgModule({
   imports: [
@@ -77,10 +85,6 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
     DirectivesModule,
     TextMaskModule
   ],
-  declarations: [
-    PersonalDetailsComponent,
-  ]
+  declarations: [PersonalDetailsComponent]
 })
-class PersonalDetailsModule {
-
-}
+class PersonalDetailsModule {}

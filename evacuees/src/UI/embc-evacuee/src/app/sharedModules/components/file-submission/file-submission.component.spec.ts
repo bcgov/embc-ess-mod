@@ -8,13 +8,14 @@ describe('FileSubmissionComponent', () => {
   let component: FileSubmissionComponent;
   let fixture: ComponentFixture<FileSubmissionComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [FileSubmissionComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [FileSubmissionComponent],
+        imports: [RouterTestingModule, HttpClientTestingModule]
+      }).compileComponents();
     })
-      .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FileSubmissionComponent);

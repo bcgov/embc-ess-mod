@@ -5,65 +5,89 @@ import { VerifiedRegistrationComponent } from './verified-registration.component
 
 const routes: Routes = [
   {
-    path: '', component: VerifiedRegistrationComponent,
+    path: '',
+    component: VerifiedRegistrationComponent,
     canActivate: [AllowNavigationGuard],
     runGuardsAndResolvers: 'always',
     children: [
       {
         path: 'conflicts',
-        loadChildren: () => import('../sharedModules/components/conflict-management/conflict-management.module')
-          .then(m => m.ConflictManagementModule),
+        loadChildren: () =>
+          import(
+            '../sharedModules/components/conflict-management/conflict-management.module'
+          ).then((m) => m.ConflictManagementModule),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'collection-notice',
-        loadChildren: () => import('../sharedModules/components/collection-notice/collection-notice.module')
-          .then(m => m.CollectionNoticeModule),
+        loadChildren: () =>
+          import(
+            '../sharedModules/components/collection-notice/collection-notice.module'
+          ).then((m) => m.CollectionNoticeModule),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'restriction',
-        loadChildren: () => import('../sharedModules/components/restriction/restriction.module').then(m => m.RestrictionModule),
+        loadChildren: () =>
+          import(
+            '../sharedModules/components/restriction/restriction.module'
+          ).then((m) => m.RestrictionModule),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'create-profile',
-        loadChildren: () => import('../sharedModules/components/profile/profile.module').then(m => m.ProfileModule),
+        loadChildren: () =>
+          import('../sharedModules/components/profile/profile.module').then(
+            (m) => m.ProfileModule
+          ),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'dashboard',
-        loadChildren: () => import('../sharedModules/components/dashboard/dashboard.module')
-          .then(m => m.DashboardModule),
+        loadChildren: () =>
+          import('../sharedModules/components/dashboard/dashboard.module').then(
+            (m) => m.DashboardModule
+          ),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'edit/:type',
-        loadChildren: () => import('../sharedModules/components/edit/edit.module').then(m => m.EditModule),
+        loadChildren: () =>
+          import('../sharedModules/components/edit/edit.module').then(
+            (m) => m.EditModule
+          ),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'confirm-restriction',
-        loadChildren: () => import('../sharedModules/components/confirm-restriction/confirm-restriction.module')
-          .then(m => m.ConfirmRestrictionModule),
+        loadChildren: () =>
+          import(
+            '../sharedModules/components/confirm-restriction/confirm-restriction.module'
+          ).then((m) => m.ConfirmRestrictionModule),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'needs-assessment',
-        loadChildren: () => import('../sharedModules/components/needs-assessment/needs-assessment.module')
-          .then(m => m.NeedsAssessmentModule),
+        loadChildren: () =>
+          import(
+            '../sharedModules/components/needs-assessment/needs-assessment.module'
+          ).then((m) => m.NeedsAssessmentModule),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'fileSubmission',
-        loadChildren: () => import('../sharedModules/components/file-submission/file-submission.module')
-          .then(m => m.FileSubmissionModule),
+        loadChildren: () =>
+          import(
+            '../sharedModules/components/file-submission/file-submission.module'
+          ).then((m) => m.FileSubmissionModule),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'error',
-        loadChildren: () => import('../sharedModules/components/error-screen/error-screen.module')
-          .then(m => m.ErrorScreenModule),
+        loadChildren: () =>
+          import(
+            '../sharedModules/components/error-screen/error-screen.module'
+          ).then((m) => m.ErrorScreenModule),
         data: { flow: 'verified-registration' }
       }
     ]
@@ -74,4 +98,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class VerifiedRegistrationRoutingModule { }
+export class VerifiedRegistrationRoutingModule {}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -36,7 +36,7 @@ export class CustomErrorMailMatcher implements ErrorStateMatcher {
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
-export class ContactComponent implements OnInit {
+export class ContactComponent implements OnInit, OnDestroy {
   contactInfoForm: FormGroup;
   readonly phoneMask = [
     /\d/,
@@ -199,27 +199,34 @@ export class ContactComponent implements OnInit {
   }
 
   /**
-   * Updates the tab status and navigate to next tab
+   * Navigate to next tab
    */
   next(): void {
-    this.updateTabStatus();
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/security-questions'
     ]);
   }
 
+  /**
+   * Navigates to previous tab
+   */
   back(): void {
-    this.updateTabStatus();
     this.router.navigate(['/ess-wizard/create-evacuee-profile/address']);
   }
 
+  ngOnDestroy(): void {
+    this.updateTabStatus();
+  }
+
   /**
-   * Updates the tab status
+   * Checks the form validity and updates the tab status
    */
   private updateTabStatus() {
     if (this.contactInfoForm.valid) {
       this.stepCreateProfileService.setTabStatus('contact', 'complete');
-    } else if (this.contactInfoForm.touched) {
+    } else if (
+      this.stepCreateProfileService.checkForPartialUpdates(this.contactInfoForm)
+    ) {
       this.stepCreateProfileService.setTabStatus('contact', 'incomplete');
     } else {
       this.stepCreateProfileService.setTabStatus('contact', 'not-started');

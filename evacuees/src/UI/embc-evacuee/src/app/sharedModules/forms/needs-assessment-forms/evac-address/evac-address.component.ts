@@ -1,5 +1,10 @@
 import { Component, OnInit, NgModule, Inject, ɵConsole } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,7 +24,6 @@ import { AddressFormsModule } from '../../address-forms/address-forms.module';
   styleUrls: ['./evac-address.component.scss']
 })
 export default class EvacAddressComponent implements OnInit {
-
   primaryAddressForm: FormGroup;
   evacuatedForm: FormGroup;
   formBuilder: FormBuilder;
@@ -31,57 +35,66 @@ export default class EvacAddressComponent implements OnInit {
   // registrationAddress: Partial<Registration>;
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService) {
+    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formCreationService') formCreationService: FormCreationService
+  ) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
 
   ngOnInit(): void {
-    this.evacuatedForm$ = this.formCreationService.getEvacuatedForm().subscribe(
-      evacuatedForm => {
+    this.evacuatedForm$ = this.formCreationService
+      .getEvacuatedForm()
+      .subscribe((evacuatedForm) => {
         this.evacuatedForm = evacuatedForm;
-      }
-    );
+      });
 
-    this.primaryAddressForm$ = this.formCreationService.getAddressForm().subscribe(
-      primaryAddressForm => {
+    this.primaryAddressForm$ = this.formCreationService
+      .getAddressForm()
+      .subscribe((primaryAddressForm) => {
         this.primaryAddressForm = primaryAddressForm;
-      }
-    );
+      });
 
     this.otherAddressTemplate();
   }
 
   evacPrimaryAddressChange(event: MatRadioChange): void {
-
     if (event.value === 'Yes') {
-
-      this.evacuatedForm.get('evacuatedFromAddress').setValue(this.primaryAddressForm.get('address').value);
-
+      this.evacuatedForm
+        .get('evacuatedFromAddress')
+        .setValue(this.primaryAddressForm.get('address').value);
     } else {
-
       this.evacuatedForm.get('evacuatedFromAddress').reset();
-      this.evacuatedForm.get('evacuatedFromAddress.stateProvince').setValue(globalConst.defaultProvince);
-      this.evacuatedForm.get('evacuatedFromAddress.country').setValue(globalConst.defaultCountry);
+      this.evacuatedForm
+        .get('evacuatedFromAddress.stateProvince')
+        .setValue(globalConst.defaultProvince);
+      this.evacuatedForm
+        .get('evacuatedFromAddress.country')
+        .setValue(globalConst.defaultCountry);
       console.log(this.evacuatedForm.get('evacuatedFromAddress'));
     }
   }
 
   otherAddressTemplate(): void {
-    if (this.evacuatedForm.get('evacuatedFromAddress.stateProvince').value === '') {
+    if (
+      this.evacuatedForm.get('evacuatedFromAddress.stateProvince').value === ''
+    ) {
       this.evacuatedForm.get('evacuatedFromAddress').reset();
-      this.evacuatedForm.get('evacuatedFromAddress.stateProvince').setValue(globalConst.defaultProvince);
-      this.evacuatedForm.get('evacuatedFromAddress.country').setValue(globalConst.defaultCountry);
+      this.evacuatedForm
+        .get('evacuatedFromAddress.stateProvince')
+        .setValue(globalConst.defaultProvince);
+      this.evacuatedForm
+        .get('evacuatedFromAddress.country')
+        .setValue(globalConst.defaultCountry);
     }
   }
 
   /**
    * Returns the control of the form
    */
-  get evacuatedFormControl(): { [key: string]: AbstractControl; } {
+  get evacuatedFormControl(): { [key: string]: AbstractControl } {
     return this.evacuatedForm.controls;
   }
-
 }
 
 @NgModule({
@@ -96,10 +109,6 @@ export default class EvacAddressComponent implements OnInit {
     CustomPipeModule,
     AddressFormsModule
   ],
-  declarations: [
-    EvacAddressComponent,
-  ]
+  declarations: [EvacAddressComponent]
 })
-class EvacAddressModule {
-
-}
+class EvacAddressModule {}

@@ -1,5 +1,6 @@
-<mat-sidenav-container class="wizard-container">
+<mat-sidenav-container class="wizard-container" fullscreen>
   <mat-sidenav
+    [autoFocus]="true"
     #sidenav
     mode="side"
     opened
@@ -14,15 +15,14 @@
       </div>
     </div>
     <div *ngFor="let menu of sideNavMenu">
-      <button
+      <a
         mat-button
         class="a-mat-button"
         routerLinkActive="active-side-item"
         [routerLink]="menu?.route"
         [state]="{ step: menu?.step, title: menu?.title }"
-        [disabled]="menu?.isLocked"
       >
-        <div class="row">
+        <div (click)="goToStep(menu?.isLocked, $event)" class="row outer-div">
           <div class="col-md-3 img-align-col">
             <img
               class="img-align"
@@ -52,7 +52,7 @@
             />
           </div>
         </div>
-      </button>
+      </a>
     </div>
     <div class="row button-container">
       <div class="col-md-12">

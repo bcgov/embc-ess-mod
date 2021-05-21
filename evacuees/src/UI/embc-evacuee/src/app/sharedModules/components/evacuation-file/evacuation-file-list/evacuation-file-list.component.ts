@@ -12,7 +12,6 @@ import { EvacuationFileService } from '../evacuation-file.service';
   styleUrls: ['./evacuation-file-list.component.scss']
 })
 export class EvacuationFileListComponent implements OnInit {
-
   currentPath: string;
   evacuatedFrom: string;
   showActiveList = true;
@@ -23,30 +22,44 @@ export class EvacuationFileListComponent implements OnInit {
   showLoading = false;
 
   constructor(
-    private route: ActivatedRoute, public formCreationService: FormCreationService,
-    private dialogService: DialogService, private evacuationFileService: EvacuationFileService,
-    private evacuationFileDataService: EvacuationFileDataService) { }
+    private route: ActivatedRoute,
+    public formCreationService: FormCreationService,
+    private dialogService: DialogService,
+    private evacuationFileService: EvacuationFileService,
+    private evacuationFileDataService: EvacuationFileDataService
+  ) {}
 
   ngOnInit(): void {
-
     this.currentPath = window.location.pathname;
 
     if (this.currentPath === '/verified-registration/dashboard/current') {
       this.showLoading = true;
-      this.evacuationFileService.getCurrentEvacuationFiles().subscribe(files => {
-        this.dataSourceActive = files;
-        this.dataSourceActive.sort((a, b) => new Date(b.evacuationFileDate).valueOf() - new Date(a.evacuationFileDate).valueOf());
-        console.log(this.dataSourceActive);
-        this.evacuationFileDataService.setCurrentEvacuationFileCount(files.length);
-        this.evacuatedFrom = this.dataSourceActive[0].evacuatedFromAddress.jurisdiction;
-        this.showLoading = false;
-      });
-
+      this.evacuationFileService
+        .getCurrentEvacuationFiles()
+        .subscribe((files) => {
+          this.dataSourceActive = files;
+          this.dataSourceActive.sort(
+            (a, b) =>
+              new Date(b.evacuationFileDate).valueOf() -
+              new Date(a.evacuationFileDate).valueOf()
+          );
+          console.log(this.dataSourceActive);
+          this.evacuationFileDataService.setCurrentEvacuationFileCount(
+            files.length
+          );
+          this.evacuatedFrom =
+            this.dataSourceActive[0].evacuatedFromAddress.jurisdiction;
+          this.showLoading = false;
+        });
     } else if (this.currentPath === '/verified-registration/dashboard/past') {
       this.showLoading = true;
-      this.evacuationFileService.getPastEvacuationFiles().subscribe(files => {
+      this.evacuationFileService.getPastEvacuationFiles().subscribe((files) => {
         this.dataSourceInactive = files;
-        this.dataSourceInactive.sort((a, b) => new Date(b.evacuationFileDate).valueOf() - new Date(a.evacuationFileDate).valueOf());
+        this.dataSourceInactive.sort(
+          (a, b) =>
+            new Date(b.evacuationFileDate).valueOf() -
+            new Date(a.evacuationFileDate).valueOf()
+        );
         // console.log(this.dataSourceInactive);
         this.showLoading = false;
       });

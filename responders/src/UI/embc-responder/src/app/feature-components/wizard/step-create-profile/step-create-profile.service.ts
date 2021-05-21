@@ -8,9 +8,10 @@ import {
   Address,
   ContactDetails,
   PersonDetails,
-  Profile,
-  SecurityQuestions
+  Profile
 } from 'src/app/core/models/profile';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { SecurityQuestion } from 'src/app/core/api/models';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {
@@ -22,14 +23,22 @@ export class StepCreateProfileService {
   private primaryAddressDetail: Address;
   private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
-  private securityQuestion: SecurityQuestions;
+  private securityQuestion: SecurityQuestion[];
   private showContacts: boolean;
+  private bypassQuestions: boolean;
   private confirmEmails: string;
   private isBcAddresS: boolean;
   private isBcMailingAddresS: boolean;
   private isMailingAddressSameAsPrimaryAddresS: boolean;
 
   constructor(private dialog: MatDialog) {}
+
+  public get bypassSecurityQuestions(): boolean {
+    return this.bypassQuestions;
+  }
+  public set bypassSecurityQuestions(bypassQuestions: boolean) {
+    this.bypassQuestions = bypassQuestions;
+  }
 
   public get showContact(): boolean {
     return this.showContacts;
@@ -103,10 +112,10 @@ export class StepCreateProfileService {
     this.contactDetail = contactDetail;
   }
 
-  public get securityQuestions(): SecurityQuestions {
+  public get securityQuestions(): SecurityQuestion[] {
     return this.securityQuestion;
   }
-  public set securityQuestions(securityQuestion: SecurityQuestions) {
+  public set securityQuestions(securityQuestion: SecurityQuestion[]) {
     this.securityQuestion = securityQuestion;
   }
 
@@ -201,5 +210,33 @@ export class StepCreateProfileService {
     };
 
     return address;
+  }
+
+  /**
+   * Checks if the form is partially completed or not
+   *
+   * @param form form group
+   * @returns true/false
+   */
+  checkForPartialUpdates(form: FormGroup): boolean {
+    const fields = [];
+    Object.keys(form.controls).forEach((field) => {
+      const control = form.controls[field] as
+        | FormControl
+        | FormGroup
+        | FormArray;
+      if (control instanceof FormControl) {
+        fields.push(control.value);
+      } else if (control instanceof FormGroup || control instanceof FormArray) {
+        for (const key in control.controls) {
+          if (control.controls.hasOwnProperty(key)) {
+            fields.push(control.controls[key].value);
+          }
+        }
+      }
+    });
+
+    const result = fields.filter((field) => !!field);
+    return result.length !== 0;
   }
 }

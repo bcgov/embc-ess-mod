@@ -7,4 +7,4 @@ import { ErrorScreenRoutingModule } from './error-screen-routing.module';
   declarations: [ErrorScreenComponent],
   imports: [CommonModule, ErrorScreenRoutingModule]
 })
-export class ErrorScreenModule { }
+export class ErrorScreenModule {}

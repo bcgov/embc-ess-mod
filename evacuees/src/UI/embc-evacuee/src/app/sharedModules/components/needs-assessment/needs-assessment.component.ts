@@ -1,4 +1,11 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { ComponentMetaDataModel } from '../../../core/model/componentMetaData.model';
@@ -17,10 +24,12 @@ import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-da
   templateUrl: './needs-assessment.component.html',
   styleUrls: ['./needs-assessment.component.scss']
 })
-export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterViewChecked {
-
-  needsSteps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
+export class NeedsAssessmentComponent
+  implements OnInit, AfterViewInit, AfterViewChecked
+{
   @ViewChild('needsStepper') private needsStepper: MatStepper;
+  needsSteps: Array<ComponentMetaDataModel> =
+    new Array<ComponentMetaDataModel>();
   needsFolderPath = 'needs-assessment-forms';
   isEditable = true;
   form$: Subscription;
@@ -35,10 +44,16 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   isSubmitted = false;
 
   constructor(
-    private router: Router, private componentService: ComponentCreationService, private formCreationService: FormCreationService,
-    private needsAssessmentService: NeedsAssessmentService, private cd: ChangeDetectorRef, private route: ActivatedRoute,
-    private alertService: AlertService, private nonVerifiedRegistrationService: NonVerifiedRegistrationService,
-    private evacuationFileDataService: EvacuationFileDataService) {
+    private router: Router,
+    private componentService: ComponentCreationService,
+    private formCreationService: FormCreationService,
+    private needsAssessmentService: NeedsAssessmentService,
+    private cd: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private alertService: AlertService,
+    private nonVerifiedRegistrationService: NonVerifiedRegistrationService,
+    private evacuationFileDataService: EvacuationFileDataService
+  ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -55,7 +70,6 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     }
     this.needsSteps = this.componentService.createEvacSteps();
   }
-
 
   ngAfterViewChecked(): void {
     this.cd.detectChanges();
@@ -79,37 +93,38 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
 
   /**
    * Loads appropriate forms based on the current step
+   *
    * @param index index of the step
    */
   loadStepForm(index: number): void {
     switch (index) {
       case 0:
-        this.form$ = this.formCreationService.getEvacuatedForm().subscribe(
-          evacuatedForm => {
+        this.form$ = this.formCreationService
+          .getEvacuatedForm()
+          .subscribe((evacuatedForm) => {
             this.form = evacuatedForm;
-          }
-        );
+          });
         break;
       case 1:
-        this.form$ = this.formCreationService.getHouseholdMembersForm().subscribe(
-          householdMemberForm => {
+        this.form$ = this.formCreationService
+          .getHouseholdMembersForm()
+          .subscribe((householdMemberForm) => {
             this.form = householdMemberForm;
-          }
-        );
+          });
         break;
       case 2:
-        this.form$ = this.formCreationService.getPetsForm().subscribe(
-          petsForm => {
+        this.form$ = this.formCreationService
+          .getPetsForm()
+          .subscribe((petsForm) => {
             this.form = petsForm;
-          }
-        );
+          });
         break;
       case 3:
-        this.form$ = this.formCreationService.getIndentifyNeedsForm().subscribe(
-          identifyNeedsForm => {
+        this.form$ = this.formCreationService
+          .getIndentifyNeedsForm()
+          .subscribe((identifyNeedsForm) => {
             this.form = identifyNeedsForm;
-          }
-        );
+          });
         break;
     }
   }
@@ -119,7 +134,10 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
       stepper.previous();
     } else if (lastStep === -1) {
       if (this.currentFlow === 'non-verified-registration') {
-        this.router.navigate(['/non-verified-registration/create-profile'], this.navigationExtras);
+        this.router.navigate(
+          ['/non-verified-registration/create-profile'],
+          this.navigationExtras
+        );
       } else {
         this.router.navigate(['/verified-registration/confirm-restriction']);
       }
@@ -144,18 +162,27 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
   setFormData(component: string): void {
     switch (component) {
       case 'evac-address':
-        this.evacuationFileDataService.evacuatedFromAddress = this.form.get('evacuatedFromAddress').value;
-        this.needsAssessmentService.insurance = this.form.get('insurance').value;
+        this.evacuationFileDataService.evacuatedFromAddress = this.form.get(
+          'evacuatedFromAddress'
+        ).value;
+        this.needsAssessmentService.insurance =
+          this.form.get('insurance').value;
         break;
       case 'family-information':
-        this.needsAssessmentService.haveSpecialDiet = this.form.get('haveSpecialDiet').value;
-        this.needsAssessmentService.haveMedication = this.form.get('haveMedication').value;
-        this.needsAssessmentService.specialDietDetails = this.form.get('specialDietDetails').value;
-        this.needsAssessmentService.setHouseHoldMembers(this.form.get('householdMembers').value);
+        this.needsAssessmentService.haveSpecialDiet =
+          this.form.get('haveSpecialDiet').value;
+        this.needsAssessmentService.haveMedication =
+          this.form.get('haveMedication').value;
+        this.needsAssessmentService.specialDietDetails =
+          this.form.get('specialDietDetails').value;
+        this.needsAssessmentService.setHouseHoldMembers(
+          this.form.get('householdMembers').value
+        );
         break;
       case 'pets':
         this.needsAssessmentService.pets = this.form.get('pets').value;
-        this.needsAssessmentService.hasPetsFood = this.form.get('hasPetsFood').value;
+        this.needsAssessmentService.hasPetsFood =
+          this.form.get('hasPetsFood').value;
         break;
       case 'identify-needs':
         this.needsAssessmentService.setNeedsDetails(this.form);
@@ -176,30 +203,35 @@ export class NeedsAssessmentComponent implements OnInit, AfterViewInit, AfterVie
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
     this.alertService.clearAlert();
-    this.nonVerifiedRegistrationService.submitRegistration().subscribe((response: RegistrationResult) => {
-      this.needsAssessmentService.setNonVerifiedEvacuationFileNo(response);
-      this.router.navigate(['/non-verified-registration/file-submission']);
-    }, (error: any) => {
-      console.log(error);
-      this.showLoader = !this.showLoader;
-      this.isSubmitted = !this.isSubmitted;
-      this.alertService.setAlert('danger', error.error.title);
-    });
-
+    this.nonVerifiedRegistrationService.submitRegistration().subscribe(
+      (response: RegistrationResult) => {
+        this.needsAssessmentService.setNonVerifiedEvacuationFileNo(response);
+        this.router.navigate(['/non-verified-registration/file-submission']);
+      },
+      (error: any) => {
+        console.log(error);
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        this.alertService.setAlert('danger', error.error.title);
+      }
+    );
   }
 
   submitVerified(): void {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
-    this.evacuationFileDataService.createEvacuationFile().subscribe((value) => {
-      console.log(value);
-      this.needsAssessmentService.setVerifiedEvacuationFileNo(value);
-      this.router.navigate(['/verified-registration/dashboard']);
-    }, (error: any) => {
-      this.showLoader = !this.showLoader;
-      this.isSubmitted = !this.isSubmitted;
-      this.alertService.setAlert('danger', error);
-    });
+    this.evacuationFileDataService.createEvacuationFile().subscribe(
+      (value) => {
+        console.log(value);
+        this.needsAssessmentService.setVerifiedEvacuationFileNo(value);
+        this.router.navigate(['/verified-registration/dashboard']);
+      },
+      (error: any) => {
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        this.alertService.setAlert('danger', error);
+      }
+    );
   }
 
   allowSubmit($event: boolean): void {

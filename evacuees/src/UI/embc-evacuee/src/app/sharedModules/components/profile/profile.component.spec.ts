@@ -10,14 +10,15 @@ describe('ProfileComponent', () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ProfileComponent ],
-      imports: [ RouterTestingModule, ReactiveFormsModule ],
-      providers: [ ComponentCreationService, FormCreationService ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ProfileComponent],
+        imports: [RouterTestingModule, ReactiveFormsModule],
+        providers: [ComponentCreationService, FormCreationService]
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ProfileComponent);
