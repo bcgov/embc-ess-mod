@@ -11,9 +11,7 @@ import { ReviewModule } from '../../components/review/review.module';
 import { CoreModule } from '../../../core/core.module';
 
 @NgModule({
-  declarations: [
-    ProfileComponent
-  ],
+  declarations: [ProfileComponent],
   imports: [
     CommonModule,
     ProfileRoutingModule,
@@ -26,4 +24,4 @@ import { CoreModule } from '../../../core/core.module';
     CoreModule
   ]
 })
-export class ProfileModule { }
+export class ProfileModule {}

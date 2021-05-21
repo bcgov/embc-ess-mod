@@ -8,12 +8,13 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./collection-notice.component.scss']
 })
 export class CollectionNoticeComponent implements OnInit {
-
   currentFlow: string;
 
   constructor(
-    private router: Router, public dialog: MatDialog,
-    private route: ActivatedRoute) { }
+    private router: Router,
+    public dialog: MatDialog,
+    private route: ActivatedRoute
+  ) {}
 
   /**
    * Initializes the user flow and form group
@@ -30,5 +31,4 @@ export class CollectionNoticeComponent implements OnInit {
     const navigationPath = '/' + this.currentFlow + '/restriction';
     this.router.navigate([navigationPath]);
   }
-
 }

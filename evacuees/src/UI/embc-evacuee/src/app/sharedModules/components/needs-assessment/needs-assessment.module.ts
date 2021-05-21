@@ -15,9 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { CoreModule } from '../../../core/core.module';
 
 @NgModule({
-  declarations: [
-    NeedsAssessmentComponent
-  ],
+  declarations: [NeedsAssessmentComponent],
   imports: [
     CommonModule,
     NeedsAssessmentRoutingModule,
@@ -34,4 +32,4 @@ import { CoreModule } from '../../../core/core.module';
     CoreModule
   ]
 })
-export class NeedsAssessmentModule { }
+export class NeedsAssessmentModule {}

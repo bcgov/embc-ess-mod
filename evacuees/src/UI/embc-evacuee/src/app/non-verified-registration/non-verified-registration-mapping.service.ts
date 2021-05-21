@@ -1,22 +1,36 @@
 import { Injectable } from '@angular/core';
-import { Address, AnonymousRegistration, NeedsAssessment, Profile } from '../core/api/models';
+import {
+  Address,
+  AnonymousRegistration,
+  NeedsAssessment,
+  Profile
+} from '../core/api/models';
 import { EvacuationFileDataService } from '../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { NeedsAssessmentService } from '../sharedModules/components/needs-assessment/needs-assessment.service';
 import { ProfileDataService } from '../sharedModules/components/profile/profile-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class NonVerifiedRegistrationMappingService {
-
   constructor(
-    private profileDataService: ProfileDataService, private needsService: NeedsAssessmentService,
-    private evacuationFileDataService: EvacuationFileDataService) { }
+    private profileDataService: ProfileDataService,
+    private needsService: NeedsAssessmentService,
+    private evacuationFileDataService: EvacuationFileDataService
+  ) {}
 
   mapAnonymousRegistration(): AnonymousRegistration {
     return {
-      evacuatedFromAddress: this.setAddressObject(this.evacuationFileDataService.evacuatedFromAddress),
+      evacuatedFromAddress: this.setAddressObject(
+        this.evacuationFileDataService.evacuatedFromAddress
+      ),
       informationCollectionConsent: true,
-      preliminaryNeedsAssessment: this.mergeData(this.createNeedsAssessment(), this.needsService.createNeedsAssessmentDTO()),
-      registrationDetails: this.mergeData(this.createRegistration(), this.profileDataService.createProfileDTO()),
+      preliminaryNeedsAssessment: this.mergeData(
+        this.createNeedsAssessment(),
+        this.needsService.createNeedsAssessmentDTO()
+      ),
+      registrationDetails: this.mergeData(
+        this.createRegistration(),
+        this.profileDataService.createProfileDTO()
+      ),
       captcha: 'abc'
     };
   }
@@ -38,7 +52,7 @@ export class NonVerifiedRegistrationMappingService {
       haveSpecialDiet: null,
       specialDietDetails: null,
       insurance: null,
-      pets: null,
+      pets: null
     };
   }
 
@@ -50,7 +64,7 @@ export class NonVerifiedRegistrationMappingService {
       personalDetails: null,
       primaryAddress: null,
       restrictedAccess: null,
-      secretPhrase: null,
+      secretPhrase: null
     };
   }
 
@@ -59,9 +73,15 @@ export class NonVerifiedRegistrationMappingService {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
       country: addressObject.country.code,
-      jurisdiction: addressObject.jurisdiction.code === undefined ? null : addressObject.jurisdiction.code,
+      jurisdiction:
+        addressObject.jurisdiction.code === undefined
+          ? null
+          : addressObject.jurisdiction.code,
       postalCode: addressObject.postalCode,
-      stateProvince: addressObject.stateProvince === null ? addressObject.stateProvince : addressObject.stateProvince.code,
+      stateProvince:
+        addressObject.stateProvince === null
+          ? addressObject.stateProvince
+          : addressObject.stateProvince.code
     };
 
     return address;

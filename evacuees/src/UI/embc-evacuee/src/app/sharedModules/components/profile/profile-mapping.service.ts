@@ -9,8 +9,10 @@ import { ConflictManagementService } from '../conflict-management/conflict-manag
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
   constructor(
-    private formCreationService: FormCreationService, private profileDataService: ProfileDataService,
-    private conflictService: ConflictManagementService) { }
+    private formCreationService: FormCreationService,
+    private profileDataService: ProfileDataService,
+    private conflictService: ConflictManagementService
+  ) {}
 
   mapProfile(profile: Profile): void {
     this.profileDataService.setProfileId(profile.id);
@@ -41,17 +43,50 @@ export class ProfileMappingService {
     this.populateFromBCSC(profile);
   }
 
+  populateFromBCSC(profile: Profile): void {
+    this.formCreationService
+      .getPersonalDetailsForm()
+      .pipe(first())
+      .subscribe((details) => {
+        details.setValue({
+          firstName: profile.personalDetails.firstName,
+          lastName: profile.personalDetails.lastName,
+          dateOfBirth: profile.personalDetails.dateOfBirth,
+          preferredName: null,
+          initials: null,
+          gender: null
+        });
+      });
+
+    this.formCreationService
+      .getAddressForm()
+      .pipe(first())
+      .subscribe((address) => {
+        address.setValue({
+          address: profile.primaryAddress,
+          isBcAddress: this.isBCAddress(profile.primaryAddress.stateProvince),
+          isNewMailingAddress: null,
+          isBcMailingAddress: null,
+          mailingAddress: profile.primaryAddress
+        });
+      });
+  }
+
   private setRestrictionDetails(profile: Profile): void {
-    this.formCreationService.getRestrictionForm().pipe(
-      first()).subscribe(details => {
+    this.formCreationService
+      .getRestrictionForm()
+      .pipe(first())
+      .subscribe((details) => {
         details.setValue({ restrictedAccess: profile.restrictedAccess });
       });
   }
 
   private setPersonalDetails(profile: Profile): void {
     let formGroup: FormGroup;
-    this.formCreationService.getPersonalDetailsForm().pipe(
-      first()).subscribe(details => {
+    this.formCreationService
+      .getPersonalDetailsForm()
+      .pipe(first())
+      .subscribe((details) => {
         details.setValue({
           ...profile.personalDetails
         });
@@ -62,13 +97,19 @@ export class ProfileMappingService {
 
   private setAddressDetails(profile: Profile): void {
     let formGroup: FormGroup;
-    this.formCreationService.getAddressForm().pipe(
-      first()).subscribe(address => {
+    this.formCreationService
+      .getAddressForm()
+      .pipe(first())
+      .subscribe((address) => {
         address.setValue({
           address: profile.primaryAddress,
           isBcAddress: this.isBCAddress(profile.primaryAddress.stateProvince),
-          isNewMailingAddress: this.isSameMailingAddress(profile.isMailingAddressSameAsPrimaryAddress),
-          isBcMailingAddress: this.isBCAddress(profile.mailingAddress.stateProvince),
+          isNewMailingAddress: this.isSameMailingAddress(
+            profile.isMailingAddressSameAsPrimaryAddress
+          ),
+          isBcMailingAddress: this.isBCAddress(
+            profile.mailingAddress.stateProvince
+          ),
           mailingAddress: profile.mailingAddress
         });
         formGroup = address;
@@ -80,11 +121,17 @@ export class ProfileMappingService {
   private setContactDetails(profile: Profile): void {
     let formGroup: FormGroup;
 
-    this.formCreationService.getContactDetailsForm().pipe(
-      first()).subscribe(contact => {
+    this.formCreationService
+      .getContactDetailsForm()
+      .pipe(first())
+      .subscribe((contact) => {
         contact.setValue({
-          ...profile.contactDetails, confirmEmail: profile.contactDetails.email,
-          showContacts: this.setShowContactsInfo(profile.contactDetails.phone, profile.contactDetails.email)
+          ...profile.contactDetails,
+          confirmEmail: profile.contactDetails.email,
+          showContacts: this.setShowContactsInfo(
+            profile.contactDetails.phone,
+            profile.contactDetails.email
+          )
         });
         formGroup = contact;
       });
@@ -101,44 +148,23 @@ export class ProfileMappingService {
 
   private setSecretDetails(profile: Profile): void {
     let formGroup: FormGroup;
-    this.formCreationService.getSecretForm().pipe(
-      first()).subscribe(secret => {
+    this.formCreationService
+      .getSecretForm()
+      .pipe(first())
+      .subscribe((secret) => {
         secret.setValue({ secretPhrase: profile.secretPhrase });
         formGroup = secret;
       });
     this.profileDataService.secretWordPhrase = profile.secretPhrase;
   }
 
-  private isSameMailingAddress(isMailingAddressSameAsPrimaryAddress: boolean): string {
+  private isSameMailingAddress(
+    isMailingAddressSameAsPrimaryAddress: boolean
+  ): string {
     return isMailingAddressSameAsPrimaryAddress === true ? 'Yes' : 'No';
   }
 
   private isBCAddress(province: null | string): string {
     return province !== null && province === 'BC' ? 'Yes' : 'No';
-  }
-
-  populateFromBCSC(profile: Profile): void {
-    this.formCreationService.getPersonalDetailsForm().pipe(
-      first()).subscribe(details => {
-        details.setValue({
-          firstName: profile.personalDetails.firstName,
-          lastName: profile.personalDetails.lastName,
-          dateOfBirth: profile.personalDetails.dateOfBirth,
-          preferredName: null,
-          initials: null,
-          gender: null
-        });
-      });
-
-    this.formCreationService.getAddressForm().pipe(
-      first()).subscribe(address => {
-        address.setValue({
-          address: profile.primaryAddress,
-          isBcAddress: this.isBCAddress(profile.primaryAddress.stateProvince),
-          isNewMailingAddress: null,
-          isBcMailingAddress: null,
-          mailingAddress: profile.primaryAddress
-        });
-      });
   }
 }

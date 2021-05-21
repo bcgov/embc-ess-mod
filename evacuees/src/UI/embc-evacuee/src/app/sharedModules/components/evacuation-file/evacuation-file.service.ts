@@ -8,10 +8,11 @@ import { EvacuationFileMappingService } from './evacuation-file-mapping.service'
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileService {
-
   constructor(
-    private evacuationService: EvacuationsService, private evacuationFileDataService: EvacuationFileDataService,
-    private evacuationFileMapping: EvacuationFileMappingService) { }
+    private evacuationService: EvacuationsService,
+    private evacuationFileDataService: EvacuationFileDataService,
+    private evacuationFileMapping: EvacuationFileMappingService
+  ) {}
 
   getCurrentEvacuationFiles(): Observable<Array<EvacuationFile>> {
     return this.evacuationService.evacuationsGetCurrentEvacuations();
@@ -26,17 +27,21 @@ export class EvacuationFileService {
     //     essFileNumber: this.evacuationFileDataService.essFileNumber,
     //     body: this.evacuationFileDataService.createEvacuationFileDTO()
     // });
-    return this.evacuationService.evacuationsUpsertEvacuationFile({
-      body: this.evacuationFileDataService.createEvacuationFileDTO()
-    }).pipe(
-      mergeMap(essFileNumber => this.getCurrentEvacuationFiles()),
-      map(evacFiles => {
-        const updatedEvacFile = evacFiles.filter(
-          evacFile => evacFile.essFileNumber === this.evacuationFileDataService.essFileNumber)[0];
-        this.evacuationFileMapping.mapEvacuationFile(updatedEvacFile);
-        return updatedEvacFile.essFileNumber;
+    return this.evacuationService
+      .evacuationsUpsertEvacuationFile({
+        body: this.evacuationFileDataService.createEvacuationFileDTO()
       })
-    );
+      .pipe(
+        mergeMap((essFileNumber) => this.getCurrentEvacuationFiles()),
+        map((evacFiles) => {
+          const updatedEvacFile = evacFiles.filter(
+            (evacFile) =>
+              evacFile.essFileNumber ===
+              this.evacuationFileDataService.essFileNumber
+          )[0];
+          this.evacuationFileMapping.mapEvacuationFile(updatedEvacFile);
+          return updatedEvacFile.essFileNumber;
+        })
+      );
   }
-
 }

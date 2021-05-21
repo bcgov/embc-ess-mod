@@ -9,14 +9,15 @@ describe('SecretComponent', () => {
   let component: SecretComponent;
   let fixture: ComponentFixture<SecretComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SecretComponent ],
-      imports: [ ReactiveFormsModule ],
-      providers: [ FormCreationService, FormBuilder ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [SecretComponent],
+        imports: [ReactiveFormsModule],
+        providers: [FormCreationService, FormBuilder]
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SecretComponent);
