@@ -133,24 +133,24 @@ namespace EMBC.ESS.Resources.Contacts
     {
         public IEnumerable<SecurityQuestion> Convert(contact sourceMember, ResolutionContext context)
         {
-            string unmasked = (string)(context.Options.Items.ContainsKey("LeaveSecurityAnswersUnmasked") ? context.Options.Items["LeaveSecurityAnswersUnmasked"] : "false");
-            bool leaveUnmasked = unmasked.Equals("true");
+            string mask = (string)(context.Options.Items.ContainsKey("MaskSecurityAnswers") ? context.Options.Items["MaskSecurityAnswers"] : "true");
+            bool maskSecurityAnswers = mask.Equals("true");
             List<SecurityQuestion> ret = new List<SecurityQuestion>();
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext1) && !string.IsNullOrEmpty(sourceMember.era_securityquestion1answer))
-                ret.Add(new SecurityQuestion { Id = 1, Question = sourceMember.era_securityquestiontext1, Answer = MaskAnswer(sourceMember.era_securityquestion1answer, leaveUnmasked) });
+                ret.Add(new SecurityQuestion { Id = 1, Question = sourceMember.era_securityquestiontext1, Answer = MaskAnswer(sourceMember.era_securityquestion1answer, maskSecurityAnswers) });
 
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext2) && !string.IsNullOrEmpty(sourceMember.era_securityquestion2answer))
-                ret.Add(new SecurityQuestion { Id = 2, Question = sourceMember.era_securityquestiontext2, Answer = MaskAnswer(sourceMember.era_securityquestion2answer, leaveUnmasked) });
+                ret.Add(new SecurityQuestion { Id = 2, Question = sourceMember.era_securityquestiontext2, Answer = MaskAnswer(sourceMember.era_securityquestion2answer, maskSecurityAnswers) });
 
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext3) && !string.IsNullOrEmpty(sourceMember.era_securityquestion3answer))
-                ret.Add(new SecurityQuestion { Id = 3, Question = sourceMember.era_securityquestiontext3, Answer = MaskAnswer(sourceMember.era_securityquestion3answer, leaveUnmasked) });
+                ret.Add(new SecurityQuestion { Id = 3, Question = sourceMember.era_securityquestiontext3, Answer = MaskAnswer(sourceMember.era_securityquestion3answer, maskSecurityAnswers) });
 
             return ret;
         }
 
-        private string MaskAnswer(string answer, bool leaveUnmasked)
+        private string MaskAnswer(string answer, bool maskSecurityAnswers)
         {
-            if (leaveUnmasked) return answer;
+            if (!maskSecurityAnswers) return answer;
 
             if (string.IsNullOrEmpty(answer))
                 return string.Empty;

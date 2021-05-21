@@ -103,7 +103,7 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 if (criteria is RegistrantsSearchCriteria registrantsSearchCriteria)
                 {
-                    contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = registrantsSearchCriteria.UserId, LeaveSecurityAnswersUnmasked = registrantsSearchCriteria.LeaveSecurityAnswersUnmasked })).Items;
+                    contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = registrantsSearchCriteria.UserId })).Items;
                 }
                 else if (criteria is EvacuationFilesSearchCriteria evacuationFilesSearchCriteria)
                 {

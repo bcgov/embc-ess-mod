@@ -53,7 +53,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string LastName { get; set; }
         public string DateOfBirth { get; set; }
         public bool IncludeRestrictedAccess { get; set; }
-        public bool LeaveSecurityAnswersUnmasked { get; set; } = false;
     }
 
     public class SearchQueryResult

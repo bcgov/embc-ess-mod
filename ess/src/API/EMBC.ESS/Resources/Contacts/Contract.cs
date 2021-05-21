@@ -37,7 +37,7 @@ namespace EMBC.ESS.Resources.Contacts
     {
         public string ByContactId { get; set; }
         public string UserId { get; set; }
-        public bool LeaveSecurityAnswersUnmasked { get; set; } = false;
+        public bool MaskSecurityAnswers { get; set; } = true;
     }
 
     public class ContactQueryResult

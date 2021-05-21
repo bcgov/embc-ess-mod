@@ -126,7 +126,7 @@ namespace EMBC.ESS.Resources.Contacts
 
             essContext.DetachAll();
 
-            return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts, opt => opt.Items["LeaveSecurityAnswersUnmasked"] = query.LeaveSecurityAnswersUnmasked.ToString()) };
+            return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts, opt => opt.Items["MaskSecurityAnswers"] = query.MaskSecurityAnswers.ToString()) };
         }
 
         private void AddJurisdictionLink(string jurisdictionCode, string sourceProperty, object target)
