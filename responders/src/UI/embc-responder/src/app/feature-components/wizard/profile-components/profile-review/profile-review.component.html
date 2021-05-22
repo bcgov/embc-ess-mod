@@ -16,10 +16,13 @@
 
             <div class="row">
               <div class="col-8">
-                <mat-checkbox [checked]="this.stepCreateProfileService.restrictedAccess" disabled>
+                <mat-checkbox
+                  [checked]="this.stepCreateProfileService.restrictedAccess"
+                  disabled
+                >
                   You have given your consent to have your location and contact
-                  information shared with concerned family or friends who enquire
-                  about your wellbeing.  
+                  information shared with concerned family or friends who
+                  enquire about your wellbeing.
                 </mat-checkbox>
               </div>
             </div>
@@ -47,7 +50,9 @@
             <div class="row">
               <div class="col-4">Preferred Name</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.personalDetails.preferredName }}
+                {{
+                  this.stepCreateProfileService.personalDetails.preferredName
+                }}
               </div>
             </div>
 
@@ -81,14 +86,20 @@
             <div class="row">
               <div class="col-4">Address Line 1</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.primaryAddressDetails.addressLine1 }}
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails
+                    .addressLine1
+                }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Address Line 2</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.primaryAddressDetails.addressLine2 }}
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails
+                    .addressLine2
+                }}
               </div>
             </div>
 
@@ -96,8 +107,10 @@
               <div class="col-4">City</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.primaryAddressDetails.jurisdiction?.name ||
-                  this.stepCreateProfileService.primaryAddressDetails.jurisdiction
+                  this.stepCreateProfileService.primaryAddressDetails
+                    .jurisdiction?.name ||
+                    this.stepCreateProfileService.primaryAddressDetails
+                      .jurisdiction
                 }}
               </div>
             </div>
@@ -106,8 +119,10 @@
               <div class="col-4">Province</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.primaryAddressDetails.stateProvince?.name ||
-                  this.stepCreateProfileService.primaryAddressDetails.stateProvince
+                  this.stepCreateProfileService.primaryAddressDetails
+                    .stateProvince?.name ||
+                    this.stepCreateProfileService.primaryAddressDetails
+                      .stateProvince
                 }}
               </div>
             </div>
@@ -115,7 +130,9 @@
             <div class="row">
               <div class="col-4">Postal Code</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.primaryAddressDetails.postalCode }}
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails.postalCode
+                }}
               </div>
             </div>
 
@@ -123,8 +140,9 @@
               <div class="col-4">Country</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.primaryAddressDetails.country?.name ||
                   this.stepCreateProfileService.primaryAddressDetails.country
+                    ?.name ||
+                    this.stepCreateProfileService.primaryAddressDetails.country
                 }}
               </div>
             </div>
@@ -138,14 +156,20 @@
             <div class="row">
               <div class="col-4">Address Line 1</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.mailingAddressDetails.addressLine1 }}
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails
+                    .addressLine1
+                }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Address Line 2</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.mailingAddressDetails.addressLine2 }}
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails
+                    .addressLine2
+                }}
               </div>
             </div>
 
@@ -153,8 +177,10 @@
               <div class="col-4">City</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.mailingAddressDetails.jurisdiction?.name ||
-                  this.stepCreateProfileService.mailingAddressDetails.jurisdiction
+                  this.stepCreateProfileService.mailingAddressDetails
+                    .jurisdiction?.name ||
+                    this.stepCreateProfileService.mailingAddressDetails
+                      .jurisdiction
                 }}
               </div>
             </div>
@@ -163,8 +189,10 @@
               <div class="col-4">Province</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.mailingAddressDetails.stateProvince?.name ||
-                  this.stepCreateProfileService.mailingAddressDetails.stateProvince
+                  this.stepCreateProfileService.mailingAddressDetails
+                    .stateProvince?.name ||
+                    this.stepCreateProfileService.mailingAddressDetails
+                      .stateProvince
                 }}
               </div>
             </div>
@@ -172,7 +200,9 @@
             <div class="row">
               <div class="col-4">Postal Code</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.mailingAddressDetails.postalCode }}
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails.postalCode
+                }}
               </div>
             </div>
 
@@ -180,8 +210,9 @@
               <div class="col-4">Country</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.mailingAddressDetails.country?.name ||
                   this.stepCreateProfileService.mailingAddressDetails.country
+                    ?.name ||
+                    this.stepCreateProfileService.mailingAddressDetails.country
                 }}
               </div>
             </div>
@@ -194,10 +225,13 @@
 
             <div class="row">
               <div class="col-8">
-                <mat-checkbox [checked]="this.stepCreateProfileService.showContact" [disabled]="true">
+                <mat-checkbox
+                  [checked]="this.stepCreateProfileService.showContact"
+                  [disabled]="true"
+                >
                   You have given your consent for Emergency Management British
-                  Columbia and your Local Emergency Program to communicate with you by
-                  email or phone regarding your emergency situation.
+                  Columbia and your Local Emergency Program to communicate with
+                  you by email or phone regarding your emergency situation.
                 </mat-checkbox>
               </div>
             </div>
@@ -212,7 +246,7 @@
             <div class="row" *ngIf="this.stepCreateProfileService.showContact">
               <div class="col-4">Email Address</div>
               <div class="col-8 bold">
-                 {{ this.stepCreateProfileService.contactDetails?.phone }}
+                {{ this.stepCreateProfileService.contactDetails?.phone }}
               </div>
             </div>
           </div>
@@ -222,7 +256,10 @@
           <div class="review-panel">
             <h2>Security Questions</h2>
 
-            <div class="row" *ngIf="this.stepCreateProfileService.bypassSecurityQuestions">
+            <div
+              class="row"
+              *ngIf="this.stepCreateProfileService.bypassSecurityQuestions"
+            >
               <div class="col-8">
                 <mat-checkbox [checked]="true" [disabled]="true">
                   Bypass security questions for manual entry of paper ESS file.
@@ -230,27 +267,42 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions">
+            <div
+              class="row"
+              *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions"
+            >
               <div class="col-4">
-                {{ this.stepCreateProfileService.securityQuestions[0].question }}
+                {{
+                  this.stepCreateProfileService.securityQuestions[0].question
+                }}
               </div>
               <div class="col-8 bold">
                 {{ displayAnswer1 }}
               </div>
             </div>
 
-            <div class="row" *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions">
+            <div
+              class="row"
+              *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions"
+            >
               <div class="col-4">
-                {{ this.stepCreateProfileService.securityQuestions[1].question }}
+                {{
+                  this.stepCreateProfileService.securityQuestions[1].question
+                }}
               </div>
               <div class="col-8 bold">
                 {{ displayAnswer2 }}
               </div>
             </div>
 
-            <div class="row" *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions">
+            <div
+              class="row"
+              *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions"
+            >
               <div class="col-4">
-                {{ this.stepCreateProfileService.securityQuestions[2].question }}
+                {{
+                  this.stepCreateProfileService.securityQuestions[2].question
+                }}
               </div>
               <div class="col-8 bold">
                 {{ displayAnswer3 }}
@@ -265,7 +317,8 @@
 
             <div class="row">
               <div class="col-12">
-                Did you see government issued identification from this individual?
+                Did you see government issued identification from this
+                individual?
               </div>
             </div>
 
