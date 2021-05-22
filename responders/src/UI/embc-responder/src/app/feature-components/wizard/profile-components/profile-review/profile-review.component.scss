@@ -9,6 +9,10 @@ button.save {
   width: 20%;
 }
 
+::ng-deep .mat-checkbox-label {
+	margin-left: 0.8em;
+}
+
 .wizard-panel {
 	h2 { font-size: 1.4em; }
 	

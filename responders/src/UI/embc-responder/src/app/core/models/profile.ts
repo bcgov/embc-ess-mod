@@ -21,10 +21,10 @@ export interface Address {
   addressLine1: string;
   addressLine2?: null | string;
   community?: null | string;
-  country: string;
-  jurisdiction: string;
+  country: any | string;
+  jurisdiction: any | string;
   postalCode?: null | string;
-  stateProvince?: null | string;
+  stateProvince?: any | string;
 }
 
 export interface PersonDetails {

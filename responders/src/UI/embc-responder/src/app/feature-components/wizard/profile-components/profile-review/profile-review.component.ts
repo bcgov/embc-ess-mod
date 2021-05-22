@@ -10,13 +10,36 @@ import { WizardService } from '../../wizard.service';
   styleUrls: ['./profile-review.component.scss']
 })
 export class ProfileReviewComponent implements OnInit {
+  displayAnswer1: string;
+  displayAnswer2: string;
+  displayAnswer3: string;
+
   constructor(
     private router: Router,
     private wizardService: WizardService,
     public stepCreateProfileService: StepCreateProfileService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (!this.stepCreateProfileService.bypassSecurityQuestions) {
+      const displayRegex = /./g;
+
+      this.displayAnswer1 = this.stepCreateProfileService.securityQuestions[0].answer.replace(
+        displayRegex,
+        '*'
+      );
+
+      this.displayAnswer2 = this.stepCreateProfileService.securityQuestions[1].answer.replace(
+        displayRegex,
+        '*'
+      );
+
+      this.displayAnswer3 = this.stepCreateProfileService.securityQuestions[2].answer.replace(
+        displayRegex,
+        '*'
+      );
+    }
+  }
 
   /**
    * Go back to the Security Questions tab

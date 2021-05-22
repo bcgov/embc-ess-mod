@@ -95,14 +95,20 @@
             <div class="row">
               <div class="col-4">City</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.primaryAddressDetails.jurisdiction }}
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails.jurisdiction?.name ||
+                  this.stepCreateProfileService.primaryAddressDetails.jurisdiction
+                }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Province</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.primaryAddressDetails.stateProvince }}
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails.stateProvince?.name ||
+                  this.stepCreateProfileService.primaryAddressDetails.stateProvince
+                }}
               </div>
             </div>
 
@@ -116,7 +122,10 @@
             <div class="row">
               <div class="col-4">Country</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.primaryAddressDetails.country }}
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails.country?.name ||
+                  this.stepCreateProfileService.primaryAddressDetails.country
+                }}
               </div>
             </div>
           </div>
@@ -143,14 +152,20 @@
             <div class="row">
               <div class="col-4">City</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.mailingAddressDetails.jurisdiction }}
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails.jurisdiction?.name ||
+                  this.stepCreateProfileService.mailingAddressDetails.jurisdiction
+                }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Province</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.mailingAddressDetails.stateProvince }}
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails.stateProvince?.name ||
+                  this.stepCreateProfileService.mailingAddressDetails.stateProvince
+                }}
               </div>
             </div>
 
@@ -164,7 +179,10 @@
             <div class="row">
               <div class="col-4">Country</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.mailingAddressDetails.country }}
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails.country?.name ||
+                  this.stepCreateProfileService.mailingAddressDetails.country
+                }}
               </div>
             </div>
           </div>
@@ -214,28 +232,28 @@
 
             <div class="row" *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions">
               <div class="col-4">
-
+                {{ this.stepCreateProfileService.securityQuestions[0].question }}
               </div>
               <div class="col-8 bold">
-
+                {{ displayAnswer1 }}
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions">
               <div class="col-4">
-
+                {{ this.stepCreateProfileService.securityQuestions[1].question }}
               </div>
               <div class="col-8 bold">
-
+                {{ displayAnswer2 }}
               </div>
             </div>
 
-            <div class="row">
+            <div class="row" *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions">
               <div class="col-4">
-
+                {{ this.stepCreateProfileService.securityQuestions[2].question }}
               </div>
               <div class="col-8 bold">
-
+                {{ displayAnswer3 }}
               </div>
             </div>
           </div>
