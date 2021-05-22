@@ -13,8 +13,6 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { Subscription } from 'rxjs';
-import { SecurityQuestionsService } from './security-questions.service';
 
 @Component({
   selector: 'app-security-questions',
@@ -22,28 +20,17 @@ import { SecurityQuestionsService } from './security-questions.service';
   styleUrls: ['./security-questions.component.scss']
 })
 export class SecurityQuestionsComponent implements OnInit, OnDestroy {
-  questionListSubscription: Subscription;
-  secQuestions: string[];
-
   questionForm: FormGroup = null;
   bypassQuestions: FormControl = null;
 
   constructor(
     private router: Router,
-    private stepCreateProfileService: StepCreateProfileService,
+    public stepCreateProfileService: StepCreateProfileService,
     private formBuilder: FormBuilder,
-    private customValidationService: CustomValidationService,
-    private securityQuestionsService: SecurityQuestionsService
+    private customValidationService: CustomValidationService
   ) {}
 
   ngOnInit(): void {
-    // Set security question values from API
-    this.questionListSubscription = this.securityQuestionsService
-      .getSecurityQuestionList()
-      .subscribe((questions) => {
-        this.secQuestions = questions;
-      });
-
     this.createQuestionForm();
 
     // Set "Bypass Questions" button and disable inputs if necessary
@@ -230,7 +217,5 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.updateTabStatus();
-
-    this.questionListSubscription.unsubscribe();
   }
 }
