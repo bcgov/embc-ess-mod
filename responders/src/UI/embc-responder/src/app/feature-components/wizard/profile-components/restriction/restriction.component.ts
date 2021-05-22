@@ -6,6 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
 
 @Component({
@@ -15,6 +16,7 @@ import { StepCreateProfileService } from '../../step-create-profile/step-create-
 })
 export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: FormGroup;
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -24,6 +26,13 @@ export class RestrictionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createRestrictionForm();
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   createRestrictionForm(): void {
@@ -74,7 +83,11 @@ export class RestrictionComponent implements OnInit, OnDestroy {
     ).value;
   }
 
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
   ngOnDestroy(): void {
-    this.updateTabStatus();
+    this.stepCreateProfileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 }

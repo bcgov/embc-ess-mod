@@ -14,7 +14,7 @@ import {
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import {
@@ -36,6 +36,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   filteredOptions: Observable<Country[]>;
   mailingFilteredOptions: Observable<Country[]>;
   countries: Country[] = [];
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -101,6 +102,13 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.primaryAddressForm.get('mailingAddress').setValue(primaryAddress);
       }
     });
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   ngAfterViewChecked(): void {
@@ -236,8 +244,12 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
     ]);
   }
 
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
   ngOnDestroy(): void {
-    this.updateTabStatus();
+    this.stepCreateProfileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 
   /**

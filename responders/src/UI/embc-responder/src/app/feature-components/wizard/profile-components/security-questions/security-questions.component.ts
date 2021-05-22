@@ -13,6 +13,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-security-questions',
@@ -22,6 +23,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   questionForm: FormGroup = null;
   bypassQuestions: FormControl = null;
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -39,6 +41,13 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     );
 
     this.setFormDisabled(this.stepCreateProfileService.bypassSecurityQuestions);
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   /**
@@ -145,7 +154,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    * Go to the Review tab if all tabs are complete, otherwise open modal
    */
   next(): void {
-    this.updateTabStatus();
+    this.stepCreateProfileService.nextTabUpdate.next();
 
     if (this.stepCreateProfileService.checkTabsStatus()) {
       this.stepCreateProfileService.openModal(globalConst.wizardProfileMessage);
@@ -213,9 +222,10 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * When navigating away from tab, update Security Question variable and status indicator
+   * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.updateTabStatus();
+    this.stepCreateProfileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 }

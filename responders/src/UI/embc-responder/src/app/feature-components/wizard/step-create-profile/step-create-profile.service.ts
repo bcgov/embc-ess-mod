@@ -12,11 +12,14 @@ import {
 } from 'src/app/core/models/profile';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { SecurityQuestion } from 'src/app/core/api/models';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {
   private profileTabs: Array<TabModel> =
     WizardTabModelValues.evacueeProfileTabs;
+
+  private setNextTabUpdate: Subject<void> = new Subject();
 
   private restricted: boolean;
   private personalDetail: PersonDetails;
@@ -128,6 +131,13 @@ export class StepCreateProfileService {
     this.securityQuestionOption = securityQuestionOption;
   }
 
+  public get nextTabUpdate(): Subject<void> {
+    return this.setNextTabUpdate;
+  }
+  public set nextTabUpdate(setNextTabUpdate: Subject<void>) {
+    this.setNextTabUpdate = setNextTabUpdate;
+  }
+
   public get tabs(): Array<TabModel> {
     return this.profileTabs;
   }
@@ -154,6 +164,7 @@ export class StepCreateProfileService {
   isAllowed(tabRoute: string, $event: MouseEvent): boolean {
     if (tabRoute === 'review') {
       const allow = this.checkTabsStatus();
+
       if (allow) {
         $event.stopPropagation();
         $event.preventDefault();

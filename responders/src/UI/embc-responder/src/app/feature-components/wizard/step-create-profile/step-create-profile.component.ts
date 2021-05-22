@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -61,6 +61,7 @@ export class StepCreateProfileComponent implements OnDestroy {
    * @returns true/false
    */
   isAllowed(tabRoute: string, $event: MouseEvent): void {
+    this.stepCreateProfileService.nextTabUpdate.next();
     this.stepCreateProfileService.isAllowed(tabRoute, $event);
   }
 
