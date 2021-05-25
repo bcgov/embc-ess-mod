@@ -315,24 +315,33 @@
           <div class="confirm-panel">
             <h2>Identification</h2>
 
-            <div class="row">
-              <div class="col-12">
-                Did you see government issued identification from this
-                individual?
-              </div>
-            </div>
+            <p class="requiredField">
+              Did you see government issued identification from this
+              individual?
+            </p>
 
             <div class="row">
               <div class="col-12">
-                <span class="bold">Yes</span> - I saw government issued
-                identification
-              </div>
-            </div>
+                <mat-radio-group aria-labelledby="primary-radio-group-label" [formControl]="verifiedProfileFC" class="primary-radio-group" required>
+                  <mat-radio-button class="primary-radio-button" [value]="true">
+                    <span class="bold">Yes</span> - I saw government issued
+                    identification
+                  </mat-radio-button>
+                  <mat-radio-button class="primary-radio-button" [value]="false">
+                    <span class="bold">No</span> - I did not see government issued
+                    identification
+                  </mat-radio-button>
+                </mat-radio-group>
 
-            <div class="row">
-              <div class="col-12">
-                <span class="bold">No</span> - I did not see government issued
-                identification
+                <mat-error
+                  *ngIf="
+                    verifiedProfileFC.touched &&
+                    verifiedProfileFC.invalid &&
+                    verifiedProfileFC.hasError('required')
+                  "
+                >
+                  Please select an option.
+                </mat-error>
               </div>
             </div>
           </div>

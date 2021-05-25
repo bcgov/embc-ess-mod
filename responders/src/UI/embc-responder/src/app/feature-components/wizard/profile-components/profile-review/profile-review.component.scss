@@ -9,6 +9,18 @@ button.save {
   width: 20%;
 }
 
+.mat-radio-button {
+	display: block;
+
+	::ng-deep .mat-radio-outer-circle {
+		border-color: white;
+	}
+
+	::ng-deep .mat-radio-label-content {
+		padding-left: 0.8em;
+	}
+}
+
 ::ng-deep .mat-checkbox-label {
 	margin-left: 0.8em;
 }
@@ -18,6 +30,8 @@ button.save {
 	
 	padding: 20px;
 	margin: 8px 0;
+
+	line-height: 2em;
 }
 
 .review-panel {
@@ -33,4 +47,8 @@ button.save {
 
 	background-color: #234075;
 	color: white;
+}
+
+.nav-buttons {
+	margin-top: 3em;
 }

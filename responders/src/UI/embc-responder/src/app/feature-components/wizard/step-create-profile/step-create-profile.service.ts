@@ -23,11 +23,12 @@ export class StepCreateProfileService {
 
   private restricted: boolean;
   private personalDetail: PersonDetails;
-  private primaryAddressDetail: Address;
-  private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
   private showContacts: boolean;
   private confirmEmails: string;
+
+  private primaryAddressDetail: Address;
+  private mailingAddressDetail: Address;
   private isBcAddresS: boolean;
   private isBcMailingAddresS: boolean;
   private isMailingAddressSameAsPrimaryAddresS: boolean;
@@ -35,6 +36,8 @@ export class StepCreateProfileService {
   private bypassQuestions: boolean;
   private securityQuestion: SecurityQuestion[];
   private securityQuestionOption: string[];
+
+  private verified: boolean;
 
   constructor(private dialog: MatDialog) {}
 
@@ -80,6 +83,13 @@ export class StepCreateProfileService {
   }
   public set restrictedAccess(restricted: boolean) {
     this.restricted = restricted;
+  }
+
+  public get verifiedProfile(): boolean {
+    return this.verified;
+  }
+  public set verifiedProfile(verified: boolean) {
+    this.verified = verified;
   }
 
   public get personalDetails(): PersonDetails {
