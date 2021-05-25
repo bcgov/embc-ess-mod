@@ -310,10 +310,10 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
           ? this.stepCreateProfileService.primaryAddressDetails.addressLine2
           : ''
       ],
-      jurisdiction: [
-        this.stepCreateProfileService?.primaryAddressDetails?.jurisdiction !==
+      community: [
+        this.stepCreateProfileService?.primaryAddressDetails?.community !==
         undefined
-          ? this.stepCreateProfileService.primaryAddressDetails.jurisdiction
+          ? this.stepCreateProfileService.primaryAddressDetails.community
           : '',
         [Validators.required]
       ],
@@ -377,10 +377,10 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
           ? this.stepCreateProfileService.mailingAddressDetails.addressLine2
           : ''
       ],
-      jurisdiction: [
-        this.stepCreateProfileService?.mailingAddressDetails?.jurisdiction !==
+      community: [
+        this.stepCreateProfileService?.mailingAddressDetails?.community !==
         undefined
-          ? this.stepCreateProfileService.mailingAddressDetails.jurisdiction
+          ? this.stepCreateProfileService.mailingAddressDetails.community
           : '',
         [Validators.required]
       ],

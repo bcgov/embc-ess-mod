@@ -107,10 +107,10 @@
               <div class="col-4">City</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.primaryAddressDetails
-                    .jurisdiction?.name ||
+                  this.stepCreateProfileService.primaryAddressDetails.community
+                    ?.name ||
                     this.stepCreateProfileService.primaryAddressDetails
-                      .jurisdiction
+                      .community
                 }}
               </div>
             </div>
@@ -177,10 +177,10 @@
               <div class="col-4">City</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.mailingAddressDetails
-                    .jurisdiction?.name ||
+                  this.stepCreateProfileService.mailingAddressDetails.community
+                    ?.name ||
                     this.stepCreateProfileService.mailingAddressDetails
-                      .jurisdiction
+                      .community
                 }}
               </div>
             </div>
