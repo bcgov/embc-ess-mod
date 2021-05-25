@@ -3,11 +3,11 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
+import { Address } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { AddressService } from '../../profile-components/address/address.service';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
-import { Address } from 'src/app/core/models/profile';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -29,18 +29,18 @@ export class EvacuationDetailsComponent implements OnInit {
   bCDummyAddress: Address = {
     addressLine1: 'Unit 1200',
     addressLine2: '1230 Main Street',
-    jurisdiction: 'North Vancouver',
-    stateProvince: 'British Columbia',
+    communityCode: 'North Vancouver',
+    stateProvinceCode: 'British Columbia',
     postalCode: 'V8Y 6U8',
-    country: 'Canada'
+    countryCode: 'Canada'
   };
   nonBcDummyAddress: Address = {
     addressLine1: 'Unit 2300',
     addressLine2: '1230 Oak Street',
-    jurisdiction: 'Miami',
-    stateProvince: 'Florida',
+    communityCode: 'Miami',
+    stateProvinceCode: 'Florida',
     postalCode: '33009',
-    country: 'Unites States'
+    countryCode: 'Unites States'
   };
 
   constructor(
@@ -195,9 +195,9 @@ export class EvacuationDetailsComponent implements OnInit {
           ? this.stepCreateEssFileService.evacAddresS.addressLine2
           : ''
       ],
-      jurisdiction: [
-        this.stepCreateEssFileService?.evacAddresS?.jurisdiction !== undefined
-          ? this.stepCreateEssFileService.evacAddresS.jurisdiction
+      community: [
+        this.stepCreateEssFileService?.evacAddresS?.community !== undefined
+          ? this.stepCreateEssFileService.evacAddresS.community
           : '',
         [Validators.required]
       ],
@@ -224,7 +224,7 @@ export class EvacuationDetailsComponent implements OnInit {
    * Checks if the inserted primary address is in BC Province
    */
   private checkPrimaryAddress() {
-    if (this.bCDummyAddress.stateProvince !== 'British Columbia') {
+    if (this.bCDummyAddress.stateProvinceCode !== 'British Columbia') {
       this.evacDetailsForm.get('evacuatedFromPrimary').setValue('No');
       this.isBCAddress = false;
     }
