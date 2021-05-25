@@ -1,25 +1,42 @@
 <div class="row justify-content-between">
-    <div class="row close-button">
-        <button class="close-image close-button-style" mat-icon-button aria-label="Close"
-            (click)="buttonAction('close')">
-            <img src="/assets/images/close.svg" height="20" width="20">
-            <img src="/assets/images/close_onhover.svg" height="20" width="20">
-        </button>
-    </div>
-    <div class="row title-row">
-        <h1 class="mat-title" *ngIf="data?.title !== undefined" mat-dialog-title [innerHTML]="data.title"></h1>
-    </div>
+  <div class="row close-button">
+    <button
+      class="close-image close-button-style"
+      mat-icon-button
+      aria-label="Close"
+      (click)="buttonAction('close')"
+    >
+      <img src="/assets/images/close.svg" height="20" width="20" />
+      <img src="/assets/images/close_onhover.svg" height="20" width="20" />
+    </button>
+  </div>
+  <div class="row title-row">
+    <h1
+      class="mat-title"
+      *ngIf="data?.title !== undefined"
+      mat-dialog-title
+      [innerHTML]="data.title"
+    ></h1>
+  </div>
 </div>
 
 <div class="row mainBody">
-    <div class="col-md-12" mat-dialog-content [innerHTML]="data.body"></div>
+  <div class="col-md-12" mat-dialog-content [innerHTML]="data.body"></div>
 </div>
-<br>
+<br />
 <div class="row justify-content-between">
-    <!--mat-dialog-actions-->
-    <div *ngFor="let b of data.buttons" class="col-md-6">
-        <button style="width: 100%;"
-            [ngClass]="{'button-p': b.class === 'button-p', 'button-s': b.class === 'button-s'}"
-            (click)="buttonAction(b.function)" mat-button>{{b.name}}</button>
-    </div>
+  <!--mat-dialog-actions-->
+  <div *ngFor="let b of data.buttons" class="col-md-6">
+    <button
+      style="width: 100%"
+      [ngClass]="{
+        'button-p': b.class === 'button-p',
+        'button-s': b.class === 'button-s'
+      }"
+      (click)="buttonAction(b.function)"
+      mat-button
+    >
+      {{ b.name }}
+    </button>
+  </div>
 </div>

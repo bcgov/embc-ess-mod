@@ -6,12 +6,13 @@ describe('RestrictionFormComponent', () => {
   let component: RestrictionFormComponent;
   let fixture: ComponentFixture<RestrictionFormComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RestrictionFormComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [RestrictionFormComponent]
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RestrictionFormComponent);

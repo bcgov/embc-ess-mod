@@ -6,12 +6,13 @@ describe('OtherAddressComponent', () => {
   let component: OtherAddressComponent;
   let fixture: ComponentFixture<OtherAddressComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ OtherAddressComponent ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [OtherAddressComponent]
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(OtherAddressComponent);

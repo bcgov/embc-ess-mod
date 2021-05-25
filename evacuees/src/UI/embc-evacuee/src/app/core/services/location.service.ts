@@ -3,7 +3,6 @@ import { CommunityType, CommunityCode, Code } from '../api/models';
 import { ConfigurationService } from '../api/services';
 import { CacheService } from './cache.service';
 
-
 export interface Country {
   code?: string;
   name?: string;
@@ -26,36 +25,44 @@ export interface Community {
 
 @Injectable({ providedIn: 'root' })
 export class LocationService {
-
-
   private communityList: Community[];
   private stateProvinceList: StateProvince[];
   private countriesList: Country[];
   private regionalDistricts: string[];
 
-  constructor(private configService: ConfigurationService, private cacheService: CacheService) { }
+  constructor(
+    private configService: ConfigurationService,
+    private cacheService: CacheService
+  ) {}
 
   public getCommunityList(): Community[] {
-    return this.communityList ? this.communityList :
-      (JSON.parse(this.cacheService.get('communityList')) ?
-        JSON.parse(this.cacheService.get('communityList')) : this.getCommunities());
+    return this.communityList
+      ? this.communityList
+      : JSON.parse(this.cacheService.get('communityList'))
+      ? JSON.parse(this.cacheService.get('communityList'))
+      : this.getCommunities();
   }
 
   public getStateProvinceList(): StateProvince[] {
-    return this.stateProvinceList ? this.stateProvinceList :
-      (JSON.parse(this.cacheService.get('stateProvinceList')) ?
-        JSON.parse(this.cacheService.get('stateProvinceList')) : this.getStateProvinces());
+    return this.stateProvinceList
+      ? this.stateProvinceList
+      : JSON.parse(this.cacheService.get('stateProvinceList'))
+      ? JSON.parse(this.cacheService.get('stateProvinceList'))
+      : this.getStateProvinces();
   }
 
   public getCountriesList(): Country[] {
-    return this.countriesList ? this.countriesList :
-      (JSON.parse(this.cacheService.get('countriesList')) ?
-        JSON.parse(this.cacheService.get('countriesList')) : this.getCountries());
+    return this.countriesList
+      ? this.countriesList
+      : JSON.parse(this.cacheService.get('countriesList'))
+      ? JSON.parse(this.cacheService.get('countriesList'))
+      : this.getCountries();
   }
 
   public getRegionalDistricts(): string[] {
-    return this.regionalDistricts ? this.regionalDistricts :
-      JSON.parse(this.cacheService.get('regionalDistrictsList'));
+    return this.regionalDistricts
+      ? this.regionalDistricts
+      : JSON.parse(this.cacheService.get('regionalDistrictsList'));
   }
 
   private setCommunityList(communityList: Community[]): void {
@@ -79,36 +86,47 @@ export class LocationService {
   }
 
   private getCommunities(): Community[] {
-    this.configService.configurationGetCommunities().subscribe((communities: CommunityCode[]) => {
-      this.setCommunityList([...communities].map((c) => ({
-        code: c.value,
-        name: c.description,
-        districtName: c.districtName,
-        stateProvinceCode: c.parentCode.value,
-        countryCode: c.parentCode.parentCode.value,
-        type: c.communityType
-      })));
-      this.setRegionalDistricts(communities.map(comm => comm.districtName));
-    });
+    this.configService
+      .configurationGetCommunities()
+      .subscribe((communities: CommunityCode[]) => {
+        this.setCommunityList(
+          [...communities].map((c) => ({
+            code: c.value,
+            name: c.description,
+            districtName: c.districtName,
+            stateProvinceCode: c.parentCode.value,
+            countryCode: c.parentCode.parentCode.value,
+            type: c.communityType
+          }))
+        );
+        this.setRegionalDistricts(communities.map((comm) => comm.districtName));
+      });
     return this.communityList || [];
   }
 
   private getStateProvinces(): StateProvince[] {
-    this.configService.configurationGetStateProvinces().subscribe((stateProvinces: Code[]) => {
-      this.setStateProvinceList([...stateProvinces].map((sp) => ({
-        code: sp.value,
-        name: sp.description,
-        countryCode: sp.parentCode.value
-      })));
-    });
+    this.configService
+      .configurationGetStateProvinces()
+      .subscribe((stateProvinces: Code[]) => {
+        this.setStateProvinceList(
+          [...stateProvinces].map((sp) => ({
+            code: sp.value,
+            name: sp.description,
+            countryCode: sp.parentCode.value
+          }))
+        );
+      });
     return this.stateProvinceList || [];
   }
 
   private getCountries(): Country[] {
-    this.configService.configurationGetCountries().subscribe((countries: Code[]) => {
-      this.setCountriesList([...countries].map((c) => ({ code: c.value, name: c.description })));
-    });
+    this.configService
+      .configurationGetCountries()
+      .subscribe((countries: Code[]) => {
+        this.setCountriesList(
+          [...countries].map((c) => ({ code: c.value, name: c.description }))
+        );
+      });
     return this.countriesList || [];
   }
-
 }

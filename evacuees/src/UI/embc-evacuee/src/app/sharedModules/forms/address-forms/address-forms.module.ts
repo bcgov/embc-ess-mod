@@ -10,7 +10,6 @@ import { OtherAddressComponent } from './other-address/other-address.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSelectModule } from '@angular/material/select';
 
-
 @NgModule({
   declarations: [
     BcAddressComponent,
@@ -33,4 +32,4 @@ import { MatSelectModule } from '@angular/material/select';
     OtherAddressComponent
   ]
 })
-export class AddressFormsModule { }
+export class AddressFormsModule {}

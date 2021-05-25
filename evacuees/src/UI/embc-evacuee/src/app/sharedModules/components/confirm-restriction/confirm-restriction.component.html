@@ -1,37 +1,47 @@
 <div class="container container-frame">
-    <div class="heading-container">
-        <div class="row">
-            <div class="col-md-12">
-                <span class="page-heading">Confirm Restriction</span>
-            </div>
-        </div>
-    </div>
+  <div class="heading-container">
     <div class="row">
-        <div class="col-md-12">
-            <p>
-                Please confirm that your Restriction information is still correct for this evacuation.
-            </p>
-            <p>
-                Your Restriction information will be applied to any family members that you list that are connected to
-                this evacuation.
-            </p>
-        </div>
+      <div class="col-md-12">
+        <span class="page-heading">Confirm Restriction</span>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-md-12 content-container">
-            <app-restriction-form [restrictionForm]='restrictionForm'></app-restriction-form>
-            <br>
-            <br>
-            <div class="row justify-content-between resp-style">
-                <div class="col-md-6">
-                    <button class="button-s" mat-button type="button" (click)="goBack()">Cancel & Go Back to My
-                        Profile</button>
-                </div>
-                <div class="col-md-6">
-                    <button class="button-p" mat-stroked-button type="button"
-                        (click)="needsAssessment()">Continue</button>
-                </div>
-            </div>
-        </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        Please confirm that your Restriction information is still correct for
+        this evacuation.
+      </p>
+      <p>
+        Your Restriction information will be applied to any family members that
+        you list that are connected to this evacuation.
+      </p>
     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 content-container">
+      <app-restriction-form
+        [restrictionForm]="restrictionForm"
+      ></app-restriction-form>
+      <br />
+      <br />
+      <div class="row justify-content-between resp-style">
+        <div class="col-md-6">
+          <button class="button-s" mat-button type="button" (click)="goBack()">
+            Cancel & Go Back to My Profile
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button
+            class="button-p"
+            mat-stroked-button
+            type="button"
+            (click)="needsAssessment()"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
