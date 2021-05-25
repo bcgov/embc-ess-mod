@@ -1,6 +1,6 @@
 // Temporary
 
-import { Address, PersonDetails } from './profile';
+import { Address, PersonDetails } from '../api/models';
 
 export interface EvacuationFile {
   essFileNumber?: null | string;
