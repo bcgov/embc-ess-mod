@@ -1,8 +1,12 @@
-import { Address } from "../api/models";
-import { Community, Country, StateProvince } from "../services/locations.service";
+import { Address } from '../api/models';
+import {
+  Community,
+  Country,
+  StateProvince
+} from '../services/locations.service';
 
 export interface AddressModel extends Address {
-    community: Community;
-    country: Country;
-    stateProvince: StateProvince;
+  community: Community;
+  country: Country;
+  stateProvince: StateProvince;
 }
