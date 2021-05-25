@@ -4,14 +4,15 @@ import * as globalConst from '../../../core/services/global-constants';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import {
   Address,
   ContactDetails,
+  EvacueeProfile,
   PersonDetails,
-  Profile
-} from 'src/app/core/models/profile';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { SecurityQuestion } from 'src/app/core/api/models';
+  SecurityQuestion
+} from 'src/app/core/api/models';
+import { AddressModel } from 'src/app/core/models/Address.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {
@@ -20,8 +21,8 @@ export class StepCreateProfileService {
 
   private restricted: boolean;
   private personalDetail: PersonDetails;
-  private primaryAddressDetail: Address;
-  private mailingAddressDetail: Address;
+  private primaryAddressDetail: AddressModel;
+  private mailingAddressDetail: AddressModel;
   private contactDetail: ContactDetails;
   private securityQuestion: SecurityQuestion[];
   private showContacts: boolean;
@@ -91,17 +92,17 @@ export class StepCreateProfileService {
     this.personalDetail = personalDetail;
   }
 
-  public get primaryAddressDetails(): Address {
+  public get primaryAddressDetails(): AddressModel {
     return this.primaryAddressDetail;
   }
-  public set primaryAddressDetails(primaryAddressDetail: Address) {
+  public set primaryAddressDetails(primaryAddressDetail: AddressModel) {
     this.primaryAddressDetail = primaryAddressDetail;
   }
 
-  public get mailingAddressDetails(): Address {
+  public get mailingAddressDetails(): AddressModel {
     return this.mailingAddressDetail;
   }
-  public set mailingAddressDetails(mailingAddressDetail: Address) {
+  public set mailingAddressDetails(mailingAddressDetail: AddressModel) {
     this.mailingAddressDetail = mailingAddressDetail;
   }
 
@@ -183,29 +184,29 @@ export class StepCreateProfileService {
     });
   }
 
-  public createProfileDTO(): Profile {
+  public createProfileDTO(): EvacueeProfile {
     return {
       contactDetails: this.contactDetails,
       mailingAddress: this.setAddressObject(this.mailingAddressDetails),
       personalDetails: this.personalDetails,
       primaryAddress: this.setAddressObject(this.primaryAddressDetails),
-      restrictedAccess: this.restrictedAccess
+      restriction: this.restrictedAccess
     };
   }
 
-  public setAddressObject(addressObject): Address {
+  public setAddressObject(addressObject: AddressModel): Address {
     const address: Address = {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
-      country: addressObject.country.code,
-      jurisdiction:
-        addressObject.jurisdiction.code === undefined
+      countryCode: addressObject.country.code,
+      communityCode:
+        addressObject.community.code === undefined
           ? null
-          : addressObject.jurisdiction.code,
+          : addressObject.community.code,
       postalCode: addressObject.postalCode,
-      stateProvince:
+      stateProvinceCode:
         addressObject.stateProvince === null
-          ? addressObject.stateProvince
+          ? null
           : addressObject.stateProvince.code
     };
 
