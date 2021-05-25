@@ -15,7 +15,7 @@
 // -------------------------------------------------------------------------
 
 using EMBC.ESS.Managers.Admin;
-using EMBC.ESS.Managers.Location;
+using EMBC.ESS.Managers.Metadata;
 using EMBC.ESS.Managers.Submissions;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
@@ -59,7 +59,7 @@ namespace EMBC.ESS
 
             services
                 .AddAdminManager()
-                .AddLocationManager()
+                .AddMetadataManager()
                 .AddSubmissionManager();
 
             services

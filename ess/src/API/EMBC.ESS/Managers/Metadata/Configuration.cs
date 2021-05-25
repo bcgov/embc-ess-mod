@@ -14,20 +14,18 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using AutoMapper;
-using EMBC.ESS.Resources.Metadata;
+using EMBC.ESS.Utilities.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace EMBC.ESS.Managers.Location
+namespace EMBC.ESS.Managers.Metadata
 {
-    public class Mappings : Profile
+    public static class Configuration
     {
-        public Mappings()
+        public static IServiceCollection AddMetadataManager(this IServiceCollection services)
         {
-            CreateMap<Shared.Contracts.Location.Country, Country>().ReverseMap();
-            CreateMap<Shared.Contracts.Location.StateProvince, StateProvince>().ReverseMap();
-            CreateMap<Shared.Contracts.Location.Community, Community>()
-                .ForMember(c => c.DistrictCode, opts => opts.Ignore())
-                .ReverseMap();
+            services.AddTransient<MetadataManager>();
+            services.Configure<MessageHandlerRegistryOptions>(opts => opts.Add(typeof(MetadataManager)));
+            return services;
         }
     }
 }
