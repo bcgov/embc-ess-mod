@@ -9,14 +9,19 @@ describe('VerifiedRegistrationComponent', () => {
   let component: VerifiedRegistrationComponent;
   let fixture: ComponentFixture<VerifiedRegistrationComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [VerifiedRegistrationComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [FormBuilder]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [VerifiedRegistrationComponent],
+        imports: [
+          ReactiveFormsModule,
+          HttpClientTestingModule,
+          RouterTestingModule
+        ],
+        providers: [FormBuilder]
+      }).compileComponents();
     })
-      .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(VerifiedRegistrationComponent);

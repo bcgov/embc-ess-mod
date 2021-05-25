@@ -54,7 +54,6 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Shared.Contracts.Submissions.SecurityQuestion, Resources.Contacts.SecurityQuestion>()
                 .ReverseMap()
-                .ForMember(d => d.Answer, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Answer) ? string.Empty : s.Answer.Substring(0, 1) + "***" + s.Answer.Substring(s.Answer.Length - 1)))
                 ;
         }
     }

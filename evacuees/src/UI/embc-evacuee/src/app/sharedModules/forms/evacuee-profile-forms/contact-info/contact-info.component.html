@@ -1,23 +1,38 @@
 <mat-card class="card-align">
   <mat-card-content>
-    <p class="card-heading">Contact Information <span style="color: red;">*</span></p>
-    <p>Your telephone number and email address will <b>ONLY</b> be used to contact you about your current registration.
-      It is strongly encouraged to provide your telephone number and/ or email address as a point of contact, so your
-      local Emergency Support Services (ESS) team can easily support you.</p>
-    <br>
-    <p>Do you authorize Emergency Management British Columbia and your Local Emergency Program to communicate with you
-      by email or phone regarding your emergency situation. Note: if you do not authorize communications, you can still
-      complete your registration and receive emergency supports, however you will not receive your ESS file number
-      confirmation and will not be able to receive e-transfer based supports. </p>
+    <p class="card-heading">
+      Contact Information <span style="color: red">*</span>
+    </p>
+    <p>
+      Your telephone number and email address will <b>ONLY</b> be used to
+      contact you about your current registration. It is strongly encouraged to
+      provide your telephone number and/ or email address as a point of contact,
+      so your local Emergency Support Services (ESS) team can easily support
+      you.
+    </p>
+    <br />
+    <p>
+      Do you authorize Emergency Management British Columbia and your Local
+      Emergency Program to communicate with you by email or phone regarding your
+      emergency situation. Note: if you do not authorize communications, you can
+      still complete your registration and receive emergency supports, however
+      you will not receive your ESS file number confirmation and will not be
+      able to receive e-transfer based supports.
+    </p>
 
     <form [formGroup]="contactInfoForm">
-
-      <mat-radio-group aria-labelledby="primary-radio-group-label" formControlName="showContacts"
-        class="primary-radio-group" (change)="hideContact($event)" required>
-        <mat-radio-button class="primary-radio-button" [value]=true>
-          <span class="highlight">Yes</span> - you may contact me regarding the emergency situation.
+      <mat-radio-group
+        aria-labelledby="primary-radio-group-label"
+        formControlName="showContacts"
+        class="primary-radio-group"
+        (change)="hideContact($event)"
+        required
+      >
+        <mat-radio-button class="primary-radio-button" [value]="true">
+          <span class="highlight">Yes</span> - you may contact me regarding the
+          emergency situation.
         </mat-radio-button>
-        <mat-radio-button class="primary-radio-button" [value]=false>
+        <mat-radio-button class="primary-radio-button" [value]="false">
           <span class="highlight">No</span> - you may <b>NOT</b> contact me.
         </mat-radio-button>
       </mat-radio-group>
@@ -28,19 +43,33 @@
           </div>
         </div>
 
-
         <div class="row">
           <div class="col-md-4">
             <mat-form-field appearance="outline">
               <!--[hideRequiredMarker]="contactFormControl?.hidePhoneRequired?.value" [errorStateMatcher]="requiredFieldsMatcher" -->
               <mat-label>Telephone Number</mat-label>
-              <input formControlName="phone" matInput placeholder="Telephone Number"
-                [textMask]="{mask: phoneMask, keepCharPositions: true}">
-              <mat-error *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('required')">
-                Telephone Number is required</mat-error>
+              <input
+                formControlName="phone"
+                matInput
+                placeholder="Telephone Number"
+                [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+              />
               <mat-error
-                *ngIf="contactFormControl.phone.invalid && contactFormControl.phone.hasError('incorrectLength')">
-                Telephone number must have 10 digits</mat-error>
+                *ngIf="
+                  contactFormControl.phone.invalid &&
+                  contactFormControl.phone.hasError('required')
+                "
+              >
+                Telephone Number is required</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  contactFormControl.phone.invalid &&
+                  contactFormControl.phone.hasError('incorrectLength')
+                "
+              >
+                Telephone number must have 10 digits</mat-error
+              >
             </mat-form-field>
           </div>
         </div>
@@ -52,7 +81,7 @@
               number.</mat-checkbox>
           </div>
         </div> -->
-        <br>
+        <br />
 
         <div class="row">
           <div class="col-md-12">
@@ -65,12 +94,26 @@
             <mat-form-field appearance="outline">
               <!-- [hideRequiredMarker]="contactFormControl?.hideEmailRequired?.value" -->
               <mat-label>Email Address</mat-label>
-              <input formControlName="email" matInput placeholder="Email Address">
-              <mat-error *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('required')">
-                Email
-                is required</mat-error>
-              <mat-error *ngIf="contactFormControl.email.invalid && contactFormControl.email.hasError('email')">Invalid
-                email</mat-error>
+              <input
+                formControlName="email"
+                matInput
+                placeholder="Email Address"
+              />
+              <mat-error
+                *ngIf="
+                  contactFormControl.email.invalid &&
+                  contactFormControl.email.hasError('required')
+                "
+              >
+                Email is required</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  contactFormControl.email.invalid &&
+                  contactFormControl.email.hasError('email')
+                "
+                >Invalid email</mat-error
+              >
             </mat-form-field>
           </div>
         </div>
@@ -80,16 +123,37 @@
             <mat-form-field appearance="outline">
               <!--[hideRequiredMarker]="contactFormControl?.hideEmailRequired?.value"-->
               <mat-label>Confirm Email Address</mat-label>
-              <input formControlName="confirmEmail" matInput placeholder="Confirm Email Address"
-                [errorStateMatcher]="emailMatcher">
+              <input
+                formControlName="confirmEmail"
+                matInput
+                placeholder="Confirm Email Address"
+                [errorStateMatcher]="emailMatcher"
+              />
               <mat-error
-                *ngIf="contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('required')">
-                Confirm Email is required</mat-error>
+                *ngIf="
+                  contactFormControl.confirmEmail.invalid &&
+                  contactFormControl.confirmEmail.hasError('required')
+                "
+              >
+                Confirm Email is required</mat-error
+              >
               <mat-error
-                *ngIf="contactFormControl.confirmEmail.invalid && contactFormControl.confirmEmail.hasError('email')">
-                Invalid email</mat-error>
-              <mat-error *ngIf="contactFormControl?.confirmEmail?.parent?.hasError('emailMatch')">
-                Email address mismatch</mat-error>
+                *ngIf="
+                  contactFormControl.confirmEmail.invalid &&
+                  contactFormControl.confirmEmail.hasError('email')
+                "
+              >
+                Invalid email</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  contactFormControl?.confirmEmail?.parent?.hasError(
+                    'emailMatch'
+                  )
+                "
+              >
+                Email address mismatch</mat-error
+              >
             </mat-form-field>
           </div>
         </div>

@@ -24,7 +24,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
         public void CanMapProfileFromDynamicsEntities()
         {
             var contact = FakeGenerator.CreateDynamicsContact();
-            var profile = mapper.Map<Contact>(contact);
+            var profile = mapper.Map<Contact>(contact, opt => opt.Items["MaskSecurityAnswers"] = "false");
 
             profile.ShouldNotBeNull();
 

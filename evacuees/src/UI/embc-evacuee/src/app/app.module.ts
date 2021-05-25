@@ -15,9 +15,7 @@ export const AUTH_INTERCEPTOR_PROVIDER: Provider = {
 };
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -26,10 +24,7 @@ export const AUTH_INTERCEPTOR_PROVIDER: Provider = {
     ReactiveFormsModule,
     CoreModule
   ],
-  providers: [
-    AuthInterceptor,
-    AUTH_INTERCEPTOR_PROVIDER
-  ],
+  providers: [AuthInterceptor, AUTH_INTERCEPTOR_PROVIDER],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

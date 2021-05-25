@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  AfterViewChecked,
+  ChangeDetectorRef
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ComponentCreationService } from '../../../core/services/componentCreation.service';
@@ -15,13 +22,14 @@ import { ProfileService } from './profile.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked {
-
+export class ProfileComponent
+  implements OnInit, AfterViewInit, AfterViewChecked
+{
+  @ViewChild('profileStepper') profileStepper: MatStepper;
   isEditable = true;
   steps: Array<ComponentMetaDataModel> = new Array<ComponentMetaDataModel>();
   showStep = false;
   profileFolderPath = 'evacuee-profile-forms';
-  @ViewChild('profileStepper') profileStepper: MatStepper;
   path: string;
   form$: Subscription;
   form: FormGroup;
@@ -33,10 +41,15 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   showLoader = false;
 
   constructor(
-    private router: Router, private componentService: ComponentCreationService, private route: ActivatedRoute,
-    private formCreationService: FormCreationService, private cd: ChangeDetectorRef,
+    private router: Router,
+    private componentService: ComponentCreationService,
+    private route: ActivatedRoute,
+    private formCreationService: FormCreationService,
+    private cd: ChangeDetectorRef,
     private alertService: AlertService,
-    private profileDataService: ProfileDataService, private profileService: ProfileService) {
+    private profileDataService: ProfileDataService,
+    private profileService: ProfileService
+  ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { stepIndex: number };
@@ -69,6 +82,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Loads form for every step based on index
+   *
    * @param index step index
    */
   currentStep(index: number): void {
@@ -78,6 +92,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Triggered on the step change animation event
+   *
    * @param event animation event
    * @param stepper stepper instance
    */
@@ -87,6 +102,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Custom back stepper function
+   *
    * @param stepper stepper instance
    * @param lastStep stepIndex
    */
@@ -103,6 +119,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Custom next stepper function
+   *
    * @param stepper stepper instance
    * @param isLast stepperIndex
    * @param component current component name
@@ -128,6 +145,7 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Sets the form data to the DTO services
+   *
    * @param component Name of the component
    */
   setFormData(component: string): void {
@@ -136,14 +154,17 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
         this.profileDataService.personalDetails = this.form.value;
         break;
       case 'address':
-        this.profileDataService.primaryAddressDetails = this.form.get('address').value;
-        this.profileDataService.mailingAddressDetails = this.form.get('mailingAddress').value;
+        this.profileDataService.primaryAddressDetails =
+          this.form.get('address').value;
+        this.profileDataService.mailingAddressDetails =
+          this.form.get('mailingAddress').value;
         break;
       case 'contact-info':
         this.profileDataService.contactDetails = this.form.value;
         break;
       case 'secret':
-        this.profileDataService.secretWordPhrase = this.form.get('secretPhrase').value;
+        this.profileDataService.secretWordPhrase =
+          this.form.get('secretPhrase').value;
         break;
       default:
     }
@@ -151,37 +172,38 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   /**
    * Loads appropriate forms based on the current step
+   *
    * @param index Step index
    */
   loadStepForm(index: number): void {
     switch (index) {
       case 0:
-        this.form$ = this.formCreationService.getPersonalDetailsForm().subscribe(
-          personalDetails => {
+        this.form$ = this.formCreationService
+          .getPersonalDetailsForm()
+          .subscribe((personalDetails) => {
             this.form = personalDetails;
-          }
-        );
+          });
         break;
       case 1:
-        this.form$ = this.formCreationService.getAddressForm().subscribe(
-          address => {
+        this.form$ = this.formCreationService
+          .getAddressForm()
+          .subscribe((address) => {
             this.form = address;
-          }
-        );
+          });
         break;
       case 2:
-        this.form$ = this.formCreationService.getContactDetailsForm().subscribe(
-          contactDetails => {
+        this.form$ = this.formCreationService
+          .getContactDetailsForm()
+          .subscribe((contactDetails) => {
             this.form = contactDetails;
-          }
-        );
+          });
         break;
       case 3:
-        this.form$ = this.formCreationService.getSecretForm().subscribe(
-          secret => {
+        this.form$ = this.formCreationService
+          .getSecretForm()
+          .subscribe((secret) => {
             this.form = secret;
-          }
-        );
+          });
         break;
     }
   }
@@ -189,13 +211,17 @@ export class ProfileComponent implements OnInit, AfterViewInit, AfterViewChecked
   submitFile(): void {
     this.showLoader = !this.showLoader;
     this.alertService.clearAlert();
-    this.profileService.upsertProfile(this.profileDataService.createProfileDTO()).subscribe(profileId => {
-      this.profileDataService.setProfileId(profileId);
-      this.router.navigate(['/verified-registration/dashboard']);
-    }, (error) => {
-      this.showLoader = !this.showLoader;
-      this.alertService.setAlert('danger', error.title);
-    });
+    this.profileService
+      .upsertProfile(this.profileDataService.createProfileDTO())
+      .subscribe(
+        (profileId) => {
+          this.profileDataService.setProfileId(profileId);
+          this.router.navigate(['/verified-registration/dashboard']);
+        },
+        (error) => {
+          this.showLoader = !this.showLoader;
+          this.alertService.setAlert('danger', error.title);
+        }
+      );
   }
-
 }

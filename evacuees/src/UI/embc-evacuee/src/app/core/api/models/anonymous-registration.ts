@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 /* eslint-disable */
 import { Address } from './address';
 import { NeedsAssessment } from './needs-assessment';

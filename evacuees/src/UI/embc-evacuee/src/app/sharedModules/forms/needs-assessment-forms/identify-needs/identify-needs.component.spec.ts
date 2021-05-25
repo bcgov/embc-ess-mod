@@ -7,14 +7,15 @@ describe('IdentifyNeedsComponent', () => {
   let component: IdentifyNeedsComponent;
   let fixture: ComponentFixture<IdentifyNeedsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ IdentifyNeedsComponent ],
-      imports: [ ReactiveFormsModule ],
-      providers: [ FormBuilder ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [IdentifyNeedsComponent],
+        imports: [ReactiveFormsModule],
+        providers: [FormBuilder]
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(IdentifyNeedsComponent);
