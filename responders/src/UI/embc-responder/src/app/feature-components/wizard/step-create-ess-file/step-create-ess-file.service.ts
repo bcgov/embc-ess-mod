@@ -3,20 +3,19 @@ import {
   InsuranceOption,
   NeedsAssessment
 } from 'src/app/core/models/evacuation-file';
-import { Address, PersonDetails } from 'src/app/core/models/profile';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import * as globalConst from '../../../core/services/global-constants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AddressModel } from 'src/app/core/models/Address.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
   private essTabs: Array<TabModel> = WizardTabModelValues.essFileTabs;
   private paperESSFile: string;
   private evacuatedFromPrimary: boolean;
-  private evacAddress: Address;
+  private evacAddress: AddressModel;
   private facilityName: string;
   private insurance: InsuranceOption;
   private householdAffected: string;
@@ -33,7 +32,7 @@ export class StepCreateEssFileService {
   private haveMedication: boolean;
   private medicationSupply: null | boolean;
   private sameLastNameCheck: null | boolean;
-  
+
 
   constructor(
     private dialog: MatDialog
@@ -53,10 +52,10 @@ export class StepCreateEssFileService {
     this.evacuatedFromPrimary = evacuatedFromPrimary;
   }
 
-  public get evacAddresS(): Address {
+  public get evacAddresS(): AddressModel {
     return this.evacAddress;
   }
-  public set evacAddresS(evacAddress: Address) {
+  public set evacAddresS(evacAddress: AddressModel) {
     this.evacAddress = evacAddress;
   }
 

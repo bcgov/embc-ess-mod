@@ -185,17 +185,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> UpsertRegistrantProfile(EvacueeProfile evacuee)
         {
-            //TODO - update SaveRegistrantCommand to accept security questions
-            //if (evacuee == null) return BadRequest();
+            if (evacuee == null) return BadRequest();
 
-            //var profile = mapper.Map<RegistrantProfile>(evacuee);
-            //var id = await messagingClient.Send(new SaveRegistrantCommand
-            //{
-            //    Profile = profile
-            //});
-            //return Ok(new { Id = id });
-
-            return Ok(await Task.FromResult(new { Id = "123" }));
+            var profile = mapper.Map<RegistrantProfile>(evacuee);
+            var id = await messagingClient.Send(new SaveRegistrantCommand
+            {
+                Profile = profile
+            });
+            return Ok(new { Id = id });
         }
     }
 
