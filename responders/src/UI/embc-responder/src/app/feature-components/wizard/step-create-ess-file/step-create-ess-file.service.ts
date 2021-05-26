@@ -8,6 +8,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { Subject } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/Address.model';
 import { Address, PersonDetails } from 'src/app/core/api/models';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
@@ -15,6 +16,9 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
   private essTabs: Array<TabModel> = WizardTabModelValues.essFileTabs;
+
+  private setNextTabUpdate: Subject<void> = new Subject();
+
   private paperESSFile: string;
   private evacuatedFromPrimary: boolean;
   private evacAddress: AddressModel;
@@ -107,6 +111,7 @@ export class StepCreateEssFileService {
     this.externalServices = externalServices;
   }
 
+
   public get haveHouseHoldMembers(): boolean {
     return this.haveHouseholdMembers;
   }
@@ -161,6 +166,13 @@ export class StepCreateEssFileService {
   }
   public set medicationSupplY(medicationSupply: boolean) {
     this.medicationSupply = medicationSupply;
+
+  public get nextTabUpdate(): Subject<void> {
+    return this.setNextTabUpdate;
+  }
+  public set nextTabUpdate(setNextTabUpdate: Subject<void>) {
+    this.setNextTabUpdate = setNextTabUpdate;
+
   }
 
   public get tabs(): Array<TabModel> {

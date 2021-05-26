@@ -8,6 +8,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import * as globalConst from '../../../../core/services/global-constants';
 import { AddressService } from '../../profile-components/address/address.service';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -25,6 +26,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   showBCAddressForm = false;
   isBCAddress = true;
   selection = new SelectionModel<any>(true, []);
+  tabUpdateSubscription: Subscription;
 
   bCDummyAddress: Address = {
     addressLine1: 'Unit 1200',
@@ -53,6 +55,13 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.createEvacDetailsForm();
     this.checkPrimaryAddress();
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateEssFileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   /**
@@ -112,7 +121,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.evacDetailsForm
       .get('referredServiceDetails')
       .setValue(this.selection.selected);
-    this.updateTabStatus();
+
+    this.stepCreateEssFileService.nextTabUpdate.next();
+
     this.stepCreateEssFileService.createNeedsAssessmentDTO();
     this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
   }
@@ -183,6 +194,14 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       ],
       evacAddress: this.createEvacAddressForm()
     });
+  }
+
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
+  ngOnDestroy(): void {
+    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 
   /**

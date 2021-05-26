@@ -6,6 +6,7 @@ import { StepCreateProfileService } from '../../step-create-profile/step-create-
 import * as globalConst from '../../../../core/services/global-constants';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-evacuee-details',
@@ -28,6 +29,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     /\d/
   ];
   evacueeSearchContext: EvacueeSearchContextModel;
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -40,6 +42,13 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.createEvacueeDetailsForm();
     this.evacueeSearchContext = this.evacueeSearchService.getEvacueeSearchContext();
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   createEvacueeDetailsForm(): void {
@@ -120,7 +129,11 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     this.stepCreateProfileService.personalDetails = this.evacueeDetailsForm.getRawValue();
   }
 
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
   ngOnDestroy(): void {
-    this.updateTabStatus();
+    this.stepCreateProfileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 }

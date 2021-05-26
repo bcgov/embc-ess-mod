@@ -1,0 +1,54 @@
+@import '../../../../../styles/defaults.scss';
+
+button.back {
+  float: left;
+  width: 20%;
+}
+button.save {
+  float: right;
+  width: 20%;
+}
+
+.mat-radio-button {
+	display: block;
+
+	::ng-deep .mat-radio-outer-circle {
+		border-color: white;
+	}
+
+	::ng-deep .mat-radio-label-content {
+		padding-left: 0.8em;
+	}
+}
+
+::ng-deep .mat-checkbox-label {
+	margin-left: 0.8em;
+}
+
+.wizard-panel {
+	h2 { font-size: 1.4em; }
+	
+	padding: 20px;
+	margin: 8px 0;
+
+	line-height: 2em;
+}
+
+.review-panel {
+	@extend .wizard-panel;
+
+	h2 { color: #234075; }
+
+	background-color: #f2f2f2;
+}
+
+.confirm-panel {
+	@extend .wizard-panel;
+
+	background-color: #234075;
+	color: white;
+}
+
+.nav-buttons {
+	margin-top: 3em;
+}

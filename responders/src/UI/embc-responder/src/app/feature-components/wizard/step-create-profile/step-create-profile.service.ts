@@ -12,6 +12,7 @@ import {
   PersonDetails,
   SecurityQuestion
 } from 'src/app/core/api/models';
+import { Subject } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/Address.model';
 
 @Injectable({ providedIn: 'root' })
@@ -19,27 +20,27 @@ export class StepCreateProfileService {
   private profileTabs: Array<TabModel> =
     WizardTabModelValues.evacueeProfileTabs;
 
+  private setNextTabUpdate: Subject<void> = new Subject();
+
   private restricted: boolean;
   private personalDetail: PersonDetails;
+  private contactDetail: ContactDetails;
+  private showContacts: boolean;
+  private confirmEmails: string;
+
   private primaryAddressDetail: AddressModel;
   private mailingAddressDetail: AddressModel;
-  private contactDetail: ContactDetails;
-  private securityQuestion: SecurityQuestion[];
-  private showContacts: boolean;
-  private bypassQuestions: boolean;
-  private confirmEmails: string;
   private isBcAddresS: boolean;
   private isBcMailingAddresS: boolean;
   private isMailingAddressSameAsPrimaryAddresS: boolean;
 
-  constructor(private dialog: MatDialog) {}
+  private bypassQuestions: boolean;
+  private securityQuestion: SecurityQuestion[];
+  private securityQuestionOption: string[];
 
-  public get bypassSecurityQuestions(): boolean {
-    return this.bypassQuestions;
-  }
-  public set bypassSecurityQuestions(bypassQuestions: boolean) {
-    this.bypassQuestions = bypassQuestions;
-  }
+  private verified: boolean;
+
+  constructor(private dialog: MatDialog) {}
 
   public get showContact(): boolean {
     return this.showContacts;
@@ -85,6 +86,13 @@ export class StepCreateProfileService {
     this.restricted = restricted;
   }
 
+  public get verifiedProfile(): boolean {
+    return this.verified;
+  }
+  public set verifiedProfile(verified: boolean) {
+    this.verified = verified;
+  }
+
   public get personalDetails(): PersonDetails {
     return this.personalDetail;
   }
@@ -113,11 +121,32 @@ export class StepCreateProfileService {
     this.contactDetail = contactDetail;
   }
 
+  public get bypassSecurityQuestions(): boolean {
+    return this.bypassQuestions;
+  }
+  public set bypassSecurityQuestions(bypassQuestions: boolean) {
+    this.bypassQuestions = bypassQuestions;
+  }
+
   public get securityQuestions(): SecurityQuestion[] {
     return this.securityQuestion;
   }
   public set securityQuestions(securityQuestion: SecurityQuestion[]) {
     this.securityQuestion = securityQuestion;
+  }
+
+  public get securityQuestionOptions(): string[] {
+    return this.securityQuestionOption;
+  }
+  public set securityQuestionOptions(securityQuestionOption: string[]) {
+    this.securityQuestionOption = securityQuestionOption;
+  }
+
+  public get nextTabUpdate(): Subject<void> {
+    return this.setNextTabUpdate;
+  }
+  public set nextTabUpdate(setNextTabUpdate: Subject<void>) {
+    this.setNextTabUpdate = setNextTabUpdate;
   }
 
   public get tabs(): Array<TabModel> {
@@ -146,6 +175,7 @@ export class StepCreateProfileService {
   isAllowed(tabRoute: string, $event: MouseEvent): boolean {
     if (tabRoute === 'review') {
       const allow = this.checkTabsStatus();
+
       if (allow) {
         $event.stopPropagation();
         $event.preventDefault();

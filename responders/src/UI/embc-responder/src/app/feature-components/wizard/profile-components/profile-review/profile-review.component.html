@@ -1,3 +1,370 @@
-<p>profile-review works!</p>
+<div class="container container-frame">
+  <div class="heading-container">
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-tab-heading"> Review & Save Profile </span>
+      </div>
+    </div>
+  </div>
 
-<button class="button-p" mat-button (click)="save()">Save</button>
+  <div class="row">
+    <div class="col-12 content-container">
+      <div class="row">
+        <div class="col-12">
+          <div class="review-panel">
+            <h2>Restriction</h2>
+
+            <div class="row">
+              <div class="col-8">
+                <mat-checkbox
+                  [checked]="this.stepCreateProfileService.restrictedAccess"
+                  disabled
+                >
+                  You have given your consent to have your location and contact
+                  information shared with concerned family or friends who
+                  enquire about your wellbeing.
+                </mat-checkbox>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="review-panel">
+            <h2>Personal Details</h2>
+
+            <div class="row">
+              <div class="col-4">Last Name</div>
+              <div class="col-8 bold">
+                {{ this.stepCreateProfileService.personalDetails.lastName }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">First Name</div>
+              <div class="col-8 bold">
+                {{ this.stepCreateProfileService.personalDetails.firstName }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Preferred Name</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.personalDetails.preferredName
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Initials</div>
+              <div class="col-8 bold">
+                {{ this.stepCreateProfileService.personalDetails.initials }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Date of Birth</div>
+              <div class="col-8 bold">
+                {{ this.stepCreateProfileService.personalDetails.dateOfBirth }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Gender</div>
+              <div class="col-8 bold">
+                {{ this.stepCreateProfileService.personalDetails.gender }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="review-panel">
+            <h2>Primary Address</h2>
+
+            <div class="row">
+              <div class="col-4">Address Line 1</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails
+                    .addressLine1
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Address Line 2</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails
+                    .addressLine2
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">City</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails.community
+                    ?.name ||
+                    this.stepCreateProfileService.primaryAddressDetails
+                      .community
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Province</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails
+                    .stateProvince?.name ||
+                    this.stepCreateProfileService.primaryAddressDetails
+                      .stateProvince
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Postal Code</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails.postalCode
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Country</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.primaryAddressDetails.country
+                    ?.name ||
+                    this.stepCreateProfileService.primaryAddressDetails.country
+                }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="review-panel">
+            <h2>Mailing Address</h2>
+
+            <div class="row">
+              <div class="col-4">Address Line 1</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails
+                    .addressLine1
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Address Line 2</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails
+                    .addressLine2
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">City</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails.community
+                    ?.name ||
+                    this.stepCreateProfileService.mailingAddressDetails
+                      .community
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Province</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails
+                    .stateProvince?.name ||
+                    this.stepCreateProfileService.mailingAddressDetails
+                      .stateProvince
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Postal Code</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails.postalCode
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Country</div>
+              <div class="col-8 bold">
+                {{
+                  this.stepCreateProfileService.mailingAddressDetails.country
+                    ?.name ||
+                    this.stepCreateProfileService.mailingAddressDetails.country
+                }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="review-panel">
+            <h2>Contact Details</h2>
+
+            <div class="row">
+              <div class="col-8">
+                <mat-checkbox
+                  [checked]="this.stepCreateProfileService.showContact"
+                  [disabled]="true"
+                >
+                  You have given your consent for Emergency Management British
+                  Columbia and your Local Emergency Program to communicate with
+                  you by email or phone regarding your emergency situation.
+                </mat-checkbox>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="this.stepCreateProfileService.showContact">
+              <div class="col-4">Telephone/Mobile</div>
+              <div class="col-8 bold">
+                {{ this.stepCreateProfileService.contactDetails?.email }}
+              </div>
+            </div>
+
+            <div class="row" *ngIf="this.stepCreateProfileService.showContact">
+              <div class="col-4">Email Address</div>
+              <div class="col-8 bold">
+                {{ this.stepCreateProfileService.contactDetails?.phone }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="review-panel">
+            <h2>Security Questions</h2>
+
+            <div
+              class="row"
+              *ngIf="this.stepCreateProfileService.bypassSecurityQuestions"
+            >
+              <div class="col-8">
+                <mat-checkbox [checked]="true" [disabled]="true">
+                  Bypass security questions for manual entry of paper ESS file.
+                </mat-checkbox>
+              </div>
+            </div>
+
+            <div
+              class="row"
+              *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions"
+            >
+              <div class="col-4">
+                {{
+                  this.stepCreateProfileService.securityQuestions[0].question
+                }}
+              </div>
+              <div class="col-8 bold">
+                {{ displayAnswer1 }}
+              </div>
+            </div>
+
+            <div
+              class="row"
+              *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions"
+            >
+              <div class="col-4">
+                {{
+                  this.stepCreateProfileService.securityQuestions[1].question
+                }}
+              </div>
+              <div class="col-8 bold">
+                {{ displayAnswer2 }}
+              </div>
+            </div>
+
+            <div
+              class="row"
+              *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions"
+            >
+              <div class="col-4">
+                {{
+                  this.stepCreateProfileService.securityQuestions[2].question
+                }}
+              </div>
+              <div class="col-8 bold">
+                {{ displayAnswer3 }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="confirm-panel">
+            <h2>Identification</h2>
+
+            <p class="requiredField">
+              Did you see government issued identification from this individual?
+            </p>
+
+            <div class="row">
+              <div class="col-12">
+                <mat-radio-group
+                  aria-labelledby="primary-radio-group-label"
+                  [formControl]="verifiedProfileFC"
+                  class="primary-radio-group"
+                  required
+                >
+                  <mat-radio-button class="primary-radio-button" [value]="true">
+                    <span class="bold">Yes</span> - I saw government issued
+                    identification
+                  </mat-radio-button>
+                  <mat-radio-button
+                    class="primary-radio-button"
+                    [value]="false"
+                  >
+                    <span class="bold">No</span> - I did not see government
+                    issued identification
+                  </mat-radio-button>
+                </mat-radio-group>
+
+                <mat-error
+                  *ngIf="
+                    verifiedProfileFC.touched &&
+                    verifiedProfileFC.invalid &&
+                    verifiedProfileFC.hasError('required')
+                  "
+                >
+                  Please select an option.
+                </mat-error>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 nav-buttons">
+          <button class="button-s back" mat-button (click)="back()">
+            Back
+          </button>
+          <button class="button-p save" mat-button (click)="save()">
+            Save Profile
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
