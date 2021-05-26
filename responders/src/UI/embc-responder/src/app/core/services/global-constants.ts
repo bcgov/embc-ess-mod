@@ -36,6 +36,7 @@ export const usDefaultObject = {
   name: 'United States of America'
 };
 export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
+export const securityQuestionAnswerPattern = '^[a-zA-Z0-9 ]+$';
 
 export const gender = [
   { name: 'Male', value: 'Male' },
@@ -50,7 +51,8 @@ export const lockedStepMessage =
   'Please complete the ESS File prior to proceeding to the next steps.';
 
 // Generic error messages
-export const genericError = 'An error has occurred. Please try again later.';
+export const genericError =
+  'An error occurred while loading this page. Please refresh and try again.';
 export const teamMemberListError =
   'Unable to retrieve team members at this time. Please try again later';
 export const activateTeamMemberError =
@@ -63,3 +65,5 @@ export const communityListError =
   'Unable to retrieve assigned communities at this time. Please try again later';
 export const editProfileError =
   'Unable to update your user profile at this time. Please try again later';
+export const securityQuestionError =
+  'Unable to load security questions. Please try again later';

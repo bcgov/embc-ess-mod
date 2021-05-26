@@ -17,7 +17,7 @@
             <div class="row">
               <div class="col-8">
                 <mat-checkbox
-                  [checked]="this.stepCreateProfileService.restrictedAccess"
+                  [checked]="!this.stepCreateProfileService.restrictedAccess"
                   disabled
                 >
                   You have given your consent to have your location and contact
@@ -277,7 +277,7 @@
                 }}
               </div>
               <div class="col-8 bold">
-                {{ displayAnswer1 }}
+                {{ this.stepCreateProfileService.securityQuestions[0].answer | maskText }}
               </div>
             </div>
 
@@ -291,7 +291,7 @@
                 }}
               </div>
               <div class="col-8 bold">
-                {{ displayAnswer2 }}
+                {{ this.stepCreateProfileService.securityQuestions[1].answer | maskText }}
               </div>
             </div>
 
@@ -305,7 +305,7 @@
                 }}
               </div>
               <div class="col-8 bold">
-                {{ displayAnswer3 }}
+                {{ this.stepCreateProfileService.securityQuestions[2].answer | maskText }}
               </div>
             </div>
           </div>

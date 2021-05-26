@@ -77,7 +77,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
           [
             Validators.minLength(3),
             Validators.maxLength(50),
-            Validators.pattern(/^[a-zA-Z0-9 ]+$/),
+            Validators.pattern(globalConst.securityQuestionAnswerPattern),
             this.customValidationService.whitespaceValidator()
           ]
         ],
@@ -90,7 +90,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
           [
             Validators.minLength(3),
             Validators.maxLength(50),
-            Validators.pattern(/^[a-zA-Z0-9 ]+$/),
+            Validators.pattern(globalConst.securityQuestionAnswerPattern),
             this.customValidationService.whitespaceValidator()
           ]
         ],
@@ -103,7 +103,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
           [
             Validators.minLength(3),
             Validators.maxLength(50),
-            Validators.pattern(/^[a-zA-Z0-9 ]+$/),
+            Validators.pattern(globalConst.securityQuestionAnswerPattern),
             this.customValidationService.whitespaceValidator()
           ]
         ]
