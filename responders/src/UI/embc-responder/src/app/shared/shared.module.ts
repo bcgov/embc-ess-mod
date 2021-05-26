@@ -46,7 +46,7 @@ import { DeleteHouseholdDialogComponent } from './components/dialog-components/d
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    TextMaskModule,
+    TextMaskModule
   ],
   exports: [
     TopNavMenuComponent,

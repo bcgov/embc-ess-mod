@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CacheService } from 'src/app/core/services/cache.service';
-import * as globalConst from 'src/app/core/services/global-constants'
+import * as globalConst from 'src/app/core/services/global-constants';
 
 @Component({
   selector: 'app-person-detail-form',
@@ -31,9 +31,11 @@ export class PersonDetailFormComponent implements OnInit {
   constructor(private cacheService: CacheService) {}
 
   ngOnInit(): void {
-
-    let mainApplicantData = JSON.parse(this.cacheService.get('evacueeSearchContext'));
-    this.primaryApplicantLastName = mainApplicantData.evacueeSearchParameters.lastName;
+    const mainApplicantData = JSON.parse(
+      this.cacheService.get('evacueeSearchContext')
+    );
+    this.primaryApplicantLastName =
+      mainApplicantData?.evacueeSearchParameters.lastName;
     this.sameLastNameEditForm();
   }
 
@@ -41,7 +43,7 @@ export class PersonDetailFormComponent implements OnInit {
    * Returns the control of the form
    */
   get personalFormControl(): { [key: string]: AbstractControl } {
-    return this.personalDetailsForm.controls;
+    return this.personalDetailsForm?.controls;
   }
 
   sameLastNameEvent(event: MatCheckboxChange): void {
@@ -57,7 +59,7 @@ export class PersonDetailFormComponent implements OnInit {
   }
 
   sameLastNameEditForm(): void {
-    if (this.personalDetailsForm.get('sameLastNameCheck').value) {
+    if (this.personalDetailsForm?.get('sameLastNameCheck').value) {
       this.readOnlyInput = true;
     } else {
       this.readOnlyInput = false;

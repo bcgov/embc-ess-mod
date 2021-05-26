@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { BehaviorSubject } from 'rxjs';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import * as globalConst from '../../../../core/services/global-constants'
+import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { DeleteHouseholdDialogComponent } from '../../../../shared/components/dialog-components/delete-household-dialog/delete-household-dialog.component';
 import { CacheService } from 'src/app/core/services/cache.service';
@@ -34,145 +40,35 @@ export class HouseholdMembersComponent implements OnInit {
   ];
 
   constructor(
-    private dialog: MatDialog, private stepCreateEssFileService: StepCreateEssFileService,
-    private formBuilder: FormBuilder, private customValidation: CustomValidationService) {}
+    private dialog: MatDialog,
+    private stepCreateEssFileService: StepCreateEssFileService,
+    private formBuilder: FormBuilder,
+    private customValidation: CustomValidationService
+  ) {}
 
   ngOnInit(): void {
     this.createHouseholdForm();
-    if(this.stepCreateEssFileService.houseHoldMembers.length !== 0) {
+    if (this.stepCreateEssFileService.houseHoldMembers.length !== 0) {
       this.data = this.stepCreateEssFileService.houseHoldMembers;
-    } 
+    }
   }
-
-  createHouseholdForm(): void {
-    this.householdForm = this.formBuilder.group({
-      haveHouseholdMembers: [
-        this.stepCreateEssFileService.haveHouseHoldMembers !== null
-          ? this.stepCreateEssFileService.haveHouseHoldMembers
-          : '', Validators.required
-      ],
-      houseHoldMembers: [this.stepCreateEssFileService.houseHoldMembers.length !== 0
-        ? this.stepCreateEssFileService.houseHoldMembers: [new FormArray([this.createHoulseholdMemberForm()])],
-        this.customValidation
-        .conditionalValidation(
-          () =>
-            this.householdForm.get('haveHouseholdMembers').value === true,
-            Validators.required
-        )
-        .bind(this.customValidation)],
-      houseHoldMember: [this.createHoulseholdMemberForm(),
-        [
-        this.customValidation
-          .conditionalValidation(
-            () =>
-              this.householdForm.get('haveHouseholdMembers').value === true,
-              Validators.required
-          )
-          .bind(this.customValidation)
-      ]
-    ],
-      haveSpecialDiet: [
-        this.stepCreateEssFileService.haveSpecialDieT !== null
-          ? this.stepCreateEssFileService.haveSpecialDieT
-          : '',
-        Validators.required
-      ],
-      specialDietDetails: [
-        this.stepCreateEssFileService.specialDietDetailS !== undefined
-          ? this.stepCreateEssFileService.specialDietDetailS
-          : '',
-          [
-            this.customValidation
-              .conditionalValidation(
-                () =>
-                  this.householdForm.get('haveSpecialDiet').value === true,
-                  this.customValidation.whitespaceValidator()
-              )
-              .bind(this.customValidation)
-          ]
-      ],
-      haveMedication: [
-        this.stepCreateEssFileService.haveMedicatioN !== null
-          ? this.stepCreateEssFileService.haveMedicatioN
-          : '',
-          Validators.required
-      ],
-      medicationSupply: [
-        this.stepCreateEssFileService.medicationSupplY !== null
-          ? this.stepCreateEssFileService.medicationSupplY
-          : '',
-          [
-            this.customValidation
-              .conditionalValidation(
-                () =>
-                  this.householdForm.get('haveMedication').value === true,
-                Validators.required
-              )
-              .bind(this.customValidation)
-          ]
-      ]
-    });
-  }
-
-  private createHoulseholdMemberForm(): FormGroup {
-    return this.formBuilder.group({
-      firstName: [
-        this.stepCreateEssFileService?.houseHoldMember?.firstName !== undefined
-          ? this.stepCreateEssFileService.houseHoldMember.firstName
-          : '',
-        [this.customValidation.whitespaceValidator()]
-      ],
-      lastName: [
-        this.stepCreateEssFileService?.houseHoldMember?.lastName !== undefined
-          ? this.stepCreateEssFileService.houseHoldMember.lastName
-          : '', [this.customValidation.whitespaceValidator()]
-      ],
-      dateOfBirth: [
-        this.stepCreateEssFileService?.houseHoldMember?.dateOfBirth !== undefined
-          ? this.stepCreateEssFileService.houseHoldMember.dateOfBirth
-          : '',
-        [Validators.required]
-      ],
-      gender: [
-        this.stepCreateEssFileService?.houseHoldMember?.gender !== undefined
-          ? this.stepCreateEssFileService.houseHoldMember?.gender
-          : '', [Validators.required]
-      ],
-      initials: [
-        this.stepCreateEssFileService?.houseHoldMember?.initials !== undefined
-          ? this.stepCreateEssFileService.houseHoldMember.initials
-          : ''
-      ],
-      preferredName: [
-        this.stepCreateEssFileService?.houseHoldMember?.preferredName !== undefined
-          ? this.stepCreateEssFileService.houseHoldMember.preferredName
-          : ''
-      ],
-      sameLastNameCheck: [
-        this.stepCreateEssFileService?.sameLastNameChecK !== null
-          ? this.stepCreateEssFileService.sameLastNameChecK
-          : ''
-      ]
-    });
-  }
-
 
   /**
    * Returns the control of the household member form
    */
-   public get houseHoldMemberFormGroup(): FormGroup {
+  public get houseHoldMemberFormGroup(): FormGroup {
     return this.householdForm.get('houseHoldMember').value;
   }
 
   /**
    * Returns the control of the form
    */
-   get householdFormControl(): { [key: string]: AbstractControl } {
+  get householdFormControl(): { [key: string]: AbstractControl } {
     return this.householdForm.controls;
   }
 
   /**
-   * 
+   *
    */
   addMembers(): void {
     this.householdForm.get('houseHoldMember').value.reset();
@@ -182,8 +78,9 @@ export class HouseholdMembersComponent implements OnInit {
 
   /**
    * Allows editing information from inserted household members
-   * @param element 
-   * @param index 
+   *
+   * @param element
+   * @param index
    */
   editRow(element, index): void {
     this.editIndex = index;
@@ -199,8 +96,9 @@ export class HouseholdMembersComponent implements OnInit {
   save(): void {
     if (this.householdForm.get('houseHoldMember').value.status === 'VALID') {
       if (this.editIndex !== undefined && this.rowEdit) {
-        this.data[this.editIndex] =
-          this.householdForm.get('houseHoldMember').value.value;
+        this.data[this.editIndex] = this.householdForm.get(
+          'houseHoldMember'
+        ).value.value;
         this.rowEdit = !this.rowEdit;
         this.editIndex = undefined;
       } else {
@@ -231,12 +129,13 @@ export class HouseholdMembersComponent implements OnInit {
 
   /**
    * Deletes the selected household member from the table list
-   * @param index 
+   *
+   * @param index
    */
   deleteRow(index: number): void {
     this.dialog
       .open(DialogComponent, {
-        data: {component: DeleteHouseholdDialogComponent},
+        data: { component: DeleteHouseholdDialogComponent },
         height: 'auto',
         width: '550px'
       })
@@ -250,16 +149,15 @@ export class HouseholdMembersComponent implements OnInit {
             this.householdForm.get('haveHouseholdMembers').setValue(false);
           }
         }
-     });
+      });
   }
-
 
   /**
    * Listen to changes on Have medication option to display the 72 hours medication supply field
-   * @param event 
+   *
+   * @param event
    */
-  hasHouseholdMembers(event: MatRadioChange): void{
-    
+  hasHouseholdMembers(event: MatRadioChange): void {
     if (event.value === false) {
       this.showMemberForm = false;
       this.householdForm.get('houseHoldMember').value.reset();
@@ -270,25 +168,27 @@ export class HouseholdMembersComponent implements OnInit {
     }
   }
 
-   /**
+  /**
    * Listen to changes on special diet option to display the special diet details field
-   * @param event 
+   *
+   * @param event
    */
-    hasSpecialDietChange(event: MatRadioChange): void {
-      if (event.value === false) {
-        this.householdForm.get('specialDietDetails').reset();
-      }
+  hasSpecialDietChange(event: MatRadioChange): void {
+    if (event.value === false) {
+      this.householdForm.get('specialDietDetails').reset();
     }
+  }
 
-   /**
+  /**
    * Listen to changes on medication option to show the 72 hours supply option
-   * @param event 
+   *
+   * @param event
    */
-    hasMedicationChange(event: MatRadioChange): void {
-      if (event.value === false) {
-        this.householdForm.get('medicationSupply').reset();
-      }
+  hasMedicationChange(event: MatRadioChange): void {
+    if (event.value === false) {
+      this.householdForm.get('medicationSupply').reset();
     }
+  }
 
   // updateOnVisibility(): void {
   //   this.householdForm
@@ -306,7 +206,123 @@ export class HouseholdMembersComponent implements OnInit {
   // }
 
   back(): void {}
-  next(): void {
+  next(): void {}
 
+  private createHouseholdForm(): void {
+    this.householdForm = this.formBuilder.group({
+      haveHouseholdMembers: [
+        this.stepCreateEssFileService.haveHouseHoldMembers !== null
+          ? this.stepCreateEssFileService.haveHouseHoldMembers
+          : '',
+        Validators.required
+      ],
+      houseHoldMembers: [
+        this.stepCreateEssFileService.houseHoldMembers.length !== 0
+          ? this.stepCreateEssFileService.houseHoldMembers
+          : [new FormArray([this.createHoulseholdMemberForm()])],
+        this.customValidation
+          .conditionalValidation(
+            () => this.householdForm.get('haveHouseholdMembers').value === true,
+            Validators.required
+          )
+          .bind(this.customValidation)
+      ],
+      houseHoldMember: [
+        this.createHoulseholdMemberForm(),
+        [
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                this.householdForm.get('haveHouseholdMembers').value === true,
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      haveSpecialDiet: [
+        this.stepCreateEssFileService.haveSpecialDieT !== null
+          ? this.stepCreateEssFileService.haveSpecialDieT
+          : '',
+        Validators.required
+      ],
+      specialDietDetails: [
+        this.stepCreateEssFileService.specialDietDetailS !== undefined
+          ? this.stepCreateEssFileService.specialDietDetailS
+          : '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.householdForm.get('haveSpecialDiet').value === true,
+              this.customValidation.whitespaceValidator()
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      haveMedication: [
+        this.stepCreateEssFileService.haveMedicatioN !== null
+          ? this.stepCreateEssFileService.haveMedicatioN
+          : '',
+        Validators.required
+      ],
+      medicationSupply: [
+        this.stepCreateEssFileService.medicationSupplY !== null
+          ? this.stepCreateEssFileService.medicationSupplY
+          : '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.householdForm.get('haveMedication').value === true,
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ]
+    });
+  }
+
+  private createHoulseholdMemberForm(): FormGroup {
+    return this.formBuilder.group({
+      firstName: [
+        this.stepCreateEssFileService?.houseHoldMember?.firstName !== undefined
+          ? this.stepCreateEssFileService.houseHoldMember.firstName
+          : '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      lastName: [
+        this.stepCreateEssFileService?.houseHoldMember?.lastName !== undefined
+          ? this.stepCreateEssFileService.houseHoldMember.lastName
+          : '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      dateOfBirth: [
+        this.stepCreateEssFileService?.houseHoldMember?.dateOfBirth !==
+        undefined
+          ? this.stepCreateEssFileService.houseHoldMember.dateOfBirth
+          : '',
+        [Validators.required]
+      ],
+      gender: [
+        this.stepCreateEssFileService?.houseHoldMember?.gender !== undefined
+          ? this.stepCreateEssFileService.houseHoldMember?.gender
+          : '',
+        [Validators.required]
+      ],
+      initials: [
+        this.stepCreateEssFileService?.houseHoldMember?.initials !== undefined
+          ? this.stepCreateEssFileService.houseHoldMember.initials
+          : ''
+      ],
+      preferredName: [
+        this.stepCreateEssFileService?.houseHoldMember?.preferredName !==
+        undefined
+          ? this.stepCreateEssFileService.houseHoldMember.preferredName
+          : ''
+      ],
+      sameLastNameCheck: [
+        this.stepCreateEssFileService?.sameLastNameChecK !== null
+          ? this.stepCreateEssFileService.sameLastNameChecK
+          : ''
+      ]
+    });
   }
 }

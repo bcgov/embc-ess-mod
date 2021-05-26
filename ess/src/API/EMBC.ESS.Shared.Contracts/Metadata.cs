@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace EMBC.ESS.Shared.Contracts.Location
+namespace EMBC.ESS.Shared.Contracts.Metadata
 {
     public class CountriesQuery : Query<CountriesQueryResponse>
     {
@@ -91,5 +91,19 @@ namespace EMBC.ESS.Shared.Contracts.Location
         RegionalMunicipality,
         ResortMunicipality,
         RuralMunicipalities
+    }
+
+    public class SecurityQuestionsQuery : Query<SecurityQuestionsQueryResponse>
+    {
+    }
+
+    public class SecurityQuestionsQueryResponse
+    {
+        public string[] Items { get; set; }
+    }
+
+    public class SecurityQuestions
+    {
+        public string Question { get; set; }
     }
 }

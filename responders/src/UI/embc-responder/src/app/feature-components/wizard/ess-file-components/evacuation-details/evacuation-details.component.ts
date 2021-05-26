@@ -51,7 +51,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService
   ) {}
-  
 
   ngOnInit(): void {
     this.createEvacDetailsForm();
@@ -65,73 +64,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  createEvacDetailsForm(): void {
-    this.evacDetailsForm = this.formBuilder.group({
-      paperESSFile: [
-        this.stepCreateEssFileService.paperESSFiles !== undefined
-          ? this.stepCreateEssFileService.paperESSFiles
-          : ''
-      ],
-      evacuatedFromPrimary: [
-        this.stepCreateEssFileService.evacuatedFromPrimaryAddress !== null
-          ? this.stepCreateEssFileService.evacuatedFromPrimaryAddress
-          : '',
-        Validators.required
-      ],
-      facilityName: [
-        this.stepCreateEssFileService.facilityNames !== undefined
-          ? this.stepCreateEssFileService.facilityNames
-          : '',
-        [this.customValidation.whitespaceValidator()]
-      ],
-      insurance: [
-        this.stepCreateEssFileService.insuranceInfo !== undefined
-          ? this.stepCreateEssFileService.insuranceInfo
-          : '',
-        Validators.required
-      ],
-      householdAffected: [
-        this.stepCreateEssFileService.householdAffectedInfo !== undefined
-          ? this.stepCreateEssFileService.householdAffectedInfo
-          : '',
-        [this.customValidation.whitespaceValidator()]
-      ],
-      emergencySupportServices: [
-        this.stepCreateEssFileService.emergencySupportServiceS !== undefined
-          ? this.stepCreateEssFileService.emergencySupportServiceS
-          : ''
-      ],
-      referredServices: [
-        this.stepCreateEssFileService.referredServiceS !== undefined
-          ? this.stepCreateEssFileService.referredServiceS
-          : ''
-      ],
-      referredServiceDetails: [
-        this.stepCreateEssFileService.referredServiceDetailS.length !== 0
-          ? this.stepCreateEssFileService.referredServiceDetailS
-          : new FormArray([]),
-        [
-          this.customValidation
-            .conditionalValidation(
-              () =>
-                this.evacDetailsForm.get('referredServices').value === 'Yes',
-              Validators.required
-            )
-            .bind(this.customValidation)
-        ]
-      ],
-      externalServices: [
-        this.stepCreateEssFileService.externalServiceS !== undefined
-          ? this.stepCreateEssFileService.externalServiceS
-          : ''
-      ],
-      evacAddress: this.createEvacAddressForm()
-    });
-  }
-
   /**
    * Listens to changes on evacuation Address options
-   * @param event 
+   *
+   * @param event
    */
   evacPrimaryAddressChange(event: MatRadioChange): void {
     if (event.value === 'Yes') {
@@ -200,6 +136,70 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.tabUpdateSubscription.unsubscribe();
   }
 
+  private createEvacDetailsForm(): void {
+    this.evacDetailsForm = this.formBuilder.group({
+      paperESSFile: [
+        this.stepCreateEssFileService.paperESSFiles !== undefined
+          ? this.stepCreateEssFileService.paperESSFiles
+          : ''
+      ],
+      evacuatedFromPrimary: [
+        this.stepCreateEssFileService.evacuatedFromPrimaryAddress !== null
+          ? this.stepCreateEssFileService.evacuatedFromPrimaryAddress
+          : '',
+        Validators.required
+      ],
+      facilityName: [
+        this.stepCreateEssFileService.facilityNames !== undefined
+          ? this.stepCreateEssFileService.facilityNames
+          : '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      insurance: [
+        this.stepCreateEssFileService.insuranceInfo !== undefined
+          ? this.stepCreateEssFileService.insuranceInfo
+          : '',
+        Validators.required
+      ],
+      householdAffected: [
+        this.stepCreateEssFileService.householdAffectedInfo !== undefined
+          ? this.stepCreateEssFileService.householdAffectedInfo
+          : '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      emergencySupportServices: [
+        this.stepCreateEssFileService.emergencySupportServiceS !== undefined
+          ? this.stepCreateEssFileService.emergencySupportServiceS
+          : ''
+      ],
+      referredServices: [
+        this.stepCreateEssFileService.referredServiceS !== undefined
+          ? this.stepCreateEssFileService.referredServiceS
+          : ''
+      ],
+      referredServiceDetails: [
+        this.stepCreateEssFileService.referredServiceDetailS.length !== 0
+          ? this.stepCreateEssFileService.referredServiceDetailS
+          : new FormArray([]),
+        [
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                this.evacDetailsForm.get('referredServices').value === 'Yes',
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      externalServices: [
+        this.stepCreateEssFileService.externalServiceS !== undefined
+          ? this.stepCreateEssFileService.externalServiceS
+          : ''
+      ],
+      evacAddress: this.createEvacAddressForm()
+    });
+  }
+
   /**
    * Creates the primary address form
    *
@@ -262,7 +262,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         'evacuation-details',
         'complete'
       );
-    } else if (this.stepCreateEssFileService.checkForPartialUpdates(this.evacDetailsForm)) {
+    } else if (
+      this.stepCreateEssFileService.checkForPartialUpdates(this.evacDetailsForm)
+    ) {
       this.stepCreateEssFileService.setTabStatus(
         'evacuation-details',
         'incomplete'
@@ -308,9 +310,5 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.stepCreateEssFileService.externalServiceS = this.evacDetailsForm.get(
       'externalServices'
     ).value;
-  }
-
-  ngOnDestroy(): void {
-    this.updateTabStatus();
   }
 }
