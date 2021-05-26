@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
@@ -8,13 +8,14 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import * as globalConst from '../../../../core/services/global-constants';
 import { AddressService } from '../../profile-components/address/address.service';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-evacuation-details',
   templateUrl: './evacuation-details.component.html',
   styleUrls: ['./evacuation-details.component.scss']
 })
-export class EvacuationDetailsComponent implements OnInit {
+export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacDetailsForm: FormGroup;
   insuranceOption = globalConst.insuranceOptions;
   radioOption: string[] = ['Yes', 'No'];
@@ -25,6 +26,7 @@ export class EvacuationDetailsComponent implements OnInit {
   showBCAddressForm = false;
   isBCAddress = true;
   selection = new SelectionModel<any>(true, []);
+  tabUpdateSubscription: Subscription;
 
   bCDummyAddress: Address = {
     addressLine1: 'Unit 1200',
@@ -54,6 +56,13 @@ export class EvacuationDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.createEvacDetailsForm();
     this.checkPrimaryAddress();
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateEssFileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   createEvacDetailsForm(): void {
@@ -172,9 +181,19 @@ export class EvacuationDetailsComponent implements OnInit {
     this.evacDetailsForm
       .get('referredServiceDetails')
       .setValue(this.selection.selected);
-    this.updateTabStatus();
+
+    this.stepCreateEssFileService.nextTabUpdate.next();
+
     this.stepCreateEssFileService.createNeedsAssessmentDTO();
     this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
+  }
+
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
+  ngOnDestroy(): void {
+    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 
   /**

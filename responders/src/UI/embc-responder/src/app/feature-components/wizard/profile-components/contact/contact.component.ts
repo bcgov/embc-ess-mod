@@ -11,6 +11,7 @@ import {
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
@@ -53,6 +54,7 @@ export class ContactComponent implements OnInit, OnDestroy {
     /\d/
   ];
   emailMatcher = new CustomErrorMailMatcher();
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -100,6 +102,13 @@ export class ContactComponent implements OnInit, OnDestroy {
         this.contactInfoForm.get('email').updateValueAndValidity();
         this.contactInfoForm.get('phone').updateValueAndValidity();
       });
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   createContactForm(): void {
@@ -214,8 +223,12 @@ export class ContactComponent implements OnInit, OnDestroy {
     this.router.navigate(['/ess-wizard/create-evacuee-profile/address']);
   }
 
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
   ngOnDestroy(): void {
-    this.updateTabStatus();
+    this.stepCreateProfileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 
   /**

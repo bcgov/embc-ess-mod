@@ -50,6 +50,7 @@ export const lockedStepMessage =
   'Please complete the ESS File prior to proceeding to the next steps.';
 
 // Generic error messages
+export const genericError = 'An error has occurred. Please try again later.';
 export const teamMemberListError =
   'Unable to retrieve team members at this time. Please try again later';
 export const activateTeamMemberError =
