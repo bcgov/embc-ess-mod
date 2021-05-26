@@ -49,14 +49,79 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService
   ) {}
-  
 
   ngOnInit(): void {
     this.createEvacDetailsForm();
     this.checkPrimaryAddress();
   }
 
-  createEvacDetailsForm(): void {
+  /**
+   * Listens to changes on evacuation Address options
+   *
+   * @param event
+   */
+  evacPrimaryAddressChange(event: MatRadioChange): void {
+    if (event.value === 'Yes') {
+      this.showBCAddressForm = false;
+      this.evacDetailsForm.get('evacAddress').setValue(this.bCDummyAddress);
+    } else {
+      this.showBCAddressForm = true;
+      this.evacDetailsForm.get('evacAddress').reset();
+    }
+  }
+
+  /**
+   * Listens to changes on the Referred Services option
+   *
+   * @param event
+   */
+  referredServiceChange(event: MatRadioChange): void {
+    if (event.value === 'Yes') {
+      this.showReferredServicesForm = true;
+    } else {
+      this.showReferredServicesForm = false;
+      this.selection.clear();
+      this.evacDetailsForm
+        .get('referredServiceDetails')
+        .setValue(this.selection.selected);
+    }
+
+    // this.evacDetailsForm.get('referredServiceDetails').updateValueAndValidity();
+  }
+
+  /**
+   * Controls the selection of referred services
+   *
+   * @param option Referred Services
+   */
+  selectionToggle(option): void {
+    this.selection.toggle(option);
+  }
+
+  /**
+   * Returns the control of the evacuated address form
+   */
+  public get evacAddressFormGroup(): FormGroup {
+    return this.evacDetailsForm.get('evacAddress') as FormGroup;
+  }
+
+  /**
+   * Updates the tab status and navigate to next tab
+   */
+  next(): void {
+    this.evacDetailsForm
+      .get('referredServiceDetails')
+      .setValue(this.selection.selected);
+    this.updateTabStatus();
+    this.stepCreateEssFileService.createNeedsAssessmentDTO();
+    this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
+  }
+
+  ngOnDestroy(): void {
+    this.updateTabStatus();
+  }
+
+  private createEvacDetailsForm(): void {
     this.evacDetailsForm = this.formBuilder.group({
       paperESSFile: [
         this.stepCreateEssFileService.paperESSFiles !== undefined
@@ -121,67 +186,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Listens to changes on evacuation Address options
-   * @param event 
-   */
-  evacPrimaryAddressChange(event: MatRadioChange): void {
-    if (event.value === 'Yes') {
-      this.showBCAddressForm = false;
-      this.evacDetailsForm.get('evacAddress').setValue(this.bCDummyAddress);
-    } else {
-      this.showBCAddressForm = true;
-      this.evacDetailsForm.get('evacAddress').reset();
-    }
-  }
-
-  /**
-   * Listens to changes on the Referred Services option
-   *
-   * @param event
-   */
-  referredServiceChange(event: MatRadioChange): void {
-    if (event.value === 'Yes') {
-      this.showReferredServicesForm = true;
-    } else {
-      this.showReferredServicesForm = false;
-      this.selection.clear();
-      this.evacDetailsForm
-        .get('referredServiceDetails')
-        .setValue(this.selection.selected);
-    }
-
-    // this.evacDetailsForm.get('referredServiceDetails').updateValueAndValidity();
-  }
-
-  /**
-   * Controls the selection of referred services
-   *
-   * @param option Referred Services
-   */
-  selectionToggle(option): void {
-    this.selection.toggle(option);
-  }
-
-  /**
-   * Returns the control of the evacuated address form
-   */
-  public get evacAddressFormGroup(): FormGroup {
-    return this.evacDetailsForm.get('evacAddress') as FormGroup;
-  }
-
-  /**
-   * Updates the tab status and navigate to next tab
-   */
-  next(): void {
-    this.evacDetailsForm
-      .get('referredServiceDetails')
-      .setValue(this.selection.selected);
-    this.updateTabStatus();
-    this.stepCreateEssFileService.createNeedsAssessmentDTO();
-    this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
-  }
-
-  /**
    * Creates the primary address form
    *
    * @returns form group
@@ -243,7 +247,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         'evacuation-details',
         'complete'
       );
-    } else if (this.stepCreateEssFileService.checkForPartialUpdates(this.evacDetailsForm)) {
+    } else if (
+      this.stepCreateEssFileService.checkForPartialUpdates(this.evacDetailsForm)
+    ) {
       this.stepCreateEssFileService.setTabStatus(
         'evacuation-details',
         'incomplete'
@@ -289,9 +295,5 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.stepCreateEssFileService.externalServiceS = this.evacDetailsForm.get(
       'externalServices'
     ).value;
-  }
-
-  ngOnDestroy(): void {
-    this.updateTabStatus();
   }
 }

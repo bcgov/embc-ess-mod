@@ -35,10 +35,7 @@ export class StepCreateEssFileService {
   private medicationSupply: null | boolean;
   private sameLastNameCheck: null | boolean;
 
-
-  constructor(
-    private dialog: MatDialog
-  ) { }
+  constructor(private dialog: MatDialog) {}
 
   public get paperESSFiles(): string {
     return this.paperESSFile;
@@ -110,7 +107,6 @@ export class StepCreateEssFileService {
     this.externalServices = externalServices;
   }
 
-
   public get haveHouseHoldMembers(): boolean {
     return this.haveHouseholdMembers;
   }
@@ -167,8 +163,6 @@ export class StepCreateEssFileService {
     this.medicationSupply = medicationSupply;
   }
 
-
-
   public get tabs(): Array<TabModel> {
     return this.essTabs;
   }
@@ -195,9 +189,7 @@ export class StepCreateEssFileService {
       referredServices: this.referredServices,
       referredServiceDetails: this.referredServiceDetails,
       externalServices: this.externalServices,
-      evacAddress: this.setAddressObject(
-        this.evacAddress
-      )
+      evacAddress: this.setAddressObject(this.evacAddress)
     });
 
     return {

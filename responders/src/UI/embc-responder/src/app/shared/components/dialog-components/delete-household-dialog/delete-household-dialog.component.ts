@@ -9,7 +9,7 @@ export class DeleteHouseholdDialogComponent {
   @Output() outputEvent = new EventEmitter<string>();
   isConfirmed = false;
   showError = false;
-  constructor() { }
+  constructor() {}
 
   cancel(): void {
     this.outputEvent.emit('close');
