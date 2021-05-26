@@ -19,6 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
+using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
 namespace EMBC.ESS.Resources.Metadata
 {
@@ -29,6 +30,8 @@ namespace EMBC.ESS.Resources.Metadata
         Task<IEnumerable<StateProvince>> GetStateProvinces();
 
         Task<IEnumerable<Community>> GetCommunities();
+
+        Task<string[]> GetSecurityQuestions();
     }
 
     public class MetadataRepository : IMetadataRepository
@@ -83,6 +86,14 @@ namespace EMBC.ESS.Resources.Metadata
                 community.CountryCode = stateProvinces.FirstOrDefault(sp => sp.code == community.StateProvinceCode)?.countryCode;
             }
             return communities;
+        }
+
+        public async Task<string[]> GetSecurityQuestions()
+        {
+            IEnumerable<OptionSetMetadataBase> optionSetDefinitions = essContext.GlobalOptionSetDefinitions.GetAllPages();
+            OptionSetMetadata securityQuestionsOptionSet = (OptionSetMetadata)optionSetDefinitions.Where(t => t.Name.Equals("era_registrantsecretquestions")).FirstOrDefault();
+            string[] options = securityQuestionsOptionSet.Options.Select(o => o.Label.UserLocalizedLabel.Label).ToArray();
+            return await Task.FromResult(options);
         }
     }
 
