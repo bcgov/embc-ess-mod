@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { AddressModel } from 'src/app/core/models/Address.model';
+import { Address, PersonDetails } from 'src/app/core/api/models';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -258,19 +260,19 @@ export class StepCreateEssFileService {
     });
   }
 
-  public setAddressObject(addressObject): Address {
+  public setAddressObject(addressObject: AddressModel): Address {
     const address: Address = {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
-      country: addressObject.country.code,
-      jurisdiction:
-        addressObject.jurisdiction.code === undefined
+      countryCode: addressObject.country.code,
+      communityCode:
+        addressObject.community.code === undefined
           ? null
-          : addressObject.jurisdiction.code,
+          : addressObject.community.code,
       postalCode: addressObject.postalCode,
-      stateProvince:
+      stateProvinceCode:
         addressObject.stateProvince === null
-          ? addressObject.stateProvince
+          ? null
           : addressObject.stateProvince.code
     };
 
