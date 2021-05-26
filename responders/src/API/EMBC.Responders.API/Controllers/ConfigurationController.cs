@@ -22,7 +22,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Location;
+using EMBC.ESS.Shared.Contracts.Metadata;
 using EMBC.Responders.API.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -104,7 +104,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 CountryCode = countryId,
                 StateProvinceCode = stateProvinceId,
-                Types = types.Select(t => (EMBC.ESS.Shared.Contracts.Location.CommunityType)t)
+                Types = types.Select(t => (EMBC.ESS.Shared.Contracts.Metadata.CommunityType)t)
             })).Items;
 
             return Ok(mapper.Map<IEnumerable<CommunityCode>>(items));
@@ -136,23 +136,9 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("security-questions")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<string[]> GetSecurityQuestions()
+        public async Task<ActionResult<string[]>> GetSecurityQuestions()
         {
-            //TODO - actually get the option set from dynamics
-            string[] questions =
-            {
-                "What was the name of your first pet?",
-                "What was your first car's make and model? (e.g. Ford Taurus)",
-                "Where was your first job?",
-                "What is your favorite children's book?",
-                "In what city or town was your mother born?",
-                "What is your favorite movie?",
-                "What is your oldest sibling's middle name?",
-                "What month and day is your anniversary?",
-                "What was your childhood nickname?",
-                "What were the last four digits of your childhood telephone number?",
-                "In what town or city did you meet your spouse or partner?"
-            };
+            var questions = (await client.Send(new SecurityQuestionsQuery())).Items;
             return Ok(questions);
         }
     }
@@ -252,8 +238,8 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.ParentCode, opts => opts.MapFrom(s => new Code { Value = s.CountryCode, Type = nameof(Country) }))
                 ;
 
-            CreateMap<ESS.Shared.Contracts.Location.Community, CommunityCode>()
-                .ForMember(d => d.Type, opts => opts.MapFrom(s => nameof(ESS.Shared.Contracts.Location.Community)))
+            CreateMap<ESS.Shared.Contracts.Metadata.Community, CommunityCode>()
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => nameof(ESS.Shared.Contracts.Metadata.Community)))
                 .ForMember(d => d.Value, opts => opts.MapFrom(s => s.Code))
                 .ForMember(d => d.Description, opts => opts.MapFrom(s => s.Name))
                 .ForMember(d => d.DistrictName, opts => opts.MapFrom(s => s.DistrictName))
