@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ import { Address } from 'src/app/core/models/profile';
   templateUrl: './evacuation-details.component.html',
   styleUrls: ['./evacuation-details.component.scss']
 })
-export class EvacuationDetailsComponent implements OnInit {
+export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacDetailsForm: FormGroup;
   insuranceOption = globalConst.insuranceOptions;
   radioOption: string[] = ['Yes', 'No'];
@@ -47,9 +47,9 @@ export class EvacuationDetailsComponent implements OnInit {
     private router: Router,
     private stepCreateEssFileService: StepCreateEssFileService,
     private formBuilder: FormBuilder,
-    private customValidation: CustomValidationService,
-    private addressService: AddressService
+    private customValidation: CustomValidationService
   ) {}
+  
 
   ngOnInit(): void {
     this.createEvacDetailsForm();
@@ -59,7 +59,7 @@ export class EvacuationDetailsComponent implements OnInit {
   createEvacDetailsForm(): void {
     this.evacDetailsForm = this.formBuilder.group({
       paperESSFile: [
-        this.stepCreateEssFileService.paperESSFiles !== null
+        this.stepCreateEssFileService.paperESSFiles !== undefined
           ? this.stepCreateEssFileService.paperESSFiles
           : ''
       ],
@@ -70,30 +70,30 @@ export class EvacuationDetailsComponent implements OnInit {
         Validators.required
       ],
       facilityName: [
-        this.stepCreateEssFileService.facilityNames !== null
+        this.stepCreateEssFileService.facilityNames !== undefined
           ? this.stepCreateEssFileService.facilityNames
           : '',
         [this.customValidation.whitespaceValidator()]
       ],
       insurance: [
-        this.stepCreateEssFileService.insuranceInfo !== null
+        this.stepCreateEssFileService.insuranceInfo !== undefined
           ? this.stepCreateEssFileService.insuranceInfo
           : '',
         Validators.required
       ],
       householdAffected: [
-        this.stepCreateEssFileService.householdAffectedInfo !== null
+        this.stepCreateEssFileService.householdAffectedInfo !== undefined
           ? this.stepCreateEssFileService.householdAffectedInfo
           : '',
         [this.customValidation.whitespaceValidator()]
       ],
       emergencySupportServices: [
-        this.stepCreateEssFileService.emergencySupportServiceS !== null
+        this.stepCreateEssFileService.emergencySupportServiceS !== undefined
           ? this.stepCreateEssFileService.emergencySupportServiceS
           : ''
       ],
       referredServices: [
-        this.stepCreateEssFileService.referredServiceS !== null
+        this.stepCreateEssFileService.referredServiceS !== undefined
           ? this.stepCreateEssFileService.referredServiceS
           : ''
       ],
@@ -112,7 +112,7 @@ export class EvacuationDetailsComponent implements OnInit {
         ]
       ],
       externalServices: [
-        this.stepCreateEssFileService.externalServiceS !== null
+        this.stepCreateEssFileService.externalServiceS !== undefined
           ? this.stepCreateEssFileService.externalServiceS
           : ''
       ],
@@ -120,6 +120,10 @@ export class EvacuationDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * Listens to changes on evacuation Address options
+   * @param event 
+   */
   evacPrimaryAddressChange(event: MatRadioChange): void {
     if (event.value === 'Yes') {
       this.showBCAddressForm = false;
@@ -239,7 +243,7 @@ export class EvacuationDetailsComponent implements OnInit {
         'evacuation-details',
         'complete'
       );
-    } else if (this.evacDetailsForm.touched) {
+    } else if (this.stepCreateEssFileService.checkForPartialUpdates(this.evacDetailsForm)) {
       this.stepCreateEssFileService.setTabStatus(
         'evacuation-details',
         'incomplete'
@@ -285,5 +289,9 @@ export class EvacuationDetailsComponent implements OnInit {
     this.stepCreateEssFileService.externalServiceS = this.evacDetailsForm.get(
       'externalServices'
     ).value;
+  }
+
+  ngOnDestroy(): void {
+    this.updateTabStatus();
   }
 }
