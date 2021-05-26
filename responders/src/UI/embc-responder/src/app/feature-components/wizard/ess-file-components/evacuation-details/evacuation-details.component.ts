@@ -128,8 +128,12 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
   }
 
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
   ngOnDestroy(): void {
-    this.updateTabStatus();
+    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 
   private createEvacDetailsForm(): void {
@@ -194,14 +198,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       ],
       evacAddress: this.createEvacAddressForm()
     });
-  }
-
-  /**
-   * When navigating away from tab, update variable value and status indicator
-   */
-  ngOnDestroy(): void {
-    this.stepCreateEssFileService.nextTabUpdate.next();
-    this.tabUpdateSubscription.unsubscribe();
   }
 
   /**

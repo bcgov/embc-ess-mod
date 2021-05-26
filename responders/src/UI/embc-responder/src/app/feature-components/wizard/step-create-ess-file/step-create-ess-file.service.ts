@@ -111,7 +111,6 @@ export class StepCreateEssFileService {
     this.externalServices = externalServices;
   }
 
-
   public get haveHouseHoldMembers(): boolean {
     return this.haveHouseholdMembers;
   }
@@ -166,13 +165,13 @@ export class StepCreateEssFileService {
   }
   public set medicationSupplY(medicationSupply: boolean) {
     this.medicationSupply = medicationSupply;
+  }
 
   public get nextTabUpdate(): Subject<void> {
     return this.setNextTabUpdate;
   }
   public set nextTabUpdate(setNextTabUpdate: Subject<void>) {
     this.setNextTabUpdate = setNextTabUpdate;
-
   }
 
   public get tabs(): Array<TabModel> {
