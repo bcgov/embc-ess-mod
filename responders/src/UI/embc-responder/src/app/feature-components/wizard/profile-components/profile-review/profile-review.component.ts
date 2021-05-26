@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { pipe } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
 import { WizardService } from '../../wizard.service';
 
@@ -27,20 +29,18 @@ export class ProfileReviewComponent implements OnInit {
     // Replace security question answers with asterisks of same length
     if (!this.stepCreateProfileService.bypassSecurityQuestions) {
       const displayRegex = /./g;
+      const hideAnswer = pipe((n: string) => n.replace(displayRegex, '*'));
 
-      this.displayAnswer1 = this.stepCreateProfileService.securityQuestions[0].answer.replace(
-        displayRegex,
-        '*'
+      this.displayAnswer1 = hideAnswer(
+        this.stepCreateProfileService.securityQuestions[0].answer
       );
 
-      this.displayAnswer2 = this.stepCreateProfileService.securityQuestions[1].answer.replace(
-        displayRegex,
-        '*'
+      this.displayAnswer2 = hideAnswer(
+        this.stepCreateProfileService.securityQuestions[1].answer
       );
 
-      this.displayAnswer3 = this.stepCreateProfileService.securityQuestions[2].answer.replace(
-        displayRegex,
-        '*'
+      this.displayAnswer3 = hideAnswer(
+        this.stepCreateProfileService.securityQuestions[2].answer
       );
     }
 

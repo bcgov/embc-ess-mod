@@ -5,6 +5,7 @@ import { TabModel } from 'src/app/core/models/tab.model';
 import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepCreateProfileService } from './step-create-profile.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-step-create-profile',
@@ -44,11 +45,7 @@ export class StepCreateProfileComponent implements OnDestroy {
       (error) => {
         if (error?.error?.title)
           this.alertService.setAlert('danger', error.error.title);
-        else
-          this.alertService.setAlert(
-            'danger',
-            'An error has occurred. Please refresh and try again.'
-          );
+        else this.alertService.setAlert('danger', globalConst.genericError);
       }
     );
   }
