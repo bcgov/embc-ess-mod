@@ -66,6 +66,6 @@ export class StepCreateProfileComponent implements OnDestroy {
    * Explicitly deactivate Question List subscription when wizard is finished
    */
   ngOnDestroy() {
-    this.questionListSubscription.unsubscribe();
+    // this.questionListSubscription.unsubscribe();
   }
 }

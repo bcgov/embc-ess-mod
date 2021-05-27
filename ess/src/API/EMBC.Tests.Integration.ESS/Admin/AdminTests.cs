@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS;
 using EMBC.ESS.Managers.Admin;
-using EMBC.ESS.Managers.Location;
-using EMBC.ESS.Shared.Contracts.Location;
+using EMBC.ESS.Managers.Metadata;
+using EMBC.ESS.Shared.Contracts.Metadata;
 using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -184,8 +184,8 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresDynamics)]
         public async Task CanAssignCommunitiesToTeam()
         {
-            var locationManager = services.GetRequiredService<LocationManager>();
-            var communities = (await locationManager.Handle(new CommunitiesQuery())).Items;
+            var metadataManager = services.GetRequiredService<MetadataManager>();
+            var communities = (await metadataManager.Handle(new CommunitiesQuery())).Items;
 
             var assignedCommunities = (await adminManager.Handle(new TeamsQuery())).Teams.SelectMany(t => t.AssignedCommunities);
 

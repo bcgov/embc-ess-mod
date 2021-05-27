@@ -25,7 +25,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         Task<IEnumerable<EvacuationFile>> ReadAll(string userId);
 
-        Task<EvacuationFile> Read(string essFileNumber);
+        Task<EvacuationFile> Read(string essFileNumber, bool maskSecurityPhrase = true);
 
         Task<string> Update(EvacuationFile evacuationFile);
 

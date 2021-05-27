@@ -292,6 +292,45 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             files.ShouldAllBe(f => f.PrimaryRegistrantId == registrant.Id);
         }
 
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanVerifySecurityQuestions()
+        {
+            //If you need to set the security answers for testing.
+            //var registrant = await GetRegistrantByUserId("CHRIS-TEST");
+
+            //List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
+            //securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1", AnswerIsMasked = false });
+            //securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2", AnswerIsMasked = false });
+            //securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3", AnswerIsMasked = false });
+
+            //registrant.SecurityQuestions = securityQuestions;
+            //await GetRegistrantByUserId("CHRIS-TEST");
+
+            List<SecurityQuestion> answers = new List<SecurityQuestion>();
+            answers.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });
+            answers.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
+            answers.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3" });
+
+            var num = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId= "CHRIS-TEST"  });
+
+            num.NumberOfCorrectAnswers.ShouldBe(answers.Count());
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanVerifySecurityPhrase()
+        {
+            string fileId = "100504";
+
+            //If you need to set the security phrase for testing.
+            //var file = (await GetEvacuationFileById(fileId)).FirstOrDefault();
+            //file.SecurityPhrase = "SecretPhrase";
+            //file.PhraseIsMasked = false;
+            //await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+            
+            var matches = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "SecretPhrase" });
+            matches.ShouldBeTrue();
+        }
+
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)
         {
             return (await manager.Handle(new SearchQuery
