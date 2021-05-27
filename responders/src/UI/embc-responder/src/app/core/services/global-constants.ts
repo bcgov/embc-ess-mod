@@ -43,12 +43,24 @@ export const gender = [
   { name: 'Female', value: 'Female' },
   { name: 'X', value: 'X' }
 ];
-export const wizardProfileMessage =
-  'Please complete all sections of the Evacuee Profile prior to submitting.';
-export const wizardESSFileMessage =
-  'Please complete all sections of the ESS File prior to submitting.';
-export const lockedStepMessage =
-  'Please complete the ESS File prior to proceeding to the next steps.';
+
+export const wizardProfileMessage = {
+  title: 'Complete all steps',
+  text:
+    'Please complete all sections of the Evacuee Profile prior to submitting.'
+};
+export const evacueeProfileCreatedMessage = {
+  title: 'Evacuee Profile Saved',
+  text: 'Evacuee profile has been successfully created.'
+};
+export const wizardESSFileMessage = {
+  title: 'Complete all steps',
+  text: 'Please complete all sections of the ESS File prior to submitting.'
+};
+export const lockedStepMessage = {
+  title: 'Complete ESS file',
+  text: 'Please complete the ESS File prior to proceeding to the next steps.'
+};
 
 // Generic error messages
 export const genericError =
@@ -63,6 +75,8 @@ export const usernameCheckerror =
   'Unable to check username at this time. Please try again later';
 export const communityListError =
   'Unable to retrieve assigned communities at this time. Please try again later';
+export const createProfileError =
+  'Unable to create this profile at this time. Please try again later';
 export const editProfileError =
   'Unable to update your user profile at this time. Please try again later';
 export const securityQuestionError =

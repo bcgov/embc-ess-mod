@@ -172,7 +172,6 @@ export class TeamListComponent implements OnInit {
         component: InformationDialogComponent,
         text
       },
-      height: '230px',
       width: '530px'
     });
   }

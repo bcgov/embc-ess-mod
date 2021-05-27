@@ -360,8 +360,9 @@
           <button class="button-s back" mat-button (click)="back()">
             Back
           </button>
-          <button class="button-p save" mat-button (click)="save()">
+          <button class="button-p save" mat-button (click)="save()" [disabled]="saveLoader">
             Save Profile
+            <app-loader [showLoader]="saveLoader"></app-loader>
           </button>
         </div>
       </div>

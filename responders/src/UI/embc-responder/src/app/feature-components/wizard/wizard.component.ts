@@ -55,7 +55,10 @@ export class WizardComponent implements OnInit {
     if (lockedIndicator) {
       $event.stopPropagation();
       $event.preventDefault();
-      this.openLockedModal(globalConst.lockedStepMessage);
+      this.openLockedModal(
+        globalConst.lockedStepMessage.text,
+        globalConst.lockedStepMessage.title
+      );
     }
   }
 
@@ -95,13 +98,13 @@ export class WizardComponent implements OnInit {
    *
    * @param text message to display
    */
-  openLockedModal(text: string) {
+  openLockedModal(text: string, title?: string) {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text
+        text,
+        title
       },
-      height: '230px',
       width: '530px'
     });
   }

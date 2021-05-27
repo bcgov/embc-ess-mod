@@ -6,6 +6,7 @@ import { ProfileReviewComponent } from './profile-review.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [ProfileReviewComponent],
@@ -14,6 +15,7 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
     ProfileReviewRoutingModule,
     MaterialModule,
     CustomPipeModule,
+    SharedModule,
     ReactiveFormsModule
   ]
 })

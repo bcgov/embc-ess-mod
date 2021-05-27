@@ -179,7 +179,11 @@ export class StepCreateProfileService {
       if (allow) {
         $event.stopPropagation();
         $event.preventDefault();
-        this.openModal(globalConst.wizardProfileMessage);
+
+        this.openModal(
+          globalConst.wizardProfileMessage.text,
+          globalConst.wizardProfileMessage.title
+        );
       }
       return allow;
     }
@@ -203,13 +207,13 @@ export class StepCreateProfileService {
    *
    * @param text text to display
    */
-  openModal(text: string): void {
+  openModal(text: string, title?: string): void {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text
+        text,
+        title
       },
-      height: '230px',
       width: '530px'
     });
   }
@@ -220,7 +224,8 @@ export class StepCreateProfileService {
       mailingAddress: this.setAddressObject(this.mailingAddressDetails),
       personalDetails: this.personalDetails,
       primaryAddress: this.setAddressObject(this.primaryAddressDetails),
-      restriction: this.restrictedAccess
+      restriction: this.restrictedAccess,
+      verifiedUser: this.verifiedProfile
     };
   }
 
