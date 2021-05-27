@@ -12,10 +12,7 @@ import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-da
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-
-
 export class DashboardComponent implements OnInit {
-
   currentFlow: string;
   activeFiles: number;
   evacuationFileWithTask: boolean;
@@ -41,12 +38,15 @@ export class DashboardComponent implements OnInit {
     }
   ];
 
-
   constructor(
-    private route: ActivatedRoute, private needsAssessmentService: NeedsAssessmentService, public formCreationService: FormCreationService,
-    private router: Router, private dialogService: DialogService, private cacheService: CacheService,
-    public evacuationFilesDataService: EvacuationFileDataService) { }
-
+    private route: ActivatedRoute,
+    private needsAssessmentService: NeedsAssessmentService,
+    public formCreationService: FormCreationService,
+    private router: Router,
+    private dialogService: DialogService,
+    private cacheService: CacheService,
+    public evacuationFilesDataService: EvacuationFileDataService
+  ) {}
 
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
@@ -62,8 +62,8 @@ export class DashboardComponent implements OnInit {
   }
 
   openReferenceNumberPopup(): void {
-
-    const registrationResult = this.needsAssessmentService.getVerifiedEvacuationFileNo();
+    const registrationResult =
+      this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
     if (registrationResult !== null) {
       this.dialogService.submissionCompleteDialog(registrationResult);

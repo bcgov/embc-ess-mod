@@ -43,9 +43,9 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.Community))
                 .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince == "BC"))
 
-                  .ForMember(d => d.address2_line1, opts => opts.MapFrom(s => s.MailingAddress.AddressLine1))
+                .ForMember(d => d.address2_line1, opts => opts.MapFrom(s => s.MailingAddress.AddressLine1))
                 .ForMember(d => d.address2_line2, opts => opts.MapFrom(s => s.MailingAddress.AddressLine2))
-              .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
+                .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
                 .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => s.MailingAddress.StateProvince))
                 .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.Community))
                 .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince == "BC"))
@@ -133,17 +133,29 @@ namespace EMBC.ESS.Resources.Contacts
     {
         public IEnumerable<SecurityQuestion> Convert(contact sourceMember, ResolutionContext context)
         {
+            string mask = (string)(context.Options.Items.ContainsKey("MaskSecurityAnswers") ? context.Options.Items["MaskSecurityAnswers"] : "true");
+            bool maskSecurityAnswers = mask.Equals("true");
             List<SecurityQuestion> ret = new List<SecurityQuestion>();
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext1) && !string.IsNullOrEmpty(sourceMember.era_securityquestion1answer))
-                ret.Add(new SecurityQuestion { Id = 1, Question = sourceMember.era_securityquestiontext1, Answer = sourceMember.era_securityquestion1answer });
+                ret.Add(new SecurityQuestion { Id = 1, Question = sourceMember.era_securityquestiontext1, Answer = MaskAnswer(sourceMember.era_securityquestion1answer, maskSecurityAnswers) });
 
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext2) && !string.IsNullOrEmpty(sourceMember.era_securityquestion2answer))
-                ret.Add(new SecurityQuestion { Id = 2, Question = sourceMember.era_securityquestiontext2, Answer = sourceMember.era_securityquestion2answer });
+                ret.Add(new SecurityQuestion { Id = 2, Question = sourceMember.era_securityquestiontext2, Answer = MaskAnswer(sourceMember.era_securityquestion2answer, maskSecurityAnswers) });
 
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext3) && !string.IsNullOrEmpty(sourceMember.era_securityquestion3answer))
-                ret.Add(new SecurityQuestion { Id = 3, Question = sourceMember.era_securityquestiontext3, Answer = sourceMember.era_securityquestion3answer });
+                ret.Add(new SecurityQuestion { Id = 3, Question = sourceMember.era_securityquestiontext3, Answer = MaskAnswer(sourceMember.era_securityquestion3answer, maskSecurityAnswers) });
 
             return ret;
+        }
+
+        private string MaskAnswer(string answer, bool maskSecurityAnswers)
+        {
+            if (!maskSecurityAnswers) return answer;
+
+            if (string.IsNullOrEmpty(answer))
+                return string.Empty;
+            else
+                return answer.Substring(0, 1) + "***" + answer.Substring(answer.Length - 1);
         }
     }
 }

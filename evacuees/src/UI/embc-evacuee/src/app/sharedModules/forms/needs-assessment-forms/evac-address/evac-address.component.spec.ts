@@ -8,14 +8,15 @@ describe('EvacAddressComponent', () => {
   let component: EvacAddressComponent;
   let fixture: ComponentFixture<EvacAddressComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ EvacAddressComponent ],
-      imports: [ ReactiveFormsModule ],
-      providers: [ FormCreationService, FormBuilder ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [EvacAddressComponent],
+        imports: [ReactiveFormsModule],
+        providers: [FormCreationService, FormBuilder]
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EvacAddressComponent);

@@ -3,20 +3,25 @@ import {
   InsuranceOption,
   NeedsAssessment
 } from 'src/app/core/models/evacuation-file';
-import { Address } from 'src/app/core/models/profile';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
-import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
 import * as globalConst from '../../../core/services/global-constants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { Subject } from 'rxjs';
+import { AddressModel } from 'src/app/core/models/Address.model';
+import { Address, PersonDetails } from 'src/app/core/api/models';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
   private essTabs: Array<TabModel> = WizardTabModelValues.essFileTabs;
+
+  private setNextTabUpdate: Subject<void> = new Subject();
+
   private paperESSFile: string;
   private evacuatedFromPrimary: boolean;
-  private evacAddress: Address;
+  private evacAddress: AddressModel;
   private facilityName: string;
   private insurance: InsuranceOption;
   private householdAffected: string;
@@ -25,10 +30,16 @@ export class StepCreateEssFileService {
   private referredServiceDetails: string[] = [];
   private externalServices: string;
 
-  constructor(
-    private strepCreateProfileService: StepCreateProfileService,
-    private dialog: MatDialog
-  ) {}
+  private haveHouseholdMembers: boolean;
+  private householdMembers: PersonDetails[] = [];
+  private householdMember: null | PersonDetails;
+  private haveSpecialDiet: boolean;
+  private specialDietDetails: null | string;
+  private haveMedication: boolean;
+  private medicationSupply: null | boolean;
+  private sameLastNameCheck: null | boolean;
+
+  constructor(private dialog: MatDialog) {}
 
   public get paperESSFiles(): string {
     return this.paperESSFile;
@@ -44,10 +55,10 @@ export class StepCreateEssFileService {
     this.evacuatedFromPrimary = evacuatedFromPrimary;
   }
 
-  public get evacAddresS(): Address {
+  public get evacAddresS(): AddressModel {
     return this.evacAddress;
   }
-  public set evacAddresS(evacAddress: Address) {
+  public set evacAddresS(evacAddress: AddressModel) {
     this.evacAddress = evacAddress;
   }
 
@@ -100,6 +111,69 @@ export class StepCreateEssFileService {
     this.externalServices = externalServices;
   }
 
+  public get haveHouseHoldMembers(): boolean {
+    return this.haveHouseholdMembers;
+  }
+  public set haveHouseHoldMembers(haveHouseholdMembers: boolean) {
+    this.haveHouseholdMembers = haveHouseholdMembers;
+  }
+
+  public get houseHoldMembers(): PersonDetails[] {
+    return this.householdMembers;
+  }
+  public set houseHoldMembers(householdMembers: PersonDetails[]) {
+    this.householdMembers = householdMembers;
+  }
+
+  public get houseHoldMember(): PersonDetails {
+    return this.householdMember;
+  }
+  public set houseHoldMember(householdMember: PersonDetails) {
+    this.householdMember = householdMember;
+  }
+
+  public get sameLastNameChecK(): boolean {
+    return this.sameLastNameCheck;
+  }
+  public set sameLastNameChecK(sameLastNameCheck: boolean) {
+    this.sameLastNameCheck = sameLastNameCheck;
+  }
+
+  public get haveSpecialDieT(): boolean {
+    return this.haveSpecialDiet;
+  }
+  public set haveSpecialDieT(haveSpecialDiet: boolean) {
+    this.haveSpecialDiet = haveSpecialDiet;
+  }
+
+  public get specialDietDetailS(): string {
+    return this.specialDietDetails;
+  }
+  public set specialDietDetailS(specialDietDetails: string) {
+    this.specialDietDetails = specialDietDetails;
+  }
+
+  public get haveMedicatioN(): boolean {
+    return this.haveMedication;
+  }
+  public set haveMedicatioN(haveMedication: boolean) {
+    this.haveMedication = haveMedication;
+  }
+
+  public get medicationSupplY(): boolean {
+    return this.medicationSupply;
+  }
+  public set medicationSupplY(medicationSupply: boolean) {
+    this.medicationSupply = medicationSupply;
+  }
+
+  public get nextTabUpdate(): Subject<void> {
+    return this.setNextTabUpdate;
+  }
+  public set nextTabUpdate(setNextTabUpdate: Subject<void>) {
+    this.setNextTabUpdate = setNextTabUpdate;
+  }
+
   public get tabs(): Array<TabModel> {
     return this.essTabs;
   }
@@ -126,9 +200,7 @@ export class StepCreateEssFileService {
       referredServices: this.referredServices,
       referredServiceDetails: this.referredServiceDetails,
       externalServices: this.externalServices,
-      evacAddress: this.strepCreateProfileService.setAddressObject(
-        this.evacAddress
-      )
+      evacAddress: this.setAddressObject(this.evacAddress)
     });
 
     return {
@@ -189,5 +261,52 @@ export class StepCreateEssFileService {
       height: '230px',
       width: '530px'
     });
+  }
+
+  public setAddressObject(addressObject: AddressModel): Address {
+    const address: Address = {
+      addressLine1: addressObject.addressLine1,
+      addressLine2: addressObject.addressLine2,
+      countryCode: addressObject.country.code,
+      communityCode:
+        addressObject.community.code === undefined
+          ? null
+          : addressObject.community.code,
+      postalCode: addressObject.postalCode,
+      stateProvinceCode:
+        addressObject.stateProvince === null
+          ? null
+          : addressObject.stateProvince.code
+    };
+
+    return address;
+  }
+
+  /**
+   * Checks if the form is partially completed or not
+   *
+   * @param form form group
+   * @returns true/false
+   */
+  checkForPartialUpdates(form: FormGroup): boolean {
+    const fields = [];
+    Object.keys(form.controls).forEach((field) => {
+      const control = form.controls[field] as
+        | FormControl
+        | FormGroup
+        | FormArray;
+      if (control instanceof FormControl) {
+        fields.push(control.value);
+      } else if (control instanceof FormGroup || control instanceof FormArray) {
+        for (const key in control.controls) {
+          if (control.controls.hasOwnProperty(key)) {
+            fields.push(control.controls[key].value);
+          }
+        }
+      }
+    });
+
+    const result = fields.filter((field) => !!field);
+    return result.length !== 0;
   }
 }

@@ -11,6 +11,7 @@ export { HouseholdMember } from './models/household-member';
 export { Pet } from './models/pet';
 export { NeedsAssessmentType } from './models/needs-assessment-type';
 export { EvacuationFile } from './models/evacuation-file';
+export { EvacuationFileStatus } from './models/evacuation-file-status';
 export { ProfileDataConflict } from './models/profile-data-conflict';
 export { DateOfBirthDataConflict } from './models/date-of-birth-data-conflict';
 export { NameDataConflict } from './models/name-data-conflict';

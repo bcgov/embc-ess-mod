@@ -1,20 +1,21 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
+import { Address } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { AddressService } from '../../profile-components/address/address.service';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
-import { Address } from 'src/app/core/models/profile';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-evacuation-details',
   templateUrl: './evacuation-details.component.html',
   styleUrls: ['./evacuation-details.component.scss']
 })
-export class EvacuationDetailsComponent implements OnInit {
+export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacDetailsForm: FormGroup;
   insuranceOption = globalConst.insuranceOptions;
   radioOption: string[] = ['Yes', 'No'];
@@ -25,101 +26,49 @@ export class EvacuationDetailsComponent implements OnInit {
   showBCAddressForm = false;
   isBCAddress = true;
   selection = new SelectionModel<any>(true, []);
+  tabUpdateSubscription: Subscription;
 
   bCDummyAddress: Address = {
     addressLine1: 'Unit 1200',
     addressLine2: '1230 Main Street',
-    jurisdiction: 'North Vancouver',
-    stateProvince: 'British Columbia',
+    communityCode: 'North Vancouver',
+    stateProvinceCode: 'British Columbia',
     postalCode: 'V8Y 6U8',
-    country: 'Canada'
+    countryCode: 'Canada'
   };
   nonBcDummyAddress: Address = {
     addressLine1: 'Unit 2300',
     addressLine2: '1230 Oak Street',
-    jurisdiction: 'Miami',
-    stateProvince: 'Florida',
+    communityCode: 'Miami',
+    stateProvinceCode: 'Florida',
     postalCode: '33009',
-    country: 'Unites States'
+    countryCode: 'Unites States'
   };
 
   constructor(
     private router: Router,
     private stepCreateEssFileService: StepCreateEssFileService,
     private formBuilder: FormBuilder,
-    private customValidation: CustomValidationService,
-    private addressService: AddressService
+    private customValidation: CustomValidationService
   ) {}
 
   ngOnInit(): void {
     this.createEvacDetailsForm();
     this.checkPrimaryAddress();
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateEssFileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
-  createEvacDetailsForm(): void {
-    this.evacDetailsForm = this.formBuilder.group({
-      paperESSFile: [
-        this.stepCreateEssFileService.paperESSFiles !== null
-          ? this.stepCreateEssFileService.paperESSFiles
-          : ''
-      ],
-      evacuatedFromPrimary: [
-        this.stepCreateEssFileService.evacuatedFromPrimaryAddress !== null
-          ? this.stepCreateEssFileService.evacuatedFromPrimaryAddress
-          : '',
-        Validators.required
-      ],
-      facilityName: [
-        this.stepCreateEssFileService.facilityNames !== null
-          ? this.stepCreateEssFileService.facilityNames
-          : '',
-        [this.customValidation.whitespaceValidator()]
-      ],
-      insurance: [
-        this.stepCreateEssFileService.insuranceInfo !== null
-          ? this.stepCreateEssFileService.insuranceInfo
-          : '',
-        Validators.required
-      ],
-      householdAffected: [
-        this.stepCreateEssFileService.householdAffectedInfo !== null
-          ? this.stepCreateEssFileService.householdAffectedInfo
-          : '',
-        [this.customValidation.whitespaceValidator()]
-      ],
-      emergencySupportServices: [
-        this.stepCreateEssFileService.emergencySupportServiceS !== null
-          ? this.stepCreateEssFileService.emergencySupportServiceS
-          : ''
-      ],
-      referredServices: [
-        this.stepCreateEssFileService.referredServiceS !== null
-          ? this.stepCreateEssFileService.referredServiceS
-          : ''
-      ],
-      referredServiceDetails: [
-        this.stepCreateEssFileService.referredServiceDetailS.length !== 0
-          ? this.stepCreateEssFileService.referredServiceDetailS
-          : new FormArray([]),
-        [
-          this.customValidation
-            .conditionalValidation(
-              () =>
-                this.evacDetailsForm.get('referredServices').value === 'Yes',
-              Validators.required
-            )
-            .bind(this.customValidation)
-        ]
-      ],
-      externalServices: [
-        this.stepCreateEssFileService.externalServiceS !== null
-          ? this.stepCreateEssFileService.externalServiceS
-          : ''
-      ],
-      evacAddress: this.createEvacAddressForm()
-    });
-  }
-
+  /**
+   * Listens to changes on evacuation Address options
+   *
+   * @param event
+   */
   evacPrimaryAddressChange(event: MatRadioChange): void {
     if (event.value === 'Yes') {
       this.showBCAddressForm = false;
@@ -172,9 +121,83 @@ export class EvacuationDetailsComponent implements OnInit {
     this.evacDetailsForm
       .get('referredServiceDetails')
       .setValue(this.selection.selected);
-    this.updateTabStatus();
+
+    this.stepCreateEssFileService.nextTabUpdate.next();
+
     this.stepCreateEssFileService.createNeedsAssessmentDTO();
     this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
+  }
+
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
+  ngOnDestroy(): void {
+    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
+  }
+
+  private createEvacDetailsForm(): void {
+    this.evacDetailsForm = this.formBuilder.group({
+      paperESSFile: [
+        this.stepCreateEssFileService.paperESSFiles !== undefined
+          ? this.stepCreateEssFileService.paperESSFiles
+          : ''
+      ],
+      evacuatedFromPrimary: [
+        this.stepCreateEssFileService.evacuatedFromPrimaryAddress !== null
+          ? this.stepCreateEssFileService.evacuatedFromPrimaryAddress
+          : '',
+        Validators.required
+      ],
+      facilityName: [
+        this.stepCreateEssFileService.facilityNames !== undefined
+          ? this.stepCreateEssFileService.facilityNames
+          : '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      insurance: [
+        this.stepCreateEssFileService.insuranceInfo !== undefined
+          ? this.stepCreateEssFileService.insuranceInfo
+          : '',
+        Validators.required
+      ],
+      householdAffected: [
+        this.stepCreateEssFileService.householdAffectedInfo !== undefined
+          ? this.stepCreateEssFileService.householdAffectedInfo
+          : '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      emergencySupportServices: [
+        this.stepCreateEssFileService.emergencySupportServiceS !== undefined
+          ? this.stepCreateEssFileService.emergencySupportServiceS
+          : ''
+      ],
+      referredServices: [
+        this.stepCreateEssFileService.referredServiceS !== undefined
+          ? this.stepCreateEssFileService.referredServiceS
+          : ''
+      ],
+      referredServiceDetails: [
+        this.stepCreateEssFileService.referredServiceDetailS.length !== 0
+          ? this.stepCreateEssFileService.referredServiceDetailS
+          : new FormArray([]),
+        [
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                this.evacDetailsForm.get('referredServices').value === 'Yes',
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      externalServices: [
+        this.stepCreateEssFileService.externalServiceS !== undefined
+          ? this.stepCreateEssFileService.externalServiceS
+          : ''
+      ],
+      evacAddress: this.createEvacAddressForm()
+    });
   }
 
   /**
@@ -195,9 +218,9 @@ export class EvacuationDetailsComponent implements OnInit {
           ? this.stepCreateEssFileService.evacAddresS.addressLine2
           : ''
       ],
-      jurisdiction: [
-        this.stepCreateEssFileService?.evacAddresS?.jurisdiction !== undefined
-          ? this.stepCreateEssFileService.evacAddresS.jurisdiction
+      community: [
+        this.stepCreateEssFileService?.evacAddresS?.community !== undefined
+          ? this.stepCreateEssFileService.evacAddresS.community
           : '',
         [Validators.required]
       ],
@@ -224,7 +247,7 @@ export class EvacuationDetailsComponent implements OnInit {
    * Checks if the inserted primary address is in BC Province
    */
   private checkPrimaryAddress() {
-    if (this.bCDummyAddress.stateProvince !== 'British Columbia') {
+    if (this.bCDummyAddress.stateProvinceCode !== 'British Columbia') {
       this.evacDetailsForm.get('evacuatedFromPrimary').setValue('No');
       this.isBCAddress = false;
     }
@@ -239,7 +262,9 @@ export class EvacuationDetailsComponent implements OnInit {
         'evacuation-details',
         'complete'
       );
-    } else if (this.evacDetailsForm.touched) {
+    } else if (
+      this.stepCreateEssFileService.checkForPartialUpdates(this.evacDetailsForm)
+    ) {
       this.stepCreateEssFileService.setTabStatus(
         'evacuation-details',
         'incomplete'

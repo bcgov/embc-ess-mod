@@ -43,15 +43,15 @@
         <mat-label>City</mat-label>
         <input
           maxlength="100"
-          [formControlName]="'jurisdiction'"
+          [formControlName]="'community'"
           matInput
           placeholder="City"
           required
         />
         <mat-error
           *ngIf="
-            addressFormControl?.jurisdiction.invalid &&
-            addressFormControl?.jurisdiction.hasError('required')
+            addressFormControl?.community.invalid &&
+            addressFormControl?.community.hasError('required')
           "
         >
           City is required</mat-error

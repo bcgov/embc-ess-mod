@@ -128,7 +128,7 @@ namespace EMBC.ESS.Resources.Contacts
 
             essContext.DetachAll();
 
-            return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts) };
+            return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts, opt => opt.Items["MaskSecurityAnswers"] = query.MaskSecurityAnswers.ToString()) };
         }
 
         private async Task<ContactQueryResult> HandleSearchQuery(SearchContactQuery query)

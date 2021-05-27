@@ -9,9 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    ConfirmRestrictionComponent
-  ],
+  declarations: [ConfirmRestrictionComponent],
   imports: [
     CommonModule,
     ConfirmRestrictionRoutingModule,
@@ -21,4 +19,4 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule
   ]
 })
-export class ConfirmRestrictionModule { }
+export class ConfirmRestrictionModule {}

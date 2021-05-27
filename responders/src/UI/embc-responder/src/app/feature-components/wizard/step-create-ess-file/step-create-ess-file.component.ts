@@ -37,6 +37,7 @@ export class StepCreateEssFileComponent {
    * @param $event mouse click event
    */
   isAllowed(tabRoute: string, $event: MouseEvent): void {
+    this.stepCreateEssFileService.nextTabUpdate.next();
     this.stepCreateEssFileService.isAllowed(tabRoute, $event);
   }
 }
