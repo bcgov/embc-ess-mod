@@ -49,7 +49,7 @@
                     (change)="evacPrimaryAddressChange($event)"
                     required
                   >
-                    <mat-radio-button value="Yes">Yes </mat-radio-button>
+                    <mat-radio-button [value]="true">Yes </mat-radio-button>
                     <div class="prim-address">
                       <p>
                         {{ bCDummyAddress.addressLine1 }},
@@ -58,7 +58,19 @@
                       <p>{{ bCDummyAddress.communityCode }}</p>
                       <p>{{ bCDummyAddress.postalCode }}</p>
                     </div>
-                    <mat-radio-button value="No">No</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
+                    <mat-error
+                      class="custom-mat-error"
+                      *ngIf="
+                        evacDetailsFormControl?.evacuatedFromPrimary.touched &&
+                        evacDetailsFormControl?.evacuatedFromPrimary.invalid &&
+                        evacDetailsFormControl?.evacuatedFromPrimary.hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Evacuation Address is required</mat-error
+                    >
                   </mat-radio-group>
                 </ng-container>
               </div>
@@ -96,6 +108,19 @@
                       maxlength="100"
                       matInput
                     />
+                    <mat-error
+                      class="custom-mat-error"
+                      *ngIf="
+                        evacDetailsFormControl?.facilityName.touched &&
+                        evacDetailsFormControl?.facilityName.invalid &&
+                        evacDetailsFormControl?.facilityName.hasError(
+                          'whitespaceError'
+                        )
+                      "
+                    >
+                      Facility Name/ Registration Location is
+                      required</mat-error
+                    >
                   </mat-form-field>
                 </div>
               </div>
@@ -120,10 +145,20 @@
                 >
                   <mat-radio-button
                     *ngFor="let option of insuranceOption"
-                    [value]="option.name"
+                    [value]="option.value"
                   >
-                    {{ option.value }}
+                    {{ option.name }}
                   </mat-radio-button>
+                  <mat-error
+                    class="custom-mat-error"
+                    *ngIf="
+                      evacDetailsFormControl?.insurance.touched &&
+                      evacDetailsFormControl?.insurance.invalid &&
+                      evacDetailsFormControl?.insurance.hasError('required')
+                    "
+                  >
+                    Insurance is required</mat-error
+                  >
                 </mat-radio-group>
               </div>
 
@@ -148,6 +183,18 @@
                       matInput
                       required
                     ></textarea>
+                    <mat-error
+                      class="custom-mat-error"
+                      *ngIf="
+                        evacDetailsFormControl?.householdAffected.touched &&
+                        evacDetailsFormControl?.householdAffected.invalid &&
+                        evacDetailsFormControl?.householdAffected.hasError(
+                          'whitespaceError'
+                        )
+                      "
+                    >
+                      This information is required</mat-error
+                    >
                   </mat-form-field>
                 </div>
               </div>
@@ -193,9 +240,9 @@
                   <mat-radio-button
                     class="primary-radio-button"
                     *ngFor="let option of radioOption"
-                    [value]="option"
+                    [value]="option.value"
                   >
-                    {{ option }}
+                    {{ option.name }}
                   </mat-radio-button>
                 </mat-radio-group>
               </div>
