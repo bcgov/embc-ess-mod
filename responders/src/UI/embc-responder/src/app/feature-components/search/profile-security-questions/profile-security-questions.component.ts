@@ -73,7 +73,9 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     this.correctAnswerFlag = true;
     this.showLoader = true;
     setTimeout(() => {
-      this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
+      this.router.navigate([
+        'responder-access/search/evacuee-profile-dashboard'
+      ]);
     }, 1000);
   }
 
