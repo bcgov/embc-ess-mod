@@ -141,4 +141,21 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
             writer.WriteEndObject();
         }
     }
+
+    public class VerifySecurityQuestionsQuery : Query<VerifySecurityQuestionsResponse>
+    {
+        public string RegistrantId { get; set; }
+        public IEnumerable<SecurityQuestion> Answers { get; set; }
+    }
+
+    public class VerifySecurityQuestionsResponse
+    {
+        public int NumberOfCorrectAnswers { get; set; }
+    }
+
+    public class VerifySecurityPhraseQuery : Query<bool>
+    {
+        public string FileId { get; set; }
+        public string SecurityPhrase { get; set; }
+    }
 }

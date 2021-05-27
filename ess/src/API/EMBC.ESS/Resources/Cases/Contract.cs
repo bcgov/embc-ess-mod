@@ -70,7 +70,8 @@ namespace EMBC.ESS.Resources.Cases
         public EvacuationAddress EvacuatedFromAddress { get; set; }
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
         public string PrimaryRegistrantId { get; set; }
-        public string SecretPhrase { get; set; }
+        public string SecurityPhrase { get; set; }
+        public bool PhraseIsMasked { get; set; } = true;
         public DateTime EvacuationDate { get; internal set; }
     }
 
