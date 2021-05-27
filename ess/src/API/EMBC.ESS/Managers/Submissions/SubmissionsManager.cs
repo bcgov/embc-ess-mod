@@ -118,11 +118,11 @@ namespace EMBC.ESS.Managers.Submissions
                     {
                         FileId = evacuationFilesSearchCriteria.FileId,
                         PrimaryRegistrantId = evacuationFilesSearchCriteria.PrimaryRegistrantId,
-                        PrimaryRegistrantUserId = evacuationFilesSearchCriteria.PrimaryRegistrantUserId,
+                        //PrimaryRegistrantUserId = evacuationFilesSearchCriteria.PrimaryRegistrantUserId,
                         FirstName = evacuationFilesSearchCriteria.FirstName,
                         LastName = evacuationFilesSearchCriteria.LastName,
                         DateOfBirth = evacuationFilesSearchCriteria.DateOfBirth,
-                        IncludeRestrictedAccess = evacuationFilesSearchCriteria.IncludeRestrictedAccess,
+                        //IncludeRestrictedAccess = evacuationFilesSearchCriteria.IncludeRestrictedAccess,
                         IncludeHouseholdMembers = evacuationFilesSearchCriteria.IncludeHouseholdMembers,
                         IncludeFilesInStatuses = evacuationFilesSearchCriteria.IncludeFilesInStatuses
                     })).Items;

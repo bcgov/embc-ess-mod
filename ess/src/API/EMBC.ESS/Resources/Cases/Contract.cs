@@ -63,13 +63,14 @@ namespace EMBC.ESS.Resources.Cases
     {
         public string FileId { get; set; }
         public string PrimaryRegistrantId { get; set; }
-        public string PrimaryRegistrantUserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DateOfBirth { get; set; }
-        public bool IncludeRestrictedAccess { get; set; }
         public bool IncludeHouseholdMembers { get; set; }
         public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
+        public DateTime? RegistraionDateFrom { get; set; }
+        public DateTime? RegistraionDateTo { get; set; }
+        public int? Limit { get; set; }
     }
 
     public class EvacuationFile : Case
@@ -113,13 +114,15 @@ namespace EMBC.ESS.Resources.Cases
     public class HouseholdMember
     {
         public string Id { get; set; }
-        public bool isUnder19 { get; set; }
+        public bool IsUnder19 { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
         public string PreferredName { get; set; }
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
+        public bool IsPrimaryRegistrant { get; set; }
+        public string LinkedRegistrantId { get; set; }
     }
 
     public class Pet
