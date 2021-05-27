@@ -1,0 +1,114 @@
+.dashboard-container {
+  color: #003366;
+}
+
+.dashboard-subheading {
+  font-size: 35px;
+  color: #003366;
+}
+
+.banner {
+  line-height: 70px;
+  background-color: rgba(252, 186, 25, 1);
+}
+
+.center-content {
+  text-align: center;
+}
+
+.banner-heading {
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 21px;
+}
+
+.margins {
+  margin: 0 !important;
+}
+
+.ess-file-button {
+  height: 35px !important;
+  width: 50%;
+}
+
+.status {
+  font-size: 21px;
+  margin-left: 10px;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+
+.verify-button {
+  height: 35px !important;
+  margin-left: 8px;
+  width: 30%;
+}
+
+.status-row-margin {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.info-test {
+    @extend .info-image;
+}
+
+.info-image img:last-child {
+  display: none;
+}
+
+.info-image:hover img:last-child {
+  display: inline;
+}
+
+.info-image:hover img:first-child {
+  display: none;
+}
+
+.content-row {
+    background-color: white;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.overview-card {
+    box-shadow: none !important;
+    border: 1px solid rgb(221, 221, 221);
+    padding-top: 0px !important;
+}
+
+.card-heading-outer {
+    background-color: rgb(35, 64, 117)
+}
+
+.card-heading {
+    color: white;
+    font-size: 23px;
+    line-height: 60px;
+}
+
+.services-card {
+    background-color: rgb(242, 242, 242);
+    padding: 20px;
+}
+
+.services-heading {
+    font-size: 21px;
+}
+
+.button-div {
+    padding-top: 20px;
+}
+
+.invite-button {
+    height: 45px !important;
+    width: 40%;
+}
+
+.dotted-hr {
+    border: 0.7px solid rgb(242, 242, 242);
+}
+
+.evacuee-info-row {
+    padding: 30px
+}

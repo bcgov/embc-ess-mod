@@ -6,10 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./evacuee-profile-dashboard.component.scss']
 })
 export class EvacueeProfileDashboardComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
+  openStatusDefinition(): void {
+    console.log('click');
   }
-
 }

@@ -8,9 +8,8 @@ describe('EvacueeProfileDashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EvacueeProfileDashboardComponent ]
-    })
-    .compileComponents();
+      declarations: [EvacueeProfileDashboardComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {
