@@ -1,6 +1,12 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
 import { Address } from 'src/app/core/api/models';
@@ -9,6 +15,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { AddressService } from '../../profile-components/address/address.service';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { Subscription } from 'rxjs';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -18,7 +25,7 @@ import { Subscription } from 'rxjs';
 export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacDetailsForm: FormGroup;
   insuranceOption = globalConst.insuranceOptions;
-  radioOption: string[] = ['Yes', 'No'];
+  radioOption = globalConst.radioButtonOptions1;
   referredServicesOption = globalConst.referredServiceOptions;
   defaultCountry = globalConst.defaultCountry;
   defaultProvince = globalConst.defaultProvince;
@@ -62,6 +69,16 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         this.updateTabStatus();
       }
     );
+
+    // Display the referredServiceDetails in case referred Service is set as true
+    if (this.stepCreateEssFileService.referredServiceS === true) {
+      this.showReferredServicesForm = true;
+
+      for (const option of this.stepCreateEssFileService
+        .referredServiceDetailS) {
+        this.selection.toggle(option);
+      }
+    }
   }
 
   /**
@@ -70,7 +87,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * @param event
    */
   evacPrimaryAddressChange(event: MatRadioChange): void {
-    if (event.value === 'Yes') {
+    if (event.value === true) {
       this.showBCAddressForm = false;
       this.evacDetailsForm.get('evacAddress').setValue(this.bCDummyAddress);
     } else {
@@ -85,7 +102,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * @param event
    */
   referredServiceChange(event: MatRadioChange): void {
-    if (event.value === 'Yes') {
+    if (event.value === true) {
       this.showReferredServicesForm = true;
     } else {
       this.showReferredServicesForm = false;
@@ -108,6 +125,13 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Returns the control of the form
+   */
+  get evacDetailsFormControl(): { [key: string]: AbstractControl } {
+    return this.evacDetailsForm.controls;
+  }
+
+  /**
    * Returns the control of the evacuated address form
    */
   public get evacAddressFormGroup(): FormGroup {
@@ -118,13 +142,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Updates the tab status and navigate to next tab
    */
   next(): void {
-    this.evacDetailsForm
-      .get('referredServiceDetails')
-      .setValue(this.selection.selected);
-
-    this.stepCreateEssFileService.nextTabUpdate.next();
-
-    this.stepCreateEssFileService.createNeedsAssessmentDTO();
     this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
   }
 
@@ -303,6 +320,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.stepCreateEssFileService.emergencySupportServiceS = this.evacDetailsForm.get(
       'emergencySupportServices'
     ).value;
+
     this.stepCreateEssFileService.referredServiceS = this.evacDetailsForm.get(
       'referredServices'
     ).value;
