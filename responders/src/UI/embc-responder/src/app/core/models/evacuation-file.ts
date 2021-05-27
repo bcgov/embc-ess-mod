@@ -47,6 +47,7 @@ export interface NeedsAssessment {
   insurance: InsuranceOption;
   pets?: null | Array<Pet>;
   specialDietDetails?: null | string;
+  medicationSupply?: null | boolean;
   paperESSFile: null | string;
   facilityName: string;
   householdAffected: string;
