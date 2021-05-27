@@ -35,6 +35,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_city, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Community))
                 .ForMember(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Country))
                 .ForMember(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvince))
+                .ForMember(d => d.era_secrettext, opts => opts.MapFrom(s => s.SecretPhrase))
                 ;
 
             CreateMap<era_evacuationfile, EvacuationFile>()
@@ -45,6 +46,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => s.era_needsassessment_EvacuationFile))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s))
+                .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
                 ;
 
             CreateMap<EvacuationAddress, era_evacuationfile>(MemberList.None)
@@ -95,6 +97,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             CreateMap<era_householdmember, HouseholdMember>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_householdmemberid.ToString()))
+                .ForMember(d => d.LinkedRegistrantId, opts => opts.MapFrom(s => s.era_Registrant.contactid))
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.era_isprimaryregistrant))
                 .ForMember(d => d.IsUnder19, opts => opts.MapFrom(s => s.era_isunder19))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_Registrant.firstname.ToString()))
@@ -115,7 +118,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 ;
 
             CreateMap<HouseholdMember, contact>(MemberList.None)
-                //.ForMember(d => d.contactid, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.LinkedRegistrantId))
                 .ForMember(d => d.era_registranttype, opts => opts.MapFrom(s => (int)(s.IsPrimaryRegistrant ? RegistrantType.Primary : RegistrantType.Member)))
                 .ForMember(d => d.firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.lastname, opts => opts.MapFrom(s => s.LastName))

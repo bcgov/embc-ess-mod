@@ -23,7 +23,6 @@ namespace EMBC.ESS.Managers.Submissions
         public MappingProfile()
         {
             CreateMap<Shared.Contracts.Submissions.EvacuationFile, Resources.Cases.EvacuationFile>()
-                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 
@@ -31,6 +30,7 @@ namespace EMBC.ESS.Managers.Submissions
                 .ReverseMap()
                 ;
             CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Cases.HouseholdMember>()
+                .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 

@@ -79,6 +79,7 @@ namespace EMBC.ESS.Resources.Cases
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
         public string PrimaryRegistrantId { get; set; }
         public string SecretPhrase { get; set; }
+        public bool IsSecretPhraseMasked { get; set; }
         public DateTime EvacuationDate { get; internal set; }
         public EvacuationFileStatus Status { get; set; }
     }

@@ -61,6 +61,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public DateTime EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; }
+        public string SecretPhrase { get; set; }
+        public bool IsSecretPhraseMasked { get; set; }
     }
 
     public enum EvacuationFileStatus
@@ -128,6 +130,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
         public bool isUnder19 { get; set; }
+        public bool IsPrimaryRegistrant { get; set; }
     }
 
     public class Pet
