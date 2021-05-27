@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  HouseholdMember,
   InsuranceOption,
   NeedsAssessment
 } from 'src/app/core/models/evacuation-file';
@@ -9,9 +10,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { Subject } from 'rxjs';
-import { AddressModel } from 'src/app/core/models/Address.model';
 import { Address, PersonDetails } from 'src/app/core/api/models';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AddressModel } from 'src/app/core/models/Address.model';
+import { HouseholdMemberModel } from 'src/app/core/models/HouseholdMember.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -31,13 +33,12 @@ export class StepCreateEssFileService {
   private externalServices: string;
 
   private haveHouseholdMembers: boolean;
-  private householdMembers: PersonDetails[] = [];
-  private householdMember: null | PersonDetails;
+  private householdMembers: HouseholdMemberModel[] = [];
+  // private householdMember: null | HouseholdMember;
   private haveSpecialDiet: boolean;
   private specialDietDetails: null | string;
   private haveMedication: boolean;
   private medicationSupply: null | boolean;
-  private sameLastNameCheck: null | boolean;
 
   constructor(private dialog: MatDialog) {}
 
@@ -118,25 +119,11 @@ export class StepCreateEssFileService {
     this.haveHouseholdMembers = haveHouseholdMembers;
   }
 
-  public get houseHoldMembers(): PersonDetails[] {
+  public get houseHoldMembers(): HouseholdMemberModel[] {
     return this.householdMembers;
   }
-  public set houseHoldMembers(householdMembers: PersonDetails[]) {
+  public set houseHoldMembers(householdMembers: HouseholdMemberModel[]) {
     this.householdMembers = householdMembers;
-  }
-
-  public get houseHoldMember(): PersonDetails {
-    return this.householdMember;
-  }
-  public set houseHoldMember(householdMember: PersonDetails) {
-    this.householdMember = householdMember;
-  }
-
-  public get sameLastNameChecK(): boolean {
-    return this.sameLastNameCheck;
-  }
-  public set sameLastNameChecK(sameLastNameCheck: boolean) {
-    this.sameLastNameCheck = sameLastNameCheck;
   }
 
   public get haveSpecialDieT(): boolean {
@@ -200,7 +187,17 @@ export class StepCreateEssFileService {
       referredServices: this.referredServices,
       referredServiceDetails: this.referredServiceDetails,
       externalServices: this.externalServices,
-      evacAddress: this.setAddressObject(this.evacAddress)
+      evacAddress: this.setAddressObject(this.evacAddress),
+
+      haveHouseHoldMembers: this.haveHouseHoldMembers,
+      householdMembers:
+        this.householdMembers.length > 0
+          ? this.setHouseHoldMembersObject(this.householdMembers)
+          : [],
+      haveMedication: this.haveMedication,
+      haveSpecialDiet: this.haveSpecialDiet,
+      specialDietDetails: this.specialDietDetails,
+      medicationSuppply: this.medicationSupply
     });
 
     return {
@@ -263,25 +260,6 @@ export class StepCreateEssFileService {
     });
   }
 
-  public setAddressObject(addressObject: AddressModel): Address {
-    const address: Address = {
-      addressLine1: addressObject.addressLine1,
-      addressLine2: addressObject.addressLine2,
-      countryCode: addressObject.country.code,
-      communityCode:
-        addressObject.community.code === undefined
-          ? null
-          : addressObject.community.code,
-      postalCode: addressObject.postalCode,
-      stateProvinceCode:
-        addressObject.stateProvince === null
-          ? null
-          : addressObject.stateProvince.code
-    };
-
-    return address;
-  }
-
   /**
    * Checks if the form is partially completed or not
    *
@@ -308,5 +286,56 @@ export class StepCreateEssFileService {
 
     const result = fields.filter((field) => !!field);
     return result.length !== 0;
+  }
+
+  /**
+   * Transforms an AddressModel Object into an Address Object
+   *
+   * @param addressObject
+   * @returns
+   */
+  private setAddressObject(addressObject: AddressModel): Address {
+    const address: Address = {
+      addressLine1: addressObject.addressLine1,
+      addressLine2: addressObject.addressLine2,
+      countryCode: addressObject.country.code,
+      communityCode:
+        addressObject.community.code === undefined
+          ? null
+          : addressObject.community.code,
+      postalCode: addressObject.postalCode,
+      stateProvinceCode:
+        addressObject.stateProvince === null
+          ? null
+          : addressObject.stateProvince.code
+    };
+
+    return address;
+  }
+
+  private setHouseHoldMembersObject(
+    householdMembers: HouseholdMemberModel[]
+  ): HouseholdMember[] {
+    console.log(householdMembers);
+
+    const houseHoldMembersAPI: HouseholdMember[] = [];
+
+    for (const member of householdMembers) {
+      const details: PersonDetails = {
+        firstName: member.firstName,
+        lastName: member.lastName,
+        initials: member.initials,
+        dateOfBirth: member.dateOfBirth,
+        gender: member.gender
+      };
+
+      const householdMember: HouseholdMember = {
+        details
+      };
+
+      houseHoldMembersAPI.push(householdMember);
+    }
+
+    return houseHoldMembersAPI;
   }
 }

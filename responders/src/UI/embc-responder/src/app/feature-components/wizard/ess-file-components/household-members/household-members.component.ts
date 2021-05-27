@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -8,20 +8,21 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { DeleteHouseholdDialogComponent } from '../../../../shared/components/dialog-components/delete-household-dialog/delete-household-dialog.component';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-household-members',
   templateUrl: './household-members.component.html',
   styleUrls: ['./household-members.component.scss']
 })
-export class HouseholdMembersComponent implements OnInit {
+export class HouseholdMembersComponent implements OnInit, OnDestroy {
   householdForm: FormGroup;
   dataSource = new BehaviorSubject([]);
   data = [];
@@ -38,19 +39,40 @@ export class HouseholdMembersComponent implements OnInit {
     'dateOfBirth',
     'buttons'
   ];
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private dialog: MatDialog,
     private stepCreateEssFileService: StepCreateEssFileService,
     private formBuilder: FormBuilder,
-    private customValidation: CustomValidationService
+    private customValidation: CustomValidationService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    // Main form creation
     this.createHouseholdForm();
+
+    // Populating household members' table if data has been previously inserted
     if (this.stepCreateEssFileService.houseHoldMembers.length !== 0) {
       this.data = this.stepCreateEssFileService.houseHoldMembers;
+      this.dataSource.next(this.data);
     }
+
+    // Displaying household member form in case 'haveHouseholdMembers' has been set to true
+    if (
+      this.stepCreateEssFileService.haveHouseHoldMembers === true &&
+      this.stepCreateEssFileService.houseHoldMembers.length === 0
+    ) {
+      this.showMemberForm = true;
+    }
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateEssFileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   /**
@@ -205,8 +227,21 @@ export class HouseholdMembersComponent implements OnInit {
   //     .updateValueAndValidity();
   // }
 
-  back(): void {}
-  next(): void {}
+  back(): void {
+    this.router.navigate(['/ess-wizard/create-ess-file/evacuation-details']);
+  }
+  next(): void {
+    // this.stepCreateEssFileService.nextTabUpdate.next();
+    this.router.navigate(['/ess-wizard/create-ess-file/animals']);
+  }
+
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
+  ngOnDestroy(): void {
+    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
+  }
 
   private createHouseholdForm(): void {
     this.householdForm = this.formBuilder.group({
@@ -219,7 +254,7 @@ export class HouseholdMembersComponent implements OnInit {
       houseHoldMembers: [
         this.stepCreateEssFileService.houseHoldMembers.length !== 0
           ? this.stepCreateEssFileService.houseHoldMembers
-          : [new FormArray([this.createHoulseholdMemberForm()])],
+          : new FormArray([]),
         this.customValidation
           .conditionalValidation(
             () => this.householdForm.get('haveHouseholdMembers').value === true,
@@ -282,47 +317,64 @@ export class HouseholdMembersComponent implements OnInit {
 
   private createHoulseholdMemberForm(): FormGroup {
     return this.formBuilder.group({
-      firstName: [
-        this.stepCreateEssFileService?.houseHoldMember?.firstName !== undefined
-          ? this.stepCreateEssFileService.houseHoldMember.firstName
-          : '',
-        [this.customValidation.whitespaceValidator()]
-      ],
-      lastName: [
-        this.stepCreateEssFileService?.houseHoldMember?.lastName !== undefined
-          ? this.stepCreateEssFileService.houseHoldMember.lastName
-          : '',
-        [this.customValidation.whitespaceValidator()]
-      ],
-      dateOfBirth: [
-        this.stepCreateEssFileService?.houseHoldMember?.dateOfBirth !==
-        undefined
-          ? this.stepCreateEssFileService.houseHoldMember.dateOfBirth
-          : '',
-        [Validators.required]
-      ],
-      gender: [
-        this.stepCreateEssFileService?.houseHoldMember?.gender !== undefined
-          ? this.stepCreateEssFileService.houseHoldMember?.gender
-          : '',
-        [Validators.required]
-      ],
-      initials: [
-        this.stepCreateEssFileService?.houseHoldMember?.initials !== undefined
-          ? this.stepCreateEssFileService.houseHoldMember.initials
-          : ''
-      ],
-      preferredName: [
-        this.stepCreateEssFileService?.houseHoldMember?.preferredName !==
-        undefined
-          ? this.stepCreateEssFileService.houseHoldMember.preferredName
-          : ''
-      ],
-      sameLastNameCheck: [
-        this.stepCreateEssFileService?.sameLastNameChecK !== null
-          ? this.stepCreateEssFileService.sameLastNameChecK
-          : ''
-      ]
+      firstName: ['', [this.customValidation.whitespaceValidator()]],
+      lastName: ['', [this.customValidation.whitespaceValidator()]],
+      dateOfBirth: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      initials: [''],
+      preferredName: [''],
+      sameLastNameCheck: [false]
     });
+  }
+
+  /**
+   * Updates the Tab Status from Incomplete, Complete or in Progress
+   */
+  private updateTabStatus() {
+    if (this.householdForm.valid) {
+      this.stepCreateEssFileService.setTabStatus(
+        'household-members',
+        'complete'
+      );
+    } else if (
+      this.stepCreateEssFileService.checkForPartialUpdates(this.householdForm)
+    ) {
+      this.stepCreateEssFileService.setTabStatus(
+        'household-members',
+        'incomplete'
+      );
+    } else {
+      this.stepCreateEssFileService.setTabStatus(
+        'household-members',
+        'not-started'
+      );
+    }
+    this.saveFormData();
+  }
+
+  /**
+   * Saves information inserted inthe form into the service
+   */
+  private saveFormData() {
+    this.stepCreateEssFileService.haveHouseHoldMembers = this.householdForm.get(
+      'haveHouseholdMembers'
+    ).value;
+    this.stepCreateEssFileService.houseHoldMembers = this.householdForm.get(
+      'houseHoldMembers'
+    ).value;
+    this.stepCreateEssFileService.haveSpecialDieT = this.householdForm.get(
+      'haveSpecialDiet'
+    ).value;
+    this.stepCreateEssFileService.specialDietDetailS = this.householdForm.get(
+      'specialDietDetails'
+    ).value;
+    this.stepCreateEssFileService.haveMedicatioN = this.householdForm.get(
+      'haveMedication'
+    ).value;
+    this.stepCreateEssFileService.medicationSupplY = this.householdForm.get(
+      'medicationSupply'
+    ).value;
+
+    this.stepCreateEssFileService.createNeedsAssessmentDTO();
   }
 }
