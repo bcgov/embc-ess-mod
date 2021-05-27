@@ -90,5 +90,6 @@ namespace EMBC.ESS.Resources.Contacts
         public int Id { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
+        public bool AnswerIsMasked { get; set; } = true;
     }
 }

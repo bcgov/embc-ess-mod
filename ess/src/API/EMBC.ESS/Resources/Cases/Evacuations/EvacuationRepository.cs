@@ -146,7 +146,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return essFileNumber;
         }
 
-        private async Task<EvacuationFile> GetEvacuationFileById(Guid id)
+        private async Task<EvacuationFile> GetEvacuationFileById(Guid id, bool maskSecurityPhrase = true)
         {
             var dynamicsFile = await essContext.era_evacuationfiles
                 .ByKey(id)
@@ -158,7 +158,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.LoadProperty(dynamicsFile.era_Jurisdiction, nameof(era_jurisdiction.era_RelatedProvinceState));
             essContext.LoadProperty(dynamicsFile.era_Jurisdiction.era_RelatedProvinceState, nameof(era_provinceterritories.era_RelatedCountry));
 
-            var file = mapper.Map<EvacuationFile>(dynamicsFile);
+            var file = mapper.Map<EvacuationFile>(dynamicsFile, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
             foreach (var na in file.NeedsAssessments)
             {
                 var evacuees = essContext.era_needsassessmentevacuees
@@ -204,7 +204,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return await Task.FromResult(evacuationFiles);
         }
 
-        public async Task<EvacuationFile> Read(string essFileNumber)
+        public async Task<EvacuationFile> Read(string essFileNumber, bool maskSecurityPhrase = true)
         {
             //TODO: change to singleordefault
             var evacuationFileId = essContext.era_evacuationfiles
@@ -216,7 +216,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             essContext.DetachAll();
 
-            var file = await GetEvacuationFileById(evacuationFileId.Value);
+            var file = await GetEvacuationFileById(evacuationFileId.Value, maskSecurityPhrase);
 
             essContext.DetachAll();
             return file;

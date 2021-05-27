@@ -183,7 +183,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("profile")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpsertRegistrantProfile(EvacueeProfile evacuee)
+        public async Task<ActionResult<string>> UpsertRegistrantProfile(EvacueeProfile evacuee)
         {
             if (evacuee == null) return BadRequest();
 
@@ -192,7 +192,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 Profile = profile
             });
-            return Ok(new { Id = id });
+            return Ok(id);
         }
     }
 

@@ -20,6 +20,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Cases;
+using EMBC.ESS.Resources.Cases.Evacuations;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Notifications;
@@ -31,6 +32,7 @@ namespace EMBC.ESS.Managers.Submissions
     {
         private readonly IMapper mapper;
         private readonly IContactRepository contactRepository;
+        private readonly IEvacuationRepository evacuationRepository;
         private readonly ITemplateProviderResolver templateProviderResolver;
         private readonly ICaseRepository caseRepository;
         private readonly ITransformator transformator;
@@ -39,6 +41,7 @@ namespace EMBC.ESS.Managers.Submissions
         public SubmissionsManager(
             IMapper mapper,
             IContactRepository contactRepository,
+            IEvacuationRepository evacuationRepository,
             ITemplateProviderResolver templateProviderResolver,
             ICaseRepository caseRepository,
             ITransformator transformator,
@@ -46,6 +49,7 @@ namespace EMBC.ESS.Managers.Submissions
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
+            this.evacuationRepository = evacuationRepository;
             this.templateProviderResolver = templateProviderResolver;
             this.caseRepository = caseRepository;
             this.transformator = transformator;
@@ -121,6 +125,43 @@ namespace EMBC.ESS.Managers.Submissions
                 MatchingFiles = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases),
                 MatchingRegistrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts),
             });
+        }
+
+        public async Task<VerifySecurityQuestionsResponse> Handle(VerifySecurityQuestionsQuery query)
+        {
+            IEnumerable<Contact> contacts = Array.Empty<Contact>();
+            contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = query.RegistrantId, MaskSecurityAnswers = false })).Items;
+            VerifySecurityQuestionsResponse ret = new VerifySecurityQuestionsResponse
+            {
+                NumberOfCorrectAnswers = 0
+            };
+
+            if (contacts.Count() == 1)
+            {
+                Contact contact = contacts.First();
+                if (contact.SecurityQuestions != null && contact.SecurityQuestions.Count() > 0)
+                {
+                    for (int i = 0; i < query.Answers.Count(); ++i)
+                    {
+                        Shared.Contracts.Submissions.SecurityQuestion question = query.Answers.ElementAt(i);
+                        string submittedAnswer = question.Answer;
+                        string savedAnswer = contact.SecurityQuestions.Where(q => q.Id == question.Id).FirstOrDefault().Answer;
+                        if (savedAnswer.ToLower().Equals(submittedAnswer.ToLower()))
+                        {
+                            ++ret.NumberOfCorrectAnswers;
+                        }
+                    }
+                }
+            }
+
+            return await Task.FromResult(ret);
+        }
+
+        public async Task<bool> Handle(VerifySecurityPhraseQuery query)
+        {
+            bool maskSecurityPhrase = false;
+            var file = await evacuationRepository.Read(query.FileId, maskSecurityPhrase);
+            return await Task.FromResult(file.SecurityPhrase.Equals(query.SecurityPhrase));
         }
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)
