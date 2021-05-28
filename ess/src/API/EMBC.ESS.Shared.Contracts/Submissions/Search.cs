@@ -153,9 +153,14 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public int NumberOfCorrectAnswers { get; set; }
     }
 
-    public class VerifySecurityPhraseQuery : Query<bool>
+    public class VerifySecurityPhraseQuery : Query<VerifySecurityPhraseResponse>
     {
         public string FileId { get; set; }
         public string SecurityPhrase { get; set; }
+    }
+
+    public class VerifySecurityPhraseResponse
+    {
+        public bool IsCorrect { get; set; }
     }
 }

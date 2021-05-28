@@ -58,6 +58,12 @@ namespace EMBC.ESS.Resources.Cases
         public string Id { get; set; }
     }
 
+    public class UpdateSecurityPhrase : ManageCaseCommand
+    {
+        public string Id { get; set; }
+        public string SecurityPhrase { get; set; }
+    }
+
     public class QueryEvacuationFiles : CaseQuery
     {
         public string FileId { get; set; }
@@ -71,7 +77,7 @@ namespace EMBC.ESS.Resources.Cases
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
-        public bool PhraseIsMasked { get; set; } = true;
+        public bool PhraseChanged { get; set; } = false;
         public DateTime EvacuationDate { get; internal set; }
     }
 

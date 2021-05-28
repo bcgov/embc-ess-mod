@@ -69,12 +69,12 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.era_preferredname, opts => opts.MapFrom(s => s.PreferredName))
                 .ForMember(d => d.emailaddress1, opts => opts.MapFrom(s => s.Email))
                 .ForMember(d => d.telephone1, opts => opts.MapFrom(s => s.Phone))
-                .ForMember(d => d.era_securityquestion1answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer))
-                .ForMember(d => d.era_securityquestion2answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer))
-                .ForMember(d => d.era_securityquestion3answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer))
-                .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question))
-                .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question))
-                .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question))
+                // .ForMember(d => d.era_securityquestion1answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer))
+                // .ForMember(d => d.era_securityquestion2answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer))
+                // .ForMember(d => d.era_securityquestion3answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer))
+                // .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question))
+                // .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question))
+                // .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question))
                 ;
 
             CreateMap<contact, Contact>()
