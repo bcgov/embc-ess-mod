@@ -327,8 +327,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             //file.PhraseIsMasked = false;
             //await manager.Handle(new SubmitEvacuationFileCommand { File = file });
             
-            var matches = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "SecretPhrase" });
-            matches.ShouldBeTrue();
+            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "SecretPhrase" });
+            response.IsCorrect.ShouldBeTrue();
         }
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)

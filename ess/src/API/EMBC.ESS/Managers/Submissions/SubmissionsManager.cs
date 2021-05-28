@@ -154,14 +154,18 @@ namespace EMBC.ESS.Managers.Submissions
                 }
             }
 
-            return await Task.FromResult(ret);
+            return ret;
         }
 
-        public async Task<bool> Handle(VerifySecurityPhraseQuery query)
+        public async Task<VerifySecurityPhraseResponse> Handle(VerifySecurityPhraseQuery query)
         {
             bool maskSecurityPhrase = false;
             var file = await evacuationRepository.Read(query.FileId, maskSecurityPhrase);
-            return await Task.FromResult(file.SecurityPhrase.Equals(query.SecurityPhrase));
+            VerifySecurityPhraseResponse ret = new VerifySecurityPhraseResponse
+            {
+                IsCorrect = file.SecurityPhrase.Equals(query.SecurityPhrase)
+            };
+            return ret;
         }
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)

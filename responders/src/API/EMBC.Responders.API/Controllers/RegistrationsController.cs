@@ -139,9 +139,9 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<VerifySecurityQuestionsResponse>> VerifySecurityQuestions(string registrantId, VerifySecurityQuestionsRequest request)
         {
-            VerifySecurityQuestionsQuery verifySecurityQuestionsQuery = new VerifySecurityQuestionsQuery { RegistrantId = registrantId, Answers = (IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion>)request.Answers };
+            VerifySecurityQuestionsQuery verifySecurityQuestionsQuery = new VerifySecurityQuestionsQuery { RegistrantId = registrantId, Answers = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion>>(request.Answers) };
             var response = await messagingClient.Send(verifySecurityQuestionsQuery);
-            return Ok(response);
+            return Ok(mapper.Map<VerifySecurityQuestionsResponse>(response));
         }
 
         /// <summary>
@@ -173,6 +173,10 @@ namespace EMBC.Responders.API.Controllers
             VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
             var isCorrect = await messagingClient.Send(verifySecurityPhraseQuery);
             return Ok(new VerifySecurityPhraseResponse { IsCorrect = isCorrect });
+
+            //this will be the replacement once the nuget package is updated for the query response
+            //var response = await messagingClient.Send(verifySecurityPhraseQuery);
+            //return Ok(mapper.Map<VerifySecurityPhraseResponse>(response));
         }
 
         /// <summary>
@@ -346,6 +350,10 @@ namespace EMBC.Responders.API.Controllers
     {
         public RegistrationsMapping()
         {
+            CreateMap<VerifySecurityQuestionsResponse, ESS.Shared.Contracts.Submissions.VerifySecurityQuestionsResponse>()
+                .ReverseMap()
+                ;
+
             CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
                 .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => s.Answer.Contains("*")))
                 .ReverseMap()
@@ -363,8 +371,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SecurityQuestions, opts => opts.MapFrom(s => s.SecurityQuestions))
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
-                .ForMember(d => d.MailingAddress, opts => opts.MapFrom(s => s.MailingAddress))
-                .ForMember(d => d.PrimaryAddress, opts => opts.MapFrom(s => s.PrimaryAddress))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.PersonalDetails.DateOfBirth))
