@@ -357,6 +357,24 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return updatedEvacuationFile.era_name;
         }
 
+        public async Task<string> UpdateSecurityPhrase(string essFileNumber, string securityPhrase)
+        {
+            var evacuationFile = essContext.era_evacuationfiles
+                .Where(f => f.era_name == essFileNumber)
+                .ToArray()
+                .FirstOrDefault();
+
+            if (evacuationFile == null) return null;
+
+            evacuationFile.era_securityphrase = securityPhrase;
+            essContext.UpdateObject(evacuationFile);
+            await essContext.SaveChangesAsync();
+
+            essContext.DetachAll();
+
+            return evacuationFile.era_name;
+        }
+
         private Guid? GetContactIdForBcscId(string bcscId) =>
       string.IsNullOrEmpty(bcscId)
           ? null

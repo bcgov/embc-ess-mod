@@ -55,6 +55,12 @@ namespace EMBC.ESS.Resources.Contacts
         public string ContactId { get; set; }
     }
 
+    public class UpdateSecurityQuestions : ContactCommand
+    {
+        public string ContactId { get; set; }
+        public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
+    }
+
     public class Contact
     {
         public string Id { get; set; }

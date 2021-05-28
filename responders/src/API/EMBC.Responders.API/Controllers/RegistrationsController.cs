@@ -290,6 +290,7 @@ namespace EMBC.Responders.API.Controllers
         public int Id { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
+        public bool AnswerChanged { get; set; }
     }
 
     public class GetSecurityQuestionsResponse
@@ -355,7 +356,8 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
-                .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => s.Answer.Contains("*")))
+                //This line can get removed once nuget package is updated
+                .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => !s.AnswerChanged))
                 .ReverseMap()
                 ;
 

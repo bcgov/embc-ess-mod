@@ -299,12 +299,12 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             //var registrant = await GetRegistrantByUserId("CHRIS-TEST");
 
             //List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
-            //securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1", AnswerIsMasked = false });
-            //securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2", AnswerIsMasked = false });
-            //securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3", AnswerIsMasked = false });
+            //securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1", AnswerChanged = true });
+            //securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2", AnswerChanged = true });
+            //securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3", AnswerChanged = true });
 
             //registrant.SecurityQuestions = securityQuestions;
-            //await GetRegistrantByUserId("CHRIS-TEST");
+            //await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
             List<SecurityQuestion> answers = new List<SecurityQuestion>();
             answers.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });
@@ -319,14 +319,14 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVerifySecurityPhrase()
         {
-            string fileId = "100504";
+            string fileId = "100495";
 
             //If you need to set the security phrase for testing.
             //var file = (await GetEvacuationFileById(fileId)).FirstOrDefault();
             //file.SecurityPhrase = "SecretPhrase";
-            //file.PhraseIsMasked = false;
+            //file.PhraseChanged = true;
             //await manager.Handle(new SubmitEvacuationFileCommand { File = file });
-            
+
             var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "SecretPhrase" });
             response.IsCorrect.ShouldBeTrue();
         }

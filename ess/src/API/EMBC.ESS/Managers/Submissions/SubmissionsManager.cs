@@ -86,6 +86,8 @@ namespace EMBC.ESS.Managers.Submissions
 
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).CaseId;
 
+            if (cmd.File.PhraseChanged) await caseRepository.ManageCase(new UpdateSecurityPhrase { Id = file.Id, SecurityPhrase = file.SecurityPhrase });
+
             if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
             {
                 //notify registrant of the new file and has email
@@ -163,7 +165,7 @@ namespace EMBC.ESS.Managers.Submissions
             var file = await evacuationRepository.Read(query.FileId, maskSecurityPhrase);
             VerifySecurityPhraseResponse ret = new VerifySecurityPhraseResponse
             {
-                IsCorrect = file.SecurityPhrase.Equals(query.SecurityPhrase)
+                IsCorrect = file.SecurityPhrase.ToLower().Equals(query.SecurityPhrase.ToLower())
             };
             return ret;
         }
@@ -173,6 +175,11 @@ namespace EMBC.ESS.Managers.Submissions
             if (cmd.Profile.SecurityQuestions.Count() > 3) throw new Exception($"Registrant can have a max of 3 Security Questions");
             var contact = mapper.Map<Contact>(cmd.Profile);
             var result = await contactRepository.ManageContact(new SaveContact { Contact = contact });
+
+            if (cmd.Profile.SecurityQuestions.Where(s => s.AnswerChanged).Any())
+            {
+                await contactRepository.ManageContact(new UpdateSecurityQuestions { ContactId = contact.Id, SecurityQuestions = contact.SecurityQuestions });
+            }
 
             if (string.IsNullOrEmpty(cmd.Profile.Id))
             {

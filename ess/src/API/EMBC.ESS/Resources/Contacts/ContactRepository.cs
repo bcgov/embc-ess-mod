@@ -42,6 +42,7 @@ namespace EMBC.ESS.Resources.Contacts
             {
                 nameof(SaveContact) => await HandleSaveContact((SaveContact)cmd),
                 nameof(DeleteContact) => await HandleDeleteContact((DeleteContact)cmd),
+                nameof(UpdateSecurityQuestions) => await HandleUpdateSecurityQuestions((UpdateSecurityQuestions)cmd),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
@@ -100,6 +101,36 @@ namespace EMBC.ESS.Resources.Contacts
             if (contact != null)
             {
                 essContext.DeleteObject(contact);
+                await essContext.SaveChangesAsync();
+            }
+
+            essContext.DetachAll();
+
+            return new ContactCommandResult { ContactId = cmd.ContactId };
+        }
+
+        private async Task<ContactCommandResult> HandleUpdateSecurityQuestions(UpdateSecurityQuestions cmd)
+        {
+            var contact = essContext.contacts.Where(c => c.contactid == Guid.Parse(cmd.ContactId)).SingleOrDefault();
+            if (contact != null)
+            {
+                if (!cmd.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().AnswerIsMasked)
+                {
+                    contact.era_securityquestiontext1 = cmd.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question;
+                    contact.era_securityquestion1answer = cmd.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer;
+                }
+                if (!cmd.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().AnswerIsMasked)
+                {
+                    contact.era_securityquestiontext2 = cmd.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question;
+                    contact.era_securityquestion2answer = cmd.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer;
+                }
+                if (!cmd.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().AnswerIsMasked)
+                {
+                    contact.era_securityquestiontext3 = cmd.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question;
+                    contact.era_securityquestion3answer = cmd.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer;
+                }
+
+                essContext.UpdateObject(contact);
                 await essContext.SaveChangesAsync();
             }
 
