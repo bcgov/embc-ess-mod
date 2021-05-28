@@ -176,9 +176,11 @@ namespace EMBC.ESS.Managers.Submissions
             var contact = mapper.Map<Contact>(cmd.Profile);
             var result = await contactRepository.ManageContact(new SaveContact { Contact = contact });
 
-            if (cmd.Profile.SecurityQuestions.Where(s => s.AnswerChanged).Any())
+            var updatedQuestions = mapper.Map<IEnumerable<Resources.Contacts.SecurityQuestion>>(cmd.Profile.SecurityQuestions.Where(s => s.AnswerChanged));
+
+            if (updatedQuestions.Count() > 0)
             {
-                await contactRepository.ManageContact(new UpdateSecurityQuestions { ContactId = contact.Id, SecurityQuestions = contact.SecurityQuestions });
+                await contactRepository.ManageContact(new UpdateSecurityQuestions { ContactId = contact.Id, SecurityQuestions = updatedQuestions });
             }
 
             if (string.IsNullOrEmpty(cmd.Profile.Id))

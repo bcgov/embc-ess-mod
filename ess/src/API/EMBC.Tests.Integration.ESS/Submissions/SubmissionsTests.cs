@@ -296,15 +296,15 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanVerifySecurityQuestions()
         {
             //If you need to set the security answers for testing.
-            //var registrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
 
-            //List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
-            //securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1", AnswerChanged = true });
-            //securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2", AnswerChanged = true });
-            //securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3", AnswerChanged = true });
+            List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
+            securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1", AnswerChanged = true });
+            securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2", AnswerChanged = true });
+            securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3", AnswerChanged = true });
 
-            //registrant.SecurityQuestions = securityQuestions;
-            //await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
+            registrant.SecurityQuestions = securityQuestions;
+            await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
             List<SecurityQuestion> answers = new List<SecurityQuestion>();
             answers.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });

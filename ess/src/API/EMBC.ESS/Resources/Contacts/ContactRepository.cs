@@ -114,20 +114,24 @@ namespace EMBC.ESS.Resources.Contacts
             var contact = essContext.contacts.Where(c => c.contactid == Guid.Parse(cmd.ContactId)).SingleOrDefault();
             if (contact != null)
             {
-                if (!cmd.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().AnswerIsMasked)
+                var question1 = cmd.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault();
+                var question2 = cmd.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault();
+                var question3 = cmd.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault();
+
+                if (question1 != null)
                 {
-                    contact.era_securityquestiontext1 = cmd.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question;
-                    contact.era_securityquestion1answer = cmd.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer;
+                    contact.era_securityquestiontext1 = question1.Question;
+                    contact.era_securityquestion1answer = question1.Answer;
                 }
-                if (!cmd.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().AnswerIsMasked)
+                if (question2 != null)
                 {
-                    contact.era_securityquestiontext2 = cmd.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question;
-                    contact.era_securityquestion2answer = cmd.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer;
+                    contact.era_securityquestiontext2 = question2.Question;
+                    contact.era_securityquestion2answer = question2.Answer;
                 }
-                if (!cmd.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().AnswerIsMasked)
+                if (question3 != null)
                 {
-                    contact.era_securityquestiontext3 = cmd.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question;
-                    contact.era_securityquestion3answer = cmd.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer;
+                    contact.era_securityquestiontext3 = question3.Question;
+                    contact.era_securityquestion3answer = question3.Answer;
                 }
 
                 essContext.UpdateObject(contact);
