@@ -19,9 +19,8 @@ export class EvacueeProfileService {
     return this.registrationsService
       .registrationsUpsertRegistrantProfile({ body: evacProfile })
       .pipe(
-        map((profileData) => {
-          return ''; // Temporary workaround until endpoint returns ID
-          //return profileData.id;
+        map((profileId) => {
+          return profileId;
         })
       );
   }

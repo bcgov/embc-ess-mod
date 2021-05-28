@@ -220,11 +220,14 @@ export class StepCreateProfileService {
 
   public createProfileDTO(): EvacueeProfile {
     return {
-      contactDetails: this.contactDetails,
-      mailingAddress: this.setAddressObject(this.mailingAddressDetails),
-      personalDetails: this.personalDetails,
-      primaryAddress: this.setAddressObject(this.primaryAddressDetails),
       restriction: this.restrictedAccess,
+      personalDetails: this.personalDetails,
+      contactDetails: this.contactDetails,
+      primaryAddress: this.setAddressObject(this.primaryAddressDetails),
+      mailingAddress: this.setAddressObject(this.mailingAddressDetails),
+      isMailingAddressSameAsPrimaryAddress: this
+        .isMailingAddressSameAsPrimaryAddress,
+      securityQuestions: this.securityQuestions,
       verifiedUser: this.verifiedProfile
     };
   }
