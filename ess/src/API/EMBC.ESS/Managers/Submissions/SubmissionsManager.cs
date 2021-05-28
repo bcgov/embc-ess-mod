@@ -86,6 +86,8 @@ namespace EMBC.ESS.Managers.Submissions
 
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).CaseId;
 
+            if (cmd.File.PhraseChanged) await caseRepository.ManageCase(new UpdateSecurityPhrase { Id = file.Id, SecurityPhrase = file.SecurityPhrase });
+
             if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
             {
                 //notify registrant of the new file and has email
@@ -154,14 +156,18 @@ namespace EMBC.ESS.Managers.Submissions
                 }
             }
 
-            return await Task.FromResult(ret);
+            return ret;
         }
 
-        public async Task<bool> Handle(VerifySecurityPhraseQuery query)
+        public async Task<VerifySecurityPhraseResponse> Handle(VerifySecurityPhraseQuery query)
         {
             bool maskSecurityPhrase = false;
             var file = await evacuationRepository.Read(query.FileId, maskSecurityPhrase);
-            return await Task.FromResult(file.SecurityPhrase.Equals(query.SecurityPhrase));
+            VerifySecurityPhraseResponse ret = new VerifySecurityPhraseResponse
+            {
+                IsCorrect = file.SecurityPhrase.ToLower().Equals(query.SecurityPhrase.ToLower())
+            };
+            return ret;
         }
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)
@@ -169,6 +175,13 @@ namespace EMBC.ESS.Managers.Submissions
             if (cmd.Profile.SecurityQuestions.Count() > 3) throw new Exception($"Registrant can have a max of 3 Security Questions");
             var contact = mapper.Map<Contact>(cmd.Profile);
             var result = await contactRepository.ManageContact(new SaveContact { Contact = contact });
+
+            var updatedQuestions = mapper.Map<IEnumerable<Resources.Contacts.SecurityQuestion>>(cmd.Profile.SecurityQuestions.Where(s => s.AnswerChanged));
+
+            if (updatedQuestions.Count() > 0)
+            {
+                await contactRepository.ManageContact(new UpdateSecurityQuestions { ContactId = contact.Id, SecurityQuestions = updatedQuestions });
+            }
 
             if (string.IsNullOrEmpty(cmd.Profile.Id))
             {

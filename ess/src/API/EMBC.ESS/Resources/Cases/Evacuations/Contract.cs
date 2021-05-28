@@ -30,6 +30,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         Task<string> Update(EvacuationFile evacuationFile);
 
         Task<string> Delete(string essFileNumber);
+
+        Task<string> UpdateSecurityPhrase(string essFileNumber, string securityPhrase);
     }
 
     public enum EvacueeType
