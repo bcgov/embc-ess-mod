@@ -139,7 +139,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<VerifySecurityQuestionsResponse>> VerifySecurityQuestions(string registrantId, VerifySecurityQuestionsRequest request)
         {
-            VerifySecurityQuestionsQuery verifySecurityQuestionsQuery = new VerifySecurityQuestionsQuery { RegistrantId = registrantId, Answers = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion>>(request.Answers) };
+            VerifySecurityQuestionsQuery verifySecurityQuestionsQuery = new VerifySecurityQuestionsQuery { RegistrantId = registrantId, Answers = (IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion>)request.Answers };
             var response = await messagingClient.Send(verifySecurityQuestionsQuery);
             return Ok(response);
         }
@@ -173,10 +173,6 @@ namespace EMBC.Responders.API.Controllers
             VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
             var isCorrect = await messagingClient.Send(verifySecurityPhraseQuery);
             return Ok(new VerifySecurityPhraseResponse { IsCorrect = isCorrect });
-
-            //this will be the replacement once the nuget package is update for the query response
-            //var response = await messagingClient.Send(verifySecurityPhraseQuery);
-            //return Ok(response);
         }
 
         /// <summary>
@@ -290,7 +286,6 @@ namespace EMBC.Responders.API.Controllers
         public int Id { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
-        public bool AnswerIsMasked { get; set; }
     }
 
     public class GetSecurityQuestionsResponse
@@ -352,6 +347,7 @@ namespace EMBC.Responders.API.Controllers
         public RegistrationsMapping()
         {
             CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
+                .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => s.Answer.Contains("*")))
                 .ReverseMap()
                 ;
 
