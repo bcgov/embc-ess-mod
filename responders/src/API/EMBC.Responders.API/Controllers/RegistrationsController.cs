@@ -139,10 +139,9 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<VerifySecurityQuestionsResponse>> VerifySecurityQuestions(string registrantId, VerifySecurityQuestionsRequest request)
         {
-            return Ok(await Task.FromResult(new VerifySecurityQuestionsResponse
-            {
-                NumberOfCorrectAnswers = request.Answers.Where(q => q.Answer.EndsWith(q.Id.ToString())).Count()
-            }));
+            VerifySecurityQuestionsQuery verifySecurityQuestionsQuery = new VerifySecurityQuestionsQuery { RegistrantId = registrantId, Answers = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion>>(request.Answers) };
+            var response = await messagingClient.Send(verifySecurityQuestionsQuery);
+            return Ok(response);
         }
 
         /// <summary>
@@ -171,8 +170,13 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<VerifySecurityPhraseResponse>> VerifySecurityPhrase(string fileId, VerifySecurityPhraseRequest request)
         {
-            var isCorrect = request.Answer.Equals("true", StringComparison.InvariantCultureIgnoreCase);
-            return Ok(await Task.FromResult(new VerifySecurityPhraseResponse { IsCorrect = isCorrect }));
+            VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
+            var isCorrect = await messagingClient.Send(verifySecurityPhraseQuery);
+            return Ok(new VerifySecurityPhraseResponse { IsCorrect = isCorrect });
+
+            //this will be the replacement once the nuget package is update for the query response
+            //var response = await messagingClient.Send(verifySecurityPhraseQuery);
+            //return Ok(response);
         }
 
         /// <summary>
@@ -286,6 +290,7 @@ namespace EMBC.Responders.API.Controllers
         public int Id { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
+        public bool AnswerIsMasked { get; set; }
     }
 
     public class GetSecurityQuestionsResponse
@@ -350,12 +355,20 @@ namespace EMBC.Responders.API.Controllers
                 .ReverseMap()
                 ;
 
+            CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
+                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
+                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
+                .ReverseMap()
+                .ForMember(d => d.City, opts => opts.Ignore())
+                ;
+
             CreateMap<EvacueeProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
                 .ForMember(d => d.SecurityQuestions, opts => opts.MapFrom(s => s.SecurityQuestions))
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
-                .ForMember(d => d.MailingAddress, opts => opts.Ignore())
-                .ForMember(d => d.PrimaryAddress, opts => opts.Ignore())
+                .ForMember(d => d.MailingAddress, opts => opts.MapFrom(s => s.MailingAddress))
+                .ForMember(d => d.PrimaryAddress, opts => opts.MapFrom(s => s.PrimaryAddress))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.PersonalDetails.DateOfBirth))
