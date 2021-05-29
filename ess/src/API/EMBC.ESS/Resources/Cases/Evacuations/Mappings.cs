@@ -47,6 +47,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 ;
 
             CreateMap<EvacuationAddress, era_evacuationfile>(MemberList.None)
@@ -98,6 +99,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             CreateMap<era_householdmember, HouseholdMember>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_householdmemberid.ToString()))
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.MapFrom(s => s.era_Registrant.contactid))
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_Registrant.era_restriction))
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.era_isprimaryregistrant))
                 .ForMember(d => d.IsUnder19, opts => opts.MapFrom(s => s.era_isunder19))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_Registrant.firstname.ToString()))
@@ -134,6 +136,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                     ? null
                     : $"{s.birthdate.Value.Month:D2}/{s.birthdate.Value.Day:D2}/{s.birthdate.Value.Year:D4}"))
                 .ForMember(d => d.IsUnder19, opts => opts.MapFrom(s => s.birthdate.HasValue ? CheckIfUnder19Years(s.birthdate.Value, Date.Now) : (bool?)null))
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_restriction ?? false))
                ;
 
             CreateMap<era_needsassessmentanimal, Pet>()

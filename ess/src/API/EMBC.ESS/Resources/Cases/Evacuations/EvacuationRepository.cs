@@ -37,14 +37,14 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             this.mapper = mapper;
         }
 
-        public async Task<string> Create(EvacuationFile evacuationFile)
+        public async Task<string> Create(EvacuationFile file)
         {
-            if (string.IsNullOrEmpty(evacuationFile.PrimaryRegistrantId)) throw new Exception($"The file has no associated primary registrant");
+            if (string.IsNullOrEmpty(file.PrimaryRegistrantId)) throw new Exception($"The file has no associated primary registrant");
 
-            var primaryContact = essContext.contacts.Where(c => c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
-            if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
+            var primaryContact = essContext.contacts.Where(c => c.contactid == Guid.Parse(file.PrimaryRegistrantId)).SingleOrDefault();
+            if (primaryContact == null) throw new Exception($"Primary registrant {file.PrimaryRegistrantId} not found");
 
-            var eraEvacuationFile = mapper.Map<era_evacuationfile>(evacuationFile);
+            var eraEvacuationFile = mapper.Map<era_evacuationfile>(file);
 
             eraEvacuationFile.era_evacuationfileid = Guid.NewGuid();
             eraEvacuationFile.era_evacuationfiledate = DateTimeOffset.UtcNow;
@@ -52,18 +52,16 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.AddToera_evacuationfiles(eraEvacuationFile);
             essContext.AddLink(primaryContact, nameof(primaryContact.era_evacuationfile_Registrant), eraEvacuationFile);
             essContext.SetLink(eraEvacuationFile, nameof(era_evacuationfile.era_Registrant), primaryContact);
-            essContext.AddLink(essContext.LookupJurisdictionByCode(evacuationFile.EvacuatedFromAddress.Community), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
+            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.Community), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
 
-            foreach (var needsAssessment in evacuationFile.NeedsAssessments)
+            foreach (var needsAssessment in file.NeedsAssessments)
             {
-                var eraNeedsAssessment = mapper.Map<era_needassessment>(needsAssessment);
-                var primaryRegistrantMember = new era_householdmember
+                if (needsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId == null) == 1)
                 {
-                    era_Registrant = primaryContact,
-                    era_isprimaryregistrant = true,
-                    era_isunder19 = primaryContact.birthdate.HasValue ? (bool?)null : Mappings.CheckIfUnder19Years(primaryContact.birthdate.Value, Date.Now)
-                };
-                var members = mapper.Map<IEnumerable<era_householdmember>>(needsAssessment.HouseholdMembers).Prepend(primaryRegistrantMember);
+                    throw new Exception($"File {file.Id} must have a single primary registrant household member");
+                }
+                var eraNeedsAssessment = mapper.Map<era_needassessment>(needsAssessment);
+                var members = mapper.Map<IEnumerable<era_householdmember>>(needsAssessment.HouseholdMembers);
                 var pets = mapper.Map<IEnumerable<era_needsassessmentanimal>>(needsAssessment.Pets);
 
                 CreateNeedsAssessment(eraEvacuationFile, eraNeedsAssessment, members, pets);
@@ -83,7 +81,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<string> Update(EvacuationFile file)
         {
-            if (string.IsNullOrEmpty(file.PrimaryRegistrantId)) throw new Exception($"The file has no associated primary registrant");
+            if (string.IsNullOrEmpty(file.PrimaryRegistrantId)) throw new Exception($"File {file.Id} has no associated primary registrant");
 
             var existingEvacuationFile = essContext.era_evacuationfiles.Where(e => e.era_name == file.Id).SingleOrDefault();
 
@@ -104,14 +102,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             foreach (var needsAssessment in file.NeedsAssessments)
             {
-                var eraNeedsAssessment = mapper.Map<era_needassessment>(needsAssessment);
-                var primaryRegistrantMember = new era_householdmember
+                if (needsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId == null) == 1)
                 {
-                    era_Registrant = primaryContact,
-                    era_isprimaryregistrant = true,
-                    era_isunder19 = primaryContact.birthdate.HasValue ? (bool?)null : Mappings.CheckIfUnder19Years(primaryContact.birthdate.Value, Date.Now)
-                };
-                var members = mapper.Map<IEnumerable<era_householdmember>>(needsAssessment.HouseholdMembers).Prepend(primaryRegistrantMember);
+                    throw new Exception($"File {file.Id} must have a single primary registrant household member");
+                }
+                var eraNeedsAssessment = mapper.Map<era_needassessment>(needsAssessment);
+                var members = mapper.Map<IEnumerable<era_householdmember>>(needsAssessment.HouseholdMembers);
                 var pets = mapper.Map<IEnumerable<era_needsassessmentanimal>>(needsAssessment.Pets);
 
                 CreateNeedsAssessment(updatedEvacuationFile, eraNeedsAssessment, members, pets);
@@ -157,7 +153,20 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             member.era_householdmemberid = Guid.NewGuid();
             var contact = member.era_Registrant;
 
-            if (contact.era_registranttype == (int)RegistrantType.Member)
+            if (contact.contactid.HasValue)
+            {
+                //TODO: figure out a nicer way to handle already tracked primary contact handling
+                var trackedContact = (contact)essContext.EntityTracker.Entities.SingleOrDefault(e => e.Entity is contact c && c.contactid == contact.contactid).Entity;
+                if (trackedContact != null)
+                {
+                    contact = trackedContact;
+                }
+                else
+                {
+                    essContext.AttachTo(nameof(essContext.contacts), contact);
+                }
+            }
+            else
             {
                 contact.contactid = Guid.NewGuid();
                 contact.era_authenticated = false;
@@ -218,13 +227,15 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 {
                     essContext.LoadProperty(householdMember, nameof(era_householdmember.era_Registrant));
                 }
-                needsAssessment.HouseholdMembers = mapper.Map<IEnumerable<HouseholdMember>>(na.era_era_householdmember_era_needassessment).Where(m => !m.IsPrimaryRegistrant).ToArray();
+                needsAssessment.HouseholdMembers = mapper.Map<IEnumerable<HouseholdMember>>(na.era_era_householdmember_era_needassessment).ToArray();
 
                 essContext.LoadProperty(na, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment));
 
                 needsAssessment.Pets = mapper.Map<IEnumerable<Pet>>(na.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment);
                 return needsAssessment;
             }).ToArray();
+
+            file.RestrictedAccess = file.NeedsAssessments.SelectMany(na => na.HouseholdMembers).Any(m => m.RestrictedAccess);
 
             return file;
         }

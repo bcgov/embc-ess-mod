@@ -55,6 +55,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class EvacuationFile
     {
         public string Id { get; set; }
+        public string TaskId { get; set; }
+        public DateTime CreatedOn { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public bool RestrictedAccess { get; set; }
         public string PrimaryRegistrantId { get; set; }
@@ -76,7 +78,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class NeedsAssessment
     {
         public string Id { get; set; }
-        public string FileId { get; set; }
+        public DateTime CompletedOn { get; set; }
         public NeedsAssessmentType Type { get; set; }
         public InsuranceOption Insurance { get; set; }
         public bool? CanEvacueeProvideFood { get; set; }
@@ -129,7 +131,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string PreferredName { get; set; }
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
-        public bool isUnder19 { get; set; }
+        public bool IsUnder19 { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
     }
 

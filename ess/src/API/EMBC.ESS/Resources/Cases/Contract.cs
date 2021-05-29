@@ -82,6 +82,7 @@ namespace EMBC.ESS.Resources.Cases
         public bool IsSecretPhraseMasked { get; set; }
         public DateTime EvacuationDate { get; internal set; }
         public EvacuationFileStatus Status { get; set; }
+        public bool RestrictedAccess { get; set; }
     }
 
     public class EvacuationAddress
@@ -124,6 +125,7 @@ namespace EMBC.ESS.Resources.Cases
         public string DateOfBirth { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public string LinkedRegistrantId { get; set; }
+        public bool RestrictedAccess { get; set; }
     }
 
     public class Pet

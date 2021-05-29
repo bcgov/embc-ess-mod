@@ -95,47 +95,6 @@ namespace EMBC.ESS.Managers.Submissions
             return caseId;
         }
 
-        public async Task<SearchQueryResult> Handle(SearchQuery query)
-        {
-            IEnumerable<Contact> contacts = Array.Empty<Contact>();
-            IEnumerable<Case> cases = Array.Empty<Case>();
-            foreach (var criteria in query.SearchParameters)
-            {
-                if (criteria is RegistrantsSearchCriteria registrantsSearchCriteria)
-                {
-                    contacts = (await contactRepository.QueryContact(new SearchContactQuery
-                    {
-                        UserId = registrantsSearchCriteria.UserId,
-                        FirstName = registrantsSearchCriteria.FirstName,
-                        LastName = registrantsSearchCriteria.LastName,
-                        DateOfBirth = registrantsSearchCriteria.DateOfBirth,
-                        IncludeRestrictedAccess = registrantsSearchCriteria.IncludeRestrictedAccess
-                    })).Items;
-                }
-                else if (criteria is EvacuationFilesSearchCriteria evacuationFilesSearchCriteria)
-                {
-                    cases = (await caseRepository.QueryCase(new EvacuationFilesQuery
-                    {
-                        FileId = evacuationFilesSearchCriteria.FileId,
-                        PrimaryRegistrantId = evacuationFilesSearchCriteria.PrimaryRegistrantId,
-                        //PrimaryRegistrantUserId = evacuationFilesSearchCriteria.PrimaryRegistrantUserId,
-                        FirstName = evacuationFilesSearchCriteria.FirstName,
-                        LastName = evacuationFilesSearchCriteria.LastName,
-                        DateOfBirth = evacuationFilesSearchCriteria.DateOfBirth,
-                        //IncludeRestrictedAccess = evacuationFilesSearchCriteria.IncludeRestrictedAccess,
-                        IncludeHouseholdMembers = evacuationFilesSearchCriteria.IncludeHouseholdMembers,
-                        IncludeFilesInStatuses = evacuationFilesSearchCriteria.IncludeFilesInStatuses
-                    })).Items;
-                }
-            }
-
-            return await Task.FromResult(new SearchQueryResult()
-            {
-                MatchingFiles = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases),
-                MatchingRegistrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts),
-            });
-        }
-
         public async Task<string> Handle(SaveRegistrantCommand cmd)
         {
             if (cmd.Profile.SecurityQuestions.Count() > 3) throw new Exception($"Registrant can have a max of 3 Security Questions");
@@ -180,6 +139,49 @@ namespace EMBC.ESS.Managers.Submissions
                 Content = emailContent,
                 To = new[] { new EmailAddress { Name = name, Address = email } }
             });
+        }
+
+        public async Task<RegistrantsSearchQueryResult> Handle(RegistrantsSearchQuery query)
+        {
+            var contacts = (await contactRepository.QueryContact(new SearchContactQuery
+            {
+                UserId = query.UserId,
+                FirstName = query.FirstName,
+                LastName = query.LastName,
+                DateOfBirth = query.DateOfBirth
+            })).Items;
+            var registrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts);
+
+            var results = new List<RegistrantWithFiles>();
+            foreach (var registrant in registrants)
+            {
+                var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id }))
+                    .Items.Cast<Resources.Cases.EvacuationFile>();
+                results.Add(new RegistrantWithFiles
+                {
+                    RegistrantProfile = registrant,
+                    Files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(files)
+                });
+            }
+
+            return new RegistrantsSearchQueryResult { Items = results };
+        }
+
+        public async Task<EvacuationFilesSearchQueryResult> Handle(EvacuationFilesSearchQuery query)
+        {
+            var cases = (await caseRepository.QueryCase(new EvacuationFilesQuery
+            {
+                FileId = query.FileId,
+                PrimaryRegistrantId = query.PrimaryRegistrantId,
+                FirstName = query.FirstName,
+                LastName = query.LastName,
+                DateOfBirth = query.DateOfBirth,
+                IncludeHouseholdMembers = query.IncludeHouseholdMembers,
+                IncludeFilesInStatuses = query.IncludeFilesInStatuses
+            })).Items.Cast<Resources.Cases.EvacuationFile>();
+
+            var results = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
+            return new EvacuationFilesSearchQueryResult { Items = results };
         }
     }
 }

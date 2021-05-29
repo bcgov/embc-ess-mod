@@ -44,23 +44,23 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetEvacuationFilesByPrimaryRegistrantUserid()
         {
-            var primaryRegistrantId = await GetPrimaryRegistrantIdByUserId(TestUserId);
+            var primaryContact = await GetContactByUserId(TestUserId);
             var caseQuery = new EvacuationFilesQuery
             {
-                PrimaryRegistrantId = primaryRegistrantId,
+                PrimaryRegistrantId = primaryContact.Id,
                 Limit = 5
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
             queryResult.Items.ShouldNotBeEmpty();
 
-            queryResult.Items.Cast<EvacuationFile>().ShouldAllBe(f => f.PrimaryRegistrantId == primaryRegistrantId);
+            queryResult.Items.Cast<EvacuationFile>().ShouldAllBe(f => f.PrimaryRegistrantId == primaryContact.Id);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateEvacuationFile()
         {
-            var primaryRegistantId = await GetPrimaryRegistrantIdByUserId(TestUserId);
-            var originalFile = CreateTestFile(primaryRegistantId);
+            var primaryContact = await GetContactByUserId(TestUserId);
+            var originalFile = CreateTestFile(primaryContact);
             var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).CaseId;
 
             var caseQuery = new EvacuationFilesQuery
@@ -73,10 +73,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateEvacuationFile()
         {
-            var primaryRegistantId = await GetPrimaryRegistrantIdByUserId(TestUserId);
+            var primaryContact = await GetContactByUserId(TestUserId);
             var fileToUpdate = (await caseRepository.QueryCase(new EvacuationFilesQuery
             {
-                PrimaryRegistrantId = primaryRegistantId,
+                PrimaryRegistrantId = primaryContact.Id,
                 Limit = 2
             })).Items.Cast<EvacuationFile>().Last();
 
@@ -107,8 +107,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task CanMapEvacuationFile()
         {
             var now = DateTime.UtcNow;
-            var primaryRegistantId = await GetPrimaryRegistrantIdByUserId(TestUserId);
-            var originalFile = CreateTestFile(primaryRegistantId);
+            var primaryContact = await GetContactByUserId(TestUserId);
+            var originalFile = CreateTestFile(primaryContact);
             var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).CaseId;
 
             var caseQuery = new EvacuationFilesQuery
@@ -127,7 +127,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.EvacuatedFromAddress.StateProvince.ShouldBe(originalFile.EvacuatedFromAddress.StateProvince);
             evacuationFile.EvacuatedFromAddress.PostalCode.ShouldBe(originalFile.EvacuatedFromAddress.PostalCode);
             evacuationFile.EvacuationDate.ShouldBeInRange(now, DateTime.UtcNow);
-            evacuationFile.PrimaryRegistrantId.ShouldBe(primaryRegistantId);
+            evacuationFile.PrimaryRegistrantId.ShouldBe(primaryContact.Id);
 
             // Needs Assessments
             evacuationFile.NeedsAssessments.ShouldHaveSingleItem();
@@ -172,15 +172,15 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
-        private async Task<string> GetPrimaryRegistrantIdByUserId(string userId) =>
-            (await services.GetRequiredService<IContactRepository>().QueryContact(new ContactQuery { UserId = TestUserId })).Items.Single().Id;
+        private async Task<Contact> GetContactByUserId(string userId) =>
+            (await services.GetRequiredService<IContactRepository>().QueryContact(new ContactQuery { UserId = userId })).Items.Single();
 
-        private EvacuationFile CreateTestFile(string primaryRegistrantId)
+        private EvacuationFile CreateTestFile(Contact primaryContact)
         {
             var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
             var file = new EvacuationFile()
             {
-                PrimaryRegistrantId = primaryRegistrantId,
+                PrimaryRegistrantId = primaryContact.Id,
                 EvacuatedFromAddress = new EvacuationAddress()
                 {
                     AddressLine1 = $"{uniqueSignature}_3738 Main St",
@@ -207,6 +207,18 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         CanEvacueeProvideTransportation = true,
                         HouseholdMembers = new[]
                         {
+                            new HouseholdMember
+                            {
+                                FirstName = primaryContact.FirstName,
+                                LastName = primaryContact.LastName,
+                                PreferredName = primaryContact.PreferredName,
+                                Initials = primaryContact.Initials,
+                                Gender = primaryContact.Gender,
+                                DateOfBirth = primaryContact.DateOfBirth,
+                                IsUnder19 = false,
+                                IsPrimaryRegistrant = true,
+                                LinkedRegistrantId = primaryContact.Id
+                            },
                             new HouseholdMember
                             {
                                 FirstName = $"{uniqueSignature}_hm1",

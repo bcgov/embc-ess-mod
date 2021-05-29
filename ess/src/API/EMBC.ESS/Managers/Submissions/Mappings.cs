@@ -31,6 +31,7 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
             CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Cases.HouseholdMember>()
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 
