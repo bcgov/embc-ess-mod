@@ -25,11 +25,14 @@ namespace EMBC.Registrants.API.Mappers
         {
             CreateMap<AnonymousRegistration, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
+                .ForMember(d => d.TaskId, opts => opts.Ignore())
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => EvacuationFileStatus.Pending))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => DateTime.Now))
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => DateTime.Now))
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => new[] { s.PreliminaryNeedsAssessment }))
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => (string)null))
+                .ForMember(d => d.IsSecretPhraseMasked, opts => opts.MapFrom(s => !s.SecretPhraseEdited))
                 ;
 
             CreateMap<Profile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
@@ -38,7 +41,6 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.VerifiedUser, opts => opts.Ignore())
                 .ForMember(d => d.UserId, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.PersonalDetails.DateOfBirth))
-                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.PersonalDetails.DateOfBirth))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.PersonalDetails.LastName))
                 .ForMember(d => d.Gender, opts => opts.MapFrom(s => s.PersonalDetails.Gender))
@@ -46,6 +48,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.PersonalDetails.PreferredName))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
+                .ForMember(d => d.SecurityQuestions, opts => opts.Ignore())
 
                 .ReverseMap()
                 ;
@@ -55,7 +58,7 @@ namespace EMBC.Registrants.API.Mappers
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
-                .ForMember(d => d.FileId, opts => opts.Ignore())
+                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => DateTime.Now))
                 ;
 
             CreateMap<HouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
@@ -65,6 +68,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.Gender, opts => opts.MapFrom(s => s.Details.Gender))
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.Details.Initials))
                 .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.Details.PreferredName))
+                .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
                 ;
 
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
@@ -72,9 +76,12 @@ namespace EMBC.Registrants.API.Mappers
 
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
+                .ForMember(d => d.TaskId, opts => opts.Ignore())
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.Ignore())
+                .ForMember(d => d.IsSecretPhraseMasked, opts => opts.MapFrom(s => !s.SecretPhraseEdited))
                 ;
         }
     }
