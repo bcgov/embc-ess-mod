@@ -130,6 +130,7 @@ namespace EMBC.Responders.API
             services.Configure<MessagingOptions>(configuration.GetSection("backend"));
             services.AddMessaging();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
             services.AddDistributedMemoryCache();
             services.AddTransient<ICache, Cache>();
         }
