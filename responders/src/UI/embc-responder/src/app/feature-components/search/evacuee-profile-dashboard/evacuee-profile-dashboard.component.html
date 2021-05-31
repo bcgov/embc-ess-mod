@@ -12,22 +12,25 @@
 
 <div class="row status-row-margin">
   <div class="col-md-5">
-    <img src="/assets/images/verification.svg" height="34" width="34" />
+    <img src="/assets/images/unverified.svg" height="34" width="34" />
     <span class="status">Verification Status: <b>Some Value</b></span>
+
     <a class="info-test" (click)="openStatusDefinition()">
       <img src="/assets/images/info.svg" height="32" width="32" />
       <img src="/assets/images/info-on-hover.svg" height="32" width="32"
     /></a>
-    <button class="button-p verify-button" mat-button>Verify</button>
+    <button class="button-p verify-button" (click)="verifyEvacuee()" mat-button>
+      Verify
+    </button>
   </div>
-  <div class="col-md-1">
+  <div class="col-md-1 divider">
     <img src="/assets/images/vertical-line.svg" height="41" width="2" />
   </div>
   <div class="col-md-3">
     <img src="/assets/images/unlock.svg" height="31" width="21" />
     <span class="status">Restriction Status: <b>Some Value</b></span>
   </div>
-  <div class="col-md-1">
+  <div class="col-md-1 divider">
     <img src="/assets/images/vertical-line.svg" height="41" width="2" />
   </div>
   <div class="col">
@@ -38,11 +41,12 @@
 
 <div class="row banner">
   <div class="col-md-8 center-content">
-    <p class="margins">
-      <img src="/assets/images/exclaimation.svg" height="32" width="32" />
-      <span class="banner-heading">Create a New ESS File:</span> Create a New
-      ESS File if the evacuee does not have an ESS file for their evacuation.
-    </p>
+    <img src="/assets/images/exclaimation.svg" height="32" width="32" />
+    <span class="banner-heading">Create a New ESS File:</span>
+    <span
+      >Create a New ESS File if the evacuee does not have an ESS file for their
+      evacuation.</span
+    >
   </div>
   <div class="col-md-4">
     <button class="button-p ess-file-button" mat-button>

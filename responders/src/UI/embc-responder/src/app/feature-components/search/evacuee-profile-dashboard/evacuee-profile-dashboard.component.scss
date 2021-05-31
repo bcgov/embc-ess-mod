@@ -8,7 +8,8 @@
 }
 
 .banner {
-  line-height: 70px;
+  //line-height: 70px;
+  padding: 20px;
   background-color: rgba(252, 186, 25, 1);
 }
 
@@ -28,7 +29,7 @@
 
 .ess-file-button {
   height: 35px !important;
-  width: 50%;
+  //width: 50%;
 }
 
 .status {
@@ -40,7 +41,7 @@
 
 .verify-button {
   height: 35px !important;
-  margin-left: 8px;
+  margin-left: 10px;
   width: 30%;
 }
 
@@ -51,6 +52,7 @@
 
 .info-test {
     @extend .info-image;
+    margin-left: 10px;
 }
 
 .info-image img:last-child {
@@ -111,4 +113,8 @@
 
 .evacuee-info-row {
     padding: 30px
+}
+
+.divider {
+  max-width: 0 !important;
 }
