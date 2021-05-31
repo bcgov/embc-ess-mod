@@ -152,7 +152,7 @@
         </div>
 
         <div class="row">
-          <div class="col-8 additional-form" *ngIf="showMemberForm">
+          <div class="col-8" *ngIf="showMemberForm">
             <app-person-detail-form
               [personalDetailsForm]="houseHoldMemberFormGroup"
             >
@@ -224,8 +224,9 @@
               >Please specify</label
             >
             <br />
-            <mat-form-field appearance="outline" style="width: 70%">
+            <mat-form-field appearance="outline">
               <textarea
+                rows="10"
                 matInput
                 [formControlName]="'specialDietDetails'"
                 placeholder="Please write in the evacuees own words as much as possible. Do not include any medical information or irrelevant/ speculative personal details."

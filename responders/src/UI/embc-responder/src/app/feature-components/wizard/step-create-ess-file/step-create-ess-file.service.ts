@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import {
   HouseholdMember,
   InsuranceOption,
-  NeedsAssessment
+  NeedsAssessment,
+  Pet
 } from 'src/app/core/models/evacuation-file';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import * as globalConst from '../../../core/services/global-constants';
@@ -29,18 +30,30 @@ export class StepCreateEssFileService {
   private householdAffected: string;
   private emergencySupportServices: string;
   private referredServices: boolean;
-  private referredServiceDetails: string[] = [];
+  private referredServiceDetails: string[];
   private externalServices: string;
 
   private haveHouseholdMembers: boolean;
-  private householdMembers: HouseholdMemberModel[] = [];
-  // private householdMember: null | HouseholdMember;
+  private householdMembers: HouseholdMemberModel[];
   private haveSpecialDiet: boolean;
-  private specialDietDetails: null | string;
+  private specialDietDetails: string;
   private haveMedication: boolean;
-  private medicationSupply: null | boolean;
+  private medicationSupply: boolean;
+
+  private hasPets: boolean;
+  private pets: Pet[];
+  private hasPetsFood: boolean;
+  private petCareDetails: string;
+
+  private canEvacueeProvideClothing: boolean;
+  private canEvacueeProvideFood: boolean;
+  private canEvacueeProvideIncidentals: boolean;
+  private canEvacueeProvideLodging: boolean;
+  private canEvacueeProvideTransportation: boolean;
 
   constructor(private dialog: MatDialog) {}
+
+  // Contact Details Getters and Setters
 
   public get paperESSFiles(): string {
     return this.paperESSFile;
@@ -112,6 +125,8 @@ export class StepCreateEssFileService {
     this.externalServices = externalServices;
   }
 
+  // Household Members Getter and Setters
+
   public get haveHouseHoldMembers(): boolean {
     return this.haveHouseholdMembers;
   }
@@ -154,6 +169,79 @@ export class StepCreateEssFileService {
     this.medicationSupply = medicationSupply;
   }
 
+  // Animals Getters and Setters
+
+  public get hasPetS(): boolean {
+    return this.hasPets;
+  }
+  public set hasPetS(havePets: boolean) {
+    this.hasPets = havePets;
+  }
+
+  public get petS(): Pet[] {
+    return this.pets;
+  }
+  public set petS(pets: Pet[]) {
+    this.pets = pets;
+  }
+
+  public get hasPetsFooD(): boolean {
+    return this.hasPetsFood;
+  }
+  public set hasPetsFooD(hasPetsFood: boolean) {
+    this.hasPetsFood = hasPetsFood;
+  }
+
+  public get petCareDetailS(): string {
+    return this.petCareDetails;
+  }
+  public set petCareDetailS(petCareDetails: string) {
+    this.petCareDetails = petCareDetails;
+  }
+
+  // Needs Assessment Getters and Setters
+
+  public get canEvacueeProvideClothinG(): boolean {
+    return this.canEvacueeProvideClothing;
+  }
+  public set canEvacueeProvideClothinG(canEvacueeProvideClothing: boolean) {
+    this.canEvacueeProvideClothing = canEvacueeProvideClothing;
+  }
+
+  public get canEvacueeProvideFooD(): boolean {
+    return this.canEvacueeProvideFood;
+  }
+  public set canEvacueeProvideFooD(canEvacueeProvideFood: boolean) {
+    this.canEvacueeProvideFood = canEvacueeProvideFood;
+  }
+
+  public get canEvacueeProvideIncidentalS(): boolean {
+    return this.canEvacueeProvideIncidentals;
+  }
+  public set canEvacueeProvideIncidentalS(
+    canEvacueeProvideIncidentals: boolean
+  ) {
+    this.canEvacueeProvideIncidentals = canEvacueeProvideIncidentals;
+  }
+
+  public get canEvacueeProvideLodginG(): boolean {
+    return this.canEvacueeProvideLodging;
+  }
+  public set canEvacueeProvideLodginG(canEvacueeProvideLodging: boolean) {
+    this.canEvacueeProvideLodging = canEvacueeProvideLodging;
+  }
+
+  public get canEvacueeProvideTransportatioN(): boolean {
+    return this.canEvacueeProvideTransportation;
+  }
+  public set canEvacueeProvideTransportatioN(
+    canEvacueeProvideTransportation: boolean
+  ) {
+    this.canEvacueeProvideTransportation = canEvacueeProvideTransportation;
+  }
+
+  // Tabs Navigation Getters and Setters
+
   public get nextTabUpdate(): Subject<void> {
     return this.setNextTabUpdate;
   }
@@ -168,6 +256,12 @@ export class StepCreateEssFileService {
     this.essTabs = tabs;
   }
 
+  /**
+   * Set the given status to the given tab
+   *
+   * @param name of the tab
+   * @param status of the tab
+   */
   public setTabStatus(name: string, status: string): void {
     this.tabs.map((tab) => {
       if (tab.name === name) {
@@ -177,6 +271,11 @@ export class StepCreateEssFileService {
     });
   }
 
+  /**
+   * Generates a needsAssessment DTO to be sent to the API
+   *
+   * @returns NeedsAssessment DTO
+   */
   public createNeedsAssessmentDTO(): NeedsAssessment {
     console.log({
       paperESSFile: this.paperESSFile,
@@ -274,7 +373,11 @@ export class StepCreateEssFileService {
         | FormGroup
         | FormArray;
       if (control instanceof FormControl) {
-        fields.push(control.value);
+        if (control.value instanceof Object && control.value != null) {
+          fields.push(control.value.length);
+        } else {
+          fields.push(control.value);
+        }
       } else if (control instanceof FormGroup || control instanceof FormArray) {
         for (const key in control.controls) {
           if (control.controls.hasOwnProperty(key)) {
@@ -283,7 +386,6 @@ export class StepCreateEssFileService {
         }
       }
     });
-
     const result = fields.filter((field) => !!field);
     return result.length !== 0;
   }
@@ -313,6 +415,12 @@ export class StepCreateEssFileService {
     return address;
   }
 
+  /**
+   * Transforms a HouseholdMember Object into a Household Member Object
+   *
+   * @param householdMembers
+   * @returns
+   */
   private setHouseHoldMembersObject(
     householdMembers: HouseholdMemberModel[]
   ): HouseholdMember[] {

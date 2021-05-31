@@ -1,1 +1,49 @@
-<p>pet-form works!</p>
+<form [formGroup]="petForm">
+  <label class="card-heading">Add Pets</label
+  ><span class="required-symbol">*</span>
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Pet Type</mat-label>
+        <input
+          matInput
+          [formControlName]="'type'"
+          placeholder="Pet Type i.e. dog/cat/hamster"
+          maxlength="100"
+        />
+        <mat-error
+          *ngIf="
+            petFormControl.type.invalid &&
+            petFormControl.type.hasError('required')
+          "
+          >Pet Type is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field appearance="outline">
+        <mat-label>How Many?</mat-label>
+        <input
+          matInput
+          [formControlName]="'quantity'"
+          placeholder="How many"
+          maxlength="3"
+        />
+        <mat-error
+          *ngIf="
+            petFormControl.quantity.invalid &&
+            petFormControl.quantity.hasError('required')
+          "
+          >How many pets is required</mat-error
+        >
+        <mat-error
+          *ngIf="
+            petFormControl.quantity.invalid &&
+            petFormControl.quantity.hasError('pattern')
+          "
+          >Quantity is invalid</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+</form>

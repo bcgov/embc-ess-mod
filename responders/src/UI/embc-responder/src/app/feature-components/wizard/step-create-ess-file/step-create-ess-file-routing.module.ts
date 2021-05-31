@@ -34,6 +34,13 @@ const routes: Routes = [
           )
       },
       {
+        path: 'needs',
+        loadChildren: () =>
+          import('../ess-file-components/needs/needs.module').then(
+            (m) => m.NeedsModule
+          )
+      },
+      {
         path: 'review',
         loadChildren: () =>
           import(
