@@ -125,12 +125,8 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<VerifySecurityPhraseResponse>> VerifySecurityPhrase(string fileId, VerifySecurityPhraseRequest request)
         {
             VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
-            var isCorrect = (await messagingClient.Send(verifySecurityPhraseQuery)).IsCorrect;
-            return Ok(new VerifySecurityPhraseResponse { IsCorrect = isCorrect });
-
-            //this will be the replacement once the nuget package is updated for the query response
-            //var response = await messagingClient.Send(verifySecurityPhraseQuery);
-            //return Ok(mapper.Map<VerifySecurityPhraseResponse>(response));
+            var response = await messagingClient.Send(verifySecurityPhraseQuery);
+            return Ok(mapper.Map<VerifySecurityPhraseResponse>(response));
         }
 
         /// <summary>
@@ -305,13 +301,15 @@ namespace EMBC.Responders.API.Controllers
     {
         public RegistrationsMapping()
         {
+            CreateMap<VerifySecurityPhraseResponse, ESS.Shared.Contracts.Submissions.VerifySecurityPhraseResponse>()
+                .ReverseMap()
+                ;
+
             CreateMap<VerifySecurityQuestionsResponse, ESS.Shared.Contracts.Submissions.VerifySecurityQuestionsResponse>()
                 .ReverseMap()
                 ;
 
             CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
-                //This line can get removed once nuget package is updated
-                .ForMember(d => d.AnswerChanged, opts => opts.MapFrom(s => !s.AnswerChanged))
                 .ReverseMap()
                 ;
 
@@ -325,7 +323,7 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<EvacueeProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
                 .ForMember(d => d.SecurityQuestions, opts => opts.MapFrom(s => s.SecurityQuestions))
-                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.Restriction))
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
