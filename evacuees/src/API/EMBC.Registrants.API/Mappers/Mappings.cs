@@ -75,6 +75,7 @@ namespace EMBC.Registrants.API.Mappers
                 ;
 
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
+                .IncludeAllDerived()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
                 .ForMember(d => d.TaskId, opts => opts.Ignore())
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
@@ -82,6 +83,8 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.Ignore())
                 .ForMember(d => d.IsSecretPhraseMasked, opts => opts.MapFrom(s => !s.SecretPhraseEdited))
+                .ForMember(d => d.PhraseChanged, opts => opts.MapFrom(s => !s.SecretPhraseEdited))
+                .ForMember(d => d.SecurityPhrase, opts => opts.MapFrom(s => s.SecretPhrase))
                 ;
         }
     }
