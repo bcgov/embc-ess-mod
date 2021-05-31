@@ -19,7 +19,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Cases.Evacuations;
 using EMBC.ESS.Utilities.Dynamics;
-using Microsoft.OData.Edm;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -51,25 +50,18 @@ namespace EMBC.ESS.Resources.Cases
         {
             return query.GetType().Name switch
             {
-                nameof(QueryEvacuationFiles) => await HandleQueryEvacuationFile((QueryEvacuationFiles)query),
+                nameof(EvacuationFilesQuery) => await HandleQueryEvacuationFile((EvacuationFilesQuery)query),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
         }
 
-        public async Task<CaseQueryResult> HandleQueryEvacuationFile(QueryEvacuationFiles cmd)
+        public async Task<CaseQueryResult> HandleQueryEvacuationFile(EvacuationFilesQuery query)
         {
-            if (!string.IsNullOrEmpty(cmd.FileId))
-            {
-                return new CaseQueryResult { Items = new EvacuationFile[] { await evacuationRepository.Read(cmd.FileId) } };
-            }
-            else if (!string.IsNullOrEmpty(cmd.UserId))
-            {
-                return new CaseQueryResult { Items = await evacuationRepository.ReadAll(cmd.UserId) };
-            }
-            else
-            {
-                throw new NotImplementedException("Need to refactor this method");
-            }
+            var result = new CaseQueryResult();
+
+            result.Items = await evacuationRepository.ReadAll(query);
+
+            return result;
         }
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFile(SaveEvacuationFile cmd)
@@ -93,22 +85,5 @@ namespace EMBC.ESS.Resources.Cases
         {
             return new ManageCaseCommandResult { CaseId = await evacuationRepository.UpdateSecurityPhrase(cmd.Id, cmd.SecurityPhrase) };
         }
-
-        private bool CheckIfUnder19Years(Date birthdate, Date currentDate)
-        {
-            return birthdate.AddYears(19) >= currentDate;
-        }
-    }
-
-    public enum EvacueeType
-    {
-        Person = 174360000,
-        Pet = 174360001
-    }
-
-    public enum RegistrantType
-    {
-        Primary = 174360000,
-        Member = 174360001
     }
 }

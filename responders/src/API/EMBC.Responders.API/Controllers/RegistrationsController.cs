@@ -18,11 +18,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.Responders.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,11 +38,13 @@ namespace EMBC.Responders.API.Controllers
     {
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
+        private readonly IEvacuationSearchService evacuationSearchService;
 
-        public RegistrationsController(IMessagingClient messagingClient, IMapper mapper)
+        public RegistrationsController(IMessagingClient messagingClient, IMapper mapper, IEvacuationSearchService evacuationSearchService)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
+            this.evacuationSearchService = evacuationSearchService;
         }
 
         /// <summary>
@@ -51,61 +54,12 @@ namespace EMBC.Responders.API.Controllers
         /// <returns>matching files list and registrants list</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<SearchResults> Search([FromQuery] SearchParameters searchParameters)
+        public async Task<ActionResult<SearchResults>> Search([FromQuery] SearchParameters searchParameters)
         {
-            var address = new Address
-            {
-                AddressLine1 = "1 line1",
-                AddressLine2 = "1 line2",
-                City = "1 city",
-                PostalCode = "V1V 1V1",
-                CommunityCode = "6e69dfaf-9f97-ea11-b813-005056830319",
-                CountryCode = "CAN",
-                StateProvinceCode = "BC"
-            };
+            var userRole = Enum.Parse<MemberRole>(User.FindFirstValue("user_role"));
+            var searchResults = await evacuationSearchService.Search(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
 
-            var householdMember = new EvacuationFileHouseholdMember
-            {
-                FirstName = "first",
-                LastName = "last",
-                Type = HouseholdMemberType.HouseholdMember,
-                IsMatch = false
-            };
-
-            var applicant = new EvacuationFileHouseholdMember
-            {
-                FirstName = "first",
-                LastName = "last",
-                Type = HouseholdMemberType.MainApplicant,
-                IsMatch = true
-            };
-
-            var file = new EvacuationFileSearchResult
-            {
-                Id = "1234",
-                TaskId = "t1234",
-                CreatedOn = new DateTime(2021, 1, 1),
-                Status = EvacuationFileStatus.Active,
-                EvacuatedFrom = address,
-                IsRestricted = false,
-                HouseholdMembers = new[] { applicant, householdMember }
-            };
-
-            var registrant = new RegistrantProfileSearchResult
-            {
-                Id = "12345",
-                FirstName = searchParameters.firstName,
-                LastName = searchParameters.lastName,
-                CreatedOn = new DateTime(2021, 1, 1),
-                Status = RegistrantStatus.Verified,
-                PrimaryAddress = address,
-                EvacuationFiles = new[] { file, file },
-                IsRestricted = false
-            };
-
-            var registrants = new[] { registrant, registrant };
-            var files = new[] { file, file };
-            return await Task.FromResult(new SearchResults { Registrants = registrants, Files = files });
+            return Ok(searchResults);
         }
 
         /// <summary>
@@ -171,7 +125,7 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<VerifySecurityPhraseResponse>> VerifySecurityPhrase(string fileId, VerifySecurityPhraseRequest request)
         {
             VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
-            var isCorrect = await messagingClient.Send(verifySecurityPhraseQuery);
+            var isCorrect = (await messagingClient.Send(verifySecurityPhraseQuery)).IsCorrect;
             return Ok(new VerifySecurityPhraseResponse { IsCorrect = isCorrect });
 
             //this will be the replacement once the nuget package is updated for the query response
@@ -357,7 +311,7 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
                 //This line can get removed once nuget package is updated
-                .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => !s.AnswerChanged))
+                .ForMember(d => d.AnswerChanged, opts => opts.MapFrom(s => !s.AnswerChanged))
                 .ReverseMap()
                 ;
 

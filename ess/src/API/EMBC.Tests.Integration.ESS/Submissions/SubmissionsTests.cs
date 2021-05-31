@@ -119,7 +119,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSubmitNewEvacuation()
         {
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
             var textContextIdentifier = DateTime.Now.ToShortTimeString();
             var needsAssessment = new NeedsAssessment
             {
@@ -172,7 +172,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var fileId = await manager.Handle(cmd);
             fileId.ShouldNotBeNull();
 
-            var file = (await GetRegistrantFilesByPrimaryRegistrantId(registrant.UserId)).Where(f => f.Id == fileId).ShouldHaveSingleItem();
+            var file = (await GetRegistrantFilesByPrimaryRegistrantId(registrant.Id)).Where(f => f.Id == fileId).ShouldHaveSingleItem();
             file.PrimaryRegistrantId.ShouldBe(registrant.Id);
         }
 
@@ -182,8 +182,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
 
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
-            var file = (await GetRegistrantFilesByPrimaryRegistrantId(registrant.UserId)).Last();
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var file = (await GetRegistrantFilesByPrimaryRegistrantId(registrant.Id)).Last();
 
             file.Id.ShouldNotBeNullOrEmpty();
             file.EvacuationDate.ShouldNotBe(now);
@@ -199,7 +199,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateNewRegistrantProfile()
         {
-            var baseRegistrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var baseRegistrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
 
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             var country = "CAN";
@@ -217,7 +217,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
 
-            var newRegistrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull();
+            var newRegistrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull().RegistrantProfile;
 
             newRegistrant.Id.ShouldBe(id);
             newRegistrant.Id.ShouldNotBe(baseRegistrant.Id);
@@ -233,7 +233,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteRegistrantProfile()
         {
-            var baseRegistrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var baseRegistrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
 
             baseRegistrant.Id = null;
             baseRegistrant.UserId = Guid.NewGuid().ToString("N").Substring(0, 10);
@@ -249,7 +249,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateProfile()
         {
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
             var currentCity = registrant.PrimaryAddress.Community;
             var newCity = currentCity == "406adfaf-9f97-ea11-b813-005056830319"
                 ? "226adfaf-9f97-ea11-b813-005056830319"
@@ -260,7 +260,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
-            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
             updatedRegistrant.Email.ShouldBe(registrant.Email);
@@ -270,7 +270,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetRegistrantProfile()
         {
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
 
             registrant.ShouldNotBeNull();
 
@@ -280,16 +280,40 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             registrant.PrimaryAddress.StateProvince.ShouldNotBeNull();
             registrant.PrimaryAddress.Community.ShouldNotBeNull().ShouldNotBeNull();
             registrant.PrimaryAddress.Community.ShouldNotBeNull();
+
+            var registrants = (await GetRegistrantsByName("Elvis", "Presley")).Select(r => r.RegistrantProfile);
+
+            registrants.ShouldNotBeNull();
+            registrants.ShouldAllBe(r => r.FirstName == "Elvis");
+            registrants.ShouldAllBe(r => r.LastName == "Presley");
+
+            registrants = (await GetRegistrantsByNameAndBirthdate("Elvis", "Presley", "2010-01-01")).Select(r => r.RegistrantProfile);
+
+            registrants.ShouldNotBeNull();
+            registrants.ShouldBeEmpty();
+            //registrants.ShouldAllBe(r => r.FirstName == "Elvis");
+            //registrants.ShouldAllBe(r => r.LastName == "Presley");
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetEvacuationFiles()
+        public async Task CanGetEvacuationFilesByRegistrantUserName()
         {
-            var registrant = await GetRegistrantByUserId("CHRIS-TEST");
-            var files = await GetRegistrantFilesByPrimaryRegistrantId(registrant.UserId);
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var files = await GetRegistrantFilesByPrimaryRegistrantId(registrant.Id);
 
             files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.PrimaryRegistrantId == registrant.Id);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetEvacuationFilesByPersonalDetails()
+        {
+            var files = (await manager.Handle(new EvacuationFilesSearchQuery
+            {
+                FirstName = "Evac",
+            })).Items;
+
+            files.ShouldNotBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -311,7 +335,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             answers.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
             answers.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3" });
 
-            var num = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId= "CHRIS-TEST"  });
+            var num = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId = "CHRIS-TEST" });
 
             num.NumberOfCorrectAnswers.ShouldBe(answers.Count());
         }
@@ -331,37 +355,103 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             response.IsCorrect.ShouldBeTrue();
         }
 
-        private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)
+        private async Task<RegistrantWithFiles> GetRegistrantByUserId(string userId)
         {
-            return (await manager.Handle(new SearchQuery
-            {
-                SearchParameters = new[]
-                {
-                    new RegistrantsSearchCriteria{ UserId = userId }
-                }
-            })).MatchingRegistrants.SingleOrDefault();
+            return (await manager.Handle(new RegistrantsSearchQuery { UserId = userId })).Items.SingleOrDefault();
         }
 
-        private async Task<IEnumerable<EvacuationFile>> GetRegistrantFilesByPrimaryRegistrantId(string registrantUserId)
+        private async Task<IEnumerable<RegistrantWithFiles>> GetRegistrantsByName(string firstName, string lastName)
         {
-            return (await manager.Handle(new SearchQuery
+            return (await manager.Handle(new RegistrantsSearchQuery
             {
-                SearchParameters = new[]
-                {
-                    new EvacuationFilesSearchCriteria { PrimaryRegistrantUserId = registrantUserId }
-                }
-            })).MatchingFiles;
+                FirstName = firstName,
+                LastName = lastName
+            })).Items.ToList();
+        }
+
+        private async Task<IEnumerable<RegistrantWithFiles>> GetRegistrantsByNameAndBirthdate(string firstName, string lastName, string dateOfBirth)
+        {
+            return (await manager.Handle(new RegistrantsSearchQuery
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = dateOfBirth
+            })).Items.ToList();
+        }
+
+        private async Task<IEnumerable<EvacuationFile>> GetRegistrantFilesByPrimaryRegistrantId(string registrantId)
+        {
+            return (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantId = registrantId })).Items;
         }
 
         private async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(string fileId)
         {
-            return (await manager.Handle(new SearchQuery
+            return (await manager.Handle(new EvacuationFilesSearchQuery { FileId = fileId })).Items;
+        }
+
+        private EvacuationFile CreateTestFile(string primaryRegistrantId)
+        {
+            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
+            var file = new EvacuationFile()
             {
-                SearchParameters = new[]
+                PrimaryRegistrantId = primaryRegistrantId,
+                EvacuatedFromAddress = new Address()
                 {
-                    new EvacuationFilesSearchCriteria { FileId = fileId }
+                    AddressLine1 = $"{uniqueSignature}_3738 Main St",
+                    AddressLine2 = "Suite 3",
+                    Community = "9e6adfaf-9f97-ea11-b813-005056830319",
+                    StateProvince = "BC",
+                    Country = "CAN",
+                    PostalCode = "V8V 2W3"
+                },
+                NeedsAssessments = new[]
+                {
+                    new NeedsAssessment
+                    {
+                        Type = NeedsAssessmentType.Preliminary,
+                        HaveMedication = false,
+                        Insurance = InsuranceOption.Yes,
+                        HaveSpecialDiet = true,
+                        SpecialDietDetails = "Shellfish allergy",
+                        HasPetsFood = true,
+                        CanEvacueeProvideClothing = true,
+                        CanEvacueeProvideFood = true,
+                        CanEvacueeProvideIncidentals = true,
+                        CanEvacueeProvideLodging = true,
+                        CanEvacueeProvideTransportation = true,
+                        HouseholdMembers = new[]
+                        {
+                            new HouseholdMember
+                            {
+                                FirstName = $"{uniqueSignature}_hm1",
+                                LastName = "hm1",
+                                PreferredName = "hm1p",
+                                Initials = $"{uniqueSignature}_1",
+                                Gender = "X",
+                                DateOfBirth = "03/11/2000",
+                                IsUnder19 = false,
+                                IsPrimaryRegistrant = false
+                            },
+                             new HouseholdMember
+                            {
+                                FirstName = $"{uniqueSignature}_hm2",
+                                LastName = "hm2",
+                                PreferredName = "hm2p",
+                                Initials = $"{uniqueSignature}_2",
+                                Gender = "M",
+                                DateOfBirth = "03/12/2010",
+                                IsUnder19 = true,
+                                IsPrimaryRegistrant = false
+                            }
+                        },
+                        Pets = new[]
+                        {
+                            new Pet{ Type = $"{uniqueSignature}_Cat", Quantity = "1" }
+                        }
+                    }
                 }
-            })).MatchingFiles;
+            };
+            return file;
         }
     }
 }
