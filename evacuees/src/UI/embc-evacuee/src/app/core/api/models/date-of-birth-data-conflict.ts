@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 /* eslint-disable */
 import { ProfileDataConflict } from './profile-data-conflict';
 export interface DateOfBirthDataConflict extends ProfileDataConflict {

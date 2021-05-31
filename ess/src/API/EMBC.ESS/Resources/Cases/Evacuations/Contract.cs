@@ -23,24 +23,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
     {
         Task<string> Create(EvacuationFile evacuationFile);
 
-        Task<IEnumerable<EvacuationFile>> ReadAll(string userId);
-
-        Task<EvacuationFile> Read(string essFileNumber);
+        Task<IEnumerable<EvacuationFile>> ReadAll(EvacuationFilesQuery query);
 
         Task<string> Update(EvacuationFile evacuationFile);
 
         Task<string> Delete(string essFileNumber);
-    }
 
-    public enum EvacueeType
-    {
-        Person = 174360000,
-        Pet = 174360001
-    }
-
-    public enum RegistrantType
-    {
-        Primary = 174360000,
-        Member = 174360001
+        Task<string> UpdateSecurityPhrase(string essFileNumber, string securityPhrase);
     }
 }

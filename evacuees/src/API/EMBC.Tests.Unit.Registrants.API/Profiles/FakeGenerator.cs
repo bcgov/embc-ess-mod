@@ -25,7 +25,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             return new Faker<RegistrantProfile>()
                 .RuleFor(o => o.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(o => o.UserId, f => f.Random.String(10))
-                .RuleFor(o => o.SecretPhrase, f => f.Internet.Password())
+                //.RuleFor(o => o.SecretPhrase, f => f.Internet.Password())
                 .RuleFor(o => o.RestrictedAccess, f => f.Random.Bool())
 
                 .RuleFor(o => o.DateOfBirth, f => f.Date.Past(20).ToString("MM-dd-yyyy"))

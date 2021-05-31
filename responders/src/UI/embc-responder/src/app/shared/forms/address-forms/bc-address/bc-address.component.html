@@ -43,7 +43,7 @@
         <input
           maxlength="100"
           type="text"
-          [formControlName]="'jurisdiction'"
+          [formControlName]="'community'"
           matInput
           placeholder="City"
           [matAutocomplete]="auto"
@@ -59,8 +59,8 @@
         </mat-autocomplete>
         <mat-error
           *ngIf="
-            addressFormControl?.jurisdiction.invalid &&
-            addressFormControl?.jurisdiction.hasError('required')
+            addressFormControl?.community.invalid &&
+            addressFormControl?.community.hasError('required')
           "
         >
           City is required</mat-error

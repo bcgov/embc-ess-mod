@@ -7,7 +7,6 @@ import { ApiConfiguration } from './core/api/api-configuration';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-
   constructor(apiConfig: ApiConfiguration) {
     apiConfig.rootUrl = '';
   }

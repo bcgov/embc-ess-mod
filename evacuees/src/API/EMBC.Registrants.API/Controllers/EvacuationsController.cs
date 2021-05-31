@@ -145,6 +145,9 @@ namespace EMBC.Registrants.API.Controllers
 
         [Required]
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
+
+        public string SecretPhrase { get; set; }
+        public bool SecretPhraseEdited { get; set; }
     }
 
     /// <summary>
@@ -200,6 +203,7 @@ namespace EMBC.Registrants.API.Controllers
     public class HouseholdMember
     {
         public string Id { get; set; }
+        public bool IsPrimaryRegistrant { get; set; }
         public PersonDetails Details { get; set; }
         public bool isUnder19 { get; set; }
     }
@@ -216,13 +220,10 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Registration form for anonymous registrants
     /// </summary>
-    public class AnonymousRegistration
+    public class AnonymousRegistration : EvacuationFile
     {
         [Required]
         public Profile RegistrationDetails { get; set; }
-
-        [Required]
-        public Address EvacuatedFromAddress { get; set; }
 
         [Required]
         public NeedsAssessment PreliminaryNeedsAssessment { get; set; }

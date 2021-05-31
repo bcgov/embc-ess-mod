@@ -23,7 +23,6 @@ namespace EMBC.ESS.Managers.Submissions
         public MappingProfile()
         {
             CreateMap<Shared.Contracts.Submissions.EvacuationFile, Resources.Cases.EvacuationFile>()
-                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 
@@ -31,6 +30,8 @@ namespace EMBC.ESS.Managers.Submissions
                 .ReverseMap()
                 ;
             CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Cases.HouseholdMember>()
+                .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 
@@ -53,8 +54,9 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Shared.Contracts.Submissions.SecurityQuestion, Resources.Contacts.SecurityQuestion>()
+                .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => !s.AnswerChanged))
                 .ReverseMap()
-                .ForMember(d => d.Answer, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Answer) ? string.Empty : s.Answer.Substring(0, 1) + "***" + s.Answer.Substring(s.Answer.Length - 1)))
+                .ForMember(d => d.AnswerChanged, opts => opts.MapFrom(s => false))
                 ;
         }
     }

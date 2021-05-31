@@ -7,19 +7,16 @@ import { AbstractControl, FormGroup } from '@angular/forms';
   styleUrls: ['./restriction-form.component.scss']
 })
 export class RestrictionFormComponent implements OnInit {
-
   @Input() restrictionForm: FormGroup;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   /**
    * Returns the control of the form
    */
-  get restrFormControl(): { [key: string]: AbstractControl; } {
+  get restrFormControl(): { [key: string]: AbstractControl } {
     return this.restrictionForm.controls;
   }
-
 }

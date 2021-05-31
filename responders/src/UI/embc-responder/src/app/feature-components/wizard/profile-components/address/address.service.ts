@@ -15,7 +15,7 @@ export class AddressService {
   public clearPrimaryAddressFields(primaryAddressForm: FormGroup): FormGroup {
     primaryAddressForm.get('address.addressLine1').reset();
     primaryAddressForm.get('address.addressLine2').reset();
-    primaryAddressForm.get('address.jurisdiction').reset();
+    primaryAddressForm.get('address.community').reset();
     primaryAddressForm.get('address.stateProvince').reset();
     primaryAddressForm.get('address.postalCode').reset();
 
@@ -25,7 +25,7 @@ export class AddressService {
   public clearMailingAddressFields(primaryAddressForm: FormGroup): FormGroup {
     primaryAddressForm.get('mailingAddress.addressLine1').reset();
     primaryAddressForm.get('mailingAddress.addressLine2').reset();
-    primaryAddressForm.get('mailingAddress.jurisdiction').reset();
+    primaryAddressForm.get('mailingAddress.community').reset();
     primaryAddressForm.get('mailingAddress.stateProvince').reset();
     primaryAddressForm.get('mailingAddress.postalCode').reset();
 
@@ -68,7 +68,7 @@ export class AddressService {
 
   public updateOnVisibility(primaryAddressForm: FormGroup): FormGroup {
     primaryAddressForm.get('address.addressLine1').updateValueAndValidity();
-    primaryAddressForm.get('address.jurisdiction').updateValueAndValidity();
+    primaryAddressForm.get('address.community').updateValueAndValidity();
     primaryAddressForm.get('address.stateProvince').updateValueAndValidity();
     primaryAddressForm.get('address.country').updateValueAndValidity();
     primaryAddressForm.get('address.postalCode').updateValueAndValidity();
