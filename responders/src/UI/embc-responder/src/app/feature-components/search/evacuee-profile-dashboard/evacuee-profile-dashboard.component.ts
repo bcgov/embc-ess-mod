@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-evacuee-profile-dashboard',
@@ -6,11 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./evacuee-profile-dashboard.component.scss']
 })
 export class EvacueeProfileDashboardComponent implements OnInit {
-  constructor() {}
+  constructor(
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {}
 
   openStatusDefinition(): void {
-    console.log('click');
+  }
+
+  verifyEvacuee(): void {
+   
   }
 }
