@@ -18,7 +18,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -126,7 +125,7 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<VerifySecurityPhraseResponse>> VerifySecurityPhrase(string fileId, VerifySecurityPhraseRequest request)
         {
             VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
-            var isCorrect = await messagingClient.Send(verifySecurityPhraseQuery);
+            var isCorrect = (await messagingClient.Send(verifySecurityPhraseQuery)).IsCorrect;
             return Ok(new VerifySecurityPhraseResponse { IsCorrect = isCorrect });
 
             //this will be the replacement once the nuget package is updated for the query response
@@ -312,7 +311,7 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
                 //This line can get removed once nuget package is updated
-                .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => !s.AnswerChanged))
+                .ForMember(d => d.AnswerChanged, opts => opts.MapFrom(s => !s.AnswerChanged))
                 .ReverseMap()
                 ;
 
