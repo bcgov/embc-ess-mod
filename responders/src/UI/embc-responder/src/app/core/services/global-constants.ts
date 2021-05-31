@@ -40,6 +40,7 @@ export const usDefaultObject = {
   name: 'United States of America'
 };
 export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
+export const petsQuantityPattern = '^([1-9][0-9]{0,2})$';
 
 export const gender = [
   { name: 'Male', value: 'Male' },

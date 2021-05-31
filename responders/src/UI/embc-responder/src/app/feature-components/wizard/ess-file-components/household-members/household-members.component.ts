@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   Validators
 } from '@angular/forms';
@@ -14,7 +14,6 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { DeleteHouseholdDialogComponent } from '../../../../shared/components/dialog-components/delete-household-dialog/delete-household-dialog.component';
-import { CacheService } from 'src/app/core/services/cache.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -79,7 +78,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Returns the control of the household member form
    */
   public get houseHoldMemberFormGroup(): FormGroup {
-    return this.householdForm.get('houseHoldMember').value;
+    return this.householdForm.get('houseHoldMember') as FormGroup;
   }
 
   /**
@@ -120,11 +119,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       if (this.editIndex !== undefined && this.rowEdit) {
         this.data[this.editIndex] = this.householdForm.get(
           'houseHoldMember'
-        ).value.value;
+        ).value;
         this.rowEdit = !this.rowEdit;
         this.editIndex = undefined;
       } else {
-        this.data.push(this.householdForm.get('houseHoldMember').value.value);
+        this.data.push(this.householdForm.get('houseHoldMember').value);
       }
       this.dataSource.next(this.data);
       this.householdForm.get('houseHoldMembers').setValue(this.data);
@@ -182,7 +181,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   hasHouseholdMembers(event: MatRadioChange): void {
     if (event.value === false) {
       this.showMemberForm = false;
-      this.householdForm.get('houseHoldMember').value.reset();
+      this.householdForm.get('houseHoldMember').reset();
       this.editFlag = !this.editFlag;
     } else {
       this.showMemberForm = true;
@@ -244,17 +243,16 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   }
 
   private createHouseholdForm(): void {
+    if (!this.stepCreateEssFileService.houseHoldMembers)
+      this.stepCreateEssFileService.houseHoldMembers = [];
+
     this.householdForm = this.formBuilder.group({
       haveHouseholdMembers: [
-        this.stepCreateEssFileService.haveHouseHoldMembers !== null
-          ? this.stepCreateEssFileService.haveHouseHoldMembers
-          : '',
+        this.stepCreateEssFileService.haveHouseHoldMembers ?? '',
         Validators.required
       ],
       houseHoldMembers: [
-        this.stepCreateEssFileService.houseHoldMembers.length !== 0
-          ? this.stepCreateEssFileService.houseHoldMembers
-          : new FormArray([]),
+        this.stepCreateEssFileService.houseHoldMembers,
         this.customValidation
           .conditionalValidation(
             () => this.householdForm.get('haveHouseholdMembers').value === true,
@@ -262,28 +260,13 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
           )
           .bind(this.customValidation)
       ],
-      houseHoldMember: [
-        this.createHoulseholdMemberForm(),
-        [
-          this.customValidation
-            .conditionalValidation(
-              () =>
-                this.householdForm.get('haveHouseholdMembers').value === true,
-              Validators.required
-            )
-            .bind(this.customValidation)
-        ]
-      ],
+      houseHoldMember: this.createHoulseholdMemberForm(),
       haveSpecialDiet: [
-        this.stepCreateEssFileService.haveSpecialDieT !== null
-          ? this.stepCreateEssFileService.haveSpecialDieT
-          : '',
+        this.stepCreateEssFileService.haveSpecialDieT ?? '',
         Validators.required
       ],
       specialDietDetails: [
-        this.stepCreateEssFileService.specialDietDetailS !== undefined
-          ? this.stepCreateEssFileService.specialDietDetailS
-          : '',
+        this.stepCreateEssFileService.specialDietDetailS ?? '',
         [
           this.customValidation
             .conditionalValidation(
@@ -294,15 +277,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         ]
       ],
       haveMedication: [
-        this.stepCreateEssFileService.haveMedicatioN !== null
-          ? this.stepCreateEssFileService.haveMedicatioN
-          : '',
+        this.stepCreateEssFileService.haveMedicatioN ?? '',
         Validators.required
       ],
       medicationSupply: [
-        this.stepCreateEssFileService.medicationSupplY !== null
-          ? this.stepCreateEssFileService.medicationSupplY
-          : '',
+        this.stepCreateEssFileService.medicationSupplY ?? '',
         [
           this.customValidation
             .conditionalValidation(
@@ -323,7 +302,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       gender: ['', [Validators.required]],
       initials: [''],
       preferredName: [''],
-      sameLastNameCheck: [false]
+      sameLastNameCheck: ['']
     });
   }
 
