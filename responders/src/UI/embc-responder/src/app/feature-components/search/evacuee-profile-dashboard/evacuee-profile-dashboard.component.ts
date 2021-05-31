@@ -54,6 +54,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   /**
    * Open the dialog to indicate evacuee has been successfully
    * verified
+   *
    * @param text Text to be displayed
    */
   openSuccessModal(text: string) {

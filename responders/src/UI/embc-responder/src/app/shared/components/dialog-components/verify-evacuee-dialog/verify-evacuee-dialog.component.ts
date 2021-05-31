@@ -44,16 +44,16 @@ export class VerifyEvacueeDialogComponent implements OnInit {
     if (!this.verificationForm.valid) {
       this.verificationForm.get('verified').markAsTouched();
     } else {
-      console.log(this.verificationForm.get('verified').value)
-      if(this.verificationForm.get('verified').value) {
+      console.log(this.verificationForm.get('verified').value);
+      if (this.verificationForm.get('verified').value) {
         //api call
-      this.outputEvent.emit('verified');
+        this.outputEvent.emit('verified');
       }
     }
   }
 
   isVerified($event: MatRadioChange): void {
-    if(!$event.value) {
+    if (!$event.value) {
       this.noIdFlag = false;
     } else {
       this.noIdFlag = true;
