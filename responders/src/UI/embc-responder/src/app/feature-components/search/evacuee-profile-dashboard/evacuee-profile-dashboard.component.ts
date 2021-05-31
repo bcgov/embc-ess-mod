@@ -7,16 +7,11 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./evacuee-profile-dashboard.component.scss']
 })
 export class EvacueeProfileDashboardComponent implements OnInit {
-  constructor(
-    private dialog: MatDialog
-  ) {}
+  constructor() {}
 
   ngOnInit(): void {}
 
-  openStatusDefinition(): void {
-  }
+  openStatusDefinition(): void {}
 
-  verifyEvacuee(): void {
-   
-  }
+  verifyEvacuee(): void {}
 }
