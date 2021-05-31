@@ -53,6 +53,8 @@ export const wizardESSFileMessage =
   'Please complete all sections of the ESS File prior to submitting.';
 export const lockedStepMessage =
   'Please complete the ESS File prior to proceeding to the next steps.';
+export const successfulVerification =
+  'Evacuee profile has been successfully verified';
 
 // Generic error messages
 export const genericError = 'An error has occurred. Please try again later.';
@@ -68,3 +70,5 @@ export const communityListError =
   'Unable to retrieve assigned communities at this time. Please try again later';
 export const editProfileError =
   'Unable to update your user profile at this time. Please try again later';
+export const taskSearchError =
+  'Unable to retrieve this task number. Please try again later';

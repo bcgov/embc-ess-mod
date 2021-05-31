@@ -51,7 +51,7 @@ export class ProfileResultsComponent
     if (
       this.evacueeSearchService.getEvacueeSearchContext().hasShownIdentification
     ) {
-      this.router.navigate(['responder-access/search/evacuee-profile']);
+      this.router.navigate(['responder-access/search/evacuee-profile-dashboard']);
     } else {
       this.router.navigate(['responder-access/search/security-questions']);
     }
