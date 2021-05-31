@@ -212,7 +212,7 @@ namespace EMBC.ESS.Managers.Submissions
                         Shared.Contracts.Submissions.SecurityQuestion question = query.Answers.ElementAt(i);
                         string submittedAnswer = question.Answer;
                         string savedAnswer = contact.SecurityQuestions.Where(q => q.Id == question.Id).FirstOrDefault().Answer;
-                        if (savedAnswer.ToLower().Equals(submittedAnswer.ToLower()))
+                        if (string.Equals(savedAnswer, submittedAnswer, StringComparison.OrdinalIgnoreCase))
                         {
                             ++ret.NumberOfCorrectAnswers;
                         }
@@ -235,7 +235,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             VerifySecurityPhraseResponse ret = new VerifySecurityPhraseResponse
             {
-                IsCorrect = file.SecurityPhrase.ToLower().Equals(query.SecurityPhrase.ToLower())
+                IsCorrect = string.Equals(file.SecurityPhrase, query.SecurityPhrase, StringComparison.OrdinalIgnoreCase)
             };
             return ret;
         }
