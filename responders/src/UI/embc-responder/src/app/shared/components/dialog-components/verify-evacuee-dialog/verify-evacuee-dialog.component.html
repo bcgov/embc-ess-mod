@@ -28,6 +28,7 @@
   </div>
 </div>
 <br />
+
 <div class="row">
   <div class="col-md-12">
     <form [formGroup]="verificationForm">
@@ -35,6 +36,7 @@
         formControlName="verified"
         aria-labelledby="primary-radio-group-label"
         class="primary-radio-group"
+        (change)="isVerified($event)"
         required
       >
         <mat-radio-button [value]="true"
@@ -45,17 +47,23 @@
           ><span class="radio-text"><b>No</b></span> - I did not see government
           issued identification</mat-radio-button
         >
-        <mat-error
-          class="custom-mat-error field-error"
-          *ngIf="
-            verifiedFormControl?.verified.touched &&
-            verifiedFormControl?.verified.invalid &&
-            verifiedFormControl?.verified.hasError('required')
-          "
-        >
-          Please make a selection</mat-error
-        >
       </mat-radio-group>
+
+      <div
+        class="field-error"
+        *ngIf="
+          verifiedFormControl?.verified.touched &&
+          verifiedFormControl?.verified.invalid &&
+          verifiedFormControl?.verified.hasError('required')
+        "
+      >
+        Please make a selection
+      </div>
+
+      <div class="field-error" *ngIf="!noIdFlag">
+        Evacuee profile cannot be verified without the presentation of
+        government issued identification
+      </div>
     </form>
   </div>
 </div>
@@ -67,7 +75,12 @@
     </button>
   </div>
   <div class="col-md-6">
-    <button class="button-p button-width" mat-button (click)="verify()">
+    <button
+      *ngIf="noIdFlag"
+      class="button-p button-width"
+      mat-button
+      (click)="verify()"
+    >
       Verify Profile
     </button>
   </div>

@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: 'app-verify-evacuee-dialog',
@@ -14,6 +15,8 @@ import {
 export class VerifyEvacueeDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();
   verificationForm: FormGroup;
+  noIdFlag = true;
+
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
@@ -38,11 +41,26 @@ export class VerifyEvacueeDialogComponent implements OnInit {
   }
 
   verify(): void {
-    console.log('outhere');
     if (!this.verificationForm.valid) {
-      console.log('inhere');
-      this.verificationForm.markAsDirty();
-      this.verificationForm.markAsTouched();
+      this.verificationForm.get('verified').markAsTouched();
+    } else {
+      console.log(this.verificationForm.get('verified').value)
+      if(this.verificationForm.get('verified').value) {
+        //api call
+      this.outputEvent.emit('verified');
+      }
     }
+  }
+
+  isVerified($event: MatRadioChange): void {
+    if(!$event.value) {
+      this.noIdFlag = false;
+    } else {
+      this.noIdFlag = true;
+    }
+    // else {
+    //   //api call
+    //   this.outputEvent.emit('verified');
+    // }
   }
 }
