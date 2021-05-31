@@ -1,0 +1,182 @@
+<div class="row dashboard-container">
+  <div class="col-md-12">
+    <span class="page-heading">Some Name here</span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <span class="dashboard-subheading">Date of birth here</span>
+  </div>
+</div>
+
+<div class="row status-row-margin">
+  <div class="col-md-5">
+    <img src="/assets/images/unverified.svg" height="34" width="34" />
+    <span class="status">Verification Status: <b>Some Value</b></span>
+
+    <a class="info-test" (click)="openStatusDefinition()">
+      <img src="/assets/images/info.svg" height="32" width="32" />
+      <img src="/assets/images/info-on-hover.svg" height="32" width="32"
+    /></a>
+    <button class="button-p verify-button" (click)="verifyEvacuee()" mat-button>
+      Verify
+    </button>
+  </div>
+  <div class="col-md-1 divider">
+    <img src="/assets/images/vertical-line.svg" height="41" width="2" />
+  </div>
+  <div class="col-md-3">
+    <img src="/assets/images/unlock.svg" height="31" width="21" />
+    <span class="status">Restriction Status: <b>Some Value</b></span>
+  </div>
+  <div class="col-md-1 divider">
+    <img src="/assets/images/vertical-line.svg" height="41" width="2" />
+  </div>
+  <div class="col">
+    <img src="/assets/images/calendar.svg" height="31" width="32" />
+    <span class="status">Created: <b>Some Value</b></span>
+  </div>
+</div>
+
+<div class="row banner">
+  <div class="col-md-8 center-content">
+    <img src="/assets/images/exclaimation.svg" height="32" width="32" />
+    <span class="banner-heading">Create a New ESS File:</span>
+    <span
+      >Create a New ESS File if the evacuee does not have an ESS file for their
+      evacuation.</span
+    >
+  </div>
+  <div class="col-md-4">
+    <button class="button-p ess-file-button" mat-button>
+      Create New ESS File
+    </button>
+  </div>
+</div>
+
+<div class="row content-row">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-8">
+        <mat-card class="overview-card">
+          <div class="row card-heading-outer">
+            <div class="col-md-12">
+              <p class="margins card-heading">Profile Overview</p>
+            </div>
+          </div>
+          <div class="row services-card">
+            <div class="col-md-8">
+              <p class="services-heading">
+                Connect profile with BC Services Card
+              </p>
+              <p>
+                <b
+                  >Send email invitation to evacuee to link their profile with
+                  BC Services Card.</b
+                >
+              </p>
+              <p>
+                Connect profile with BC Services Card Send email invitation to
+                evacuee to link their profile with BC Services Card.
+              </p>
+              <div class="button-div">
+                <button class="button-p invite-button" mat-button>
+                  Send email invitation
+                </button>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <img
+                src="/assets/images/services-card.svg"
+                height="219"
+                width="285"
+              />
+            </div>
+          </div>
+          <div class="row evacuee-info-row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-3">
+                  <img
+                    src="/assets/images/profile-user.svg"
+                    height="69"
+                    width="69"
+                  />
+                  <p style="font-size: 21px">Personal</p>
+                  <p style="font-size: 21px">Details</p>
+                </div>
+                <div class="col-md-2">
+                  <p>First Name:</p>
+                  <p>Last Name:</p>
+                  <p>Preferred Name:</p>
+                  <p>Initials:</p>
+                  <p>Date of Birth:</p>
+                  <p>Gender:</p>
+                </div>
+                <div>
+                  <p>FirstName</p>
+                  <p>LastName</p>
+                  <p>PreferredName</p>
+                  <p>Initials</p>
+                  <p>DateofBirth:</p>
+                  <p>Gender</p>
+                </div>
+              </div>
+              <hr class="dotted-hr" />
+              <div class="row">
+                <div class="col-md-3">
+                  <img
+                    src="/assets/images/address.svg"
+                    height="71"
+                    width="71"
+                  />
+                  <p style="font-size: 21px">Primary</p>
+                  <p style="font-size: 21px">Address</p>
+                </div>
+                <div>some address</div>
+              </div>
+              <hr class="dotted-hr" />
+              <div class="row">
+                <div class="col-md-3">
+                  <img
+                    src="/assets/images/contact.svg"
+                    height="65"
+                    width="65"
+                  />
+                  <p style="font-size: 21px">Contact</p>
+                  <p style="font-size: 21px">Details</p>
+                </div>
+                <div class="col-md-2">
+                  <p>Email Address:</p>
+                  <p>Telephone:</p>
+                </div>
+                <div>
+                  <p>EmailAddress</p>
+                  <p>Telephone</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-md-4">
+        <mat-card class="overview-card">
+          <div class="row card-heading-outer">
+            <div class="col-md-12">
+              <p class="margins card-heading">ESS Files</p>
+            </div>
+          </div>
+        </mat-card>
+        <br />
+        <mat-card class="overview-card">
+          <div class="row card-heading-outer">
+            <div class="col-md-12">
+              <p class="margins card-heading">Possible ESS File Match</p>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
