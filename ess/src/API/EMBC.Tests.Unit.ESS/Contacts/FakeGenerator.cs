@@ -115,6 +115,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 .RuleFor(o => o.Id, id)
                 .RuleFor(o => o.Question, f => f.Random.Word())
                 .RuleFor(o => o.Answer, f => f.Random.Word())
+                .RuleFor(o => o.AnswerIsMasked, false)
                 .Generate();
         }
 

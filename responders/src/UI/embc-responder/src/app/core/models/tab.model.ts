@@ -68,12 +68,14 @@ export class WizardTabModelValues {
       label: 'Animals',
       route: 'animals',
       name: 'animals',
-      status: 'incomplete'
+      status: 'not-started'
     },
-    // {
-    //   label: 'Evacuee Details',
-    //   route: ''
-    // },
+    {
+      label: 'Needs',
+      route: 'needs',
+      name: 'needs',
+      status: 'not-started'
+    },
     // {
     //   label: 'Address',
     //   route: ''
