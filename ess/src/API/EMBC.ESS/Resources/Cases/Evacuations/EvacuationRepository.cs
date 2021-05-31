@@ -304,7 +304,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             if (query.Limit.HasValue) fileIds = fileIds.OrderByDescending(id => id).Take(query.Limit.Value);
 
-            var evacuationFiles = fileIds.Distinct().OrderByDescending(id => id).Select(id => GetEvacuationFileById(id.Value).GetAwaiter().GetResult()).ToArray();
+            var evacuationFiles = fileIds.Distinct().OrderByDescending(id => id).Select(id => GetEvacuationFileById(id.Value, query.MaskSecurityPhrase).GetAwaiter().GetResult()).ToArray();
 
             essContext.DetachAll();
 
