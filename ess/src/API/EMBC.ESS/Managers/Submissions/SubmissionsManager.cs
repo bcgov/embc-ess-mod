@@ -21,9 +21,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.Transformation;
+using Task = System.Threading.Tasks.Task;
 
 namespace EMBC.ESS.Managers.Submissions
 {
@@ -35,6 +37,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly ICaseRepository caseRepository;
         private readonly ITransformator transformator;
         private readonly INotificationSender notificationSender;
+        private readonly ITaskRepository taskRepository;
 
         public SubmissionsManager(
             IMapper mapper,
@@ -42,7 +45,8 @@ namespace EMBC.ESS.Managers.Submissions
             ITemplateProviderResolver templateProviderResolver,
             ICaseRepository caseRepository,
             ITransformator transformator,
-            INotificationSender notificationSender)
+            INotificationSender notificationSender,
+            ITaskRepository taskRepository)
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
@@ -50,6 +54,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.caseRepository = caseRepository;
             this.transformator = transformator;
             this.notificationSender = notificationSender;
+            this.taskRepository = taskRepository;
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
