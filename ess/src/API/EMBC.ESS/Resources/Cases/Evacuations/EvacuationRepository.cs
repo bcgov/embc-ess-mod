@@ -200,7 +200,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return essFileNumber;
         }
 
-        private async Task<EvacuationFile> GetEvacuationFileById(Guid id)
+        private async Task<EvacuationFile> GetEvacuationFileById(Guid id, bool maskSecurityPhrase = true)
         {
             var dynamicsFile = await essContext.era_evacuationfiles
                 .ByKey(id)
@@ -211,7 +211,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.LoadProperty(dynamicsFile.era_Jurisdiction, nameof(era_jurisdiction.era_RelatedProvinceState));
             essContext.LoadProperty(dynamicsFile.era_Jurisdiction.era_RelatedProvinceState, nameof(era_provinceterritories.era_RelatedCountry));
 
-            var file = mapper.Map<EvacuationFile>(dynamicsFile);
+            var file = mapper.Map<EvacuationFile>(dynamicsFile, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
 
             var latestNeedsAssessment = essContext.era_needassessments
                 .Where(na => na.era_EvacuationFile.era_evacuationfileid == dynamicsFile.era_evacuationfileid)
@@ -309,6 +309,24 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.DetachAll();
 
             return evacuationFiles;
+        }
+
+        public async Task<string> UpdateSecurityPhrase(string fileId, string securityPhrase)
+        {
+            var evacuationFile = essContext.era_evacuationfiles
+                .Where(f => f.era_name == fileId)
+                .ToArray()
+                .FirstOrDefault();
+
+            if (evacuationFile == null) throw new Exception($"Evacuation File {fileId} not found");
+
+            evacuationFile.era_securityphrase = securityPhrase;
+            essContext.UpdateObject(evacuationFile);
+            await essContext.SaveChangesAsync();
+
+            essContext.DetachAll();
+
+            return evacuationFile.era_name;
         }
     }
 }

@@ -41,6 +41,7 @@ namespace EMBC.ESS.Resources.Cases
             {
                 nameof(SaveEvacuationFile) => await HandleSaveEvacuationFile((SaveEvacuationFile)cmd),
                 nameof(DeleteEvacuationFile) => await HandleDeleteEvacuationFile((DeleteEvacuationFile)cmd),
+                nameof(UpdateSecurityPhrase) => await HandleUpdateSecurityPhrase((UpdateSecurityPhrase)cmd),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
@@ -78,6 +79,11 @@ namespace EMBC.ESS.Resources.Cases
         private async Task<ManageCaseCommandResult> HandleDeleteEvacuationFile(DeleteEvacuationFile cmd)
         {
             return new ManageCaseCommandResult { CaseId = await evacuationRepository.Delete(cmd.Id) };
+        }
+
+        private async Task<ManageCaseCommandResult> HandleUpdateSecurityPhrase(UpdateSecurityPhrase cmd)
+        {
+            return new ManageCaseCommandResult { CaseId = await evacuationRepository.UpdateSecurityPhrase(cmd.Id, cmd.SecurityPhrase) };
         }
     }
 }

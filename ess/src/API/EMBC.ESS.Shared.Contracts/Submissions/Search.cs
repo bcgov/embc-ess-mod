@@ -55,4 +55,26 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public RegistrantProfile RegistrantProfile { get; set; }
         public IEnumerable<EvacuationFile> Files { get; set; }
     }
+
+    public class VerifySecurityQuestionsQuery : Query<VerifySecurityQuestionsResponse>
+    {
+        public string RegistrantId { get; set; }
+        public IEnumerable<SecurityQuestion> Answers { get; set; }
+    }
+
+    public class VerifySecurityQuestionsResponse
+    {
+        public int NumberOfCorrectAnswers { get; set; }
+    }
+
+    public class VerifySecurityPhraseQuery : Query<VerifySecurityPhraseResponse>
+    {
+        public string FileId { get; set; }
+        public string SecurityPhrase { get; set; }
+    }
+
+    public class VerifySecurityPhraseResponse
+    {
+        public bool IsCorrect { get; set; }
+    }
 }

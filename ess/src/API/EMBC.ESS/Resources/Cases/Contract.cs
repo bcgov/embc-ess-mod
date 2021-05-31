@@ -59,6 +59,12 @@ namespace EMBC.ESS.Resources.Cases
         public string Id { get; set; }
     }
 
+    public class UpdateSecurityPhrase : ManageCaseCommand
+    {
+        public string Id { get; set; }
+        public string SecurityPhrase { get; set; }
+    }
+
     public class EvacuationFilesQuery : CaseQuery
     {
         public string FileId { get; set; }
@@ -78,11 +84,12 @@ namespace EMBC.ESS.Resources.Cases
         public EvacuationAddress EvacuatedFromAddress { get; set; }
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
         public string PrimaryRegistrantId { get; set; }
-        public string SecretPhrase { get; set; }
-        public bool IsSecretPhraseMasked { get; set; }
-        public DateTime EvacuationDate { get; internal set; }
+        public string SecurityPhrase { get; set; }
+        public bool PhraseChanged { get; set; } = false;
+        public DateTime EvacuationDate { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public bool RestrictedAccess { get; set; }
+        public bool IsSecretPhraseMasked { get; set; }
     }
 
     public class EvacuationAddress

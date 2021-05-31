@@ -54,7 +54,9 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Shared.Contracts.Submissions.SecurityQuestion, Resources.Contacts.SecurityQuestion>()
+                .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => !s.AnswerChanged))
                 .ReverseMap()
+                .ForMember(d => d.AnswerChanged, opts => opts.MapFrom(s => false))
                 ;
         }
     }

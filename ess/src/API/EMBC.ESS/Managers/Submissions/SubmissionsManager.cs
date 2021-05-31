@@ -82,6 +82,8 @@ namespace EMBC.ESS.Managers.Submissions
 
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).CaseId;
 
+            if (cmd.File.PhraseChanged) await caseRepository.ManageCase(new UpdateSecurityPhrase { Id = file.Id, SecurityPhrase = file.SecurityPhrase });
+
             if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
             {
                 //notify registrant of the new file and has email
@@ -100,6 +102,13 @@ namespace EMBC.ESS.Managers.Submissions
             if (cmd.Profile.SecurityQuestions.Count() > 3) throw new Exception($"Registrant can have a max of 3 Security Questions");
             var contact = mapper.Map<Contact>(cmd.Profile);
             var result = await contactRepository.ManageContact(new SaveContact { Contact = contact });
+
+            var updatedQuestions = mapper.Map<IEnumerable<Resources.Contacts.SecurityQuestion>>(cmd.Profile.SecurityQuestions.Where(s => s.AnswerChanged));
+
+            if (updatedQuestions.Count() > 0)
+            {
+                await contactRepository.ManageContact(new UpdateSecurityQuestions { ContactId = contact.Id, SecurityQuestions = updatedQuestions });
+            }
 
             if (string.IsNullOrEmpty(cmd.Profile.Id))
             {
@@ -182,6 +191,49 @@ namespace EMBC.ESS.Managers.Submissions
 
             var results = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
             return new EvacuationFilesSearchQueryResult { Items = results };
+        }
+
+        public async Task<VerifySecurityQuestionsResponse> Handle(VerifySecurityQuestionsQuery query)
+        {
+            IEnumerable<Contact> contacts = Array.Empty<Contact>();
+            contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = query.RegistrantId, MaskSecurityAnswers = false })).Items;
+            VerifySecurityQuestionsResponse ret = new VerifySecurityQuestionsResponse
+            {
+                NumberOfCorrectAnswers = 0
+            };
+
+            if (contacts.Count() == 1)
+            {
+                Contact contact = contacts.First();
+                if (contact.SecurityQuestions != null && contact.SecurityQuestions.Count() > 0)
+                {
+                    for (int i = 0; i < query.Answers.Count(); ++i)
+                    {
+                        Shared.Contracts.Submissions.SecurityQuestion question = query.Answers.ElementAt(i);
+                        string submittedAnswer = question.Answer;
+                        string savedAnswer = contact.SecurityQuestions.Where(q => q.Id == question.Id).FirstOrDefault().Answer;
+                        if (savedAnswer.ToLower().Equals(submittedAnswer.ToLower()))
+                        {
+                            ++ret.NumberOfCorrectAnswers;
+                        }
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        public async Task<VerifySecurityPhraseResponse> Handle(VerifySecurityPhraseQuery query)
+        {
+            //bool maskSecurityPhrase = false;
+            //var file = await evacuationRepository.Read(query.FileId, maskSecurityPhrase);
+            //VerifySecurityPhraseResponse ret = new VerifySecurityPhraseResponse
+            //{
+            //    IsCorrect = file.SecurityPhrase.ToLower().Equals(query.SecurityPhrase.ToLower())
+            //};
+            //return ret;
+            await Task.CompletedTask;
+            throw new NotImplementedException("Need to fix this handler to call CASE repository, not evacuation repository");
         }
     }
 }

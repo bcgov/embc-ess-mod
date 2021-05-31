@@ -60,6 +60,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public EvacuationFileStatus Status { get; set; }
         public bool RestrictedAccess { get; set; }
         public string PrimaryRegistrantId { get; set; }
+        public string SecurityPhrase { get; set; }
+        public bool PhraseChanged { get; set; } = false;
         public DateTime EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
         public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; }
@@ -120,6 +122,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public int Id { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
+        public bool AnswerChanged { get; set; } = false;
     }
 
     public class HouseholdMember

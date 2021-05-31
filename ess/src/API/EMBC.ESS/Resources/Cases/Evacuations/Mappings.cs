@@ -28,6 +28,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             CreateMap<EvacuationFile, era_evacuationfile>(MemberList.None)
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_evacuationfiledate, opts => opts.MapFrom(s => s.EvacuationDate))
+                //.ForMember(d => d.era_securityphrase, opts => opts.MapFrom(s => s.PhraseChanged ? s.SecurityPhrase : null))
                 .ForMember(d => d.era_needsassessment_EvacuationFile, opts => opts.MapFrom(s => s.NeedsAssessments))
                 .ForMember(d => d.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine1))
                 .ForMember(d => d.era_addressline2, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine2))
@@ -35,13 +36,14 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_city, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Community))
                 .ForMember(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Country))
                 .ForMember(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvince))
-                .ForMember(d => d.era_secrettext, opts => opts.MapFrom(s => s.SecretPhrase))
+                .ForMember(d => d.era_secrettext, opts => opts.MapFrom(s => s.SecurityPhrase))
                 ;
 
             CreateMap<era_evacuationfile, EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => s.era_Registrant.contactid.ToString()))
-                .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.era_secrettext))
+                .ForMember(d => d.SecurityPhrase, opts => opts.ConvertUsing<SecurityPhraseConverter, string>(s => s.era_securityphrase))
+                .ForMember(d => d.PhraseChanged, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.era_evacuationfiledate.HasValue ? s.era_evacuationfiledate.Value.UtcDateTime : (DateTime?)null))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => s.era_needsassessment_EvacuationFile))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
@@ -183,6 +185,21 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
     {
         Primary = 174360000,
         Member = 174360001
+    }
+
+    public class SecurityPhraseConverter : IValueConverter<string, string>
+    {
+        public string Convert(string sourceMember, ResolutionContext context)
+        {
+            string mask = (string)(context.Options.Items.ContainsKey("MaskSecurityPhrase") ? context.Options.Items["MaskSecurityPhrase"] : "true");
+            bool maskSecretPhrase = mask.ToLower().Equals("true");
+            if (!maskSecretPhrase) return sourceMember;
+
+            if (string.IsNullOrEmpty(sourceMember))
+                return string.Empty;
+            else
+                return sourceMember.Substring(0, 1) + "***" + sourceMember.Substring(sourceMember.Length - 1);
+        }
     }
 
     public class GenderConverter : IValueConverter<string, int?>, IValueConverter<int?, string>
