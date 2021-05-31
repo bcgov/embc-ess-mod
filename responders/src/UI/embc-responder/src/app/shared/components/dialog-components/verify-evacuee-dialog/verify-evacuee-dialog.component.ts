@@ -40,11 +40,14 @@ export class VerifyEvacueeDialogComponent implements OnInit {
     this.outputEvent.emit('close');
   }
 
+  /**
+   * Verifies if the evacuee has shown identification or
+   * not and updates the value via api
+   */
   verify(): void {
     if (!this.verificationForm.valid) {
       this.verificationForm.get('verified').markAsTouched();
     } else {
-      console.log(this.verificationForm.get('verified').value);
       if (this.verificationForm.get('verified').value) {
         //api call
         this.outputEvent.emit('verified');
@@ -52,15 +55,16 @@ export class VerifyEvacueeDialogComponent implements OnInit {
     }
   }
 
+  /**
+   * Enables message flag is no identification is provided
+   *
+   * @param $event radio button change event
+   */
   isVerified($event: MatRadioChange): void {
     if (!$event.value) {
       this.noIdFlag = false;
     } else {
       this.noIdFlag = true;
     }
-    // else {
-    //   //api call
-    //   this.outputEvent.emit('verified');
-    // }
   }
 }
