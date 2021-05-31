@@ -225,8 +225,6 @@ export class StepCreateProfileService {
       contactDetails: this.contactDetails,
       primaryAddress: this.setAddressObject(this.primaryAddressDetails),
       mailingAddress: this.setAddressObject(this.mailingAddressDetails),
-      isMailingAddressSameAsPrimaryAddress: this
-        .isMailingAddressSameAsPrimaryAddress,
       securityQuestions: this.securityQuestions,
       verifiedUser: this.verifiedProfile
     };
