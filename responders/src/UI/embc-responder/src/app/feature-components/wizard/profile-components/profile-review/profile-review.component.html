@@ -50,9 +50,7 @@
             <div class="row">
               <div class="col-4">Preferred Name</div>
               <div class="col-8 bold">
-                {{
-                  stepCreateProfileService?.personalDetails?.preferredName
-                }}
+                {{ stepCreateProfileService?.personalDetails?.preferredName }}
               </div>
             </div>
 
@@ -87,8 +85,7 @@
               <div class="col-4">Address Line 1</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.primaryAddressDetails
-                    ?.addressLine1
+                  stepCreateProfileService?.primaryAddressDetails?.addressLine1
                 }}
               </div>
             </div>
@@ -97,8 +94,7 @@
               <div class="col-4">Address Line 2</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.primaryAddressDetails
-                    ?.addressLine2
+                  stepCreateProfileService?.primaryAddressDetails?.addressLine2
                 }}
               </div>
             </div>
@@ -109,8 +105,7 @@
                 {{
                   stepCreateProfileService?.primaryAddressDetails?.community
                     ?.name ||
-                    stepCreateProfileService?.primaryAddressDetails
-                      ?.community
+                    stepCreateProfileService?.primaryAddressDetails?.community
                 }}
               </div>
             </div>
@@ -119,8 +114,8 @@
               <div class="col-4">Province</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.primaryAddressDetails
-                    ?.stateProvince?.name ||
+                  stepCreateProfileService?.primaryAddressDetails?.stateProvince
+                    ?.name ||
                     stepCreateProfileService?.primaryAddressDetails
                       ?.stateProvince
                 }}
@@ -157,8 +152,7 @@
               <div class="col-4">Address Line 1</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.mailingAddressDetails
-                    ?.addressLine1
+                  stepCreateProfileService?.mailingAddressDetails?.addressLine1
                 }}
               </div>
             </div>
@@ -167,8 +161,7 @@
               <div class="col-4">Address Line 2</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.mailingAddressDetails
-                    ?.addressLine2
+                  stepCreateProfileService?.mailingAddressDetails?.addressLine2
                 }}
               </div>
             </div>
@@ -179,8 +172,7 @@
                 {{
                   stepCreateProfileService?.mailingAddressDetails?.community
                     ?.name ||
-                    stepCreateProfileService?.mailingAddressDetails
-                      ?.community
+                    stepCreateProfileService?.mailingAddressDetails?.community
                 }}
               </div>
             </div>
@@ -189,8 +181,8 @@
               <div class="col-4">Province</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.mailingAddressDetails
-                    ?.stateProvince?.name ||
+                  stepCreateProfileService?.mailingAddressDetails?.stateProvince
+                    ?.name ||
                     stepCreateProfileService?.mailingAddressDetails
                       ?.stateProvince
                 }}
@@ -272,9 +264,7 @@
               *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
             >
               <div class="col-4">
-                {{
-                  stepCreateProfileService?.securityQuestions[0]?.question
-                }}
+                {{ stepCreateProfileService?.securityQuestions[0]?.question }}
               </div>
               <div class="col-8 bold">
                 {{
@@ -289,9 +279,7 @@
               *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
             >
               <div class="col-4">
-                {{
-                  stepCreateProfileService?.securityQuestions[1]?.question
-                }}
+                {{ stepCreateProfileService?.securityQuestions[1]?.question }}
               </div>
               <div class="col-8 bold">
                 {{
@@ -306,9 +294,7 @@
               *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
             >
               <div class="col-4">
-                {{
-                  stepCreateProfileService?.securityQuestions[2]?.question
-                }}
+                {{ stepCreateProfileService?.securityQuestions[2]?.question }}
               </div>
               <div class="col-8 bold">
                 {{
