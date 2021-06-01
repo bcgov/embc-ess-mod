@@ -66,7 +66,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         .upsertProfile(this.stepCreateProfileService.createProfileDTO())
         .subscribe(
           (profileId) => {
-            this.cacheService.set('profileId', profileId);
+            this.evacueeProfileService.setCurrentProfileId(profileId);
 
             //TODO: Once "Get Profile" endpoint is ready, update stepCreateProfileService with DB data
 
@@ -92,7 +92,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
 
             this.alertService.setAlert(
               'danger',
-              error?.title || globalConst.createProfileError
+              globalConst.createProfileError
             );
           }
         );
