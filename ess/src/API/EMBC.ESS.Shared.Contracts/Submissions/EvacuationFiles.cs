@@ -24,6 +24,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string Id { get; set; }
         public string TaskId { get; set; }
         public DateTime CreatedOn { get; set; }
+        public DateTime LastModified { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public bool RestrictedAccess { get; set; }
         public string PrimaryRegistrantId { get; set; }
@@ -50,6 +51,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string Id { get; set; }
         public DateTime CompletedOn { get; set; }
+        public DateTime LastModified { get; set; }
         public NeedsAssessmentType Type { get; set; }
         public InsuranceOption Insurance { get; set; }
         public bool? CanEvacueeProvideFood { get; set; }

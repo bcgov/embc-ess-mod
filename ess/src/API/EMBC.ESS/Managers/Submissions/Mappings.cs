@@ -47,7 +47,9 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Shared.Contracts.Submissions.NeedsAssessment, Resources.Cases.NeedsAssessment>()
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CompletedOn))
                 .ReverseMap()
+                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.CreatedOn))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Note, Resources.Cases.Note>()

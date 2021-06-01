@@ -47,6 +47,8 @@ namespace EMBC.ESS.Resources.Cases
     public abstract class Case
     {
         public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime LastModified { get; set; }
     }
 
     public class SaveEvacuationFile : ManageCaseCommand
@@ -108,6 +110,8 @@ namespace EMBC.ESS.Resources.Cases
     public class NeedsAssessment
     {
         public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime LastModified { get; set; }
         public InsuranceOption Insurance { get; set; }
         public bool? CanEvacueeProvideFood { get; set; }
         public bool? CanEvacueeProvideLodging { get; set; }
