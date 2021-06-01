@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Edm;
@@ -25,45 +26,46 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
     {
         public Mappings()
         {
+            Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
+
             CreateMap<EvacuationFile, era_evacuationfile>(MemberList.None)
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.era_paperbasedessfile, opts => opts.Ignore())
+                .ForMember(d => d.era_essfilestatus, opts => opts.Ignore())
                 .ForMember(d => d.era_evacuationfiledate, opts => opts.MapFrom(s => s.EvacuationDate))
-                //.ForMember(d => d.era_securityphrase, opts => opts.MapFrom(s => s.PhraseChanged ? s.SecurityPhrase : null))
+                .ForMember(d => d.era_securityphrase, opts => opts.Ignore())
                 .ForMember(d => d.era_needsassessment_EvacuationFile, opts => opts.MapFrom(s => s.NeedsAssessments))
                 .ForMember(d => d.era_addressline1, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine1))
                 .ForMember(d => d.era_addressline2, opts => opts.MapFrom(s => s.EvacuatedFromAddress.AddressLine2))
                 .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.EvacuatedFromAddress.PostalCode))
-                .ForMember(d => d.era_city, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Community))
-                .ForMember(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Country))
-                .ForMember(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvince))
-                .ForMember(d => d.era_secrettext, opts => opts.MapFrom(s => s.SecurityPhrase))
+                .ForMember(d => d.era_city, opts => opts.MapFrom(s => isGuid(s.EvacuatedFromAddress.CommunityCode) ? null : s.EvacuatedFromAddress.CommunityCode))
+                .ForMember(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.CountryCode))
+                .ForMember(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvinceCode))
+                .ForMember(d => d.era_registrationlocation, opts => opts.MapFrom(s => s.RegistrationLocation))
                 ;
 
             CreateMap<era_evacuationfile, EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
+                .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.era_TaskId == null ? null : s.era_TaskId.era_taskdetails))
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => s.era_Registrant.contactid.ToString()))
                 .ForMember(d => d.SecurityPhrase, opts => opts.ConvertUsing<SecurityPhraseConverter, string>(s => s.era_securityphrase))
-                .ForMember(d => d.PhraseChanged, opts => opts.MapFrom(s => false))
-                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.era_evacuationfiledate.HasValue ? s.era_evacuationfiledate.Value.UtcDateTime : (DateTime?)null))
+                .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => false))
+                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.era_evacuationfiledate.Value.UtcDateTime))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => s.era_needsassessment_EvacuationFile))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.era_essfilestatus))
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s))
-                .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
+                .ForMember(d => d.IsSecretPhraseMasked, opts => opts.MapFrom((s, d, _, ctx) => SecurityPhraseConverter.ShouldMaskSecretPhrase(ctx)))
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
+                .ForMember(d => d.RegistrationLocation, opts => opts.MapFrom(s => s.era_registrationlocation))
                 ;
 
-            CreateMap<EvacuationAddress, era_evacuationfile>(MemberList.None)
-                .ForMember(d => d.era_addressline1, opts => opts.MapFrom(s => s.AddressLine1))
-                .ForMember(d => d.era_addressline2, opts => opts.MapFrom(s => s.AddressLine2))
-                .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.PostalCode))
-                .ForMember(d => d.era_Jurisdiction, opts => opts.Ignore())
-                .ReverseMap()
+            CreateMap<era_evacuationfile, EvacuationAddress>(MemberList.None)
                 .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.era_addressline1))
                 .ForMember(d => d.AddressLine2, opts => opts.MapFrom(s => s.era_addressline2))
                 .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.era_postalcode))
-                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.era_Jurisdiction.era_jurisdictionid))
-                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_code))
-                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_RelatedCountry.era_countrycode))
+                .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.era_Jurisdiction.era_jurisdictionid))
+                .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_code))
+                .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.era_Jurisdiction.era_RelatedProvinceState.era_RelatedCountry.era_countrycode))
                 ;
 
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)
@@ -96,6 +98,21 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.HasPetsFood, opts => opts.MapFrom(s => Lookup(s.era_haspetfood)))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => Array.Empty<HouseholdMember>()))
                 .ForMember(d => d.Pets, opts => opts.MapFrom(s => Array.Empty<Pet>()))
+                .ForMember(d => d.Notes, opts => opts.MapFrom(s => new[]
+                    {
+                        string.IsNullOrEmpty(s.era_householdrecoveryplan) ? null : new Note { Type = NoteType.RecoveryPlan, Content = s.era_householdrecoveryplan },
+                        string.IsNullOrEmpty(s.era_evacuationimpacttohousehold) ? null : new Note { Type = NoteType.EvacuationImpact, Content = s.era_evacuationimpacttohousehold },
+                        string.IsNullOrEmpty(s.era_externalreferralsdetails) ? null : new Note { Type = NoteType.ExternalReferralServices, Content = s.era_externalreferralsdetails },
+                    }.Where(n => n != null).ToArray()))
+                .ForMember(s => s.RecommendedReferralServices, opts => opts.MapFrom(s => new[]
+                    {
+                        s.era_haschildcarereferral.GetValueOrDefault(false) ? ReferralServices.ChildCare : (ReferralServices?)null,
+                        s.era_hasfirstaidreferral.GetValueOrDefault(false) ? ReferralServices.FirstAid : (ReferralServices?)null,
+                        s.era_hasinquiryreferral.GetValueOrDefault(false) ? ReferralServices.Inquiry : (ReferralServices?)null,
+                        s.era_haspersonalservicesreferral.GetValueOrDefault(false) ? ReferralServices.Personal : (ReferralServices?)null,
+                        s.era_haspetcarereferral.GetValueOrDefault(false) ? ReferralServices.PetCare : (ReferralServices?)null,
+                        s.era_hashealthservicesreferral.GetValueOrDefault(false) ? ReferralServices.Health : (ReferralServices?)null,
+                    }.Where(r => r != null).ToArray()))
                ;
 
             CreateMap<era_householdmember, HouseholdMember>()
@@ -191,15 +208,16 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
     {
         public string Convert(string sourceMember, ResolutionContext context)
         {
-            string mask = (string)(context.Options.Items.ContainsKey("MaskSecurityPhrase") ? context.Options.Items["MaskSecurityPhrase"] : "true");
-            bool maskSecretPhrase = mask.ToLower().Equals("true");
-            if (!maskSecretPhrase) return sourceMember;
+            if (!ShouldMaskSecretPhrase(context)) return sourceMember;
 
             if (string.IsNullOrEmpty(sourceMember))
                 return string.Empty;
             else
                 return sourceMember.Substring(0, 1) + "***" + sourceMember.Substring(sourceMember.Length - 1);
         }
+
+        public static bool ShouldMaskSecretPhrase(ResolutionContext ctx) =>
+            ctx.Options.Items.ContainsKey("MaskSecurityPhrase") && bool.Parse(ctx.Options.Items["MaskSecurityPhrase"].ToString());
     }
 
     public class GenderConverter : IValueConverter<string, int?>, IValueConverter<int?, string>

@@ -16,98 +16,41 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using EMBC.ESS.Shared.Contracts.Submissions;
 
-namespace EMBC.ESS.Resources.Cases
+namespace EMBC.ESS.Shared.Contracts.Submissions
 {
-    public interface ICaseRepository
-    {
-        Task<ManageCaseCommandResult> ManageCase(ManageCaseCommand cmd);
-
-        Task<CaseQueryResult> QueryCase(CaseQuery query);
-    }
-
-    public abstract class ManageCaseCommand { }
-
-    public class ManageCaseCommandResult
-    {
-        public string CaseId { get; set; }
-    }
-
-    public abstract class CaseQuery
-    {
-    }
-
-    public class CaseQueryResult
-    {
-        public IEnumerable<Case> Items { get; set; } = Array.Empty<Case>();
-    }
-
-    public abstract class Case
+    public class EvacuationFile
     {
         public string Id { get; set; }
-    }
-
-    public class SaveEvacuationFile : ManageCaseCommand
-    {
-        public EvacuationFile EvacuationFile { get; set; }
-    }
-
-    public class DeleteEvacuationFile : ManageCaseCommand
-    {
-        public string Id { get; set; }
-    }
-
-    public class UpdateSecurityPhrase : ManageCaseCommand
-    {
-        public string Id { get; set; }
-        public string SecurityPhrase { get; set; }
-    }
-
-    public class EvacuationFilesQuery : CaseQuery
-    {
-        public string FileId { get; set; }
-        public string PrimaryRegistrantId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DateOfBirth { get; set; }
-        public bool IncludeHouseholdMembers { get; set; }
-        public bool MaskSecurityPhrase { get; set; } = true;
-        public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
-        public DateTime? RegistraionDateFrom { get; set; }
-        public DateTime? RegistraionDateTo { get; set; }
-        public int? Limit { get; set; }
-    }
-
-    public class EvacuationFile : Case
-    {
         public string TaskId { get; set; }
-        public EvacuationAddress EvacuatedFromAddress { get; set; }
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
+        public DateTime CreatedOn { get; set; }
+        public EvacuationFileStatus Status { get; set; }
+        public bool RestrictedAccess { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseChanged { get; set; } = false;
         public DateTime EvacuationDate { get; set; }
-        public EvacuationFileStatus Status { get; set; }
-        public bool RestrictedAccess { get; set; }
+        public Address EvacuatedFromAddress { get; set; }
+        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; }
+        public string SecretPhrase { get; set; }
         public bool IsSecretPhraseMasked { get; set; }
         public string RegistrationLocation { get; set; }
     }
 
-    public class EvacuationAddress
+    public enum EvacuationFileStatus
     {
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string CommunityCode { get; set; }
-        public string StateProvinceCode { get; set; }
-        public string CountryCode { get; set; }
-        public string PostalCode { get; set; }
+        Pending = 174360000,
+        Active = 174360001,
+        Completed = 174360002,
+        Expired = 174360003,
+        Archived = 174360004
     }
 
     public class NeedsAssessment
     {
         public string Id { get; set; }
+        public DateTime CompletedOn { get; set; }
+        public NeedsAssessmentType Type { get; set; }
         public InsuranceOption Insurance { get; set; }
         public bool? CanEvacueeProvideFood { get; set; }
         public bool? CanEvacueeProvideLodging { get; set; }
@@ -120,30 +63,41 @@ namespace EMBC.ESS.Resources.Cases
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }
-        public NeedsAssessmentType Type { get; set; }
-        public IEnumerable<Note> Notes { get; set; }
-        public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }
+        public IEnumerable<Note> Notes { get; set; } = Array.Empty<Note>();
+        public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; } = Array.Empty<ReferralServices>();
     }
 
     public class HouseholdMember
     {
         public string Id { get; set; }
-        public bool IsUnder19 { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
         public string PreferredName { get; set; }
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
+        public bool IsUnder19 { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
-        public string LinkedRegistrantId { get; set; }
-        public bool RestrictedAccess { get; set; }
     }
 
     public class Pet
     {
         public string Type { get; set; }
         public string Quantity { get; set; }
+    }
+
+    public enum InsuranceOption
+    {
+        No,
+        Yes,
+        Unsure,
+        Unknown
+    }
+
+    public enum NeedsAssessmentType
+    {
+        Preliminary,
+        Assessed
     }
 
     public class Note
@@ -159,9 +113,8 @@ namespace EMBC.ESS.Resources.Cases
     {
         General,
         EvacuationImpact,
-        ExternalReferralServices,
-        PetCarePlans,
-        RecoveryPlan
+        EvacuationExternalReferrals,
+        PetCarePlans
     }
 
     public enum ReferralServices
@@ -172,19 +125,5 @@ namespace EMBC.ESS.Resources.Cases
         Personal,
         ChildCare,
         PetCare
-    }
-
-    public enum InsuranceOption
-    {
-        No,
-        Yes,
-        Unsure,
-        Unknown
-    }
-
-    public enum NeedsAssessmentType
-    {
-        Preliminary,
-        Assessed
     }
 }

@@ -52,7 +52,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.AddToera_evacuationfiles(eraEvacuationFile);
             essContext.AddLink(primaryContact, nameof(primaryContact.era_evacuationfile_Registrant), eraEvacuationFile);
             essContext.SetLink(eraEvacuationFile, nameof(era_evacuationfile.era_Registrant), primaryContact);
-            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.Community), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
+            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.CommunityCode), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
 
             foreach (var needsAssessment in file.NeedsAssessments)
             {
@@ -98,7 +98,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.UpdateObject(updatedEvacuationFile);
             essContext.AddLink(primaryContact, nameof(contact.era_evacuationfile_Registrant), updatedEvacuationFile);
             essContext.SetLink(updatedEvacuationFile, nameof(era_evacuationfile.era_Registrant), primaryContact);
-            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.Community), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), updatedEvacuationFile);
+            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.CommunityCode), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), updatedEvacuationFile);
 
             foreach (var needsAssessment in file.NeedsAssessments)
             {
