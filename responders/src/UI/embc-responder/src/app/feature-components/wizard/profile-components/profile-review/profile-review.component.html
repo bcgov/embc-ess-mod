@@ -17,7 +17,7 @@
             <div class="row">
               <div class="col-8">
                 <mat-checkbox
-                  [checked]="!this.stepCreateProfileService.restrictedAccess"
+                  [checked]="!stepCreateProfileService?.restrictedAccess"
                   disabled
                 >
                   You have given your consent to have your location and contact
@@ -36,14 +36,14 @@
             <div class="row">
               <div class="col-4">Last Name</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.personalDetails.lastName }}
+                {{ stepCreateProfileService?.personalDetails?.lastName }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">First Name</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.personalDetails.firstName }}
+                {{ stepCreateProfileService?.personalDetails?.firstName }}
               </div>
             </div>
 
@@ -51,7 +51,7 @@
               <div class="col-4">Preferred Name</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.personalDetails.preferredName
+                  stepCreateProfileService?.personalDetails?.preferredName
                 }}
               </div>
             </div>
@@ -59,21 +59,21 @@
             <div class="row">
               <div class="col-4">Initials</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.personalDetails.initials }}
+                {{ stepCreateProfileService?.personalDetails?.initials }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Date of Birth</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.personalDetails.dateOfBirth }}
+                {{ stepCreateProfileService?.personalDetails?.dateOfBirth }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Gender</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.personalDetails.gender }}
+                {{ stepCreateProfileService?.personalDetails?.gender }}
               </div>
             </div>
           </div>
@@ -87,8 +87,8 @@
               <div class="col-4">Address Line 1</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.primaryAddressDetails
-                    .addressLine1
+                  stepCreateProfileService?.primaryAddressDetails
+                    ?.addressLine1
                 }}
               </div>
             </div>
@@ -97,8 +97,8 @@
               <div class="col-4">Address Line 2</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.primaryAddressDetails
-                    .addressLine2
+                  stepCreateProfileService?.primaryAddressDetails
+                    ?.addressLine2
                 }}
               </div>
             </div>
@@ -107,10 +107,10 @@
               <div class="col-4">City</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.primaryAddressDetails.community
+                  stepCreateProfileService?.primaryAddressDetails?.community
                     ?.name ||
-                    this.stepCreateProfileService.primaryAddressDetails
-                      .community
+                    stepCreateProfileService?.primaryAddressDetails
+                      ?.community
                 }}
               </div>
             </div>
@@ -119,10 +119,10 @@
               <div class="col-4">Province</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.primaryAddressDetails
-                    .stateProvince?.name ||
-                    this.stepCreateProfileService.primaryAddressDetails
-                      .stateProvince
+                  stepCreateProfileService?.primaryAddressDetails
+                    ?.stateProvince?.name ||
+                    stepCreateProfileService?.primaryAddressDetails
+                      ?.stateProvince
                 }}
               </div>
             </div>
@@ -131,7 +131,7 @@
               <div class="col-4">Postal Code</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.primaryAddressDetails.postalCode
+                  stepCreateProfileService?.primaryAddressDetails?.postalCode
                 }}
               </div>
             </div>
@@ -140,9 +140,9 @@
               <div class="col-4">Country</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.primaryAddressDetails.country
+                  stepCreateProfileService?.primaryAddressDetails?.country
                     ?.name ||
-                    this.stepCreateProfileService.primaryAddressDetails.country
+                    stepCreateProfileService?.primaryAddressDetails?.country
                 }}
               </div>
             </div>
@@ -157,8 +157,8 @@
               <div class="col-4">Address Line 1</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.mailingAddressDetails
-                    .addressLine1
+                  stepCreateProfileService?.mailingAddressDetails
+                    ?.addressLine1
                 }}
               </div>
             </div>
@@ -167,8 +167,8 @@
               <div class="col-4">Address Line 2</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.mailingAddressDetails
-                    .addressLine2
+                  stepCreateProfileService?.mailingAddressDetails
+                    ?.addressLine2
                 }}
               </div>
             </div>
@@ -177,10 +177,10 @@
               <div class="col-4">City</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.mailingAddressDetails.community
+                  stepCreateProfileService?.mailingAddressDetails?.community
                     ?.name ||
-                    this.stepCreateProfileService.mailingAddressDetails
-                      .community
+                    stepCreateProfileService?.mailingAddressDetails
+                      ?.community
                 }}
               </div>
             </div>
@@ -189,10 +189,10 @@
               <div class="col-4">Province</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.mailingAddressDetails
-                    .stateProvince?.name ||
-                    this.stepCreateProfileService.mailingAddressDetails
-                      .stateProvince
+                  stepCreateProfileService?.mailingAddressDetails
+                    ?.stateProvince?.name ||
+                    stepCreateProfileService?.mailingAddressDetails
+                      ?.stateProvince
                 }}
               </div>
             </div>
@@ -201,7 +201,7 @@
               <div class="col-4">Postal Code</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.mailingAddressDetails.postalCode
+                  stepCreateProfileService?.mailingAddressDetails?.postalCode
                 }}
               </div>
             </div>
@@ -210,9 +210,9 @@
               <div class="col-4">Country</div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.mailingAddressDetails.country
+                  stepCreateProfileService?.mailingAddressDetails?.country
                     ?.name ||
-                    this.stepCreateProfileService.mailingAddressDetails.country
+                    stepCreateProfileService?.mailingAddressDetails?.country
                 }}
               </div>
             </div>
@@ -226,7 +226,7 @@
             <div class="row">
               <div class="col-8">
                 <mat-checkbox
-                  [checked]="this.stepCreateProfileService.showContact"
+                  [checked]="stepCreateProfileService?.showContact"
                   [disabled]="true"
                 >
                   You have given your consent for Emergency Management British
@@ -236,17 +236,17 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="this.stepCreateProfileService.showContact">
+            <div class="row" *ngIf="stepCreateProfileService?.showContact">
               <div class="col-4">Telephone/Mobile</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.contactDetails?.email }}
+                {{ stepCreateProfileService?.contactDetails?.email }}
               </div>
             </div>
 
-            <div class="row" *ngIf="this.stepCreateProfileService.showContact">
+            <div class="row" *ngIf="stepCreateProfileService?.showContact">
               <div class="col-4">Email Address</div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.contactDetails?.phone }}
+                {{ stepCreateProfileService?.contactDetails?.phone }}
               </div>
             </div>
           </div>
@@ -258,7 +258,7 @@
 
             <div
               class="row"
-              *ngIf="this.stepCreateProfileService.bypassSecurityQuestions"
+              *ngIf="stepCreateProfileService?.bypassSecurityQuestions"
             >
               <div class="col-8">
                 <mat-checkbox [checked]="true" [disabled]="true">
@@ -269,16 +269,16 @@
 
             <div
               class="row"
-              *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions"
+              *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
             >
               <div class="col-4">
                 {{
-                  this.stepCreateProfileService.securityQuestions[0].question
+                  stepCreateProfileService?.securityQuestions[0]?.question
                 }}
               </div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.securityQuestions[0].answer
+                  stepCreateProfileService?.securityQuestions[0]?.answer
                     | maskText
                 }}
               </div>
@@ -286,16 +286,16 @@
 
             <div
               class="row"
-              *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions"
+              *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
             >
               <div class="col-4">
                 {{
-                  this.stepCreateProfileService.securityQuestions[1].question
+                  stepCreateProfileService?.securityQuestions[1]?.question
                 }}
               </div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.securityQuestions[1].answer
+                  stepCreateProfileService?.securityQuestions[1]?.answer
                     | maskText
                 }}
               </div>
@@ -303,16 +303,16 @@
 
             <div
               class="row"
-              *ngIf="!this.stepCreateProfileService.bypassSecurityQuestions"
+              *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
             >
               <div class="col-4">
                 {{
-                  this.stepCreateProfileService.securityQuestions[2].question
+                  stepCreateProfileService?.securityQuestions[2]?.question
                 }}
               </div>
               <div class="col-8 bold">
                 {{
-                  this.stepCreateProfileService.securityQuestions[2].answer
+                  stepCreateProfileService?.securityQuestions[2]?.answer
                     | maskText
                 }}
               </div>
@@ -351,9 +351,9 @@
 
                 <mat-error
                   *ngIf="
-                    verifiedProfileFC.touched &&
-                    verifiedProfileFC.invalid &&
-                    verifiedProfileFC.hasError('required')
+                    verifiedProfileFC?.touched &&
+                    verifiedProfileFC?.invalid &&
+                    verifiedProfileFC?.hasError('required')
                   "
                 >
                   Please select an option.
