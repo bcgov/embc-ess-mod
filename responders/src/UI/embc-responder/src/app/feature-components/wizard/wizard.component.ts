@@ -38,6 +38,7 @@ export class WizardComponent implements OnInit {
       const firstStepUrl = this.sideNavMenu[0].route;
       const firstStepId = this.sideNavMenu[0].step;
       const firstStepTitle = this.sideNavMenu[0].title;
+
       this.router.navigate([firstStepUrl], {
         state: { step: firstStepId, title: firstStepTitle }
       });
@@ -55,10 +56,15 @@ export class WizardComponent implements OnInit {
     if (lockedIndicator) {
       $event.stopPropagation();
       $event.preventDefault();
-      this.openLockedModal(
-        globalConst.lockedStepMessage.text,
-        globalConst.lockedStepMessage.title
-      );
+
+      const curStep = this.wizardService.getCurrentStep(this.router.url);
+      console.log(curStep);
+
+      const lockedMsg =
+        this.wizardService.menuItems[curStep]?.incompleteMsg ||
+        globalConst.stepIncompleteMessage;
+
+      this.openLockedModal(lockedMsg);
     }
   }
 

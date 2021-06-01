@@ -62,10 +62,13 @@ export const wizardESSFileMessage = {
   title: 'Complete all steps',
   text: 'Please complete all sections of the ESS File prior to submitting.'
 };
-export const lockedStepMessage = {
-  title: 'Complete ESS file',
-  text: 'Please complete the ESS File prior to proceeding to the next steps.'
-};
+
+export const evacueeProfileStepIncompleteMessage =
+  'Please <strong>complete the Evacuee Profile</strong> prior to proceeding to the next steps.';
+export const essFileStepIncompleteMessage =
+  'Please <strong>complete the ESS File</strong> prior to proceeding to the next steps.';
+export const stepIncompleteMessage =
+  'Please <strong>complete the current step</strong> prior to proceeding to the next steps.';
 
 export const successfulVerification =
   'Evacuee profile has been successfully verified';
