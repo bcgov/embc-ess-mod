@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as globalConst from '../../../core/services/global-constants';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -207,8 +207,8 @@ export class StepCreateProfileService {
    *
    * @param text text to display
    */
-  openModal(text: string, title?: string): void {
-    this.dialog.open(DialogComponent, {
+  openModal(text: string, title?: string): MatDialogRef<DialogComponent, any> {
+    const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
         text,
@@ -216,6 +216,8 @@ export class StepCreateProfileService {
       },
       width: '530px'
     });
+
+    return thisModal;
   }
 
   public createProfileDTO(): EvacueeProfile {

@@ -8,6 +8,7 @@ import { StepCreateProfileService } from '../../step-create-profile/step-create-
 import { WizardService } from '../../wizard.service';
 
 import * as globalConst from 'src/app/core/services/global-constants';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 @Component({
   selector: 'app-profile-review',
@@ -24,7 +25,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     private wizardService: WizardService,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
-    public stepCreateProfileService: StepCreateProfileService
+    public stepCreateProfileService: StepCreateProfileService,
+    private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {
@@ -64,15 +66,26 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         .upsertProfile(this.stepCreateProfileService.createProfileDTO())
         .subscribe(
           (profileId) => {
-            this.stepCreateProfileService.openModal(
-              globalConst.evacueeProfileCreatedMessage.text,
-              globalConst.evacueeProfileCreatedMessage.title
-            );
+            this.cacheService.set('profileId', profileId);
 
-            this.wizardService.setStepStatus(
-              '/ess-wizard/create-ess-file',
-              false
-            );
+            //TODO: Once "Get Profile" endpoint is ready, update stepCreateProfileService with DB data
+
+            this.stepCreateProfileService
+              .openModal(
+                globalConst.evacueeProfileCreatedMessage.text,
+                globalConst.evacueeProfileCreatedMessage.title
+              )
+              .afterClosed()
+              .subscribe(() => {
+                this.wizardService.setStepStatus(
+                  '/ess-wizard/create-ess-file',
+                  false
+                );
+
+                this.router.navigate([
+                  '/ess-wizard/create-ess-file/evacuation-details'
+                ]);
+              });
           },
           (error) => {
             this.saveLoader = false;

@@ -277,7 +277,10 @@
                 }}
               </div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.securityQuestions[0].answer | maskText }}
+                {{
+                  this.stepCreateProfileService.securityQuestions[0].answer
+                    | maskText
+                }}
               </div>
             </div>
 
@@ -291,7 +294,10 @@
                 }}
               </div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.securityQuestions[1].answer | maskText }}
+                {{
+                  this.stepCreateProfileService.securityQuestions[1].answer
+                    | maskText
+                }}
               </div>
             </div>
 
@@ -305,7 +311,10 @@
                 }}
               </div>
               <div class="col-8 bold">
-                {{ this.stepCreateProfileService.securityQuestions[2].answer | maskText }}
+                {{
+                  this.stepCreateProfileService.securityQuestions[2].answer
+                    | maskText
+                }}
               </div>
             </div>
           </div>
@@ -360,9 +369,24 @@
           <button class="button-s back" mat-button (click)="back()">
             Back
           </button>
-          <button class="button-p save" mat-button (click)="save()" [disabled]="saveLoader">
+
+          <button
+            class="button-p save"
+            mat-stroked-button
+            (click)="save()"
+            [disabled]="saveLoader"
+          >
             Save Profile
-            <app-loader [showLoader]="saveLoader"></app-loader>
+            <app-loader
+              style="
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+              "
+              [strokeWidth]="3"
+              [diameter]="20"
+              [showLoader]="saveLoader"
+            ></app-loader>
           </button>
         </div>
       </div>
