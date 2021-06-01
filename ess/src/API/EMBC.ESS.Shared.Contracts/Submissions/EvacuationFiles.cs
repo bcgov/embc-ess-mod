@@ -40,11 +40,11 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
 
     public enum EvacuationFileStatus
     {
-        Pending = 174360000,
-        Active = 174360001,
-        Completed = 174360002,
-        Expired = 174360003,
-        Archived = 174360004
+        Pending,
+        Active,
+        Completed,
+        Expired,
+        Archived
     }
 
     public class NeedsAssessment
@@ -108,7 +108,9 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public NoteType Type { get; set; }
         public string Content { get; set; }
         public DateTime AddedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
         public string CreatingTeamMemberId { get; set; }
+        public NoteStatus Status { get; set; }
     }
 
     public enum NoteType
@@ -117,6 +119,13 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         EvacuationImpact,
         EvacuationExternalReferrals,
         PetCarePlans
+    }
+
+    public enum NoteStatus
+    {
+        ReadOnly,
+        Editable,
+        Hidden
     }
 
     public enum ReferralServices

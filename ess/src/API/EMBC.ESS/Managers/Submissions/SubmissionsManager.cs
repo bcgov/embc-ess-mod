@@ -186,7 +186,7 @@ namespace EMBC.ESS.Managers.Submissions
                 LastName = query.LastName,
                 DateOfBirth = query.DateOfBirth,
                 IncludeHouseholdMembers = query.IncludeHouseholdMembers,
-                IncludeFilesInStatuses = query.IncludeFilesInStatuses
+                IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Cases.EvacuationFileStatus>(s.ToString())).ToArray()
             })).Items.Cast<Resources.Cases.EvacuationFile>();
 
             var results = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
@@ -238,6 +238,18 @@ namespace EMBC.ESS.Managers.Submissions
                 IsCorrect = string.Equals(file.SecurityPhrase, query.SecurityPhrase, StringComparison.OrdinalIgnoreCase)
             };
             return ret;
+        }
+
+        public async Task<string> Handle(SaveEvacuationFileNotes cmd)
+        {
+            await Task.CompletedTask;
+            throw new NotImplementedException();
+        }
+
+        public async Task<EvacuationFileNotesQueryResult> Handle(EvacuationFileNotesQuery query)
+        {
+            await Task.CompletedTask;
+            throw new NotImplementedException();
         }
     }
 }
