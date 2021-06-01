@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AnimalsRoutingModule } from './animals-routing.module';
-import { AnimalsComponent } from './animals.component';
+import { NeedsRoutingModule } from './needs-routing.module';
+import { NeedsComponent } from './needs.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [AnimalsComponent],
+  declarations: [NeedsComponent],
   imports: [
     CommonModule,
-    AnimalsRoutingModule,
+    NeedsRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
     SharedModule
   ]
 })
-export class AnimalsModule {}
+export class NeedsModule {}

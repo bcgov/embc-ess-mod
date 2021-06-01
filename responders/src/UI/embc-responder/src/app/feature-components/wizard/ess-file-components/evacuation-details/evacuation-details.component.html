@@ -35,8 +35,6 @@
               </div>
               <br />
 
-              <div class="col-12 divider"></div>
-
               <div class="col-12">
                 <span class="tab-subtitle"
                   >Are you being evacuated from your primary address? </span
@@ -80,14 +78,12 @@
                   [addressForm]="evacAddressFormGroup"
                 ></app-bc-address>
               </div>
-              <div class="col-12 additional-form" *ngIf="showBCAddressForm">
+              <div class="col-12" *ngIf="showBCAddressForm">
                 <p><b>Where are you being evacuated from?</b></p>
                 <app-bc-address
                   [addressForm]="evacAddressFormGroup"
                 ></app-bc-address>
               </div>
-
-              <div class="col-12 divider"></div>
 
               <div class="col-12">
                 <span class="tab-subtitle"
@@ -125,8 +121,6 @@
                 </div>
               </div>
 
-              <div class="col-12 divider"></div>
-
               <div class="col-12">
                 <span class="tab-subtitle"
                   >Do you have insurance to cover your immediate needs? </span
@@ -161,8 +155,6 @@
                   >
                 </mat-radio-group>
               </div>
-
-              <div class="col-12 divider"></div>
 
               <div class="col-12">
                 <span class="tab-subtitle"
@@ -199,8 +191,6 @@
                 </div>
               </div>
 
-              <div class="col-12 divider"></div>
-
               <div class="col-12">
                 <span class="tab-subtitle"
                   >Emergency Support Services provides short term assistance to
@@ -224,8 +214,6 @@
                 </mat-form-field>
               </div>
 
-              <div class="col-12 divider"></div>
-
               <div class="col-12">
                 <span class="tab-subtitle"
                   >Has the evacuee been referred to any services available in
@@ -246,10 +234,7 @@
                   </mat-radio-button>
                 </mat-radio-group>
               </div>
-              <div
-                class="col-12 additional-form"
-                *ngIf="showReferredServicesForm"
-              >
+              <div class="col-12" *ngIf="showReferredServicesForm">
                 <p>
                   <b
                     >Please select the ones you have recommended for the evacuee </b
@@ -266,8 +251,6 @@
                   >
                 </section>
               </div>
-
-              <div class="col-12 divider"></div>
 
               <div class="col-12">
                 <span class="tab-subtitle"

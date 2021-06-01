@@ -217,7 +217,7 @@ namespace EMBC.ESS.Managers.Submissions
                         Shared.Contracts.Submissions.SecurityQuestion question = query.Answers.ElementAt(i);
                         string submittedAnswer = question.Answer;
                         string savedAnswer = contact.SecurityQuestions.Where(q => q.Id == question.Id).FirstOrDefault().Answer;
-                        if (savedAnswer.ToLower().Equals(submittedAnswer.ToLower()))
+                        if (string.Equals(savedAnswer, submittedAnswer, StringComparison.OrdinalIgnoreCase))
                         {
                             ++ret.NumberOfCorrectAnswers;
                         }
@@ -230,15 +230,19 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<VerifySecurityPhraseResponse> Handle(VerifySecurityPhraseQuery query)
         {
-            //bool maskSecurityPhrase = false;
-            //var file = await evacuationRepository.Read(query.FileId, maskSecurityPhrase);
-            //VerifySecurityPhraseResponse ret = new VerifySecurityPhraseResponse
-            //{
-            //    IsCorrect = file.SecurityPhrase.ToLower().Equals(query.SecurityPhrase.ToLower())
-            //};
-            //return ret;
-            await Task.CompletedTask;
-            throw new NotImplementedException("Need to fix this handler to call CASE repository, not evacuation repository");
+            var file = (await caseRepository.QueryCase(new EvacuationFilesQuery
+            {
+                FileId = query.FileId,
+                MaskSecurityPhrase = false
+            })).Items.Cast<Resources.Cases.EvacuationFile>().FirstOrDefault();
+
+            if (file == null) throw new Exception($"Evacuation File {query.FileId} not found");
+
+            VerifySecurityPhraseResponse ret = new VerifySecurityPhraseResponse
+            {
+                IsCorrect = string.Equals(file.SecurityPhrase, query.SecurityPhrase, StringComparison.OrdinalIgnoreCase)
+            };
+            return ret;
         }
     }
 }

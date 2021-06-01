@@ -4,6 +4,7 @@ import {
   AbstractControl,
   FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   Validators
 } from '@angular/forms';
@@ -12,10 +13,8 @@ import { Router } from '@angular/router';
 import { Address } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import * as globalConst from '../../../../core/services/global-constants';
-import { AddressService } from '../../profile-components/address/address.service';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { Subscription } from 'rxjs';
-import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -154,6 +153,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   }
 
   private createEvacDetailsForm(): void {
+    if (!this.stepCreateEssFileService.referredServiceDetailS)
+      this.stepCreateEssFileService.referredServiceDetailS = [];
+
     this.evacDetailsForm = this.formBuilder.group({
       paperESSFile: [
         this.stepCreateEssFileService.paperESSFiles !== undefined
@@ -195,9 +197,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
           : ''
       ],
       referredServiceDetails: [
-        this.stepCreateEssFileService.referredServiceDetailS.length !== 0
-          ? this.stepCreateEssFileService.referredServiceDetailS
-          : new FormArray([]),
+        this.stepCreateEssFileService.referredServiceDetailS,
         [
           this.customValidation
             .conditionalValidation(
@@ -244,12 +244,14 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       stateProvince: [
         this.stepCreateEssFileService?.evacAddresS?.stateProvince !== undefined
           ? this.stepCreateEssFileService.evacAddresS.stateProvince
-          : this.defaultProvince
+          : '',
+        [Validators.required]
       ],
       country: [
         this.stepCreateEssFileService?.evacAddresS?.country !== undefined
           ? this.stepCreateEssFileService.evacAddresS.country
-          : this.defaultCountry
+          : '',
+        [Validators.required]
       ],
       postalCode: [
         this.stepCreateEssFileService?.evacAddresS?.postalCode !== undefined
