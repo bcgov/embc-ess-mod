@@ -5,9 +5,15 @@ import { EvacueeProfileDashboardRoutingModule } from './evacuee-profile-dashboar
 import { EvacueeProfileDashboardComponent } from './evacuee-profile-dashboard.component';
 import { MaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatchedEssfilesComponent } from './matched-essfiles/matched-essfiles.component';
+import { PossibleMatchedEssfilesComponent } from './possible-matched-essfiles/possible-matched-essfiles.component';
 
 @NgModule({
-  declarations: [EvacueeProfileDashboardComponent],
+  declarations: [
+    EvacueeProfileDashboardComponent,
+    MatchedEssfilesComponent,
+    PossibleMatchedEssfilesComponent
+  ],
   imports: [
     CommonModule,
     EvacueeProfileDashboardRoutingModule,
