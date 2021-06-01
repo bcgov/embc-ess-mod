@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using EMBC.ESS.Shared.Contracts.Submissions;
+﻿using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Registrants.API.Controllers;
 using EMBC.Registrants.API.Mappers;
 using Shouldly;
@@ -35,7 +34,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             profile.ShouldNotBeNull();
 
             profile.Id.ShouldBe(registrantProfile.UserId);
-            profile.SecretPhrase.ShouldBe(registrantProfile.SecretPhrase);
+            //profile.SecretPhrase.ShouldBe(registrantProfile.SecretPhrase);
             profile.RestrictedAccess.ShouldBe(registrantProfile.RestrictedAccess);
 
             profile.PersonalDetails.DateOfBirth.ShouldBe(registrantProfile.DateOfBirth);
@@ -76,7 +75,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             registrantProfile.ShouldNotBeNull();
 
             registrantProfile.UserId.ShouldBe(profile.Id);
-            registrantProfile.SecretPhrase.ShouldBe(profile.SecretPhrase);
+            //registrantProfile.SecretPhrase.ShouldBe(profile.SecretPhrase);
             registrantProfile.RestrictedAccess.ShouldBe(profile.RestrictedAccess);
 
             registrantProfile.FirstName.ShouldBe(profile.PersonalDetails.FirstName);

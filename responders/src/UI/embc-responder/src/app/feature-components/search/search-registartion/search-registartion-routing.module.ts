@@ -55,11 +55,11 @@ const routes: Routes = [
           ).then((m) => m.ProfileSecurityQuestionsModule)
       },
       {
-        path: 'evacuee-profile',
+        path: 'evacuee-profile-dashboard',
         loadChildren: () =>
-          import('../selected-profile/selected-profile.module').then(
-            (m) => m.SelectedProfileModule
-          )
+          import(
+            '../evacuee-profile-dashboard/evacuee-profile-dashboard.module'
+          ).then((m) => m.EvacueeProfileDashboardModule)
       }
     ]
   }

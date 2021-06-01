@@ -40,28 +40,21 @@ namespace EMBC.Registrants.API.Services
 
         public async Task<IEnumerable<EvacuationFile>> GetFiles(string byRegistrantUserId, EvacuationFileStatus[] byStatus)
         {
-            var files = (await messagingClient.Send(new SearchQuery
+            var files = (await messagingClient.Send(new EvacuationFilesSearchQuery
             {
-                SearchParameters = new[]
-                {
-                    new EvacuationFilesSearchCriteria { PrimaryRegistrantUserId = byRegistrantUserId, IncludeFilesInStatuses = byStatus }
-                }
-            })).MatchingFiles;
+                PrimaryRegistrantUserId = byRegistrantUserId,
+                IncludeFilesInStatuses = byStatus
+            })).Items;
 
             return files;
         }
 
         public async Task<RegistrantProfile> GetRegistrantByUserId(string userId)
         {
-            var registrant = (await messagingClient.Send(new SearchQuery
-            {
-                SearchParameters = new[]
-                {
-                    new RegistrantsSearchCriteria { UserId = userId }
-                }
-            })).MatchingRegistrants.SingleOrDefault();
+            var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
+            { UserId = userId })).Items.SingleOrDefault();
 
-            return registrant;
+            return registrant.RegistrantProfile;
         }
     }
 }

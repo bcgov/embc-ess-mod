@@ -1,3 +1,222 @@
-<p>animals works!</p>
+<div class="container container-frame">
+  <div class="heading-container">
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-tab-heading">Animals</span>
+      </div>
+    </div>
+  </div>
 
-<button class="button-p" mat-button (click)="next()">Next</button>
+  <div class="row">
+    <div class="col-12 content-container">
+      <form [formGroup]="animalsForm">
+        <p class="no-margin">
+          Do you have any pets that live in the same household with you?
+          <span class="required-symbol">*</span>
+        </p>
+
+        <mat-radio-group
+          aria-labelledby="primary-radio-group-label"
+          formControlName="hasPets"
+          class="primary-radio-group"
+          required
+          (change)="hasPetsChange($event)"
+        >
+          <mat-radio-button
+            class="primary-radio-button"
+            *ngFor="let option of radioOption"
+            [value]="option.value"
+          >
+            {{ option.name }}
+          </mat-radio-button>
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              animalsFormControl?.hasPets.touched &&
+              animalsFormControl?.hasPets.invalid &&
+              animalsFormControl?.hasPets.hasError('required')
+            "
+          >
+            Confirm to have pets is required</mat-error
+          >
+        </mat-radio-group>
+        <div class="row" *ngIf="dataSource.getValue().length > 0">
+          <div class="col-8">
+            <br />
+            <div class="col-4">
+              <button
+                class="animal-button details-button"
+                mat-button
+                type="button"
+                (click)="addPets()"
+              >
+                + Add Pets
+              </button>
+            </div>
+            <br />
+            <mat-table [dataSource]="dataSource">
+              <ng-container matColumnDef="type">
+                <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
+                <mat-cell
+                  [ngClass]="element.type.length >= 40 ? 'wrapText' : ''"
+                  *matCellDef="let element"
+                >
+                  <span class="mobile-label">Pet Type</span>
+                  {{ element.type }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="quantity">
+                <mat-header-cell *matHeaderCellDef> How Many </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <span class="mobile-label">How Many:</span>
+                  {{ element.quantity }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="buttons">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let element; let index = index">
+                  <button
+                    class="edit-image"
+                    mat-icon-button
+                    aria-label="Edit"
+                    (click)="editRow(element, index)"
+                    *ngIf="!showPetsForm"
+                  >
+                    <img src="/assets/images/edit.svg" height="35" width="35" />
+                    <img
+                      src="/assets/images/edit_onhover.svg"
+                      height="35"
+                      width="35"
+                    />
+                  </button>
+
+                  <button
+                    class="delete-image"
+                    mat-icon-button
+                    aria-label="Remove"
+                    (click)="deleteRow(index)"
+                    *ngIf="!showPetsForm"
+                  >
+                    <img
+                      src="/assets/images/delete.svg"
+                      height="35"
+                      width="35"
+                    />
+                    <img
+                      src="/assets/images/delete_onhover.svg"
+                      height="35"
+                      width="35"
+                    />
+                  </button>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row
+                *matHeaderRowDef="displayedColumns"
+              ></mat-header-row>
+              <mat-row
+                *matRowDef="let row; columns: displayedColumns"
+              ></mat-row>
+            </mat-table>
+          </div>
+        </div>
+        <br />
+
+        <div *ngIf="showPetsForm">
+          <app-pet-form [petForm]="petFormGroup"></app-pet-form>
+          <div class="row">
+            <div class="col-md-3">
+              <button
+                class="button-s details-button"
+                mat-button
+                type="button"
+                (click)="cancel()"
+              >
+                Cancel
+              </button>
+            </div>
+            <div class="col-md-3">
+              <button
+                class="animal-button details-button save-button"
+                mat-button
+                type="button"
+                (click)="save()"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <br />
+        <br />
+
+        <div *ngIf="dataSource.getValue().length > 0" class="card-align">
+          <div class="row">
+            <div class="col-md-12">
+              <label class="no-margin" id="primary-radio-group-label"
+                >Do you have sufficient food for your pet(s)?</label
+              ><span class="required-symbol">*</span>
+              <br />
+              <mat-radio-group
+                aria-labelledby="primary-radio-group-label"
+                formControlName="hasPetsFood"
+                class="primary-radio-group"
+              >
+                <mat-radio-button
+                  class="primary-radio-button"
+                  *ngFor="let option of radioOption"
+                  [value]="option.value"
+                >
+                  {{ option.name }}
+                </mat-radio-button>
+                <mat-error
+                  class="custom-mat-error"
+                  *ngIf="
+                    animalsFormControl?.hasPetsFood.touched &&
+                    animalsFormControl?.hasPetsFood.invalid &&
+                    animalsFormControl?.hasPetsFood.hasError('required')
+                  "
+                >
+                  Pet food is required</mat-error
+                >
+              </mat-radio-group>
+              <br />
+              <label class="no-margin" id="primary-radio-group-label"
+                >What are your pet care plans for the duration that you are
+                evacuated?</label
+              >
+              <br />
+              <mat-form-field appearance="outline">
+                <textarea
+                  rows="10"
+                  formControlName="petCareDetails"
+                  placeholder="Please write in the evacuees own words as mush as possible."
+                  maxlength="4000"
+                  matInput
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+      <br />
+      <div class="row">
+        <div class="col-md-6">
+          <button class="button-s back" mat-button (click)="back()">
+            Back
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button class="button-p next" mat-button (click)="next()">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="button-p" mat-button (click)="next()">Next</button>
+</div>

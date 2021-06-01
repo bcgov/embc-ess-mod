@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EMBC.ESS.Shared.Contracts.Submissions;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -64,11 +65,19 @@ namespace EMBC.ESS.Resources.Cases
         public string SecurityPhrase { get; set; }
     }
 
-    public class QueryEvacuationFiles : CaseQuery
+    public class EvacuationFilesQuery : CaseQuery
     {
         public string FileId { get; set; }
-        public string UserId { get; set; }
         public string PrimaryRegistrantId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DateOfBirth { get; set; }
+        public bool IncludeHouseholdMembers { get; set; }
+        public bool MaskSecurityPhrase { get; set; } = true;
+        public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
+        public DateTime? RegistraionDateFrom { get; set; }
+        public DateTime? RegistraionDateTo { get; set; }
+        public int? Limit { get; set; }
     }
 
     public class EvacuationFile : Case
@@ -78,7 +87,10 @@ namespace EMBC.ESS.Resources.Cases
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
         public bool PhraseChanged { get; set; } = false;
-        public DateTime EvacuationDate { get; internal set; }
+        public DateTime EvacuationDate { get; set; }
+        public EvacuationFileStatus Status { get; set; }
+        public bool RestrictedAccess { get; set; }
+        public bool IsSecretPhraseMasked { get; set; }
     }
 
     public class EvacuationAddress
@@ -94,9 +106,7 @@ namespace EMBC.ESS.Resources.Cases
     public class NeedsAssessment
     {
         public string Id { get; set; }
-
         public InsuranceOption Insurance { get; set; }
-
         public bool? CanEvacueeProvideFood { get; set; }
         public bool? CanEvacueeProvideLodging { get; set; }
         public bool? CanEvacueeProvideClothing { get; set; }
@@ -114,13 +124,16 @@ namespace EMBC.ESS.Resources.Cases
     public class HouseholdMember
     {
         public string Id { get; set; }
-        public bool isUnder19 { get; set; }
+        public bool IsUnder19 { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
         public string PreferredName { get; set; }
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
+        public bool IsPrimaryRegistrant { get; set; }
+        public string LinkedRegistrantId { get; set; }
+        public bool RestrictedAccess { get; set; }
     }
 
     public class Pet

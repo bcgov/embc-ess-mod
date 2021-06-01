@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectedProfileComponent } from './selected-profile.component';
+import { MatchedEssfilesComponent } from './matched-essfiles.component';
 
-describe('SelectedProfileComponent', () => {
-  let component: SelectedProfileComponent;
-  let fixture: ComponentFixture<SelectedProfileComponent>;
+describe('MatchedEssfilesComponent', () => {
+  let component: MatchedEssfilesComponent;
+  let fixture: ComponentFixture<MatchedEssfilesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SelectedProfileComponent]
+      declarations: [MatchedEssfilesComponent]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SelectedProfileComponent);
+    fixture = TestBed.createComponent(MatchedEssfilesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

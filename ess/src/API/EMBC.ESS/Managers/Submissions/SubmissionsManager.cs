@@ -20,7 +20,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Cases;
-using EMBC.ESS.Resources.Cases.Evacuations;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Notifications;
@@ -32,7 +31,6 @@ namespace EMBC.ESS.Managers.Submissions
     {
         private readonly IMapper mapper;
         private readonly IContactRepository contactRepository;
-        private readonly IEvacuationRepository evacuationRepository;
         private readonly ITemplateProviderResolver templateProviderResolver;
         private readonly ICaseRepository caseRepository;
         private readonly ITransformator transformator;
@@ -41,7 +39,6 @@ namespace EMBC.ESS.Managers.Submissions
         public SubmissionsManager(
             IMapper mapper,
             IContactRepository contactRepository,
-            IEvacuationRepository evacuationRepository,
             ITemplateProviderResolver templateProviderResolver,
             ICaseRepository caseRepository,
             ITransformator transformator,
@@ -49,7 +46,6 @@ namespace EMBC.ESS.Managers.Submissions
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
-            this.evacuationRepository = evacuationRepository;
             this.templateProviderResolver = templateProviderResolver;
             this.caseRepository = caseRepository;
             this.transformator = transformator;
@@ -80,7 +76,7 @@ namespace EMBC.ESS.Managers.Submissions
         public async Task<string> Handle(SubmitEvacuationFileCommand cmd)
         {
             var file = mapper.Map<Resources.Cases.EvacuationFile>(cmd.File);
-            var contact = (await contactRepository.QueryContact(new ContactQuery { ByContactId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
+            var contact = (await contactRepository.QueryContact(new ContactQuery { ContactId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
 
             if (contact == null) throw new Exception($"Registrant not found '{file.PrimaryRegistrantId}'");
 
@@ -99,75 +95,6 @@ namespace EMBC.ESS.Managers.Submissions
             }
 
             return caseId;
-        }
-
-        public async Task<SearchQueryResult> Handle(SearchQuery query)
-        {
-            IEnumerable<Contact> contacts = Array.Empty<Contact>();
-            IEnumerable<Case> cases = Array.Empty<Case>();
-            foreach (var criteria in query.SearchParameters)
-            {
-                if (criteria is RegistrantsSearchCriteria registrantsSearchCriteria)
-                {
-                    contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = registrantsSearchCriteria.UserId })).Items;
-                }
-                else if (criteria is EvacuationFilesSearchCriteria evacuationFilesSearchCriteria)
-                {
-                    cases = (await caseRepository.QueryCase(new QueryEvacuationFiles
-                    {
-                        PrimaryRegistrantId = evacuationFilesSearchCriteria.PrimaryRegistrantId,
-                        UserId = evacuationFilesSearchCriteria.PrimaryRegistrantUserId,
-                        FileId = evacuationFilesSearchCriteria.FileId
-                    })).Items;
-                }
-            }
-
-            return await Task.FromResult(new SearchQueryResult()
-            {
-                MatchingFiles = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases),
-                MatchingRegistrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts),
-            });
-        }
-
-        public async Task<VerifySecurityQuestionsResponse> Handle(VerifySecurityQuestionsQuery query)
-        {
-            IEnumerable<Contact> contacts = Array.Empty<Contact>();
-            contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = query.RegistrantId, MaskSecurityAnswers = false })).Items;
-            VerifySecurityQuestionsResponse ret = new VerifySecurityQuestionsResponse
-            {
-                NumberOfCorrectAnswers = 0
-            };
-
-            if (contacts.Count() == 1)
-            {
-                Contact contact = contacts.First();
-                if (contact.SecurityQuestions != null && contact.SecurityQuestions.Count() > 0)
-                {
-                    for (int i = 0; i < query.Answers.Count(); ++i)
-                    {
-                        Shared.Contracts.Submissions.SecurityQuestion question = query.Answers.ElementAt(i);
-                        string submittedAnswer = question.Answer;
-                        string savedAnswer = contact.SecurityQuestions.Where(q => q.Id == question.Id).FirstOrDefault().Answer;
-                        if (savedAnswer.ToLower().Equals(submittedAnswer.ToLower()))
-                        {
-                            ++ret.NumberOfCorrectAnswers;
-                        }
-                    }
-                }
-            }
-
-            return ret;
-        }
-
-        public async Task<VerifySecurityPhraseResponse> Handle(VerifySecurityPhraseQuery query)
-        {
-            bool maskSecurityPhrase = false;
-            var file = await evacuationRepository.Read(query.FileId, maskSecurityPhrase);
-            VerifySecurityPhraseResponse ret = new VerifySecurityPhraseResponse
-            {
-                IsCorrect = file.SecurityPhrase.ToLower().Equals(query.SecurityPhrase.ToLower())
-            };
-            return ret;
         }
 
         public async Task<string> Handle(SaveRegistrantCommand cmd)
@@ -221,6 +148,96 @@ namespace EMBC.ESS.Managers.Submissions
                 Content = emailContent,
                 To = new[] { new EmailAddress { Name = name, Address = email } }
             });
+        }
+
+        public async Task<RegistrantsSearchQueryResult> Handle(RegistrantsSearchQuery query)
+        {
+            var contacts = (await contactRepository.QueryContact(new SearchContactQuery
+            {
+                UserId = query.UserId,
+                FirstName = query.FirstName,
+                LastName = query.LastName,
+                DateOfBirth = query.DateOfBirth
+            })).Items;
+            var registrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts);
+
+            var results = new List<RegistrantWithFiles>();
+            foreach (var registrant in registrants)
+            {
+                var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id }))
+                    .Items.Cast<Resources.Cases.EvacuationFile>();
+                results.Add(new RegistrantWithFiles
+                {
+                    RegistrantProfile = registrant,
+                    Files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(files)
+                });
+            }
+
+            return new RegistrantsSearchQueryResult { Items = results };
+        }
+
+        public async Task<EvacuationFilesSearchQueryResult> Handle(EvacuationFilesSearchQuery query)
+        {
+            var cases = (await caseRepository.QueryCase(new EvacuationFilesQuery
+            {
+                FileId = query.FileId,
+                PrimaryRegistrantId = query.PrimaryRegistrantId,
+                FirstName = query.FirstName,
+                LastName = query.LastName,
+                DateOfBirth = query.DateOfBirth,
+                IncludeHouseholdMembers = query.IncludeHouseholdMembers,
+                IncludeFilesInStatuses = query.IncludeFilesInStatuses
+            })).Items.Cast<Resources.Cases.EvacuationFile>();
+
+            var results = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
+            return new EvacuationFilesSearchQueryResult { Items = results };
+        }
+
+        public async Task<VerifySecurityQuestionsResponse> Handle(VerifySecurityQuestionsQuery query)
+        {
+            IEnumerable<Contact> contacts = Array.Empty<Contact>();
+            contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = query.RegistrantId, MaskSecurityAnswers = false })).Items;
+            VerifySecurityQuestionsResponse ret = new VerifySecurityQuestionsResponse
+            {
+                NumberOfCorrectAnswers = 0
+            };
+
+            if (contacts.Count() == 1)
+            {
+                Contact contact = contacts.First();
+                if (contact.SecurityQuestions != null && contact.SecurityQuestions.Count() > 0)
+                {
+                    for (int i = 0; i < query.Answers.Count(); ++i)
+                    {
+                        Shared.Contracts.Submissions.SecurityQuestion question = query.Answers.ElementAt(i);
+                        string submittedAnswer = question.Answer;
+                        string savedAnswer = contact.SecurityQuestions.Where(q => q.Id == question.Id).FirstOrDefault().Answer;
+                        if (string.Equals(savedAnswer, submittedAnswer, StringComparison.OrdinalIgnoreCase))
+                        {
+                            ++ret.NumberOfCorrectAnswers;
+                        }
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        public async Task<VerifySecurityPhraseResponse> Handle(VerifySecurityPhraseQuery query)
+        {
+            var file = (await caseRepository.QueryCase(new EvacuationFilesQuery
+            {
+                FileId = query.FileId,
+                MaskSecurityPhrase = false
+            })).Items.Cast<Resources.Cases.EvacuationFile>().FirstOrDefault();
+
+            if (file == null) throw new Exception($"Evacuation File {query.FileId} not found");
+
+            VerifySecurityPhraseResponse ret = new VerifySecurityPhraseResponse
+            {
+                IsCorrect = string.Equals(file.SecurityPhrase, query.SecurityPhrase, StringComparison.OrdinalIgnoreCase)
+            };
+            return ret;
         }
     }
 }

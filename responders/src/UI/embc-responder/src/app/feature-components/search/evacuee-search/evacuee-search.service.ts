@@ -20,7 +20,10 @@ export class EvacueeSearchService {
   public setEvacueeSearchContext(
     evacueeSearchContext: EvacueeSearchContextModel
   ): void {
-    this.cacheService.set('evacueeSearchContext', evacueeSearchContext);
-    this.evacueeSearchContext = evacueeSearchContext;
+    this.evacueeSearchContext = {
+      ...this.evacueeSearchContext,
+      ...evacueeSearchContext
+    };
+    this.cacheService.set('evacueeSearchContext', this.evacueeSearchContext);
   }
 }

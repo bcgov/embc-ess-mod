@@ -19,7 +19,7 @@ using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.OData.Edm;
 
-namespace EMBC.ESS.Resources.Cases
+namespace EMBC.ESS.Resources.Cases.Evacuations
 {
     public class Mappings : Profile
     {
@@ -36,6 +36,7 @@ namespace EMBC.ESS.Resources.Cases
                 .ForMember(d => d.era_city, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Community))
                 .ForMember(d => d.era_country, opts => opts.MapFrom(s => s.EvacuatedFromAddress.Country))
                 .ForMember(d => d.era_province, opts => opts.MapFrom(s => s.EvacuatedFromAddress.StateProvince))
+                .ForMember(d => d.era_secrettext, opts => opts.MapFrom(s => s.SecurityPhrase))
                 ;
 
             CreateMap<era_evacuationfile, EvacuationFile>()
@@ -45,7 +46,10 @@ namespace EMBC.ESS.Resources.Cases
                 .ForMember(d => d.PhraseChanged, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.era_evacuationfiledate.HasValue ? s.era_evacuationfiledate.Value.UtcDateTime : (DateTime?)null))
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => s.era_needsassessment_EvacuationFile))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s))
+                .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 ;
 
             CreateMap<EvacuationAddress, era_evacuationfile>(MemberList.None)
@@ -94,59 +98,62 @@ namespace EMBC.ESS.Resources.Cases
                 .ForMember(d => d.Pets, opts => opts.MapFrom(s => Array.Empty<Pet>()))
                ;
 
-            CreateMap<HouseholdMember, era_needsassessmentevacuee>(MemberList.None)
-                .ForMember(d => d.era_RegistrantID, opts => opts.MapFrom(s => s))
-                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => s.isUnder19))
+            CreateMap<era_householdmember, HouseholdMember>()
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_householdmemberid.ToString()))
+                .ForMember(d => d.LinkedRegistrantId, opts => opts.MapFrom(s => s.era_Registrant.contactid))
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_Registrant.era_restriction))
+                .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.era_isprimaryregistrant))
+                .ForMember(d => d.IsUnder19, opts => opts.MapFrom(s => s.era_isunder19))
+                .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_Registrant.firstname.ToString()))
+                .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_Registrant.lastname.ToString()))
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => !s.era_Registrant.birthdate.HasValue
+                    ? null
+                    : $"{s.era_Registrant.birthdate.Value.Month:D2}/{s.era_Registrant.birthdate.Value.Day:D2}/{s.era_Registrant.birthdate.Value.Year:D4}"))
+                .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_Registrant.era_initial.ToString()))
+                .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.era_Registrant.era_preferredname.ToString()))
+                .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.era_Registrant.gendercode))
                 ;
 
-            CreateMap<era_needsassessmentevacuee, HouseholdMember>()
-                .ForMember(d => d.isUnder19, opts => opts.MapFrom(s => s.era_isunder19))
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_RegistrantID.contactid))
-                .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_RegistrantID.firstname))
-                .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_RegistrantID.lastname))
-                .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_RegistrantID.era_initial))
-                .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.era_RegistrantID.era_preferredname))
-                .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.era_RegistrantID == null ? null : s.era_RegistrantID.gendercode))
-                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.era_RegistrantID.birthdate.HasValue
-                    ? $"{s.era_RegistrantID.birthdate.Value.Month:D2}/{s.era_RegistrantID.birthdate.Value.Day:D2}/{s.era_RegistrantID.birthdate.Value.Year:D2}"
-                    : null))
+            CreateMap<HouseholdMember, era_householdmember>(MemberList.None)
+                .ForMember(d => d.era_householdmemberid, opts => opts.MapFrom(s => Guid.Parse(s.Id)))
+                .ForMember(d => d.era_isprimaryregistrant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
+                .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => s.IsUnder19))
+                .ForMember(d => d.era_Registrant, opts => opts.MapFrom(s => s))
                 ;
 
             CreateMap<HouseholdMember, contact>(MemberList.None)
-                .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.contactid, opts => opts.MapFrom(s => s.LinkedRegistrantId))
+                .ForMember(d => d.era_registranttype, opts => opts.MapFrom(s => (int)(s.IsPrimaryRegistrant ? RegistrantType.Primary : RegistrantType.Member)))
                 .ForMember(d => d.firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.lastname, opts => opts.MapFrom(s => s.LastName))
                 .ForMember(d => d.era_initial, opts => opts.MapFrom(s => s.Initials))
                 .ForMember(d => d.era_preferredname, opts => opts.MapFrom(s => s.PreferredName))
                 .ForMember(d => d.gendercode, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))
                 .ForMember(d => d.birthdate, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.DateOfBirth) ? (Date?)null : Date.Parse(s.DateOfBirth)))
-                ;
 
-            CreateMap<era_needsassessmentevacuee, Pet>()
+                .ReverseMap()
+
+                .ForMember(d => d.Gender, opts => opts.ConvertUsing<GenderConverter, int?>(s => s.gendercode))
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => !s.birthdate.HasValue
+                    ? null
+                    : $"{s.birthdate.Value.Month:D2}/{s.birthdate.Value.Day:D2}/{s.birthdate.Value.Year:D4}"))
+                .ForMember(d => d.IsUnder19, opts => opts.MapFrom(s => s.birthdate.HasValue ? CheckIfUnder19Years(s.birthdate.Value, Date.Now) : (bool?)null))
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.era_restriction ?? false))
+               ;
+
+            CreateMap<era_needsassessmentanimal, Pet>()
                 .ForMember(d => d.Quantity, opts => opts.MapFrom(s => s.era_numberofpets))
-                .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_typeofpet))
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_name))
 
                 .ReverseMap()
 
                 .ForMember(d => d.era_numberofpets, opts => opts.MapFrom(s => s.Quantity))
-                .ForMember(d => d.era_typeofpet, opts => opts.MapFrom(s => s.Type));
-
-            //CreateMap<HouseholdMember, contact>()
-            //    .ReverseMap()
-            //    ;
-
-            //CreateMap<HouseholdMember, era_householdmember>()
-            //   .ReverseMap()
-            //   ;
-
-            //CreateMap<Pet, era_householdmember>()
-            //   .ReverseMap()
-            //   ;
+                .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Type));
         }
 
-        private int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
+        private static int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;
 
-        private bool? Lookup(int? value) => value switch
+        private static bool? Lookup(int? value) => value switch
         {
             174360000 => true,
             174360001 => false,
@@ -154,19 +161,30 @@ namespace EMBC.ESS.Resources.Cases
             _ => null
         };
 
-        public enum InsuranceOptionOptionSet
+        public static bool CheckIfUnder19Years(Date birthdate, Date currentDate)
         {
-            No = 174360000,
-            Yes = 174360001,
-            Unsure = 174360002,
-            Unknown = 174360003
+            return birthdate.AddYears(19) >= currentDate;
         }
+    }
 
-        public enum NeedsAssessmentTypeOptionSet
-        {
-            Preliminary = 174360000,
-            Assessed = 174360001
-        }
+    public enum InsuranceOptionOptionSet
+    {
+        No = 174360000,
+        Yes = 174360001,
+        Unsure = 174360002,
+        Unknown = 174360003
+    }
+
+    public enum NeedsAssessmentTypeOptionSet
+    {
+        Preliminary = 174360000,
+        Assessed = 174360001
+    }
+
+    public enum RegistrantType
+    {
+        Primary = 174360000,
+        Member = 174360001
     }
 
     public class SecurityPhraseConverter : IValueConverter<string, string>
@@ -188,9 +206,9 @@ namespace EMBC.ESS.Resources.Cases
     {
         public int? Convert(string sourceMember, ResolutionContext context) => sourceMember?.ToLower() switch
         {
-            "Male" => 1,
-            "Female" => 2,
-            "X" => 3,
+            "male" => 1,
+            "female" => 2,
+            "x" => 3,
             _ => null
         };
 

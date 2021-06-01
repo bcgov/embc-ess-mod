@@ -76,7 +76,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get Updated Contact */
             var updatedContactQuery = new ContactQuery
             {
-                ByContactId = updatedContactId
+                ContactId = updatedContactId
             };
             var updatedQueryResult = await contactRepository.QueryContact(updatedContactQuery);
             var updatedContact = updatedQueryResult.Items.FirstOrDefault();
@@ -108,7 +108,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get New Contact */
             var newContactQuery = new ContactQuery
             {
-                ByContactId = newContactId
+                ContactId = newContactId
             };
             var newQueryResult = await contactRepository.QueryContact(newContactQuery);
             var newContact = newQueryResult.Items.FirstOrDefault();
@@ -126,7 +126,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get Deleted Contact */
             var deletedCaseQuery = new ContactQuery
             {
-                ByContactId = deletedContactId
+                ContactId = deletedContactId
             };
             var deletedQueryResult = await contactRepository.QueryContact(deletedCaseQuery);
             var deletedContact = (Contact)deletedQueryResult.Items.LastOrDefault();
@@ -169,7 +169,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get New Contact */
             var newContactQuery = new ContactQuery
             {
-                ByContactId = newContactId
+                ContactId = newContactId
             };
             var newQueryResult = await contactRepository.QueryContact(newContactQuery);
             var newContact = newQueryResult.Items.FirstOrDefault();
@@ -195,7 +195,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             /* Get deleted contact */
             var deletedCaseQuery = new ContactQuery
             {
-                ByContactId = deletedContactId
+                ContactId = deletedContactId
             };
             var deletedQueryResult = await contactRepository.QueryContact(deletedCaseQuery);
             var deletedContact = (Contact)deletedQueryResult.Items.LastOrDefault();
