@@ -82,9 +82,9 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
                   false
                 );
 
-                this.router.navigate([
-                  '/ess-wizard/create-ess-file/evacuation-details'
-                ]);
+                this.router.navigate(['/ess-wizard/create-ess-file'], {
+                  state: { step: 'STEP 2', title: 'Create ESS File' }
+                });
               });
           },
           (error) => {
@@ -99,10 +99,6 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     } else {
       this.verifiedProfileFC.markAsTouched();
     }
-
-    // this.router.navigate(['/ess-wizard/create-ess-file'], {
-    //   state: { step: 'STEP 2', title: 'Create ESS File' }
-    // });
   }
 
   /**
