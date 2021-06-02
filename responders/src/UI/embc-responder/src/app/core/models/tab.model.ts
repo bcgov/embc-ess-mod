@@ -76,18 +76,12 @@ export class WizardTabModelValues {
       name: 'needs',
       status: 'not-started'
     },
-    // {
-    //   label: 'Address',
-    //   route: ''
-    // },
-    // {
-    //   label: 'Contact',
-    //   route: ''
-    // },
-    // {
-    //   label: 'Security Questions',
-    //   route: ''
-    // },
+    {
+      label: 'Security Phrase',
+      route: 'security-phrase',
+      name: 'security-phrase',
+      status: 'not-started'
+    },
     {
       label: 'Review & Save',
       route: 'review',

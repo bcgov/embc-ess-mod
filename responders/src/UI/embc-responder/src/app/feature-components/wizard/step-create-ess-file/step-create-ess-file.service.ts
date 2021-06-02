@@ -32,6 +32,7 @@ export class StepCreateEssFileService {
   private referredServices: boolean;
   private referredServiceDetails: string[];
   private externalServices: string;
+  private securityPhraseVal: string;
 
   private haveHouseholdMembers: boolean;
   private householdMembers: HouseholdMemberModel[];
@@ -240,8 +241,14 @@ export class StepCreateEssFileService {
     this.canEvacueeProvideTransportation = canEvacueeProvideTransportation;
   }
 
-  // Tabs Navigation Getters and Setters
+  public get securityPhrase(): string {
+    return this.securityPhraseVal;
+  }
+  public set securityPhrase(securityPhraseVal: string) {
+    this.securityPhraseVal = securityPhraseVal;
+  }
 
+  // Tabs Navigation Getters and Setters
   public get nextTabUpdate(): Subject<void> {
     return this.setNextTabUpdate;
   }

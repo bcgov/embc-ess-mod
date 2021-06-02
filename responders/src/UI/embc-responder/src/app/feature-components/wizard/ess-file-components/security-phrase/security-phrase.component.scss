@@ -1,0 +1,32 @@
+button.back {
+  float: left;
+  width: 20%;
+}
+button.next {
+  float: right;
+  width: 20%;
+}
+
+p, .tips-card {
+  margin: 1.8em 0;
+}
+
+.row.nav-buttons {
+  margin-top: 1em;
+}
+
+.tips-card {
+  background-color: rgba(35, 64, 117, 1);
+}
+
+.tips-heading {
+  color: white;
+  font-size: 21px;
+  margin-left: 5px;
+}
+
+.tips-info {
+  color: white;
+  padding: 8px;
+  margin-top: 20px;
+}
