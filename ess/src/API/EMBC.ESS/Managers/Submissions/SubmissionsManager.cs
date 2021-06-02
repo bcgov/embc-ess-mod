@@ -162,17 +162,18 @@ namespace EMBC.ESS.Managers.Submissions
             var registrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts);
 
             var results = new List<RegistrantWithFiles>();
-            foreach (var registrant in registrants)
+            var resultTasks = registrants.Select(async r =>
             {
-                var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id }))
-                    .Items.Cast<Resources.Cases.EvacuationFile>();
-                results.Add(new RegistrantWithFiles
+                var result = new RegistrantWithFiles { RegistrantProfile = r, Files = Array.Empty<Shared.Contracts.Submissions.EvacuationFile>() };
+                if (query.IncludeCases)
                 {
-                    RegistrantProfile = registrant,
-                    Files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(files)
-                });
-            }
+                    var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = r.Id })).Items.Cast<Resources.Cases.EvacuationFile>();
+                    result.Files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(files);
+                }
+                results.Add(result);
+            });
 
+            Task.WaitAll(resultTasks.ToArray());
             return new RegistrantsSearchQueryResult { Items = results };
         }
 
