@@ -40,6 +40,7 @@ export const usDefaultObject = {
   name: 'United States of America'
 };
 export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
+export const securityQuestionAnswerPattern = '^[a-zA-Z0-9 ]+$';
 export const petsQuantityPattern = '^([1-9][0-9]{0,2})$';
 
 export const gender = [
@@ -47,15 +48,34 @@ export const gender = [
   { name: 'Female', value: 'Female' },
   { name: 'X', value: 'X' }
 ];
-export const wizardProfileMessage =
-  'Please complete all sections of the Evacuee Profile prior to submitting.';
-export const wizardESSFileMessage =
-  'Please complete all sections of the ESS File prior to submitting.';
-export const lockedStepMessage =
-  'Please complete the ESS File prior to proceeding to the next steps.';
+
+export const wizardProfileMessage = {
+  title: 'Complete all steps',
+  text:
+    'Please complete all sections of the Evacuee Profile prior to submitting.'
+};
+export const evacueeProfileCreatedMessage = {
+  title: 'Evacuee Profile Saved',
+  text: 'Evacuee profile has been successfully created.'
+};
+export const wizardESSFileMessage = {
+  title: 'Complete all steps',
+  text: 'Please complete all sections of the ESS File prior to submitting.'
+};
+
+export const evacueeProfileStepIncompleteMessage =
+  'Please <strong>complete the Evacuee Profile</strong> prior to proceeding to the next steps.';
+export const essFileStepIncompleteMessage =
+  'Please <strong>complete the ESS File</strong> prior to proceeding to the next steps.';
+export const stepIncompleteMessage =
+  'Please <strong>complete the current step</strong> prior to proceeding to the next steps.';
+
+export const successfulVerification =
+  'Evacuee profile has been successfully verified';
 
 // Generic error messages
-export const genericError = 'An error has occurred. Please try again later.';
+export const genericError =
+  'An error occurred while loading this page. Please refresh and try again.';
 export const teamMemberListError =
   'Unable to retrieve team members at this time. Please try again later';
 export const activateTeamMemberError =
@@ -66,5 +86,11 @@ export const usernameCheckerror =
   'Unable to check username at this time. Please try again later';
 export const communityListError =
   'Unable to retrieve assigned communities at this time. Please try again later';
+export const createProfileError =
+  'Unable to create this profile at this time. Please try again later';
 export const editProfileError =
   'Unable to update your user profile at this time. Please try again later';
+export const securityQuestionError =
+  'Unable to load security questions. Please try again later';
+export const taskSearchError =
+  'Unable to retrieve this task number. Please try again later';

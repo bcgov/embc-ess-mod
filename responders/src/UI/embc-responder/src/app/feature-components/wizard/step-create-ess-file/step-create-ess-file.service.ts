@@ -324,7 +324,11 @@ export class StepCreateEssFileService {
       if (allow) {
         $event.stopPropagation();
         $event.preventDefault();
-        this.openModal(globalConst.wizardESSFileMessage);
+
+        this.openModal(
+          globalConst.wizardESSFileMessage.text,
+          globalConst.wizardESSFileMessage.title
+        );
       }
       return allow;
     }
@@ -348,13 +352,13 @@ export class StepCreateEssFileService {
    *
    * @param text text to display
    */
-  openModal(text: string): void {
+  openModal(text: string, title?: string): void {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text
+        text,
+        title
       },
-      height: '230px',
       width: '530px'
     });
   }

@@ -20,6 +20,8 @@ import { PersonDetailFormComponent } from './forms/person-detail-form/person-det
 import { PetFormComponent } from './forms/pet-form/pet-form.component';
 import { TextMaskModule } from 'angular2-text-mask';
 import { DeleteHouseholdDialogComponent } from './components/dialog-components/delete-household-dialog/delete-household-dialog.component';
+import { StatusDefinitionDialogComponent } from './components/dialog-components/status-definition-dialog/status-definition-dialog.component';
+import { VerifyEvacueeDialogComponent } from './components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { DeleteHouseholdDialogComponent } from './components/dialog-components/d
     OtherAddressComponent,
     PersonDetailFormComponent,
     PetFormComponent,
-    DeleteHouseholdDialogComponent
+    DeleteHouseholdDialogComponent,
+    StatusDefinitionDialogComponent,
+    VerifyEvacueeDialogComponent
   ],
   imports: [
     CommonModule,
@@ -63,7 +67,9 @@ import { DeleteHouseholdDialogComponent } from './components/dialog-components/d
     UsaAddressComponent,
     OtherAddressComponent,
     PersonDetailFormComponent,
-    PetFormComponent
+    PetFormComponent,
+    StatusDefinitionDialogComponent,
+    VerifyEvacueeDialogComponent
   ]
 })
 export class SharedModule {}

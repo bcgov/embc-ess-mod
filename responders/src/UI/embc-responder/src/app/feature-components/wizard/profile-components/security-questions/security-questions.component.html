@@ -51,7 +51,7 @@
                 <mat-select formControlName="question1">
                   <mat-option
                     *ngFor="
-                      let question of stepCreateProfileService.securityQuestionOptions
+                      let question of stepCreateProfileService?.securityQuestionOptions
                     "
                     [value]="question"
                   >
@@ -60,12 +60,12 @@
                 </mat-select>
 
                 <mat-error
-                  *ngIf="questionFormControl?.question1.hasError('required')"
+                  *ngIf="questionFormControl?.question1?.hasError('required')"
                 >
                   Security Question is required.
                 </mat-error>
                 <mat-error
-                  *ngIf="questionFormControl?.question1.hasError('notUnique')"
+                  *ngIf="questionFormControl?.question1?.hasError('notUnique')"
                 >
                   Security Questions must all be different.
                 </mat-error>
@@ -78,22 +78,22 @@
 
                 <mat-error
                   *ngIf="
-                    questionFormControl?.answer1.hasError('required') ||
-                    questionFormControl?.answer1.hasError('whitespaceError')
+                    questionFormControl?.answer1?.hasError('required') ||
+                    questionFormControl?.answer1?.hasError('whitespaceError')
                   "
                 >
                   Answer is required.
                 </mat-error>
                 <mat-error
                   *ngIf="
-                    questionFormControl?.answer1.hasError('minlength') ||
-                    questionFormControl?.answer1.hasError('maxlength')
+                    questionFormControl?.answer1?.hasError('minlength') ||
+                    questionFormControl?.answer1?.hasError('maxlength')
                   "
                 >
                   Answer must be between 3 and 50 characters long.
                 </mat-error>
                 <mat-error
-                  *ngIf="questionFormControl?.answer1.hasError('pattern')"
+                  *ngIf="questionFormControl?.answer1?.hasError('pattern')"
                 >
                   Answer cannot contain special characters.
                 </mat-error>
@@ -107,7 +107,7 @@
                 <mat-select formControlName="question2">
                   <mat-option
                     *ngFor="
-                      let question of stepCreateProfileService.securityQuestionOptions
+                      let question of stepCreateProfileService?.securityQuestionOptions
                     "
                     [value]="question"
                   >
@@ -116,12 +116,12 @@
                 </mat-select>
 
                 <mat-error
-                  *ngIf="questionFormControl?.question2.hasError('required')"
+                  *ngIf="questionFormControl?.question2?.hasError('required')"
                 >
                   Security Question is required.
                 </mat-error>
                 <mat-error
-                  *ngIf="questionFormControl?.question2.hasError('notUnique')"
+                  *ngIf="questionFormControl?.question2?.hasError('notUnique')"
                 >
                   Security Questions must all be different.
                 </mat-error>
@@ -134,22 +134,22 @@
 
                 <mat-error
                   *ngIf="
-                    questionFormControl?.answer2.hasError('required') ||
-                    questionFormControl?.answer2.hasError('whitespaceError')
+                    questionFormControl?.answer2?.hasError('required') ||
+                    questionFormControl?.answer2?.hasError('whitespaceError')
                   "
                 >
                   Answer is required.
                 </mat-error>
                 <mat-error
                   *ngIf="
-                    questionFormControl?.answer2.hasError('minlength') ||
-                    questionFormControl?.answer2.hasError('maxlength')
+                    questionFormControl?.answer2?.hasError('minlength') ||
+                    questionFormControl?.answer2?.hasError('maxlength')
                   "
                 >
                   Answer must be between 3 and 50 characters long.
                 </mat-error>
                 <mat-error
-                  *ngIf="questionFormControl?.answer2.hasError('pattern')"
+                  *ngIf="questionFormControl?.answer2?.hasError('pattern')"
                 >
                   Answer cannot contain special characters.
                 </mat-error>
@@ -163,7 +163,7 @@
                 <mat-select formControlName="question3">
                   <mat-option
                     *ngFor="
-                      let question of stepCreateProfileService.securityQuestionOptions
+                      let question of stepCreateProfileService?.securityQuestionOptions
                     "
                     [value]="question"
                   >
@@ -172,12 +172,12 @@
                 </mat-select>
 
                 <mat-error
-                  *ngIf="questionFormControl?.question3.hasError('required')"
+                  *ngIf="questionFormControl?.question3?.hasError('required')"
                 >
                   Security Question is required.
                 </mat-error>
                 <mat-error
-                  *ngIf="questionFormControl?.question3.hasError('notUnique')"
+                  *ngIf="questionFormControl?.question3?.hasError('notUnique')"
                 >
                   Security Questions must all be different.
                 </mat-error>
@@ -190,22 +190,22 @@
 
                 <mat-error
                   *ngIf="
-                    questionFormControl?.answer3.hasError('required') ||
-                    questionFormControl?.answer3.hasError('whitespaceError')
+                    questionFormControl?.answer3?.hasError('required') ||
+                    questionFormControl?.answer3?.hasError('whitespaceError')
                   "
                 >
                   Answer is required.
                 </mat-error>
                 <mat-error
                   *ngIf="
-                    questionFormControl?.answer3.hasError('minlength') ||
-                    questionFormControl?.answer3.hasError('maxlength')
+                    questionFormControl?.answer3?.hasError('minlength') ||
+                    questionFormControl?.answer3?.hasError('maxlength')
                   "
                 >
                   Answer must be between 3 and 50 characters long.
                 </mat-error>
                 <mat-error
-                  *ngIf="questionFormControl?.answer3.hasError('pattern')"
+                  *ngIf="questionFormControl?.answer3?.hasError('pattern')"
                 >
                   Answer cannot contain special characters.
                 </mat-error>
