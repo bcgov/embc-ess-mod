@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
@@ -30,7 +31,8 @@ export class ProfileResultsComponent
 
   constructor(
     private evacueeSearchService: EvacueeSearchService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -43,6 +45,7 @@ export class ProfileResultsComponent
 
   ngAfterViewInit(): void {
     this.matchedRegistrants.paginator = this.paginator;
+    this.cd.detectChanges();
   }
 
   ngOnInit(): void {}
