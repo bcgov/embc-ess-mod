@@ -77,4 +77,15 @@ namespace EMBC.Registrants.API.Controllers
 
         public bool HideEmailRequired { get; set; }
     }
+
+    /// <summary>
+    /// Profile security questions
+    /// </summary>
+    public class SecurityQuestion
+    {
+        public int Id { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
+        public bool AnswerChanged { get; set; }
+    }
 }

@@ -33,6 +33,8 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => new[] { s.PreliminaryNeedsAssessment }))
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => (string)null))
                 .ForMember(d => d.IsSecretPhraseMasked, opts => opts.MapFrom(s => !s.SecretPhraseEdited))
+                .ForMember(d => d.SecurityPhrase, opts => opts.MapFrom(s => s.SecretPhrase))
+                .ForMember(d => d.PhraseChanged, opts => opts.MapFrom(s => !s.SecretPhraseEdited))
                 ;
 
             CreateMap<Profile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
@@ -48,8 +50,12 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.PersonalDetails.PreferredName))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
-                .ForMember(d => d.SecurityQuestions, opts => opts.Ignore())
+                .ForMember(d => d.SecurityQuestions, opts => opts.MapFrom(s => s.SecurityQuestions))
 
+                .ReverseMap()
+                ;
+
+            CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
                 .ReverseMap()
                 ;
 
