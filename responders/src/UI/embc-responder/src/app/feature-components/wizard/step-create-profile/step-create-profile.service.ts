@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as globalConst from '../../../core/services/global-constants';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -179,7 +179,11 @@ export class StepCreateProfileService {
       if (allow) {
         $event.stopPropagation();
         $event.preventDefault();
-        this.openModal(globalConst.wizardProfileMessage);
+
+        this.openModal(
+          globalConst.wizardProfileMessage.text,
+          globalConst.wizardProfileMessage.title
+        );
       }
       return allow;
     }
@@ -203,24 +207,28 @@ export class StepCreateProfileService {
    *
    * @param text text to display
    */
-  openModal(text: string): void {
-    this.dialog.open(DialogComponent, {
+  openModal(text: string, title?: string): MatDialogRef<DialogComponent, any> {
+    const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text
+        text,
+        title
       },
-      height: '230px',
       width: '530px'
     });
+
+    return thisModal;
   }
 
   public createProfileDTO(): EvacueeProfile {
     return {
-      contactDetails: this.contactDetails,
-      mailingAddress: this.setAddressObject(this.mailingAddressDetails),
+      restriction: this.restrictedAccess,
       personalDetails: this.personalDetails,
+      contactDetails: this.contactDetails,
       primaryAddress: this.setAddressObject(this.primaryAddressDetails),
-      restriction: this.restrictedAccess
+      mailingAddress: this.setAddressObject(this.mailingAddressDetails),
+      securityQuestions: this.securityQuestions,
+      verifiedUser: this.verifiedProfile
     };
   }
 
