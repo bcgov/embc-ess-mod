@@ -1,12 +1,16 @@
 @import '../../../../../styles/defaults.scss';
 
 button.back {
-  float: left;
-  width: 20%;
+	float: left;
+	width: 20%;
 }
 button.save {
-  float: right;
-  width: 20%;
+	float: right;
+	width: 20%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .mat-radio-button {
