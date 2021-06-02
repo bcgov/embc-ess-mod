@@ -1,12 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import './fonts';
-$bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
-@import "~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme";
+$bcgov-font-path: '~@bcgov/bootstrap-theme/dist/fonts/';
+@import '~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme';
 @import './defaults.scss';
 @import './variables';
 
-@import "~@bcgov/bootstrap-theme/dist/scss/common";
+@import '~@bcgov/bootstrap-theme/dist/scss/common';
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
@@ -16,11 +16,13 @@ $bcgov-font-path: "~@bcgov/bootstrap-theme/dist/fonts/";
 // monospace font used for fixed-size text blocks (eg, referral comments)
 // NB: same font as PDF renderer service
 @font-face {
-    font-family: 'LiberationMono';
-    src: url('/assets/LiberationMono-Regular.woff2') format('woff2'), /* Super Modern Browsers */
-         url('/assets/LiberationMono-Regular.woff') format('woff'), /* Pretty Modern Browsers */
-         url('/assets/LiberationMono-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
-  }
+  font-family: 'LiberationMono';
+  src: url('/assets/LiberationMono-Regular.woff2') format('woff2'),
+    /* Super Modern Browsers */ url('/assets/LiberationMono-Regular.woff')
+      format('woff'),
+    /* Pretty Modern Browsers */ url('/assets/LiberationMono-Regular.ttf')
+      format('truetype'); /* Safari, Android, iOS */
+}
 
 $custom-typography: mat-typography-config(
   $font-family: $font-family-sans-serif,
@@ -30,12 +32,17 @@ $custom-typography: mat-typography-config(
 @include angular-material-typography($custom-typography);
 
 main {
-    padding-bottom: 0px !important;
-    padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
 }
 
-html, body { height: 100%; }
-body { margin: 0; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
 
 .background {
   background-color: rgb(242, 242, 242);
@@ -46,7 +53,7 @@ body { margin: 0; }
 }
 
 footer nav {
-  background-color: #DCE2F0;
+  background-color: #dce2f0;
   border-top: 2px solid #fcba19;
 }
 
@@ -55,7 +62,7 @@ footer nav {
 }
 
 .mat-toolbar {
- background: #FFFFFF;
+  background: #ffffff;
 }
 // .mat-step-icon {
 //   height: 38px !important;
@@ -110,11 +117,11 @@ footer nav {
 //   }
 // }
 
-.mat-button, 
-.mat-flat-button, 
-.mat-icon-button, 
-.mat-stroked-button { 
-  border-radius: 0px !important; 
+.mat-button,
+.mat-flat-button,
+.mat-icon-button,
+.mat-stroked-button {
+  border-radius: 0px !important;
 }
 
 // .stepper-style {
@@ -122,7 +129,7 @@ footer nav {
 // }
 
 .container-frame {
-  padding-top: 40px ;
+  padding-top: 40px;
 }
 
 .heading-container {
@@ -131,7 +138,7 @@ footer nav {
 }
 
 .page-heading {
- font-size: 50px;
+  font-size: 50px;
 }
 
 .bold {
@@ -153,40 +160,40 @@ footer nav {
 .button-p {
   @extend .button-style;
   background-color: #234075;
-  color: #FFFFFF ;
+  color: #ffffff;
   font-size: 16px;
 }
 
 .button-s {
   @extend .button-style;
-  border: 1px solid #B5B5B5 !important;
+  border: 1px solid #b5b5b5 !important;
   color: #606060;
-  background-color: #FFFFFF !important;
+  background-color: #ffffff !important;
   font-size: 16px;
 }
 
 .button-transparent {
   @extend .button-style;
-  color: #169BD5;
+  color: #169bd5;
   font-size: 16px;
 }
 
 .button-p:hover {
-  background-color: #169BD5;
+  background-color: #169bd5;
 }
 
 .button-yellow:hover {
   background-color: #234075 !important;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .button-s:hover {
-  background-color: #E5E5E5;
+  background-color: #e5e5e5;
 }
 
-.button-p:disabled  {
+.button-p:disabled {
   background-color: #234075;
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
 
 button {
@@ -198,7 +205,7 @@ button:focus {
 }
 
 @media screen and (max-width: 833px) {
-   .button-yellow {
+  .button-yellow {
     width: 100% !important;
   }
   .button-p {
@@ -214,14 +221,14 @@ button:focus {
   }
 }
 
-@media screen and (max-width: 905px){
+@media screen and (max-width: 905px) {
   .responsive-heading .logo {
     width: 65px;
     height: 90px;
   }
 }
 
-@media screen and (max-width: 765px){
+@media screen and (max-width: 765px) {
   .responsive-heading .logo {
     width: 82px;
     height: 108px;
@@ -240,12 +247,18 @@ mat-card {
   border-radius: 0px !important;
 }
 .mat-form-field-appearance-outline .mat-form-field-outline-gap {
-   border-radius: 0px !important;
+  border-radius: 0px !important;
 }
 
-.mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-start,
- .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-end,
-  .mat-form-field-appearance-outline .mat-form-field-outline-thick .mat-form-field-outline-gap {
+.mat-form-field-appearance-outline
+  .mat-form-field-outline-thick
+  .mat-form-field-outline-start,
+.mat-form-field-appearance-outline
+  .mat-form-field-outline-thick
+  .mat-form-field-outline-end,
+.mat-form-field-appearance-outline
+  .mat-form-field-outline-thick
+  .mat-form-field-outline-gap {
   border-width: 1px !important;
 }
 
@@ -254,7 +267,7 @@ mat-card {
 }
 
 .mat-form-field-subscript-wrapper {
-   position: relative !important;
+  position: relative !important;
 }
 
 // .sub-heading {
@@ -263,8 +276,9 @@ mat-card {
 //   color: #169BD5;
 // }
 
-.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background, .mat-checkbox-checked.mat-accent .mat-checkbox-background {
-  background-color: #169BD5 !important;
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: #169bd5 !important;
 }
 
 .mat-checkbox-inner-container {
@@ -277,34 +291,36 @@ mat-card {
 }
 
 .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-  border-color: #169BD5 !important;
+  border-color: #169bd5 !important;
 }
 
 .mat-radio-button.mat-accent .mat-radio-inner-circle,
- .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
-  .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
-   .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
-  background-color: #169BD5 !important;
+.mat-radio-button.mat-accent
+  .mat-radio-ripple
+  .mat-ripple-element:not(.mat-radio-persistent-ripple),
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
+.mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
+  background-color: #169bd5 !important;
 }
 
 .requiredField::after {
-    content: "*";
-    color: red;
- }
+  content: '*';
+  color: red;
+}
 
- .custom-mat-error {
-   font-size: 75%;
- }
+.custom-mat-error {
+  font-size: 75%;
+}
 
- .mat-dialog-container {
-   border-radius: 0px !important;
- }
+.mat-dialog-container {
+  border-radius: 0px !important;
+}
 
- .mat-radio-label {
-   white-space: normal !important;
- }
+.mat-radio-label {
+  white-space: normal !important;
+}
 
- mat-form-field {
+mat-form-field {
   width: 100%;
 }
 
@@ -343,15 +359,17 @@ mat-card {
 //   color: black !important;
 // }
 
- .mat-tab-label, .mat-tab-link {
+.mat-tab-label,
+.mat-tab-link {
   color: #333333 !important;
   font-size: 16px;
   background-color: rgba(221, 221, 221, 1) !important;
   text-decoration: none;
 }
 
-.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
-   background-color: transparent !important; 
+.mat-tab-group.mat-primary .mat-ink-bar,
+.mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  background-color: transparent !important;
 }
 
 .mat-tab-link {
@@ -366,7 +384,7 @@ mat-card {
 }
 
 .active-list-item {
-  color: #169BD5 !important;
+  color: #169bd5 !important;
 }
 
 .wizard-tab-heading {
@@ -377,4 +395,36 @@ mat-card {
 
 .field-error {
   color: red;
- }
+}
+
+.mat-expansion-panel:not([class*='mat-elevation-z']) {
+  box-shadow: none !important;
+}
+
+.mat-expansion-panel {
+  border-radius: 0px !important;
+}
+
+.pending-status {
+  color: #F28200;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.active-status {
+  color: #169BD5;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.complete-status {
+  color: #3C9D0F;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.expired-status {
+  color: #696969;
+  font-weight: bold;
+  font-size: 16px;
+}
