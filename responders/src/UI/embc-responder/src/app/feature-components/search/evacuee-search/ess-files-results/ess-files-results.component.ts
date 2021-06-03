@@ -47,7 +47,7 @@ export class EssFilesResultsComponent
 
   openESSFile(): void {
     if (
-      this.evacueeSearchService.getEvacueeSearchContext().hasShownIdentification
+      this.evacueeSearchService.evacueeSearchContext.hasShownIdentification
     ) {
       this.router.navigate(['responder-access/search/essfile']);
     } else {

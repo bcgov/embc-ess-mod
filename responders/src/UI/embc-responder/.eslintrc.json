@@ -23,6 +23,7 @@
       ],
       "rules": {
         "no-shadow": "off",
+        "no-unsafe-any": true,
         "@typescript-eslint/no-shadow": [
           "error"
         ],
