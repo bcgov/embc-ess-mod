@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EMBC.ESS.Shared.Contracts.Submissions;
 
 namespace EMBC.ESS.Resources.Cases
 {
@@ -47,6 +46,8 @@ namespace EMBC.ESS.Resources.Cases
     public abstract class Case
     {
         public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime LastModified { get; set; }
     }
 
     public class SaveEvacuationFile : ManageCaseCommand
@@ -80,79 +81,8 @@ namespace EMBC.ESS.Resources.Cases
         public int? Limit { get; set; }
     }
 
-    public class EvacuationFile : Case
+    public class SaveEvacuationFileNote : ManageCaseCommand
     {
-        public EvacuationAddress EvacuatedFromAddress { get; set; }
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
-        public string PrimaryRegistrantId { get; set; }
-        public string SecurityPhrase { get; set; }
-        public bool PhraseChanged { get; set; } = false;
-        public DateTime EvacuationDate { get; set; }
-        public EvacuationFileStatus Status { get; set; }
-        public bool RestrictedAccess { get; set; }
-        public bool IsSecretPhraseMasked { get; set; }
-    }
-
-    public class EvacuationAddress
-    {
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string Community { get; set; }
-        public string StateProvince { get; set; }
-        public string Country { get; set; }
-        public string PostalCode { get; set; }
-    }
-
-    public class NeedsAssessment
-    {
-        public string Id { get; set; }
-        public InsuranceOption Insurance { get; set; }
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
-        public bool HaveSpecialDiet { get; set; }
-        public string SpecialDietDetails { get; set; }
-        public bool HaveMedication { get; set; }
-        public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
-        public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HasPetsFood { get; set; }
-        public NeedsAssessmentType Type { get; set; }
-    }
-
-    public class HouseholdMember
-    {
-        public string Id { get; set; }
-        public bool IsUnder19 { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Initials { get; set; }
-        public string PreferredName { get; set; }
-        public string Gender { get; set; }
-        public string DateOfBirth { get; set; }
-        public bool IsPrimaryRegistrant { get; set; }
-        public string LinkedRegistrantId { get; set; }
-        public bool RestrictedAccess { get; set; }
-    }
-
-    public class Pet
-    {
-        public string Type { get; set; }
-        public string Quantity { get; set; }
-    }
-
-    public enum InsuranceOption
-    {
-        No,
-        Yes,
-        Unsure,
-        Unknown
-    }
-
-    public enum NeedsAssessmentType
-    {
-        Preliminary,
-        Assessed
+        public Note Note { get; set; }
     }
 }

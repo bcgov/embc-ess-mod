@@ -122,9 +122,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.Id.ShouldBe(fileId);
             evacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(originalFile.EvacuatedFromAddress.AddressLine1);
             evacuationFile.EvacuatedFromAddress.AddressLine2.ShouldBe(originalFile.EvacuatedFromAddress.AddressLine2);
-            evacuationFile.EvacuatedFromAddress.Community.ShouldBe(originalFile.EvacuatedFromAddress.Community);
-            evacuationFile.EvacuatedFromAddress.Country.ShouldBe(originalFile.EvacuatedFromAddress.Country);
-            evacuationFile.EvacuatedFromAddress.StateProvince.ShouldBe(originalFile.EvacuatedFromAddress.StateProvince);
+            evacuationFile.EvacuatedFromAddress.CommunityCode.ShouldBe(originalFile.EvacuatedFromAddress.CommunityCode);
+            evacuationFile.EvacuatedFromAddress.CountryCode.ShouldBe(originalFile.EvacuatedFromAddress.CountryCode);
+            evacuationFile.EvacuatedFromAddress.StateProvinceCode.ShouldBe(originalFile.EvacuatedFromAddress.StateProvinceCode);
             evacuationFile.EvacuatedFromAddress.PostalCode.ShouldBe(originalFile.EvacuatedFromAddress.PostalCode);
             evacuationFile.EvacuationDate.ShouldBeInRange(now, DateTime.UtcNow);
             evacuationFile.PrimaryRegistrantId.ShouldBe(primaryContact.Id);
@@ -185,9 +185,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 {
                     AddressLine1 = $"{uniqueSignature}_3738 Main St",
                     AddressLine2 = "Suite 3",
-                    Community = "9e6adfaf-9f97-ea11-b813-005056830319",
-                    StateProvince = "BC",
-                    Country = "CAN",
+                    CommunityCode = "9e6adfaf-9f97-ea11-b813-005056830319",
+                    StateProvinceCode = "BC",
+                    CountryCode = "CAN",
                     PostalCode = "V8V 2W3"
                 },
                 NeedsAssessments = new[]

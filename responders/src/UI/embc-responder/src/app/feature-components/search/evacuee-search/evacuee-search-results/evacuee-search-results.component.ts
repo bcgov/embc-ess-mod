@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   EvacuationFileSearchResult,
   RegistrantProfileSearchResult
@@ -20,6 +20,7 @@ import { CacheService } from 'src/app/core/services/cache.service';
   styleUrls: ['./evacuee-search-results.component.scss']
 })
 export class EvacueeSearchResultsComponent implements OnInit {
+  @Output() showIDPhotoComponent = new EventEmitter<boolean>();
   registrantResults: Array<RegistrantProfileSearchResult>;
   fileResults: Array<EvacuationFileSearchResult>;
   evacueeSearchContext: EvacueeSearchContextModel;
@@ -54,7 +55,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
   }
 
   searchAgain(): void {
-    console.log('here');
+    this.showIDPhotoComponent.emit(true);
   }
 
   searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {

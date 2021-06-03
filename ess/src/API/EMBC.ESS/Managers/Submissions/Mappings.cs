@@ -27,8 +27,15 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Address, Resources.Cases.EvacuationAddress>()
+                .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.Community))
+                .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
+                .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
                 .ReverseMap()
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
+                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
+                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
                 ;
+
             CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Cases.HouseholdMember>()
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
@@ -40,6 +47,12 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Shared.Contracts.Submissions.NeedsAssessment, Resources.Cases.NeedsAssessment>()
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CompletedOn))
+                .ReverseMap()
+                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.CreatedOn))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.Note, Resources.Cases.Note>()
                 .ReverseMap()
                 ;
 

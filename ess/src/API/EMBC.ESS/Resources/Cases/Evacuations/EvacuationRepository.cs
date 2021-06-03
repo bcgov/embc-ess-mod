@@ -52,7 +52,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.AddToera_evacuationfiles(eraEvacuationFile);
             essContext.AddLink(primaryContact, nameof(primaryContact.era_evacuationfile_Registrant), eraEvacuationFile);
             essContext.SetLink(eraEvacuationFile, nameof(era_evacuationfile.era_Registrant), primaryContact);
-            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.Community), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
+            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.CommunityCode), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
 
             foreach (var needsAssessment in file.NeedsAssessments)
             {
@@ -98,14 +98,14 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.UpdateObject(updatedEvacuationFile);
             essContext.AddLink(primaryContact, nameof(contact.era_evacuationfile_Registrant), updatedEvacuationFile);
             essContext.SetLink(updatedEvacuationFile, nameof(era_evacuationfile.era_Registrant), primaryContact);
-            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.Community), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), updatedEvacuationFile);
+            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.CommunityCode), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), updatedEvacuationFile);
 
             foreach (var needsAssessment in file.NeedsAssessments)
             {
-                if (needsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId == null) == 1)
-                {
-                    throw new Exception($"File {file.Id} must have a single primary registrant household member");
-                }
+                //if (needsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId == null) == 1)
+                //{
+                //    throw new Exception($"File {file.Id} must have a single primary registrant household member");
+                //}
                 var eraNeedsAssessment = mapper.Map<era_needassessment>(needsAssessment);
                 var members = mapper.Map<IEnumerable<era_householdmember>>(needsAssessment.HouseholdMembers);
                 var pets = mapper.Map<IEnumerable<era_needsassessmentanimal>>(needsAssessment.Pets);
@@ -184,11 +184,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<string> Delete(string essFileNumber)
         {
-            //TODO: change to single
             var evacuationFile = essContext.era_evacuationfiles
                 .Where(ef => ef.era_name == essFileNumber)
                 .ToArray()
-                .LastOrDefault();
+                .SingleOrDefault();
 
             if (evacuationFile != null)
             {
@@ -242,11 +241,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<IEnumerable<EvacuationFile>> ReadAll(EvacuationFilesQuery query)
         {
-            IEnumerable<Guid?> fileIds = Array.Empty<Guid?>();
+            IEnumerable<Guid> fileIds = Array.Empty<Guid>();
             var queryContacts = !string.IsNullOrEmpty(query.FirstName) ||
                 !string.IsNullOrEmpty(query.LastName) ||
                 !string.IsNullOrEmpty(query.DateOfBirth) ||
                 !string.IsNullOrEmpty(query.PrimaryRegistrantId);
+
             var queryFiles = !string.IsNullOrEmpty(query.FileId) ||
                 query.IncludeFilesInStatuses.Any() ||
                 query.RegistraionDateFrom.HasValue ||
@@ -266,15 +266,16 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
                 var matchingContactIds = (await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync()).Select(c => c.contactid).ToArray();
 
-                var householdMembersQuery = essContext.era_needsassessmentevacuees
-                    .Expand(m => m.era_NeedsAssessmentID)
-                    .Where(m => m.statecode == (int)EntityState.Active);
+                Func<DataServiceQuery<era_needsassessmentevacuee>> householdMembersQuery = () =>
+                    (DataServiceQuery<era_needsassessmentevacuee>)essContext.era_needsassessmentevacuees
+                        .Expand(m => m.era_NeedsAssessmentID)
+                        .Where(m => m.statecode == (int)EntityState.Active);
 
                 var matchingContactFileIds = matchingContactIds
-                   .Select(id => householdMembersQuery
+                   .Select(id => householdMembersQuery()
                        .Where(m => m.era_RegistrantID.contactid == id && m.era_NeedsAssessmentID != null)
                        .ToArray()
-                       .Select(m => m.era_NeedsAssessmentID?._era_evacuationfile_value))
+                       .Select(m => m.era_NeedsAssessmentID._era_evacuationfile_value.Value))
                    .SelectMany(f => f)
                    .ToArray();
 
@@ -292,7 +293,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 if (query.RegistraionDateTo.HasValue) fileQuery = fileQuery.Where(f => f.createdon <= query.RegistraionDateTo.Value);
                 if (query.IncludeFilesInStatuses.Any()) fileQuery = fileQuery.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.statuscode));
 
-                var matchingFileIds = (await ((DataServiceQuery<era_evacuationfile>)fileQuery).GetAllPagesAsync()).Select(f => f.era_evacuationfileid).ToArray();
+                var matchingFileIds = (await ((DataServiceQuery<era_evacuationfile>)fileQuery).GetAllPagesAsync()).Select(f => f.era_evacuationfileid.Value).ToArray();
 
                 //merge matching file ids
                 fileIds = fileIds.Any()
@@ -300,11 +301,17 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                     : fileIds.Concat(matchingFileIds);
             }
 
-            essContext.DetachAll();
-
             if (query.Limit.HasValue) fileIds = fileIds.OrderByDescending(id => id).Take(query.Limit.Value);
 
-            var evacuationFiles = fileIds.Distinct().OrderByDescending(id => id).Select(id => GetEvacuationFileById(id.Value, query.MaskSecurityPhrase).GetAwaiter().GetResult()).ToArray();
+            essContext.DetachAll();
+            var evacuationFiles = new List<EvacuationFile>();
+            var evacuationFilesTasks = fileIds.Distinct().Select(async id => evacuationFiles.Add(await GetEvacuationFileById(id, query.MaskSecurityPhrase)));
+
+            //Task.WaitAll(evacuationFilesTasks.ToArray());
+            foreach (var task in evacuationFilesTasks)
+            {
+                await task;
+            }
 
             essContext.DetachAll();
 
