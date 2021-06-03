@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -113,14 +114,14 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Creates or updates a Registrant Profile
+        /// Creates a Registrant Profile
         /// </summary>
         /// <param name="evacuee">Evacuee</param>
         /// <returns>new registrant id</returns>
-        [HttpPost("profile")]
+        [HttpPost("registrants")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> UpsertRegistrantProfile(EvacueeProfile evacuee)
+        public async Task<ActionResult<string>> CreateRegistrantProfile(EvacueeProfile evacuee)
         {
             if (evacuee == null) return BadRequest();
 
@@ -130,6 +131,87 @@ namespace EMBC.Responders.API.Controllers
                 Profile = profile
             });
             return Ok(id);
+        }
+
+        /// <summary>
+        /// Updates a Registrant Profile
+        /// </summary>
+        /// <param name="registrantId">RegistrantId</param>
+        /// <param name="evacuee">Evacuee</param>
+        /// <returns>updated registrant id</returns>
+        [HttpPost("registrants/{registrantId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<string>> UpdateRegistrantProfile(string registrantId, EvacueeProfile evacuee)
+        {
+            if (evacuee == null) return BadRequest();
+
+            evacuee.Id = registrantId;
+
+            var profile = mapper.Map<RegistrantProfile>(evacuee);
+            var id = await messagingClient.Send(new SaveRegistrantCommand
+            {
+                Profile = profile
+            });
+            return Ok(id);
+        }
+
+        /// <summary>
+        /// Gets a Registrant Profile
+        /// </summary>
+        /// <param name="registrantId">RegistrantId</param>
+        /// <returns>registrant</returns>
+        [HttpGet("registrants/{registrantId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<EvacueeProfile>> GetRegistrantProfile(string registrantId)
+        {
+            var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
+            {
+                UserId = registrantId
+            })).Items.FirstOrDefault();
+
+            if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
+
+            return Ok(mapper.Map<EvacueeProfile>(registrant.RegistrantProfile));
+        }
+
+        /// <summary>
+        /// Updates a File
+        /// </summary>
+        /// <param name="fileId">fileId</param>
+        /// <param name="file">file</param>
+        /// <returns>updated file id</returns>
+        [HttpPost("files/{fileId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<string>> UpdateFile(string fileId, RegistrantFile file)
+        {
+            //TODO - update model with what frond end will submit
+            //var id = await messagingClient.Send(new SubmitEvacuationFileCommand
+            //{
+            //    File = file
+            //});
+
+            //return Ok(id);
+            return Ok(await Task.FromResult("id"));
+        }
+
+        /// <summary>
+        /// Gets a File
+        /// </summary>
+        /// <param name="fileId">fileId</param>
+        /// <returns>file</returns>
+        [HttpGet("files/{fileId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<EvacuationFileSearchResult>> GetFile(string fileId)
+        {
+            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
+            {
+                FileId = fileId
+            })).Items.FirstOrDefault();
+            return Ok(mapper.Map<EvacuationFileSearchResult>(file));
         }
     }
 
@@ -216,6 +298,15 @@ namespace EMBC.Responders.API.Controllers
     }
 
     /// <summary>
+    /// Evacuation File
+    /// </summary>
+    public class RegistrantFile
+    {
+        public string Id { get; set; }
+        //TODO - get model that the front end would be submitting
+    }
+
+    /// <summary>
     /// Evacuee profile
     /// </summary>
     public class EvacueeProfile
@@ -279,6 +370,14 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.VerifiedUser))
+                .ReverseMap()
+                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
+                    s.MailingAddress.Country == s.PrimaryAddress.Country &&
+                    s.MailingAddress.StateProvince == s.PrimaryAddress.StateProvince &&
+                    s.MailingAddress.Community == s.PrimaryAddress.Community &&
+                    s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
+                    s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
+                    s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
                 ;
         }
     }
