@@ -244,5 +244,16 @@ namespace EMBC.ESS.Managers.Submissions
             };
             return ret;
         }
+
+        public async Task<TasksSearchQueryResult> Handle(TasksSearchQuery query)
+        {
+            var esstask = (await taskRepository.QueryTask(new TaskQuery
+            {
+                ById = query.TaskId
+            })).Items;
+            var esstasks = mapper.Map<IEnumerable<IncidentTask>>(esstask);
+
+            return new TasksSearchQueryResult { Items = esstasks };
+        }
     }
 }

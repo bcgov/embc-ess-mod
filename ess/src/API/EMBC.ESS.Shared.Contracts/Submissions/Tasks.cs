@@ -16,43 +16,33 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace EMBC.ESS.Resources.Tasks
+namespace EMBC.ESS.Shared.Contracts.Submissions
 {
-    public interface ITaskRepository
+    public class TasksSearchQuery : Query<TasksSearchQueryResult>
     {
-        Task<TaskQueryResult> QueryTask(TaskQuery request);
+        public string TaskId { get; set; }
     }
 
-    public class TaskQuery
+    public class TasksSearchQueryResult
     {
-        public string ById { get; set; }
-        public TaskStatus[] ByStatus { get; set; } = Array.Empty<TaskStatus>();
+        public IEnumerable<IncidentTask> Items { get; set; }
     }
 
-    public class TaskQueryResult
+    public class IncidentTask
     {
-        public IEnumerable<Task> Items { get; set; }
-    }
-
-    public abstract class Task
-    {
-        public string Id { get; set; }
-        public TaskStatus Status { get; set; }
-    }
-
-    public enum TaskStatus
-    {
-        Active = 1,
-        Expired = 2
-    }
-
-    public class EssTask : Task
-    {
+        public string Id { get; set; } //task number
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string CommunityCode { get; set; }
         public string Description { get; set; }
+        public IncidentTaskStatus Status { get; set; }
+    }
+
+    public enum IncidentTaskStatus
+    {
+        Active,
+        Expired
     }
 }

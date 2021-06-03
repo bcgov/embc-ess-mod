@@ -58,6 +58,8 @@ namespace EMBC.ESS.Managers.Submissions
                 .ReverseMap()
                 .ForMember(d => d.AnswerChanged, opts => opts.MapFrom(s => false))
                 ;
+
+            CreateMap<Resources.Tasks.EssTask, Shared.Contracts.Submissions.IncidentTask>();
         }
     }
 }
