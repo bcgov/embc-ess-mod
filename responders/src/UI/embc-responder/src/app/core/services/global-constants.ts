@@ -41,6 +41,7 @@ export const usDefaultObject = {
 };
 export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
 export const securityQuestionAnswerPattern = '^[a-zA-Z0-9 ]+$';
+export const securityPhrasePattern = securityQuestionAnswerPattern;
 export const petsQuantityPattern = '^([1-9][0-9]{0,2})$';
 
 export const gender = [

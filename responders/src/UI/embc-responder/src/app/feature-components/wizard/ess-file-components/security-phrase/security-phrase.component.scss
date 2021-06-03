@@ -30,3 +30,15 @@ p, .tips-card {
   padding: 8px;
   margin-top: 20px;
 }
+
+.checkbox-row {
+  padding: 1.8em 0;
+
+  ::ng-deep .mat-checkbox-label {
+    margin-left: 0.8em;
+  }
+}
+
+::ng-deep .mat-form-field-wrapper {
+	padding-bottom: 0.25em;
+}

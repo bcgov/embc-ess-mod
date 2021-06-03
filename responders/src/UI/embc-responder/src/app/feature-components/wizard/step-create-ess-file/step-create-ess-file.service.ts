@@ -32,6 +32,8 @@ export class StepCreateEssFileService {
   private referredServices: boolean;
   private referredServiceDetails: string[];
   private externalServices: string;
+
+  private bypassPhraseVal: boolean;
   private securityPhraseVal: string;
 
   private haveHouseholdMembers: boolean;
@@ -241,6 +243,13 @@ export class StepCreateEssFileService {
     this.canEvacueeProvideTransportation = canEvacueeProvideTransportation;
   }
 
+  public get bypassPhrase(): boolean {
+    return this.bypassPhraseVal;
+  }
+  public set bypassPhrase(bypassPhraseVal: boolean) {
+    this.bypassPhraseVal = bypassPhraseVal;
+  }
+
   public get securityPhrase(): string {
     return this.securityPhraseVal;
   }
@@ -314,7 +323,8 @@ export class StepCreateEssFileService {
       emergencySupportServices: this.emergencySupportServices,
       referredServices: this.referredServices,
       referredServiceDetails: this.referredServiceDetails,
-      externalServices: this.externalServices
+      externalServices: this.externalServices,
+      securityPhrase: this.securityPhrase
     };
   }
 

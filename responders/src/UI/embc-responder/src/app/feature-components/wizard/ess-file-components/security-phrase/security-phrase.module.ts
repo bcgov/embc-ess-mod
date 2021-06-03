@@ -5,6 +5,8 @@ import { SecurityPhraseRoutingModule } from './security-phrase-routing.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [SecurityPhraseComponent],
@@ -12,7 +14,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     SecurityPhraseRoutingModule,
     MatCardModule,
+    MatCheckboxModule,
     MatFormFieldModule,
+    MatInputModule,
     ReactiveFormsModule
   ]
 })
