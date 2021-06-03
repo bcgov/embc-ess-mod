@@ -14,11 +14,9 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -34,7 +32,7 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class RegistrationsController : ControllerBase
+    public partial class RegistrationsController : ControllerBase
     {
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
@@ -45,21 +43,6 @@ namespace EMBC.Responders.API.Controllers
             this.messagingClient = messagingClient;
             this.mapper = mapper;
             this.evacuationSearchService = evacuationSearchService;
-        }
-
-        /// <summary>
-        /// Search evacuation files and profiles matching the search parameters
-        /// </summary>
-        /// <param name="searchParameters">search parameters to filter the results</param>
-        /// <returns>matching files list and registrants list</returns>
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<SearchResults>> Search([FromQuery] SearchParameters searchParameters)
-        {
-            var userRole = Enum.Parse<MemberRole>(User.FindFirstValue("user_role"));
-            var searchResults = await evacuationSearchService.Search(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
-
-            return Ok(searchResults);
         }
 
         /// <summary>
@@ -150,47 +133,6 @@ namespace EMBC.Responders.API.Controllers
         }
     }
 
-    public class SearchParameters
-    {
-        [Required]
-        public string firstName { get; set; }
-
-        [Required]
-        public string lastName { get; set; }
-
-        [Required]
-        public string dateOfBirth { get; set; }
-    }
-
-    public class SearchResults
-    {
-        public IEnumerable<RegistrantProfileSearchResult> Registrants { get; set; }
-        public IEnumerable<EvacuationFileSearchResult> Files { get; set; }
-    }
-
-    public class RegistrantProfileSearchResult
-    {
-        public string Id { get; set; }
-        public bool IsRestricted { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public RegistrantStatus Status { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public Address PrimaryAddress { get; set; }
-        public IEnumerable<EvacuationFileSearchResult> EvacuationFiles { get; set; }
-    }
-
-    public class EvacuationFileSearchResult
-    {
-        public string Id { get; set; }
-        public bool IsRestricted { get; set; }
-        public string TaskId { get; set; }
-        public Address EvacuatedFrom { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public EvacuationFileStatus Status { get; set; }
-        public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; }
-    }
-
     public class EvacuationFileHouseholdMember
     {
         public string FirstName { get; set; }
@@ -212,8 +154,8 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum EvacuationFileStatus
     {
-        [Description("In Progress")]
-        InProgress,
+        [Description("Pending")]
+        Pending,
 
         [Description("Active")]
         Active,

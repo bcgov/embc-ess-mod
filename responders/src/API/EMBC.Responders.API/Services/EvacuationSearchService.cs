@@ -20,25 +20,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
-using EMBC.Responders.API.Controllers;
 
 namespace EMBC.Responders.API.Services
 {
     public interface IEvacuationSearchService
     {
-        public Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
+        public Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, Controllers.MemberRole userRole);
     }
 
-    public class Searchresults
+    public class SearchResults
     {
         public IEnumerable<EvacuationFile> Files { get; set; }
-        public IEnumerable<RegistrantProfile> Registrants { get; set; }
+        public IEnumerable<RegistrantWithFiles> Registrants { get; set; }
     }
 
     public class EvacuationSearchService : IEvacuationSearchService
     {
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
+        private static EvacuationFileStatus[] tier1FileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired };
+        private static EvacuationFileStatus[] tier2andAboveFileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired, EvacuationFileStatus.Completed };
 
         public EvacuationSearchService(IMessagingClient messagingClient, IMapper mapper)
         {
@@ -46,67 +47,53 @@ namespace EMBC.Responders.API.Services
             this.mapper = mapper;
         }
 
-        public async Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
+        public async Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, Controllers.MemberRole userRole)
         {
             var registrants = (await messagingClient.Send(new RegistrantsSearchQuery
             {
                 FirstName = firstName,
                 LastName = lastName,
-                DateOfBirth = dateOfBirth
+                DateOfBirth = dateOfBirth,
+                IncludeCases = true
             })).Items;
 
             var files = (await messagingClient.Send(new EvacuationFilesSearchQuery
             {
                 FirstName = firstName,
                 LastName = lastName,
-                DateOfBirth = dateOfBirth
+                DateOfBirth = dateOfBirth,
+                IncludeHouseholdMembers = true
             })).Items;
 
-            //TODO: check if any result has restrictions
+            //check for restricted files
+            var anyRestriction = registrants.SelectMany(r => r.Files).Any(f => f.RestrictedAccess) ||
+                files.Any(f => f.RestrictedAccess);
+            if (userRole == Controllers.MemberRole.Tier1 && anyRestriction)
+            {
+                return new SearchResults
+                {
+                    Files = Array.Empty<EvacuationFile>(),
+                    Registrants = Array.Empty<RegistrantWithFiles>()
+                };
+            }
+
+            //filter files by role
+            var statusFilter = userRole == Controllers.MemberRole.Tier1
+                ? tier1FileStatuses
+                : tier2andAboveFileStatuses;
+
+            files = files.Where(f => statusFilter.Contains(f.Status));
+            registrants = registrants.Select(r => new RegistrantWithFiles
+            {
+                RegistrantProfile = r.RegistrantProfile,
+                Files = r.Files.Where(f => statusFilter.Contains(f.Status))
+            });
 
             return new SearchResults
             {
-                Registrants = mapper.Map<IEnumerable<RegistrantProfileSearchResult>>(registrants),
-                Files = mapper.Map<IEnumerable<EvacuationFileSearchResult>>(files)
+                Registrants = mapper.Map<IEnumerable<RegistrantWithFiles>>(registrants),
+                Files = mapper.Map<IEnumerable<EvacuationFile>>(files)
             };
-        }
-    }
-
-    public class EvacuationSearchMapping : Profile
-    {
-        public EvacuationSearchMapping()
-        {
-            CreateMap<EvacuationFile, EvacuationFileSearchResult>()
-                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status))
-                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.NeedsAssessments.First().HouseholdMembers))
-                .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuatedFromAddress))
-                ;
-
-            Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
-            CreateMap<ESS.Shared.Contracts.Submissions.Address, Controllers.Address>()
-                .ForMember(d => d.City, opts => opts.MapFrom(s => isGuid(s.Community) ? null : s.Community))
-                .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => !isGuid(s.Community) ? null : s.Community))
-                .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
-                .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
-                ;
-
-            CreateMap<RegistrantWithFiles, RegistrantProfileSearchResult>()
-                .IncludeMembers(s => s.RegistrantProfile)
-                .ForMember(d => d.EvacuationFiles, opts => opts.MapFrom(s => s.Files))
-                ;
-
-            CreateMap<RegistrantProfile, RegistrantProfileSearchResult>()
-                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => DateTime.Now))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => RegistrantStatus.NotVerified))
-                .ForMember(d => d.EvacuationFiles, opts => opts.Ignore())
-                ;
-
-            CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()
-                .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.MainApplicant : HouseholdMemberType.HouseholdMember))
-                .ForMember(d => d.IsMatch, opts => opts.Ignore())
-                ;
         }
     }
 }
