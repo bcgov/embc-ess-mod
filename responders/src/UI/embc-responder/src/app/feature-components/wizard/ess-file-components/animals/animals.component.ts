@@ -6,7 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -27,6 +27,7 @@ export class AnimalsComponent implements OnInit {
   editIndex: number;
   rowEdit = false;
   showTable = true;
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -40,6 +41,32 @@ export class AnimalsComponent implements OnInit {
 
     this.dataSource.next(this.animalsForm.get('pets').value);
     this.data = this.animalsForm.get('pets').value;
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateEssFileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
+
+    // Update Value and Validity for pets form if hasPets changes 
+    this.animalsForm
+      .get('hasPets')
+      .valueChanges.subscribe(() => {
+        this.animalsForm
+          .get('hasPetsFood')
+          .updateValueAndValidity();
+
+          this.animalsForm
+          .get('pets')
+          .updateValueAndValidity();
+
+          this.petFormGroup.updateValueAndValidity();
+      });
+
+    if(this.stepCreateEssFileService.hasPetS === true && this.stepCreateEssFileService.petS.length === 0) {
+      this.showPetsForm = true;
+    }
   }
 
   hasPetsChange(event: MatRadioChange): void {
@@ -77,7 +104,6 @@ export class AnimalsComponent implements OnInit {
 
   cancel(): void {
     this.showPetsForm = !this.showPetsForm;
-
     this.animalsForm.get('pet').reset();
   }
 
@@ -101,9 +127,8 @@ export class AnimalsComponent implements OnInit {
     this.animalsForm.get('pets').setValue(this.data);
 
     if (this.data.length === 0) {
-      this.animalsForm.get('addPetIndicator').setValue(false);
-      this.animalsForm.get('addPetFoodIndicator').setValue(false);
       this.animalsForm.get('hasPetsFood').reset();
+      this.animalsForm.get('petCareDetails').reset();
     }
   }
 
@@ -112,26 +137,26 @@ export class AnimalsComponent implements OnInit {
     this.rowEdit = !this.rowEdit;
     this.animalsForm.get('pet').setValue(element);
     this.showPetsForm = !this.showPetsForm;
-    // this.showTable = !this.showTable;
-    this.animalsForm.get('addPetIndicator').setValue(true);
-  }
-
-  updateOnVisibility(): void {
-    this.animalsForm.get('pet.type').updateValueAndValidity();
-    this.animalsForm.get('pet.quantity').updateValueAndValidity();
-    this.animalsForm.get('hasPetsFood').updateValueAndValidity();
   }
 
   back() {
-    this.router.navigate(['/ess-wizard/create-ess-file/animals']);
+    this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
   }
 
   /**
    * Updates the tab status and navigate to next tab
    */
   next(): void {
-    this.stepCreateEssFileService.setTabStatus('animals', 'complete');
-    this.router.navigate(['/ess-wizard/create-ess-file/review']);
+    this.router.navigate(['/ess-wizard/create-ess-file/needs']);
+  }
+
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
+   ngOnDestroy(): void {
+    console.log(this.animalsForm);
+    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 
   private createAnimalsForm(): void {
@@ -172,11 +197,67 @@ export class AnimalsComponent implements OnInit {
 
   private createPetForm(): FormGroup {
     return this.formBuilder.group({
-      type: ['', [this.customValidation.whitespaceValidator()]],
+      type: ['', [this.customValidation
+        .conditionalValidation(
+          () => this.animalsForm.get('hasPets').value === true,
+          this.customValidation.whitespaceValidator()
+        )
+        .bind(this.customValidation)]],
       quantity: [
         '',
-        [this.customValidation.quantityPetsValidator(), Validators.required]
+        [this.customValidation
+          .conditionalValidation(
+            () => this.animalsForm.get('hasPets').value === true,
+            this.customValidation.quantityPetsValidator() && Validators.required
+          )
+          .bind(this.customValidation)
+          ]
       ]
     });
+  }
+
+  /**
+   * Updates the Tab Status from Incomplete, Complete or in Progress
+   */
+   private updateTabStatus() {
+    if (this.animalsForm.valid) {
+      this.stepCreateEssFileService.setTabStatus(
+        'animals',
+        'complete'
+      );
+    } else if (
+      this.stepCreateEssFileService.checkForPartialUpdates(this.animalsForm)
+    ) {
+      this.stepCreateEssFileService.setTabStatus(
+        'animals',
+        'incomplete'
+      );
+    } else {
+      this.stepCreateEssFileService.setTabStatus(
+        'animals',
+        'not-started'
+      );
+    }
+    this.saveFormData();
+  }
+
+  /**
+   * Saves information inserted inthe form into the service
+   */
+  private saveFormData() {
+    this.stepCreateEssFileService.hasPetS = this.animalsForm.get(
+      'hasPets'
+    ).value;
+    this.stepCreateEssFileService.petS = this.animalsForm.get(
+      'pets'
+    ).value;
+    this.stepCreateEssFileService.hasPetsFooD = this.animalsForm.get(
+      'hasPetsFood'
+    ).value;
+    this.stepCreateEssFileService.petCareDetailS = this.animalsForm.get(
+      'petCareDetails'
+    ).value;
+
+    this.stepCreateEssFileService.createNeedsAssessmentDTO();
   }
 }

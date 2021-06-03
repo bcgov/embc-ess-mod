@@ -286,7 +286,7 @@ export class StepCreateEssFileService {
       referredServices: this.referredServices,
       referredServiceDetails: this.referredServiceDetails,
       externalServices: this.externalServices,
-      evacAddress: this.setAddressObject(this.evacAddress),
+      // evacAddress: this.setAddressObject(this.evacAddress),
 
       haveHouseHoldMembers: this.haveHouseHoldMembers,
       householdMembers:
@@ -390,6 +390,7 @@ export class StepCreateEssFileService {
         }
       }
     });
+    console.log(fields)
     const result = fields.filter((field) => !!field);
     return result.length !== 0;
   }
@@ -400,7 +401,7 @@ export class StepCreateEssFileService {
    * @param addressObject
    * @returns
    */
-  private setAddressObject(addressObject: AddressModel): Address {
+   public setAddressObject(addressObject: AddressModel): Address {
     const address: Address = {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,

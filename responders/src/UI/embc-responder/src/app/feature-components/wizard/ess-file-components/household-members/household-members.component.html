@@ -21,7 +21,7 @@
 
         <mat-radio-group
           aria-labelledby="primary-radio-group-label"
-          formControlName="haveHouseholdMembers"
+          formControlName="hasHouseholdMembers"
           class="primary-radio-group"
           required
           (change)="hasHouseholdMembers($event)"
@@ -29,16 +29,16 @@
           <mat-radio-button
             class="primary-radio-button"
             *ngFor="let option of radioOption"
-            [value]="option.value"
+            [value]="option"
           >
-            {{ option.name }}
+            {{ option }}
           </mat-radio-button>
           <mat-error
             class="custom-mat-error"
             *ngIf="
-              householdFormControl?.haveHouseholdMembers.touched &&
-              householdFormControl?.haveHouseholdMembers.invalid &&
-              householdFormControl?.haveHouseholdMembers.hasError('required')
+              householdFormControl?.hasHouseholdMembers.touched &&
+              householdFormControl?.hasHouseholdMembers.invalid &&
+              householdFormControl?.hasHouseholdMembers.hasError('required')
             "
           >
             Confirm to have Household Members is required</mat-error
@@ -191,7 +191,7 @@
 
         <mat-radio-group
           aria-labelledby="primary-radio-group-label"
-          formControlName="haveSpecialDiet"
+          formControlName="hasSpecialDiet"
           class="primary-radio-group"
           required
           (change)="hasSpecialDietChange($event)"
@@ -199,16 +199,16 @@
           <mat-radio-button
             class="primary-radio-button"
             *ngFor="let option of radioOption"
-            [value]="option.value"
+            [value]="option"
           >
-            {{ option.name }}
+            {{ option }}
           </mat-radio-button>
           <mat-error
             class="custom-mat-error"
             *ngIf="
-              householdFormControl?.haveSpecialDiet.touched &&
-              householdFormControl?.haveSpecialDiet.invalid &&
-              householdFormControl?.haveSpecialDiet.hasError('required')
+              householdFormControl?.hasSpecialDiet.touched &&
+              householdFormControl?.hasSpecialDiet.invalid &&
+              householdFormControl?.hasSpecialDiet.hasError('required')
             "
           >
             Dietary Requirement is required</mat-error
@@ -218,7 +218,7 @@
         <div class="row">
           <div
             class="col-8 additional-form"
-            *ngIf="householdFormControl?.haveSpecialDiet.value === true"
+            *ngIf="householdFormControl?.hasSpecialDiet.value === true"
           >
             <label class="card-heading" id="primary-radio-group-label"
               >Please specify</label
@@ -254,7 +254,7 @@
 
         <mat-radio-group
           aria-labelledby="primary-radio-group-label"
-          formControlName="haveMedication"
+          formControlName="hasMedication"
           class="primary-radio-group"
           required
           (change)="hasMedicationChange($event)"
@@ -262,16 +262,16 @@
           <mat-radio-button
             class="primary-radio-button"
             *ngFor="let option of radioOption"
-            [value]="option.value"
+            [value]="option"
           >
-            {{ option.name }}
+            {{ option }}
           </mat-radio-button>
           <mat-error
             class="custom-mat-error"
             *ngIf="
-              householdFormControl?.haveMedication.touched &&
-              householdFormControl?.haveMedication.invalid &&
-              householdFormControl?.haveMedication.hasError('required')
+              householdFormControl?.hasMedication.touched &&
+              householdFormControl?.hasMedication.invalid &&
+              householdFormControl?.hasMedication.hasError('required')
             "
           >
             Medication is required</mat-error
@@ -280,7 +280,7 @@
         <div class="row">
           <div
             class="col-8 additional-form"
-            *ngIf="householdFormControl?.haveMedication.value === true"
+            *ngIf="householdFormControl?.hasMedication.value === true"
           >
             <p>
               Does the evacuee have sufficient supply for the next 72 hours?
@@ -294,9 +294,9 @@
               <mat-radio-button
                 class="primary-radio-button"
                 *ngFor="let option of radioOption"
-                [value]="option.value"
+                [value]="option"
               >
-                {{ option.name }}
+                {{ option }}
               </mat-radio-button>
               <mat-error
                 class="custom-mat-error"
