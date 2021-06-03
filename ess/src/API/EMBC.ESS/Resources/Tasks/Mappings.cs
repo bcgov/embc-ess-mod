@@ -27,22 +27,13 @@ namespace EMBC.ESS.Resources.Tasks
     {
         public Mappings()
         {
-            //CreateMap<EssTask, era_task>()
-            //    .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Id))
-            //    .ForMember(d => d.era_taskdetails, opts => opts.MapFrom(s => s.Description))
-            //    .ForMember(d => d.era_taskstatus, opts => opts.MapFrom(s => s.Status))
-            //    //.ForMember(d => d.era_JurisdictionID.era_jurisdictionid, opts => opts.MapFrom(s => s.CommunityCode))
-            //    .ForMember(d => d.era_taskstartdate, opts => opts.MapFrom(s => s.From))
-            //    .ForMember(d => d.era_taskenddate, opts => opts.MapFrom(s => s.To))
-            //    ;
-
             CreateMap<era_task, EssTask>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
                 .ForMember(d => d.Description, opts => opts.MapFrom(s => s.era_taskdetails))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => Enum.GetName(typeof(EssTaskStatusCode), s.statuscode)))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.era_JurisdictionID.era_jurisdictionid))
-                .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_taskstartdate.HasValue ? s.era_taskstartdate.Value.DateTime : (DateTime?)null))
-                .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_taskenddate.HasValue ? s.era_taskenddate.Value.DateTime : (DateTime?)null))
+                .ForMember(d => d.StartDate, opts => opts.MapFrom(s => s.era_taskstartdate.HasValue ? s.era_taskstartdate.Value.DateTime : (DateTime?)null))
+                .ForMember(d => d.EndDate, opts => opts.MapFrom(s => s.era_taskenddate.HasValue ? s.era_taskenddate.Value.DateTime : (DateTime?)null))
                 ;
         }
     }

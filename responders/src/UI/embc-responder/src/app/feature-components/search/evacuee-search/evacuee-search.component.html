@@ -13,7 +13,9 @@
     </ng-container>
 
     <ng-container *ngIf="showResultsComponent">
-      <app-evacuee-search-results></app-evacuee-search-results>
+      <app-evacuee-search-results
+        (showIDPhotoComponent)="allowNewSearch($event)"
+      ></app-evacuee-search-results>
     </ng-container>
   </div>
 </div>

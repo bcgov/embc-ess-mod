@@ -296,7 +296,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetEvacuationFilesByRegistrantUserName()
+        public async Task CanSearchEvacuationFilesByRegistrantUserName()
         {
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
             var files = await GetRegistrantFilesByPrimaryRegistrantId(registrant.Id);
@@ -306,11 +306,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetEvacuationFilesByPersonalDetails()
+        public async Task CanSearchEvacuationFilesByPersonalDetails()
         {
             var files = (await manager.Handle(new EvacuationFilesSearchQuery
             {
-                FirstName = "Evac",
+                FirstName = "Elvis",
+                LastName = "Presley",
+                DateOfBirth = "08/01/1935"
             })).Items;
 
             files.ShouldNotBeEmpty();
@@ -428,7 +430,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                                 PreferredName = "hm1p",
                                 Initials = $"{uniqueSignature}_1",
                                 Gender = "X",
-                                DateOfBirth = "03/11/2000",
+                                DateOfBirth = "03/15/2000",
                                 IsUnder19 = false,
                                 IsPrimaryRegistrant = false
                             },
@@ -439,7 +441,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                                 PreferredName = "hm2p",
                                 Initials = $"{uniqueSignature}_2",
                                 Gender = "M",
-                                DateOfBirth = "03/12/2010",
+                                DateOfBirth = "03/16/2010",
                                 IsUnder19 = true,
                                 IsPrimaryRegistrant = false
                             }

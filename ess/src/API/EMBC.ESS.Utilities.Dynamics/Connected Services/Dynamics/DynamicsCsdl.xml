@@ -8318,6 +8318,7 @@
         <Property Name="era_haspetfood" Type="Edm.Int32" />
         <Property Name="era_emailrefusal" Type="Edm.Boolean" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_petcareplans" Type="Edm.String" Unicode="false" />
         <Property Name="era_hasinquiryreferral" Type="Edm.Boolean" />
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="era_phonenumberrefusal" Type="Edm.Boolean" />

@@ -43,6 +43,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DateOfBirth { get; set; }
+        public bool IncludeCases { get; set; } = false;
     }
 
     public class RegistrantsSearchQueryResult

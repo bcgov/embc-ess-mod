@@ -1,0 +1,45 @@
+.overview-card {
+  box-shadow: none !important;
+  border: 1px solid rgb(221, 221, 221);
+  padding-top: 0px !important;
+}
+
+.card-heading-outer {
+  background-color: rgb(35, 64, 117);
+}
+
+.card-heading {
+  color: white;
+  font-size: 23px;
+  line-height: 60px;
+}
+.margins {
+  margin: 0 !important;
+}
+
+.description-align {
+  justify-content: flex-end !important;
+}
+
+.file-details {
+  font-weight: bold;
+}
+
+mat-expansion-panel {
+  margin: 0px !important;
+  padding-top: 15px;
+}
+
+.expansion-divider {
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.file-heading {
+  padding-left: 17px;
+}
+
+.section-info {
+  padding-top: 15px;
+  padding-bottom: 10px;
+  background-color: rgb(242, 242, 242);
+}

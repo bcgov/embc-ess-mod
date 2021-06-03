@@ -21,9 +21,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.Transformation;
+using Task = System.Threading.Tasks.Task;
 
 namespace EMBC.ESS.Managers.Submissions
 {
@@ -35,6 +37,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly ICaseRepository caseRepository;
         private readonly ITransformator transformator;
         private readonly INotificationSender notificationSender;
+        private readonly ITaskRepository taskRepository;
 
         public SubmissionsManager(
             IMapper mapper,
@@ -42,7 +45,8 @@ namespace EMBC.ESS.Managers.Submissions
             ITemplateProviderResolver templateProviderResolver,
             ICaseRepository caseRepository,
             ITransformator transformator,
-            INotificationSender notificationSender)
+            INotificationSender notificationSender,
+            ITaskRepository taskRepository)
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
@@ -50,6 +54,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.caseRepository = caseRepository;
             this.transformator = transformator;
             this.notificationSender = notificationSender;
+            this.taskRepository = taskRepository;
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
@@ -82,7 +87,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).CaseId;
 
-            if (cmd.File.PhraseChanged) await caseRepository.ManageCase(new UpdateSecurityPhrase { Id = file.Id, SecurityPhrase = file.SecurityPhrase });
+            if (cmd.File.SecurityPhraseChanged) await caseRepository.ManageCase(new UpdateSecurityPhrase { Id = file.Id, SecurityPhrase = file.SecurityPhrase });
 
             if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
             {
@@ -162,17 +167,18 @@ namespace EMBC.ESS.Managers.Submissions
             var registrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts);
 
             var results = new List<RegistrantWithFiles>();
-            foreach (var registrant in registrants)
+            var resultTasks = registrants.Select(async r =>
             {
-                var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id }))
-                    .Items.Cast<Resources.Cases.EvacuationFile>();
-                results.Add(new RegistrantWithFiles
+                var result = new RegistrantWithFiles { RegistrantProfile = r, Files = Array.Empty<Shared.Contracts.Submissions.EvacuationFile>() };
+                if (query.IncludeCases)
                 {
-                    RegistrantProfile = registrant,
-                    Files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(files)
-                });
-            }
+                    var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = r.Id })).Items.Cast<Resources.Cases.EvacuationFile>();
+                    result.Files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(files);
+                }
+                results.Add(result);
+            });
 
+            Task.WaitAll(resultTasks.ToArray());
             return new RegistrantsSearchQueryResult { Items = results };
         }
 
@@ -186,7 +192,7 @@ namespace EMBC.ESS.Managers.Submissions
                 LastName = query.LastName,
                 DateOfBirth = query.DateOfBirth,
                 IncludeHouseholdMembers = query.IncludeHouseholdMembers,
-                IncludeFilesInStatuses = query.IncludeFilesInStatuses
+                IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Cases.EvacuationFileStatus>(s.ToString())).ToArray()
             })).Items.Cast<Resources.Cases.EvacuationFile>();
 
             var results = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
@@ -238,6 +244,29 @@ namespace EMBC.ESS.Managers.Submissions
                 IsCorrect = string.Equals(file.SecurityPhrase, query.SecurityPhrase, StringComparison.OrdinalIgnoreCase)
             };
             return ret;
+        }
+
+        public async Task<string> Handle(SaveEvacuationFileNotes cmd)
+        {
+            await Task.CompletedTask;
+            throw new NotImplementedException();
+        }
+
+        public async Task<EvacuationFileNotesQueryResult> Handle(EvacuationFileNotesQuery query)
+        {
+            await Task.CompletedTask;
+            throw new NotImplementedException();
+        }
+
+        public async Task<TasksSearchQueryResult> Handle(TasksSearchQuery query)
+        {
+            var esstask = (await taskRepository.QueryTask(new TaskQuery
+            {
+                ById = query.TaskId
+            })).Items;
+            var esstasks = mapper.Map<IEnumerable<IncidentTask>>(esstask);
+
+            return new TasksSearchQueryResult { Items = esstasks };
         }
     }
 }
