@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { ExitWizardDialogComponent } from 'src/app/shared/components/dialog-components/exit-wizard-dialog/exit-wizard-dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { WizardService } from './wizard.service';
+import { Subscription } from 'rxjs';
+
 import * as globalConst from '../../core/services/global-constants';
 
 @Component({
@@ -14,8 +16,9 @@ import * as globalConst from '../../core/services/global-constants';
   templateUrl: './wizard.component.html',
   styleUrls: ['./wizard.component.scss']
 })
-export class WizardComponent implements OnInit {
+export class WizardComponent implements OnInit, OnDestroy {
   sideNavMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
+  scrollSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -28,6 +31,15 @@ export class WizardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDefaultStep();
+
+    // Scroll to top when navigating. "scrollPositionRestoration" option doesn't work for Mat-Sidenav-Content.
+    this.router.events.subscribe((ev: any) => {
+      if (ev instanceof NavigationEnd) {
+        document
+          .querySelector('.mat-sidenav-content')
+          .scroll({ left: 0, top: 0 });
+      }
+    });
   }
 
   /**
@@ -113,5 +125,12 @@ export class WizardComponent implements OnInit {
       },
       width: '530px'
     });
+  }
+
+  /**
+   * When wizard is closed, end Angular Material "scroll to top" subscription
+   */
+  ngOnDestroy() {
+    this.scrollSubscription.unsubscribe();
   }
 }

@@ -36,7 +36,7 @@ export class NeedsComponent implements OnInit {
 
   next(): void {
     // this.stepCreateEssFileService.nextTabUpdate.next();
-    this.router.navigate(['/ess-wizard/create-ess-file/animals']);
+    this.router.navigate(['/ess-wizard/create-ess-file/security-phrase']);
   }
 
   private createNeedsForm(): void {
