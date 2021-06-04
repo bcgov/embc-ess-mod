@@ -23,7 +23,7 @@
               /></span>
             </a>
             <a
-              *ngIf="fileResult?.status === 'InProgress'"
+              *ngIf="fileResult?.status === 'Pending'"
               class="file-pending highlight"
               (click)="openESSFile()"
               >ESS File: <b>{{ fileResult?.id }}</b
