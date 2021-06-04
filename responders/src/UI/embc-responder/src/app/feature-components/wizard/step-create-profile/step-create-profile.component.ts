@@ -1,6 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -12,7 +12,7 @@ import * as globalConst from '../../../core/services/global-constants';
   templateUrl: './step-create-profile.component.html',
   styleUrls: ['./step-create-profile.component.scss']
 })
-export class StepCreateProfileComponent implements OnDestroy {
+export class StepCreateProfileComponent {
   questionListSubscription: Subscription;
 
   stepId: string;
@@ -60,12 +60,5 @@ export class StepCreateProfileComponent implements OnDestroy {
   isAllowed(tabRoute: string, $event: MouseEvent): void {
     this.stepCreateProfileService.nextTabUpdate.next();
     this.stepCreateProfileService.isAllowed(tabRoute, $event);
-  }
-
-  /**
-   * Explicitly deactivate Question List subscription when wizard is finished
-   */
-  ngOnDestroy() {
-    // this.questionListSubscription.unsubscribe();
   }
 }

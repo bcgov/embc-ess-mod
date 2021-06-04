@@ -113,7 +113,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.EvacuationFiles, opts => opts.MapFrom(s => s.Files))
                 ;
 
-            CreateMap<RegistrantProfile, RegistrantProfileSearchResult>()
+            CreateMap<ESS.Shared.Contracts.Submissions.RegistrantProfile, RegistrantProfileSearchResult>()
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => DateTime.Now))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => RegistrantStatus.NotVerified))
