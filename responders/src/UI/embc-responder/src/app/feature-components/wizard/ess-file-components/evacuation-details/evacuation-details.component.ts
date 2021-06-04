@@ -2,19 +2,18 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators
 } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
-import { Address } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { Subscription } from 'rxjs';
+import { AddressModel } from 'src/app/core/models/Address.model';
+import { CommunityType } from '../../../../core/api/models';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -34,21 +33,28 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<any>(true, []);
   tabUpdateSubscription: Subscription;
 
-  bCDummyAddress: Address = {
+  bCDummyAddress: AddressModel = {
     addressLine1: 'Unit 1200',
     addressLine2: '1230 Main Street',
-    communityCode: 'North Vancouver',
-    stateProvinceCode: 'British Columbia',
+    community: {
+      code: '6e69dfaf-9f97-ea11-b813-005056830319',
+      countryCode: 'CAN',
+      districtName: 'Cariboo',
+      name: '100 Mile House',
+      stateProvinceCode: 'BC',
+      type: CommunityType.DistrictMunicipality
+    },
+    stateProvince: { code: 'BC', countryCode: 'CAN', name: 'British Columbia' },
     postalCode: 'V8Y 6U8',
-    countryCode: 'Canada'
+    country: { code: 'CAN', name: 'Canada' }
   };
-  nonBcDummyAddress: Address = {
+  nonBcDummyAddress: AddressModel = {
     addressLine1: 'Unit 2300',
     addressLine2: '1230 Oak Street',
-    communityCode: 'Miami',
-    stateProvinceCode: 'Florida',
+    community: undefined,
+    stateProvince: { code: 'FL', countryCode: 'USA', name: 'Florida' },
     postalCode: '33009',
-    countryCode: 'Unites States'
+    country: { code: 'USA', name: 'United States of America' }
   };
 
   constructor(
@@ -69,6 +75,15 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       }
     );
 
+    // Update Value and Validity for referredServiceDetails if referredServices changes
+    this.evacDetailsForm
+      .get('referredServices')
+      .valueChanges.subscribe((value) => {
+        this.evacDetailsForm
+          .get('referredServiceDetails')
+          .updateValueAndValidity();
+      });
+
     // Display the referredServiceDetails in case referred Service is set as true
     if (this.stepCreateEssFileService.referredServiceS === true) {
       this.showReferredServicesForm = true;
@@ -77,6 +92,11 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         .referredServiceDetailS) {
         this.selection.toggle(option);
       }
+    }
+
+    // Display the Evacuation Address form if the answer is set as false
+    if (this.stepCreateEssFileService.evacuatedFromPrimaryAddress === false) {
+      this.showBCAddressForm = true;
     }
   }
 
@@ -121,6 +141,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    */
   selectionToggle(option): void {
     this.selection.toggle(option);
+
+    this.evacDetailsForm
+      .get('referredServiceDetails')
+      .setValue(this.selection.selected);
   }
 
   /**
@@ -148,6 +172,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    console.log(this.evacDetailsForm);
     this.stepCreateEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
@@ -201,8 +226,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         [
           this.customValidation
             .conditionalValidation(
-              () =>
-                this.evacDetailsForm.get('referredServices').value === 'Yes',
+              () => this.evacDetailsForm.get('referredServices').value === true,
               Validators.required
             )
             .bind(this.customValidation)
@@ -266,7 +290,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Checks if the inserted primary address is in BC Province
    */
   private checkPrimaryAddress() {
-    if (this.bCDummyAddress.stateProvinceCode !== 'British Columbia') {
+    if (this.bCDummyAddress.stateProvince.code !== 'BC') {
       this.evacDetailsForm.get('evacuatedFromPrimary').setValue('No');
       this.isBCAddress = false;
     }
@@ -322,7 +346,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.stepCreateEssFileService.emergencySupportServiceS = this.evacDetailsForm.get(
       'emergencySupportServices'
     ).value;
-
     this.stepCreateEssFileService.referredServiceS = this.evacDetailsForm.get(
       'referredServices'
     ).value;
