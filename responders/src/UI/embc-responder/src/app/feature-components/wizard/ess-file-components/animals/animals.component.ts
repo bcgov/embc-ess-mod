@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -17,7 +17,7 @@ import { MatRadioChange } from '@angular/material/radio';
   templateUrl: './animals.component.html',
   styleUrls: ['./animals.component.scss']
 })
-export class AnimalsComponent implements OnInit {
+export class AnimalsComponent implements OnInit, OnDestroy {
   animalsForm: FormGroup;
   radioOption = globalConst.radioButtonOptions1;
   showPetsForm = false;
@@ -37,8 +37,10 @@ export class AnimalsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Creates the Animals form
     this.createAnimalsForm();
 
+    // Adds pets list in case the user has previously inserted data
     this.dataSource.next(this.animalsForm.get('pets').value);
     this.data = this.animalsForm.get('pets').value;
 
@@ -49,40 +51,41 @@ export class AnimalsComponent implements OnInit {
       }
     );
 
-    // Update Value and Validity for pets form if hasPets changes 
+    // Update Value and Validity for pets form if hasPets changes
+    this.animalsForm.get('hasPets').valueChanges.subscribe(() => {
+      this.animalsForm.get('hasPetsFood').updateValueAndValidity();
+
+      this.animalsForm.get('pets').updateValueAndValidity();
+    });
+
+    // Updates the validations for the PetFormGroup
     this.animalsForm
-      .get('hasPets')
-      .valueChanges.subscribe(() => {
-        this.animalsForm
-          .get('hasPetsFood')
-          .updateValueAndValidity();
+      .get('addPetIndicator')
+      .valueChanges.subscribe(() => this.updateOnVisibility());
 
-          this.animalsForm
-          .get('pets')
-          .updateValueAndValidity();
-
-          this.petFormGroup.updateValueAndValidity();
-      });
-
-    if(this.stepCreateEssFileService.hasPetS === true && this.stepCreateEssFileService.petS.length === 0) {
+    // Shows the petsGroupForm if hasPets is true and none pets has been inserted yet
+    if (
+      this.stepCreateEssFileService.hasPets === true &&
+      this.stepCreateEssFileService.pets.length === 0
+    ) {
       this.showPetsForm = true;
     }
   }
 
+  //
   hasPetsChange(event: MatRadioChange): void {
     if (event.value === false) {
       this.showPetsForm = false;
       this.animalsForm.get('pet').reset();
-      // this.editFlag = !this.editFlag;
     } else {
       this.showPetsForm = true;
-      // this.editFlag = !this.editFlag;
     }
   }
 
   addPets(): void {
     this.animalsForm.get('pet').reset();
     this.showPetsForm = !this.showPetsForm;
+    this.animalsForm.get('addPetIndicator').setValue(true);
   }
 
   save(): void {
@@ -94,6 +97,7 @@ export class AnimalsComponent implements OnInit {
       } else {
         this.data.push(this.animalsForm.get('pet').value);
       }
+      this.animalsForm.get('addPetIndicator').setValue(false);
       this.dataSource.next(this.data);
       this.animalsForm.get('pets').setValue(this.data);
       this.showPetsForm = !this.showPetsForm;
@@ -105,6 +109,11 @@ export class AnimalsComponent implements OnInit {
   cancel(): void {
     this.showPetsForm = !this.showPetsForm;
     this.animalsForm.get('pet').reset();
+    this.animalsForm.get('addPetIndicator').setValue(false);
+
+    if (this.data.length === 0) {
+      this.animalsForm.get('hasPets').setValue(false);
+    }
   }
 
   /**
@@ -125,26 +134,38 @@ export class AnimalsComponent implements OnInit {
     this.data.splice(index, 1);
     this.dataSource.next(this.data);
     this.animalsForm.get('pets').setValue(this.data);
+    this.animalsForm.get('addPetIndicator').setValue(false);
 
     if (this.data.length === 0) {
       this.animalsForm.get('hasPetsFood').reset();
       this.animalsForm.get('petCareDetails').reset();
+      this.animalsForm.get('hasPets').setValue(false);
     }
   }
 
+  /**
+   * Edits the selected pet from the petList
+   *
+   * @param element
+   * @param index
+   */
   editRow(element, index): void {
     this.editIndex = index;
     this.rowEdit = !this.rowEdit;
     this.animalsForm.get('pet').setValue(element);
     this.showPetsForm = !this.showPetsForm;
+    this.animalsForm.get('addPetIndicator').setValue(true);
   }
 
+  /**
+   * Goes back to the previous ESS File Tab
+   */
   back() {
     this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
   }
 
   /**
-   * Updates the tab status and navigate to next tab
+   * Goes to the next tab from the ESS File
    */
   next(): void {
     this.router.navigate(['/ess-wizard/create-ess-file/needs']);
@@ -153,24 +174,27 @@ export class AnimalsComponent implements OnInit {
   /**
    * When navigating away from tab, update variable value and status indicator
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     console.log(this.animalsForm);
     this.stepCreateEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 
+  /**
+   * Generates the main Animals form
+   */
   private createAnimalsForm(): void {
-    if (!this.stepCreateEssFileService.petS) {
-      this.stepCreateEssFileService.petS = [];
+    if (!this.stepCreateEssFileService.pets) {
+      this.stepCreateEssFileService.pets = [];
     }
 
     this.animalsForm = this.formBuilder.group({
       hasPets: [
-        this.stepCreateEssFileService.hasPetS ?? '',
+        this.stepCreateEssFileService.hasPets ?? '',
         [Validators.required]
       ],
       pets: [
-        this.stepCreateEssFileService.petS,
+        this.stepCreateEssFileService.pets,
         this.customValidation
           .conditionalValidation(
             () => this.animalsForm.get('hasPets').value === true,
@@ -178,9 +202,8 @@ export class AnimalsComponent implements OnInit {
           )
           .bind(this.customValidation)
       ],
-
       hasPetsFood: [
-        this.stepCreateEssFileService.hasPetsFooD ?? '',
+        this.stepCreateEssFileService.hasPetsFood ?? '',
         this.customValidation
           .conditionalValidation(
             () => this.animalsForm.get('hasPets').value === true,
@@ -188,55 +211,70 @@ export class AnimalsComponent implements OnInit {
           )
           .bind(this.customValidation)
       ],
-
-      petCareDetails: [this.stepCreateEssFileService.petCareDetailS ?? ''],
-
-      pet: this.createPetForm()
+      petCareDetails: [this.stepCreateEssFileService.petCareDetails ?? ''],
+      pet: this.createPetForm(),
+      addPetIndicator: [false]
     });
   }
 
+  /**
+   * Generates a pet form to add them in the petList
+   *
+   * @returns a pet form
+   */
   private createPetForm(): FormGroup {
     return this.formBuilder.group({
-      type: ['', [this.customValidation
-        .conditionalValidation(
-          () => this.animalsForm.get('hasPets').value === true,
-          this.customValidation.whitespaceValidator()
-        )
-        .bind(this.customValidation)]],
+      type: [
+        '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.animalsForm.get('addPetIndicator').value === true,
+              this.customValidation.whitespaceValidator()
+            )
+            .bind(this.customValidation)
+        ]
+      ],
       quantity: [
         '',
-        [this.customValidation
-          .conditionalValidation(
-            () => this.animalsForm.get('hasPets').value === true,
-            this.customValidation.quantityPetsValidator() && Validators.required
-          )
-          .bind(this.customValidation)
-          ]
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.animalsForm.get('addPetIndicator').value === true,
+              this.customValidation.quantityPetsValidator()
+            )
+            .bind(this.customValidation),
+          this.customValidation
+            .conditionalValidation(
+              () => this.animalsForm.get('addPetIndicator').value === true,
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
       ]
     });
   }
 
   /**
+   * Updates the validations for personalDetailsForm
+   */
+  private updateOnVisibility(): void {
+    this.animalsForm.get('pet.type').updateValueAndValidity();
+    this.animalsForm.get('pet.quantity').updateValueAndValidity();
+  }
+
+  /**
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
-   private updateTabStatus() {
+  private updateTabStatus() {
     if (this.animalsForm.valid) {
-      this.stepCreateEssFileService.setTabStatus(
-        'animals',
-        'complete'
-      );
+      this.stepCreateEssFileService.setTabStatus('animals', 'complete');
     } else if (
       this.stepCreateEssFileService.checkForPartialUpdates(this.animalsForm)
     ) {
-      this.stepCreateEssFileService.setTabStatus(
-        'animals',
-        'incomplete'
-      );
+      this.stepCreateEssFileService.setTabStatus('animals', 'incomplete');
     } else {
-      this.stepCreateEssFileService.setTabStatus(
-        'animals',
-        'not-started'
-      );
+      this.stepCreateEssFileService.setTabStatus('animals', 'not-started');
     }
     this.saveFormData();
   }
@@ -245,19 +283,18 @@ export class AnimalsComponent implements OnInit {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepCreateEssFileService.hasPetS = this.animalsForm.get(
+    this.stepCreateEssFileService.hasPets = this.animalsForm.get(
       'hasPets'
     ).value;
-    this.stepCreateEssFileService.petS = this.animalsForm.get(
-      'pets'
-    ).value;
-    this.stepCreateEssFileService.hasPetsFooD = this.animalsForm.get(
+    this.stepCreateEssFileService.pets = this.animalsForm.get('pets').value;
+    this.stepCreateEssFileService.hasPetsFood = this.animalsForm.get(
       'hasPetsFood'
     ).value;
-    this.stepCreateEssFileService.petCareDetailS = this.animalsForm.get(
+    this.stepCreateEssFileService.petCareDetails = this.animalsForm.get(
       'petCareDetails'
     ).value;
-
-    this.stepCreateEssFileService.createNeedsAssessmentDTO();
+    this.stepCreateEssFileService.petCareDetails = this.animalsForm.get(
+      'addPetIndicator'
+    ).value;
   }
 }

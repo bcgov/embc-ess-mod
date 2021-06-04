@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -14,7 +14,7 @@ import { StepCreateEssFileService } from '../../step-create-ess-file/step-create
   templateUrl: './needs.component.html',
   styleUrls: ['./needs.component.scss']
 })
-export class NeedsComponent implements OnInit {
+export class NeedsComponent implements OnInit, OnDestroy {
   needsForm: FormGroup;
   tabUpdateSubscription: Subscription;
 
@@ -25,6 +25,7 @@ export class NeedsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Creates the main form
     this.createNeedsForm();
 
     // Set "update tab status" method, called for any tab navigation
@@ -35,23 +36,31 @@ export class NeedsComponent implements OnInit {
     );
   }
 
+  /**
+   * Returns the control of the form
+   */
   get needsFormControl(): { [key: string]: AbstractControl } {
     return this.needsForm.controls;
   }
 
+  /**
+   * Goes back to the previous ESS File Tab
+   */
   back(): void {
     this.router.navigate(['/ess-wizard/create-ess-file/animals']);
   }
 
+  /**
+   * Goes to the next tab from the ESS File
+   */
   next(): void {
-    // this.stepCreateEssFileService.nextTabUpdate.next();
     this.router.navigate(['/ess-wizard/create-ess-file/review']);
   }
 
   /**
    * When navigating away from tab, update variable value and status indicator
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.stepCreateEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
@@ -59,23 +68,23 @@ export class NeedsComponent implements OnInit {
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
       canEvacueeProvideFood: [
-        this.stepCreateEssFileService.canEvacueeProvideFooD ?? '',
+        this.stepCreateEssFileService.canEvacueeProvideFood ?? '',
         Validators.required
       ],
       canEvacueeProvideLodging: [
-        this.stepCreateEssFileService.canEvacueeProvideLodginG ?? '',
+        this.stepCreateEssFileService.canEvacueeProvideLodging ?? '',
         Validators.required
       ],
       canEvacueeProvideClothing: [
-        this.stepCreateEssFileService.canEvacueeProvideClothinG ?? '',
+        this.stepCreateEssFileService.canEvacueeProvideClothing ?? '',
         Validators.required
       ],
       canEvacueeProvideTransportation: [
-        this.stepCreateEssFileService.canEvacueeProvideTransportatioN ?? '',
+        this.stepCreateEssFileService.canEvacueeProvideTransportation ?? '',
         Validators.required
       ],
       canEvacueeProvideIncidentals: [
-        this.stepCreateEssFileService.canEvacueeProvideIncidentalS ?? '',
+        this.stepCreateEssFileService.canEvacueeProvideIncidentals ?? '',
         Validators.required
       ]
     });
@@ -84,24 +93,15 @@ export class NeedsComponent implements OnInit {
   /**
    * Updates the Tab Status from Incomplete, Complete or in Progress
    */
-   private updateTabStatus() {
+  private updateTabStatus() {
     if (this.needsForm.valid) {
-      this.stepCreateEssFileService.setTabStatus(
-        'needs',
-        'complete'
-      );
+      this.stepCreateEssFileService.setTabStatus('needs', 'complete');
     } else if (
       this.stepCreateEssFileService.checkForPartialUpdates(this.needsForm)
     ) {
-      this.stepCreateEssFileService.setTabStatus(
-        'needs',
-        'incomplete'
-      );
+      this.stepCreateEssFileService.setTabStatus('needs', 'incomplete');
     } else {
-      this.stepCreateEssFileService.setTabStatus(
-        'needs',
-        'not-started'
-      );
+      this.stepCreateEssFileService.setTabStatus('needs', 'not-started');
     }
     this.saveFormData();
   }
@@ -110,22 +110,22 @@ export class NeedsComponent implements OnInit {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    // this.stepCreateEssFileService.haveHouseHoldMembers = this.needsForm.get(
-    //   'canEvacueeProvideFood'
-    // ).value;
-    // this.stepCreateEssFileService.houseHoldMembers = this.needsForm.get(
-    //   'canEvacueeProvideLodging'
-    // ).value;
-    // this.stepCreateEssFileService.haveSpecialDieT = this.needsForm.get(
-    //   'canEvacueeProvideClothing'
-    // ).value;
-    // this.stepCreateEssFileService.specialDietDetailS = this.needsForm.get(
-    //   'canEvacueeProvideTransportation'
-    // ).value;
-    // this.stepCreateEssFileService.haveMedicatioN = this.needsForm.get(
-    //   'canEvacueeProvideIncidentals'
-    // ).value;
-    
-    // this.stepCreateEssFileService.createNeedsAssessmentDTO();
+    this.stepCreateEssFileService.canEvacueeProvideFood = this.needsForm.get(
+      'canEvacueeProvideFood'
+    ).value;
+    this.stepCreateEssFileService.canEvacueeProvideLodging = this.needsForm.get(
+      'canEvacueeProvideLodging'
+    ).value;
+    this.stepCreateEssFileService.canEvacueeProvideClothing = this.needsForm.get(
+      'canEvacueeProvideClothing'
+    ).value;
+    this.stepCreateEssFileService.canEvacueeProvideTransportation = this.needsForm.get(
+      'canEvacueeProvideTransportation'
+    ).value;
+    this.stepCreateEssFileService.canEvacueeProvideIncidentals = this.needsForm.get(
+      'canEvacueeProvideIncidentals'
+    ).value;
+
+    this.stepCreateEssFileService.createNeedsAssessmentDTO();
   }
 }

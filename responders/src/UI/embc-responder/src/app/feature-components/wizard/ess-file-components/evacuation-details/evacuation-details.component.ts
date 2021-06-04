@@ -13,7 +13,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { Subscription } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/Address.model';
-import {CommunityType} from '../../../../core/api/models'
+import { CommunityType } from '../../../../core/api/models';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -36,18 +36,25 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   bCDummyAddress: AddressModel = {
     addressLine1: 'Unit 1200',
     addressLine2: '1230 Main Street',
-    community: {code: '6e69dfaf-9f97-ea11-b813-005056830319', countryCode: 'CAN', districtName: 'Cariboo', name: '100 Mile House', stateProvinceCode: 'BC', type: CommunityType.DistrictMunicipality},
-    stateProvince: {code: 'BC', countryCode: 'CAN', name: 'British Columbia'},
+    community: {
+      code: '6e69dfaf-9f97-ea11-b813-005056830319',
+      countryCode: 'CAN',
+      districtName: 'Cariboo',
+      name: '100 Mile House',
+      stateProvinceCode: 'BC',
+      type: CommunityType.DistrictMunicipality
+    },
+    stateProvince: { code: 'BC', countryCode: 'CAN', name: 'British Columbia' },
     postalCode: 'V8Y 6U8',
-    country: {code: 'CAN', name: 'Canada'}
+    country: { code: 'CAN', name: 'Canada' }
   };
   nonBcDummyAddress: AddressModel = {
     addressLine1: 'Unit 2300',
     addressLine2: '1230 Oak Street',
     community: undefined,
-    stateProvince: {code: 'FL', countryCode: 'USA', name: 'Florida'},
+    stateProvince: { code: 'FL', countryCode: 'USA', name: 'Florida' },
     postalCode: '33009',
-    country: {code: 'USA', name: 'United States of America'}
+    country: { code: 'USA', name: 'United States of America' }
   };
 
   constructor(
@@ -68,7 +75,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       }
     );
 
-    // Update Value and Validity for referredServiceDetails if referredServices changes 
+    // Update Value and Validity for referredServiceDetails if referredServices changes
     this.evacDetailsForm
       .get('referredServices')
       .valueChanges.subscribe((value) => {
@@ -88,7 +95,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     }
 
     // Display the Evacuation Address form if the answer is set as false
-    if(this.stepCreateEssFileService.evacuatedFromPrimaryAddress === false) {
+    if (this.stepCreateEssFileService.evacuatedFromPrimaryAddress === false) {
       this.showBCAddressForm = true;
     }
   }
@@ -116,7 +123,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   referredServiceChange(event: MatRadioChange): void {
     if (event.value === true) {
       this.showReferredServicesForm = true;
-      
     } else {
       this.showReferredServicesForm = false;
       this.selection.clear();
@@ -137,8 +143,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.selection.toggle(option);
 
     this.evacDetailsForm
-        .get('referredServiceDetails')
-        .setValue(this.selection.selected);
+      .get('referredServiceDetails')
+      .setValue(this.selection.selected);
   }
 
   /**
@@ -166,7 +172,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    console.log(this.evacDetailsForm)
+    console.log(this.evacDetailsForm);
     this.stepCreateEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
@@ -220,8 +226,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         [
           this.customValidation
             .conditionalValidation(
-              () =>
-                this.evacDetailsForm.get('referredServices').value === true,
+              () => this.evacDetailsForm.get('referredServices').value === true,
               Validators.required
             )
             .bind(this.customValidation)
@@ -341,7 +346,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.stepCreateEssFileService.emergencySupportServiceS = this.evacDetailsForm.get(
       'emergencySupportServices'
     ).value;
-    this.stepCreateEssFileService.referredServiceS = this.evacDetailsForm.get('referredServices').value;
+    this.stepCreateEssFileService.referredServiceS = this.evacDetailsForm.get(
+      'referredServices'
+    ).value;
     this.stepCreateEssFileService.referredServiceDetailS = this.selection.selected;
     this.stepCreateEssFileService.externalServiceS = this.evacDetailsForm.get(
       'externalServices'
