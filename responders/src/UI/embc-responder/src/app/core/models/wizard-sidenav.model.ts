@@ -1,8 +1,11 @@
+import * as globalConst from '../../core/services/global-constants';
+
 export class WizardSidenavModel {
   step: string;
   title: string;
   route: string;
   isLocked: boolean;
+  incompleteMsg?: string;
   img: SidenavStepImg;
 }
 
@@ -20,6 +23,7 @@ export class WizardSidenavModelValues {
       title: 'Create Evacuee Profile',
       route: '/ess-wizard/create-evacuee-profile',
       isLocked: false,
+      incompleteMsg: globalConst.evacueeProfileStepIncompleteMessage,
       img: {
         imgSrc: '/assets/images/wizard/locked-profile.svg',
         altSrc: '/assets/images/wizard/profile.svg',
@@ -32,6 +36,7 @@ export class WizardSidenavModelValues {
       title: 'Create ESS File',
       route: '/ess-wizard/create-ess-file',
       isLocked: true,
+      incompleteMsg: globalConst.essFileStepIncompleteMessage,
       img: {
         imgSrc: '/assets/images/wizard/locked-ess-file.svg',
         altSrc: '/assets/images/wizard/ess-file.svg',

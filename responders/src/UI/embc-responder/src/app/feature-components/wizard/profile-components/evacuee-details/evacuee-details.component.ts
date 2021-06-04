@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
@@ -6,13 +6,14 @@ import { StepCreateProfileService } from '../../step-create-profile/step-create-
 import * as globalConst from '../../../../core/services/global-constants';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-evacuee-details',
   templateUrl: './evacuee-details.component.html',
   styleUrls: ['./evacuee-details.component.scss']
 })
-export class EvacueeDetailsComponent implements OnInit {
+export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   evacueeDetailsForm: FormGroup;
   gender = globalConst.gender;
   readonly dateMask = [
@@ -28,6 +29,7 @@ export class EvacueeDetailsComponent implements OnInit {
     /\d/
   ];
   evacueeSearchContext: EvacueeSearchContextModel;
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -40,6 +42,13 @@ export class EvacueeDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.createEvacueeDetailsForm();
     this.evacueeSearchContext = this.evacueeSearchService.getEvacueeSearchContext();
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   createEvacueeDetailsForm(): void {
@@ -92,18 +101,22 @@ export class EvacueeDetailsComponent implements OnInit {
   }
 
   /**
-   * Updates the tab status and navigate to next tab
+   * Navigate to next tab
    */
   next(): void {
-    this.updateTabStatus();
     this.router.navigate(['/ess-wizard/create-evacuee-profile/address']);
   }
 
+  /**
+   * Navigates to the previous tab
+   */
   back(): void {
-    this.updateTabStatus();
     this.router.navigate(['/ess-wizard/create-evacuee-profile/restriction']);
   }
 
+  /**
+   * Checks the form validity and updates the tab status
+   */
   updateTabStatus() {
     if (this.evacueeDetailsForm.valid) {
       this.stepCreateProfileService.setTabStatus('evacuee-details', 'complete');
@@ -114,5 +127,13 @@ export class EvacueeDetailsComponent implements OnInit {
       );
     }
     this.stepCreateProfileService.personalDetails = this.evacueeDetailsForm.getRawValue();
+  }
+
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
+  ngOnDestroy(): void {
+    this.stepCreateProfileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 }

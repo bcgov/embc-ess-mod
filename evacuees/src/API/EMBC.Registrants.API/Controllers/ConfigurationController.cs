@@ -22,7 +22,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Location;
+using EMBC.ESS.Shared.Contracts.Metadata;
 using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -97,7 +97,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 CountryCode = countryId,
                 StateProvinceCode = stateProvinceId,
-                Types = types.Select(t => (EMBC.ESS.Shared.Contracts.Location.CommunityType)t)
+                Types = types.Select(t => (EMBC.ESS.Shared.Contracts.Metadata.CommunityType)t)
             })).Items;
 
             return Ok(mapper.Map<IEnumerable<CommunityCode>>(items));

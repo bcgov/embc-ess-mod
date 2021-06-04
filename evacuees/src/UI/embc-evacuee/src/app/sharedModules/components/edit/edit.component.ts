@@ -32,10 +32,16 @@ export class EditComponent implements OnInit, OnDestroy {
   // disabledSavedButton = false;
 
   constructor(
-    private router: Router, private route: ActivatedRoute,
-    private formCreationService: FormCreationService, private profileService: ProfileService,
-    private profileDataService: ProfileDataService, private evacuationFileDataService: EvacuationFileDataService,
-    private alertService: AlertService, private editService: EditService, private evacuationFileService: EvacuationFileService) {
+    private router: Router,
+    private route: ActivatedRoute,
+    private formCreationService: FormCreationService,
+    private profileService: ProfileService,
+    private profileDataService: ProfileDataService,
+    private evacuationFileDataService: EvacuationFileDataService,
+    private alertService: AlertService,
+    private editService: EditService,
+    private evacuationFileService: EvacuationFileService
+  ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation.extras.state !== undefined) {
       const state = navigation.extras.state as { parentPageName: string };
@@ -49,13 +55,12 @@ export class EditComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.currentFlow = this.route.snapshot.data.flow;
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
     });
     // this.onChanges();
   }
-
 
   // onChanges(): void {
   //   console.log(this.form);
@@ -77,7 +82,11 @@ export class EditComponent implements OnInit, OnDestroy {
    * page
    */
   save(): void {
-    this.editService.saveFormData(this.componentToLoad, this.form, this.currentFlow);
+    this.editService.saveFormData(
+      this.componentToLoad,
+      this.form,
+      this.currentFlow
+    );
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {
@@ -85,26 +94,41 @@ export class EditComponent implements OnInit, OnDestroy {
         this.router.navigate([this.verifiedRoute], this.navigationExtras);
       } else if (this.parentPageName === 'dashboard') {
         this.showLoader = !this.showLoader;
-        this.profileService.upsertProfile(this.profileDataService.createProfileDTO()).subscribe(profileId => {
-          this.showLoader = !this.showLoader;
-          this.router.navigate(['/verified-registration/dashboard/profile']);
-        }, (error) => {
-          this.showLoader = !this.showLoader;
-          this.alertService.setAlert('danger', error.title);
-        });
+        this.profileService
+          .upsertProfile(this.profileDataService.createProfileDTO())
+          .subscribe(
+            (profileId) => {
+              this.showLoader = !this.showLoader;
+              this.router.navigate([
+                '/verified-registration/dashboard/profile'
+              ]);
+            },
+            (error) => {
+              this.showLoader = !this.showLoader;
+              this.alertService.setAlert('danger', error.title);
+            }
+          );
       } else if (this.parentPageName === 'needs-assessment') {
         if (this.evacuationFileDataService.essFileNumber === undefined) {
-          this.router.navigate([this.verifiedNeedsAssessments], this.navigationExtras);
+          this.router.navigate(
+            [this.verifiedNeedsAssessments],
+            this.navigationExtras
+          );
         } else {
           this.showLoader = !this.showLoader;
-          this.evacuationFileService.updateEvacuationFile().subscribe(essFileNumber => {
-            this.showLoader = !this.showLoader;
-            this.router.navigate(['/verified-registration/dashboard/current/' + essFileNumber]);
-          }, (error) => {
-            this.showLoader = !this.showLoader;
-            console.log(error);
-            this.alertService.setAlert('danger', error.title);
-          });
+          this.evacuationFileService.updateEvacuationFile().subscribe(
+            (essFileNumber) => {
+              this.showLoader = !this.showLoader;
+              this.router.navigate([
+                '/verified-registration/dashboard/current/' + essFileNumber
+              ]);
+            },
+            (error) => {
+              this.showLoader = !this.showLoader;
+              console.log(error);
+              this.alertService.setAlert('danger', error.title);
+            }
+          );
         }
       }
     }
@@ -115,7 +139,11 @@ export class EditComponent implements OnInit, OnDestroy {
    * page
    */
   cancel(): void {
-    this.editService.cancelFormData(this.componentToLoad, this.form, this.currentFlow);
+    this.editService.cancelFormData(
+      this.componentToLoad,
+      this.form,
+      this.currentFlow
+    );
     if (this.currentFlow === 'non-verified-registration') {
       this.router.navigate([this.nonVerfiedRoute], this.navigationExtras);
     } else {
@@ -124,97 +152,99 @@ export class EditComponent implements OnInit, OnDestroy {
       } else if (this.parentPageName === 'dashboard') {
         this.router.navigate(['/verified-registration/dashboard/profile']);
       } else if (this.parentPageName === 'needs-assessment') {
-        this.router.navigate(['/verified-registration/dashboard/current/' + this.evacuationFileDataService.essFileNumber]);
+        this.router.navigate([
+          '/verified-registration/dashboard/current/' +
+            this.evacuationFileDataService.essFileNumber
+        ]);
       }
     }
   }
 
-
-
   /**
    * Loads the form into view
+   *
    * @param component form name
    */
   loadForm(component: string): void {
     switch (component) {
       case 'restriction':
-        this.form$ = this.formCreationService.getRestrictionForm().subscribe(
-          restriction => {
+        this.form$ = this.formCreationService
+          .getRestrictionForm()
+          .subscribe((restriction) => {
             this.form = restriction;
-          }
-        );
+          });
         this.editHeading = 'Edit Restriction';
         break;
       case 'personal-details':
-        this.form$ = this.formCreationService.getPersonalDetailsForm().subscribe(
-          personalDetails => {
+        this.form$ = this.formCreationService
+          .getPersonalDetailsForm()
+          .subscribe((personalDetails) => {
             this.form = personalDetails;
-          }
-        );
+          });
         this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'address':
-        this.form$ = this.formCreationService.getAddressForm().subscribe(
-          address => {
+        this.form$ = this.formCreationService
+          .getAddressForm()
+          .subscribe((address) => {
             this.form = address;
-          }
-        );
+          });
         this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'contact-info':
-        this.form$ = this.formCreationService.getContactDetailsForm().subscribe(
-          contactDetails => {
+        this.form$ = this.formCreationService
+          .getContactDetailsForm()
+          .subscribe((contactDetails) => {
             this.form = contactDetails;
-          }
-        );
+          });
         this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'secret':
-        this.form$ = this.formCreationService.getSecretForm().subscribe(
-          secret => {
+        this.form$ = this.formCreationService
+          .getSecretForm()
+          .subscribe((secret) => {
             this.form = secret;
-          }
-        );
+          });
         this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'evac-address':
-        this.form$ = this.formCreationService.getEvacuatedForm().subscribe(
-          evacuatedForm => {
+        this.form$ = this.formCreationService
+          .getEvacuatedForm()
+          .subscribe((evacuatedForm) => {
             this.form = evacuatedForm;
             console.log(this.form);
-          }
-        );
+          });
         this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'family-information':
-        this.form$ = this.formCreationService.getHouseholdMembersForm().subscribe(
-          householdMemberForm => {
+        this.form$ = this.formCreationService
+          .getHouseholdMembersForm()
+          .subscribe((householdMemberForm) => {
             this.form = householdMemberForm;
-          }
-        );
+          });
         this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'pets':
-        this.form$ = this.formCreationService.getPetsForm().subscribe(
-          petsForm => {
+        this.form$ = this.formCreationService
+          .getPetsForm()
+          .subscribe((petsForm) => {
             this.form = petsForm;
-          }
-        );
+          });
         this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
       case 'identify-needs':
-        this.form$ = this.formCreationService.getIndentifyNeedsForm().subscribe(
-          identifyNeedsForm => {
+        this.form$ = this.formCreationService
+          .getIndentifyNeedsForm()
+          .subscribe((identifyNeedsForm) => {
             this.form = identifyNeedsForm;
-          }
-        );
+          });
         this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
         break;
@@ -228,5 +258,4 @@ export class EditComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.form$.unsubscribe();
   }
-
 }

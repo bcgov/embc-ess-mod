@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* eslint-disable */
 /* eslint-disable */
 import { ProfileDataConflict } from './profile-data-conflict';
 import { ValueTupleOfStringAndString } from './value-tuple-of-string-and-string';

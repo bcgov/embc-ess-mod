@@ -35,8 +35,9 @@ namespace EMBC.ESS.Resources.Contacts
 
     public class ContactQuery
     {
-        public string ByContactId { get; set; }
+        public string ContactId { get; set; }
         public string UserId { get; set; }
+        public bool MaskSecurityAnswers { get; set; } = true;
     }
 
     public class ContactQueryResult
@@ -52,6 +53,20 @@ namespace EMBC.ESS.Resources.Contacts
     public class DeleteContact : ContactCommand
     {
         public string ContactId { get; set; }
+    }
+
+    public class SearchContactQuery : ContactQuery
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DateOfBirth { get; set; }
+        public bool IncludeRestrictedAccess { get; set; }
+    }
+
+    public class UpdateSecurityQuestions : ContactCommand
+    {
+        public string ContactId { get; set; }
+        public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
     }
 
     public class Contact
@@ -89,5 +104,6 @@ namespace EMBC.ESS.Resources.Contacts
         public int Id { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
+        public bool AnswerIsMasked { get; set; } = true;
     }
 }

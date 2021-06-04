@@ -16,6 +16,12 @@ import { BcAddressComponent } from './forms/address-forms/bc-address/bc-address.
 import { CanAddressComponent } from './forms/address-forms/can-address/can-address.component';
 import { UsaAddressComponent } from './forms/address-forms/usa-address/usa-address.component';
 import { OtherAddressComponent } from './forms/address-forms/other-address/other-address.component';
+import { PersonDetailFormComponent } from './forms/person-detail-form/person-detail-form.component';
+import { PetFormComponent } from './forms/pet-form/pet-form.component';
+import { TextMaskModule } from 'angular2-text-mask';
+import { DeleteHouseholdDialogComponent } from './components/dialog-components/delete-household-dialog/delete-household-dialog.component';
+import { StatusDefinitionDialogComponent } from './components/dialog-components/status-definition-dialog/status-definition-dialog.component';
+import { VerifyEvacueeDialogComponent } from './components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 
 @NgModule({
   declarations: [
@@ -31,14 +37,20 @@ import { OtherAddressComponent } from './forms/address-forms/other-address/other
     BcAddressComponent,
     CanAddressComponent,
     UsaAddressComponent,
-    OtherAddressComponent
+    OtherAddressComponent,
+    PersonDetailFormComponent,
+    PetFormComponent,
+    DeleteHouseholdDialogComponent,
+    StatusDefinitionDialogComponent,
+    VerifyEvacueeDialogComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     MaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TextMaskModule
   ],
   exports: [
     TopNavMenuComponent,
@@ -53,7 +65,11 @@ import { OtherAddressComponent } from './forms/address-forms/other-address/other
     BcAddressComponent,
     CanAddressComponent,
     UsaAddressComponent,
-    OtherAddressComponent
+    OtherAddressComponent,
+    PersonDetailFormComponent,
+    PetFormComponent,
+    StatusDefinitionDialogComponent,
+    VerifyEvacueeDialogComponent
   ]
 })
 export class SharedModule {}

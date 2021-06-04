@@ -35,8 +35,6 @@
               </div>
               <br />
 
-              <div class="col-12 divider"></div>
-
               <div class="col-12">
                 <span class="tab-subtitle"
                   >Are you being evacuated from your primary address? </span
@@ -49,16 +47,28 @@
                     (change)="evacPrimaryAddressChange($event)"
                     required
                   >
-                    <mat-radio-button value="Yes">Yes </mat-radio-button>
+                    <mat-radio-button [value]="true">Yes </mat-radio-button>
                     <div class="prim-address">
                       <p>
                         {{ bCDummyAddress.addressLine1 }},
                         {{ bCDummyAddress.addressLine2 }}
                       </p>
-                      <p>{{ bCDummyAddress.jurisdiction }}</p>
+                      <p>{{ bCDummyAddress.communityCode }}</p>
                       <p>{{ bCDummyAddress.postalCode }}</p>
                     </div>
-                    <mat-radio-button value="No">No</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
+                    <mat-error
+                      class="custom-mat-error"
+                      *ngIf="
+                        evacDetailsFormControl?.evacuatedFromPrimary.touched &&
+                        evacDetailsFormControl?.evacuatedFromPrimary.invalid &&
+                        evacDetailsFormControl?.evacuatedFromPrimary.hasError(
+                          'required'
+                        )
+                      "
+                    >
+                      Evacuation Address is required</mat-error
+                    >
                   </mat-radio-group>
                 </ng-container>
               </div>
@@ -68,14 +78,12 @@
                   [addressForm]="evacAddressFormGroup"
                 ></app-bc-address>
               </div>
-              <div class="col-12 additional-form" *ngIf="showBCAddressForm">
+              <div class="col-12" *ngIf="showBCAddressForm">
                 <p><b>Where are you being evacuated from?</b></p>
                 <app-bc-address
                   [addressForm]="evacAddressFormGroup"
                 ></app-bc-address>
               </div>
-
-              <div class="col-12 divider"></div>
 
               <div class="col-12">
                 <span class="tab-subtitle"
@@ -96,11 +104,22 @@
                       maxlength="100"
                       matInput
                     />
+                    <mat-error
+                      class="custom-mat-error"
+                      *ngIf="
+                        evacDetailsFormControl?.facilityName.touched &&
+                        evacDetailsFormControl?.facilityName.invalid &&
+                        evacDetailsFormControl?.facilityName.hasError(
+                          'whitespaceError'
+                        )
+                      "
+                    >
+                      Facility Name/ Registration Location is
+                      required</mat-error
+                    >
                   </mat-form-field>
                 </div>
               </div>
-
-              <div class="col-12 divider"></div>
 
               <div class="col-12">
                 <span class="tab-subtitle"
@@ -120,14 +139,22 @@
                 >
                   <mat-radio-button
                     *ngFor="let option of insuranceOption"
-                    [value]="option.name"
+                    [value]="option.value"
                   >
-                    {{ option.value }}
+                    {{ option.name }}
                   </mat-radio-button>
+                  <mat-error
+                    class="custom-mat-error"
+                    *ngIf="
+                      evacDetailsFormControl?.insurance.touched &&
+                      evacDetailsFormControl?.insurance.invalid &&
+                      evacDetailsFormControl?.insurance.hasError('required')
+                    "
+                  >
+                    Insurance is required</mat-error
+                  >
                 </mat-radio-group>
               </div>
-
-              <div class="col-12 divider"></div>
 
               <div class="col-12">
                 <span class="tab-subtitle"
@@ -148,11 +175,21 @@
                       matInput
                       required
                     ></textarea>
+                    <mat-error
+                      class="custom-mat-error"
+                      *ngIf="
+                        evacDetailsFormControl?.householdAffected.touched &&
+                        evacDetailsFormControl?.householdAffected.invalid &&
+                        evacDetailsFormControl?.householdAffected.hasError(
+                          'whitespaceError'
+                        )
+                      "
+                    >
+                      This information is required</mat-error
+                    >
                   </mat-form-field>
                 </div>
               </div>
-
-              <div class="col-12 divider"></div>
 
               <div class="col-12">
                 <span class="tab-subtitle"
@@ -177,8 +214,6 @@
                 </mat-form-field>
               </div>
 
-              <div class="col-12 divider"></div>
-
               <div class="col-12">
                 <span class="tab-subtitle"
                   >Has the evacuee been referred to any services available in
@@ -193,16 +228,13 @@
                   <mat-radio-button
                     class="primary-radio-button"
                     *ngFor="let option of radioOption"
-                    [value]="option"
+                    [value]="option.value"
                   >
-                    {{ option }}
+                    {{ option.name }}
                   </mat-radio-button>
                 </mat-radio-group>
               </div>
-              <div
-                class="col-12 additional-form"
-                *ngIf="showReferredServicesForm"
-              >
+              <div class="col-12" *ngIf="showReferredServicesForm">
                 <p>
                   <b
                     >Please select the ones you have recommended for the evacuee </b
@@ -219,8 +251,6 @@
                   >
                 </section>
               </div>
-
-              <div class="col-12 divider"></div>
 
               <div class="col-12">
                 <span class="tab-subtitle"

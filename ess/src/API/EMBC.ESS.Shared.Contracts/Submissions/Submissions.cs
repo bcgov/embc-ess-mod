@@ -52,111 +52,24 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string UserId { get; set; }
     }
 
-    public class EvacuationFile
+    /// <summary>
+    /// save a file's note
+    /// </summary>
+    public class SaveEvacuationFileNotes : Command
     {
-        public string Id { get; set; }
-        public EvacuationFileStatus Status { get; set; }
-        public bool RestrictedAccess { get; set; }
-        public string PrimaryRegistrantId { get; set; }
-        public DateTime EvacuationDate { get; set; }
-        public Address EvacuatedFromAddress { get; set; }
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; }
+        public IEnumerable<Note> Notes { get; set; }
     }
 
-    public enum EvacuationFileStatus
+    public class EvacuationFileNotesQuery : Query<EvacuationFileNotesQueryResult>
     {
-        Pending,
-        Active,
-        Expired,
-        Completed
-    }
-
-    public class NeedsAssessment
-    {
-        public string Id { get; set; }
         public string FileId { get; set; }
-        public NeedsAssessmentType Type { get; set; }
-        public InsuranceOption Insurance { get; set; }
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
-        public bool HaveSpecialDiet { get; set; }
-        public string SpecialDietDetails { get; set; }
-        public bool HaveMedication { get; set; }
-        public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
-        public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HasPetsFood { get; set; }
+        public string NoteId { get; set; }
+        public IEnumerable<NoteType> IncludeTypes { get; set; } = new[] { NoteType.General };
+        public IEnumerable<NoteStatus> IncludeStatuses { get; set; } = Array.Empty<NoteStatus>();
     }
 
-    public class RegistrantProfile
+    public class EvacuationFileNotesQueryResult
     {
-        public string Id { get; set; }
-        public string UserId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Initials { get; set; }
-        public string PreferredName { get; set; }
-        public string Gender { get; set; }
-        public string DateOfBirth { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public Address PrimaryAddress { get; set; }
-        public Address MailingAddress { get; set; }
-        public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
-        public bool RestrictedAccess { get; set; }
-        public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
-        public bool AuthenticatedUser { get; set; }
-        public bool VerifiedUser { get; set; }
-    }
-
-    public class SecurityQuestion
-    {
-        public int Id { get; set; }
-        public string Question { get; set; }
-        public string Answer { get; set; }
-    }
-
-    public class HouseholdMember
-    {
-        public string Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Initials { get; set; }
-        public string PreferredName { get; set; }
-        public string Gender { get; set; }
-        public string DateOfBirth { get; set; }
-        public bool isUnder19 { get; set; }
-    }
-
-    public class Pet
-    {
-        public string Type { get; set; }
-        public string Quantity { get; set; }
-    }
-
-    public enum InsuranceOption
-    {
-        No,
-        Yes,
-        Unsure,
-        Unknown
-    }
-
-    public enum NeedsAssessmentType
-    {
-        Preliminary,
-        Assessed
-    }
-
-    public class Address
-    {
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string Community { get; set; }
-        public string StateProvince { get; set; }
-        public string Country { get; set; }
-        public string PostalCode { get; set; }
+        public IEnumerable<Note> Notes { get; set; }
     }
 }

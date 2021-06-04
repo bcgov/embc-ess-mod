@@ -22,14 +22,20 @@ import { DialogComponent } from 'src/app/core/components/dialog/dialog.component
   styleUrls: ['./family-information.component.scss']
 })
 export default class FamilyInformationComponent implements OnInit {
-
   householdMemberForm: FormGroup;
   radioOption = globalConst.radioButton1;
   formBuilder: FormBuilder;
   householdMemberForm$: Subscription;
   formCreationService: FormCreationService;
   showFamilyForm = false;
-  displayedColumns: string[] = ['firstName', 'lastName', 'initials', 'gender', 'dateOfBirth', 'buttons'];
+  displayedColumns: string[] = [
+    'firstName',
+    'lastName',
+    'initials',
+    'gender',
+    'dateOfBirth',
+    'buttons'
+  ];
   dataSource = new BehaviorSubject([]);
   data = [];
   editIndex: number;
@@ -38,21 +44,26 @@ export default class FamilyInformationComponent implements OnInit {
   editFlag = false;
 
   constructor(
-    @Inject('formBuilder') formBuilder: FormBuilder, @Inject('formCreationService') formCreationService: FormCreationService,
-    public dialog: MatDialog) {
+    @Inject('formBuilder') formBuilder: FormBuilder,
+    @Inject('formCreationService') formCreationService: FormCreationService,
+    public dialog: MatDialog
+  ) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;
   }
 
   ngOnInit(): void {
-    this.householdMemberForm$ = this.formCreationService.getHouseholdMembersForm().subscribe(
-      householdMemberForm => {
+    this.householdMemberForm$ = this.formCreationService
+      .getHouseholdMembersForm()
+      .subscribe((householdMemberForm) => {
         this.householdMemberForm = householdMemberForm;
-      }
+      });
+    this.householdMemberForm
+      .get('addHouseholdMemberIndicator')
+      .valueChanges.subscribe((value) => this.updateOnVisibility());
+    this.dataSource.next(
+      this.householdMemberForm.get('householdMembers').value
     );
-    this.householdMemberForm.get('addHouseholdMemberIndicator').valueChanges.subscribe(value =>
-      this.updateOnVisibility());
-    this.dataSource.next(this.householdMemberForm.get('householdMembers').value);
     this.data = this.householdMemberForm.get('householdMembers').value;
   }
 
@@ -67,7 +78,8 @@ export default class FamilyInformationComponent implements OnInit {
   save(): void {
     if (this.householdMemberForm.get('householdMember').status === 'VALID') {
       if (this.editIndex !== undefined && this.rowEdit) {
-        this.data[this.editIndex] = this.householdMemberForm.get('householdMember').value;
+        this.data[this.editIndex] =
+          this.householdMemberForm.get('householdMember').value;
         this.rowEdit = !this.rowEdit;
         this.editIndex = undefined;
       } else {
@@ -84,7 +96,6 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   cancel(): void {
-
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
     // this.showTable = !this.showTable;
@@ -96,25 +107,30 @@ export default class FamilyInformationComponent implements OnInit {
   /**
    * Returns the control of the form
    */
-  get householdFormControl(): { [key: string]: AbstractControl; } {
+  get householdFormControl(): { [key: string]: AbstractControl } {
     return this.householdMemberForm.controls;
   }
 
   deleteRow(index: number): void {
-    this.dialog.open(DialogComponent, {
-      data: globalConst.deleteMemberInfoBody,
-      height: '220px',
-      width: '500px'
-    }).afterClosed().subscribe(result => {
-      if (result === 'remove') {
-        this.data.splice(index, 1);
-        this.dataSource.next(this.data);
-        this.householdMemberForm.get('householdMembers').setValue(this.data);
-        if (this.data.length === 0) {
-          this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
+    this.dialog
+      .open(DialogComponent, {
+        data: globalConst.deleteMemberInfoBody,
+        height: '220px',
+        width: '500px'
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result === 'remove') {
+          this.data.splice(index, 1);
+          this.dataSource.next(this.data);
+          this.householdMemberForm.get('householdMembers').setValue(this.data);
+          if (this.data.length === 0) {
+            this.householdMemberForm
+              .get('addHouseholdMemberIndicator')
+              .setValue(false);
+          }
         }
-      }
-    });
+      });
   }
 
   editRow(element, index): void {
@@ -129,14 +145,21 @@ export default class FamilyInformationComponent implements OnInit {
   }
 
   updateOnVisibility(): void {
-    this.householdMemberForm.get('householdMember.firstName').updateValueAndValidity();
-    this.householdMemberForm.get('householdMember.lastName').updateValueAndValidity();
-    this.householdMemberForm.get('householdMember.gender').updateValueAndValidity();
-    this.householdMemberForm.get('householdMember.dateOfBirth').updateValueAndValidity();
+    this.householdMemberForm
+      .get('householdMember.firstName')
+      .updateValueAndValidity();
+    this.householdMemberForm
+      .get('householdMember.lastName')
+      .updateValueAndValidity();
+    this.householdMemberForm
+      .get('householdMember.gender')
+      .updateValueAndValidity();
+    this.householdMemberForm
+      .get('householdMember.dateOfBirth')
+      .updateValueAndValidity();
   }
 
   hasSpecialDietChange(event: MatRadioChange): void {
-
     if (event.value === false) {
       this.householdMemberForm.get('specialDietDetails').reset();
     }
@@ -156,10 +179,6 @@ export default class FamilyInformationComponent implements OnInit {
     MatTableModule,
     MatIconModule
   ],
-  declarations: [
-    FamilyInformationComponent,
-  ]
+  declarations: [FamilyInformationComponent]
 })
-class FamilyInformationModule {
-
-}
+class FamilyInformationModule {}

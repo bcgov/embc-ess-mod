@@ -34,20 +34,6 @@
     color: red;
   }
 
-  .divider {
-    border-width: 0px;
-    margin: 30px 0px;
-    left: 0px;
-    top: 0px;
-    width: 740px;
-    height: 3px;
-    background: inherit;
-    background-color: rgba(242, 242, 242, 1);
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-  }
-
 .prim-address {
   font-weight: 700;
   line-height: 10px;
@@ -60,22 +46,12 @@
   margin: 15px 0;
 }
 
-.additional-form {
-  padding: 20px 0px 0px 20px;
-  border-width: 0px;
-  left: 0px;
-  top: 0px;
-  width: 100%;
-  height: auto;
-  background: inherit;
-  background-color: rgba(242, 242, 242, 1);
-  border: none;
-  border-radius: 0px;
-  box-shadow: none;
-}
-
 .checkbox-option {
   margin-bottom: 5px;
   margin-left: 10px;
+}
+
+.custom-mat-error {
+  font-size: 85%;
 }
   

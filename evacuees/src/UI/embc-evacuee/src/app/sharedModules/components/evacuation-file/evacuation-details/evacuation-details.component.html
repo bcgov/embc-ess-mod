@@ -1,93 +1,152 @@
-<br>
-<div class="row" style="max-width: 100%;">
-    <div class="col-md-12 breadCrumb">
-        <a class="goBackLink" (click)="goToCurrent()">{{evacuationFileTab}} Evacuations
-            ({{(evacuationFileDataService.currentEvacuationFileCount$ |async)}})
-            &nbsp;</a>
-        <span> / &nbsp; Evacuation File #{{evacuationFileDataService?.essFileNumber}}</span>
-    </div>
+<br />
+<div class="row" style="max-width: 100%">
+  <div class="col-md-12 breadCrumb">
+    <a class="goBackLink" (click)="goToCurrent()"
+      >{{ evacuationFileTab }} Evacuations ({{
+        evacuationFileDataService.currentEvacuationFileCount$ | async
+      }}) &nbsp;</a
+    >
+    <span>
+      / &nbsp; Evacuation File #{{
+        evacuationFileDataService?.essFileNumber
+      }}</span
+    >
+  </div>
 </div>
 <mat-card class="detailsCard">
-    <div class="row evacFileHeader">
-        <div class="col-md-9 titleDetailHeader">
-            <button class="backButton" (click)="goToCurrent()" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
-                <img [src]="backArrowImgSrc" height="28" width="31">
-            </button>
-            <span class="evacFileSpan">Evacuation File #{{evacuationFileDataService?.essFileNumber}}</span>
-        </div>
-
-        <div class="col-md-3 statusDetailHeader">
-            <div class="statusDetailHeaderElements">
-                <span>Status: </span>
-                <span
-                    [ngStyle]="{'color': changeStatusColor()}">{{evacuationFileDataService?.evacuationFileStatus}}</span>
-            </div>
-        </div>
+  <div class="row evacFileHeader">
+    <div class="col-md-9 titleDetailHeader">
+      <button
+        class="backButton"
+        (click)="goToCurrent()"
+        (mouseover)="onMouseOver()"
+        (mouseout)="onMouseOut()"
+      >
+        <img [src]="backArrowImgSrc" height="28" width="31" />
+      </button>
+      <span class="evacFileSpan"
+        >Evacuation File #{{ evacuationFileDataService?.essFileNumber }}</span
+      >
     </div>
-    <div *ngIf="referralData.length === 0; else referrals">
-        <app-review [type]="type" [showHeading]='false' [currentFlow]="currentFlow" [parentPageName]="parentPageName">
-        </app-review>
-        <div class="supportReceived">
-            <p class="titleDetailHeader">Supports Received</p>
-            <p class="supportReceivedBoldSpan">We do not have any records of supports issued within our system.</p>
-            <p class="supportReceivedRegSpan">Please proceed to an ESS volunteer or your nearest reception center where
-                you will be assisted.</p>
-        </div>
-    </div>
-    <ng-template #referrals>
-        <mat-card-content class="contentCard">
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Evacuation Details
-                </div>
-            </div>
-            <hr>
 
-            <div class="row info-detail">
-                <div class="col-md-3">Evacuated From:</div>
-                <div class="col-md-3 evacuatedAddress">
-                    <div>
-                        <span>{{evacuationFileDataService?.evacuatedFromAddress?.addressLine1}},</span>
-                        <span *ngIf="evacuationFileDataService?.evacuatedFromAddress?.addressLine2 != null">
-                            &nbsp;{{evacuationFileDataService?.evacuatedFromAddress?.addressLine2}},</span>
-                    </div>
-                    <div>
-                        <span>{{evacuationFileDataService?.evacuatedFromAddress?.jurisdiction?.name}},</span>
-                        <span> &nbsp;{{evacuationFileDataService?.evacuatedFromAddress?.stateProvince?.name}}</span>
-                        <span *ngIf="evacuationFileDataService?.evacuatedFromAddress?.postalCode != null">,
-                            &nbsp;{{evacuationFileDataService?.evacuatedFromAddress?.postalCode}}</span>
-                    </div>
-                </div>
+    <div class="col-md-3 statusDetailHeader">
+      <div class="statusDetailHeaderElements">
+        <span>Status: </span>
+        <span [ngStyle]="{ color: changeStatusColor() }">{{
+          evacuationFileDataService?.evacuationFileStatus
+        }}</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="referralData.length === 0; else referrals">
+    <app-review
+      [type]="type"
+      [showHeading]="false"
+      [currentFlow]="currentFlow"
+      [parentPageName]="parentPageName"
+    >
+    </app-review>
+    <div class="supportReceived">
+      <p class="titleDetailHeader">Supports Received</p>
+      <p class="supportReceivedBoldSpan">
+        We do not have any records of supports issued within our system.
+      </p>
+      <p class="supportReceivedRegSpan">
+        Please proceed to an ESS volunteer or your nearest reception center
+        where you will be assisted.
+      </p>
+    </div>
+  </div>
+  <ng-template #referrals>
+    <mat-card-content class="contentCard">
+      <div class="row justify-content-between">
+        <div class="col-md-6 card-heading">Evacuation Details</div>
+      </div>
+      <hr />
+
+      <div class="row info-detail">
+        <div class="col-md-3">Evacuated From:</div>
+        <div class="col-md-3 evacuatedAddress">
+          <div>
+            <span
+              >{{
+                evacuationFileDataService?.evacuatedFromAddress?.addressLine1
+              }},</span
+            >
+            <span
+              *ngIf="
+                evacuationFileDataService?.evacuatedFromAddress?.addressLine2 !=
+                null
+              "
+            >
+              &nbsp;{{
+                evacuationFileDataService?.evacuatedFromAddress?.addressLine2
+              }},</span
+            >
+          </div>
+          <div>
+            <span
+              >{{
+                evacuationFileDataService?.evacuatedFromAddress?.jurisdiction
+                  ?.name
+              }},</span
+            >
+            <span>
+              &nbsp;{{
+                evacuationFileDataService?.evacuatedFromAddress?.stateProvince
+                  ?.name
+              }}</span
+            >
+            <span
+              *ngIf="
+                evacuationFileDataService?.evacuatedFromAddress?.postalCode !=
+                null
+              "
+              >, &nbsp;{{
+                evacuationFileDataService?.evacuatedFromAddress?.postalCode
+              }}</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="row info-detail">
+        <div class="col-md-3">Evacuated File Created:</div>
+        <div class="col-md-3">
+          <span><b>03-Sep-2020</b></span>
+        </div>
+      </div>
+      <br /><br />
+      <div class="row justify-content-between">
+        <div class="col-md-6 card-heading">Support Received</div>
+      </div>
+      <hr />
+      <div class="row info-detail">
+        <div class="col-md-10">
+          Click on the dates that you received supports below to view full
+          support details.
+        </div>
+        <div class="col-md-2 row mainReferralsLink" (click)="expandDetails()">
+          <div class="col-md-6 allReferrals">
+            <a>{{ referralDetailsText }}</a>
+          </div>
+          <div class="col-md-6 row">
+            <div class="col-md-9" style="height: 6px">
+              <img
+                [ngClass]="allExpandState ? 'rotate180' : 'none'"
+                src="../../../../assets/images/expand_arrow.png"
+                height="15"
+                width="18"
+              />
             </div>
-            <div class="row info-detail">
-                <div class="col-md-3">Evacuated File Created:</div>
-                <div class="col-md-3">
-                    <span><b>03-Sep-2020</b></span>
-                </div>
-            </div>
-            <br><br>
-            <div class="row justify-content-between">
-                <div class="col-md-6 card-heading">
-                    Support Received
-                </div>
-            </div>
-            <hr>
-            <div class="row info-detail">
-                <div class="col-md-10">Click on the dates that you received supports below to view full support details.
-                </div>
-                <div class="col-md-2 row mainReferralsLink" (click)="expandDetails()">
-                    <div class="col-md-6 allReferrals"><a>{{referralDetailsText}}</a></div>
-                    <div class="col-md-6 row">
-                        <div class="col-md-9" style="height: 6px;">
-                            <img [ngClass]="allExpandState? 'rotate180':'none'"
-                                src="../../../../assets/images/expand_arrow.png" height="15" width="18">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <app-referral-details *ngFor="let referral of referralData" [evacuationReferral]="referral"
-                [allExpandState]="allExpandState"></app-referral-details>
-        </mat-card-content>
-    </ng-template>
+          </div>
+        </div>
+      </div>
+      <br />
+      <app-referral-details
+        *ngFor="let referral of referralData"
+        [evacuationReferral]="referral"
+        [allExpandState]="allExpandState"
+      ></app-referral-details>
+    </mat-card-content>
+  </ng-template>
 </mat-card>

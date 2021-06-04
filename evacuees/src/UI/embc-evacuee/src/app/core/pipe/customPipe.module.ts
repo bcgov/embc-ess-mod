@@ -14,9 +14,7 @@ import { ArrayValueOf } from './arrayValueOf.pipe';
     ArrayContains,
     ArrayValueOf
   ],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   exports: [
     EnumToArrayPipe,
     MaskTextPipe,
@@ -25,4 +23,4 @@ import { ArrayValueOf } from './arrayValueOf.pipe';
     ArrayValueOf
   ]
 })
-export class CustomPipeModule { }
+export class CustomPipeModule {}

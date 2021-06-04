@@ -5,26 +5,26 @@ import { FileSubmissionComponent } from '../../sharedModules/components/file-sub
 import { DialogService } from './dialog.service';
 
 @Injectable({ providedIn: 'root' })
-export class DisableBackGuard implements CanDeactivate<FileSubmissionComponent> {
+export class DisableBackGuard
+  implements CanDeactivate<FileSubmissionComponent>
+{
+  constructor(public dialog: MatDialog, public dialogService: DialogService) {}
 
-    constructor(public dialog: MatDialog, public dialogService: DialogService) { }
+  canDeactivate(): boolean {
+    console.log(window.location.pathname);
+    if (
+      window.location.pathname === '/non-verified-registration/file-submission'
+    ) {
+      return true;
+    } else {
+      this.dialogService.invalidGoBackMessage();
 
-    canDeactivate(): boolean {
-        console.log(window.location.pathname);
-        if (window.location.pathname === '/non-verified-registration/file-submission') {
-            return true;
-        } else {
-            this.dialogService.invalidGoBackMessage();
-
-            // this.dialog.open(DialogComponent, {
-            //     data: globalConst.invalidGoBackMessage,
-            //     height: '220px',
-            //     width: '400px'
-            // });
-            return false;
-        }
-
+      // this.dialog.open(DialogComponent, {
+      //     data: globalConst.invalidGoBackMessage,
+      //     height: '220px',
+      //     width: '400px'
+      // });
+      return false;
     }
-
-
+  }
 }

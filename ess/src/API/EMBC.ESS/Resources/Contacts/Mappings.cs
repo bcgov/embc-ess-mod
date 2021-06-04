@@ -43,9 +43,9 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.Community))
                 .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince == "BC"))
 
-                  .ForMember(d => d.address2_line1, opts => opts.MapFrom(s => s.MailingAddress.AddressLine1))
+                .ForMember(d => d.address2_line1, opts => opts.MapFrom(s => s.MailingAddress.AddressLine1))
                 .ForMember(d => d.address2_line2, opts => opts.MapFrom(s => s.MailingAddress.AddressLine2))
-              .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
+                .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
                 .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => s.MailingAddress.StateProvince))
                 .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.Community))
                 .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince == "BC"))
@@ -69,12 +69,12 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.era_preferredname, opts => opts.MapFrom(s => s.PreferredName))
                 .ForMember(d => d.emailaddress1, opts => opts.MapFrom(s => s.Email))
                 .ForMember(d => d.telephone1, opts => opts.MapFrom(s => s.Phone))
-                .ForMember(d => d.era_securityquestion1answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer))
-                .ForMember(d => d.era_securityquestion2answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer))
-                .ForMember(d => d.era_securityquestion3answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer))
-                .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question))
-                .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question))
-                .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question))
+                // .ForMember(d => d.era_securityquestion1answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer))
+                // .ForMember(d => d.era_securityquestion2answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer))
+                // .ForMember(d => d.era_securityquestion3answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer))
+                // .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question))
+                // .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question))
+                // .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question))
                 ;
 
             CreateMap<contact, Contact>()
@@ -133,17 +133,29 @@ namespace EMBC.ESS.Resources.Contacts
     {
         public IEnumerable<SecurityQuestion> Convert(contact sourceMember, ResolutionContext context)
         {
+            string mask = (string)(context.Options.Items.ContainsKey("MaskSecurityAnswers") ? context.Options.Items["MaskSecurityAnswers"] : "true");
+            bool maskSecurityAnswers = mask.ToLower().Equals("true");
             List<SecurityQuestion> ret = new List<SecurityQuestion>();
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext1) && !string.IsNullOrEmpty(sourceMember.era_securityquestion1answer))
-                ret.Add(new SecurityQuestion { Id = 1, Question = sourceMember.era_securityquestiontext1, Answer = sourceMember.era_securityquestion1answer });
+                ret.Add(new SecurityQuestion { Id = 1, Question = sourceMember.era_securityquestiontext1, Answer = MaskAnswer(sourceMember.era_securityquestion1answer, maskSecurityAnswers), AnswerIsMasked = maskSecurityAnswers });
 
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext2) && !string.IsNullOrEmpty(sourceMember.era_securityquestion2answer))
-                ret.Add(new SecurityQuestion { Id = 2, Question = sourceMember.era_securityquestiontext2, Answer = sourceMember.era_securityquestion2answer });
+                ret.Add(new SecurityQuestion { Id = 2, Question = sourceMember.era_securityquestiontext2, Answer = MaskAnswer(sourceMember.era_securityquestion2answer, maskSecurityAnswers), AnswerIsMasked = maskSecurityAnswers });
 
             if (!string.IsNullOrEmpty(sourceMember.era_securityquestiontext3) && !string.IsNullOrEmpty(sourceMember.era_securityquestion3answer))
-                ret.Add(new SecurityQuestion { Id = 3, Question = sourceMember.era_securityquestiontext3, Answer = sourceMember.era_securityquestion3answer });
+                ret.Add(new SecurityQuestion { Id = 3, Question = sourceMember.era_securityquestiontext3, Answer = MaskAnswer(sourceMember.era_securityquestion3answer, maskSecurityAnswers), AnswerIsMasked = maskSecurityAnswers });
 
             return ret;
+        }
+
+        private string MaskAnswer(string answer, bool maskSecurityAnswers)
+        {
+            if (!maskSecurityAnswers) return answer;
+
+            if (string.IsNullOrEmpty(answer))
+                return string.Empty;
+            else
+                return answer.Substring(0, 1) + "***" + answer.Substring(answer.Length - 1);
         }
     }
 }

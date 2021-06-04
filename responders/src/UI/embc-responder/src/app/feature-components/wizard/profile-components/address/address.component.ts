@@ -2,6 +2,7 @@ import {
   AfterViewChecked,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit
 } from '@angular/core';
 import {
@@ -13,7 +14,7 @@ import {
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import {
@@ -29,12 +30,13 @@ import { AddressService } from './address.service';
   templateUrl: './address.component.html',
   styleUrls: ['./address.component.scss']
 })
-export class AddressComponent implements OnInit, AfterViewChecked {
+export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   primaryAddressForm: FormGroup;
   radioOption: string[] = ['Yes', 'No'];
   filteredOptions: Observable<Country[]>;
   mailingFilteredOptions: Observable<Country[]>;
   countries: Country[] = [];
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -100,6 +102,13 @@ export class AddressComponent implements OnInit, AfterViewChecked {
         this.primaryAddressForm.get('mailingAddress').setValue(primaryAddress);
       }
     });
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   ngAfterViewChecked(): void {
@@ -223,7 +232,6 @@ export class AddressComponent implements OnInit, AfterViewChecked {
    * Navigate to next tab
    */
   public next(): void {
-    this.updateTabStatus();
     this.router.navigate(['/ess-wizard/create-evacuee-profile/contact']);
   }
 
@@ -231,10 +239,17 @@ export class AddressComponent implements OnInit, AfterViewChecked {
    * Navigate to previous tab
    */
   public back(): void {
-    this.updateTabStatus();
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/evacuee-details'
     ]);
+  }
+
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
+  ngOnDestroy(): void {
+    this.stepCreateProfileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 
   /**
@@ -295,10 +310,10 @@ export class AddressComponent implements OnInit, AfterViewChecked {
           ? this.stepCreateProfileService.primaryAddressDetails.addressLine2
           : ''
       ],
-      jurisdiction: [
-        this.stepCreateProfileService?.primaryAddressDetails?.jurisdiction !==
+      community: [
+        this.stepCreateProfileService?.primaryAddressDetails?.community !==
         undefined
-          ? this.stepCreateProfileService.primaryAddressDetails.jurisdiction
+          ? this.stepCreateProfileService.primaryAddressDetails.community
           : '',
         [Validators.required]
       ],
@@ -362,10 +377,10 @@ export class AddressComponent implements OnInit, AfterViewChecked {
           ? this.stepCreateProfileService.mailingAddressDetails.addressLine2
           : ''
       ],
-      jurisdiction: [
-        this.stepCreateProfileService?.mailingAddressDetails?.jurisdiction !==
+      community: [
+        this.stepCreateProfileService?.mailingAddressDetails?.community !==
         undefined
-          ? this.stepCreateProfileService.mailingAddressDetails.jurisdiction
+          ? this.stepCreateProfileService.mailingAddressDetails.community
           : '',
         [Validators.required]
       ],
@@ -435,12 +450,16 @@ export class AddressComponent implements OnInit, AfterViewChecked {
   }
 
   /**
-   * Updates the tab status
+   * Checks the form validity and updates the tab status
    */
   private updateTabStatus() {
     if (this.primaryAddressForm.valid) {
       this.stepCreateProfileService.setTabStatus('address', 'complete');
-    } else if (this.primaryAddressForm.touched) {
+    } else if (
+      this.stepCreateProfileService.checkForPartialUpdates(
+        this.primaryAddressForm
+      )
+    ) {
       this.stepCreateProfileService.setTabStatus('address', 'incomplete');
     } else {
       this.stepCreateProfileService.setTabStatus('address', 'not-started');

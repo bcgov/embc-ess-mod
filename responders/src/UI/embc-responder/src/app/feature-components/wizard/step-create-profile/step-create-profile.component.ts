@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
+import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepCreateProfileService } from './step-create-profile.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-step-create-profile',
@@ -9,13 +13,17 @@ import { StepCreateProfileService } from './step-create-profile.service';
   styleUrls: ['./step-create-profile.component.scss']
 })
 export class StepCreateProfileComponent {
+  questionListSubscription: Subscription;
+
   stepId: string;
   stepName: string;
   tabs: Array<TabModel> = new Array<TabModel>();
 
   constructor(
     private router: Router,
-    private stepCreateProfileService: StepCreateProfileService
+    private stepCreateProfileService: StepCreateProfileService,
+    private securityQuestionsService: SecurityQuestionsService,
+    private alertService: AlertService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -28,6 +36,18 @@ export class StepCreateProfileComponent {
       }
     }
     this.tabs = this.stepCreateProfileService.tabs;
+
+    // Load security question list as soon as wizard is initialized
+    this.securityQuestionsService.getSecurityQuestionList().subscribe(
+      (questions) => {
+        this.stepCreateProfileService.securityQuestionOptions = questions;
+      },
+      (error) => {
+        if (error?.error?.title)
+          this.alertService.setAlert('danger', error.error.title);
+        else this.alertService.setAlert('danger', globalConst.genericError);
+      }
+    );
   }
 
   /**
@@ -38,6 +58,7 @@ export class StepCreateProfileComponent {
    * @returns true/false
    */
   isAllowed(tabRoute: string, $event: MouseEvent): void {
+    this.stepCreateProfileService.nextTabUpdate.next();
     this.stepCreateProfileService.isAllowed(tabRoute, $event);
   }
 }

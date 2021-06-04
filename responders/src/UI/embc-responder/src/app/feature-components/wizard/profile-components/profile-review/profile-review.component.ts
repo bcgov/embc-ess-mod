@@ -1,32 +1,137 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
 import { WizardService } from '../../wizard.service';
+
+import * as globalConst from 'src/app/core/services/global-constants';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 @Component({
   selector: 'app-profile-review',
   templateUrl: './profile-review.component.html',
   styleUrls: ['./profile-review.component.scss']
 })
-export class ProfileReviewComponent implements OnInit {
+export class ProfileReviewComponent implements OnInit, OnDestroy {
+  verifiedProfileGroup: FormGroup = null;
+  tabUpdateSubscription: Subscription;
+  saveLoader = false;
+
   constructor(
     private router: Router,
     private wizardService: WizardService,
-    private stepCreateProfileService: StepCreateProfileService
+    private evacueeProfileService: EvacueeProfileService,
+    private alertService: AlertService,
+    private formBuilder: FormBuilder,
+    public stepCreateProfileService: StepCreateProfileService,
+    private cacheService: CacheService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Set up form validation for verification check
+    this.verifiedProfileGroup = this.formBuilder.group({
+      verifiedProfile: [
+        this.stepCreateProfileService.verifiedProfile,
+        Validators.required
+      ]
+    });
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
+  }
+
+  get verifiedProfileControl(): { [key: string]: AbstractControl } {
+    return this.verifiedProfileGroup.controls;
+  }
 
   /**
-   * Updates the tab status, step status and navigates
-   * to the next step
+   * Go back to the Security Questions tab
+   */
+  back(): void {
+    this.router.navigate([
+      '/ess-wizard/create-evacuee-profile/security-questions'
+    ]);
+  }
+
+  /**
+   * Submit evacuee profile and continue to Step 2
    */
   save(): void {
-    console.log('in save');
-    this.stepCreateProfileService.setTabStatus('review', 'complete');
-    this.wizardService.setStepStatus('/ess-wizard/create-ess-file', false);
-    this.router.navigate(['/ess-wizard/create-ess-file'], {
-      state: { step: 'STEP 2', title: 'Create ESS File' }
-    });
+    this.stepCreateProfileService.nextTabUpdate.next();
+
+    if (this.verifiedProfileGroup.valid) {
+      this.saveLoader = true;
+
+      this.evacueeProfileService
+        .upsertProfile(this.stepCreateProfileService.createProfileDTO())
+        .subscribe(
+          (profileId) => {
+            this.evacueeProfileService.setCurrentProfileId(profileId);
+
+            //TODO: Once "Get Profile" endpoint is ready, update stepCreateProfileService with DB data
+
+            this.stepCreateProfileService
+              .openModal(
+                globalConst.evacueeProfileCreatedMessage.text,
+                globalConst.evacueeProfileCreatedMessage.title
+              )
+              .afterClosed()
+              .subscribe(() => {
+                this.wizardService.setStepStatus(
+                  '/ess-wizard/create-ess-file',
+                  false
+                );
+
+                this.router.navigate(['/ess-wizard/create-ess-file'], {
+                  state: { step: 'STEP 2', title: 'Create ESS File' }
+                });
+              });
+          },
+          (error) => {
+            this.saveLoader = false;
+
+            this.alertService.setAlert(
+              'danger',
+              globalConst.createProfileError
+            );
+          }
+        );
+    } else {
+      this.verifiedProfileControl.verifiedProfile.markAsTouched();
+    }
+  }
+
+  /**
+   * Checks the form validity and updates the tab status
+   */
+  updateTabStatus() {
+    if (this.verifiedProfileGroup.valid) {
+      this.stepCreateProfileService.setTabStatus('review', 'complete');
+    }
+
+    this.stepCreateProfileService.verifiedProfile = this.verifiedProfileGroup.get(
+      'verifiedProfile'
+    ).value;
+  }
+
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
+  ngOnDestroy(): void {
+    this.stepCreateProfileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 }

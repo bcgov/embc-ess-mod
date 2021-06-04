@@ -46,6 +46,8 @@ namespace EMBC.ESS.Resources.Cases
     public abstract class Case
     {
         public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime LastModified { get; set; }
     }
 
     public class SaveEvacuationFile : ManageCaseCommand
@@ -58,81 +60,29 @@ namespace EMBC.ESS.Resources.Cases
         public string Id { get; set; }
     }
 
-    public class QueryEvacuationFiles : CaseQuery
+    public class UpdateSecurityPhrase : ManageCaseCommand
+    {
+        public string Id { get; set; }
+        public string SecurityPhrase { get; set; }
+    }
+
+    public class EvacuationFilesQuery : CaseQuery
     {
         public string FileId { get; set; }
-        public string UserId { get; set; }
         public string PrimaryRegistrantId { get; set; }
-    }
-
-    public class EvacuationFile : Case
-    {
-        public EvacuationAddress EvacuatedFromAddress { get; set; }
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
-        public string PrimaryRegistrantId { get; set; }
-        public string SecretPhrase { get; set; }
-        public DateTime EvacuationDate { get; internal set; }
-    }
-
-    public class EvacuationAddress
-    {
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string Community { get; set; }
-        public string StateProvince { get; set; }
-        public string Country { get; set; }
-        public string PostalCode { get; set; }
-    }
-
-    public class NeedsAssessment
-    {
-        public string Id { get; set; }
-
-        public InsuranceOption Insurance { get; set; }
-
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
-        public bool HaveSpecialDiet { get; set; }
-        public string SpecialDietDetails { get; set; }
-        public bool HaveMedication { get; set; }
-        public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
-        public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HasPetsFood { get; set; }
-        public NeedsAssessmentType Type { get; set; }
-    }
-
-    public class HouseholdMember
-    {
-        public string Id { get; set; }
-        public bool isUnder19 { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Initials { get; set; }
-        public string PreferredName { get; set; }
-        public string Gender { get; set; }
         public string DateOfBirth { get; set; }
+        public bool IncludeHouseholdMembers { get; set; }
+        public bool MaskSecurityPhrase { get; set; } = true;
+        public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
+        public DateTime? RegistraionDateFrom { get; set; }
+        public DateTime? RegistraionDateTo { get; set; }
+        public int? Limit { get; set; }
     }
 
-    public class Pet
+    public class SaveEvacuationFileNote : ManageCaseCommand
     {
-        public string Type { get; set; }
-        public string Quantity { get; set; }
-    }
-
-    public enum InsuranceOption
-    {
-        No,
-        Yes,
-        Unsure,
-        Unknown
-    }
-
-    public enum NeedsAssessmentType
-    {
-        Preliminary,
-        Assessed
+        public Note Note { get; set; }
     }
 }

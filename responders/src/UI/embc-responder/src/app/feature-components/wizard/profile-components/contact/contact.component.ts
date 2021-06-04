@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -11,6 +11,7 @@ import {
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
@@ -36,7 +37,7 @@ export class CustomErrorMailMatcher implements ErrorStateMatcher {
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
-export class ContactComponent implements OnInit {
+export class ContactComponent implements OnInit, OnDestroy {
   contactInfoForm: FormGroup;
   readonly phoneMask = [
     /\d/,
@@ -53,6 +54,7 @@ export class ContactComponent implements OnInit {
     /\d/
   ];
   emailMatcher = new CustomErrorMailMatcher();
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -100,6 +102,13 @@ export class ContactComponent implements OnInit {
         this.contactInfoForm.get('email').updateValueAndValidity();
         this.contactInfoForm.get('phone').updateValueAndValidity();
       });
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   createContactForm(): void {
@@ -199,27 +208,38 @@ export class ContactComponent implements OnInit {
   }
 
   /**
-   * Updates the tab status and navigate to next tab
+   * Navigate to next tab
    */
   next(): void {
-    this.updateTabStatus();
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/security-questions'
     ]);
   }
 
+  /**
+   * Navigates to previous tab
+   */
   back(): void {
-    this.updateTabStatus();
     this.router.navigate(['/ess-wizard/create-evacuee-profile/address']);
   }
 
   /**
-   * Updates the tab status
+   * When navigating away from tab, update variable value and status indicator
+   */
+  ngOnDestroy(): void {
+    this.stepCreateProfileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
+  }
+
+  /**
+   * Checks the form validity and updates the tab status
    */
   private updateTabStatus() {
     if (this.contactInfoForm.valid) {
       this.stepCreateProfileService.setTabStatus('contact', 'complete');
-    } else if (this.contactInfoForm.touched) {
+    } else if (
+      this.stepCreateProfileService.checkForPartialUpdates(this.contactInfoForm)
+    ) {
       this.stepCreateProfileService.setTabStatus('contact', 'incomplete');
     } else {
       this.stepCreateProfileService.setTabStatus('contact', 'not-started');

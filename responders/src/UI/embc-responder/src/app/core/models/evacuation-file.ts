@@ -1,6 +1,6 @@
 // Temporary
 
-import { Address, PersonDetails } from './profile';
+import { Address, PersonDetails } from '../api/models';
 
 export interface EvacuationFile {
   essFileNumber?: null | string;
@@ -47,6 +47,7 @@ export interface NeedsAssessment {
   insurance: InsuranceOption;
   pets?: null | Array<Pet>;
   specialDietDetails?: null | string;
+  medicationSupply?: null | boolean;
   paperESSFile: null | string;
   facilityName: string;
   householdAffected: string;
@@ -54,5 +55,6 @@ export interface NeedsAssessment {
   referredServices: null | boolean;
   referredServiceDetails: string[];
   externalServices: null | string;
+  securityPhrase?: string;
   type?: NeedsAssessmentType;
 }

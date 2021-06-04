@@ -1,33 +1,44 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as globalConst from '../../../core/services/global-constants';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import {
   Address,
   ContactDetails,
+  RegistrantProfile,
   PersonDetails,
-  Profile,
-  SecurityQuestions
-} from 'src/app/core/models/profile';
+  SecurityQuestion
+} from 'src/app/core/api/models';
+import { Subject } from 'rxjs';
+import { AddressModel } from 'src/app/core/models/Address.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {
   private profileTabs: Array<TabModel> =
     WizardTabModelValues.evacueeProfileTabs;
 
+  private setNextTabUpdate: Subject<void> = new Subject();
+
   private restricted: boolean;
   private personalDetail: PersonDetails;
-  private primaryAddressDetail: Address;
-  private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
-  private securityQuestion: SecurityQuestions;
   private showContacts: boolean;
   private confirmEmails: string;
+
+  private primaryAddressDetail: AddressModel;
+  private mailingAddressDetail: AddressModel;
   private isBcAddresS: boolean;
   private isBcMailingAddresS: boolean;
   private isMailingAddressSameAsPrimaryAddresS: boolean;
+
+  private bypassQuestions: boolean;
+  private securityQuestion: SecurityQuestion[];
+  private securityQuestionOption: string[];
+
+  private verified: boolean;
 
   constructor(private dialog: MatDialog) {}
 
@@ -75,6 +86,13 @@ export class StepCreateProfileService {
     this.restricted = restricted;
   }
 
+  public get verifiedProfile(): boolean {
+    return this.verified;
+  }
+  public set verifiedProfile(verified: boolean) {
+    this.verified = verified;
+  }
+
   public get personalDetails(): PersonDetails {
     return this.personalDetail;
   }
@@ -82,17 +100,17 @@ export class StepCreateProfileService {
     this.personalDetail = personalDetail;
   }
 
-  public get primaryAddressDetails(): Address {
+  public get primaryAddressDetails(): AddressModel {
     return this.primaryAddressDetail;
   }
-  public set primaryAddressDetails(primaryAddressDetail: Address) {
+  public set primaryAddressDetails(primaryAddressDetail: AddressModel) {
     this.primaryAddressDetail = primaryAddressDetail;
   }
 
-  public get mailingAddressDetails(): Address {
+  public get mailingAddressDetails(): AddressModel {
     return this.mailingAddressDetail;
   }
-  public set mailingAddressDetails(mailingAddressDetail: Address) {
+  public set mailingAddressDetails(mailingAddressDetail: AddressModel) {
     this.mailingAddressDetail = mailingAddressDetail;
   }
 
@@ -103,11 +121,32 @@ export class StepCreateProfileService {
     this.contactDetail = contactDetail;
   }
 
-  public get securityQuestions(): SecurityQuestions {
+  public get bypassSecurityQuestions(): boolean {
+    return this.bypassQuestions;
+  }
+  public set bypassSecurityQuestions(bypassQuestions: boolean) {
+    this.bypassQuestions = bypassQuestions;
+  }
+
+  public get securityQuestions(): SecurityQuestion[] {
     return this.securityQuestion;
   }
-  public set securityQuestions(securityQuestion: SecurityQuestions) {
+  public set securityQuestions(securityQuestion: SecurityQuestion[]) {
     this.securityQuestion = securityQuestion;
+  }
+
+  public get securityQuestionOptions(): string[] {
+    return this.securityQuestionOption;
+  }
+  public set securityQuestionOptions(securityQuestionOption: string[]) {
+    this.securityQuestionOption = securityQuestionOption;
+  }
+
+  public get nextTabUpdate(): Subject<void> {
+    return this.setNextTabUpdate;
+  }
+  public set nextTabUpdate(setNextTabUpdate: Subject<void>) {
+    this.setNextTabUpdate = setNextTabUpdate;
   }
 
   public get tabs(): Array<TabModel> {
@@ -136,10 +175,15 @@ export class StepCreateProfileService {
   isAllowed(tabRoute: string, $event: MouseEvent): boolean {
     if (tabRoute === 'review') {
       const allow = this.checkTabsStatus();
+
       if (allow) {
         $event.stopPropagation();
         $event.preventDefault();
-        this.openModal(globalConst.wizardProfileMessage);
+
+        this.openModal(
+          globalConst.wizardProfileMessage.text,
+          globalConst.wizardProfileMessage.title
+        );
       }
       return allow;
     }
@@ -163,43 +207,75 @@ export class StepCreateProfileService {
    *
    * @param text text to display
    */
-  openModal(text: string): void {
-    this.dialog.open(DialogComponent, {
+  openModal(text: string, title?: string): MatDialogRef<DialogComponent, any> {
+    const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text
+        text,
+        title
       },
-      height: '230px',
       width: '530px'
     });
+
+    return thisModal;
   }
 
-  public createProfileDTO(): Profile {
+  public createProfileDTO(): RegistrantProfile {
     return {
-      contactDetails: this.contactDetails,
-      mailingAddress: this.setAddressObject(this.mailingAddressDetails),
+      restriction: this.restrictedAccess,
       personalDetails: this.personalDetails,
+      contactDetails: this.contactDetails,
       primaryAddress: this.setAddressObject(this.primaryAddressDetails),
-      restrictedAccess: this.restrictedAccess
+      mailingAddress: this.setAddressObject(this.mailingAddressDetails),
+      securityQuestions: this.securityQuestions,
+      verifiedUser: this.verifiedProfile
     };
   }
 
-  public setAddressObject(addressObject): Address {
+  public setAddressObject(addressObject: AddressModel): Address {
     const address: Address = {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
-      country: addressObject.country.code,
-      jurisdiction:
-        addressObject.jurisdiction.code === undefined
+      countryCode: addressObject.country.code,
+      communityCode:
+        addressObject.community.code === undefined
           ? null
-          : addressObject.jurisdiction.code,
+          : addressObject.community.code,
       postalCode: addressObject.postalCode,
-      stateProvince:
+      stateProvinceCode:
         addressObject.stateProvince === null
-          ? addressObject.stateProvince
+          ? null
           : addressObject.stateProvince.code
     };
 
     return address;
+  }
+
+  /**
+   * Checks if the form is partially completed or not
+   *
+   * @param form form group
+   * @returns true/false
+   */
+  checkForPartialUpdates(form: FormGroup): boolean {
+    const fields = [];
+    Object.keys(form.controls).forEach((field) => {
+      const control = form.controls[field] as
+        | FormControl
+        | FormGroup
+        | FormArray;
+      if (control instanceof FormControl) {
+        fields.push(control.value);
+      } else if (control instanceof FormGroup || control instanceof FormArray) {
+        for (const key in control.controls) {
+          if (control.controls.hasOwnProperty(key)) {
+            fields.push(control.controls[key].value);
+          }
+        }
+      }
+    });
+
+    const result = fields.filter((field) => !!field);
+    return result.length !== 0;
   }
 }

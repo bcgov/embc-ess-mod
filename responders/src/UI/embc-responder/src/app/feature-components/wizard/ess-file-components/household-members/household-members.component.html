@@ -1,1 +1,330 @@
-<p>household-members works!</p>
+<div class="container container-frame">
+  <div class="heading-container">
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-tab-heading">Household Members</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 content-container">
+      <form [formGroup]="householdForm">
+        <p class="no-margin">
+          Do you have any household members (including dependents) who live in
+          the same household with you?
+          <span class="required-symbol">*</span>
+        </p>
+        <p class="notes">
+          Please note: Roommates & tenants need to register separately.
+        </p>
+
+        <mat-radio-group
+          aria-labelledby="primary-radio-group-label"
+          formControlName="hasHouseholdMembers"
+          class="primary-radio-group"
+          required
+          (change)="hasHouseholdMembers($event)"
+        >
+          <mat-radio-button
+            class="primary-radio-button"
+            *ngFor="let option of radioOption"
+            [value]="option.value"
+          >
+            {{ option.name }}
+          </mat-radio-button>
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              householdFormControl?.hasHouseholdMembers.touched &&
+              householdFormControl?.hasHouseholdMembers.invalid &&
+              householdFormControl?.hasHouseholdMembers.hasError('required')
+            "
+          >
+            Confirm to have Household Members is required</mat-error
+          >
+        </mat-radio-group>
+        <div class="row" *ngIf="dataSource.getValue().length > 0">
+          <div class="col-8">
+            <br />
+            <div class="col-4">
+              <button
+                class="family-button details-button"
+                mat-button
+                type="button"
+                (click)="addMembers()"
+              >
+                + Add Household Member
+              </button>
+            </div>
+            <br />
+            <mat-table [dataSource]="dataSource">
+              <ng-container matColumnDef="firstName">
+                <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <span class="mobile-label">First Name</span>
+                  {{ element.firstName }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="lastName">
+                <mat-header-cell *matHeaderCellDef> Last Name </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <span class="mobile-label">Last Name</span>
+                  {{ element.lastName }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="initials">
+                <mat-header-cell *matHeaderCellDef> Initials </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <span class="mobile-label">Initials:</span>
+                  {{ element.initials }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="gender">
+                <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <span class="mobile-label">Gender:</span>
+                  {{ element.gender }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="dateOfBirth">
+                <mat-header-cell *matHeaderCellDef>
+                  Date of Birth
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <span class="mobile-label">Date of Birth:</span>
+                  {{ element.dateOfBirth }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="buttons">
+                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                <mat-cell *matCellDef="let element; let index = index">
+                  <!-- <span class="mobile-label">11</span> -->
+                  <button
+                    *ngIf="!editFlag"
+                    class="edit-image"
+                    mat-icon-button
+                    aria-label="Edit"
+                    (click)="editRow(element, index)"
+                  >
+                    <img src="/assets/images/edit.svg" height="35" width="35" />
+                    <img
+                      src="/assets/images/edit_onhover.svg"
+                      height="35"
+                      width="35"
+                    />
+                  </button>
+
+                  <button
+                    *ngIf="!editFlag"
+                    class="delete-image"
+                    mat-icon-button
+                    aria-label="Remove"
+                    (click)="deleteRow(index)"
+                  >
+                    <img
+                      src="/assets/images/delete.svg"
+                      height="35"
+                      width="35"
+                    />
+                    <img
+                      src="/assets/images/delete_onhover.svg"
+                      height="35"
+                      width="35"
+                    />
+                  </button>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row
+                *matHeaderRowDef="displayedColumns"
+              ></mat-header-row>
+              <mat-row
+                *matRowDef="let row; columns: displayedColumns"
+              ></mat-row>
+            </mat-table>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-8" *ngIf="showMemberForm">
+            <app-person-detail-form
+              [personalDetailsForm]="houseHoldMemberFormGroup"
+            >
+            </app-person-detail-form>
+            <div class="row">
+              <div class="col-md-3">
+                <button
+                  class="button-s details-button"
+                  mat-button
+                  type="button"
+                  (click)="cancel()"
+                >
+                  Cancel
+                </button>
+              </div>
+              <div class="col-md-3">
+                <button
+                  class="family-button details-button"
+                  mat-button
+                  type="button"
+                  (click)="save()"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+            <br />
+          </div>
+        </div>
+
+        <p>
+          Do you (or any of your household members that you listed) have any
+          dietary requirements?
+          <span class="required-symbol">*</span>
+        </p>
+
+        <mat-radio-group
+          aria-labelledby="primary-radio-group-label"
+          formControlName="hasSpecialDiet"
+          class="primary-radio-group"
+          required
+          (change)="hasSpecialDietChange($event)"
+        >
+          <mat-radio-button
+            class="primary-radio-button"
+            *ngFor="let option of radioOption"
+            [value]="option.value"
+          >
+            {{ option.name }}
+          </mat-radio-button>
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              householdFormControl?.hasSpecialDiet.touched &&
+              householdFormControl?.hasSpecialDiet.invalid &&
+              householdFormControl?.hasSpecialDiet.hasError('required')
+            "
+          >
+            Dietary Requirement is required</mat-error
+          >
+        </mat-radio-group>
+
+        <div class="row">
+          <div
+            class="col-8 additional-form"
+            *ngIf="householdFormControl?.hasSpecialDiet.value === true"
+          >
+            <label class="card-heading" id="primary-radio-group-label"
+              >Please specify</label
+            >
+            <br />
+            <mat-form-field appearance="outline">
+              <textarea
+                rows="10"
+                matInput
+                [formControlName]="'specialDietDetails'"
+                placeholder="Please write in the evacuees own words as much as possible. Do not include any medical information or irrelevant/ speculative personal details."
+                maxlength="200"
+              ></textarea>
+              <mat-error
+                *ngIf="
+                  householdFormControl?.specialDietDetails.touched &&
+                  householdFormControl?.specialDietDetails.invalid &&
+                  householdFormControl?.specialDietDetails.hasError(
+                    'whitespaceError'
+                  )
+                "
+              >
+                Dietary requirements specifications are required</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+
+        <p>
+          Does the evacuee (or anyone registering with them) take medication?
+          <span class="required-symbol">*</span>
+        </p>
+
+        <mat-radio-group
+          aria-labelledby="primary-radio-group-label"
+          formControlName="hasMedication"
+          class="primary-radio-group"
+          required
+          (change)="hasMedicationChange($event)"
+        >
+          <mat-radio-button
+            class="primary-radio-button"
+            *ngFor="let option of radioOption"
+            [value]="option.value"
+          >
+            {{ option.name }}
+          </mat-radio-button>
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              householdFormControl?.hasMedication.touched &&
+              householdFormControl?.hasMedication.invalid &&
+              householdFormControl?.hasMedication.hasError('required')
+            "
+          >
+            Medication is required</mat-error
+          >
+        </mat-radio-group>
+        <div class="row">
+          <div
+            class="col-8 additional-form"
+            *ngIf="householdFormControl?.hasMedication.value === true"
+          >
+            <p>
+              Does the evacuee have sufficient supply for the next 72 hours?
+              <span class="required-symbol">*</span>
+            </p>
+            <mat-radio-group
+              aria-labelledby="primary-radio-group-label"
+              formControlName="medicationSupply"
+              class="primary-radio-group"
+            >
+              <mat-radio-button
+                class="primary-radio-button"
+                *ngFor="let option of radioOption"
+                [value]="option.value"
+              >
+                {{ option.name }}
+              </mat-radio-button>
+              <mat-error
+                class="custom-mat-error"
+                *ngIf="
+                  householdFormControl?.medicationSupply.touched &&
+                  householdFormControl?.medicationSupply.invalid &&
+                  householdFormControl?.medicationSupply.hasError('required')
+                "
+              >
+                Medication supply is required</mat-error
+              >
+            </mat-radio-group>
+          </div>
+        </div>
+      </form>
+      <br />
+      <div class="row">
+        <div class="col-md-6">
+          <button class="button-s back" mat-button (click)="back()">
+            Back
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button class="button-p next" mat-button (click)="next()">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

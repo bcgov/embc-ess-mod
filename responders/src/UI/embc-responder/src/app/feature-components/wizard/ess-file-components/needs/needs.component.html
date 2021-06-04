@@ -1,0 +1,239 @@
+<div class="container container-frame">
+  <div class="heading-container">
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-tab-heading">Needs Assessment</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 content-container">
+      <form [formGroup]="needsForm">
+        <p class="no-margin">
+          Which categories of support are you able to provide for yourself and
+          your family while evacuated?
+        </p>
+        <br /><br />
+
+        <label class="question requiredField" id="food-label">
+          <img
+            src="../../../../../assets/images/wizard/needs-food.svg"
+            width="40px"
+            height="42px"
+          />
+          Food</label
+        >
+        <p>
+          Can you provide food for you and your household while you are
+          evacuated?
+        </p>
+        <mat-radio-group
+          aria-labelledby="primary-radio-group-label"
+          formControlName="canEvacueeProvideFood"
+          class="primary-radio-group"
+          required
+        >
+          <mat-radio-button class="primary-radio-button" [value]="true"
+            >Yes</mat-radio-button
+          >
+          <mat-radio-button class="primary-radio-button" [value]="false"
+            >No</mat-radio-button
+          >
+          <mat-radio-button class="primary-radio-button" [value]="'null'"
+            >I'm not sure</mat-radio-button
+          >
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              needsFormControl?.canEvacueeProvideFood.touched &&
+              needsFormControl?.canEvacueeProvideFood.invalid &&
+              needsFormControl?.canEvacueeProvideFood.hasError('required')
+            "
+          >
+            Food is required</mat-error
+          >
+        </mat-radio-group>
+
+        <br />
+        <label class="question requiredField" id="lodging-label">
+          <img
+            src="../../../../../assets/images/wizard/needs-lodging.svg"
+            width="40px"
+            height="42px"
+          />
+          Lodging</label
+        >
+        <p>
+          Can you provide lodging for you and your household while you are
+          evacuated?
+        </p>
+        <mat-radio-group
+          aria-labelledby="primary-radio-group-label"
+          formControlName="canEvacueeProvideLodging"
+          class="primary-radio-group"
+          required
+        >
+          <mat-radio-button class="primary-radio-button" [value]="true"
+            >Yes</mat-radio-button
+          >
+          <mat-radio-button class="primary-radio-button" [value]="false"
+            >No</mat-radio-button
+          >
+          <mat-radio-button class="primary-radio-button" [value]="'null'"
+            >I'm not sure</mat-radio-button
+          >
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              needsFormControl?.canEvacueeProvideLodging.touched &&
+              needsFormControl?.canEvacueeProvideLodging.invalid &&
+              needsFormControl?.canEvacueeProvideLodging.hasError('required')
+            "
+          >
+            Lodging is required</mat-error
+          >
+        </mat-radio-group>
+
+        <br />
+        <label class="question requiredField" id="clothing-label">
+          <img
+            src="../../../../../assets/images/wizard/needs-clothing.svg"
+            width="40px"
+            height="42px"
+          />
+          Clothing</label
+        >
+        <p>
+          Can you provide appropriate clothing for you and your household while
+          you are evacuated? This includes warm clothing should there be extreme
+          winter conditions.
+        </p>
+        <mat-radio-group
+          aria-labelledby="primary-radio-group-label"
+          formControlName="canEvacueeProvideClothing"
+          class="primary-radio-group"
+          required
+        >
+          <mat-radio-button class="primary-radio-button" [value]="true"
+            >Yes</mat-radio-button
+          >
+          <mat-radio-button class="primary-radio-button" [value]="false"
+            >No</mat-radio-button
+          >
+          <mat-radio-button class="primary-radio-button" [value]="'null'"
+            >I'm not sure</mat-radio-button
+          >
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              needsFormControl?.canEvacueeProvideClothing.touched &&
+              needsFormControl?.canEvacueeProvideClothing.invalid &&
+              needsFormControl?.canEvacueeProvideClothing.hasError('required')
+            "
+          >
+            Clothing is required</mat-error
+          >
+        </mat-radio-group>
+
+        <br />
+        <label class="question requiredField" id="transport-label">
+          <img
+            src="../../../../../assets/images/wizard/needs-transport.svg"
+            width="40px"
+            height="42px"
+          />
+          Transportation</label
+        >
+        <p>
+          Can you provide transportation for you and your household while you
+          are evacuated? This could include a taxi or rideshare to your current
+          accommodation.
+        </p>
+        <mat-radio-group
+          aria-labelledby="primary-radio-group-label"
+          formControlName="canEvacueeProvideTransportation"
+          class="primary-radio-group"
+          required
+        >
+          <mat-radio-button class="primary-radio-button" [value]="true"
+            >Yes</mat-radio-button
+          >
+          <mat-radio-button class="primary-radio-button" [value]="false"
+            >No</mat-radio-button
+          >
+          <mat-radio-button class="primary-radio-button" [value]="'null'"
+            >I'm not sure</mat-radio-button
+          >
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              needsFormControl?.canEvacueeProvideTransportation.touched &&
+              needsFormControl?.canEvacueeProvideTransportation.invalid &&
+              needsFormControl?.canEvacueeProvideTransportation.hasError(
+                'required'
+              )
+            "
+          >
+            Transportation is required</mat-error
+          >
+        </mat-radio-group>
+        <br />
+        <label class="question requiredField" id="incidentals-label">
+          <img
+            src="../../../../../assets/images/wizard/needs-incidentals.svg"
+            width="40px"
+            height="42px"
+          />
+          Incidentals</label
+        >
+        <p>
+          Can you provide incidentals for you and your household while you are
+          evacuated? This could include miscellaneous items such as personal
+          hygiene products, laundry supplies and/or pet food.
+        </p>
+        <mat-radio-group
+          aria-labelledby="primary-radio-group-label"
+          formControlName="canEvacueeProvideIncidentals"
+          class="primary-radio-group"
+          required
+        >
+          <mat-radio-button class="primary-radio-button" [value]="true"
+            >Yes</mat-radio-button
+          >
+          <mat-radio-button class="primary-radio-button" [value]="false"
+            >No</mat-radio-button
+          >
+          <mat-radio-button class="primary-radio-button" [value]="'null'"
+            >I'm not sure</mat-radio-button
+          >
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              needsFormControl?.canEvacueeProvideIncidentals.touched &&
+              needsFormControl?.canEvacueeProvideIncidentals.invalid &&
+              needsFormControl?.canEvacueeProvideIncidentals.hasError(
+                'required'
+              )
+            "
+          >
+            Incidentals is required</mat-error
+          >
+        </mat-radio-group>
+      </form>
+      <br /><br />
+      <div class="row">
+        <div class="col-md-6">
+          <button class="button-s back" mat-button (click)="back()">
+            Back
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button class="button-p next" mat-button (click)="next()">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

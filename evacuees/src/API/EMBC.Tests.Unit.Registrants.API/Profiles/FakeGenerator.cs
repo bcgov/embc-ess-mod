@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Bogus;
 using EMBC.ESS.Shared.Contracts.Submissions;
@@ -25,7 +26,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             return new Faker<RegistrantProfile>()
                 .RuleFor(o => o.Id, f => Guid.NewGuid().ToString())
                 .RuleFor(o => o.UserId, f => f.Random.String(10))
-                .RuleFor(o => o.SecretPhrase, f => f.Internet.Password())
+                .RuleFor(o => o.SecurityQuestions, f => FakeSecurityQuestions())
                 .RuleFor(o => o.RestrictedAccess, f => f.Random.Bool())
 
                 .RuleFor(o => o.DateOfBirth, f => f.Date.Past(20).ToString("MM-dd-yyyy"))
@@ -44,6 +45,27 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .Generate();
         }
 
+        private static IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion> FakeSecurityQuestions()
+        {
+            List<ESS.Shared.Contracts.Submissions.SecurityQuestion> ret = new List<ESS.Shared.Contracts.Submissions.SecurityQuestion>
+            {
+                FakeSecurityQuestion(1),
+                FakeSecurityQuestion(2),
+                FakeSecurityQuestion(3)
+            };
+            return ret;
+        }
+
+        private static ESS.Shared.Contracts.Submissions.SecurityQuestion FakeSecurityQuestion(int id)
+        {
+            return new Faker<ESS.Shared.Contracts.Submissions.SecurityQuestion>()
+                .RuleFor(o => o.Id, id)
+                .RuleFor(o => o.Question, f => f.Random.Word())
+                .RuleFor(o => o.Answer, f => f.Random.Word())
+                .RuleFor(o => o.AnswerChanged, true)
+                .Generate();
+        }
+
         private static ESS.Shared.Contracts.Submissions.Address FakeAddress()
         {
             return new Faker<ESS.Shared.Contracts.Submissions.Address>()
@@ -59,7 +81,7 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
         {
             return new Faker<Profile>()
                 .RuleFor(o => o.Id, f => f.Random.String(10))
-                .RuleFor(o => o.SecretPhrase, f => f.Internet.Password())
+                .RuleFor(o => o.SecurityQuestions, f => FakeClientEnteredSecurityQuestions())
                 .RuleFor(o => o.RestrictedAccess, f => f.Random.Bool())
 
                 .RuleFor(o => o.PersonalDetails, f => new Faker<PersonDetails>()
@@ -81,6 +103,27 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
                 .RuleFor(o => o.MailingAddress, f => FakeClientEnteredAddress())
                 .RuleFor(o => o.IsMailingAddressSameAsPrimaryAddress, f => f.Random.Bool())
 
+                .Generate();
+        }
+
+        private static IEnumerable<EMBC.Registrants.API.Controllers.SecurityQuestion> FakeClientEnteredSecurityQuestions()
+        {
+            List<EMBC.Registrants.API.Controllers.SecurityQuestion> ret = new List<EMBC.Registrants.API.Controllers.SecurityQuestion>
+            {
+                FakeClientEnteredSecurityQuestion(1),
+                FakeClientEnteredSecurityQuestion(2),
+                FakeClientEnteredSecurityQuestion(3)
+            };
+            return ret;
+        }
+
+        private static EMBC.Registrants.API.Controllers.SecurityQuestion FakeClientEnteredSecurityQuestion(int id)
+        {
+            return new Faker<EMBC.Registrants.API.Controllers.SecurityQuestion>()
+                .RuleFor(o => o.Id, id)
+                .RuleFor(o => o.Question, f => f.Random.Word())
+                .RuleFor(o => o.Answer, f => f.Random.Word())
+                .RuleFor(o => o.AnswerChanged, true)
                 .Generate();
         }
 

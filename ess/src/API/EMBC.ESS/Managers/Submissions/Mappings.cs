@@ -23,14 +23,22 @@ namespace EMBC.ESS.Managers.Submissions
         public MappingProfile()
         {
             CreateMap<Shared.Contracts.Submissions.EvacuationFile, Resources.Cases.EvacuationFile>()
-                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Address, Resources.Cases.EvacuationAddress>()
+                .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.Community))
+                .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
+                .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
                 .ReverseMap()
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
+                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
+                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
                 ;
+
             CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Cases.HouseholdMember>()
+                .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 
@@ -39,6 +47,12 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Shared.Contracts.Submissions.NeedsAssessment, Resources.Cases.NeedsAssessment>()
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CompletedOn))
+                .ReverseMap()
+                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.CreatedOn))
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.Note, Resources.Cases.Note>()
                 .ReverseMap()
                 ;
 
@@ -53,9 +67,12 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Shared.Contracts.Submissions.SecurityQuestion, Resources.Contacts.SecurityQuestion>()
+                .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => !s.AnswerChanged))
                 .ReverseMap()
-                .ForMember(d => d.Answer, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Answer) ? string.Empty : s.Answer.Substring(0, 1) + "***" + s.Answer.Substring(s.Answer.Length - 1)))
+                .ForMember(d => d.AnswerChanged, opts => opts.MapFrom(s => false))
                 ;
+
+            CreateMap<Resources.Tasks.EssTask, Shared.Contracts.Submissions.IncidentTask>();
         }
     }
 }

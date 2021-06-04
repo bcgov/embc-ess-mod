@@ -171,11 +171,11 @@ export class CustomValidationService {
   /**
    * Checks if the quantity inserted is between 1 and 999
    */
-  // quantityPetsValidator(): ValidatorFn {
-  //     return (control: AbstractControl): { [key: string]: boolean } | null => {
-  //         return Validators.pattern(globalConst.petsQuantityPattern)(control);
-  //     };
-  // }
+  quantityPetsValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      return Validators.pattern(globalConst.petsQuantityPattern)(control);
+    };
+  }
 
   /**
    * Checks an array of controls by name, to see if they all have different values (unless empty)
@@ -188,7 +188,7 @@ export class CustomValidationService {
 
       // Fill array of values
       for (const controlName of controlNames) {
-        values.push(formGroup.get(controlName).value.trim());
+        values.push(formGroup.get(controlName).value?.trim() ?? '');
       }
 
       // Get index of every repeated value in array

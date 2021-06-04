@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -6,6 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
 
 @Component({
@@ -13,8 +14,9 @@ import { StepCreateProfileService } from '../../step-create-profile/step-create-
   templateUrl: './restriction.component.html',
   styleUrls: ['./restriction.component.scss']
 })
-export class RestrictionComponent implements OnInit {
+export class RestrictionComponent implements OnInit, OnDestroy {
   restrictionForm: FormGroup;
+  tabUpdateSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -24,6 +26,13 @@ export class RestrictionComponent implements OnInit {
 
   ngOnInit(): void {
     this.createRestrictionForm();
+
+    // Set "update tab status" method, called for any tab navigation
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+      () => {
+        this.updateTabStatus();
+      }
+    );
   }
 
   createRestrictionForm(): void {
@@ -45,22 +54,26 @@ export class RestrictionComponent implements OnInit {
   }
 
   /**
-   * Updates the tab status and navigate to next tab
+   * Navigate to next tab
    */
   next(): void {
-    this.updateTabStatus();
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/evacuee-details'
     ]);
   }
 
+  /**
+   * Navigates to the previous tab
+   */
   back(): void {
-    this.updateTabStatus();
     this.router.navigate([
       '/ess-wizard/create-evacuee-profile/collection-notice'
     ]);
   }
 
+  /**
+   * Checks the form validity and updates the tab status
+   */
   updateTabStatus() {
     if (this.restrictionForm.valid) {
       this.stepCreateProfileService.setTabStatus('restriction', 'complete');
@@ -68,5 +81,13 @@ export class RestrictionComponent implements OnInit {
     this.stepCreateProfileService.restrictedAccess = this.restrictionForm.get(
       'restrictedAccess'
     ).value;
+  }
+
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
+  ngOnDestroy(): void {
+    this.stepCreateProfileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
   }
 }

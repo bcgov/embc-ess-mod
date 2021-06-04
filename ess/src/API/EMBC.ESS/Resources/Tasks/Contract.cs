@@ -33,7 +33,7 @@ namespace EMBC.ESS.Resources.Tasks
 
     public class TaskQueryResult
     {
-        public IEnumerable<EssTask> Items { get; set; }
+        public IEnumerable<Task> Items { get; set; }
     }
 
     public abstract class Task
@@ -44,14 +44,14 @@ namespace EMBC.ESS.Resources.Tasks
 
     public enum TaskStatus
     {
-        Active,
-        Expired
+        Active = 1,
+        Expired = 2
     }
 
     public class EssTask : Task
     {
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public string CommunityCode { get; set; }
         public string Description { get; set; }
     }

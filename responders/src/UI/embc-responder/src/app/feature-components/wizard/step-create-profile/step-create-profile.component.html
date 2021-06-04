@@ -22,7 +22,6 @@
         'tab-margin custom-tab-link': tabItem.name !== 'review'
       }"
     >
-      <!-- {{ tabItem.label }} -->
       <span class="span-height" (click)="isAllowed(tabItem.name, $event)"
         >{{ tabItem.label }}
         <img
@@ -51,6 +50,8 @@
   </nav>
 
   <div class="content-container">
+    <app-alert></app-alert>
+
     <router-outlet></router-outlet>
   </div>
 </div>

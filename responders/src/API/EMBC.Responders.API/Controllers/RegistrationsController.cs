@@ -14,7 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +22,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.Responders.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,79 +33,17 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class RegistrationsController : ControllerBase
+    public partial class RegistrationsController : ControllerBase
     {
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
+        private readonly IEvacuationSearchService evacuationSearchService;
 
-        public RegistrationsController(IMessagingClient messagingClient, IMapper mapper)
+        public RegistrationsController(IMessagingClient messagingClient, IMapper mapper, IEvacuationSearchService evacuationSearchService)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
-        }
-
-        /// <summary>
-        /// Search evacuation files and profiles matching the search parameters
-        /// </summary>
-        /// <param name="searchParameters">search parameters to filter the results</param>
-        /// <returns>matching files list and registrants list</returns>
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<SearchResults> Search([FromQuery] SearchParameters searchParameters)
-        {
-            var address = new Address
-            {
-                AddressLine1 = "1 line1",
-                AddressLine2 = "1 line2",
-                City = "1 city",
-                PostalCode = "V1V 1V1",
-                CommunityCode = "6e69dfaf-9f97-ea11-b813-005056830319",
-                CountryCode = "CAN",
-                StateProvinceCode = "BC"
-            };
-
-            var householdMember = new EvacuationFileHouseholdMember
-            {
-                FirstName = "first",
-                LastName = "last",
-                Type = HouseholdMemberType.HouseholdMember,
-                IsMatch = false
-            };
-
-            var applicant = new EvacuationFileHouseholdMember
-            {
-                FirstName = "first",
-                LastName = "last",
-                Type = HouseholdMemberType.MainApplicant,
-                IsMatch = true
-            };
-
-            var file = new EvacuationFileSearchResult
-            {
-                Id = "1234",
-                TaskId = "t1234",
-                CreatedOn = new DateTime(2021, 1, 1),
-                Status = EvacuationFileStatus.Active,
-                EvacuatedFrom = address,
-                IsRestricted = false,
-                HouseholdMembers = new[] { applicant, householdMember }
-            };
-
-            var registrant = new RegistrantProfileSearchResult
-            {
-                Id = "12345",
-                FirstName = searchParameters.firstName,
-                LastName = searchParameters.lastName,
-                CreatedOn = new DateTime(2021, 1, 1),
-                Status = RegistrantStatus.Verified,
-                PrimaryAddress = address,
-                EvacuationFiles = new[] { file, file },
-                IsRestricted = false
-            };
-
-            var registrants = new[] { registrant, registrant };
-            var files = new[] { file, file };
-            return await Task.FromResult(new SearchResults { Registrants = registrants, Files = files });
+            this.evacuationSearchService = evacuationSearchService;
         }
 
         /// <summary>
@@ -139,10 +77,9 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<VerifySecurityQuestionsResponse>> VerifySecurityQuestions(string registrantId, VerifySecurityQuestionsRequest request)
         {
-            return Ok(await Task.FromResult(new VerifySecurityQuestionsResponse
-            {
-                NumberOfCorrectAnswers = request.Answers.Where(q => q.Answer.EndsWith(q.Id.ToString())).Count()
-            }));
+            VerifySecurityQuestionsQuery verifySecurityQuestionsQuery = new VerifySecurityQuestionsQuery { RegistrantId = registrantId, Answers = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion>>(request.Answers) };
+            var response = await messagingClient.Send(verifySecurityQuestionsQuery);
+            return Ok(mapper.Map<VerifySecurityQuestionsResponse>(response));
         }
 
         /// <summary>
@@ -171,73 +108,111 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<VerifySecurityPhraseResponse>> VerifySecurityPhrase(string fileId, VerifySecurityPhraseRequest request)
         {
-            var isCorrect = request.Answer.Equals("true", StringComparison.InvariantCultureIgnoreCase);
-            return Ok(await Task.FromResult(new VerifySecurityPhraseResponse { IsCorrect = isCorrect }));
+            VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
+            var response = await messagingClient.Send(verifySecurityPhraseQuery);
+            return Ok(mapper.Map<VerifySecurityPhraseResponse>(response));
         }
 
         /// <summary>
-        /// Creates or updates a Registrant Profile
+        /// Creates a Registrant Profile
         /// </summary>
-        /// <param name="evacuee">Evacuee</param>
+        /// <param name="registrant">Registrant</param>
         /// <returns>new registrant id</returns>
-        [HttpPost("profile")]
+        [HttpPost("registrants")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpsertRegistrantProfile(EvacueeProfile evacuee)
+        public async Task<ActionResult<string>> CreateRegistrantProfile(RegistrantProfile registrant)
         {
-            //TODO - update SaveRegistrantCommand to accept security questions
-            //if (evacuee == null) return BadRequest();
+            if (registrant == null) return BadRequest();
 
-            //var profile = mapper.Map<RegistrantProfile>(evacuee);
-            //var id = await messagingClient.Send(new SaveRegistrantCommand
-            //{
-            //    Profile = profile
-            //});
-            //return Ok(new { Id = id });
-
-            return Ok(await Task.FromResult(new { Id = "123" }));
+            var profile = mapper.Map<ESS.Shared.Contracts.Submissions.RegistrantProfile>(registrant);
+            var id = await messagingClient.Send(new SaveRegistrantCommand
+            {
+                Profile = profile
+            });
+            return Ok(id);
         }
-    }
 
-    public class SearchParameters
-    {
-        [Required]
-        public string firstName { get; set; }
+        /// <summary>
+        /// Updates a Registrant Profile
+        /// </summary>
+        /// <param name="registrantId">RegistrantId</param>
+        /// <param name="registrant">Registrant</param>
+        /// <returns>updated registrant id</returns>
+        [HttpPost("registrants/{registrantId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<string>> UpdateRegistrantProfile(string registrantId, RegistrantProfile registrant)
+        {
+            if (registrant == null) return BadRequest();
 
-        [Required]
-        public string lastName { get; set; }
+            registrant.Id = registrantId;
 
-        [Required]
-        public string dateOfBirth { get; set; }
-    }
+            var profile = mapper.Map<ESS.Shared.Contracts.Submissions.RegistrantProfile>(registrant);
+            var id = await messagingClient.Send(new SaveRegistrantCommand
+            {
+                Profile = profile
+            });
+            return Ok(id);
+        }
 
-    public class SearchResults
-    {
-        public IEnumerable<RegistrantProfileSearchResult> Registrants { get; set; }
-        public IEnumerable<EvacuationFileSearchResult> Files { get; set; }
-    }
+        /// <summary>
+        /// Gets a Registrant Profile
+        /// </summary>
+        /// <param name="registrantId">RegistrantId</param>
+        /// <returns>registrant</returns>
+        [HttpGet("registrants/{registrantId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RegistrantProfile>> GetRegistrantProfile(string registrantId)
+        {
+            var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
+            {
+                UserId = registrantId
+            })).Items.FirstOrDefault();
 
-    public class RegistrantProfileSearchResult
-    {
-        public string Id { get; set; }
-        public bool IsRestricted { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public RegistrantStatus Status { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public Address PrimaryAddress { get; set; }
-        public IEnumerable<EvacuationFileSearchResult> EvacuationFiles { get; set; }
-    }
+            if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
 
-    public class EvacuationFileSearchResult
-    {
-        public string Id { get; set; }
-        public bool IsRestricted { get; set; }
-        public string TaskId { get; set; }
-        public Address EvacuatedFrom { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public EvacuationFileStatus Status { get; set; }
-        public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; }
+            return Ok(mapper.Map<RegistrantProfile>(registrant.RegistrantProfile));
+        }
+
+        /// <summary>
+        /// Updates a File
+        /// </summary>
+        /// <param name="fileId">fileId</param>
+        /// <param name="file">file</param>
+        /// <returns>updated file id</returns>
+        [HttpPost("files/{fileId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<string>> UpdateFile(string fileId, RegistrantFile file)
+        {
+            //TODO - update model with what frond end will submit
+            //var id = await messagingClient.Send(new SubmitEvacuationFileCommand
+            //{
+            //    File = file
+            //});
+
+            //return Ok(id);
+            return Ok(await Task.FromResult("id"));
+        }
+
+        /// <summary>
+        /// Gets a File
+        /// </summary>
+        /// <param name="fileId">fileId</param>
+        /// <returns>file</returns>
+        [HttpGet("files/{fileId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<EvacuationFileSearchResult>> GetFile(string fileId)
+        {
+            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
+            {
+                FileId = fileId
+            })).Items.FirstOrDefault();
+            return Ok(mapper.Map<EvacuationFileSearchResult>(file));
+        }
     }
 
     public class EvacuationFileHouseholdMember
@@ -261,8 +236,8 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum EvacuationFileStatus
     {
-        [Description("In Progress")]
-        InProgress,
+        [Description("Pending")]
+        Pending,
 
         [Description("Active")]
         Active,
@@ -289,6 +264,7 @@ namespace EMBC.Responders.API.Controllers
         public int Id { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
+        public bool AnswerChanged { get; set; }
     }
 
     public class GetSecurityQuestionsResponse
@@ -322,9 +298,18 @@ namespace EMBC.Responders.API.Controllers
     }
 
     /// <summary>
-    /// Evacuee profile
+    /// Evacuation File
     /// </summary>
-    public class EvacueeProfile
+    public class RegistrantFile
+    {
+        public string Id { get; set; }
+        //TODO - get model that the front end would be submitting
+    }
+
+    /// <summary>
+    /// Registrant profile
+    /// </summary>
+    public class RegistrantProfile
     {
         public string Id { get; set; }
 
@@ -349,12 +334,30 @@ namespace EMBC.Responders.API.Controllers
     {
         public RegistrationsMapping()
         {
-            CreateMap<EvacueeProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
-                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
-                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
+            CreateMap<VerifySecurityPhraseResponse, ESS.Shared.Contracts.Submissions.VerifySecurityPhraseResponse>()
+                .ReverseMap()
+                ;
+
+            CreateMap<VerifySecurityQuestionsResponse, ESS.Shared.Contracts.Submissions.VerifySecurityQuestionsResponse>()
+                .ReverseMap()
+                ;
+
+            CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
+                .ReverseMap()
+                ;
+
+            CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
+                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
+                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
+                .ReverseMap()
+                .ForMember(d => d.City, opts => opts.Ignore())
+                ;
+
+            CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
+                .ForMember(d => d.SecurityQuestions, opts => opts.MapFrom(s => s.SecurityQuestions))
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.Restriction))
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
-                .ForMember(d => d.MailingAddress, opts => opts.Ignore())
-                .ForMember(d => d.PrimaryAddress, opts => opts.Ignore())
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.PersonalDetails.DateOfBirth))
@@ -367,6 +370,14 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.VerifiedUser))
+                .ReverseMap()
+                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
+                    s.MailingAddress.Country == s.PrimaryAddress.Country &&
+                    s.MailingAddress.StateProvince == s.PrimaryAddress.StateProvince &&
+                    s.MailingAddress.Community == s.PrimaryAddress.Community &&
+                    s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
+                    s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
+                    s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
                 ;
         }
     }
