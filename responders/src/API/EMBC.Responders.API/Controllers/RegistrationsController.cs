@@ -116,16 +116,16 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Creates a Registrant Profile
         /// </summary>
-        /// <param name="evacuee">Evacuee</param>
+        /// <param name="registrant">Registrant</param>
         /// <returns>new registrant id</returns>
         [HttpPost("registrants")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> CreateRegistrantProfile(EvacueeProfile evacuee)
+        public async Task<ActionResult<string>> CreateRegistrantProfile(RegistrantProfile registrant)
         {
-            if (evacuee == null) return BadRequest();
+            if (registrant == null) return BadRequest();
 
-            var profile = mapper.Map<RegistrantProfile>(evacuee);
+            var profile = mapper.Map<ESS.Shared.Contracts.Submissions.RegistrantProfile>(registrant);
             var id = await messagingClient.Send(new SaveRegistrantCommand
             {
                 Profile = profile
@@ -137,18 +137,18 @@ namespace EMBC.Responders.API.Controllers
         /// Updates a Registrant Profile
         /// </summary>
         /// <param name="registrantId">RegistrantId</param>
-        /// <param name="evacuee">Evacuee</param>
+        /// <param name="registrant">Registrant</param>
         /// <returns>updated registrant id</returns>
         [HttpPost("registrants/{registrantId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> UpdateRegistrantProfile(string registrantId, EvacueeProfile evacuee)
+        public async Task<ActionResult<string>> UpdateRegistrantProfile(string registrantId, RegistrantProfile registrant)
         {
-            if (evacuee == null) return BadRequest();
+            if (registrant == null) return BadRequest();
 
-            evacuee.Id = registrantId;
+            registrant.Id = registrantId;
 
-            var profile = mapper.Map<RegistrantProfile>(evacuee);
+            var profile = mapper.Map<ESS.Shared.Contracts.Submissions.RegistrantProfile>(registrant);
             var id = await messagingClient.Send(new SaveRegistrantCommand
             {
                 Profile = profile
@@ -164,7 +164,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("registrants/{registrantId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<EvacueeProfile>> GetRegistrantProfile(string registrantId)
+        public async Task<ActionResult<RegistrantProfile>> GetRegistrantProfile(string registrantId)
         {
             var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
             {
@@ -173,7 +173,7 @@ namespace EMBC.Responders.API.Controllers
 
             if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
 
-            return Ok(mapper.Map<EvacueeProfile>(registrant.RegistrantProfile));
+            return Ok(mapper.Map<RegistrantProfile>(registrant.RegistrantProfile));
         }
 
         /// <summary>
@@ -307,9 +307,9 @@ namespace EMBC.Responders.API.Controllers
     }
 
     /// <summary>
-    /// Evacuee profile
+    /// Registrant profile
     /// </summary>
-    public class EvacueeProfile
+    public class RegistrantProfile
     {
         public string Id { get; set; }
 
@@ -354,7 +354,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.City, opts => opts.Ignore())
                 ;
 
-            CreateMap<EvacueeProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
+            CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
                 .ForMember(d => d.SecurityQuestions, opts => opts.MapFrom(s => s.SecurityQuestions))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.Restriction))
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
