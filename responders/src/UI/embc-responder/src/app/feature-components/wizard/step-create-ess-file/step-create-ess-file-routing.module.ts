@@ -41,6 +41,13 @@ const routes: Routes = [
           )
       },
       {
+        path: 'security-phrase',
+        loadChildren: () =>
+          import(
+            '../ess-file-components/security-phrase/security-phrase.module'
+          ).then((m) => m.SecurityPhraseModule)
+      },
+      {
         path: 'review',
         loadChildren: () =>
           import(

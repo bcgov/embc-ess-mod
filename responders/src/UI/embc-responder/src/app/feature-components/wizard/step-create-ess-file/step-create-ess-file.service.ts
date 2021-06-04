@@ -33,6 +33,9 @@ export class StepCreateEssFileService {
   private referredServiceDetails: string[];
   private externalServices: string;
 
+  private bypassPhraseVal: boolean;
+  private securityPhraseVal: string;
+
   private haveHouseholdMembers: boolean;
   private householdMembers: HouseholdMemberModel[];
   private haveSpecialDiet: boolean;
@@ -240,8 +243,21 @@ export class StepCreateEssFileService {
     this.canEvacueeProvideTransportation = canEvacueeProvideTransportation;
   }
 
-  // Tabs Navigation Getters and Setters
+  public get bypassPhrase(): boolean {
+    return this.bypassPhraseVal;
+  }
+  public set bypassPhrase(bypassPhraseVal: boolean) {
+    this.bypassPhraseVal = bypassPhraseVal;
+  }
 
+  public get securityPhrase(): string {
+    return this.securityPhraseVal;
+  }
+  public set securityPhrase(securityPhraseVal: string) {
+    this.securityPhraseVal = securityPhraseVal;
+  }
+
+  // Tabs Navigation Getters and Setters
   public get nextTabUpdate(): Subject<void> {
     return this.setNextTabUpdate;
   }
@@ -307,7 +323,8 @@ export class StepCreateEssFileService {
       emergencySupportServices: this.emergencySupportServices,
       referredServices: this.referredServices,
       referredServiceDetails: this.referredServiceDetails,
-      externalServices: this.externalServices
+      externalServices: this.externalServices,
+      securityPhrase: this.securityPhrase
     };
   }
 

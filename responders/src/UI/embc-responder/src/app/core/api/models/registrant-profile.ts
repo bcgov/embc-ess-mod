@@ -6,9 +6,9 @@ import { PersonDetails } from './person-details';
 import { SecurityQuestion } from './security-question';
 
 /**
- * Evacuee profile
+ * Registrant profile
  */
-export interface EvacueeProfile {
+export interface RegistrantProfile {
   contactDetails: ContactDetails;
   id?: null | string;
   isMailingAddressSameAsPrimaryAddress?: boolean;

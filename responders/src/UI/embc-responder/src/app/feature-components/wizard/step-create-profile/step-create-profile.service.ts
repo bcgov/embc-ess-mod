@@ -8,7 +8,7 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import {
   Address,
   ContactDetails,
-  EvacueeProfile,
+  RegistrantProfile,
   PersonDetails,
   SecurityQuestion
 } from 'src/app/core/api/models';
@@ -220,7 +220,7 @@ export class StepCreateProfileService {
     return thisModal;
   }
 
-  public createProfileDTO(): EvacueeProfile {
+  public createProfileDTO(): RegistrantProfile {
     return {
       restriction: this.restrictedAccess,
       personalDetails: this.personalDetails,
