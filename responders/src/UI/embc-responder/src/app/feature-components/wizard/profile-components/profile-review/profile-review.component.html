@@ -314,38 +314,45 @@
               Did you see government issued identification from this individual?
             </p>
 
-            <div class="row">
-              <div class="col-12">
-                <mat-radio-group
-                  aria-labelledby="primary-radio-group-label"
-                  [formControl]="verifiedProfileFC"
-                  class="primary-radio-group"
-                  required
-                >
-                  <mat-radio-button class="primary-radio-button" [value]="true">
-                    <span class="bold">Yes</span> - I saw government issued
-                    identification
-                  </mat-radio-button>
-                  <mat-radio-button
-                    class="primary-radio-button"
-                    [value]="false"
+            <form [formGroup]="verifiedProfileGroup">
+              <div class="row">
+                <div class="col-12">
+                  <mat-radio-group
+                    aria-labelledby="primary-radio-group-label"
+                    formControlName="verifiedProfile"
+                    class="primary-radio-group"
+                    required
                   >
-                    <span class="bold">No</span> - I did not see government
-                    issued identification
-                  </mat-radio-button>
-                </mat-radio-group>
+                    <mat-radio-button
+                      class="primary-radio-button"
+                      [value]="true"
+                    >
+                      <span class="bold">Yes</span> - I saw government issued
+                      identification
+                    </mat-radio-button>
+                    <mat-radio-button
+                      class="primary-radio-button"
+                      [value]="false"
+                    >
+                      <span class="bold">No</span> - I did not see government
+                      issued identification
+                    </mat-radio-button>
+                  </mat-radio-group>
 
-                <mat-error
-                  *ngIf="
-                    verifiedProfileFC?.touched &&
-                    verifiedProfileFC?.invalid &&
-                    verifiedProfileFC?.hasError('required')
-                  "
-                >
-                  Please select an option.
-                </mat-error>
+                  <mat-error
+                    *ngIf="
+                      verifiedProfileControl?.verifiedProfile?.touched &&
+                      verifiedProfileControl?.verifiedProfile?.invalid &&
+                      verifiedProfileControl?.verifiedProfile?.hasError(
+                        'required'
+                      )
+                    "
+                  >
+                    Please select an option.
+                  </mat-error>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

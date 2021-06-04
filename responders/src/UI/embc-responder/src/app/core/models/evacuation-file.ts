@@ -55,5 +55,6 @@ export interface NeedsAssessment {
   referredServices: null | boolean;
   referredServiceDetails: string[];
   externalServices: null | string;
+  securityPhrase?: string;
   type?: NeedsAssessmentType;
 }
