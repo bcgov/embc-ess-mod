@@ -41,7 +41,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         {
             if (string.IsNullOrEmpty(file.PrimaryRegistrantId)) throw new Exception($"The file has no associated primary registrant");
 
-            var primaryContact = essContext.contacts.Where(c => c.contactid == Guid.Parse(file.PrimaryRegistrantId)).SingleOrDefault();
+            var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(file.PrimaryRegistrantId)).SingleOrDefault();
             if (primaryContact == null) throw new Exception($"Primary registrant {file.PrimaryRegistrantId} not found");
 
             var eraEvacuationFile = mapper.Map<era_evacuationfile>(file);
@@ -87,7 +87,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             if (existingEvacuationFile == null) throw new Exception($"File {file.Id} not found");
 
-            var primaryContact = essContext.contacts.Where(c => c.contactid == Guid.Parse(file.PrimaryRegistrantId)).SingleOrDefault();
+            var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(file.PrimaryRegistrantId)).SingleOrDefault();
             if (primaryContact == null) throw new Exception($"Primary registrant {file.PrimaryRegistrantId} not found");
 
             var updatedEvacuationFile = mapper.Map<era_evacuationfile>(file);
