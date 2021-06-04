@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum EvacuationFileStatus {
-  InProgress = 'InProgress',
+  Pending = 'Pending',
   Active = 'Active',
   Expired = 'Expired',
   Completed = 'Completed'
