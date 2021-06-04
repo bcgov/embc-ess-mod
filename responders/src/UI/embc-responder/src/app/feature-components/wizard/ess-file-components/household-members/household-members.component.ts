@@ -60,10 +60,17 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
 
     // Displaying household member form in case 'haveHouseholdMembers' has been set to true
     if (
-      this.stepCreateEssFileService.haveHouseHoldMembers === true &&
+      this.stepCreateEssFileService.hasHouseHoldMembers === true &&
       this.stepCreateEssFileService.houseHoldMembers.length === 0
     ) {
       this.showMemberForm = true;
+      this.householdForm.get('addMemberIndicator').setValue(true);
+    }
+
+    // If the user goes back to the household members tab and left a Personal Details form incomplete, the form is displayed
+    if (this.stepCreateEssFileService.addMemberIndicator === true) {
+      this.showMemberForm = true;
+      this.householdForm.get('houseHoldMember').markAllAsTouched();
     }
 
     // Set "update tab status" method, called for any tab navigation
@@ -72,6 +79,16 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.updateTabStatus();
       }
     );
+
+    // Updates the status of the form according to changes
+    this.householdForm
+      .get('addMemberIndicator')
+      .valueChanges.subscribe(() => this.updateOnVisibility());
+    this.householdForm
+      .get('hasHouseholdMembers')
+      .valueChanges.subscribe(() =>
+        this.householdForm.get('houseHoldMembers').updateValueAndValidity()
+      );
   }
 
   /**
@@ -89,12 +106,13 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
+   * Displays the PersonDetails form to add new household members to the form
    */
   addMembers(): void {
-    this.householdForm.get('houseHoldMember').value.reset();
+    this.householdForm.get('houseHoldMember').reset();
     this.showMemberForm = !this.showMemberForm;
     this.editFlag = !this.editFlag;
+    this.householdForm.get('addMemberIndicator').setValue(true);
   }
 
   /**
@@ -106,16 +124,17 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   editRow(element, index): void {
     this.editIndex = index;
     this.rowEdit = !this.rowEdit;
-    this.householdForm.get('houseHoldMember').value.setValue(element);
+    this.householdForm.get('houseHoldMember').setValue(element);
     this.showMemberForm = !this.showMemberForm;
     this.editFlag = !this.editFlag;
+    this.householdForm.get('addMemberIndicator').setValue(true);
   }
 
   /**
    * Saves householdmembers in the Evacuation File Form
    */
   save(): void {
-    if (this.householdForm.get('houseHoldMember').value.status === 'VALID') {
+    if (this.householdForm.get('houseHoldMember').status === 'VALID') {
       if (this.editIndex !== undefined && this.rowEdit) {
         this.data[this.editIndex] = this.householdForm.get(
           'houseHoldMember'
@@ -127,11 +146,12 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       }
       this.dataSource.next(this.data);
       this.householdForm.get('houseHoldMembers').setValue(this.data);
-      this.householdForm.get('houseHoldMember').value.reset();
+      this.householdForm.get('houseHoldMember').reset();
       this.showMemberForm = !this.showMemberForm;
       this.editFlag = !this.editFlag;
+      this.householdForm.get('addMemberIndicator').setValue(false);
     } else {
-      this.householdForm.get('houseHoldMember').value.markAllAsTouched();
+      this.householdForm.get('houseHoldMember').markAllAsTouched();
     }
   }
 
@@ -139,12 +159,13 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Resets the househol Member form and goes back to the main Form
    */
   cancel(): void {
-    this.householdForm.get('houseHoldMember').value.reset();
+    this.householdForm.get('addMemberIndicator').setValue(false);
+    this.householdForm.get('houseHoldMember').reset();
     this.showMemberForm = !this.showMemberForm;
     this.editFlag = !this.editFlag;
 
     if (this.data.length === 0) {
-      this.householdForm.get('haveHouseholdMembers').setValue(false);
+      this.householdForm.get('hasHouseholdMembers').setValue(false);
     }
   }
 
@@ -167,7 +188,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
           this.dataSource.next(this.data);
           this.householdForm.get('houseHoldMembers').setValue(this.data);
           if (this.data.length === 0) {
-            this.householdForm.get('haveHouseholdMembers').setValue(false);
+            this.householdForm.get('hasHouseholdMembers').setValue(false);
           }
         }
       });
@@ -183,9 +204,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       this.showMemberForm = false;
       this.householdForm.get('houseHoldMember').reset();
       this.editFlag = !this.editFlag;
+      this.householdForm.get('addMemberIndicator').setValue(false);
     } else {
       this.showMemberForm = true;
       this.editFlag = !this.editFlag;
+      this.householdForm.get('addMemberIndicator').setValue(true);
     }
   }
 
@@ -211,26 +234,17 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     }
   }
 
-  // updateOnVisibility(): void {
-  //   this.householdForm
-  //     .get('householdMember.firstName')
-  //     .updateValueAndValidity();
-  //   this.householdForm
-  //     .get('householdMember.lastName')
-  //     .updateValueAndValidity();
-  //   this.householdForm
-  //     .get('householdMember.gender')
-  //     .updateValueAndValidity();
-  //   this.householdForm
-  //     .get('householdMember.dateOfBirth')
-  //     .updateValueAndValidity();
-  // }
-
+  /**
+   * Goes back to the previous tab from the ESS File Wizard
+   */
   back(): void {
     this.router.navigate(['/ess-wizard/create-ess-file/evacuation-details']);
   }
+
+  /**
+   * Goes to the next tab from the ESS File Wizard
+   */
   next(): void {
-    // this.stepCreateEssFileService.nextTabUpdate.next();
     this.router.navigate(['/ess-wizard/create-ess-file/animals']);
   }
 
@@ -238,31 +252,35 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
+    console.log(this.householdForm);
     this.stepCreateEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 
+  /**
+   * Create Household Members main form
+   */
   private createHouseholdForm(): void {
     if (!this.stepCreateEssFileService.houseHoldMembers)
       this.stepCreateEssFileService.houseHoldMembers = [];
 
     this.householdForm = this.formBuilder.group({
-      haveHouseholdMembers: [
-        this.stepCreateEssFileService.haveHouseHoldMembers ?? '',
+      hasHouseholdMembers: [
+        this.stepCreateEssFileService.hasHouseHoldMembers ?? '',
         Validators.required
       ],
       houseHoldMembers: [
         this.stepCreateEssFileService.houseHoldMembers,
         this.customValidation
           .conditionalValidation(
-            () => this.householdForm.get('haveHouseholdMembers').value === true,
+            () => this.householdForm.get('hasHouseholdMembers').value === true,
             Validators.required
           )
           .bind(this.customValidation)
       ],
-      houseHoldMember: this.createHoulseholdMemberForm(),
-      haveSpecialDiet: [
-        this.stepCreateEssFileService.haveSpecialDieT ?? '',
+      houseHoldMember: this.createHouseholdMemberForm(),
+      hasSpecialDiet: [
+        this.stepCreateEssFileService.hasSpecialDiet ?? '',
         Validators.required
       ],
       specialDietDetails: [
@@ -270,14 +288,14 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         [
           this.customValidation
             .conditionalValidation(
-              () => this.householdForm.get('haveSpecialDiet').value === true,
+              () => this.householdForm.get('hasSpecialDiet').value === true,
               this.customValidation.whitespaceValidator()
             )
             .bind(this.customValidation)
         ]
       ],
-      haveMedication: [
-        this.stepCreateEssFileService.haveMedicatioN ?? '',
+      hasMedication: [
+        this.stepCreateEssFileService.hasMedication ?? '',
         Validators.required
       ],
       medicationSupply: [
@@ -285,25 +303,85 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         [
           this.customValidation
             .conditionalValidation(
-              () => this.householdForm.get('haveMedication').value === true,
+              () => this.householdForm.get('hasMedication').value === true,
               Validators.required
             )
             .bind(this.customValidation)
         ]
-      ]
+      ],
+      addMemberIndicator: [false]
     });
   }
 
-  private createHoulseholdMemberForm(): FormGroup {
+  /**
+   * Creates household member form to insert household members
+   *
+   * @returns a PersonalDetails form
+   */
+  private createHouseholdMemberForm(): FormGroup {
     return this.formBuilder.group({
-      firstName: ['', [this.customValidation.whitespaceValidator()]],
-      lastName: ['', [this.customValidation.whitespaceValidator()]],
-      dateOfBirth: ['', [Validators.required]],
-      gender: ['', [Validators.required]],
+      firstName: [
+        '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.householdForm.get('addMemberIndicator').value === true,
+              this.customValidation.whitespaceValidator()
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      lastName: [
+        '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.householdForm.get('addMemberIndicator').value === true,
+              this.customValidation.whitespaceValidator()
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      dateOfBirth: [
+        '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.householdForm.get('addMemberIndicator').value === true,
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      gender: [
+        '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () => this.householdForm.get('addMemberIndicator').value === true,
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ],
       initials: [''],
       preferredName: [''],
       sameLastNameCheck: ['']
     });
+  }
+
+  /**
+   * Updates the validations for personalDetailsForm
+   */
+  private updateOnVisibility(): void {
+    this.householdForm
+      .get('houseHoldMember.firstName')
+      .updateValueAndValidity();
+    this.householdForm.get('houseHoldMember.lastName').updateValueAndValidity();
+    this.householdForm.get('houseHoldMember.gender').updateValueAndValidity();
+    this.householdForm
+      .get('houseHoldMember.dateOfBirth')
+      .updateValueAndValidity();
   }
 
   /**
@@ -335,25 +413,26 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepCreateEssFileService.haveHouseHoldMembers = this.householdForm.get(
-      'haveHouseholdMembers'
+    this.stepCreateEssFileService.hasHouseHoldMembers = this.householdForm.get(
+      'hasHouseholdMembers'
     ).value;
     this.stepCreateEssFileService.houseHoldMembers = this.householdForm.get(
       'houseHoldMembers'
     ).value;
-    this.stepCreateEssFileService.haveSpecialDieT = this.householdForm.get(
-      'haveSpecialDiet'
+    this.stepCreateEssFileService.hasSpecialDiet = this.householdForm.get(
+      'hasSpecialDiet'
     ).value;
     this.stepCreateEssFileService.specialDietDetailS = this.householdForm.get(
       'specialDietDetails'
     ).value;
-    this.stepCreateEssFileService.haveMedicatioN = this.householdForm.get(
-      'haveMedication'
+    this.stepCreateEssFileService.hasMedication = this.householdForm.get(
+      'hasMedication'
     ).value;
     this.stepCreateEssFileService.medicationSupplY = this.householdForm.get(
       'medicationSupply'
     ).value;
-
-    this.stepCreateEssFileService.createNeedsAssessmentDTO();
+    this.stepCreateEssFileService.addMemberIndicator = this.householdForm.get(
+      'addMemberIndicator'
+    ).value;
   }
 }
