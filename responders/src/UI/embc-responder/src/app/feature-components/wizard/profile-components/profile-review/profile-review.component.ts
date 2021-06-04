@@ -1,5 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
@@ -16,7 +22,7 @@ import { CacheService } from 'src/app/core/services/cache.service';
   styleUrls: ['./profile-review.component.scss']
 })
 export class ProfileReviewComponent implements OnInit, OnDestroy {
-  verifiedProfileFC: FormControl = null;
+  verifiedProfileGroup: FormGroup = null;
   tabUpdateSubscription: Subscription;
   saveLoader = false;
 
@@ -25,16 +31,19 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     private wizardService: WizardService,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
+    private formBuilder: FormBuilder,
     public stepCreateProfileService: StepCreateProfileService,
     private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {
     // Set up form validation for verification check
-    this.verifiedProfileFC = new FormControl(
-      this.stepCreateProfileService.verifiedProfile,
-      Validators.required
-    );
+    this.verifiedProfileGroup = this.formBuilder.group({
+      verifiedProfile: [
+        this.stepCreateProfileService.verifiedProfile,
+        Validators.required
+      ]
+    });
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
@@ -42,6 +51,10 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         this.updateTabStatus();
       }
     );
+  }
+
+  get verifiedProfileControl(): { [key: string]: AbstractControl } {
+    return this.verifiedProfileGroup.controls;
   }
 
   /**
@@ -59,7 +72,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   save(): void {
     this.stepCreateProfileService.nextTabUpdate.next();
 
-    if (this.verifiedProfileFC.valid) {
+    if (this.verifiedProfileGroup.valid) {
       this.saveLoader = true;
 
       this.evacueeProfileService
@@ -97,7 +110,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
           }
         );
     } else {
-      this.verifiedProfileFC.markAsTouched();
+      this.verifiedProfileControl.verifiedProfile.markAsTouched();
     }
   }
 
@@ -105,11 +118,13 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
    * Checks the form validity and updates the tab status
    */
   updateTabStatus() {
-    if (this.verifiedProfileFC.valid) {
+    if (this.verifiedProfileGroup.valid) {
       this.stepCreateProfileService.setTabStatus('review', 'complete');
     }
 
-    this.stepCreateProfileService.verifiedProfile = this.verifiedProfileFC.value;
+    this.stepCreateProfileService.verifiedProfile = this.verifiedProfileGroup.get(
+      'verifiedProfile'
+    ).value;
   }
 
   /**

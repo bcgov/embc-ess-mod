@@ -21,8 +21,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./security-questions.component.scss']
 })
 export class SecurityQuestionsComponent implements OnInit, OnDestroy {
+  parentForm: FormGroup = null;
   questionForm: FormGroup = null;
-  bypassQuestions: FormControl = null;
   tabUpdateSubscription: Subscription;
 
   constructor(
@@ -34,11 +34,6 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createQuestionForm();
-
-    // Set "Bypass Questions" button and disable inputs if necessary
-    this.bypassQuestions = new FormControl(
-      this.stepCreateProfileService.bypassSecurityQuestions
-    );
 
     this.setFormDisabled(this.stepCreateProfileService.bypassSecurityQuestions);
 
@@ -118,6 +113,17 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
         ]
       }
     );
+
+    this.parentForm = this.formBuilder.group({
+      questionForm: this.questionForm,
+      bypassQuestions: this.stepCreateProfileService.bypassSecurityQuestions
+    });
+
+    this.questionForm = this.parentForm.get('questionForm') as FormGroup;
+  }
+
+  get parentFormControl(): { [key: string]: AbstractControl } {
+    return this.parentForm.controls;
   }
 
   get questionFormControl(): { [key: string]: AbstractControl } {
@@ -177,7 +183,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    * Set Security Question values in global var, update tab's status indicator
    */
   updateTabStatus() {
-    this.questionForm.updateValueAndValidity();
+    this.parentForm.updateValueAndValidity();
 
     let anyValueSet = false;
 
@@ -203,10 +209,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     }
 
     // Based on state of form, set tab status
-    if (
-      this.questionForm.valid ||
-      this.stepCreateProfileService.bypassSecurityQuestions
-    ) {
+    if (this.parentForm.valid) {
       this.stepCreateProfileService.setTabStatus(
         'security-questions',
         'complete'

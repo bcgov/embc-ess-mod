@@ -6,7 +6,12 @@ import { StepCreateEssFileService } from '../../step-create-ess-file/step-create
 
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'app-security-phrase',
@@ -14,32 +19,30 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
   styleUrls: ['./security-phrase.component.scss']
 })
 export class SecurityPhraseComponent implements OnInit, OnDestroy {
-  securityPhraseFC: FormControl = null;
-  bypassPhrase: FormControl = null;
+  securityForm: FormGroup = null;
   tabUpdateSubscription: Subscription;
 
   constructor(
     private stepCreateEssFileService: StepCreateEssFileService,
     private customValidationService: CustomValidationService,
+    private formBuilder: FormBuilder,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     // Set up form validation for verification check
-    this.securityPhraseFC = new FormControl(
-      this.stepCreateEssFileService.securityPhrase,
-      [
-        Validators.minLength(6),
-        Validators.maxLength(50),
-        Validators.pattern(globalConst.securityPhrasePattern),
-        this.customValidationService.whitespaceValidator()
-      ]
-    );
-
-    // Set "Bypass Phrase" button and disable inputs if necessary
-    this.bypassPhrase = new FormControl(
-      this.stepCreateEssFileService.bypassPhrase
-    );
+    this.securityForm = this.formBuilder.group({
+      securityPhrase: [
+        this.stepCreateEssFileService.securityPhrase,
+        [
+          Validators.minLength(6),
+          Validators.maxLength(50),
+          Validators.pattern(globalConst.securityPhrasePattern),
+          this.customValidationService.whitespaceValidator()
+        ]
+      ],
+      bypassPhrase: this.stepCreateEssFileService.bypassPhrase
+    });
 
     this.setFormDisabled(this.stepCreateEssFileService.bypassPhrase);
 
@@ -49,6 +52,10 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
         this.updateTabStatus();
       }
     );
+  }
+
+  get securityFormControl(): { [key: string]: AbstractControl } {
+    return this.securityForm.controls;
   }
 
   /**
@@ -61,19 +68,19 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Disables or enables the Q&A inputs on the Security Phrase form
+   * Disables or enables the Security Phrase input
    *
-   * @param checked True = Disable the form, False = Enable the form
+   * @param checked True = Disable, False = Enable
    */
   setFormDisabled(checked) {
     this.stepCreateEssFileService.bypassPhrase = checked;
 
     if (this.stepCreateEssFileService.bypassPhrase) {
-      // Reset dropdowns/inputs
-      this.securityPhraseFC.disable();
-      this.securityPhraseFC.reset();
+      // Reset input
+      this.securityFormControl.securityPhrase.disable();
+      this.securityFormControl.securityPhrase.reset();
     } else {
-      this.securityPhraseFC.enable();
+      this.securityFormControl.securityPhrase.enable();
     }
   }
 
@@ -104,17 +111,14 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    * Set Security Phrase values in global var, update tab's status indicator
    */
   updateTabStatus() {
-    this.securityPhraseFC.updateValueAndValidity();
+    this.securityForm.updateValueAndValidity();
 
-    const curVal = this.securityPhraseFC.value?.trim() || '';
+    const curVal = this.securityFormControl.securityPhrase.value?.trim() || '';
     const anyValueSet = curVal.length > 0;
 
     this.stepCreateEssFileService.securityPhrase = curVal;
 
-    if (
-      this.securityPhraseFC.valid ||
-      this.stepCreateEssFileService.bypassPhrase
-    ) {
+    if (this.securityForm.valid) {
       this.stepCreateEssFileService.setTabStatus('security-phrase', 'complete');
     } else if (anyValueSet) {
       this.stepCreateEssFileService.setTabStatus(

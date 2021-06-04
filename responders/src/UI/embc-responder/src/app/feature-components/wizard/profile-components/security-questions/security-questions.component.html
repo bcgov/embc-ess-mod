@@ -43,187 +43,195 @@
             case sensitive.
           </p>
 
-          <div [formGroup]="questionForm">
-            <div class="row question-row">
-              <mat-form-field class="col-6" appearance="outline">
-                <mat-label>Security Question 1</mat-label>
+          <form [formGroup]="parentForm">
+            <div formGroupName="questionForm">
+              <div class="row question-row">
+                <mat-form-field class="col-6" appearance="outline">
+                  <mat-label>Security Question 1</mat-label>
 
-                <mat-select formControlName="question1">
-                  <mat-option
-                    *ngFor="
-                      let question of stepCreateProfileService?.securityQuestionOptions
-                    "
-                    [value]="question"
+                  <mat-select formControlName="question1">
+                    <mat-option
+                      *ngFor="
+                        let question of stepCreateProfileService?.securityQuestionOptions
+                      "
+                      [value]="question"
+                    >
+                      {{ question }}
+                    </mat-option>
+                  </mat-select>
+
+                  <mat-error
+                    *ngIf="questionFormControl?.question1?.hasError('required')"
                   >
-                    {{ question }}
-                  </mat-option>
-                </mat-select>
-
-                <mat-error
-                  *ngIf="questionFormControl?.question1?.hasError('required')"
-                >
-                  Security Question is required.
-                </mat-error>
-                <mat-error
-                  *ngIf="questionFormControl?.question1?.hasError('notUnique')"
-                >
-                  Security Questions must all be different.
-                </mat-error>
-              </mat-form-field>
-
-              <mat-form-field class="col-6" appearance="outline">
-                <mat-label>Question 1 Answer</mat-label>
-
-                <input matInput maxlength="50" formControlName="answer1" />
-
-                <mat-error
-                  *ngIf="
-                    questionFormControl?.answer1?.hasError('required') ||
-                    questionFormControl?.answer1?.hasError('whitespaceError')
-                  "
-                >
-                  Answer is required.
-                </mat-error>
-                <mat-error
-                  *ngIf="
-                    questionFormControl?.answer1?.hasError('minlength') ||
-                    questionFormControl?.answer1?.hasError('maxlength')
-                  "
-                >
-                  Answer must be between 6 and 50 characters long.
-                </mat-error>
-                <mat-error
-                  *ngIf="questionFormControl?.answer1?.hasError('pattern')"
-                >
-                  Answer cannot contain special characters.
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="row question-row">
-              <mat-form-field class="col-6" appearance="outline">
-                <mat-label>Security Question 2</mat-label>
-
-                <mat-select formControlName="question2">
-                  <mat-option
-                    *ngFor="
-                      let question of stepCreateProfileService?.securityQuestionOptions
+                    Security Question is required.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      questionFormControl?.question1?.hasError('notUnique')
                     "
-                    [value]="question"
                   >
-                    {{ question }}
-                  </mat-option>
-                </mat-select>
+                    Security Questions must all be different.
+                  </mat-error>
+                </mat-form-field>
 
-                <mat-error
-                  *ngIf="questionFormControl?.question2?.hasError('required')"
-                >
-                  Security Question is required.
-                </mat-error>
-                <mat-error
-                  *ngIf="questionFormControl?.question2?.hasError('notUnique')"
-                >
-                  Security Questions must all be different.
-                </mat-error>
-              </mat-form-field>
+                <mat-form-field class="col-6" appearance="outline">
+                  <mat-label>Question 1 Answer</mat-label>
 
-              <mat-form-field class="col-6" appearance="outline">
-                <mat-label>Question 2 Answer</mat-label>
+                  <input matInput maxlength="50" formControlName="answer1" />
 
-                <input matInput maxlength="50" formControlName="answer2" />
-
-                <mat-error
-                  *ngIf="
-                    questionFormControl?.answer2?.hasError('required') ||
-                    questionFormControl?.answer2?.hasError('whitespaceError')
-                  "
-                >
-                  Answer is required.
-                </mat-error>
-                <mat-error
-                  *ngIf="
-                    questionFormControl?.answer2?.hasError('minlength') ||
-                    questionFormControl?.answer2?.hasError('maxlength')
-                  "
-                >
-                  Answer must be between 3 and 50 characters long.
-                </mat-error>
-                <mat-error
-                  *ngIf="questionFormControl?.answer2?.hasError('pattern')"
-                >
-                  Answer cannot contain special characters.
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="row question-row">
-              <mat-form-field class="col-6" appearance="outline">
-                <mat-label>Security Question 3</mat-label>
-
-                <mat-select formControlName="question3">
-                  <mat-option
-                    *ngFor="
-                      let question of stepCreateProfileService?.securityQuestionOptions
+                  <mat-error
+                    *ngIf="
+                      questionFormControl?.answer1?.hasError('required') ||
+                      questionFormControl?.answer1?.hasError('whitespaceError')
                     "
-                    [value]="question"
                   >
-                    {{ question }}
-                  </mat-option>
-                </mat-select>
+                    Answer is required.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      questionFormControl?.answer1?.hasError('minlength') ||
+                      questionFormControl?.answer1?.hasError('maxlength')
+                    "
+                  >
+                    Answer must be between 6 and 50 characters long.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="questionFormControl?.answer1?.hasError('pattern')"
+                  >
+                    Answer cannot contain special characters.
+                  </mat-error>
+                </mat-form-field>
+              </div>
 
-                <mat-error
-                  *ngIf="questionFormControl?.question3?.hasError('required')"
-                >
-                  Security Question is required.
-                </mat-error>
-                <mat-error
-                  *ngIf="questionFormControl?.question3?.hasError('notUnique')"
-                >
-                  Security Questions must all be different.
-                </mat-error>
-              </mat-form-field>
+              <div class="row question-row">
+                <mat-form-field class="col-6" appearance="outline">
+                  <mat-label>Security Question 2</mat-label>
 
-              <mat-form-field class="col-6" appearance="outline">
-                <mat-label>Question 3 Answer</mat-label>
+                  <mat-select formControlName="question2">
+                    <mat-option
+                      *ngFor="
+                        let question of stepCreateProfileService?.securityQuestionOptions
+                      "
+                      [value]="question"
+                    >
+                      {{ question }}
+                    </mat-option>
+                  </mat-select>
 
-                <input matInput maxlength="50" formControlName="answer3" />
+                  <mat-error
+                    *ngIf="questionFormControl?.question2?.hasError('required')"
+                  >
+                    Security Question is required.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      questionFormControl?.question2?.hasError('notUnique')
+                    "
+                  >
+                    Security Questions must all be different.
+                  </mat-error>
+                </mat-form-field>
 
-                <mat-error
-                  *ngIf="
-                    questionFormControl?.answer3?.hasError('required') ||
-                    questionFormControl?.answer3?.hasError('whitespaceError')
-                  "
-                >
-                  Answer is required.
-                </mat-error>
-                <mat-error
-                  *ngIf="
-                    questionFormControl?.answer3?.hasError('minlength') ||
-                    questionFormControl?.answer3?.hasError('maxlength')
-                  "
-                >
-                  Answer must be between 3 and 50 characters long.
-                </mat-error>
-                <mat-error
-                  *ngIf="questionFormControl?.answer3?.hasError('pattern')"
-                >
-                  Answer cannot contain special characters.
-                </mat-error>
-              </mat-form-field>
+                <mat-form-field class="col-6" appearance="outline">
+                  <mat-label>Question 2 Answer</mat-label>
+
+                  <input matInput maxlength="50" formControlName="answer2" />
+
+                  <mat-error
+                    *ngIf="
+                      questionFormControl?.answer2?.hasError('required') ||
+                      questionFormControl?.answer2?.hasError('whitespaceError')
+                    "
+                  >
+                    Answer is required.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      questionFormControl?.answer2?.hasError('minlength') ||
+                      questionFormControl?.answer2?.hasError('maxlength')
+                    "
+                  >
+                    Answer must be between 3 and 50 characters long.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="questionFormControl?.answer2?.hasError('pattern')"
+                  >
+                    Answer cannot contain special characters.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="row question-row">
+                <mat-form-field class="col-6" appearance="outline">
+                  <mat-label>Security Question 3</mat-label>
+
+                  <mat-select formControlName="question3">
+                    <mat-option
+                      *ngFor="
+                        let question of stepCreateProfileService?.securityQuestionOptions
+                      "
+                      [value]="question"
+                    >
+                      {{ question }}
+                    </mat-option>
+                  </mat-select>
+
+                  <mat-error
+                    *ngIf="questionFormControl?.question3?.hasError('required')"
+                  >
+                    Security Question is required.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      questionFormControl?.question3?.hasError('notUnique')
+                    "
+                  >
+                    Security Questions must all be different.
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-6" appearance="outline">
+                  <mat-label>Question 3 Answer</mat-label>
+
+                  <input matInput maxlength="50" formControlName="answer3" />
+
+                  <mat-error
+                    *ngIf="
+                      questionFormControl?.answer3?.hasError('required') ||
+                      questionFormControl?.answer3?.hasError('whitespaceError')
+                    "
+                  >
+                    Answer is required.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      questionFormControl?.answer3?.hasError('minlength') ||
+                      questionFormControl?.answer3?.hasError('maxlength')
+                    "
+                  >
+                    Answer must be between 3 and 50 characters long.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="questionFormControl?.answer3?.hasError('pattern')"
+                  >
+                    Answer cannot contain special characters.
+                  </mat-error>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
 
-          <div class="row checkbox-row">
-            <div class="col-12">
-              <mat-checkbox
-                class="example-margin"
-                (change)="bypassCheckboxChanged($event)"
-                [formControl]="bypassQuestions"
-              >
-                Bypass security questions for manual entry of paper ESS file.
-              </mat-checkbox>
+            <div class="row checkbox-row">
+              <div class="col-12">
+                <mat-checkbox
+                  class="example-margin"
+                  (change)="bypassCheckboxChanged($event)"
+                  formControlName="bypassQuestions"
+                >
+                  Bypass security questions for manual entry of paper ESS file.
+                </mat-checkbox>
+              </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
 
