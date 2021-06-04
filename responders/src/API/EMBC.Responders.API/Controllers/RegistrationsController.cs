@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -113,23 +114,104 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Creates or updates a Registrant Profile
+        /// Creates a Registrant Profile
         /// </summary>
-        /// <param name="evacuee">Evacuee</param>
+        /// <param name="registrant">Registrant</param>
         /// <returns>new registrant id</returns>
-        [HttpPost("profile")]
+        [HttpPost("registrants")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> UpsertRegistrantProfile(EvacueeProfile evacuee)
+        public async Task<ActionResult<string>> CreateRegistrantProfile(RegistrantProfile registrant)
         {
-            if (evacuee == null) return BadRequest();
+            if (registrant == null) return BadRequest();
 
-            var profile = mapper.Map<RegistrantProfile>(evacuee);
+            var profile = mapper.Map<ESS.Shared.Contracts.Submissions.RegistrantProfile>(registrant);
             var id = await messagingClient.Send(new SaveRegistrantCommand
             {
                 Profile = profile
             });
             return Ok(id);
+        }
+
+        /// <summary>
+        /// Updates a Registrant Profile
+        /// </summary>
+        /// <param name="registrantId">RegistrantId</param>
+        /// <param name="registrant">Registrant</param>
+        /// <returns>updated registrant id</returns>
+        [HttpPost("registrants/{registrantId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<string>> UpdateRegistrantProfile(string registrantId, RegistrantProfile registrant)
+        {
+            if (registrant == null) return BadRequest();
+
+            registrant.Id = registrantId;
+
+            var profile = mapper.Map<ESS.Shared.Contracts.Submissions.RegistrantProfile>(registrant);
+            var id = await messagingClient.Send(new SaveRegistrantCommand
+            {
+                Profile = profile
+            });
+            return Ok(id);
+        }
+
+        /// <summary>
+        /// Gets a Registrant Profile
+        /// </summary>
+        /// <param name="registrantId">RegistrantId</param>
+        /// <returns>registrant</returns>
+        [HttpGet("registrants/{registrantId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RegistrantProfile>> GetRegistrantProfile(string registrantId)
+        {
+            var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
+            {
+                UserId = registrantId
+            })).Items.FirstOrDefault();
+
+            if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
+
+            return Ok(mapper.Map<RegistrantProfile>(registrant.RegistrantProfile));
+        }
+
+        /// <summary>
+        /// Updates a File
+        /// </summary>
+        /// <param name="fileId">fileId</param>
+        /// <param name="file">file</param>
+        /// <returns>updated file id</returns>
+        [HttpPost("files/{fileId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<string>> UpdateFile(string fileId, RegistrantFile file)
+        {
+            //TODO - update model with what frond end will submit
+            //var id = await messagingClient.Send(new SubmitEvacuationFileCommand
+            //{
+            //    File = file
+            //});
+
+            //return Ok(id);
+            return Ok(await Task.FromResult("id"));
+        }
+
+        /// <summary>
+        /// Gets a File
+        /// </summary>
+        /// <param name="fileId">fileId</param>
+        /// <returns>file</returns>
+        [HttpGet("files/{fileId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<EvacuationFileSearchResult>> GetFile(string fileId)
+        {
+            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
+            {
+                FileId = fileId
+            })).Items.FirstOrDefault();
+            return Ok(mapper.Map<EvacuationFileSearchResult>(file));
         }
     }
 
@@ -216,9 +298,18 @@ namespace EMBC.Responders.API.Controllers
     }
 
     /// <summary>
-    /// Evacuee profile
+    /// Evacuation File
     /// </summary>
-    public class EvacueeProfile
+    public class RegistrantFile
+    {
+        public string Id { get; set; }
+        //TODO - get model that the front end would be submitting
+    }
+
+    /// <summary>
+    /// Registrant profile
+    /// </summary>
+    public class RegistrantProfile
     {
         public string Id { get; set; }
 
@@ -263,7 +354,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.City, opts => opts.Ignore())
                 ;
 
-            CreateMap<EvacueeProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
+            CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
                 .ForMember(d => d.SecurityQuestions, opts => opts.MapFrom(s => s.SecurityQuestions))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.Restriction))
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
@@ -279,6 +370,14 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.VerifiedUser))
+                .ReverseMap()
+                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
+                    s.MailingAddress.Country == s.PrimaryAddress.Country &&
+                    s.MailingAddress.StateProvince == s.PrimaryAddress.StateProvince &&
+                    s.MailingAddress.Community == s.PrimaryAddress.Community &&
+                    s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
+                    s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
+                    s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
                 ;
         }
     }
