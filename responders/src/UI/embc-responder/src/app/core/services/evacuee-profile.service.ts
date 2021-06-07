@@ -17,11 +17,26 @@ export class EvacueeProfileService {
   ) {}
 
   /**
+   * Fetch profile record from API
+   *
+   * @returns profile record
+   */
+  public getProfileFromId(profileId: string): Observable<RegistrantProfile> {
+    return this.registrationsService
+      .registrationsGetRegistrantProfile({ registrantId: profileId })
+      .pipe(
+        map((profile) => {
+          return profile;
+        })
+      );
+  }
+
+  /**
    * Insert new profile
    *
    * @returns profile id
    */
-  public upsertProfile(evacProfile: RegistrantProfile): Observable<string> {
+  public createProfile(evacProfile: RegistrantProfile): Observable<string> {
     return this.registrationsService
       .registrationsCreateRegistrantProfile({ body: evacProfile })
       .pipe(

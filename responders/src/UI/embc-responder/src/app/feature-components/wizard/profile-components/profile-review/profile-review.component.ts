@@ -15,6 +15,7 @@ import { WizardService } from '../../wizard.service';
 
 import * as globalConst from 'src/app/core/services/global-constants';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-review',
@@ -76,13 +77,20 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       this.saveLoader = true;
 
       this.evacueeProfileService
-        .upsertProfile(this.stepCreateProfileService.createProfileDTO())
+        .createProfile(this.stepCreateProfileService.createProfileDTO())
         .subscribe(
           (profileId) => {
+            // Set Profile ID in session cache
             this.evacueeProfileService.setCurrentProfileId(profileId);
 
-            //TODO: Once "Get Profile" endpoint is ready, update stepCreateProfileService with DB data
+            // Fetch newly-created Profile object, update Step 1 forms with API values
+            this.evacueeProfileService
+              .getProfileFromId(profileId)
+              .subscribe((profile) => {
+                this.stepCreateProfileService.updateFromProfileDTO(profile);
+              });
 
+            // Notify user of successful creation, redirect to Step 2
             this.stepCreateProfileService
               .openModal(
                 globalConst.evacueeProfileCreatedMessage.text,
