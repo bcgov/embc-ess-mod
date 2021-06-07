@@ -112,7 +112,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             if (updatedQuestions.Count() > 0)
             {
-                await contactRepository.ManageContact(new UpdateSecurityQuestions { ContactId = contact.Id, SecurityQuestions = updatedQuestions });
+                await contactRepository.ManageContact(new UpdateSecurityQuestions { ContactId = result.ContactId, SecurityQuestions = updatedQuestions });
             }
 
             if (string.IsNullOrEmpty(cmd.Profile.Id))
