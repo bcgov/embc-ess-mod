@@ -159,7 +159,7 @@ namespace EMBC.ESS.Managers.Submissions
         {
             var contacts = (await contactRepository.QueryContact(new SearchContactQuery
             {
-                ContactId = query.ContactId,
+                ContactId = query.Id,
                 UserId = query.UserId,
                 FirstName = query.FirstName,
                 LastName = query.LastName,
