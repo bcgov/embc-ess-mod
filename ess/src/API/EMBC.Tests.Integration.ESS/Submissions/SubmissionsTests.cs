@@ -337,7 +337,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             answers.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
             answers.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3" });
 
-            var num = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId = "CHRIS-TEST" });
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+
+            var num = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId = registrant.Id });
 
             num.NumberOfCorrectAnswers.ShouldBe(answers.Count());
         }
