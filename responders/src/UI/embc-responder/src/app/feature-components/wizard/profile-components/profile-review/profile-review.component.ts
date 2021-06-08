@@ -108,17 +108,15 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
    * Create or update evacuee profile and continue to Step 2
    */
   afterSave(regResult: RegistrationResult) {
-    const profileId = regResult.id;
+    const regId = regResult.id;
 
     // Set Profile ID in session cache
-    this.evacueeProfileService.setCurrentProfileId(profileId);
+    this.evacueeProfileService.setCurrentProfileId(regId);
 
     // Fetch newly-created Profile object, update Step 1 forms with API values
-    this.evacueeProfileService
-      .getProfileFromId(profileId)
-      .subscribe((profile) => {
-        this.stepCreateProfileService.getProfileDTO(profile);
-      });
+    this.evacueeProfileService.getProfileFromId(regId).subscribe((profile) => {
+      this.stepCreateProfileService.getProfileDTO(regId, profile);
+    });
 
     this.disableButton = true;
     this.saveLoader = false;

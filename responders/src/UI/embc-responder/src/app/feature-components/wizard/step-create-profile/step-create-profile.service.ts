@@ -249,8 +249,8 @@ export class StepCreateProfileService {
   /**
    * Update the wizard's values with ones fetched from API
    */
-  public getProfileDTO(profile: RegistrantProfile) {
-    this.registrantId = profile.id;
+  public getProfileDTO(regId: string, profile: RegistrantProfile) {
+    this.registrantId = regId;
 
     this.restrictedAccess = profile.restriction;
     this.personalDetails = profile.personalDetails;
