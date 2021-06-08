@@ -38,6 +38,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
 
     public class RegistrantsSearchQuery : Query<RegistrantsSearchQueryResult>
     {
+        public string Id { get; set; }
         public string UserId { get; set; }
         public string FileId { get; set; }
         public string FirstName { get; set; }
