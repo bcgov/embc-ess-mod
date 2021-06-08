@@ -121,7 +121,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("registrants")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> CreateRegistrantProfile(RegistrantProfile registrant)
+        public async Task<ActionResult<RegistrationResult>> CreateRegistrantProfile(RegistrantProfile registrant)
         {
             if (registrant == null) return BadRequest();
 
@@ -130,7 +130,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 Profile = profile
             });
-            return Ok(id);
+            return Ok(new RegistrationResult { Id = id });
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("registrants/{registrantId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> UpdateRegistrantProfile(string registrantId, RegistrantProfile registrant)
+        public async Task<ActionResult<RegistrationResult>> UpdateRegistrantProfile(string registrantId, RegistrantProfile registrant)
         {
             if (registrant == null) return BadRequest();
 
@@ -153,7 +153,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 Profile = profile
             });
-            return Ok(id);
+            return Ok(new RegistrationResult { Id = id });
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace EMBC.Responders.API.Controllers
         {
             var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
             {
-                UserId = registrantId
+                Id = registrantId
             })).Items.FirstOrDefault();
 
             if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
@@ -213,6 +213,11 @@ namespace EMBC.Responders.API.Controllers
             })).Items.FirstOrDefault();
             return Ok(mapper.Map<EvacuationFileSearchResult>(file));
         }
+    }
+
+    public class RegistrationResult
+    {
+        public string Id { get; set; }
     }
 
     public class EvacuationFileHouseholdMember
