@@ -375,29 +375,29 @@ namespace EMBC.Responders.API.Controllers
         public bool? CanEvacueeProvideIncidentals { get; set; }
 
         public NeedsAssessmentType Type { get; set; }
+    }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public enum InsuranceOption
-        {
-            [EnumMember(Value = "No")]
-            No,
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum InsuranceOption
+    {
+        [EnumMember(Value = "No")]
+        No,
 
-            [EnumMember(Value = "Yes")]
-            Yes,
+        [EnumMember(Value = "Yes")]
+        Yes,
 
-            [EnumMember(Value = "Unsure")]
-            Unsure,
+        [EnumMember(Value = "Unsure")]
+        Unsure,
 
-            [EnumMember(Value = "Unknown")]
-            Unknown
-        }
+        [EnumMember(Value = "Unknown")]
+        Unknown
+    }
 
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public enum NeedsAssessmentType
-        {
-            Preliminary,
-            Assessed
-        }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum NeedsAssessmentType
+    {
+        Preliminary,
+        Assessed
     }
 
     public class Note
