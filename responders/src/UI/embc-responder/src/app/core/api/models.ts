@@ -13,6 +13,7 @@ export { VerifySecurityQuestionsRequest } from './models/verify-security-questio
 export { GetSecurityPhraseResponse } from './models/get-security-phrase-response';
 export { VerifySecurityPhraseResponse } from './models/verify-security-phrase-response';
 export { VerifySecurityPhraseRequest } from './models/verify-security-phrase-request';
+export { RegistrationResult } from './models/registration-result';
 export { RegistrantProfile } from './models/registrant-profile';
 export { PersonDetails } from './models/person-details';
 export { ContactDetails } from './models/contact-details';
@@ -30,5 +31,6 @@ export { AssignedCommunity } from './models/assigned-community';
 export { TeamMember } from './models/team-member';
 export { MemberRole } from './models/member-role';
 export { MemberLabel } from './models/member-label';
+export { TeamMemberResult } from './models/team-member-result';
 export { MemberRoleDescription } from './models/member-role-description';
 export { MemberLabelDescription } from './models/member-label-description';

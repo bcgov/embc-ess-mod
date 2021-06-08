@@ -22,6 +22,8 @@ export class StepCreateProfileService {
 
   private setNextTabUpdate: Subject<void> = new Subject();
 
+  private regIdVal: string;
+
   private restricted: boolean;
   private personalDetail: PersonDetails;
   private contactDetail: ContactDetails;
@@ -41,6 +43,13 @@ export class StepCreateProfileService {
   private verified: boolean;
 
   constructor(private dialog: MatDialog) {}
+
+  public get registrantId(): string {
+    return this.regIdVal;
+  }
+  public set registrantId(regIdVal: string) {
+    this.regIdVal = regIdVal;
+  }
 
   public get showContact(): boolean {
     return this.showContacts;
@@ -240,7 +249,9 @@ export class StepCreateProfileService {
   /**
    * Update the wizard's values with ones fetched from API
    */
-  public updateFromProfileDTO(profile: RegistrantProfile) {
+  public getProfileDTO(profile: RegistrantProfile) {
+    this.registrantId = profile.id;
+
     this.restrictedAccess = profile.restriction;
     this.personalDetails = profile.personalDetails;
     this.contactDetails = profile.contactDetails;
