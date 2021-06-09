@@ -1,1 +1,1 @@
-wt -M -d .\ --title registrants `; sp -d .\registrants\src\UI\embc-evacuee\ `; sp -d .\registrants\src\API\ `; mf left `; sp -d .\ess\src\API\
+wt -M -d .\ --title registrants `; sp -d .\registrants\src\UI\embc-registrant\ `; sp -d .\registrants\src\API\ `; mf left `; sp -d .\ess\src\API\
