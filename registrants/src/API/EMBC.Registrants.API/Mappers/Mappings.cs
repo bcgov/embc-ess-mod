@@ -65,6 +65,9 @@ namespace EMBC.Registrants.API.Mappers
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => DateTime.Now))
+                .ForMember(d => d.Notes, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.RecommendedReferralServices, opts => opts.Ignore())
                 ;
 
             CreateMap<HouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
@@ -91,6 +94,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.IsSecretPhraseMasked, opts => opts.MapFrom(s => !s.SecretPhraseEdited))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => !s.SecretPhraseEdited))
                 .ForMember(d => d.SecurityPhrase, opts => opts.MapFrom(s => s.SecretPhrase))
+                .ForMember(d => d.RegistrationLocation, opts => opts.Ignore())
                 ;
         }
     }
