@@ -1,33 +1,33 @@
 mat-form-field {
-    width: 100%;
+  width: 100%;
 }
 
 .question {
-    color: #234075;
-    font-size: 21px;
+  color: #234075;
+  font-size: 21px;
 }
 
 .primary-radio-group {
-    display: flex;
-    flex-direction: column;
-    margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
 }
 
 .primary-radio-button {
-    margin: 5px;
+  margin: 5px;
 }
 
 .next {
-    float: right;
-    width: 40%;
+  float: right;
+  width: 40%;
 }
 
 .back {
-    width: 40%;
+  width: 40%;
 }
 
 @media (max-width: 600px) {
-    .mat-radio-button ~ .mat-radio-button {
-        margin-left: 16px;
-    }
+  .mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+  }
 }
