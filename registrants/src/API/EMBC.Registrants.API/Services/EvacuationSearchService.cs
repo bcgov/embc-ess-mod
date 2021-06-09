@@ -54,7 +54,7 @@ namespace EMBC.Registrants.API.Services
             var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
             { UserId = userId })).Items.SingleOrDefault();
 
-            return registrant.RegistrantProfile;
+            return registrant?.RegistrantProfile;
         }
     }
 }
