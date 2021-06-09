@@ -25,11 +25,13 @@ using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
@@ -86,6 +88,7 @@ namespace EMBC.Registrants.API
                     policy.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(corsOrigins);
                 }
             }));
+            services.AddHealthChecks().AddCheck("API", () => HealthCheckResult.Healthy("API OK"), new[] { "ready" });
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
@@ -150,6 +153,15 @@ namespace EMBC.Registrants.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions()
+                {
+                    Predicate = (check) => check.Tags.Contains("ready")
+                });
+
+                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions()
+                {
+                    Predicate = (_) => false
+                });
             });
         }
 
