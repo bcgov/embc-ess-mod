@@ -36,9 +36,11 @@
               <br />
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Are you being evacuated from your primary address? </span
-                ><span class="required-symbol">*</span> <br /><br />
+                <span class="tab-subtitle requiredField">
+                  Are you being evacuated from your primary address?
+                </span>
+                <br />
+                <br />
                 <ng-container *ngIf="isBCAddress">
                   <mat-radio-group
                     formControlName="evacuatedFromPrimary"
@@ -86,9 +88,11 @@
               </div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Facility Name / Registration Location </span
-                ><span class="required-symbol">*</span> <br /><br />
+                <span class="tab-subtitle requiredField">
+                  Facility Name / Registration Location
+                </span>
+                <br />
+                <br />
                 <p>
                   A facility is the location of the
                   <b>Reception Centre</b> (i.e. rec centre). If there is no
@@ -122,9 +126,11 @@
               </div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Do you have insurance to cover your immediate needs? </span
-                ><span class="required-symbol">*</span> <br /><br />
+                <span class="tab-subtitle requiredField">
+                  Do you have insurance to cover your immediate needs?
+                </span>
+                <br />
+                <br />
                 <p>
                   If you have <b>insurance</b>, please keep all of your
                   receipts, and contact your insurance provider as soon as
@@ -157,10 +163,12 @@
               </div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >How have you and your household been affected by the
-                  evacuation? </span
-                ><span class="required-symbol">*</span> <br /><br />
+                <span class="tab-subtitle requiredField">
+                  How have you and your household been affected by the
+                  evacuation?
+                </span>
+                <br />
+                <br />
                 <p>
                   Please do not include any personal/medical information
                   pertaining to the evacuee and their household members.
@@ -234,12 +242,12 @@
                   </mat-radio-button>
                 </mat-radio-group>
               </div>
+
               <div class="col-12" *ngIf="showReferredServicesForm">
-                <p>
-                  <b
-                    >Please select the ones you have recommended for the evacuee </b
-                  ><span class="required-symbol">*</span>
+                <p class="bold requiredField">
+                  Please select the ones you have recommended for the evacuee
                 </p>
+
                 <section class="options-group">
                   <mat-checkbox
                     class="checkbox-option"
@@ -253,11 +261,12 @@
               </div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Has the evacuee been referred to any services outside of the
+                <span class="tab-subtitle">
+                  Has the evacuee been referred to any services outside of the
                   reception centre?
                 </span>
-                <br /><br />
+                <br />
+                <br />
                 <mat-form-field appearance="outline">
                   <textarea
                     rows="10"

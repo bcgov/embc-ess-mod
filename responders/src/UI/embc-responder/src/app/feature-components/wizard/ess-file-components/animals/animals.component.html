@@ -10,13 +10,12 @@
   <div class="row">
     <div class="col-12 content-container">
       <form [formGroup]="animalsForm">
-        <p class="no-margin">
+        <p id="hasPets-radio-group-label" class="no-margin requiredField">
           Do you have any pets that live in the same household with you?
-          <span class="required-symbol">*</span>
         </p>
 
         <mat-radio-group
-          aria-labelledby="primary-radio-group-label"
+          aria-labelledby="hasPets-radio-group-label"
           formControlName="hasPets"
           class="primary-radio-group"
           required
@@ -37,9 +36,10 @@
               animalsFormControl?.hasPets.hasError('required')
             "
           >
-            Confirm to have pets is required</mat-error
-          >
+            Confirm to have pets is required
+          </mat-error>
         </mat-radio-group>
+
         <div class="row" *ngIf="dataSource.getValue().length > 0">
           <div class="col-8">
             <br />
@@ -54,6 +54,7 @@
               </button>
             </div>
             <br />
+
             <mat-table [dataSource]="dataSource">
               <ng-container matColumnDef="type">
                 <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
@@ -137,6 +138,7 @@
                 Cancel
               </button>
             </div>
+
             <div class="col-md-3">
               <button
                 class="animal-button details-button save-button"
@@ -156,12 +158,13 @@
         <div *ngIf="dataSource.getValue().length > 0" class="card-align">
           <div class="row">
             <div class="col-md-12">
-              <label class="no-margin" id="primary-radio-group-label"
-                >Do you have sufficient food for your pet(s)?</label
-              ><span class="required-symbol">*</span>
+              <label id="hasPetsFood-radio-group-label" class="no-margin requiredField">
+                Do you have sufficient food for your pet(s)?
+              </label>
               <br />
+              
               <mat-radio-group
-                aria-labelledby="primary-radio-group-label"
+                aria-labelledby="hasPetsFood-radio-group-label"
                 formControlName="hasPetsFood"
                 class="primary-radio-group"
               >
@@ -184,16 +187,18 @@
                 >
               </mat-radio-group>
               <br />
-              <label class="no-margin" id="primary-radio-group-label"
-                >What are your pet care plans for the duration that you are
-                evacuated?</label
-              >
+
+              <label class="no-margin">
+                What are your pet care plans for the duration that you are
+                evacuated?
+              </label>
               <br />
+
               <mat-form-field appearance="outline">
                 <textarea
                   rows="10"
                   formControlName="petCareDetails"
-                  placeholder="Please write in the evacuees own words as mush as possible."
+                  placeholder="Please write in the evacuee's own words as much as possible."
                   maxlength="4000"
                   matInput
                 ></textarea>
