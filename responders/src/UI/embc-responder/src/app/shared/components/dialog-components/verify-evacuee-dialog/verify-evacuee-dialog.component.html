@@ -6,11 +6,9 @@
 <br />
 <div class="row">
   <div class="col-md-12">
-    <p>
-      <b>
-        To verify this profile please confirm that you have seen government
-        issue identification for this evacuee.</b
-      >
+    <p id="verified-radio-group-label" class="bold">
+      To verify this profile please confirm that you have seen government
+      issue identification for this evacuee.
     </p>
   </div>
 </div>
@@ -34,7 +32,7 @@
     <form [formGroup]="verificationForm">
       <mat-radio-group
         formControlName="verified"
-        aria-labelledby="primary-radio-group-label"
+        aria-labelledby="verified-radio-group-label"
         class="primary-radio-group"
         (change)="isVerified($event)"
         required

@@ -3,14 +3,12 @@
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <label
-            class="card-heading requiredField"
-            id="primary-radio-group-label"
-            >If you have any <b>family members</b> (including dependents) who
-            live in the same household with you, please add them below.</label
-          >
+          <label class="card-heading requiredField">
+            If you have any <strong>family members</strong> (including dependents) who
+            live in the same household with you, please add them below.
+          </label>
           <p>
-            <i>Please note:</i> Roommates & tenants need to register separately.
+            <em>Please note:</em> Roommates & tenants need to register separately.
           </p>
           <mat-table
             *ngIf="dataSource.getValue().length > 0"
@@ -153,14 +151,15 @@
       <div class="row">
         <div class="col-md-12">
           <label
+            id="haveSpecialDiet-radio-group-label"
             class="card-heading requiredField"
-            id="primary-radio-group-label"
-            >Do you or any of your family members have any dietary
-            requirements?</label
           >
+            Do you or any of your family members have any dietary
+            requirements?
+          </label>
           <br />
           <mat-radio-group
-            aria-labelledby="primary-radio-group-label"
+            aria-labelledby="haveSpecialDiet-radio-group-label"
             formControlName="haveSpecialDiet"
             class="primary-radio-group"
             required
@@ -187,9 +186,9 @@
         </div>
       </div>
       <div *ngIf="householdFormControl?.haveSpecialDiet.value === true">
-        <label class="card-heading" id="primary-radio-group-label"
-          >Please specify</label
-        >
+        <label class="card-heading">
+          Please specify
+        </label>
         <br />
         <mat-form-field appearance="outline" style="width: 70%">
           <input
@@ -218,13 +217,14 @@
       <div class="row">
         <div class="col-md-12">
           <label
+            id="haveMedication-radio-group-label"
             class="card-heading requiredField"
-            id="primary-radio-group-label"
-            >Do you or any of your family members take any medication?</label
           >
+            Do you or any of your family members take any medication?
+          </label>
           <br />
           <mat-radio-group
-            aria-labelledby="primary-radio-group-label"
+            aria-labelledby="haveMedication-radio-group-label"
             formControlName="haveMedication"
             class="primary-radio-group"
             required

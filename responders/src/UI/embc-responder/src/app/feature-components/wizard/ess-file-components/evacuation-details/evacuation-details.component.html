@@ -36,7 +36,7 @@
               <br />
 
               <div class="col-12">
-                <span class="tab-subtitle requiredField">
+                <span id="evacuatedFromPrimary-radio-group-label" class="tab-subtitle requiredField">
                   Are you being evacuated from your primary address?
                 </span>
                 <br />
@@ -44,7 +44,7 @@
                 <ng-container *ngIf="isBCAddress">
                   <mat-radio-group
                     formControlName="evacuatedFromPrimary"
-                    aria-labelledby="primary-radio-group-label"
+                    aria-labelledby="evacuatedFromPrimary-radio-group-label"
                     class="options-group"
                     (change)="evacPrimaryAddressChange($event)"
                     required

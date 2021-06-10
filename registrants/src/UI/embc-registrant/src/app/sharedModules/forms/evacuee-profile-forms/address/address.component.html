@@ -6,7 +6,7 @@
       <p class="card-heading">Primary Residence</p>
       <div class="row">
         <div class="col-md-12">
-          <label class="requiredField" id="primary-radio-group-label"
+          <label id="isBcAddress-radio-group-label" class="requiredField"
             >Is your <b>primary residence</b> within British Columbia?</label
           >
           <br />
@@ -21,7 +21,7 @@
           >
           <mat-radio-group
             formControlName="isBcAddress"
-            aria-labelledby="primary-radio-group-label"
+            aria-labelledby="isBcAddress-radio-group-label"
             (change)="primaryAddressChange($event)"
             class="primary-radio-group"
             required
@@ -160,13 +160,13 @@
 
       <div class="row">
         <div class="col-md-12">
-          <label id="primary-radio-group-label" class="requiredField"
+          <label id="isNewMailingAddress-radio-group-label" class="requiredField"
             >Is your <b>mailing address</b> the same as their primary residence
             above?</label
           >
           <mat-radio-group
             formControlName="isNewMailingAddress"
-            aria-labelledby="primary-radio-group-label"
+            aria-labelledby="isNewMailingAddress-radio-group-label"
             class="primary-radio-group"
             (change)="sameAsPrimary($event)"
             required
@@ -199,12 +199,12 @@
       >
         <div class="row">
           <div class="col-md-12">
-            <label id="primary-radio-group-label"
+            <label id="isBcMailingAddress-radio-group-label"
               >Is your <b>mailing address</b> within British Columbia?</label
             >
             <mat-radio-group
               formControlName="isBcMailingAddress"
-              aria-labelledby="primary-radio-group-label"
+              aria-labelledby="isBcMailingAddress-radio-group-label"
               (change)="mailingAddressChange($event)"
               class="primary-radio-group"
             >

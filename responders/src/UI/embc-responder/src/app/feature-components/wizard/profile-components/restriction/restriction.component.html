@@ -15,9 +15,9 @@
               In the event of an emergency, concerned family and friends may
               inquire about you and your family.
             </p>
-            <p class="requiredField">
+            <p id="restrictedAccess-radio-group-label" class="requiredField">
               Do you consent to have your location and contact information
-              <b>shared with concerned family or friends</b> who ask about your
+              <strong>shared with concerned family or friends</strong> who ask about your
               wellbeing?
             </p>
 
@@ -25,17 +25,17 @@
               <div class="col-md-12">
                 <mat-radio-group
                   formControlName="restrictedAccess"
-                  aria-labelledby="primary-radio-group-label"
+                  aria-labelledby="restrictedAccess-radio-group-label"
                   class="primary-radio-group"
                   required
                 >
                   <mat-radio-button [value]="false"
-                    ><span class="radio-text"><b>Yes</b></span> - You may
+                    ><span class="bold radio-text">Yes</span> - You may
                     disclose my location and contact information with family or
                     friends</mat-radio-button
                   >
                   <mat-radio-button [value]="true"
-                    ><span class="radio-text"><b>No</b></span> - You may not
+                    ><span class="bold radio-text">No</span> - You may not
                     disclose my location or contact
                     information</mat-radio-button
                   >
