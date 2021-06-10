@@ -15,7 +15,7 @@ import { WizardService } from '../../wizard.service';
 
 import * as globalConst from 'src/app/core/services/global-constants';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { first } from 'rxjs/operators';
+import { first, map, mergeMap } from 'rxjs/operators';
 import { RegistrationResult } from 'src/app/core/api/models';
 
 @Component({
@@ -83,9 +83,45 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       if (!this.stepCreateProfileService.registrantId) {
         this.evacueeProfileService
           .createProfile(this.stepCreateProfileService.createProfileDTO())
+          .pipe(
+            mergeMap((regResult) => {
+              // Set Profile ID to Profile Service, retrieve profile from API
+              this.stepCreateProfileService.registrantId = regResult.id;
+
+              return this.evacueeProfileService.getProfileFromId(
+                this.stepCreateProfileService.registrantId
+              );
+            }),
+            map((profile) => {
+              // Update wizard's Profile Service with data from API
+              this.stepCreateProfileService.getProfileDTO(
+                this.stepCreateProfileService.registrantId,
+                profile
+              );
+            })
+          )
           .subscribe(
-            (regResult) => {
-              this.afterSave(regResult);
+            () => {
+              // Once all profile work is done, tell user save is complete and go to Step 2
+              this.disableButton = true;
+              this.saveLoader = false;
+
+              this.stepCreateProfileService
+                .openModal(
+                  globalConst.evacueeProfileCreatedMessage.text,
+                  globalConst.evacueeProfileCreatedMessage.title
+                )
+                .afterClosed()
+                .subscribe(() => {
+                  this.wizardService.setStepStatus(
+                    '/ess-wizard/create-ess-file',
+                    false
+                  );
+
+                  this.router.navigate(['/ess-wizard/create-ess-file'], {
+                    state: { step: 'STEP 2', title: 'Create ESS File' }
+                  });
+                });
             },
             (error) => {
               this.saveLoader = false;
@@ -102,39 +138,6 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     } else {
       this.verifiedProfileControl.verifiedProfile.markAsTouched();
     }
-  }
-
-  /**
-   * Create or update evacuee profile and continue to Step 2
-   */
-  afterSave(regResult: RegistrationResult) {
-    const regId = regResult.id;
-
-    // Set Profile ID in session cache
-    this.evacueeProfileService.setCurrentProfileId(regId);
-
-    // Fetch newly-created Profile object, update Step 1 forms with API values
-    this.evacueeProfileService.getProfileFromId(regId).subscribe((profile) => {
-      this.stepCreateProfileService.getProfileDTO(regId, profile);
-    });
-
-    this.disableButton = true;
-    this.saveLoader = false;
-
-    // Notify user of successful creation, redirect to Step 2
-    this.stepCreateProfileService
-      .openModal(
-        globalConst.evacueeProfileCreatedMessage.text,
-        globalConst.evacueeProfileCreatedMessage.title
-      )
-      .afterClosed()
-      .subscribe(() => {
-        this.wizardService.setStepStatus('/ess-wizard/create-ess-file', false);
-
-        this.router.navigate(['/ess-wizard/create-ess-file'], {
-          state: { step: 'STEP 2', title: 'Create ESS File' }
-        });
-      });
   }
 
   /**

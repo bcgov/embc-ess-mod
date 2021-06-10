@@ -83,6 +83,16 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_medicationrequirement, opts => opts.MapFrom(s => s.HaveMedication))
                 .ForMember(d => d.era_insurancecoverage, opts => opts.MapFrom(s => (int?)Enum.Parse<InsuranceOptionOptionSet>(s.Insurance.ToString())))
                 .ForMember(d => d.era_haspetfood, opts => opts.MapFrom(s => Lookup(s.HasPetsFood)))
+                .ForMember(d => d.era_householdrecoveryplan, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == NoteType.RecoveryPlan).FirstOrDefault().Content))
+                .ForMember(d => d.era_evacuationimpacttohousehold, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == NoteType.EvacuationImpact).FirstOrDefault().Content))
+                .ForMember(d => d.era_externalreferralsdetails, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == NoteType.ExternalReferralServices).FirstOrDefault().Content))
+                .ForMember(d => d.era_petcareplans, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == NoteType.PetCarePlans).FirstOrDefault().Content))
+                .ForMember(d => d.era_haschildcarereferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.ChildCare)))
+                .ForMember(d => d.era_hasfirstaidreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.FirstAid)))
+                .ForMember(d => d.era_hasinquiryreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Inquiry)))
+                .ForMember(d => d.era_haspersonalservicesreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Personal)))
+                .ForMember(d => d.era_haspetcarereferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.PetCare)))
+                .ForMember(d => d.era_hashealthservicesreferral, opts => opts.MapFrom(s => s.RecommendedReferralServices.Contains(ReferralServices.Health)))
                 ;
 
             CreateMap<era_needassessment, NeedsAssessment>()
@@ -107,6 +117,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                         string.IsNullOrEmpty(s.era_householdrecoveryplan) ? null : new Note { Type = NoteType.RecoveryPlan, Content = s.era_householdrecoveryplan },
                         string.IsNullOrEmpty(s.era_evacuationimpacttohousehold) ? null : new Note { Type = NoteType.EvacuationImpact, Content = s.era_evacuationimpacttohousehold },
                         string.IsNullOrEmpty(s.era_externalreferralsdetails) ? null : new Note { Type = NoteType.ExternalReferralServices, Content = s.era_externalreferralsdetails },
+                        string.IsNullOrEmpty(s.era_petcareplans) ? null : new Note { Type = NoteType.PetCarePlans, Content = s.era_petcareplans },
                     }.Where(n => n != null).ToArray()))
                 .ForMember(s => s.RecommendedReferralServices, opts => opts.MapFrom(s => new[]
                     {
