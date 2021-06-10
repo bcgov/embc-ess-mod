@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
-import { RegistrantProfile } from '../api/models';
+import { RegistrantProfile, RegistrationResult } from '../api/models';
 import { CacheService } from './cache.service';
 
 @Injectable({
@@ -17,16 +17,59 @@ export class EvacueeProfileService {
   ) {}
 
   /**
+   * Fetch profile record from API
+   *
+   * @returns profile record
+   */
+  public getProfileFromId(profileId: string): Observable<RegistrantProfile> {
+    return this.registrationsService
+      .registrationsGetRegistrantProfile({ registrantId: profileId })
+      .pipe(
+        map((profile) => {
+          return profile;
+        })
+      );
+  }
+
+  /**
    * Insert new profile
+   *
+   * @param regProfile Registrant Profile data to send to API
    *
    * @returns profile id
    */
-  public upsertProfile(evacProfile: RegistrantProfile): Observable<string> {
+  public createProfile(
+    regProfile: RegistrantProfile
+  ): Observable<RegistrationResult> {
     return this.registrationsService
-      .registrationsCreateRegistrantProfile({ body: evacProfile })
+      .registrationsCreateRegistrantProfile({ body: regProfile })
       .pipe(
-        map((profileId) => {
-          return profileId;
+        map((result) => {
+          return result;
+        })
+      );
+  }
+
+  /**
+   * Update existing profile
+   *
+   * @param registrantId ID of Registrant Profile to update
+   * @param regProfile Registrant Profile data to send to API
+   *
+   * @returns profile id
+   */
+  public updateProfile(
+    registrantId: string,
+    regProfile: RegistrantProfile
+  ): Observable<RegistrationResult> {
+    return this.registrationsService
+      .registrationsUpdateRegistrantProfile({
+        registrantId,
+        body: regProfile
+      })
+      .pipe(
+        map((result) => {
+          return result;
         })
       );
   }

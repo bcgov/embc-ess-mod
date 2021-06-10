@@ -367,7 +367,7 @@
             class="button-p save"
             mat-stroked-button
             (click)="save()"
-            [disabled]="saveLoader"
+            [disabled]="saveLoader || disableButton"
           >
             Save Profile
             <app-loader

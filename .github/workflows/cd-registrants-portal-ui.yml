@@ -1,4 +1,4 @@
-name: cd-evacuees-portal-ui
+name: cd-registrants-portal-ui
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
     tags:
       - v*
     paths:
-      - "evacuees/src/UI/**"
+      - "registrants/src/UI/**"
       - ".github/workflows/cd-registrants-portal-ui.yml"
 env:
   IMAGE_NAME: registrants-portal-ui
@@ -31,7 +31,7 @@ jobs:
         run: docker pull $IMAGE_ID || true
 
       - name: Build image
-        working-directory: ./evacuees/src/UI
+        working-directory: ./registrants/src/UI
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID
 
       - name: Push image
