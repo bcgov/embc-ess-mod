@@ -112,7 +112,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             if (updatedQuestions.Count() > 0)
             {
-                await contactRepository.ManageContact(new UpdateSecurityQuestions { ContactId = contact.Id, SecurityQuestions = updatedQuestions });
+                await contactRepository.ManageContact(new UpdateSecurityQuestions { ContactId = result.ContactId, SecurityQuestions = updatedQuestions });
             }
 
             if (string.IsNullOrEmpty(cmd.Profile.Id))
@@ -159,6 +159,7 @@ namespace EMBC.ESS.Managers.Submissions
         {
             var contacts = (await contactRepository.QueryContact(new SearchContactQuery
             {
+                ContactId = query.Id,
                 UserId = query.UserId,
                 FirstName = query.FirstName,
                 LastName = query.LastName,
@@ -202,7 +203,7 @@ namespace EMBC.ESS.Managers.Submissions
         public async Task<VerifySecurityQuestionsResponse> Handle(VerifySecurityQuestionsQuery query)
         {
             IEnumerable<Contact> contacts = Array.Empty<Contact>();
-            contacts = (await contactRepository.QueryContact(new ContactQuery { UserId = query.RegistrantId, MaskSecurityAnswers = false })).Items;
+            contacts = (await contactRepository.QueryContact(new ContactQuery { ContactId = query.RegistrantId, MaskSecurityAnswers = false })).Items;
             VerifySecurityQuestionsResponse ret = new VerifySecurityQuestionsResponse
             {
                 NumberOfCorrectAnswers = 0

@@ -14,10 +14,12 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -121,7 +123,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("registrants")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> CreateRegistrantProfile(RegistrantProfile registrant)
+        public async Task<ActionResult<RegistrationResult>> CreateRegistrantProfile(RegistrantProfile registrant)
         {
             if (registrant == null) return BadRequest();
 
@@ -130,7 +132,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 Profile = profile
             });
-            return Ok(id);
+            return Ok(new RegistrationResult { Id = id });
         }
 
         /// <summary>
@@ -142,7 +144,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("registrants/{registrantId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> UpdateRegistrantProfile(string registrantId, RegistrantProfile registrant)
+        public async Task<ActionResult<RegistrationResult>> UpdateRegistrantProfile(string registrantId, RegistrantProfile registrant)
         {
             if (registrant == null) return BadRequest();
 
@@ -153,7 +155,7 @@ namespace EMBC.Responders.API.Controllers
             {
                 Profile = profile
             });
-            return Ok(id);
+            return Ok(new RegistrationResult { Id = id });
         }
 
         /// <summary>
@@ -168,12 +170,30 @@ namespace EMBC.Responders.API.Controllers
         {
             var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
             {
-                UserId = registrantId
+                Id = registrantId
             })).Items.FirstOrDefault();
 
             if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
 
             return Ok(mapper.Map<RegistrantProfile>(registrant.RegistrantProfile));
+        }
+
+        /// <summary>
+        /// Creates a File
+        /// </summary>
+        /// <param name="file">file</param>
+        /// <returns>new file id</returns>
+        [HttpPost("files")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RegistrationResult>> CreateFile(EvacuationFile file)
+        {
+            var id = await messagingClient.Send(new SubmitEvacuationFileCommand
+            {
+                File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(file)
+            });
+
+            return Ok(new RegistrationResult { Id = id });
         }
 
         /// <summary>
@@ -185,16 +205,15 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("files/{fileId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<string>> UpdateFile(string fileId, RegistrantFile file)
+        public async Task<ActionResult<RegistrationResult>> UpdateFile(string fileId, EvacuationFile file)
         {
-            //TODO - update model with what frond end will submit
-            //var id = await messagingClient.Send(new SubmitEvacuationFileCommand
-            //{
-            //    File = file
-            //});
+            file.EssFileNumber = fileId;
+            var id = await messagingClient.Send(new SubmitEvacuationFileCommand
+            {
+                File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(file)
+            });
 
-            //return Ok(id);
-            return Ok(await Task.FromResult("id"));
+            return Ok(new RegistrationResult { Id = id });
         }
 
         /// <summary>
@@ -215,10 +234,18 @@ namespace EMBC.Responders.API.Controllers
         }
     }
 
+    public class RegistrationResult
+    {
+        public string Id { get; set; }
+    }
+
     public class EvacuationFileHouseholdMember
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Initials { get; set; }
+        public string Gender { get; set; }
+        public string DateOfBirth { get; set; }
         public HouseholdMemberType Type { get; set; }
         public bool IsMatch { get; set; }
     }
@@ -300,10 +327,124 @@ namespace EMBC.Responders.API.Controllers
     /// <summary>
     /// Evacuation File
     /// </summary>
-    public class RegistrantFile
+    public class EvacuationFile
+    {
+        public string EssFileNumber { get; set; }
+        public string PrimaryRegistrantId { get; set; }
+
+        [Required]
+        public Address EvacuatedFromAddress { get; set; }
+
+        public string RegistrationLocation { get; set; }
+
+        [Required]
+        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
+
+        public string SecurityPhrase { get; set; }
+        public bool SecurityPhraseEdited { get; set; }
+
+        public bool IsRestricted { get; set; }
+        public EvacuationFileStatus Status { get; set; }
+        public string EvacuationFileDate { get; set; }
+    }
+
+    /// <summary>
+    /// Needs assessment form
+    /// </summary>
+    public class NeedsAssessment
     {
         public string Id { get; set; }
-        //TODO - get model that the front end would be submitting
+
+        [Required]
+        public InsuranceOption Insurance { get; set; }
+        public IEnumerable<Note> Notes { get; set; }
+        public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }
+
+        public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
+        public bool HaveSpecialDiet { get; set; }
+        public string SpecialDietDetails { get; set; }
+        public bool HaveMedication { get; set; }
+
+        public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
+        public bool? HasPetsFood { get; set; }
+
+        public bool? CanEvacueeProvideFood { get; set; }
+        public bool? CanEvacueeProvideLodging { get; set; }
+        public bool? CanEvacueeProvideClothing { get; set; }
+        public bool? CanEvacueeProvideTransportation { get; set; }
+        public bool? CanEvacueeProvideIncidentals { get; set; }
+
+        public NeedsAssessmentType Type { get; set; }
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum InsuranceOption
+    {
+        [EnumMember(Value = "No")]
+        No,
+
+        [EnumMember(Value = "Yes")]
+        Yes,
+
+        [EnumMember(Value = "Unsure")]
+        Unsure,
+
+        [EnumMember(Value = "Unknown")]
+        Unknown
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum NeedsAssessmentType
+    {
+        Preliminary,
+        Assessed
+    }
+
+    public class Note
+    {
+        public NoteType Type { get; set; }
+        public string Content { get; set; }
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum NoteType
+    {
+        [EnumMember(Value = "General")]
+        General = 0,
+        [EnumMember(Value = "EvacuationImpact")]
+        EvacuationImpact = 1,
+        [EnumMember(Value = "EvacuationExternalReferrals")]
+        EvacuationExternalReferrals = 2,
+        [EnumMember(Value = "PetCarePlans")]
+        PetCarePlans = 3,
+        [EnumMember(Value = "HouseHoldRecoveryPlan")]
+        HouseHoldRecoveryPlan = 4
+    }
+
+    /// <summary>
+    /// Pet
+    /// </summary>
+    public class Pet
+    {
+        public string Type { get; set; }
+        public string Quantity { get; set; }
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum ReferralServices
+    {
+        [Description("Inquiry")]
+        Inquiry,
+        [Description("Health")]
+        Health,
+        [Description("FirstAid")]
+        FirstAid,
+        [Description("Personal")]
+        Personal,
+        [Description("ChildCare")]
+        ChildCare,
+        [Description("PetCare")]
+        PetCare
     }
 
     /// <summary>
@@ -346,6 +487,33 @@ namespace EMBC.Responders.API.Controllers
                 .ReverseMap()
                 ;
 
+            CreateMap<EvacuationFileHouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
+                .ForMember(d => d.PreferredName, opts => opts.Ignore())
+                .ForMember(d => d.Id, opts => opts.Ignore())
+                .ForMember(d => d.IsUnder19, opts => opts.Ignore())
+                .ForMember(d => d.IsPrimaryRegistrant, opts => opts.Ignore())
+                .ReverseMap()
+                ;
+
+            CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
+                .ReverseMap()
+                ;
+
+            CreateMap<Note, ESS.Shared.Contracts.Submissions.Note>()
+                .ForMember(d => d.Id, opts => opts.Ignore())
+                .ForMember(d => d.AddedOn, opts => opts.Ignore())
+                .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
+                .ForMember(d => d.CreatingTeamMemberId, opts => opts.Ignore())
+                .ForMember(d => d.Status, opts => opts.Ignore())
+                .ReverseMap()
+                ;
+
+            CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
+                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.CompletedOn, opts => opts.Ignore())
+                .ReverseMap()
+                ;
+
             CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
                 .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
                 .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
@@ -354,8 +522,19 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.City, opts => opts.Ignore())
                 ;
 
+            CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.IsRestricted))
+                .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
+                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
+                .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
+                .ForMember(d => d.TaskId, opts => opts.Ignore())
+                .ForMember(d => d.EvacuationDate, opts => opts.Ignore())
+                ;
+
             CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
-                .ForMember(d => d.SecurityQuestions, opts => opts.MapFrom(s => s.SecurityQuestions))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.Restriction))
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
@@ -369,7 +548,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.UserId, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
-                .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.VerifiedUser))
                 .ReverseMap()
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
                     s.MailingAddress.Country == s.PrimaryAddress.Country &&

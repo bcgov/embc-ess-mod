@@ -85,14 +85,14 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateTeamMember([FromBody] TeamMember teamMember)
+        public async Task<ActionResult<TeamMemberResult>> CreateTeamMember([FromBody] TeamMember teamMember)
         {
             teamMember.TeamId = teamId;
             var memberId = await client.Send(new SaveTeamMemberCommand
             {
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
             });
-            return Ok(new { Id = memberId });
+            return Ok(new TeamMemberResult { Id = memberId });
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateTeamMember(string memberId, [FromBody] TeamMember teamMember)
+        public async Task<ActionResult<TeamMemberResult>> UpdateTeamMember(string memberId, [FromBody] TeamMember teamMember)
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
@@ -115,7 +115,7 @@ namespace EMBC.Responders.API.Controllers
                 Member = mapper.Map<ESS.Shared.Contracts.Team.TeamMember>(teamMember)
             });
             if (updatedMemberId == null) return NotFound(updatedMemberId);
-            return Ok(new { Id = updatedMemberId });
+            return Ok(new TeamMemberResult { Id = updatedMemberId });
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteTeamMember(string memberId)
+        public async Task<ActionResult<TeamMemberResult>> DeleteTeamMember(string memberId)
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
@@ -137,7 +137,7 @@ namespace EMBC.Responders.API.Controllers
                 MemberId = memberId
             });
             if (reply == null) return NotFound(memberId);
-            return Ok(new { Id = memberId });
+            return Ok(new TeamMemberResult { Id = memberId });
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("{memberId}/active")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ActivateTeamMember(string memberId)
+        public async Task<ActionResult<TeamMemberResult>> ActivateTeamMember(string memberId)
         {
             if (string.IsNullOrEmpty(memberId)) return BadRequest(nameof(memberId));
 
@@ -157,7 +157,7 @@ namespace EMBC.Responders.API.Controllers
                 TeamId = teamId,
                 MemberId = memberId
             });
-            return Ok(new { Id = memberId });
+            return Ok(new TeamMemberResult { Id = memberId });
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace EMBC.Responders.API.Controllers
                 TeamId = teamId,
                 MemberId = memberId
             });
-            return Ok(new { Id = memberId });
+            return Ok(new TeamMemberResult { Id = memberId });
         }
 
         [HttpGet("username")]
@@ -213,6 +213,11 @@ namespace EMBC.Responders.API.Controllers
             var enumList = EnumDescriptionHelper.GetEnumDescriptions<MemberLabel>();
             return Ok(await Task.FromResult(enumList.Select(e => new MemberLabelDescription { Code = e.value, Description = e.description }).ToArray()));
         }
+    }
+
+    public class TeamMemberResult
+    {
+        public string Id { get; set; }
     }
 
     /// <summary>

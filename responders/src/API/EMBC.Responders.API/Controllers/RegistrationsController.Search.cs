@@ -93,7 +93,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public EvacuationSearchMapping()
         {
-            CreateMap<EvacuationFile, EvacuationFileSearchResult>()
+            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFileSearchResult>()
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.NeedsAssessments.First().HouseholdMembers))
