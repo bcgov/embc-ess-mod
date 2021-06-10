@@ -22,6 +22,8 @@ export class StepCreateProfileService {
 
   private setNextTabUpdate: Subject<void> = new Subject();
 
+  private regIdVal: string;
+
   private restricted: boolean;
   private personalDetail: PersonDetails;
   private contactDetail: ContactDetails;
@@ -41,6 +43,13 @@ export class StepCreateProfileService {
   private verified: boolean;
 
   constructor(private dialog: MatDialog) {}
+
+  public get registrantId(): string {
+    return this.regIdVal;
+  }
+  public set registrantId(regIdVal: string) {
+    this.regIdVal = regIdVal;
+  }
 
   public get showContact(): boolean {
     return this.showContacts;
@@ -220,19 +229,53 @@ export class StepCreateProfileService {
     return thisModal;
   }
 
+  /**
+   * Convert Create Profile form data into object that can be submitted to the API
+   *
+   * @returns Profile record usable by the API
+   */
   public createProfileDTO(): RegistrantProfile {
     return {
       restriction: this.restrictedAccess,
       personalDetails: this.personalDetails,
       contactDetails: this.contactDetails,
-      primaryAddress: this.setAddressObject(this.primaryAddressDetails),
-      mailingAddress: this.setAddressObject(this.mailingAddressDetails),
+      primaryAddress: this.setAddressObjectForDTO(this.primaryAddressDetails),
+      mailingAddress: this.setAddressObjectForDTO(this.mailingAddressDetails),
       securityQuestions: this.securityQuestions,
       verifiedUser: this.verifiedProfile
     };
   }
 
-  public setAddressObject(addressObject: AddressModel): Address {
+  /**
+   * Update the wizard's values with ones fetched from API
+   */
+  public getProfileDTO(regId: string, profile: RegistrantProfile) {
+    this.registrantId = regId;
+
+    this.restrictedAccess = profile.restriction;
+    this.personalDetails = profile.personalDetails;
+    this.contactDetails = profile.contactDetails;
+
+    this.primaryAddressDetails = this.setAddressObjectForForm(
+      profile.primaryAddress
+    );
+    this.mailingAddressDetails = this.setAddressObjectForForm(
+      profile.mailingAddress
+    );
+    this.isMailingAddressSameAsPrimaryAddress =
+      profile.isMailingAddressSameAsPrimaryAddress;
+
+    this.securityQuestions = profile.securityQuestions;
+    this.verifiedProfile = profile.verifiedUser;
+  }
+
+  /**
+   * Map an address from the wizard to an address usable by the API
+   *
+   * @param addressObject An Address as defined by the Create Profile address form
+   * @returns Address object as defined by the API
+   */
+  public setAddressObjectForDTO(addressObject: AddressModel): Address {
     const address: Address = {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
@@ -246,6 +289,31 @@ export class StepCreateProfileService {
         addressObject.stateProvince === null
           ? null
           : addressObject.stateProvince.code
+    };
+
+    return address;
+  }
+
+  /**
+   * Map an address from the API to an address usable by the wizard form
+   *
+   * @param addressObject Address object as defined by the API
+   * @returns An Address as defined by the Create Profile address form
+   */
+  public setAddressObjectForForm(addressObject: Address): AddressModel {
+    const address: AddressModel = {
+      addressLine1: addressObject.addressLine1,
+      addressLine2: addressObject.addressLine2,
+      country: {
+        code: addressObject.countryCode
+      },
+      community: {
+        code: addressObject.communityCode
+      },
+      postalCode: addressObject.postalCode,
+      stateProvince: {
+        code: addressObject.stateProvinceCode
+      }
     };
 
     return address;
