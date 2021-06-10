@@ -148,6 +148,7 @@ namespace EMBC.Registrants.API.Controllers
 
         public string SecretPhrase { get; set; }
         public bool SecretPhraseEdited { get; set; }
+        public DateTime LastModified { get; set; }
     }
 
     /// <summary>
@@ -172,29 +173,6 @@ namespace EMBC.Registrants.API.Controllers
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }
         public NeedsAssessmentType Type { get; set; }
-
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public enum InsuranceOption
-        {
-            [EnumMember(Value = "No")]
-            No,
-
-            [EnumMember(Value = "Yes")]
-            Yes,
-
-            [EnumMember(Value = "Unsure")]
-            Unsure,
-
-            [EnumMember(Value = "Unknown")]
-            Unknown
-        }
-
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public enum NeedsAssessmentType
-        {
-            Preliminary,
-            Assessed
-        }
     }
 
     /// <summary>
@@ -256,5 +234,28 @@ namespace EMBC.Registrants.API.Controllers
 
         [EnumMember(Value = "Completed")]
         Completed
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum InsuranceOption
+    {
+        [EnumMember(Value = "No")]
+        No,
+
+        [EnumMember(Value = "Yes")]
+        Yes,
+
+        [EnumMember(Value = "Unsure")]
+        Unsure,
+
+        [EnumMember(Value = "Unknown")]
+        Unknown
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum NeedsAssessmentType
+    {
+        Preliminary,
+        Assessed
     }
 }

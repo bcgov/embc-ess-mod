@@ -23,8 +23,6 @@ FROM build AS publish
 RUN dotnet publish "EMBC.Registrants.API/EMBC.Registrants.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
-#https://github.com/dotnet/runtime/issues/30667
-#RUN sed -i "s|DEFAULT@SECLEVEL=2|DEFAULT@SECLEVEL=1|g" /etc/ssl/openssl.cnf
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EMBC.Registrants.API.dll"]
