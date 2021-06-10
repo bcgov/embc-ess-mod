@@ -10,7 +10,7 @@ on:
     tags:
       - v*
     paths:
-      - "evacuees/src/API/**"
+      - "registrants/src/API/**"
       - ".github/workflows/cd-registrants-portal-api.yml"
 
 env:
@@ -32,7 +32,7 @@ jobs:
         run: docker pull $IMAGE_ID || true
 
       - name: Build image
-        working-directory: ./evacuees/src/API
+        working-directory: ./registrants/src/API
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --cache-from=$IMAGE_ID --build-arg GITHUB_NUGET_USERNAME=github --build-arg GITHUB_NUGET_PAT=${{ secrets.GITHUB_TOKEN }}
 
       - name: Push image
