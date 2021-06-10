@@ -3,13 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { NavigationEnd, Router } from '@angular/router';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { ExitWizardDialogComponent } from 'src/app/shared/components/dialog-components/exit-wizard-dialog/exit-wizard-dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { WizardService } from './wizard.service';
 import { Subscription } from 'rxjs';
 
 import * as globalConst from '../../core/services/global-constants';
+import { YesNoDialogComponent } from 'src/app/shared/components/dialog-components/yes-no-dialog/yes-no-dialog.component';
 
 @Component({
   selector: 'app-wizard',
@@ -97,7 +97,11 @@ export class WizardComponent implements OnInit, OnDestroy {
     this.dialog
       .open(DialogComponent, {
         data: {
-          component: ExitWizardDialogComponent
+          component: YesNoDialogComponent,
+          text: 'Are you sure you want to exit the wizard?',
+          text2: 'Any information that has not been <b>submitted</b> will be lost.',
+          yesButtonText: 'Yes, Exit Wizard',
+          noButtonText: 'No, Cancel'
         },
         height: '270px',
         width: '530px'

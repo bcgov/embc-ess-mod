@@ -5,6 +5,7 @@ import {
   SecurityAnswer
 } from '../profile-security-questions.component';
 import { Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-security-question-card',
@@ -15,9 +16,15 @@ export class SecurityQuestionCardComponent implements OnInit {
   @Input() question: SecurityQuestion;
   @Output() questionEvent = new EventEmitter<SecurityAnswer>();
 
-  constructor() {}
+  securityQuestionForm: FormGroup;
 
-  ngOnInit(): void {}
+  constructor(
+    private formBuilder: FormBuilder
+  ) { }
+
+  ngOnInit(): void {
+    this.createAnswerForm();
+  }
 
   sendAnswer($event): void {
     const securityAnswer: SecurityAnswer = {
@@ -26,5 +33,11 @@ export class SecurityQuestionCardComponent implements OnInit {
     };
 
     this.questionEvent.emit(securityAnswer);
+  }
+
+  private createAnswerForm(): void {
+    this.securityQuestionForm = this.formBuilder.group({
+      answer: [''],
+    });
   }
 }

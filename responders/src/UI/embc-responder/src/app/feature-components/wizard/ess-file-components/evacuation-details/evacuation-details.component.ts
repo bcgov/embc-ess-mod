@@ -172,7 +172,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    console.log(this.evacDetailsForm);
     this.stepCreateEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
