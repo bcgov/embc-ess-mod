@@ -203,6 +203,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
 
       this.stepCreateProfileService.securityQuestions.push({
         id: i,
+        answerChanged: true,
         question,
         answer
       });
