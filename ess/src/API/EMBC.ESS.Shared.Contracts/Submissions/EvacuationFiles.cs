@@ -118,7 +118,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         General,
         EvacuationImpact,
         EvacuationExternalReferrals,
-        PetCarePlans
+        PetCarePlans,
+        RecoveryPlan
     }
 
     public enum NoteStatus
