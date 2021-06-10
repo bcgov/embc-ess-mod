@@ -14,6 +14,7 @@ import { GetSecurityPhraseResponse } from '../models/get-security-phrase-respons
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
 import { RegistrantFile } from '../models/registrant-file';
 import { RegistrantProfile } from '../models/registrant-profile';
+import { RegistrationResult } from '../models/registration-result';
 import { SearchResults } from '../models/search-results';
 import { VerifySecurityPhraseRequest } from '../models/verify-security-phrase-request';
 import { VerifySecurityPhraseResponse } from '../models/verify-security-phrase-response';
@@ -322,7 +323,7 @@ export class RegistrationsService extends BaseService {
      * Registrant
      */
     body: RegistrantProfile
-  }): Observable<StrictHttpResponse<string>> {
+  }): Observable<StrictHttpResponse<RegistrationResult>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateRegistrantProfilePath, 'post');
     if (params) {
@@ -335,7 +336,7 @@ export class RegistrationsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<RegistrationResult>;
       })
     );
   }
@@ -356,10 +357,10 @@ export class RegistrationsService extends BaseService {
      * Registrant
      */
     body: RegistrantProfile
-  }): Observable<string> {
+  }): Observable<RegistrationResult> {
 
     return this.registrationsCreateRegistrantProfile$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
   }
 
@@ -451,7 +452,7 @@ export class RegistrationsService extends BaseService {
      * Registrant
      */
     body: RegistrantProfile
-  }): Observable<StrictHttpResponse<string>> {
+  }): Observable<StrictHttpResponse<RegistrationResult>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateRegistrantProfilePath, 'post');
     if (params) {
@@ -465,7 +466,7 @@ export class RegistrationsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<RegistrationResult>;
       })
     );
   }
@@ -491,10 +492,10 @@ export class RegistrationsService extends BaseService {
      * Registrant
      */
     body: RegistrantProfile
-  }): Observable<string> {
+  }): Observable<RegistrationResult> {
 
     return this.registrationsUpdateRegistrantProfile$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
   }
 
