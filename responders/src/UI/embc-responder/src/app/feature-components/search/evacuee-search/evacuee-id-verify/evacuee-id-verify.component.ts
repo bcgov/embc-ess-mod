@@ -63,7 +63,7 @@ export class EvacueeIdVerifyComponent implements OnInit {
     const idVerify = {
       hasShownIdentification: this.idVerifyForm.get('photoId').value
     };
-    this.evacueeSearchService.setEvacueeSearchContext(idVerify);
+    this.evacueeSearchService.evacueeSearchContext = idVerify;
     this.showIDPhotoComponent.emit(false);
   }
 }

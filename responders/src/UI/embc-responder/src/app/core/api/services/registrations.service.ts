@@ -9,10 +9,10 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { EvacuationFile } from '../models/evacuation-file';
 import { EvacuationFileSearchResult } from '../models/evacuation-file-search-result';
 import { GetSecurityPhraseResponse } from '../models/get-security-phrase-response';
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
-import { RegistrantFile } from '../models/registrant-file';
 import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrationResult } from '../models/registration-result';
 import { SearchResults } from '../models/search-results';
@@ -500,6 +500,68 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
+   * Path part for operation registrationsCreateFile
+   */
+  static readonly RegistrationsCreateFilePath = '/api/Registrations/files';
+
+  /**
+   * Creates a File.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsCreateFile()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsCreateFile$Response(params: {
+
+    /**
+     * file
+     */
+    body: EvacuationFile
+  }): Observable<StrictHttpResponse<RegistrationResult>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateFilePath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<RegistrationResult>;
+      })
+    );
+  }
+
+  /**
+   * Creates a File.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsCreateFile$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsCreateFile(params: {
+
+    /**
+     * file
+     */
+    body: EvacuationFile
+  }): Observable<RegistrationResult> {
+
+    return this.registrationsCreateFile$Response(params).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+    );
+  }
+
+  /**
    * Path part for operation registrationsGetFile
    */
   static readonly RegistrationsGetFilePath = '/api/Registrations/files/{fileId}';
@@ -586,8 +648,8 @@ export class RegistrationsService extends BaseService {
     /**
      * file
      */
-    body: RegistrantFile
-  }): Observable<StrictHttpResponse<string>> {
+    body: EvacuationFile
+  }): Observable<StrictHttpResponse<RegistrationResult>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateFilePath, 'post');
     if (params) {
@@ -601,7 +663,7 @@ export class RegistrationsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<RegistrationResult>;
       })
     );
   }
@@ -626,11 +688,11 @@ export class RegistrationsService extends BaseService {
     /**
      * file
      */
-    body: RegistrantFile
-  }): Observable<string> {
+    body: EvacuationFile
+  }): Observable<RegistrationResult> {
 
     return this.registrationsUpdateFile$Response(params).pipe(
-      map((r: StrictHttpResponse<string>) => r.body as string)
+      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
   }
 
