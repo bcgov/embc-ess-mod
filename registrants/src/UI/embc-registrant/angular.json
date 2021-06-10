@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "embc-evacuee": {
+    "embc-registrant": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/embc-evacuee",
+            "outputPath": "dist/embc-registrant",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -79,21 +79,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "embc-evacuee:build"
+            "browserTarget": "embc-registrant:build"
           },
           "configurations": {
             "local": {
-              "browserTarget": "embc-evacuee:build:local"
+              "browserTarget": "embc-registrant:build:local"
             },
             "production": {
-              "browserTarget": "embc-evacuee:build:production"
+              "browserTarget": "embc-registrant:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "embc-evacuee:build"
+            "browserTarget": "embc-registrant:build"
           }
         },
         "test": {
@@ -127,16 +127,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "embc-evacuee:serve"
+            "devServerTarget": "embc-registrant:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "embc-evacuee:serve:production"
+              "devServerTarget": "embc-registrant:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "embc-evacuee"
+  "defaultProject": "embc-registrant"
 }

@@ -5,8 +5,8 @@ services:
     build:
       context: ./suppliers/src/API
       args:
-      - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
-      - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
+        - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
+        - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
     image: embcess-suppliers-api:dev
     ports:
       - 7020:8080
@@ -23,13 +23,13 @@ services:
       - "API_URL=suppliers-portal-api:8080"
     depends_on:
       - suppliers-portal-api
-      
+
   registrants-portal-api:
     build:
-      context: ./evacuees/src/API
+      context: ./registrants/src/API
       args:
-      - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
-      - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
+        - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
+        - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
     image: embcess-registrants-api:dev
     ports:
       - 5020:8080
@@ -38,7 +38,7 @@ services:
 
   registrants-portal-ui:
     build:
-      context: ./evacuees/src/UI
+      context: ./registrants/src/UI
     image: embcess-registrants-ui:dev
     ports:
       - 5200:2015
@@ -51,14 +51,14 @@ services:
     build:
       context: ./responders/src/API
       args:
-      - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
-      - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
+        - "GITHUB_NUGET_USERNAME=${GITHUB_NUGET_USERNAME}"
+        - "GITHUB_NUGET_PAT=${GITHUB_NUGET_PAT}"
     image: embcess-responders-api:dev
     ports:
       - 6020:8080
     environment:
-    - "BACKEND__URL=https://ess-backend:8080"
-    - "BACKEND__ALLOWINVALIDSERVERCERTIFICATE=true"
+      - "BACKEND__URL=https://ess-backend:8080"
+      - "BACKEND__ALLOWINVALIDSERVERCERTIFICATE=true"
     env_file:
       - .env
     depends_on:
@@ -74,7 +74,7 @@ services:
       - "API_URL=responders-portal-api:8080"
     depends_on:
       - responders-portal-api
-  
+
   ess-backend:
     build:
       context: ./ess/src/API
@@ -84,6 +84,6 @@ services:
     env_file:
       - .env
     environment:
-    - "ASPNETCORE_Kestrel__Certificates__Default__Path=/ssl/aspnetapp.pfx"
+      - "ASPNETCORE_Kestrel__Certificates__Default__Path=/ssl/aspnetapp.pfx"
     volumes:
-    - ~/.aspnet/https:/ssl/
+      - ~/.aspnet/https:/ssl/
