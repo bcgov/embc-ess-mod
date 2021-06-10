@@ -16,6 +16,7 @@ export class TaskSearchService {
   /**
    * Gets the task details from server and maps the incoming
    * community code to community name
+   *
    * @param taskNumber User input task number
    * @returns Observable of type ess task
    */
