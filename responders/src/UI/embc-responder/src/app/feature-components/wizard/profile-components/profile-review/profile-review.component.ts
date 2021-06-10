@@ -15,6 +15,8 @@ import { WizardService } from '../../wizard.service';
 
 import * as globalConst from 'src/app/core/services/global-constants';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { first, map, mergeMap } from 'rxjs/operators';
+import { RegistrationResult } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-profile-review',
@@ -24,7 +26,9 @@ import { CacheService } from 'src/app/core/services/cache.service';
 export class ProfileReviewComponent implements OnInit, OnDestroy {
   verifiedProfileGroup: FormGroup = null;
   tabUpdateSubscription: Subscription;
+
   saveLoader = false;
+  disableButton = false;
 
   constructor(
     private router: Router,
@@ -67,7 +71,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Submit evacuee profile and continue to Step 2
+   * Create or update evacuee profile and continue to Step 2
    */
   save(): void {
     this.stepCreateProfileService.nextTabUpdate.next();
@@ -75,40 +79,62 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     if (this.verifiedProfileGroup.valid) {
       this.saveLoader = true;
 
-      this.evacueeProfileService
-        .upsertProfile(this.stepCreateProfileService.createProfileDTO())
-        .subscribe(
-          (profileId) => {
-            this.evacueeProfileService.setCurrentProfileId(profileId);
+      // If profile's already been created, update existing record
+      if (!this.stepCreateProfileService.registrantId) {
+        this.evacueeProfileService
+          .createProfile(this.stepCreateProfileService.createProfileDTO())
+          .pipe(
+            mergeMap((regResult) => {
+              // Set Profile ID to Profile Service, retrieve profile from API
+              this.stepCreateProfileService.registrantId = regResult.id;
 
-            //TODO: Once "Get Profile" endpoint is ready, update stepCreateProfileService with DB data
+              return this.evacueeProfileService.getProfileFromId(
+                this.stepCreateProfileService.registrantId
+              );
+            }),
+            map((profile) => {
+              // Update wizard's Profile Service with data from API
+              this.stepCreateProfileService.getProfileDTO(
+                this.stepCreateProfileService.registrantId,
+                profile
+              );
+            })
+          )
+          .subscribe(
+            () => {
+              // Once all profile work is done, tell user save is complete and go to Step 2
+              this.disableButton = true;
+              this.saveLoader = false;
 
-            this.stepCreateProfileService
-              .openModal(
-                globalConst.evacueeProfileCreatedMessage.text,
-                globalConst.evacueeProfileCreatedMessage.title
-              )
-              .afterClosed()
-              .subscribe(() => {
-                this.wizardService.setStepStatus(
-                  '/ess-wizard/create-ess-file',
-                  false
-                );
+              this.stepCreateProfileService
+                .openModal(
+                  globalConst.evacueeProfileCreatedMessage.text,
+                  globalConst.evacueeProfileCreatedMessage.title
+                )
+                .afterClosed()
+                .subscribe(() => {
+                  this.wizardService.setStepStatus(
+                    '/ess-wizard/create-ess-file',
+                    false
+                  );
 
-                this.router.navigate(['/ess-wizard/create-ess-file'], {
-                  state: { step: 'STEP 2', title: 'Create ESS File' }
+                  this.router.navigate(['/ess-wizard/create-ess-file'], {
+                    state: { step: 'STEP 2', title: 'Create ESS File' }
+                  });
                 });
-              });
-          },
-          (error) => {
-            this.saveLoader = false;
+            },
+            (error) => {
+              this.saveLoader = false;
 
-            this.alertService.setAlert(
-              'danger',
-              globalConst.createProfileError
-            );
-          }
-        );
+              this.alertService.setAlert(
+                'danger',
+                globalConst.createRegProfileError
+              );
+            }
+          );
+      } else {
+        //TODO: Update Profile code to go here
+      }
     } else {
       this.verifiedProfileControl.verifiedProfile.markAsTouched();
     }

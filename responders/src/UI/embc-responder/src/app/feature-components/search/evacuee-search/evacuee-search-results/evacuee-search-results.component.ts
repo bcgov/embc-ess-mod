@@ -37,7 +37,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchForEvacuee(
-      (this.evacueeSearchContext = this.evacueeSearchService.getEvacueeSearchContext())
+      (this.evacueeSearchContext = this.evacueeSearchService.evacueeSearchContext)
     );
   }
 
@@ -79,6 +79,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
       'wizardOpenedFrom',
       '/responder-access/search/evacuee'
     );
-    this.router.navigate(['/ess-wizard']);
+    this.router.navigate(['/ess-wizard'], {
+      queryParams: { type: 'new-registration' }
+    });
   }
 }

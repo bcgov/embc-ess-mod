@@ -1,9 +1,5 @@
 /* tslint:disable */
 /* eslint-disable */
-
-/**
- * Evacuation File
- */
-export interface RegistrantFile {
+export interface RegistrationResult {
   id?: null | string;
 }

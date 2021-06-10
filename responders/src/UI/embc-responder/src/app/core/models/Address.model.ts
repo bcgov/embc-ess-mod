@@ -8,5 +8,5 @@ import {
 export interface AddressModel extends Address {
   community: Community;
   country: Country;
-  stateProvince: StateProvince;
+  stateProvince?: StateProvince;
 }

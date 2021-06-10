@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { StatusDefinitionDialogComponent } from 'src/app/shared/components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
@@ -12,7 +13,7 @@ import * as globalConst from '../../../core/services/global-constants';
   styleUrls: ['./evacuee-profile-dashboard.component.scss']
 })
 export class EvacueeProfileDashboardComponent implements OnInit {
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -57,7 +58,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    *
    * @param text Text to be displayed
    */
-  openSuccessModal(text: string) {
+  openSuccessModal(text: string): void {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
@@ -65,6 +66,12 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       },
       height: '230px',
       width: '530px'
+    });
+  }
+
+  createNewESSFile(): void {
+    this.router.navigate(['/ess-wizard'], {
+      queryParams: { type: 'new-file' }
     });
   }
 }
