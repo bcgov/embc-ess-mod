@@ -69,4 +69,44 @@ export class WizardSidenavModelValues {
       }
     }
   ];
+
+  static newESSFileMenu: Array<WizardSidenavModel> = [
+    {
+      step: 'STEP 1',
+      title: 'Create ESS File',
+      route: '/ess-wizard/create-ess-file',
+      isLocked: false,
+      incompleteMsg: globalConst.essFileStepIncompleteMessage,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-ess-file.svg',
+        altSrc: '/assets/images/wizard/ess-file.svg',
+        height: '29',
+        width: '28'
+      }
+    },
+    {
+      step: 'STEP 2',
+      title: 'Add Supports',
+      route: '/ess-wizard/add-supports',
+      isLocked: true,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-supports.svg',
+        altSrc: '/assets/images/wizard/supports.svg',
+        height: '33',
+        width: '33'
+      }
+    },
+    {
+      step: 'NOTES',
+      title: 'Add ESS File Notes',
+      route: '/ess-wizard/add-notes',
+      isLocked: true,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-notes.svg',
+        altSrc: '/assets/images/wizard/notes.svg',
+        height: '42',
+        width: '42'
+      }
+    }
+  ];
 }

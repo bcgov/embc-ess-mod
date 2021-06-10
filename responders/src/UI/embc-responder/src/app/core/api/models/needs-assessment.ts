@@ -1,0 +1,30 @@
+/* tslint:disable */
+/* eslint-disable */
+import { EvacuationFileHouseholdMember } from './evacuation-file-household-member';
+import { InsuranceOption } from './insurance-option';
+import { NeedsAssessmentType } from './needs-assessment-type';
+import { Note } from './note';
+import { Pet } from './pet';
+import { ReferralServices } from './referral-services';
+
+/**
+ * Needs assessment form
+ */
+export interface NeedsAssessment {
+  canEvacueeProvideClothing?: null | boolean;
+  canEvacueeProvideFood?: null | boolean;
+  canEvacueeProvideIncidentals?: null | boolean;
+  canEvacueeProvideLodging?: null | boolean;
+  canEvacueeProvideTransportation?: null | boolean;
+  hasPetsFood?: null | boolean;
+  haveMedication?: boolean;
+  haveSpecialDiet?: boolean;
+  householdMembers?: null | Array<EvacuationFileHouseholdMember>;
+  id?: null | string;
+  insurance: InsuranceOption;
+  notes?: null | Array<Note>;
+  pets?: null | Array<Pet>;
+  recommendedReferralServices?: null | Array<ReferralServices>;
+  specialDietDetails?: null | string;
+  type?: NeedsAssessmentType;
+}
