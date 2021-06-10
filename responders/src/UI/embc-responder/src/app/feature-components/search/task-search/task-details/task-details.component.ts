@@ -28,10 +28,17 @@ export class TaskDetailsComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  /**
+   * Navigates to task search page
+   */
   searchTask(): void {
     this.router.navigate(['/responder-access/search/task']);
   }
 
+  /**
+   * Updates the signed in task number and navigates to evacuee
+   * search
+   */
   signInTask(): void {
     this.userService.updateTaskNumber(this.taskNumber);
     this.router.navigate(['/responder-access/search/evacuee']);

@@ -13,6 +13,12 @@ export class TaskSearchService {
     private locationsService: LocationsService
   ) {}
 
+  /**
+   * Gets the task details from server and maps the incoming
+   * community code to community name
+   * @param taskNumber User input task number
+   * @returns Observable of type ess task
+   */
   searchTask(taskNumber: string): Observable<EssTask> {
     return this.taskService.tasksGetTask({ taskId: taskNumber }).pipe(
       map((essTask: EssTaskModel) => {
@@ -21,7 +27,6 @@ export class TaskSearchService {
           (comm) => comm.code === essTask.communityCode
         );
         essTask.communityName = community.name;
-        console.log(essTask);
         return essTask;
       })
     );

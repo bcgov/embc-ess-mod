@@ -29,16 +29,29 @@ export class TaskSearchComponent implements OnInit {
     this.constructTaskSearchForm();
   }
 
+  /**
+   * Return form control
+   */
   get taskSearchFormControl(): { [key: string]: AbstractControl } {
     return this.taskSearchForm.controls;
   }
 
+  /**
+   * Constructs task search form
+   */
   constructTaskSearchForm(): void {
     this.taskSearchForm = this.builder.group({
       taskNumber: ['', [this.customValidation.whitespaceValidator()]]
     });
   }
 
+  /**
+   * Submits the task number
+   * 1. If successful, navigates to task details page
+   * 2. If error code is 404, updates the task status to 'invalid'
+   * and navigates to task details page
+   * 3. In case of any other error, displays the error banner
+   */
   submitTask(): void {
     this.showLoader = !this.showLoader;
     this.isSubmitted = !this.isSubmitted;
