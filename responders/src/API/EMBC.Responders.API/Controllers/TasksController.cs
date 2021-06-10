@@ -15,10 +15,10 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts.Submissions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -48,24 +48,12 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("{taskId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<ESSTask> GetTask(string taskId)
+        public async Task<ActionResult<ESSTask>> GetTask(string taskId)
         {
-            //var reply = await messagingClient.Send(new TeamMembersQueryCommand { TeamId = teamId, MemberId = memberId, IncludeActiveUsersOnly = false });
-            //var teamMember = reply.TeamMembers.SingleOrDefault();
-            //if (teamMember == null) return NotFound(memberId);
-            //return Ok(mapper.Map<TeamMember>(teamMember));
-
-            var activeTask = new ESSTask
-            {
-                Id = "123456",
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(3),
-                CommunityCode = "6e69dfaf-9f97-ea11-b813-005056830319", //100 Mile House
-                Description = "Task Description",
-                Status = "Active"
-            };
-
-            return Ok(activeTask);
+            var reply = await messagingClient.Send(new TasksSearchQuery { TaskId = taskId });
+            var task = reply.Items.SingleOrDefault();
+            if (task == null) return NotFound(taskId);
+            return Ok(mapper.Map<ESSTask>(task));
         }
     }
 
@@ -77,5 +65,13 @@ namespace EMBC.Responders.API.Controllers
         public string CommunityCode { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
+    }
+
+    public class TaskMapping : Profile
+    {
+        public TaskMapping()
+        {
+            CreateMap<IncidentTask, ESSTask>();
+        }
     }
 }
