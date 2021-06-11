@@ -52,13 +52,14 @@
             </p>
             <p class="p-custom">
               <b
-                >{{ registrantResult?.primaryAddress?.city }},
+                ><span *ngIf="registrantResult?.primaryAddress?.city !== null">{{ registrantResult?.primaryAddress?.city }},</span>
+                <span *ngIf="registrantResult?.primaryAddress?.communityCode !== null">{{ registrantResult?.primaryAddress?.community?.name }},</span>
                 {{ registrantResult?.primaryAddress?.stateProvinceCode }},
                 {{ registrantResult?.primaryAddress?.postalCode }}</b
               >
             </p>
             <p class="p-custom">
-              <b>{{ registrantResult?.primaryAddress?.countryCode }}</b>
+              <b>{{ registrantResult?.primaryAddress?.country?.name }}</b>
             </p>
           </div>
         </div>

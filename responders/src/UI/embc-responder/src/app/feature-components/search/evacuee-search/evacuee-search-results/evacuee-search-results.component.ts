@@ -13,6 +13,7 @@ import {
 } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -21,7 +22,7 @@ import { CacheService } from 'src/app/core/services/cache.service';
 })
 export class EvacueeSearchResultsComponent implements OnInit {
   @Output() showIDPhotoComponent = new EventEmitter<boolean>();
-  registrantResults: Array<RegistrantProfileSearchResult>;
+  registrantResults: Array<RegistrantProfileSearchResultModel>;
   fileResults: Array<EvacuationFileSearchResult>;
   evacueeSearchContext: EvacueeSearchContextModel;
   isLoading = false;
@@ -54,10 +55,18 @@ export class EvacueeSearchResultsComponent implements OnInit {
     );
   }
 
+  /**
+   * Resets the search
+   */
   searchAgain(): void {
     this.showIDPhotoComponent.emit(true);
   }
 
+  /**
+   * Searches for profiles and ess file based on the
+   * search parameters
+   * @param evacueeSearchContext search parameters
+   */
   searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
     this.evacueeSearchResultsService
       .searchForEvacuee(evacueeSearchContext.evacueeSearchParameters)
