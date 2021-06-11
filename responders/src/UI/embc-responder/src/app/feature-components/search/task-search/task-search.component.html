@@ -8,6 +8,7 @@
   <div class="row">
     <div class="col-md-8">
       <mat-card>
+        <app-alert></app-alert>
         <p class="heading">Sign in to a Task Number</p>
         <p>
           All Evacuee Registration & Assistance (ERA) Responders are required to
@@ -45,10 +46,15 @@
             <button
               class="button-p submit"
               mat-button
-              [disabled]="!taskSearchForm.valid"
+              [disabled]="!taskSearchForm.valid || isSubmitted"
               (click)="submitTask()"
             >
               Submit
+              <app-loader
+                [strokeWidth]="3"
+                [diameter]="25"
+                [showLoader]="showLoader"
+              ></app-loader>
             </button>
           </div>
         </div>

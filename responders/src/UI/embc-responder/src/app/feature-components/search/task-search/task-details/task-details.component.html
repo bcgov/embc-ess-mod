@@ -7,13 +7,13 @@
   <br />
   <div class="row">
     <div class="col-md-8">
-      <div *ngIf="isActive">
+      <div *ngIf="essTask?.status === 'Active'">
         <ng-container *ngTemplateOutlet="activeTask"></ng-container>
       </div>
-      <div *ngIf="isExpired">
+      <div *ngIf="essTask?.status === 'Expired'">
         <ng-container *ngTemplateOutlet="expiredTask"></ng-container>
       </div>
-      <div *ngIf="isInvalid">
+      <div *ngIf="essTask?.status === 'Invalid'">
         <ng-container *ngTemplateOutlet="invalidTask"></ng-container>
       </div>
     </div>
@@ -49,14 +49,14 @@
 
     <div class="row">
       <div class="col-md-2 task-details">Task Number:</div>
-      <div class="col-md-4 task-details">
-        <b>{{ taskNumber }} - Kamloops</b>
+      <div class="col-md-6 task-details">
+        <b>{{ essTask.id }} - {{ essTask.communityName }}</b>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-2 task-details">Task Status:</div>
-      <div class="col-md-4 status-active">Active</div>
+      <div class="col-md-4 status-active">{{ essTask.status }}</div>
     </div>
     <br />
     <div class="row">
@@ -94,14 +94,14 @@
 
     <div class="row">
       <div class="col-md-2 task-details">Task Number:</div>
-      <div class="col-md-4 task-details">
-        <b>{{ taskNumber }} - Kamloops</b>
+      <div class="col-md-6 task-details">
+        <b>{{ essTask.id }} - {{ essTask.communityName }}</b>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-2 task-details">Task Status:</div>
-      <div class="col-md-4 status-expired">Expired</div>
+      <div class="col-md-4 status-expired">{{ essTask.status }}</div>
     </div>
     <br />
     <div class="row">
@@ -129,7 +129,7 @@
 
     <div class="row">
       <div class="col-md-2 task-details">
-        <b>{{ taskNumber }} - </b>
+        <b>{{ essTask.id }} -</b>
       </div>
       <div class="col-md-4 task-details">Task Number not found</div>
     </div>
