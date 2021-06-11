@@ -1,4 +1,4 @@
-<form [formGroup]="personalDetailsForm">
+<div [formGroup]="personalDetailsForm">
   <div class="row">
     <div class="col-md-4">
       <mat-form-field appearance="outline">
@@ -68,7 +68,6 @@
       <mat-form-field appearance="outline">
         <mat-label class="requiredField">Gender</mat-label>
         <mat-select [formControlName]="'gender'">
-          <mat-option>--Gender</mat-option>
           <mat-option *ngFor="let gen of gender" [value]="gen.value">
             {{ gen.name }}
           </mat-option>
@@ -127,4 +126,4 @@
       </mat-form-field>
     </div>
   </div>
-</form>
+</div>
