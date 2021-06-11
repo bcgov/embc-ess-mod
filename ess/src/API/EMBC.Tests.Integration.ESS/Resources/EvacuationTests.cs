@@ -19,7 +19,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         // Constants
         private const string TestUserId = "CHRIS-TEST";
 
-        private const string TestEssFileNumber = "100487";
+        private const string TestEssFileNumber = "100718";
 
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -81,7 +81,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             })).Items.Cast<EvacuationFile>().Last();
 
             var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
-            var needsAssessment = fileToUpdate.NeedsAssessments.ShouldHaveSingleItem();
+            var needsAssessment = fileToUpdate.CurrentNeedsAssessment;
 
             needsAssessment.HasPetsFood = !needsAssessment.HasPetsFood;
             foreach (var memeber in needsAssessment.HouseholdMembers)
@@ -94,7 +94,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var updatedFile = (await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
 
-            var updatedNeedsAssessment = updatedFile.NeedsAssessments.ShouldHaveSingleItem();
+            var updatedNeedsAssessment = updatedFile.CurrentNeedsAssessment;
             updatedNeedsAssessment.HasPetsFood.ShouldBe(needsAssessment.HasPetsFood);
             foreach (var member in updatedNeedsAssessment.HouseholdMembers)
             {
@@ -118,57 +118,51 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var evacuationFile = (EvacuationFile)(await caseRepository.QueryCase(caseQuery)).Items.ShouldHaveSingleItem();
 
             // Evacuation file
-            evacuationFile.EvacuatedFromAddress.ShouldNotBeNull();
+            evacuationFile.EvacuatedFrom.ShouldNotBeNull();
             evacuationFile.Id.ShouldBe(fileId);
-            evacuationFile.EvacuatedFromAddress.AddressLine1.ShouldBe(originalFile.EvacuatedFromAddress.AddressLine1);
-            evacuationFile.EvacuatedFromAddress.AddressLine2.ShouldBe(originalFile.EvacuatedFromAddress.AddressLine2);
-            evacuationFile.EvacuatedFromAddress.CommunityCode.ShouldBe(originalFile.EvacuatedFromAddress.CommunityCode);
-            evacuationFile.EvacuatedFromAddress.CountryCode.ShouldBe(originalFile.EvacuatedFromAddress.CountryCode);
-            evacuationFile.EvacuatedFromAddress.StateProvinceCode.ShouldBe(originalFile.EvacuatedFromAddress.StateProvinceCode);
-            evacuationFile.EvacuatedFromAddress.PostalCode.ShouldBe(originalFile.EvacuatedFromAddress.PostalCode);
+            evacuationFile.EvacuatedFrom.AddressLine1.ShouldBe(originalFile.EvacuatedFrom.AddressLine1);
+            evacuationFile.EvacuatedFrom.AddressLine2.ShouldBe(originalFile.EvacuatedFrom.AddressLine2);
+            evacuationFile.EvacuatedFrom.CommunityCode.ShouldBe(originalFile.EvacuatedFrom.CommunityCode);
+            evacuationFile.EvacuatedFrom.PostalCode.ShouldBe(originalFile.EvacuatedFrom.PostalCode);
             evacuationFile.EvacuationDate.ShouldBeInRange(now, DateTime.UtcNow);
             evacuationFile.PrimaryRegistrantId.ShouldBe(primaryContact.Id);
 
-            // Needs Assessments
-            evacuationFile.NeedsAssessments.ShouldHaveSingleItem();
-            for (var i = 0; i < originalFile.NeedsAssessments.Count(); i++)
+            // Needs Assessment
+
+            var originalNeedsAssessment = originalFile.CurrentNeedsAssessment;
+            var needsAssessment = evacuationFile.CurrentNeedsAssessment;
+            needsAssessment.Insurance.ShouldBe(originalNeedsAssessment.Insurance);
+            needsAssessment.CanEvacueeProvideClothing.ShouldBe(originalNeedsAssessment.CanEvacueeProvideClothing);
+            needsAssessment.CanEvacueeProvideFood.ShouldBe(originalNeedsAssessment.CanEvacueeProvideFood);
+            needsAssessment.CanEvacueeProvideIncidentals.ShouldBe(originalNeedsAssessment.CanEvacueeProvideIncidentals);
+            needsAssessment.CanEvacueeProvideLodging.ShouldBe(originalNeedsAssessment.CanEvacueeProvideLodging);
+            needsAssessment.CanEvacueeProvideTransportation.ShouldBe(originalNeedsAssessment.CanEvacueeProvideTransportation);
+            needsAssessment.HaveMedication.ShouldBe(originalNeedsAssessment.HaveMedication);
+            needsAssessment.HasPetsFood.ShouldBe(originalNeedsAssessment.HasPetsFood);
+            needsAssessment.HaveSpecialDiet.ShouldBe(originalNeedsAssessment.HaveSpecialDiet);
+            needsAssessment.SpecialDietDetails.ShouldBe(originalNeedsAssessment.SpecialDietDetails);
+
+            needsAssessment.HouseholdMembers.Count().ShouldBe(originalNeedsAssessment.HouseholdMembers.Count());
+            for (var j = 0; j < originalNeedsAssessment.HouseholdMembers.Count(); j++)
             {
-                var originalNeedsAssessment = originalFile.NeedsAssessments.ElementAt(i);
-                var needsAssessment = evacuationFile.NeedsAssessments.ElementAt(i);
-                needsAssessment.Insurance.ShouldBe(originalNeedsAssessment.Insurance);
-                needsAssessment.CanEvacueeProvideClothing.ShouldBe(originalNeedsAssessment.CanEvacueeProvideClothing);
-                needsAssessment.CanEvacueeProvideFood.ShouldBe(originalNeedsAssessment.CanEvacueeProvideFood);
-                needsAssessment.CanEvacueeProvideIncidentals.ShouldBe(originalNeedsAssessment.CanEvacueeProvideIncidentals);
-                needsAssessment.CanEvacueeProvideLodging.ShouldBe(originalNeedsAssessment.CanEvacueeProvideLodging);
-                needsAssessment.CanEvacueeProvideTransportation.ShouldBe(originalNeedsAssessment.CanEvacueeProvideTransportation);
-                needsAssessment.HaveMedication.ShouldBe(originalNeedsAssessment.HaveMedication);
-                needsAssessment.HasPetsFood.ShouldBe(originalNeedsAssessment.HasPetsFood);
-                needsAssessment.HaveSpecialDiet.ShouldBe(originalNeedsAssessment.HaveSpecialDiet);
-                needsAssessment.SpecialDietDetails.ShouldBe(originalNeedsAssessment.SpecialDietDetails);
+                var originalHouseholdMember = originalNeedsAssessment.HouseholdMembers.OrderBy(m => m.DateOfBirth).ElementAt(j);
+                var householdMember = needsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant).OrderBy(m => m.DateOfBirth).ElementAt(j);
+                householdMember.DateOfBirth.ShouldBe(originalHouseholdMember.DateOfBirth);
+                householdMember.FirstName.ShouldBe(originalHouseholdMember.FirstName);
+                householdMember.LastName.ShouldBe(originalHouseholdMember.LastName);
+                householdMember.Gender.ShouldBe(originalHouseholdMember.Gender);
+                householdMember.Initials.ShouldBe(originalHouseholdMember.Initials);
+                householdMember.IsUnder19.ShouldBe(originalHouseholdMember.IsUnder19);
+                householdMember.Id.ShouldNotBeNull();
+            }
+            needsAssessment.Pets.Count().ShouldBe(originalNeedsAssessment.Pets.Count());
+            for (var j = 0; j < originalNeedsAssessment.Pets.Count(); j++)
+            {
+                var originalPet = originalNeedsAssessment.Pets.OrderBy(p => p.Type).ElementAt(j);
+                var pet = needsAssessment.Pets.OrderBy(p => p.Type).ElementAt(j);
 
-                needsAssessment.HouseholdMembers.Count().ShouldBe(originalNeedsAssessment.HouseholdMembers.Count());
-                for (var j = 0; j < originalNeedsAssessment.HouseholdMembers.Count(); j++)
-                {
-                    var originalHouseholdMember = originalNeedsAssessment.HouseholdMembers.OrderBy(m => m.DateOfBirth).ElementAt(i);
-                    var householdMember = needsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant).OrderBy(m => m.DateOfBirth).ElementAt(i);
-                    householdMember.DateOfBirth.ShouldBe(originalHouseholdMember.DateOfBirth);
-                    householdMember.FirstName.ShouldBe(originalHouseholdMember.FirstName);
-                    householdMember.LastName.ShouldBe(originalHouseholdMember.LastName);
-                    householdMember.Gender.ShouldBe(originalHouseholdMember.Gender);
-                    householdMember.Initials.ShouldBe(originalHouseholdMember.Initials);
-                    householdMember.PreferredName.ShouldBe(originalHouseholdMember.PreferredName);
-                    householdMember.IsUnder19.ShouldBe(originalHouseholdMember.IsUnder19);
-                    householdMember.Id.ShouldNotBeNull();
-                }
-                needsAssessment.Pets.Count().ShouldBe(originalNeedsAssessment.Pets.Count());
-                for (var j = 0; j < originalNeedsAssessment.Pets.Count(); j++)
-                {
-                    var originalPet = originalNeedsAssessment.Pets.OrderBy(p => p.Type).ElementAt(i);
-                    var pet = needsAssessment.Pets.OrderBy(p => p.Type).ElementAt(i);
-
-                    pet.Quantity.ShouldBe(originalPet.Quantity);
-                    pet.Type.ShouldBe(originalPet.Type);
-                }
+                pet.Quantity.ShouldBe(originalPet.Quantity);
+                pet.Type.ShouldBe(originalPet.Type);
             }
         }
 
@@ -177,41 +171,43 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         private EvacuationFile CreateTestFile(Contact primaryContact)
         {
+            var now = DateTime.UtcNow;
             var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
             var file = new EvacuationFile()
             {
                 PrimaryRegistrantId = primaryContact.Id,
-                EvacuatedFromAddress = new EvacuationAddress()
+                EvacuationDate = now,
+                TaskId = "0001",
+                SecurityPhrase = "secret123",
+                SecurityPhraseChanged = true,
+
+                CurrentNeedsAssessment = new NeedsAssessment
                 {
-                    AddressLine1 = $"{uniqueSignature}_3738 Main St",
-                    AddressLine2 = "Suite 3",
-                    CommunityCode = "9e6adfaf-9f97-ea11-b813-005056830319",
-                    StateProvinceCode = "BC",
-                    CountryCode = "CAN",
-                    PostalCode = "V8V 2W3"
-                },
-                NeedsAssessments = new[]
-                {
-                    new NeedsAssessment
+                    CompletedOn = now,
+                    EvacuatedFrom = new EvacuationAddress()
                     {
-                        Type = NeedsAssessmentType.Preliminary,
-                        HaveMedication = false,
-                        Insurance = InsuranceOption.Yes,
-                        HaveSpecialDiet = true,
-                        SpecialDietDetails = "Shellfish allergy",
-                        HasPetsFood = true,
-                        CanEvacueeProvideClothing = true,
-                        CanEvacueeProvideFood = true,
-                        CanEvacueeProvideIncidentals = true,
-                        CanEvacueeProvideLodging = true,
-                        CanEvacueeProvideTransportation = true,
-                        HouseholdMembers = new[]
+                        AddressLine1 = $"{uniqueSignature}_3738 Main St",
+                        AddressLine2 = "Suite 3",
+                        CommunityCode = "9e6adfaf-9f97-ea11-b813-005056830319",
+                        PostalCode = "V8V 2W3"
+                    },
+                    Type = NeedsAssessmentType.Preliminary,
+                    HaveMedication = false,
+                    Insurance = InsuranceOption.Yes,
+                    HaveSpecialDiet = true,
+                    SpecialDietDetails = "Shellfish allergy",
+                    HasPetsFood = true,
+                    CanEvacueeProvideClothing = true,
+                    CanEvacueeProvideFood = true,
+                    CanEvacueeProvideIncidentals = true,
+                    CanEvacueeProvideLodging = true,
+                    CanEvacueeProvideTransportation = true,
+                    HouseholdMembers = new[]
                         {
                             new HouseholdMember
                             {
                                 FirstName = primaryContact.FirstName,
                                 LastName = primaryContact.LastName,
-                                PreferredName = primaryContact.PreferredName,
                                 Initials = primaryContact.Initials,
                                 Gender = primaryContact.Gender,
                                 DateOfBirth = primaryContact.DateOfBirth,
@@ -223,7 +219,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
                             {
                                 FirstName = $"{uniqueSignature}_hm1",
                                 LastName = "hm1",
-                                PreferredName = "hm1p",
                                 Initials = $"{uniqueSignature}_1",
                                 Gender = "X",
                                 DateOfBirth = "03/11/2000",
@@ -234,7 +229,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
                             {
                                 FirstName = $"{uniqueSignature}_hm2",
                                 LastName = "hm2",
-                                PreferredName = "hm2p",
                                 Initials = $"{uniqueSignature}_2",
                                 Gender = "M",
                                 DateOfBirth = "03/12/2010",
@@ -242,11 +236,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
                                 IsPrimaryRegistrant = false
                             }
                         },
-                        Pets = new[]
+                    Pets = new[]
                         {
                             new Pet{ Type = $"{uniqueSignature}_Cat", Quantity = "1" }
                         }
-                    }
                 }
             };
             return file;

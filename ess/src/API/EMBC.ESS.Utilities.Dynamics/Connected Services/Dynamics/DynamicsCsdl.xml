@@ -1783,6 +1783,12 @@
         <NavigationProperty Name="regardingobjectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_AsyncOperations">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="new_casresponseid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_essfilenote" Type="mscrm.era_essfilenote" Nullable="false" Partner="era_essfilenote_AsyncOperations">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_essfilenoteid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_essfilesupport" Type="mscrm.era_essfilesupport" Nullable="false" Partner="era_essfilesupport_AsyncOperations">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_essfilesupportid" />
+        </NavigationProperty>
         <NavigationProperty Name="regardingobjectid_report" Type="mscrm.report" Nullable="false" Partner="Report_AsyncOperations">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="reportid" />
         </NavigationProperty>
@@ -3022,6 +3028,12 @@
         <NavigationProperty Name="regardingobjectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_BulkDeleteFailures">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="new_casresponseid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_essfilenote" Type="mscrm.era_essfilenote" Nullable="false" Partner="era_essfilenote_BulkDeleteFailures">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_essfilenoteid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_essfilesupport" Type="mscrm.era_essfilesupport" Nullable="false" Partner="era_essfilesupport_BulkDeleteFailures">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_essfilesupportid" />
+        </NavigationProperty>
         <NavigationProperty Name="regardingobjectid_customeraddress" Type="mscrm.customeraddress" Nullable="false" Partner="CustomerAddress_BulkDeleteFailures">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="customeraddressid" />
         </NavigationProperty>
@@ -3509,6 +3521,8 @@
         <NavigationProperty Name="business_unit_era_needsassessmentanimal" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="owningbusinessunit" />
         <NavigationProperty Name="business_unit_era_householdmember" Type="Collection(mscrm.era_householdmember)" Partner="owningbusinessunit" />
         <NavigationProperty Name="business_unit_new_casresponse" Type="Collection(mscrm.new_casresponse)" Partner="owningbusinessunit" />
+        <NavigationProperty Name="business_unit_era_essfilenote" Type="Collection(mscrm.era_essfilenote)" Partner="owningbusinessunit" />
+        <NavigationProperty Name="business_unit_era_essfilesupport" Type="Collection(mscrm.era_essfilesupport)" Partner="owningbusinessunit" />
         <NavigationProperty Name="BusinessUnit_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_businessunit_syncerror" />
         <NavigationProperty Name="transactioncurrencyid" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_BusinessUnit">
           <ReferentialConstraint Property="_transactioncurrencyid_value" ReferencedProperty="transactioncurrencyid" />
@@ -6392,6 +6406,12 @@
         <NavigationProperty Name="baserecordid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_DuplicateBaseRecord">
           <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="new_casresponseid" />
         </NavigationProperty>
+        <NavigationProperty Name="duplicaterecordid_era_essfilesupport" Type="mscrm.era_essfilesupport" Nullable="false" Partner="era_essfilesupport_DuplicateMatchingRecord">
+          <ReferentialConstraint Property="_duplicaterecordid_value" ReferencedProperty="era_essfilesupportid" />
+        </NavigationProperty>
+        <NavigationProperty Name="baserecordid_era_essfilesupport" Type="mscrm.era_essfilesupport" Nullable="false" Partner="era_essfilesupport_DuplicateBaseRecord">
+          <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="era_essfilesupportid" />
+        </NavigationProperty>
         <NavigationProperty Name="baserecordid_goalrollupquery" Type="mscrm.goalrollupquery" Nullable="false" Partner="GoalRollupQuery_DuplicateBaseRecord">
           <ReferentialConstraint Property="_baserecordid_value" ReferencedProperty="goalrollupqueryid" />
         </NavigationProperty>
@@ -7814,6 +7834,130 @@
         <Property Name="era_era_householdmember_era_needassessmentid" Type="Edm.Guid" />
         <Property Name="era_needassessmentid" Type="Edm.Guid" />
       </EntityType>
+      <EntityType Name="era_essfilenote" BaseType="mscrm.crmbaseentity">
+        <Key>
+          <PropertyRef Name="era_essfilenoteid" />
+        </Key>
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="_era_essteamuserid_value" Type="Edm.Guid" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="_era_essfileid_value" Type="Edm.Guid" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="era_essfilenoteid" Type="Edm.Guid" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_ishidden" Type="Edm.Boolean" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="era_notetext" Type="Edm.String" Unicode="false" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_essfilenote_createdby">
+          <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="createdonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_essfilenote_createdonbehalfby">
+          <ReferentialConstraint Property="_createdonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_essfilenote_modifiedby">
+          <ReferentialConstraint Property="_modifiedby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_essfilenote_modifiedonbehalfby">
+          <ReferentialConstraint Property="_modifiedonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owninguser" Type="mscrm.systemuser" Nullable="false" Partner="user_era_essfilenote">
+          <ReferentialConstraint Property="_owninguser_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningteam" Type="mscrm.team" Nullable="false" Partner="team_era_essfilenote">
+          <ReferentialConstraint Property="_owningteam_value" ReferencedProperty="teamid" />
+        </NavigationProperty>
+        <NavigationProperty Name="ownerid" Type="mscrm.principal" Nullable="false" Partner="owner_era_essfilenote">
+          <ReferentialConstraint Property="_ownerid_value" ReferencedProperty="ownerid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningbusinessunit" Type="mscrm.businessunit" Nullable="false" Partner="business_unit_era_essfilenote">
+          <ReferentialConstraint Property="_owningbusinessunit_value" ReferencedProperty="businessunitid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_essfilenote_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_era_essfilenote" />
+        <NavigationProperty Name="era_essfilenote_AsyncOperations" Type="Collection(mscrm.asyncoperation)" Partner="regardingobjectid_era_essfilenote" />
+        <NavigationProperty Name="era_essfilenote_MailboxTrackingFolders" Type="Collection(mscrm.mailboxtrackingfolder)" Partner="regardingobjectid_era_essfilenote" />
+        <NavigationProperty Name="era_essfilenote_ProcessSession" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_era_essfilenote" />
+        <NavigationProperty Name="era_essfilenote_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_era_essfilenote" />
+        <NavigationProperty Name="era_essfilenote_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_era_essfilenote" />
+        <NavigationProperty Name="era_ESSTeamUserID" Type="mscrm.era_essteamuser" Nullable="false" Partner="era_era_essteamuser_era_essfilenote_ESSTeamUser">
+          <ReferentialConstraint Property="_era_essteamuserid_value" ReferencedProperty="era_essteamuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_ESSFileID" Type="mscrm.era_evacuationfile" Nullable="false" Partner="era_era_evacuationfile_era_essfilenote_ESSFileID">
+          <ReferentialConstraint Property="_era_essfileid_value" ReferencedProperty="era_evacuationfileid" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="era_essfilesupport" BaseType="mscrm.crmbaseentity">
+        <Key>
+          <PropertyRef Name="era_essfilesupportid" />
+        </Key>
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="_era_essfileid_value" Type="Edm.Guid" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="era_essfilesupportid" Type="Edm.Guid" />
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_essfilesupport_createdby">
+          <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="createdonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_essfilesupport_createdonbehalfby">
+          <ReferentialConstraint Property="_createdonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_essfilesupport_modifiedby">
+          <ReferentialConstraint Property="_modifiedby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="modifiedonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_essfilesupport_modifiedonbehalfby">
+          <ReferentialConstraint Property="_modifiedonbehalfby_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owninguser" Type="mscrm.systemuser" Nullable="false" Partner="user_era_essfilesupport">
+          <ReferentialConstraint Property="_owninguser_value" ReferencedProperty="systemuserid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningteam" Type="mscrm.team" Nullable="false" Partner="team_era_essfilesupport">
+          <ReferentialConstraint Property="_owningteam_value" ReferencedProperty="teamid" />
+        </NavigationProperty>
+        <NavigationProperty Name="ownerid" Type="mscrm.principal" Nullable="false" Partner="owner_era_essfilesupport">
+          <ReferentialConstraint Property="_ownerid_value" ReferencedProperty="ownerid" />
+        </NavigationProperty>
+        <NavigationProperty Name="owningbusinessunit" Type="mscrm.businessunit" Nullable="false" Partner="business_unit_era_essfilesupport">
+          <ReferentialConstraint Property="_owningbusinessunit_value" ReferencedProperty="businessunitid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_essfilesupport_SyncErrors" Type="Collection(mscrm.syncerror)" Partner="regardingobjectid_era_essfilesupport" />
+        <NavigationProperty Name="era_essfilesupport_DuplicateMatchingRecord" Type="Collection(mscrm.duplicaterecord)" Partner="duplicaterecordid_era_essfilesupport" />
+        <NavigationProperty Name="era_essfilesupport_DuplicateBaseRecord" Type="Collection(mscrm.duplicaterecord)" Partner="baserecordid_era_essfilesupport" />
+        <NavigationProperty Name="era_essfilesupport_AsyncOperations" Type="Collection(mscrm.asyncoperation)" Partner="regardingobjectid_era_essfilesupport" />
+        <NavigationProperty Name="era_essfilesupport_MailboxTrackingFolders" Type="Collection(mscrm.mailboxtrackingfolder)" Partner="regardingobjectid_era_essfilesupport" />
+        <NavigationProperty Name="era_essfilesupport_ProcessSession" Type="Collection(mscrm.processsession)" Partner="regardingobjectid_era_essfilesupport" />
+        <NavigationProperty Name="era_essfilesupport_BulkDeleteFailures" Type="Collection(mscrm.bulkdeletefailure)" Partner="regardingobjectid_era_essfilesupport" />
+        <NavigationProperty Name="era_essfilesupport_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_era_essfilesupport" />
+        <NavigationProperty Name="era_ESSFileID" Type="mscrm.era_evacuationfile" Nullable="false" Partner="era_era_evacuationfile_era_essfilesupport_ESSFile">
+          <ReferentialConstraint Property="_era_essfileid_value" ReferencedProperty="era_evacuationfileid" />
+        </NavigationProperty>
+      </EntityType>
       <EntityType Name="era_essteamarea" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="era_essteamareaid" />
@@ -8079,6 +8223,7 @@
         <NavigationProperty Name="era_ESSTeamId" Type="mscrm.era_essteam" Nullable="false" Partner="era_essteamuser_ESSTeamId">
           <ReferentialConstraint Property="_era_essteamid_value" ReferencedProperty="era_essteamid" />
         </NavigationProperty>
+        <NavigationProperty Name="era_era_essteamuser_era_essfilenote_ESSTeamUser" Type="Collection(mscrm.era_essfilenote)" Partner="era_ESSTeamUserID" />
       </EntityType>
       <EntityType Name="era_evacuationfile" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -8099,13 +8244,13 @@
         <Property Name="era_addressline1" Type="Edm.String" Unicode="false" />
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="era_country" Type="Edm.String" Unicode="false" />
+        <Property Name="_era_currentneedsassessmentid_value" Type="Edm.Guid" />
         <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="importsequencenumber" Type="Edm.Int32" />
         <Property Name="era_evacuationfiledate" Type="Edm.DateTimeOffset" />
         <Property Name="era_paperbasedessfile" Type="Edm.String" Unicode="false" />
         <Property Name="era_essfilenumber" Type="Edm.Int32" />
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="statuscode" Type="Edm.Int32" />
         <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="era_secrettext" Type="Edm.String" Unicode="false" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
@@ -8118,6 +8263,7 @@
         <Property Name="era_essfilestatus" Type="Edm.Int32" />
         <Property Name="era_evacuationfileid" Type="Edm.Guid" />
         <Property Name="_era_registrant_value" Type="Edm.Guid" />
+        <Property Name="statuscode" Type="Edm.Int32" />
         <Property Name="_era_autonumberid_value" Type="Edm.Guid" />
         <Property Name="era_name" Type="Edm.String" Unicode="false" />
         <Property Name="era_dayssincecreated" Type="Edm.Int32" />
@@ -8167,34 +8313,45 @@
           <ReferentialConstraint Property="_era_taskid_value" ReferencedProperty="era_taskid" />
         </NavigationProperty>
         <NavigationProperty Name="era_era_evacuationfile_era_householdmember_EvacuationFileid" Type="Collection(mscrm.era_householdmember)" Partner="era_EvacuationFileid" />
+        <NavigationProperty Name="era_era_evacuationfile_era_essfilenote_ESSFileID" Type="Collection(mscrm.era_essfilenote)" Partner="era_ESSFileID" />
+        <NavigationProperty Name="era_era_evacuationfile_era_essfilesupport_ESSFile" Type="Collection(mscrm.era_essfilesupport)" Partner="era_ESSFileID" />
+        <NavigationProperty Name="era_CurrentNeedsAssessmentid" Type="mscrm.era_needassessment" Nullable="false" Partner="era_era_needassessment_era_evacuationfile_CurrentNeedsAssessmentid">
+          <ReferentialConstraint Property="_era_currentneedsassessmentid_value" ReferencedProperty="era_needassessmentid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_era_evacuationfile_era_needsassessmentanimal_ESSFileid" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="era_ESSFileid" />
       </EntityType>
       <EntityType Name="era_householdmember" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="era_householdmemberid" />
         </Key>
-        <Property Name="_owningteam_value" Type="Edm.Guid" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
-        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="era_dateofbirth" Type="Edm.Date" />
         <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
         <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="era_householdmemberid" Type="Edm.Guid" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_isunder19" Type="Edm.Boolean" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="statuscode" Type="Edm.Int32" />
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="era_isunder19" Type="Edm.Boolean" />
+        <Property Name="era_firstname" Type="Edm.String" Unicode="false" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="era_householdmemberid" Type="Edm.Guid" />
+        <Property Name="era_isprimaryregistrant" Type="Edm.Boolean" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="era_lastname" Type="Edm.String" Unicode="false" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="era_gender" Type="Edm.Int32" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_era_evacuationfileid_value" Type="Edm.Guid" />
         <Property Name="statecode" Type="Edm.Int32" />
         <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
-        <Property Name="era_isprimaryregistrant" Type="Edm.Boolean" />
-        <Property Name="_era_evacuationfileid_value" Type="Edm.Guid" />
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
         <Property Name="_era_registrant_value" Type="Edm.Guid" />
+        <Property Name="era_initials" Type="Edm.String" Unicode="false" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_householdmember_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -8310,65 +8467,71 @@
         <NavigationProperty Name="era_ESSTeamId" Type="mscrm.era_essteam" Nullable="false" Partner="era_essteam_jurisdiction">
           <ReferentialConstraint Property="_era_essteamid_value" ReferencedProperty="era_essteamid" />
         </NavigationProperty>
+        <NavigationProperty Name="era_era_jurisdiction_era_needassessment_Jurisdiction" Type="Collection(mscrm.era_needassessment)" Partner="era_Jurisdictionid" />
       </EntityType>
       <EntityType Name="era_needassessment" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="era_needassessmentid" />
         </Key>
-        <Property Name="era_haspetfood" Type="Edm.Int32" />
-        <Property Name="era_emailrefusal" Type="Edm.Boolean" />
-        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="era_petcareplans" Type="Edm.String" Unicode="false" />
-        <Property Name="era_hasinquiryreferral" Type="Edm.Boolean" />
-        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="era_phonenumberrefusal" Type="Edm.Boolean" />
-        <Property Name="era_haschildcarereferral" Type="Edm.Boolean" />
-        <Property Name="era_dietaryrequirementdetails" Type="Edm.String" Unicode="false" />
-        <Property Name="era_medicationrequirement" Type="Edm.Boolean" />
-        <Property Name="era_canevacueeprovideclothing" Type="Edm.Int32" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="era_totalhouseholdanimals" Type="Edm.Int32" />
-        <Property Name="era_canevacueeprovidetransportation" Type="Edm.Int32" />
-        <Property Name="statecode" Type="Edm.Int32" />
-        <Property Name="era_needsassessmenttype" Type="Edm.Int32" />
-        <Property Name="statuscode" Type="Edm.Int32" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_needassessmentid" Type="Edm.Guid" />
-        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
-        <Property Name="_era_evacuationfile_value" Type="Edm.Guid" />
-        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
-        <Property Name="versionnumber" Type="Edm.Int64" />
-        <Property Name="era_householdanimalstypecount" Type="Edm.Int32" />
-        <Property Name="era_haspetcarereferral" Type="Edm.Boolean" />
-        <Property Name="era_evacuationimpacttohousehold" Type="Edm.String" Unicode="false" />
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
-        <Property Name="era_canevacueeprovidelodging" Type="Edm.Int32" />
-        <Property Name="era_hashealthservicesreferral" Type="Edm.Boolean" />
-        <Property Name="era_haspersonalservicesreferral" Type="Edm.Boolean" />
-        <Property Name="era_totalhouseholdanimals_date" Type="Edm.DateTimeOffset" />
-        <Property Name="era_householdanimalstypecount_date" Type="Edm.DateTimeOffset" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="era_canevacueeprovidefood" Type="Edm.Int32" />
-        <Property Name="era_hasenoughsupply" Type="Edm.Boolean" />
         <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_sharingrestriction" Type="Edm.Boolean" />
-        <Property Name="era_insurancecoverage" Type="Edm.Int32" />
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
-        <Property Name="era_collectionandauthorization" Type="Edm.Boolean" />
-        <Property Name="era_transportationrequirement" Type="Edm.Int32" />
+        <Property Name="era_totalhouseholdanimals" Type="Edm.Int32" />
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="era_hasinquiryreferral" Type="Edm.Boolean" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
         <Property Name="era_householdanimalstypecount_state" Type="Edm.Int32" />
         <Property Name="era_canevacueeprovideincidentals" Type="Edm.Int32" />
-        <Property Name="era_externalreferralsdetails" Type="Edm.String" Unicode="false" />
-        <Property Name="era_totalhouseholdanimals_state" Type="Edm.Int32" />
-        <Property Name="_owningteam_value" Type="Edm.Guid" />
-        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="era_householdrecoveryplan" Type="Edm.String" Unicode="false" />
-        <Property Name="era_hasfirstaidreferral" Type="Edm.Boolean" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="era_needsassessmentdate" Type="Edm.DateTimeOffset" />
-        <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_dietaryrequirement" Type="Edm.Boolean" />
+        <Property Name="era_dietaryrequirementdetails" Type="Edm.String" Unicode="false" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_needsassessmenttype" Type="Edm.Int32" />
+        <Property Name="era_haspetcarereferral" Type="Edm.Boolean" />
+        <Property Name="era_canevacueeprovidetransportation" Type="Edm.Int32" />
+        <Property Name="era_addressline2" Type="Edm.String" Unicode="false" />
         <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="_era_evacuationfile_value" Type="Edm.Guid" />
+        <Property Name="era_collectionandauthorization" Type="Edm.Boolean" />
+        <Property Name="era_petcareplans" Type="Edm.String" Unicode="false" />
+        <Property Name="era_canevacueeprovidelodging" Type="Edm.Int32" />
+        <Property Name="era_hashealthservicesreferral" Type="Edm.Boolean" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="era_hasfirstaidreferral" Type="Edm.Boolean" />
+        <Property Name="era_sharingrestriction" Type="Edm.Boolean" />
+        <Property Name="era_postalcode" Type="Edm.String" Unicode="false" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="_era_jurisdictionid_value" Type="Edm.Guid" />
+        <Property Name="era_evacuationimpacttohousehold" Type="Edm.String" Unicode="false" />
+        <Property Name="era_needsassessmentdate" Type="Edm.DateTimeOffset" />
+        <Property Name="era_registrationlocation" Type="Edm.String" Unicode="false" />
+        <Property Name="era_haspetfood" Type="Edm.Int32" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="era_emailrefusal" Type="Edm.Boolean" />
+        <Property Name="era_insurancecoverage" Type="Edm.Int32" />
+        <Property Name="era_householdanimalstypecount" Type="Edm.Int32" />
+        <Property Name="era_dietaryrequirement" Type="Edm.Boolean" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="era_haspersonalservicesreferral" Type="Edm.Boolean" />
+        <Property Name="era_phonenumberrefusal" Type="Edm.Boolean" />
+        <Property Name="era_totalhouseholdanimals_date" Type="Edm.DateTimeOffset" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="era_totalhouseholdanimals_state" Type="Edm.Int32" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="era_externalreferralsdetails" Type="Edm.String" Unicode="false" />
+        <Property Name="era_canevacueeprovideclothing" Type="Edm.Int32" />
+        <Property Name="era_haschildcarereferral" Type="Edm.Boolean" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="era_canevacueeprovidefood" Type="Edm.Int32" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="era_hasenoughsupply" Type="Edm.Boolean" />
+        <Property Name="era_medicationrequirement" Type="Edm.Boolean" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_addressline1" Type="Edm.String" Unicode="false" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_householdanimalstypecount_date" Type="Edm.DateTimeOffset" />
+        <Property Name="era_needassessmentid" Type="Edm.Guid" />
+        <Property Name="era_transportationrequirement" Type="Edm.Int32" />
+        <Property Name="era_householdrecoveryplan" Type="Edm.String" Unicode="false" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needassessment_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -8408,6 +8571,10 @@
         <NavigationProperty Name="era_NeedsAssessmentEvacuee_NeedsAssessmentID" Type="Collection(mscrm.era_needsassessmentevacuee)" Partner="era_NeedsAssessmentID" />
         <NavigationProperty Name="era_era_needassessment_era_needsassessmentanimal_NeedsAssessment" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="era_NeedsAssessment" />
         <NavigationProperty Name="era_era_householdmember_era_needassessment" Type="Collection(mscrm.era_householdmember)" Partner="era_era_householdmember_era_needassessment" />
+        <NavigationProperty Name="era_Jurisdictionid" Type="mscrm.era_jurisdiction" Nullable="false" Partner="era_era_jurisdiction_era_needassessment_Jurisdiction">
+          <ReferentialConstraint Property="_era_jurisdictionid_value" ReferencedProperty="era_jurisdictionid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_era_needassessment_era_evacuationfile_CurrentNeedsAssessmentid" Type="Collection(mscrm.era_evacuationfile)" Partner="era_CurrentNeedsAssessmentid" />
       </EntityType>
       <EntityType Name="era_needsassessmentanimal" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -8421,19 +8588,20 @@
         <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
         <Property Name="_modifiedby_value" Type="Edm.Guid" />
         <Property Name="era_needsassessmentanimalid" Type="Edm.Guid" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
         <Property Name="createdon" Type="Edm.DateTimeOffset" />
         <Property Name="_ownerid_value" Type="Edm.Guid" />
         <Property Name="_era_needsassessment_value" Type="Edm.Guid" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
         <Property Name="era_numberofpets" Type="Edm.Int32" />
-        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="_era_essfileid_value" Type="Edm.Guid" />
         <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
         <Property Name="era_name" Type="Edm.String" Unicode="false" />
         <Property Name="statuscode" Type="Edm.Int32" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="versionnumber" Type="Edm.Int64" />
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
         <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_needsassessmentanimal_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -8468,6 +8636,9 @@
         <NavigationProperty Name="era_needsassessmentanimal_PrincipalObjectAttributeAccesses" Type="Collection(mscrm.principalobjectattributeaccess)" Partner="objectid_era_needsassessmentanimal" />
         <NavigationProperty Name="era_NeedsAssessment" Type="mscrm.era_needassessment" Nullable="false" Partner="era_era_needassessment_era_needsassessmentanimal_NeedsAssessment">
           <ReferentialConstraint Property="_era_needsassessment_value" ReferencedProperty="era_needassessmentid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_ESSFileid" Type="mscrm.era_evacuationfile" Nullable="false" Partner="era_era_evacuationfile_era_needsassessmentanimal_ESSFileid">
+          <ReferentialConstraint Property="_era_essfileid_value" ReferencedProperty="era_evacuationfileid" />
         </NavigationProperty>
       </EntityType>
       <EntityType Name="era_needsassessmentevacuee" BaseType="mscrm.crmbaseentity">
@@ -12778,6 +12949,12 @@
         <NavigationProperty Name="regardingobjectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_MailboxTrackingFolders">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="new_casresponseid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_essfilenote" Type="mscrm.era_essfilenote" Nullable="false" Partner="era_essfilenote_MailboxTrackingFolders">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_essfilenoteid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_essfilesupport" Type="mscrm.era_essfilesupport" Nullable="false" Partner="era_essfilesupport_MailboxTrackingFolders">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_essfilesupportid" />
+        </NavigationProperty>
         <NavigationProperty Name="modifiedonbehalfby" Type="mscrm.systemuser" Nullable="false" Partner="lk_mailboxtrackingfolder_modifiedonbehalfby">
           <ReferentialConstraint Property="_modifiedonbehalfby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -15069,6 +15246,8 @@
         <NavigationProperty Name="owner_era_needsassessmentanimal" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="ownerid" />
         <NavigationProperty Name="owner_era_householdmember" Type="Collection(mscrm.era_householdmember)" Partner="ownerid" />
         <NavigationProperty Name="owner_new_casresponse" Type="Collection(mscrm.new_casresponse)" Partner="ownerid" />
+        <NavigationProperty Name="owner_era_essfilenote" Type="Collection(mscrm.era_essfilenote)" Partner="ownerid" />
+        <NavigationProperty Name="owner_era_essfilesupport" Type="Collection(mscrm.era_essfilesupport)" Partner="ownerid" />
         <NavigationProperty Name="owner_personaldocumenttemplates" Type="Collection(mscrm.personaldocumenttemplate)" Partner="ownerid" />
         <NavigationProperty Name="owner_accounts" Type="Collection(mscrm.account)" Partner="ownerid" />
         <NavigationProperty Name="owner_goalrollupquery" Type="Collection(mscrm.goalrollupquery)" Partner="ownerid" />
@@ -16259,6 +16438,12 @@
         <NavigationProperty Name="objectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_PrincipalObjectAttributeAccesses">
           <ReferentialConstraint Property="_objectid_value" ReferencedProperty="new_casresponseid" />
         </NavigationProperty>
+        <NavigationProperty Name="objectid_era_essfilenote" Type="mscrm.era_essfilenote" Nullable="false" Partner="era_essfilenote_PrincipalObjectAttributeAccesses">
+          <ReferentialConstraint Property="_objectid_value" ReferencedProperty="era_essfilenoteid" />
+        </NavigationProperty>
+        <NavigationProperty Name="objectid_era_essfilesupport" Type="mscrm.era_essfilesupport" Nullable="false" Partner="era_essfilesupport_PrincipalObjectAttributeAccesses">
+          <ReferentialConstraint Property="_objectid_value" ReferencedProperty="era_essfilesupportid" />
+        </NavigationProperty>
         <NavigationProperty Name="objectid_letter" Type="mscrm.letter" Nullable="false" Partner="letter_principalobjectattributeaccess" />
         <NavigationProperty Name="objectid_reportcategory" Type="mscrm.reportcategory" Nullable="false" Partner="reportcategory_principalobjectattributeaccess">
           <ReferentialConstraint Property="_objectid_value" ReferencedProperty="reportcategoryid" />
@@ -16649,6 +16834,12 @@
         </NavigationProperty>
         <NavigationProperty Name="regardingobjectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_ProcessSession">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="new_casresponseid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_essfilenote" Type="mscrm.era_essfilenote" Nullable="false" Partner="era_essfilenote_ProcessSession">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_essfilenoteid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_essfilesupport" Type="mscrm.era_essfilesupport" Nullable="false" Partner="era_essfilesupport_ProcessSession">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_essfilesupportid" />
         </NavigationProperty>
         <NavigationProperty Name="regardingobjectid_queue" Type="mscrm.queue" Nullable="false" Partner="Queue_ProcessSessions">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="queueid" />
@@ -21150,6 +21341,12 @@
         <NavigationProperty Name="regardingobjectid_new_casresponse" Type="mscrm.new_casresponse" Nullable="false" Partner="new_casresponse_SyncErrors">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="new_casresponseid" />
         </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_essfilenote" Type="mscrm.era_essfilenote" Nullable="false" Partner="era_essfilenote_SyncErrors">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_essfilenoteid" />
+        </NavigationProperty>
+        <NavigationProperty Name="regardingobjectid_era_essfilesupport" Type="mscrm.era_essfilesupport" Nullable="false" Partner="era_essfilesupport_SyncErrors">
+          <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="era_essfilesupportid" />
+        </NavigationProperty>
         <NavigationProperty Name="regardingobjectid_ExpiredProcess_syncerror" Type="mscrm.expiredprocess" Nullable="false" Partner="ExpiredProcess_SyncErrors">
           <ReferentialConstraint Property="_regardingobjectid_value" ReferencedProperty="businessprocessflowinstanceid" />
         </NavigationProperty>
@@ -22146,6 +22343,16 @@
         <NavigationProperty Name="lk_new_casresponse_modifiedby" Type="Collection(mscrm.new_casresponse)" Partner="modifiedby" />
         <NavigationProperty Name="lk_new_casresponse_modifiedonbehalfby" Type="Collection(mscrm.new_casresponse)" Partner="modifiedonbehalfby" />
         <NavigationProperty Name="user_new_casresponse" Type="Collection(mscrm.new_casresponse)" Partner="owninguser" />
+        <NavigationProperty Name="lk_era_essfilenote_createdby" Type="Collection(mscrm.era_essfilenote)" Partner="createdby" />
+        <NavigationProperty Name="lk_era_essfilenote_createdonbehalfby" Type="Collection(mscrm.era_essfilenote)" Partner="createdonbehalfby" />
+        <NavigationProperty Name="lk_era_essfilenote_modifiedby" Type="Collection(mscrm.era_essfilenote)" Partner="modifiedby" />
+        <NavigationProperty Name="lk_era_essfilenote_modifiedonbehalfby" Type="Collection(mscrm.era_essfilenote)" Partner="modifiedonbehalfby" />
+        <NavigationProperty Name="user_era_essfilenote" Type="Collection(mscrm.era_essfilenote)" Partner="owninguser" />
+        <NavigationProperty Name="lk_era_essfilesupport_createdby" Type="Collection(mscrm.era_essfilesupport)" Partner="createdby" />
+        <NavigationProperty Name="lk_era_essfilesupport_createdonbehalfby" Type="Collection(mscrm.era_essfilesupport)" Partner="createdonbehalfby" />
+        <NavigationProperty Name="lk_era_essfilesupport_modifiedby" Type="Collection(mscrm.era_essfilesupport)" Partner="modifiedby" />
+        <NavigationProperty Name="lk_era_essfilesupport_modifiedonbehalfby" Type="Collection(mscrm.era_essfilesupport)" Partner="modifiedonbehalfby" />
+        <NavigationProperty Name="user_era_essfilesupport" Type="Collection(mscrm.era_essfilesupport)" Partner="owninguser" />
         <NavigationProperty Name="lk_slakpiinstancebase_createdonbehalfby" Type="Collection(mscrm.slakpiinstance)" Partner="createdonbehalfby" />
         <NavigationProperty Name="lk_mobileofflineprofileitemassocaition_modifiedonbehalfby" Type="Collection(mscrm.mobileofflineprofileitemassociation)" Partner="modifiedonbehalfby" />
         <NavigationProperty Name="lk_userqueryvisualizationbase_modifiedonbehalfby" Type="Collection(mscrm.userqueryvisualization)" Partner="modifiedonbehalfby" />
@@ -22949,6 +23156,8 @@
         <NavigationProperty Name="team_era_needsassessmentanimal" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="owningteam" />
         <NavigationProperty Name="team_era_householdmember" Type="Collection(mscrm.era_householdmember)" Partner="owningteam" />
         <NavigationProperty Name="team_new_casresponse" Type="Collection(mscrm.new_casresponse)" Partner="owningteam" />
+        <NavigationProperty Name="team_era_essfilenote" Type="Collection(mscrm.era_essfilenote)" Partner="owningteam" />
+        <NavigationProperty Name="team_era_essfilesupport" Type="Collection(mscrm.era_essfilesupport)" Partner="owningteam" />
         <NavigationProperty Name="team_DuplicateRules" Type="Collection(mscrm.duplicaterule)" Partner="owningteam" />
         <NavigationProperty Name="team_Imports" Type="Collection(mscrm.import)" Partner="owningteam" />
         <NavigationProperty Name="OwningTeam_postfollows" Type="Collection(mscrm.postfollow)" Partner="owningteam" />
@@ -29725,6 +29934,8 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="regardingobjectid_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="regardingobjectid_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_essfilenote" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_essfilesupport" Target="era_essfilesupports" />
           <NavigationPropertyBinding Path="regardingobjectid_report" Target="reports" />
           <NavigationPropertyBinding Path="AsyncOperation_Emails" Target="emails" />
           <NavigationPropertyBinding Path="regardingobjectid_recurringappointmentmaster" Target="recurringappointmentmasters" />
@@ -30154,6 +30365,8 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="regardingobjectid_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="regardingobjectid_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_essfilenote" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_essfilesupport" Target="era_essfilesupports" />
           <NavigationPropertyBinding Path="regardingobjectid_customeraddress" Target="customeraddresses" />
           <NavigationPropertyBinding Path="regardingobjectid_annualfiscalcalendar" Target="annualfiscalcalendars" />
           <NavigationPropertyBinding Path="regardingobjectid_fax" Target="faxes" />
@@ -30360,6 +30573,8 @@
           <NavigationPropertyBinding Path="business_unit_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="business_unit_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="business_unit_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="business_unit_era_essfilenote" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="business_unit_era_essfilesupport" Target="era_essfilesupports" />
           <NavigationPropertyBinding Path="BusinessUnit_SyncErrors" Target="syncerrors" />
           <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
           <NavigationPropertyBinding Path="BulkDeleteOperation_BusinessUnit" Target="bulkdeleteoperations" />
@@ -31262,6 +31477,8 @@
           <NavigationPropertyBinding Path="baserecordid_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="duplicaterecordid_new_casresponse" Target="new_casresponses" />
           <NavigationPropertyBinding Path="baserecordid_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="duplicaterecordid_era_essfilesupport" Target="era_essfilesupports" />
+          <NavigationPropertyBinding Path="baserecordid_era_essfilesupport" Target="era_essfilesupports" />
           <NavigationPropertyBinding Path="baserecordid_goalrollupquery" Target="goalrollupqueries" />
           <NavigationPropertyBinding Path="duplicaterecordid_publisher" Target="publishers" />
           <NavigationPropertyBinding Path="baserecordid_transactioncurrency" Target="transactioncurrencies" />
@@ -31733,6 +31950,43 @@
           <NavigationPropertyBinding Path="era_regionaldistrict_EMBCRegion" Target="era_regionaldistricts" />
         </EntitySet>
         <EntitySet Name="era_era_householdmember_era_needassessmentset" EntityType="Microsoft.Dynamics.CRM.era_era_householdmember_era_needassessment" />
+        <EntitySet Name="era_essfilenotes" EntityType="Microsoft.Dynamics.CRM.era_essfilenote">
+          <NavigationPropertyBinding Path="createdby" Target="systemusers" />
+          <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="owninguser" Target="systemusers" />
+          <NavigationPropertyBinding Path="owningteam" Target="teams" />
+          <NavigationPropertyBinding Path="ownerid" Target="owners" />
+          <NavigationPropertyBinding Path="owningbusinessunit" Target="businessunits" />
+          <NavigationPropertyBinding Path="era_essfilenote_SyncErrors" Target="syncerrors" />
+          <NavigationPropertyBinding Path="era_essfilenote_AsyncOperations" Target="asyncoperations" />
+          <NavigationPropertyBinding Path="era_essfilenote_MailboxTrackingFolders" Target="mailboxtrackingfolders" />
+          <NavigationPropertyBinding Path="era_essfilenote_ProcessSession" Target="processsessions" />
+          <NavigationPropertyBinding Path="era_essfilenote_BulkDeleteFailures" Target="bulkdeletefailures" />
+          <NavigationPropertyBinding Path="era_essfilenote_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
+          <NavigationPropertyBinding Path="era_ESSTeamUserID" Target="era_essteamusers" />
+          <NavigationPropertyBinding Path="era_ESSFileID" Target="era_evacuationfiles" />
+        </EntitySet>
+        <EntitySet Name="era_essfilesupports" EntityType="Microsoft.Dynamics.CRM.era_essfilesupport">
+          <NavigationPropertyBinding Path="createdby" Target="systemusers" />
+          <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedby" Target="systemusers" />
+          <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
+          <NavigationPropertyBinding Path="owninguser" Target="systemusers" />
+          <NavigationPropertyBinding Path="owningteam" Target="teams" />
+          <NavigationPropertyBinding Path="ownerid" Target="owners" />
+          <NavigationPropertyBinding Path="owningbusinessunit" Target="businessunits" />
+          <NavigationPropertyBinding Path="era_essfilesupport_SyncErrors" Target="syncerrors" />
+          <NavigationPropertyBinding Path="era_essfilesupport_DuplicateMatchingRecord" Target="duplicaterecords" />
+          <NavigationPropertyBinding Path="era_essfilesupport_DuplicateBaseRecord" Target="duplicaterecords" />
+          <NavigationPropertyBinding Path="era_essfilesupport_AsyncOperations" Target="asyncoperations" />
+          <NavigationPropertyBinding Path="era_essfilesupport_MailboxTrackingFolders" Target="mailboxtrackingfolders" />
+          <NavigationPropertyBinding Path="era_essfilesupport_ProcessSession" Target="processsessions" />
+          <NavigationPropertyBinding Path="era_essfilesupport_BulkDeleteFailures" Target="bulkdeletefailures" />
+          <NavigationPropertyBinding Path="era_essfilesupport_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
+          <NavigationPropertyBinding Path="era_ESSFileID" Target="era_evacuationfiles" />
+        </EntitySet>
         <EntitySet Name="era_essteamareas" EntityType="Microsoft.Dynamics.CRM.era_essteamarea">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
           <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
@@ -31814,6 +32068,7 @@
           <NavigationPropertyBinding Path="era_essteamuser_BulkDeleteFailures" Target="bulkdeletefailures" />
           <NavigationPropertyBinding Path="era_essteamuser_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
           <NavigationPropertyBinding Path="era_ESSTeamId" Target="era_essteams" />
+          <NavigationPropertyBinding Path="era_era_essteamuser_era_essfilenote_ESSTeamUser" Target="era_essfilenotes" />
         </EntitySet>
         <EntitySet Name="era_evacuationfiles" EntityType="Microsoft.Dynamics.CRM.era_evacuationfile">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31838,6 +32093,10 @@
           <NavigationPropertyBinding Path="era_Registrant" Target="contacts" />
           <NavigationPropertyBinding Path="era_TaskId" Target="era_tasks" />
           <NavigationPropertyBinding Path="era_era_evacuationfile_era_householdmember_EvacuationFileid" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="era_era_evacuationfile_era_essfilenote_ESSFileID" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="era_era_evacuationfile_era_essfilesupport_ESSFile" Target="era_essfilesupports" />
+          <NavigationPropertyBinding Path="era_CurrentNeedsAssessmentid" Target="era_needassessments" />
+          <NavigationPropertyBinding Path="era_era_evacuationfile_era_needsassessmentanimal_ESSFileid" Target="era_needsassessmentanimals" />
         </EntitySet>
         <EntitySet Name="era_householdmembers" EntityType="Microsoft.Dynamics.CRM.era_householdmember">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31887,6 +32146,7 @@
           <NavigationPropertyBinding Path="era_ESSTeamArea_JurisdictionID" Target="era_essteamareas" />
           <NavigationPropertyBinding Path="era_Task_JurisdictionID" Target="era_tasks" />
           <NavigationPropertyBinding Path="era_ESSTeamId" Target="era_essteams" />
+          <NavigationPropertyBinding Path="era_era_jurisdiction_era_needassessment_Jurisdiction" Target="era_needassessments" />
         </EntitySet>
         <EntitySet Name="era_needassessments" EntityType="Microsoft.Dynamics.CRM.era_needassessment">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31910,6 +32170,8 @@
           <NavigationPropertyBinding Path="era_NeedsAssessmentEvacuee_NeedsAssessmentID" Target="era_needsassessmentevacuees" />
           <NavigationPropertyBinding Path="era_era_needassessment_era_needsassessmentanimal_NeedsAssessment" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="era_era_householdmember_era_needassessment" Target="era_householdmembers" />
+          <NavigationPropertyBinding Path="era_Jurisdictionid" Target="era_jurisdictions" />
+          <NavigationPropertyBinding Path="era_era_needassessment_era_evacuationfile_CurrentNeedsAssessmentid" Target="era_evacuationfiles" />
         </EntitySet>
         <EntitySet Name="era_needsassessmentanimals" EntityType="Microsoft.Dynamics.CRM.era_needsassessmentanimal">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31929,6 +32191,7 @@
           <NavigationPropertyBinding Path="era_needsassessmentanimal_BulkDeleteFailures" Target="bulkdeletefailures" />
           <NavigationPropertyBinding Path="era_needsassessmentanimal_PrincipalObjectAttributeAccesses" Target="principalobjectattributeaccessset" />
           <NavigationPropertyBinding Path="era_NeedsAssessment" Target="era_needassessments" />
+          <NavigationPropertyBinding Path="era_ESSFileid" Target="era_evacuationfiles" />
         </EntitySet>
         <EntitySet Name="era_needsassessmentevacuees" EntityType="Microsoft.Dynamics.CRM.era_needsassessmentevacuee">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -33241,6 +33504,8 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="regardingobjectid_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="regardingobjectid_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_essfilenote" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_essfilesupport" Target="era_essfilesupports" />
           <NavigationPropertyBinding Path="modifiedonbehalfby" Target="systemusers" />
           <NavigationPropertyBinding Path="ownerid" Target="owners" />
           <NavigationPropertyBinding Path="createdonbehalfby" Target="systemusers" />
@@ -34214,6 +34479,8 @@
           <NavigationPropertyBinding Path="objectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="objectid_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="objectid_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="objectid_era_essfilenote" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="objectid_era_essfilesupport" Target="era_essfilesupports" />
           <NavigationPropertyBinding Path="objectid_letter" Target="letters" />
           <NavigationPropertyBinding Path="objectid_reportcategory" Target="reportcategories" />
           <NavigationPropertyBinding Path="objectid_sharepointdocumentlocation" Target="sharepointdocumentlocations" />
@@ -34338,6 +34605,8 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="regardingobjectid_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="regardingobjectid_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_essfilenote" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_essfilesupport" Target="era_essfilesupports" />
           <NavigationPropertyBinding Path="regardingobjectid_queue" Target="queues" />
           <NavigationPropertyBinding Path="canceledby" Target="systemusers" />
           <NavigationPropertyBinding Path="regardingobjectid_contact" Target="contacts" />
@@ -35710,6 +35979,8 @@
           <NavigationPropertyBinding Path="regardingobjectid_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="regardingobjectid_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="regardingobjectid_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_essfilenote" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="regardingobjectid_era_essfilesupport" Target="era_essfilesupports" />
           <NavigationPropertyBinding Path="regardingobjectid_ExpiredProcess_syncerror" Target="expiredprocesses" />
           <NavigationPropertyBinding Path="regardingobjectid_email_syncerror" Target="emails" />
           <NavigationPropertyBinding Path="regardingobjectid_systemuser" Target="systemusers" />
@@ -36368,6 +36639,16 @@
           <NavigationPropertyBinding Path="lk_new_casresponse_modifiedby" Target="new_casresponses" />
           <NavigationPropertyBinding Path="lk_new_casresponse_modifiedonbehalfby" Target="new_casresponses" />
           <NavigationPropertyBinding Path="user_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="lk_era_essfilenote_createdby" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="lk_era_essfilenote_createdonbehalfby" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="lk_era_essfilenote_modifiedby" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="lk_era_essfilenote_modifiedonbehalfby" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="user_era_essfilenote" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="lk_era_essfilesupport_createdby" Target="era_essfilesupports" />
+          <NavigationPropertyBinding Path="lk_era_essfilesupport_createdonbehalfby" Target="era_essfilesupports" />
+          <NavigationPropertyBinding Path="lk_era_essfilesupport_modifiedby" Target="era_essfilesupports" />
+          <NavigationPropertyBinding Path="lk_era_essfilesupport_modifiedonbehalfby" Target="era_essfilesupports" />
+          <NavigationPropertyBinding Path="user_era_essfilesupport" Target="era_essfilesupports" />
           <NavigationPropertyBinding Path="lk_slakpiinstancebase_createdonbehalfby" Target="slakpiinstances" />
           <NavigationPropertyBinding Path="lk_mobileofflineprofileitemassocaition_modifiedonbehalfby" Target="mobileofflineprofileitemassociations" />
           <NavigationPropertyBinding Path="lk_userqueryvisualizationbase_modifiedonbehalfby" Target="userqueryvisualizations" />
@@ -37068,6 +37349,8 @@
           <NavigationPropertyBinding Path="team_era_needsassessmentanimal" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="team_era_householdmember" Target="era_householdmembers" />
           <NavigationPropertyBinding Path="team_new_casresponse" Target="new_casresponses" />
+          <NavigationPropertyBinding Path="team_era_essfilenote" Target="era_essfilenotes" />
+          <NavigationPropertyBinding Path="team_era_essfilesupport" Target="era_essfilesupports" />
           <NavigationPropertyBinding Path="team_DuplicateRules" Target="duplicaterules" />
           <NavigationPropertyBinding Path="team_Imports" Target="imports" />
           <NavigationPropertyBinding Path="OwningTeam_postfollows" Target="postfollows" />
