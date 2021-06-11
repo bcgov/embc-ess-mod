@@ -65,6 +65,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.SetLink(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), needsAssessment);
             essContext.AddLink(file, nameof(era_evacuationfile.era_needsassessment_EvacuationFile), needsAssessment);
             essContext.SetLink(needsAssessment, nameof(era_needassessment.era_EvacuationFile), file);
+            essContext.SetLink(needsAssessment, nameof(era_needassessment.era_Jurisdictionid), essContext.LookupJurisdictionByCode(needsAssessment._era_jurisdictionid_value?.ToString()));
 
             //foreach (var member in file.era_era_evacuationfile_era_householdmember_EvacuationFileid)
             //{
@@ -246,40 +247,17 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         {
             var file = await essContext.era_evacuationfiles
                 .ByKey(id)
-                .Expand(f => f.era_Jurisdiction)
                 .Expand(f => f.era_Registrant)
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .GetValueAsync();
 
             essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
-            essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
-            essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment));
-
+            if (file.era_CurrentNeedsAssessmentid != null)
+            {
+                essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
+                essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment));
+            }
             var evacuationFile = mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
-
-            //var latestNeedsAssessment = essContext.era_needassessments
-            //    .Where(na => na.era_EvacuationFile.era_evacuationfileid == file.era_evacuationfileid)
-            //    .OrderByDescending(na => na.createdon)
-            //    .First();
-
-            //var needsAssessments = new[] { latestNeedsAssessment };
-            //evacuationFile.NeedsAssessments = needsAssessments.Select(na =>
-            //{
-            //    var needsAssessment = mapper.Map<NeedsAssessment>(na);
-            //    essContext.LoadProperty(na, nameof(era_needassessment.era_era_householdmember_era_needassessment));
-            //    foreach (var householdMember in na.era_era_householdmember_era_needassessment)
-            //    {
-            //        essContext.LoadProperty(householdMember, nameof(era_householdmember.era_Registrant));
-            //    }
-            //    needsAssessment.HouseholdMembers = mapper.Map<IEnumerable<HouseholdMember>>(na.era_era_householdmember_era_needassessment).ToArray();
-
-            //    essContext.LoadProperty(na, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment));
-
-            //    needsAssessment.Pets = mapper.Map<IEnumerable<Pet>>(na.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment);
-            //    return needsAssessment;
-            //}).ToArray();
-
-            //evacuationFile.RestrictedAccess = evacuationFile.NeedsAssessments.SelectMany(na => na.HouseholdMembers).Any(m => m.RestrictedAccess);
 
             return evacuationFile;
         }

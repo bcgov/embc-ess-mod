@@ -96,7 +96,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                   .ForMember(d => d.AddressLine1, opts => opts.MapFrom(s => s.era_addressline1))
                   .ForMember(d => d.AddressLine2, opts => opts.MapFrom(s => s.era_addressline2))
                   .ForMember(d => d.PostalCode, opts => opts.MapFrom(s => s.era_postalcode))
-                  .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.era_Jurisdictionid.era_jurisdictionid))
+                  .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s._era_jurisdictionid_value))
                   ;
 
             CreateMap<era_needassessment, NeedsAssessment>()
@@ -144,7 +144,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.IsUnder19, opts => opts.MapFrom(s => s.era_isunder19))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname.ToString()))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname.ToString()))
-                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => !s.era_Registrant.birthdate.HasValue
+                .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => !s.era_dateofbirth.HasValue
                     ? null
                     : $"{s.era_dateofbirth.Value.Month:D2}/{s.era_dateofbirth.Value.Day:D2}/{s.era_dateofbirth.Value.Year:D4}"))
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.era_initials.ToString()))

@@ -146,7 +146,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             for (var j = 0; j < originalNeedsAssessment.HouseholdMembers.Count(); j++)
             {
                 var originalHouseholdMember = originalNeedsAssessment.HouseholdMembers.OrderBy(m => m.DateOfBirth).ElementAt(j);
-                var householdMember = needsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant).OrderBy(m => m.DateOfBirth).ElementAt(j);
+                var householdMember = needsAssessment.HouseholdMembers.OrderBy(m => m.DateOfBirth).ElementAt(j);
                 householdMember.DateOfBirth.ShouldBe(originalHouseholdMember.DateOfBirth);
                 householdMember.FirstName.ShouldBe(originalHouseholdMember.FirstName);
                 householdMember.LastName.ShouldBe(originalHouseholdMember.LastName);
@@ -220,7 +220,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                                 FirstName = $"{uniqueSignature}_hm1",
                                 LastName = "hm1",
                                 Initials = $"{uniqueSignature}_1",
-                                Gender = "X",
+                                Gender = "Female",
                                 DateOfBirth = "03/11/2000",
                                 IsUnder19 = false,
                                 IsPrimaryRegistrant = false
@@ -230,7 +230,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                                 FirstName = $"{uniqueSignature}_hm2",
                                 LastName = "hm2",
                                 Initials = $"{uniqueSignature}_2",
-                                Gender = "M",
+                                Gender = "Male",
                                 DateOfBirth = "03/12/2010",
                                 IsUnder19 = true,
                                 IsPrimaryRegistrant = false
