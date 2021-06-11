@@ -28,7 +28,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "angular2-text-mask": "^9.0.0",
     "bootstrap": "^4.5.3",
-    "jquery": "^1.9.1",
+    "jquery": "^3.5.0",
     "moment": "^2.29.1",
     "mygovbc-captcha-widget": "git+https://github.com/bcgov/MyGovBC-CAPTCHA-Widget.git",
     "popper.js": "^1.14.7",

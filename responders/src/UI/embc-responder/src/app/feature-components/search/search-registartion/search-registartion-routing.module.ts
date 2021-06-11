@@ -22,7 +22,7 @@ const routes: Routes = [
       {
         path: 'task-details',
         loadChildren: () =>
-          import('../task-details/task-details.module').then(
+          import('../task-search/task-details/task-details.module').then(
             (m) => m.TaskDetailsModule
           )
       },

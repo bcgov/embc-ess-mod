@@ -41,7 +41,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createEvacueeDetailsForm();
-    this.evacueeSearchContext = this.evacueeSearchService.getEvacueeSearchContext();
+    this.evacueeSearchContext = this.evacueeSearchService.evacueeSearchContext;
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
@@ -55,14 +55,14 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     this.evacueeDetailsForm = this.formBuilder.group({
       firstName: [
         {
-          value: this.evacueeSearchService.getEvacueeSearchContext()
+          value: this.evacueeSearchService.evacueeSearchContext
             .evacueeSearchParameters.firstName,
           disabled: true
         }
       ],
       lastName: [
         {
-          value: this.evacueeSearchService.getEvacueeSearchContext()
+          value: this.evacueeSearchService.evacueeSearchContext
             .evacueeSearchParameters.lastName,
           disabled: true
         }
@@ -85,7 +85,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
       ],
       dateOfBirth: [
         {
-          value: this.evacueeSearchService.getEvacueeSearchContext()
+          value: this.evacueeSearchService.evacueeSearchContext
             .evacueeSearchParameters.dateOfBirth,
           disabled: true
         }

@@ -87,8 +87,8 @@ export const usernameCheckerror =
   'Unable to check username at this time. Please try again later';
 export const communityListError =
   'Unable to retrieve assigned communities at this time. Please try again later';
-export const createProfileError =
-  'Unable to create this profile at this time. Please try again later';
+export const createRegProfileError =
+  'Unable to create evacuee profile at this time. Please try again later';
 export const editProfileError =
   'Unable to update your user profile at this time. Please try again later';
 export const securityQuestionError =

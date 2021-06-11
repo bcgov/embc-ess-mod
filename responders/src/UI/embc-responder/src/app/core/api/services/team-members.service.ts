@@ -12,6 +12,7 @@ import { map, filter } from 'rxjs/operators';
 import { MemberLabelDescription } from '../models/member-label-description';
 import { MemberRoleDescription } from '../models/member-role-description';
 import { TeamMember } from '../models/team-member';
+import { TeamMemberResult } from '../models/team-member-result';
 
 @Injectable({
   providedIn: 'root',
@@ -96,7 +97,7 @@ export class TeamMembersService extends BaseService {
      * team member
      */
     body: TeamMember
-  }): Observable<StrictHttpResponse<void>> {
+  }): Observable<StrictHttpResponse<TeamMemberResult>> {
 
     const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersCreateTeamMemberPath, 'post');
     if (params) {
@@ -104,12 +105,12 @@ export class TeamMembersService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<TeamMemberResult>;
       })
     );
   }
@@ -130,10 +131,10 @@ export class TeamMembersService extends BaseService {
      * team member
      */
     body: TeamMember
-  }): Observable<void> {
+  }): Observable<TeamMemberResult> {
 
     return this.teamMembersCreateTeamMember$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
     );
   }
 
@@ -225,7 +226,7 @@ export class TeamMembersService extends BaseService {
      * team member
      */
     body: TeamMember
-  }): Observable<StrictHttpResponse<void>> {
+  }): Observable<StrictHttpResponse<TeamMemberResult>> {
 
     const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersUpdateTeamMemberPath, 'post');
     if (params) {
@@ -234,12 +235,12 @@ export class TeamMembersService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<TeamMemberResult>;
       })
     );
   }
@@ -265,10 +266,10 @@ export class TeamMembersService extends BaseService {
      * team member
      */
     body: TeamMember
-  }): Observable<void> {
+  }): Observable<TeamMemberResult> {
 
     return this.teamMembersUpdateTeamMember$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
     );
   }
 
@@ -293,7 +294,7 @@ export class TeamMembersService extends BaseService {
      * team member id
      */
     memberId: string;
-  }): Observable<StrictHttpResponse<void>> {
+  }): Observable<StrictHttpResponse<TeamMemberResult>> {
 
     const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersDeleteTeamMemberPath, 'delete');
     if (params) {
@@ -301,12 +302,12 @@ export class TeamMembersService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<TeamMemberResult>;
       })
     );
   }
@@ -327,10 +328,10 @@ export class TeamMembersService extends BaseService {
      * team member id
      */
     memberId: string;
-  }): Observable<void> {
+  }): Observable<TeamMemberResult> {
 
     return this.teamMembersDeleteTeamMember$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
     );
   }
 
@@ -355,7 +356,7 @@ export class TeamMembersService extends BaseService {
      * team member id
      */
     memberId: string;
-  }): Observable<StrictHttpResponse<void>> {
+  }): Observable<StrictHttpResponse<TeamMemberResult>> {
 
     const rb = new RequestBuilder(this.rootUrl, TeamMembersService.TeamMembersActivateTeamMemberPath, 'post');
     if (params) {
@@ -363,12 +364,12 @@ export class TeamMembersService extends BaseService {
     }
 
     return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
+      responseType: 'json',
+      accept: 'application/json'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+        return r as StrictHttpResponse<TeamMemberResult>;
       })
     );
   }
@@ -389,10 +390,10 @@ export class TeamMembersService extends BaseService {
      * team member id
      */
     memberId: string;
-  }): Observable<void> {
+  }): Observable<TeamMemberResult> {
 
     return this.teamMembersActivateTeamMember$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+      map((r: StrictHttpResponse<TeamMemberResult>) => r.body as TeamMemberResult)
     );
   }
 
