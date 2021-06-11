@@ -6,24 +6,21 @@ import { CacheService } from 'src/app/core/services/cache.service';
   providedIn: 'root'
 })
 export class EvacueeSearchService {
-  evacueeSearchContext: EvacueeSearchContextModel;
+  private searchContext: EvacueeSearchContextModel;
 
   constructor(private cacheService: CacheService) {}
 
-  public getEvacueeSearchContext(): EvacueeSearchContextModel {
-    return this.evacueeSearchContext === null ||
-      this.evacueeSearchContext === undefined
+  public get evacueeSearchContext(): EvacueeSearchContextModel {
+    return this.searchContext === null || this.searchContext === undefined
       ? JSON.parse(this.cacheService.get('evacueeSearchContext'))
-      : this.evacueeSearchContext;
+      : this.searchContext;
   }
 
-  public setEvacueeSearchContext(
-    evacueeSearchContext: EvacueeSearchContextModel
-  ): void {
-    this.evacueeSearchContext = {
-      ...this.evacueeSearchContext,
-      ...evacueeSearchContext
+  public set evacueeSearchContext(searchContext: EvacueeSearchContextModel) {
+    this.searchContext = {
+      ...this.searchContext,
+      ...searchContext
     };
-    this.cacheService.set('evacueeSearchContext', this.evacueeSearchContext);
+    this.cacheService.set('evacueeSearchContext', this.searchContext);
   }
 }

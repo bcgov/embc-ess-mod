@@ -3,17 +3,31 @@ import {
   WizardSidenavModel,
   WizardSidenavModelValues
 } from 'src/app/core/models/wizard-sidenav.model';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 @Injectable({ providedIn: 'root' })
 export class WizardService {
-  private sideMenuItems: Array<WizardSidenavModel> =
-    WizardSidenavModelValues.newRegistrationMenu;
+  private sideMenuItems: Array<WizardSidenavModel>;
+
+  constructor(private cacheService: CacheService) {}
 
   public get menuItems(): Array<WizardSidenavModel> {
-    return this.sideMenuItems;
+    return this.sideMenuItems === null || this.sideMenuItems === undefined
+      ? JSON.parse(this.cacheService.get('wizardMenu'))
+      : this.sideMenuItems;
   }
   public set menuItems(menuItems: Array<WizardSidenavModel>) {
     this.sideMenuItems = menuItems;
+    this.cacheService.set('wizardMenu', menuItems);
+  }
+
+  public getMenuItems(type: string): Array<WizardSidenavModel> {
+    if (type === 'new-registration') {
+      this.menuItems = WizardSidenavModelValues.newRegistrationMenu;
+    } else if (type === 'new-file') {
+      this.menuItems = WizardSidenavModelValues.newESSFileMenu;
+    }
+    return this.menuItems;
   }
 
   /**

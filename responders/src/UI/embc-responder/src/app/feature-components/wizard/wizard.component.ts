@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
@@ -24,9 +24,15 @@ export class WizardComponent implements OnInit, OnDestroy {
     private router: Router,
     private wizardService: WizardService,
     private cacheService: CacheService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute
   ) {
-    this.sideNavMenu = this.wizardService.menuItems;
+    const params = this.route.snapshot.queryParams;
+    if (params && params.type) {
+      this.sideNavMenu = this.wizardService.getMenuItems(params.type);
+    } else {
+      this.sideNavMenu = this.wizardService.menuItems;
+    }
   }
 
   ngOnInit(): void {
