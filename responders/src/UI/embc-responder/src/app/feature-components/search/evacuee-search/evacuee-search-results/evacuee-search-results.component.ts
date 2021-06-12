@@ -68,6 +68,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
    * @param evacueeSearchContext search parameters
    */
   searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
+    this.isLoading = !this.isLoading;
     this.evacueeSearchResultsService
       .searchForEvacuee(evacueeSearchContext.evacueeSearchParameters)
       .subscribe(
@@ -78,6 +79,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
           // .sort((a, b) => new Date(b.createdOn).valueOf() - new Date(a.createdOn).valueOf())
         },
         (error) => {
+          this.isLoading = !this.isLoading;
           console.log(error);
         }
       );
