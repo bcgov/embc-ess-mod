@@ -6,6 +6,7 @@
       </div>
     </div>
   </div>
+
   <div class="row">
     <div class="col-12 content-container">
       <form [formGroup]="evacDetailsForm">
@@ -13,36 +14,41 @@
           <div class="col-8">
             <div class="row">
               <div class="col-12">
-                <span class="tab-subtitle">Paper Based ESS File #</span>
-                <br /><br />
+                <label class="tab-subtitle">Paper Based ESS File #</label>
+
                 <p>
-                  If you are entering a paper-based ESS File into the ERA Tool,
+                  If you are entering a
+                  <strong>paper-based ESS File</strong> into the ERA Tool,
                   please add the ESS File # as it appears on the paper
                   registration below.
                 </p>
 
-                <div class="col-6">
-                  <br />
-                  <mat-form-field appearance="outline">
-                    <mat-label>Paper Based ESS File #</mat-label>
-                    <input
-                      formControlName="paperESSFile"
-                      maxlength="100"
-                      matInput
-                    />
-                  </mat-form-field>
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Paper Based ESS File #</mat-label>
+                      <input
+                        formControlName="paperESSFile"
+                        maxlength="100"
+                        matInput
+                      />
+                    </mat-form-field>
+                  </div>
                 </div>
               </div>
-              <br />
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Are you being evacuated from your primary address? </span
-                ><span class="required-symbol">*</span> <br /><br />
+                <label
+                  id="evacuatedFromPrimary-radio-group-label"
+                  class="tab-subtitle requiredField"
+                >
+                  Are you being evacuated from your primary address?
+                </label>
+
                 <ng-container *ngIf="isBCAddress">
                   <mat-radio-group
                     formControlName="evacuatedFromPrimary"
-                    aria-labelledby="primary-radio-group-label"
+                    aria-labelledby="evacuatedFromPrimary-radio-group-label"
                     class="options-group"
                     (change)="evacPrimaryAddressChange($event)"
                     required
@@ -67,71 +73,79 @@
                         )
                       "
                     >
-                      Evacuation Address is required</mat-error
-                    >
+                      Evacuation Address is required
+                    </mat-error>
                   </mat-radio-group>
                 </ng-container>
               </div>
-              <br />
+
               <div class="col-12" *ngIf="!isBCAddress">
                 <app-bc-address
                   [addressForm]="evacAddressFormGroup"
                 ></app-bc-address>
               </div>
               <div class="col-12" *ngIf="showBCAddressForm">
-                <p><b>Where are you being evacuated from?</b></p>
+                <p class="bold">Where are you being evacuated from?</p>
                 <app-bc-address
                   [addressForm]="evacAddressFormGroup"
                 ></app-bc-address>
               </div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Facility Name / Registration Location </span
-                ><span class="required-symbol">*</span> <br /><br />
+                <label class="tab-subtitle requiredField">
+                  Facility Name / Registration Location
+                </label>
+
                 <p>
                   A facility is the location of the
-                  <b>Reception Centre</b> (i.e. rec centre). If there is no
-                  Reception Centre, please use the street name on Level 1
+                  <strong>Reception Centre</strong> (i.e. rec centre). If there
+                  is no Reception Centre, please use the street name on Level 1
                   Activations.
                 </p>
-                <div class="col-6">
-                  <br />
-                  <mat-form-field appearance="outline">
-                    <mat-label>Facility Name/ Registration Location</mat-label>
-                    <input
-                      formControlName="facilityName"
-                      maxlength="100"
-                      matInput
-                    />
-                    <mat-error
-                      class="custom-mat-error"
-                      *ngIf="
-                        evacDetailsFormControl?.facilityName.touched &&
-                        evacDetailsFormControl?.facilityName.invalid &&
-                        evacDetailsFormControl?.facilityName.hasError(
-                          'whitespaceError'
-                        )
-                      "
-                    >
-                      Facility Name/ Registration Location is
-                      required</mat-error
-                    >
-                  </mat-form-field>
+
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field appearance="outline">
+                      <mat-label>
+                        Facility Name / Registration Location
+                      </mat-label>
+
+                      <input
+                        formControlName="facilityName"
+                        maxlength="100"
+                        matInput
+                      />
+                      <mat-error
+                        class="custom-mat-error"
+                        *ngIf="
+                          evacDetailsFormControl?.facilityName.touched &&
+                          evacDetailsFormControl?.facilityName.invalid &&
+                          evacDetailsFormControl?.facilityName.hasError(
+                            'whitespaceError'
+                          )
+                        "
+                      >
+                        Facility Name/ Registration Location is
+                        required</mat-error
+                      >
+                    </mat-form-field>
+                  </div>
                 </div>
               </div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Do you have insurance to cover your immediate needs? </span
-                ><span class="required-symbol">*</span> <br /><br />
+                <label class="tab-subtitle requiredField">
+                  Do you have insurance to cover your immediate needs?
+                </label>
+
                 <p>
-                  If you have <b>insurance</b>, please keep all of your
-                  receipts, and contact your insurance provider as soon as
+                  If you have <strong>insurance</strong>, please keep all of
+                  your receipts, and contact your insurance provider as soon as
                   possible. If you are having difficulty contacting your
                   insurance provider, please contact the Insurance Bureau of
                   Canada at 1-844-227-5422.
                 </p>
+
                 <mat-radio-group
                   formControlName="insurance"
                   class="options-group"
@@ -157,57 +171,57 @@
               </div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >How have you and your household been affected by the
-                  evacuation? </span
-                ><span class="required-symbol">*</span> <br /><br />
+                <label class="tab-subtitle requiredField">
+                  How have you and your household been affected by the
+                  evacuation?
+                </label>
+
                 <p>
                   Please do not include any personal/medical information
                   pertaining to the evacuee and their household members.
                 </p>
-                <div class="col-12">
-                  <mat-form-field appearance="outline">
-                    <textarea
-                      rows="10"
-                      formControlName="householdAffected"
-                      placeholder="Please write in the evacuees own words as mush as possible."
-                      maxlength="4000"
-                      matInput
-                      required
-                    ></textarea>
-                    <mat-error
-                      class="custom-mat-error"
-                      *ngIf="
-                        evacDetailsFormControl?.householdAffected.touched &&
-                        evacDetailsFormControl?.householdAffected.invalid &&
-                        evacDetailsFormControl?.householdAffected.hasError(
-                          'whitespaceError'
-                        )
-                      "
-                    >
-                      This information is required</mat-error
-                    >
-                  </mat-form-field>
-                </div>
+
+                <mat-form-field appearance="outline">
+                  <textarea
+                    rows="10"
+                    formControlName="householdAffected"
+                    placeholder="Please write in the evacuee's own words as much as possible."
+                    maxlength="4000"
+                    matInput
+                    required
+                  ></textarea>
+                  <mat-error
+                    class="custom-mat-error"
+                    *ngIf="
+                      evacDetailsFormControl?.householdAffected.touched &&
+                      evacDetailsFormControl?.householdAffected.invalid &&
+                      evacDetailsFormControl?.householdAffected.hasError(
+                        'whitespaceError'
+                      )
+                    "
+                  >
+                    This information is required
+                  </mat-error>
+                </mat-form-field>
               </div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Emergency Support Services provides short term assistance to
-                  give evacuees' a chance to recover. Have you thought about
-                  what you will do after that time?
-                </span>
-                <br /><br />
+                <label class="tab-subtitle">
+                  Emergency Support Services provides short term assistance to
+                  give evacuees a chance to recover. Have you thought about what
+                  you will do after that time?
+                </label>
+
                 <p>
                   Please do not include any personal/medical information
                   pertaining to the evacuee and their family.
                 </p>
-                <br />
+
                 <mat-form-field appearance="outline">
                   <textarea
                     rows="10"
                     formControlName="emergencySupportServices"
-                    placeholder="Please write in the evacuees own words as mush as possible."
+                    placeholder="Please write in the evacuee's own words as much as possible."
                     maxlength="4000"
                     matInput
                   ></textarea>
@@ -215,11 +229,11 @@
               </div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Has the evacuee been referred to any services available in
+                <label class="tab-subtitle">
+                  Has the evacuee been referred to any services available in
                   your reception centre?
-                </span>
-                <br /><br />
+                </label>
+
                 <mat-radio-group
                   formControlName="referredServices"
                   class="options-group"
@@ -234,12 +248,12 @@
                   </mat-radio-button>
                 </mat-radio-group>
               </div>
+
               <div class="col-12" *ngIf="showReferredServicesForm">
-                <p>
-                  <b
-                    >Please select the ones you have recommended for the evacuee </b
-                  ><span class="required-symbol">*</span>
+                <p class="bold requiredField">
+                  Please select the ones you have recommended for the evacuee
                 </p>
+
                 <section class="options-group">
                   <mat-checkbox
                     class="checkbox-option"
@@ -253,11 +267,11 @@
               </div>
 
               <div class="col-12">
-                <span class="tab-subtitle"
-                  >Has the evacuee been referred to any services outside of the
+                <label class="tab-subtitle">
+                  Has the evacuee been referred to any services outside of the
                   reception centre?
-                </span>
-                <br /><br />
+                </label>
+
                 <mat-form-field appearance="outline">
                   <textarea
                     rows="10"
@@ -270,6 +284,7 @@
               </div>
             </div>
           </div>
+
           <div class="col-md-4">
             <mat-card class="tips-card">
               <div>
@@ -279,22 +294,25 @@
                   height="63"
                   width="62"
                 />
-                <span class="tips-heading"><b>Tip: </b>Task Number</span>
+                <span class="tips-heading">
+                  <span class="bold">Tip:</span> Task Number
+                </span>
               </div>
+
               <p class="tips-info">
                 This ESS File will be associated with the Task Number that you
                 are signed in under.
               </p>
+
               <p class="tips-info">
                 If this is not the correct task number, please sign in under the
                 correct task number.
               </p>
-              <br />
             </mat-card>
           </div>
         </div>
       </form>
-      <br />
+
       <div class="row">
         <div class="col-12">
           <button class="button-p next" mat-button (click)="next()">

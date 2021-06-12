@@ -10,17 +10,15 @@
   <div class="row">
     <div class="col-12 content-container">
       <form [formGroup]="householdForm">
-        <p class="no-margin">
+        <p class="no-margin requiredField">
           Do you have any household members (including dependents) who live in
           the same household with you?
-          <span class="required-symbol">*</span>
         </p>
         <p class="notes">
           Please note: Roommates & tenants need to register separately.
         </p>
 
         <mat-radio-group
-          aria-labelledby="primary-radio-group-label"
           formControlName="hasHouseholdMembers"
           class="primary-radio-group"
           required
@@ -44,9 +42,9 @@
             Confirm to have Household Members is required</mat-error
           >
         </mat-radio-group>
+
         <div class="row" *ngIf="dataSource.getValue().length > 0">
           <div class="col-8">
-            <br />
             <div class="col-4">
               <button
                 class="family-button details-button"
@@ -57,8 +55,8 @@
                 + Add Household Member
               </button>
             </div>
-            <br />
-            <mat-table [dataSource]="dataSource">
+
+            <mat-table class="bottom-space" [dataSource]="dataSource">
               <ng-container matColumnDef="firstName">
                 <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
                 <mat-cell *matCellDef="let element">
@@ -68,7 +66,7 @@
               </ng-container>
 
               <ng-container matColumnDef="lastName">
-                <mat-header-cell *matHeaderCellDef> Last Name </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
                 <mat-cell *matCellDef="let element">
                   <span class="mobile-label">Last Name</span>
                   {{ element.lastName }}
@@ -76,7 +74,7 @@
               </ng-container>
 
               <ng-container matColumnDef="initials">
-                <mat-header-cell *matHeaderCellDef> Initials </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>Initials</mat-header-cell>
                 <mat-cell *matCellDef="let element">
                   <span class="mobile-label">Initials:</span>
                   {{ element.initials }}
@@ -84,7 +82,7 @@
               </ng-container>
 
               <ng-container matColumnDef="gender">
-                <mat-header-cell *matHeaderCellDef> Gender </mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>Gender</mat-header-cell>
                 <mat-cell *matCellDef="let element">
                   <span class="mobile-label">Gender:</span>
                   {{ element.gender }}
@@ -157,7 +155,8 @@
               [personalDetailsForm]="houseHoldMemberFormGroup"
             >
             </app-person-detail-form>
-            <div class="row">
+
+            <div class="row bottom-space">
               <div class="col-md-3">
                 <button
                   class="button-s details-button"
@@ -179,18 +178,15 @@
                 </button>
               </div>
             </div>
-            <br />
           </div>
         </div>
 
-        <p>
+        <p class="requiredField">
           Do you (or any of your household members that you listed) have any
           dietary requirements?
-          <span class="required-symbol">*</span>
         </p>
 
         <mat-radio-group
-          aria-labelledby="primary-radio-group-label"
           formControlName="hasSpecialDiet"
           class="primary-radio-group"
           required
@@ -220,10 +216,8 @@
             class="col-8 additional-form"
             *ngIf="householdFormControl?.hasSpecialDiet.value === true"
           >
-            <label class="card-heading" id="primary-radio-group-label"
-              >Please specify</label
-            >
-            <br />
+            <label class="card-heading requiredField">Please specify</label>
+
             <mat-form-field appearance="outline">
               <textarea
                 rows="10"
@@ -247,13 +241,11 @@
           </div>
         </div>
 
-        <p>
+        <p class="requiredField">
           Does the evacuee (or anyone registering with them) take medication?
-          <span class="required-symbol">*</span>
         </p>
 
         <mat-radio-group
-          aria-labelledby="primary-radio-group-label"
           formControlName="hasMedication"
           class="primary-radio-group"
           required
@@ -277,17 +269,17 @@
             Medication is required</mat-error
           >
         </mat-radio-group>
+
         <div class="row">
           <div
             class="col-8 additional-form"
             *ngIf="householdFormControl?.hasMedication.value === true"
           >
-            <p>
+            <p class="requiredField">
               Does the evacuee have sufficient supply for the next 72 hours?
-              <span class="required-symbol">*</span>
             </p>
+
             <mat-radio-group
-              aria-labelledby="primary-radio-group-label"
               formControlName="medicationSupply"
               class="primary-radio-group"
             >
@@ -312,7 +304,7 @@
           </div>
         </div>
       </form>
-      <br />
+
       <div class="row">
         <div class="col-md-6">
           <button class="button-s back" mat-button (click)="back()">

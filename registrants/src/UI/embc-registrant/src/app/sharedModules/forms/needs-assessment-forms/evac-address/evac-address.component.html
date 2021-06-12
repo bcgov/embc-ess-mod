@@ -18,15 +18,16 @@
           <div class="row">
             <div class="col-md-12">
               <label
+                id="evacuatedFromPrimary-radio-group-label"
                 class="card-heading requiredField"
-                id="primary-radio-group-label"
-                >Are you being evacuated from your primary address that you
-                listed when you created your profile?</label
               >
+                Are you being evacuated from your primary address that you
+                listed when you created your profile?
+              </label>
               <br />
               <mat-radio-group
                 formControlName="evacuatedFromPrimary"
-                aria-labelledby="primary-radio-group-label"
+                aria-labelledby="evacuatedFromPrimary-radio-group-label"
                 class="primary-radio-group"
                 (change)="evacPrimaryAddressChange($event)"
                 required
@@ -110,12 +111,12 @@
   <ng-template #otherAddress>
     <div class="row">
       <div class="col-md-12">
-        <label class="card-heading requiredField" id="primary-radio-group-label"
-          >Where are you being evacuated from?</label
-        >
+        <label class="card-heading requiredField">
+          Where are you being evacuated from?
+        </label>
         <p>
-          Please identify where in <b>BC</b> you have been
-          <b>evacuated from</b>?
+          Please identify where in <strong>BC</strong> you have been
+          <strong>evacuated from</strong>?
         </p>
         <app-bc-address
           [addressForm]="evacuatedFormControl?.evacuatedFromAddress"
@@ -130,14 +131,15 @@
       <div class="row">
         <div class="col-md-8">
           <label
+            id="insurance-radio-group-label"
             class="card-heading requiredField"
-            id="primary-radio-group-label"
-            >Do you have insurance?</label
           >
+            Do you have insurance?
+          </label>
           <br />
           <mat-radio-group
             formControlName="insurance"
-            aria-labelledby="primary-radio-group-label"
+            aria-labelledby="insurance-radio-group-label"
             class="primary-radio-group"
             required
           >
