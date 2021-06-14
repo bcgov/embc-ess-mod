@@ -1,7 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import {
-  EvacuationFileSearchResult,
-} from 'src/app/core/api/models';
+import { EvacuationFileSearchResult } from 'src/app/core/api/models';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
@@ -92,7 +90,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
     this.cacheService.set(
       'wizardOpenedFrom',
       '/responder-access/search/evacuee'
-    );  
+    );
     this.router.navigate(['/ess-wizard'], {
       queryParams: { type: 'new-registration' }
     });

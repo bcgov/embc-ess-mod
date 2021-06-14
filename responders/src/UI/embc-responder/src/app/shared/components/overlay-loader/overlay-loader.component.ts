@@ -30,6 +30,7 @@ export class OverlayLoaderComponent implements OnInit, DoCheck {
 
   /**
    * Sets the overlay configuration
+   *
    * @returns reference object
    */
   createOverlay(): OverlayRef {
