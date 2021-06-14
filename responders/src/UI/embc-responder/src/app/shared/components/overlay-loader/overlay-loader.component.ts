@@ -16,10 +16,9 @@ import {
   styleUrls: ['./overlay-loader.component.scss']
 })
 export class OverlayLoaderComponent implements OnInit, DoCheck {
-  public color = '#169BD5';
   @Input() showLoader: boolean;
-
   @ViewChild('loaderRef', { read: TemplateRef, static: true })
+  public color = '#169BD5';
   private loaderRef: TemplateRef<any>;
   private overlayRef: OverlayRef;
   constructor(private overlay: Overlay, private vcRef: ViewContainerRef) {}
@@ -29,6 +28,10 @@ export class OverlayLoaderComponent implements OnInit, DoCheck {
     this.overlayRef.attach(new TemplatePortal(this.loaderRef, this.vcRef));
   }
 
+  /**
+   * Sets the overlay configuration
+   * @returns reference object
+   */
   createOverlay(): OverlayRef {
     return this.overlay.create({
       hasBackdrop: true,
@@ -41,6 +44,9 @@ export class OverlayLoaderComponent implements OnInit, DoCheck {
     });
   }
 
+  /**
+   * Detaches the overlay when the event is consumed
+   */
   ngDoCheck(): void {
     if (!this.showLoader && this.overlayRef.hasAttached) {
       this.overlayRef.detach();

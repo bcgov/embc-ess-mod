@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   EvacuationFileSearchResult,
-  RegistrantProfileSearchResult
 } from 'src/app/core/api/models';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { UserService } from 'src/app/core/services/user.service';
@@ -14,6 +13,8 @@ import {
 import { Router } from '@angular/router';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -33,7 +34,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
     private evacueeSearchService: EvacueeSearchService,
     private userService: UserService,
     private router: Router,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +67,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
   /**
    * Searches for profiles and ess file based on the
    * search parameters
+   *
    * @param evacueeSearchContext search parameters
    */
   searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
@@ -80,7 +83,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
         },
         (error) => {
           this.isLoading = !this.isLoading;
-          console.log(error);
+          this.alertService.setAlert('danger', globalConst.evacueeSearchError);
         }
       );
   }
@@ -89,7 +92,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
     this.cacheService.set(
       'wizardOpenedFrom',
       '/responder-access/search/evacuee'
-    );
+    );  
     this.router.navigate(['/ess-wizard'], {
       queryParams: { type: 'new-registration' }
     });

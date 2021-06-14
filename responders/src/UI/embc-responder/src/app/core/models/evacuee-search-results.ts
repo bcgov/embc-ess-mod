@@ -1,4 +1,8 @@
-import { EvacuationFileSearchResult, RegistrantStatus, SearchResults } from '../api/models';
+import {
+  EvacuationFileSearchResult,
+  RegistrantStatus,
+  SearchResults
+} from '../api/models';
 import { AddressModel } from './address.model';
 
 export interface EvacueeSearchResults extends SearchResults {

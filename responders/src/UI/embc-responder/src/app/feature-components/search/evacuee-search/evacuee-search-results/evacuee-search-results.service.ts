@@ -30,16 +30,16 @@ export class EvacueeSearchResultsService {
           const communities = this.locationsService.getCommunityList();
           const countries = this.locationsService.getCountriesList();
           const registrants = searchResult.registrants;
-          for (let registrant of registrants) {
+          for (const registrant of registrants) {
             const community = communities.find(
               (comm) => comm.code === registrant.primaryAddress.communityCode
             );
             const country = countries.find(
               (coun) => coun.code === registrant.primaryAddress.countryCode
             );
-            let addressModel: AddressModel = {
-              community: community,
-              country: country
+            const addressModel: AddressModel = {
+              community,
+              country
             };
             registrant.primaryAddress = {
               ...addressModel,
