@@ -85,7 +85,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 if (member._era_registrant_value != null)
                 {
                     var registrant = essContext.contacts.Where(c => c.contactid == member._era_registrant_value).SingleOrDefault();
-                    if (registrant == null) throw new Exception($"Household member has registrant id {member._era_registrant_value} which was not found");
+                    if (registrant == null) throw new Exception($"Household member {member.era_firstname} {member.era_lastname} has registrant id {member._era_registrant_value} which was not found");
                     essContext.AddLink(registrant, nameof(contact.era_contact_era_householdmember_Registrantid), member);
                 }
                 essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), member);
@@ -263,6 +263,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 }
                 essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment));
             }
+
             var evacuationFile = mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
 
             return evacuationFile;
@@ -336,8 +337,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var evacuationFiles = new List<EvacuationFile>();
             var evacuationFilesTasks = fileIds.Distinct().Select(async id => evacuationFiles.Add(await GetEvacuationFileById(id, query.MaskSecurityPhrase)));
 
-            //Task.WaitAll(evacuationFilesTasks.ToArray());
-            foreach (var task in evacuationFilesTasks) await task;
+            Task.WaitAll(evacuationFilesTasks.ToArray());
+            //foreach (var task in evacuationFilesTasks) await task;
 
             essContext.DetachAll();
 
