@@ -8,6 +8,7 @@
 <mat-card>
   <div class="row">
     <div class="col-md-8">
+      <app-alert></app-alert>
       <p class="result-text">
         Results for "<b
           >{{
@@ -152,7 +153,6 @@
   >
     <div class="col-md-12">
       <app-profile-results
-        [isLoading]="isLoading"
         [registrantResults]="registrantResults"
       ></app-profile-results>
     </div>
@@ -209,7 +209,6 @@
   >
     <div class="col-md-12">
       <app-profile-results
-        [isLoading]="isLoading"
         [registrantResults]="registrantResults"
       ></app-profile-results>
     </div>
@@ -247,6 +246,8 @@
     </div>
   </div>
 </ng-template>
+
+<app-overlay-loader [showLoader]="isLoading"></app-overlay-loader>
 
 <!-- <app-loader style="display: flex; justify-content: center; align-items: center;"
         [showLoader]="!isLoading" [strokeWidth]="3" [diameter]="50" [color]="color"></app-loader> -->

@@ -13,7 +13,7 @@ import {
   SecurityQuestion
 } from 'src/app/core/api/models';
 import { Subject } from 'rxjs';
-import { AddressModel } from 'src/app/core/models/Address.model';
+import { AddressModel } from 'src/app/core/models/address.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {

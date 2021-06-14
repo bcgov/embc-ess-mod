@@ -1,8 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import {
-  EvacuationFileSearchResult,
-  RegistrantProfileSearchResult
-} from 'src/app/core/api/models';
+import { EvacuationFileSearchResult } from 'src/app/core/api/models';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
@@ -13,6 +10,9 @@ import {
 } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -21,7 +21,7 @@ import { CacheService } from 'src/app/core/services/cache.service';
 })
 export class EvacueeSearchResultsComponent implements OnInit {
   @Output() showIDPhotoComponent = new EventEmitter<boolean>();
-  registrantResults: Array<RegistrantProfileSearchResult>;
+  registrantResults: Array<RegistrantProfileSearchResultModel>;
   fileResults: Array<EvacuationFileSearchResult>;
   evacueeSearchContext: EvacueeSearchContextModel;
   isLoading = false;
@@ -32,7 +32,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
     private evacueeSearchService: EvacueeSearchService,
     private userService: UserService,
     private router: Router,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -54,11 +55,21 @@ export class EvacueeSearchResultsComponent implements OnInit {
     );
   }
 
+  /**
+   * Resets the search
+   */
   searchAgain(): void {
     this.showIDPhotoComponent.emit(true);
   }
 
+  /**
+   * Searches for profiles and ess file based on the
+   * search parameters
+   *
+   * @param evacueeSearchContext search parameters
+   */
   searchForEvacuee(evacueeSearchContext: EvacueeSearchContextModel): void {
+    this.isLoading = !this.isLoading;
     this.evacueeSearchResultsService
       .searchForEvacuee(evacueeSearchContext.evacueeSearchParameters)
       .subscribe(
@@ -69,7 +80,8 @@ export class EvacueeSearchResultsComponent implements OnInit {
           // .sort((a, b) => new Date(b.createdOn).valueOf() - new Date(a.createdOn).valueOf())
         },
         (error) => {
-          console.log(error);
+          this.isLoading = !this.isLoading;
+          this.alertService.setAlert('danger', globalConst.evacueeSearchError);
         }
       );
   }

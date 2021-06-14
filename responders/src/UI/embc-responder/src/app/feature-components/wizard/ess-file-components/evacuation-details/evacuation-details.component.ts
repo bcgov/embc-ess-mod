@@ -12,7 +12,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { Subscription } from 'rxjs';
-import { AddressModel } from 'src/app/core/models/Address.model';
+import { AddressModel } from 'src/app/core/models/address.model';
 import { CommunityType } from '../../../../core/api/models';
 
 @Component({
