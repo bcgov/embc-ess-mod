@@ -18,8 +18,8 @@ import {
 export class OverlayLoaderComponent implements OnInit, DoCheck {
   @Input() showLoader: boolean;
   @ViewChild('loaderRef', { read: TemplateRef, static: true })
+  public loaderRef: TemplateRef<any>;
   public color = '#169BD5';
-  private loaderRef: TemplateRef<any>;
   private overlayRef: OverlayRef;
   constructor(private overlay: Overlay, private vcRef: ViewContainerRef) {}
 
