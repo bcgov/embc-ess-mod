@@ -247,14 +247,20 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         {
             var file = await essContext.era_evacuationfiles
                 .ByKey(id)
-                .Expand(f => f.era_Registrant)
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .GetValueAsync();
 
             essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
-            if (file.era_CurrentNeedsAssessmentid != null)
+            if (file._era_currentneedsassessmentid_value.HasValue)
             {
                 essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
+                foreach (var member in file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)
+                {
+                    if (member._era_registrant_value.HasValue)
+                    {
+                        essContext.LoadProperty(member, nameof(era_householdmember.era_Registrant));
+                    }
+                }
                 essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment));
             }
             var evacuationFile = mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
@@ -331,10 +337,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var evacuationFilesTasks = fileIds.Distinct().Select(async id => evacuationFiles.Add(await GetEvacuationFileById(id, query.MaskSecurityPhrase)));
 
             //Task.WaitAll(evacuationFilesTasks.ToArray());
-            foreach (var task in evacuationFilesTasks)
-            {
-                await task;
-            }
+            foreach (var task in evacuationFilesTasks) await task;
 
             essContext.DetachAll();
 

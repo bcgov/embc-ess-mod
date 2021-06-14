@@ -47,7 +47,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.era_TaskId == null ? null : s.era_TaskId.era_taskdetails))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.DateTime))
                 .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.modifiedon.Value.DateTime))
-                .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => s.era_Registrant.contactid.ToString()))
+                .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => s._era_registrant_value))
                 .ForMember(d => d.SecurityPhrase, opts => opts.ConvertUsing<SecurityPhraseConverter, string>(s => s.era_securityphrase))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.IsSecretPhraseMasked, opts => opts.MapFrom((s, d, _, ctx) => SecurityPhraseConverter.ShouldMaskSecretPhrase(ctx)))
