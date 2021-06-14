@@ -58,14 +58,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetSecurityQuestionsResponse>> GetSecurityQuestions(string registrantId)
         {
-            var questions = new[]
+            var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
             {
-                new SecurityQuestion { Id = 1, Question = "question1", Answer = "a***1" },
-                new SecurityQuestion { Id = 2, Question = "question2", Answer = "a***2" },
-                new SecurityQuestion { Id = 3, Question = "question3", Answer = "a***3" },
-            };
+                Id = registrantId
+            })).Items.FirstOrDefault();
 
-            return Ok(await Task.FromResult(new GetSecurityQuestionsResponse { Questions = questions }));
+            if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
+
+            return Ok(new GetSecurityQuestionsResponse { Questions = mapper.Map<IEnumerable<SecurityQuestion>>(registrant.RegistrantProfile.SecurityQuestions) });
         }
 
         /// <summary>
@@ -94,9 +94,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetSecurityPhraseResponse>> GetSecurityPhrase(string fileId)
         {
-            var phrase = "a*****z";
+            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
+            {
+                FileId = fileId
+            })).Items.FirstOrDefault();
 
-            return Ok(await Task.FromResult(new GetSecurityPhraseResponse { SecurityPhrase = phrase }));
+            if (file == null) return NoContent();
+
+            return Ok(new GetSecurityPhraseResponse { SecurityPhrase = mapper.Map<EvacuationFile>(file).SecurityPhrase });
         }
 
         /// <summary>
