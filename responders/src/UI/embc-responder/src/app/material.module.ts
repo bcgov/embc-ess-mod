@@ -24,6 +24,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatRadioModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    OverlayModule
   ],
   exports: [
     CommonModule,
@@ -78,7 +80,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatProgressSpinnerModule,
     MatRadioModule,
     MatExpansionModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    OverlayModule
   ]
 })
 export class MaterialModule {}
