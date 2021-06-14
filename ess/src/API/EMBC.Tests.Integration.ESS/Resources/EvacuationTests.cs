@@ -42,6 +42,19 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetNoEvacuationFilessByFileIdAndRegistrant()
+        {
+            var primaryContact = await GetContactByUserId(TestUserId);
+            var caseQuery = new EvacuationFilesQuery
+            {
+                FileId = "nofileid",
+                PrimaryRegistrantId = primaryContact.Id
+            };
+            var queryResult = await caseRepository.QueryCase(caseQuery);
+            queryResult.Items.ShouldBeEmpty();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanGetEvacuationFilesByPrimaryRegistrantUserid()
         {
             var primaryContact = await GetContactByUserId(TestUserId);

@@ -311,7 +311,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
                 //merge matching file ids
                 fileIds = fileIds.Any()
-                    ? fileIds.Union(matchingContactFileIds)
+                    ? fileIds.Intersect(matchingContactFileIds)
                     : fileIds.Concat(matchingContactFileIds);
             }
 
@@ -327,7 +327,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
                 //merge matching file ids
                 fileIds = fileIds.Any()
-                    ? fileIds.Union(matchingFileIds)
+                    ? fileIds.Intersect(matchingFileIds)
                     : fileIds.Concat(matchingFileIds);
             }
 
