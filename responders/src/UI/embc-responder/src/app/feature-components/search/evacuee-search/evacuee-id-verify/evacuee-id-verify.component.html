@@ -7,14 +7,14 @@
 <div class="row">
   <div class="col-md-8">
     <mat-card>
-      <p class="heading">
+      <p id="photoId-radio-group-label" class="heading">
         Can you present any <b>government-issued photo ID</b> to verify your
         identity?
       </p>
 
       <form [formGroup]="idVerifyForm">
         <mat-radio-group
-          aria-labelledby="primary-radio-group-label"
+          aria-labelledby="photoId-radio-group-label"
           formControlName="photoId"
           class="primary-radio-group"
           required
