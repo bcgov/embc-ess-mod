@@ -13,6 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { RegistrantProfileSearchResult } from 'src/app/core/api/models';
+import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 @Component({
@@ -23,10 +24,9 @@ import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.servic
 export class ProfileResultsComponent
   implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @Input() registrantResults: Array<RegistrantProfileSearchResult>;
-  @Input() isLoading: boolean;
+  @Input() registrantResults: Array<RegistrantProfileSearchResultModel>;
   matchedRegistrants = new MatTableDataSource();
-  matchedRegistrants$: Observable<Array<RegistrantProfileSearchResult>>;
+  matchedRegistrants$: Observable<Array<RegistrantProfileSearchResultModel>>;
   color = '#169BD5';
 
   constructor(

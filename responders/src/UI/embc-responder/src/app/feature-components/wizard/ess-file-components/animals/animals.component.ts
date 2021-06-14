@@ -65,8 +65,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
 
     // Shows the petsGroupForm if hasPets is true and none pets has been inserted yet
     if (
-      this.stepCreateEssFileService.hasPets === true &&
-      this.stepCreateEssFileService.pets.length === 0
+      this.stepCreateEssFileService.havePets === true &&
+      this.stepCreateEssFileService.petsList.length === 0
     ) {
       this.showPetsForm = true;
     }
@@ -184,17 +184,17 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    * Generates the main Animals form
    */
   private createAnimalsForm(): void {
-    if (!this.stepCreateEssFileService.pets) {
-      this.stepCreateEssFileService.pets = [];
+    if (!this.stepCreateEssFileService.petsList) {
+      this.stepCreateEssFileService.petsList = [];
     }
 
     this.animalsForm = this.formBuilder.group({
       hasPets: [
-        this.stepCreateEssFileService.hasPets ?? '',
+        this.stepCreateEssFileService.havePets ?? '',
         [Validators.required]
       ],
       pets: [
-        this.stepCreateEssFileService.pets,
+        this.stepCreateEssFileService.petsList,
         this.customValidation
           .conditionalValidation(
             () => this.animalsForm.get('hasPets').value === true,
@@ -203,7 +203,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
           .bind(this.customValidation)
       ],
       hasPetsFood: [
-        this.stepCreateEssFileService.hasPetsFood ?? '',
+        this.stepCreateEssFileService.havePetsFood ?? '',
         this.customValidation
           .conditionalValidation(
             () => this.animalsForm.get('hasPets').value === true,
@@ -283,11 +283,11 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepCreateEssFileService.hasPets = this.animalsForm.get(
+    this.stepCreateEssFileService.havePets = this.animalsForm.get(
       'hasPets'
     ).value;
-    this.stepCreateEssFileService.pets = this.animalsForm.get('pets').value;
-    this.stepCreateEssFileService.hasPetsFood = this.animalsForm.get(
+    this.stepCreateEssFileService.petsList = this.animalsForm.get('pets').value;
+    this.stepCreateEssFileService.havePetsFood = this.animalsForm.get(
       'hasPetsFood'
     ).value;
     this.stepCreateEssFileService.petCareDetails = this.animalsForm.get(
