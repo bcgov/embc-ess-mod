@@ -13,7 +13,7 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { Subject } from 'rxjs';
 import { Address, PersonDetails } from 'src/app/core/api/models';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { AddressModel } from 'src/app/core/models/Address.model';
+import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/HouseholdMember.model';
 
 @Injectable({ providedIn: 'root' })

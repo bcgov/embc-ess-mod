@@ -44,7 +44,7 @@ namespace EMBC.Responders.API.Controllers
             var userRole = Enum.Parse<MemberRole>(User.FindFirstValue("user_role"));
             var searchResults = await evacuationSearchService.Search(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
 
-            return Ok(searchResults);
+            return Ok(mapper.Map<SearchResults>(searchResults));
         }
     }
 
@@ -93,6 +93,10 @@ namespace EMBC.Responders.API.Controllers
     {
         public EvacuationSearchMapping()
         {
+            CreateMap<Services.SearchResults, SearchResults>()
+                .ForMember(d => d.Files, opts => opts.MapFrom(s => s.Files))
+                .ForMember(d => d.Registrants, opts => opts.MapFrom(s => s.Registrants))
+                ;
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFileSearchResult>()
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status))
