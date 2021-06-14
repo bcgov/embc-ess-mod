@@ -18,245 +18,249 @@ import { HouseholdMemberModel } from 'src/app/core/models/HouseholdMember.model'
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
-  private essTabs: Array<TabModel> = WizardTabModelValues.essFileTabs;
+  private essTabsVal: Array<TabModel> = WizardTabModelValues.essFileTabs;
 
-  private setNextTabUpdate: Subject<void> = new Subject();
+  private nextTabUpdateVal: Subject<void> = new Subject();
 
-  private paperESSFile: string;
-  private evacuatedFromPrimary: boolean;
-  private evacAddress: AddressModel;
-  private facilityName: string;
-  private insurance: InsuranceOption;
-  private householdAffected: string;
-  private emergencySupportServices: string;
-  private referredServices: boolean;
-  private referredServiceDetails: string[];
-  private externalServices: string;
+  private paperESSFileVal: string;
+  private evacuatedFromPrimaryVal: boolean;
+  private evacAddressVal: AddressModel;
+  private facilityNameVal: string;
+  private insuranceVal: InsuranceOption;
+  private householdAffectedVal: string;
+  private emergencySupportServicesVal: string;
+  private referredServicesVal: boolean;
+  private referredServiceDetailsVal: string[];
+  private externalServicesVal: string;
 
   private bypassPhraseVal: boolean;
   private securityPhraseVal: string;
 
-  private haveHouseholdMembers: boolean;
-  private householdMembers: HouseholdMemberModel[];
-  private addHouseholdMemberIndicator: boolean;
-  private haveSpecialDiet: boolean;
-  private specialDietDetails: string;
-  private haveMedication: boolean;
-  private medicationSupply: boolean;
+  private haveHouseholdMembersVal: boolean;
+  private householdMembersVal: HouseholdMemberModel[];
+  private addMemberIndicatorVal: boolean;
+  private haveSpecialDietVal: boolean;
+  private specialDietDetailsVal: string;
+  private haveMedicationVal: boolean;
+  private medicationSupplyVal: boolean;
 
-  private havePets: boolean;
-  private petsList: Pet[];
-  private addPetsIndicator: boolean;
-  private havePetsFood: boolean;
-  private petCareDetail: string;
+  private havePetsVal: boolean;
+  private petsListVal: Pet[];
+  private addPetIndicatorVal: boolean;
+  private havePetsFoodVal: boolean;
+  private petCareDetailsVal: string;
 
-  private canRegistrantProvideClothing: boolean;
-  private canRegistrantProvideFood: boolean;
-  private canRegistrantProvideIncidentals: boolean;
-  private canRegistrantProvideLodging: boolean;
-  private canRegistrantProvideTransportation: boolean;
+  private canRegistrantProvideClothingVal: boolean;
+  private canRegistrantProvideFoodVal: boolean;
+  private canRegistrantProvideIncidentalsVal: boolean;
+  private canRegistrantProvideLodgingVal: boolean;
+  private canRegistrantProvideTransportationVal: boolean;
 
   constructor(private dialog: MatDialog) {}
 
   // Contact Details Getters and Setters
 
-  public get paperESSFiles(): string {
-    return this.paperESSFile;
+  public get paperESSFile(): string {
+    return this.paperESSFileVal;
   }
-  public set paperESSFiles(paperESSFile: string) {
-    this.paperESSFile = paperESSFile;
-  }
-
-  public get evacuatedFromPrimaryAddress(): boolean {
-    return this.evacuatedFromPrimary;
-  }
-  public set evacuatedFromPrimaryAddress(evacuatedFromPrimary: boolean) {
-    this.evacuatedFromPrimary = evacuatedFromPrimary;
+  public set paperESSFile(paperESSFileVal: string) {
+    this.paperESSFileVal = paperESSFileVal;
   }
 
-  public get evacAddresS(): AddressModel {
-    return this.evacAddress;
+  public get evacuatedFromPrimary(): boolean {
+    return this.evacuatedFromPrimaryVal;
   }
-  public set evacAddresS(evacAddress: AddressModel) {
-    this.evacAddress = evacAddress;
-  }
-
-  public get facilityNames(): string {
-    return this.facilityName;
-  }
-  public set facilityNames(facilityName: string) {
-    this.facilityName = facilityName;
+  public set evacuatedFromPrimary(evacuatedFromPrimaryVal: boolean) {
+    this.evacuatedFromPrimaryVal = evacuatedFromPrimaryVal;
   }
 
-  public get insuranceInfo(): InsuranceOption {
-    return this.insurance;
+  public get evacAddress(): AddressModel {
+    return this.evacAddressVal;
   }
-  public set insuranceInfo(insurance: InsuranceOption) {
-    this.insurance = insurance;
-  }
-
-  public get householdAffectedInfo(): string {
-    return this.householdAffected;
-  }
-  public set householdAffectedInfo(householdAffected: string) {
-    this.householdAffected = householdAffected;
+  public set evacAddress(evacAddressVal: AddressModel) {
+    this.evacAddressVal = evacAddressVal;
   }
 
-  public get emergencySupportServiceS(): string {
-    return this.emergencySupportServices;
+  public get facilityName(): string {
+    return this.facilityNameVal;
   }
-  public set emergencySupportServiceS(emergencySupportServices: string) {
-    this.emergencySupportServices = emergencySupportServices;
-  }
-
-  public get referredServiceS(): boolean {
-    return this.referredServices;
-  }
-  public set referredServiceS(referredServices: boolean) {
-    this.referredServices = referredServices;
+  public set facilityName(facilityNameVal: string) {
+    this.facilityNameVal = facilityNameVal;
   }
 
-  public get referredServiceDetailS(): string[] {
-    return this.referredServiceDetails;
+  public get insurance(): InsuranceOption {
+    return this.insuranceVal;
   }
-  public set referredServiceDetailS(referredServiceDetails: string[]) {
-    this.referredServiceDetails = referredServiceDetails;
+  public set insurance(insuranceVal: InsuranceOption) {
+    this.insuranceVal = insuranceVal;
   }
 
-  public get externalServiceS(): string {
-    return this.externalServices;
+  public get householdAffected(): string {
+    return this.householdAffectedVal;
   }
-  public set externalServiceS(externalServices: string) {
-    this.externalServices = externalServices;
+  public set householdAffected(householdAffectedVal: string) {
+    this.householdAffectedVal = householdAffectedVal;
+  }
+
+  public get emergencySupportServices(): string {
+    return this.emergencySupportServicesVal;
+  }
+  public set emergencySupportServices(emergencySupportServicesVal: string) {
+    this.emergencySupportServicesVal = emergencySupportServicesVal;
+  }
+
+  public get referredServices(): boolean {
+    return this.referredServicesVal;
+  }
+  public set referredServices(referredServicesVal: boolean) {
+    this.referredServicesVal = referredServicesVal;
+  }
+
+  public get referredServiceDetails(): string[] {
+    return this.referredServiceDetailsVal;
+  }
+  public set referredServiceDetails(referredServiceDetailsVal: string[]) {
+    this.referredServiceDetailsVal = referredServiceDetailsVal;
+  }
+
+  public get externalServices(): string {
+    return this.externalServicesVal;
+  }
+  public set externalServices(externalServicesVal: string) {
+    this.externalServicesVal = externalServicesVal;
   }
 
   // Household Members Getter and Setters
 
-  public get hasHouseHoldMembers(): boolean {
-    return this.haveHouseholdMembers;
+  public get haveHouseHoldMembers(): boolean {
+    return this.haveHouseholdMembersVal;
   }
-  public set hasHouseHoldMembers(haveHouseholdMembers: boolean) {
-    this.haveHouseholdMembers = haveHouseholdMembers;
+  public set haveHouseHoldMembers(haveHouseholdMembersVal: boolean) {
+    this.haveHouseholdMembersVal = haveHouseholdMembersVal;
   }
 
-  public get houseHoldMembers(): HouseholdMemberModel[] {
-    return this.householdMembers;
+  public get householdMembers(): HouseholdMemberModel[] {
+    return this.householdMembersVal;
   }
-  public set houseHoldMembers(householdMembers: HouseholdMemberModel[]) {
-    this.householdMembers = householdMembers;
+  public set householdMembers(householdMembersVal: HouseholdMemberModel[]) {
+    this.householdMembersVal = householdMembersVal;
   }
 
   public get addMemberIndicator(): boolean {
-    return this.addHouseholdMemberIndicator;
+    return this.addMemberIndicatorVal;
   }
-  public set addMemberIndicator(addHouseholdMemberIndicator: boolean) {
-    this.addHouseholdMemberIndicator = addHouseholdMemberIndicator;
-  }
-
-  public get hasSpecialDiet(): boolean {
-    return this.haveSpecialDiet;
-  }
-  public set hasSpecialDiet(haveSpecialDiet: boolean) {
-    this.haveSpecialDiet = haveSpecialDiet;
+  public set addMemberIndicator(addMemberIndicatorVal: boolean) {
+    this.addMemberIndicatorVal = addMemberIndicatorVal;
   }
 
-  public get specialDietDetailS(): string {
-    return this.specialDietDetails;
+  public get haveSpecialDiet(): boolean {
+    return this.haveSpecialDietVal;
   }
-  public set specialDietDetailS(specialDietDetails: string) {
-    this.specialDietDetails = specialDietDetails;
-  }
-
-  public get hasMedication(): boolean {
-    return this.haveMedication;
-  }
-  public set hasMedication(haveMedication: boolean) {
-    this.haveMedication = haveMedication;
+  public set haveSpecialDiet(haveSpecialDietVal: boolean) {
+    this.haveSpecialDietVal = haveSpecialDietVal;
   }
 
-  public get medicationSupplY(): boolean {
-    return this.medicationSupply;
+  public get specialDietDetails(): string {
+    return this.specialDietDetailsVal;
   }
-  public set medicationSupplY(medicationSupply: boolean) {
-    this.medicationSupply = medicationSupply;
+  public set specialDietDetails(specialDietDetailsVal: string) {
+    this.specialDietDetailsVal = specialDietDetailsVal;
+  }
+
+  public get haveMedication(): boolean {
+    return this.haveMedicationVal;
+  }
+  public set haveMedication(haveMedicationVal: boolean) {
+    this.haveMedicationVal = haveMedicationVal;
+  }
+
+  public get medicationSupply(): boolean {
+    return this.medicationSupplyVal;
+  }
+  public set medicationSupply(medicationSupplyVal: boolean) {
+    this.medicationSupplyVal = medicationSupplyVal;
   }
 
   // Animals Getters and Setters
 
-  public get hasPets(): boolean {
-    return this.havePets;
+  public get havePets(): boolean {
+    return this.havePetsVal;
   }
-  public set hasPets(havePets: boolean) {
-    this.havePets = havePets;
+  public set havePets(havePetsVal: boolean) {
+    this.havePetsVal = havePetsVal;
   }
 
-  public get pets(): Pet[] {
-    return this.petsList;
+  public get petsList(): Pet[] {
+    return this.petsListVal;
   }
-  public set pets(petsList: Pet[]) {
-    this.petsList = petsList;
+  public set petsList(petsListVal: Pet[]) {
+    this.petsListVal = petsListVal;
   }
 
   public get addPetIndicator(): boolean {
-    return this.addPetsIndicator;
+    return this.addPetIndicatorVal;
   }
-  public set addPetIndicator(addPetsIndicator: boolean) {
-    this.addPetsIndicator = addPetsIndicator;
-  }
-
-  public get hasPetsFood(): boolean {
-    return this.havePetsFood;
-  }
-  public set hasPetsFood(havePetsFood: boolean) {
-    this.havePetsFood = havePetsFood;
+  public set addPetIndicator(addPetIndicatorVal: boolean) {
+    this.addPetIndicatorVal = addPetIndicatorVal;
   }
 
-  public get petCareDetailS(): string {
-    return this.petCareDetail;
+  public get havePetsFood(): boolean {
+    return this.havePetsFoodVal;
   }
-  public set petCareDetails(petCareDetail: string) {
-    this.petCareDetail = petCareDetail;
+  public set havePetsFood(havePetsFoodVal: boolean) {
+    this.havePetsFoodVal = havePetsFoodVal;
+  }
+
+  public get petCareDetails(): string {
+    return this.petCareDetailsVal;
+  }
+  public set petCareDetails(petCareDetailVal: string) {
+    this.petCareDetailsVal = petCareDetailVal;
   }
 
   // Needs Assessment Getters and Setters
 
-  public get canEvacueeProvideClothing(): boolean {
-    return this.canRegistrantProvideClothing;
+  public get canRegistrantProvideClothing(): boolean {
+    return this.canRegistrantProvideClothingVal;
   }
-  public set canEvacueeProvideClothing(canRegistrantProvideClothing: boolean) {
-    this.canRegistrantProvideClothing = canRegistrantProvideClothing;
-  }
-
-  public get canEvacueeProvideFood(): boolean {
-    return this.canRegistrantProvideFood;
-  }
-  public set canEvacueeProvideFood(canRegistrantProvideFood: boolean) {
-    this.canRegistrantProvideFood = canRegistrantProvideFood;
-  }
-
-  public get canEvacueeProvideIncidentals(): boolean {
-    return this.canRegistrantProvideIncidentals;
-  }
-  public set canEvacueeProvideIncidentals(
-    canRegistrantProvideIncidentals: boolean
+  public set canRegistrantProvideClothing(
+    canRegistrantProvideClothingVal: boolean
   ) {
-    this.canRegistrantProvideIncidentals = canRegistrantProvideIncidentals;
+    this.canRegistrantProvideClothingVal = canRegistrantProvideClothingVal;
   }
 
-  public get canEvacueeProvideLodging(): boolean {
-    return this.canRegistrantProvideLodging;
+  public get canRegistrantProvideFood(): boolean {
+    return this.canRegistrantProvideFoodVal;
   }
-  public set canEvacueeProvideLodging(canRegistrantProvideLodging: boolean) {
-    this.canRegistrantProvideLodging = canRegistrantProvideLodging;
+  public set canRegistrantProvideFood(canRegistrantProvideFoodVal: boolean) {
+    this.canRegistrantProvideFoodVal = canRegistrantProvideFoodVal;
   }
 
-  public get canEvacueeProvideTransportation(): boolean {
-    return this.canRegistrantProvideTransportation;
+  public get canRegistrantProvideIncidentals(): boolean {
+    return this.canRegistrantProvideIncidentalsVal;
   }
-  public set canEvacueeProvideTransportation(
-    canRegistrantProvideTransportation: boolean
+  public set canRegistrantProvideIncidentals(
+    canRegistrantProvideIncidentalsVal: boolean
   ) {
-    this.canRegistrantProvideTransportation = canRegistrantProvideTransportation;
+    this.canRegistrantProvideIncidentalsVal = canRegistrantProvideIncidentalsVal;
+  }
+
+  public get canRegistrantProvideLodging(): boolean {
+    return this.canRegistrantProvideLodgingVal;
+  }
+  public set canRegistrantProvideLodging(
+    canRegistrantProvideLodgingVal: boolean
+  ) {
+    this.canRegistrantProvideLodgingVal = canRegistrantProvideLodgingVal;
+  }
+
+  public get canRegistrantProvideTransportation(): boolean {
+    return this.canRegistrantProvideTransportationVal;
+  }
+  public set canRegistrantProvideTransportation(
+    canRegistrantProvideTransportationVal: boolean
+  ) {
+    this.canRegistrantProvideTransportationVal = canRegistrantProvideTransportationVal;
   }
 
   public get bypassPhrase(): boolean {
@@ -275,17 +279,17 @@ export class StepCreateEssFileService {
 
   // Tabs Navigation Getters and Setters
   public get nextTabUpdate(): Subject<void> {
-    return this.setNextTabUpdate;
+    return this.nextTabUpdateVal;
   }
-  public set nextTabUpdate(setNextTabUpdate: Subject<void>) {
-    this.setNextTabUpdate = setNextTabUpdate;
+  public set nextTabUpdate(nextTabUpdateVal: Subject<void>) {
+    this.nextTabUpdateVal = nextTabUpdateVal;
   }
 
-  public get tabs(): Array<TabModel> {
-    return this.essTabs;
+  public get essTabs(): Array<TabModel> {
+    return this.essTabsVal;
   }
-  public set tabs(tabs: Array<TabModel>) {
-    this.essTabs = tabs;
+  public set essTabs(essTabsVal: Array<TabModel>) {
+    this.essTabsVal = essTabsVal;
   }
 
   /**
@@ -295,7 +299,7 @@ export class StepCreateEssFileService {
    * @param status of the tab
    */
   public setTabStatus(name: string, status: string): void {
-    this.tabs.map((tab) => {
+    this.essTabsVal.map((tab) => {
       if (tab.name === name) {
         tab.status = status;
       }
@@ -332,14 +336,14 @@ export class StepCreateEssFileService {
     // });
 
     return {
-      paperESSFile: this.paperESSFile,
-      facilityName: this.facilityName,
-      insurance: this.insurance,
-      householdAffected: this.householdAffected,
-      emergencySupportServices: this.emergencySupportServices,
-      referredServices: this.referredServices,
-      referredServiceDetails: this.referredServiceDetails,
-      externalServices: this.externalServices,
+      paperESSFile: this.paperESSFileVal,
+      facilityName: this.facilityNameVal,
+      insurance: this.insuranceVal,
+      householdAffected: this.householdAffectedVal,
+      emergencySupportServices: this.emergencySupportServicesVal,
+      referredServices: this.referredServicesVal,
+      referredServiceDetails: this.referredServiceDetailsVal,
+      externalServices: this.externalServicesVal,
       securityPhrase: this.securityPhrase
     };
   }
@@ -373,7 +377,7 @@ export class StepCreateEssFileService {
    * @returns true/false
    */
   checkTabsStatus(): boolean {
-    return this.tabs.some(
+    return this.essTabsVal.some(
       (tab) =>
         (tab.status === 'not-started' || tab.status === 'incomplete') &&
         tab.name !== 'review'
