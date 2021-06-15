@@ -38,58 +38,58 @@
           </div>
         </ng-container>   *ngIf="!isLoading" -->
         <!-- <ng-container> -->
-          <div class="row row-space">
-            <div class="col-md-8">
-              <app-security-question-card
-                [question]="securityQuestions[0]"
-                (questionEvent)="getAnswers($event)"
-              >
-              </app-security-question-card>
-            </div>
+        <div class="row row-space">
+          <div class="col-md-8">
+            <app-security-question-card
+              [question]="securityQuestions[0]"
+              (questionEvent)="getAnswers($event)"
+            >
+            </app-security-question-card>
           </div>
-          <div class="row row-space">
-            <div class="col-md-8">
-              <app-security-question-card
-                [question]="securityQuestions[1]"
-                (questionEvent)="getAnswers($event)"
-              >
-              </app-security-question-card>
-            </div>
+        </div>
+        <div class="row row-space">
+          <div class="col-md-8">
+            <app-security-question-card
+              [question]="securityQuestions[1]"
+              (questionEvent)="getAnswers($event)"
+            >
+            </app-security-question-card>
           </div>
+        </div>
 
-          <div *ngIf="correctAnswerFlag">
-            <img
-              width="20px"
-              height="20px"
-              src="/assets/images/status/complete.svg"
-            />
-            <span class="correct"> Correct!</span>
+        <div *ngIf="correctAnswerFlag">
+          <img
+            width="20px"
+            height="20px"
+            src="/assets/images/status/complete.svg"
+          />
+          <span class="correct"> Correct!</span>
+        </div>
+        <div class="row double-space">
+          <div class="col-md-8">
+            <button
+              class="button-s submit button-space"
+              type="button"
+              mat-button
+              (click)="goToSearchResults()"
+            >
+              Back to Search
+            </button>
+            <button
+              class="button-p submit"
+              type="button"
+              mat-button
+              (click)="next()"
+            >
+              Continue
+              <app-loader
+                [strokeWidth]="3"
+                [diameter]="25"
+                [showLoader]="showLoader"
+              ></app-loader>
+            </button>
           </div>
-          <div class="row double-space">
-            <div class="col-md-8">
-              <button
-                class="button-s submit button-space"
-                type="button"
-                mat-button
-                (click)="goToSearchResults()"
-              >
-                Back to Search
-              </button>
-              <button
-                class="button-p submit"
-                type="button"
-                mat-button
-                (click)="next()"
-              >
-                Continue
-                <app-loader
-                  [strokeWidth]="3"
-                  [diameter]="25"
-                  [showLoader]="showLoader"
-                ></app-loader>
-              </button>
-            </div>
-          </div>
+        </div>
         <!-- </ng-container> -->
       </mat-card>
     </div>
