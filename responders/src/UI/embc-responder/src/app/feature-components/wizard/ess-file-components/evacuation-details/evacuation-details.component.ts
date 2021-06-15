@@ -4,6 +4,7 @@ import {
   AbstractControl,
   FormBuilder,
   FormGroup,
+  ValidationErrors,
   Validators
 } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
@@ -14,6 +15,7 @@ import { StepCreateEssFileService } from '../../step-create-ess-file/step-create
 import { Subscription } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { CommunityType } from '../../../../core/api/models';
+import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -33,31 +35,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<any>(true, []);
   tabUpdateSubscription: Subscription;
 
-  bCDummyAddress: AddressModel = {
-    addressLine1: 'Unit 1200',
-    addressLine2: '1230 Main Street',
-    community: {
-      code: '6e69dfaf-9f97-ea11-b813-005056830319',
-      countryCode: 'CAN',
-      districtName: 'Cariboo',
-      name: '100 Mile House',
-      stateProvinceCode: 'BC',
-      type: CommunityType.DistrictMunicipality
-    },
-    stateProvince: { code: 'BC', countryCode: 'CAN', name: 'British Columbia' },
-    postalCode: 'V8Y 6U8',
-    country: { code: 'CAN', name: 'Canada' }
-  };
-  nonBcDummyAddress: AddressModel = {
-    addressLine1: 'Unit 2300',
-    addressLine2: '1230 Oak Street',
-    community: undefined,
-    stateProvince: { code: 'FL', countryCode: 'USA', name: 'Florida' },
-    postalCode: '33009',
-    country: { code: 'USA', name: 'United States of America' }
-  };
-
   constructor(
+    public stepCreateProfileService: StepCreateProfileService,
     private router: Router,
     private stepCreateEssFileService: StepCreateEssFileService,
     private formBuilder: FormBuilder,
@@ -67,6 +46,15 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.createEvacDetailsForm();
     this.checkPrimaryAddress();
+
+    // Evacuation Province/Country must always be system defaults
+    this.evacDetailsForm
+      .get('evacAddress.stateProvince')
+      .setValue(globalConst.defaultProvince);
+
+    this.evacDetailsForm
+      .get('evacAddress.country')
+      .setValue(globalConst.defaultCountry);
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepCreateEssFileService.nextTabUpdate.subscribe(
@@ -108,7 +96,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacPrimaryAddressChange(event: MatRadioChange): void {
     if (event.value === true) {
       this.showBCAddressForm = false;
-      this.evacDetailsForm.get('evacAddress').setValue(this.bCDummyAddress);
+      this.evacDetailsForm
+        .get('evacAddress')
+        .setValue(this.stepCreateProfileService.primaryAddressDetails);
     } else {
       this.showBCAddressForm = true;
       this.evacDetailsForm.get('evacAddress').reset();
@@ -290,7 +280,10 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Checks if the inserted primary address is in BC Province
    */
   private checkPrimaryAddress() {
-    if (this.bCDummyAddress.stateProvince.code !== 'BC') {
+    if (
+      this.stepCreateProfileService?.primaryAddressDetails?.stateProvince
+        .code !== 'BC'
+    ) {
       this.evacDetailsForm.get('evacuatedFromPrimary').setValue('No');
       this.isBCAddress = false;
     }
