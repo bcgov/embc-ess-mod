@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using AutoMapper;
 
@@ -27,6 +28,7 @@ namespace EMBC.ESS.Managers.Submissions
                 .ForMember(d => d.CurrentNeedsAssessment, opts => opts.MapFrom(s => s.NeedsAssessments.FirstOrDefault()))
                 .ForPath(d => d.CurrentNeedsAssessment.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuatedFromAddress))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
+                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationDate == default ? DateTime.UtcNow : s.EvacuationDate))
                 .ReverseMap()
                 .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => new[] { s.CurrentNeedsAssessment }))
                 ;
@@ -38,7 +40,6 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Cases.HouseholdMember>()
-                .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 .ForMember(d => d.HasAccessRestriction, opts => opts.Ignore())
                 .ReverseMap()
                 ;
@@ -51,6 +52,7 @@ namespace EMBC.ESS.Managers.Submissions
             CreateMap<Shared.Contracts.Submissions.NeedsAssessment, Resources.Cases.NeedsAssessment>()
                 .ForMember(d => d.EvacuatedFrom, opts => opts.Ignore())
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.CompletedOn == default ? DateTime.UtcNow : s.CompletedOn))
                 .ReverseMap()
                 ;
 

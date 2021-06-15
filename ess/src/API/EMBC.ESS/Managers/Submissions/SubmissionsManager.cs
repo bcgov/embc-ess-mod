@@ -63,6 +63,7 @@ namespace EMBC.ESS.Managers.Submissions
             var contact = mapper.Map<Contact>(cmd.SubmitterProfile);
 
             file.PrimaryRegistrantId = (await contactRepository.ManageContact(new SaveContact { Contact = contact })).ContactId;
+            file.CurrentNeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).Single().LinkedRegistrantId = file.PrimaryRegistrantId;
 
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).CaseId;
 
@@ -185,6 +186,12 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<EvacuationFilesSearchQueryResult> Handle(EvacuationFilesSearchQuery query)
         {
+            if (!string.IsNullOrEmpty(query.PrimaryRegistrantUserId))
+            {
+                var registrant = (await contactRepository.QueryContact(new ContactQuery { UserId = query.PrimaryRegistrantUserId })).Items.SingleOrDefault();
+                if (registrant == null) throw new Exception($"registrant with user id '{query.PrimaryRegistrantUserId}' not found");
+                query.PrimaryRegistrantId = registrant.Id;
+            }
             var cases = (await caseRepository.QueryCase(new EvacuationFilesQuery
             {
                 FileId = query.FileId,

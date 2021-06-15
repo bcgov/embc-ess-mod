@@ -180,7 +180,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             }
             if (evacuationFile.CurrentNeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId != null) != 1)
             {
-                throw new Exception($"File {evacuationFile.Id} primary registrant must be linked to a profile");
+                throw new Exception($"File {evacuationFile.Id} primary registrant household member must be linked to a profile");
             }
         }
 
