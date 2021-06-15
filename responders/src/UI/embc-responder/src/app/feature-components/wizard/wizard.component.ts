@@ -105,7 +105,8 @@ export class WizardComponent implements OnInit, OnDestroy {
         data: {
           component: YesNoDialogComponent,
           text: 'Are you sure you want to exit the wizard?',
-          text2: 'Any information that has not been <b>submitted</b> will be lost.',
+          text2:
+            'Any information that has not been <b>submitted</b> will be lost.',
           yesButtonText: 'Yes, Exit Wizard',
           noButtonText: 'No, Cancel'
         },

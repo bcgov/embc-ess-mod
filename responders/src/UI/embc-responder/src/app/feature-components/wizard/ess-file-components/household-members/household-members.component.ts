@@ -173,8 +173,14 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   deleteRow(index: number): void {
     this.dialog
       .open(DialogComponent, {
-        data: { component: YesNoDialogComponent, title: 'Remove Household Member',
-          text: 'Are you sure you want to <b>remove</b> this household member from your evacuation file?', yesButtonText: 'Yes, Remove Household Member', noButtonText: 'No, Cancel' },
+        data: {
+          component: YesNoDialogComponent,
+          title: 'Remove Household Member',
+          text:
+            'Are you sure you want to <b>remove</b> this household member from your evacuation file?',
+          yesButtonText: 'Yes, Remove Household Member',
+          noButtonText: 'No, Cancel'
+        },
         height: 'auto',
         width: '550px'
       })

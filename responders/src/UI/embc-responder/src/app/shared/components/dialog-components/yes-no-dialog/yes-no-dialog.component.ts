@@ -6,12 +6,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./yes-no-dialog.component.scss']
 })
 export class YesNoDialogComponent {
-
   @Input() inputEvent: string;
   @Input() inputEvent2: string;
   @Input() yesButtonText: string;
   @Input() noButtonText: string;
-  
+
   @Output() outputEvent = new EventEmitter<string>();
 
   cancel(): void {

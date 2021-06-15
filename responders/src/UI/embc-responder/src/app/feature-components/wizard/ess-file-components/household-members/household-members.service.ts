@@ -1,35 +1,30 @@
-import { Injectable } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class HouseholdMembersService {
-
   /**
    * Updates the validations for personalDetailsForm
    */
   public updateOnVisibility(householdForm: FormGroup): FormGroup {
-    householdForm
-      .get('houseHoldMember.firstName')
-      .updateValueAndValidity();
+    householdForm.get('houseHoldMember.firstName').updateValueAndValidity();
     householdForm.get('houseHoldMember.lastName').updateValueAndValidity();
     householdForm.get('houseHoldMember.gender').updateValueAndValidity();
-    householdForm
-      .get('houseHoldMember.dateOfBirth')
-      .updateValueAndValidity();
-    
-      return householdForm;
+    householdForm.get('houseHoldMember.dateOfBirth').updateValueAndValidity();
+
+    return householdForm;
   }
 
   /**
    * Displays the PersonDetails form to add new household members to the form
    */
-   addMembers(householdForm: FormGroup): FormGroup {
+  addMembers(householdForm: FormGroup): FormGroup {
     householdForm.get('houseHoldMember').reset();
     householdForm.get('addMemberIndicator').setValue(true);
     return householdForm;
   }
 
-  saveHouseholdMember(householdForm: FormGroup, data:any[]): FormGroup {
+  saveHouseholdMember(householdForm: FormGroup, data: any[]): FormGroup {
     householdForm.get('houseHoldMembers').setValue(data);
     householdForm.get('houseHoldMember').reset();
     householdForm.get('addMemberIndicator').setValue(false);

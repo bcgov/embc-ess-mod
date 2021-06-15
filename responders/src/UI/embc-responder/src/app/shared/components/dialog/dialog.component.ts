@@ -41,11 +41,17 @@ export class DialogComponent implements OnInit, OnDestroy {
       this.componentRef.instance.inputEvent2 = this.data.text2;
     }
 
-    if (this.data.yesButtonText !== undefined && this.data.yesButtonText !== null) {
+    if (
+      this.data.yesButtonText !== undefined &&
+      this.data.yesButtonText !== null
+    ) {
       this.componentRef.instance.yesButtonText = this.data.yesButtonText;
     }
 
-    if (this.data.noButtonText !== undefined && this.data.noButtonText  !== null) {
+    if (
+      this.data.noButtonText !== undefined &&
+      this.data.noButtonText !== null
+    ) {
       this.componentRef.instance.noButtonText = this.data.noButtonText;
     }
 

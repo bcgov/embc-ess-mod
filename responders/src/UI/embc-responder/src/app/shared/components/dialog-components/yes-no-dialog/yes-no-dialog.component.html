@@ -1,18 +1,20 @@
 <div class="row">
-    <div class="col-md-12">
-      <p [innerHTML]="inputEvent"></p>
-      <p *ngIf="inputEvent2" [innerHTML]="inputEvent2"></p>
-    </div>
+  <div class="col-md-12">
+    <p [innerHTML]="inputEvent"></p>
+    <p *ngIf="inputEvent2" [innerHTML]="inputEvent2"></p>
   </div>
-  <br />
-  
-  <div class="row justify-content-between">
-    <div class="col-md-6">
-      <button class="button-s" mat-button (click)="cancel()">{{ noButtonText }}</button>
-    </div>
-    <div class="col-md-6">
-      <button class="button-p confirm-button" mat-button (click)="confirm()">
-        {{ yesButtonText }}
-      </button>
-    </div>
+</div>
+<br />
+
+<div class="row justify-content-between">
+  <div class="col-md-6">
+    <button class="button-s" mat-button (click)="cancel()">
+      {{ noButtonText }}
+    </button>
   </div>
+  <div class="col-md-6">
+    <button class="button-p confirm-button" mat-button (click)="confirm()">
+      {{ yesButtonText }}
+    </button>
+  </div>
+</div>

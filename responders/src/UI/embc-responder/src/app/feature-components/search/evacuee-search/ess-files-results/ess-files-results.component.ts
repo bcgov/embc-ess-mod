@@ -49,6 +49,7 @@ export class EssFilesResultsComponent
     if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
       this.router.navigate(['responder-access/search/essfile']);
     } else {
+      this.evacueeSearchService.essFileId = 'selectedEssFile.id';
       this.router.navigate(['responder-access/search/security-phrase']);
     }
   }
