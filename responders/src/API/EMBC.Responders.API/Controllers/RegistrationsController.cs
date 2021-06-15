@@ -27,6 +27,7 @@ using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Responders.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NJsonSchema.Converters;
 
 namespace EMBC.Responders.API.Controllers
 {
@@ -49,14 +50,14 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Get security questions for a registrant
+        /// Gets a Registrant Profile
         /// </summary>
-        /// <param name="registrantId">registrant id</param>
-        /// <returns>list of security questions and masked answers</returns>
-        [HttpGet("registrants/{registrantId}/security")]
+        /// <param name="registrantId">RegistrantId</param>
+        /// <returns>registrant</returns>
+        [HttpGet("registrants/{registrantId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GetSecurityQuestionsResponse>> GetSecurityQuestions(string registrantId)
+        public async Task<ActionResult<RegistrantProfile>> GetRegistrantProfile(string registrantId)
         {
             var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
             {
@@ -65,59 +66,7 @@ namespace EMBC.Responders.API.Controllers
 
             if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
 
-            return Ok(new GetSecurityQuestionsResponse { Questions = mapper.Map<IEnumerable<SecurityQuestion>>(registrant.RegistrantProfile.SecurityQuestions) });
-        }
-
-        /// <summary>
-        /// verify answers for security questions
-        /// </summary>
-        /// <param name="registrantId">registrant id</param>
-        /// <param name="request">array of questions and their answers</param>
-        /// <returns>number of correct answers</returns>
-        [HttpPost("registrants/{registrantId}/security")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<VerifySecurityQuestionsResponse>> VerifySecurityQuestions(string registrantId, VerifySecurityQuestionsRequest request)
-        {
-            VerifySecurityQuestionsQuery verifySecurityQuestionsQuery = new VerifySecurityQuestionsQuery { RegistrantId = registrantId, Answers = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion>>(request.Answers) };
-            var response = await messagingClient.Send(verifySecurityQuestionsQuery);
-            return Ok(mapper.Map<VerifySecurityQuestionsResponse>(response));
-        }
-
-        /// <summary>
-        /// get the security phrase of an evacuation file
-        /// </summary>
-        /// <param name="fileId">file id</param>
-        /// <returns>masked security phrase</returns>
-        [HttpGet("files/{fileId}/security")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GetSecurityPhraseResponse>> GetSecurityPhrase(string fileId)
-        {
-            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
-            {
-                FileId = fileId
-            })).Items.FirstOrDefault();
-
-            if (file == null) return NoContent();
-
-            return Ok(new GetSecurityPhraseResponse { SecurityPhrase = mapper.Map<EvacuationFile>(file).SecurityPhrase });
-        }
-
-        /// <summary>
-        /// verify an evacuation file's security phrase
-        /// </summary>
-        /// <param name="fileId">file id</param>
-        /// <param name="request">security phrase to verify</param>
-        /// <returns>result of verification</returns>
-        [HttpPost("files/{fileId}/security")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<VerifySecurityPhraseResponse>> VerifySecurityPhrase(string fileId, VerifySecurityPhraseRequest request)
-        {
-            VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
-            var response = await messagingClient.Send(verifySecurityPhraseQuery);
-            return Ok(mapper.Map<VerifySecurityPhraseResponse>(response));
+            return Ok(mapper.Map<RegistrantProfile>(registrant.RegistrantProfile));
         }
 
         /// <summary>
@@ -164,14 +113,14 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Gets a Registrant Profile
+        /// Get security questions for a registrant
         /// </summary>
-        /// <param name="registrantId">RegistrantId</param>
-        /// <returns>registrant</returns>
-        [HttpGet("registrants/{registrantId}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        /// <param name="registrantId">registrant id</param>
+        /// <returns>list of security questions and masked answers</returns>
+        [HttpGet("registrants/{registrantId}/security")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrantProfile>> GetRegistrantProfile(string registrantId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<GetSecurityQuestionsResponse>> GetSecurityQuestions(string registrantId)
         {
             var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
             {
@@ -180,7 +129,40 @@ namespace EMBC.Responders.API.Controllers
 
             if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
 
-            return Ok(mapper.Map<RegistrantProfile>(registrant.RegistrantProfile));
+            return Ok(new GetSecurityQuestionsResponse { Questions = mapper.Map<IEnumerable<SecurityQuestion>>(registrant.RegistrantProfile.SecurityQuestions) });
+        }
+
+        /// <summary>
+        /// verify answers for security questions
+        /// </summary>
+        /// <param name="registrantId">registrant id</param>
+        /// <param name="request">array of questions and their answers</param>
+        /// <returns>number of correct answers</returns>
+        [HttpPost("registrants/{registrantId}/security")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<VerifySecurityQuestionsResponse>> VerifySecurityQuestions(string registrantId, VerifySecurityQuestionsRequest request)
+        {
+            VerifySecurityQuestionsQuery verifySecurityQuestionsQuery = new VerifySecurityQuestionsQuery { RegistrantId = registrantId, Answers = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.SecurityQuestion>>(request.Answers) };
+            var response = await messagingClient.Send(verifySecurityQuestionsQuery);
+            return Ok(mapper.Map<VerifySecurityQuestionsResponse>(response));
+        }
+
+        /// <summary>
+        /// Gets a File
+        /// </summary>
+        /// <param name="fileId">fileId</param>
+        /// <returns>file</returns>
+        [HttpGet("files/{fileId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<EvacuationFileSearchResult>> GetFile(string fileId)
+        {
+            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
+            {
+                FileId = fileId
+            })).Items.FirstOrDefault();
+            return Ok(mapper.Map<EvacuationFileSearchResult>(file));
         }
 
         /// <summary>
@@ -222,20 +204,39 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Gets a File
+        /// get the security phrase of an evacuation file
         /// </summary>
-        /// <param name="fileId">fileId</param>
-        /// <returns>file</returns>
-        [HttpGet("files/{fileId}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        /// <param name="fileId">file id</param>
+        /// <returns>masked security phrase</returns>
+        [HttpGet("files/{fileId}/security")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<EvacuationFileSearchResult>> GetFile(string fileId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<GetSecurityPhraseResponse>> GetSecurityPhrase(string fileId)
         {
             var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
             {
                 FileId = fileId
             })).Items.FirstOrDefault();
-            return Ok(mapper.Map<EvacuationFileSearchResult>(file));
+
+            if (file == null) return NoContent();
+
+            return Ok(new GetSecurityPhraseResponse { SecurityPhrase = mapper.Map<EvacuationFile>(file).SecurityPhrase });
+        }
+
+        /// <summary>
+        /// verify an evacuation file's security phrase
+        /// </summary>
+        /// <param name="fileId">file id</param>
+        /// <param name="request">security phrase to verify</param>
+        /// <returns>result of verification</returns>
+        [HttpPost("files/{fileId}/security")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<VerifySecurityPhraseResponse>> VerifySecurityPhrase(string fileId, VerifySecurityPhraseRequest request)
+        {
+            VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
+            var response = await messagingClient.Send(verifySecurityPhraseQuery);
+            return Ok(mapper.Map<VerifySecurityPhraseResponse>(response));
         }
     }
 
@@ -474,6 +475,74 @@ namespace EMBC.Responders.API.Controllers
         public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
         public SecurityQuestion[] SecurityQuestions { get; set; }
         public bool VerifiedUser { get; set; }
+    }
+
+    /// <summary>
+    /// Base class for profile data conflicts
+    /// </summary>
+    [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "dataElementName")]
+    [KnownType(typeof(DateOfBirthDataConflict))]
+    [KnownType(typeof(NameDataConflict))]
+    [KnownType(typeof(AddressDataConflict))]
+    public abstract class ProfileDataConflict
+    {
+        [Required]
+        public abstract string DataElementName { get; }
+
+        [Required]
+        public virtual object ConflictingValue { get; set; }
+
+        [Required]
+        public virtual object OriginalValue { get; set; }
+    }
+
+    /// <summary>
+    /// Date of birth data conflict
+    /// </summary>
+    public class DateOfBirthDataConflict : ProfileDataConflict
+    {
+        [Required]
+        public override string DataElementName => "DateOfBirth";
+
+        [Required]
+        public new string ConflictingValue { get; set; }
+
+        [Required]
+        public new string OriginalValue { get; set; }
+    }
+
+    /// <summary>
+    /// Name data conflict
+    /// </summary>
+    public class NameDataConflict : ProfileDataConflict
+    {
+        [Required]
+        public override string DataElementName => "Name";
+
+        [Required]
+        public new
+            (string firstName, string lastName) ConflictingValue
+        { get; set; }
+
+        [Required]
+        public new
+            (string firstName, string lastName) OriginalValue
+        { get; set; }
+    }
+
+    /// <summary>
+    /// Address data conflict
+    /// </summary>
+    public class AddressDataConflict : ProfileDataConflict
+    {
+        [Required]
+        public override string DataElementName => "Address";
+
+        [Required]
+        public new Address ConflictingValue { get; set; }
+
+        [Required]
+        public new Address OriginalValue { get; set; }
     }
 
     public class RegistrationsMapping : Profile
