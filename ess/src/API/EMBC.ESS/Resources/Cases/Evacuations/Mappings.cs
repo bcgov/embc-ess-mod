@@ -37,8 +37,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_CurrentNeedsAssessmentid, opts => opts.MapFrom(s => s.CurrentNeedsAssessment))
                 .ForMember(d => d.era_securityphrase, opts => opts.MapFrom(s => s.SecurityPhraseChanged ? s.SecurityPhrase : null))
                 .ForMember(d => d.era_registrationlocation, opts => opts.MapFrom(s => s.RegistrationLocation))
-                //new household members to add to the file
-                .ForMember(d => d.era_era_evacuationfile_era_householdmember_EvacuationFileid, opts => opts.MapFrom(s => s.CurrentNeedsAssessment.HouseholdMembers.Where(m => m.Id == null)))
                 .ForMember(d => d._era_registrant_value, opts => opts.MapFrom(s => s.PrimaryRegistrantId))
                 ;
 
@@ -61,7 +59,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             Func<Note, string> resolveNoteContent = n => n?.Content;
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)
-                .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => /*isGuid(s.Id) ? Guid.Parse(s.Id) :*/ Guid.NewGuid()))
+                .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => Guid.NewGuid()))
                 .ForMember(d => d.era_needsassessmentdate, opts => opts.MapFrom(s => s.CompletedOn))
                 .ForMember(d => d.era_needsassessmenttype, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentTypeOptionSet>(s.Type.ToString())))
                 .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => Lookup(s.CanEvacueeProvideFood)))
@@ -103,7 +101,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_needassessmentid))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.DateTime))
-                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.era_needsassessmentdate.Value.DateTime))
+                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.era_needsassessmentdate.HasValue ? s.era_needsassessmentdate.Value.DateTime : s.createdon.Value.DateTime))
                 .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.modifiedon.Value.DateTime))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentType>(((NeedsAssessmentTypeOptionSet)s.era_needsassessmenttype).ToString())))
                 .ForMember(d => d.CanEvacueeProvideClothing, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovideclothing)))
@@ -152,7 +150,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
                 .ReverseMap()
 
-                .ForMember(d => d.era_householdmemberid, opts => opts.MapFrom(s => isGuid(s.Id) ? Guid.Parse(s.Id) : Guid.NewGuid()))
+                .ForMember(d => d.era_householdmemberid, opts => opts.MapFrom(s => isGuid(s.Id) ? Guid.Parse(s.Id) : (Guid?)null))
                 .ForMember(d => d.era_isprimaryregistrant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
                 .ForMember(d => d.era_isunder19, opts => opts.MapFrom(s => s.IsUnder19))
                 .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.FirstName))

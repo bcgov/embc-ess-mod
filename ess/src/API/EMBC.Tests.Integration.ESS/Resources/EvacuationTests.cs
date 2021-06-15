@@ -90,7 +90,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var fileToUpdate = (await caseRepository.QueryCase(new EvacuationFilesQuery
             {
                 PrimaryRegistrantId = primaryContact.Id,
-                Limit = 2
+                Limit = 1
             })).Items.Cast<EvacuationFile>().Last();
 
             var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
@@ -109,11 +109,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var updatedNeedsAssessment = updatedFile.CurrentNeedsAssessment;
             updatedNeedsAssessment.HasPetsFood.ShouldBe(needsAssessment.HasPetsFood);
-            foreach (var member in updatedNeedsAssessment.HouseholdMembers)
+            foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
             {
                 member.FirstName.ShouldStartWith(newUniqueSignature);
                 member.LastName.ShouldStartWith(newUniqueSignature);
             }
+            var primaryRegistrant = updatedNeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem();
+            primaryContact.FirstName.ShouldBe(primaryContact.FirstName);
+            primaryContact.LastName.ShouldBe(primaryContact.LastName);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -167,6 +170,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 householdMember.Initials.ShouldBe(originalHouseholdMember.Initials);
                 householdMember.IsUnder19.ShouldBe(originalHouseholdMember.IsUnder19);
                 householdMember.Id.ShouldNotBeNull();
+                householdMember.LinkedRegistrantId.ShouldBe(originalHouseholdMember.LinkedRegistrantId);
+                householdMember.HasAccessRestriction.ShouldBe(originalHouseholdMember.HasAccessRestriction);
             }
             needsAssessment.Pets.Count().ShouldBe(originalNeedsAssessment.Pets.Count());
             for (var j = 0; j < originalNeedsAssessment.Pets.Count(); j++)
@@ -176,6 +181,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
                 pet.Quantity.ShouldBe(originalPet.Quantity);
                 pet.Type.ShouldBe(originalPet.Type);
+                pet.Id.ShouldNotBeNullOrEmpty();
             }
         }
 
