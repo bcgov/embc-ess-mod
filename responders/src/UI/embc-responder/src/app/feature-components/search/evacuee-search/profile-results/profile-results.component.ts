@@ -12,7 +12,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { RegistrantProfileSearchResult } from 'src/app/core/api/models';
 import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
@@ -50,7 +49,7 @@ export class ProfileResultsComponent
 
   ngOnInit(): void {}
 
-  openProfile(selectedRegistrant: any): void {
+  openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
       this.router.navigate([
         'responder-access/search/evacuee-profile-dashboard'

@@ -41,9 +41,10 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
       this.profileSecurityQuestionsService
         .getSecurityQuestions(this.evacueeSearchService.profileId)
         .subscribe((results) => {
-          this.securityQuestions = this.profileSecurityQuestionsService.shuffleSecurityQuestions(
-            results?.questions
-          );
+          this.securityQuestions = results?.questions;
+          // this.profileSecurityQuestionsService.shuffleSecurityQuestions(
+          //   results?.questions
+          // );
           this.isLoading = !this.isLoading;
         });
     }

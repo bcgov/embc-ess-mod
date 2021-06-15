@@ -26,6 +26,9 @@ export class EvacueeSearchService {
     this.cacheService.set('evacueeSearchContext', this.searchContext);
   }
 
+  /**
+   * To be moved to global service and cached
+   */
   public get profileId(): string {
     return this.profileIdVal;
   }
