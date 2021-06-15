@@ -22,6 +22,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { StatusDefinitionDialogComponent } from './components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from './components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 import { YesNoDialogComponent } from './components/dialog-components/yes-no-dialog/yes-no-dialog.component';
+import { OverlayLoaderComponent } from './components/overlay-loader/overlay-loader.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { YesNoDialogComponent } from './components/dialog-components/yes-no-dial
     PetFormComponent,
     StatusDefinitionDialogComponent,
     VerifyEvacueeDialogComponent,
-    YesNoDialogComponent
+    YesNoDialogComponent,
+    OverlayLoaderComponent
   ],
   imports: [
     CommonModule,
