@@ -38,6 +38,12 @@ button.save {
 	line-height: 2em;
 }
 
+.data-panel {
+	.row:not(:first-child) {
+		margin-top: 0.5em;
+	}
+}
+
 .review-panel {
 	@extend .wizard-panel;
 
