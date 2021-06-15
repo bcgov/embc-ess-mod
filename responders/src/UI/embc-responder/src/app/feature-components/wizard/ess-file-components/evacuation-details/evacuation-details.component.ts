@@ -12,7 +12,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { Subscription } from 'rxjs';
-import { AddressModel } from 'src/app/core/models/Address.model';
+import { AddressModel } from 'src/app/core/models/address.model';
 import { CommunityType } from '../../../../core/api/models';
 
 @Component({
@@ -85,17 +85,17 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       });
 
     // Display the referredServiceDetails in case referred Service is set as true
-    if (this.stepCreateEssFileService.referredServiceS === true) {
+    if (this.stepCreateEssFileService.referredServices === true) {
       this.showReferredServicesForm = true;
 
       for (const option of this.stepCreateEssFileService
-        .referredServiceDetailS) {
+        .referredServiceDetails) {
         this.selection.toggle(option);
       }
     }
 
     // Display the Evacuation Address form if the answer is set as false
-    if (this.stepCreateEssFileService.evacuatedFromPrimaryAddress === false) {
+    if (this.stepCreateEssFileService.evacuatedFromPrimary === false) {
       this.showBCAddressForm = true;
     }
   }
@@ -177,51 +177,51 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   }
 
   private createEvacDetailsForm(): void {
-    if (!this.stepCreateEssFileService.referredServiceDetailS)
-      this.stepCreateEssFileService.referredServiceDetailS = [];
+    if (!this.stepCreateEssFileService.referredServiceDetails)
+      this.stepCreateEssFileService.referredServiceDetails = [];
 
     this.evacDetailsForm = this.formBuilder.group({
       paperESSFile: [
-        this.stepCreateEssFileService.paperESSFiles !== undefined
-          ? this.stepCreateEssFileService.paperESSFiles
+        this.stepCreateEssFileService.paperESSFile !== undefined
+          ? this.stepCreateEssFileService.paperESSFile
           : ''
       ],
       evacuatedFromPrimary: [
-        this.stepCreateEssFileService.evacuatedFromPrimaryAddress !== null
-          ? this.stepCreateEssFileService.evacuatedFromPrimaryAddress
+        this.stepCreateEssFileService.evacuatedFromPrimary !== null
+          ? this.stepCreateEssFileService.evacuatedFromPrimary
           : '',
         Validators.required
       ],
       facilityName: [
-        this.stepCreateEssFileService.facilityNames !== undefined
-          ? this.stepCreateEssFileService.facilityNames
+        this.stepCreateEssFileService.facilityName !== undefined
+          ? this.stepCreateEssFileService.facilityName
           : '',
         [this.customValidation.whitespaceValidator()]
       ],
       insurance: [
-        this.stepCreateEssFileService.insuranceInfo !== undefined
-          ? this.stepCreateEssFileService.insuranceInfo
+        this.stepCreateEssFileService.insurance !== undefined
+          ? this.stepCreateEssFileService.insurance
           : '',
         Validators.required
       ],
       householdAffected: [
-        this.stepCreateEssFileService.householdAffectedInfo !== undefined
-          ? this.stepCreateEssFileService.householdAffectedInfo
+        this.stepCreateEssFileService.householdAffected !== undefined
+          ? this.stepCreateEssFileService.householdAffected
           : '',
         [this.customValidation.whitespaceValidator()]
       ],
       emergencySupportServices: [
-        this.stepCreateEssFileService.emergencySupportServiceS !== undefined
-          ? this.stepCreateEssFileService.emergencySupportServiceS
+        this.stepCreateEssFileService.emergencySupportServices !== undefined
+          ? this.stepCreateEssFileService.emergencySupportServices
           : ''
       ],
       referredServices: [
-        this.stepCreateEssFileService.referredServiceS !== undefined
-          ? this.stepCreateEssFileService.referredServiceS
+        this.stepCreateEssFileService.referredServices !== undefined
+          ? this.stepCreateEssFileService.referredServices
           : ''
       ],
       referredServiceDetails: [
-        this.stepCreateEssFileService.referredServiceDetailS,
+        this.stepCreateEssFileService.referredServiceDetails,
         [
           this.customValidation
             .conditionalValidation(
@@ -232,8 +232,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         ]
       ],
       externalServices: [
-        this.stepCreateEssFileService.externalServiceS !== undefined
-          ? this.stepCreateEssFileService.externalServiceS
+        this.stepCreateEssFileService.externalServices !== undefined
+          ? this.stepCreateEssFileService.externalServices
           : ''
       ],
       evacAddress: this.createEvacAddressForm()
@@ -248,37 +248,37 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   private createEvacAddressForm(): FormGroup {
     return this.formBuilder.group({
       addressLine1: [
-        this.stepCreateEssFileService?.evacAddresS?.addressLine1 !== undefined
-          ? this.stepCreateEssFileService.evacAddresS.addressLine1
+        this.stepCreateEssFileService?.evacAddress?.addressLine1 !== undefined
+          ? this.stepCreateEssFileService.evacAddress.addressLine1
           : '',
         [this.customValidation.whitespaceValidator()]
       ],
       addressLine2: [
-        this.stepCreateEssFileService?.evacAddresS?.addressLine2 !== undefined
-          ? this.stepCreateEssFileService.evacAddresS.addressLine2
+        this.stepCreateEssFileService?.evacAddress?.addressLine2 !== undefined
+          ? this.stepCreateEssFileService.evacAddress.addressLine2
           : ''
       ],
       community: [
-        this.stepCreateEssFileService?.evacAddresS?.community !== undefined
-          ? this.stepCreateEssFileService.evacAddresS.community
+        this.stepCreateEssFileService?.evacAddress?.community !== undefined
+          ? this.stepCreateEssFileService.evacAddress.community
           : '',
         [Validators.required]
       ],
       stateProvince: [
-        this.stepCreateEssFileService?.evacAddresS?.stateProvince !== undefined
-          ? this.stepCreateEssFileService.evacAddresS.stateProvince
+        this.stepCreateEssFileService?.evacAddress?.stateProvince !== undefined
+          ? this.stepCreateEssFileService.evacAddress.stateProvince
           : '',
         [Validators.required]
       ],
       country: [
-        this.stepCreateEssFileService?.evacAddresS?.country !== undefined
-          ? this.stepCreateEssFileService.evacAddresS.country
+        this.stepCreateEssFileService?.evacAddress?.country !== undefined
+          ? this.stepCreateEssFileService.evacAddress.country
           : '',
         [Validators.required]
       ],
       postalCode: [
-        this.stepCreateEssFileService?.evacAddresS?.postalCode !== undefined
-          ? this.stepCreateEssFileService.evacAddresS.postalCode
+        this.stepCreateEssFileService?.evacAddress?.postalCode !== undefined
+          ? this.stepCreateEssFileService.evacAddress.postalCode
           : '',
         [this.customValidation.postalValidation().bind(this.customValidation)]
       ]
@@ -324,32 +324,32 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepCreateEssFileService.paperESSFiles = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.paperESSFile = this.evacDetailsForm.get(
       'paperESSFile'
     ).value;
-    this.stepCreateEssFileService.evacuatedFromPrimaryAddress = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.evacuatedFromPrimary = this.evacDetailsForm.get(
       'evacuatedFromPrimary'
     ).value;
-    this.stepCreateEssFileService.evacAddresS = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.evacAddress = this.evacDetailsForm.get(
       'evacAddress'
     ).value;
-    this.stepCreateEssFileService.facilityNames = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.facilityName = this.evacDetailsForm.get(
       'facilityName'
     ).value;
-    this.stepCreateEssFileService.insuranceInfo = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.insurance = this.evacDetailsForm.get(
       'insurance'
     ).value;
-    this.stepCreateEssFileService.householdAffectedInfo = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.householdAffected = this.evacDetailsForm.get(
       'householdAffected'
     ).value;
-    this.stepCreateEssFileService.emergencySupportServiceS = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.emergencySupportServices = this.evacDetailsForm.get(
       'emergencySupportServices'
     ).value;
-    this.stepCreateEssFileService.referredServiceS = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.referredServices = this.evacDetailsForm.get(
       'referredServices'
     ).value;
-    this.stepCreateEssFileService.referredServiceDetailS = this.selection.selected;
-    this.stepCreateEssFileService.externalServiceS = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.referredServiceDetails = this.selection.selected;
+    this.stepCreateEssFileService.externalServices = this.evacDetailsForm.get(
       'externalServices'
     ).value;
   }

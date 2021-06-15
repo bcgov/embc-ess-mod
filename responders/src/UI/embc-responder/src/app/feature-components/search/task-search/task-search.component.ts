@@ -5,7 +5,6 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { TaskSearchService } from './task-search.service';
 import * as globalConst from '../../../core/services/global-constants';
-import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-task-search',

@@ -54,7 +54,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Goes to the next tab from the ESS File
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/create-ess-file/review']);
+    this.router.navigate(['/ess-wizard/create-ess-file/security-phrase']);
   }
 
   /**
@@ -68,23 +68,23 @@ export class NeedsComponent implements OnInit, OnDestroy {
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
       canEvacueeProvideFood: [
-        this.stepCreateEssFileService.canEvacueeProvideFood ?? '',
+        this.stepCreateEssFileService.canRegistrantProvideFood ?? '',
         Validators.required
       ],
       canEvacueeProvideLodging: [
-        this.stepCreateEssFileService.canEvacueeProvideLodging ?? '',
+        this.stepCreateEssFileService.canRegistrantProvideLodging ?? '',
         Validators.required
       ],
       canEvacueeProvideClothing: [
-        this.stepCreateEssFileService.canEvacueeProvideClothing ?? '',
+        this.stepCreateEssFileService.canRegistrantProvideClothing ?? '',
         Validators.required
       ],
       canEvacueeProvideTransportation: [
-        this.stepCreateEssFileService.canEvacueeProvideTransportation ?? '',
+        this.stepCreateEssFileService.canRegistrantProvideTransportation ?? '',
         Validators.required
       ],
       canEvacueeProvideIncidentals: [
-        this.stepCreateEssFileService.canEvacueeProvideIncidentals ?? '',
+        this.stepCreateEssFileService.canRegistrantProvideIncidentals ?? '',
         Validators.required
       ]
     });
@@ -110,19 +110,19 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepCreateEssFileService.canEvacueeProvideFood = this.needsForm.get(
+    this.stepCreateEssFileService.canRegistrantProvideFood = this.needsForm.get(
       'canEvacueeProvideFood'
     ).value;
-    this.stepCreateEssFileService.canEvacueeProvideLodging = this.needsForm.get(
+    this.stepCreateEssFileService.canRegistrantProvideLodging = this.needsForm.get(
       'canEvacueeProvideLodging'
     ).value;
-    this.stepCreateEssFileService.canEvacueeProvideClothing = this.needsForm.get(
+    this.stepCreateEssFileService.canRegistrantProvideClothing = this.needsForm.get(
       'canEvacueeProvideClothing'
     ).value;
-    this.stepCreateEssFileService.canEvacueeProvideTransportation = this.needsForm.get(
+    this.stepCreateEssFileService.canRegistrantProvideTransportation = this.needsForm.get(
       'canEvacueeProvideTransportation'
     ).value;
-    this.stepCreateEssFileService.canEvacueeProvideIncidentals = this.needsForm.get(
+    this.stepCreateEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
       'canEvacueeProvideIncidentals'
     ).value;
 

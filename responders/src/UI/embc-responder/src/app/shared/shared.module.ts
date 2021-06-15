@@ -69,7 +69,8 @@ import { YesNoDialogComponent } from './components/dialog-components/yes-no-dial
     PersonDetailFormComponent,
     PetFormComponent,
     StatusDefinitionDialogComponent,
-    VerifyEvacueeDialogComponent
+    VerifyEvacueeDialogComponent,
+    OverlayLoaderComponent
   ]
 })
 export class SharedModule {}

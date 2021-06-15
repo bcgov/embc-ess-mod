@@ -54,15 +54,15 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.createHouseholdForm();
 
     // Populating household members' table if data has been previously inserted
-    if (this.stepCreateEssFileService.houseHoldMembers.length !== 0) {
-      this.data = this.stepCreateEssFileService.houseHoldMembers;
+    if (this.stepCreateEssFileService.householdMembers.length !== 0) {
+      this.data = this.stepCreateEssFileService.householdMembers;
       this.dataSource.next(this.data);
     }
 
     // Displaying household member form in case 'haveHouseholdMembers' has been set to true
     if (
-      this.stepCreateEssFileService.hasHouseHoldMembers === true &&
-      this.stepCreateEssFileService.houseHoldMembers.length === 0
+      this.stepCreateEssFileService.haveHouseHoldMembers === true &&
+      this.stepCreateEssFileService.householdMembers.length === 0
     ) {
       this.showMemberForm = true;
       this.householdForm.get('addMemberIndicator').setValue(true);
@@ -263,16 +263,16 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Create Household Members main form
    */
   private createHouseholdForm(): void {
-    if (!this.stepCreateEssFileService.houseHoldMembers)
-      this.stepCreateEssFileService.houseHoldMembers = [];
+    if (!this.stepCreateEssFileService.householdMembers)
+      this.stepCreateEssFileService.householdMembers = [];
 
     this.householdForm = this.formBuilder.group({
       hasHouseholdMembers: [
-        this.stepCreateEssFileService.hasHouseHoldMembers ?? '',
+        this.stepCreateEssFileService.haveHouseHoldMembers ?? '',
         Validators.required
       ],
       houseHoldMembers: [
-        this.stepCreateEssFileService.houseHoldMembers,
+        this.stepCreateEssFileService.householdMembers,
         this.customValidation
           .conditionalValidation(
             () => this.householdForm.get('hasHouseholdMembers').value === true,
@@ -282,11 +282,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       ],
       houseHoldMember: this.createHouseholdMemberForm(),
       hasSpecialDiet: [
-        this.stepCreateEssFileService.hasSpecialDiet ?? '',
+        this.stepCreateEssFileService.haveSpecialDiet ?? '',
         Validators.required
       ],
       specialDietDetails: [
-        this.stepCreateEssFileService.specialDietDetailS ?? '',
+        this.stepCreateEssFileService.specialDietDetails ?? '',
         [
           this.customValidation
             .conditionalValidation(
@@ -297,11 +297,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         ]
       ],
       hasMedication: [
-        this.stepCreateEssFileService.hasMedication ?? '',
+        this.stepCreateEssFileService.haveMedication ?? '',
         Validators.required
       ],
       medicationSupply: [
-        this.stepCreateEssFileService.medicationSupplY ?? '',
+        this.stepCreateEssFileService.medicationSupply ?? '',
         [
           this.customValidation
             .conditionalValidation(
@@ -408,22 +408,22 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepCreateEssFileService.hasHouseHoldMembers = this.householdForm.get(
+    this.stepCreateEssFileService.haveHouseHoldMembers = this.householdForm.get(
       'hasHouseholdMembers'
     ).value;
-    this.stepCreateEssFileService.houseHoldMembers = this.householdForm.get(
+    this.stepCreateEssFileService.householdMembers = this.householdForm.get(
       'houseHoldMembers'
     ).value;
-    this.stepCreateEssFileService.hasSpecialDiet = this.householdForm.get(
+    this.stepCreateEssFileService.haveSpecialDiet = this.householdForm.get(
       'hasSpecialDiet'
     ).value;
-    this.stepCreateEssFileService.specialDietDetailS = this.householdForm.get(
+    this.stepCreateEssFileService.specialDietDetails = this.householdForm.get(
       'specialDietDetails'
     ).value;
-    this.stepCreateEssFileService.hasMedication = this.householdForm.get(
+    this.stepCreateEssFileService.haveMedication = this.householdForm.get(
       'hasMedication'
     ).value;
-    this.stepCreateEssFileService.medicationSupplY = this.householdForm.get(
+    this.stepCreateEssFileService.medicationSupply = this.householdForm.get(
       'medicationSupply'
     ).value;
     this.stepCreateEssFileService.addMemberIndicator = this.householdForm.get(
