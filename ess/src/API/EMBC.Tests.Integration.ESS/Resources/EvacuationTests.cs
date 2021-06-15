@@ -61,7 +61,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var caseQuery = new EvacuationFilesQuery
             {
                 PrimaryRegistrantId = primaryContact.Id,
-                Limit = 5
+                //Limit = 5
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
             queryResult.Items.ShouldNotBeEmpty();
