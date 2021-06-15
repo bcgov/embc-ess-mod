@@ -19,7 +19,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         // Constants
         private const string TestUserId = "CHRIS-TEST";
 
-        private const string TestEssFileNumber = "100487";
+        private const string TestEssFileNumber = "100644";
 
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
