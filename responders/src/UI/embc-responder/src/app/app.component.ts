@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { AuthenticationService } from './core/services/authentication.service';
 import { ConfigService } from './core/services/config.service';
+import { LocationsService } from './core/services/locations.service';
 import { UserService } from './core/services/user.service';
 import { AlertService } from './shared/components/alert/alert.service';
 
@@ -20,7 +21,8 @@ export class AppComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private configService: ConfigService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private locationService: LocationsService
   ) {
     this.router.events.subscribe((e) => {
       if (e instanceof NavigationEnd) {
@@ -44,6 +46,7 @@ export class AppComponent implements OnInit {
     try {
       const nextUrl = await this.authenticationService.login();
       const userProfile = await this.userService.loadUserProfile();
+      this.loadStaticLists();
       const nextRoute = decodeURIComponent(
         userProfile.requiredToSignAgreement
           ? 'electronic-agreement'
@@ -59,5 +62,12 @@ export class AppComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  private loadStaticLists() : void {
+    this.locationService.getCommunityList();
+    this.locationService.getCountriesList();
+    this.locationService.getRegionalDistricts();
+    this.locationService.getStateProvinceList();
   }
 }
