@@ -347,12 +347,12 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVerifySecurityPhrase()
         {
-            string fileId = "100495";
+            string fileId = "100644";
 
             //If you need to set the security phrase for testing.
             //var file = (await GetEvacuationFileById(fileId)).FirstOrDefault();
             //file.SecurityPhrase = "SecretPhrase";
-            //file.PhraseChanged = true;
+            //file.SecurityPhraseChanged = true;
             //await manager.Handle(new SubmitEvacuationFileCommand { File = file });
 
             var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "SecretPhrase" });

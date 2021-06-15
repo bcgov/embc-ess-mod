@@ -27,7 +27,7 @@ export class StepCreateEssFileComponent {
         this.stepName = state.title;
       }
     }
-    this.tabs = this.stepCreateEssFileService.tabs;
+    this.tabs = this.stepCreateEssFileService.essTabs;
   }
 
   /**
