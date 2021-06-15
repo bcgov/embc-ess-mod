@@ -28,13 +28,15 @@ export class MaskEvacuatedAddressPipe implements PipeTransform {
       if (address.addressLine2?.length > 0)
         line1 += ', ' + address.addressLine2;
 
-      // If community code is found, use that. Otherwise, use city
-      const communityName =
-        communities.find((community) => {
-          return community.code === address.community?.code;
-        })?.name ||
-        address.city ||
-        '';
+      // TODO: Rewrite this once the new community code mapping is merged
+      const communityName = address.community?.code || '';
+
+      // const communityName =
+      //   communities.find((community) => {
+      //     return community.code === address.community?.code;
+      //   })?.name ||
+      //   address.city ||
+      //   '';
 
       // Only set line 2 if city exists
       if (communityName.length > 0) {
