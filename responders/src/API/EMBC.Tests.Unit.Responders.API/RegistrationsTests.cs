@@ -200,6 +200,7 @@ namespace EMBC.Tests.Unit.Responders.API
                 });
         }
 
+        //TODO - use fake messaging client to test search service
         [Fact]
         public async Task GetRegistrantProfileById()
         {

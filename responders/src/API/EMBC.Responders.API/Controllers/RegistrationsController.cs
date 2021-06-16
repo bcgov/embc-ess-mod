@@ -64,7 +64,7 @@ namespace EMBC.Responders.API.Controllers
                 Id = registrantId
             })).Items.FirstOrDefault();
 
-            if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
+            if (registrant == null || registrant.RegistrantProfile == null) return NotFound();
 
             return Ok(mapper.Map<RegistrantProfile>(registrant.RegistrantProfile));
         }
@@ -127,7 +127,7 @@ namespace EMBC.Responders.API.Controllers
                 Id = registrantId
             })).Items.FirstOrDefault();
 
-            if (registrant == null || registrant.RegistrantProfile == null) return NoContent();
+            if (registrant == null || registrant.RegistrantProfile == null) return NotFound();
 
             return Ok(new GetSecurityQuestionsResponse { Questions = mapper.Map<IEnumerable<SecurityQuestion>>(registrant.RegistrantProfile.SecurityQuestions) });
         }
@@ -218,7 +218,7 @@ namespace EMBC.Responders.API.Controllers
                 FileId = fileId
             })).Items.FirstOrDefault();
 
-            if (file == null) return NoContent();
+            if (file == null) return NotFound();
 
             return Ok(new GetSecurityPhraseResponse { SecurityPhrase = mapper.Map<EvacuationFile>(file).SecurityPhrase });
         }
@@ -475,74 +475,6 @@ namespace EMBC.Responders.API.Controllers
         public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
         public SecurityQuestion[] SecurityQuestions { get; set; }
         public bool VerifiedUser { get; set; }
-    }
-
-    /// <summary>
-    /// Base class for profile data conflicts
-    /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "dataElementName")]
-    [KnownType(typeof(DateOfBirthDataConflict))]
-    [KnownType(typeof(NameDataConflict))]
-    [KnownType(typeof(AddressDataConflict))]
-    public abstract class ProfileDataConflict
-    {
-        [Required]
-        public abstract string DataElementName { get; }
-
-        [Required]
-        public virtual object ConflictingValue { get; set; }
-
-        [Required]
-        public virtual object OriginalValue { get; set; }
-    }
-
-    /// <summary>
-    /// Date of birth data conflict
-    /// </summary>
-    public class DateOfBirthDataConflict : ProfileDataConflict
-    {
-        [Required]
-        public override string DataElementName => "DateOfBirth";
-
-        [Required]
-        public new string ConflictingValue { get; set; }
-
-        [Required]
-        public new string OriginalValue { get; set; }
-    }
-
-    /// <summary>
-    /// Name data conflict
-    /// </summary>
-    public class NameDataConflict : ProfileDataConflict
-    {
-        [Required]
-        public override string DataElementName => "Name";
-
-        [Required]
-        public new
-            (string firstName, string lastName) ConflictingValue
-        { get; set; }
-
-        [Required]
-        public new
-            (string firstName, string lastName) OriginalValue
-        { get; set; }
-    }
-
-    /// <summary>
-    /// Address data conflict
-    /// </summary>
-    public class AddressDataConflict : ProfileDataConflict
-    {
-        [Required]
-        public override string DataElementName => "Address";
-
-        [Required]
-        public new Address ConflictingValue { get; set; }
-
-        [Required]
-        public new Address OriginalValue { get; set; }
     }
 
     public class RegistrationsMapping : Profile
