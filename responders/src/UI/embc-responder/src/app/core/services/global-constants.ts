@@ -1,11 +1,16 @@
 export const insuranceOptions = [
   { name: 'Yes', value: 'Yes' },
   {
-    name: 'Unsure',
-    value: 'Yes, but I am unsure if I have coverage for this event.'
+    name: 'Yes, but I am unsure if I have coverage for this event.',
+    value: 'Unsure'
   },
   { name: 'No', value: 'No' },
-  { name: 'Unknown', value: "I don't know" }
+  { name: "I don't know", value: 'Unknown' }
+];
+export const needsOptions = [
+  { name: 'Yes', value: 'Yes', apiValue: true },
+  { name: 'No', value: 'No', apiValue: false },
+  { name: "I'm not sure", value: 'Unsure', apiValue: null }
 ];
 export const referredServiceOptions = [
   { name: 'Inquiry' },
