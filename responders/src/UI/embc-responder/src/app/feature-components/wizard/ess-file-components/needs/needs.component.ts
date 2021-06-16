@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
+import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-needs',
@@ -16,6 +17,7 @@ import { StepCreateEssFileService } from '../../step-create-ess-file/step-create
 })
 export class NeedsComponent implements OnInit, OnDestroy {
   needsForm: FormGroup;
+  radioOption = globalConst.needsOptions;
   tabUpdateSubscription: Subscription;
 
   constructor(
