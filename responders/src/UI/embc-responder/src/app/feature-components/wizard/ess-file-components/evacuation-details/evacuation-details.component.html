@@ -263,8 +263,8 @@
                     class="checkbox-option"
                     *ngFor="let option of referredServicesOption"
                     [value]="option.name"
-                    (change)="$event ? selectionToggle(option) : null"
-                    [checked]="selection.isSelected(option)"
+                    (change)="$event ? selectionToggle(option.name) : null"
+                    [checked]="selection.isSelected(option.name)"
                     >{{ option.name }}</mat-checkbox
                   >
                 </section>
