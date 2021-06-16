@@ -72,7 +72,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     }
   }
 
-  //
   hasPetsChange(event: MatRadioChange): void {
     if (event.value === false) {
       this.showPetsForm = false;
@@ -97,6 +96,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       } else {
         this.data.push(this.animalsForm.get('pet').value);
       }
+
       this.animalsForm.get('addPetIndicator').setValue(false);
       this.dataSource.next(this.data);
       this.animalsForm.get('pets').setValue(this.data);
@@ -175,7 +175,6 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    console.log(this.animalsForm);
     this.stepCreateEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
@@ -293,7 +292,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.stepCreateEssFileService.petCareDetails = this.animalsForm.get(
       'petCareDetails'
     ).value;
-    this.stepCreateEssFileService.petCareDetails = this.animalsForm.get(
+    this.stepCreateEssFileService.addPetIndicator = this.animalsForm.get(
       'addPetIndicator'
     ).value;
   }
