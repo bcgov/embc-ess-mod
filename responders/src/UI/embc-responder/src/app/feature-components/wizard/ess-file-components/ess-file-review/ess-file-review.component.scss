@@ -13,6 +13,20 @@ button.save {
 	align-items: center;
 }
 
+.bottom-space {
+  margin-bottom: 1.5em;
+}
+
+.bottom-space-large {
+  margin-bottom: 4.5em;
+}
+
+.tab-subtitle {
+  font-size: 21px;
+  color: #234075;
+  margin-bottom: 1em;
+}
+
 .mat-radio-button {
 	display: block;
 
@@ -61,4 +75,39 @@ button.save {
 
 .nav-buttons {
 	margin-top: 3em;
+}
+
+.mobile-label {
+  display: none;
+}
+
+@media(max-width: 600px) {
+  .mobile-label {
+    width: 80px;
+    display: inline-block;
+    font-weight: bold;
+  }
+
+  // Remove the header row altogether
+  .mat-header-row {
+    display: none;
+  }
+
+  // The row cells should display as a column, justified left, with a bit of extra padding
+  .mat-row {
+    flex-direction: column;
+    align-items: start;
+    padding: 8px 24px;
+    min-height: unset; // Tweak for Angular Material 8
+  }
+
+  // Tweaks for Angular Material 8
+  .mat-cell:first-of-type, .mat-footer-cell:first-of-type, .mat-header-cell:first-of-type {
+    padding-left: unset;
+  }
+
+  .mat-cell {
+    align-items: unset;
+    min-height: unset;
+  }
 }
