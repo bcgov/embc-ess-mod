@@ -13,6 +13,12 @@ button.save {
 	align-items: center;
 }
 
+.tab-subtitle {
+  font-size: 21px;
+  color: #234075;
+  margin-bottom: 1em;
+}
+
 .mat-radio-button {
 	display: block;
 
@@ -36,6 +42,12 @@ button.save {
 	margin: 8px 0;
 
 	line-height: 2em;
+}
+
+.data-panel {
+	.row:not(:first-child) {
+		margin-top: 0.5em;
+	}
 }
 
 .review-panel {
