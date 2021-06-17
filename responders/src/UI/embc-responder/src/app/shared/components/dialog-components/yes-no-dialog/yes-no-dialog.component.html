@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-12">
-    <p [innerHTML]="inputEvent"></p>
-    <p *ngIf="inputEvent2" [innerHTML]="inputEvent2"></p>
+    <p [innerHTML]="content?.text"></p>
+    <p *ngIf="content?.text2" [innerHTML]="content?.text2"></p>
   </div>
 </div>
 <br />
@@ -9,12 +9,12 @@
 <div class="row justify-content-between">
   <div class="col-md-6">
     <button class="button-s" mat-button (click)="cancel()">
-      {{ noButtonText }}
+      {{ content?.noButtonText }}
     </button>
   </div>
   <div class="col-md-6">
     <button class="button-p confirm-button" mat-button (click)="confirm()">
-      {{ yesButtonText }}
+      {{ content?.yesButtonText }}
     </button>
   </div>
 </div>

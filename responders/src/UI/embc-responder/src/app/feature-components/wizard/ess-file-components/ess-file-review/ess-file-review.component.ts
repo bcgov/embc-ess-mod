@@ -7,7 +7,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
 import { HouseholdMember } from 'src/app/core/models/evacuation-file';
 import { HouseholdMembersComponent } from '../household-members/household-members.component';
-import { HouseholdMemberModel } from 'src/app/core/models/HouseholdMember.model';
+import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 
 @Component({
   selector: 'app-ess-file-review',

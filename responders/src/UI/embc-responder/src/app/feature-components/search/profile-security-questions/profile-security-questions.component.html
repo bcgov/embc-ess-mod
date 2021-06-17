@@ -1,5 +1,5 @@
 <div class="row heading-container">
-  <div class="col-md-12" *ngIf="defaultScreen || secondTryScreen">
+  <div class="col-md-12" *ngIf="!incorrectScreen">
     <span class="page-heading">Please Answer Your Security Questions</span>
   </div>
   <div class="col-md-12" *ngIf="incorrectScreen">
@@ -8,7 +8,7 @@
 </div>
 <br />
 <div class="row">
-  <ng-container *ngIf="defaultScreen">
+  <ng-container *ngIf="defaultScreen && !incorrectScreen">
     <div class="col-md-12">
       <mat-card>
         <p class="heading">
@@ -95,7 +95,7 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="secondTryScreen">
+  <ng-container *ngIf="!defaultScreen && !incorrectScreen">
     <div class="col-md-12">
       <mat-card>
         <p class="heading">
@@ -156,21 +156,19 @@
   <ng-container *ngIf="incorrectScreen">
     <div class="col-md-12">
       <mat-card>
-        <p class="heading">
-          The evacuee was unable to answer the security questions correctly.
-        </p>
-        <p class="paragraph-space">
-          If the evacuee also has an <b>ESS File</b>, go back to the search
-          results page and try to access their ESS File.
-        </p>
-        <p>
-          Please start a new Evacuee Registration if you cannot access the
-          evacuees ESS File or Profile.
-        </p>
-        <br />
-        <br />
-        <br />
-        <br />
+        <div class="text">
+          <p class="heading">
+            The evacuee was unable to answer the security questions correctly.
+          </p>
+          <p class="paragraph-space">
+            If the evacuee also has an <b>ESS File</b>, go back to the search
+            results page and try to access their ESS File.
+          </p>
+          <p>
+            Please start a new Evacuee Registration if you cannot access the
+            evacuees ESS File or Profile.
+          </p>
+        </div>
         <div class="row double-space">
           <div class="col-md-8">
             <button

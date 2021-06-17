@@ -18,7 +18,7 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   securityQuestionResult: number;
   firstTryCorrect: boolean;
   defaultScreen = true;
-  secondTryScreen = false;
+  // secondTryScreen = false;
   incorrectScreen = false;
   correctAnswerFlag = false;
   showLoader = false;
@@ -87,10 +87,10 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
             this.securityAnswers.length === 3)
         ) {
           this.incorrectScreen = true;
-          this.secondTryScreen = false;
-          this.defaultScreen = false;
+          // this.secondTryScreen = false;
+          // this.defaultScreen = false;
         } else if (this.securityQuestionResult === 1) {
-          this.secondTryScreen = true;
+          // this.secondTryScreen = true;
           this.defaultScreen = false;
         } else {
           this.firstTryCorrect = true;
