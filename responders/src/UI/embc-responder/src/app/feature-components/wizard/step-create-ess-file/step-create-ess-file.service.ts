@@ -50,11 +50,11 @@ export class StepCreateEssFileService {
   private havePetsFoodVal: boolean;
   private petCareDetailsVal: string;
 
-  private canRegistrantProvideClothingVal: boolean;
-  private canRegistrantProvideFoodVal: boolean;
-  private canRegistrantProvideIncidentalsVal: boolean;
-  private canRegistrantProvideLodgingVal: boolean;
-  private canRegistrantProvideTransportationVal: boolean;
+  private canRegistrantProvideClothingVal: string;
+  private canRegistrantProvideFoodVal: string;
+  private canRegistrantProvideIncidentalsVal: string;
+  private canRegistrantProvideLodgingVal: string;
+  private canRegistrantProvideTransportationVal: string;
 
   constructor(private dialog: MatDialog) {}
 
@@ -214,51 +214,51 @@ export class StepCreateEssFileService {
   public get petCareDetails(): string {
     return this.petCareDetailsVal;
   }
-  public set petCareDetails(petCareDetailVal: string) {
-    this.petCareDetailsVal = petCareDetailVal;
+  public set petCareDetails(petCareDetailsVal: string) {
+    this.petCareDetailsVal = petCareDetailsVal;
   }
 
   // Needs Assessment Getters and Setters
 
-  public get canRegistrantProvideClothing(): boolean {
+  public get canRegistrantProvideClothing(): string {
     return this.canRegistrantProvideClothingVal;
   }
   public set canRegistrantProvideClothing(
-    canRegistrantProvideClothingVal: boolean
+    canRegistrantProvideClothingVal: string
   ) {
     this.canRegistrantProvideClothingVal = canRegistrantProvideClothingVal;
   }
 
-  public get canRegistrantProvideFood(): boolean {
+  public get canRegistrantProvideFood(): string {
     return this.canRegistrantProvideFoodVal;
   }
-  public set canRegistrantProvideFood(canRegistrantProvideFoodVal: boolean) {
+  public set canRegistrantProvideFood(canRegistrantProvideFoodVal: string) {
     this.canRegistrantProvideFoodVal = canRegistrantProvideFoodVal;
   }
 
-  public get canRegistrantProvideIncidentals(): boolean {
+  public get canRegistrantProvideIncidentals(): string {
     return this.canRegistrantProvideIncidentalsVal;
   }
   public set canRegistrantProvideIncidentals(
-    canRegistrantProvideIncidentalsVal: boolean
+    canRegistrantProvideIncidentalsVal: string
   ) {
     this.canRegistrantProvideIncidentalsVal = canRegistrantProvideIncidentalsVal;
   }
 
-  public get canRegistrantProvideLodging(): boolean {
+  public get canRegistrantProvideLodging(): string {
     return this.canRegistrantProvideLodgingVal;
   }
   public set canRegistrantProvideLodging(
-    canRegistrantProvideLodgingVal: boolean
+    canRegistrantProvideLodgingVal: string
   ) {
     this.canRegistrantProvideLodgingVal = canRegistrantProvideLodgingVal;
   }
 
-  public get canRegistrantProvideTransportation(): boolean {
+  public get canRegistrantProvideTransportation(): string {
     return this.canRegistrantProvideTransportationVal;
   }
   public set canRegistrantProvideTransportation(
-    canRegistrantProvideTransportationVal: boolean
+    canRegistrantProvideTransportationVal: string
   ) {
     this.canRegistrantProvideTransportationVal = canRegistrantProvideTransportationVal;
   }

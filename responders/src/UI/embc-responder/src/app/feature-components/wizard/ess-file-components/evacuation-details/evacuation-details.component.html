@@ -41,8 +41,12 @@
                 <label
                   id="evacuatedFromPrimary-radio-group-label"
                   class="tab-subtitle requiredField"
+                  *ngIf="isBCAddress"
                 >
                   Are you being evacuated from your primary address?
+                </label>
+                <label class="tab-subtitle requiredField" *ngIf="!isBCAddress">
+                  Where are you being evacuated from?
                 </label>
 
                 <ng-container *ngIf="isBCAddress">
@@ -53,14 +57,14 @@
                     (change)="evacPrimaryAddressChange($event)"
                     required
                   >
-                    <mat-radio-button [value]="true">Yes </mat-radio-button>
+                    <mat-radio-button [value]="true">Yes</mat-radio-button>
                     <div class="prim-address">
-                      <p>
-                        {{ bCDummyAddress.addressLine1 }},
-                        {{ bCDummyAddress.addressLine2 }}
-                      </p>
-                      <p>{{ bCDummyAddress.communityCode }}</p>
-                      <p>{{ bCDummyAddress.postalCode }}</p>
+                      <p
+                        [innerHTML]="
+                          stepCreateProfileService?.primaryAddressDetails
+                            | maskEvacuatedaddress
+                        "
+                      ></p>
                     </div>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                     <mat-error
@@ -259,8 +263,8 @@
                     class="checkbox-option"
                     *ngFor="let option of referredServicesOption"
                     [value]="option.name"
-                    (change)="$event ? selectionToggle(option) : null"
-                    [checked]="selection.isSelected(option)"
+                    (change)="$event ? selectionToggle(option.name) : null"
+                    [checked]="selection.isSelected(option.name)"
                     >{{ option.name }}</mat-checkbox
                   >
                 </section>
