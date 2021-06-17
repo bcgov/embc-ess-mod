@@ -87,6 +87,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
             mergeMap((regResult) => {
               // Set Profile ID to Profile Service, retrieve profile from API
               this.stepCreateProfileService.registrantId = regResult.id;
+              this.cacheService.set('primaryRegistrantId', regResult.id);
 
               return this.evacueeProfileService.getProfileFromId(
                 this.stepCreateProfileService.registrantId
@@ -109,7 +110,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
               this.stepCreateProfileService
                 .openModal(
                   globalConst.evacueeProfileCreatedMessage.text,
-                  globalConst.evacueeProfileCreatedMessage.title
+                  globalConst.evacueeProfileCreatedMessage.title,
+                  globalConst.evacueeProfileCreatedMessage.button
                 )
                 .afterClosed()
                 .subscribe(() => {
