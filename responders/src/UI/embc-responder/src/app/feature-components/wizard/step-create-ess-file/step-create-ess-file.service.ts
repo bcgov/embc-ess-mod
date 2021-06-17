@@ -417,7 +417,7 @@ export class StepCreateEssFileService {
         }
       ],
       securityPhrase: this.securityPhrase,
-      securityPhraseEdited: true
+      securityPhraseEdited: !this.bypassPhrase
     };
   }
 

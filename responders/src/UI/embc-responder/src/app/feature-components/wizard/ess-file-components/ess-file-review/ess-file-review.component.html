@@ -314,7 +314,15 @@
           <div class="review-panel data-panel">
             <label class="tab-subtitle">Security Phrase</label>
 
-            <div class="row">
+            <div class="row" *ngIf="stepCreateEssFileService?.bypassPhrase">
+              <div class="col-8">
+                <mat-checkbox [checked]="true" [disabled]="true">
+                  Bypass security phrase for manual entry of paper ESS file.
+                </mat-checkbox>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="!stepCreateEssFileService?.bypassPhrase">
               <div class="col-4">Security Phrase</div>
               <div class="col-8 bold">
                 {{ stepCreateEssFileService?.securityPhrase | maskText }}
