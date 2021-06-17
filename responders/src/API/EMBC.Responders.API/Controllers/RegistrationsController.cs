@@ -27,7 +27,6 @@ using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Responders.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NJsonSchema.Converters;
 
 namespace EMBC.Responders.API.Controllers
 {
@@ -521,12 +520,10 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
-                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
-                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
-                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
-                .ReverseMap()
-                .ForMember(d => d.City, opts => opts.Ignore())
-                ;
+               .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
+               .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
+               .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
+               ;
 
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
@@ -551,14 +548,14 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.PersonalDetails.Initials))
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.PersonalDetails.LastName))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
-                .ForMember(d => d.UserId, opts => opts.MapFrom(s => s.Id))
-                .ForMember(d => d.Id, opts => opts.Ignore())
+                .ForMember(d => d.UserId, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
                 .ReverseMap()
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
                     s.MailingAddress.Country == s.PrimaryAddress.Country &&
                     s.MailingAddress.StateProvince == s.PrimaryAddress.StateProvince &&
                     s.MailingAddress.Community == s.PrimaryAddress.Community &&
+                    s.MailingAddress.City == s.PrimaryAddress.City &&
                     s.MailingAddress.PostalCode == s.PrimaryAddress.PostalCode &&
                     s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
                     s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
