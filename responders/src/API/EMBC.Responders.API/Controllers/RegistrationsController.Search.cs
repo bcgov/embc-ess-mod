@@ -106,7 +106,6 @@ namespace EMBC.Responders.API.Controllers
 
             Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
             CreateMap<ESS.Shared.Contracts.Submissions.Address, Controllers.Address>()
-                .ForMember(d => d.City, opts => opts.MapFrom(s => isGuid(s.Community) ? null : s.Community))
                 .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => !isGuid(s.Community) ? null : s.Community))
                 .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
                 .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))

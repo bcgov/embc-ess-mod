@@ -40,10 +40,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             contact.PrimaryAddress.Country.ShouldNotBeNull().ShouldNotBeNull();
             contact.PrimaryAddress.Country.ShouldNotBeNull();
-            contact.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldNotBeNull();
-            contact.PrimaryAddress.StateProvince.ShouldNotBeNull();
-            contact.PrimaryAddress.Community.ShouldNotBeNull().ShouldNotBeNull();
-            contact.PrimaryAddress.Community.ShouldNotBeNull();
         }
 
         
