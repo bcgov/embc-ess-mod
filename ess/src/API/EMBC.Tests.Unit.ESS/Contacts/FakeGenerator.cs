@@ -93,7 +93,8 @@ namespace EMBC.Tests.Unit.ESS.Contacts
         {
             return new Faker<Address>()
                 .RuleFor(o => o.AddressLine1, f => f.Address.StreetAddress())
-                .RuleFor(o => o.Community, f => f.Address.City())
+                .RuleFor(o => o.City, f => f.Address.City())
+                .RuleFor(o => o.Community, f => null)
                 .RuleFor(o => o.Country, f => f.Address.CountryCode())
                 .RuleFor(o => o.StateProvince, f => f.Address.State())
                 .RuleFor(o => o.PostalCode, f => f.Address.ZipCode())
