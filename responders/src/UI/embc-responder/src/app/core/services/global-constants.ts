@@ -1,4 +1,4 @@
-import { DialogContent } from "../models/dialog-content.model";
+import { DialogContent } from '../models/dialog-content.model';
 
 export const insuranceOptions = [
   { name: 'Yes', value: 'Yes' },
@@ -72,7 +72,8 @@ export const wizardESSFileMessage = {
 };
 
 export const householdMemberDeleteDialog: DialogContent = {
-  text: 'Are you sure you want to <b>remove</b> this household member from your evacuation file?',
+  text:
+    'Are you sure you want to <b>remove</b> this household member from your evacuation file?',
   yesButtonText: 'Yes, Remove Household Member',
   noButtonText: 'No, Cancel'
 };

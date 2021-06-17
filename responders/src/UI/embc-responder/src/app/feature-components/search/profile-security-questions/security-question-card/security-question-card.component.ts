@@ -14,12 +14,12 @@ export class SecurityQuestionCardComponent implements OnInit {
 
   securityQuestionForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.createAnswerForm();
     this.securityQuestionForm.valueChanges.subscribe((value) => {
-      console.log("In value changes");
+      console.log('In value changes');
       console.log(value);
     });
   }
