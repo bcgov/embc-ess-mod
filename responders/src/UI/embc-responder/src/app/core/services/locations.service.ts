@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { Code, CommunityType } from '../api/models';
 import { CommunityCode } from '../api/models/community-code';
 import { ConfigurationService } from '../api/services';
@@ -33,7 +34,8 @@ export class LocationsService {
 
   constructor(
     private configService: ConfigurationService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private alertService: AlertService
   ) {}
 
   public getCommunityList(): Community[] {
@@ -87,9 +89,8 @@ export class LocationsService {
   }
 
   private getCommunities(): Community[] {
-    this.configService
-      .configurationGetCommunities()
-      .subscribe((communities: CommunityCode[]) => {
+    this.configService.configurationGetCommunities().subscribe(
+      (communities: CommunityCode[]) => {
         this.setCommunityList(
           [...communities].map((c) => ({
             code: c.value,
@@ -101,14 +102,21 @@ export class LocationsService {
           }))
         );
         this.setRegionalDistricts(communities.map((comm) => comm.districtName));
-      });
+      },
+      (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          'The service is temporarily unavailable. Please try again later'
+        );
+      }
+    );
     return this.communityList || [];
   }
 
   private getStateProvinces(): StateProvince[] {
-    this.configService
-      .configurationGetStateProvinces()
-      .subscribe((stateProvinces: Code[]) => {
+    this.configService.configurationGetStateProvinces().subscribe(
+      (stateProvinces: Code[]) => {
         this.setStateProvinceList(
           [...stateProvinces].map((sp) => ({
             code: sp.value,
@@ -116,18 +124,33 @@ export class LocationsService {
             countryCode: sp.parentCode.value
           }))
         );
-      });
+      },
+      (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          'The service is temporarily unavailable. Please try again later'
+        );
+      }
+    );
     return this.stateProvinceList || [];
   }
 
   private getCountries(): Country[] {
-    this.configService
-      .configurationGetCountries()
-      .subscribe((countries: Code[]) => {
+    this.configService.configurationGetCountries().subscribe(
+      (countries: Code[]) => {
         this.setCountriesList(
           [...countries].map((c) => ({ code: c.value, name: c.description }))
         );
-      });
+      },
+      (error) => {
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          'The service is temporarily unavailable. Please try again later'
+        );
+      }
+    );
     return this.countriesList || [];
   }
 }
