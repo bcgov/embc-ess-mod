@@ -64,7 +64,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private loadStaticLists() : void {
+  private loadStaticLists(): void {
     this.locationService.getCommunityList();
     this.locationService.getCountriesList();
     this.locationService.getRegionalDistricts();
