@@ -48,7 +48,7 @@
             <div class="row">
               <div class="col-4">Insurance</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.insurance }}
+                {{ insuranceDisplay }}
               </div>
             </div>
 
@@ -72,10 +72,12 @@
               </div>
               <div class="col-8 bold">
                 {{
-                  stepCreateEssFileService?.referredServices ? 'Yes - ' : 'No'
-                }}
-                {{
-                  stepCreateEssFileService?.referredServiceDetails.join(', ')
+                  stepCreateEssFileService?.referredServices
+                    ? 'Yes - ' +
+                      stepCreateEssFileService?.referredServiceDetails?.join(
+                        ', '
+                      )
+                    : 'No'
                 }}
               </div>
             </div>
@@ -85,7 +87,237 @@
                 Service Recommendations external of Reception Centre
               </div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.paperESSFile }}
+                {{ stepCreateEssFileService?.externalServices }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="review-panel data-panel">
+            <label class="tab-subtitle">Household Members</label>
+
+            <div class="row">
+              <div class="col-8">
+                <mat-table
+                  class="bottom-space"
+                  [dataSource]="memberListDisplay"
+                >
+                  <ng-container matColumnDef="firstName">
+                    <mat-header-cell *matHeaderCellDef
+                      >First Name</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let element">
+                      <span class="mobile-label">First Name:</span>
+                      {{ element.firstName }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="lastName">
+                    <mat-header-cell *matHeaderCellDef
+                      >Last Name</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let element">
+                      <span class="mobile-label">Last Name:</span>
+                      {{ element.lastName }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="initials">
+                    <mat-header-cell *matHeaderCellDef
+                      >Initials</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let element">
+                      <span class="mobile-label">Initials:</span>
+                      {{ element.initials }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="gender">
+                    <mat-header-cell *matHeaderCellDef>Gender</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span class="mobile-label">Gender:</span>
+                      {{ element.gender }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dateOfBirth">
+                    <mat-header-cell *matHeaderCellDef>
+                      Date of Birth
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span class="mobile-label">Date of Birth:</span>
+                      {{ element.dateOfBirth }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row
+                    *matHeaderRowDef="memberColumns"
+                  ></mat-header-row>
+                  <mat-row
+                    *matRowDef="let row; columns: memberColumns"
+                  ></mat-row>
+                </mat-table>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Household Dietary Requirements</div>
+              <div class="col-8 bold">
+                {{
+                  stepCreateEssFileService?.haveSpecialDiet
+                    ? 'Yes - ' + stepCreateEssFileService?.specialDietDetails
+                    : 'No'
+                }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Household Medication Requirements</div>
+              <div class="col-8 bold">
+                {{ stepCreateEssFileService?.haveMedication ? 'Yes' : 'No' }}
+              </div>
+            </div>
+
+            <div class="row" *ngIf="stepCreateEssFileService?.haveMedication">
+              <div class="col-4">Has Sufficient Medication</div>
+              <div class="col-8 bold">
+                {{ stepCreateEssFileService?.medicationSupply ? 'Yes' : 'No' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="review-panel data-panel">
+            <label class="tab-subtitle">Animals</label>
+
+            <div class="row">
+              <div class="col-4">Do you have pets?</div>
+              <div class="col-8 bold">
+                {{ stepCreateEssFileService?.havePets ? 'Yes' : 'No' }}
+              </div>
+            </div>
+
+            <div
+              class="row"
+              *ngIf="stepCreateEssFileService?.petsList?.length > 0"
+            >
+              <div class="col-8">
+                <mat-table
+                  class="bottom-space"
+                  [dataSource]="stepCreateEssFileService?.petsList"
+                >
+                  <ng-container matColumnDef="type">
+                    <mat-header-cell *matHeaderCellDef
+                      >Pet Type</mat-header-cell
+                    >
+                    <mat-cell
+                      [ngClass]="element.type.length >= 40 ? 'wrapText' : ''"
+                      *matCellDef="let element"
+                    >
+                      <span class="mobile-label">Pet Type:</span>
+                      {{ element.type }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="quantity">
+                    <mat-header-cell *matHeaderCellDef>
+                      How Many
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <span class="mobile-label">How Many:</span>
+                      {{ element.quantity }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row
+                    *matHeaderRowDef="petColumns"
+                  ></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: petColumns"></mat-row>
+                </mat-table>
+              </div>
+            </div>
+
+            <div
+              class="row"
+              *ngIf="stepCreateEssFileService?.petsList?.length > 0"
+            >
+              <div class="col-4">Sufficient pet food?</div>
+              <div class="col-8 bold">
+                {{ stepCreateEssFileService?.havePetsFood ? 'Yes' : 'No' }}
+              </div>
+            </div>
+
+            <div
+              class="row"
+              *ngIf="stepCreateEssFileService?.petsList?.length > 0"
+            >
+              <div class="col-4">Pet Care Plan</div>
+              <div class="col-8 bold">
+                {{ stepCreateEssFileService?.petCareDetails }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="review-panel data-panel">
+            <label class="tab-subtitle">Needs Assessment</label>
+
+            <div class="row">
+              <div class="col-4">Food</div>
+              <div class="col-8 bold">
+                {{ needsFoodDisplay }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Lodging</div>
+              <div class="col-8 bold">
+                {{ needsLodgingDisplay }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Clothing</div>
+              <div class="col-8 bold">
+                {{ needsClothingDisplay }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Transportation</div>
+              <div class="col-8 bold">
+                {{ needsTransportationDisplay }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-4">Incidentals</div>
+              <div class="col-8 bold">
+                {{ needsIncidentalsDisplay }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="review-panel data-panel">
+            <label class="tab-subtitle">Security Phrase</label>
+
+            <div class="row">
+              <div class="col-4">Security Phrase</div>
+              <div class="col-8 bold">
+                {{ stepCreateEssFileService?.securityPhrase | maskText }}
               </div>
             </div>
           </div>

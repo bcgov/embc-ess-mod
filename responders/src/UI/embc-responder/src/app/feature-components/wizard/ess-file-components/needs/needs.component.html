@@ -33,15 +33,13 @@
           class="primary-radio-group"
           required
         >
-          <mat-radio-button class="primary-radio-button" [value]="true"
-            >Yes</mat-radio-button
+          <mat-radio-button
+            class="primary-radio-button"
+            *ngFor="let option of radioOption"
+            [value]="option.value"
           >
-          <mat-radio-button class="primary-radio-button" [value]="false"
-            >No</mat-radio-button
-          >
-          <mat-radio-button class="primary-radio-button" [value]="'null'"
-            >I'm not sure</mat-radio-button
-          >
+            {{ option.name }}
+          </mat-radio-button>
           <mat-error
             class="custom-mat-error"
             *ngIf="
@@ -72,15 +70,13 @@
           class="primary-radio-group"
           required
         >
-          <mat-radio-button class="primary-radio-button" [value]="true"
-            >Yes</mat-radio-button
+          <mat-radio-button
+            class="primary-radio-button"
+            *ngFor="let option of radioOption"
+            [value]="option.value"
           >
-          <mat-radio-button class="primary-radio-button" [value]="false"
-            >No</mat-radio-button
-          >
-          <mat-radio-button class="primary-radio-button" [value]="'null'"
-            >I'm not sure</mat-radio-button
-          >
+            {{ option.name }}
+          </mat-radio-button>
           <mat-error
             class="custom-mat-error"
             *ngIf="
@@ -112,15 +108,13 @@
           class="primary-radio-group"
           required
         >
-          <mat-radio-button class="primary-radio-button" [value]="true"
-            >Yes</mat-radio-button
+          <mat-radio-button
+            class="primary-radio-button"
+            *ngFor="let option of radioOption"
+            [value]="option.value"
           >
-          <mat-radio-button class="primary-radio-button" [value]="false"
-            >No</mat-radio-button
-          >
-          <mat-radio-button class="primary-radio-button" [value]="'null'"
-            >I'm not sure</mat-radio-button
-          >
+            {{ option.name }}
+          </mat-radio-button>
           <mat-error
             class="custom-mat-error"
             *ngIf="
@@ -152,15 +146,13 @@
           class="primary-radio-group"
           required
         >
-          <mat-radio-button class="primary-radio-button" [value]="true"
-            >Yes</mat-radio-button
+          <mat-radio-button
+            class="primary-radio-button"
+            *ngFor="let option of radioOption"
+            [value]="option.value"
           >
-          <mat-radio-button class="primary-radio-button" [value]="false"
-            >No</mat-radio-button
-          >
-          <mat-radio-button class="primary-radio-button" [value]="'null'"
-            >I'm not sure</mat-radio-button
-          >
+            {{ option.name }}
+          </mat-radio-button>
           <mat-error
             class="custom-mat-error"
             *ngIf="
@@ -194,15 +186,13 @@
           class="primary-radio-group"
           required
         >
-          <mat-radio-button class="primary-radio-button" [value]="true"
-            >Yes</mat-radio-button
+          <mat-radio-button
+            class="primary-radio-button"
+            *ngFor="let option of radioOption"
+            [value]="option.value"
           >
-          <mat-radio-button class="primary-radio-button" [value]="false"
-            >No</mat-radio-button
-          >
-          <mat-radio-button class="primary-radio-button" [value]="'null'"
-            >I'm not sure</mat-radio-button
-          >
+            {{ option.name }}
+          </mat-radio-button>
           <mat-error
             class="custom-mat-error"
             *ngIf="
