@@ -330,8 +330,23 @@
             Back
           </button>
 
-          <button class="button-p save" mat-stroked-button (click)="save()">
+          <button
+            class="button-p save"
+            mat-stroked-button
+            (click)="save()"
+            [disabled]="saveLoader || disableButton"
+          >
             Save ESS File
+            <app-loader
+              style="
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+              "
+              [strokeWidth]="3"
+              [diameter]="20"
+              [showLoader]="saveLoader"
+            ></app-loader>
           </button>
         </div>
       </div>
