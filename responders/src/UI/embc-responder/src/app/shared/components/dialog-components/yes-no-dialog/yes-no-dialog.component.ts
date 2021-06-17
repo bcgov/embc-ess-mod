@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-yes-no-dialog',
@@ -6,10 +7,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./yes-no-dialog.component.scss']
 })
 export class YesNoDialogComponent {
-  @Input() inputEvent: string;
-  @Input() inputEvent2: string;
-  @Input() yesButtonText: string;
-  @Input() noButtonText: string;
+  @Input() content: DialogContent;
 
   @Output() outputEvent = new EventEmitter<string>();
 

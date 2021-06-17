@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SecurityQuestion } from 'src/app/core/api/models';
@@ -15,16 +14,20 @@ export class SecurityQuestionCardComponent implements OnInit {
 
   securityQuestionForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.createAnswerForm();
+    this.securityQuestionForm.valueChanges.subscribe((value) => {
+      console.log("In value changes");
+      console.log(value);
+    });
   }
 
-  sendAnswer($event): void {
+  sendAnswer(): void {
     const securityAQuestion: SecurityQuestion = {
       question: this.question.question,
-      answer: $event.target.value,
+      answer: this.securityQuestionForm.get('answer').value,
       answerChanged: false,
       id: this.question.id
     };

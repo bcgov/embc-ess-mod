@@ -176,10 +176,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         data: {
           component: YesNoDialogComponent,
           title: 'Remove Household Member',
-          text:
-            'Are you sure you want to <b>remove</b> this household member from your evacuation file?',
-          yesButtonText: 'Yes, Remove Household Member',
-          noButtonText: 'No, Cancel'
+          content: globalConst.householdMemberDeleteDialog
         },
         height: 'auto',
         width: '550px'

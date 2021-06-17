@@ -50,7 +50,7 @@ export class ProfileResultsComponent
 
   ngOnInit(): void {}
 
-  openProfile(selectedRegistrant: any): void {
+  openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
       this.router.navigate([
         'responder-access/search/evacuee-profile-dashboard'

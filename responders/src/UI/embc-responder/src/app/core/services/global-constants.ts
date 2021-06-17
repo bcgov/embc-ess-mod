@@ -1,3 +1,5 @@
+import { DialogContent } from "../models/dialog-content.model";
+
 export const insuranceOptions = [
   { name: 'Yes', value: 'Yes' },
   {
@@ -67,6 +69,19 @@ export const evacueeProfileCreatedMessage = {
 export const wizardESSFileMessage = {
   title: 'Complete all steps',
   text: 'Please complete all sections of the ESS File prior to submitting.'
+};
+
+export const householdMemberDeleteDialog: DialogContent = {
+  text: 'Are you sure you want to <b>remove</b> this household member from your evacuation file?',
+  yesButtonText: 'Yes, Remove Household Member',
+  noButtonText: 'No, Cancel'
+};
+
+export const exitWizardDialog: DialogContent = {
+  text: 'Are you sure you want to exit the wizard?',
+  text2: 'Any information that has not been <b>submitted</b> will be lost.',
+  yesButtonText: 'Yes, Exit Wizard',
+  noButtonText: 'No, Cancel'
 };
 
 export const evacueeProfileStepIncompleteMessage =
