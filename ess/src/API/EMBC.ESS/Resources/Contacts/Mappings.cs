@@ -27,6 +27,8 @@ namespace EMBC.ESS.Resources.Contacts
     {
         public Mappings()
         {
+            Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
+
             CreateMap<Contact, contact>(MemberList.None)
                 .ForMember(d => d.contactid, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Id) ? (Guid?)null : Guid.Parse(s.Id)))
                 .ForMember(d => d.era_registranttype, opts => opts.MapFrom(s => 174360000))
@@ -40,14 +42,14 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.address1_line2, opts => opts.MapFrom(s => s.PrimaryAddress.AddressLine2))
                 .ForMember(d => d.address1_country, opts => opts.MapFrom(s => s.PrimaryAddress.Country))
                 .ForMember(d => d.address1_stateorprovince, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince))
-                .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.Community))
+                .ForMember(d => d.address1_city, opts => opts.MapFrom(s => s.PrimaryAddress.City))
                 .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince == "BC"))
 
                 .ForMember(d => d.address2_line1, opts => opts.MapFrom(s => s.MailingAddress.AddressLine1))
                 .ForMember(d => d.address2_line2, opts => opts.MapFrom(s => s.MailingAddress.AddressLine2))
                 .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
                 .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => s.MailingAddress.StateProvince))
-                .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.Community))
+                .ForMember(d => d.address2_city, opts => opts.MapFrom(s => s.MailingAddress.City))
                 .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince == "BC"))
                 .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s =>
                     s.MailingAddress.Country == s.PrimaryAddress.Country &&
@@ -69,12 +71,6 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.era_preferredname, opts => opts.MapFrom(s => s.PreferredName))
                 .ForMember(d => d.emailaddress1, opts => opts.MapFrom(s => s.Email))
                 .ForMember(d => d.telephone1, opts => opts.MapFrom(s => s.Phone))
-                // .ForMember(d => d.era_securityquestion1answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Answer))
-                // .ForMember(d => d.era_securityquestion2answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Answer))
-                // .ForMember(d => d.era_securityquestion3answer, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().AnswerIsMasked ? null : s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Answer))
-                // .ForMember(d => d.era_securityquestiontext1, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault().Question))
-                // .ForMember(d => d.era_securityquestiontext2, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault().Question))
-                // .ForMember(d => d.era_securityquestiontext3, opts => opts.MapFrom(s => s.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault().Question))
                 ;
 
             CreateMap<contact, Contact>()
@@ -91,17 +87,19 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.telephone1))
                 .ForPath(d => d.PrimaryAddress.AddressLine1, opts => opts.MapFrom(s => s.address1_line1))
                 .ForPath(d => d.PrimaryAddress.AddressLine2, opts => opts.MapFrom(s => s.address1_line2))
+                .ForPath(d => d.PrimaryAddress.City, opts => opts.MapFrom(s => isGuid(s.address1_city) ? null : s.address1_city))
                 .ForPath(d => d.PrimaryAddress.PostalCode, opts => opts.MapFrom(s => s.address1_postalcode))
                 .ForPath(d => d.PrimaryAddress.Country, opts => opts.MapFrom(s => s.era_Country != null ? s.era_Country.era_countrycode : s.address1_country))
                 .ForPath(d => d.PrimaryAddress.StateProvince, opts => opts.MapFrom(s => s.era_ProvinceState != null ? s.era_ProvinceState.era_code : s.address1_stateorprovince))
-                .ForPath(d => d.PrimaryAddress.Community, opts => opts.MapFrom(s => s.era_City != null ? s.era_City.era_jurisdictionid.ToString() : s.address1_city))
+                .ForPath(d => d.PrimaryAddress.Community, opts => opts.MapFrom(s => s.era_City != null ? s.era_City.era_jurisdictionid.ToString() : null))
 
                 .ForPath(d => d.MailingAddress.AddressLine1, opts => opts.MapFrom(s => s.address2_line1))
                 .ForPath(d => d.MailingAddress.AddressLine2, opts => opts.MapFrom(s => s.address2_line2))
+                .ForPath(d => d.MailingAddress.City, opts => opts.MapFrom(s => isGuid(s.address2_city) ? null : s.address2_city))
                 .ForPath(d => d.MailingAddress.PostalCode, opts => opts.MapFrom(s => s.address2_postalcode))
                 .ForPath(d => d.MailingAddress.Country, opts => opts.MapFrom(s => s.era_MailingCountry != null ? s.era_MailingCountry.era_countrycode : s.address2_country))
                 .ForPath(d => d.MailingAddress.StateProvince, opts => opts.MapFrom(s => s.era_MailingProvinceState != null ? s.era_MailingProvinceState.era_code : s.address2_stateorprovince))
-                .ForPath(d => d.MailingAddress.Community, opts => opts.MapFrom(s => s.era_MailingCity != null ? s.era_MailingCity.era_jurisdictionid.ToString() : s.address2_city))
+                .ForPath(d => d.MailingAddress.Community, opts => opts.MapFrom(s => s.era_MailingCity != null ? s.era_MailingCity.era_jurisdictionid.ToString() : null))
 
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.birthdate.HasValue
                     ? $"{s.birthdate.Value.Month:D2}/{s.birthdate.Value.Day:D2}/{s.birthdate.Value.Year:D2}"
