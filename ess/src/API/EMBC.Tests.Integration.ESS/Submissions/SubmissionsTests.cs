@@ -184,16 +184,19 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             var country = "CAN";
             var province = "BC";
-            var city = "226adfaf-9f97-ea11-b813-005056830319";
+            var community = "226adfaf-9f97-ea11-b813-005056830319";
+            string city = null;
 
             baseRegistrant.Id = null;
             baseRegistrant.UserId = newProfileBceId;
             baseRegistrant.PrimaryAddress.Country = country;
             baseRegistrant.PrimaryAddress.StateProvince = province;
-            baseRegistrant.PrimaryAddress.Community = city;
+            baseRegistrant.PrimaryAddress.Community = community;
+            baseRegistrant.PrimaryAddress.City = city;
             baseRegistrant.MailingAddress.Country = country;
             baseRegistrant.MailingAddress.StateProvince = province;
-            baseRegistrant.MailingAddress.Community = city;
+            baseRegistrant.MailingAddress.Community = community;
+            baseRegistrant.MailingAddress.City = city;
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
 
@@ -203,11 +206,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             newRegistrant.Id.ShouldNotBe(baseRegistrant.Id);
             newRegistrant.PrimaryAddress.Country.ShouldBe(country);
             newRegistrant.PrimaryAddress.StateProvince.ShouldBe(province);
-            newRegistrant.PrimaryAddress.Community.ShouldBe(city);
+            newRegistrant.PrimaryAddress.Community.ShouldBe(community);
+            newRegistrant.PrimaryAddress.City.ShouldBe(city);
 
             newRegistrant.MailingAddress.Country.ShouldBe(country);
             newRegistrant.MailingAddress.StateProvince.ShouldBe(province);
-            newRegistrant.MailingAddress.Community.ShouldBe(city);
+            newRegistrant.MailingAddress.Community.ShouldBe(community);
+            newRegistrant.MailingAddress.City.ShouldBe(city);
         }
 
         [Fact(Skip = RequiresDynamics)]
