@@ -88,7 +88,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
             this.stepCreateProfileService
               .openModal(
                 globalConst.evacueeProfileCreatedMessage.text,
-                globalConst.evacueeProfileCreatedMessage.title
+                globalConst.evacueeProfileCreatedMessage.title,
+                globalConst.evacueeProfileCreatedMessage.button
               )
               .afterClosed()
               .subscribe(() => {

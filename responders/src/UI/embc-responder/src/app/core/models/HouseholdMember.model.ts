@@ -1,5 +1,5 @@
-import { PersonDetails } from '../api/models';
+import { EvacuationFileHouseholdMember } from '../api/models';
 
-export interface HouseholdMemberModel extends PersonDetails {
+export interface HouseholdMemberModel extends EvacuationFileHouseholdMember {
   sameLastName: boolean;
 }

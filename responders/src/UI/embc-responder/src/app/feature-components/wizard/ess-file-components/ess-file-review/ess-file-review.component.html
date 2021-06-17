@@ -55,14 +55,14 @@
             <div class="row">
               <div class="col-4">How Affected by the Evacuation</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.householdAffected }}
+                {{ stepCreateEssFileService?.evacuationImpact }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Post Evacuation Recovery Plans</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.emergencySupportServices }}
+                {{ stepCreateEssFileService?.householdRecoveryPlan }}
               </div>
             </div>
 
@@ -87,7 +87,7 @@
                 Service Recommendations external of Reception Centre
               </div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.externalServices }}
+                {{ stepCreateEssFileService?.evacuationExternalReferrals }}
               </div>
             </div>
           </div>
@@ -259,7 +259,7 @@
             >
               <div class="col-4">Pet Care Plan</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.petCareDetails }}
+                {{ stepCreateEssFileService?.petCarePlans }}
               </div>
             </div>
           </div>
@@ -314,7 +314,15 @@
           <div class="review-panel data-panel">
             <label class="tab-subtitle">Security Phrase</label>
 
-            <div class="row">
+            <div class="row" *ngIf="stepCreateEssFileService?.bypassPhrase">
+              <div class="col-8">
+                <mat-checkbox [checked]="true" [disabled]="true">
+                  Bypass security phrase for manual entry of paper ESS file.
+                </mat-checkbox>
+              </div>
+            </div>
+
+            <div class="row" *ngIf="!stepCreateEssFileService?.bypassPhrase">
               <div class="col-4">Security Phrase</div>
               <div class="col-8 bold">
                 {{ stepCreateEssFileService?.securityPhrase | maskText }}
@@ -330,8 +338,23 @@
             Back
           </button>
 
-          <button class="button-p save" mat-stroked-button (click)="save()">
+          <button
+            class="button-p save"
+            mat-stroked-button
+            (click)="save()"
+            [disabled]="saveLoader || disableButton"
+          >
             Save ESS File
+            <app-loader
+              style="
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+              "
+              [strokeWidth]="3"
+              [diameter]="20"
+              [showLoader]="saveLoader"
+            ></app-loader>
           </button>
         </div>
       </div>

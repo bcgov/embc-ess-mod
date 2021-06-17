@@ -212,12 +212,17 @@ export class StepCreateProfileService {
    *
    * @param text text to display
    */
-  openModal(text: string, title?: string): MatDialogRef<DialogComponent, any> {
+  openModal(
+    text: string,
+    title?: string,
+    button?: string
+  ): MatDialogRef<DialogComponent, any> {
     const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
         text,
-        title
+        title,
+        button
       },
       width: '530px'
     });

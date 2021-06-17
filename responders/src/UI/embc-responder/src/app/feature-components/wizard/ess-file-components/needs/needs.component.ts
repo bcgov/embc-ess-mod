@@ -127,7 +127,5 @@ export class NeedsComponent implements OnInit, OnDestroy {
     this.stepCreateEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
       'canEvacueeProvideIncidentals'
     ).value;
-
-    this.stepCreateEssFileService.createNeedsAssessmentDTO();
   }
 }
