@@ -51,13 +51,15 @@ namespace EMBC.Tests.Unit.ESS.Contacts
 
             profile.PrimaryAddress.AddressLine1.ShouldBe(contact.address1_line1);
             profile.PrimaryAddress.AddressLine2.ShouldBe(contact.address1_line2);
-            profile.PrimaryAddress.Community.ShouldNotBeNull().ShouldBe(contact.era_City?.era_jurisdictionid.ToString() ?? contact.address1_city);
+            profile.PrimaryAddress.City.ShouldBe(contact.address1_city);
+            profile.PrimaryAddress.Community.ShouldBe(contact.era_City?.era_jurisdictionid.ToString() ?? null);
             profile.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldBe(contact.era_ProvinceState?.era_code.ToString() ?? contact.address1_stateorprovince);
             profile.PrimaryAddress.Country.ShouldNotBeNull().ShouldBe(contact.era_Country?.era_countrycode.ToString() ?? contact.address1_country);
 
             profile.MailingAddress.AddressLine1.ShouldBe(contact.address2_line1);
             profile.MailingAddress.AddressLine2.ShouldBe(contact.address2_line2);
-            profile.MailingAddress.Community.ShouldNotBeNull().ShouldBe(contact.era_MailingCity?.era_jurisdictionid.ToString() ?? contact.address2_city);
+            profile.MailingAddress.City.ShouldBe(contact.address2_city);
+            profile.MailingAddress.Community.ShouldBe(contact.era_MailingCity?.era_jurisdictionid.ToString() ?? null);
             profile.MailingAddress.StateProvince.ShouldNotBeNull().ShouldBe(contact.era_MailingProvinceState?.era_code.ToString() ?? contact.address2_stateorprovince);
             profile.MailingAddress.Country.ShouldNotBeNull().ShouldBe(contact.era_MailingCountry?.era_countrycode.ToString() ?? contact.address2_country);
         }
@@ -96,7 +98,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
 
             contact.address1_line1.ShouldBe(profile.PrimaryAddress.AddressLine1);
             contact.address1_line2.ShouldBe(profile.PrimaryAddress.AddressLine2);
-            contact.address1_city.ShouldBe(profile.PrimaryAddress.Community);
+            contact.address1_city.ShouldBe(profile.PrimaryAddress.City);
             contact.address1_stateorprovince.ShouldBe(profile.PrimaryAddress.StateProvince);
             contact.address1_country.ShouldBe(profile.PrimaryAddress.Country);
             contact.era_City.ShouldBeNull();
@@ -105,7 +107,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
 
             contact.address2_line1.ShouldBe(profile.MailingAddress.AddressLine1);
             contact.address2_line2.ShouldBe(profile.MailingAddress.AddressLine2);
-            contact.address2_city.ShouldBe(profile.MailingAddress.Community);
+            contact.address2_city.ShouldBe(profile.MailingAddress.City);
             contact.address2_stateorprovince.ShouldBe(profile.MailingAddress.StateProvince);
             contact.address2_country.ShouldBe(profile.MailingAddress.Country);
             contact.era_MailingCity.ShouldBeNull();

@@ -75,11 +75,11 @@ namespace EMBC.ESS.Resources.Contacts
                 essContext.UpdateObject(contact);
             }
             essContext.AddLink(essContext.LookupCountryByCode(cmd.Contact.PrimaryAddress.Country), nameof(era_country.era_contact_Country), contact);
-            essContext.AddLink(essContext.LookupStateProvinceByCode(cmd.Contact.PrimaryAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact);
+            AddStateProvinceLink(cmd.Contact.PrimaryAddress.StateProvince, nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact);
             AddJurisdictionLink(cmd.Contact.PrimaryAddress.Community, nameof(era_jurisdiction.era_jurisdiction_contact_City), contact);
 
             essContext.AddLink(essContext.LookupCountryByCode(cmd.Contact.MailingAddress.Country), nameof(era_country.era_country_contact_MailingCountry), contact);
-            essContext.AddLink(essContext.LookupStateProvinceByCode(cmd.Contact.MailingAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact);
+            AddStateProvinceLink(cmd.Contact.MailingAddress.StateProvince, nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact);
             AddJurisdictionLink(cmd.Contact.MailingAddress.Community, nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), contact);
 
             var results = await essContext.SaveChangesAsync();
@@ -188,6 +188,15 @@ namespace EMBC.ESS.Resources.Contacts
             essContext.DetachAll();
 
             return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts) };
+        }
+
+        private void AddStateProvinceLink(string stateProvinceCode, string sourceProperty, object target)
+        {
+            var stateProvince = essContext.LookupStateProvinceByCode(stateProvinceCode);
+            if (stateProvince != null)
+            {
+                essContext.AddLink(stateProvince, sourceProperty, target);
+            }
         }
 
         private void AddJurisdictionLink(string jurisdictionCode, string sourceProperty, object target)
