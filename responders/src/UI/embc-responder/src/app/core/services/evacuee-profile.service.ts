@@ -1,38 +1,91 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
+import { StepCreateProfileService } from 'src/app/feature-components/wizard/step-create-profile/step-create-profile.service';
 import { RegistrantProfile, RegistrationResult } from '../api/models';
-import { CacheService } from './cache.service';
+import { AddressModel } from '../models/address.model';
+import { EvacueeProfile } from '../models/evacuee-profile';
+import { LocationsService } from './locations.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EvacueeProfileService {
-  private cachedProfileId: string;
-
   constructor(
     private registrationsService: RegistrationsService,
-    private cacheService: CacheService
+    private stepCreateProfileService: StepCreateProfileService,
+    private locationService: LocationsService
   ) {}
 
   /**
-   * Fetch profile record from API
+   * Fetches profile record from API and maps the location codes
+   * to description
    *
    * @returns profile record
    */
-  public getProfileFromId(profileId: string): Observable<RegistrantProfile> {
+  public getProfileFromId(profileId: string): Observable<EvacueeProfile> {
     return this.registrationsService
-      .registrationsGetRegistrantProfile({ registrantId: profileId })
+      .registrationsGetRegistrantProfile({
+        registrantId: profileId
+      })
       .pipe(
-        map((profile) => {
+        map((profile: EvacueeProfile) => {
+          const communities = this.locationService.getCommunityList();
+          const countries = this.locationService.getCountriesList();
+          const stateProvinces = this.locationService.getStateProvinceList();
+
+          const primaryCommunity = communities.find(
+            (comm) => comm.code === profile.primaryAddress.communityCode
+          );
+          const mailingCommunity = communities.find(
+            (comm) => comm.code === profile.mailingAddress.communityCode
+          );
+
+          const primaryCountry = countries.find(
+            (coun) => coun.code === profile.primaryAddress.countryCode
+          );
+
+          const mailingCountry = countries.find(
+            (coun) => coun.code === profile.mailingAddress.countryCode
+          );
+
+          const primaryStateProvince = stateProvinces.find(
+            (sp) => sp.code === profile.primaryAddress.stateProvinceCode
+          );
+
+          const mailingStateProvince = stateProvinces.find(
+            (sp) => sp.code === profile.mailingAddress.stateProvinceCode
+          );
+
+          const primaryAddressModel: AddressModel = {
+            community: primaryCommunity,
+            country: primaryCountry,
+            stateProvince: primaryStateProvince
+          };
+          const mailingAddressModel: AddressModel = {
+            community: mailingCommunity,
+            country: mailingCountry,
+            stateProvince: mailingStateProvince
+          };
+
+          profile.primaryAddress = {
+            ...primaryAddressModel,
+            ...profile.primaryAddress
+          };
+
+          profile.mailingAddress = {
+            ...mailingAddressModel,
+            ...profile.mailingAddress
+          };
+          this.stepCreateProfileService.getProfileDTO(profile);
           return profile;
         })
       );
   }
 
   /**
-   * Insert new profile
+   * Create new profile and fetches the created profile
    *
    * @param regProfile Registrant Profile data to send to API
    *
@@ -44,9 +97,9 @@ export class EvacueeProfileService {
     return this.registrationsService
       .registrationsCreateRegistrantProfile({ body: regProfile })
       .pipe(
-        map((result) => {
-          return result;
-        })
+        mergeMap((regResult: RegistrationResult) =>
+          this.getProfileFromId(regResult.id)
+        )
       );
   }
 
@@ -62,41 +115,9 @@ export class EvacueeProfileService {
     registrantId: string,
     regProfile: RegistrantProfile
   ): Observable<RegistrationResult> {
-    return this.registrationsService
-      .registrationsUpdateRegistrantProfile({
-        registrantId,
-        body: regProfile
-      })
-      .pipe(
-        map((result) => {
-          return result;
-        })
-      );
-  }
-
-  /**
-   * Get Profile ID currently stored in cache.
-   */
-  public getCurrentProfileId() {
-    return this.cachedProfileId
-      ? this.cachedProfileId
-      : JSON.parse(this.cacheService.get('profileId'));
-  }
-
-  /**
-   * Store a Profile ID in the cache.
-   *
-   * @param id ID to store in cache
-   */
-  public setCurrentProfileId(id: string) {
-    this.cacheService.set('profileId', id);
-    this.cachedProfileId = id;
-  }
-
-  /**
-   * Remove "profileId" from cache
-   */
-  public clearCurrentProfileId(): void {
-    this.cacheService.remove('profileId');
+    return this.registrationsService.registrationsUpdateRegistrantProfile({
+      registrantId,
+      body: regProfile
+    });
   }
 }
