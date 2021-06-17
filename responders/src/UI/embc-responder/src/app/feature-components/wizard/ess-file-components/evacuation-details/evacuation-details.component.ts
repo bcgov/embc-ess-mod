@@ -29,16 +29,19 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   referredServicesOption = globalConst.referredServiceOptions;
   defaultCountry = globalConst.defaultCountry;
   defaultProvince = globalConst.defaultProvince;
+
   showReferredServicesForm = false;
   showBCAddressForm = false;
   isBCAddress = true;
+  showInsuranceMsg = false;
+
   selection = new SelectionModel<any>(true, []);
   tabUpdateSubscription: Subscription;
 
   constructor(
     public stepCreateProfileService: StepCreateProfileService,
+    public stepCreateEssFileService: StepCreateEssFileService,
     private router: Router,
-    private stepCreateEssFileService: StepCreateEssFileService,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService
   ) {}
@@ -86,6 +89,17 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     if (this.stepCreateEssFileService.evacuatedFromPrimary === false) {
       this.showBCAddressForm = true;
     }
+  }
+
+  /**
+   * Listens to changes on Insurance options
+   *
+   * @param event
+   */
+  insuranceChange(event: MatRadioChange): void {
+    const showVals = ['Yes', 'Unsure'];
+
+    this.showInsuranceMsg = showVals.includes(event.value);
   }
 
   /**

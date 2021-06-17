@@ -352,7 +352,11 @@ export class StepCreateEssFileService {
       (ins) => ins.value === this.canRegistrantProvideTransportation
     )?.apiValue;
 
-    // Create new HouseholdMembers array that includes primary registrant
+    // Create new HouseholdMembers array that includes primary registrant, set member types
+    this.householdMembers.forEach(
+      (mem) => (mem.type = HouseholdMemberType.HouseholdMember)
+    );
+
     const allMembers: EvacuationFileHouseholdMember[] = [
       {
         dateOfBirth: this.stepCreateProfileService.personalDetails.dateOfBirth,

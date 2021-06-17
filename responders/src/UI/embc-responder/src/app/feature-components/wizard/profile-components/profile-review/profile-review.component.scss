@@ -53,13 +53,13 @@ button.save {
 .review-panel {
 	@extend .wizard-panel;
 
-	h2 { color: #234075; }
-
 	background-color: #f2f2f2;
 }
 
 .confirm-panel {
 	@extend .wizard-panel;
+
+	.tab-subtitle { color: white; }
 
 	background-color: #234075;
 	color: white;
