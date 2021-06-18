@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AddressModel } from 'src/app/core/models/address.model';
-import { Community, LocationsService } from 'src/app/core/services/locations.service';
+import {
+  Community,
+  LocationsService
+} from 'src/app/core/services/locations.service';
 import * as _ from 'lodash';
 
 @Pipe({ name: 'maskEvacuatedaddress' })
