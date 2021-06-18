@@ -22,6 +22,7 @@ import { HouseholdMemberModel } from 'src/app/core/models/household-member.model
 import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { InformationDialogExitWizardComponent } from 'src/app/shared/components/dialog-components/information-dialog-exit-wizard/information-dialog-exit-wizard.component';
+import { Community } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -541,9 +542,9 @@ export class StepCreateEssFileService {
       addressLine2: addressObject.addressLine2,
       countryCode: addressObject.country.code,
       communityCode:
-        addressObject.community.code === undefined
+        (addressObject.community as Community).code === undefined
           ? null
-          : addressObject.community.code,
+          : (addressObject.community as Community).code,
       postalCode: addressObject.postalCode,
       stateProvinceCode:
         addressObject.stateProvince === null
