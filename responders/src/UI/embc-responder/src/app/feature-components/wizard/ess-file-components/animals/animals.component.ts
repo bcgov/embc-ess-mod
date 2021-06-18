@@ -210,7 +210,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
           )
           .bind(this.customValidation)
       ],
-      petCareDetails: [this.stepCreateEssFileService.petCareDetails ?? ''],
+      petCareDetails: [this.stepCreateEssFileService.petCarePlans ?? ''],
       pet: this.createPetForm(),
       addPetIndicator: [false]
     });
@@ -289,7 +289,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.stepCreateEssFileService.havePetsFood = this.animalsForm.get(
       'hasPetsFood'
     ).value;
-    this.stepCreateEssFileService.petCareDetails = this.animalsForm.get(
+    this.stepCreateEssFileService.petCarePlans = this.animalsForm.get(
       'petCareDetails'
     ).value;
     this.stepCreateEssFileService.addPetIndicator = this.animalsForm.get(

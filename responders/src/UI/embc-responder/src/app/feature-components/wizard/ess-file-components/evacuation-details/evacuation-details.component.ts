@@ -29,16 +29,19 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   referredServicesOption = globalConst.referredServiceOptions;
   defaultCountry = globalConst.defaultCountry;
   defaultProvince = globalConst.defaultProvince;
+
   showReferredServicesForm = false;
   showBCAddressForm = false;
   isBCAddress = true;
+  showInsuranceMsg = false;
+
   selection = new SelectionModel<any>(true, []);
   tabUpdateSubscription: Subscription;
 
   constructor(
     public stepCreateProfileService: StepCreateProfileService,
+    public stepCreateEssFileService: StepCreateEssFileService,
     private router: Router,
-    private stepCreateEssFileService: StepCreateEssFileService,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService
   ) {}
@@ -86,6 +89,17 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     if (this.stepCreateEssFileService.evacuatedFromPrimary === false) {
       this.showBCAddressForm = true;
     }
+  }
+
+  /**
+   * Listens to changes on Insurance options
+   *
+   * @param event
+   */
+  insuranceChange(event: MatRadioChange): void {
+    const showVals = ['Yes', 'Unsure'];
+
+    this.showInsuranceMsg = showVals.includes(event.value);
   }
 
   /**
@@ -195,14 +209,14 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         Validators.required
       ],
       householdAffected: [
-        this.stepCreateEssFileService.householdAffected !== undefined
-          ? this.stepCreateEssFileService.householdAffected
+        this.stepCreateEssFileService.evacuationImpact !== undefined
+          ? this.stepCreateEssFileService.evacuationImpact
           : '',
         [this.customValidation.whitespaceValidator()]
       ],
       emergencySupportServices: [
-        this.stepCreateEssFileService.emergencySupportServices !== undefined
-          ? this.stepCreateEssFileService.emergencySupportServices
+        this.stepCreateEssFileService.householdRecoveryPlan !== undefined
+          ? this.stepCreateEssFileService.householdRecoveryPlan
           : ''
       ],
       referredServices: [
@@ -222,8 +236,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         ]
       ],
       externalServices: [
-        this.stepCreateEssFileService.externalServices !== undefined
-          ? this.stepCreateEssFileService.externalServices
+        this.stepCreateEssFileService.evacuationExternalReferrals !== undefined
+          ? this.stepCreateEssFileService.evacuationExternalReferrals
           : ''
       ],
       evacAddress: this.createEvacAddressForm()
@@ -332,17 +346,17 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.stepCreateEssFileService.insurance = this.evacDetailsForm.get(
       'insurance'
     ).value;
-    this.stepCreateEssFileService.householdAffected = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.evacuationImpact = this.evacDetailsForm.get(
       'householdAffected'
     ).value;
-    this.stepCreateEssFileService.emergencySupportServices = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.householdRecoveryPlan = this.evacDetailsForm.get(
       'emergencySupportServices'
     ).value;
     this.stepCreateEssFileService.referredServices = this.evacDetailsForm.get(
       'referredServices'
     ).value;
     this.stepCreateEssFileService.referredServiceDetails = this.selection.selected;
-    this.stepCreateEssFileService.externalServices = this.evacDetailsForm.get(
+    this.stepCreateEssFileService.evacuationExternalReferrals = this.evacDetailsForm.get(
       'externalServices'
     ).value;
   }

@@ -234,14 +234,22 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateProfile()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
-            var currentCity = registrant.PrimaryAddress.Community;
-            var newCity = currentCity == "406adfaf-9f97-ea11-b813-005056830319"
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile; 
+            var currentCommunity = registrant.PrimaryAddress.Community;
+            var newCommunity = currentCommunity == "406adfaf-9f97-ea11-b813-005056830319"
                 ? "226adfaf-9f97-ea11-b813-005056830319"
                 : "406adfaf-9f97-ea11-b813-005056830319";
+            newCommunity = null;
+
+            var currentCity = registrant.PrimaryAddress.City;
+            var newCity = currentCity == "Vancouver"
+                ? "Burnaby"
+                : "Vancouver";
+            //newCity = null;
 
             registrant.Email = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
-            registrant.PrimaryAddress.Community = newCity;
+            registrant.PrimaryAddress.Community = newCommunity;
+            registrant.PrimaryAddress.City = newCity;
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
@@ -249,7 +257,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
             updatedRegistrant.Email.ShouldBe(registrant.Email);
-            updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCity);
+            updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
+            updatedRegistrant.PrimaryAddress.City.ShouldBe(newCity);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -261,10 +270,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             registrant.PrimaryAddress.Country.ShouldNotBeNull().ShouldNotBeNull();
             registrant.PrimaryAddress.Country.ShouldNotBeNull();
-            registrant.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldNotBeNull();
-            registrant.PrimaryAddress.StateProvince.ShouldNotBeNull();
-            registrant.PrimaryAddress.Community.ShouldNotBeNull().ShouldNotBeNull();
-            registrant.PrimaryAddress.Community.ShouldNotBeNull();
 
             var registrants = (await manager.Handle(new RegistrantsSearchQuery { FirstName = "Elvis", LastName = "Presley" })).Items.Select(r => r.RegistrantProfile);
 

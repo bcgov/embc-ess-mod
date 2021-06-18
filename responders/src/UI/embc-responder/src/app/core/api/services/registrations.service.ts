@@ -33,338 +33,6 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * Path part for operation registrationsGetSecurityQuestions
-   */
-  static readonly RegistrationsGetSecurityQuestionsPath = '/api/Registrations/registrants/{registrantId}/security';
-
-  /**
-   * Get security questions for a registrant.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationsGetSecurityQuestions()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  registrationsGetSecurityQuestions$Response(params: {
-
-    /**
-     * registrant id
-     */
-    registrantId: string;
-  }): Observable<StrictHttpResponse<GetSecurityQuestionsResponse>> {
-
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetSecurityQuestionsPath, 'get');
-    if (params) {
-      rb.path('registrantId', params.registrantId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<GetSecurityQuestionsResponse>;
-      })
-    );
-  }
-
-  /**
-   * Get security questions for a registrant.
-   *
-   *
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `registrationsGetSecurityQuestions$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  registrationsGetSecurityQuestions(params: {
-
-    /**
-     * registrant id
-     */
-    registrantId: string;
-  }): Observable<GetSecurityQuestionsResponse> {
-
-    return this.registrationsGetSecurityQuestions$Response(params).pipe(
-      map((r: StrictHttpResponse<GetSecurityQuestionsResponse>) => r.body as GetSecurityQuestionsResponse)
-    );
-  }
-
-  /**
-   * Path part for operation registrationsVerifySecurityQuestions
-   */
-  static readonly RegistrationsVerifySecurityQuestionsPath = '/api/Registrations/registrants/{registrantId}/security';
-
-  /**
-   * verify answers for security questions.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationsVerifySecurityQuestions()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  registrationsVerifySecurityQuestions$Response(params: {
-
-    /**
-     * registrant id
-     */
-    registrantId: string;
-
-    /**
-     * array of questions and their answers
-     */
-    body: VerifySecurityQuestionsRequest
-  }): Observable<StrictHttpResponse<VerifySecurityQuestionsResponse>> {
-
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVerifySecurityQuestionsPath, 'post');
-    if (params) {
-      rb.path('registrantId', params.registrantId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<VerifySecurityQuestionsResponse>;
-      })
-    );
-  }
-
-  /**
-   * verify answers for security questions.
-   *
-   *
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `registrationsVerifySecurityQuestions$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  registrationsVerifySecurityQuestions(params: {
-
-    /**
-     * registrant id
-     */
-    registrantId: string;
-
-    /**
-     * array of questions and their answers
-     */
-    body: VerifySecurityQuestionsRequest
-  }): Observable<VerifySecurityQuestionsResponse> {
-
-    return this.registrationsVerifySecurityQuestions$Response(params).pipe(
-      map((r: StrictHttpResponse<VerifySecurityQuestionsResponse>) => r.body as VerifySecurityQuestionsResponse)
-    );
-  }
-
-  /**
-   * Path part for operation registrationsGetSecurityPhrase
-   */
-  static readonly RegistrationsGetSecurityPhrasePath = '/api/Registrations/files/{fileId}/security';
-
-  /**
-   * get the security phrase of an evacuation file.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationsGetSecurityPhrase()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  registrationsGetSecurityPhrase$Response(params: {
-
-    /**
-     * file id
-     */
-    fileId: string;
-  }): Observable<StrictHttpResponse<GetSecurityPhraseResponse>> {
-
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetSecurityPhrasePath, 'get');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<GetSecurityPhraseResponse>;
-      })
-    );
-  }
-
-  /**
-   * get the security phrase of an evacuation file.
-   *
-   *
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `registrationsGetSecurityPhrase$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  registrationsGetSecurityPhrase(params: {
-
-    /**
-     * file id
-     */
-    fileId: string;
-  }): Observable<GetSecurityPhraseResponse> {
-
-    return this.registrationsGetSecurityPhrase$Response(params).pipe(
-      map((r: StrictHttpResponse<GetSecurityPhraseResponse>) => r.body as GetSecurityPhraseResponse)
-    );
-  }
-
-  /**
-   * Path part for operation registrationsVerifySecurityPhrase
-   */
-  static readonly RegistrationsVerifySecurityPhrasePath = '/api/Registrations/files/{fileId}/security';
-
-  /**
-   * verify an evacuation file's security phrase.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationsVerifySecurityPhrase()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  registrationsVerifySecurityPhrase$Response(params: {
-
-    /**
-     * file id
-     */
-    fileId: string;
-
-    /**
-     * security phrase to verify
-     */
-    body: VerifySecurityPhraseRequest
-  }): Observable<StrictHttpResponse<VerifySecurityPhraseResponse>> {
-
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVerifySecurityPhrasePath, 'post');
-    if (params) {
-      rb.path('fileId', params.fileId, {});
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<VerifySecurityPhraseResponse>;
-      })
-    );
-  }
-
-  /**
-   * verify an evacuation file's security phrase.
-   *
-   *
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `registrationsVerifySecurityPhrase$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  registrationsVerifySecurityPhrase(params: {
-
-    /**
-     * file id
-     */
-    fileId: string;
-
-    /**
-     * security phrase to verify
-     */
-    body: VerifySecurityPhraseRequest
-  }): Observable<VerifySecurityPhraseResponse> {
-
-    return this.registrationsVerifySecurityPhrase$Response(params).pipe(
-      map((r: StrictHttpResponse<VerifySecurityPhraseResponse>) => r.body as VerifySecurityPhraseResponse)
-    );
-  }
-
-  /**
-   * Path part for operation registrationsCreateRegistrantProfile
-   */
-  static readonly RegistrationsCreateRegistrantProfilePath = '/api/Registrations/registrants';
-
-  /**
-   * Creates a Registrant Profile.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationsCreateRegistrantProfile()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  registrationsCreateRegistrantProfile$Response(params: {
-
-    /**
-     * Registrant
-     */
-    body: RegistrantProfile
-  }): Observable<StrictHttpResponse<RegistrationResult>> {
-
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateRegistrantProfilePath, 'post');
-    if (params) {
-      rb.body(params.body, 'application/json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<RegistrationResult>;
-      })
-    );
-  }
-
-  /**
-   * Creates a Registrant Profile.
-   *
-   *
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `registrationsCreateRegistrantProfile$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  registrationsCreateRegistrantProfile(params: {
-
-    /**
-     * Registrant
-     */
-    body: RegistrantProfile
-  }): Observable<RegistrationResult> {
-
-    return this.registrationsCreateRegistrantProfile$Response(params).pipe(
-      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
-    );
-  }
-
-  /**
    * Path part for operation registrationsGetRegistrantProfile
    */
   static readonly RegistrationsGetRegistrantProfilePath = '/api/Registrations/registrants/{registrantId}';
@@ -500,29 +168,29 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * Path part for operation registrationsCreateFile
+   * Path part for operation registrationsCreateRegistrantProfile
    */
-  static readonly RegistrationsCreateFilePath = '/api/Registrations/files';
+  static readonly RegistrationsCreateRegistrantProfilePath = '/api/Registrations/registrants';
 
   /**
-   * Creates a File.
+   * Creates a Registrant Profile.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationsCreateFile()` instead.
+   * To access only the response body, use `registrationsCreateRegistrantProfile()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsCreateFile$Response(params: {
+  registrationsCreateRegistrantProfile$Response(params: {
 
     /**
-     * file
+     * Registrant
      */
-    body: EvacuationFile
+    body: RegistrantProfile
   }): Observable<StrictHttpResponse<RegistrationResult>> {
 
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateFilePath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateRegistrantProfilePath, 'post');
     if (params) {
       rb.body(params.body, 'application/json');
     }
@@ -539,25 +207,160 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * Creates a File.
+   * Creates a Registrant Profile.
    *
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `registrationsCreateFile$Response()` instead.
+   * To access the full response (for headers, for example), `registrationsCreateRegistrantProfile$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsCreateFile(params: {
+  registrationsCreateRegistrantProfile(params: {
 
     /**
-     * file
+     * Registrant
      */
-    body: EvacuationFile
+    body: RegistrantProfile
   }): Observable<RegistrationResult> {
 
-    return this.registrationsCreateFile$Response(params).pipe(
+    return this.registrationsCreateRegistrantProfile$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsGetSecurityQuestions
+   */
+  static readonly RegistrationsGetSecurityQuestionsPath = '/api/Registrations/registrants/{registrantId}/security';
+
+  /**
+   * Get security questions for a registrant.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsGetSecurityQuestions()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsGetSecurityQuestions$Response(params: {
+
+    /**
+     * registrant id
+     */
+    registrantId: string;
+  }): Observable<StrictHttpResponse<GetSecurityQuestionsResponse>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetSecurityQuestionsPath, 'get');
+    if (params) {
+      rb.path('registrantId', params.registrantId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<GetSecurityQuestionsResponse>;
+      })
+    );
+  }
+
+  /**
+   * Get security questions for a registrant.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsGetSecurityQuestions$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsGetSecurityQuestions(params: {
+
+    /**
+     * registrant id
+     */
+    registrantId: string;
+  }): Observable<GetSecurityQuestionsResponse> {
+
+    return this.registrationsGetSecurityQuestions$Response(params).pipe(
+      map((r: StrictHttpResponse<GetSecurityQuestionsResponse>) => r.body as GetSecurityQuestionsResponse)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsVerifySecurityQuestions
+   */
+  static readonly RegistrationsVerifySecurityQuestionsPath = '/api/Registrations/registrants/{registrantId}/security';
+
+  /**
+   * verify answers for security questions.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsVerifySecurityQuestions()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsVerifySecurityQuestions$Response(params: {
+
+    /**
+     * registrant id
+     */
+    registrantId: string;
+
+    /**
+     * array of questions and their answers
+     */
+    body: VerifySecurityQuestionsRequest
+  }): Observable<StrictHttpResponse<VerifySecurityQuestionsResponse>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVerifySecurityQuestionsPath, 'post');
+    if (params) {
+      rb.path('registrantId', params.registrantId, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<VerifySecurityQuestionsResponse>;
+      })
+    );
+  }
+
+  /**
+   * verify answers for security questions.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsVerifySecurityQuestions$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsVerifySecurityQuestions(params: {
+
+    /**
+     * registrant id
+     */
+    registrantId: string;
+
+    /**
+     * array of questions and their answers
+     */
+    body: VerifySecurityQuestionsRequest
+  }): Observable<VerifySecurityQuestionsResponse> {
+
+    return this.registrationsVerifySecurityQuestions$Response(params).pipe(
+      map((r: StrictHttpResponse<VerifySecurityQuestionsResponse>) => r.body as VerifySecurityQuestionsResponse)
     );
   }
 
@@ -693,6 +496,203 @@ export class RegistrationsService extends BaseService {
 
     return this.registrationsUpdateFile$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsCreateFile
+   */
+  static readonly RegistrationsCreateFilePath = '/api/Registrations/files';
+
+  /**
+   * Creates a File.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsCreateFile()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsCreateFile$Response(params: {
+
+    /**
+     * file
+     */
+    body: EvacuationFile
+  }): Observable<StrictHttpResponse<RegistrationResult>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateFilePath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<RegistrationResult>;
+      })
+    );
+  }
+
+  /**
+   * Creates a File.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsCreateFile$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsCreateFile(params: {
+
+    /**
+     * file
+     */
+    body: EvacuationFile
+  }): Observable<RegistrationResult> {
+
+    return this.registrationsCreateFile$Response(params).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsGetSecurityPhrase
+   */
+  static readonly RegistrationsGetSecurityPhrasePath = '/api/Registrations/files/{fileId}/security';
+
+  /**
+   * get the security phrase of an evacuation file.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsGetSecurityPhrase()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsGetSecurityPhrase$Response(params: {
+
+    /**
+     * file id
+     */
+    fileId: string;
+  }): Observable<StrictHttpResponse<GetSecurityPhraseResponse>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetSecurityPhrasePath, 'get');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<GetSecurityPhraseResponse>;
+      })
+    );
+  }
+
+  /**
+   * get the security phrase of an evacuation file.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsGetSecurityPhrase$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsGetSecurityPhrase(params: {
+
+    /**
+     * file id
+     */
+    fileId: string;
+  }): Observable<GetSecurityPhraseResponse> {
+
+    return this.registrationsGetSecurityPhrase$Response(params).pipe(
+      map((r: StrictHttpResponse<GetSecurityPhraseResponse>) => r.body as GetSecurityPhraseResponse)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsVerifySecurityPhrase
+   */
+  static readonly RegistrationsVerifySecurityPhrasePath = '/api/Registrations/files/{fileId}/security';
+
+  /**
+   * verify an evacuation file's security phrase.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsVerifySecurityPhrase()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsVerifySecurityPhrase$Response(params: {
+
+    /**
+     * file id
+     */
+    fileId: string;
+
+    /**
+     * security phrase to verify
+     */
+    body: VerifySecurityPhraseRequest
+  }): Observable<StrictHttpResponse<VerifySecurityPhraseResponse>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVerifySecurityPhrasePath, 'post');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<VerifySecurityPhraseResponse>;
+      })
+    );
+  }
+
+  /**
+   * verify an evacuation file's security phrase.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsVerifySecurityPhrase$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsVerifySecurityPhrase(params: {
+
+    /**
+     * file id
+     */
+    fileId: string;
+
+    /**
+     * security phrase to verify
+     */
+    body: VerifySecurityPhraseRequest
+  }): Observable<VerifySecurityPhraseResponse> {
+
+    return this.registrationsVerifySecurityPhrase$Response(params).pipe(
+      map((r: StrictHttpResponse<VerifySecurityPhraseResponse>) => r.body as VerifySecurityPhraseResponse)
     );
   }
 

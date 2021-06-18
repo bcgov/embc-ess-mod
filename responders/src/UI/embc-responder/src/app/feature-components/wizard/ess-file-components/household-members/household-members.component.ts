@@ -15,6 +15,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { DeleteHouseholdDialogComponent } from '../../../../shared/components/dialog-components/delete-household-dialog/delete-household-dialog.component';
 import { Router } from '@angular/router';
+import { HouseholdMemberType } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-household-members',
@@ -139,6 +140,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.data[this.editIndex] = this.householdForm.get(
           'houseHoldMember'
         ).value;
+
         this.rowEdit = !this.rowEdit;
         this.editIndex = undefined;
       } else {
