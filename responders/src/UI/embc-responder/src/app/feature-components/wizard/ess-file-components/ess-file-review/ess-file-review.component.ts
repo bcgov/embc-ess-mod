@@ -132,10 +132,11 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.saveLoader = false;
 
     this.stepCreateEssFileService
-      .openModalWithExit(
+      .openModal(
         globalConst.essFileCreatedMessage.text,
         globalConst.essFileCreatedMessage.title,
-        globalConst.essFileCreatedMessage.button
+        globalConst.essFileCreatedMessage.button,
+        globalConst.essFileCreatedMessage.exitLink
       )
       .afterClosed()
       .subscribe(() => {

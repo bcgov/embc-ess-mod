@@ -21,7 +21,6 @@ import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/HouseholdMember.model';
 import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { InformationDialogExitWizardComponent } from 'src/app/shared/components/dialog-components/information-dialog-exit-wizard/information-dialog-exit-wizard.component';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -461,36 +460,23 @@ export class StepCreateEssFileService {
    * Open information modal window
    *
    * @param text text to display
+   * @param title title of modal
+   * @param button text on "close" button ("Close" by default)
+   * @param exitLink link to exit greater context (e.g. wizard) for modal, null = no link
    */
-  openModal(text: string, title?: string): MatDialogRef<DialogComponent, any> {
+  openModal(
+    text: string,
+    title?: string,
+    button?: string,
+    exitLink?: string
+  ): MatDialogRef<DialogComponent, any> {
     const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
         text,
-        title
-      },
-      width: '530px'
-    });
-
-    return thisModal;
-  }
-
-  /**
-   * Open information modal window
-   *
-   * @param text text to display
-   */
-  openModalWithExit(
-    text: string,
-    title?: string,
-    button?: string
-  ): MatDialogRef<DialogComponent, any> {
-    const thisModal = this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogExitWizardComponent,
-        text,
         title,
-        button
+        button,
+        exitLink
       },
       width: '530px'
     });
