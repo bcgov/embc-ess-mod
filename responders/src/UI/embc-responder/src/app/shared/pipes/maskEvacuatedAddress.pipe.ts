@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AddressModel } from 'src/app/core/models/address.model';
-import { LocationsService } from 'src/app/core/services/locations.service';
+import { Community, LocationsService } from 'src/app/core/services/locations.service';
 import * as _ from 'lodash';
 
 @Pipe({ name: 'maskEvacuatedaddress' })
@@ -29,7 +29,7 @@ export class MaskEvacuatedAddressPipe implements PipeTransform {
         line1 += ', ' + address.addressLine2;
 
       // TODO: Rewrite this once the new community code mapping is merged
-      const communityName = address.community?.code || '';
+      const communityName = (address.community as Community)?.code || '';
 
       // const communityName =
       //   communities.find((community) => {
