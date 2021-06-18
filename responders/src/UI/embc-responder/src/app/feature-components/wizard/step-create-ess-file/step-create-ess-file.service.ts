@@ -21,6 +21,7 @@ import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/HouseholdMember.model';
 import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -418,6 +419,93 @@ export class StepCreateEssFileService {
       securityPhrase: this.securityPhrase,
       securityPhraseEdited: !this.bypassPhrase
     };
+  }
+
+  /**
+   * Update the wizard's values with ones fetched from API
+   */
+  public getEvacFileDTO(essFile: EvacuationFileModel) {
+    this.paperESSFile = essFile.essFileNumber;
+    this.evacAddress = essFile.evacuatedFromAddress;
+    this.facilityName = essFile.registrationLocation;
+
+    this.evacuatedFromPrimary =
+      this.stepCreateProfileService?.primaryAddressDetails === this.evacAddress;
+
+    if (essFile.needsAssessments?.length > 0) {
+      const essNeeds = essFile.needsAssessments[0];
+
+      // Get content for API Notes fields
+      if (essNeeds.notes?.length > 0) {
+        this.evacuationImpact = essNeeds.notes?.find(
+          (note) => note.type === NoteType.EvacuationImpact
+        )?.content;
+
+        this.householdRecoveryPlan = essNeeds.notes?.find(
+          (note) => note.type === NoteType.HouseHoldRecoveryPlan
+        )?.content;
+
+        this.evacuationExternalReferrals = essNeeds.notes?.find(
+          (note) => note.type === NoteType.EvacuationExternalReferrals
+        )?.content;
+
+        this.petCarePlans = essNeeds.notes?.find(
+          (note) => note.type === NoteType.PetCarePlans
+        )?.content;
+      }
+      this.insurance = essNeeds.insurance;
+
+      this.referredServiceDetails = essNeeds.recommendedReferralServices;
+      this.referredServices = essNeeds.recommendedReferralServices.length > 0;
+
+      // Split main applicant from other household members, remap to UI model
+      const primaryLastName = essNeeds.householdMembers?.find(
+        (member) => member.type === HouseholdMemberType.MainApplicant
+      )?.lastName;
+
+      this.householdMembers = essNeeds.householdMembers
+        ?.filter((member) => member.type !== HouseholdMemberType.MainApplicant)
+        .map<HouseholdMemberModel>((member) => {
+          return {
+            ...member,
+            sameLastName: member.lastName === primaryLastName
+          };
+        });
+
+      this.haveHouseholdMembersVal = this.householdMembers?.length > 0;
+
+      this.haveSpecialDiet = essNeeds.haveSpecialDiet;
+      this.specialDietDetails = essNeeds.specialDietDetails;
+      this.haveMedication = essNeeds.haveMedication;
+
+      this.petsList = essNeeds.pets;
+      this.havePetsFood = essNeeds.hasPetsFood;
+
+      this.havePets = essNeeds.pets?.length > 0;
+
+      // Get values for buttons on Needs tabs
+      this.canRegistrantProvideFood = globalConst.needsOptions.find(
+        (ins) => ins.apiValue === essNeeds.canEvacueeProvideFood
+      )?.value;
+
+      this.canRegistrantProvideLodging = globalConst.needsOptions.find(
+        (ins) => ins.apiValue === essNeeds.canEvacueeProvideLodging
+      )?.value;
+
+      this.canRegistrantProvideClothing = globalConst.needsOptions.find(
+        (ins) => ins.apiValue === essNeeds.canEvacueeProvideClothing
+      )?.value;
+
+      this.canRegistrantProvideTransportation = globalConst.needsOptions.find(
+        (ins) => ins.apiValue === essNeeds.canEvacueeProvideTransportation
+      )?.value;
+
+      this.canRegistrantProvideIncidentals = globalConst.needsOptions.find(
+        (ins) => ins.apiValue === essNeeds.canEvacueeProvideIncidentals
+      )?.value;
+    }
+
+    this.securityPhrase = essFile.securityPhrase;
   }
 
   /**

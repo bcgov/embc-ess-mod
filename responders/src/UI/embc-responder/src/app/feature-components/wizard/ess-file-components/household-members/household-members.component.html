@@ -301,6 +301,15 @@
                 Medication supply is required</mat-error
               >
             </mat-radio-group>
+
+            <p
+              class="responderInstruction bottom-space"
+              *ngIf="householdFormControl?.medicationSupply.value === false"
+            >
+              Please refer the evacuee to
+              <strong>Health Services at the Reception Centre</strong> when
+              available.
+            </p>
           </div>
         </div>
       </form>

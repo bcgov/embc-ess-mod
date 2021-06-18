@@ -42,8 +42,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   tabUpdateSubscription: Subscription;
 
   constructor(
+    public stepCreateEssFileService: StepCreateEssFileService,
     private dialog: MatDialog,
-    private stepCreateEssFileService: StepCreateEssFileService,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
     private router: Router

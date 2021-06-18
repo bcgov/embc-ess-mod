@@ -14,7 +14,7 @@ import {
 } from 'src/app/core/api/models';
 import { Subject } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/address.model';
-import { EvacueeProfile } from 'src/app/core/models/evacuee-profile';
+import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { EvacueeSession } from 'src/app/core/services/evacuee-session';
 
 @Injectable({ providedIn: 'root' })
@@ -250,7 +250,7 @@ export class StepCreateProfileService {
   /**
    * Update the wizard's values with ones fetched from API
    */
-  public getProfileDTO(profile: EvacueeProfile) {
+  public getProfileDTO(profile: RegistrantProfileModel) {
     this.evacueeSession.profileId = profile.id;
     this.restrictedAccess = profile.restriction;
     this.personalDetails = profile.personalDetails;
