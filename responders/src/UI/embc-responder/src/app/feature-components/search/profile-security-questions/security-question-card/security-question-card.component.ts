@@ -7,8 +7,7 @@ import { SecurityQuestion } from 'src/app/core/api/models';
   templateUrl: './security-question-card.component.html',
   styleUrls: ['./security-question-card.component.scss']
 })
-export class SecurityQuestionCardComponent
-  implements OnInit {
+export class SecurityQuestionCardComponent implements OnInit {
   @Input() question: SecurityQuestion;
   @Input() parentForm: FormGroup;
   @Input() index: number;
@@ -19,5 +18,4 @@ export class SecurityQuestionCardComponent
   ngOnInit(): void {
     this.controlName = 'answer' + this.index;
   }
-
 }

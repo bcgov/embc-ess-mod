@@ -39,26 +39,26 @@
         </ng-container> -->
         <ng-container>
           <form [formGroup]="securityQuestionsForm">
-          <div class="row row-space">
-            <div class="col-md-8">
-              <app-security-question-card
-                [question]="securityQuestions[0]"
-                [parentForm]="securityQuestionsForm"
-                [index]="1"
-              >
-              </app-security-question-card>
+            <div class="row row-space">
+              <div class="col-md-8">
+                <app-security-question-card
+                  [question]="securityQuestions[0]"
+                  [parentForm]="securityQuestionsForm"
+                  [index]="1"
+                >
+                </app-security-question-card>
+              </div>
             </div>
-          </div>
-          <div class="row row-space">
-            <div class="col-md-8">
-              <app-security-question-card
-                [question]="securityQuestions[1]"
-                [parentForm]="securityQuestionsForm"
-                [index]="2"
-              >
-              </app-security-question-card>
+            <div class="row row-space">
+              <div class="col-md-8">
+                <app-security-question-card
+                  [question]="securityQuestions[1]"
+                  [parentForm]="securityQuestionsForm"
+                  [index]="2"
+                >
+                </app-security-question-card>
+              </div>
             </div>
-          </div>
           </form>
 
           <div *ngIf="correctAnswerFlag">
@@ -112,17 +112,17 @@
         </p>
         <br />
         <form [formGroup]="securityQuestionsForm">
-        <div class="row row-space">
-          <div class="col-md-8">
-            <app-security-question-card
-              [question]="securityQuestions[2]"
-              [parentForm]="securityQuestionsForm"
-              [index]="3"
-            >
-            </app-security-question-card>
+          <div class="row row-space">
+            <div class="col-md-8">
+              <app-security-question-card
+                [question]="securityQuestions[2]"
+                [parentForm]="securityQuestionsForm"
+                [index]="3"
+              >
+              </app-security-question-card>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
         <div *ngIf="correctAnswerFlag">
           <img
             width="20px"

@@ -57,7 +57,7 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   /**
    * Returns the control of the answer1 from the securityQuestions form
    */
-   public get answer1FormControl(): FormControl {
+  public get answer1FormControl(): FormControl {
     return this.securityQuestionsForm.get('answer1') as FormControl;
   }
 
@@ -73,20 +73,19 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
    * Function that gets the answers to given questions and adds it into an array.
    */
   getAnswers() {
-    
     this.securityAnswers = [];
     let counter = 1;
-        for(let question of this.securityQuestions) {
-          const securityAQuestion: SecurityQuestion = {
-              question: question.question,
-              answer: this.securityQuestionsForm.get('answer'+ counter).value,
-              answerChanged: false,
-              id: question.id
-            };
-            counter++;
-          console.log(securityAQuestion);
-          this.securityAnswers.push(securityAQuestion);
-        }
+    for (const question of this.securityQuestions) {
+      const securityAQuestion: SecurityQuestion = {
+        question: question.question,
+        answer: this.securityQuestionsForm.get('answer' + counter).value,
+        answerChanged: false,
+        id: question.id
+      };
+      counter++;
+      console.log(securityAQuestion);
+      this.securityAnswers.push(securityAQuestion);
+    }
 
     console.log(this.securityAnswers);
   }
@@ -107,12 +106,13 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
 
         if (
           this.securityQuestionResult === 0 ||
-          (this.securityQuestionResult === 1 &&
-            this.defaultScreen === false)
+          (this.securityQuestionResult === 1 && this.defaultScreen === false)
         ) {
           this.incorrectScreen = true;
-        } else if (this.securityQuestionResult === 1 &&
-          this.defaultScreen === true) {
+        } else if (
+          this.securityQuestionResult === 1 &&
+          this.defaultScreen === true
+        ) {
           this.defaultScreen = false;
         } else {
           this.firstTryCorrect = true;
