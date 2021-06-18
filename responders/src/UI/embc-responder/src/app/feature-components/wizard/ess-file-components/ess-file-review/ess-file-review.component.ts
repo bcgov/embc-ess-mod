@@ -5,9 +5,11 @@ import { UserService } from 'src/app/core/services/user.service';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
-import { HouseholdMember } from 'src/app/core/models/evacuation-file';
-import { HouseholdMembersComponent } from '../household-members/household-members.component';
-import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
+import { HouseholdMemberModel } from 'src/app/core/models/HouseholdMember.model';
+import { WizardService } from '../../wizard.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { CacheService } from 'src/app/core/services/cache.service';
+import { HouseholdMemberType } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-ess-file-review',
@@ -17,6 +19,9 @@ import { HouseholdMemberModel } from 'src/app/core/models/household-member.model
 export class EssFileReviewComponent implements OnInit, OnDestroy {
   taskNumber: string;
   tabUpdateSubscription: Subscription;
+
+  saveLoader = false;
+  disableButton = false;
 
   insuranceDisplay: string;
 
@@ -42,7 +47,10 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     public stepCreateProfileService: StepCreateProfileService,
     public stepCreateEssFileService: StepCreateEssFileService,
     private router: Router,
-    private userService: UserService
+    private wizardService: WizardService,
+    private alertService: AlertService,
+    private userService: UserService,
+    private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {
@@ -113,6 +121,31 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
    */
   save(): void {
     this.stepCreateEssFileService.nextTabUpdate.next();
+
+    this.saveLoader = true;
+
+    // TODO: Wrap this all in actual ESS File submission
+    console.log(this.stepCreateEssFileService.createEvacFileDTO());
+
+    // Once all profile work is done, user can close wizard or proceed to step 3
+    this.disableButton = true;
+    this.saveLoader = false;
+
+    this.stepCreateEssFileService
+      .openModalWithExit(
+        globalConst.essFileCreatedMessage.text,
+        globalConst.essFileCreatedMessage.title,
+        globalConst.essFileCreatedMessage.button
+      )
+      .afterClosed()
+      .subscribe(() => {
+        this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
+        this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
+
+        this.router.navigate(['/ess-wizard/add-supports'], {
+          state: { step: 'STEP 3', title: 'Add Supports' }
+        });
+      });
   }
 
   /**

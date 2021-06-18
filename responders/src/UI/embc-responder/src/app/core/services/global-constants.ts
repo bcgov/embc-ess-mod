@@ -64,11 +64,17 @@ export const wizardProfileMessage = {
 };
 export const evacueeProfileCreatedMessage = {
   title: 'Evacuee Profile Saved',
-  text: 'Evacuee profile has been successfully created.'
+  text: 'Evacuee profile has been successfully created.',
+  button: 'Proceed to Step 2'
 };
 export const wizardESSFileMessage = {
   title: 'Complete all steps',
   text: 'Please complete all sections of the ESS File prior to submitting.'
+};
+export const essFileCreatedMessage = {
+  title: 'ESS File Saved',
+  text: 'ESS File has been successfully created.',
+  button: 'Proceed to Step 3'
 };
 
 export const householdMemberDeleteDialog: DialogContent = {

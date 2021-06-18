@@ -61,26 +61,27 @@ namespace EMBC.ESS.Resources.Contacts
         private async Task<ContactCommandResult> HandleSaveContact(SaveContact cmd)
         {
             var contact = mapper.Map<contact>(cmd.Contact);
-            contact.contactid = GetContactIdForBcscId(contact.era_bcservicescardid);
+            var existingContact = GetContactIdForBcscId(contact.era_bcservicescardid);
             essContext.DetachAll();
 
-            if (!contact.contactid.HasValue)
+            if (existingContact == null)
             {
                 contact.contactid = Guid.NewGuid();
                 essContext.AddTocontacts(contact);
             }
             else
             {
+                contact.contactid = existingContact.contactid;
                 essContext.AttachTo(nameof(EssContext.contacts), contact);
                 essContext.UpdateObject(contact);
             }
             essContext.AddLink(essContext.LookupCountryByCode(cmd.Contact.PrimaryAddress.Country), nameof(era_country.era_contact_Country), contact);
-            essContext.AddLink(essContext.LookupStateProvinceByCode(cmd.Contact.PrimaryAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact);
-            AddJurisdictionLink(cmd.Contact.PrimaryAddress.Community, nameof(era_jurisdiction.era_jurisdiction_contact_City), contact);
+            SetStateProvinceLink(cmd.Contact.PrimaryAddress.StateProvince, nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact, existingContact?.era_ProvinceState?.era_code.ToString());
+            SetJurisdictionLink(cmd.Contact.PrimaryAddress.Community, nameof(era_jurisdiction.era_jurisdiction_contact_City), contact, existingContact?.era_City?.era_jurisdictionid.ToString());
 
             essContext.AddLink(essContext.LookupCountryByCode(cmd.Contact.MailingAddress.Country), nameof(era_country.era_country_contact_MailingCountry), contact);
-            essContext.AddLink(essContext.LookupStateProvinceByCode(cmd.Contact.MailingAddress.StateProvince), nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact);
-            AddJurisdictionLink(cmd.Contact.MailingAddress.Community, nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), contact);
+            SetStateProvinceLink(cmd.Contact.MailingAddress.StateProvince, nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact, existingContact?.era_MailingProvinceState?.era_code.ToString());
+            SetJurisdictionLink(cmd.Contact.MailingAddress.Community, nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), contact, existingContact?.era_MailingCity?.era_jurisdictionid.ToString());
 
             var results = await essContext.SaveChangesAsync();
 
@@ -89,13 +90,12 @@ namespace EMBC.ESS.Resources.Contacts
             return new ContactCommandResult { ContactId = contact.contactid.ToString() };
         }
 
-        private Guid? GetContactIdForBcscId(string bcscId) =>
+        private contact GetContactIdForBcscId(string bcscId) =>
             string.IsNullOrEmpty(bcscId)
                 ? null
                 : essContext.contacts
                     .Where(c => c.era_bcservicescardid == bcscId)
-                    .Select(c => new { c.contactid, c.era_bcservicescardid })
-                    .SingleOrDefault()?.contactid;
+                    .SingleOrDefault();
 
         private async Task<ContactCommandResult> HandleDeleteContact(DeleteContact cmd)
         {
@@ -190,12 +190,37 @@ namespace EMBC.ESS.Resources.Contacts
             return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts) };
         }
 
-        private void AddJurisdictionLink(string jurisdictionCode, string sourceProperty, object target)
+        private void SetStateProvinceLink(string stateProvinceCode, string sourceProperty, object target, string oldCode)
+        {
+            var stateProvince = essContext.LookupStateProvinceByCode(stateProvinceCode);
+            if (stateProvince != null)
+            {
+                essContext.AddLink(stateProvince, sourceProperty, target);
+            }
+            else
+            {
+                stateProvince = essContext.LookupStateProvinceByCode(oldCode);
+                if (stateProvince != null)
+                {
+                    essContext.DeleteLink(stateProvince, sourceProperty, target);
+                }
+            }
+        }
+
+        private void SetJurisdictionLink(string jurisdictionCode, string sourceProperty, object target, string oldCode)
         {
             var jurisdiction = essContext.LookupJurisdictionByCode(jurisdictionCode);
             if (jurisdiction != null)
             {
                 essContext.AddLink(jurisdiction, sourceProperty, target);
+            }
+            else
+            {
+                jurisdiction = essContext.LookupJurisdictionByCode(oldCode);
+                if (jurisdiction != null)
+                {
+                    essContext.DeleteLink(jurisdiction, sourceProperty, target);
+                }
             }
         }
     }
