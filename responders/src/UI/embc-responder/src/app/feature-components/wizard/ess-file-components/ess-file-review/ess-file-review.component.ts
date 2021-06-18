@@ -5,7 +5,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
-import { HouseholdMemberModel } from 'src/app/core/models/HouseholdMember.model';
+import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { WizardService } from '../../wizard.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { CacheService } from 'src/app/core/services/cache.service';

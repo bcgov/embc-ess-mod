@@ -19,7 +19,7 @@
           characters.
         </p>
         <br />
-        <ng-container *ngIf="isLoading">
+        <!-- <ng-container *ngIf="isLoading">
           <div class="row row-space">
             <div class="col-md-8">
               <app-loader
@@ -36,13 +36,15 @@
               ></app-loader>
             </div>
           </div>
-        </ng-container>
-        <ng-container *ngIf="!isLoading">
+        </ng-container> -->
+        <ng-container>
+          <form [formGroup]="securityQuestionsForm">
           <div class="row row-space">
             <div class="col-md-8">
               <app-security-question-card
                 [question]="securityQuestions[0]"
-                (questionEvent)="getAnswers($event)"
+                [parentForm]="securityQuestionsForm"
+                [index]="1"
               >
               </app-security-question-card>
             </div>
@@ -51,11 +53,13 @@
             <div class="col-md-8">
               <app-security-question-card
                 [question]="securityQuestions[1]"
-                (questionEvent)="getAnswers($event)"
+                [parentForm]="securityQuestionsForm"
+                [index]="2"
               >
               </app-security-question-card>
             </div>
           </div>
+          </form>
 
           <div *ngIf="correctAnswerFlag">
             <img
@@ -107,15 +111,18 @@
           characters.
         </p>
         <br />
+        <form [formGroup]="securityQuestionsForm">
         <div class="row row-space">
           <div class="col-md-8">
             <app-security-question-card
               [question]="securityQuestions[2]"
-              (questionEvent)="getAnswers($event)"
+              [parentForm]="securityQuestionsForm"
+              [index]="3"
             >
             </app-security-question-card>
           </div>
         </div>
+      </form>
         <div *ngIf="correctAnswerFlag">
           <img
             width="20px"
