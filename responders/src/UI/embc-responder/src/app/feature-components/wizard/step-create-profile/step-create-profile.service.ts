@@ -16,6 +16,7 @@ import { Subject } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { EvacueeSession } from 'src/app/core/services/evacuee-session';
+import { Community } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {
@@ -261,10 +262,12 @@ export class StepCreateProfileService {
     this.isBcMailingAddress = this.checkForBCAddress(
       profile.mailingAddress.stateProvinceCode
     );
-    this.primaryAddressDetails = profile.primaryAddress; //this.setAddressObjectForForm(
-    //);
-    this.mailingAddressDetails = profile.mailingAddress; //this.setAddressObjectForForm(
-    //);
+    this.primaryAddressDetails = this.setAddressObjectForForm(
+      profile.primaryAddress
+    );
+    this.mailingAddressDetails = this.setAddressObjectForForm(
+      profile.mailingAddress
+    );
     this.isMailingAddressSameAsPrimaryAddress = this.checkForSameMailingAddress(
       profile.isMailingAddressSameAsPrimaryAddress
     );
@@ -285,11 +288,11 @@ export class StepCreateProfileService {
       addressLine2: addressObject.addressLine2,
       countryCode: addressObject.country.code,
       communityCode:
-        addressObject.community.code === undefined
+        (addressObject.community as Community).code === undefined
           ? null
-          : addressObject.community.code,
+          : (addressObject.community as Community).code,
       city:
-        addressObject.community.code === undefined &&
+        (addressObject.community as Community).code === undefined &&
         typeof addressObject.community === 'string'
           ? addressObject.community
           : null,
@@ -309,22 +312,25 @@ export class StepCreateProfileService {
    * @param addressObject Address object as defined by the API
    * @returns An Address as defined by the Create Profile address form
    */
-  // public setAddressObjectForForm(addressObject: AddressModel): AddressModel {
-  //   const address: AddressModel = {
-  //     addressLine1: addressObject.addressLine1,
-  //     addressLine2: addressObject.addressLine2,
-  //     communityCode: addressObject.communityCode,
-  //     countryCode: addressObject.countryCode,
-  //     stateProvinceCode: addressObject.stateProvinceCode,
-  //     city: addressObject.city,
-  //     country: addressObject.country,
-  //     community: addressObject.community,
-  //     postalCode: addressObject.postalCode,
-  //     stateProvince: addressObject.stateProvince
-  //   };
+  public setAddressObjectForForm(addressObject: AddressModel): AddressModel {
+    const address: AddressModel = {
+      addressLine1: addressObject.addressLine1,
+      addressLine2: addressObject.addressLine2,
+      communityCode: addressObject.communityCode,
+      countryCode: addressObject.countryCode,
+      stateProvinceCode: addressObject.stateProvinceCode,
+      country: addressObject.country,
+      postalCode: addressObject.postalCode,
+      stateProvince: addressObject.stateProvince,
+      community:
+        addressObject.city !== null
+          ? addressObject.city
+          : addressObject.community,
+      city: null
+    };
 
-  //   return address;
-  // }
+    return address;
+  }
 
   /**
    * Checks if the form is partially completed or not

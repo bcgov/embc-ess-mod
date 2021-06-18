@@ -14,6 +14,7 @@ import { WizardService } from '../../wizard.service';
 
 import * as globalConst from 'src/app/core/services/global-constants';
 import { EvacueeSession } from 'src/app/core/services/evacuee-session';
+import { Community } from 'src/app/core/services/locations.service';
 
 @Component({
   selector: 'app-profile-review',
@@ -27,6 +28,9 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   saveLoader = false;
   disableButton = false;
 
+  primaryCommunity: string;
+  mailingCommunity: string;
+
   constructor(
     private router: Router,
     private wizardService: WizardService,
@@ -39,6 +43,18 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Set up form validation for verification check
+    this.primaryCommunity =
+      typeof this.stepCreateProfileService.primaryAddressDetails.community ===
+      'string'
+        ? this.stepCreateProfileService.primaryAddressDetails.community
+        : (this.stepCreateProfileService.primaryAddressDetails
+            .community as Community)?.name;
+    this.mailingCommunity =
+      typeof this.stepCreateProfileService.mailingAddressDetails.community ===
+      'string'
+        ? this.stepCreateProfileService.mailingAddressDetails.community
+        : (this.stepCreateProfileService.mailingAddressDetails
+            .community as Community)?.name;
     this.verifiedProfileGroup = this.formBuilder.group({
       verifiedProfile: [
         this.stepCreateProfileService.verifiedProfile,

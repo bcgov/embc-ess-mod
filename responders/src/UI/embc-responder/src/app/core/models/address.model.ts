@@ -6,7 +6,7 @@ import {
 } from '../services/locations.service';
 
 export interface AddressModel extends Address {
-  community: Community;
+  community: Community | string;
   country: Country;
   stateProvince?: StateProvince;
 }
