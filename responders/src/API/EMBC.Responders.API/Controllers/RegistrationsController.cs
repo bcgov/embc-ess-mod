@@ -535,6 +535,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
                 .ForMember(d => d.TaskId, opts => opts.Ignore())
                 .ForMember(d => d.EvacuationDate, opts => opts.Ignore())
+                .ReverseMap()
                 ;
 
             CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
