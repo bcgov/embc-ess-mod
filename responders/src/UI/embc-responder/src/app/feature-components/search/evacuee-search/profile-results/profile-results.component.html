@@ -62,9 +62,7 @@
                   *ngIf="
                     registrantResult?.primaryAddress?.communityCode !== null
                   "
-                  >{{
-                    registrantResult?.primaryAddress?.community?.name
-                  }},</span
+                  >{{ communityName(registrantResult?.primaryAddress) }},</span
                 >
                 {{ registrantResult?.primaryAddress?.stateProvinceCode }},
                 {{ registrantResult?.primaryAddress?.postalCode }}</b
