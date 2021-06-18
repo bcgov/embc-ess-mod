@@ -7,7 +7,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class InformationDialogComponent implements OnInit {
   @Output() outputEvent = new EventEmitter<string>();
-  @Input() inputEvent: any;
+  @Input() inputEvent: {
+    text: string;
+    title?: string;
+    button?: string;
+    exitLink?: string;
+  };
 
   constructor() {}
 
@@ -15,5 +20,9 @@ export class InformationDialogComponent implements OnInit {
 
   close(): void {
     this.outputEvent.emit('close');
+  }
+
+  exit(): void {
+    this.outputEvent.emit('exit');
   }
 }

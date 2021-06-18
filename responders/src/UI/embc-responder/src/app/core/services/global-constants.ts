@@ -72,7 +72,8 @@ export const wizardESSFileMessage = {
 export const essFileCreatedMessage = {
   title: 'ESS File Saved',
   text: 'ESS File has been successfully created.',
-  button: 'Proceed to Step 3'
+  button: 'Proceed to Step 3',
+  exitLink: 'Exit Wizard'
 };
 
 export const evacueeProfileStepIncompleteMessage =
