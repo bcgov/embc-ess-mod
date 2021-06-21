@@ -65,7 +65,10 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool HaveSpecialDiet { get; set; }
         public string SpecialDietDetails { get; set; }
         public bool HaveMedication { get; set; }
+
+        //TODO: rename to HasSupplies
         public bool HasEnoughSupply { get; set; }
+
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }
@@ -79,7 +82,10 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
+
+        //TODO: delete as no longer used
         public string PreferredName { get; set; }
+
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
         public bool IsUnder19 { get; set; }

@@ -246,6 +246,7 @@ namespace EMBC.Responders.API.Controllers
 
     public class EvacuationFileHouseholdMember
     {
+        public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
@@ -253,6 +254,7 @@ namespace EMBC.Responders.API.Controllers
         public string DateOfBirth { get; set; }
         public HouseholdMemberType Type { get; set; }
         public bool IsMatch { get; set; }
+        public bool IsPrimaryRegistrant { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -284,8 +286,8 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum HouseholdMemberType
     {
-        [Description("Main Applicant")]
-        MainApplicant,
+        [Description("Registrant")]
+        Registrant,
 
         [Description("Household Member")]
         HouseholdMember
@@ -351,6 +353,7 @@ namespace EMBC.Responders.API.Controllers
         public bool IsRestricted { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public string EvacuationFileDate { get; set; }
+        public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; }
     }
 
     /// <summary>
@@ -362,6 +365,7 @@ namespace EMBC.Responders.API.Controllers
 
         [Required]
         public InsuranceOption Insurance { get; set; }
+
         public IEnumerable<Note> Notes { get; set; }
         public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }
 
@@ -380,6 +384,7 @@ namespace EMBC.Responders.API.Controllers
         public bool? CanEvacueeProvideIncidentals { get; set; }
 
         public NeedsAssessmentType Type { get; set; }
+        public bool HasSupplies { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -416,12 +421,16 @@ namespace EMBC.Responders.API.Controllers
     {
         [EnumMember(Value = "General")]
         General = 0,
+
         [EnumMember(Value = "EvacuationImpact")]
         EvacuationImpact = 1,
+
         [EnumMember(Value = "EvacuationExternalReferrals")]
         EvacuationExternalReferrals = 2,
+
         [EnumMember(Value = "PetCarePlans")]
         PetCarePlans = 3,
+
         [EnumMember(Value = "HouseHoldRecoveryPlan")]
         HouseHoldRecoveryPlan = 4
     }
@@ -440,14 +449,19 @@ namespace EMBC.Responders.API.Controllers
     {
         [Description("Inquiry")]
         Inquiry,
+
         [Description("Health")]
         Health,
+
         [Description("FirstAid")]
         FirstAid,
+
         [Description("Personal")]
         Personal,
+
         [Description("ChildCare")]
         ChildCare,
+
         [Description("PetCare")]
         PetCare
     }
@@ -494,12 +508,16 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<EvacuationFileHouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
                 .ForMember(d => d.PreferredName, opts => opts.Ignore())
-                .ForMember(d => d.Id, opts => opts.Ignore())
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.IsUnder19, opts => opts.Ignore())
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.Ignore())
-                .ReverseMap()
+                .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 ;
 
+            CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()
+                   .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
+                   .ForMember(d => d.IsMatch, opts => opts.Ignore())
+                   ;
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
                 .ReverseMap()
                 ;
@@ -516,7 +534,11 @@ namespace EMBC.Responders.API.Controllers
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.CompletedOn, opts => opts.Ignore())
-                .ReverseMap()
+                .ForMember(d => d.HasEnoughSupply, opts => opts.MapFrom(s => s.HasSupplies))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.NeedsAssessment, NeedsAssessment>()
+                .ForMember(d => d.HasSupplies, opts => opts.MapFrom(s => s.HasEnoughSupply))
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
@@ -534,8 +556,16 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
                 .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
                 .ForMember(d => d.TaskId, opts => opts.Ignore())
-                .ForMember(d => d.EvacuationDate, opts => opts.Ignore())
-                .ReverseMap()
+                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
+                .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
+                .ForMember(d => d.EssFileNumber, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
+                .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
+                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
                 ;
 
             CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
@@ -551,7 +581,24 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
                 .ForMember(d => d.UserId, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
-                .ReverseMap()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.RegistrantProfile, RegistrantProfile>()
+                .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => new PersonDetails
+                {
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    DateOfBirth = s.DateOfBirth,
+                    Gender = s.Gender,
+                    Initials = s.Initials,
+                    PreferredName = s.PreferredName
+                }))
+                .ForMember(d => d.ContactDetails, opts => opts.MapFrom(s => new ContactDetails
+                {
+                    Email = s.Email,
+                    Phone = s.Phone
+                }))
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
                     s.MailingAddress.Country == s.PrimaryAddress.Country &&
                     s.MailingAddress.StateProvince == s.PrimaryAddress.StateProvince &&

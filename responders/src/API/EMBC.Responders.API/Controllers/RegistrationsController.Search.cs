@@ -122,11 +122,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => RegistrantStatus.NotVerified))
                 .ForMember(d => d.EvacuationFiles, opts => opts.Ignore())
                 ;
-
-            CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()
-                .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.MainApplicant : HouseholdMemberType.HouseholdMember))
-                .ForMember(d => d.IsMatch, opts => opts.Ignore())
-                ;
         }
     }
 }
