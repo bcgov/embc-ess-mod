@@ -188,10 +188,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     }
 
     this.animalsForm = this.formBuilder.group({
-      hasPets: [
-        this.stepCreateEssFileService.havePets ?? '',
-        [Validators.required]
-      ],
+      hasPets: [this.stepCreateEssFileService.havePets, [Validators.required]],
       pets: [
         this.stepCreateEssFileService.petsList,
         this.customValidation
@@ -202,7 +199,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
           .bind(this.customValidation)
       ],
       hasPetsFood: [
-        this.stepCreateEssFileService.havePetsFood ?? '',
+        this.stepCreateEssFileService.havePetsFood,
         this.customValidation
           .conditionalValidation(
             () => this.animalsForm.get('hasPets').value === true,
@@ -210,7 +207,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
           )
           .bind(this.customValidation)
       ],
-      petCareDetails: [this.stepCreateEssFileService.petCarePlans ?? ''],
+      petCareDetails: [this.stepCreateEssFileService.petCarePlans],
       pet: this.createPetForm(),
       addPetIndicator: [false]
     });
