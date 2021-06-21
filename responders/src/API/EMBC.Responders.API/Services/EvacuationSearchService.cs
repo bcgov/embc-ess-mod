@@ -49,21 +49,31 @@ namespace EMBC.Responders.API.Services
 
         public async Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, Controllers.MemberRole userRole)
         {
-            var registrants = (await messagingClient.Send(new RegistrantsSearchQuery
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                IncludeCases = true
-            })).Items;
+            IEnumerable<RegistrantWithFiles> registrants = Array.Empty<RegistrantWithFiles>();
+            IEnumerable<EvacuationFile> files = Array.Empty<EvacuationFile>();
 
-            var files = (await messagingClient.Send(new EvacuationFilesSearchQuery
+            var searchTasks = new Func<Task>[]
             {
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                IncludeHouseholdMembers = true
-            })).Items;
+                //registrants
+                async () => registrants = (await messagingClient.Send(new RegistrantsSearchQuery
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    DateOfBirth = dateOfBirth,
+                    IncludeCases = true
+                })).Items,
+                //files
+                async () => files = (await messagingClient.Send(new EvacuationFilesSearchQuery
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    DateOfBirth = dateOfBirth,
+                    IncludeHouseholdMembers = true
+                })).Items
+            };
+
+            //await Task.WhenAll(registrantsSearchTask, filesSearchTask);
+            await Task.WhenAll(searchTasks.Select(t => t()));
 
             //check for restricted files
             var anyRestriction = registrants.SelectMany(r => r.Files).Any(f => f.RestrictedAccess) ||
