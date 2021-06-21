@@ -87,23 +87,6 @@ namespace EMBC.Registrants.API.Controllers
         }
 
         /// <summary>
-        /// Get the current logged in user's profile
-        /// </summary>
-        /// <returns>Currently logged in user's profile</returns>
-        [HttpDelete("current")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize]
-        public async Task<ActionResult<Profile>> DeleteProfile()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!env.IsProduction())
-            {
-                await messagingClient.Send(new DeleteRegistrantCommand { UserId = userId });
-            }
-            return Ok(userId);
-        }
-
-        /// <summary>
         /// Create or update the current user's profile
         /// </summary>
         /// <param name="profile">The profile information</param>

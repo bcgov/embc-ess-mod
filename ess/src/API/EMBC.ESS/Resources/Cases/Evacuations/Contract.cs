@@ -24,7 +24,7 @@ namespace EMBC.ESS.Resources.Cases
     {
         Task<string> Create(EvacuationFile evacuationFile);
 
-        Task<IEnumerable<EvacuationFile>> ReadAll(EvacuationFilesQuery query);
+        Task<IEnumerable<EvacuationFile>> Read(EvacuationFilesQuery query);
 
         Task<string> Update(EvacuationFile evacuationFile);
 
@@ -36,16 +36,17 @@ namespace EMBC.ESS.Resources.Cases
     public class EvacuationFile : Case
     {
         public string TaskId { get; set; }
-        public EvacuationAddress EvacuatedFromAddress { get; set; }
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
+        public EvacuationAddress EvacuatedFrom { get => CurrentNeedsAssessment?.EvacuatedFrom; }
+        public NeedsAssessment CurrentNeedsAssessment { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseChanged { get; set; } = false;
+        public bool IsSecretPhraseMasked { get; set; }
         public DateTime EvacuationDate { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public bool RestrictedAccess { get; set; }
-        public bool IsSecretPhraseMasked { get; set; }
         public string RegistrationLocation { get; set; }
+        public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
     }
 
     public class EvacuationAddress
@@ -53,14 +54,14 @@ namespace EMBC.ESS.Resources.Cases
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string CommunityCode { get; set; }
-        public string StateProvinceCode { get; set; }
-        public string CountryCode { get; set; }
         public string PostalCode { get; set; }
     }
 
     public class NeedsAssessment
     {
         public string Id { get; set; }
+        public EvacuationAddress EvacuatedFrom { get; set; }
+        public DateTime CompletedOn { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime LastModified { get; set; }
         public InsuranceOption Insurance { get; set; }
@@ -72,6 +73,7 @@ namespace EMBC.ESS.Resources.Cases
         public bool HaveSpecialDiet { get; set; }
         public string SpecialDietDetails { get; set; }
         public bool HaveMedication { get; set; }
+        public bool HasEnoughSupply { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }
@@ -87,16 +89,16 @@ namespace EMBC.ESS.Resources.Cases
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
-        public string PreferredName { get; set; }
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public string LinkedRegistrantId { get; set; }
-        public bool RestrictedAccess { get; set; }
+        public bool HasAccessRestriction { get; set; }
     }
 
     public class Pet
     {
+        public string Id { get; set; }
         public string Type { get; set; }
         public string Quantity { get; set; }
     }

@@ -17,7 +17,6 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Resources.Cases.Evacuations;
 using EMBC.ESS.Utilities.Dynamics;
 
 namespace EMBC.ESS.Resources.Cases
@@ -59,7 +58,7 @@ namespace EMBC.ESS.Resources.Cases
         {
             var result = new CaseQueryResult();
 
-            result.Items = await evacuationRepository.ReadAll(query);
+            result.Items = await evacuationRepository.Read(query);
 
             return result;
         }

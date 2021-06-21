@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EMBC.ESS.Shared.Contracts.Submissions
 {
@@ -32,10 +33,12 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool SecurityPhraseChanged { get; set; } = false;
         public DateTime EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; }
+        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
         public string SecretPhrase { get; set; }
         public bool IsSecretPhraseMasked { get; set; }
         public string RegistrationLocation { get; set; }
+        public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
+        public NeedsAssessment LastNeedsAssessment { get => NeedsAssessments.OrderByDescending(na => na.CompletedOn).FirstOrDefault(); }
     }
 
     public enum EvacuationFileStatus
@@ -62,6 +65,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool HaveSpecialDiet { get; set; }
         public string SpecialDietDetails { get; set; }
         public bool HaveMedication { get; set; }
+        public bool HasEnoughSupply { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
         public bool? HasPetsFood { get; set; }
@@ -80,6 +84,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string DateOfBirth { get; set; }
         public bool IsUnder19 { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
+        public string LinkedRegistrantId { get; set; }
     }
 
     public class Pet
