@@ -97,10 +97,12 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var needsAssessment = fileToUpdate.CurrentNeedsAssessment;
 
             needsAssessment.HasPetsFood = !needsAssessment.HasPetsFood;
-            foreach (var memeber in needsAssessment.HouseholdMembers)
+            foreach (var member in needsAssessment.HouseholdMembers)
             {
-                memeber.FirstName = $"{newUniqueSignature}_{memeber.FirstName}";
-                memeber.LastName = $"{newUniqueSignature}_{memeber.FirstName}";
+                string originalFirstName = member.FirstName.Substring(member.FirstName.LastIndexOf("_") + 1);
+                string originalLastName = member.LastName.Substring(member.LastName.LastIndexOf("_") + 1);
+                member.FirstName = $"{newUniqueSignature}_{originalFirstName}";
+                member.LastName = $"{newUniqueSignature}_{originalLastName}";
             }
 
             var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = fileToUpdate })).CaseId;
@@ -154,6 +156,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             needsAssessment.CanEvacueeProvideLodging.ShouldBe(originalNeedsAssessment.CanEvacueeProvideLodging);
             needsAssessment.CanEvacueeProvideTransportation.ShouldBe(originalNeedsAssessment.CanEvacueeProvideTransportation);
             needsAssessment.HaveMedication.ShouldBe(originalNeedsAssessment.HaveMedication);
+            needsAssessment.HasEnoughSupply.ShouldBe(originalNeedsAssessment.HasEnoughSupply);
             needsAssessment.HasPetsFood.ShouldBe(originalNeedsAssessment.HasPetsFood);
             needsAssessment.HaveSpecialDiet.ShouldBe(originalNeedsAssessment.HaveSpecialDiet);
             needsAssessment.SpecialDietDetails.ShouldBe(originalNeedsAssessment.SpecialDietDetails);
@@ -212,6 +215,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                     },
                     Type = NeedsAssessmentType.Preliminary,
                     HaveMedication = false,
+                    HasEnoughSupply = false,
                     Insurance = InsuranceOption.Yes,
                     HaveSpecialDiet = true,
                     SpecialDietDetails = "Shellfish allergy",
