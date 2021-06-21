@@ -25,11 +25,13 @@ using EMBC.Responders.API.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
@@ -43,6 +45,7 @@ namespace EMBC.Responders.API
 {
     public class Startup
     {
+        private const string HealthCheckReadyTag = "ready";
         private readonly IHostEnvironment env;
         private readonly IConfiguration configuration;
 
@@ -67,6 +70,7 @@ namespace EMBC.Responders.API
             AddDataProtection(services);
             AddOpenApi(services);
             AddCors(services);
+            services.AddHealthChecks().AddCheck("Responders API", () => HealthCheckResult.Healthy("API OK"), new[] { HealthCheckReadyTag });
 
             services.AddAuthentication(options =>
              {
@@ -171,6 +175,15 @@ namespace EMBC.Responders.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions()
+                {
+                    Predicate = (check) => check.Tags.Contains(HealthCheckReadyTag)
+                });
+
+                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions()
+                {
+                    Predicate = (_) => false
+                });
             });
         }
 
