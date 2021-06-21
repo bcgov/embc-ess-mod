@@ -28,9 +28,11 @@ using EMBC.ESS.Utilities.Messaging;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.Transformation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 
 namespace EMBC.ESS
@@ -55,6 +57,7 @@ namespace EMBC.ESS
                 opts.EnableDetailedErrors = true;
             });
 
+            services.AddHealthChecks().AddCheck("ESS Backend", () => HealthCheckResult.Healthy("ESS Backend OK"), new[] { "ready" });
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
 
             services
@@ -89,6 +92,15 @@ namespace EMBC.ESS
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<DispatcherService>();
+                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions()
+                {
+                    Predicate = (check) => check.Tags.Contains("ready")
+                });
+
+                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions()
+                {
+                    Predicate = (_) => false
+                });
             });
         }
     }
