@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -264,10 +265,11 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             }
 
             essContext.DetachAll();
-            var evacuationFiles = new List<EvacuationFile>();
+            var evacuationFiles = new ConcurrentBag<EvacuationFile>();
             var evacuationFilesTasks = fileIds.Distinct().Select(async id => evacuationFiles.Add(await GetEvacuationFileById(id, query.MaskSecurityPhrase)));
-            Task.WaitAll(evacuationFilesTasks.ToArray());
+            //Task.WaitAll(evacuationFilesTasks.ToArray());
             //foreach (var task in evacuationFilesTasks) await task;
+            var result = Parallel.ForEach(evacuationFilesTasks, new ParallelOptions { MaxDegreeOfParallelism = 52 }, t => t.Wait());
 
             essContext.DetachAll();
 
