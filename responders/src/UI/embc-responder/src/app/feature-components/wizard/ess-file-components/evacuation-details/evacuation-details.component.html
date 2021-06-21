@@ -174,7 +174,7 @@
                   >
                 </mat-radio-group>
 
-                <p class="responderInstruction" *ngIf="showInsuranceMsg">
+                <p class="responder-instruction bold" *ngIf="showInsuranceMsg">
                   Assist the evacuee in contacting their insurance agent to
                   confirm coverage for this event.
                 </p>
@@ -268,9 +268,9 @@
                   <mat-checkbox
                     class="checkbox-option"
                     *ngFor="let option of referredServicesOption"
-                    [value]="option.name"
-                    (change)="$event ? selectionToggle(option.name) : null"
-                    [checked]="selection.isSelected(option.name)"
+                    [value]="option.value"
+                    (change)="$event ? selectionToggle(option.value) : null"
+                    [checked]="selection.isSelected(option.value)"
                     >{{ option.name }}</mat-checkbox
                   >
                 </section>
