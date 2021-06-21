@@ -72,7 +72,6 @@ namespace EMBC.Responders.API.Services
                 })).Items
             };
 
-            //await Task.WhenAll(registrantsSearchTask, filesSearchTask);
             await Task.WhenAll(searchTasks.Select(t => t()));
 
             //check for restricted files
