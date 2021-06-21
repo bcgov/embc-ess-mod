@@ -112,8 +112,7 @@ export class WizardService {
       community:
         addressObject.city !== null
           ? addressObject.city
-          : addressObject.community,
-      city: null
+          : addressObject.community
     };
 
     return address;
