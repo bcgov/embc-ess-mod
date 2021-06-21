@@ -45,6 +45,7 @@ namespace EMBC.Responders.API
 {
     public class Startup
     {
+        private const string HealthCheckReadyTag = "ready";
         private readonly IHostEnvironment env;
         private readonly IConfiguration configuration;
 
@@ -69,7 +70,7 @@ namespace EMBC.Responders.API
             AddDataProtection(services);
             AddOpenApi(services);
             AddCors(services);
-            services.AddHealthChecks().AddCheck("API", () => HealthCheckResult.Healthy("API OK"), new[] { "ready" });
+            services.AddHealthChecks().AddCheck("Responders API", () => HealthCheckResult.Healthy("API OK"), new[] { HealthCheckReadyTag });
 
             services.AddAuthentication(options =>
              {
@@ -176,7 +177,7 @@ namespace EMBC.Responders.API
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions()
                 {
-                    Predicate = (check) => check.Tags.Contains("ready")
+                    Predicate = (check) => check.Tags.Contains(HealthCheckReadyTag)
                 });
 
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions()

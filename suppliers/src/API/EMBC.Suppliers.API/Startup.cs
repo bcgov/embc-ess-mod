@@ -46,6 +46,7 @@ namespace EMBC.Suppliers.API
 {
     public class Startup
     {
+        private const string HealthCheckReadyTag = "ready";
         private readonly IHostEnvironment env;
         private readonly IConfiguration configuration;
 
@@ -121,7 +122,7 @@ namespace EMBC.Suppliers.API
             {
                 dpBuilder.PersistKeysToFileSystem(new DirectoryInfo(keyRingPath));
             }
-            services.AddHealthChecks().AddCheck("ESS Backend", () => HealthCheckResult.Healthy("ESS Backend OK"), new[] { "ready" });
+            services.AddHealthChecks().AddCheck("Suppliers API", () => HealthCheckResult.Healthy("OK"), new[] { HealthCheckReadyTag });
 
             services.AddOpenApiDocument();
             services.Configure<OpenApiDocumentMiddlewareSettings>(options =>
@@ -203,7 +204,7 @@ namespace EMBC.Suppliers.API
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions()
                 {
-                    Predicate = (check) => check.Tags.Contains("ready")
+                    Predicate = (check) => check.Tags.Contains(HealthCheckReadyTag)
                 });
 
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions()

@@ -44,6 +44,7 @@ namespace EMBC.Registrants.API
 {
     public class Startup
     {
+        private const string HealthCheckReadyTag = "ready";
         private readonly IHostEnvironment env;
         private readonly IConfiguration configuration;
 
@@ -88,7 +89,7 @@ namespace EMBC.Registrants.API
                     policy.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(corsOrigins);
                 }
             }));
-            services.AddHealthChecks().AddCheck("API", () => HealthCheckResult.Healthy("API OK"), new[] { "ready" });
+            services.AddHealthChecks().AddCheck("Registrants API", () => HealthCheckResult.Healthy("API OK"), new[] { HealthCheckReadyTag });
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
@@ -155,7 +156,7 @@ namespace EMBC.Registrants.API
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions()
                 {
-                    Predicate = (check) => check.Tags.Contains("ready")
+                    Predicate = (check) => check.Tags.Contains(HealthCheckReadyTag)
                 });
 
                 endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions()
