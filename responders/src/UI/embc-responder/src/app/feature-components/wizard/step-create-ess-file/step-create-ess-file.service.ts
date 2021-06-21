@@ -23,6 +23,7 @@ import { StepCreateProfileService } from '../step-create-profile/step-create-pro
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { WizardService } from '../wizard.service';
+import { EvacueeSession } from 'src/app/core/services/evacuee-session';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -70,7 +71,7 @@ export class StepCreateEssFileService {
   constructor(
     private dialog: MatDialog,
     private wizardService: WizardService,
-    private cacheService: CacheService,
+    private evacueeSession: EvacueeSession,
     private stepCreateProfileService: StepCreateProfileService
   ) {}
 
@@ -373,7 +374,7 @@ export class StepCreateEssFileService {
 
     // Map out into DTO object and return
     return {
-      primaryRegistrantId: this.cacheService.get('primaryRegistrantId'),
+      primaryRegistrantId: this.evacueeSession.profileId,
 
       essFileNumber: this.paperESSFile,
       evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(

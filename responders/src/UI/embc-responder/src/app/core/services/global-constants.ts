@@ -13,12 +13,12 @@ export const needsOptions = [
   { name: "I'm not sure", value: 'Unsure', apiValue: null }
 ];
 export const referredServiceOptions = [
-  { name: 'Inquiry' },
-  { name: 'Health Services' },
-  { name: 'First Aid' },
-  { name: 'Personal Services' },
-  { name: 'Child Care' },
-  { name: 'Pet Care' }
+  { name: 'Inquiry', value: 'Inquiry' },
+  { name: 'Health Services', value: 'Health' },
+  { name: 'First Aid', value: 'FirstAid' },
+  { name: 'Personal Services', value: 'Personal' },
+  { name: 'Child Care', value: 'ChildCare' },
+  { name: 'Pet Care', value: 'PetCare' }
 ];
 export const radioButtonOptions1 = [
   { name: 'Yes', value: true },

@@ -106,9 +106,6 @@ export class WizardService {
     const address: AddressModel = {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
-      communityCode: addressObject.communityCode,
-      countryCode: addressObject.countryCode,
-      stateProvinceCode: addressObject.stateProvinceCode,
       country: addressObject.country,
       postalCode: addressObject.postalCode,
       stateProvince: addressObject.stateProvince,

@@ -262,6 +262,7 @@ export class StepCreateProfileService {
     this.restrictedAccess = profile.restriction;
     this.personalDetails = profile.personalDetails;
     this.contactDetails = profile.contactDetails;
+
     this.isBcAddress = this.checkForBCAddress(
       profile.primaryAddress.stateProvinceCode
     );
