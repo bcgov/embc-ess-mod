@@ -22,7 +22,7 @@ import { HouseholdMemberModel } from 'src/app/core/models/HouseholdMember.model'
 import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
-import { Community } from 'src/app/core/services/locations.service';
+import { WizardService } from '../wizard.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -69,6 +69,7 @@ export class StepCreateEssFileService {
 
   constructor(
     private dialog: MatDialog,
+    private wizardService: WizardService,
     private cacheService: CacheService,
     private stepCreateProfileService: StepCreateProfileService
   ) {}
@@ -375,7 +376,9 @@ export class StepCreateEssFileService {
       primaryRegistrantId: this.cacheService.get('primaryRegistrantId'),
 
       essFileNumber: this.paperESSFile,
-      evacuatedFromAddress: this.setAddressObjectForDTO(this.evacAddress),
+      evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(
+        this.evacAddress
+      ),
       registrationLocation: this.facilityName,
 
       needsAssessments: [
@@ -427,7 +430,7 @@ export class StepCreateEssFileService {
    */
   public getEvacFileDTO(essFile: EvacuationFileModel) {
     this.paperESSFile = essFile.essFileNumber;
-    this.evacAddress = this.setAddressObjectForForm(
+    this.evacAddress = this.wizardService.setAddressObjectForForm(
       essFile.evacuatedFromAddress
     );
     this.facilityName = essFile.registrationLocation;
@@ -604,61 +607,5 @@ export class StepCreateEssFileService {
     });
     const result = fields.filter((field) => !!field);
     return result.length !== 0;
-  }
-
-  /**
-   * Map an address from the wizard to an address usable by the API
-   *
-   * @param addressObject An Address as defined by the Create Profile address form
-   * @returns Address object as defined by the API
-   */
-  public setAddressObjectForDTO(addressObject: AddressModel): Address {
-    const address: Address = {
-      addressLine1: addressObject.addressLine1,
-      addressLine2: addressObject.addressLine2,
-      countryCode: addressObject.country.code,
-      communityCode:
-        (addressObject.community as Community).code === undefined
-          ? null
-          : (addressObject.community as Community).code,
-      city:
-        (addressObject.community as Community).code === undefined &&
-        typeof addressObject.community === 'string'
-          ? addressObject.community
-          : null,
-      postalCode: addressObject.postalCode,
-      stateProvinceCode:
-        addressObject.stateProvince === null
-          ? null
-          : addressObject.stateProvince.code
-    };
-
-    return address;
-  }
-
-  /**
-   * Map an address from the API to an address usable by the wizard form
-   *
-   * @param addressObject Address object as defined by the API
-   * @returns An Address as defined by the Create Profile address form
-   */
-  public setAddressObjectForForm(addressObject: AddressModel): AddressModel {
-    const address: AddressModel = {
-      addressLine1: addressObject.addressLine1,
-      addressLine2: addressObject.addressLine2,
-      communityCode: addressObject.communityCode,
-      countryCode: addressObject.countryCode,
-      stateProvinceCode: addressObject.stateProvinceCode,
-      country: addressObject.country,
-      postalCode: addressObject.postalCode,
-      stateProvince: addressObject.stateProvince,
-      community:
-        addressObject.city !== null
-          ? addressObject.city
-          : addressObject.community,
-      city: null
-    };
-
-    return address;
   }
 }

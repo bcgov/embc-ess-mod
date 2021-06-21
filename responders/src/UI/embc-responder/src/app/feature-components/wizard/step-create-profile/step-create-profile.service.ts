@@ -16,7 +16,8 @@ import { Subject } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { EvacueeSession } from 'src/app/core/services/evacuee-session';
-import { Community } from 'src/app/core/services/locations.service';
+import { LocationsService } from 'src/app/core/services/locations.service';
+import { WizardService } from '../wizard.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {
@@ -45,6 +46,7 @@ export class StepCreateProfileService {
 
   constructor(
     private dialog: MatDialog,
+    private wizardService: WizardService,
     private evacueeSession: EvacueeSession
   ) {}
 
@@ -241,8 +243,12 @@ export class StepCreateProfileService {
       restriction: this.restrictedAccess,
       personalDetails: this.personalDetails,
       contactDetails: this.contactDetails,
-      primaryAddress: this.setAddressObjectForDTO(this.primaryAddressDetails),
-      mailingAddress: this.setAddressObjectForDTO(this.mailingAddressDetails),
+      primaryAddress: this.wizardService.setAddressObjectForDTO(
+        this.primaryAddressDetails
+      ),
+      mailingAddress: this.wizardService.setAddressObjectForDTO(
+        this.mailingAddressDetails
+      ),
       securityQuestions: this.securityQuestions,
       verifiedUser: this.verifiedProfile
     };
@@ -262,10 +268,10 @@ export class StepCreateProfileService {
     this.isBcMailingAddress = this.checkForBCAddress(
       profile.mailingAddress.stateProvinceCode
     );
-    this.primaryAddressDetails = this.setAddressObjectForForm(
+    this.primaryAddressDetails = this.wizardService.setAddressObjectForForm(
       profile.primaryAddress
     );
-    this.mailingAddressDetails = this.setAddressObjectForForm(
+    this.mailingAddressDetails = this.wizardService.setAddressObjectForForm(
       profile.mailingAddress
     );
     this.isMailingAddressSameAsPrimaryAddress = this.checkForSameMailingAddress(
@@ -274,62 +280,6 @@ export class StepCreateProfileService {
 
     this.securityQuestions = profile.securityQuestions;
     this.verifiedProfile = profile.verifiedUser;
-  }
-
-  /**
-   * Map an address from the wizard to an address usable by the API
-   *
-   * @param addressObject An Address as defined by the Create Profile address form
-   * @returns Address object as defined by the API
-   */
-  public setAddressObjectForDTO(addressObject: AddressModel): Address {
-    const address: Address = {
-      addressLine1: addressObject.addressLine1,
-      addressLine2: addressObject.addressLine2,
-      countryCode: addressObject.country.code,
-      communityCode:
-        (addressObject.community as Community).code === undefined
-          ? null
-          : (addressObject.community as Community).code,
-      city:
-        (addressObject.community as Community).code === undefined &&
-        typeof addressObject.community === 'string'
-          ? addressObject.community
-          : null,
-      postalCode: addressObject.postalCode,
-      stateProvinceCode:
-        addressObject.stateProvince === null
-          ? null
-          : addressObject.stateProvince.code
-    };
-
-    return address;
-  }
-
-  /**
-   * Map an address from the API to an address usable by the wizard form
-   *
-   * @param addressObject Address object as defined by the API
-   * @returns An Address as defined by the Create Profile address form
-   */
-  public setAddressObjectForForm(addressObject: AddressModel): AddressModel {
-    const address: AddressModel = {
-      addressLine1: addressObject.addressLine1,
-      addressLine2: addressObject.addressLine2,
-      communityCode: addressObject.communityCode,
-      countryCode: addressObject.countryCode,
-      stateProvinceCode: addressObject.stateProvinceCode,
-      country: addressObject.country,
-      postalCode: addressObject.postalCode,
-      stateProvince: addressObject.stateProvince,
-      community:
-        addressObject.city !== null
-          ? addressObject.city
-          : addressObject.community,
-      city: null
-    };
-
-    return address;
   }
 
   /**
