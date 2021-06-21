@@ -90,6 +90,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     }
                 },
                 HaveMedication = false,
+                HasEnoughSupply = false,
                 Insurance = InsuranceOption.Yes,
                 HaveSpecialDiet = true,
                 SpecialDietDetails = "Gluten Free",
@@ -345,9 +346,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVerifySecurityPhrase()
         {
-            var fileId = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last().Id;
-
-            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "SecretPhrase" });
+            //var fileId = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last().Id;
+            var fileId = "PAP2354234";
+            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "My New Security Phrase" });
             response.IsCorrect.ShouldBeTrue();
         }
 
@@ -385,6 +386,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     {
                         Type = NeedsAssessmentType.Preliminary,
                         HaveMedication = false,
+                        HasEnoughSupply = false,
                         Insurance = InsuranceOption.Yes,
                         HaveSpecialDiet = true,
                         SpecialDietDetails = "Shellfish allergy",
