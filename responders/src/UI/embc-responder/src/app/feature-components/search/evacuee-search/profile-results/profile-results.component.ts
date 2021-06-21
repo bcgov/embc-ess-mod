@@ -12,7 +12,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { RegistrantProfileSearchResult } from 'src/app/core/api/models';
+import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
+import { Community } from 'src/app/core/services/locations.service';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 @Component({
@@ -58,5 +61,9 @@ export class ProfileResultsComponent
       this.evacueeSearchService.profileId = selectedRegistrant.id;
       this.router.navigate(['responder-access/search/security-questions']);
     }
+  }
+
+  communityName(address: AddressModel): string {
+    return (address.community as Community).name;
   }
 }

@@ -44,8 +44,6 @@ button.save {
 }
 
 .wizard-panel {
-	h2 { font-size: 1.4em; }
-	
 	padding: 20px;
 	margin: 8px 0;
 
@@ -60,8 +58,6 @@ button.save {
 
 .review-panel {
 	@extend .wizard-panel;
-
-	h2 { color: #234075; }
 
 	background-color: #f2f2f2;
 }

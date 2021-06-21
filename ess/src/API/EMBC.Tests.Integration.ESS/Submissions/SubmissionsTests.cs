@@ -204,16 +204,19 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             var country = "CAN";
             var province = "BC";
-            var city = "226adfaf-9f97-ea11-b813-005056830319";
+            var community = "226adfaf-9f97-ea11-b813-005056830319";
+            string city = null;
 
             baseRegistrant.Id = null;
             baseRegistrant.UserId = newProfileBceId;
             baseRegistrant.PrimaryAddress.Country = country;
             baseRegistrant.PrimaryAddress.StateProvince = province;
-            baseRegistrant.PrimaryAddress.Community = city;
+            baseRegistrant.PrimaryAddress.Community = community;
+            baseRegistrant.PrimaryAddress.City = city;
             baseRegistrant.MailingAddress.Country = country;
             baseRegistrant.MailingAddress.StateProvince = province;
-            baseRegistrant.MailingAddress.Community = city;
+            baseRegistrant.MailingAddress.Community = community;
+            baseRegistrant.MailingAddress.City = city;
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
 
@@ -223,11 +226,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             newRegistrant.Id.ShouldNotBe(baseRegistrant.Id);
             newRegistrant.PrimaryAddress.Country.ShouldBe(country);
             newRegistrant.PrimaryAddress.StateProvince.ShouldBe(province);
-            newRegistrant.PrimaryAddress.Community.ShouldBe(city);
+            newRegistrant.PrimaryAddress.Community.ShouldBe(community);
+            newRegistrant.PrimaryAddress.City.ShouldBe(city);
 
             newRegistrant.MailingAddress.Country.ShouldBe(country);
             newRegistrant.MailingAddress.StateProvince.ShouldBe(province);
-            newRegistrant.MailingAddress.Community.ShouldBe(city);
+            newRegistrant.MailingAddress.Community.ShouldBe(community);
+            newRegistrant.MailingAddress.City.ShouldBe(city);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -249,14 +254,22 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateProfile()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
-            var currentCity = registrant.PrimaryAddress.Community;
-            var newCity = currentCity == "406adfaf-9f97-ea11-b813-005056830319"
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile; 
+            var currentCommunity = registrant.PrimaryAddress.Community;
+            var newCommunity = currentCommunity == "406adfaf-9f97-ea11-b813-005056830319"
                 ? "226adfaf-9f97-ea11-b813-005056830319"
                 : "406adfaf-9f97-ea11-b813-005056830319";
+            newCommunity = null;
+
+            var currentCity = registrant.PrimaryAddress.City;
+            var newCity = currentCity == "Vancouver"
+                ? "Burnaby"
+                : "Vancouver";
+            //newCity = null;
 
             registrant.Email = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
-            registrant.PrimaryAddress.Community = newCity;
+            registrant.PrimaryAddress.Community = newCommunity;
+            registrant.PrimaryAddress.City = newCity;
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
@@ -264,7 +277,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
             updatedRegistrant.Email.ShouldBe(registrant.Email);
-            updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCity);
+            updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
+            updatedRegistrant.PrimaryAddress.City.ShouldBe(newCity);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -276,10 +290,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             registrant.PrimaryAddress.Country.ShouldNotBeNull().ShouldNotBeNull();
             registrant.PrimaryAddress.Country.ShouldNotBeNull();
-            registrant.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldNotBeNull();
-            registrant.PrimaryAddress.StateProvince.ShouldNotBeNull();
-            registrant.PrimaryAddress.Community.ShouldNotBeNull().ShouldNotBeNull();
-            registrant.PrimaryAddress.Community.ShouldNotBeNull();
 
             var registrants = (await GetRegistrantsByName("Elvis", "Presley")).Select(r => r.RegistrantProfile);
 

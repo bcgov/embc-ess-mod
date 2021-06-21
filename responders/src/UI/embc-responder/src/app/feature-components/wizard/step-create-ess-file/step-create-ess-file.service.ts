@@ -1,20 +1,28 @@
 import { Injectable } from '@angular/core';
-import {
-  HouseholdMember,
-  InsuranceOption,
-  NeedsAssessment,
-  Pet
-} from 'src/app/core/models/evacuation-file';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import * as globalConst from '../../../core/services/global-constants';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { Subject } from 'rxjs';
-import { Address, PersonDetails } from 'src/app/core/api/models';
+import {
+  Address,
+  EvacuationFile,
+  EvacuationFileHouseholdMember,
+  HouseholdMemberType,
+  InsuranceOption,
+  NoteType,
+  PersonDetails,
+  Pet,
+  ReferralServices
+} from 'src/app/core/api/models';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
+import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
+import { CacheService } from 'src/app/core/services/cache.service';
+import { InformationDialogExitWizardComponent } from 'src/app/shared/components/dialog-components/information-dialog-exit-wizard/information-dialog-exit-wizard.component';
+import { Community } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -27,11 +35,12 @@ export class StepCreateEssFileService {
   private evacAddressVal: AddressModel;
   private facilityNameVal: string;
   private insuranceVal: InsuranceOption;
-  private householdAffectedVal: string;
-  private emergencySupportServicesVal: string;
+
+  private evacuationImpactVal: string;
+  private householdRecoveryPlanVal: string;
   private referredServicesVal: boolean;
-  private referredServiceDetailsVal: string[];
-  private externalServicesVal: string;
+  private referredServiceDetailsVal: ReferralServices[];
+  private evacuationExternalReferralsVal: string;
 
   private bypassPhraseVal: boolean;
   private securityPhraseVal: string;
@@ -39,6 +48,7 @@ export class StepCreateEssFileService {
   private haveHouseholdMembersVal: boolean;
   private householdMembersVal: HouseholdMemberModel[];
   private addMemberIndicatorVal: boolean;
+
   private haveSpecialDietVal: boolean;
   private specialDietDetailsVal: string;
   private haveMedicationVal: boolean;
@@ -47,8 +57,9 @@ export class StepCreateEssFileService {
   private havePetsVal: boolean;
   private petsListVal: Pet[];
   private addPetIndicatorVal: boolean;
+
   private havePetsFoodVal: boolean;
-  private petCareDetailsVal: string;
+  private petCarePlansVal: string;
 
   private canRegistrantProvideClothingVal: string;
   private canRegistrantProvideFoodVal: string;
@@ -56,7 +67,11 @@ export class StepCreateEssFileService {
   private canRegistrantProvideLodgingVal: string;
   private canRegistrantProvideTransportationVal: string;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    private cacheService: CacheService,
+    private stepCreateProfileService: StepCreateProfileService
+  ) {}
 
   // Contact Details Getters and Setters
 
@@ -95,18 +110,18 @@ export class StepCreateEssFileService {
     this.insuranceVal = insuranceVal;
   }
 
-  public get householdAffected(): string {
-    return this.householdAffectedVal;
+  public get evacuationImpact(): string {
+    return this.evacuationImpactVal;
   }
-  public set householdAffected(householdAffectedVal: string) {
-    this.householdAffectedVal = householdAffectedVal;
+  public set evacuationImpact(evacuationImpactVal: string) {
+    this.evacuationImpactVal = evacuationImpactVal;
   }
 
-  public get emergencySupportServices(): string {
-    return this.emergencySupportServicesVal;
+  public get householdRecoveryPlan(): string {
+    return this.householdRecoveryPlanVal;
   }
-  public set emergencySupportServices(emergencySupportServicesVal: string) {
-    this.emergencySupportServicesVal = emergencySupportServicesVal;
+  public set householdRecoveryPlan(householdRecoveryPlanVal: string) {
+    this.householdRecoveryPlanVal = householdRecoveryPlanVal;
   }
 
   public get referredServices(): boolean {
@@ -116,18 +131,22 @@ export class StepCreateEssFileService {
     this.referredServicesVal = referredServicesVal;
   }
 
-  public get referredServiceDetails(): string[] {
+  public get referredServiceDetails(): ReferralServices[] {
     return this.referredServiceDetailsVal;
   }
-  public set referredServiceDetails(referredServiceDetailsVal: string[]) {
+  public set referredServiceDetails(
+    referredServiceDetailsVal: ReferralServices[]
+  ) {
     this.referredServiceDetailsVal = referredServiceDetailsVal;
   }
 
-  public get externalServices(): string {
-    return this.externalServicesVal;
+  public get evacuationExternalReferrals(): string {
+    return this.evacuationExternalReferralsVal;
   }
-  public set externalServices(externalServicesVal: string) {
-    this.externalServicesVal = externalServicesVal;
+  public set evacuationExternalReferrals(
+    evacuationExternalReferralsVal: string
+  ) {
+    this.evacuationExternalReferralsVal = evacuationExternalReferralsVal;
   }
 
   // Household Members Getter and Setters
@@ -211,11 +230,11 @@ export class StepCreateEssFileService {
     this.havePetsFoodVal = havePetsFoodVal;
   }
 
-  public get petCareDetails(): string {
-    return this.petCareDetailsVal;
+  public get petCarePlans(): string {
+    return this.petCarePlansVal;
   }
-  public set petCareDetails(petCareDetailsVal: string) {
-    this.petCareDetailsVal = petCareDetailsVal;
+  public set petCarePlans(petCarePlansVal: string) {
+    this.petCarePlansVal = petCarePlansVal;
   }
 
   // Needs Assessment Getters and Setters
@@ -308,43 +327,98 @@ export class StepCreateEssFileService {
   }
 
   /**
-   * Generates a needsAssessment DTO to be sent to the API
+   * Convert Create ESS File form data into object that can be submitted to the API
    *
-   * @returns NeedsAssessment DTO
+   * @returns Evacuation File record usable by the API
    */
-  public createNeedsAssessmentDTO(): NeedsAssessment {
-    // console.log({
-    //   paperESSFile: this.paperESSFile,
-    //   facilityName: this.facilityName,
-    //   insurance: this.insurance,
-    //   householdAffected: this.householdAffected,
-    //   emergencySupportServices: this.emergencySupportServices,
-    //   referredServices: this.referredServices,
-    //   referredServiceDetails: this.referredServiceDetails,
-    //   externalServices: this.externalServices,
-    //   evacAddress: this.setAddressObject(this.evacAddress),
+  public createEvacFileDTO(): EvacuationFile {
+    // Get correct API values for Needs Assessment selections
+    const needsClothingDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canRegistrantProvideClothing
+    )?.apiValue;
 
-    //   haveHouseHoldMembers: this.hasHouseHoldMembers,
-    //   householdMembers:
-    //     this.householdMembers.length > 0
-    //       ? this.setHouseHoldMembersObject(this.householdMembers)
-    //       : [],
-    //   haveMedication: this.haveMedication,
-    //   haveSpecialDiet: this.haveSpecialDiet,
-    //   specialDietDetails: this.specialDietDetails,
-    //   medicationSuppply: this.medicationSupply
-    // });
+    const needsFoodDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canRegistrantProvideFood
+    )?.apiValue;
 
+    const needsIncidentalsDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canRegistrantProvideIncidentals
+    )?.apiValue;
+
+    const needsLodgingDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canRegistrantProvideLodging
+    )?.apiValue;
+
+    const needsTransportationDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canRegistrantProvideTransportation
+    )?.apiValue;
+
+    // Create new HouseholdMembers array that includes primary registrant, set member types
+    this.householdMembers.forEach(
+      (mem) => (mem.type = HouseholdMemberType.HouseholdMember)
+    );
+
+    const allMembers: EvacuationFileHouseholdMember[] = [
+      {
+        dateOfBirth: this.stepCreateProfileService.personalDetails.dateOfBirth,
+        firstName: this.stepCreateProfileService.personalDetails.firstName,
+        lastName: this.stepCreateProfileService.personalDetails.lastName,
+        gender: this.stepCreateProfileService.personalDetails.gender,
+        initials: this.stepCreateProfileService.personalDetails.initials,
+        type: HouseholdMemberType.MainApplicant
+      },
+      ...this.householdMembers
+    ];
+
+    // Map out into DTO object and return
     return {
-      paperESSFile: this.paperESSFileVal,
-      facilityName: this.facilityNameVal,
-      insurance: this.insuranceVal,
-      householdAffected: this.householdAffectedVal,
-      emergencySupportServices: this.emergencySupportServicesVal,
-      referredServices: this.referredServicesVal,
-      referredServiceDetails: this.referredServiceDetailsVal,
-      externalServices: this.externalServicesVal,
-      securityPhrase: this.securityPhrase
+      primaryRegistrantId: this.cacheService.get('primaryRegistrantId'),
+
+      essFileNumber: this.paperESSFile,
+      evacuatedFromAddress: this.evacAddress,
+      registrationLocation: this.facilityName,
+
+      needsAssessments: [
+        {
+          notes: [
+            {
+              type: NoteType.EvacuationImpact,
+              content: this.evacuationImpact
+            },
+            {
+              type: NoteType.HouseHoldRecoveryPlan,
+              content: this.householdRecoveryPlan
+            },
+            {
+              type: NoteType.EvacuationExternalReferrals,
+              content: this.evacuationExternalReferrals
+            },
+            {
+              type: NoteType.PetCarePlans,
+              content: this.petCarePlans
+            }
+          ],
+
+          insurance: this.insurance,
+          recommendedReferralServices: this.referredServiceDetails,
+
+          householdMembers: allMembers,
+          haveSpecialDiet: this.haveSpecialDiet,
+          specialDietDetails: this.specialDietDetails,
+          haveMedication: this.haveMedication,
+
+          pets: this.petsList,
+          hasPetsFood: this.havePetsFood,
+
+          canEvacueeProvideFood: needsFoodDTO,
+          canEvacueeProvideLodging: needsLodgingDTO,
+          canEvacueeProvideClothing: needsClothingDTO,
+          canEvacueeProvideTransportation: needsTransportationDTO,
+          canEvacueeProvideIncidentals: needsIncidentalsDTO
+        }
+      ],
+      securityPhrase: this.securityPhrase,
+      securityPhraseEdited: !this.bypassPhrase
     };
   }
 
@@ -389,8 +463,8 @@ export class StepCreateEssFileService {
    *
    * @param text text to display
    */
-  openModal(text: string, title?: string): void {
-    this.dialog.open(DialogComponent, {
+  openModal(text: string, title?: string): MatDialogRef<DialogComponent, any> {
+    const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
         text,
@@ -398,6 +472,31 @@ export class StepCreateEssFileService {
       },
       width: '530px'
     });
+
+    return thisModal;
+  }
+
+  /**
+   * Open information modal window
+   *
+   * @param text text to display
+   */
+  openModalWithExit(
+    text: string,
+    title?: string,
+    button?: string
+  ): MatDialogRef<DialogComponent, any> {
+    const thisModal = this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogExitWizardComponent,
+        text,
+        title,
+        button
+      },
+      width: '530px'
+    });
+
+    return thisModal;
   }
 
   /**
@@ -443,9 +542,9 @@ export class StepCreateEssFileService {
       addressLine2: addressObject.addressLine2,
       countryCode: addressObject.country.code,
       communityCode:
-        addressObject.community.code === undefined
+        (addressObject.community as Community).code === undefined
           ? null
-          : addressObject.community.code,
+          : (addressObject.community as Community).code,
       postalCode: addressObject.postalCode,
       stateProvinceCode:
         addressObject.stateProvince === null
@@ -454,35 +553,5 @@ export class StepCreateEssFileService {
     };
 
     return address;
-  }
-
-  /**
-   * Transforms a HouseholdMember Object into a Household Member Object
-   *
-   * @param householdMembers
-   * @returns
-   */
-  private setHouseHoldMembersObject(
-    householdMembers: HouseholdMemberModel[]
-  ): HouseholdMember[] {
-    const houseHoldMembersAPI: HouseholdMember[] = [];
-
-    for (const member of householdMembers) {
-      const details: PersonDetails = {
-        firstName: member.firstName,
-        lastName: member.lastName,
-        initials: member.initials,
-        dateOfBirth: member.dateOfBirth,
-        gender: member.gender
-      };
-
-      const householdMember: HouseholdMember = {
-        details
-      };
-
-      houseHoldMembersAPI.push(householdMember);
-    }
-
-    return houseHoldMembersAPI;
   }
 }

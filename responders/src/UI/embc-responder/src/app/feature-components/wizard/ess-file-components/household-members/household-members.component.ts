@@ -15,6 +15,7 @@ import { StepCreateEssFileService } from '../../step-create-ess-file/step-create
 import { Router } from '@angular/router';
 import { YesNoDialogComponent } from 'src/app/shared/components/dialog-components/yes-no-dialog/yes-no-dialog.component';
 import { HouseholdMembersService } from './household-members.service';
+import { HouseholdMemberType } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-household-members',
@@ -138,6 +139,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.data[this.editIndex] = this.householdForm.get(
           'houseHoldMember'
         ).value;
+
         this.rowEdit = !this.rowEdit;
         this.editIndex = undefined;
       } else {

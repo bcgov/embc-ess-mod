@@ -153,6 +153,7 @@
                 <mat-radio-group
                   formControlName="insurance"
                   class="options-group"
+                  (change)="insuranceChange($event)"
                   required
                 >
                   <mat-radio-button
@@ -172,6 +173,11 @@
                     Insurance is required</mat-error
                   >
                 </mat-radio-group>
+
+                <p class="responderInstruction" *ngIf="showInsuranceMsg">
+                  Assist the evacuee in contacting their insurance agent to
+                  confirm coverage for this event.
+                </p>
               </div>
 
               <div class="col-12">

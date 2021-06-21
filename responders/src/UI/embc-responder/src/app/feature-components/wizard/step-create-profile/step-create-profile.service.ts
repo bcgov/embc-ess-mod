@@ -14,6 +14,9 @@ import {
 } from 'src/app/core/api/models';
 import { Subject } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/address.model';
+import { EvacueeProfile } from 'src/app/core/models/evacuee-profile';
+import { EvacueeSession } from 'src/app/core/services/evacuee-session';
+import { Community } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {
@@ -21,8 +24,6 @@ export class StepCreateProfileService {
     WizardTabModelValues.evacueeProfileTabs;
 
   private setNextTabUpdate: Subject<void> = new Subject();
-
-  private regIdVal: string;
 
   private restricted: boolean;
   private personalDetail: PersonDetails;
@@ -32,9 +33,9 @@ export class StepCreateProfileService {
 
   private primaryAddressDetail: AddressModel;
   private mailingAddressDetail: AddressModel;
-  private isBcAddresS: boolean;
-  private isBcMailingAddresS: boolean;
-  private isMailingAddressSameAsPrimaryAddresS: boolean;
+  private isBcAddressVal: string;
+  private isBcMailingAddressVal: string;
+  private isMailingAddressSameAsPrimaryAddressVal: string;
 
   private bypassQuestions: boolean;
   private securityQuestion: SecurityQuestion[];
@@ -42,14 +43,10 @@ export class StepCreateProfileService {
 
   private verified: boolean;
 
-  constructor(private dialog: MatDialog) {}
-
-  public get registrantId(): string {
-    return this.regIdVal;
-  }
-  public set registrantId(regIdVal: string) {
-    this.regIdVal = regIdVal;
-  }
+  constructor(
+    private dialog: MatDialog,
+    private evacueeSession: EvacueeSession
+  ) {}
 
   public get showContact(): boolean {
     return this.showContacts;
@@ -65,27 +62,27 @@ export class StepCreateProfileService {
     this.confirmEmails = value;
   }
 
-  public get isMailingAddressSameAsPrimaryAddress(): boolean {
-    return this.isMailingAddressSameAsPrimaryAddresS;
+  public get isMailingAddressSameAsPrimaryAddress(): string {
+    return this.isMailingAddressSameAsPrimaryAddressVal;
   }
   public set isMailingAddressSameAsPrimaryAddress(
-    isMailingAddressSameAsPrimaryAddresS: boolean
+    isMailingAddressSameAsPrimaryAddressVal: string
   ) {
-    this.isMailingAddressSameAsPrimaryAddresS = isMailingAddressSameAsPrimaryAddresS;
+    this.isMailingAddressSameAsPrimaryAddressVal = isMailingAddressSameAsPrimaryAddressVal;
   }
 
-  public get isBcMailingAddress(): boolean {
-    return this.isBcMailingAddresS;
+  public get isBcMailingAddress(): string {
+    return this.isBcMailingAddressVal;
   }
-  public set isBcMailingAddress(isBcMailingAddresS: boolean) {
-    this.isBcMailingAddresS = isBcMailingAddresS;
+  public set isBcMailingAddress(isBcMailingAddressVal: string) {
+    this.isBcMailingAddressVal = isBcMailingAddressVal;
   }
 
-  public get isBcAddress(): boolean {
-    return this.isBcAddresS;
+  public get isBcAddress(): string {
+    return this.isBcAddressVal;
   }
-  public set isBcAddress(isBcAddresS: boolean) {
-    this.isBcAddresS = isBcAddresS;
+  public set isBcAddress(isBcAddressVal: string) {
+    this.isBcAddressVal = isBcAddressVal;
   }
 
   public get restrictedAccess(): boolean {
@@ -216,12 +213,17 @@ export class StepCreateProfileService {
    *
    * @param text text to display
    */
-  openModal(text: string, title?: string): MatDialogRef<DialogComponent, any> {
+  openModal(
+    text: string,
+    title?: string,
+    button?: string
+  ): MatDialogRef<DialogComponent, any> {
     const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
         text,
-        title
+        title,
+        button
       },
       width: '530px'
     });
@@ -249,21 +251,26 @@ export class StepCreateProfileService {
   /**
    * Update the wizard's values with ones fetched from API
    */
-  public getProfileDTO(regId: string, profile: RegistrantProfile) {
-    this.registrantId = regId;
-
+  public getProfileDTO(profile: EvacueeProfile) {
+    this.evacueeSession.profileId = profile.id;
     this.restrictedAccess = profile.restriction;
     this.personalDetails = profile.personalDetails;
     this.contactDetails = profile.contactDetails;
-
+    this.isBcAddress = this.checkForBCAddress(
+      profile.primaryAddress.stateProvinceCode
+    );
+    this.isBcMailingAddress = this.checkForBCAddress(
+      profile.mailingAddress.stateProvinceCode
+    );
     this.primaryAddressDetails = this.setAddressObjectForForm(
       profile.primaryAddress
     );
     this.mailingAddressDetails = this.setAddressObjectForForm(
       profile.mailingAddress
     );
-    this.isMailingAddressSameAsPrimaryAddress =
-      profile.isMailingAddressSameAsPrimaryAddress;
+    this.isMailingAddressSameAsPrimaryAddress = this.checkForSameMailingAddress(
+      profile.isMailingAddressSameAsPrimaryAddress
+    );
 
     this.securityQuestions = profile.securityQuestions;
     this.verifiedProfile = profile.verifiedUser;
@@ -281,9 +288,14 @@ export class StepCreateProfileService {
       addressLine2: addressObject.addressLine2,
       countryCode: addressObject.country.code,
       communityCode:
-        addressObject.community.code === undefined
+        (addressObject.community as Community).code === undefined
           ? null
-          : addressObject.community.code,
+          : (addressObject.community as Community).code,
+      city:
+        (addressObject.community as Community).code === undefined &&
+        typeof addressObject.community === 'string'
+          ? addressObject.community
+          : null,
       postalCode: addressObject.postalCode,
       stateProvinceCode:
         addressObject.stateProvince === null
@@ -300,20 +312,21 @@ export class StepCreateProfileService {
    * @param addressObject Address object as defined by the API
    * @returns An Address as defined by the Create Profile address form
    */
-  public setAddressObjectForForm(addressObject: Address): AddressModel {
+  public setAddressObjectForForm(addressObject: AddressModel): AddressModel {
     const address: AddressModel = {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
-      country: {
-        code: addressObject.countryCode
-      },
-      community: {
-        code: addressObject.communityCode
-      },
+      communityCode: addressObject.communityCode,
+      countryCode: addressObject.countryCode,
+      stateProvinceCode: addressObject.stateProvinceCode,
+      country: addressObject.country,
       postalCode: addressObject.postalCode,
-      stateProvince: {
-        code: addressObject.stateProvinceCode
-      }
+      stateProvince: addressObject.stateProvince,
+      community:
+        addressObject.city !== null
+          ? addressObject.city
+          : addressObject.community,
+      city: null
     };
 
     return address;
@@ -345,5 +358,15 @@ export class StepCreateProfileService {
 
     const result = fields.filter((field) => !!field);
     return result.length !== 0;
+  }
+
+  private checkForSameMailingAddress(
+    isMailingAddressSameAsPrimaryAddress: boolean
+  ): string {
+    return isMailingAddressSameAsPrimaryAddress === true ? 'Yes' : 'No';
+  }
+
+  private checkForBCAddress(province: null | string): string {
+    return province !== null && province === 'BC' ? 'Yes' : 'No';
   }
 }

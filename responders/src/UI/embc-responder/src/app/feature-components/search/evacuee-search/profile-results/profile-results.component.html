@@ -47,7 +47,10 @@
             <p class="p-custom">
               <b>{{ registrantResult?.primaryAddress?.addressLine1 }}</b>
             </p>
-            <p class="p-custom">
+            <p
+              *ngIf="registrantResult?.primaryAddress?.addressLine2 !== null"
+              class="p-custom"
+            >
               <b>{{ registrantResult?.primaryAddress?.addressLine2 }},</b>
             </p>
             <p class="p-custom">
@@ -59,9 +62,7 @@
                   *ngIf="
                     registrantResult?.primaryAddress?.communityCode !== null
                   "
-                  >{{
-                    registrantResult?.primaryAddress?.community?.name
-                  }},</span
+                  >{{ communityName(registrantResult?.primaryAddress) }},</span
                 >
                 {{ registrantResult?.primaryAddress?.stateProvinceCode }},
                 {{ registrantResult?.primaryAddress?.postalCode }}</b

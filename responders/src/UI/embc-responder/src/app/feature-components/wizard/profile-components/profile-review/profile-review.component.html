@@ -102,11 +102,7 @@
             <div class="row">
               <div class="col-4">City</div>
               <div class="col-8 bold">
-                {{
-                  stepCreateProfileService?.primaryAddressDetails?.community
-                    ?.name ||
-                    stepCreateProfileService?.primaryAddressDetails?.community
-                }}
+                {{ primaryCommunity }}
               </div>
             </div>
 
@@ -169,11 +165,7 @@
             <div class="row">
               <div class="col-4">City</div>
               <div class="col-8 bold">
-                {{
-                  stepCreateProfileService?.mailingAddressDetails?.community
-                    ?.name ||
-                    stepCreateProfileService?.mailingAddressDetails?.community
-                }}
+                {{ mailingCommunity }}
               </div>
             </div>
 
@@ -231,14 +223,14 @@
             <div class="row" *ngIf="stepCreateProfileService?.showContact">
               <div class="col-4">Telephone/Mobile</div>
               <div class="col-8 bold">
-                {{ stepCreateProfileService?.contactDetails?.email }}
+                {{ stepCreateProfileService?.contactDetails?.phone }}
               </div>
             </div>
 
             <div class="row" *ngIf="stepCreateProfileService?.showContact">
               <div class="col-4">Email Address</div>
               <div class="col-8 bold">
-                {{ stepCreateProfileService?.contactDetails?.phone }}
+                {{ stepCreateProfileService?.contactDetails?.email }}
               </div>
             </div>
           </div>
