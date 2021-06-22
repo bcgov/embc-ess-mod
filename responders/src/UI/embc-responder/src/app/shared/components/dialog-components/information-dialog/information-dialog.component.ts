@@ -1,28 +1,20 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-information-dialog',
   templateUrl: './information-dialog.component.html',
   styleUrls: ['./information-dialog.component.scss']
 })
-export class InformationDialogComponent implements OnInit {
+export class InformationDialogComponent {
+  @Input() content: DialogContent;
   @Output() outputEvent = new EventEmitter<string>();
-  @Input() inputEvent: {
-    text: string;
-    title?: string;
-    button?: string;
-    exitLink?: string;
-  };
 
-  constructor() {}
-
-  ngOnInit(): void {}
-
-  close(): void {
-    this.outputEvent.emit('close');
+  cancel(): void {
+    this.outputEvent.emit('cancel');
   }
 
-  exit(): void {
-    this.outputEvent.emit('exit');
+  confirm(): void {
+    this.outputEvent.emit('confirm');
   }
 }

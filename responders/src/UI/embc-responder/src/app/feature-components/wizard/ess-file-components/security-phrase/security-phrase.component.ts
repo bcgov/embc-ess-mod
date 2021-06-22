@@ -92,8 +92,8 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
 
     if (this.stepCreateEssFileService.checkTabsStatus()) {
       this.stepCreateEssFileService.openModal(
-        globalConst.wizardESSFileMessage.text,
-        globalConst.wizardESSFileMessage.title
+        globalConst.wizardESSFileMessage,
+        'Complete all steps'
       );
     } else {
       this.router.navigate(['/ess-wizard/create-ess-file/review']);

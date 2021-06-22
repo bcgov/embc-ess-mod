@@ -1,10 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import {
-  SecurityQuestion,
-  SecurityAnswer
-} from '../profile-security-questions.component';
 import { Output, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { SecurityQuestion } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-security-question-card',
@@ -13,18 +10,33 @@ import { Output, EventEmitter } from '@angular/core';
 })
 export class SecurityQuestionCardComponent implements OnInit {
   @Input() question: SecurityQuestion;
-  @Output() questionEvent = new EventEmitter<SecurityAnswer>();
+  @Output() questionEvent = new EventEmitter<SecurityQuestion>();
 
-  constructor() {}
+  securityQuestionForm: FormGroup;
 
-  ngOnInit(): void {}
+  constructor(private formBuilder: FormBuilder) {}
 
-  sendAnswer($event): void {
-    const securityAnswer: SecurityAnswer = {
+  ngOnInit(): void {
+    this.createAnswerForm();
+    this.securityQuestionForm.valueChanges.subscribe((value) => {
+      console.log('In value changes');
+      console.log(value);
+    });
+  }
+
+  sendAnswer(): void {
+    const securityAQuestion: SecurityQuestion = {
       question: this.question.question,
-      answer: $event.target.value
+      answer: this.securityQuestionForm.get('answer').value,
+      answerChanged: false,
+      id: this.question.id
     };
+    this.questionEvent.emit(securityAQuestion);
+  }
 
-    this.questionEvent.emit(securityAnswer);
+  private createAnswerForm(): void {
+    this.securityQuestionForm = this.formBuilder.group({
+      answer: ['']
+    });
   }
 }

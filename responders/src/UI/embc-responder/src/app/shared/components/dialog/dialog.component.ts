@@ -10,6 +10,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-dialog',
@@ -30,10 +31,10 @@ export class DialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.data);
     const factory = this.resolver.resolveComponentFactory(this.data.component);
     this.componentRef = this.vcRef.createComponent(factory);
-
-    this.componentRef.instance.inputEvent = this.data;
+    this.componentRef.instance.content = this.data.content;
 
     this.componentRef.instance.outputEvent.subscribe((value) => {
       this.buttonAction(value);

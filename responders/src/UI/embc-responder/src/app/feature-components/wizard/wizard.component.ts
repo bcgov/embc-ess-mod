@@ -3,13 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { ExitWizardDialogComponent } from 'src/app/shared/components/dialog-components/exit-wizard-dialog/exit-wizard-dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { WizardService } from './wizard.service';
 import { Subscription } from 'rxjs';
-
 import * as globalConst from '../../core/services/global-constants';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-wizard',
@@ -76,7 +75,6 @@ export class WizardComponent implements OnInit, OnDestroy {
       $event.preventDefault();
 
       const curStep = this.wizardService.getCurrentStep(this.router.url);
-      console.log(curStep);
 
       const lockedMsg =
         this.wizardService.menuItems[curStep]?.incompleteMsg ||
@@ -103,14 +101,15 @@ export class WizardComponent implements OnInit, OnDestroy {
     this.dialog
       .open(DialogComponent, {
         data: {
-          component: ExitWizardDialogComponent
+          component: InformationDialogComponent,
+          content: globalConst.exitWizardDialog
         },
         height: '270px',
         width: '530px'
       })
       .afterClosed()
       .subscribe((event) => {
-        if (event === 'exit') {
+        if (event === 'confirm') {
           this.router.navigate([navigateTo]);
         }
       });
@@ -122,11 +121,11 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param text message to display
    */
-  openLockedModal(text: string, title?: string) {
+  openLockedModal(content: DialogContent, title?: string) {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text,
+        content,
         title
       },
       width: '530px'
