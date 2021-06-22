@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
+@use '~@angular/material' as mat;
 @import './fonts';
 $bcgov-font-path: '~@bcgov/bootstrap-theme/dist/fonts/';
 @import '~@bcgov/bootstrap-theme/dist/scss/bootstrap-theme';
@@ -24,12 +25,12 @@ $bcgov-font-path: '~@bcgov/bootstrap-theme/dist/fonts/';
       format('truetype'); /* Safari, Android, iOS */
 }
 
-$custom-typography: mat-typography-config(
+$custom-typography: mat.define-typography-config(
   $font-family: $font-family-sans-serif,
-  $body-1: mat-typography-level(15px, 1.6, 400)
+  $body-1: mat.define-typography-level(15px, 1.6, 400)
 );
 
-@include angular-material-typography($custom-typography);
+@include mat.all-component-typographies($custom-typography);
 
 main {
   padding-bottom: 0px !important;
