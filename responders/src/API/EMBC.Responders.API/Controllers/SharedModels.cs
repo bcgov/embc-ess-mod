@@ -60,9 +60,5 @@ namespace EMBC.Responders.API.Controllers
 
         [Phone]
         public string Phone { get; set; }
-
-        public bool HidePhoneRequired { get; set; }
-
-        public bool HideEmailRequired { get; set; }
     }
 }
