@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum HouseholdMemberType {
-  MainApplicant = 'MainApplicant',
+  Registrant = 'Registrant',
   HouseholdMember = 'HouseholdMember'
 }

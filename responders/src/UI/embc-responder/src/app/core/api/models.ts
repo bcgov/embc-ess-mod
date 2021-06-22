@@ -27,6 +27,7 @@ export { NoteType } from './models/note-type';
 export { ReferralServices } from './models/referral-services';
 export { Pet } from './models/pet';
 export { NeedsAssessmentType } from './models/needs-assessment-type';
+export { EvacuationFileTask } from './models/evacuation-file-task';
 export { GetSecurityPhraseResponse } from './models/get-security-phrase-response';
 export { VerifySecurityPhraseResponse } from './models/verify-security-phrase-response';
 export { VerifySecurityPhraseRequest } from './models/verify-security-phrase-request';
