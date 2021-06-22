@@ -1,11 +1,12 @@
 import * as globalConst from '../../core/services/global-constants';
+import { DialogContent } from './dialog-content.model';
 
 export class WizardSidenavModel {
   step: string;
   title: string;
   route: string;
   isLocked: boolean;
-  incompleteMsg?: string;
+  incompleteMsg?: DialogContent;
   img: SidenavStepImg;
 }
 

@@ -13,9 +13,8 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
 import { Router } from '@angular/router';
-import { YesNoDialogComponent } from 'src/app/shared/components/dialog-components/yes-no-dialog/yes-no-dialog.component';
 import { HouseholdMembersService } from './household-members.service';
-import { HouseholdMemberType } from 'src/app/core/api/models';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-household-members',
@@ -176,12 +175,12 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.dialog
       .open(DialogComponent, {
         data: {
-          component: YesNoDialogComponent,
+          component: InformationDialogComponent,
           title: 'Remove Household Member',
           content: globalConst.householdMemberDeleteDialog
         },
         height: 'auto',
-        width: '550px'
+        width: '650px'
       })
       .afterClosed()
       .subscribe((event) => {

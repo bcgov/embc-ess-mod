@@ -18,6 +18,7 @@ import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.m
 import { EvacueeSession } from 'src/app/core/services/evacuee-session';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { WizardService } from '../wizard.service';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateProfileService {
@@ -188,10 +189,7 @@ export class StepCreateProfileService {
         $event.stopPropagation();
         $event.preventDefault();
 
-        this.openModal(
-          globalConst.wizardProfileMessage.text,
-          globalConst.wizardProfileMessage.title
-        );
+        this.openModal(globalConst.wizardProfileMessage, 'Complete all steps');
       }
       return allow;
     }
@@ -216,16 +214,14 @@ export class StepCreateProfileService {
    * @param text text to display
    */
   openModal(
-    text: string,
-    title?: string,
-    button?: string
+    content: DialogContent,
+    title?: string
   ): MatDialogRef<DialogComponent, any> {
     const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text,
         title,
-        button
+        content
       },
       width: '530px'
     });

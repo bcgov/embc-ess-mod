@@ -164,8 +164,8 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
 
     if (this.stepCreateProfileService.checkTabsStatus()) {
       this.stepCreateProfileService.openModal(
-        globalConst.wizardProfileMessage.text,
-        globalConst.wizardProfileMessage.title
+        globalConst.wizardProfileMessage,
+        'Complete all steps'
       );
     } else {
       this.router.navigate(['/ess-wizard/create-evacuee-profile/review']);

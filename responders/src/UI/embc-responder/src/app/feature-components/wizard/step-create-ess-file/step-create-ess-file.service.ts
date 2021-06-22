@@ -24,6 +24,7 @@ import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { WizardService } from '../wizard.service';
 import { EvacueeSession } from 'src/app/core/services/evacuee-session';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -529,10 +530,7 @@ export class StepCreateEssFileService {
         $event.stopPropagation();
         $event.preventDefault();
 
-        this.openModal(
-          globalConst.wizardESSFileMessage.text,
-          globalConst.wizardESSFileMessage.title
-        );
+        this.openModal(globalConst.wizardESSFileMessage, 'Complete all steps');
       }
       return allow;
     }
@@ -560,18 +558,14 @@ export class StepCreateEssFileService {
    * @param exitLink link to exit greater context (e.g. wizard) for modal, null = no link
    */
   openModal(
-    text: string,
-    title?: string,
-    button?: string,
-    exitLink?: string
+    content: DialogContent,
+    title: string
   ): MatDialogRef<DialogComponent, any> {
     const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text,
-        title,
-        button,
-        exitLink
+        content,
+        title
       },
       width: '530px'
     });
