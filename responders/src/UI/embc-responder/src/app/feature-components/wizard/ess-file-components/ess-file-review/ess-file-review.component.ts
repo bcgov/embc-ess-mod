@@ -10,6 +10,7 @@ import { WizardService } from '../../wizard.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { HouseholdMemberType } from 'src/app/core/api/models';
+import { EssFileService } from 'src/app/core/services/ess-file.service';
 
 @Component({
   selector: 'app-ess-file-review',
@@ -48,6 +49,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     public stepCreateEssFileService: StepCreateEssFileService,
     private router: Router,
     private wizardService: WizardService,
+    private essFileService: EssFileService,
     private alertService: AlertService,
     private userService: UserService,
     private cacheService: CacheService
@@ -124,28 +126,39 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
 
     this.saveLoader = true;
 
-    // TODO: Wrap this all in actual ESS File submission
-    console.log(this.stepCreateEssFileService.createEvacFileDTO());
+    this.essFileService
+      .createFile(this.stepCreateEssFileService.createEvacFileDTO())
+      .subscribe(
+        () => {
+          // Once all profile work is done, user can close wizard or proceed to step 3
+          this.disableButton = true;
+          this.saveLoader = false;
 
-    // Once all profile work is done, user can close wizard or proceed to step 3
-    this.disableButton = true;
-    this.saveLoader = false;
+          this.stepCreateEssFileService
+            .openModal(
+              globalConst.essFileCreatedMessage.text,
+              globalConst.essFileCreatedMessage.title,
+              globalConst.essFileCreatedMessage.button,
+              globalConst.essFileCreatedMessage.exitLink
+            )
+            .afterClosed()
+            .subscribe(() => {
+              this.wizardService.setStepStatus(
+                '/ess-wizard/add-supports',
+                false
+              );
+              this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
 
-    this.stepCreateEssFileService
-      .openModalWithExit(
-        globalConst.essFileCreatedMessage.text,
-        globalConst.essFileCreatedMessage.title,
-        globalConst.essFileCreatedMessage.button
-      )
-      .afterClosed()
-      .subscribe(() => {
-        this.wizardService.setStepStatus('/ess-wizard/add-supports', false);
-        this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
-
-        this.router.navigate(['/ess-wizard/add-supports'], {
-          state: { step: 'STEP 3', title: 'Add Supports' }
-        });
-      });
+              this.router.navigate(['/ess-wizard/add-supports'], {
+                state: { step: 'STEP 3', title: 'Add Supports' }
+              });
+            });
+        },
+        (error) => {
+          this.saveLoader = false;
+          this.alertService.setAlert('danger', globalConst.createEssFileError);
+        }
+      );
   }
 
   /**

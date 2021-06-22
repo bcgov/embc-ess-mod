@@ -21,8 +21,9 @@ import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { InformationDialogExitWizardComponent } from 'src/app/shared/components/dialog-components/information-dialog-exit-wizard/information-dialog-exit-wizard.component';
-import { Community } from 'src/app/core/services/locations.service';
+import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
+import { WizardService } from '../wizard.service';
+import { EvacueeSession } from 'src/app/core/services/evacuee-session';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -69,7 +70,8 @@ export class StepCreateEssFileService {
 
   constructor(
     private dialog: MatDialog,
-    private cacheService: CacheService,
+    private wizardService: WizardService,
+    private evacueeSession: EvacueeSession,
     private stepCreateProfileService: StepCreateProfileService
   ) {}
 
@@ -372,10 +374,12 @@ export class StepCreateEssFileService {
 
     // Map out into DTO object and return
     return {
-      primaryRegistrantId: this.cacheService.get('primaryRegistrantId'),
+      primaryRegistrantId: this.evacueeSession.profileId,
 
       essFileNumber: this.paperESSFile,
-      evacuatedFromAddress: this.evacAddress,
+      evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(
+        this.evacAddress
+      ),
       registrationLocation: this.facilityName,
 
       needsAssessments: [
@@ -423,6 +427,95 @@ export class StepCreateEssFileService {
   }
 
   /**
+   * Update the wizard's values with ones fetched from API
+   */
+  public getEvacFileDTO(essFile: EvacuationFileModel) {
+    this.paperESSFile = essFile.essFileNumber;
+    this.evacAddress = this.wizardService.setAddressObjectForForm(
+      essFile.evacuatedFromAddress
+    );
+    this.facilityName = essFile.registrationLocation;
+
+    this.evacuatedFromPrimary =
+      this.stepCreateProfileService?.primaryAddressDetails === this.evacAddress;
+
+    if (essFile.needsAssessments?.length > 0) {
+      const essNeeds = essFile.needsAssessments[0];
+
+      // Get content for API Notes fields
+      if (essNeeds.notes?.length > 0) {
+        this.evacuationImpact = essNeeds.notes?.find(
+          (note) => note.type === NoteType.EvacuationImpact
+        )?.content;
+
+        this.householdRecoveryPlan = essNeeds.notes?.find(
+          (note) => note.type === NoteType.HouseHoldRecoveryPlan
+        )?.content;
+
+        this.evacuationExternalReferrals = essNeeds.notes?.find(
+          (note) => note.type === NoteType.EvacuationExternalReferrals
+        )?.content;
+
+        this.petCarePlans = essNeeds.notes?.find(
+          (note) => note.type === NoteType.PetCarePlans
+        )?.content;
+      }
+      this.insurance = essNeeds.insurance;
+
+      this.referredServiceDetails = essNeeds.recommendedReferralServices;
+      this.referredServices = essNeeds.recommendedReferralServices.length > 0;
+
+      // Split main applicant from other household members, remap to UI model
+      const primaryLastName = essNeeds.householdMembers?.find(
+        (member) => member.type === HouseholdMemberType.MainApplicant
+      )?.lastName;
+
+      this.householdMembers = essNeeds.householdMembers
+        ?.filter((member) => member.type !== HouseholdMemberType.MainApplicant)
+        .map<HouseholdMemberModel>((member) => {
+          return {
+            ...member,
+            sameLastName: member.lastName === primaryLastName
+          };
+        });
+
+      this.haveHouseholdMembersVal = this.householdMembers?.length > 0;
+
+      this.haveSpecialDiet = essNeeds.haveSpecialDiet;
+      this.specialDietDetails = essNeeds.specialDietDetails;
+      this.haveMedication = essNeeds.haveMedication;
+
+      this.petsList = essNeeds.pets;
+      this.havePetsFood = essNeeds.hasPetsFood;
+
+      this.havePets = essNeeds.pets?.length > 0;
+
+      // Get values for buttons on Needs tabs
+      this.canRegistrantProvideFood = globalConst.needsOptions.find(
+        (ins) => ins.apiValue === essNeeds.canEvacueeProvideFood
+      )?.value;
+
+      this.canRegistrantProvideLodging = globalConst.needsOptions.find(
+        (ins) => ins.apiValue === essNeeds.canEvacueeProvideLodging
+      )?.value;
+
+      this.canRegistrantProvideClothing = globalConst.needsOptions.find(
+        (ins) => ins.apiValue === essNeeds.canEvacueeProvideClothing
+      )?.value;
+
+      this.canRegistrantProvideTransportation = globalConst.needsOptions.find(
+        (ins) => ins.apiValue === essNeeds.canEvacueeProvideTransportation
+      )?.value;
+
+      this.canRegistrantProvideIncidentals = globalConst.needsOptions.find(
+        (ins) => ins.apiValue === essNeeds.canEvacueeProvideIncidentals
+      )?.value;
+    }
+
+    this.securityPhrase = essFile.securityPhrase;
+  }
+
+  /**
    * Determines if the tab navigation is allowed or not
    *
    * @param tabRoute clicked route
@@ -462,36 +555,23 @@ export class StepCreateEssFileService {
    * Open information modal window
    *
    * @param text text to display
+   * @param title title of modal
+   * @param button text on "close" button ("Close" by default)
+   * @param exitLink link to exit greater context (e.g. wizard) for modal, null = no link
    */
-  openModal(text: string, title?: string): MatDialogRef<DialogComponent, any> {
+  openModal(
+    text: string,
+    title?: string,
+    button?: string,
+    exitLink?: string
+  ): MatDialogRef<DialogComponent, any> {
     const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
         text,
-        title
-      },
-      width: '530px'
-    });
-
-    return thisModal;
-  }
-
-  /**
-   * Open information modal window
-   *
-   * @param text text to display
-   */
-  openModalWithExit(
-    text: string,
-    title?: string,
-    button?: string
-  ): MatDialogRef<DialogComponent, any> {
-    const thisModal = this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogExitWizardComponent,
-        text,
         title,
-        button
+        button,
+        exitLink
       },
       width: '530px'
     });
@@ -528,30 +608,5 @@ export class StepCreateEssFileService {
     });
     const result = fields.filter((field) => !!field);
     return result.length !== 0;
-  }
-
-  /**
-   * Transforms an AddressModel Object into an Address Object
-   *
-   * @param addressObject
-   * @returns
-   */
-  public setAddressObject(addressObject: AddressModel): Address {
-    const address: Address = {
-      addressLine1: addressObject.addressLine1,
-      addressLine2: addressObject.addressLine2,
-      countryCode: addressObject.country.code,
-      communityCode:
-        (addressObject.community as Community).code === undefined
-          ? null
-          : (addressObject.community as Community).code,
-      postalCode: addressObject.postalCode,
-      stateProvinceCode:
-        addressObject.stateProvince === null
-          ? null
-          : addressObject.stateProvince.code
-    };
-
-    return address;
   }
 }

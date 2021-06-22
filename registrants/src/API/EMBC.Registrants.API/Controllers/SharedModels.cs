@@ -28,10 +28,8 @@ namespace EMBC.Registrants.API.Controllers
 
         public string AddressLine2 { get; set; }
 
-        [Required]
-        public string Jurisdiction { get; set; }
-
-        public string Community { get => Jurisdiction; set => Jurisdiction = value; }
+        public string Community { get; set; }
+        public string City { get; set; }
 
         public string StateProvince { get; set; }
 

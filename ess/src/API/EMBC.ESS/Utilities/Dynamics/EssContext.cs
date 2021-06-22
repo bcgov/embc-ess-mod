@@ -28,44 +28,41 @@ namespace EMBC.ESS.Utilities.Dynamics
 {
     public class EssContext : Microsoft.Dynamics.CRM.System
     {
-        private readonly ILogger logger;
+        private readonly ILogger<EssContext> logger;
 
-        public EssContext(Uri uri, Uri url, Func<Task<string>> tokenFactory, ILogger logger) : base(uri)
+        public EssContext(Uri uri, Uri url, Func<Task<string>> tokenFactory, ILogger<EssContext> logger) : base(uri)
         {
             this.logger = logger;
             this.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
             this.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
 
+            Func<Uri, Uri> formatUri = requestUri => requestUri.IsAbsoluteUri
+                    ? new Uri(url, (url.AbsolutePath == "/" ? string.Empty : url.AbsolutePath) + requestUri.AbsolutePath + requestUri.Query)
+                    : new Uri(url, (url.AbsolutePath == "/" ? string.Empty : url.AbsolutePath) + uri.AbsolutePath + requestUri.ToString());
+
             BuildingRequest += (sender, args) =>
             {
                 args.Headers.Add("Authorization", $"Bearer {tokenFactory().GetAwaiter().GetResult()}");
-                if (args.RequestUri.IsAbsoluteUri)
-                {
-                    args.RequestUri = new Uri(url, (url.AbsolutePath == "/" ? string.Empty : url.AbsolutePath) + args.RequestUri.AbsolutePath + args.RequestUri.Query);
-                }
-                else
-                {
-                    args.RequestUri = new Uri(url, (url.AbsolutePath == "/" ? string.Empty : url.AbsolutePath) + uri.AbsolutePath + args.RequestUri.ToString());
-                }
+                args.RequestUri = formatUri(args.RequestUri);
             };
             SendingRequest2 += (sender, args) =>
             {
-                logger.LogDebug("{0} SendingRequest2 {1} {2} ", nameof(EssContext), args.RequestMessage.Method, args.RequestMessage.Url);
+                logger.LogDebug("SendingRequest2 {0} {1}", args.RequestMessage.Method, args.RequestMessage.Url);
             };
             ReceivingResponse += (sender, args) =>
             {
-                logger.LogDebug("{0} ReceivingResponse {1} response", nameof(EssContext), args.ResponseMessage?.StatusCode);
+                logger.LogDebug("ReceivingResponse {0} response", args.ResponseMessage?.StatusCode);
             };
             Configurations.RequestPipeline.OnEntryStarting((arg) =>
             {
                 // do not send reference properties and null values to Dynamics
                 arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
-                logger.LogDebug("{0} OnEntryStarting: {1}", nameof(EssContext), JsonSerializer.Serialize(arg.Entity));
+                logger.LogDebug("OnEntryStarting: {0}", JsonSerializer.Serialize(arg.Entity));
             });
 
             Configurations.RequestPipeline.OnEntityReferenceLink((arg) =>
             {
-                logger.LogDebug("{0} OnEntityReferenceLink url {1}", nameof(EssContext), arg.EntityReferenceLink.Url);
+                logger.LogDebug("OnEntityReferenceLink url {0}", arg.EntityReferenceLink.Url);
             });
         }
     }

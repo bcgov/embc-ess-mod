@@ -25,7 +25,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSubmitAnonymousRegistration()
         {
-            var textContextIdentifier = DateTime.Now.ToShortTimeString();
+            var textContextIdentifier = Guid.NewGuid().ToString().Substring(0, 4);
             List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
             securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });
             securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
@@ -38,8 +38,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 VerifiedUser = false,
                 RestrictedAccess = false,
                 SecurityQuestions = securityQuestions,
-                FirstName = $"PriRegTestFirst-{textContextIdentifier}",
-                LastName = $"PriRegTestLast-{textContextIdentifier}",
+                FirstName = $"{textContextIdentifier}-PriRegTestFirst",
+                LastName = $"{textContextIdentifier}-PriRegTestLast",
                 DateOfBirth = "2000/01/01",
                 Gender = "Female",
                 Initials = "initials1",
@@ -48,7 +48,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 Phone = "999-999-9999",
                 PrimaryAddress = new Address
                 {
-                    AddressLine1 = $"paddr1-{textContextIdentifier}",
+                    AddressLine1 = $"paddr1",
                     AddressLine2 = "paddr2",
                     Country = "CAN",
                     StateProvince = "BC",
@@ -57,7 +57,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 },
                 MailingAddress = new Address
                 {
-                    AddressLine1 = $"maddr1-{textContextIdentifier}",
+                    AddressLine1 = $"maddr1",
                     AddressLine2 = "maddr2",
                     Country = "USA",
                     StateProvince = "WA",
@@ -68,74 +68,29 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var needsAssessment = new NeedsAssessment
             {
                 HouseholdMembers = new[]
-                    {
-                        new HouseholdMember
-                        {
-                            Id = null,
-
-                                FirstName = $"MemRegTestFirst-{textContextIdentifier}",
-                                LastName = $"MemRegTestLast-{textContextIdentifier}",
-                                Gender = "X",
-                                DateOfBirth = "2010-01-01"
-                        }
-                    },
-                HaveMedication = false,
-                Insurance = InsuranceOption.Yes,
-                HaveSpecialDiet = true,
-                SpecialDietDetails = "Gluten Free",
-                HasPetsFood = true,
-                CanEvacueeProvideClothing = false,
-                CanEvacueeProvideFood = true,
-                CanEvacueeProvideIncidentals = null,
-                CanEvacueeProvideLodging = false,
-                CanEvacueeProvideTransportation = true,
-                Pets = new[]
-                    {
-                        new Pet{ Type = $"dog{textContextIdentifier}", Quantity = "4" }
-                    }
-            };
-            var cmd = new SubmitAnonymousEvacuationFileCommand
-            {
-                File = new EvacuationFile
-                {
-                    EvacuatedFromAddress = new Address
-                    {
-                        AddressLine1 = $"addr1-{textContextIdentifier}",
-                        Country = "CAN",
-                        Community = "226adfaf-9f97-ea11-b813-005056830319",
-                        StateProvince = "BC",
-                        PostalCode = "v1v 1v1"
-                    },
-                    EvacuationDate = DateTime.Now,
-                    NeedsAssessments = new[] { needsAssessment },
-                },
-                SubmitterProfile = profile
-            };
-
-            var fileId = await manager.Handle(cmd);
-            fileId.ShouldNotBeNull();
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task CanSubmitNewEvacuation()
-        {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
-            var textContextIdentifier = DateTime.Now.ToShortTimeString();
-            var needsAssessment = new NeedsAssessment
-            {
-                HouseholdMembers = new[]
                 {
                     new HouseholdMember
                     {
+                        IsPrimaryRegistrant = true,
+                        FirstName = profile.FirstName,
+                        LastName = profile.LastName,
+                        DateOfBirth = profile.DateOfBirth,
+                        Gender = profile.Gender,
+                        Initials = profile.Initials,
+                        PreferredName = profile.PreferredName,
+                    },
+                    new HouseholdMember
+                    {
+                        IsPrimaryRegistrant = false,
                         Id = null,
-
-                            FirstName = $"MemRegTestFirst-{textContextIdentifier}",
-                            LastName = $"MemRegTestLast-{textContextIdentifier}",
-                            Gender = "X",
-                            DateOfBirth = "2010-01-01"
+                        FirstName = $"{textContextIdentifier}-MemRegTestFirst",
+                        LastName = $"{textContextIdentifier}-MemRegTestLast",
+                        Gender = "X",
+                        DateOfBirth = "2010-01-01"
                     }
                 },
                 HaveMedication = false,
+                HasEnoughSupply = false,
                 Insurance = InsuranceOption.Yes,
                 HaveSpecialDiet = true,
                 SpecialDietDetails = "Gluten Free",
@@ -150,30 +105,57 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     new Pet{ Type = $"dog{textContextIdentifier}", Quantity = "4" }
                 }
             };
-            var cmd = new SubmitEvacuationFileCommand
+            var cmd = new SubmitAnonymousEvacuationFileCommand
             {
                 File = new EvacuationFile
                 {
-                    Id = null,
                     EvacuatedFromAddress = new Address
                     {
-                        AddressLine1 = $"addr1-{textContextIdentifier}",
+                        AddressLine1 = $"addr1",
                         Country = "CAN",
                         Community = "226adfaf-9f97-ea11-b813-005056830319",
                         StateProvince = "BC",
                         PostalCode = "v1v 1v1"
                     },
-                    EvacuationDate = DateTime.Now,
                     NeedsAssessments = new[] { needsAssessment },
-                    PrimaryRegistrantId = registrant.Id
                 },
+                SubmitterProfile = profile
             };
 
-            var fileId = await manager.Handle(cmd);
+            var fileId = (await manager.Handle(cmd)).ShouldNotBeNull();
+
+            var file = (await manager.Handle(new EvacuationFilesSearchQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+
+            file.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
+            file.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
+            file.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == false && m.FirstName == $"{textContextIdentifier}-MemRegTestFirst" && m.LastName == $"{textContextIdentifier}-MemRegTestLast");
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSubmitNewEvacuation()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var file = CreateNewTestEvacuationFile(registrant);
+
+            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
             fileId.ShouldNotBeNull();
 
-            var file = (await GetRegistrantFilesByPrimaryRegistrantId(registrant.Id)).Where(f => f.Id == fileId).ShouldHaveSingleItem();
-            file.PrimaryRegistrantId.ShouldBe(registrant.Id);
+            var savedFile = (await GetEvacuationFileById(fileId)).ShouldHaveSingleItem();
+            savedFile.PrimaryRegistrantId.ShouldBe(registrant.Id);
+            savedFile.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
+            savedFile.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
+
+            savedFile.HouseholdMembers.Count().ShouldBe(file.LastNeedsAssessment.HouseholdMembers.Count());
+            foreach (var member in file.LastNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
+            {
+                savedFile.HouseholdMembers.ShouldContain(m => m.FirstName == member.FirstName && m.LastName == member.LastName);
+            }
+
+            savedFile.LastNeedsAssessment.HouseholdMembers.Count().ShouldBe(file.LastNeedsAssessment.HouseholdMembers.Count());
+            foreach (var member in file.LastNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
+            {
+                savedFile.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.FirstName == member.FirstName && m.LastName == member.LastName);
+            }
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -182,8 +164,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
 
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
-            var file = (await GetRegistrantFilesByPrimaryRegistrantId(registrant.Id)).Last();
+            var file = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last();
 
             file.Id.ShouldNotBeNullOrEmpty();
             file.EvacuationDate.ShouldNotBe(now);
@@ -282,7 +263,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetRegistrantProfile()
+        public async Task CanSearchRegistrantsByName()
         {
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
 
@@ -291,18 +272,37 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             registrant.PrimaryAddress.Country.ShouldNotBeNull().ShouldNotBeNull();
             registrant.PrimaryAddress.Country.ShouldNotBeNull();
 
-            var registrants = (await GetRegistrantsByName("Elvis", "Presley")).Select(r => r.RegistrantProfile);
+            var registrants = (await manager.Handle(new RegistrantsSearchQuery { FirstName = "Elvis", LastName = "Presley" })).Items.Select(r => r.RegistrantProfile);
 
             registrants.ShouldNotBeNull();
             registrants.ShouldAllBe(r => r.FirstName == "Elvis");
             registrants.ShouldAllBe(r => r.LastName == "Presley");
+        }
 
-            registrants = (await GetRegistrantsByNameAndBirthdate("Elvis", "Presley", "2010-01-01")).Select(r => r.RegistrantProfile);
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchRegistrantsByUserId()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
 
-            registrants.ShouldNotBeNull();
-            registrants.ShouldBeEmpty();
-            //registrants.ShouldAllBe(r => r.FirstName == "Elvis");
-            //registrants.ShouldAllBe(r => r.LastName == "Presley");
+            registrant.ShouldNotBeNull();
+
+            registrant.PrimaryAddress.Country.ShouldNotBeNull().ShouldNotBeNull();
+            registrant.PrimaryAddress.Country.ShouldNotBeNull();
+            registrant.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldNotBeNull();
+            registrant.PrimaryAddress.StateProvince.ShouldNotBeNull();
+            registrant.PrimaryAddress.Community.ShouldNotBeNull().ShouldNotBeNull();
+            registrant.PrimaryAddress.Community.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchRegistrantsByNonExistentValues()
+        {
+            (await manager.Handle(new RegistrantsSearchQuery
+            {
+                FirstName = "Elvis",
+                LastName = "Presley",
+                DateOfBirth = "2010-01-01"
+            })).Items.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -331,17 +331,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVerifySecurityQuestions()
         {
-            //If you need to set the security answers for testing.
-            //var registrant = await GetRegistrantByUserId("CHRIS-TEST");
-
-            //List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
-            //securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1", AnswerChanged = true });
-            //securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2", AnswerChanged = true });
-            //securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3", AnswerChanged = true });
-
-            //registrant.SecurityQuestions = securityQuestions;
-            //await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
-
             List<SecurityQuestion> answers = new List<SecurityQuestion>();
             answers.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });
             answers.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
@@ -357,15 +346,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVerifySecurityPhrase()
         {
-            string fileId = "100644";
-
-            //If you need to set the security phrase for testing.
-            //var file = (await GetEvacuationFileById(fileId)).FirstOrDefault();
-            //file.SecurityPhrase = "SecretPhrase";
-            //file.SecurityPhraseChanged = true;
-            //await manager.Handle(new SubmitEvacuationFileCommand { File = file });
-
-            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "SecretPhrase" });
+            //var fileId = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last().Id;
+            var fileId = "PAP2354234";
+            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "My New Security Phrase" });
             response.IsCorrect.ShouldBeTrue();
         }
 
@@ -374,44 +357,23 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             return (await manager.Handle(new RegistrantsSearchQuery { UserId = userId })).Items.SingleOrDefault();
         }
 
-        private async Task<IEnumerable<RegistrantWithFiles>> GetRegistrantsByName(string firstName, string lastName)
-        {
-            return (await manager.Handle(new RegistrantsSearchQuery
-            {
-                FirstName = firstName,
-                LastName = lastName
-            })).Items.ToList();
-        }
+        private async Task<IEnumerable<EvacuationFile>> GetRegistrantFilesByPrimaryRegistrantId(string registrantId) =>
+            (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantId = registrantId })).Items;
 
-        private async Task<IEnumerable<RegistrantWithFiles>> GetRegistrantsByNameAndBirthdate(string firstName, string lastName, string dateOfBirth)
-        {
-            return (await manager.Handle(new RegistrantsSearchQuery
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth
-            })).Items.ToList();
-        }
+        private async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(string fileId) =>
+            (await manager.Handle(new EvacuationFilesSearchQuery { FileId = fileId })).Items;
 
-        private async Task<IEnumerable<EvacuationFile>> GetRegistrantFilesByPrimaryRegistrantId(string registrantId)
+        private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant)
         {
-            return (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantId = registrantId })).Items;
-        }
-
-        private async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(string fileId)
-        {
-            return (await manager.Handle(new EvacuationFilesSearchQuery { FileId = fileId })).Items;
-        }
-
-        private EvacuationFile CreateTestFile(string primaryRegistrantId)
-        {
-            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
+            var uniqueSignature = Guid.NewGuid().ToString().Substring(0, 4);
             var file = new EvacuationFile()
             {
-                PrimaryRegistrantId = primaryRegistrantId,
+                PrimaryRegistrantId = registrant.Id,
+                SecretPhrase = "SecretPhrase",
+                SecurityPhraseChanged = true,
                 EvacuatedFromAddress = new Address()
                 {
-                    AddressLine1 = $"{uniqueSignature}_3738 Main St",
+                    AddressLine1 = $"{uniqueSignature}-3738 Main St",
                     AddressLine2 = "Suite 3",
                     Community = "9e6adfaf-9f97-ea11-b813-005056830319",
                     StateProvince = "BC",
@@ -424,6 +386,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     {
                         Type = NeedsAssessmentType.Preliminary,
                         HaveMedication = false,
+                        HasEnoughSupply = false,
                         Insurance = InsuranceOption.Yes,
                         HaveSpecialDiet = true,
                         SpecialDietDetails = "Shellfish allergy",
@@ -437,10 +400,21 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                         {
                             new HouseholdMember
                             {
-                                FirstName = $"{uniqueSignature}_hm1",
-                                LastName = "hm1",
+                                FirstName = registrant.FirstName,
+                                LastName = registrant.LastName,
+                                PreferredName = registrant.PreferredName,
+                                Initials = registrant.Initials,
+                                Gender = registrant.Gender,
+                                DateOfBirth = registrant.DateOfBirth,
+                                IsPrimaryRegistrant = true,
+                                LinkedRegistrantId = registrant.Id
+                            },
+                            new HouseholdMember
+                            {
+                                FirstName = $"{uniqueSignature}-hm1first",
+                                LastName = $"{uniqueSignature}-hm1last",
                                 PreferredName = "hm1p",
-                                Initials = $"{uniqueSignature}_1",
+                                Initials = $"{uniqueSignature}-1",
                                 Gender = "X",
                                 DateOfBirth = "03/15/2000",
                                 IsUnder19 = false,
@@ -448,10 +422,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                             },
                              new HouseholdMember
                             {
-                                FirstName = $"{uniqueSignature}_hm2",
-                                LastName = "hm2",
+                                FirstName = $"{uniqueSignature}-hm2first",
+                                LastName = $"{uniqueSignature}-hm2last",
                                 PreferredName = "hm2p",
-                                Initials = $"{uniqueSignature}_2",
+                                Initials = $"{uniqueSignature}-2",
                                 Gender = "M",
                                 DateOfBirth = "03/16/2010",
                                 IsUnder19 = true,
@@ -460,7 +434,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                         },
                         Pets = new[]
                         {
-                            new Pet{ Type = $"{uniqueSignature}_Cat", Quantity = "1" }
+                            new Pet{ Type = $"{uniqueSignature}_Cat", Quantity = "1" },
+                            new Pet{ Type = $"{uniqueSignature}_Dog", Quantity = "4" }
                         }
                     }
                 }

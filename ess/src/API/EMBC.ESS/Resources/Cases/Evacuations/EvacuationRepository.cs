@@ -15,12 +15,14 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using EMBC.ESS.Utilities.Extensions;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 
@@ -37,149 +39,151 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             this.mapper = mapper;
         }
 
-        public async Task<string> Create(EvacuationFile file)
+        public async Task<string> Create(EvacuationFile evacuationFile)
         {
-            if (string.IsNullOrEmpty(file.PrimaryRegistrantId)) throw new Exception($"The file has no associated primary registrant");
+            VerifyEvacuationFileInvariants(evacuationFile);
 
-            var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(file.PrimaryRegistrantId)).SingleOrDefault();
-            if (primaryContact == null) throw new Exception($"Primary registrant {file.PrimaryRegistrantId} not found");
+            var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
+            if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
 
-            var eraEvacuationFile = mapper.Map<era_evacuationfile>(file);
+            var file = mapper.Map<era_evacuationfile>(evacuationFile);
+            file.era_evacuationfileid = Guid.NewGuid();
 
-            eraEvacuationFile.era_evacuationfileid = Guid.NewGuid();
-            eraEvacuationFile.era_evacuationfiledate = DateTimeOffset.UtcNow;
+            essContext.AddToera_evacuationfiles(file);
+            AssignPrimaryRegistrant(file, primaryContact);
+            AssignToTask(file, evacuationFile.TaskId);
 
-            essContext.AddToera_evacuationfiles(eraEvacuationFile);
-            essContext.AddLink(primaryContact, nameof(primaryContact.era_evacuationfile_Registrant), eraEvacuationFile);
-            essContext.SetLink(eraEvacuationFile, nameof(era_evacuationfile.era_Registrant), primaryContact);
-            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.CommunityCode), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), eraEvacuationFile);
-
-            foreach (var needsAssessment in file.NeedsAssessments)
-            {
-                if (needsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId == null) == 1)
-                {
-                    throw new Exception($"File {file.Id} must have a single primary registrant household member");
-                }
-                var eraNeedsAssessment = mapper.Map<era_needassessment>(needsAssessment);
-                var members = mapper.Map<IEnumerable<era_householdmember>>(needsAssessment.HouseholdMembers);
-                var pets = mapper.Map<IEnumerable<era_needsassessmentanimal>>(needsAssessment.Pets);
-
-                CreateNeedsAssessment(eraEvacuationFile, eraNeedsAssessment, members, pets);
-            }
+            AddNeedsAssessment(file, file.era_CurrentNeedsAssessmentid);
 
             await essContext.SaveChangesAsync();
 
-            essContext.Detach(eraEvacuationFile);
-            var createdFile = essContext.era_evacuationfiles.Where(f => f.era_evacuationfileid == eraEvacuationFile.era_evacuationfileid).Single();
-
-            var essFileNumber = createdFile.era_name;
+            essContext.Detach(file);
+            var essFileNumber = essContext.era_evacuationfiles.Where(f => f.era_evacuationfileid == file.era_evacuationfileid).Select(f => f.era_name).Single();
 
             essContext.DetachAll();
 
             return essFileNumber;
         }
 
-        public async Task<string> Update(EvacuationFile file)
+        public async Task<string> Update(EvacuationFile evacuationFile)
         {
-            if (string.IsNullOrEmpty(file.PrimaryRegistrantId)) throw new Exception($"File {file.Id} has no associated primary registrant");
+            VerifyEvacuationFileInvariants(evacuationFile);
 
-            var existingEvacuationFile = essContext.era_evacuationfiles.Where(e => e.era_name == file.Id).SingleOrDefault();
+            var currentFile = essContext.era_evacuationfiles
+                .Where(f => f.era_name == evacuationFile.Id).SingleOrDefault();
+            if (currentFile == null) throw new Exception($"Evacuation file {evacuationFile.Id} not found");
 
-            if (existingEvacuationFile == null) throw new Exception($"File {file.Id} not found");
+            var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
+            if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
 
-            var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(file.PrimaryRegistrantId)).SingleOrDefault();
-            if (primaryContact == null) throw new Exception($"Primary registrant {file.PrimaryRegistrantId} not found");
+            essContext.Detach(currentFile);
+            var file = mapper.Map<era_evacuationfile>(evacuationFile);
+            file.era_evacuationfileid = currentFile.era_evacuationfileid;
 
-            var updatedEvacuationFile = mapper.Map<era_evacuationfile>(file);
-            updatedEvacuationFile.era_evacuationfileid = existingEvacuationFile.era_evacuationfileid;
+            essContext.AttachTo(nameof(essContext.era_evacuationfiles), file);
+            essContext.UpdateObject(file);
+            AssignPrimaryRegistrant(file, primaryContact);
+            AssignToTask(file, evacuationFile.TaskId);
 
-            essContext.Detach(existingEvacuationFile);
-            essContext.AttachTo(nameof(essContext.era_evacuationfiles), updatedEvacuationFile);
-            essContext.UpdateObject(updatedEvacuationFile);
-            essContext.AddLink(primaryContact, nameof(contact.era_evacuationfile_Registrant), updatedEvacuationFile);
-            essContext.SetLink(updatedEvacuationFile, nameof(era_evacuationfile.era_Registrant), primaryContact);
-            essContext.AddLink(essContext.LookupJurisdictionByCode(file.EvacuatedFromAddress.CommunityCode), nameof(era_jurisdiction.era_evacuationfile_Jurisdiction), updatedEvacuationFile);
-
-            foreach (var needsAssessment in file.NeedsAssessments)
-            {
-                //if (needsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId == null) == 1)
-                //{
-                //    throw new Exception($"File {file.Id} must have a single primary registrant household member");
-                //}
-                var eraNeedsAssessment = mapper.Map<era_needassessment>(needsAssessment);
-                var members = mapper.Map<IEnumerable<era_householdmember>>(needsAssessment.HouseholdMembers);
-                var pets = mapper.Map<IEnumerable<era_needsassessmentanimal>>(needsAssessment.Pets);
-
-                CreateNeedsAssessment(updatedEvacuationFile, eraNeedsAssessment, members, pets);
-            }
+            AddNeedsAssessment(file, file.era_CurrentNeedsAssessmentid);
 
             await essContext.SaveChangesAsync();
 
             essContext.DetachAll();
 
-            return updatedEvacuationFile.era_name;
+            return file.era_name;
         }
 
-        private void CreateNeedsAssessment(era_evacuationfile eraEvacuationFile, era_needassessment eraNeedsAssessment, IEnumerable<era_householdmember> members, IEnumerable<era_needsassessmentanimal> pets)
+        private void AddNeedsAssessment(era_evacuationfile file, era_needassessment needsAssessment)
         {
-            eraNeedsAssessment.era_needassessmentid = Guid.NewGuid();
-            eraNeedsAssessment.era_needsassessmentdate = DateTimeOffset.UtcNow;
+            essContext.AddToera_needassessments(needsAssessment);
+            essContext.SetLink(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid), needsAssessment);
+            essContext.AddLink(file, nameof(era_evacuationfile.era_needsassessment_EvacuationFile), needsAssessment);
+            essContext.SetLink(needsAssessment, nameof(era_needassessment.era_EvacuationFile), file);
+            essContext.SetLink(needsAssessment, nameof(era_needassessment.era_Jurisdictionid), essContext.LookupJurisdictionByCode(needsAssessment._era_jurisdictionid_value?.ToString()));
 
-            essContext.AddToera_needassessments(eraNeedsAssessment);
-            essContext.AddLink(eraEvacuationFile, nameof(eraEvacuationFile.era_needsassessment_EvacuationFile), eraNeedsAssessment);
-
-            foreach (var member in members)
+            foreach (var member in needsAssessment.era_era_householdmember_era_needassessment)
             {
-                CreateHouseholdMember(eraEvacuationFile, eraNeedsAssessment, member);
-            }
-
-            foreach (var pet in pets)
-            {
-                CreatePet(eraNeedsAssessment, pet);
-            }
-        }
-
-        private void CreatePet(era_needassessment eraNeedsAssessment, era_needsassessmentanimal pet)
-        {
-            pet.era_needsassessmentanimalid = Guid.NewGuid();
-
-            essContext.AddToera_needsassessmentanimals(pet);
-            essContext.SetLink(pet, nameof(era_needsassessmentanimal.era_NeedsAssessment), eraNeedsAssessment);
-            essContext.AddLink(eraNeedsAssessment, nameof(eraNeedsAssessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment), pet);
-        }
-
-        private void CreateHouseholdMember(era_evacuationfile eraEvacuationFile, era_needassessment eraNeedsAssessment, era_householdmember member)
-        {
-            member.era_householdmemberid = Guid.NewGuid();
-            var contact = member.era_Registrant;
-
-            if (contact.contactid.HasValue)
-            {
-                //TODO: figure out a nicer way to handle already tracked primary contact handling
-                var trackedContact = (contact)essContext.EntityTracker.Entities.SingleOrDefault(e => e.Entity is contact c && c.contactid == contact.contactid).Entity;
-                if (trackedContact != null)
+                if (member.era_householdmemberid.HasValue)
                 {
-                    contact = trackedContact;
+                    //update member
+                    essContext.AttachTo(nameof(essContext.era_householdmembers), member);
+                    essContext.UpdateObject(member);
                 }
                 else
                 {
-                    essContext.AttachTo(nameof(essContext.contacts), contact);
+                    //create member
+                    member.era_householdmemberid = Guid.NewGuid();
+                    essContext.AddToera_householdmembers(member);
                 }
+                AssignHouseholdMember(file, member);
+                AssignHouseholdMember(needsAssessment, member);
             }
-            else
+
+            foreach (var pet in needsAssessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment)
             {
-                contact.contactid = Guid.NewGuid();
-                contact.era_authenticated = false;
-                contact.era_verified = false;
-                contact.era_registrationdate = DateTimeOffset.UtcNow;
-                essContext.AddTocontacts(contact);
+                essContext.AddToera_needsassessmentanimals(pet);
+                AssignPet(needsAssessment, pet);
             }
-            essContext.AddToera_householdmembers(member);
-            essContext.AddLink(member, nameof(era_householdmember.era_era_householdmember_era_needassessment), eraNeedsAssessment);
-            //essContext.AddLink(eraNeedsAssessment, nameof(era_needassessment.era_era_householdmember_era_needassessment), member);
-            essContext.SetLink(member, nameof(era_householdmember.era_EvacuationFileid), eraEvacuationFile);
-            essContext.SetLink(member, nameof(era_householdmember.era_Registrant), contact);
-            essContext.AddLink(contact, nameof(contact.era_contact_era_householdmember_Registrantid), member);
+        }
+
+        private void AssignPrimaryRegistrant(era_evacuationfile file, contact primaryContact)
+        {
+            essContext.AddLink(primaryContact, nameof(primaryContact.era_evacuationfile_Registrant), file);
+            essContext.SetLink(file, nameof(era_evacuationfile.era_Registrant), primaryContact);
+        }
+
+        private void AssignToTask(era_evacuationfile file, string taskId)
+        {
+            if (string.IsNullOrEmpty(taskId)) return;
+            var task = essContext.era_tasks.Where(t => t.era_name == taskId).SingleOrDefault();
+            if (task == null) throw new Exception($"Task {taskId} not found");
+            essContext.AddLink(task, nameof(era_task.era_era_task_era_evacuationfileId), file);
+        }
+
+        private void AssignHouseholdMember(era_evacuationfile file, era_householdmember member)
+        {
+            if (member._era_registrant_value != null)
+            {
+                var registrant = essContext.contacts.Where(c => c.contactid == member._era_registrant_value).SingleOrDefault();
+                if (registrant == null) throw new Exception($"Household member has registrant id {member._era_registrant_value} which was not found");
+                essContext.AddLink(registrant, nameof(contact.era_contact_era_householdmember_Registrantid), member);
+            }
+            essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid), member);
+            essContext.SetLink(member, nameof(era_householdmember.era_EvacuationFileid), file);
+        }
+
+        private void AssignHouseholdMember(era_needassessment needsAssessment, era_householdmember member)
+        {
+            essContext.AddLink(member, nameof(era_householdmember.era_era_householdmember_era_needassessment), needsAssessment);
+            //essContext.AddLink(needsAssessment, nameof(era_needassessment.era_era_householdmember_era_needassessment), member);
+        }
+
+        private void AssignPet(era_needassessment needsAssessment, era_needsassessmentanimal pet)
+        {
+            essContext.AddLink(needsAssessment, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment), pet);
+            essContext.SetLink(pet, nameof(era_needsassessmentanimal.era_NeedsAssessment), needsAssessment);
+        }
+
+        private void VerifyEvacuationFileInvariants(EvacuationFile evacuationFile)
+        {
+            //Check invariants
+            if (string.IsNullOrEmpty(evacuationFile.PrimaryRegistrantId))
+            {
+                throw new Exception($"The file has no associated primary registrant");
+            }
+            if (evacuationFile.CurrentNeedsAssessment == null)
+            {
+                throw new Exception($"File {evacuationFile.Id} must have a needs assessment");
+            }
+            if (evacuationFile.CurrentNeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant) != 1)
+            {
+                throw new Exception($"File {evacuationFile.Id} must have a single primary registrant household member");
+            }
+            if (evacuationFile.CurrentNeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId != null) != 1)
+            {
+                throw new Exception($"File {evacuationFile.Id} primary registrant household member must be linked to a profile");
+            }
         }
 
         public async Task<string> Delete(string essFileNumber)
@@ -201,121 +205,104 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         private async Task<EvacuationFile> GetEvacuationFileById(Guid id, bool maskSecurityPhrase = true)
         {
-            var dynamicsFile = await essContext.era_evacuationfiles
+            var file = await essContext.era_evacuationfiles
                 .ByKey(id)
-                .Expand(f => f.era_Jurisdiction)
-                .Expand(f => f.era_Registrant)
+                .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .GetValueAsync();
 
-            essContext.LoadProperty(dynamicsFile.era_Jurisdiction, nameof(era_jurisdiction.era_RelatedProvinceState));
-            essContext.LoadProperty(dynamicsFile.era_Jurisdiction.era_RelatedProvinceState, nameof(era_provinceterritories.era_RelatedCountry));
+            if (file == null || file.statecode != (int)EntityState.Active) return null;
+            if (!file._era_currentneedsassessmentid_value.HasValue) return null;
 
-            var file = mapper.Map<EvacuationFile>(dynamicsFile, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
+            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
 
-            var latestNeedsAssessment = essContext.era_needassessments
-                .Where(na => na.era_EvacuationFile.era_evacuationfileid == dynamicsFile.era_evacuationfileid)
-                .OrderByDescending(na => na.createdon)
-                .First();
-
-            var needsAssessments = new[] { latestNeedsAssessment };
-            file.NeedsAssessments = needsAssessments.Select(na =>
+            essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
+            foreach (var member in file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)
             {
-                var needsAssessment = mapper.Map<NeedsAssessment>(na);
-                essContext.LoadProperty(na, nameof(era_needassessment.era_era_householdmember_era_needassessment));
-                foreach (var householdMember in na.era_era_householdmember_era_needassessment)
+                if (member._era_registrant_value.HasValue)
                 {
-                    essContext.LoadProperty(householdMember, nameof(era_householdmember.era_Registrant));
+                    essContext.LoadProperty(member, nameof(era_householdmember.era_Registrant));
                 }
-                needsAssessment.HouseholdMembers = mapper.Map<IEnumerable<HouseholdMember>>(na.era_era_householdmember_era_needassessment).ToArray();
+            }
+            essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment));
 
-                essContext.LoadProperty(na, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment));
+            var evacuationFile = mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
 
-                needsAssessment.Pets = mapper.Map<IEnumerable<Pet>>(na.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment);
-                return needsAssessment;
-            }).ToArray();
-
-            file.RestrictedAccess = file.NeedsAssessments.SelectMany(na => na.HouseholdMembers).Any(m => m.RestrictedAccess);
-
-            return file;
+            return await Task.FromResult(evacuationFile);
         }
 
-        public async Task<IEnumerable<EvacuationFile>> ReadAll(EvacuationFilesQuery query)
+        public async Task<IEnumerable<EvacuationFile>> Read(EvacuationFilesQuery query)
         {
             IEnumerable<Guid> fileIds = Array.Empty<Guid>();
-            var queryContacts = !string.IsNullOrEmpty(query.FirstName) ||
+            var queryContacts =
+                !string.IsNullOrEmpty(query.FirstName) ||
                 !string.IsNullOrEmpty(query.LastName) ||
                 !string.IsNullOrEmpty(query.DateOfBirth) ||
                 !string.IsNullOrEmpty(query.PrimaryRegistrantId);
 
-            var queryFiles = !string.IsNullOrEmpty(query.FileId) ||
+            var queryFiles =
+                !string.IsNullOrEmpty(query.FileId) ||
                 query.IncludeFilesInStatuses.Any() ||
                 query.RegistraionDateFrom.HasValue ||
                 query.RegistraionDateTo.HasValue;
 
             if (queryContacts)
             {
-                var contactQuery = essContext.contacts
-                  .Where(c => c.statecode == (int)EntityState.Active);
-
-                //if (!string.IsNullOrEmpty(query.PrimaryRegistrantUserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.PrimaryRegistrantUserId, StringComparison.OrdinalIgnoreCase));
-                if (!string.IsNullOrEmpty(query.PrimaryRegistrantId)) contactQuery = contactQuery.Where(c => c.contactid == Guid.Parse(query.PrimaryRegistrantId));
-                if (!string.IsNullOrEmpty(query.LastName)) contactQuery = contactQuery.Where(c => c.lastname.Equals(query.LastName, StringComparison.OrdinalIgnoreCase));
-                if (!string.IsNullOrEmpty(query.FirstName)) contactQuery = contactQuery.Where(c => c.firstname.Equals(query.FirstName, StringComparison.OrdinalIgnoreCase));
-                if (!string.IsNullOrEmpty(query.DateOfBirth)) contactQuery = contactQuery.Where(c => c.birthdate.Equals(Date.Parse(query.DateOfBirth)));
-                if (!query.IncludeHouseholdMembers) contactQuery = contactQuery.Where(m => m.era_registranttype == (int)RegistrantType.Primary);
-
-                var matchingContactIds = (await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync()).Select(c => c.contactid).ToArray();
-
-                Func<DataServiceQuery<era_needsassessmentevacuee>> householdMembersQuery = () =>
-                    (DataServiceQuery<era_needsassessmentevacuee>)essContext.era_needsassessmentevacuees
-                        .Expand(m => m.era_NeedsAssessmentID)
-                        .Where(m => m.statecode == (int)EntityState.Active);
-
-                var matchingContactFileIds = matchingContactIds
-                   .Select(id => householdMembersQuery()
-                       .Where(m => m.era_RegistrantID.contactid == id && m.era_NeedsAssessmentID != null)
-                       .ToArray()
-                       .Select(m => m.era_NeedsAssessmentID._era_evacuationfile_value.Value))
-                   .SelectMany(f => f)
-                   .ToArray();
+                var matchingContactFileIds = await QueryHouseholdMembers(query);
 
                 //merge matching file ids
                 fileIds = fileIds.Any()
-                    ? fileIds.Union(matchingContactFileIds)
+                    ? fileIds.Intersect(matchingContactFileIds)
                     : fileIds.Concat(matchingContactFileIds);
             }
 
             if (queryFiles)
             {
-                var fileQuery = essContext.era_evacuationfiles.Where(f => f.statecode == (int)EntityState.Active);
-                if (!string.IsNullOrEmpty(query.FileId)) fileQuery = fileQuery.Where(f => f.era_name == query.FileId);
-                if (query.RegistraionDateFrom.HasValue) fileQuery = fileQuery.Where(f => f.createdon >= query.RegistraionDateFrom.Value);
-                if (query.RegistraionDateTo.HasValue) fileQuery = fileQuery.Where(f => f.createdon <= query.RegistraionDateTo.Value);
-                if (query.IncludeFilesInStatuses.Any()) fileQuery = fileQuery.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.statuscode));
-
-                var matchingFileIds = (await ((DataServiceQuery<era_evacuationfile>)fileQuery).GetAllPagesAsync()).Select(f => f.era_evacuationfileid.Value).ToArray();
+                var matchingFileIds = await QueryFiles(query);
 
                 //merge matching file ids
                 fileIds = fileIds.Any()
-                    ? fileIds.Union(matchingFileIds)
+                    ? fileIds.Intersect(matchingFileIds)
                     : fileIds.Concat(matchingFileIds);
             }
 
-            if (query.Limit.HasValue) fileIds = fileIds.OrderByDescending(id => id).Take(query.Limit.Value);
-
             essContext.DetachAll();
-            var evacuationFiles = new List<EvacuationFile>();
+            var evacuationFiles = new ConcurrentBag<EvacuationFile>();
             var evacuationFilesTasks = fileIds.Distinct().Select(async id => evacuationFiles.Add(await GetEvacuationFileById(id, query.MaskSecurityPhrase)));
-
-            //Task.WaitAll(evacuationFilesTasks.ToArray());
-            foreach (var task in evacuationFilesTasks)
-            {
-                await task;
-            }
+            //magic to query files in parallel
+            await evacuationFilesTasks.ForEachAsync(10, async t => await t);
 
             essContext.DetachAll();
 
-            return evacuationFiles;
+            var files = evacuationFiles.Where(f => f != null);
+            if (query.Limit.HasValue) files = files.OrderByDescending(f => f.Id).Take(query.Limit.Value);
+            return files.ToArray();
+        }
+
+        private async Task<IEnumerable<Guid>> QueryFiles(EvacuationFilesQuery query)
+        {
+            var fileQuery = essContext.era_evacuationfiles.Where(f => f.statecode == (int)EntityState.Active);
+            if (!string.IsNullOrEmpty(query.FileId)) fileQuery = fileQuery.Where(f => f.era_name == query.FileId);
+            if (query.RegistraionDateFrom.HasValue) fileQuery = fileQuery.Where(f => f.createdon >= query.RegistraionDateFrom.Value);
+            if (query.RegistraionDateTo.HasValue) fileQuery = fileQuery.Where(f => f.createdon <= query.RegistraionDateTo.Value);
+            if (query.IncludeFilesInStatuses.Any()) fileQuery = fileQuery.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.statuscode));
+
+            var matchingFileIds = (await ((DataServiceQuery<era_evacuationfile>)fileQuery).GetAllPagesAsync()).Select(f => f.era_evacuationfileid.Value).ToArray();
+            return matchingFileIds;
+        }
+
+        private async Task<IEnumerable<Guid>> QueryHouseholdMembers(EvacuationFilesQuery query)
+        {
+            var contactQuery = essContext.era_householdmembers
+              .Where(c => c.statecode == (int)EntityState.Active);
+
+            if (!string.IsNullOrEmpty(query.PrimaryRegistrantId)) contactQuery = contactQuery.Where(c => c.era_isprimaryregistrant == true && c._era_registrant_value == Guid.Parse(query.PrimaryRegistrantId));
+            if (!string.IsNullOrEmpty(query.LastName)) contactQuery = contactQuery.Where(c => c.era_lastname.Equals(query.LastName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.FirstName)) contactQuery = contactQuery.Where(c => c.era_firstname.Equals(query.FirstName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.DateOfBirth)) contactQuery = contactQuery.Where(c => c.era_dateofbirth.Equals(Date.Parse(query.DateOfBirth)));
+
+            var matchingContactFileIds = (await ((DataServiceQuery<era_householdmember>)contactQuery).GetAllPagesAsync())
+                .Select(m => m._era_evacuationfileid_value.Value).ToArray();
+            return matchingContactFileIds;
         }
 
         public async Task<string> UpdateSecurityPhrase(string fileId, string securityPhrase)

@@ -15,12 +15,12 @@ export const needsOptions = [
   { name: "I'm not sure", value: 'Unsure', apiValue: null }
 ];
 export const referredServiceOptions = [
-  { name: 'Inquiry' },
-  { name: 'Health Services' },
-  { name: 'First Aid' },
-  { name: 'Personal Services' },
-  { name: 'Child Care' },
-  { name: 'Pet Care' }
+  { name: 'Inquiry', value: 'Inquiry' },
+  { name: 'Health Services', value: 'Health' },
+  { name: 'First Aid', value: 'FirstAid' },
+  { name: 'Personal Services', value: 'Personal' },
+  { name: 'Child Care', value: 'ChildCare' },
+  { name: 'Pet Care', value: 'PetCare' }
 ];
 export const radioButtonOptions1 = [
   { name: 'Yes', value: true },
@@ -74,7 +74,8 @@ export const wizardESSFileMessage = {
 export const essFileCreatedMessage = {
   title: 'ESS File Saved',
   text: 'ESS File has been successfully created.',
-  button: 'Proceed to Step 3'
+  button: 'Proceed to Step 3',
+  exitLink: 'Exit Wizard'
 };
 
 export const householdMemberDeleteDialog: DialogContent = {
@@ -118,6 +119,8 @@ export const createRegProfileError =
   'Unable to create evacuee profile at this time. Please try again later';
 export const editProfileError =
   'Unable to update your user profile at this time. Please try again later';
+export const createEssFileError =
+  'Unable to create ESS file at this time. Please try again later';
 export const securityQuestionError =
   'Unable to load security questions. Please try again later';
 export const taskSearchError =
