@@ -246,6 +246,7 @@ namespace EMBC.Responders.API.Controllers
 
     public class EvacuationFileHouseholdMember
     {
+        public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
@@ -253,6 +254,7 @@ namespace EMBC.Responders.API.Controllers
         public string DateOfBirth { get; set; }
         public HouseholdMemberType Type { get; set; }
         public bool IsMatch { get; set; }
+        public bool IsPrimaryRegistrant { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -284,8 +286,8 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum HouseholdMemberType
     {
-        [Description("Main Applicant")]
-        MainApplicant,
+        [Description("Registrant")]
+        Registrant,
 
         [Description("Household Member")]
         HouseholdMember
@@ -342,8 +344,10 @@ namespace EMBC.Responders.API.Controllers
 
         public string RegistrationLocation { get; set; }
 
+        public IEnumerable<NeedsAssessment> NeedsAssessments { get => new[] { LastNeedsAssessment }; }
+
         [Required]
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
+        public NeedsAssessment LastNeedsAssessment { get; set; }
 
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseEdited { get; set; }
@@ -351,6 +355,20 @@ namespace EMBC.Responders.API.Controllers
         public bool IsRestricted { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public string EvacuationFileDate { get; set; }
+        public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; }
+
+        [Required]
+        public EvacuationFileTask Task { get; set; }
+    }
+
+    public class EvacuationFileTask
+    {
+        [Required]
+        public string TaskNumber { get; set; }
+
+        public string CommunityCode { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
     }
 
     /// <summary>
@@ -362,6 +380,7 @@ namespace EMBC.Responders.API.Controllers
 
         [Required]
         public InsuranceOption Insurance { get; set; }
+
         public IEnumerable<Note> Notes { get; set; }
         public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }
 
@@ -380,6 +399,7 @@ namespace EMBC.Responders.API.Controllers
         public bool? CanEvacueeProvideIncidentals { get; set; }
 
         public NeedsAssessmentType Type { get; set; }
+        public bool HasSupplies { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -415,15 +435,19 @@ namespace EMBC.Responders.API.Controllers
     public enum NoteType
     {
         [EnumMember(Value = "General")]
-        General = 0,
-        [EnumMember(Value = "EvacuationImpact")]
-        EvacuationImpact = 1,
-        [EnumMember(Value = "EvacuationExternalReferrals")]
-        EvacuationExternalReferrals = 2,
-        [EnumMember(Value = "PetCarePlans")]
-        PetCarePlans = 3,
-        [EnumMember(Value = "HouseHoldRecoveryPlan")]
-        HouseHoldRecoveryPlan = 4
+        General,
+
+        [EnumMember(Value = "Evacuation Impact")]
+        EvacuationImpact,
+
+        [EnumMember(Value = "Evacuation External Referrals")]
+        EvacuationExternalReferrals,
+
+        [EnumMember(Value = "Pet Care Plans")]
+        PetCarePlans,
+
+        [EnumMember(Value = "HouseHold Recovery Plan")]
+        HouseHoldRecoveryPlan
     }
 
     /// <summary>
@@ -440,15 +464,20 @@ namespace EMBC.Responders.API.Controllers
     {
         [Description("Inquiry")]
         Inquiry,
+
         [Description("Health")]
         Health,
-        [Description("FirstAid")]
+
+        [Description("First Aid")]
         FirstAid,
+
         [Description("Personal")]
         Personal,
-        [Description("ChildCare")]
+
+        [Description("Child Care")]
         ChildCare,
-        [Description("PetCare")]
+
+        [Description("Pet Care")]
         PetCare
     }
 
@@ -494,12 +523,16 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<EvacuationFileHouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
                 .ForMember(d => d.PreferredName, opts => opts.Ignore())
-                .ForMember(d => d.Id, opts => opts.Ignore())
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.IsUnder19, opts => opts.Ignore())
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.Ignore())
-                .ReverseMap()
+                .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 ;
 
+            CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()
+                   .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
+                   .ForMember(d => d.IsMatch, opts => opts.Ignore())
+                   ;
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
                 .ReverseMap()
                 ;
@@ -516,7 +549,12 @@ namespace EMBC.Responders.API.Controllers
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.CompletedOn, opts => opts.Ignore())
-                .ReverseMap()
+                .ForMember(d => d.HasEnoughSupply, opts => opts.MapFrom(s => s.HasSupplies))
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => NeedsAssessmentType.Assessed))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.NeedsAssessment, NeedsAssessment>()
+                .ForMember(d => d.HasSupplies, opts => opts.MapFrom(s => s.HasEnoughSupply))
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
@@ -524,6 +562,12 @@ namespace EMBC.Responders.API.Controllers
                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.Address, Address>()
+                .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.Community))
+                .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
+                .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
+                ;
 
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
@@ -533,9 +577,23 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
                 .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
                 .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
-                .ForMember(d => d.TaskId, opts => opts.Ignore())
-                .ForMember(d => d.EvacuationDate, opts => opts.Ignore())
-                .ReverseMap()
+                .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.Task.TaskNumber))
+                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
+                .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
+                .ForMember(d => d.EssFileNumber, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
+                .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
+                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
+                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.TaskId == null
+                    ? null
+                    : new EvacuationFileTask
+                    {
+                        TaskNumber = s.TaskId
+                    }))
                 ;
 
             CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
@@ -551,7 +609,24 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
                 .ForMember(d => d.UserId, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
-                .ReverseMap()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.RegistrantProfile, RegistrantProfile>()
+                .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => new PersonDetails
+                {
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    DateOfBirth = s.DateOfBirth,
+                    Gender = s.Gender,
+                    Initials = s.Initials,
+                    PreferredName = s.PreferredName
+                }))
+                .ForMember(d => d.ContactDetails, opts => opts.MapFrom(s => new ContactDetails
+                {
+                    Email = s.Email,
+                    Phone = s.Phone
+                }))
                 .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.MapFrom(s =>
                     s.MailingAddress.Country == s.PrimaryAddress.Country &&
                     s.MailingAddress.StateProvince == s.PrimaryAddress.StateProvince &&
