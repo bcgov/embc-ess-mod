@@ -295,7 +295,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   private checkPrimaryAddress() {
     if (
       this.stepCreateProfileService?.primaryAddressDetails?.stateProvince
-        .code !== 'BC'
+        ?.code !== 'BC'
     ) {
       this.evacDetailsForm.get('evacuatedFromPrimary').setValue('No');
       this.isBCAddress = false;

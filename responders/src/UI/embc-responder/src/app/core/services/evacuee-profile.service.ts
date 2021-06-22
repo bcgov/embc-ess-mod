@@ -5,7 +5,7 @@ import { RegistrationsService } from 'src/app/core/api/services';
 import { StepCreateProfileService } from 'src/app/feature-components/wizard/step-create-profile/step-create-profile.service';
 import { RegistrantProfile, RegistrationResult } from '../api/models';
 import { AddressModel } from '../models/address.model';
-import { EvacueeProfile } from '../models/evacuee-profile';
+import { RegistrantProfileModel } from '../models/registrant-profile.model';
 import { LocationsService } from './locations.service';
 
 @Injectable({
@@ -24,13 +24,15 @@ export class EvacueeProfileService {
    *
    * @returns profile record
    */
-  public getProfileFromId(profileId: string): Observable<EvacueeProfile> {
+  public getProfileFromId(
+    profileId: string
+  ): Observable<RegistrantProfileModel> {
     return this.registrationsService
       .registrationsGetRegistrantProfile({
         registrantId: profileId
       })
       .pipe(
-        map((profile: EvacueeProfile) => {
+        map((profile: RegistrantProfileModel) => {
           const communities = this.locationService.getCommunityList();
           const countries = this.locationService.getCountriesList();
           const stateProvinces = this.locationService.getStateProvinceList();
@@ -89,11 +91,11 @@ export class EvacueeProfileService {
    *
    * @param regProfile Registrant Profile data to send to API
    *
-   * @returns profile id
+   * @returns API profile mapped as EvacueeProfile
    */
   public createProfile(
     regProfile: RegistrantProfile
-  ): Observable<RegistrationResult> {
+  ): Observable<RegistrantProfileModel> {
     return this.registrationsService
       .registrationsCreateRegistrantProfile({ body: regProfile })
       .pipe(
@@ -109,15 +111,21 @@ export class EvacueeProfileService {
    * @param registrantId ID of Registrant Profile to update
    * @param regProfile Registrant Profile data to send to API
    *
-   * @returns profile id
+   * @returns API profile mapped as EvacueeProfile
    */
   public updateProfile(
     registrantId: string,
     regProfile: RegistrantProfile
-  ): Observable<RegistrationResult> {
-    return this.registrationsService.registrationsUpdateRegistrantProfile({
-      registrantId,
-      body: regProfile
-    });
+  ): Observable<RegistrantProfileModel> {
+    return this.registrationsService
+      .registrationsUpdateRegistrantProfile({
+        registrantId,
+        body: regProfile
+      })
+      .pipe(
+        mergeMap((regResult: RegistrationResult) =>
+          this.getProfileFromId(regResult.id)
+        )
+      );
   }
 }
