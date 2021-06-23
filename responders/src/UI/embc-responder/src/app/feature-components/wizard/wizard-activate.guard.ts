@@ -28,9 +28,9 @@ export class WizardActivateGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    let loggedInTask = this.cacheService.get('loggedInTask');
-    let wizardType = this.evacueeSearchService.getWizardType();
-    let registrantProfileId = this.evacueeSessionService.profileId;
+    const loggedInTask = this.cacheService.get('loggedInTask');
+    const wizardType = this.evacueeSearchService.getWizardType();
+    const registrantProfileId = this.evacueeSessionService.profileId;
 
     if (wizardType === 'new-registration') {
       return this.isNewRegistrationAllowed(loggedInTask);
