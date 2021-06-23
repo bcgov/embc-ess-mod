@@ -31,14 +31,15 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseChanged { get; set; } = false;
-        public DateTime EvacuationDate { get; set; }
+        public DateTime? EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
+        public IEnumerable<NeedsAssessment> NeedsAssessments { get => new[] { LastNeedsAssessment }; }
         public string SecretPhrase { get; set; }
         public bool IsSecretPhraseMasked { get; set; }
         public string RegistrationLocation { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
-        public NeedsAssessment LastNeedsAssessment { get => NeedsAssessments.OrderByDescending(na => na.CompletedOn).FirstOrDefault(); }
+        public NeedsAssessment LastNeedsAssessment { get => NeedsAssessment; set => NeedsAssessment = value; }
+        public NeedsAssessment NeedsAssessment { get; set; }
     }
 
     public enum EvacuationFileStatus
