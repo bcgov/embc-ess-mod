@@ -13,7 +13,7 @@ import { StepCreateProfileService } from '../../step-create-profile/step-create-
 import { WizardService } from '../../wizard.service';
 
 import * as globalConst from 'src/app/core/services/global-constants';
-import { EvacueeSession } from 'src/app/core/services/evacuee-session';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { Community } from 'src/app/core/services/locations.service';
 
 @Component({
@@ -38,7 +38,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     private alertService: AlertService,
     private formBuilder: FormBuilder,
     public stepCreateProfileService: StepCreateProfileService,
-    private evacueeSession: EvacueeSession
+    private evacueeSession: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
