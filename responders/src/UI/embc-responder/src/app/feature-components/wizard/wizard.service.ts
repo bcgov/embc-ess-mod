@@ -28,7 +28,7 @@ export class WizardService {
   public setDefaultMenuItems(type: string) {
     if (type === 'new-registration') {
       this.menuItems = WizardSidenavModelValues.newRegistrationMenu;
-    } else if (type === 'new-file') {
+    } else if (type === 'new-ess-file') {
       this.menuItems = WizardSidenavModelValues.newESSFileMenu;
     }
   }

@@ -44,4 +44,12 @@ export class EvacueeSearchService {
   public set essFileId(essFileIdVal: string) {
     this.essFileIdVal = essFileIdVal;
   }
+
+  public setWizardType(wizardType: string) {
+    this.cacheService.set('wizardType', wizardType);
+  }
+
+  public getWizardType(): string {
+    return this.cacheService.get('wizardType');
+  }
 }
