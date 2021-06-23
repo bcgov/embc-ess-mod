@@ -73,17 +73,16 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   }
 
   hasPetsChange(event: MatRadioChange): void {
-    if (event.value === false) {
-      this.showPetsForm = false;
-      this.animalsForm.get('pet').reset();
+    if (event.value) {
+      this.addPets();
     } else {
-      this.showPetsForm = true;
+      this.cancel();
     }
   }
 
   addPets(): void {
     this.animalsForm.get('pet').reset();
-    this.showPetsForm = !this.showPetsForm;
+    this.showPetsForm = true;
     this.animalsForm.get('addPetIndicator').setValue(true);
   }
 
@@ -100,14 +99,14 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       this.animalsForm.get('addPetIndicator').setValue(false);
       this.dataSource.next(this.data);
       this.animalsForm.get('pets').setValue(this.data);
-      this.showPetsForm = !this.showPetsForm;
+      this.showPetsForm = false;
     } else {
       this.animalsForm.get('pet').markAllAsTouched();
     }
   }
 
   cancel(): void {
-    this.showPetsForm = !this.showPetsForm;
+    this.showPetsForm = false;
     this.animalsForm.get('pet').reset();
     this.animalsForm.get('addPetIndicator').setValue(false);
 
