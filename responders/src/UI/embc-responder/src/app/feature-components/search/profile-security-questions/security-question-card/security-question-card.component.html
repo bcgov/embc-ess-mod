@@ -1,37 +1,43 @@
 <mat-card>
-  <div class="row lineSpace">
-    <div class="col-md-4">
-      <p>Question:</p>
+  <form [formGroup]="securityQuestionForm">
+    <div class="row line-space">
+      <div class="col-md-4">
+        <p>Question:</p>
+      </div>
+      <div class="col-md-8">
+        <span class="question-highlight"> {{ question?.question }} </span>
+      </div>
     </div>
-    <div class="col-md-8">
-      <span class="questionHighlight"> {{ question?.question }} </span>
+    <div class="row img-space">
+      <div class="col-md-4">
+        <img class="divider" src="/assets/images/questionLine.svg" />
+      </div>
     </div>
-  </div>
-  <div class="row imgSpace">
-    <div class="col-md-4">
-      <img class="divider" src="/assets/images/questionLine.svg" />
+    <div class="row line-space">
+      <div class="col-md-4">
+        <p>Answer Hint:</p>
+      </div>
+      <div class="col-md-8">
+        <p>
+          <b> {{ question?.answer }} </b>
+        </p>
+      </div>
     </div>
-  </div>
-  <div class="row lineSpace">
-    <div class="col-md-4">
-      <p>Answer Hint:</p>
-    </div>
-    <div class="col-md-8">
-      <p>
-        <b> {{ question?.answerHint }} </b>
-      </p>
-    </div>
-  </div>
 
-  <div class="row lineSpace">
-    <div class="col-md-4">
-      <p>Answer:</p>
+    <div class="row line-space">
+      <div class="col-md-4">
+        <p>Answer:</p>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            [formControlName]="'answer'"
+            type="text"
+            (focusout)="sendAnswer()"
+          />
+        </mat-form-field>
+      </div>
     </div>
-    <div class="col-md-6">
-      <mat-form-field appearance="outline">
-        <!-- <mat-label>Answer</mat-label> -->
-        <input matInput #answer type="text" (focusout)="sendAnswer($event)" />
-      </mat-form-field>
-    </div>
-  </div>
+  </form>
 </mat-card>

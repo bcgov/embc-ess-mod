@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { VerifySecurityPhraseRequest } from 'src/app/core/api/models';
+import { VerifySecurityPhraseResponse } from 'src/app/core/api/models/verify-security-phrase-response';
+import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
+import { EssFileSecurityPhraseService } from './essfile-security-phrase.service';
 
 @Component({
   selector: 'app-essfile-security-phrase',
@@ -7,17 +11,36 @@ import { Router } from '@angular/router';
   styleUrls: ['./essfile-security-phrase.component.scss']
 })
 export class EssfileSecurityPhraseComponent implements OnInit {
-  dummyPhrase = 'j****t';
+  securityPhrase: string;
   givenAnswer: string;
-
   attemptsRemaning = 3;
+  isLoading = false;
   showLoader = false;
   correctAnswerFlag = false;
   wrongAnswerFlag = false;
+  color = '#169BD5';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private essFileSecurityPhraseService: EssFileSecurityPhraseService,
+    private evacueeSearchService: EvacueeSearchService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.evacueeSearchService.essFileId === undefined) {
+      this.router.navigate(['responder-access/search/evacuee']);
+    } else {
+      this.essFileSecurityPhraseService
+        .getSecurityPhrase(this.evacueeSearchService.essFileId)
+        .subscribe((results) => {
+          console.log(results);
+          // this.securityPhrase = this.profileSecurityQuestionsService.shuffleSecurityQuestions(
+          //   results?.questions
+          // );
+          // this.isLoading = !this.isLoading;
+        });
+    }
+  }
 
   /**
    * Function that connects to child output. Gets the answer to given questions and adds it into an array.
@@ -39,11 +62,21 @@ export class EssfileSecurityPhraseComponent implements OnInit {
    * Funtion that send answers to the backend and decided which screen to show according to backend response
    */
   next() {
-    this.correctAnswerFlag = true;
-    this.showLoader = true;
-    setTimeout(() => {
-      this.router.navigate(['responder-access/search/essfile']);
-    }, 1000);
+    const body: VerifySecurityPhraseRequest = {
+      answer: this.givenAnswer
+    };
+
+    this.essFileSecurityPhraseService
+      .verifySecurityPhrase(this.evacueeSearchService.essFileId, body)
+      .subscribe((results) => {
+        console.log(results);
+
+        //     this.correctAnswerFlag = true;
+        // this.showLoader = true;
+        // setTimeout(() => {
+        //   this.router.navigate(['responder-access/search/essfile']);
+        // }, 1000);
+      });
   }
 
   /**

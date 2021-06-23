@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators
 } from '@angular/forms';
@@ -13,9 +12,9 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
-import { DeleteHouseholdDialogComponent } from '../../../../shared/components/dialog-components/delete-household-dialog/delete-household-dialog.component';
 import { Router } from '@angular/router';
-import { HouseholdMemberType } from 'src/app/core/api/models';
+import { HouseholdMembersService } from './household-members.service';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-household-members',
@@ -46,7 +45,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private router: Router
+    private router: Router,
+    private householdService: HouseholdMembersService
   ) {}
 
   ngOnInit(): void {
@@ -110,10 +110,9 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Displays the PersonDetails form to add new household members to the form
    */
   addMembers(): void {
-    this.householdForm.get('houseHoldMember').reset();
+    this.householdService.addMembers(this.householdForm);
     this.showMemberForm = !this.showMemberForm;
     this.editFlag = !this.editFlag;
-    this.householdForm.get('addMemberIndicator').setValue(true);
   }
 
   /**
@@ -123,12 +122,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * @param index
    */
   editRow(element, index): void {
+    this.householdService.editRow(this.householdForm, element);
     this.editIndex = index;
     this.rowEdit = !this.rowEdit;
-    this.householdForm.get('houseHoldMember').setValue(element);
     this.showMemberForm = !this.showMemberForm;
     this.editFlag = !this.editFlag;
-    this.householdForm.get('addMemberIndicator').setValue(true);
   }
 
   /**
@@ -147,11 +145,9 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.data.push(this.householdForm.get('houseHoldMember').value);
       }
       this.dataSource.next(this.data);
-      this.householdForm.get('houseHoldMembers').setValue(this.data);
-      this.householdForm.get('houseHoldMember').reset();
+      this.householdService.saveHouseholdMember(this.householdForm, this.data);
       this.showMemberForm = !this.showMemberForm;
       this.editFlag = !this.editFlag;
-      this.householdForm.get('addMemberIndicator').setValue(false);
     } else {
       this.householdForm.get('houseHoldMember').markAllAsTouched();
     }
@@ -161,8 +157,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Resets the househol Member form and goes back to the main Form
    */
   cancel(): void {
-    this.householdForm.get('addMemberIndicator').setValue(false);
-    this.householdForm.get('houseHoldMember').reset();
+    this.householdService.cancel(this.householdForm);
     this.showMemberForm = !this.showMemberForm;
     this.editFlag = !this.editFlag;
 
@@ -179,13 +174,17 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   deleteRow(index: number): void {
     this.dialog
       .open(DialogComponent, {
-        data: { component: DeleteHouseholdDialogComponent },
+        data: {
+          component: InformationDialogComponent,
+          title: 'Remove Household Member',
+          content: globalConst.householdMemberDeleteDialog
+        },
         height: 'auto',
-        width: '550px'
+        width: '650px'
       })
       .afterClosed()
       .subscribe((event) => {
-        if (event === 'delete') {
+        if (event === 'confirm') {
           this.data.splice(index, 1);
           this.dataSource.next(this.data);
           this.householdForm.get('houseHoldMembers').setValue(this.data);
@@ -375,14 +374,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Updates the validations for personalDetailsForm
    */
   private updateOnVisibility(): void {
-    this.householdForm
-      .get('houseHoldMember.firstName')
-      .updateValueAndValidity();
-    this.householdForm.get('houseHoldMember.lastName').updateValueAndValidity();
-    this.householdForm.get('houseHoldMember.gender').updateValueAndValidity();
-    this.householdForm
-      .get('houseHoldMember.dateOfBirth')
-      .updateValueAndValidity();
+    this.householdService.updateOnVisibility(this.householdForm);
   }
 
   /**

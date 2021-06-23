@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { StatusDefinitionDialogComponent } from 'src/app/shared/components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
@@ -58,11 +59,11 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    *
    * @param text Text to be displayed
    */
-  openSuccessModal(text: string): void {
+  openSuccessModal(content: DialogContent): void {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text
+        content
       },
       height: '230px',
       width: '530px'

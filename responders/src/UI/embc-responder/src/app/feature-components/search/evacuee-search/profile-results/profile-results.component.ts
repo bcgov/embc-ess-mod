@@ -52,12 +52,13 @@ export class ProfileResultsComponent
 
   ngOnInit(): void {}
 
-  openProfile(): void {
+  openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
       this.router.navigate([
         'responder-access/search/evacuee-profile-dashboard'
       ]);
     } else {
+      this.evacueeSearchService.profileId = selectedRegistrant.id;
       this.router.navigate(['responder-access/search/security-questions']);
     }
   }

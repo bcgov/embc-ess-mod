@@ -1,12 +1,9 @@
 mat-card {
-    border: none !important;
-    background-color: rgba(242, 242, 242, 1);
     height: auto;
-    box-shadow: none !important;
     width: 70%;
 }
 
-.questionHighlight {
+.question-highlight {
     font-weight: 700;
     color: #234075;
     line-height: 17px;
@@ -17,12 +14,16 @@ mat-card {
     height: 2px;
 }
 
-.lineSpace {
+.line-space {
     padding: 15px 30px 10px;
 }
 
-.imgSpace {
+.img-space {
     padding-left: 30px;
+}
+
+text {
+    margin-bottom: 70px;
 }
 
 *:focus {

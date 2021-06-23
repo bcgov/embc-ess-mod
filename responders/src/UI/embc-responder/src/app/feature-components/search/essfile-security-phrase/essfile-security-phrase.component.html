@@ -1,4 +1,4 @@
-<div class="row heading-container">
+<div class="row heading-container row-space">
   <div class="col-md-12" *ngIf="attemptsRemaning > 0">
     <span class="page-heading">Answer Evacuation File Security Phrase</span>
   </div>
@@ -6,7 +6,6 @@
     <span class="page-heading">Unable to Verify Security Phrase</span>
   </div>
 </div>
-<br />
 <div class="row">
   <ng-container *ngIf="attemptsRemaning > 0">
     <div class="col-md-12">
@@ -20,65 +19,78 @@
           responders are required to start a new evacuee registration.
         </p>
         <br />
-        <div class="row">
-          <div class="col-md-8">
-            <app-security-phrase-card
-              [phrase]="dummyPhrase"
-              (answerEvent)="getAnswer($event)"
-            ></app-security-phrase-card>
-          </div>
-        </div>
-
-        <br />
-        <br />
-        <div *ngIf="correctAnswerFlag">
-          <img
-            width="20px"
-            height="20px"
-            src="/assets/images/status/complete.svg"
-          />
-          <span class="correct"> Correct!</span>
-        </div>
-        <div *ngIf="wrongAnswerFlag">
-          <img
-            width="20px"
-            height="20px"
-            src="/assets/images/wrong-answer.svg"
-          />
-          <span class="incorrect">
-            Incorrect answer. You have {{ attemptsRemaning }} attempts
-            remaining. Please try again.</span
-          >
-        </div>
-        <br />
-        <div class="row">
-          <div class="col-md-8">
-            <button
-              class="button-s submit button-space"
-              type="button"
-              mat-button
-              (click)="goToSearchResults()"
-            >
-              Back to Search
-            </button>
-            <button
-              class="button-p submit"
-              type="button"
-              mat-button
-              (click)="next()"
-            >
-              Continue
+        <ng-container *ngIf="isLoading">
+          <div class="row row-space">
+            <div class="col-md-8">
               <app-loader
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  margin-bottom: 20px;
+                "
+                [showLoader]="isLoading"
                 [strokeWidth]="3"
-                [diameter]="25"
-                [showLoader]="showLoader"
+                [diameter]="50"
+                [color]="color"
               ></app-loader>
-            </button>
+            </div>
           </div>
-        </div>
-        <br />
-        <br />
-        <br />
+        </ng-container>
+        <ng-container *ngIf="!isLoading">
+          <div class="row double-space">
+            <div class="col-md-8">
+              <app-security-phrase-card
+                [phrase]="securityPhrase"
+                (answerEvent)="getAnswer($event)"
+              ></app-security-phrase-card>
+            </div>
+          </div>
+          <div *ngIf="correctAnswerFlag">
+            <img
+              width="20px"
+              height="20px"
+              src="/assets/images/status/complete.svg"
+            />
+            <span class="correct"> Correct!</span>
+          </div>
+          <div *ngIf="wrongAnswerFlag">
+            <img
+              width="20px"
+              height="20px"
+              src="/assets/images/wrong-answer.svg"
+            />
+            <span class="incorrect">
+              Incorrect answer. You have {{ attemptsRemaning }} attempts
+              remaining. Please try again.</span
+            >
+          </div>
+          <div class="row double-space">
+            <div class="col-md-8">
+              <button
+                class="button-s submit button-space"
+                type="button"
+                mat-button
+                (click)="goToSearchResults()"
+              >
+                Back to Search
+              </button>
+              <button
+                class="button-p submit"
+                type="button"
+                mat-button
+                (click)="next()"
+              >
+                Continue
+                <app-loader
+                  [strokeWidth]="3"
+                  [diameter]="25"
+                  [showLoader]="showLoader"
+                ></app-loader>
+              </button>
+            </div>
+          </div>
+        </ng-container>
       </mat-card>
     </div>
   </ng-container>
@@ -97,10 +109,6 @@
           Please start a new Evacuee Registration if you cannot access the
           evacuees ESS File or Profile.
         </p>
-        <br />
-        <br />
-        <br />
-        <br />
         <div class="row">
           <div class="col-md-8">
             <button
@@ -121,10 +129,6 @@
             </button>
           </div>
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
       </mat-card>
     </div>
   </ng-container>

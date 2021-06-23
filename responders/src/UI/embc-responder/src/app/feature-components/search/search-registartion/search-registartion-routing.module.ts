@@ -41,13 +41,6 @@ const routes: Routes = [
           ).then((m) => m.EssfileSecurityPhraseModule)
       },
       {
-        path: 'essfile',
-        loadChildren: () =>
-          import('../selected-essfile/selected-essfile.module').then(
-            (m) => m.SelectedEssfileModule
-          )
-      },
-      {
         path: 'security-questions',
         loadChildren: () =>
           import(

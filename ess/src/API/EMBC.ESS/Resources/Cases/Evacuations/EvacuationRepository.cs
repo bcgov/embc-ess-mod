@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using EMBC.ESS.Utilities.Extensions;
 using Microsoft.OData.Client;
 using Microsoft.OData.Edm;
 
@@ -209,7 +210,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .GetValueAsync();
 
-            if (file.statecode != (int)EntityState.Active) return null;
+            if (file == null || file.statecode != (int)EntityState.Active) return null;
             if (!file._era_currentneedsassessmentid_value.HasValue) return null;
 
             essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
@@ -267,9 +268,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.DetachAll();
             var evacuationFiles = new ConcurrentBag<EvacuationFile>();
             var evacuationFilesTasks = fileIds.Distinct().Select(async id => evacuationFiles.Add(await GetEvacuationFileById(id, query.MaskSecurityPhrase)));
-            //Task.WaitAll(evacuationFilesTasks.ToArray());
-            //foreach (var task in evacuationFilesTasks) await task;
-            var result = Parallel.ForEach(evacuationFilesTasks, new ParallelOptions { MaxDegreeOfParallelism = 52 }, t => t.Wait());
+            //magic to query files in parallel
+            await evacuationFilesTasks.ForEachAsync(10, async t => await t);
 
             essContext.DetachAll();
 

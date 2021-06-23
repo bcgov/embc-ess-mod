@@ -40,9 +40,7 @@ namespace EMBC.Tests.Unit.Responders.API
         {
             return new Faker<ContactDetails>()
                 .RuleFor(o => o.Email, f => f.Internet.Email())
-                .RuleFor(o => o.HideEmailRequired, f => f.Random.Bool())
                 .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
-                .RuleFor(o => o.HidePhoneRequired, f => f.Random.Bool())
                 .Generate();
         }
 

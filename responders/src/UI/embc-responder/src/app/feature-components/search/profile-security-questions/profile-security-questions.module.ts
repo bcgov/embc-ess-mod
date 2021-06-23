@@ -5,6 +5,7 @@ import { ProfileSecurityQuestionsComponentRoutingModule } from './profile-securi
 import { MaterialModule } from 'src/app/material.module';
 import { SecurityQuestionCardComponent } from './security-question-card/security-question-card.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     ProfileSecurityQuestionsComponentRoutingModule,
     MaterialModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ]
 })
 export class ProfileSecurityQuestionsModule {}

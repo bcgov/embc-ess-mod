@@ -1,3 +1,6 @@
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { DialogContent } from '../models/dialog-content.model';
+
 export const insuranceOptions = [
   { name: 'Yes', value: 'Yes' },
   {
@@ -24,11 +27,15 @@ export const radioButtonOptions1 = [
   { name: 'Yes', value: true },
   { name: 'No', value: false }
 ];
-export const deleteMessage =
-  'User has been successfully deleted from the ERA Tool.';
-export const editMessage = 'User has been edited successfully.';
-export const addMessage =
-  'Team member has been <b>saved</b> & added successfully.';
+export const deleteMessage: DialogContent = {
+  text: '<p>User has been successfully deleted from the ERA Tool.</p>'
+};
+export const editMessage: DialogContent = {
+  text: '<p>User has been edited successfully.</p>'
+};
+export const addMessage: DialogContent = {
+  text: '<p>Team member has been <b>saved</b> & added successfully.</p>'
+};
 export const tier2Notes = 'Notes regarding Tier 2 Supervisor';
 export const tier3Notes = 'Notes regarding Tier 3 ESS Director/ Manager';
 export const tier1Notes = 'Notes regarding Tier 1 Responder';
@@ -55,36 +62,55 @@ export const gender = [
   { name: 'X', value: 'X' }
 ];
 
-export const wizardProfileMessage = {
-  title: 'Complete all steps',
+export const wizardProfileMessage: DialogContent = {
   text:
-    'Please complete all sections of the Evacuee Profile prior to submitting.'
+    '<p>Please complete all sections of the Evacuee Profile prior to submitting.</p>'
 };
-export const evacueeProfileCreatedMessage = {
-  title: 'Evacuee Profile Saved',
-  text: 'Evacuee profile has been successfully created.',
-  button: 'Proceed to Step 2'
+export const evacueeProfileCreatedMessage: DialogContent = {
+  text: '<p>Evacuee profile has been successfully created.</p>',
+  confirmButton: 'Proceed to Step 2'
 };
-export const wizardESSFileMessage = {
-  title: 'Complete all steps',
-  text: 'Please complete all sections of the ESS File prior to submitting.'
+export const wizardESSFileMessage: DialogContent = {
+  text:
+    '<p>Please complete all sections of the ESS File prior to submitting.</p>'
 };
-export const essFileCreatedMessage = {
-  title: 'ESS File Saved',
-  text: 'ESS File has been successfully created.',
-  button: 'Proceed to Step 3',
+export const essFileCreatedMessage: DialogContent = {
+  text: '<p>ESS File has been successfully created.</p>',
+  confirmButton: 'Proceed to Step 3',
   exitLink: 'Exit Wizard'
 };
 
-export const evacueeProfileStepIncompleteMessage =
-  'Please <strong>complete the Evacuee Profile</strong> prior to proceeding to the next steps.';
-export const essFileStepIncompleteMessage =
-  'Please <strong>complete the ESS File</strong> prior to proceeding to the next steps.';
-export const stepIncompleteMessage =
-  'Please <strong>complete the current step</strong> prior to proceeding to the next steps.';
+export const householdMemberDeleteDialog: DialogContent = {
+  text:
+    '<p>Are you sure you want to <b>remove</b> this household member from your evacuation file?</p>',
+  confirmButton: 'Yes, Remove Household Member',
+  cancelButton: 'No, Cancel'
+};
 
-export const successfulVerification =
-  'Evacuee profile has been successfully verified';
+export const exitWizardDialog: DialogContent = {
+  text:
+    '<p>Are you sure you want to exit the wizard?</p><p>Any information that has not been <b>submitted</b> will be lost.</p>',
+  confirmButton: 'Yes, Exit Wizard',
+  cancelButton: 'No, Cancel'
+};
+
+export const evacueeProfileStepIncompleteMessage: DialogContent = {
+  text:
+    '<p>Please <strong>complete the Evacuee Profile</strong> prior to proceeding to the next steps.</p>'
+};
+
+export const essFileStepIncompleteMessage: DialogContent = {
+  text:
+    '<p>Please <strong>complete the ESS File</strong> prior to proceeding to the next steps.</p>'
+};
+export const stepIncompleteMessage: DialogContent = {
+  text:
+    '<p>Please <strong>complete the current step</strong> prior to proceeding to the next steps.</p>'
+};
+
+export const successfulVerification: DialogContent = {
+  text: '<p>Evacuee profile has been successfully verified</p>'
+};
 
 // Generic error messages
 export const genericError =

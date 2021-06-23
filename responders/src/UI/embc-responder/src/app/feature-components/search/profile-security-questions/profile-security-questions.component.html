@@ -1,17 +1,14 @@
 <div class="row heading-container">
-  <div
-    class="col-md-12"
-    *ngIf="securityQuestionResult === undefined || securityQuestionResult === 1"
-  >
+  <div class="col-md-12" *ngIf="!incorrectScreen">
     <span class="page-heading">Please Answer Your Security Questions</span>
   </div>
-  <div class="col-md-12" *ngIf="securityQuestionResult === 0">
+  <div class="col-md-12" *ngIf="incorrectScreen">
     <span class="page-heading">Unable to Verify Security Questions</span>
   </div>
 </div>
 <br />
 <div class="row">
-  <ng-container *ngIf="securityQuestionResult === undefined">
+  <ng-container *ngIf="defaultScreen && !incorrectScreen">
     <div class="col-md-12">
       <mat-card>
         <p class="heading">
@@ -22,26 +19,44 @@
           characters.
         </p>
         <br />
-        <div class="row">
+        <!-- <ng-container *ngIf="isLoading">
+          <div class="row row-space">
+            <div class="col-md-8">
+              <app-loader
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  margin-bottom: 20px;
+                "
+                [showLoader]="isLoading"
+                [strokeWidth]="3"
+                [diameter]="50"
+                [color]="color"
+              ></app-loader>
+            </div>
+          </div>
+        </ng-container>   *ngIf="!isLoading" -->
+        <!-- <ng-container> -->
+        <div class="row row-space">
           <div class="col-md-8">
             <app-security-question-card
               [question]="securityQuestions[0]"
               (questionEvent)="getAnswers($event)"
-            ></app-security-question-card>
+            >
+            </app-security-question-card>
           </div>
         </div>
-
-        <br />
-        <div class="row">
+        <div class="row row-space">
           <div class="col-md-8">
             <app-security-question-card
               [question]="securityQuestions[1]"
               (questionEvent)="getAnswers($event)"
-            ></app-security-question-card>
+            >
+            </app-security-question-card>
           </div>
         </div>
-        <br />
-        <br />
+
         <div *ngIf="correctAnswerFlag">
           <img
             width="20px"
@@ -50,8 +65,7 @@
           />
           <span class="correct"> Correct!</span>
         </div>
-        <br />
-        <div class="row">
+        <div class="row double-space">
           <div class="col-md-8">
             <button
               class="button-s submit button-space"
@@ -76,14 +90,12 @@
             </button>
           </div>
         </div>
-        <br />
-        <br />
-        <br />
+        <!-- </ng-container> -->
       </mat-card>
     </div>
   </ng-container>
 
-  <ng-container *ngIf="securityQuestionResult === 1">
+  <ng-container *ngIf="!defaultScreen && !incorrectScreen">
     <div class="col-md-12">
       <mat-card>
         <p class="heading">
@@ -95,16 +107,15 @@
           characters.
         </p>
         <br />
-        <div class="row">
+        <div class="row row-space">
           <div class="col-md-8">
             <app-security-question-card
               [question]="securityQuestions[2]"
               (questionEvent)="getAnswers($event)"
-            ></app-security-question-card>
+            >
+            </app-security-question-card>
           </div>
         </div>
-        <br />
-        <br />
         <div *ngIf="correctAnswerFlag">
           <img
             width="20px"
@@ -113,9 +124,7 @@
           />
           <span class="correct"> Correct!</span>
         </div>
-        <br />
-        <br />
-        <div class="row">
+        <div class="row double-space">
           <div class="col-md-8">
             <button
               class="button-s submit button-space"
@@ -140,32 +149,27 @@
             </button>
           </div>
         </div>
-        <br />
-        <br />
-        <br />
       </mat-card>
     </div>
   </ng-container>
 
-  <ng-container *ngIf="securityQuestionResult === 0">
+  <ng-container *ngIf="incorrectScreen">
     <div class="col-md-12">
       <mat-card>
-        <p class="heading">
-          The evacuee was unable to answer the security questions correctly.
-        </p>
-        <p class="paragraphSpace">
-          If the evacuee also has an <b>ESS File</b>, go back to the search
-          results page and try to access their ESS File.
-        </p>
-        <p>
-          Please start a new Evacuee Registration if you cannot access the
-          evacuees ESS File or Profile.
-        </p>
-        <br />
-        <br />
-        <br />
-        <br />
-        <div class="row">
+        <div class="text">
+          <p class="heading">
+            The evacuee was unable to answer the security questions correctly.
+          </p>
+          <p class="paragraph-space">
+            If the evacuee also has an <b>ESS File</b>, go back to the search
+            results page and try to access their ESS File.
+          </p>
+          <p>
+            Please start a new Evacuee Registration if you cannot access the
+            evacuees ESS File or Profile.
+          </p>
+        </div>
+        <div class="row double-space">
           <div class="col-md-8">
             <button
               class="button-s submit button-space"
@@ -185,10 +189,6 @@
             </button>
           </div>
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
       </mat-card>
     </div>
   </ng-container>

@@ -104,13 +104,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuatedFromAddress))
                 ;
 
-            Func<string, bool> isGuid = s => Guid.TryParse(s, out var _);
-            CreateMap<ESS.Shared.Contracts.Submissions.Address, Controllers.Address>()
-                .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => !isGuid(s.Community) ? null : s.Community))
-                .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
-                .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
-                ;
-
             CreateMap<RegistrantWithFiles, RegistrantProfileSearchResult>()
                 .IncludeMembers(s => s.RegistrantProfile)
                 .ForMember(d => d.EvacuationFiles, opts => opts.MapFrom(s => s.Files))
@@ -121,11 +114,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => DateTime.Now))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => RegistrantStatus.NotVerified))
                 .ForMember(d => d.EvacuationFiles, opts => opts.Ignore())
-                ;
-
-            CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()
-                .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.MainApplicant : HouseholdMemberType.HouseholdMember))
-                .ForMember(d => d.IsMatch, opts => opts.Ignore())
                 ;
         }
     }

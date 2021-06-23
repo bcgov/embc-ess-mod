@@ -45,10 +45,11 @@ export class EssFilesResultsComponent
 
   ngOnInit(): void {}
 
-  openESSFile(): void {
+  openESSFile(selectedESSFile: EvacuationFileSearchResult): void {
     if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
       this.router.navigate(['responder-access/search/essfile']);
     } else {
+      this.evacueeSearchService.essFileId = selectedESSFile.id;
       this.router.navigate(['responder-access/search/security-phrase']);
     }
   }

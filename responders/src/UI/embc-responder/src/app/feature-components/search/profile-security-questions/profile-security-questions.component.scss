@@ -6,6 +6,7 @@
 
 mat-card {
     border: none !important;
+    margin-bottom: 20px;
 }
 
 .submit {
@@ -17,7 +18,7 @@ mat-card {
     margin-right: 20px;
 }
 
-.paragraphSpace {
+.paragraph-space {
     margin-bottom: 0px;
     margin-top: 50px;
 }
@@ -25,4 +26,13 @@ mat-card {
 .correct {
     color: #3C9D0F;
     font-size:small;
+}
+
+.row-space{
+    margin-bottom: 20px;
+}
+
+.double-space {
+    margin-bottom: 20px !important;
+    margin-top: 20px !important;
 }
