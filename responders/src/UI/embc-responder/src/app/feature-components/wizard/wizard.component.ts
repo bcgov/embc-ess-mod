@@ -28,11 +28,10 @@ export class WizardComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {
     const params = this.route.snapshot.queryParams;
-    if (params && params.type) {
-      this.sideNavMenu = this.wizardService.getMenuItems(params.type);
-    } else {
-      this.sideNavMenu = this.wizardService.menuItems;
-    }
+    if (params && params.type)
+      this.wizardService.setDefaultMenuItems(params.type);
+
+    this.sideNavMenu = this.wizardService.menuItems;
   }
 
   ngOnInit(): void {

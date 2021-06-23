@@ -15,22 +15,22 @@ export class WizardService {
   constructor(private cacheService: CacheService) {}
 
   public get menuItems(): Array<WizardSidenavModel> {
-    return this.sideMenuItems === null || this.sideMenuItems === undefined
-      ? JSON.parse(this.cacheService.get('wizardMenu'))
-      : this.sideMenuItems;
+    if (this.sideMenuItems === null || this.sideMenuItems === undefined)
+      this.sideMenuItems = JSON.parse(this.cacheService.get('wizardMenu'));
+
+    return this.sideMenuItems;
   }
   public set menuItems(menuItems: Array<WizardSidenavModel>) {
     this.sideMenuItems = menuItems;
     this.cacheService.set('wizardMenu', menuItems);
   }
 
-  public getMenuItems(type: string): Array<WizardSidenavModel> {
+  public setDefaultMenuItems(type: string) {
     if (type === 'new-registration') {
       this.menuItems = WizardSidenavModelValues.newRegistrationMenu;
     } else if (type === 'new-file') {
       this.menuItems = WizardSidenavModelValues.newESSFileMenu;
     }
-    return this.menuItems;
   }
 
   /**
