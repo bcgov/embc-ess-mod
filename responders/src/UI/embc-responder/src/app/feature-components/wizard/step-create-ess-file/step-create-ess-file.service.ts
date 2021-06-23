@@ -20,10 +20,9 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
-import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { WizardService } from '../wizard.service';
-import { EvacueeSession } from 'src/app/core/services/evacuee-session';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Injectable({ providedIn: 'root' })
@@ -72,7 +71,7 @@ export class StepCreateEssFileService {
   constructor(
     private dialog: MatDialog,
     private wizardService: WizardService,
-    private evacueeSession: EvacueeSession,
+    private evacueeSession: EvacueeSessionService,
     private stepCreateProfileService: StepCreateProfileService
   ) {}
 

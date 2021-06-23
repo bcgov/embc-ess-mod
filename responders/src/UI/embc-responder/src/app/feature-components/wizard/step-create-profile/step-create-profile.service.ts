@@ -15,8 +15,7 @@ import {
 import { Subject } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
-import { EvacueeSession } from 'src/app/core/services/evacuee-session';
-import { LocationsService } from 'src/app/core/services/locations.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardService } from '../wizard.service';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
@@ -48,7 +47,7 @@ export class StepCreateProfileService {
   constructor(
     private dialog: MatDialog,
     private wizardService: WizardService,
-    private evacueeSession: EvacueeSession
+    private evacueeSession: EvacueeSessionService
   ) {}
 
   public get showContact(): boolean {
