@@ -94,7 +94,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             })).Items.Cast<EvacuationFile>().Last();
 
             var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
-            var needsAssessment = fileToUpdate.CurrentNeedsAssessment;
+            var needsAssessment = fileToUpdate.NeedsAssessment;
 
             needsAssessment.HasPetsFood = !needsAssessment.HasPetsFood;
             foreach (var member in needsAssessment.HouseholdMembers)
@@ -109,7 +109,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var updatedFile = (await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
 
-            var updatedNeedsAssessment = updatedFile.CurrentNeedsAssessment;
+            var updatedNeedsAssessment = updatedFile.NeedsAssessment;
             updatedNeedsAssessment.HasPetsFood.ShouldBe(needsAssessment.HasPetsFood);
             foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
             {
@@ -147,8 +147,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             // Needs Assessment
 
-            var originalNeedsAssessment = originalFile.CurrentNeedsAssessment;
-            var needsAssessment = evacuationFile.CurrentNeedsAssessment;
+            var originalNeedsAssessment = originalFile.NeedsAssessment;
+            var needsAssessment = evacuationFile.NeedsAssessment;
             needsAssessment.Insurance.ShouldBe(originalNeedsAssessment.Insurance);
             needsAssessment.CanEvacueeProvideClothing.ShouldBe(originalNeedsAssessment.CanEvacueeProvideClothing);
             needsAssessment.CanEvacueeProvideFood.ShouldBe(originalNeedsAssessment.CanEvacueeProvideFood);
@@ -203,7 +203,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 SecurityPhrase = "secret123",
                 SecurityPhraseChanged = true,
 
-                CurrentNeedsAssessment = new NeedsAssessment
+                NeedsAssessment = new NeedsAssessment
                 {
                     CompletedOn = now,
                     EvacuatedFrom = new EvacuationAddress()

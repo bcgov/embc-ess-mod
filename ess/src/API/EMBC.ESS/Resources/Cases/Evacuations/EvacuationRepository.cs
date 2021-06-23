@@ -172,15 +172,15 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             {
                 throw new Exception($"The file has no associated primary registrant");
             }
-            if (evacuationFile.CurrentNeedsAssessment == null)
+            if (evacuationFile.NeedsAssessment == null)
             {
                 throw new Exception($"File {evacuationFile.Id} must have a needs assessment");
             }
-            if (evacuationFile.CurrentNeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant) != 1)
+            if (evacuationFile.NeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant) != 1)
             {
                 throw new Exception($"File {evacuationFile.Id} must have a single primary registrant household member");
             }
-            if (evacuationFile.CurrentNeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId != null) != 1)
+            if (evacuationFile.NeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId != null) != 1)
             {
                 throw new Exception($"File {evacuationFile.Id} primary registrant household member must be linked to a profile");
             }
