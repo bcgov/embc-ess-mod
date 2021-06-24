@@ -25,7 +25,7 @@ export class WizardService {
     this.cacheService.set('wizardMenu', menuItems);
   }
 
-  public setDefaultMenuItems(type: string) {
+  public setDefaultMenuItems(type: string): void {
     if (type === 'new-registration') {
       this.menuItems = WizardSidenavModelValues.newRegistrationMenu;
     } else if (type === 'new-file') {

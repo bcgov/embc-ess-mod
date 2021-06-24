@@ -11,6 +11,7 @@ import {
   EvacuationFileHouseholdMember,
   HouseholdMemberType,
   InsuranceOption,
+  NeedsAssessment,
   NoteType,
   PersonDetails,
   Pet,
@@ -25,6 +26,7 @@ import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { WizardService } from '../wizard.service';
 import { EvacueeSession } from 'src/app/core/services/evacuee-session';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
@@ -72,6 +74,7 @@ export class StepCreateEssFileService {
   constructor(
     private dialog: MatDialog,
     private wizardService: WizardService,
+    private userService: UserService,
     private evacueeSession: EvacueeSession,
     private stepCreateProfileService: StepCreateProfileService
   ) {}
@@ -335,6 +338,8 @@ export class StepCreateEssFileService {
    * @returns Evacuation File record usable by the API
    */
   public createEvacFileDTO(): EvacuationFile {
+    const userProfile = this.userService.currentProfile;
+
     // Get correct API values for Needs Assessment selections
     const needsClothingDTO = globalConst.needsOptions.find(
       (ins) => ins.value === this.canRegistrantProvideClothing
@@ -368,62 +373,65 @@ export class StepCreateEssFileService {
         lastName: this.stepCreateProfileService.personalDetails.lastName,
         gender: this.stepCreateProfileService.personalDetails.gender,
         initials: this.stepCreateProfileService.personalDetails.initials,
-        type: HouseholdMemberType.MainApplicant
+        type: HouseholdMemberType.Registrant
       },
       ...this.householdMembers
     ];
+
+    const needsObject: NeedsAssessment = {
+      notes: [
+        {
+          type: NoteType.EvacuationImpact,
+          content: this.evacuationImpact
+        },
+        {
+          type: NoteType.HouseHoldRecoveryPlan,
+          content: this.householdRecoveryPlan
+        },
+        {
+          type: NoteType.EvacuationExternalReferrals,
+          content: this.evacuationExternalReferrals
+        },
+        {
+          type: NoteType.PetCarePlans,
+          content: this.petCarePlans
+        }
+      ],
+
+      insurance: this.insurance,
+      recommendedReferralServices: this.referredServiceDetails,
+
+      householdMembers: allMembers,
+      haveSpecialDiet: this.haveSpecialDiet,
+      specialDietDetails: this.specialDietDetails,
+      haveMedication: this.haveMedication,
+
+      pets: this.petsList,
+      hasPetsFood: this.havePetsFood,
+
+      canEvacueeProvideFood: needsFoodDTO,
+      canEvacueeProvideLodging: needsLodgingDTO,
+      canEvacueeProvideClothing: needsClothingDTO,
+      canEvacueeProvideTransportation: needsTransportationDTO,
+      canEvacueeProvideIncidentals: needsIncidentalsDTO
+    };
 
     // Map out into DTO object and return
     return {
       primaryRegistrantId: this.evacueeSession.profileId,
 
-      essFileNumber: this.paperESSFile,
       evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(
         this.evacAddress
       ),
       registrationLocation: this.facilityName,
 
-      needsAssessments: [
-        {
-          notes: [
-            {
-              type: NoteType.EvacuationImpact,
-              content: this.evacuationImpact
-            },
-            {
-              type: NoteType.HouseHoldRecoveryPlan,
-              content: this.householdRecoveryPlan
-            },
-            {
-              type: NoteType.EvacuationExternalReferrals,
-              content: this.evacuationExternalReferrals
-            },
-            {
-              type: NoteType.PetCarePlans,
-              content: this.petCarePlans
-            }
-          ],
-
-          insurance: this.insurance,
-          recommendedReferralServices: this.referredServiceDetails,
-
-          householdMembers: allMembers,
-          haveSpecialDiet: this.haveSpecialDiet,
-          specialDietDetails: this.specialDietDetails,
-          haveMedication: this.haveMedication,
-
-          pets: this.petsList,
-          hasPetsFood: this.havePetsFood,
-
-          canEvacueeProvideFood: needsFoodDTO,
-          canEvacueeProvideLodging: needsLodgingDTO,
-          canEvacueeProvideClothing: needsClothingDTO,
-          canEvacueeProvideTransportation: needsTransportationDTO,
-          canEvacueeProvideIncidentals: needsIncidentalsDTO
-        }
-      ],
+      needsAssessments: [needsObject],
+      lastNeedsAssessment: needsObject,
       securityPhrase: this.securityPhrase,
-      securityPhraseEdited: !this.bypassPhrase
+      securityPhraseEdited: !this.bypassPhrase,
+      task: {
+        taskNumber: userProfile.taskNumber
+      }
     };
   }
 
@@ -468,11 +476,11 @@ export class StepCreateEssFileService {
 
       // Split main applicant from other household members, remap to UI model
       const primaryLastName = essNeeds.householdMembers?.find(
-        (member) => member.type === HouseholdMemberType.MainApplicant
+        (member) => member.type === HouseholdMemberType.Registrant
       )?.lastName;
 
       this.householdMembers = essNeeds.householdMembers
-        ?.filter((member) => member.type !== HouseholdMemberType.MainApplicant)
+        ?.filter((member) => member.type !== HouseholdMemberType.Registrant)
         .map<HouseholdMemberModel>((member) => {
           return {
             ...member,

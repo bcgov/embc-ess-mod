@@ -2,8 +2,8 @@
 /* eslint-disable */
 export enum NoteType {
   General = 'General',
-  EvacuationImpact = 'EvacuationImpact',
-  EvacuationExternalReferrals = 'EvacuationExternalReferrals',
-  PetCarePlans = 'PetCarePlans',
-  HouseHoldRecoveryPlan = 'HouseHoldRecoveryPlan'
+  EvacuationImpact = 'Evacuation Impact',
+  EvacuationExternalReferrals = 'Evacuation External Referrals',
+  PetCarePlans = 'Pet Care Plans',
+  HouseHoldRecoveryPlan = 'HouseHold Recovery Plan'
 }
