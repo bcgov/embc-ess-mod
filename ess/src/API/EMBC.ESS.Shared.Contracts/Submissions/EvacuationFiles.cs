@@ -42,20 +42,20 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public NeedsAssessment NeedsAssessment { get; set; }
     }
 
-    public class User
-    {
-        public string UserId { get; set; }
-        public string UserName { get; set; }
-        public UserType Type { get; set; }
-        public string DisplayName { get; set; }
-    }
+    //public class User
+    //{
+    //    public string UserId { get; set; }
+    //    public string UserName { get; set; }
+    //    public UserType Type { get; set; }
+    //    public string DisplayName { get; set; }
+    //}
 
-    public enum UserType
-    {
-        Anonymous,
-        Registrant,
-        Responder
-    }
+    //public enum UserType
+    //{
+    //    Anonymous,
+    //    Registrant,
+    //    Responder
+    //}
 
     public enum EvacuationFileStatus
     {
