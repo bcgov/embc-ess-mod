@@ -117,7 +117,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                         StateProvince = "BC",
                         PostalCode = "v1v 1v1"
                     },
-                    NeedsAssessments = new[] { needsAssessment },
+                    NeedsAssessment = needsAssessment,
                 },
                 SubmitterProfile = profile
             };
@@ -235,7 +235,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateProfile()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile; 
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
             var currentCommunity = registrant.PrimaryAddress.Community;
             var newCommunity = currentCommunity == "406adfaf-9f97-ea11-b813-005056830319"
                 ? "226adfaf-9f97-ea11-b813-005056830319"
@@ -380,8 +380,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     Country = "CAN",
                     PostalCode = "V8V 2W3"
                 },
-                NeedsAssessments = new[]
-                {
+                NeedsAssessment =
                     new NeedsAssessment
                     {
                         Type = NeedsAssessmentType.Preliminary,
@@ -438,7 +437,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                             new Pet{ Type = $"{uniqueSignature}_Dog", Quantity = "4" }
                         }
                     }
-                }
             };
             return file;
         }
