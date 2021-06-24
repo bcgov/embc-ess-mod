@@ -103,7 +103,6 @@ export class WizardComponent implements OnInit, OnDestroy {
           component: InformationDialogComponent,
           content: globalConst.exitWizardDialog
         },
-        height: '270px',
         width: '530px'
       })
       .afterClosed()

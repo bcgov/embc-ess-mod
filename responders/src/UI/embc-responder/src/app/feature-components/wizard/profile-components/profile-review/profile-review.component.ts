@@ -44,17 +44,17 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Set up form validation for verification check
     this.primaryCommunity =
-      typeof this.stepCreateProfileService.primaryAddressDetails.community ===
+      typeof this.stepCreateProfileService.primaryAddressDetails?.community ===
       'string'
-        ? this.stepCreateProfileService.primaryAddressDetails.community
+        ? this.stepCreateProfileService.primaryAddressDetails?.community
         : (this.stepCreateProfileService.primaryAddressDetails
-            .community as Community)?.name;
+            ?.community as Community)?.name;
     this.mailingCommunity =
-      typeof this.stepCreateProfileService.mailingAddressDetails.community ===
+      typeof this.stepCreateProfileService.mailingAddressDetails?.community ===
       'string'
-        ? this.stepCreateProfileService.mailingAddressDetails.community
+        ? this.stepCreateProfileService.mailingAddressDetails?.community
         : (this.stepCreateProfileService.mailingAddressDetails
-            .community as Community)?.name;
+            ?.community as Community)?.name;
     this.verifiedProfileGroup = this.formBuilder.group({
       verifiedProfile: [
         this.stepCreateProfileService.verifiedProfile,
@@ -63,7 +63,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     });
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate?.subscribe(
       () => {
         this.updateTabStatus();
       }

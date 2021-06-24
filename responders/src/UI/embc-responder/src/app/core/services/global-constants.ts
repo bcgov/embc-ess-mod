@@ -74,7 +74,7 @@ export const wizardProfileMessage: DialogContent = {
 export const evacueeProfileCreatedMessage: DialogContent = {
   title: 'Evacuee Profile Saved',
   text: '<p>Evacuee profile has been successfully created.</p>',
-  confirmButton: 'Proceed to STEP 2'
+  confirmButton: 'Proceed to Step 2'
 };
 export const wizardESSFileMessage: DialogContent = {
   title: 'Complete all steps',
@@ -85,7 +85,7 @@ export const wizardESSFileMessage: DialogContent = {
 export const essFileCreatedMessage: DialogContent = {
   title: 'ESS File Saved',
   text: '<p>ESS File has been successfully created.</p>',
-  confirmButton: 'Proceed to STEP 3',
+  confirmButton: 'Proceed to Step 3',
   exitLink: 'Exit Wizard'
 };
 
