@@ -16,6 +16,7 @@ export interface NeedsAssessment {
   canEvacueeProvideIncidentals?: null | boolean;
   canEvacueeProvideLodging?: null | boolean;
   canEvacueeProvideTransportation?: null | boolean;
+  createdOn?: string;
   hasPetsFood?: null | boolean;
   hasSupplies?: boolean;
   haveMedication?: boolean;
@@ -23,6 +24,7 @@ export interface NeedsAssessment {
   householdMembers: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
   insurance: InsuranceOption;
+  modifiedOn?: string;
   notes?: null | Array<Note>;
   pets?: null | Array<Pet>;
   recommendedReferralServices?: null | Array<ReferralServices>;
