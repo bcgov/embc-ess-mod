@@ -1,8 +1,12 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { VerifySecurityPhraseRequest } from 'src/app/core/api/models';
-import { VerifySecurityPhraseResponse } from 'src/app/core/api/models/verify-security-phrase-response';
-import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
+import {
+  GetSecurityPhraseResponse,
+  VerifySecurityPhraseRequest
+} from 'src/app/core/api/models';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { EssFileSecurityPhraseService } from './essfile-security-phrase.service';
 
 @Component({
@@ -11,8 +15,9 @@ import { EssFileSecurityPhraseService } from './essfile-security-phrase.service'
   styleUrls: ['./essfile-security-phrase.component.scss']
 })
 export class EssfileSecurityPhraseComponent implements OnInit {
-  securityPhrase: string;
-  givenAnswer: string;
+  securityPhraseForm: FormGroup;
+  securityPhrase: GetSecurityPhraseResponse;
+  // givenAnswer: string;
   attemptsRemaning = 3;
   isLoading = false;
   showLoader = false;
@@ -23,32 +28,23 @@ export class EssfileSecurityPhraseComponent implements OnInit {
   constructor(
     private router: Router,
     private essFileSecurityPhraseService: EssFileSecurityPhraseService,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSessionService: EvacueeSessionService,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    if (this.evacueeSearchService.essFileId === undefined) {
+    this.createSecurityPhraseForm();
+
+    if (this.evacueeSessionService.essFileNumber === undefined) {
       this.router.navigate(['responder-access/search/evacuee']);
     } else {
       this.essFileSecurityPhraseService
-        .getSecurityPhrase(this.evacueeSearchService.essFileId)
+        .getSecurityPhrase(this.evacueeSessionService.essFileNumber)
         .subscribe((results) => {
           console.log(results);
-          // this.securityPhrase = this.profileSecurityQuestionsService.shuffleSecurityQuestions(
-          //   results?.questions
-          // );
-          // this.isLoading = !this.isLoading;
+          this.securityPhrase = results;
         });
     }
-  }
-
-  /**
-   * Function that connects to child output. Gets the answer to given questions and adds it into an array.
-   * In case the question exists in the array, it replaces the previous answer.
-   */
-  getAnswer(answer: string) {
-    this.givenAnswer = answer;
-    console.log(this.givenAnswer);
   }
 
   /**
@@ -62,20 +58,27 @@ export class EssfileSecurityPhraseComponent implements OnInit {
    * Funtion that send answers to the backend and decided which screen to show according to backend response
    */
   next() {
+    this.showLoader = !this.showLoader;
     const body: VerifySecurityPhraseRequest = {
-      answer: this.givenAnswer
+      answer: this.securityPhraseForm.get('phraseAnswer').value
     };
 
     this.essFileSecurityPhraseService
-      .verifySecurityPhrase(this.evacueeSearchService.essFileId, body)
+      .verifySecurityPhrase(this.evacueeSessionService.essFileNumber, body)
       .subscribe((results) => {
         console.log(results);
-
-        //     this.correctAnswerFlag = true;
-        // this.showLoader = true;
-        // setTimeout(() => {
-        //   this.router.navigate(['responder-access/search/essfile']);
-        // }, 1000);
+        this.showLoader = !this.showLoader;
+        if (results.isCorrect) {
+          this.wrongAnswerFlag = false;
+          this.correctAnswerFlag = true;
+          setTimeout(() => {
+            this.router.navigate(['responder-access/search/essfile-dashboard']);
+          }, 1000);
+        } else {
+          this.securityPhraseForm.get('phraseAnswer').reset();
+          this.attemptsRemaning--;
+          this.wrongAnswerFlag = true;
+        }
       });
   }
 
@@ -86,5 +89,11 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     this.router.navigate([
       'ess-wizard/create-evacuee-profile/collection-notice'
     ]);
+  }
+
+  private createSecurityPhraseForm() {
+    this.securityPhraseForm = this.formBuilder.group({
+      phraseAnswer: ['']
+    });
   }
 }

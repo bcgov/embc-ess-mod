@@ -1,12 +1,12 @@
 <mat-card>
-  <form [formGroup]="securityPhraseForm">
+  <form [formGroup]="parentForm">
     <div class="row line-space">
       <div class="col-md-4">
         <p>Answer Hint:</p>
       </div>
       <div class="col-md-8">
         <p>
-          <b> {{ phrase }} </b>
+          <b> {{ phrase?.securityPhrase }} </b>
         </p>
       </div>
     </div>
@@ -17,12 +17,7 @@
       </div>
       <div class="col-md-6">
         <mat-form-field appearance="outline">
-          <input
-            [formControlName]="'answer'"
-            matInput
-            type="text"
-            (focusout)="sendAnswer($event)"
-          />
+          <input [formControlName]="'phraseAnswer'" matInput type="text" />
         </mat-form-field>
       </div>
     </div>

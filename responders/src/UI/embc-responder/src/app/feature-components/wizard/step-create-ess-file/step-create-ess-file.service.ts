@@ -529,7 +529,7 @@ export class StepCreateEssFileService {
         $event.stopPropagation();
         $event.preventDefault();
 
-        this.openModal(globalConst.wizardESSFileMessage, 'Complete all steps');
+        this.openModal(globalConst.wizardESSFileMessage);
       }
       return allow;
     }
@@ -556,15 +556,11 @@ export class StepCreateEssFileService {
    * @param button text on "close" button ("Close" by default)
    * @param exitLink link to exit greater context (e.g. wizard) for modal, null = no link
    */
-  openModal(
-    content: DialogContent,
-    title: string
-  ): MatDialogRef<DialogComponent, any> {
+  openModal(content: DialogContent): MatDialogRef<DialogComponent, any> {
     const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        content,
-        title
+        content
       },
       width: '530px'
     });

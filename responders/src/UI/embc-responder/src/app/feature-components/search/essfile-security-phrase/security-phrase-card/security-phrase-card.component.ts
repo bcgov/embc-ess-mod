@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { GetSecurityPhraseResponse } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-security-phrase-card',
@@ -7,24 +8,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   styleUrls: ['./security-phrase-card.component.scss']
 })
 export class SecurityPhraseCardComponent implements OnInit {
-  @Input() phrase: string;
-  @Output() answerEvent = new EventEmitter<string>();
+  @Input() phrase: GetSecurityPhraseResponse;
+  @Input() parentForm: FormGroup;
 
-  securityPhraseForm: FormGroup;
+  constructor() {}
 
-  constructor(private formBuilder: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.createAnswerForm();
-  }
-
-  sendAnswer($event): void {
-    this.answerEvent.emit($event.target.value);
-  }
-
-  private createAnswerForm(): void {
-    this.securityPhraseForm = this.formBuilder.group({
-      answer: ['']
-    });
-  }
+  ngOnInit(): void {}
 }

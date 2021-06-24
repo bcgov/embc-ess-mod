@@ -188,7 +188,7 @@ export class StepCreateProfileService {
         $event.stopPropagation();
         $event.preventDefault();
 
-        this.openModal(globalConst.wizardProfileMessage, 'Complete all steps');
+        this.openModal(globalConst.wizardProfileMessage);
       }
       return allow;
     }
@@ -212,14 +212,10 @@ export class StepCreateProfileService {
    *
    * @param text text to display
    */
-  openModal(
-    content: DialogContent,
-    title?: string
-  ): MatDialogRef<DialogComponent, any> {
+  openModal(content: DialogContent): MatDialogRef<DialogComponent, any> {
     const thisModal = this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        title,
         content
       },
       width: '530px'

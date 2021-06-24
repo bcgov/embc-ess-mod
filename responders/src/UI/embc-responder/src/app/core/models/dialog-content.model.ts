@@ -1,4 +1,5 @@
 export interface DialogContent {
+  title?: null | string;
   text: null | string;
   confirmButton?: null | string;
   cancelButton?: null | string;
