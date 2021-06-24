@@ -253,7 +253,10 @@
 
             <div
               class="row"
-              *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
+              *ngIf="
+                !stepCreateProfileService?.bypassSecurityQuestions &&
+                stepCreateProfileService?.securityQuestions?.length > 0
+              "
             >
               <div class="col-4">
                 {{ stepCreateProfileService?.securityQuestions[0]?.question }}
@@ -268,7 +271,10 @@
 
             <div
               class="row"
-              *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
+              *ngIf="
+                !stepCreateProfileService?.bypassSecurityQuestions &&
+                stepCreateProfileService?.securityQuestions?.length > 1
+              "
             >
               <div class="col-4">
                 {{ stepCreateProfileService?.securityQuestions[1]?.question }}
@@ -283,7 +289,10 @@
 
             <div
               class="row"
-              *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
+              *ngIf="
+                !stepCreateProfileService?.bypassSecurityQuestions &&
+                stepCreateProfileService?.securityQuestions?.length > 2
+              "
             >
               <div class="col-4">
                 {{ stepCreateProfileService?.securityQuestions[2]?.question }}

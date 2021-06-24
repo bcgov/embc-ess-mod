@@ -5,8 +5,10 @@ export interface EvacuationFileHouseholdMember {
   dateOfBirth?: null | string;
   firstName?: null | string;
   gender?: null | string;
+  id?: null | string;
   initials?: null | string;
   isMatch?: boolean;
+  isPrimaryRegistrant?: boolean;
   lastName?: null | string;
   type?: HouseholdMemberType;
 }
