@@ -102,9 +102,10 @@ namespace EMBC.Responders.API.Controllers
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFileSearchResult>()
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status))
-                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.NeedsAssessments.First().HouseholdMembers))
+                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.NeedsAssessment.HouseholdMembers))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuatedFromAddress))
-                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
                 ;
 
             CreateMap<RegistrantWithFiles, RegistrantProfileSearchResult>()
@@ -115,8 +116,7 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<ESS.Shared.Contracts.Submissions.RegistrantProfile, RegistrantProfileSearchResult>()
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => DateTime.Now))
-                .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => RegistrantStatus.NotVerified))
                 .ForMember(d => d.EvacuationFiles, opts => opts.Ignore())
                 ;
