@@ -14,11 +14,10 @@
         <p class="heading">
           Please ask the evacuee to answer their security questions.
         </p>
-        <p>
+        <p class="fp-space">
           The answers are not case sensitive and do not include any special
           characters.
         </p>
-        <br />
         <!-- <ng-container *ngIf="isLoading">
           <div class="row row-space">
             <div class="col-md-8">
@@ -36,26 +35,29 @@
               ></app-loader>
             </div>
           </div>
-        </ng-container>   *ngIf="!isLoading" -->
-        <!-- <ng-container> -->
-        <div class="row row-space">
-          <div class="col-md-8">
-            <app-security-question-card
-              [question]="securityQuestions[0]"
-              (questionEvent)="getAnswers($event)"
-            >
-            </app-security-question-card>
+        </ng-container> -->
+        <form [formGroup]="securityQuestionsForm">
+          <div class="row row-space">
+            <div class="col-md-8">
+              <app-security-question-card
+                [question]="securityQuestions[0]"
+                [parentForm]="securityQuestionsForm"
+                [index]="1"
+              >
+              </app-security-question-card>
+            </div>
           </div>
-        </div>
-        <div class="row row-space">
-          <div class="col-md-8">
-            <app-security-question-card
-              [question]="securityQuestions[1]"
-              (questionEvent)="getAnswers($event)"
-            >
-            </app-security-question-card>
+          <div class="row row-space">
+            <div class="col-md-8">
+              <app-security-question-card
+                [question]="securityQuestions[1]"
+                [parentForm]="securityQuestionsForm"
+                [index]="2"
+              >
+              </app-security-question-card>
+            </div>
           </div>
-        </div>
+        </form>
 
         <div *ngIf="correctAnswerFlag">
           <img
@@ -90,7 +92,6 @@
             </button>
           </div>
         </div>
-        <!-- </ng-container> -->
       </mat-card>
     </div>
   </ng-container>
@@ -102,20 +103,22 @@
           We're having trouble verifying your identity. Please answer an
           additional security question.
         </p>
-        <p>
+        <p class="fp-space">
           The answers are not case sensitive and do not include any special
           characters.
         </p>
-        <br />
-        <div class="row row-space">
-          <div class="col-md-8">
-            <app-security-question-card
-              [question]="securityQuestions[2]"
-              (questionEvent)="getAnswers($event)"
-            >
-            </app-security-question-card>
+        <form [formGroup]="securityQuestionsForm">
+          <div class="row row-space">
+            <div class="col-md-8">
+              <app-security-question-card
+                [question]="securityQuestions[2]"
+                [parentForm]="securityQuestionsForm"
+                [index]="3"
+              >
+              </app-security-question-card>
+            </div>
           </div>
-        </div>
+        </form>
         <div *ngIf="correctAnswerFlag">
           <img
             width="20px"

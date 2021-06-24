@@ -24,8 +24,10 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string Id { get; set; }
         public string TaskId { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public DateTime LastModified { get; set; }
+        //public DateTime CreatedOn { get; set; }
+        //public User CreatedBy { get; set; }
+        //public DateTime LastModified { get; set; }
+        //public User LastModified { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public bool RestrictedAccess { get; set; }
         public string PrimaryRegistrantId { get; set; }
@@ -33,14 +35,27 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool SecurityPhraseChanged { get; set; } = false;
         public DateTime? EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get => new[] { LastNeedsAssessment }; }
         public string SecretPhrase { get; set; }
         public bool IsSecretPhraseMasked { get; set; }
         public string RegistrationLocation { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
-        public NeedsAssessment LastNeedsAssessment { get => NeedsAssessment; set => NeedsAssessment = value; }
         public NeedsAssessment NeedsAssessment { get; set; }
     }
+
+    //public class User
+    //{
+    //    public string UserId { get; set; }
+    //    public string UserName { get; set; }
+    //    public UserType Type { get; set; }
+    //    public string DisplayName { get; set; }
+    //}
+
+    //public enum UserType
+    //{
+    //    Anonymous,
+    //    Registrant,
+    //    Responder
+    //}
 
     public enum EvacuationFileStatus
     {
@@ -55,7 +70,12 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string Id { get; set; }
         public DateTime CompletedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string CreatedByUserId { get; set; }
+        public string CreatedByDisplayName { get; set; }
         public DateTime LastModified { get; set; }
+        public string LastModifiedUserId { get; set; }
+        public string LastModifiedDisplayName { get; set; }
         public NeedsAssessmentType Type { get; set; }
         public InsuranceOption Insurance { get; set; }
         public bool? CanEvacueeProvideFood { get; set; }

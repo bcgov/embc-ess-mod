@@ -29,8 +29,9 @@ namespace EMBC.ESS.Managers.Submissions
                 .ForPath(d => d.NeedsAssessment.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuatedFromAddress))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => !s.EvacuationDate.HasValue ? DateTime.UtcNow : s.EvacuationDate))
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ReverseMap()
-                .ForMember(d => d.LastNeedsAssessment, opts => opts.Ignore())
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Address, Resources.Cases.EvacuationAddress>()

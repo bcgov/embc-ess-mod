@@ -43,8 +43,16 @@ text {
         width: 60vw;
     }
 
-    .lineSpace {
+    .line-space {
         padding: 15px 30px 0px;
+    }
+
+}
+
+@media (min-width: 2200px) {
+
+    .divider {
+        width: 25vw;
     }
 
 }

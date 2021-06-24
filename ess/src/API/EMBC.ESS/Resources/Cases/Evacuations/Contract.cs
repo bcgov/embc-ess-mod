@@ -63,7 +63,11 @@ namespace EMBC.ESS.Resources.Cases
         public EvacuationAddress EvacuatedFrom { get; set; }
         public DateTime CompletedOn { get; set; }
         public DateTime CreatedOn { get; set; }
+        public string CreatedByUserId { get; set; }
+        public string CreatedByDisplayName { get; set; }
         public DateTime LastModified { get; set; }
+        public string LastModifiedUserId { get; set; }
+        public string LastModifiedDisplayName { get; set; }
         public InsuranceOption Insurance { get; set; }
         public bool? CanEvacueeProvideFood { get; set; }
         public bool? CanEvacueeProvideLodging { get; set; }

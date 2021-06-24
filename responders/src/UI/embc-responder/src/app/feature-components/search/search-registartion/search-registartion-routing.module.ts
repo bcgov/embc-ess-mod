@@ -53,6 +53,13 @@ const routes: Routes = [
           import(
             '../evacuee-profile-dashboard/evacuee-profile-dashboard.module'
           ).then((m) => m.EvacueeProfileDashboardModule)
+      },
+      {
+        path: 'essfile-dashboard',
+        loadChildren: () =>
+          import('../essfile-dashboard/essfile-dashboard.module').then(
+            (m) => m.EssfileDashboardModule
+          )
       }
     ]
   }

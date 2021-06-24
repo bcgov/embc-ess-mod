@@ -377,6 +377,8 @@ namespace EMBC.Responders.API.Controllers
     public class NeedsAssessment
     {
         public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
 
         [Required]
         public InsuranceOption Insurance { get; set; }
@@ -406,16 +408,16 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum InsuranceOption
     {
-        [EnumMember(Value = "No")]
+        [Description("No")]
         No,
 
-        [EnumMember(Value = "Yes")]
+        [Description("Yes")]
         Yes,
 
-        [EnumMember(Value = "Unsure")]
+        [Description("Unsure")]
         Unsure,
 
-        [EnumMember(Value = "Unknown")]
+        [Description("Unknown")]
         Unknown
     }
 
@@ -435,19 +437,19 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum NoteType
     {
-        [EnumMember(Value = "General")]
+        [Description("General")]
         General,
 
-        [EnumMember(Value = "Evacuation Impact")]
+        [Description("Evacuation Impact")]
         EvacuationImpact,
 
-        [EnumMember(Value = "Evacuation External Referrals")]
+        [Description("Evacuation External Referrals")]
         EvacuationExternalReferrals,
 
-        [EnumMember(Value = "Pet Care Plans")]
+        [Description("Pet Care Plans")]
         PetCarePlans,
 
-        [EnumMember(Value = "HouseHold Recovery Plan")]
+        [Description("HouseHold Recovery Plan")]
         HouseHoldRecoveryPlan
     }
 
@@ -488,6 +490,8 @@ namespace EMBC.Responders.API.Controllers
     public class RegistrantProfile
     {
         public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
 
         public bool Restriction { get; set; }
 
@@ -526,7 +530,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.PreferredName, opts => opts.Ignore())
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.IsUnder19, opts => opts.Ignore())
-                .ForMember(d => d.IsPrimaryRegistrant, opts => opts.Ignore())
+                .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.Type == HouseholdMemberType.Registrant))
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 ;
 
@@ -534,6 +538,7 @@ namespace EMBC.Responders.API.Controllers
                    .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
                    .ForMember(d => d.IsMatch, opts => opts.Ignore())
                    ;
+
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
                 .ReverseMap()
                 ;
@@ -548,13 +553,19 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.CompletedOn, opts => opts.Ignore())
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
+                .ForMember(d => d.CreatedByDisplayName, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
+                .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 .ForMember(d => d.HasEnoughSupply, opts => opts.MapFrom(s => s.HasSupplies))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => NeedsAssessmentType.Assessed))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.NeedsAssessment, NeedsAssessment>()
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                 .ForMember(d => d.HasSupplies, opts => opts.MapFrom(s => s.HasEnoughSupply))
                 ;
 
@@ -572,8 +583,6 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.IsRestricted))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
                 .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
@@ -581,9 +590,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.Task.TaskNumber))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
-                .ForMember(d => d.NeedsAssessments, opts => opts.Ignore()) //TODO - remove from shared contract as well
-                .ForMember(d => d.LastNeedsAssessment, opts => opts.MapFrom(s => s.NeedsAssessment)) //TODO - update name in shared contract
-                .AfterMap((s, d) => d.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).Id = s.PrimaryRegistrantId)
+                .AfterMap((s, d) => d.NeedsAssessment.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).LinkedRegistrantId = s.PrimaryRegistrantId)
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
@@ -592,7 +599,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
-                .ForMember(d => d.NeedsAssessment, opts => opts.MapFrom(s => s.LastNeedsAssessment))
                 .ForMember(d => d.Task, opts => opts.MapFrom(s => s.TaskId == null
                     ? null
                     : new EvacuationFileTask
@@ -614,9 +620,16 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
                 .ForMember(d => d.UserId, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
+                .ForMember(d => d.CreatedByDisplayName, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
+                .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.RegistrantProfile, RegistrantProfile>()
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                 .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => new PersonDetails
                 {

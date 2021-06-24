@@ -12,9 +12,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { RegistrantProfileSearchResult } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { Community } from 'src/app/core/services/locations.service';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
@@ -34,7 +34,8 @@ export class ProfileResultsComponent
   constructor(
     private evacueeSearchService: EvacueeSearchService,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -53,12 +54,13 @@ export class ProfileResultsComponent
   ngOnInit(): void {}
 
   openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
+    this.evacueeSessionService.profileId = selectedRegistrant.id;
     if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
       this.router.navigate([
         'responder-access/search/evacuee-profile-dashboard'
       ]);
     } else {
-      this.evacueeSearchService.profileId = selectedRegistrant.id;
+      console.log(this.evacueeSessionService.profileId);
       this.router.navigate(['responder-access/search/security-questions']);
     }
   }
