@@ -15,9 +15,8 @@ export interface EvacuationFile {
   evacuationFileDate?: null | string;
   householdMembers?: null | Array<EvacuationFileHouseholdMember>;
   isRestricted?: boolean;
-  lastNeedsAssessment: NeedsAssessment;
-  needsAssessments?: null | Array<NeedsAssessment>;
-  primaryRegistrantId?: null | string;
+  needsAssessment: NeedsAssessment;
+  primaryRegistrantId: string;
   registrationLocation?: null | string;
   securityPhrase?: null | string;
   securityPhraseEdited?: boolean;

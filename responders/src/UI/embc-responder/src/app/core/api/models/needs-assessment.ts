@@ -20,7 +20,7 @@ export interface NeedsAssessment {
   hasSupplies?: boolean;
   haveMedication?: boolean;
   haveSpecialDiet?: boolean;
-  householdMembers?: null | Array<EvacuationFileHouseholdMember>;
+  householdMembers: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
   insurance: InsuranceOption;
   notes?: null | Array<Note>;
