@@ -28,13 +28,16 @@ export const radioButtonOptions1 = [
   { name: 'No', value: false }
 ];
 export const deleteMessage: DialogContent = {
-  text: '<p>User has been successfully deleted from the ERA Tool.</p>'
+  text: '<p>User has been successfully deleted from the ERA Tool.</p>',
+  cancelButton: 'Close'
 };
 export const editMessage: DialogContent = {
-  text: '<p>User has been edited successfully.</p>'
+  text: '<p>User has been edited successfully.</p>',
+  cancelButton: 'Close'
 };
 export const addMessage: DialogContent = {
-  text: '<p>Team member has been <b>saved</b> & added successfully.</p>'
+  text: '<p>Team member has been <b>saved</b> & added successfully.</p>',
+  cancelButton: 'Close'
 };
 export const tier2Notes = 'Notes regarding Tier 2 Supervisor';
 export const tier3Notes = 'Notes regarding Tier 3 ESS Director/ Manager';
@@ -63,18 +66,24 @@ export const gender = [
 ];
 
 export const wizardProfileMessage: DialogContent = {
+  title: 'Complete all steps',
   text:
-    '<p>Please complete all sections of the Evacuee Profile prior to submitting.</p>'
+    '<p>Please complete all sections of the Evacuee Profile prior to submitting.</p>',
+  cancelButton: 'Close'
 };
 export const evacueeProfileCreatedMessage: DialogContent = {
+  title: 'Evacuee Profile Saved',
   text: '<p>Evacuee profile has been successfully created.</p>',
   confirmButton: 'Proceed to Step 2'
 };
 export const wizardESSFileMessage: DialogContent = {
+  title: 'Complete all steps',
   text:
-    '<p>Please complete all sections of the ESS File prior to submitting.</p>'
+    '<p>Please complete all sections of the ESS File prior to submitting.</p>',
+  cancelButton: 'Close'
 };
 export const essFileCreatedMessage: DialogContent = {
+  title: 'ESS File Saved',
   text: '<p>ESS File has been successfully created.</p>',
   confirmButton: 'Proceed to Step 3',
   exitLink: 'Exit Wizard'
@@ -96,20 +105,25 @@ export const exitWizardDialog: DialogContent = {
 
 export const evacueeProfileStepIncompleteMessage: DialogContent = {
   text:
-    '<p>Please <strong>complete the Evacuee Profile</strong> prior to proceeding to the next steps.</p>'
+    '<p>Please <strong>complete the Evacuee Profile</strong> prior to proceeding to the next steps.</p>',
+  cancelButton: 'Close'
 };
 
 export const essFileStepIncompleteMessage: DialogContent = {
   text:
-    '<p>Please <strong>complete the ESS File</strong> prior to proceeding to the next steps.</p>'
+    '<p>Please <strong>complete the ESS File</strong> prior to proceeding to the next steps.</p>',
+  cancelButton: 'Close'
 };
 export const stepIncompleteMessage: DialogContent = {
   text:
-    '<p>Please <strong>complete the current step</strong> prior to proceeding to the next steps.</p>'
+    '<p>Please <strong>complete the current step</strong> prior to proceeding to the next steps.</p>',
+  cancelButton: 'Close'
 };
 
 export const successfulVerification: DialogContent = {
-  text: '<p>Evacuee profile has been successfully verified</p>'
+  title: 'Profile Successfully Verified',
+  text: '<p>Evacuee profile has been successfully verified.</p>',
+  cancelButton: 'Close'
 };
 
 // Generic error messages

@@ -1,5 +1,5 @@
-<mat-card>
-  <form [formGroup]="securityQuestionForm">
+<mat-card [formGroup]="parentForm">
+  <div>
     <div class="row line-space">
       <div class="col-md-4">
         <p>Question:</p>
@@ -30,14 +30,9 @@
       </div>
       <div class="col-md-6">
         <mat-form-field appearance="outline">
-          <input
-            matInput
-            [formControlName]="'answer'"
-            type="text"
-            (focusout)="sendAnswer()"
-          />
+          <input [formControlName]="controlName" matInput type="text" />
         </mat-form-field>
       </div>
     </div>
-  </form>
+  </div>
 </mat-card>

@@ -18,79 +18,58 @@
           If the evacuee cannot remember the security phrase, emergency
           responders are required to start a new evacuee registration.
         </p>
-        <br />
-        <ng-container *ngIf="isLoading">
-          <div class="row row-space">
-            <div class="col-md-8">
-              <app-loader
-                style="
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  margin-bottom: 20px;
-                "
-                [showLoader]="isLoading"
-                [strokeWidth]="3"
-                [diameter]="50"
-                [color]="color"
-              ></app-loader>
-            </div>
+        <div class="row double-space">
+          <div class="col-md-8">
+            <app-security-phrase-card
+              [phrase]="securityPhrase"
+              [parentForm]="securityPhraseForm"
+            ></app-security-phrase-card>
           </div>
-        </ng-container>
-        <ng-container *ngIf="!isLoading">
-          <div class="row double-space">
-            <div class="col-md-8">
-              <app-security-phrase-card
-                [phrase]="securityPhrase"
-                (answerEvent)="getAnswer($event)"
-              ></app-security-phrase-card>
-            </div>
-          </div>
-          <div *ngIf="correctAnswerFlag">
-            <img
-              width="20px"
-              height="20px"
-              src="/assets/images/status/complete.svg"
-            />
-            <span class="correct"> Correct!</span>
-          </div>
-          <div *ngIf="wrongAnswerFlag">
-            <img
-              width="20px"
-              height="20px"
-              src="/assets/images/wrong-answer.svg"
-            />
-            <span class="incorrect">
-              Incorrect answer. You have {{ attemptsRemaning }} attempts
-              remaining. Please try again.</span
+        </div>
+        <div *ngIf="correctAnswerFlag">
+          <img
+            width="20px"
+            height="20px"
+            src="/assets/images/status/complete.svg"
+          />
+          <span class="correct"> Correct!</span>
+        </div>
+        <div *ngIf="wrongAnswerFlag">
+          <img
+            width="20px"
+            height="20px"
+            src="/assets/images/wrong-answer.svg"
+          />
+          <span class="incorrect">
+            Incorrect answer. You have {{ attemptsRemaning }} attempts
+            remaining. Please try again.</span
+          >
+        </div>
+        <div class="row double-space">
+          <div class="col-md-8">
+            <button
+              class="button-s submit button-space"
+              type="button"
+              mat-button
+              (click)="goToSearchResults()"
             >
+              Back to Search
+            </button>
+            <button
+              class="button-p submit"
+              type="button"
+              mat-button
+              (click)="next()"
+            >
+              Continue
+              <app-loader
+                [strokeWidth]="3"
+                [diameter]="25"
+                [showLoader]="showLoader"
+              ></app-loader>
+            </button>
           </div>
-          <div class="row double-space">
-            <div class="col-md-8">
-              <button
-                class="button-s submit button-space"
-                type="button"
-                mat-button
-                (click)="goToSearchResults()"
-              >
-                Back to Search
-              </button>
-              <button
-                class="button-p submit"
-                type="button"
-                mat-button
-                (click)="next()"
-              >
-                Continue
-                <app-loader
-                  [strokeWidth]="3"
-                  [diameter]="25"
-                  [showLoader]="showLoader"
-                ></app-loader>
-              </button>
-            </div>
-          </div>
-        </ng-container>
+        </div>
       </mat-card>
     </div>
   </ng-container>
@@ -101,7 +80,7 @@
         <p class="heading">
           The evacuee was unable to answer the security phrase correctly.
         </p>
-        <p class="paragraphSpace">
+        <p class="paragraph-space">
           If the evacuee also has a <b>profile</b>, go back to the search
           results page and try to access their profile.
         </p>

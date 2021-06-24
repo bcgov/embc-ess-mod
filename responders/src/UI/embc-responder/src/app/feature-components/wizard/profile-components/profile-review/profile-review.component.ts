@@ -102,10 +102,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
             this.saveLoader = false;
 
             this.stepCreateProfileService
-              .openModal(
-                globalConst.evacueeProfileCreatedMessage,
-                'Evacuee Profile Saved'
-              )
+              .openModal(globalConst.evacueeProfileCreatedMessage)
               .afterClosed()
               .subscribe(() => {
                 this.wizardService.setStepStatus(
