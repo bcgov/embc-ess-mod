@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +41,7 @@ using NSwag;
 using NSwag.AspNetCore;
 using NSwag.Generation.Processors.Security;
 using Serilog;
+using Serilog.Events;
 
 namespace EMBC.Responders.API
 {
@@ -153,6 +155,7 @@ namespace EMBC.Responders.API
 
             app.UseSerilogRequestLogging(opts =>
             {
+                opts.GetLevel = ExcludeHealthChecks;
                 opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
                 {
                     diagCtx.Set("User", httpCtx.User.Identity?.Name);
@@ -248,5 +251,15 @@ namespace EMBC.Responders.API
                 }
             }));
         }
+
+        //inspired by https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-excluding-health-check-endpoints-from-serilog-request-logging/
+        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>
+        ex != null
+            ? LogEventLevel.Error
+            : ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError
+                ? LogEventLevel.Error
+                : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
+                    ? LogEventLevel.Verbose
+                    : LogEventLevel.Information;
     }
 }
