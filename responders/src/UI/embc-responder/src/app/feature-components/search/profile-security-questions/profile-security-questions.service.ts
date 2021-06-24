@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {
   GetSecurityQuestionsResponse,
   SecurityQuestion,
@@ -23,7 +22,7 @@ export class ProfileSecurityQuestionsService {
    */
   public shuffleSecurityQuestions(
     securityQuestions: Array<SecurityQuestion>
-  ): GetSecurityQuestionsResponse {
+  ): Array<SecurityQuestion> {
     let currentIndex: number = securityQuestions.length;
     let temporaryValue: SecurityQuestion;
     let randomIndex: number;
@@ -36,7 +35,7 @@ export class ProfileSecurityQuestionsService {
       securityQuestions[currentIndex] = securityQuestions[randomIndex];
       securityQuestions[randomIndex] = temporaryValue;
     }
-    return { questions: securityQuestions };
+    return securityQuestions;
   }
 
   /**
@@ -47,15 +46,9 @@ export class ProfileSecurityQuestionsService {
   public getSecurityQuestions(
     registrantId: string
   ): Observable<GetSecurityQuestionsResponse> {
-    return this.registrationService
-      .registrationsGetSecurityQuestions({
-        registrantId
-      })
-      .pipe(
-        map((results: GetSecurityQuestionsResponse) => {
-          return this.shuffleSecurityQuestions(results.questions);
-        })
-      );
+    return this.registrationService.registrationsGetSecurityQuestions({
+      registrantId
+    });
   }
 
   /**

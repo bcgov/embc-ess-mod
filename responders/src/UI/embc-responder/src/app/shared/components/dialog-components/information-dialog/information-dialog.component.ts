@@ -17,4 +17,8 @@ export class InformationDialogComponent {
   confirm(): void {
     this.outputEvent.emit('confirm');
   }
+
+  exit(): void {
+    this.outputEvent.emit('exit');
+  }
 }

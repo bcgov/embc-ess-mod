@@ -1,17 +1,31 @@
 <div class="row">
   <div class="col-md-12" [innerHTML]="content?.text"></div>
 </div>
-<br />
+<div class="row button-row justify-content-between">
+  <button
+    class="button-s button-width"
+    mat-button
+    (click)="cancel()"
+    *ngIf="content?.cancelButton"
+  >
+    {{ content?.cancelButton }}
+  </button>
 
-<div class="row justify-content-between">
-  <div class="col-md-6">
-    <button class="button-s" mat-button (click)="cancel()">
-      {{ content?.cancelButton || 'Close' }}
-    </button>
-  </div>
-  <div class="col-md-6" *ngIf="content?.confirmButton">
-    <button class="button-p confirm-button" mat-button (click)="confirm()">
-      {{ content?.confirmButton }}
-    </button>
-  </div>
+  <button
+    class="button-p button-width confirm-button"
+    mat-button
+    (click)="confirm()"
+    *ngIf="content?.confirmButton"
+  >
+    {{ content?.confirmButton }}
+  </button>
+</div>
+<div class="row">
+  <button
+    class="btn btn-link btn-sm exit-link"
+    (click)="exit()"
+    *ngIf="content?.exitLink"
+  >
+    {{ content?.exitLink }}
+  </button>
 </div>
