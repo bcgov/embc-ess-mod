@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { CacheService } from './cache.service';
 
 @Injectable({ providedIn: 'root' })
-export class EvacueeSession {
+export class EvacueeSessionService {
   private registrantProfileId: string;
   //private registrantProfile: RegistrantProfile;
-  //essFileNumber: string;
+  private fileNumber: string;
 
   constructor(private cacheService: CacheService) {}
 
@@ -18,6 +18,17 @@ export class EvacueeSession {
     return this.registrantProfileId
       ? this.registrantProfileId
       : this.cacheService.get('registrantProfileId');
+  }
+
+  set essFileNumber(fileNumber: string) {
+    this.fileNumber = fileNumber;
+    this.cacheService.set('fileNumber', fileNumber);
+  }
+
+  get essFileNumber(): string {
+    return this.fileNumber
+      ? this.fileNumber
+      : this.cacheService.get('fileNumber');
   }
 
   clearEvacueeSession() {

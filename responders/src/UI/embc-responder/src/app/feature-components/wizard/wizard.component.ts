@@ -27,9 +27,9 @@ export class WizardComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute
   ) {
     const params = this.route.snapshot.queryParams;
-    if (params && params.type)
+    if (params && params.type) {
       this.wizardService.setDefaultMenuItems(params.type);
-
+    }
     this.sideNavMenu = this.wizardService.menuItems;
   }
 

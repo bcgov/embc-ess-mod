@@ -72,7 +72,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
 
   createNewESSFile(): void {
     this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: 'new-file' }
+      queryParams: { type: 'new-ess-file' }
     });
   }
 }

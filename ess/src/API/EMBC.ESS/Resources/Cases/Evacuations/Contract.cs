@@ -36,8 +36,8 @@ namespace EMBC.ESS.Resources.Cases
     public class EvacuationFile : Case
     {
         public string TaskId { get; set; }
-        public EvacuationAddress EvacuatedFrom { get => CurrentNeedsAssessment?.EvacuatedFrom; }
-        public NeedsAssessment CurrentNeedsAssessment { get; set; }
+        public EvacuationAddress EvacuatedFrom { get => NeedsAssessment?.EvacuatedFrom; }
+        public NeedsAssessment NeedsAssessment { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseChanged { get; set; } = false;
