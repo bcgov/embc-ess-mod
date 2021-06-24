@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Submissions
@@ -22,6 +23,12 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string Id { get; set; }
         public string UserId { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string CreatedByUserId { get; set; }
+        public string CreatedByDisplayName { get; set; }
+        public DateTime LastModified { get; set; }
+        public string LastModifiedUserId { get; set; }
+        public string LastModifiedDisplayName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
