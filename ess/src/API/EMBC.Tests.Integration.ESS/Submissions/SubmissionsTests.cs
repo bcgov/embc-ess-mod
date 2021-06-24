@@ -127,8 +127,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var file = (await manager.Handle(new EvacuationFilesSearchQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
             file.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
-            file.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
-            file.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == false && m.FirstName == $"{textContextIdentifier}-MemRegTestFirst" && m.LastName == $"{textContextIdentifier}-MemRegTestLast");
+            file.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
+            file.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == false && m.FirstName == $"{textContextIdentifier}-MemRegTestFirst" && m.LastName == $"{textContextIdentifier}-MemRegTestLast");
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -143,18 +143,18 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var savedFile = (await GetEvacuationFileById(fileId)).ShouldHaveSingleItem();
             savedFile.PrimaryRegistrantId.ShouldBe(registrant.Id);
             savedFile.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
-            savedFile.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
+            savedFile.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
 
-            savedFile.HouseholdMembers.Count().ShouldBe(file.LastNeedsAssessment.HouseholdMembers.Count());
-            foreach (var member in file.LastNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
+            savedFile.HouseholdMembers.Count().ShouldBe(file.NeedsAssessment.HouseholdMembers.Count());
+            foreach (var member in file.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
             {
                 savedFile.HouseholdMembers.ShouldContain(m => m.FirstName == member.FirstName && m.LastName == member.LastName);
             }
 
-            savedFile.LastNeedsAssessment.HouseholdMembers.Count().ShouldBe(file.LastNeedsAssessment.HouseholdMembers.Count());
-            foreach (var member in file.LastNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
+            savedFile.NeedsAssessment.HouseholdMembers.Count().ShouldBe(file.NeedsAssessment.HouseholdMembers.Count());
+            foreach (var member in file.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
             {
-                savedFile.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.FirstName == member.FirstName && m.LastName == member.LastName);
+                savedFile.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.FirstName == member.FirstName && m.LastName == member.LastName);
             }
         }
 

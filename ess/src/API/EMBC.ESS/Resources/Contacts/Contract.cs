@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -72,6 +73,12 @@ namespace EMBC.ESS.Resources.Contacts
     public class Contact
     {
         public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string CreatedByUserId { get; set; }
+        public string CreatedByDisplayName { get; set; }
+        public DateTime LastModified { get; set; }
+        public string LastModifiedUserId { get; set; }
+        public string LastModifiedDisplayName { get; set; }
         public bool Authenticated { get; set; }
         public bool Verified { get; set; }
         public string FirstName { get; set; }
