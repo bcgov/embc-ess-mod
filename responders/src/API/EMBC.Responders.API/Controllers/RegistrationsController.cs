@@ -408,16 +408,16 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum InsuranceOption
     {
-        [EnumMember(Value = "No")]
+        [Description("No")]
         No,
 
-        [EnumMember(Value = "Yes")]
+        [Description("Yes")]
         Yes,
 
-        [EnumMember(Value = "Unsure")]
+        [Description("Unsure")]
         Unsure,
 
-        [EnumMember(Value = "Unknown")]
+        [Description("Unknown")]
         Unknown
     }
 
@@ -437,19 +437,19 @@ namespace EMBC.Responders.API.Controllers
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum NoteType
     {
-        [EnumMember(Value = "General")]
+        [Description("General")]
         General,
 
-        [EnumMember(Value = "Evacuation Impact")]
+        [Description("Evacuation Impact")]
         EvacuationImpact,
 
-        [EnumMember(Value = "Evacuation External Referrals")]
+        [Description("Evacuation External Referrals")]
         EvacuationExternalReferrals,
 
-        [EnumMember(Value = "Pet Care Plans")]
+        [Description("Pet Care Plans")]
         PetCarePlans,
 
-        [EnumMember(Value = "HouseHold Recovery Plan")]
+        [Description("HouseHold Recovery Plan")]
         HouseHoldRecoveryPlan
     }
 
@@ -530,7 +530,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.PreferredName, opts => opts.Ignore())
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.IsUnder19, opts => opts.Ignore())
-                .ForMember(d => d.IsPrimaryRegistrant, opts => opts.Ignore())
+                .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.Type == HouseholdMemberType.Registrant))
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 ;
 
@@ -538,6 +538,7 @@ namespace EMBC.Responders.API.Controllers
                    .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
                    .ForMember(d => d.IsMatch, opts => opts.Ignore())
                    ;
+
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
                 .ReverseMap()
                 ;
@@ -589,7 +590,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.Task.TaskNumber))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
-                .AfterMap((s, d) => d.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).Id = s.PrimaryRegistrantId)
+                .AfterMap((s, d) => d.NeedsAssessment.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).LinkedRegistrantId = s.PrimaryRegistrantId)
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
