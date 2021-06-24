@@ -234,7 +234,15 @@ objects:
               volumeMounts:
                 - mountPath: /dpkeys
                   name: dp-keys
-          dnsPolicy: ClusterFirst
+              livenessProbe:
+                httpGet:
+                  path: /hc/live
+                  port: 8080
+              startupProbe:
+                httpGet:
+                  path: /hc/ready
+                  port: 8080
+            dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
           securityContext: {}
