@@ -154,13 +154,14 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("files/{fileId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<EvacuationFileSearchResult>> GetFile(string fileId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<EvacuationFile>> GetFile(string fileId)
         {
-            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
-            {
-                FileId = fileId
-            })).Items.FirstOrDefault();
-            return Ok(mapper.Map<EvacuationFileSearchResult>(file));
+            var file = await evacuationSearchService.GetEvacuationFile(fileId);
+
+            if (file == null) return NotFound();
+
+            return Ok(file);
         }
 
         /// <summary>
