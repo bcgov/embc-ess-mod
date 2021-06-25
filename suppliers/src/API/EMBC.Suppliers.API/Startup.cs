@@ -229,7 +229,7 @@ namespace EMBC.Suppliers.API
             });
         }
 
-        //inspired by https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-excluding-health-check-endpoints-from-serilog-request-logging/
+        // inspired by https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-excluding-health-check-endpoints-from-serilog-request-logging/
         private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>
         ex != null
             ? LogEventLevel.Error
