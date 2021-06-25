@@ -527,7 +527,6 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<EvacuationFileHouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
                 .ForMember(d => d.PreferredName, opts => opts.Ignore())
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.IsUnder19, opts => opts.Ignore())
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.Type == HouseholdMemberType.Registrant))
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
@@ -579,7 +578,6 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.IsRestricted))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.Task.TaskNumber))
@@ -589,7 +587,6 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
