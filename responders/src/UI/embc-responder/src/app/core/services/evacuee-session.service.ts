@@ -7,7 +7,7 @@ export class EvacueeSessionService {
   private registrantProfileId: string;
   //private registrantProfile: RegistrantProfile;
   private fileNumber: string;
-  private editWizard: boolean;
+  private editWizardFlag: boolean;
 
   constructor(private cacheService: CacheService) {}
 
@@ -46,9 +46,9 @@ export class EvacueeSessionService {
       wizardType === 'review-file' ||
       wizardType === 'complete-file'
     ) {
-      this.editWizard = true;
+      this.editWizardFlag = true;
     } else {
-      this.editWizard = false;
+      this.editWizardFlag = false;
     }
   }
 
@@ -56,7 +56,7 @@ export class EvacueeSessionService {
     return this.cacheService.get('wizardType');
   }
 
-  public getEditWizard(): boolean {
-    return this.editWizard;
+  public getEditWizardFlag(): boolean {
+    return this.editWizardFlag;
   }
 }
