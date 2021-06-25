@@ -56,7 +56,7 @@ export class EvacueeSessionService {
     return this.cacheService.get('wizardType');
   }
 
-  public getEditWizardProfile(): boolean {
+  public getEditWizard(): boolean {
     return this.editWizard;
   }
 }
