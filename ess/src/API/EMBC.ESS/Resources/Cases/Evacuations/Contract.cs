@@ -41,7 +41,7 @@ namespace EMBC.ESS.Resources.Cases
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseChanged { get; set; } = false;
-        public bool IsSecretPhraseMasked { get; set; }
+        public bool IsSecurityPhraseMasked { get; set; }
         public DateTime EvacuationDate { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public bool RestrictedAccess { get; set; }

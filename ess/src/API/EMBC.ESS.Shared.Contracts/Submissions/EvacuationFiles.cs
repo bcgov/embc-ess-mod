@@ -36,8 +36,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool SecurityPhraseChanged { get; set; } = false;
         public DateTime? EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
-        public string SecretPhrase { get; set; }
-        public bool IsSecretPhraseMasked { get; set; }
         public string RegistrationLocation { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
         public NeedsAssessment NeedsAssessment { get; set; }

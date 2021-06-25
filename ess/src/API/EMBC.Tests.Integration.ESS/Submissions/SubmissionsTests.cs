@@ -369,7 +369,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var file = new EvacuationFile()
             {
                 PrimaryRegistrantId = registrant.Id,
-                SecretPhrase = "SecretPhrase",
+                SecurityPhrase = "SecretPhrase",
                 SecurityPhraseChanged = true,
                 EvacuatedFromAddress = new Address()
                 {

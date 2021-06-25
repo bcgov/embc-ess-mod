@@ -582,8 +582,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.IsRestricted))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
-                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
-                .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.Task.TaskNumber))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
