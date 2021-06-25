@@ -29,7 +29,7 @@ export class WizardActivateGuard implements CanActivate {
     | boolean
     | UrlTree {
     const loggedInTask = this.cacheService.get('loggedInTask');
-    const wizardType = this.evacueeSearchService.getWizardType();
+    const wizardType = this.evacueeSessionService.getWizardType();
     const registrantProfileId = this.evacueeSessionService.profileId;
 
     if (wizardType === 'new-registration') {

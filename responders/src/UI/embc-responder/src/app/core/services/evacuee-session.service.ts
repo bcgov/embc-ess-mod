@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ignoreElements } from 'rxjs/operators';
 import { CacheService } from './cache.service';
 
 @Injectable({ providedIn: 'root' })
@@ -6,6 +7,7 @@ export class EvacueeSessionService {
   private registrantProfileId: string;
   //private registrantProfile: RegistrantProfile;
   private fileNumber: string;
+  private editWizard: boolean;
 
   constructor(private cacheService: CacheService) {}
 
@@ -34,5 +36,27 @@ export class EvacueeSessionService {
   clearEvacueeSession() {
     this.registrantProfileId = null;
     this.cacheService.remove('registrantProfileId');
+  }
+
+  public setWizardType(wizardType: string) {
+    this.cacheService.set('wizardType', wizardType);
+
+    if (
+      wizardType === 'edit-registration' ||
+      wizardType === 'review-file' ||
+      wizardType === 'complete-file'
+    ) {
+      this.editWizard = true;
+    } else {
+      this.editWizard = false;
+    }
+  }
+
+  public getWizardType(): string {
+    return this.cacheService.get('wizardType');
+  }
+
+  public getEditWizardProfile(): boolean {
+    return this.editWizard;
   }
 }
