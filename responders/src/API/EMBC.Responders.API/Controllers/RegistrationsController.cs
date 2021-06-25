@@ -154,13 +154,14 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("files/{fileId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<EvacuationFileSearchResult>> GetFile(string fileId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<EvacuationFile>> GetFile(string fileId)
         {
-            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
-            {
-                FileId = fileId
-            })).Items.FirstOrDefault();
-            return Ok(mapper.Map<EvacuationFileSearchResult>(file));
+            var file = await evacuationSearchService.GetEvacuationFile(fileId);
+
+            if (file == null) return NotFound();
+
+            return Ok(file);
         }
 
         /// <summary>
@@ -192,7 +193,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrationResult>> UpdateFile(string fileId, EvacuationFile file)
         {
-            file.EssFileNumber = fileId;
+            file.Id = fileId;
             var id = await messagingClient.Send(new SubmitEvacuationFileCommand
             {
                 File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(file)
@@ -335,7 +336,7 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class EvacuationFile
     {
-        public string EssFileNumber { get; set; }
+        public string Id { get; set; }
 
         [Required]
         public string PrimaryRegistrantId { get; set; }
@@ -352,8 +353,8 @@ namespace EMBC.Responders.API.Controllers
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseEdited { get; set; }
 
-        public bool IsRestricted { get; set; }
-        public EvacuationFileStatus Status { get; set; }
+        public bool? IsRestricted { get; set; }
+        public EvacuationFileStatus? Status { get; set; }
         public DateTime? EvacuationFileDate { get; set; }
         public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; }
 
@@ -391,19 +392,16 @@ namespace EMBC.Responders.API.Controllers
 
         public bool HaveSpecialDiet { get; set; }
         public string SpecialDietDetails { get; set; }
-        public bool HaveMedication { get; set; }
-
+        public bool TakeMedication { get; set; }
+        public bool? HaveMedicalSupplies { get; set; }
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HasPetsFood { get; set; }
-
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
-
+        public bool? HavePetsFood { get; set; }
+        public bool? CanProvideFood { get; set; }
+        public bool? CanProvideLodging { get; set; }
+        public bool? CanProvideClothing { get; set; }
+        public bool? CanProvideTransportation { get; set; }
+        public bool? CanProvideIncidentals { get; set; }
         public NeedsAssessmentType Type { get; set; }
-        public bool HasSupplies { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -529,7 +527,6 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<EvacuationFileHouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
                 .ForMember(d => d.PreferredName, opts => opts.Ignore())
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.IsUnder19, opts => opts.Ignore())
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.Type == HouseholdMemberType.Registrant))
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
@@ -561,13 +558,11 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
-                .ForMember(d => d.HasEnoughSupply, opts => opts.MapFrom(s => s.HasSupplies))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => NeedsAssessmentType.Assessed))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.NeedsAssessment, NeedsAssessment>()
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
-                .ForMember(d => d.HasSupplies, opts => opts.MapFrom(s => s.HasEnoughSupply))
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
@@ -583,11 +578,8 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.IsRestricted))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
-                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
-                .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.Task.TaskNumber))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
@@ -595,7 +587,6 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
-                .ForMember(d => d.EssFileNumber, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))

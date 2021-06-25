@@ -26,6 +26,8 @@ namespace EMBC.Responders.API.Services
     public interface IEvacuationSearchService
     {
         public Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, Controllers.MemberRole userRole);
+
+        public Task<Controllers.EvacuationFile> GetEvacuationFile(string fileId);
     }
 
     public class SearchResults
@@ -103,6 +105,13 @@ namespace EMBC.Responders.API.Services
                 Registrants = mapper.Map<IEnumerable<RegistrantWithFiles>>(registrants),
                 Files = mapper.Map<IEnumerable<EvacuationFile>>(files)
             };
+        }
+
+        public async Task<Controllers.EvacuationFile> GetEvacuationFile(string fileId)
+        {
+            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery { FileId = fileId })).Items.SingleOrDefault();
+            if (file == null) return null;
+            return mapper.Map<Controllers.EvacuationFile>(file);
         }
     }
 }
