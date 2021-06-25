@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -344,6 +343,7 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public Address EvacuatedFromAddress { get; set; }
 
+        [Required]
         public string RegistrationLocation { get; set; }
 
         [Required]
@@ -388,6 +388,7 @@ namespace EMBC.Responders.API.Controllers
 
         [Required]
         public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
+
         public bool HaveSpecialDiet { get; set; }
         public string SpecialDietDetails { get; set; }
         public bool HaveMedication { get; set; }

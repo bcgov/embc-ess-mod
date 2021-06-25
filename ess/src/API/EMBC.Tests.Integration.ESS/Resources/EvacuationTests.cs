@@ -144,6 +144,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.EvacuatedFrom.PostalCode.ShouldBe(originalFile.EvacuatedFrom.PostalCode);
             evacuationFile.EvacuationDate.ShouldBeInRange(now, DateTime.UtcNow);
             evacuationFile.PrimaryRegistrantId.ShouldBe(primaryContact.Id);
+            evacuationFile.RegistrationLocation.ShouldBe(originalFile.RegistrationLocation);
 
             // Needs Assessment
 
@@ -202,6 +203,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 TaskId = "0001",
                 SecurityPhrase = "secret123",
                 SecurityPhraseChanged = true,
+                RegistrationLocation = $"{uniqueSignature}_testlocation",
 
                 NeedsAssessment = new NeedsAssessment
                 {
