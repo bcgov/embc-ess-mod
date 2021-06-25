@@ -69,18 +69,18 @@ namespace EMBC.ESS.Resources.Cases
         public string LastModifiedUserId { get; set; }
         public string LastModifiedDisplayName { get; set; }
         public InsuranceOption Insurance { get; set; }
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
+        public bool? CanProvideFood { get; set; }
+        public bool? CanProvideLodging { get; set; }
+        public bool? CanProvideClothing { get; set; }
+        public bool? CanProvideTransportation { get; set; }
+        public bool? CanProvideIncidentals { get; set; }
         public bool HaveSpecialDiet { get; set; }
         public string SpecialDietDetails { get; set; }
-        public bool HaveMedication { get; set; }
-        public bool HasEnoughSupply { get; set; }
+        public bool TakeMedication { get; set; }
+        public bool? HaveMedicalSupplies { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HasPetsFood { get; set; }
+        public bool? HavePetsFood { get; set; }
         public NeedsAssessmentType Type { get; set; }
         public IEnumerable<Note> Notes { get; set; }
         public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }

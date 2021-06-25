@@ -89,17 +89,17 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                         DateOfBirth = "2010-01-01"
                     }
                 },
-                HaveMedication = false,
-                HasEnoughSupply = false,
+                TakeMedication = false,
+                HaveMedicalSupplies = false,
                 Insurance = InsuranceOption.Yes,
                 HaveSpecialDiet = true,
                 SpecialDietDetails = "Gluten Free",
-                HasPetsFood = true,
-                CanEvacueeProvideClothing = false,
-                CanEvacueeProvideFood = true,
-                CanEvacueeProvideIncidentals = null,
-                CanEvacueeProvideLodging = false,
-                CanEvacueeProvideTransportation = true,
+                HavePetsFood = true,
+                CanProvideClothing = false,
+                CanProvideFood = true,
+                CanProvideIncidentals = null,
+                CanProvideLodging = false,
+                CanProvideTransportation = true,
                 Pets = new[]
                 {
                     new Pet{ Type = $"dog{textContextIdentifier}", Quantity = "4" }
@@ -384,17 +384,17 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     new NeedsAssessment
                     {
                         Type = NeedsAssessmentType.Preliminary,
-                        HaveMedication = false,
-                        HasEnoughSupply = false,
+                        TakeMedication = false,
+                        HaveMedicalSupplies = false,
                         Insurance = InsuranceOption.Yes,
                         HaveSpecialDiet = true,
                         SpecialDietDetails = "Shellfish allergy",
-                        HasPetsFood = true,
-                        CanEvacueeProvideClothing = true,
-                        CanEvacueeProvideFood = true,
-                        CanEvacueeProvideIncidentals = true,
-                        CanEvacueeProvideLodging = true,
-                        CanEvacueeProvideTransportation = true,
+                        HavePetsFood = true,
+                        CanProvideClothing = true,
+                        CanProvideFood = true,
+                        CanProvideIncidentals = true,
+                        CanProvideLodging = true,
+                        CanProvideTransportation = true,
                         HouseholdMembers = new[]
                         {
                             new HouseholdMember
