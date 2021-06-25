@@ -58,7 +58,6 @@ parameters:
     value: Staging
 
 objects:
-
   - kind: ConfigMap
     apiVersion: v1
     metadata:
@@ -185,11 +184,11 @@ objects:
         matchLabels:
           app: ${APP_NAME}-suppliers-portal
       ingress:
-      - ports:
-        - protocol: TCP
-          port: 2015
-        - protocol: TCP
-          port: 8080
+        - ports:
+            - protocol: TCP
+              port: 2015
+            - protocol: TCP
+              port: 8080
 
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
@@ -236,6 +235,14 @@ objects:
                   name: dp-keys
                 - mountPath: ${DYNAMICS_LISTS_CACHE_DIR}
                   name: lists-cache
+              livenessProbe:
+                httpGet:
+                  path: /hc/live
+                  port: 8080
+              startupProbe:
+                httpGet:
+                  path: /hc/ready
+                  port: 8080
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
