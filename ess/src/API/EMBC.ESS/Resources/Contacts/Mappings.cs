@@ -31,7 +31,6 @@ namespace EMBC.ESS.Resources.Contacts
 
             CreateMap<Contact, contact>(MemberList.None)
                 .ForMember(d => d.contactid, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Id) ? (Guid?)null : Guid.Parse(s.Id)))
-                .ForMember(d => d.era_registranttype, opts => opts.MapFrom(s => 174360000))
                 .ForMember(d => d.era_bcservicescardid, opts => opts.MapFrom(s => s.UserId))
                 .ForMember(d => d.era_collectionandauthorization, opts => opts.MapFrom(s => true))
                 .ForMember(d => d.era_restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
@@ -62,8 +61,6 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.birthdate, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.DateOfBirth) ? (Date?)null : Date.Parse(s.DateOfBirth)))
                 .ForMember(d => d.emailaddress1, opts => opts.MapFrom(s => s.Email ?? string.Empty))
                 .ForMember(d => d.telephone1, opts => opts.MapFrom(s => s.Phone ?? string.Empty))
-                .ForMember(d => d.era_emailrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Email)))
-                .ForMember(d => d.era_phonenumberrefusal, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Phone)))
                 .ForMember(d => d.firstname, opts => opts.MapFrom(s => s.FirstName))
                 .ForMember(d => d.lastname, opts => opts.MapFrom(s => s.LastName))
                 .ForMember(d => d.gendercode, opts => opts.ConvertUsing<GenderConverter, string>(s => s.Gender))

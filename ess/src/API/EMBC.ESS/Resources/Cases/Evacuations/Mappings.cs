@@ -35,8 +35,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_evacuationfiledate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.era_securityphrase, opts => opts.Ignore())
                 .ForMember(d => d.era_CurrentNeedsAssessmentid, opts => opts.MapFrom(s => s.NeedsAssessment))
+                .ForPath(d => d.era_CurrentNeedsAssessmentid.era_registrationlocation, opts => opts.MapFrom(s => s.RegistrationLocation))
                 .ForMember(d => d.era_securityphrase, opts => opts.MapFrom(s => s.SecurityPhraseChanged ? s.SecurityPhrase : null))
-                .ForMember(d => d.era_registrationlocation, opts => opts.MapFrom(s => s.RegistrationLocation))
                 .ForMember(d => d._era_registrant_value, opts => opts.MapFrom(s => s.PrimaryRegistrantId))
                 ;
 
@@ -53,7 +53,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.NeedsAssessment, opts => opts.MapFrom(s => s.era_CurrentNeedsAssessmentid))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.era_essfilestatus))
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
-                .ForMember(d => d.RegistrationLocation, opts => opts.MapFrom(s => s.era_registrationlocation))
+                .ForMember(d => d.RegistrationLocation, opts => opts.MapFrom(s => s.era_CurrentNeedsAssessmentid.era_registrationlocation))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_householdmember_EvacuationFileid))
                 ;
 
@@ -90,6 +90,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d._era_jurisdictionid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
                 .ForMember(d => d.era_era_householdmember_era_needassessment, opts => opts.MapFrom(s => s.HouseholdMembers))
                 .ForMember(d => d.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment, opts => opts.MapFrom(s => s.Pets))
+                .ForPath(d => d.era_registrationlocation, opts => opts.Ignore())
                 ;
 
             CreateMap<era_needassessment, EvacuationAddress>(MemberList.None)
