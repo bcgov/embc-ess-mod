@@ -10,16 +10,16 @@ import { NeedsAssessment } from './needs-assessment';
  * Evacuation File
  */
 export interface EvacuationFile {
-  essFileNumber?: null | string;
   evacuatedFromAddress: Address;
   evacuationFileDate?: null | string;
   householdMembers?: null | Array<EvacuationFileHouseholdMember>;
-  isRestricted?: boolean;
+  id?: null | string;
+  isRestricted?: null | boolean;
   needsAssessment: NeedsAssessment;
   primaryRegistrantId: string;
-  registrationLocation?: null | string;
+  registrationLocation: string;
   securityPhrase?: null | string;
   securityPhraseEdited?: boolean;
-  status?: EvacuationFileStatus;
+  status?: null | EvacuationFileStatus;
   task: EvacuationFileTask;
 }

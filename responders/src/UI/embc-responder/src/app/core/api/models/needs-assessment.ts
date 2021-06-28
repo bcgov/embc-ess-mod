@@ -11,15 +11,14 @@ import { ReferralServices } from './referral-services';
  * Needs assessment form
  */
 export interface NeedsAssessment {
-  canEvacueeProvideClothing?: null | boolean;
-  canEvacueeProvideFood?: null | boolean;
-  canEvacueeProvideIncidentals?: null | boolean;
-  canEvacueeProvideLodging?: null | boolean;
-  canEvacueeProvideTransportation?: null | boolean;
+  canProvideClothing?: null | boolean;
+  canProvideFood?: null | boolean;
+  canProvideIncidentals?: null | boolean;
+  canProvideLodging?: null | boolean;
+  canProvideTransportation?: null | boolean;
   createdOn?: string;
-  hasPetsFood?: null | boolean;
-  hasSupplies?: boolean;
-  haveMedication?: boolean;
+  haveMedicalSupplies?: null | boolean;
+  havePetsFood?: null | boolean;
   haveSpecialDiet?: boolean;
   householdMembers: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
@@ -29,5 +28,6 @@ export interface NeedsAssessment {
   pets?: null | Array<Pet>;
   recommendedReferralServices?: null | Array<ReferralServices>;
   specialDietDetails?: null | string;
+  takeMedication?: boolean;
   type?: NeedsAssessmentType;
 }
