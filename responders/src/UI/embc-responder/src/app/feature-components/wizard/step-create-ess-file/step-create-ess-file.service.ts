@@ -397,9 +397,10 @@ export class StepCreateEssFileService {
     )?.apiValue;
 
     // Create new HouseholdMembers array that includes primary registrant, set member types
-    this.householdMembers.forEach(
-      (mem) => (mem.type = HouseholdMemberType.HouseholdMember)
-    );
+    this.householdMembers.forEach((mem) => {
+      mem.isPrimaryRegistrant = false;
+      mem.type = HouseholdMemberType.HouseholdMember;
+    });
 
     const allMembers: EvacuationFileHouseholdMember[] = [
       {
