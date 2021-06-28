@@ -37,13 +37,13 @@ export class EssFileService {
           const stateProvinces = this.locationService.getStateProvinceList();
 
           const evacCommunity = communities.find(
-            (comm) => comm.code === file.evacuatedFromAddress.communityCode
+            (comm) => comm.code === file.evacuatedFromAddress?.communityCode
           );
           const evacCountry = countries.find(
-            (coun) => coun.code === file.evacuatedFromAddress.countryCode
+            (coun) => coun.code === file.evacuatedFromAddress?.countryCode
           );
           const evacStateProvince = stateProvinces.find(
-            (sp) => sp.code === file.evacuatedFromAddress.stateProvinceCode
+            (sp) => sp.code === file.evacuatedFromAddress?.stateProvinceCode
           );
 
           const evacAddressModel: AddressModel = {

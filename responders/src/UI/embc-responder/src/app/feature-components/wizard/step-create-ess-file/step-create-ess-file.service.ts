@@ -29,10 +29,17 @@ import { UserService } from 'src/app/core/services/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepCreateEssFileService {
+  // Wizard variables
   private essTabsVal: Array<TabModel> = WizardTabModelValues.essFileTabs;
-
   private nextTabUpdateVal: Subject<void> = new Subject();
 
+  // Required values not set on form
+  private primaryRegistrantIdVal: string;
+  private primaryAddressVal: AddressModel;
+  private primaryMemberVal: HouseholdMemberModel;
+  private taskIdVal: string;
+
+  // Evacuation Details tab
   private paperESSFileVal: string;
   private evacuatedFromPrimaryVal: boolean;
   private evacAddressVal: AddressModel;
@@ -45,18 +52,17 @@ export class StepCreateEssFileService {
   private referredServiceDetailsVal: ReferralServices[];
   private evacuationExternalReferralsVal: string;
 
-  private bypassPhraseVal: boolean;
-  private securityPhraseVal: string;
-
+  // Household Members tab
   private haveHouseholdMembersVal: boolean;
   private householdMembersVal: HouseholdMemberModel[];
   private addMemberIndicatorVal: boolean;
 
   private haveSpecialDietVal: boolean;
   private specialDietDetailsVal: string;
-  private haveMedicationVal: boolean;
-  private medicationSupplyVal: boolean;
+  private takeMedicationVal: boolean;
+  private haveMedicationSupplyVal: boolean;
 
+  // Animals tab
   private havePetsVal: boolean;
   private petsListVal: Pet[];
   private addPetIndicatorVal: boolean;
@@ -64,11 +70,16 @@ export class StepCreateEssFileService {
   private havePetsFoodVal: boolean;
   private petCarePlansVal: string;
 
+  // Needs tab
   private canRegistrantProvideClothingVal: string;
   private canRegistrantProvideFoodVal: string;
   private canRegistrantProvideIncidentalsVal: string;
   private canRegistrantProvideLodgingVal: string;
   private canRegistrantProvideTransportationVal: string;
+
+  // Security Phrase tab
+  private bypassPhraseVal: boolean;
+  private securityPhraseVal: string;
 
   constructor(
     private dialog: MatDialog,
@@ -77,9 +88,51 @@ export class StepCreateEssFileService {
     private evacueeSession: EvacueeSessionService,
     private stepCreateProfileService: StepCreateProfileService
   ) {}
+  // Wizard variables
+  public get essTabs(): Array<TabModel> {
+    return this.essTabsVal;
+  }
+  public set essTabs(essTabsVal: Array<TabModel>) {
+    this.essTabsVal = essTabsVal;
+  }
 
-  // Contact Details Getters and Setters
+  public get nextTabUpdate(): Subject<void> {
+    return this.nextTabUpdateVal;
+  }
+  public set nextTabUpdate(nextTabUpdateVal: Subject<void>) {
+    this.nextTabUpdateVal = nextTabUpdateVal;
+  }
 
+  // Required values not set on form
+  public get primaryRegistrantId(): string {
+    return this.primaryRegistrantIdVal;
+  }
+  public set primaryRegistrantId(primaryRegistrantIdVal: string) {
+    this.primaryRegistrantIdVal = primaryRegistrantIdVal;
+  }
+
+  public get primaryAddress(): AddressModel {
+    return this.primaryAddressVal;
+  }
+  public set primaryAddress(primaryAddressVal: AddressModel) {
+    this.primaryAddressVal = primaryAddressVal;
+  }
+
+  public get primaryMember(): HouseholdMemberModel {
+    return this.primaryMemberVal;
+  }
+  public set primaryMember(primaryMemberVal: HouseholdMemberModel) {
+    this.primaryMemberVal = primaryMemberVal;
+  }
+
+  public get taskId(): string {
+    return this.taskIdVal;
+  }
+  public set taskId(taskIdVal: string) {
+    this.taskIdVal = taskIdVal;
+  }
+
+  // Evacuation Details tab
   public get paperESSFile(): string {
     return this.paperESSFileVal;
   }
@@ -154,8 +207,7 @@ export class StepCreateEssFileService {
     this.evacuationExternalReferralsVal = evacuationExternalReferralsVal;
   }
 
-  // Household Members Getter and Setters
-
+  // Household Members tab
   public get haveHouseHoldMembers(): boolean {
     return this.haveHouseholdMembersVal;
   }
@@ -191,22 +243,21 @@ export class StepCreateEssFileService {
     this.specialDietDetailsVal = specialDietDetailsVal;
   }
 
-  public get haveMedication(): boolean {
-    return this.haveMedicationVal;
+  public get takeMedication(): boolean {
+    return this.takeMedicationVal;
   }
-  public set haveMedication(haveMedicationVal: boolean) {
-    this.haveMedicationVal = haveMedicationVal;
-  }
-
-  public get medicationSupply(): boolean {
-    return this.medicationSupplyVal;
-  }
-  public set medicationSupply(medicationSupplyVal: boolean) {
-    this.medicationSupplyVal = medicationSupplyVal;
+  public set takeMedication(takeMedicationVal: boolean) {
+    this.takeMedicationVal = takeMedicationVal;
   }
 
-  // Animals Getters and Setters
+  public get haveMedicationSupply(): boolean {
+    return this.haveMedicationSupplyVal;
+  }
+  public set haveMedicationSupply(haveMedicationSupplyVal: boolean) {
+    this.haveMedicationSupplyVal = haveMedicationSupplyVal;
+  }
 
+  // Animals tab
   public get havePets(): boolean {
     return this.havePetsVal;
   }
@@ -242,8 +293,7 @@ export class StepCreateEssFileService {
     this.petCarePlansVal = petCarePlansVal;
   }
 
-  // Needs Assessment Getters and Setters
-
+  // Needs tab
   public get canRegistrantProvideClothing(): string {
     return this.canRegistrantProvideClothingVal;
   }
@@ -287,6 +337,7 @@ export class StepCreateEssFileService {
     this.canRegistrantProvideTransportationVal = canRegistrantProvideTransportationVal;
   }
 
+  // Security Phrase tab
   public get bypassPhrase(): boolean {
     return this.bypassPhraseVal;
   }
@@ -299,21 +350,6 @@ export class StepCreateEssFileService {
   }
   public set securityPhrase(securityPhraseVal: string) {
     this.securityPhraseVal = securityPhraseVal;
-  }
-
-  // Tabs Navigation Getters and Setters
-  public get nextTabUpdate(): Subject<void> {
-    return this.nextTabUpdateVal;
-  }
-  public set nextTabUpdate(nextTabUpdateVal: Subject<void>) {
-    this.nextTabUpdateVal = nextTabUpdateVal;
-  }
-
-  public get essTabs(): Array<TabModel> {
-    return this.essTabsVal;
-  }
-  public set essTabs(essTabsVal: Array<TabModel>) {
-    this.essTabsVal = essTabsVal;
   }
 
   /**
@@ -372,6 +408,7 @@ export class StepCreateEssFileService {
         lastName: this.stepCreateProfileService.personalDetails.lastName,
         gender: this.stepCreateProfileService.personalDetails.gender,
         initials: this.stepCreateProfileService.personalDetails.initials,
+        isPrimaryRegistrant: true,
         type: HouseholdMemberType.Registrant
       },
       ...this.householdMembers
@@ -403,16 +440,17 @@ export class StepCreateEssFileService {
       householdMembers: allMembers,
       haveSpecialDiet: this.haveSpecialDiet,
       specialDietDetails: this.specialDietDetails,
-      haveMedication: this.haveMedication,
+      takeMedication: this.takeMedication,
+      haveMedicalSupplies: this.haveMedicationSupply,
 
       pets: this.petsList,
-      hasPetsFood: this.havePetsFood,
+      havePetsFood: this.havePetsFood,
 
-      canEvacueeProvideFood: needsFoodDTO,
-      canEvacueeProvideLodging: needsLodgingDTO,
-      canEvacueeProvideClothing: needsClothingDTO,
-      canEvacueeProvideTransportation: needsTransportationDTO,
-      canEvacueeProvideIncidentals: needsIncidentalsDTO
+      canProvideFood: needsFoodDTO,
+      canProvideLodging: needsLodgingDTO,
+      canProvideClothing: needsClothingDTO,
+      canProvideTransportation: needsTransportationDTO,
+      canProvideIncidentals: needsIncidentalsDTO
     };
 
     // Map out into DTO object and return
@@ -437,7 +475,20 @@ export class StepCreateEssFileService {
    * Update the wizard's values with ones fetched from API
    */
   public getEvacFileDTO(essFile: EvacuationFileModel) {
-    this.paperESSFile = essFile.essFileNumber;
+    const essNeeds = essFile.needsAssessment;
+
+    // Wizard variables
+    this.evacueeSession.essFileNumber = essFile.id;
+
+    // Required values not set on form
+    this.primaryMember = {
+      sameLastName: true,
+      ...essNeeds.householdMembers?.find(
+        (member) => member.type === HouseholdMemberType.Registrant
+      )
+    };
+
+    // Evacuation Details tab
     this.evacAddress = this.wizardService.setAddressObjectForForm(
       essFile.evacuatedFromAddress
     );
@@ -445,8 +496,6 @@ export class StepCreateEssFileService {
 
     this.evacuatedFromPrimary =
       this.stepCreateProfileService?.primaryAddressDetails === this.evacAddress;
-
-    const essNeeds = essFile.needsAssessment;
 
     // Get content for API Notes fields
     if (essNeeds.notes?.length > 0) {
@@ -471,17 +520,14 @@ export class StepCreateEssFileService {
     this.referredServiceDetails = essNeeds.recommendedReferralServices;
     this.referredServices = essNeeds.recommendedReferralServices.length > 0;
 
+    // Household Members tab
     // Split main applicant from other household members, remap to UI model
-    const primaryLastName = essNeeds.householdMembers?.find(
-      (member) => member.type === HouseholdMemberType.Registrant
-    )?.lastName;
-
     this.householdMembers = essNeeds.householdMembers
       ?.filter((member) => member.type !== HouseholdMemberType.Registrant)
       .map<HouseholdMemberModel>((member) => {
         return {
           ...member,
-          sameLastName: member.lastName === primaryLastName
+          sameLastName: member.lastName === this.primaryMember.lastName
         };
       });
 
@@ -489,34 +535,38 @@ export class StepCreateEssFileService {
 
     this.haveSpecialDiet = essNeeds.haveSpecialDiet;
     this.specialDietDetails = essNeeds.specialDietDetails;
-    this.haveMedication = essNeeds.haveMedication;
+    this.takeMedication = essNeeds.takeMedication;
+    this.haveMedicationSupply = essNeeds.haveMedicalSupplies;
 
+    // Animals tab
+    // Pet Care Plans is set in "Notes" section further up
     this.petsList = essNeeds.pets;
-    this.havePetsFood = essNeeds.hasPetsFood;
-
     this.havePets = essNeeds.pets?.length > 0;
 
-    // Get values for buttons on Needs tabs
+    this.havePetsFood = essNeeds.havePetsFood;
+
+    // Needs tab
     this.canRegistrantProvideFood = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canEvacueeProvideFood
+      (ins) => ins.apiValue === essNeeds.canProvideFood
     )?.value;
 
     this.canRegistrantProvideLodging = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canEvacueeProvideLodging
+      (ins) => ins.apiValue === essNeeds.canProvideLodging
     )?.value;
 
     this.canRegistrantProvideClothing = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canEvacueeProvideClothing
+      (ins) => ins.apiValue === essNeeds.canProvideClothing
     )?.value;
 
     this.canRegistrantProvideTransportation = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canEvacueeProvideTransportation
+      (ins) => ins.apiValue === essNeeds.canProvideTransportation
     )?.value;
 
     this.canRegistrantProvideIncidentals = globalConst.needsOptions.find(
-      (ins) => ins.apiValue === essNeeds.canEvacueeProvideIncidentals
+      (ins) => ins.apiValue === essNeeds.canProvideIncidentals
     )?.value;
 
+    // Security Phrase tab
     this.securityPhrase = essFile.securityPhrase;
   }
 

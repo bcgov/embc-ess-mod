@@ -295,11 +295,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         ]
       ],
       hasMedication: [
-        this.stepCreateEssFileService.haveMedication ?? '',
+        this.stepCreateEssFileService.takeMedication ?? '',
         Validators.required
       ],
       medicationSupply: [
-        this.stepCreateEssFileService.medicationSupply ?? '',
+        this.stepCreateEssFileService.haveMedicationSupply ?? '',
         [
           this.customValidation
             .conditionalValidation(
@@ -418,10 +418,10 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.stepCreateEssFileService.specialDietDetails = this.householdForm.get(
       'specialDietDetails'
     ).value;
-    this.stepCreateEssFileService.haveMedication = this.householdForm.get(
+    this.stepCreateEssFileService.takeMedication = this.householdForm.get(
       'hasMedication'
     ).value;
-    this.stepCreateEssFileService.medicationSupply = this.householdForm.get(
+    this.stepCreateEssFileService.haveMedicationSupply = this.householdForm.get(
       'medicationSupply'
     ).value;
     this.stepCreateEssFileService.addMemberIndicator = this.householdForm.get(

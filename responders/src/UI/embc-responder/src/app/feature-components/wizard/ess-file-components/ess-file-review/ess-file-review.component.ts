@@ -137,16 +137,21 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
           this.stepCreateEssFileService
             .openModal(globalConst.essFileCreatedMessage)
             .afterClosed()
-            .subscribe(() => {
+            .subscribe((event) => {
               this.wizardService.setStepStatus(
                 '/ess-wizard/add-supports',
                 false
               );
               this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
 
-              this.router.navigate(['/ess-wizard/add-supports'], {
-                state: { step: 'STEP 3', title: 'Add Supports' }
-              });
+              if (event === 'exit') {
+                const navigateTo = this.cacheService.get('wizardOpenedFrom');
+                this.router.navigate([navigateTo ?? '/']);
+              } else {
+                this.router.navigate(['/ess-wizard/add-supports'], {
+                  state: { step: 'STEP 3', title: 'Add Supports' }
+                });
+              }
             });
         },
         (error) => {

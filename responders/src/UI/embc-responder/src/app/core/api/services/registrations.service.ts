@@ -10,7 +10,6 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { EvacuationFile } from '../models/evacuation-file';
-import { EvacuationFileSearchResult } from '../models/evacuation-file-search-result';
 import { GetSecurityPhraseResponse } from '../models/get-security-phrase-response';
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
 import { RegistrantProfile } from '../models/registrant-profile';
@@ -385,7 +384,7 @@ export class RegistrationsService extends BaseService {
      * fileId
      */
     fileId: string;
-  }): Observable<StrictHttpResponse<EvacuationFileSearchResult>> {
+  }): Observable<StrictHttpResponse<EvacuationFile>> {
 
     const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetFilePath, 'get');
     if (params) {
@@ -398,7 +397,7 @@ export class RegistrationsService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<EvacuationFileSearchResult>;
+        return r as StrictHttpResponse<EvacuationFile>;
       })
     );
   }
@@ -419,10 +418,10 @@ export class RegistrationsService extends BaseService {
      * fileId
      */
     fileId: string;
-  }): Observable<EvacuationFileSearchResult> {
+  }): Observable<EvacuationFile> {
 
     return this.registrationsGetFile$Response(params).pipe(
-      map((r: StrictHttpResponse<EvacuationFileSearchResult>) => r.body as EvacuationFileSearchResult)
+      map((r: StrictHttpResponse<EvacuationFile>) => r.body as EvacuationFile)
     );
   }
 
