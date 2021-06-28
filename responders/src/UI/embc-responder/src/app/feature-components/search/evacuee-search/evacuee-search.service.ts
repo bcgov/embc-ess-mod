@@ -23,12 +23,4 @@ export class EvacueeSearchService {
     };
     this.cacheService.set('evacueeSearchContext', this.searchContext);
   }
-
-  public setWizardType(wizardType: string) {
-    this.cacheService.set('wizardType', wizardType);
-  }
-
-  public getWizardType(): string {
-    return this.cacheService.get('wizardType');
-  }
 }

@@ -15,6 +15,7 @@ import {
 } from 'src/app/core/models/evacuee-search-results';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -32,6 +33,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
   constructor(
     private evacueeSearchResultsService: EvacueeSearchResultsService,
     private evacueeSearchService: EvacueeSearchService,
+    private evacueeSessionService: EvacueeSessionService,
     private userService: UserService,
     private router: Router,
     private cacheService: CacheService,
@@ -93,7 +95,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
       'wizardOpenedFrom',
       '/responder-access/search/evacuee'
     );
-    this.evacueeSearchService.setWizardType('new-registration');
+    this.evacueeSessionService.setWizardType('new-registration');
     this.router.navigate(['/ess-wizard'], {
       queryParams: { type: 'new-registration' },
       queryParamsHandling: 'merge'
