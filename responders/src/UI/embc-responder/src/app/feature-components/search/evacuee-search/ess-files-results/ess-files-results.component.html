@@ -63,7 +63,13 @@
         <div class="row">
           <div class="col-md-12">
             <p class="result-subHeading">
-              Task # <b>{{ fileResult?.taskId }}</b>
+              Task #
+              <b
+                ><span *ngIf="fileResult?.taskId !== null; else notAssigned">{{
+                  fileResult?.taskId
+                }}</span></b
+              >
+              <ng-template #notAssigned>Not yet assigned</ng-template>
             </p>
           </div>
         </div>
@@ -107,15 +113,22 @@
               <b>{{ fileResult?.evacuatedFrom?.addressLine2 }},</b>
             </p>
             <p class="p-custom">
-              <b
-                >{{ fileResult?.evacuatedFrom?.city }},
-                {{ fileResult?.evacuatedFrom?.stateProvinceCode }},
-                {{ fileResult?.evacuatedFrom?.postalCode }}</b
-              >
+              <b>
+                <span *ngIf="fileResult?.evacuatedFrom?.city !== null"
+                  >{{ fileResult?.evacuatedFrom?.city }},</span
+                >
+                <span
+                  *ngIf="fileResult?.evacuatedFrom?.communityCode !== null"
+                  >{{ communityName(fileResult?.evacuatedFrom) }}</span
+                >
+                <span *ngIf="fileResult?.evacuatedFrom?.postalCode !== null">
+                  ,{{ fileResult?.evacuatedFrom?.postalCode }}
+                </span>
+              </b>
             </p>
-            <p class="p-custom">
-              <b>{{ fileResult?.evacuatedFrom?.countryCode }}</b>
-            </p>
+            <!-- <p class="p-custom">
+              <b>{{ fileResult?.evacuatedFrom?.country?.name }}</b>
+            </p> -->
           </div>
         </div>
       </div>
