@@ -145,8 +145,9 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
               this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
 
               if (event === 'exit') {
-                const navigateTo = this.cacheService.get('wizardOpenedFrom');
-                this.router.navigate([navigateTo ?? '/']);
+                this.router.navigate([
+                  'responder-access/search/essfile-dashboard'
+                ]);
               } else {
                 this.router.navigate(['/ess-wizard/add-supports'], {
                   state: { step: 'STEP 3', title: 'Add Supports' }
