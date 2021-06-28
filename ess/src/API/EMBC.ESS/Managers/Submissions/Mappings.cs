@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Linq;
 using AutoMapper;
 
 namespace EMBC.ESS.Managers.Submissions
@@ -31,7 +30,11 @@ namespace EMBC.ESS.Managers.Submissions
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => !s.EvacuationDate.HasValue ? DateTime.UtcNow : s.EvacuationDate))
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
-                .ReverseMap()
+                .ForMember(d => d.IsSecurityPhraseMasked, opts => opts.Ignore())
+                ;
+
+            CreateMap<Resources.Cases.EvacuationFile, Shared.Contracts.Submissions.EvacuationFile>()
+                .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Address, Resources.Cases.EvacuationAddress>()
