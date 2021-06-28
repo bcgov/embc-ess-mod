@@ -14,10 +14,10 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using System.Text.Json.Serialization;
 using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.SecurityModule;
@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +40,7 @@ using NSwag;
 using NSwag.AspNetCore;
 using NSwag.Generation.Processors.Security;
 using Serilog;
+using Serilog.Events;
 
 namespace EMBC.Registrants.API
 {
@@ -124,19 +126,16 @@ namespace EMBC.Registrants.API
 
             app.UseSerilogRequestLogging(opts =>
             {
+                opts.GetLevel = ExcludeHealthChecks;
                 opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
                 {
-                    diagCtx.Set("User", httpCtx.User.FindFirst(ClaimTypes.Upn)?.Value);
+                    diagCtx.Set("User", httpCtx.User.Identity?.Name);
                     diagCtx.Set("Host", httpCtx.Request.Host);
                     diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
                     diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
                     diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
                     diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
-                    diagCtx.Set("X-Forwarded-For", httpCtx.Request.Headers["X-Forwarded-For"].ToString());
-                    diagCtx.Set("X-Forwarded-Proto", httpCtx.Request.Headers["X-Forwarded-Proto"].ToString());
-                    diagCtx.Set("X-Forwarded-Host", httpCtx.Request.Headers["X-Forwarded-Host"].ToString());
                     diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
-                    if (!env.IsProduction()) diagCtx.Set("Raw_Headers", httpCtx.Request.Headers, true);
                 };
             });
 
@@ -211,5 +210,15 @@ namespace EMBC.Registrants.API
                 });
             }
         }
+
+        //inspired by https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-excluding-health-check-endpoints-from-serilog-request-logging/
+        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>
+        ex != null
+            ? LogEventLevel.Error
+            : ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError
+                ? LogEventLevel.Error
+                : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
+                    ? LogEventLevel.Verbose
+                    : LogEventLevel.Information;
     }
 }

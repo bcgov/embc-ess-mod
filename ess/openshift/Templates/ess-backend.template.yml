@@ -176,6 +176,16 @@ objects:
                 - mountPath: /ssl
                   name: ssl
                   readonly: true
+              livenessProbe:
+                httpGet:
+                  scheme: HTTPS
+                  path: /hc/live
+                  port: 8080
+              startupProbe:
+                httpGet:
+                  scheme: HTTPS
+                  path: /hc/ready
+                  port: 8080
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
