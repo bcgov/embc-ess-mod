@@ -177,14 +177,16 @@
             <div class="row">
               <div class="col-4">Household Medication Requirements</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.haveMedication ? 'Yes' : 'No' }}
+                {{ stepCreateEssFileService?.takeMedication ? 'Yes' : 'No' }}
               </div>
             </div>
 
-            <div class="row" *ngIf="stepCreateEssFileService?.haveMedication">
+            <div class="row" *ngIf="stepCreateEssFileService?.takeMedication">
               <div class="col-4">Has Sufficient Medication</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.medicationSupply ? 'Yes' : 'No' }}
+                {{
+                  stepCreateEssFileService?.haveMedicationSupply ? 'Yes' : 'No'
+                }}
               </div>
             </div>
           </div>
