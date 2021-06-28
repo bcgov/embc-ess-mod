@@ -34,8 +34,11 @@ export class EvacueeSessionService {
   }
 
   clearEvacueeSession() {
-    this.registrantProfileId = null;
+    this.profileId = null;
+    this.essFileNumber = null;
     this.cacheService.remove('registrantProfileId');
+    this.cacheService.remove('fileNumber');
+    this.cacheService.remove('wizardType');
   }
 
   public setWizardType(wizardType: string) {
