@@ -21,7 +21,7 @@ import {
   Country,
   LocationsService
 } from 'src/app/core/services/locations.service';
-import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
+import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { AddressService } from './address.service';
 
@@ -40,7 +40,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   constructor(
     private router: Router,
-    private stepCreateProfileService: StepCreateProfileService,
+    private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
     private cd: ChangeDetectorRef,
@@ -104,7 +104,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
     });
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
       () => {
         this.updateTabStatus();
       }
@@ -232,7 +232,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * Navigate to next tab
    */
   public next(): void {
-    this.router.navigate(['/ess-wizard/create-evacuee-profile/contact']);
+    this.router.navigate(['/ess-wizard/evacuee-profile/contact']);
   }
 
   /**
@@ -240,7 +240,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    */
   public back(): void {
     this.router.navigate([
-      '/ess-wizard/create-evacuee-profile/evacuee-details'
+      '/ess-wizard/evacuee-profile/evacuee-details'
     ]);
   }
 
@@ -248,7 +248,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.stepCreateProfileService.nextTabUpdate.next();
+    this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 
@@ -258,21 +258,21 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   private createAddressForm(): void {
     this.primaryAddressForm = this.formBuilder.group({
       isBcAddress: [
-        this.stepCreateProfileService.isBcAddress !== null
-          ? this.stepCreateProfileService.isBcAddress
+        this.stepEvacueeProfileService.isBcAddress !== null
+          ? this.stepEvacueeProfileService.isBcAddress
           : '',
         [Validators.required]
       ],
       isNewMailingAddress: [
-        this.stepCreateProfileService.isMailingAddressSameAsPrimaryAddress !==
+        this.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddress !==
         null
-          ? this.stepCreateProfileService.isMailingAddressSameAsPrimaryAddress
+          ? this.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddress
           : '',
         [Validators.required]
       ],
       isBcMailingAddress: [
-        this.stepCreateProfileService.isBcMailingAddress !== null
-          ? this.stepCreateProfileService.isBcMailingAddress
+        this.stepEvacueeProfileService.isBcMailingAddress !== null
+          ? this.stepEvacueeProfileService.isBcMailingAddress
           : '',
         [
           this.customValidation
@@ -298,29 +298,29 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   private createPrimaryAddressForm(): FormGroup {
     return this.formBuilder.group({
       addressLine1: [
-        this.stepCreateProfileService?.primaryAddressDetails?.addressLine1 !==
+        this.stepEvacueeProfileService?.primaryAddressDetails?.addressLine1 !==
         undefined
-          ? this.stepCreateProfileService.primaryAddressDetails.addressLine1
+          ? this.stepEvacueeProfileService.primaryAddressDetails.addressLine1
           : '',
         [this.customValidation.whitespaceValidator()]
       ],
       addressLine2: [
-        this.stepCreateProfileService?.primaryAddressDetails?.addressLine2 !==
+        this.stepEvacueeProfileService?.primaryAddressDetails?.addressLine2 !==
         undefined
-          ? this.stepCreateProfileService.primaryAddressDetails.addressLine2
+          ? this.stepEvacueeProfileService.primaryAddressDetails.addressLine2
           : ''
       ],
       community: [
-        this.stepCreateProfileService?.primaryAddressDetails?.community !==
+        this.stepEvacueeProfileService?.primaryAddressDetails?.community !==
         undefined
-          ? this.stepCreateProfileService.primaryAddressDetails.community
+          ? this.stepEvacueeProfileService.primaryAddressDetails.community
           : '',
         [Validators.required]
       ],
       stateProvince: [
-        this.stepCreateProfileService?.primaryAddressDetails?.stateProvince !==
+        this.stepEvacueeProfileService?.primaryAddressDetails?.stateProvince !==
         undefined
-          ? this.stepCreateProfileService.primaryAddressDetails.stateProvince
+          ? this.stepEvacueeProfileService.primaryAddressDetails.stateProvince
           : '',
         [
           this.customValidation
@@ -341,16 +341,16 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
         ]
       ],
       country: [
-        this.stepCreateProfileService?.primaryAddressDetails?.country !==
+        this.stepEvacueeProfileService?.primaryAddressDetails?.country !==
         undefined
-          ? this.stepCreateProfileService.primaryAddressDetails.country
+          ? this.stepEvacueeProfileService.primaryAddressDetails.country
           : '',
         [Validators.required]
       ],
       postalCode: [
-        this.stepCreateProfileService?.primaryAddressDetails?.postalCode !==
+        this.stepEvacueeProfileService?.primaryAddressDetails?.postalCode !==
         undefined
-          ? this.stepCreateProfileService.primaryAddressDetails.postalCode
+          ? this.stepEvacueeProfileService.primaryAddressDetails.postalCode
           : '',
         [this.customValidation.postalValidation().bind(this.customValidation)]
       ]
@@ -365,29 +365,29 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
   private createMailingAddressForm(): FormGroup {
     return this.formBuilder.group({
       addressLine1: [
-        this.stepCreateProfileService?.mailingAddressDetails?.addressLine1 !==
+        this.stepEvacueeProfileService?.mailingAddressDetails?.addressLine1 !==
         undefined
-          ? this.stepCreateProfileService.mailingAddressDetails.addressLine1
+          ? this.stepEvacueeProfileService.mailingAddressDetails.addressLine1
           : '',
         [this.customValidation.whitespaceValidator()]
       ],
       addressLine2: [
-        this.stepCreateProfileService?.mailingAddressDetails?.addressLine2 !==
+        this.stepEvacueeProfileService?.mailingAddressDetails?.addressLine2 !==
         undefined
-          ? this.stepCreateProfileService.mailingAddressDetails.addressLine2
+          ? this.stepEvacueeProfileService.mailingAddressDetails.addressLine2
           : ''
       ],
       community: [
-        this.stepCreateProfileService?.mailingAddressDetails?.community !==
+        this.stepEvacueeProfileService?.mailingAddressDetails?.community !==
         undefined
-          ? this.stepCreateProfileService.mailingAddressDetails.community
+          ? this.stepEvacueeProfileService.mailingAddressDetails.community
           : '',
         [Validators.required]
       ],
       stateProvince: [
-        this.stepCreateProfileService?.mailingAddressDetails?.stateProvince !==
+        this.stepEvacueeProfileService?.mailingAddressDetails?.stateProvince !==
         undefined
-          ? this.stepCreateProfileService.mailingAddressDetails.stateProvince
+          ? this.stepEvacueeProfileService.mailingAddressDetails.stateProvince
           : '',
         [
           this.customValidation
@@ -409,16 +409,16 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
         ]
       ],
       country: [
-        this.stepCreateProfileService?.mailingAddressDetails?.country !==
+        this.stepEvacueeProfileService?.mailingAddressDetails?.country !==
         undefined
-          ? this.stepCreateProfileService.mailingAddressDetails.country
+          ? this.stepEvacueeProfileService.mailingAddressDetails.country
           : '',
         [Validators.required]
       ],
       postalCode: [
-        this.stepCreateProfileService?.mailingAddressDetails?.postalCode !==
+        this.stepEvacueeProfileService?.mailingAddressDetails?.postalCode !==
         undefined
-          ? this.stepCreateProfileService.mailingAddressDetails.postalCode
+          ? this.stepEvacueeProfileService.mailingAddressDetails.postalCode
           : '',
         [this.customValidation.postalValidation().bind(this.customValidation)]
       ]
@@ -454,15 +454,15 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    */
   private updateTabStatus() {
     if (this.primaryAddressForm.valid) {
-      this.stepCreateProfileService.setTabStatus('address', 'complete');
+      this.stepEvacueeProfileService.setTabStatus('address', 'complete');
     } else if (
-      this.stepCreateProfileService.checkForPartialUpdates(
+      this.stepEvacueeProfileService.checkForPartialUpdates(
         this.primaryAddressForm
       )
     ) {
-      this.stepCreateProfileService.setTabStatus('address', 'incomplete');
+      this.stepEvacueeProfileService.setTabStatus('address', 'incomplete');
     } else {
-      this.stepCreateProfileService.setTabStatus('address', 'not-started');
+      this.stepEvacueeProfileService.setTabStatus('address', 'not-started');
     }
     this.saveFormUpdates();
   }
@@ -471,19 +471,19 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * Persists the form values to the service
    */
   private saveFormUpdates(): void {
-    this.stepCreateProfileService.primaryAddressDetails = this.primaryAddressForm.get(
+    this.stepEvacueeProfileService.primaryAddressDetails = this.primaryAddressForm.get(
       'address'
     ).value;
-    this.stepCreateProfileService.mailingAddressDetails = this.primaryAddressForm.get(
+    this.stepEvacueeProfileService.mailingAddressDetails = this.primaryAddressForm.get(
       'mailingAddress'
     ).value;
-    this.stepCreateProfileService.isBcAddress = this.primaryAddressForm.get(
+    this.stepEvacueeProfileService.isBcAddress = this.primaryAddressForm.get(
       'isBcAddress'
     ).value;
-    this.stepCreateProfileService.isMailingAddressSameAsPrimaryAddress = this.primaryAddressForm.get(
+    this.stepEvacueeProfileService.isMailingAddressSameAsPrimaryAddress = this.primaryAddressForm.get(
       'isNewMailingAddress'
     ).value;
-    this.stepCreateProfileService.isBcMailingAddress = this.primaryAddressForm.get(
+    this.stepEvacueeProfileService.isBcMailingAddress = this.primaryAddressForm.get(
       'isBcMailingAddress'
     ).value;
   }

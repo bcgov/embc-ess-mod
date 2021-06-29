@@ -17,7 +17,7 @@
             <div class="row">
               <div class="col-4">Paper Based ESS File Number</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.paperESSFile }}
+                {{ stepEssFileService?.paperESSFile }}
               </div>
             </div>
 
@@ -26,7 +26,7 @@
               <div
                 class="col-8 bold"
                 [innerHTML]="
-                  stepCreateEssFileService?.evacAddress | maskEvacuatedaddress
+                  stepEssFileService?.evacAddress | maskEvacuatedaddress
                 "
               ></div>
             </div>
@@ -34,7 +34,7 @@
             <div class="row">
               <div class="col-4">Facility/Registration Location</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.facilityName }}
+                {{ stepEssFileService?.facilityName }}
               </div>
             </div>
 
@@ -55,14 +55,14 @@
             <div class="row">
               <div class="col-4">How Affected by the Evacuation</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.evacuationImpact }}
+                {{ stepEssFileService?.evacuationImpact }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Post Evacuation Recovery Plans</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.householdRecoveryPlan }}
+                {{ stepEssFileService?.householdRecoveryPlan }}
               </div>
             </div>
 
@@ -72,11 +72,9 @@
               </div>
               <div class="col-8 bold">
                 {{
-                  stepCreateEssFileService?.referredServices
+                  stepEssFileService?.referredServices
                     ? 'Yes - ' +
-                      stepCreateEssFileService?.referredServiceDetails?.join(
-                        ', '
-                      )
+                      stepEssFileService?.referredServiceDetails?.join(', ')
                     : 'No'
                 }}
               </div>
@@ -87,7 +85,7 @@
                 Service Recommendations external of Reception Centre
               </div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.evacuationExternalReferrals }}
+                {{ stepEssFileService?.evacuationExternalReferrals }}
               </div>
             </div>
           </div>
@@ -167,8 +165,8 @@
               <div class="col-4">Household Dietary Requirements</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateEssFileService?.haveSpecialDiet
-                    ? 'Yes - ' + stepCreateEssFileService?.specialDietDetails
+                  stepEssFileService?.haveSpecialDiet
+                    ? 'Yes - ' + stepEssFileService?.specialDietDetails
                     : 'No'
                 }}
               </div>
@@ -177,16 +175,14 @@
             <div class="row">
               <div class="col-4">Household Medication Requirements</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.takeMedication ? 'Yes' : 'No' }}
+                {{ stepEssFileService?.takeMedication ? 'Yes' : 'No' }}
               </div>
             </div>
 
-            <div class="row" *ngIf="stepCreateEssFileService?.takeMedication">
+            <div class="row" *ngIf="stepEssFileService?.takeMedication">
               <div class="col-4">Has Sufficient Medication</div>
               <div class="col-8 bold">
-                {{
-                  stepCreateEssFileService?.haveMedicationSupply ? 'Yes' : 'No'
-                }}
+                {{ stepEssFileService?.haveMedicationSupply ? 'Yes' : 'No' }}
               </div>
             </div>
           </div>
@@ -201,18 +197,15 @@
             <div class="row">
               <div class="col-4">Do you have pets?</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.havePets ? 'Yes' : 'No' }}
+                {{ stepEssFileService?.havePets ? 'Yes' : 'No' }}
               </div>
             </div>
 
-            <div
-              class="row"
-              *ngIf="stepCreateEssFileService?.petsList?.length > 0"
-            >
+            <div class="row" *ngIf="stepEssFileService?.petsList?.length > 0">
               <div class="col-8">
                 <mat-table
                   class="bottom-space"
-                  [dataSource]="stepCreateEssFileService?.petsList"
+                  [dataSource]="stepEssFileService?.petsList"
                 >
                   <ng-container matColumnDef="type">
                     <mat-header-cell *matHeaderCellDef
@@ -245,23 +238,17 @@
               </div>
             </div>
 
-            <div
-              class="row"
-              *ngIf="stepCreateEssFileService?.petsList?.length > 0"
-            >
+            <div class="row" *ngIf="stepEssFileService?.petsList?.length > 0">
               <div class="col-4">Sufficient pet food?</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.havePetsFood ? 'Yes' : 'No' }}
+                {{ stepEssFileService?.havePetsFood ? 'Yes' : 'No' }}
               </div>
             </div>
 
-            <div
-              class="row"
-              *ngIf="stepCreateEssFileService?.petsList?.length > 0"
-            >
+            <div class="row" *ngIf="stepEssFileService?.petsList?.length > 0">
               <div class="col-4">Pet Care Plan</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.petCarePlans }}
+                {{ stepEssFileService?.petCarePlans }}
               </div>
             </div>
           </div>
@@ -316,7 +303,7 @@
           <div class="review-panel data-panel">
             <label class="tab-subtitle">Security Phrase</label>
 
-            <div class="row" *ngIf="stepCreateEssFileService?.bypassPhrase">
+            <div class="row" *ngIf="stepEssFileService?.bypassPhrase">
               <div class="col-8">
                 <mat-checkbox [checked]="true" [disabled]="true">
                   Bypass security phrase for manual entry of paper ESS file.
@@ -324,10 +311,10 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="!stepCreateEssFileService?.bypassPhrase">
+            <div class="row" *ngIf="!stepEssFileService?.bypassPhrase">
               <div class="col-4">Security Phrase</div>
               <div class="col-8 bold">
-                {{ stepCreateEssFileService?.securityPhrase | maskText }}
+                {{ stepEssFileService?.securityPhrase | maskText }}
               </div>
             </div>
           </div>

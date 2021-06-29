@@ -129,7 +129,7 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
    */
   goToEvacRegistration() {
     this.router.navigate([
-      'ess-wizard/create-evacuee-profile/collection-notice'
+      'ess-wizard/evacuee-profile/collection-notice'
     ]);
   }
 

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
+import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
@@ -33,7 +33,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private stepCreateProfileService: StepCreateProfileService,
+    private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
     private evacueeSearchService: EvacueeSearchService
@@ -44,7 +44,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     this.evacueeSearchContext = this.evacueeSearchService.evacueeSearchContext;
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
       () => {
         this.updateTabStatus();
       }
@@ -68,18 +68,18 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
         }
       ],
       preferredName: [
-        this.stepCreateProfileService.personalDetails !== undefined
-          ? this.stepCreateProfileService.personalDetails.preferredName
+        this.stepEvacueeProfileService.personalDetails !== undefined
+          ? this.stepEvacueeProfileService.personalDetails.preferredName
           : ''
       ],
       initials: [
-        this.stepCreateProfileService.personalDetails !== undefined
-          ? this.stepCreateProfileService.personalDetails.initials
+        this.stepEvacueeProfileService.personalDetails !== undefined
+          ? this.stepEvacueeProfileService.personalDetails.initials
           : ''
       ],
       gender: [
-        this.stepCreateProfileService.personalDetails !== undefined
-          ? this.stepCreateProfileService.personalDetails.gender
+        this.stepEvacueeProfileService.personalDetails !== undefined
+          ? this.stepEvacueeProfileService.personalDetails.gender
           : '',
         [this.customValidation.whitespaceValidator()]
       ],
@@ -104,14 +104,14 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
    * Navigate to next tab
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/create-evacuee-profile/address']);
+    this.router.navigate(['/ess-wizard/evacuee-profile/address']);
   }
 
   /**
    * Navigates to the previous tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/create-evacuee-profile/restriction']);
+    this.router.navigate(['/ess-wizard/evacuee-profile/restriction']);
   }
 
   /**
@@ -119,21 +119,24 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
    */
   updateTabStatus() {
     if (this.evacueeDetailsForm.valid) {
-      this.stepCreateProfileService.setTabStatus('evacuee-details', 'complete');
+      this.stepEvacueeProfileService.setTabStatus(
+        'evacuee-details',
+        'complete'
+      );
     } else {
-      this.stepCreateProfileService.setTabStatus(
+      this.stepEvacueeProfileService.setTabStatus(
         'evacuee-details',
         'incomplete'
       );
     }
-    this.stepCreateProfileService.personalDetails = this.evacueeDetailsForm.getRawValue();
+    this.stepEvacueeProfileService.personalDetails = this.evacueeDetailsForm.getRawValue();
   }
 
   /**
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.stepCreateProfileService.nextTabUpdate.next();
+    this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 }

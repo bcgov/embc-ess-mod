@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
+import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 
 @Component({
   selector: 'app-restriction',
@@ -20,7 +20,7 @@ export class RestrictionComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private stepCreateProfileService: StepCreateProfileService,
+    private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder
   ) {}
 
@@ -28,7 +28,7 @@ export class RestrictionComponent implements OnInit, OnDestroy {
     this.createRestrictionForm();
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
       () => {
         this.updateTabStatus();
       }
@@ -38,8 +38,8 @@ export class RestrictionComponent implements OnInit, OnDestroy {
   createRestrictionForm(): void {
     this.restrictionForm = this.formBuilder.group({
       restrictedAccess: [
-        this.stepCreateProfileService.restrictedAccess !== null
-          ? this.stepCreateProfileService.restrictedAccess
+        this.stepEvacueeProfileService.restrictedAccess !== null
+          ? this.stepEvacueeProfileService.restrictedAccess
           : '',
         [Validators.required]
       ]
@@ -58,7 +58,7 @@ export class RestrictionComponent implements OnInit, OnDestroy {
    */
   next(): void {
     this.router.navigate([
-      '/ess-wizard/create-evacuee-profile/evacuee-details'
+      '/ess-wizard/evacuee-profile/evacuee-details'
     ]);
   }
 
@@ -67,7 +67,7 @@ export class RestrictionComponent implements OnInit, OnDestroy {
    */
   back(): void {
     this.router.navigate([
-      '/ess-wizard/create-evacuee-profile/collection-notice'
+      '/ess-wizard/evacuee-profile/collection-notice'
     ]);
   }
 
@@ -76,9 +76,9 @@ export class RestrictionComponent implements OnInit, OnDestroy {
    */
   updateTabStatus() {
     if (this.restrictionForm.valid) {
-      this.stepCreateProfileService.setTabStatus('restriction', 'complete');
+      this.stepEvacueeProfileService.setTabStatus('restriction', 'complete');
     }
-    this.stepCreateProfileService.restrictedAccess = this.restrictionForm.get(
+    this.stepEvacueeProfileService.restrictedAccess = this.restrictionForm.get(
       'restrictedAccess'
     ).value;
   }
@@ -87,7 +87,7 @@ export class RestrictionComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.stepCreateProfileService.nextTabUpdate.next();
+    this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 }

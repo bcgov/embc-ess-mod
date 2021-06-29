@@ -20,7 +20,7 @@ import {
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
-import { StepCreateProfileService } from '../step-create-profile/step-create-profile.service';
+import { StepEvacueeProfileService } from '../step-evacuee-profile/step-evacuee-profile.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { WizardService } from '../wizard.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -28,7 +28,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Injectable({ providedIn: 'root' })
-export class StepCreateEssFileService {
+export class StepEssFileService {
   // Wizard variables
   private essTabsVal: Array<TabModel> = WizardTabModelValues.essFileTabs;
   private nextTabUpdateVal: Subject<void> = new Subject();
@@ -86,7 +86,7 @@ export class StepCreateEssFileService {
     private wizardService: WizardService,
     private userService: UserService,
     private evacueeSession: EvacueeSessionService,
-    private stepCreateProfileService: StepCreateProfileService
+    private stepEvacueeProfileService: StepEvacueeProfileService
   ) {}
   // Wizard variables
   public get essTabs(): Array<TabModel> {
@@ -404,11 +404,11 @@ export class StepCreateEssFileService {
 
     const allMembers: EvacuationFileHouseholdMember[] = [
       {
-        dateOfBirth: this.stepCreateProfileService.personalDetails.dateOfBirth,
-        firstName: this.stepCreateProfileService.personalDetails.firstName,
-        lastName: this.stepCreateProfileService.personalDetails.lastName,
-        gender: this.stepCreateProfileService.personalDetails.gender,
-        initials: this.stepCreateProfileService.personalDetails.initials,
+        dateOfBirth: this.stepEvacueeProfileService.personalDetails.dateOfBirth,
+        firstName: this.stepEvacueeProfileService.personalDetails.firstName,
+        lastName: this.stepEvacueeProfileService.personalDetails.lastName,
+        gender: this.stepEvacueeProfileService.personalDetails.gender,
+        initials: this.stepEvacueeProfileService.personalDetails.initials,
         isPrimaryRegistrant: true,
         type: HouseholdMemberType.Registrant
       },
@@ -496,7 +496,8 @@ export class StepCreateEssFileService {
     this.facilityName = essFile.registrationLocation;
 
     this.evacuatedFromPrimary =
-      this.stepCreateProfileService?.primaryAddressDetails === this.evacAddress;
+      this.stepEvacueeProfileService?.primaryAddressDetails ===
+      this.evacAddress;
 
     // Get content for API Notes fields
     if (essNeeds.notes?.length > 0) {

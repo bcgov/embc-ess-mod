@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
+import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
@@ -22,7 +22,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private stepCreateEssFileService: StepCreateEssFileService,
+    private stepEssFileService: StepEssFileService,
     private formBuilder: FormBuilder
   ) {}
 
@@ -31,7 +31,7 @@ export class NeedsComponent implements OnInit, OnDestroy {
     this.createNeedsForm();
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateEssFileService.nextTabUpdate.subscribe(
+    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
       () => {
         this.updateTabStatus();
       }
@@ -49,44 +49,44 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Goes back to the previous ESS File Tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/create-ess-file/animals']);
+    this.router.navigate(['/ess-wizard/ess-file/animals']);
   }
 
   /**
    * Goes to the next tab from the ESS File
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/create-ess-file/security-phrase']);
+    this.router.navigate(['/ess-wizard/ess-file/security-phrase']);
   }
 
   /**
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 
   private createNeedsForm(): void {
     this.needsForm = this.formBuilder.group({
       canEvacueeProvideFood: [
-        this.stepCreateEssFileService.canRegistrantProvideFood ?? '',
+        this.stepEssFileService.canRegistrantProvideFood ?? '',
         Validators.required
       ],
       canEvacueeProvideLodging: [
-        this.stepCreateEssFileService.canRegistrantProvideLodging ?? '',
+        this.stepEssFileService.canRegistrantProvideLodging ?? '',
         Validators.required
       ],
       canEvacueeProvideClothing: [
-        this.stepCreateEssFileService.canRegistrantProvideClothing ?? '',
+        this.stepEssFileService.canRegistrantProvideClothing ?? '',
         Validators.required
       ],
       canEvacueeProvideTransportation: [
-        this.stepCreateEssFileService.canRegistrantProvideTransportation ?? '',
+        this.stepEssFileService.canRegistrantProvideTransportation ?? '',
         Validators.required
       ],
       canEvacueeProvideIncidentals: [
-        this.stepCreateEssFileService.canRegistrantProvideIncidentals ?? '',
+        this.stepEssFileService.canRegistrantProvideIncidentals ?? '',
         Validators.required
       ]
     });
@@ -97,13 +97,11 @@ export class NeedsComponent implements OnInit, OnDestroy {
    */
   private updateTabStatus() {
     if (this.needsForm.valid) {
-      this.stepCreateEssFileService.setTabStatus('needs', 'complete');
-    } else if (
-      this.stepCreateEssFileService.checkForPartialUpdates(this.needsForm)
-    ) {
-      this.stepCreateEssFileService.setTabStatus('needs', 'incomplete');
+      this.stepEssFileService.setTabStatus('needs', 'complete');
+    } else if (this.stepEssFileService.checkForPartialUpdates(this.needsForm)) {
+      this.stepEssFileService.setTabStatus('needs', 'incomplete');
     } else {
-      this.stepCreateEssFileService.setTabStatus('needs', 'not-started');
+      this.stepEssFileService.setTabStatus('needs', 'not-started');
     }
     this.saveFormData();
   }
@@ -112,19 +110,19 @@ export class NeedsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepCreateEssFileService.canRegistrantProvideFood = this.needsForm.get(
+    this.stepEssFileService.canRegistrantProvideFood = this.needsForm.get(
       'canEvacueeProvideFood'
     ).value;
-    this.stepCreateEssFileService.canRegistrantProvideLodging = this.needsForm.get(
+    this.stepEssFileService.canRegistrantProvideLodging = this.needsForm.get(
       'canEvacueeProvideLodging'
     ).value;
-    this.stepCreateEssFileService.canRegistrantProvideClothing = this.needsForm.get(
+    this.stepEssFileService.canRegistrantProvideClothing = this.needsForm.get(
       'canEvacueeProvideClothing'
     ).value;
-    this.stepCreateEssFileService.canRegistrantProvideTransportation = this.needsForm.get(
+    this.stepEssFileService.canRegistrantProvideTransportation = this.needsForm.get(
       'canEvacueeProvideTransportation'
     ).value;
-    this.stepCreateEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
+    this.stepEssFileService.canRegistrantProvideIncidentals = this.needsForm.get(
       'canEvacueeProvideIncidentals'
     ).value;
   }
