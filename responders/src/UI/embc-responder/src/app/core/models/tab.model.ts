@@ -89,4 +89,12 @@ export class WizardTabModelValues {
       status: 'not-started'
     }
   ];
+
+  static notesTab: Array<TabModel> = [
+    {
+      label: 'Notes',
+      route: 'notes',
+      name: 'notes'
+    }
+  ];
 }
