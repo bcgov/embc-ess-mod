@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-evacuee-search',
@@ -10,9 +10,11 @@ export class EvacueeSearchComponent implements OnInit {
   showPhotoIDComponent = true;
   showResultsComponent = false;
 
-  constructor() {}
+  constructor(private evacueeSessionService: EvacueeSessionService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.evacueeSessionService.clearEvacueeSession();
+  }
 
   /**
    * Receives the emitted event from evacuee-id-verify child and changes the component to show

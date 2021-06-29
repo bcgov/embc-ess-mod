@@ -65,8 +65,12 @@
                   >{{ communityName(registrantResult?.primaryAddress) }},</span
                 >
                 {{ registrantResult?.primaryAddress?.stateProvinceCode }},
-                {{ registrantResult?.primaryAddress?.postalCode }}</b
-              >
+                <span
+                  *ngIf="registrantResult?.primaryAddress?.postalCode !== null"
+                >
+                  {{ registrantResult?.primaryAddress?.postalCode }}</span
+                >
+              </b>
             </p>
             <p class="p-custom">
               <b>{{ registrantResult?.primaryAddress?.country?.name }}</b>
@@ -91,8 +95,10 @@
               >
                 <b
                   >ESS File # {{ files?.id }} -
-                  {{ files?.evacuatedFrom?.city }}</b
+                  {{ communityName(files?.evacuatedFrom) }}</b
                 >
+                <!--{{ files?.evacuatedFrom?.city }}-->
+                <!-- {{ communityName(files?.evacuatedFrom) }} -->
               </p>
               <p
                 *ngIf="files?.status === 'Pending'"
@@ -100,7 +106,7 @@
               >
                 <b
                   >ESS File # {{ files?.id }} -
-                  {{ files?.evacuatedFrom?.city }}</b
+                  {{ communityName(files?.evacuatedFrom) }}</b
                 >
               </p>
               <p
@@ -109,7 +115,7 @@
               >
                 <b
                   >ESS File # {{ files?.id }} -
-                  {{ files?.evacuatedFrom?.city }}</b
+                  {{ communityName(files?.evacuatedFrom) }}</b
                 >
               </p>
               <p
@@ -118,7 +124,7 @@
               >
                 <b
                   >ESS File # {{ files?.id }} -
-                  {{ files?.evacuatedFrom?.city }}</b
+                  {{ communityName(files?.evacuatedFrom) }}</b
                 >
               </p>
             </span>
