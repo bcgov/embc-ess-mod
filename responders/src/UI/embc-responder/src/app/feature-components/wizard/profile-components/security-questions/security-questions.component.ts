@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
+import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
@@ -27,7 +27,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    public stepCreateProfileService: StepCreateProfileService,
+    public stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
     private customValidationService: CustomValidationService
   ) {}
@@ -35,10 +35,12 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.createQuestionForm();
 
-    this.setFormDisabled(this.stepCreateProfileService.bypassSecurityQuestions);
+    this.setFormDisabled(
+      this.stepEvacueeProfileService.bypassSecurityQuestions
+    );
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
       () => {
         this.updateTabStatus();
       }
@@ -49,13 +51,13 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    * Set up main FormGroup with security Q&A inputs and validation
    */
   createQuestionForm(): void {
-    if (!this.stepCreateProfileService.securityQuestions)
-      this.stepCreateProfileService.securityQuestions = [];
+    if (!this.stepEvacueeProfileService.securityQuestions)
+      this.stepEvacueeProfileService.securityQuestions = [];
 
     // Set up 3 blank security question values if not already there
-    while (this.stepCreateProfileService.securityQuestions.length < 3) {
-      this.stepCreateProfileService.securityQuestions.push({
-        id: this.stepCreateProfileService.securityQuestions.length + 1,
+    while (this.stepEvacueeProfileService.securityQuestions.length < 3) {
+      this.stepEvacueeProfileService.securityQuestions.push({
+        id: this.stepEvacueeProfileService.securityQuestions.length + 1,
         question: '',
         answer: ''
       });
@@ -64,11 +66,11 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     this.questionForm = this.formBuilder.group(
       {
         question1: [
-          this.stepCreateProfileService.securityQuestions[0].question ?? '',
+          this.stepEvacueeProfileService.securityQuestions[0].question ?? '',
           [Validators.required]
         ],
         answer1: [
-          this.stepCreateProfileService.securityQuestions[0].answer ?? '',
+          this.stepEvacueeProfileService.securityQuestions[0].answer ?? '',
           [
             Validators.minLength(3),
             Validators.maxLength(50),
@@ -77,11 +79,11 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
           ]
         ],
         question2: [
-          this.stepCreateProfileService.securityQuestions[1].question ?? '',
+          this.stepEvacueeProfileService.securityQuestions[1].question ?? '',
           [Validators.required]
         ],
         answer2: [
-          this.stepCreateProfileService.securityQuestions[1].answer ?? '',
+          this.stepEvacueeProfileService.securityQuestions[1].answer ?? '',
           [
             Validators.minLength(3),
             Validators.maxLength(50),
@@ -90,11 +92,11 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
           ]
         ],
         question3: [
-          this.stepCreateProfileService.securityQuestions[2].question ?? '',
+          this.stepEvacueeProfileService.securityQuestions[2].question ?? '',
           [Validators.required]
         ],
         answer3: [
-          this.stepCreateProfileService.securityQuestions[2].answer ?? '',
+          this.stepEvacueeProfileService.securityQuestions[2].answer ?? '',
           [
             Validators.minLength(3),
             Validators.maxLength(50),
@@ -116,7 +118,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
 
     this.parentForm = this.formBuilder.group({
       questionForm: this.questionForm,
-      bypassQuestions: this.stepCreateProfileService.bypassSecurityQuestions
+      bypassQuestions: this.stepEvacueeProfileService.bypassSecurityQuestions
     });
 
     this.questionForm = this.parentForm.get('questionForm') as FormGroup;
@@ -145,9 +147,9 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    * @param checked True = Disable the form, False = Enable the form
    */
   setFormDisabled(checked) {
-    this.stepCreateProfileService.bypassSecurityQuestions = checked;
+    this.stepEvacueeProfileService.bypassSecurityQuestions = checked;
 
-    if (this.stepCreateProfileService.bypassSecurityQuestions) {
+    if (this.stepEvacueeProfileService.bypassSecurityQuestions) {
       // Reset dropdowns/inputs
       this.questionForm.disable();
       this.questionForm.reset();
@@ -160,12 +162,14 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    * Go to the Review tab if all tabs are complete, otherwise open modal
    */
   next(): void {
-    this.stepCreateProfileService.nextTabUpdate.next();
+    this.stepEvacueeProfileService.nextTabUpdate.next();
 
-    if (this.stepCreateProfileService.checkTabsStatus()) {
-      this.stepCreateProfileService.openModal(globalConst.wizardProfileMessage);
+    if (this.stepEvacueeProfileService.checkTabsStatus()) {
+      this.stepEvacueeProfileService.openModal(
+        globalConst.wizardProfileMessage
+      );
     } else {
-      this.router.navigate(['/ess-wizard/create-evacuee-profile/review']);
+      this.router.navigate(['/ess-wizard/evacuee-profile/review']);
     }
   }
 
@@ -173,7 +177,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    * Go back to the Contact tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/create-evacuee-profile/contact']);
+    this.router.navigate(['/ess-wizard/evacuee-profile/contact']);
   }
 
   /**
@@ -185,7 +189,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     let anyValueSet = false;
 
     // Reset Security Questions before writing to shared object
-    this.stepCreateProfileService.securityQuestions = [];
+    this.stepEvacueeProfileService.securityQuestions = [];
 
     // Create SecurityQuestion objects and save to array, and check if any value set
     for (let i = 1; i <= 3; i++) {
@@ -198,7 +202,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
         anyValueSet = true;
       }
 
-      this.stepCreateProfileService.securityQuestions.push({
+      this.stepEvacueeProfileService.securityQuestions.push({
         id: i,
         answerChanged: true,
         question,
@@ -208,17 +212,17 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
 
     // Based on state of form, set tab status
     if (this.parentForm.valid) {
-      this.stepCreateProfileService.setTabStatus(
+      this.stepEvacueeProfileService.setTabStatus(
         'security-questions',
         'complete'
       );
     } else if (anyValueSet) {
-      this.stepCreateProfileService.setTabStatus(
+      this.stepEvacueeProfileService.setTabStatus(
         'security-questions',
         'incomplete'
       );
     } else {
-      this.stepCreateProfileService.setTabStatus(
+      this.stepEvacueeProfileService.setTabStatus(
         'security-questions',
         'not-started'
       );
@@ -229,7 +233,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.stepCreateProfileService.nextTabUpdate.next();
+    this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 }

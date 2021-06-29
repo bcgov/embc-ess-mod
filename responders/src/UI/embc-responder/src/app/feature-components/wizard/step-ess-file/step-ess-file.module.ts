@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { StepCreateProfileRoutingModule } from './step-create-profile-routing.module';
-import { StepCreateProfileComponent } from './step-create-profile.component';
+import { StepEssFileRoutingModule } from './step-ess-file-routing.module';
+import { StepEssFileComponent } from './step-ess-file.component';
 import { MaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
-  declarations: [StepCreateProfileComponent],
+  declarations: [StepEssFileComponent],
   imports: [
     CommonModule,
-    StepCreateProfileRoutingModule,
+    StepEssFileRoutingModule,
     MaterialModule,
     SharedModule
   ]
 })
-export class StepCreateProfileModule {}
+export class StepEssFileModule {}

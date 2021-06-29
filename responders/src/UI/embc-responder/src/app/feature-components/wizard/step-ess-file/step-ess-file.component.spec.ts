@@ -1,22 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StepCreateProfileComponent } from './step-create-profile.component';
+import { StepEssFileComponent } from './step-ess-file.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 
-describe('StepCreateProfileComponent', () => {
-  let component: StepCreateProfileComponent;
-  let fixture: ComponentFixture<StepCreateProfileComponent>;
+describe('StepEssFileComponent', () => {
+  let component: StepEssFileComponent;
+  let fixture: ComponentFixture<StepEssFileComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, MatDialogModule],
-      declarations: [StepCreateProfileComponent]
+      declarations: [StepEssFileComponent]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StepCreateProfileComponent);
+    fixture = TestBed.createComponent(StepEssFileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
+import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -23,7 +23,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   tabUpdateSubscription: Subscription;
 
   constructor(
-    private stepCreateEssFileService: StepCreateEssFileService,
+    private stepEssFileService: StepEssFileService,
     private customValidationService: CustomValidationService,
     private formBuilder: FormBuilder,
     private router: Router
@@ -33,7 +33,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     // Set up form validation for verification check
     this.securityForm = this.formBuilder.group({
       securityPhrase: [
-        this.stepCreateEssFileService.securityPhrase,
+        this.stepEssFileService.securityPhrase,
         [
           Validators.minLength(6),
           Validators.maxLength(50),
@@ -41,13 +41,13 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
           this.customValidationService.whitespaceValidator()
         ]
       ],
-      bypassPhrase: this.stepCreateEssFileService.bypassPhrase
+      bypassPhrase: this.stepEssFileService.bypassPhrase
     });
 
-    this.setFormDisabled(this.stepCreateEssFileService.bypassPhrase);
+    this.setFormDisabled(this.stepEssFileService.bypassPhrase);
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateEssFileService.nextTabUpdate.subscribe(
+    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
       () => {
         this.updateTabStatus();
       }
@@ -73,9 +73,9 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    * @param checked True = Disable, False = Enable
    */
   setFormDisabled(checked) {
-    this.stepCreateEssFileService.bypassPhrase = checked;
+    this.stepEssFileService.bypassPhrase = checked;
 
-    if (this.stepCreateEssFileService.bypassPhrase) {
+    if (this.stepEssFileService.bypassPhrase) {
       // Reset input
       this.securityFormControl.securityPhrase.disable();
       this.securityFormControl.securityPhrase.reset();
@@ -88,12 +88,12 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    * Go to the Review tab if all tabs are complete, otherwise open modal
    */
   next(): void {
-    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.stepEssFileService.nextTabUpdate.next();
 
-    if (this.stepCreateEssFileService.checkTabsStatus()) {
-      this.stepCreateEssFileService.openModal(globalConst.wizardESSFileMessage);
+    if (this.stepEssFileService.checkTabsStatus()) {
+      this.stepEssFileService.openModal(globalConst.wizardESSFileMessage);
     } else {
-      this.router.navigate(['/ess-wizard/create-ess-file/review']);
+      this.router.navigate(['/ess-wizard/ess-file/review']);
     }
   }
 
@@ -101,7 +101,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    * Go back to the Needs tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/create-ess-file/needs']);
+    this.router.navigate(['/ess-wizard/ess-file/needs']);
   }
 
   /**
@@ -113,20 +113,14 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     const curVal = this.securityFormControl.securityPhrase.value?.trim() || '';
     const anyValueSet = curVal.length > 0;
 
-    this.stepCreateEssFileService.securityPhrase = curVal;
+    this.stepEssFileService.securityPhrase = curVal;
 
     if (this.securityForm.valid) {
-      this.stepCreateEssFileService.setTabStatus('security-phrase', 'complete');
+      this.stepEssFileService.setTabStatus('security-phrase', 'complete');
     } else if (anyValueSet) {
-      this.stepCreateEssFileService.setTabStatus(
-        'security-phrase',
-        'incomplete'
-      );
+      this.stepEssFileService.setTabStatus('security-phrase', 'incomplete');
     } else {
-      this.stepCreateEssFileService.setTabStatus(
-        'security-phrase',
-        'not-started'
-      );
+      this.stepEssFileService.setTabStatus('security-phrase', 'not-started');
     }
   }
 
@@ -134,7 +128,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 }

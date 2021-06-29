@@ -22,7 +22,7 @@ export class WizardSidenavModelValues {
     {
       step: 'STEP 1',
       title: 'Create Evacuee Profile',
-      route: '/ess-wizard/create-evacuee-profile',
+      route: '/ess-wizard/evacuee-profile',
       isLocked: false,
       incompleteMsg: globalConst.evacueeProfileStepIncompleteMessage,
       img: {
@@ -35,7 +35,7 @@ export class WizardSidenavModelValues {
     {
       step: 'STEP 2',
       title: 'Create ESS File',
-      route: '/ess-wizard/create-ess-file',
+      route: '/ess-wizard/ess-file',
       isLocked: true,
       incompleteMsg: globalConst.essFileStepIncompleteMessage,
       img: {
@@ -75,7 +75,7 @@ export class WizardSidenavModelValues {
     {
       step: 'STEP 1',
       title: 'Create ESS File',
-      route: '/ess-wizard/create-ess-file',
+      route: '/ess-wizard/ess-file',
       isLocked: false,
       incompleteMsg: globalConst.essFileStepIncompleteMessage,
       img: {
