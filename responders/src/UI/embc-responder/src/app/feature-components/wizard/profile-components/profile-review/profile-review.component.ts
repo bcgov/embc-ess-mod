@@ -78,9 +78,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
    * Go back to the Security Questions tab
    */
   back(): void {
-    this.router.navigate([
-      '/ess-wizard/evacuee-profile/security-questions'
-    ]);
+    this.router.navigate(['/ess-wizard/evacuee-profile/security-questions']);
   }
 
   /**
@@ -105,10 +103,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
               .openModal(globalConst.evacueeProfileCreatedMessage)
               .afterClosed()
               .subscribe(() => {
-                this.wizardService.setStepStatus(
-                  '/ess-wizard/ess-file',
-                  false
-                );
+                this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
 
                 this.router.navigate(['/ess-wizard/ess-file'], {
                   state: { step: 'STEP 2', title: 'Create ESS File' }

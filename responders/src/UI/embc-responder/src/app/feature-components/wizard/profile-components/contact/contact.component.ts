@@ -211,9 +211,7 @@ export class ContactComponent implements OnInit, OnDestroy {
    * Navigate to next tab
    */
   next(): void {
-    this.router.navigate([
-      '/ess-wizard/evacuee-profile/security-questions'
-    ]);
+    this.router.navigate(['/ess-wizard/evacuee-profile/security-questions']);
   }
 
   /**

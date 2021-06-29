@@ -86,9 +86,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
    * Function that redirects to Evacuation Registration page
    */
   goToEvacRegistration() {
-    this.router.navigate([
-      'ess-wizard/evacuee-profile/collection-notice'
-    ]);
+    this.router.navigate(['ess-wizard/evacuee-profile/collection-notice']);
   }
 
   private createSecurityPhraseForm() {

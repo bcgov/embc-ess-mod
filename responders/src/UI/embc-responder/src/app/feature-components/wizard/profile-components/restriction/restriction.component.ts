@@ -57,18 +57,14 @@ export class RestrictionComponent implements OnInit, OnDestroy {
    * Navigate to next tab
    */
   next(): void {
-    this.router.navigate([
-      '/ess-wizard/evacuee-profile/evacuee-details'
-    ]);
+    this.router.navigate(['/ess-wizard/evacuee-profile/evacuee-details']);
   }
 
   /**
    * Navigates to the previous tab
    */
   back(): void {
-    this.router.navigate([
-      '/ess-wizard/evacuee-profile/collection-notice'
-    ]);
+    this.router.navigate(['/ess-wizard/evacuee-profile/collection-notice']);
   }
 
   /**

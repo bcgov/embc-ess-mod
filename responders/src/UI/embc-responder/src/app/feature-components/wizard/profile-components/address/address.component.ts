@@ -239,9 +239,7 @@ export class AddressComponent implements OnInit, AfterViewChecked, OnDestroy {
    * Navigate to previous tab
    */
   public back(): void {
-    this.router.navigate([
-      '/ess-wizard/evacuee-profile/evacuee-details'
-    ]);
+    this.router.navigate(['/ess-wizard/evacuee-profile/evacuee-details']);
   }
 
   /**
