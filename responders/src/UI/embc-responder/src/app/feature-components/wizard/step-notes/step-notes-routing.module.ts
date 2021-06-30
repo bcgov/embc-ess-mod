@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StepAddNotesComponent } from './step-add-notes.component';
+import { StepNotesComponent } from './step-notes.component';
 
-const routes: Routes = [{ path: '', component: StepAddNotesComponent }];
+const routes: Routes = [{ path: '', component: StepNotesComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class StepAddNotesRoutingModule {}
+export class StepNotesRoutingModule {}

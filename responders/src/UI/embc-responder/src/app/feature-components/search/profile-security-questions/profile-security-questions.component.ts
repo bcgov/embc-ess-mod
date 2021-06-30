@@ -128,9 +128,7 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
    * Function that redirects to Evacuation Registration page
    */
   goToEvacRegistration() {
-    this.router.navigate([
-      'ess-wizard/create-evacuee-profile/collection-notice'
-    ]);
+    this.router.navigate(['ess-wizard/evacuee-profile/collection-notice']);
   }
 
   private createAnswersForm(): void {

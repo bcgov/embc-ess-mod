@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
+import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 
 export class CustomErrorMailMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -58,7 +58,7 @@ export class ContactComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private stepCreateProfileService: StepCreateProfileService,
+    private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService
   ) {}
@@ -104,7 +104,7 @@ export class ContactComponent implements OnInit, OnDestroy {
       });
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate.subscribe(
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
       () => {
         this.updateTabStatus();
       }
@@ -115,8 +115,8 @@ export class ContactComponent implements OnInit, OnDestroy {
     this.contactInfoForm = this.formBuilder.group(
       {
         email: [
-          this.stepCreateProfileService?.contactDetails?.email !== undefined
-            ? this.stepCreateProfileService?.contactDetails?.email
+          this.stepEvacueeProfileService?.contactDetails?.email !== undefined
+            ? this.stepEvacueeProfileService?.contactDetails?.email
             : '',
           [
             Validators.email,
@@ -133,8 +133,8 @@ export class ContactComponent implements OnInit, OnDestroy {
           ]
         ],
         phone: [
-          this.stepCreateProfileService?.contactDetails?.phone !== undefined
-            ? this.stepCreateProfileService?.contactDetails?.phone
+          this.stepEvacueeProfileService?.contactDetails?.phone !== undefined
+            ? this.stepEvacueeProfileService?.contactDetails?.phone
             : '',
           [
             this.customValidation
@@ -153,8 +153,8 @@ export class ContactComponent implements OnInit, OnDestroy {
           ]
         ],
         confirmEmail: [
-          this.stepCreateProfileService?.confirmEmail !== undefined
-            ? this.stepCreateProfileService?.confirmEmail
+          this.stepEvacueeProfileService?.confirmEmail !== undefined
+            ? this.stepEvacueeProfileService?.confirmEmail
             : '',
           [
             Validators.email,
@@ -171,8 +171,8 @@ export class ContactComponent implements OnInit, OnDestroy {
           ]
         ],
         showContacts: [
-          this.stepCreateProfileService?.showContact !== undefined
-            ? this.stepCreateProfileService?.showContact
+          this.stepEvacueeProfileService?.showContact !== undefined
+            ? this.stepEvacueeProfileService?.showContact
             : '',
           [Validators.required]
         ]
@@ -211,23 +211,21 @@ export class ContactComponent implements OnInit, OnDestroy {
    * Navigate to next tab
    */
   next(): void {
-    this.router.navigate([
-      '/ess-wizard/create-evacuee-profile/security-questions'
-    ]);
+    this.router.navigate(['/ess-wizard/evacuee-profile/security-questions']);
   }
 
   /**
    * Navigates to previous tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/create-evacuee-profile/address']);
+    this.router.navigate(['/ess-wizard/evacuee-profile/address']);
   }
 
   /**
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.stepCreateProfileService.nextTabUpdate.next();
+    this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 
@@ -236,13 +234,15 @@ export class ContactComponent implements OnInit, OnDestroy {
    */
   private updateTabStatus() {
     if (this.contactInfoForm.valid) {
-      this.stepCreateProfileService.setTabStatus('contact', 'complete');
+      this.stepEvacueeProfileService.setTabStatus('contact', 'complete');
     } else if (
-      this.stepCreateProfileService.checkForPartialUpdates(this.contactInfoForm)
+      this.stepEvacueeProfileService.checkForPartialUpdates(
+        this.contactInfoForm
+      )
     ) {
-      this.stepCreateProfileService.setTabStatus('contact', 'incomplete');
+      this.stepEvacueeProfileService.setTabStatus('contact', 'incomplete');
     } else {
-      this.stepCreateProfileService.setTabStatus('contact', 'not-started');
+      this.stepEvacueeProfileService.setTabStatus('contact', 'not-started');
     }
     this.saveFormUpdates();
   }
@@ -251,11 +251,11 @@ export class ContactComponent implements OnInit, OnDestroy {
    * Persists the form values to the service
    */
   private saveFormUpdates(): void {
-    this.stepCreateProfileService.contactDetails = this.contactInfoForm.value;
-    this.stepCreateProfileService.showContact = this.contactInfoForm.get(
+    this.stepEvacueeProfileService.contactDetails = this.contactInfoForm.value;
+    this.stepEvacueeProfileService.showContact = this.contactInfoForm.get(
       'showContacts'
     ).value;
-    this.stepCreateProfileService.confirmEmail = this.contactInfoForm.get(
+    this.stepEvacueeProfileService.confirmEmail = this.contactInfoForm.get(
       'confirmEmail'
     ).value;
   }

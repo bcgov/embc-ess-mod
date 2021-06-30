@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
+import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import { WizardService } from '../../wizard.service';
 
 import * as globalConst from 'src/app/core/services/global-constants';
@@ -37,33 +37,33 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
-    public stepCreateProfileService: StepCreateProfileService,
+    public stepEvacueeProfileService: StepEvacueeProfileService,
     private evacueeSession: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
     // Set up form validation for verification check
     this.primaryCommunity =
-      typeof this.stepCreateProfileService.primaryAddressDetails?.community ===
+      typeof this.stepEvacueeProfileService.primaryAddressDetails?.community ===
       'string'
-        ? this.stepCreateProfileService.primaryAddressDetails?.community
-        : (this.stepCreateProfileService.primaryAddressDetails
+        ? this.stepEvacueeProfileService.primaryAddressDetails?.community
+        : (this.stepEvacueeProfileService.primaryAddressDetails
             ?.community as Community)?.name;
     this.mailingCommunity =
-      typeof this.stepCreateProfileService.mailingAddressDetails?.community ===
+      typeof this.stepEvacueeProfileService.mailingAddressDetails?.community ===
       'string'
-        ? this.stepCreateProfileService.mailingAddressDetails?.community
-        : (this.stepCreateProfileService.mailingAddressDetails
+        ? this.stepEvacueeProfileService.mailingAddressDetails?.community
+        : (this.stepEvacueeProfileService.mailingAddressDetails
             ?.community as Community)?.name;
     this.verifiedProfileGroup = this.formBuilder.group({
       verifiedProfile: [
-        this.stepCreateProfileService.verifiedProfile,
+        this.stepEvacueeProfileService.verifiedProfile,
         Validators.required
       ]
     });
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateProfileService.nextTabUpdate?.subscribe(
+    this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate?.subscribe(
       () => {
         this.updateTabStatus();
       }
@@ -78,39 +78,34 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
    * Go back to the Security Questions tab
    */
   back(): void {
-    this.router.navigate([
-      '/ess-wizard/create-evacuee-profile/security-questions'
-    ]);
+    this.router.navigate(['/ess-wizard/evacuee-profile/security-questions']);
   }
 
   /**
    * Create or update evacuee profile and continue to Step 2
    */
   save(): void {
-    this.stepCreateProfileService.nextTabUpdate.next();
+    this.stepEvacueeProfileService.nextTabUpdate.next();
     if (this.verifiedProfileGroup.valid) {
       this.saveLoader = true;
 
       // TODO: If profile's already been created, update existing record
       //if (!this.evacueeSession.profileId) {
       this.evacueeProfileService
-        .createProfile(this.stepCreateProfileService.createProfileDTO())
+        .createProfile(this.stepEvacueeProfileService.createProfileDTO())
         .subscribe(
           () => {
             // Once all profile work is done, tell user save is complete and go to Step 2
             this.disableButton = true;
             this.saveLoader = false;
 
-            this.stepCreateProfileService
+            this.stepEvacueeProfileService
               .openModal(globalConst.evacueeProfileCreatedMessage)
               .afterClosed()
               .subscribe(() => {
-                this.wizardService.setStepStatus(
-                  '/ess-wizard/create-ess-file',
-                  false
-                );
+                this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
 
-                this.router.navigate(['/ess-wizard/create-ess-file'], {
+                this.router.navigate(['/ess-wizard/ess-file'], {
                   state: { step: 'STEP 2', title: 'Create ESS File' }
                 });
               });
@@ -137,10 +132,10 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
    */
   updateTabStatus() {
     if (this.verifiedProfileGroup.valid) {
-      this.stepCreateProfileService.setTabStatus('review', 'complete');
+      this.stepEvacueeProfileService.setTabStatus('review', 'complete');
     }
 
-    this.stepCreateProfileService.verifiedProfile = this.verifiedProfileGroup.get(
+    this.stepEvacueeProfileService.verifiedProfile = this.verifiedProfileGroup.get(
       'verifiedProfile'
     ).value;
   }
@@ -149,7 +144,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.stepCreateProfileService.nextTabUpdate.next();
+    this.stepEvacueeProfileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 }

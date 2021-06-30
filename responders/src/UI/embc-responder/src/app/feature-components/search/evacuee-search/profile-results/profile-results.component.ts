@@ -53,6 +53,11 @@ export class ProfileResultsComponent
 
   ngOnInit(): void {}
 
+  /**
+   * Navigates to next step based on user verified status
+   *
+   * @param selectedRegistrant selected profile
+   */
   openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     this.evacueeSessionService.profileId = selectedRegistrant.id;
     if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
@@ -65,6 +70,12 @@ export class ProfileResultsComponent
     }
   }
 
+  /**
+   * Returns community name
+   *
+   * @param address complete address model
+   * @returns community name
+   */
   communityName(address: AddressModel): string {
     return (address.community as Community).name;
   }

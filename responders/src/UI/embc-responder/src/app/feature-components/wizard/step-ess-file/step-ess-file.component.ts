@@ -1,21 +1,21 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TabModel } from 'src/app/core/models/tab.model';
-import { StepCreateEssFileService } from './step-create-ess-file.service';
+import { StepEssFileService } from './step-ess-file.service';
 
 @Component({
-  selector: 'app-step-create-ess-file',
-  templateUrl: './step-create-ess-file.component.html',
-  styleUrls: ['./step-create-ess-file.component.scss']
+  selector: 'app-step-ess-file',
+  templateUrl: './step-ess-file.component.html',
+  styleUrls: ['./step-ess-file.component.scss']
 })
-export class StepCreateEssFileComponent {
+export class StepEssFileComponent {
   stepId: string;
   stepName: string;
   tabs: Array<TabModel> = new Array<TabModel>();
 
   constructor(
     private router: Router,
-    private stepCreateEssFileService: StepCreateEssFileService
+    private stepEssFileService: StepEssFileService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -27,7 +27,7 @@ export class StepCreateEssFileComponent {
         this.stepName = state.title;
       }
     }
-    this.tabs = this.stepCreateEssFileService.essTabs;
+    this.tabs = this.stepEssFileService.essTabs;
   }
 
   /**
@@ -37,7 +37,7 @@ export class StepCreateEssFileComponent {
    * @param $event mouse click event
    */
   isAllowed(tabRoute: string, $event: MouseEvent): void {
-    this.stepCreateEssFileService.nextTabUpdate.next();
-    this.stepCreateEssFileService.isAllowed(tabRoute, $event);
+    this.stepEssFileService.nextTabUpdate.next();
+    this.stepEssFileService.isAllowed(tabRoute, $event);
   }
 }

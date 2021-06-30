@@ -16,6 +16,13 @@ export class EvacueeSearchResultsService {
     private locationsService: LocationsService
   ) {}
 
+  /**
+   * Gets the search results from dymanics and maps the results into UI
+   * acceptable format
+   *
+   * @param evacueeSearchParameters profile/ess file search params
+   * @returns observable of search results
+   */
   public searchForEvacuee(
     evacueeSearchParameters: EvacueeDetailsModel
   ): Observable<EvacueeSearchResults> {
@@ -27,28 +34,68 @@ export class EvacueeSearchResultsService {
       })
       .pipe(
         map((searchResult: EvacueeSearchResults) => {
-          const communities = this.locationsService.getCommunityList();
-          const countries = this.locationsService.getCountriesList();
+          console.log(searchResult);
           const registrants = searchResult.registrants;
+          const essFiles = searchResult.files;
           for (const registrant of registrants) {
-            const community = communities.find(
-              (comm) => comm.code === registrant.primaryAddress.communityCode
+            const addressModel: AddressModel = this.mapAddressFields(
+              registrant.primaryAddress.communityCode,
+              registrant.primaryAddress.countryCode
             );
-            const country = countries.find(
-              (coun) => coun.code === registrant.primaryAddress.countryCode
-            );
-            const addressModel: AddressModel = {
-              community,
-              country
-            };
+            const files = registrant.evacuationFiles;
+
+            for (const file of files) {
+              const fileAddressModel: AddressModel = this.mapAddressFields(
+                file.evacuatedFrom.communityCode,
+                file.evacuatedFrom.countryCode
+              );
+
+              file.evacuatedFrom = {
+                ...fileAddressModel,
+                ...file.evacuatedFrom
+              };
+            }
             registrant.primaryAddress = {
               ...addressModel,
               ...registrant.primaryAddress
             };
           }
 
+          for (const file of essFiles) {
+            const fileAddressModel: AddressModel = this.mapAddressFields(
+              file.evacuatedFrom.communityCode,
+              file.evacuatedFrom.countryCode
+            );
+
+            file.evacuatedFrom = {
+              ...fileAddressModel,
+              ...file.evacuatedFrom
+            };
+          }
+
           return searchResult;
         })
       );
+  }
+
+  /**
+   * Maps codes to generate names
+   *
+   * @param communityCode communityCode from api
+   * @param countryCode countryCode from api
+   * @returns Address object
+   */
+  private mapAddressFields(
+    communityCode: string,
+    countryCode: string
+  ): AddressModel {
+    const communities = this.locationsService.getCommunityList();
+    const countries = this.locationsService.getCountriesList();
+    const community = communities.find((comm) => comm.code === communityCode);
+    const country = countries.find((coun) => coun.code === countryCode);
+    return {
+      community,
+      country
+    };
   }
 }

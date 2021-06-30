@@ -20,7 +20,7 @@ import { WizardService } from '../wizard.service';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Injectable({ providedIn: 'root' })
-export class StepCreateProfileService {
+export class StepEvacueeProfileService {
   private profileTabs: Array<TabModel> =
     WizardTabModelValues.evacueeProfileTabs;
 

@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StepCreateEssFileComponent } from './step-create-ess-file.component';
+import { StepEssFileComponent } from './step-ess-file.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: StepCreateEssFileComponent,
+    component: StepEssFileComponent,
     children: [
       {
         path: '',
@@ -62,4 +62,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class StepCreateEssFileRoutingModule {}
+export class StepEssFileRoutingModule {}

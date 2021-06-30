@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StepCreateProfileComponent } from './step-create-profile.component';
+import { StepEvacueeProfileComponent } from './step-evacuee-profile.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: StepCreateProfileComponent,
+    component: StepEvacueeProfileComponent,
     children: [
       {
         path: '',
@@ -69,4 +69,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class StepCreateProfileRoutingModule {}
+export class StepEvacueeProfileRoutingModule {}

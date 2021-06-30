@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
-import { StepCreateProfileService } from 'src/app/feature-components/wizard/step-create-profile/step-create-profile.service';
+import { StepEvacueeProfileService } from 'src/app/feature-components/wizard/step-evacuee-profile/step-evacuee-profile.service';
 import { RegistrantProfile, RegistrationResult } from '../api/models';
 import { AddressModel } from '../models/address.model';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
@@ -14,7 +14,7 @@ import { LocationsService } from './locations.service';
 export class EvacueeProfileService {
   constructor(
     private registrationsService: RegistrationsService,
-    private stepCreateProfileService: StepCreateProfileService,
+    private stepEvacueeProfileService: StepEvacueeProfileService,
     private locationService: LocationsService
   ) {}
 
@@ -80,7 +80,7 @@ export class EvacueeProfileService {
             ...mailingAddressModel,
             ...profile.mailingAddress
           };
-          this.stepCreateProfileService.getProfileDTO(profile);
+          this.stepEvacueeProfileService.getProfileDTO(profile);
           return profile;
         })
       );

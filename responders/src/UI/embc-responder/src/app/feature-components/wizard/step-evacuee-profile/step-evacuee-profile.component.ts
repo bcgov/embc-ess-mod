@@ -4,15 +4,15 @@ import { Subscription } from 'rxjs';
 import { TabModel } from 'src/app/core/models/tab.model';
 import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { StepCreateProfileService } from './step-create-profile.service';
+import { StepEvacueeProfileService } from './step-evacuee-profile.service';
 import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
-  selector: 'app-step-create-profile',
-  templateUrl: './step-create-profile.component.html',
-  styleUrls: ['./step-create-profile.component.scss']
+  selector: 'app-step-evacuee-profile',
+  templateUrl: './step-evacuee-profile.component.html',
+  styleUrls: ['./step-evacuee-profile.component.scss']
 })
-export class StepCreateProfileComponent {
+export class StepEvacueeProfileComponent {
   questionListSubscription: Subscription;
 
   stepId: string;
@@ -21,7 +21,7 @@ export class StepCreateProfileComponent {
 
   constructor(
     private router: Router,
-    private stepCreateProfileService: StepCreateProfileService,
+    private stepEvacueeProfileService: StepEvacueeProfileService,
     private securityQuestionsService: SecurityQuestionsService,
     private alertService: AlertService
   ) {
@@ -35,12 +35,12 @@ export class StepCreateProfileComponent {
         this.stepName = state.title;
       }
     }
-    this.tabs = this.stepCreateProfileService.tabs;
+    this.tabs = this.stepEvacueeProfileService.tabs;
 
     // Load security question list as soon as wizard is initialized
     this.securityQuestionsService.getSecurityQuestionList().subscribe(
       (questions) => {
-        this.stepCreateProfileService.securityQuestionOptions = questions;
+        this.stepEvacueeProfileService.securityQuestionOptions = questions;
       },
       (error) => {
         if (error?.error?.title)
@@ -58,7 +58,7 @@ export class StepCreateProfileComponent {
    * @returns true/false
    */
   isAllowed(tabRoute: string, $event: MouseEvent): void {
-    this.stepCreateProfileService.nextTabUpdate.next();
-    this.stepCreateProfileService.isAllowed(tabRoute, $event);
+    this.stepEvacueeProfileService.nextTabUpdate.next();
+    this.stepEvacueeProfileService.isAllowed(tabRoute, $event);
   }
 }
