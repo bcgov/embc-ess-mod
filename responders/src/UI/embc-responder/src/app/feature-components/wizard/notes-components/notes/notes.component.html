@@ -1,0 +1,46 @@
+<div class="container container-frame">
+  <div class="heading-container">
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-tab-heading">Notes</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 content-container">
+      <div class="row">
+        <div class="col-md-8">
+          <p>(count) note have been added for this ESS File.</p>
+
+          <button class="button-p" mat-button>Add Notes</button>
+
+          <!--Add component to add notes here-->
+          <router-outlet></router-outlet>
+        </div>
+        <div class="col-md-4">
+          <mat-card class="tips-card">
+            <div>
+              <img
+                class="img-align"
+                src="/assets/images/tips-lightbulb.svg"
+                height="63"
+                width="62"
+              />
+              <span class="tips-heading"><b>Tip: </b>Notes</span>
+            </div>
+            <p class="tips-info">
+              A space to add any factual case notes pertaining to the evacuee
+              and their family. Please do not add any medical information or
+              irrelevant/speculative personal details as this information may be
+              viewed by other volunteers and/or EMBC.
+            </p>
+            <p class="tips-info">
+              Further, evacuees may request to view their own records, including
+              notes.
+            </p>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
