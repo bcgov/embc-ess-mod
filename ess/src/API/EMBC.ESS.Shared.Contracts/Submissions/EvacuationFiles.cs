@@ -38,6 +38,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public Address EvacuatedFromAddress { get; set; }
         public string RegistrationLocation { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
+        public IEnumerable<Note> Notes { get; set; } = Array.Empty<Note>();
         public NeedsAssessment NeedsAssessment { get; set; }
     }
 
@@ -138,7 +139,9 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public DateTime AddedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public string CreatingTeamMemberId { get; set; }
-        public NoteStatus Status { get; set; }
+        public string MemberName { get; set; }
+        public string TeamName { get; set; }
+        public bool IsHidden { get; set; }
     }
 
     public enum NoteType

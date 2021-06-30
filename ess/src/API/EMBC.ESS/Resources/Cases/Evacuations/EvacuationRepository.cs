@@ -226,6 +226,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
             essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
+            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID));
 
             essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
             foreach (var member in file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)

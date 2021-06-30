@@ -22,6 +22,7 @@ using AutoMapper;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Resources.Tasks;
+using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.Transformation;
@@ -38,6 +39,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly ITransformator transformator;
         private readonly INotificationSender notificationSender;
         private readonly ITaskRepository taskRepository;
+        private readonly ITeamRepository teamRepository;
 
         public SubmissionsManager(
             IMapper mapper,
@@ -46,7 +48,8 @@ namespace EMBC.ESS.Managers.Submissions
             ICaseRepository caseRepository,
             ITransformator transformator,
             INotificationSender notificationSender,
-            ITaskRepository taskRepository)
+            ITaskRepository taskRepository,
+            ITeamRepository teamRepository)
         {
             this.mapper = mapper;
             this.contactRepository = contactRepository;
@@ -55,6 +58,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.transformator = transformator;
             this.notificationSender = notificationSender;
             this.taskRepository = taskRepository;
+            this.teamRepository = teamRepository;
         }
 
         public async Task<string> Handle(SubmitAnonymousEvacuationFileCommand cmd)
@@ -204,6 +208,16 @@ namespace EMBC.ESS.Managers.Submissions
             })).Items.Cast<Resources.Cases.EvacuationFile>();
 
             var results = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
+
+            foreach (var note in results.SelectMany(c => c.Notes))
+            {
+                var teamMembers = await teamRepository.GetMembers(null, null, note.CreatingTeamMemberId);
+                var member = teamMembers.SingleOrDefault();
+                if (member == null) continue;
+                note.MemberName = $"{member.FirstName}, {member.LastName.Substring(0, 1)}";
+                note.TeamName = member.TeamName;
+            }
+
             return new EvacuationFilesSearchQueryResult { Items = results };
         }
 
