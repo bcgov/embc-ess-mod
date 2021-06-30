@@ -39,14 +39,14 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     this.dialog
       .open(DialogComponent, {
         data: {
-          component: VerifyEvacueeDialogComponent
+          component: VerifyEvacueeDialogComponent,
+          content: globalConst.verifyEvacueeProfile
         },
         height: '580px',
         width: '620px'
       })
       .afterClosed()
       .subscribe((value) => {
-        console.log(value);
         if (value === 'verified') {
           this.openSuccessModal(globalConst.successfulVerification);
         }
