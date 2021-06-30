@@ -126,6 +126,22 @@ export const successfulVerification: DialogContent = {
   cancelButton: 'Close'
 };
 
+export const verifyEvacueeProfile: DialogContent = {
+  subtitle: 'Verify Evacuee Profile',
+  text:
+    '<div class="row"><div class="col-md-12"><p id="verified-radio-group-label" class="bold">To verify this profile please confirm that you have seen government issue identification for this evacuee.</p></div></div><br /><div class="row"><div class="col-md-3"><p><b>First Name:</b></p><p><b>Last Name:</b></p><p><b>Date of Birth:</b></p></div><div class="col-md-9"><p>firstName</p><p>lastName</p><p>dateOfBirth</p></div></div><br />',
+  cancelButton: 'Cancel',
+  confirmButton: 'Verify Profile'
+};
+
+export const unlockFieldsProfile: DialogContent = {
+  subtitle: 'Edit Evacuee Details',
+  text:
+    '<div class="row"><div class="col-md-12"><p id="verified-radio-group-label" class="bold">To unlock these fields, please confirm that you have seen government issue identification to support these changes.</p></div></div>',
+  cancelButton: 'Cancel',
+  confirmButton: 'Unlock'
+};
+
 // Generic error messages
 export const genericError =
   'An error occurred while loading this page. Please refresh and try again.';
