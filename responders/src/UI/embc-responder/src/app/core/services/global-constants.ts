@@ -151,3 +151,5 @@ export const taskSearchError =
   'Unable to retrieve this task number. Please try again later';
 export const evacueeSearchError =
   'Unable to complete the search at this time. Please try again later';
+export const notesListError =
+  'Unable to retrieve notes at this time. Please try again later';
