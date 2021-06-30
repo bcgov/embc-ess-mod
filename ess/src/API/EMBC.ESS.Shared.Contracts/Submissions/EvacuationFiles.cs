@@ -140,6 +140,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public DateTime ModifiedOn { get; set; }
         public string CreatingTeamMemberId { get; set; }
         public string MemberName { get; set; }
+        public string TeamId { get; set; }
         public string TeamName { get; set; }
         public bool IsHidden { get; set; }
     }

@@ -63,6 +63,7 @@ namespace EMBC.ESS.Managers.Submissions
             CreateMap<Shared.Contracts.Submissions.Note, Resources.Cases.Note>()
                 .ReverseMap()
                 .ForMember(d => d.MemberName, opts => opts.Ignore())
+                .ForMember(d => d.TeamId, opts => opts.Ignore())
                 .ForMember(d => d.TeamName, opts => opts.Ignore())
                 ;
 

@@ -215,6 +215,7 @@ namespace EMBC.ESS.Managers.Submissions
                 var member = teamMembers.SingleOrDefault();
                 if (member == null) continue;
                 note.MemberName = $"{member.FirstName}, {member.LastName.Substring(0, 1)}";
+                note.TeamId = member.TeamId;
                 note.TeamName = member.TeamName;
             }
 
