@@ -43,6 +43,7 @@ export class StepEvacueeProfileService {
   private securityQuestionOption: string[];
 
   private verified: boolean;
+  private unlockedField: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -148,6 +149,14 @@ export class StepEvacueeProfileService {
   }
   public set securityQuestionOptions(securityQuestionOption: string[]) {
     this.securityQuestionOption = securityQuestionOption;
+  }
+
+  public get unlockedFields(): boolean {
+    return this.unlockedField;
+  }
+
+  public set unlockedFields(lockedField: boolean) {
+    this.unlockedField = lockedField;
   }
 
   public get nextTabUpdate(): Subject<void> {

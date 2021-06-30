@@ -7,6 +7,10 @@
   width: 40%;
 }
 
+.form-container {
+  margin-bottom: 40px;
+}
+
 .content-container {
   padding-top: 24px;
   padding-bottom: 24px;
@@ -15,4 +19,13 @@
 .locked-field {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.unlock-link {
+  padding: 0;
+  color: #169BD5;
+}
+
+.unlock-link:hover {
+  text-decoration: underline;
 }

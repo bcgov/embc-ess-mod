@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -6,6 +6,7 @@ import {
   Validators
 } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-verify-evacuee-dialog',
@@ -13,6 +14,7 @@ import { MatRadioChange } from '@angular/material/radio';
   styleUrls: ['./verify-evacuee-dialog.component.scss']
 })
 export class VerifyEvacueeDialogComponent implements OnInit {
+  @Input() content: DialogContent;
   @Output() outputEvent = new EventEmitter<string>();
   verificationForm: FormGroup;
   noIdFlag = true;

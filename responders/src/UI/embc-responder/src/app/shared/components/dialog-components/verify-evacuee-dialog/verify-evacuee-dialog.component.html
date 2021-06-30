@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-md-12">
-    <p class="heading">Verify Evacuee Profile</p>
+    <p class="heading">{{ content?.subtitle }}</p>
   </div>
 </div>
-<br />
+<!-- <br />
 <div class="row">
   <div class="col-md-12">
     <p id="verified-radio-group-label" class="bold">
@@ -25,7 +25,8 @@
     <p>dateOfBirth</p>
   </div>
 </div>
-<br />
+<br /> -->
+<div class="text-content" [innerHTML]="content?.text"></div>
 
 <div class="row">
   <div class="col-md-12">
@@ -69,7 +70,7 @@
 <div class="row">
   <div class="col-md-6">
     <button class="button-s button-width" mat-button (click)="close()">
-      Cancel
+      {{ content?.cancelButton }}
     </button>
   </div>
   <div class="col-md-6">
@@ -79,7 +80,7 @@
       mat-button
       (click)="verify()"
     >
-      Verify Profile
+      {{ content?.confirmButton }}
     </button>
   </div>
 </div>
