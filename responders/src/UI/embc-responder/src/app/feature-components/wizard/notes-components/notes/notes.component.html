@@ -10,12 +10,23 @@
     <div class="col-md-12 content-container">
       <div class="row">
         <div class="col-md-8">
-          <p>(count) note have been added for this ESS File.</p>
+          <p>{{ count }} note have been added for this ESS File.</p>
 
           <button class="button-p" mat-button>Add Notes</button>
 
           <!--Add component to add notes here-->
-          <router-outlet></router-outlet>
+          <div class="row">
+            <div class="col-md-12 loader-align">
+              <app-loader
+                [strokeWidth]="3"
+                [diameter]="50"
+                [showLoader]="showLoader"
+                [color]="color"
+              ></app-loader>
+            </div>
+          </div>
+
+          <app-list-notes [notesList]="notesList"></app-list-notes>
         </div>
         <div class="col-md-4">
           <mat-card class="tips-card">

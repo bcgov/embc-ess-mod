@@ -5,21 +5,7 @@ import { NotesComponent } from './notes.component';
 const routes: Routes = [
   {
     path: '',
-    component: NotesComponent,
-    children: [
-      // {
-      //   path: '',
-      //   redirectTo: 'list',
-      //   pathMatch: 'full'
-      // },
-      // {
-      //   path: 'list',
-      //   loadChildren: () =>
-      //     import('../list-notes/list-notes.module').then(
-      //       (m) => m.ListNotesModule
-      //     )
-      // }
-    ]
+    component: NotesComponent
   }
 ];
 
