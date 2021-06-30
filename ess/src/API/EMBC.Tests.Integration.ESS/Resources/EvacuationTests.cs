@@ -119,6 +119,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var primaryRegistrant = updatedNeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem();
             primaryContact.FirstName.ShouldBe(primaryContact.FirstName);
             primaryContact.LastName.ShouldBe(primaryContact.LastName);
+            updatedFile.NeedsAssessment.Pets.Count().ShouldBe(fileToUpdate.NeedsAssessment.Pets.Count());
+            updatedFile.NeedsAssessment.HouseholdMembers.Count().ShouldBe(fileToUpdate.NeedsAssessment.HouseholdMembers.Count());
         }
 
         [Fact(Skip = RequiresDynamics)]
