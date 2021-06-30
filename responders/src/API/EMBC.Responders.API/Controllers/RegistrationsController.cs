@@ -161,14 +161,6 @@ namespace EMBC.Responders.API.Controllers
 
             if (file == null) return NotFound();
 
-            List<Note> notes = new List<Note>();
-
-            notes.Add(new Note { Content = "Why did the man name his dogs Rolex and Timex? Because they were watch dogs.", Type = NoteType.General });
-            notes.Add(new Note { Content = "Why don't crabs give to charity? Because they're shellfish.", Type = NoteType.General });
-            notes.Add(new Note { Content = "Why do cows wear bells? Because their horns don't work.", Type = NoteType.General });
-
-            file.Notes = notes;
-
             return Ok(file);
         }
 
@@ -444,6 +436,10 @@ namespace EMBC.Responders.API.Controllers
     {
         public NoteType Type { get; set; }
         public string Content { get; set; }
+        public DateTime AddedOn { get; set; }
+        public string MemberName { get; set; }
+        public string TeamName { get; set; }
+        public bool IsHidden { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -556,10 +552,9 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<Note, ESS.Shared.Contracts.Submissions.Note>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
-                .ForMember(d => d.AddedOn, opts => opts.Ignore())
                 .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
                 .ForMember(d => d.CreatingTeamMemberId, opts => opts.Ignore())
-                .ForMember(d => d.Status, opts => opts.Ignore())
+                .ForMember(d => d.TeamId, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 
@@ -609,7 +604,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
-                .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(d => d.Task, opts => opts.MapFrom(s => s.TaskId == null
                     ? null
                     : new EvacuationFileTask
