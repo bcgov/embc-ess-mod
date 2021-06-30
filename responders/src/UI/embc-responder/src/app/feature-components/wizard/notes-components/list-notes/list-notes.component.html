@@ -1,0 +1,25 @@
+<div *ngFor="let note of notes$ | async">
+  <hr class="solid-hr" />
+  <div class="row list-notes">
+    <div class="col-md-10">
+      <p>firstname, lastname - team name</p>
+      <p>timestamp</p>
+    </div>
+    <div class="col-md-2">
+      <button class="edit-image" mat-icon-button aria-label="Edit">
+        <img src="/assets/images/edit.svg" height="40" width="40" />
+        <img src="/assets/images/edit_onhover.svg" height="40" width="40" />
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p>{{ note?.content }}</p>
+    </div>
+  </div>
+</div>
+
+<mat-paginator
+  class="custom-paginator custom-paginator-align"
+  [pageSizeOptions]="[10]"
+></mat-paginator>
