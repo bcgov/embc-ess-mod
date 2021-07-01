@@ -53,7 +53,8 @@ namespace EMBC.Tests.Unit.Responders.API
 
         [Theory]
         [MemberData(nameof(EvacuationSearchTestCaseGenerator.GenerateCases), MemberType = typeof(EvacuationSearchTestCaseGenerator))]
-        public async Task SearchOnRestrictions(EMBC.Responders.API.Controllers.MemberRole role,
+        public async Task SearchOnRestrictions(
+            EMBC.Responders.API.Controllers.MemberRole role,
             MemberDataSerializer<IEnumerable<EvacuationFile>> files,
             MemberDataSerializer<IEnumerable<RegistrantWithFiles>> profiles,
             int expectedFiles,
@@ -90,8 +91,9 @@ namespace EMBC.Tests.Unit.Responders.API
                     var profileOptions = new[] { (resticted: false, items: Array.Empty<RegistrantWithFiles>()), (resticted: true, items: testProfilesWithRestriction), (resticted: false, items: testProfilesWithNoRestiction) };
                     foreach (var profileOption in profileOptions)
                     {
-                        var expectedNumberOfProfiles = profileOption.resticted && role == EMBC.Responders.API.Controllers.MemberRole.Tier1 ? 0 : profileOption.items.Count();
-                        var expectedNumberOfFiles = fileOption.resticted && role == EMBC.Responders.API.Controllers.MemberRole.Tier1 ? 0 : fileOption.items.Count();
+                        var haveRestrictions = profileOption.resticted || fileOption.resticted;
+                        var expectedNumberOfProfiles = haveRestrictions && role == EMBC.Responders.API.Controllers.MemberRole.Tier1 ? 0 : profileOption.items.Count();
+                        var expectedNumberOfFiles = haveRestrictions && role == EMBC.Responders.API.Controllers.MemberRole.Tier1 ? 0 : fileOption.items.Count();
                         testCases.Add(new object[] {
                             role,
                             new MemberDataSerializer<IEnumerable<EvacuationFile>>(fileOption.items),
