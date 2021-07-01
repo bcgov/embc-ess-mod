@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
+import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { MatRadioChange } from '@angular/material/radio';
@@ -31,7 +31,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private stepCreateEssFileService: StepCreateEssFileService,
+    private stepEssFileService: StepEssFileService,
     private customValidation: CustomValidationService,
     private formBuilder: FormBuilder
   ) {}
@@ -45,7 +45,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.data = this.animalsForm.get('pets').value;
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateEssFileService.nextTabUpdate.subscribe(
+    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
       () => {
         this.updateTabStatus();
       }
@@ -65,25 +65,24 @@ export class AnimalsComponent implements OnInit, OnDestroy {
 
     // Shows the petsGroupForm if hasPets is true and none pets has been inserted yet
     if (
-      this.stepCreateEssFileService.havePets === true &&
-      this.stepCreateEssFileService.petsList.length === 0
+      this.stepEssFileService.havePets === true &&
+      this.stepEssFileService.petsList.length === 0
     ) {
       this.showPetsForm = true;
     }
   }
 
   hasPetsChange(event: MatRadioChange): void {
-    if (event.value === false) {
-      this.showPetsForm = false;
-      this.animalsForm.get('pet').reset();
+    if (event.value) {
+      this.addPets();
     } else {
-      this.showPetsForm = true;
+      this.cancel();
     }
   }
 
   addPets(): void {
     this.animalsForm.get('pet').reset();
-    this.showPetsForm = !this.showPetsForm;
+    this.showPetsForm = true;
     this.animalsForm.get('addPetIndicator').setValue(true);
   }
 
@@ -100,14 +99,14 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       this.animalsForm.get('addPetIndicator').setValue(false);
       this.dataSource.next(this.data);
       this.animalsForm.get('pets').setValue(this.data);
-      this.showPetsForm = !this.showPetsForm;
+      this.showPetsForm = false;
     } else {
       this.animalsForm.get('pet').markAllAsTouched();
     }
   }
 
   cancel(): void {
-    this.showPetsForm = !this.showPetsForm;
+    this.showPetsForm = false;
     this.animalsForm.get('pet').reset();
     this.animalsForm.get('addPetIndicator').setValue(false);
 
@@ -161,21 +160,21 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    * Goes back to the previous ESS File Tab
    */
   back() {
-    this.router.navigate(['/ess-wizard/create-ess-file/household-members']);
+    this.router.navigate(['/ess-wizard/ess-file/household-members']);
   }
 
   /**
    * Goes to the next tab from the ESS File
    */
   next(): void {
-    this.router.navigate(['/ess-wizard/create-ess-file/needs']);
+    this.router.navigate(['/ess-wizard/ess-file/needs']);
   }
 
   /**
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 
@@ -183,14 +182,14 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    * Generates the main Animals form
    */
   private createAnimalsForm(): void {
-    if (!this.stepCreateEssFileService.petsList) {
-      this.stepCreateEssFileService.petsList = [];
+    if (!this.stepEssFileService.petsList) {
+      this.stepEssFileService.petsList = [];
     }
 
     this.animalsForm = this.formBuilder.group({
-      hasPets: [this.stepCreateEssFileService.havePets, [Validators.required]],
+      hasPets: [this.stepEssFileService.havePets, [Validators.required]],
       pets: [
-        this.stepCreateEssFileService.petsList,
+        this.stepEssFileService.petsList,
         this.customValidation
           .conditionalValidation(
             () => this.animalsForm.get('hasPets').value === true,
@@ -199,7 +198,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
           .bind(this.customValidation)
       ],
       hasPetsFood: [
-        this.stepCreateEssFileService.havePetsFood,
+        this.stepEssFileService.havePetsFood,
         this.customValidation
           .conditionalValidation(
             () => this.animalsForm.get('hasPets').value === true,
@@ -207,7 +206,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
           )
           .bind(this.customValidation)
       ],
-      petCareDetails: [this.stepCreateEssFileService.petCarePlans],
+      petCareDetails: [this.stepEssFileService.petCarePlans],
       pet: this.createPetForm(),
       addPetIndicator: [false]
     });
@@ -264,13 +263,13 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    */
   private updateTabStatus() {
     if (this.animalsForm.valid) {
-      this.stepCreateEssFileService.setTabStatus('animals', 'complete');
+      this.stepEssFileService.setTabStatus('animals', 'complete');
     } else if (
-      this.stepCreateEssFileService.checkForPartialUpdates(this.animalsForm)
+      this.stepEssFileService.checkForPartialUpdates(this.animalsForm)
     ) {
-      this.stepCreateEssFileService.setTabStatus('animals', 'incomplete');
+      this.stepEssFileService.setTabStatus('animals', 'incomplete');
     } else {
-      this.stepCreateEssFileService.setTabStatus('animals', 'not-started');
+      this.stepEssFileService.setTabStatus('animals', 'not-started');
     }
     this.saveFormData();
   }
@@ -279,17 +278,15 @@ export class AnimalsComponent implements OnInit, OnDestroy {
    * Saves information inserted inthe form into the service
    */
   private saveFormData() {
-    this.stepCreateEssFileService.havePets = this.animalsForm.get(
-      'hasPets'
-    ).value;
-    this.stepCreateEssFileService.petsList = this.animalsForm.get('pets').value;
-    this.stepCreateEssFileService.havePetsFood = this.animalsForm.get(
+    this.stepEssFileService.havePets = this.animalsForm.get('hasPets').value;
+    this.stepEssFileService.petsList = this.animalsForm.get('pets').value;
+    this.stepEssFileService.havePetsFood = this.animalsForm.get(
       'hasPetsFood'
     ).value;
-    this.stepCreateEssFileService.petCarePlans = this.animalsForm.get(
+    this.stepEssFileService.petCarePlans = this.animalsForm.get(
       'petCareDetails'
     ).value;
-    this.stepCreateEssFileService.addPetIndicator = this.animalsForm.get(
+    this.stepEssFileService.addPetIndicator = this.animalsForm.get(
       'addPetIndicator'
     ).value;
   }

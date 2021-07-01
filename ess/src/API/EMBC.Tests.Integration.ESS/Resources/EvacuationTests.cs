@@ -94,9 +94,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
             })).Items.Cast<EvacuationFile>().Last();
 
             var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
-            var needsAssessment = fileToUpdate.CurrentNeedsAssessment;
+            var needsAssessment = fileToUpdate.NeedsAssessment;
 
-            needsAssessment.HasPetsFood = !needsAssessment.HasPetsFood;
+            needsAssessment.HavePetsFood = !needsAssessment.HavePetsFood;
             foreach (var member in needsAssessment.HouseholdMembers)
             {
                 string originalFirstName = member.FirstName.Substring(member.FirstName.LastIndexOf("_") + 1);
@@ -109,8 +109,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var updatedFile = (await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
 
-            var updatedNeedsAssessment = updatedFile.CurrentNeedsAssessment;
-            updatedNeedsAssessment.HasPetsFood.ShouldBe(needsAssessment.HasPetsFood);
+            var updatedNeedsAssessment = updatedFile.NeedsAssessment;
+            updatedNeedsAssessment.HavePetsFood.ShouldBe(needsAssessment.HavePetsFood);
             foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
             {
                 member.FirstName.ShouldStartWith(newUniqueSignature);
@@ -119,6 +119,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var primaryRegistrant = updatedNeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem();
             primaryContact.FirstName.ShouldBe(primaryContact.FirstName);
             primaryContact.LastName.ShouldBe(primaryContact.LastName);
+            updatedFile.NeedsAssessment.Pets.Count().ShouldBe(fileToUpdate.NeedsAssessment.Pets.Count());
+            updatedFile.NeedsAssessment.HouseholdMembers.Count().ShouldBe(fileToUpdate.NeedsAssessment.HouseholdMembers.Count());
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -144,20 +146,21 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.EvacuatedFrom.PostalCode.ShouldBe(originalFile.EvacuatedFrom.PostalCode);
             evacuationFile.EvacuationDate.ShouldBeInRange(now, DateTime.UtcNow);
             evacuationFile.PrimaryRegistrantId.ShouldBe(primaryContact.Id);
+            evacuationFile.RegistrationLocation.ShouldBe(originalFile.RegistrationLocation);
 
             // Needs Assessment
 
-            var originalNeedsAssessment = originalFile.CurrentNeedsAssessment;
-            var needsAssessment = evacuationFile.CurrentNeedsAssessment;
+            var originalNeedsAssessment = originalFile.NeedsAssessment;
+            var needsAssessment = evacuationFile.NeedsAssessment;
             needsAssessment.Insurance.ShouldBe(originalNeedsAssessment.Insurance);
-            needsAssessment.CanEvacueeProvideClothing.ShouldBe(originalNeedsAssessment.CanEvacueeProvideClothing);
-            needsAssessment.CanEvacueeProvideFood.ShouldBe(originalNeedsAssessment.CanEvacueeProvideFood);
-            needsAssessment.CanEvacueeProvideIncidentals.ShouldBe(originalNeedsAssessment.CanEvacueeProvideIncidentals);
-            needsAssessment.CanEvacueeProvideLodging.ShouldBe(originalNeedsAssessment.CanEvacueeProvideLodging);
-            needsAssessment.CanEvacueeProvideTransportation.ShouldBe(originalNeedsAssessment.CanEvacueeProvideTransportation);
-            needsAssessment.HaveMedication.ShouldBe(originalNeedsAssessment.HaveMedication);
-            needsAssessment.HasEnoughSupply.ShouldBe(originalNeedsAssessment.HasEnoughSupply);
-            needsAssessment.HasPetsFood.ShouldBe(originalNeedsAssessment.HasPetsFood);
+            needsAssessment.CanProvideClothing.ShouldBe(originalNeedsAssessment.CanProvideClothing);
+            needsAssessment.CanProvideFood.ShouldBe(originalNeedsAssessment.CanProvideFood);
+            needsAssessment.CanProvideIncidentals.ShouldBe(originalNeedsAssessment.CanProvideIncidentals);
+            needsAssessment.CanProvideLodging.ShouldBe(originalNeedsAssessment.CanProvideLodging);
+            needsAssessment.CanProvideTransportation.ShouldBe(originalNeedsAssessment.CanProvideTransportation);
+            needsAssessment.TakeMedication.ShouldBe(originalNeedsAssessment.TakeMedication);
+            needsAssessment.HaveMedicalSupplies.ShouldBe(originalNeedsAssessment.HaveMedicalSupplies);
+            needsAssessment.HavePetsFood.ShouldBe(originalNeedsAssessment.HavePetsFood);
             needsAssessment.HaveSpecialDiet.ShouldBe(originalNeedsAssessment.HaveSpecialDiet);
             needsAssessment.SpecialDietDetails.ShouldBe(originalNeedsAssessment.SpecialDietDetails);
 
@@ -202,8 +205,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 TaskId = "0001",
                 SecurityPhrase = "secret123",
                 SecurityPhraseChanged = true,
+                RegistrationLocation = $"{uniqueSignature}_testlocation",
 
-                CurrentNeedsAssessment = new NeedsAssessment
+                NeedsAssessment = new NeedsAssessment
                 {
                     CompletedOn = now,
                     EvacuatedFrom = new EvacuationAddress()
@@ -214,17 +218,17 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         PostalCode = "V8V 2W3"
                     },
                     Type = NeedsAssessmentType.Preliminary,
-                    HaveMedication = false,
-                    HasEnoughSupply = false,
+                    TakeMedication = false,
+                    HaveMedicalSupplies = false,
                     Insurance = InsuranceOption.Yes,
                     HaveSpecialDiet = true,
                     SpecialDietDetails = "Shellfish allergy",
-                    HasPetsFood = true,
-                    CanEvacueeProvideClothing = true,
-                    CanEvacueeProvideFood = true,
-                    CanEvacueeProvideIncidentals = true,
-                    CanEvacueeProvideLodging = true,
-                    CanEvacueeProvideTransportation = true,
+                    HavePetsFood = true,
+                    CanProvideClothing = true,
+                    CanProvideFood = true,
+                    CanProvideIncidentals = true,
+                    CanProvideLodging = true,
+                    CanProvideTransportation = true,
                     HouseholdMembers = new[]
                         {
                             new HouseholdMember

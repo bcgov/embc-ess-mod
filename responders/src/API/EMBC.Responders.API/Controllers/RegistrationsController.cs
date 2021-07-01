@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -155,13 +154,14 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("files/{fileId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<EvacuationFileSearchResult>> GetFile(string fileId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<EvacuationFile>> GetFile(string fileId)
         {
-            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
-            {
-                FileId = fileId
-            })).Items.FirstOrDefault();
-            return Ok(mapper.Map<EvacuationFileSearchResult>(file));
+            var file = await evacuationSearchService.GetEvacuationFile(fileId);
+
+            if (file == null) return NotFound();
+
+            return Ok(file);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrationResult>> UpdateFile(string fileId, EvacuationFile file)
         {
-            file.EssFileNumber = fileId;
+            file.Id = fileId;
             var id = await messagingClient.Send(new SubmitEvacuationFileCommand
             {
                 File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(file)
@@ -219,7 +219,7 @@ namespace EMBC.Responders.API.Controllers
 
             if (file == null) return NotFound();
 
-            return Ok(new GetSecurityPhraseResponse { SecurityPhrase = mapper.Map<EvacuationFile>(file).SecurityPhrase });
+            return Ok(new GetSecurityPhraseResponse { SecurityPhrase = file.SecurityPhrase });
         }
 
         /// <summary>
@@ -336,25 +336,28 @@ namespace EMBC.Responders.API.Controllers
     /// </summary>
     public class EvacuationFile
     {
-        public string EssFileNumber { get; set; }
+        public string Id { get; set; }
+
+        [Required]
         public string PrimaryRegistrantId { get; set; }
 
         [Required]
         public Address EvacuatedFromAddress { get; set; }
 
+        [Required]
         public string RegistrationLocation { get; set; }
 
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get => new[] { LastNeedsAssessment }; }
-
         [Required]
-        public NeedsAssessment LastNeedsAssessment { get; set; }
+        public NeedsAssessment NeedsAssessment { get; set; }
+
+        public IEnumerable<Note> Notes { get; set; }
 
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseEdited { get; set; }
 
-        public bool IsRestricted { get; set; }
-        public EvacuationFileStatus Status { get; set; }
-        public string EvacuationFileDate { get; set; }
+        public bool? IsRestricted { get; set; }
+        public EvacuationFileStatus? Status { get; set; }
+        public DateTime? EvacuationFileDate { get; set; }
         public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; }
 
         [Required]
@@ -377,44 +380,48 @@ namespace EMBC.Responders.API.Controllers
     public class NeedsAssessment
     {
         public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
 
         [Required]
         public InsuranceOption Insurance { get; set; }
 
-        public IEnumerable<Note> Notes { get; set; }
+        public string EvacuationImpact { get; set; }
+        public string EvacuationExternalReferrals { get; set; }
+        public string PetCarePlans { get; set; }
+        public string HouseHoldRecoveryPlan { get; set; }
         public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }
 
+        [Required]
         public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
+
         public bool HaveSpecialDiet { get; set; }
         public string SpecialDietDetails { get; set; }
-        public bool HaveMedication { get; set; }
-
+        public bool TakeMedication { get; set; }
+        public bool? HaveMedicalSupplies { get; set; }
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HasPetsFood { get; set; }
-
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
-
+        public bool? HavePetsFood { get; set; }
+        public bool? CanProvideFood { get; set; }
+        public bool? CanProvideLodging { get; set; }
+        public bool? CanProvideClothing { get; set; }
+        public bool? CanProvideTransportation { get; set; }
+        public bool? CanProvideIncidentals { get; set; }
         public NeedsAssessmentType Type { get; set; }
-        public bool HasSupplies { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum InsuranceOption
     {
-        [EnumMember(Value = "No")]
+        [Description("No")]
         No,
 
-        [EnumMember(Value = "Yes")]
+        [Description("Yes")]
         Yes,
 
-        [EnumMember(Value = "Unsure")]
+        [Description("Unsure")]
         Unsure,
 
-        [EnumMember(Value = "Unknown")]
+        [Description("Unknown")]
         Unknown
     }
 
@@ -429,24 +436,28 @@ namespace EMBC.Responders.API.Controllers
     {
         public NoteType Type { get; set; }
         public string Content { get; set; }
+        public DateTime AddedOn { get; set; }
+        public string MemberName { get; set; }
+        public string TeamName { get; set; }
+        public bool IsHidden { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum NoteType
     {
-        [EnumMember(Value = "General")]
+        [Description("General")]
         General,
 
-        [EnumMember(Value = "Evacuation Impact")]
+        [Description("Evacuation Impact")]
         EvacuationImpact,
 
-        [EnumMember(Value = "Evacuation External Referrals")]
+        [Description("Evacuation External Referrals")]
         EvacuationExternalReferrals,
 
-        [EnumMember(Value = "Pet Care Plans")]
+        [Description("Pet Care Plans")]
         PetCarePlans,
 
-        [EnumMember(Value = "HouseHold Recovery Plan")]
+        [Description("HouseHold Recovery Plan")]
         HouseHoldRecoveryPlan
     }
 
@@ -487,6 +498,8 @@ namespace EMBC.Responders.API.Controllers
     public class RegistrantProfile
     {
         public string Id { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
 
         public bool Restriction { get; set; }
 
@@ -523,9 +536,8 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<EvacuationFileHouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
                 .ForMember(d => d.PreferredName, opts => opts.Ignore())
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.IsUnder19, opts => opts.Ignore())
-                .ForMember(d => d.IsPrimaryRegistrant, opts => opts.Ignore())
+                .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.Type == HouseholdMemberType.Registrant))
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 ;
 
@@ -533,28 +545,37 @@ namespace EMBC.Responders.API.Controllers
                    .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
                    .ForMember(d => d.IsMatch, opts => opts.Ignore())
                    ;
+
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
                 .ReverseMap()
                 ;
 
             CreateMap<Note, ESS.Shared.Contracts.Submissions.Note>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
-                .ForMember(d => d.AddedOn, opts => opts.Ignore())
                 .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
                 .ForMember(d => d.CreatingTeamMemberId, opts => opts.Ignore())
-                .ForMember(d => d.Status, opts => opts.Ignore())
+                .ForMember(d => d.TeamId, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.CompletedOn, opts => opts.Ignore())
-                .ForMember(d => d.HasEnoughSupply, opts => opts.MapFrom(s => s.HasSupplies))
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
+                .ForMember(d => d.CreatedByDisplayName, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
+                .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => NeedsAssessmentType.Assessed))
+                .ForMember(d => d.Notes, opts => opts.ConvertUsing<NeedsAssessmentNotesConverter, NeedsAssessment>(n => n))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.NeedsAssessment, NeedsAssessment>()
-                .ForMember(d => d.HasSupplies, opts => opts.MapFrom(s => s.HasEnoughSupply))
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
+                .ForMember(d => d.EvacuationImpact, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact).SingleOrDefault().Content))
+                .ForMember(d => d.EvacuationExternalReferrals, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals).SingleOrDefault().Content))
+                .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans).SingleOrDefault().Content))
+                .ForMember(d => d.HouseHoldRecoveryPlan, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan).SingleOrDefault().Content))
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
@@ -570,20 +591,15 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.IsRestricted))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
-                .ForMember(d => d.SecretPhrase, opts => opts.Ignore())
-                .ForMember(d => d.IsSecretPhraseMasked, opts => opts.Ignore())
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.Task.TaskNumber))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
+                .AfterMap((s, d) => d.NeedsAssessment.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).LinkedRegistrantId = s.PrimaryRegistrantId)
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
-                .ForMember(d => d.EssFileNumber, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
@@ -609,9 +625,16 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
                 .ForMember(d => d.UserId, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
+                .ForMember(d => d.CreatedByDisplayName, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
+                .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.RegistrantProfile, RegistrantProfile>()
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                 .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => new PersonDetails
                 {
@@ -636,6 +659,52 @@ namespace EMBC.Responders.API.Controllers
                     s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
                     s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
                 ;
+        }
+    }
+
+    public class NeedsAssessmentNotesConverter : IValueConverter<NeedsAssessment, IEnumerable<ESS.Shared.Contracts.Submissions.Note>>
+    {
+        public IEnumerable<ESS.Shared.Contracts.Submissions.Note> Convert(NeedsAssessment sourceMember, ResolutionContext context)
+        {
+            List<ESS.Shared.Contracts.Submissions.Note> ret = new List<ESS.Shared.Contracts.Submissions.Note>();
+
+            if (!string.IsNullOrEmpty(sourceMember.EvacuationImpact))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.EvacuationImpact,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact,
+                });
+            }
+
+            if (!string.IsNullOrEmpty(sourceMember.EvacuationExternalReferrals))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.EvacuationExternalReferrals,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals,
+                });
+            }
+
+            if (!string.IsNullOrEmpty(sourceMember.PetCarePlans))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.PetCarePlans,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans,
+                });
+            }
+
+            if (!string.IsNullOrEmpty(sourceMember.HouseHoldRecoveryPlan))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.HouseHoldRecoveryPlan,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan,
+                });
+            }
+
+            return ret;
         }
     }
 }

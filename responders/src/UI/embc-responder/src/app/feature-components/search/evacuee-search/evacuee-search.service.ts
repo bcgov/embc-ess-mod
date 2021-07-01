@@ -7,8 +7,6 @@ import { CacheService } from 'src/app/core/services/cache.service';
 })
 export class EvacueeSearchService {
   private searchContext: EvacueeSearchContextModel;
-  private profileIdVal: string;
-  private essFileIdVal: string;
 
   constructor(private cacheService: CacheService) {}
 
@@ -24,21 +22,5 @@ export class EvacueeSearchService {
       ...searchContext
     };
     this.cacheService.set('evacueeSearchContext', this.searchContext);
-  }
-
-  public get profileId(): string {
-    return this.profileIdVal;
-  }
-
-  public set profileId(profileIdVal: string) {
-    this.profileIdVal = profileIdVal;
-  }
-
-  public get essFileId(): string {
-    return this.essFileIdVal;
-  }
-
-  public set essFileId(essFileIdVal: string) {
-    this.essFileIdVal = essFileIdVal;
   }
 }

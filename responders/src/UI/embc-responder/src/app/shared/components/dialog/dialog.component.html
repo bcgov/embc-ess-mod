@@ -2,9 +2,9 @@
   <div class="col-md-10">
     <h1
       class="mat-title"
-      *ngIf="data?.title"
+      *ngIf="data?.content?.title"
       mat-dialog-title
-      [innerHTML]="data?.title"
+      [innerHTML]="data?.content?.title"
     ></h1>
   </div>
   <div class="col-md-2">

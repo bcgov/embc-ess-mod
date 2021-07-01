@@ -52,6 +52,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.AddToera_evacuationfiles(file);
             AssignPrimaryRegistrant(file, primaryContact);
             AssignToTask(file, evacuationFile.TaskId);
+            AddPets(file);
 
             AddNeedsAssessment(file, file.era_CurrentNeedsAssessmentid);
 
@@ -76,6 +77,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
             if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
 
+            RemovePets(currentFile);
+
             essContext.Detach(currentFile);
             var file = mapper.Map<era_evacuationfile>(evacuationFile);
             file.era_evacuationfileid = currentFile.era_evacuationfileid;
@@ -84,6 +87,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.UpdateObject(file);
             AssignPrimaryRegistrant(file, primaryContact);
             AssignToTask(file, evacuationFile.TaskId);
+            AddPets(file);
 
             AddNeedsAssessment(file, file.era_CurrentNeedsAssessmentid);
 
@@ -119,12 +123,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 AssignHouseholdMember(file, member);
                 AssignHouseholdMember(needsAssessment, member);
             }
-
-            foreach (var pet in needsAssessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment)
-            {
-                essContext.AddToera_needsassessmentanimals(pet);
-                AssignPet(needsAssessment, pet);
-            }
         }
 
         private void AssignPrimaryRegistrant(era_evacuationfile file, contact primaryContact)
@@ -159,10 +157,23 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             //essContext.AddLink(needsAssessment, nameof(era_needassessment.era_era_householdmember_era_needassessment), member);
         }
 
-        private void AssignPet(era_needassessment needsAssessment, era_needsassessmentanimal pet)
+        private void AddPets(era_evacuationfile file)
         {
-            essContext.AddLink(needsAssessment, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment), pet);
-            essContext.SetLink(pet, nameof(era_needsassessmentanimal.era_NeedsAssessment), needsAssessment);
+            foreach (var pet in file.era_era_evacuationfile_era_animal_ESSFileid)
+            {
+                essContext.AddToera_animals(pet);
+                essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), pet);
+                essContext.SetLink(pet, nameof(era_animal.era_ESSFileid), file);
+            }
+        }
+
+        private void RemovePets(era_evacuationfile file)
+        {
+            foreach (var pet in file.era_era_evacuationfile_era_animal_ESSFileid)
+            {
+                essContext.DeleteObject(pet);
+                essContext.DeleteLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid), pet);
+            }
         }
 
         private void VerifyEvacuationFileInvariants(EvacuationFile evacuationFile)
@@ -172,15 +183,15 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             {
                 throw new Exception($"The file has no associated primary registrant");
             }
-            if (evacuationFile.CurrentNeedsAssessment == null)
+            if (evacuationFile.NeedsAssessment == null)
             {
                 throw new Exception($"File {evacuationFile.Id} must have a needs assessment");
             }
-            if (evacuationFile.CurrentNeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant) != 1)
+            if (evacuationFile.NeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant) != 1)
             {
                 throw new Exception($"File {evacuationFile.Id} must have a single primary registrant household member");
             }
-            if (evacuationFile.CurrentNeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId != null) != 1)
+            if (evacuationFile.NeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId != null) != 1)
             {
                 throw new Exception($"File {evacuationFile.Id} primary registrant household member must be linked to a profile");
             }
@@ -214,6 +225,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (!file._era_currentneedsassessmentid_value.HasValue) return null;
 
             essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
+            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID));
 
             essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
             foreach (var member in file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)
@@ -223,7 +236,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                     essContext.LoadProperty(member, nameof(era_householdmember.era_Registrant));
                 }
             }
-            essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment));
 
             var evacuationFile = mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
 

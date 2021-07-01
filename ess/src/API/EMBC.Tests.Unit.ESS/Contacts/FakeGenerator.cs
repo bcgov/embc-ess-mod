@@ -26,8 +26,9 @@ namespace EMBC.Tests.Unit.ESS.Contacts
         {
             return new Faker<contact>()
                 .RuleFor(o => o.contactid, f => Guid.NewGuid())
+                .RuleFor(o => o.createdon, f => f.Date.Past(2))
+                .RuleFor(o => o.modifiedon, f => f.Date.Past(1))
                 .RuleFor(o => o.era_bcservicescardid, f => f.Random.String(10))
-                .RuleFor(o => o.era_secrettext, f => f.Internet.Password())
                 .RuleFor(o => o.era_restriction, f => f.Random.Bool())
 
                 .RuleFor(o => o.birthdate, f => f.Date.Past(20))
@@ -38,9 +39,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 .RuleFor(o => o.era_preferredname, f => f.Name.Suffix())
 
                 .RuleFor(o => o.telephone1, f => f.Phone.PhoneNumber())
-                .RuleFor(o => o.era_phonenumberrefusal, f => f.Random.Bool())
                 .RuleFor(o => o.emailaddress1, f => f.Internet.Email())
-                .RuleFor(o => o.era_emailrefusal, f => f.Random.Bool())
 
                 .RuleFor(o => o.address1_line1, f => f.Address.StreetAddress())
                 .RuleFor(o => o.address1_city, f => f.Address.City())

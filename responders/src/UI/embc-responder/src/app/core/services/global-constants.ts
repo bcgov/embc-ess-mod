@@ -1,3 +1,4 @@
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { DialogContent } from '../models/dialog-content.model';
 
 export const insuranceOptions = [
@@ -26,11 +27,18 @@ export const radioButtonOptions1 = [
   { name: 'Yes', value: true },
   { name: 'No', value: false }
 ];
-export const deleteMessage =
-  'User has been successfully deleted from the ERA Tool.';
-export const editMessage = 'User has been edited successfully.';
-export const addMessage =
-  'Team member has been <b>saved</b> & added successfully.';
+export const deleteMessage: DialogContent = {
+  text: '<p>User has been successfully deleted from the ERA Tool.</p>',
+  cancelButton: 'Close'
+};
+export const editMessage: DialogContent = {
+  text: '<p>User has been edited successfully.</p>',
+  cancelButton: 'Close'
+};
+export const addMessage: DialogContent = {
+  text: '<p>Team member has been <b>saved</b> & added successfully.</p>',
+  cancelButton: 'Close'
+};
 export const tier2Notes = 'Notes regarding Tier 2 Supervisor';
 export const tier3Notes = 'Notes regarding Tier 3 ESS Director/ Manager';
 export const tier1Notes = 'Notes regarding Tier 1 Responder';
@@ -57,50 +65,82 @@ export const gender = [
   { name: 'X', value: 'X' }
 ];
 
-export const wizardProfileMessage = {
+export const wizardProfileMessage: DialogContent = {
   title: 'Complete all steps',
   text:
-    'Please complete all sections of the Evacuee Profile prior to submitting.'
+    '<p>Please complete all sections of the Evacuee Profile prior to submitting.</p>',
+  cancelButton: 'Close'
 };
-export const evacueeProfileCreatedMessage = {
+export const evacueeProfileCreatedMessage: DialogContent = {
   title: 'Evacuee Profile Saved',
-  text: 'Evacuee profile has been successfully created.',
-  button: 'Proceed to Step 2'
+  text: '<p>Evacuee profile has been successfully created.</p>',
+  confirmButton: 'Proceed to Step 2'
 };
-export const wizardESSFileMessage = {
+export const wizardESSFileMessage: DialogContent = {
   title: 'Complete all steps',
-  text: 'Please complete all sections of the ESS File prior to submitting.'
+  text:
+    '<p>Please complete all sections of the ESS File prior to submitting.</p>',
+  cancelButton: 'Close'
 };
-export const essFileCreatedMessage = {
+export const essFileCreatedMessage: DialogContent = {
   title: 'ESS File Saved',
-  text: 'ESS File has been successfully created.',
-  button: 'Proceed to Step 3',
+  text: '<p>ESS File has been successfully created.</p>',
+  confirmButton: 'Proceed to Step 3',
   exitLink: 'Exit Wizard'
 };
 
 export const householdMemberDeleteDialog: DialogContent = {
   text:
-    'Are you sure you want to <b>remove</b> this household member from your evacuation file?',
-  yesButtonText: 'Yes, Remove Household Member',
-  noButtonText: 'No, Cancel'
+    '<p>Are you sure you want to <b>remove</b> this household member from your evacuation file?</p>',
+  confirmButton: 'Yes, Remove Household Member',
+  cancelButton: 'No, Cancel'
 };
 
 export const exitWizardDialog: DialogContent = {
-  text: 'Are you sure you want to exit the wizard?',
-  text2: 'Any information that has not been <b>submitted</b> will be lost.',
-  yesButtonText: 'Yes, Exit Wizard',
-  noButtonText: 'No, Cancel'
+  text:
+    '<p>Are you sure you want to exit the wizard?</p><p>Any information that has not been <b>submitted</b> will be lost.</p>',
+  confirmButton: 'Yes, Exit Wizard',
+  cancelButton: 'No, Cancel'
 };
 
-export const evacueeProfileStepIncompleteMessage =
-  'Please <strong>complete the Evacuee Profile</strong> prior to proceeding to the next steps.';
-export const essFileStepIncompleteMessage =
-  'Please <strong>complete the ESS File</strong> prior to proceeding to the next steps.';
-export const stepIncompleteMessage =
-  'Please <strong>complete the current step</strong> prior to proceeding to the next steps.';
+export const evacueeProfileStepIncompleteMessage: DialogContent = {
+  text:
+    '<p>Please <strong>complete the Evacuee Profile</strong> prior to proceeding to the next steps.</p>',
+  cancelButton: 'Close'
+};
 
-export const successfulVerification =
-  'Evacuee profile has been successfully verified';
+export const essFileStepIncompleteMessage: DialogContent = {
+  text:
+    '<p>Please <strong>complete the ESS File</strong> prior to proceeding to the next steps.</p>',
+  cancelButton: 'Close'
+};
+export const stepIncompleteMessage: DialogContent = {
+  text:
+    '<p>Please <strong>complete the current step</strong> prior to proceeding to the next steps.</p>',
+  cancelButton: 'Close'
+};
+
+export const successfulVerification: DialogContent = {
+  title: 'Profile Successfully Verified',
+  text: '<p>Evacuee profile has been successfully verified.</p>',
+  cancelButton: 'Close'
+};
+
+export const verifyEvacueeProfile: DialogContent = {
+  subtitle: 'Verify Evacuee Profile',
+  text:
+    '<div class="row"><div class="col-md-12"><p id="verified-radio-group-label" class="bold">To verify this profile please confirm that you have seen government issue identification for this evacuee.</p></div></div><br /><div class="row"><div class="col-md-3"><p><b>First Name:</b></p><p><b>Last Name:</b></p><p><b>Date of Birth:</b></p></div><div class="col-md-9"><p>firstName</p><p>lastName</p><p>dateOfBirth</p></div></div><br />',
+  cancelButton: 'Cancel',
+  confirmButton: 'Verify Profile'
+};
+
+export const unlockFieldsProfile: DialogContent = {
+  subtitle: 'Edit Evacuee Details',
+  text:
+    '<div class="row"><div class="col-md-12"><p id="verified-radio-group-label" class="bold">To unlock these fields, please confirm that you have seen government issue identification to support these changes.</p></div></div>',
+  cancelButton: 'Cancel',
+  confirmButton: 'Unlock'
+};
 
 // Generic error messages
 export const genericError =
@@ -127,3 +167,5 @@ export const taskSearchError =
   'Unable to retrieve this task number. Please try again later';
 export const evacueeSearchError =
   'Unable to complete the search at this time. Please try again later';
+export const notesListError =
+  'Unable to retrieve notes at this time. Please try again later';

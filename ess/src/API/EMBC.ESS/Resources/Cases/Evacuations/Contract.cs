@@ -36,17 +36,18 @@ namespace EMBC.ESS.Resources.Cases
     public class EvacuationFile : Case
     {
         public string TaskId { get; set; }
-        public EvacuationAddress EvacuatedFrom { get => CurrentNeedsAssessment?.EvacuatedFrom; }
-        public NeedsAssessment CurrentNeedsAssessment { get; set; }
+        public EvacuationAddress EvacuatedFrom { get => NeedsAssessment?.EvacuatedFrom; }
+        public NeedsAssessment NeedsAssessment { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseChanged { get; set; } = false;
-        public bool IsSecretPhraseMasked { get; set; }
+        public bool IsSecurityPhraseMasked { get; set; }
         public DateTime EvacuationDate { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public bool RestrictedAccess { get; set; }
         public string RegistrationLocation { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
+        public IEnumerable<Note> Notes { get; set; }
     }
 
     public class EvacuationAddress
@@ -63,20 +64,24 @@ namespace EMBC.ESS.Resources.Cases
         public EvacuationAddress EvacuatedFrom { get; set; }
         public DateTime CompletedOn { get; set; }
         public DateTime CreatedOn { get; set; }
+        public string CreatedByUserId { get; set; }
+        public string CreatedByDisplayName { get; set; }
         public DateTime LastModified { get; set; }
+        public string LastModifiedUserId { get; set; }
+        public string LastModifiedDisplayName { get; set; }
         public InsuranceOption Insurance { get; set; }
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
+        public bool? CanProvideFood { get; set; }
+        public bool? CanProvideLodging { get; set; }
+        public bool? CanProvideClothing { get; set; }
+        public bool? CanProvideTransportation { get; set; }
+        public bool? CanProvideIncidentals { get; set; }
         public bool HaveSpecialDiet { get; set; }
         public string SpecialDietDetails { get; set; }
-        public bool HaveMedication { get; set; }
-        public bool HasEnoughSupply { get; set; }
+        public bool TakeMedication { get; set; }
+        public bool? HaveMedicalSupplies { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HasPetsFood { get; set; }
+        public bool? HavePetsFood { get; set; }
         public NeedsAssessmentType Type { get; set; }
         public IEnumerable<Note> Notes { get; set; }
         public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }
@@ -109,7 +114,9 @@ namespace EMBC.ESS.Resources.Cases
         public NoteType Type { get; set; }
         public string Content { get; set; }
         public DateTime AddedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
         public string CreatingTeamMemberId { get; set; }
+        public bool IsHidden { get; set; }
     }
 
     public enum NoteType

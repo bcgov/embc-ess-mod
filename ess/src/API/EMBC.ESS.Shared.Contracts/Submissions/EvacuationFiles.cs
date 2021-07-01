@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EMBC.ESS.Shared.Contracts.Submissions
 {
@@ -24,22 +23,39 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string Id { get; set; }
         public string TaskId { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public DateTime LastModified { get; set; }
+
+        //public DateTime CreatedOn { get; set; }
+        //public User CreatedBy { get; set; }
+        //public DateTime LastModified { get; set; }
+        //public User LastModified { get; set; }
         public EvacuationFileStatus Status { get; set; }
+
         public bool RestrictedAccess { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseChanged { get; set; } = false;
-        public DateTime EvacuationDate { get; set; }
+        public DateTime? EvacuationDate { get; set; }
         public Address EvacuatedFromAddress { get; set; }
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
-        public string SecretPhrase { get; set; }
-        public bool IsSecretPhraseMasked { get; set; }
         public string RegistrationLocation { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
-        public NeedsAssessment LastNeedsAssessment { get => NeedsAssessments.OrderByDescending(na => na.CompletedOn).FirstOrDefault(); }
+        public IEnumerable<Note> Notes { get; set; } = Array.Empty<Note>();
+        public NeedsAssessment NeedsAssessment { get; set; }
     }
+
+    //public class User
+    //{
+    //    public string UserId { get; set; }
+    //    public string UserName { get; set; }
+    //    public UserType Type { get; set; }
+    //    public string DisplayName { get; set; }
+    //}
+
+    //public enum UserType
+    //{
+    //    Anonymous,
+    //    Registrant,
+    //    Responder
+    //}
 
     public enum EvacuationFileStatus
     {
@@ -54,24 +70,26 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string Id { get; set; }
         public DateTime CompletedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string CreatedByUserId { get; set; }
+        public string CreatedByDisplayName { get; set; }
         public DateTime LastModified { get; set; }
+        public string LastModifiedUserId { get; set; }
+        public string LastModifiedDisplayName { get; set; }
         public NeedsAssessmentType Type { get; set; }
         public InsuranceOption Insurance { get; set; }
-        public bool? CanEvacueeProvideFood { get; set; }
-        public bool? CanEvacueeProvideLodging { get; set; }
-        public bool? CanEvacueeProvideClothing { get; set; }
-        public bool? CanEvacueeProvideTransportation { get; set; }
-        public bool? CanEvacueeProvideIncidentals { get; set; }
+        public bool? CanProvideFood { get; set; }
+        public bool? CanProvideLodging { get; set; }
+        public bool? CanProvideClothing { get; set; }
+        public bool? CanProvideTransportation { get; set; }
+        public bool? CanProvideIncidentals { get; set; }
         public bool HaveSpecialDiet { get; set; }
         public string SpecialDietDetails { get; set; }
-        public bool HaveMedication { get; set; }
-
-        //TODO: rename to HasSupplies
-        public bool HasEnoughSupply { get; set; }
-
+        public bool TakeMedication { get; set; }
+        public bool? HaveMedicalSupplies { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; } = Array.Empty<HouseholdMember>();
         public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HasPetsFood { get; set; }
+        public bool? HavePetsFood { get; set; }
         public IEnumerable<Note> Notes { get; set; } = Array.Empty<Note>();
         public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; } = Array.Empty<ReferralServices>();
     }
@@ -121,7 +139,10 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public DateTime AddedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public string CreatingTeamMemberId { get; set; }
-        public NoteStatus Status { get; set; }
+        public string MemberName { get; set; }
+        public string TeamId { get; set; }
+        public string TeamName { get; set; }
+        public bool IsHidden { get; set; }
     }
 
     public enum NoteType

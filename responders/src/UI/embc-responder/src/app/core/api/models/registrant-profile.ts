@@ -10,9 +10,11 @@ import { SecurityQuestion } from './security-question';
  */
 export interface RegistrantProfile {
   contactDetails: ContactDetails;
+  createdOn?: string;
   id?: null | string;
   isMailingAddressSameAsPrimaryAddress?: boolean;
   mailingAddress?: null | Address;
+  modifiedOn?: string;
   personalDetails: PersonDetails;
   primaryAddress: Address;
   restriction?: boolean;

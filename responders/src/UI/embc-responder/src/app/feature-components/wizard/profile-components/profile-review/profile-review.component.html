@@ -17,7 +17,7 @@
             <div class="row">
               <div class="col-8">
                 <mat-checkbox
-                  [checked]="!stepCreateProfileService?.restrictedAccess"
+                  [checked]="!stepEvacueeProfileService?.restrictedAccess"
                   disabled
                 >
                   You have given your consent to have your location and contact
@@ -36,42 +36,42 @@
             <div class="row">
               <div class="col-4">Last Name</div>
               <div class="col-8 bold">
-                {{ stepCreateProfileService?.personalDetails?.lastName }}
+                {{ stepEvacueeProfileService?.personalDetails?.lastName }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">First Name</div>
               <div class="col-8 bold">
-                {{ stepCreateProfileService?.personalDetails?.firstName }}
+                {{ stepEvacueeProfileService?.personalDetails?.firstName }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Preferred Name</div>
               <div class="col-8 bold">
-                {{ stepCreateProfileService?.personalDetails?.preferredName }}
+                {{ stepEvacueeProfileService?.personalDetails?.preferredName }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Initials</div>
               <div class="col-8 bold">
-                {{ stepCreateProfileService?.personalDetails?.initials }}
+                {{ stepEvacueeProfileService?.personalDetails?.initials }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Date of Birth</div>
               <div class="col-8 bold">
-                {{ stepCreateProfileService?.personalDetails?.dateOfBirth }}
+                {{ stepEvacueeProfileService?.personalDetails?.dateOfBirth }}
               </div>
             </div>
 
             <div class="row">
               <div class="col-4">Gender</div>
               <div class="col-8 bold">
-                {{ stepCreateProfileService?.personalDetails?.gender }}
+                {{ stepEvacueeProfileService?.personalDetails?.gender }}
               </div>
             </div>
           </div>
@@ -85,7 +85,7 @@
               <div class="col-4">Address Line 1</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.primaryAddressDetails?.addressLine1
+                  stepEvacueeProfileService?.primaryAddressDetails?.addressLine1
                 }}
               </div>
             </div>
@@ -94,7 +94,7 @@
               <div class="col-4">Address Line 2</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.primaryAddressDetails?.addressLine2
+                  stepEvacueeProfileService?.primaryAddressDetails?.addressLine2
                 }}
               </div>
             </div>
@@ -110,9 +110,9 @@
               <div class="col-4">Province</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.primaryAddressDetails?.stateProvince
-                    ?.name ||
-                    stepCreateProfileService?.primaryAddressDetails
+                  stepEvacueeProfileService?.primaryAddressDetails
+                    ?.stateProvince?.name ||
+                    stepEvacueeProfileService?.primaryAddressDetails
                       ?.stateProvince
                 }}
               </div>
@@ -122,7 +122,7 @@
               <div class="col-4">Postal Code</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.primaryAddressDetails?.postalCode
+                  stepEvacueeProfileService?.primaryAddressDetails?.postalCode
                 }}
               </div>
             </div>
@@ -131,9 +131,9 @@
               <div class="col-4">Country</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.primaryAddressDetails?.country
+                  stepEvacueeProfileService?.primaryAddressDetails?.country
                     ?.name ||
-                    stepCreateProfileService?.primaryAddressDetails?.country
+                    stepEvacueeProfileService?.primaryAddressDetails?.country
                 }}
               </div>
             </div>
@@ -148,7 +148,7 @@
               <div class="col-4">Address Line 1</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.mailingAddressDetails?.addressLine1
+                  stepEvacueeProfileService?.mailingAddressDetails?.addressLine1
                 }}
               </div>
             </div>
@@ -157,7 +157,7 @@
               <div class="col-4">Address Line 2</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.mailingAddressDetails?.addressLine2
+                  stepEvacueeProfileService?.mailingAddressDetails?.addressLine2
                 }}
               </div>
             </div>
@@ -173,9 +173,9 @@
               <div class="col-4">Province</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.mailingAddressDetails?.stateProvince
-                    ?.name ||
-                    stepCreateProfileService?.mailingAddressDetails
+                  stepEvacueeProfileService?.mailingAddressDetails
+                    ?.stateProvince?.name ||
+                    stepEvacueeProfileService?.mailingAddressDetails
                       ?.stateProvince
                 }}
               </div>
@@ -185,7 +185,7 @@
               <div class="col-4">Postal Code</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.mailingAddressDetails?.postalCode
+                  stepEvacueeProfileService?.mailingAddressDetails?.postalCode
                 }}
               </div>
             </div>
@@ -194,9 +194,9 @@
               <div class="col-4">Country</div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.mailingAddressDetails?.country
+                  stepEvacueeProfileService?.mailingAddressDetails?.country
                     ?.name ||
-                    stepCreateProfileService?.mailingAddressDetails?.country
+                    stepEvacueeProfileService?.mailingAddressDetails?.country
                 }}
               </div>
             </div>
@@ -210,7 +210,7 @@
             <div class="row">
               <div class="col-8">
                 <mat-checkbox
-                  [checked]="stepCreateProfileService?.showContact"
+                  [checked]="stepEvacueeProfileService?.showContact"
                   [disabled]="true"
                 >
                   You have given your consent for Emergency Management British
@@ -220,17 +220,17 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="stepCreateProfileService?.showContact">
+            <div class="row" *ngIf="stepEvacueeProfileService?.showContact">
               <div class="col-4">Telephone/Mobile</div>
               <div class="col-8 bold">
-                {{ stepCreateProfileService?.contactDetails?.phone }}
+                {{ stepEvacueeProfileService?.contactDetails?.phone }}
               </div>
             </div>
 
-            <div class="row" *ngIf="stepCreateProfileService?.showContact">
+            <div class="row" *ngIf="stepEvacueeProfileService?.showContact">
               <div class="col-4">Email Address</div>
               <div class="col-8 bold">
-                {{ stepCreateProfileService?.contactDetails?.email }}
+                {{ stepEvacueeProfileService?.contactDetails?.email }}
               </div>
             </div>
           </div>
@@ -242,7 +242,7 @@
 
             <div
               class="row"
-              *ngIf="stepCreateProfileService?.bypassSecurityQuestions"
+              *ngIf="stepEvacueeProfileService?.bypassSecurityQuestions"
             >
               <div class="col-8">
                 <mat-checkbox [checked]="true" [disabled]="true">
@@ -253,14 +253,17 @@
 
             <div
               class="row"
-              *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
+              *ngIf="
+                !stepEvacueeProfileService?.bypassSecurityQuestions &&
+                stepEvacueeProfileService?.securityQuestions?.length > 0
+              "
             >
               <div class="col-4">
-                {{ stepCreateProfileService?.securityQuestions[0]?.question }}
+                {{ stepEvacueeProfileService?.securityQuestions[0]?.question }}
               </div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.securityQuestions[0]?.answer
+                  stepEvacueeProfileService?.securityQuestions[0]?.answer
                     | maskText
                 }}
               </div>
@@ -268,14 +271,17 @@
 
             <div
               class="row"
-              *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
+              *ngIf="
+                !stepEvacueeProfileService?.bypassSecurityQuestions &&
+                stepEvacueeProfileService?.securityQuestions?.length > 1
+              "
             >
               <div class="col-4">
-                {{ stepCreateProfileService?.securityQuestions[1]?.question }}
+                {{ stepEvacueeProfileService?.securityQuestions[1]?.question }}
               </div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.securityQuestions[1]?.answer
+                  stepEvacueeProfileService?.securityQuestions[1]?.answer
                     | maskText
                 }}
               </div>
@@ -283,14 +289,17 @@
 
             <div
               class="row"
-              *ngIf="!stepCreateProfileService?.bypassSecurityQuestions"
+              *ngIf="
+                !stepEvacueeProfileService?.bypassSecurityQuestions &&
+                stepEvacueeProfileService?.securityQuestions?.length > 2
+              "
             >
               <div class="col-4">
-                {{ stepCreateProfileService?.securityQuestions[2]?.question }}
+                {{ stepEvacueeProfileService?.securityQuestions[2]?.question }}
               </div>
               <div class="col-8 bold">
                 {{
-                  stepCreateProfileService?.securityQuestions[2]?.answer
+                  stepEvacueeProfileService?.securityQuestions[2]?.answer
                     | maskText
                 }}
               </div>

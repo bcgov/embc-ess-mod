@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Linq;
 using AutoMapper;
 
 namespace EMBC.ESS.Managers.Submissions
@@ -25,12 +24,17 @@ namespace EMBC.ESS.Managers.Submissions
         public MappingProfile()
         {
             CreateMap<Shared.Contracts.Submissions.EvacuationFile, Resources.Cases.EvacuationFile>()
-                .ForMember(d => d.CurrentNeedsAssessment, opts => opts.MapFrom(s => s.NeedsAssessments.FirstOrDefault()))
-                .ForPath(d => d.CurrentNeedsAssessment.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuatedFromAddress))
+                .ForMember(d => d.NeedsAssessment, opts => opts.MapFrom(s => s.NeedsAssessment))
+                .ForPath(d => d.NeedsAssessment.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuatedFromAddress))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
-                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationDate == default ? DateTime.UtcNow : s.EvacuationDate))
-                .ReverseMap()
-                .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => new[] { s.CurrentNeedsAssessment }))
+                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => !s.EvacuationDate.HasValue ? DateTime.UtcNow : s.EvacuationDate))
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.IsSecurityPhraseMasked, opts => opts.Ignore())
+                ;
+
+            CreateMap<Resources.Cases.EvacuationFile, Shared.Contracts.Submissions.EvacuationFile>()
+                .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Address, Resources.Cases.EvacuationAddress>()
@@ -58,6 +62,9 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Shared.Contracts.Submissions.Note, Resources.Cases.Note>()
                 .ReverseMap()
+                .ForMember(d => d.MemberName, opts => opts.Ignore())
+                .ForMember(d => d.TeamId, opts => opts.Ignore())
+                .ForMember(d => d.TeamName, opts => opts.Ignore())
                 ;
 
             CreateMap<Shared.Contracts.Submissions.RegistrantProfile, Resources.Contacts.Contact>()

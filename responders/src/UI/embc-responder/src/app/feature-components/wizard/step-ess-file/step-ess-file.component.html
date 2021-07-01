@@ -1,0 +1,54 @@
+<div class="container wizard-border">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="step-id">{{ stepId }}</p>
+    </div>
+  </div>
+  <div class="row heading-container">
+    <div class="col-md-12">
+      <span class="page-heading">{{ stepName }}</span>
+    </div>
+  </div>
+  <br />
+  <nav mat-tab-nav-bar dynamicHeight>
+    <a
+      mat-tab-link
+      #tabNavLinks
+      *ngFor="let tabItem of tabs"
+      [routerLink]="tabItem.route"
+      routerLinkActive="active-step-tab"
+      [ngClass]="{
+        'tab-highlight': tabItem.name === 'review',
+        'tab-margin custom-tab-link': tabItem.name !== 'review'
+      }"
+    >
+      <span class="span-height" (click)="isAllowed(tabItem.name, $event)"
+        >{{ tabItem.label }}
+        <img
+          class="tab-status"
+          *ngIf="tabItem.status === 'complete'"
+          src="/assets/images/status/complete.svg"
+          width="20"
+          height="20" />
+        <img
+          class="tab-status"
+          *ngIf="tabItem.status === 'incomplete'"
+          src="/assets/images/status/incomplete.svg"
+          width="20"
+          height="20" />
+        <img
+          class="tab-status"
+          *ngIf="tabItem.status === 'not-started'"
+          src="/assets/images/status/not-started.svg"
+          width="20"
+          height="20"
+      /></span>
+    </a>
+  </nav>
+
+  <div class="content-container">
+    <app-alert></app-alert>
+
+    <router-outlet></router-outlet>
+  </div>
+</div>

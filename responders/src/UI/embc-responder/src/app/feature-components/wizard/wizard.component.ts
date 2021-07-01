@@ -7,9 +7,8 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { WizardService } from './wizard.service';
 import { Subscription } from 'rxjs';
-
 import * as globalConst from '../../core/services/global-constants';
-import { YesNoDialogComponent } from 'src/app/shared/components/dialog-components/yes-no-dialog/yes-no-dialog.component';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-wizard',
@@ -29,10 +28,9 @@ export class WizardComponent implements OnInit, OnDestroy {
   ) {
     const params = this.route.snapshot.queryParams;
     if (params && params.type) {
-      this.sideNavMenu = this.wizardService.getMenuItems(params.type);
-    } else {
-      this.sideNavMenu = this.wizardService.menuItems;
+      this.wizardService.setDefaultMenuItems(params.type);
     }
+    this.sideNavMenu = this.wizardService.menuItems;
   }
 
   ngOnInit(): void {
@@ -76,7 +74,6 @@ export class WizardComponent implements OnInit, OnDestroy {
       $event.preventDefault();
 
       const curStep = this.wizardService.getCurrentStep(this.router.url);
-      console.log(curStep);
 
       const lockedMsg =
         this.wizardService.menuItems[curStep]?.incompleteMsg ||
@@ -103,10 +100,9 @@ export class WizardComponent implements OnInit, OnDestroy {
     this.dialog
       .open(DialogComponent, {
         data: {
-          component: YesNoDialogComponent,
+          component: InformationDialogComponent,
           content: globalConst.exitWizardDialog
         },
-        height: '270px',
         width: '530px'
       })
       .afterClosed()
@@ -123,11 +119,11 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param text message to display
    */
-  openLockedModal(text: string, title?: string) {
+  openLockedModal(content: DialogContent, title?: string) {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text,
+        content,
         title
       },
       width: '530px'

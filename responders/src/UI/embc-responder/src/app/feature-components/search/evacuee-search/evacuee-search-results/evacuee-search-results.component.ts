@@ -1,5 +1,4 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { EvacuationFileSearchResult } from 'src/app/core/api/models';
 import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSearchService } from '../evacuee-search.service';
@@ -10,9 +9,13 @@ import {
 } from 'src/app/core/services/authorization.service';
 import { Router } from '@angular/router';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
+import {
+  EvacuationFileSearchResultModel,
+  RegistrantProfileSearchResultModel
+} from 'src/app/core/models/evacuee-search-results';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -22,7 +25,7 @@ import * as globalConst from '../../../../core/services/global-constants';
 export class EvacueeSearchResultsComponent implements OnInit {
   @Output() showIDPhotoComponent = new EventEmitter<boolean>();
   registrantResults: Array<RegistrantProfileSearchResultModel>;
-  fileResults: Array<EvacuationFileSearchResult>;
+  fileResults: Array<EvacuationFileSearchResultModel>;
   evacueeSearchContext: EvacueeSearchContextModel;
   isLoading = false;
   color = '#169BD5';
@@ -30,6 +33,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
   constructor(
     private evacueeSearchResultsService: EvacueeSearchResultsService,
     private evacueeSearchService: EvacueeSearchService,
+    private evacueeSessionService: EvacueeSessionService,
     private userService: UserService,
     private router: Router,
     private cacheService: CacheService,
@@ -91,8 +95,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
       'wizardOpenedFrom',
       '/responder-access/search/evacuee'
     );
+    this.evacueeSessionService.setWizardType('new-registration');
     this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: 'new-registration' }
+      queryParams: { type: 'new-registration' },
+      queryParamsHandling: 'merge'
     });
   }
 }

@@ -29,6 +29,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +40,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using NSwag.AspNetCore;
 using Serilog;
+using Serilog.Events;
 using Xrm.Tools.WebAPI;
 using Xrm.Tools.WebAPI.Requests;
 
@@ -189,7 +191,20 @@ namespace EMBC.Suppliers.API
                 app.UseExceptionHandler("/error");
             }
 
-            app.UseSerilogRequestLogging();
+            app.UseSerilogRequestLogging(opts =>
+            {
+                opts.GetLevel = ExcludeHealthChecks;
+                opts.EnrichDiagnosticContext = (diagCtx, httpCtx) =>
+                {
+                    diagCtx.Set("User", httpCtx.User.Identity?.Name);
+                    diagCtx.Set("Host", httpCtx.Request.Host);
+                    diagCtx.Set("UserAgent", httpCtx.Request.Headers["User-Agent"].ToString());
+                    diagCtx.Set("RemoteIP", httpCtx.Connection.RemoteIpAddress.ToString());
+                    diagCtx.Set("ConnectionId", httpCtx.Connection.Id);
+                    diagCtx.Set("Forwarded", httpCtx.Request.Headers["Forwarded"].ToString());
+                    diagCtx.Set("ContentLength", httpCtx.Response.ContentLength);
+                };
+            });
             app.UseForwardedHeaders();
 
             app.UseOpenApi();
@@ -213,5 +228,15 @@ namespace EMBC.Suppliers.API
                 });
             });
         }
+
+        // inspired by https://andrewlock.net/using-serilog-aspnetcore-in-asp-net-core-3-excluding-health-check-endpoints-from-serilog-request-logging/
+        private static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception ex) =>
+        ex != null
+            ? LogEventLevel.Error
+            : ctx.Response.StatusCode >= (int)HttpStatusCode.InternalServerError
+                ? LogEventLevel.Error
+                : ctx.Request.Path.StartsWithSegments("/hc", StringComparison.InvariantCultureIgnoreCase)
+                    ? LogEventLevel.Verbose
+                    : LogEventLevel.Information;
     }
 }

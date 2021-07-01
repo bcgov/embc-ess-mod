@@ -11,21 +11,23 @@ import { ReferralServices } from './referral-services';
  * Needs assessment form
  */
 export interface NeedsAssessment {
-  canEvacueeProvideClothing?: null | boolean;
-  canEvacueeProvideFood?: null | boolean;
-  canEvacueeProvideIncidentals?: null | boolean;
-  canEvacueeProvideLodging?: null | boolean;
-  canEvacueeProvideTransportation?: null | boolean;
-  hasPetsFood?: null | boolean;
-  hasSupplies?: boolean;
-  haveMedication?: boolean;
+  canProvideClothing?: null | boolean;
+  canProvideFood?: null | boolean;
+  canProvideIncidentals?: null | boolean;
+  canProvideLodging?: null | boolean;
+  canProvideTransportation?: null | boolean;
+  createdOn?: string;
+  haveMedicalSupplies?: null | boolean;
+  havePetsFood?: null | boolean;
   haveSpecialDiet?: boolean;
-  householdMembers?: null | Array<EvacuationFileHouseholdMember>;
+  householdMembers: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
   insurance: InsuranceOption;
+  modifiedOn?: string;
   notes?: null | Array<Note>;
   pets?: null | Array<Pet>;
   recommendedReferralServices?: null | Array<ReferralServices>;
   specialDietDetails?: null | string;
+  takeMedication?: boolean;
   type?: NeedsAssessmentType;
 }

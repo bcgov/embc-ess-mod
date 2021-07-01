@@ -89,17 +89,17 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                         DateOfBirth = "2010-01-01"
                     }
                 },
-                HaveMedication = false,
-                HasEnoughSupply = false,
+                TakeMedication = false,
+                HaveMedicalSupplies = false,
                 Insurance = InsuranceOption.Yes,
                 HaveSpecialDiet = true,
                 SpecialDietDetails = "Gluten Free",
-                HasPetsFood = true,
-                CanEvacueeProvideClothing = false,
-                CanEvacueeProvideFood = true,
-                CanEvacueeProvideIncidentals = null,
-                CanEvacueeProvideLodging = false,
-                CanEvacueeProvideTransportation = true,
+                HavePetsFood = true,
+                CanProvideClothing = false,
+                CanProvideFood = true,
+                CanProvideIncidentals = null,
+                CanProvideLodging = false,
+                CanProvideTransportation = true,
                 Pets = new[]
                 {
                     new Pet{ Type = $"dog{textContextIdentifier}", Quantity = "4" }
@@ -117,7 +117,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                         StateProvince = "BC",
                         PostalCode = "v1v 1v1"
                     },
-                    NeedsAssessments = new[] { needsAssessment },
+                    NeedsAssessment = needsAssessment,
                 },
                 SubmitterProfile = profile
             };
@@ -127,8 +127,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var file = (await manager.Handle(new EvacuationFilesSearchQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
             file.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
-            file.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
-            file.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == false && m.FirstName == $"{textContextIdentifier}-MemRegTestFirst" && m.LastName == $"{textContextIdentifier}-MemRegTestLast");
+            file.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
+            file.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == false && m.FirstName == $"{textContextIdentifier}-MemRegTestFirst" && m.LastName == $"{textContextIdentifier}-MemRegTestLast");
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -143,18 +143,18 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var savedFile = (await GetEvacuationFileById(fileId)).ShouldHaveSingleItem();
             savedFile.PrimaryRegistrantId.ShouldBe(registrant.Id);
             savedFile.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
-            savedFile.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
+            savedFile.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == registrant.FirstName && m.LastName == registrant.LastName);
 
-            savedFile.HouseholdMembers.Count().ShouldBe(file.LastNeedsAssessment.HouseholdMembers.Count());
-            foreach (var member in file.LastNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
+            savedFile.HouseholdMembers.Count().ShouldBe(file.NeedsAssessment.HouseholdMembers.Count());
+            foreach (var member in file.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
             {
                 savedFile.HouseholdMembers.ShouldContain(m => m.FirstName == member.FirstName && m.LastName == member.LastName);
             }
 
-            savedFile.LastNeedsAssessment.HouseholdMembers.Count().ShouldBe(file.LastNeedsAssessment.HouseholdMembers.Count());
-            foreach (var member in file.LastNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
+            savedFile.NeedsAssessment.HouseholdMembers.Count().ShouldBe(file.NeedsAssessment.HouseholdMembers.Count());
+            foreach (var member in file.NeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
             {
-                savedFile.LastNeedsAssessment.HouseholdMembers.ShouldContain(m => m.FirstName == member.FirstName && m.LastName == member.LastName);
+                savedFile.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.FirstName == member.FirstName && m.LastName == member.LastName);
             }
         }
 
@@ -235,7 +235,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateProfile()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile; 
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
             var currentCommunity = registrant.PrimaryAddress.Community;
             var newCommunity = currentCommunity == "406adfaf-9f97-ea11-b813-005056830319"
                 ? "226adfaf-9f97-ea11-b813-005056830319"
@@ -369,7 +369,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var file = new EvacuationFile()
             {
                 PrimaryRegistrantId = registrant.Id,
-                SecretPhrase = "SecretPhrase",
+                SecurityPhrase = "SecretPhrase",
                 SecurityPhraseChanged = true,
                 EvacuatedFromAddress = new Address()
                 {
@@ -380,22 +380,21 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     Country = "CAN",
                     PostalCode = "V8V 2W3"
                 },
-                NeedsAssessments = new[]
-                {
+                NeedsAssessment =
                     new NeedsAssessment
                     {
                         Type = NeedsAssessmentType.Preliminary,
-                        HaveMedication = false,
-                        HasEnoughSupply = false,
+                        TakeMedication = false,
+                        HaveMedicalSupplies = false,
                         Insurance = InsuranceOption.Yes,
                         HaveSpecialDiet = true,
                         SpecialDietDetails = "Shellfish allergy",
-                        HasPetsFood = true,
-                        CanEvacueeProvideClothing = true,
-                        CanEvacueeProvideFood = true,
-                        CanEvacueeProvideIncidentals = true,
-                        CanEvacueeProvideLodging = true,
-                        CanEvacueeProvideTransportation = true,
+                        HavePetsFood = true,
+                        CanProvideClothing = true,
+                        CanProvideFood = true,
+                        CanProvideIncidentals = true,
+                        CanProvideLodging = true,
+                        CanProvideTransportation = true,
                         HouseholdMembers = new[]
                         {
                             new HouseholdMember
@@ -436,9 +435,15 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                         {
                             new Pet{ Type = $"{uniqueSignature}_Cat", Quantity = "1" },
                             new Pet{ Type = $"{uniqueSignature}_Dog", Quantity = "4" }
+                        },
+                        Notes = new[]
+                        {
+                            new Note{ Type = NoteType.EvacuationImpact, Content = "evac" },
+                            new Note{ Type = NoteType.EvacuationExternalReferrals, Content = "refer" },
+                            new Note{ Type = NoteType.PetCarePlans, Content = "pat plans" },
+                            new Note{ Type = NoteType.RecoveryPlan, Content = "recovery" },
                         }
                     }
-                }
             };
             return file;
         }

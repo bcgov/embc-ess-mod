@@ -5,7 +5,7 @@ import {
   SecurityQuestion,
   VerifySecurityQuestionsRequest
 } from 'src/app/core/api/models';
-import { EvacueeSearchService } from '../evacuee-search/evacuee-search.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { ProfileSecurityQuestionsService } from './profile-security-questions.service';
 
 @Component({
@@ -30,21 +30,21 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   constructor(
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
     private router: Router,
-    private evacueeSearchService: EvacueeSearchService,
+    private evacueeSessionService: EvacueeSessionService,
     private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.securityAnswers = [];
-    this.firstTryCorrect = false;
     // this.isLoading = !this.isLoading;
     this.createAnswersForm();
+    this.securityAnswers = [];
+    this.firstTryCorrect = false;
 
-    if (this.evacueeSearchService.profileId === undefined) {
+    if (this.evacueeSessionService.profileId === undefined) {
       this.router.navigate(['responder-access/search/evacuee']);
     } else {
       this.profileSecurityQuestionsService
-        .getSecurityQuestions(this.evacueeSearchService.profileId)
+        .getSecurityQuestions(this.evacueeSessionService.profileId)
         .subscribe((results) => {
           this.securityQuestions = this.profileSecurityQuestionsService.shuffleSecurityQuestions(
             results?.questions
@@ -52,21 +52,6 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
           // this.isLoading = !this.isLoading;
         });
     }
-  }
-
-  /**
-   * Returns the control of the answer1 from the securityQuestions form
-   */
-  public get answer1FormControl(): FormControl {
-    return this.securityQuestionsForm.get('answer1') as FormControl;
-  }
-
-  public get answer2FormControl(): FormControl {
-    return this.securityQuestionsForm.get('answer2') as FormControl;
-  }
-
-  public get answer3FormControl(): FormControl {
-    return this.thirdSecurityQuestionForm.get('answer3') as FormControl;
   }
 
   /**
@@ -86,23 +71,22 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
       console.log(securityAQuestion);
       this.securityAnswers.push(securityAQuestion);
     }
-
-    console.log(this.securityAnswers);
   }
 
   /**
    * Funtion that send answers to the backend and decided which screen to show according to backend response
    */
   next() {
+    this.showLoader = !this.showLoader;
     this.getAnswers();
     const body: VerifySecurityQuestionsRequest = {
       answers: this.securityAnswers
     };
     this.profileSecurityQuestionsService
-      .verifySecurityQuestions(this.evacueeSearchService.profileId, body)
+      .verifySecurityQuestions(this.evacueeSessionService.profileId, body)
       .subscribe((results) => {
-        console.log(results.numberOfCorrectAnswers);
         this.securityQuestionResult = results.numberOfCorrectAnswers;
+        this.showLoader = !this.showLoader;
 
         if (
           this.securityQuestionResult === 0 ||
@@ -144,9 +128,15 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
    * Function that redirects to Evacuation Registration page
    */
   goToEvacRegistration() {
-    this.router.navigate([
-      'ess-wizard/create-evacuee-profile/collection-notice'
-    ]);
+    this.router.navigate(['ess-wizard/evacuee-profile/collection-notice']);
+  }
+
+  private createAnswersForm(): void {
+    this.securityQuestionsForm = this.formBuilder.group({
+      answer1: [''],
+      answer2: [''],
+      answer3: ['']
+    });
   }
 
   private createAnswersForm(): void {

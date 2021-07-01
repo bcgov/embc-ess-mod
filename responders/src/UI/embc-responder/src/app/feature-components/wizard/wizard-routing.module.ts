@@ -8,31 +8,31 @@ const routes: Routes = [
     component: WizardComponent,
     children: [
       {
-        path: 'create-evacuee-profile',
+        path: 'evacuee-profile',
         loadChildren: () =>
-          import('./step-create-profile/step-create-profile.module').then(
-            (m) => m.StepCreateProfileModule
+          import('./step-evacuee-profile/step-evacuee-profile.module').then(
+            (m) => m.StepEvacueeProfileModule
           )
       },
       {
-        path: 'create-ess-file',
+        path: 'ess-file',
         loadChildren: () =>
-          import('./step-create-ess-file/step-create-ess-file.module').then(
-            (m) => m.StepCreateEssFileModule
+          import('./step-ess-file/step-ess-file.module').then(
+            (m) => m.StepEssFileModule
           )
       },
       {
         path: 'add-supports',
         loadChildren: () =>
-          import('./step-add-supports/step-add-supports.module').then(
-            (m) => m.StepAddSupportsModule
+          import('./step-supports/step-supports.module').then(
+            (m) => m.StepSupportsModule
           )
       },
       {
         path: 'add-notes',
         loadChildren: () =>
-          import('./step-add-notes/step-add-notes.module').then(
-            (m) => m.StepAddNotesModule
+          import('./step-notes/step-notes.module').then(
+            (m) => m.StepNotesModule
           )
       }
     ]

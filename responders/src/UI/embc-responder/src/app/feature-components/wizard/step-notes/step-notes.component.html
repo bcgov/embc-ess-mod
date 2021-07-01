@@ -1,0 +1,25 @@
+<div class="container wizard-border">
+  <div class="row heading-container notes-heading">
+    <div class="col-md-12">
+      <span class="page-heading">{{ stepName }}</span>
+    </div>
+  </div>
+  <br />
+  <nav mat-tab-nav-bar dynamicHeight>
+    <a
+      mat-tab-link
+      #tabNavLinks
+      *ngFor="let tabItem of tabs"
+      [routerLink]="tabItem.route"
+      routerLinkActive="active-step-tab"
+    >
+      <span class="span-height">{{ tabItem.label }} </span>
+    </a>
+  </nav>
+
+  <div class="content-container">
+    <app-alert></app-alert>
+
+    <router-outlet></router-outlet>
+  </div>
+</div>

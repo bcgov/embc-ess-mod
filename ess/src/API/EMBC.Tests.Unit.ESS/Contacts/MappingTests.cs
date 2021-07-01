@@ -92,9 +92,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
             contact.gendercode.ShouldBe(FakeGenerator.GenderResolver(profile.Gender));
 
             contact.emailaddress1.ShouldBe(profile.Email);
-            contact.era_emailrefusal.ShouldBe(string.IsNullOrEmpty(profile.Email));
             contact.telephone1.ShouldBe(profile.Phone);
-            contact.era_phonenumberrefusal.ShouldBe(string.IsNullOrEmpty(profile.Phone));
 
             contact.address1_line1.ShouldBe(profile.PrimaryAddress.AddressLine1);
             contact.address1_line2.ShouldBe(profile.PrimaryAddress.AddressLine2);

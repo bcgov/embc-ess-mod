@@ -13,6 +13,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { AddTeamMemberService } from '../add-team-member/add-team-member.service';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-team-list',
@@ -148,7 +149,7 @@ export class TeamListComponent implements OnInit {
    * @param state navigation state string
    */
   enableActionNotification(state: { [k: string]: any }): void {
-    let displayText = '';
+    let displayText: DialogContent;
     if (state?.action === 'delete') {
       displayText = globalConst.deleteMessage;
     } else if (state?.action === 'edit') {
@@ -166,11 +167,11 @@ export class TeamListComponent implements OnInit {
    *
    * @param text text to display
    */
-  openConfirmation(text: string): void {
+  openConfirmation(content: DialogContent): void {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        text
+        content
       },
       width: '530px'
     });

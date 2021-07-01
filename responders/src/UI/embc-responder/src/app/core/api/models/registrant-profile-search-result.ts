@@ -10,6 +10,7 @@ export interface RegistrantProfileSearchResult {
   id?: null | string;
   isRestricted?: boolean;
   lastName?: null | string;
+  modifiedOn?: string;
   primaryAddress?: null | Address;
   status?: RegistrantStatus;
 }

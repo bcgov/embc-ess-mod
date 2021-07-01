@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserService } from 'src/app/core/services/user.service';
-import { StepCreateEssFileService } from '../../step-create-ess-file/step-create-ess-file.service';
+import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
-import { StepCreateProfileService } from '../../step-create-profile/step-create-profile.service';
+import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { WizardService } from '../../wizard.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -45,8 +45,8 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   petColumns: string[] = ['type', 'quantity'];
 
   constructor(
-    public stepCreateProfileService: StepCreateProfileService,
-    public stepCreateEssFileService: StepCreateEssFileService,
+    public stepEvacueeProfileService: StepEvacueeProfileService,
+    public stepEssFileService: StepEssFileService,
     private router: Router,
     private wizardService: WizardService,
     private essFileService: EssFileService,
@@ -61,50 +61,47 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
 
     // Get the displayed value for radio options
     this.insuranceDisplay = globalConst.insuranceOptions.find(
-      (ins) => ins.value === this.stepCreateEssFileService?.insurance
+      (ins) => ins.value === this.stepEssFileService?.insurance
     )?.name;
 
     this.needsFoodDisplay = globalConst.needsOptions.find(
-      (ins) =>
-        ins.value === this.stepCreateEssFileService?.canRegistrantProvideFood
+      (ins) => ins.value === this.stepEssFileService?.canRegistrantProvideFood
     )?.name;
 
     this.needsLodgingDisplay = globalConst.needsOptions.find(
       (ins) =>
-        ins.value === this.stepCreateEssFileService?.canRegistrantProvideLodging
+        ins.value === this.stepEssFileService?.canRegistrantProvideLodging
     )?.name;
 
     this.needsClothingDisplay = globalConst.needsOptions.find(
       (ins) =>
-        ins.value ===
-        this.stepCreateEssFileService?.canRegistrantProvideClothing
+        ins.value === this.stepEssFileService?.canRegistrantProvideClothing
     )?.name;
 
     this.needsTransportationDisplay = globalConst.needsOptions.find(
       (ins) =>
         ins.value ===
-        this.stepCreateEssFileService?.canRegistrantProvideTransportation
+        this.stepEssFileService?.canRegistrantProvideTransportation
     )?.name;
 
     this.needsIncidentalsDisplay = globalConst.needsOptions.find(
       (ins) =>
-        ins.value ===
-        this.stepCreateEssFileService?.canRegistrantProvideIncidentals
+        ins.value === this.stepEssFileService?.canRegistrantProvideIncidentals
     )?.name;
 
     // Add main member to "Household Members" table
     const mainMember: HouseholdMemberModel = {
       sameLastName: true,
-      ...this.stepCreateProfileService.personalDetails
+      ...this.stepEvacueeProfileService.personalDetails
     };
 
     this.memberListDisplay = [
       mainMember,
-      ...this.stepCreateEssFileService?.householdMembers
+      ...this.stepEssFileService?.householdMembers
     ];
 
     // Set "update tab status" method, called for any tab navigation
-    this.tabUpdateSubscription = this.stepCreateEssFileService.nextTabUpdate.subscribe(
+    this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
       () => {
         this.updateTabStatus();
       }
@@ -115,43 +112,44 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
    * Go back to the Security Phrase tab
    */
   back(): void {
-    this.router.navigate(['/ess-wizard/create-ess-file/security-phrase']);
+    this.router.navigate(['/ess-wizard/ess-file/security-phrase']);
   }
 
   /**
    * Create or update ESS File and continue to Step 3
    */
   save(): void {
-    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.stepEssFileService.nextTabUpdate.next();
 
     this.saveLoader = true;
 
     this.essFileService
-      .createFile(this.stepCreateEssFileService.createEvacFileDTO())
+      .createFile(this.stepEssFileService.createEvacFileDTO())
       .subscribe(
         () => {
           // Once all profile work is done, user can close wizard or proceed to step 3
           this.disableButton = true;
           this.saveLoader = false;
 
-          this.stepCreateEssFileService
-            .openModal(
-              globalConst.essFileCreatedMessage.text,
-              globalConst.essFileCreatedMessage.title,
-              globalConst.essFileCreatedMessage.button,
-              globalConst.essFileCreatedMessage.exitLink
-            )
+          this.stepEssFileService
+            .openModal(globalConst.essFileCreatedMessage)
             .afterClosed()
-            .subscribe(() => {
+            .subscribe((event) => {
               this.wizardService.setStepStatus(
                 '/ess-wizard/add-supports',
                 false
               );
               this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
 
-              this.router.navigate(['/ess-wizard/add-supports'], {
-                state: { step: 'STEP 3', title: 'Add Supports' }
-              });
+              if (event === 'exit') {
+                this.router.navigate([
+                  'responder-access/search/essfile-dashboard'
+                ]);
+              } else {
+                this.router.navigate(['/ess-wizard/add-supports'], {
+                  state: { step: 'STEP 3', title: 'Add Supports' }
+                });
+              }
             });
         },
         (error) => {
@@ -166,8 +164,8 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
    */
   updateTabStatus() {
     // If all other tabs are complete and this tab has been viewed, mark complete
-    if (!this.stepCreateEssFileService.checkTabsStatus()) {
-      this.stepCreateEssFileService.setTabStatus('review', 'complete');
+    if (!this.stepEssFileService.checkTabsStatus()) {
+      this.stepEssFileService.setTabStatus('review', 'complete');
     }
   }
 
@@ -175,7 +173,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
    * When navigating away from tab, update variable value and status indicator
    */
   ngOnDestroy(): void {
-    this.stepCreateEssFileService.nextTabUpdate.next();
+    this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
   }
 }

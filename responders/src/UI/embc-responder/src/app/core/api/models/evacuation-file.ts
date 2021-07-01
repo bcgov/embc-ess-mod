@@ -5,22 +5,23 @@ import { EvacuationFileHouseholdMember } from './evacuation-file-household-membe
 import { EvacuationFileStatus } from './evacuation-file-status';
 import { EvacuationFileTask } from './evacuation-file-task';
 import { NeedsAssessment } from './needs-assessment';
+import { Note } from './note';
 
 /**
  * Evacuation File
  */
 export interface EvacuationFile {
-  essFileNumber?: null | string;
   evacuatedFromAddress: Address;
   evacuationFileDate?: null | string;
   householdMembers?: null | Array<EvacuationFileHouseholdMember>;
-  isRestricted?: boolean;
-  lastNeedsAssessment: NeedsAssessment;
-  needsAssessments?: null | Array<NeedsAssessment>;
-  primaryRegistrantId?: null | string;
-  registrationLocation?: null | string;
+  id?: null | string;
+  isRestricted?: null | boolean;
+  needsAssessment: NeedsAssessment;
+  notes?: null | Array<Note>;
+  primaryRegistrantId: string;
+  registrationLocation: string;
   securityPhrase?: null | string;
   securityPhraseEdited?: boolean;
-  status?: EvacuationFileStatus;
+  status?: null | EvacuationFileStatus;
   task: EvacuationFileTask;
 }

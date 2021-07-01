@@ -14,7 +14,8 @@
         <mat-error
           *ngIf="
             petFormControl.type.invalid &&
-            petFormControl.type.hasError('required')
+            (petFormControl.type.hasError('required') ||
+              petFormControl.type.hasError('whitespaceError'))
           "
           >Pet Type is required
         </mat-error>
@@ -33,7 +34,8 @@
         <mat-error
           *ngIf="
             petFormControl.quantity.invalid &&
-            petFormControl.quantity.hasError('required')
+            (petFormControl.quantity.hasError('required') ||
+              petFormControl.quantity.hasError('whitespaceError'))
           "
           >How many pets is required</mat-error
         >
