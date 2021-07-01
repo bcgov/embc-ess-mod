@@ -109,6 +109,11 @@ namespace EMBC.Tests.Unit.Responders.API
         }
     }
 
+    /// <summary>
+    /// https://stackoverflow.com/questions/30574322/memberdata-tests-show-up-as-one-test-instead-of-many
+    /// TODO: consider if this is worth the extra compilation time
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class MemberDataSerializer<T> : IXunitSerializable
     {
         public T Object { get; private set; }
