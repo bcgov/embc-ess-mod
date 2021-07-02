@@ -416,24 +416,24 @@ export class StepEssFileService {
     ];
 
     const needsObject: NeedsAssessment = {
-      notes: [
-        {
-          type: NoteType.EvacuationImpact,
-          content: this.evacuationImpact
-        },
-        {
-          type: NoteType.HouseHoldRecoveryPlan,
-          content: this.householdRecoveryPlan
-        },
-        {
-          type: NoteType.EvacuationExternalReferrals,
-          content: this.evacuationExternalReferrals
-        },
-        {
-          type: NoteType.PetCarePlans,
-          content: this.petCarePlans
-        }
-      ],
+      // notes: [
+      //   {
+      //     type: NoteType.EvacuationImpact,
+      //     content: this.evacuationImpact
+      //   },
+      //   {
+      //     type: NoteType.HouseHoldRecoveryPlan,
+      //     content: this.householdRecoveryPlan
+      //   },
+      //   {
+      //     type: NoteType.EvacuationExternalReferrals,
+      //     content: this.evacuationExternalReferrals
+      //   },
+      //   {
+      //     type: NoteType.PetCarePlans,
+      //     content: this.petCarePlans
+      //   }
+      // ],
 
       insurance: this.insurance,
       recommendedReferralServices: this.referredServiceDetails,
@@ -500,23 +500,23 @@ export class StepEssFileService {
       this.evacAddress;
 
     // Get content for API Notes fields
-    if (essNeeds.notes?.length > 0) {
-      this.evacuationImpact = essNeeds.notes?.find(
-        (note) => note.type === NoteType.EvacuationImpact
-      )?.content;
+    // if (essNeeds.notes?.length > 0) {
+    //   this.evacuationImpact = essNeeds.notes?.find(
+    //     (note) => note.type === NoteType.EvacuationImpact
+    //   )?.content;
 
-      this.householdRecoveryPlan = essNeeds.notes?.find(
-        (note) => note.type === NoteType.HouseHoldRecoveryPlan
-      )?.content;
+    //   this.householdRecoveryPlan = essNeeds.notes?.find(
+    //     (note) => note.type === NoteType.HouseHoldRecoveryPlan
+    //   )?.content;
 
-      this.evacuationExternalReferrals = essNeeds.notes?.find(
-        (note) => note.type === NoteType.EvacuationExternalReferrals
-      )?.content;
+    //   this.evacuationExternalReferrals = essNeeds.notes?.find(
+    //     (note) => note.type === NoteType.EvacuationExternalReferrals
+    //   )?.content;
 
-      this.petCarePlans = essNeeds.notes?.find(
-        (note) => note.type === NoteType.PetCarePlans
-      )?.content;
-    }
+    //   this.petCarePlans = essNeeds.notes?.find(
+    //     (note) => note.type === NoteType.PetCarePlans
+    //   )?.content;
+    // }
     this.insurance = essNeeds.insurance;
 
     this.referredServiceDetails = essNeeds.recommendedReferralServices;
