@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 using Microsoft.Extensions.Logging;
@@ -45,24 +44,11 @@ namespace EMBC.ESS.Utilities.Dynamics
                 args.Headers.Add("Authorization", $"Bearer {tokenFactory().GetAwaiter().GetResult()}");
                 args.RequestUri = formatUri(args.RequestUri);
             };
-            SendingRequest2 += (sender, args) =>
-            {
-                logger.LogDebug("SendingRequest2 {0} {1}", args.RequestMessage.Method, args.RequestMessage.Url);
-            };
-            ReceivingResponse += (sender, args) =>
-            {
-                logger.LogDebug("ReceivingResponse {0} response", args.ResponseMessage?.StatusCode);
-            };
+
             Configurations.RequestPipeline.OnEntryStarting((arg) =>
             {
                 // do not send reference properties and null values to Dynamics
                 arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
-                logger.LogDebug("OnEntryStarting: {0}", JsonSerializer.Serialize(arg.Entity));
-            });
-
-            Configurations.RequestPipeline.OnEntityReferenceLink((arg) =>
-            {
-                logger.LogDebug("OnEntityReferenceLink url {0}", arg.EntityReferenceLink.Url);
             });
         }
     }
