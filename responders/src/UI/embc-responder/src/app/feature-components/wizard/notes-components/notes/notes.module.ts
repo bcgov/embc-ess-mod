@@ -7,9 +7,10 @@ import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ListNotesComponent } from '../list-notes/list-notes.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { AddNotesComponent } from '../add-notes/add-notes.component';
 
 @NgModule({
-  declarations: [NotesComponent, ListNotesComponent],
+  declarations: [NotesComponent, ListNotesComponent, AddNotesComponent],
   imports: [
     CommonModule,
     NotesRoutingModule,

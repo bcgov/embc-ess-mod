@@ -13,7 +13,9 @@ export class NotesComponent implements OnInit {
   notesList: Array<Note>;
   count: number;
   showLoader = true;
-  public color = '#169BD5';
+  color = '#169BD5';
+  addNoteFlag = false;
+  isAddDisabled = false;
 
   constructor(
     private stepNotesService: StepNotesService,
@@ -32,5 +34,15 @@ export class NotesComponent implements OnInit {
         this.alertService.setAlert('danger', globalConst.notesListError);
       }
     );
+  }
+
+  addNotes(): void {
+    this.addNoteFlag = !this.addNoteFlag;
+    this.isAddDisabled = !this.isAddDisabled;
+  }
+
+  cancel(): void {
+    this.addNoteFlag = !this.addNoteFlag;
+    this.isAddDisabled = !this.isAddDisabled;
   }
 }
