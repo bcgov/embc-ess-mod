@@ -12,7 +12,12 @@
         <div class="col-md-8">
           <p>{{ count }} note have been added for this ESS File.</p>
 
-          <button class="button-p" [disabled]="isAddDisabled" mat-button (click)="addNotes()">
+          <button
+            class="button-p"
+            [disabled]="isAddDisabled"
+            mat-button
+            (click)="addNotes()"
+          >
             Add Notes
           </button>
 
@@ -26,7 +31,10 @@
               ></app-loader>
             </div>
           </div>
-          <app-add-notes *ngIf="addNoteFlag" (cancelEvent)="cancel()"></app-add-notes>
+          <app-add-notes
+            *ngIf="addNoteFlag"
+            (cancelEvent)="cancel()"
+          ></app-add-notes>
           <app-list-notes
             *ngIf="!addNoteFlag"
             [notesList]="notesList"

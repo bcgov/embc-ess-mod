@@ -7,27 +7,23 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   styleUrls: ['./add-notes.component.scss']
 })
 export class AddNotesComponent implements OnInit {
-
   @Output() cancelEvent = new EventEmitter<boolean>();
   notesForm: FormGroup;
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.createNotesForm();
-  }
-
-  private createNotesForm(): void {
-    this.notesForm = this.formBuilder.group({
-      note: ['']
-    })
   }
 
   cancel(): void {
     this.cancelEvent.emit(true);
   }
 
-  save(): void {
+  save(): void {}
 
+  private createNotesForm(): void {
+    this.notesForm = this.formBuilder.group({
+      note: ['']
+    });
   }
-
 }

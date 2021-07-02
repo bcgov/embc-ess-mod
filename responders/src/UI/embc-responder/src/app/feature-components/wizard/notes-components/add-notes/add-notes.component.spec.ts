@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddNotesComponent } from './add-notes.component';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 
 describe('AddNotesComponent', () => {
   let component: AddNotesComponent;
@@ -8,9 +9,10 @@ describe('AddNotesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddNotesComponent ]
-    })
-    .compileComponents();
+      imports: [ReactiveFormsModule],
+      providers: [FormBuilder],
+      declarations: [AddNotesComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {
