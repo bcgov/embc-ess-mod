@@ -169,3 +169,5 @@ export const evacueeSearchError =
   'Unable to complete the search at this time. Please try again later';
 export const notesListError =
   'Unable to retrieve notes at this time. Please try again later';
+export const addNotesError =
+  'Unable to add notes at this time. Please try again later';

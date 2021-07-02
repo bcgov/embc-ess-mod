@@ -18,18 +18,11 @@
           maxlength="1000"
           matInput
         ></textarea>
-        <!-- <mat-error
-          class="custom-mat-error"
-          *ngIf="
-            evacDetailsFormControl?.householdAffected.touched &&
-            evacDetailsFormControl?.householdAffected.invalid &&
-            evacDetailsFormControl?.householdAffected.hasError(
-              'whitespaceError'
-            )
-          "
+        <mat-error
+          *ngIf="verifiedFormControl?.note.hasError('whitespaceError')"
         >
-          This information is required
-        </mat-error> -->
+          You cannot save a blank note
+        </mat-error>
       </mat-form-field>
     </form>
   </div>
@@ -43,8 +36,18 @@
   </div>
 
   <div class="col-md-5">
-    <button class="button-p button-width" mat-button (click)="save()">
+    <button
+      [disabled]="isSubmitted"
+      class="button-p button-width"
+      mat-button
+      (click)="save()"
+    >
       Save Note
+      <app-loader
+        [strokeWidth]="3"
+        [diameter]="25"
+        [showLoader]="showLoader"
+      ></app-loader>
     </button>
   </div>
 </div>

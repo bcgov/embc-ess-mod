@@ -12,6 +12,7 @@ import { map, filter } from 'rxjs/operators';
 import { EvacuationFile } from '../models/evacuation-file';
 import { GetSecurityPhraseResponse } from '../models/get-security-phrase-response';
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
+import { Note } from '../models/note';
 import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrationResult } from '../models/registration-result';
 import { SearchResults } from '../models/search-results';
@@ -556,6 +557,79 @@ export class RegistrationsService extends BaseService {
   }): Observable<RegistrationResult> {
 
     return this.registrationsCreateFile$Response(params).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsCreateFileNote
+   */
+  static readonly RegistrationsCreateFileNotePath = '/api/Registrations/files/{fileId}/notes';
+
+  /**
+   * Create a File Note.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsCreateFileNote()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsCreateFileNote$Response(params: {
+
+    /**
+     * fileId
+     */
+    fileId: string;
+
+    /**
+     * note
+     */
+    body: Note
+  }): Observable<StrictHttpResponse<RegistrationResult>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsCreateFileNotePath, 'post');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<RegistrationResult>;
+      })
+    );
+  }
+
+  /**
+   * Create a File Note.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsCreateFileNote$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsCreateFileNote(params: {
+
+    /**
+     * fileId
+     */
+    fileId: string;
+
+    /**
+     * note
+     */
+    body: Note
+  }): Observable<RegistrationResult> {
+
+    return this.registrationsCreateFileNote$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
   }
