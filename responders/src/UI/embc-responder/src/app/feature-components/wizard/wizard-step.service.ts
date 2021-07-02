@@ -30,9 +30,15 @@ export class WizardStepService {
    * Set initial values for stepEvacueeProfileService when entering from Evacuee Search
    */
   public evacueeProfileStepFromSearch() {
-    this.stepEvacueeProfileService.personalDetails.firstName = this.evacueeSearchService.evacueeSearchContext?.evacueeSearchParameters?.firstName;
-    this.stepEvacueeProfileService.personalDetails.lastName = this.evacueeSearchService.evacueeSearchContext?.evacueeSearchParameters?.lastName;
-    this.stepEvacueeProfileService.personalDetails.dateOfBirth = this.evacueeSearchService.evacueeSearchContext?.evacueeSearchParameters?.dateOfBirth;
+    this.stepEvacueeProfileService.personalDetails = {
+      ...this.stepEvacueeProfileService.personalDetails,
+      firstName: this.evacueeSearchService.evacueeSearchContext
+        ?.evacueeSearchParameters?.firstName,
+      lastName: this.evacueeSearchService.evacueeSearchContext
+        ?.evacueeSearchParameters?.lastName,
+      dateOfBirth: this.evacueeSearchService.evacueeSearchContext
+        ?.evacueeSearchParameters?.dateOfBirth
+    };
   }
 
   /**
