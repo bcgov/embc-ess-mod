@@ -38,6 +38,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForPath(d => d.era_CurrentNeedsAssessmentid.era_registrationlocation, opts => opts.MapFrom(s => s.RegistrationLocation))
                 .ForMember(d => d.era_securityphrase, opts => opts.MapFrom(s => s.SecurityPhraseChanged ? s.SecurityPhrase : null))
                 .ForMember(d => d._era_registrant_value, opts => opts.MapFrom(s => s.PrimaryRegistrantId))
+                .ForMember(d => d.era_era_evacuationfile_era_animal_ESSFileid, opts => opts.MapFrom(s => s.NeedsAssessment.Pets))
                 ;
 
             CreateMap<era_evacuationfile, EvacuationFile>()
@@ -55,6 +56,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.RegistrationLocation, opts => opts.MapFrom(s => s.era_CurrentNeedsAssessmentid.era_registrationlocation))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_householdmember_EvacuationFileid))
+                .ForMember(d => d.Notes, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_essfilenote_ESSFileID))
+                .ForPath(d => d.NeedsAssessment.Pets, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_animal_ESSFileid))
                 ;
 
             Func<Note, string> resolveNoteContent = n => n?.Content;
@@ -89,7 +92,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.EvacuatedFrom.PostalCode))
                 .ForMember(d => d._era_jurisdictionid_value, opts => opts.MapFrom(s => s.EvacuatedFrom.CommunityCode))
                 .ForMember(d => d.era_era_householdmember_era_needassessment, opts => opts.MapFrom(s => s.HouseholdMembers))
-                .ForMember(d => d.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment, opts => opts.MapFrom(s => s.Pets))
                 .ForPath(d => d.era_registrationlocation, opts => opts.Ignore())
                 ;
 
@@ -123,7 +125,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.SpecialDietDetails, opts => opts.MapFrom(s => s.era_dietaryrequirementdetails))
                 .ForMember(d => d.HavePetsFood, opts => opts.MapFrom(s => Lookup(s.era_haspetfood)))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_needassessment))
-                .ForMember(d => d.Pets, opts => opts.MapFrom(s => s.era_era_needassessment_era_needsassessmentanimal_NeedsAssessment))
+                .ForMember(d => d.Pets, opts => opts.Ignore())
                 .ForMember(d => d.Notes, opts => opts.MapFrom(s => new[]
                     {
                         string.IsNullOrEmpty(s.era_householdrecoveryplan) ? null : new Note { Type = NoteType.RecoveryPlan, Content = s.era_householdrecoveryplan },
@@ -169,16 +171,26 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d._era_registrant_value, opts => opts.MapFrom(s => s.LinkedRegistrantId))
                 ;
 
-            CreateMap<era_needsassessmentanimal, Pet>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_needsassessmentanimalid.ToString()))
+            CreateMap<era_animal, Pet>()
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_animalid.ToString()))
                 .ForMember(d => d.Quantity, opts => opts.MapFrom(s => s.era_numberofpets))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => s.era_name))
 
                 .ReverseMap()
 
-                .ForMember(d => d.era_needsassessmentanimalid, opts => opts.MapFrom(s => Guid.NewGuid()))
+                .ForMember(d => d.era_animalid, opts => opts.MapFrom(s => Guid.NewGuid()))
                 .ForMember(d => d.era_numberofpets, opts => opts.MapFrom(s => s.Quantity))
                 .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.Type));
+
+            CreateMap<era_essfilenote, Note>()
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_essfilenoteid))
+                .ForMember(d => d.Content, opts => opts.MapFrom(s => s.era_notetext))
+                .ForMember(d => d.AddedOn, opts => opts.MapFrom(s => s.createdon.Value.DateTime))
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.modifiedon.Value.DateTime))
+                .ForMember(d => d.CreatingTeamMemberId, opts => opts.MapFrom(s => s._era_essteamuserid_value))
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => NoteType.General))
+                .ForMember(d => d.IsHidden, opts => opts.MapFrom(s => s.era_ishidden == true))
+                ;
         }
 
         private static int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;

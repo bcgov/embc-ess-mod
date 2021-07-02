@@ -53,7 +53,8 @@ export class StepEvacueeProfileService {
   private securityQuestionOptionsVal: string[];
 
   // Review & Save tab
-  private verified: boolean;
+  private verifiedProfileVal: boolean;
+  private unlockedFieldsVal: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -176,12 +177,20 @@ export class StepEvacueeProfileService {
     this.securityQuestionOptionsVal = securityQuestionOptionsVal;
   }
 
+  public get unlockedFields(): boolean {
+    return this.unlockedFieldsVal;
+  }
+
+  public set unlockedFields(unlockedFieldsVal: boolean) {
+    this.unlockedFieldsVal = unlockedFieldsVal;
+  }
+
   // Review & Save tab
   public get verifiedProfile(): boolean {
-    return this.verified;
+    return this.verifiedProfileVal;
   }
-  public set verifiedProfile(verified: boolean) {
-    this.verified = verified;
+  public set verifiedProfile(verifiedProfileVal: boolean) {
+    this.verifiedProfileVal = verifiedProfileVal;
   }
 
   public setTabStatus(name: string, status: string): void {

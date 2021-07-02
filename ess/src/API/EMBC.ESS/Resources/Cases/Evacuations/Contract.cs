@@ -47,6 +47,7 @@ namespace EMBC.ESS.Resources.Cases
         public bool RestrictedAccess { get; set; }
         public string RegistrationLocation { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
+        public IEnumerable<Note> Notes { get; set; }
     }
 
     public class EvacuationAddress
@@ -113,7 +114,9 @@ namespace EMBC.ESS.Resources.Cases
         public NoteType Type { get; set; }
         public string Content { get; set; }
         public DateTime AddedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
         public string CreatingTeamMemberId { get; set; }
+        public bool IsHidden { get; set; }
     }
 
     public enum NoteType

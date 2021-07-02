@@ -49,8 +49,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     private wizardService: WizardService,
     private userService: UserService,
     private essFileService: EssFileService,
-    private alertService: AlertService,
-
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {

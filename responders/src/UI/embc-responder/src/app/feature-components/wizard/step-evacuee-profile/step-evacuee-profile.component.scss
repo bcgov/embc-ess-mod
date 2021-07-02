@@ -6,22 +6,8 @@ app-alert ::ng-deep.alert {
   color: rgb(187, 187, 187);
 }
 
-.wizard-border {
-  padding-top: 20px;
-}
-
 .content-container {
   padding-bottom: 24px;
-}
-
-.active-step-tab {
-  background-color: white !important;
-  min-width: 200px !important;
-  text-decoration: none !important;
-  color: #169bd5 !important;
-  border-left: 1px solid rgba(0, 0, 0, 0.12);
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-  border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 a:hover {

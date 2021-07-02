@@ -350,6 +350,8 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public NeedsAssessment NeedsAssessment { get; set; }
 
+        public IEnumerable<Note> Notes { get; set; }
+
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseEdited { get; set; }
 
@@ -384,7 +386,10 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public InsuranceOption Insurance { get; set; }
 
-        public IEnumerable<Note> Notes { get; set; }
+        public string EvacuationImpact { get; set; }
+        public string EvacuationExternalReferrals { get; set; }
+        public string PetCarePlans { get; set; }
+        public string HouseHoldRecoveryPlan { get; set; }
         public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }
 
         [Required]
@@ -431,6 +436,10 @@ namespace EMBC.Responders.API.Controllers
     {
         public NoteType Type { get; set; }
         public string Content { get; set; }
+        public DateTime AddedOn { get; set; }
+        public string MemberName { get; set; }
+        public string TeamName { get; set; }
+        public bool IsHidden { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -543,10 +552,9 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<Note, ESS.Shared.Contracts.Submissions.Note>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
-                .ForMember(d => d.AddedOn, opts => opts.Ignore())
                 .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
                 .ForMember(d => d.CreatingTeamMemberId, opts => opts.Ignore())
-                .ForMember(d => d.Status, opts => opts.Ignore())
+                .ForMember(d => d.TeamId, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 
@@ -559,10 +567,15 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => NeedsAssessmentType.Assessed))
+                .ForMember(d => d.Notes, opts => opts.ConvertUsing<NeedsAssessmentNotesConverter, NeedsAssessment>(n => n))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.NeedsAssessment, NeedsAssessment>()
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
+                .ForMember(d => d.EvacuationImpact, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact).SingleOrDefault().Content))
+                .ForMember(d => d.EvacuationExternalReferrals, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals).SingleOrDefault().Content))
+                .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans).SingleOrDefault().Content))
+                .ForMember(d => d.HouseHoldRecoveryPlan, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan).SingleOrDefault().Content))
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
@@ -646,6 +659,52 @@ namespace EMBC.Responders.API.Controllers
                     s.MailingAddress.AddressLine1 == s.PrimaryAddress.AddressLine1 &&
                     s.MailingAddress.AddressLine2 == s.PrimaryAddress.AddressLine2))
                 ;
+        }
+    }
+
+    public class NeedsAssessmentNotesConverter : IValueConverter<NeedsAssessment, IEnumerable<ESS.Shared.Contracts.Submissions.Note>>
+    {
+        public IEnumerable<ESS.Shared.Contracts.Submissions.Note> Convert(NeedsAssessment sourceMember, ResolutionContext context)
+        {
+            List<ESS.Shared.Contracts.Submissions.Note> ret = new List<ESS.Shared.Contracts.Submissions.Note>();
+
+            if (!string.IsNullOrEmpty(sourceMember.EvacuationImpact))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.EvacuationImpact,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact,
+                });
+            }
+
+            if (!string.IsNullOrEmpty(sourceMember.EvacuationExternalReferrals))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.EvacuationExternalReferrals,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals,
+                });
+            }
+
+            if (!string.IsNullOrEmpty(sourceMember.PetCarePlans))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.PetCarePlans,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans,
+                });
+            }
+
+            if (!string.IsNullOrEmpty(sourceMember.HouseHoldRecoveryPlan))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.HouseHoldRecoveryPlan,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan,
+                });
+            }
+
+            return ret;
         }
     }
 }

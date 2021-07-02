@@ -77,7 +77,9 @@ namespace EMBC.Responders.API.Services
             await Task.WhenAll(searchTasks.Select(t => t()));
 
             //check for restricted files
-            var anyRestriction = registrants.SelectMany(r => r.Files).Any(f => f.RestrictedAccess) ||
+            var anyRestriction =
+                registrants.Any(r => r.RegistrantProfile.RestrictedAccess) ||
+                registrants.SelectMany(r => r.Files).Any(f => f.RestrictedAccess) ||
                 files.Any(f => f.RestrictedAccess);
             if (userRole == Controllers.MemberRole.Tier1 && anyRestriction)
             {

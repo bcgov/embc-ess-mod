@@ -434,3 +434,31 @@ mat-form-field {
   background: #000;
   opacity: 0.75 !important;
 }
+
+.wizard-border {
+  padding-top: 20px;
+}
+
+.active-step-tab {
+  background-color: white !important;
+  min-width: 200px !important;
+  text-decoration: none !important;
+  color: #169bd5 !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.content-container {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.custom-paginator {
+  font-size: 14px;
+}
+
+.custom-paginator-align {
+  display: flex !important;
+  justify-content: center;
+}
