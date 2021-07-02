@@ -109,7 +109,10 @@
             <p class="p-custom">
               <b>{{ fileResult?.evacuatedFrom?.addressLine1 }}</b>
             </p>
-            <p class="p-custom">
+            <p
+              *ngIf="fileResult?.evacuatedFrom?.addressLine2 !== null"
+              class="p-custom"
+            >
               <b>{{ fileResult?.evacuatedFrom?.addressLine2 }},</b>
             </p>
             <p class="p-custom">
@@ -126,9 +129,6 @@
                 </span>
               </b>
             </p>
-            <!-- <p class="p-custom">
-              <b>{{ fileResult?.evacuatedFrom?.country?.name }}</b>
-            </p> -->
           </div>
         </div>
       </div>
