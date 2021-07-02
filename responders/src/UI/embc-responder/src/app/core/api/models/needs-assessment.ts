@@ -3,7 +3,6 @@
 import { EvacuationFileHouseholdMember } from './evacuation-file-household-member';
 import { InsuranceOption } from './insurance-option';
 import { NeedsAssessmentType } from './needs-assessment-type';
-import { Note } from './note';
 import { Pet } from './pet';
 import { ReferralServices } from './referral-services';
 
@@ -17,14 +16,17 @@ export interface NeedsAssessment {
   canProvideLodging?: null | boolean;
   canProvideTransportation?: null | boolean;
   createdOn?: string;
+  evacuationExternalReferrals?: null | string;
+  evacuationImpact?: null | string;
   haveMedicalSupplies?: null | boolean;
   havePetsFood?: null | boolean;
   haveSpecialDiet?: boolean;
+  houseHoldRecoveryPlan?: null | string;
   householdMembers: Array<EvacuationFileHouseholdMember>;
   id?: null | string;
   insurance: InsuranceOption;
   modifiedOn?: string;
-  notes?: null | Array<Note>;
+  petCarePlans?: null | string;
   pets?: null | Array<Pet>;
   recommendedReferralServices?: null | Array<ReferralServices>;
   specialDietDetails?: null | string;

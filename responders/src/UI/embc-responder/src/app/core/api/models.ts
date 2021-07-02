@@ -18,13 +18,13 @@ export { VerifySecurityQuestionsRequest } from './models/verify-security-questio
 export { EvacuationFile } from './models/evacuation-file';
 export { NeedsAssessment } from './models/needs-assessment';
 export { InsuranceOption } from './models/insurance-option';
-export { Note } from './models/note';
-export { NoteType } from './models/note-type';
 export { ReferralServices } from './models/referral-services';
 export { EvacuationFileHouseholdMember } from './models/evacuation-file-household-member';
 export { HouseholdMemberType } from './models/household-member-type';
 export { Pet } from './models/pet';
 export { NeedsAssessmentType } from './models/needs-assessment-type';
+export { Note } from './models/note';
+export { NoteType } from './models/note-type';
 export { EvacuationFileStatus } from './models/evacuation-file-status';
 export { EvacuationFileTask } from './models/evacuation-file-task';
 export { GetSecurityPhraseResponse } from './models/get-security-phrase-response';
