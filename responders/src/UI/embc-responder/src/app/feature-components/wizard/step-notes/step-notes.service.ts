@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Note } from 'src/app/core/api/models';
+import { Note, NoteType, RegistrationResult } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
 import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -37,5 +37,29 @@ export class StepNotesService {
           return file.notes;
         })
       );
+  }
+
+  /**
+   * Creates the note DTO
+   * @param content User entered note content
+   * @returns Note object
+   */
+  createNoteDTO(content: string): Note {
+    return {
+      content: content,
+      type: NoteType.General
+    };
+  }
+
+  /**
+   * Save user entered notes for the file
+   * @param note user entered note
+   * @returns
+   */
+  public saveNotes(note: Note): Observable<RegistrationResult> {
+    return this.registrationsService.registrationsCreateFileNote({
+      fileId: this.evacueeSessionService.essFileNumber,
+      body: note
+    });
   }
 }
