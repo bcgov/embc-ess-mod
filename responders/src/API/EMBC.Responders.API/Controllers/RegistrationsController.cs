@@ -208,7 +208,7 @@ namespace EMBC.Responders.API.Controllers
         /// <param name="fileId">fileId</param>
         /// <param name="note">note</param>
         /// <returns>newly created note id</returns>
-        [HttpPost("files/{fileId}/note")]
+        [HttpPost("files/{fileId}/notes")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrationResult>> CreateFileNote(string fileId, Note note)
@@ -219,7 +219,7 @@ namespace EMBC.Responders.API.Controllers
             //});
 
             //return Ok(new RegistrationResult { Id = id });
-            return Ok(await Task.FromResult(new RegistrationResult { Id = "note123" }));
+            return Ok(await Task.FromResult(new EvacuationFileNotesResult { Id = "note123" }));
         }
 
         /// <summary>
@@ -260,6 +260,11 @@ namespace EMBC.Responders.API.Controllers
     }
 
     public class RegistrationResult
+    {
+        public string Id { get; set; }
+    }
+
+    public class EvacuationFileNotesResult
     {
         public string Id { get; set; }
     }
