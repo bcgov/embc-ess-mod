@@ -41,18 +41,20 @@ export class StepNotesService {
 
   /**
    * Creates the note DTO
+   *
    * @param content User entered note content
    * @returns Note object
    */
   createNoteDTO(content: string): Note {
     return {
-      content: content,
+      content,
       type: NoteType.General
     };
   }
 
   /**
    * Save user entered notes for the file
+   *
    * @param note user entered note
    * @returns
    */
