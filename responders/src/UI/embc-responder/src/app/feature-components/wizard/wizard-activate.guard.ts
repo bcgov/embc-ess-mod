@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
+import { WizardStepService } from './wizard-step.service';
 
 @Injectable({ providedIn: 'root' })
 export class WizardActivateGuard implements CanActivate {
@@ -17,6 +18,7 @@ export class WizardActivateGuard implements CanActivate {
     private cacheService: CacheService,
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
+    private wizardStepService: WizardStepService,
     private router: Router
   ) {}
 
@@ -31,9 +33,18 @@ export class WizardActivateGuard implements CanActivate {
     const loggedInTask = this.cacheService.get('loggedInTask');
     const wizardType = this.evacueeSessionService.getWizardType();
     const registrantProfileId = this.evacueeSessionService.profileId;
+    const wizardFromPage = this.cacheService.get('wizardOpenedFrom');
 
     if (wizardType === 'new-registration') {
-      return this.isNewRegistrationAllowed(loggedInTask);
+      if (this.isNewRegistrationAllowed(loggedInTask)) {
+        if (wizardFromPage === '/responder-access/search/evacuee') {
+          this.wizardStepService.evacueeProfileStepFromSearch();
+        }
+
+        return true;
+      }
+
+      return false;
     } else if (wizardType === 'edit-registration') {
       return this.isProfileIdNotNull(registrantProfileId);
     } else if (wizardType === 'new-ess-file') {

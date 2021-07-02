@@ -4,9 +4,8 @@ import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
-import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
-import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { Subscription } from 'rxjs';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-evacuee-details',
@@ -28,7 +27,6 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     /\d/,
     /\d/
   ];
-  evacueeSearchContext: EvacueeSearchContextModel;
   tabUpdateSubscription: Subscription;
 
   constructor(
@@ -36,12 +34,11 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private evacueeSearchService: EvacueeSearchService
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
     this.createEvacueeDetailsForm();
-    this.evacueeSearchContext = this.evacueeSearchService.evacueeSearchContext;
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate.subscribe(
@@ -55,15 +52,13 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     this.evacueeDetailsForm = this.formBuilder.group({
       firstName: [
         {
-          value: this.evacueeSearchService.evacueeSearchContext
-            .evacueeSearchParameters.firstName,
+          value: this.stepEvacueeProfileService.personalDetails.firstName,
           disabled: true
         }
       ],
       lastName: [
         {
-          value: this.evacueeSearchService.evacueeSearchContext
-            .evacueeSearchParameters.lastName,
+          value: this.stepEvacueeProfileService.personalDetails.lastName,
           disabled: true
         }
       ],
@@ -85,8 +80,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
       ],
       dateOfBirth: [
         {
-          value: this.evacueeSearchService.evacueeSearchContext
-            .evacueeSearchParameters.dateOfBirth,
+          value: this.stepEvacueeProfileService.personalDetails.dateOfBirth,
           disabled: true
         }
       ]

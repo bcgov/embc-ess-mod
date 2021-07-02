@@ -1,16 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UserService } from 'src/app/core/services/user.service';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
-import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { WizardService } from '../../wizard.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { CacheService } from 'src/app/core/services/cache.service';
-import { HouseholdMemberType } from 'src/app/core/api/models';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
+import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-ess-file-review',
@@ -45,19 +44,17 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   petColumns: string[] = ['type', 'quantity'];
 
   constructor(
-    public stepEvacueeProfileService: StepEvacueeProfileService,
     public stepEssFileService: StepEssFileService,
     private router: Router,
     private wizardService: WizardService,
+    private userService: UserService,
     private essFileService: EssFileService,
     private alertService: AlertService,
-    private userService: UserService,
-    private cacheService: CacheService
+
   ) {}
 
   ngOnInit(): void {
-    const userProfile = this.userService.currentProfile;
-    this.taskNumber = userProfile.taskNumber;
+    this.taskNumber = this.userService.currentProfile?.taskNumber;
 
     // Get the displayed value for radio options
     this.insuranceDisplay = globalConst.insuranceOptions.find(
@@ -90,13 +87,8 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     )?.name;
 
     // Add main member to "Household Members" table
-    const mainMember: HouseholdMemberModel = {
-      sameLastName: true,
-      ...this.stepEvacueeProfileService.personalDetails
-    };
-
     this.memberListDisplay = [
-      mainMember,
+      this.stepEssFileService.primaryMember,
       ...this.stepEssFileService?.householdMembers
     ];
 
@@ -126,7 +118,10 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.essFileService
       .createFile(this.stepEssFileService.createEvacFileDTO())
       .subscribe(
-        () => {
+        (essFile: EvacuationFileModel) => {
+          // After creating and fetching ESS File, update ESS File Step values
+          this.stepEssFileService.setFormValuesFromFile(essFile);
+
           // Once all profile work is done, user can close wizard or proceed to step 3
           this.disableButton = true;
           this.saveLoader = false;

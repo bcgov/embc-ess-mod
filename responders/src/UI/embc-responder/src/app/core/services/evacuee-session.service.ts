@@ -4,32 +4,33 @@ import { CacheService } from './cache.service';
 
 @Injectable({ providedIn: 'root' })
 export class EvacueeSessionService {
-  private registrantProfileId: string;
+  private profileIdVal: string;
   //private registrantProfile: RegistrantProfile;
-  private fileNumber: string;
+  private essFileNumberVal: string;
+
   private editWizardFlag: boolean;
 
   constructor(private cacheService: CacheService) {}
 
-  set profileId(registrantProfileId: string) {
-    this.registrantProfileId = registrantProfileId;
-    this.cacheService.set('registrantProfileId', registrantProfileId);
+  set profileId(profileIdVal: string) {
+    this.profileIdVal = profileIdVal;
+    this.cacheService.set('registrantProfileId', profileIdVal);
   }
 
   get profileId(): string {
-    return this.registrantProfileId
-      ? this.registrantProfileId
+    return this.profileIdVal
+      ? this.profileIdVal
       : this.cacheService.get('registrantProfileId');
   }
 
-  set essFileNumber(fileNumber: string) {
-    this.fileNumber = fileNumber;
-    this.cacheService.set('fileNumber', fileNumber);
+  set essFileNumber(essFileNumberVal: string) {
+    this.essFileNumberVal = essFileNumberVal;
+    this.cacheService.set('fileNumber', essFileNumberVal);
   }
 
   get essFileNumber(): string {
-    return this.fileNumber
-      ? this.fileNumber
+    return this.essFileNumberVal
+      ? this.essFileNumberVal
       : this.cacheService.get('fileNumber');
   }
 
@@ -39,6 +40,7 @@ export class EvacueeSessionService {
     this.cacheService.remove('registrantProfileId');
     this.cacheService.remove('fileNumber');
     this.cacheService.remove('wizardType');
+    this.cacheService.remove('taskNumber');
   }
 
   public setWizardType(wizardType: string) {
