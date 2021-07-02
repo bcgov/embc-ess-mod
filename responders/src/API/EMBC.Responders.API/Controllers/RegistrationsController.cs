@@ -203,6 +203,26 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
+        /// Create a File Note
+        /// </summary>
+        /// <param name="fileId">fileId</param>
+        /// <param name="note">note</param>
+        /// <returns>newly created note id</returns>
+        [HttpPost("files/{fileId}/notes")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RegistrationResult>> CreateFileNote(string fileId, Note note)
+        {
+            //var id = await messagingClient.Send(new SubmitEvacuationFileCommand
+            //{
+            //    File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(note)
+            //});
+
+            //return Ok(new RegistrationResult { Id = id });
+            return Ok(await Task.FromResult(new EvacuationFileNotesResult { Id = "note123" }));
+        }
+
+        /// <summary>
         /// get the security phrase of an evacuation file
         /// </summary>
         /// <param name="fileId">file id</param>
@@ -240,6 +260,11 @@ namespace EMBC.Responders.API.Controllers
     }
 
     public class RegistrationResult
+    {
+        public string Id { get; set; }
+    }
+
+    public class EvacuationFileNotesResult
     {
         public string Id { get; set; }
     }
