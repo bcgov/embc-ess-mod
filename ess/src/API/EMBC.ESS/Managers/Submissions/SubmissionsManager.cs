@@ -211,6 +211,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             foreach (var note in results.SelectMany(c => c.Notes))
             {
+                if (string.IsNullOrEmpty(note.CreatingTeamMemberId)) continue;
                 var teamMembers = await teamRepository.GetMembers(null, null, note.CreatingTeamMemberId);
                 var member = teamMembers.SingleOrDefault();
                 if (member == null) continue;
@@ -269,10 +270,11 @@ namespace EMBC.ESS.Managers.Submissions
             return ret;
         }
 
-        public async Task<string> Handle(SaveEvacuationFileNotes cmd)
+        public async Task<string> Handle(SaveEvacuationFileNoteCommand cmd)
         {
-            await Task.CompletedTask;
-            throw new NotImplementedException();
+            var note = mapper.Map<Resources.Cases.Note>(cmd.Note);
+            var id = (await caseRepository.ManageCase(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).CaseId;
+            return id;
         }
 
         public async Task<EvacuationFileNotesQueryResult> Handle(EvacuationFileNotesQuery query)

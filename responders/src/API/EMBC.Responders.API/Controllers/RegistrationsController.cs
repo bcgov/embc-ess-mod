@@ -459,6 +459,7 @@ namespace EMBC.Responders.API.Controllers
 
     public class Note
     {
+        public string Id { get; set; }
         public NoteType Type { get; set; }
         public string Content { get; set; }
         public DateTime AddedOn { get; set; }
@@ -576,11 +577,12 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<Note, ESS.Shared.Contracts.Submissions.Note>()
-                .ForMember(d => d.Id, opts => opts.Ignore())
                 .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
                 .ForMember(d => d.CreatingTeamMemberId, opts => opts.Ignore())
                 .ForMember(d => d.TeamId, opts => opts.Ignore())
-                .ReverseMap()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.Note, Note>()
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
