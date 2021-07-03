@@ -345,5 +345,55 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             return evacuationFile.era_name;
         }
+
+        public async Task<string> CreateNote(string essFileId, Note note)
+        {
+            var file = essContext.era_evacuationfiles
+                .Where(f => f.era_name == essFileId).SingleOrDefault();
+            if (file == null) throw new Exception($"Evacuation file {essFileId} not found");
+
+            var era_essfilenote = mapper.Map<era_essfilenote>(note);
+            era_essfilenote.era_essfilenoteid = Guid.NewGuid();
+            AddNote(file, era_essfilenote);
+
+            await essContext.SaveChangesAsync();
+
+            essContext.DetachAll();
+
+            return era_essfilenote.era_essfilenoteid.ToString();
+        }
+
+        public async Task<string> UpdateNote(string essFileId, Note note)
+        {
+            var era_essfilenote = mapper.Map<era_essfilenote>(note);
+            var existingNote = essContext.era_essfilenotes
+                .Where(n => n.era_essfilenoteid == new Guid(note.Id)).SingleOrDefault();
+            essContext.DetachAll();
+
+            if (existingNote == null) throw new Exception($"Evacuation file note {note.Id} not found");
+
+            era_essfilenote.era_essfilenoteid = existingNote.era_essfilenoteid;
+            essContext.AttachTo(nameof(EssContext.era_essfilenotes), era_essfilenote);
+            essContext.UpdateObject(era_essfilenote);
+
+            await essContext.SaveChangesAsync();
+
+            essContext.DetachAll();
+
+            return era_essfilenote.era_essfilenoteid.ToString();
+        }
+
+        private void AddNote(era_evacuationfile file, era_essfilenote note)
+        {
+            essContext.AddToera_essfilenotes(note);
+            essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID), note);
+            essContext.SetLink(note, nameof(era_essfilenote.era_ESSFileID), file);
+
+            if (note._era_essteamuserid_value.HasValue)
+            {
+                var user = essContext.era_essteamusers.Where(u => u.era_essteamuserid == note._era_essteamuserid_value).SingleOrDefault();
+                if (user != null) essContext.AddLink(user, nameof(era_essteamuser.era_era_essteamuser_era_essfilenote_ESSTeamUser), note);
+            }
+        }
     }
 }

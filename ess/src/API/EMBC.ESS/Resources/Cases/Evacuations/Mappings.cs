@@ -191,6 +191,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => NoteType.General))
                 .ForMember(d => d.IsHidden, opts => opts.MapFrom(s => s.era_ishidden == true))
                 ;
+
+            CreateMap<Note, era_essfilenote>(MemberList.None)
+                .ForMember(d => d.era_essfilenoteid, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.era_notetext, opts => opts.MapFrom(s => s.Content))
+                .ForMember(d => d._era_essteamuserid_value, opts => opts.MapFrom(s => isGuid(s.CreatingTeamMemberId) ? Guid.Parse(s.CreatingTeamMemberId) : (Guid?)null))
+                ;
         }
 
         private static int Lookup(bool? value) => value.HasValue ? value.Value ? 174360000 : 174360001 : 174360002;

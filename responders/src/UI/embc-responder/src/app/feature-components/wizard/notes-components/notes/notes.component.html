@@ -33,7 +33,7 @@
           </div>
           <app-add-notes
             *ngIf="addNoteFlag"
-            (cancelEvent)="cancel()"
+            (closeEvent)="cancel()"
           ></app-add-notes>
           <app-list-notes
             *ngIf="!addNoteFlag"
