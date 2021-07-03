@@ -352,6 +352,36 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             response.IsCorrect.ShouldBeTrue();
         }
 
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanCreateFileNote()
+        {
+            var fileId = "101010";
+            var note = new Note { Content = "Test create note", Type = NoteType.General, CreatingTeamMemberId = "170b9e4d-731e-4ab8-a0df-ff2612bf6840" };
+            var id = await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note });
+            id.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanUpdateFileNote()
+        {
+            var fileId = "101010";
+            var file = (await GetEvacuationFileById(fileId)).FirstOrDefault();
+
+            var note = file.Notes.FirstOrDefault();
+
+            if (note.Content.Equals("Test update value 1"))
+            {
+                note.Content = "Test update value 2";
+            }
+            else
+            {
+                note.Content = "Test update value 1";
+            }
+
+            var id = await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note });
+            id.ShouldNotBeNull();
+        }
+
         private async Task<RegistrantWithFiles> GetRegistrantByUserId(string userId)
         {
             return (await manager.Handle(new RegistrantsSearchQuery { UserId = userId })).Items.SingleOrDefault();
