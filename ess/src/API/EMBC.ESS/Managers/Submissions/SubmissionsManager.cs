@@ -24,6 +24,7 @@ using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.Transformation;
 using Task = System.Threading.Tasks.Task;
@@ -183,8 +184,8 @@ namespace EMBC.ESS.Managers.Submissions
                 }
                 results.Add(result);
             });
+            await resultTasks.ForEachAsync(10, async t => await t);
 
-            Task.WaitAll(resultTasks.ToArray());
             return new RegistrantsSearchQueryResult { Items = results };
         }
 

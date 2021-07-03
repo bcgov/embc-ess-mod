@@ -280,6 +280,7 @@ namespace EMBC.Responders.API.Controllers
         public HouseholdMemberType Type { get; set; }
         public bool IsMatch { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
+        public bool IsHouseholdMember => !IsPrimaryRegistrant;
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
