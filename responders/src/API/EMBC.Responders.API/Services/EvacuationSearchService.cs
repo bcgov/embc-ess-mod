@@ -74,7 +74,7 @@ namespace EMBC.Responders.API.Services
                 })).Items
             };
 
-            await Task.WhenAll(searchTasks.Select(t => t()));
+            await Task.WhenAll(searchTasks.Select(t => t()).ToArray());
 
             //check for restricted files
             var anyRestriction =

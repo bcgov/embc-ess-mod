@@ -217,25 +217,29 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         private EvacuationFile MapEvacuationFile(era_evacuationfile file, bool maskSecurityPhrase = true) =>
             mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
 
-        private era_evacuationfile LoadEvacuationFile(era_evacuationfile file)
+        private async Task<era_evacuationfile> LoadEvacuationFile(era_evacuationfile file)
         {
             if (file == null || file.statecode != (int)EntityState.Active) return null;
             if (!file._era_currentneedsassessmentid_value.HasValue) return null;
 
-            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
-            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
-            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID));
+            var loadTasks = new List<Task>();
+            loadTasks.Add(Task.Run(() => essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid))));
+            loadTasks.Add(Task.Run(() => essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid))));
+            loadTasks.Add(Task.Run(() => essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID))));
 
-            if (file.era_CurrentNeedsAssessmentid == null) essContext.LoadProperty(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid));
-            essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
-            foreach (var member in file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)
+            loadTasks.Add(Task.Run(() =>
             {
-                if (member._era_registrant_value.HasValue)
+                if (file.era_CurrentNeedsAssessmentid == null) essContext.LoadProperty(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid));
+                essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
+                foreach (var member in file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)
                 {
-                    essContext.LoadProperty(member, nameof(era_householdmember.era_Registrant));
+                    if (member._era_registrant_value.HasValue)
+                    {
+                        essContext.LoadProperty(member, nameof(era_householdmember.era_Registrant));
+                    }
                 }
-            }
-
+            }));
+            await Task.WhenAll(loadTasks.ToArray());
             return file;
         }
 
@@ -269,9 +273,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             }
 
             var results = new ConcurrentBag<era_evacuationfile>();
-            Parallel.ForEach(allFiles.ToArray(),
-                new ParallelOptions { MaxDegreeOfParallelism = 10 },
-                file => results.Add(LoadEvacuationFile(file)));
+            await allFiles.ForEachAsync(10, async f => results.Add(await LoadEvacuationFile(f)));
 
             var files = results.Select(f => MapEvacuationFile(f, query.MaskSecurityPhrase)).Where(f => f != null);
             if (query.Limit.HasValue) files = files.OrderByDescending(f => f.Id).Take(query.Limit.Value);
