@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { Code, CommunityType } from '../api/models';
+import { Address, Code, CommunityType } from '../api/models';
 import { CommunityCode } from '../api/models/community-code';
 import { ConfigurationService } from '../api/services';
+import { AddressModel } from '../models/address.model';
 import { CacheService } from './cache.service';
 
 export interface Country {
@@ -66,6 +67,35 @@ export class LocationsService {
     return this.regionalDistricts
       ? this.regionalDistricts
       : JSON.parse(this.cacheService.get('regionalDistrictsList'));
+  }
+
+  /**
+   * Replace codes from Address object to full objects for AddressModel
+   *
+   * @param addressObject Address object as defined by the API
+   * @returns AddressModel object usable by the UI
+   */
+  public getAddressModelFromAddress(addressObject: Address): AddressModel {
+    const communities = this.getCommunityList();
+    const countries = this.getCountriesList();
+    const stateProvinces = this.getStateProvinceList();
+
+    const addressCommunity = communities.find(
+      (comm) => comm.code === addressObject.communityCode
+    );
+    const addressCountry = countries.find(
+      (coun) => coun.code === addressObject.countryCode
+    );
+    const addressStateProvince = stateProvinces.find(
+      (sp) => sp.code === addressObject.stateProvinceCode
+    );
+
+    return {
+      community: addressCommunity,
+      country: addressCountry,
+      stateProvince: addressStateProvince,
+      ...addressObject
+    };
   }
 
   private setCommunityList(communityList: Community[]): void {

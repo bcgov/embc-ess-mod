@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { StepEssFileService } from 'src/app/feature-components/wizard/step-ess-file/step-ess-file.service';
 import { RegistrationResult } from '../api/models';
 import { EvacuationFile } from '../api/models/evacuation-file';
 import { RegistrationsService } from '../api/services';
-import { AddressModel } from '../models/address.model';
 import { EvacuationFileModel } from '../models/evacuation-file.model';
 import { LocationsService } from './locations.service';
 
@@ -15,8 +13,7 @@ import { LocationsService } from './locations.service';
 export class EssFileService {
   constructor(
     private registrationsService: RegistrationsService,
-    private stepEssFileService: StepEssFileService,
-    private locationService: LocationsService
+    private locationsService: LocationsService
   ) {}
 
   /**
@@ -31,35 +28,16 @@ export class EssFileService {
         fileId
       })
       .pipe(
-        map((file: EvacuationFileModel) => {
-          const communities = this.locationService.getCommunityList();
-          const countries = this.locationService.getCountriesList();
-          const stateProvinces = this.locationService.getStateProvinceList();
-
-          const evacCommunity = communities.find(
-            (comm) => comm.code === file.evacuatedFromAddress?.communityCode
-          );
-          const evacCountry = countries.find(
-            (coun) => coun.code === file.evacuatedFromAddress?.countryCode
-          );
-          const evacStateProvince = stateProvinces.find(
-            (sp) => sp.code === file.evacuatedFromAddress?.stateProvinceCode
-          );
-
-          const evacAddressModel: AddressModel = {
-            community: evacCommunity,
-            country: evacCountry,
-            stateProvince: evacStateProvince
-          };
-
-          file.evacuatedFromAddress = {
-            ...evacAddressModel,
-            ...file.evacuatedFromAddress
-          };
-
-          this.stepEssFileService.getEvacFileDTO(file);
-          return file;
-        })
+        map(
+          (file: EvacuationFile): EvacuationFileModel => {
+            return {
+              ...file,
+              evacuatedFromAddress: this.locationsService.getAddressModelFromAddress(
+                file.evacuatedFromAddress
+              )
+            };
+          }
+        )
       );
   }
 
