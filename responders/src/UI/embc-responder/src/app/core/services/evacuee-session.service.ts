@@ -40,7 +40,6 @@ export class EvacueeSessionService {
     this.cacheService.remove('registrantProfileId');
     this.cacheService.remove('fileNumber');
     this.cacheService.remove('wizardType');
-    this.cacheService.remove('taskNumber');
   }
 
   public setWizardType(wizardType: string) {

@@ -33,13 +33,10 @@ export class WizardActivateGuard implements CanActivate {
     const loggedInTask = this.cacheService.get('loggedInTask');
     const wizardType = this.evacueeSessionService.getWizardType();
     const registrantProfileId = this.evacueeSessionService.profileId;
-    const wizardFromPage = this.cacheService.get('wizardOpenedFrom');
 
     if (wizardType === 'new-registration') {
       if (this.isNewRegistrationAllowed(loggedInTask)) {
-        if (wizardFromPage === '/responder-access/search/evacuee') {
-          this.wizardStepService.evacueeProfileStepFromSearch();
-        }
+        this.wizardStepService.evacueeProfileStepFromSearch();
 
         return true;
       }
