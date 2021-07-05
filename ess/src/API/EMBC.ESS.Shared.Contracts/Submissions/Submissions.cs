@@ -55,9 +55,10 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// <summary>
     /// save a file's note
     /// </summary>
-    public class SaveEvacuationFileNotes : Command
+    public class SaveEvacuationFileNoteCommand : Command
     {
-        public IEnumerable<Note> Notes { get; set; }
+        public string FileId { get; set; }
+        public Note Note { get; set; }
     }
 
     public class EvacuationFileNotesQuery : Query<EvacuationFileNotesQueryResult>
