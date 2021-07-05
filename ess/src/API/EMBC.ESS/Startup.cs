@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Managers.Metadata;
 using EMBC.ESS.Managers.Submissions;
@@ -64,6 +65,9 @@ namespace EMBC.ESS
                 .AddAdminManager()
                 .AddMetadataManager()
                 .AddSubmissionManager();
+
+            services
+                .AddSearchEngine();
 
             services
                 .AddTeamRepository()

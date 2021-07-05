@@ -95,6 +95,14 @@ namespace EMBC.ESS.Utilities.Dynamics
             }
         }
 
+        public static void Detach(this EssContext context, params object[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                context.Detach(entity);
+            }
+        }
+
         public static void SoftDeleteObject(this EssContext context, object entity) => ModifyEntityStatus(context, entity, EntityStatus.SoftDelete);
 
         public static void ActivateObject(this EssContext context, object entity) => ModifyEntityStatus(context, entity, EntityStatus.Active);
