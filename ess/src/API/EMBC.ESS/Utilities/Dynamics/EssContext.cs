@@ -27,17 +27,23 @@ namespace EMBC.ESS.Utilities.Dynamics
 {
     public class EssContext : Microsoft.Dynamics.CRM.System
     {
+        private readonly Uri serviceRoot;
+        private readonly Uri endpointUrl;
+        private readonly Func<Task<string>> tokenFactory;
         private readonly ILogger<EssContext> logger;
 
-        public EssContext(Uri uri, Uri url, Func<Task<string>> tokenFactory, ILogger<EssContext> logger) : base(uri)
+        public EssContext(Uri serviceRoot, Uri endpointUrl, Func<Task<string>> tokenFactory, ILogger<EssContext> logger) : base(serviceRoot)
         {
+            this.serviceRoot = serviceRoot;
+            this.endpointUrl = endpointUrl;
+            this.tokenFactory = tokenFactory;
             this.logger = logger;
             this.SaveChangesDefaultOptions = SaveChangesOptions.BatchWithSingleChangeset;
             this.EntityParameterSendOption = EntityParameterSendOption.SendOnlySetProperties;
 
             Func<Uri, Uri> formatUri = requestUri => requestUri.IsAbsoluteUri
-                    ? new Uri(url, (url.AbsolutePath == "/" ? string.Empty : url.AbsolutePath) + requestUri.AbsolutePath + requestUri.Query)
-                    : new Uri(url, (url.AbsolutePath == "/" ? string.Empty : url.AbsolutePath) + uri.AbsolutePath + requestUri.ToString());
+                    ? new Uri(endpointUrl, (endpointUrl.AbsolutePath == "/" ? string.Empty : endpointUrl.AbsolutePath) + requestUri.AbsolutePath + requestUri.Query)
+                    : new Uri(endpointUrl, (endpointUrl.AbsolutePath == "/" ? string.Empty : endpointUrl.AbsolutePath) + serviceRoot.AbsolutePath + requestUri.ToString());
 
             BuildingRequest += (sender, args) =>
             {
@@ -50,6 +56,11 @@ namespace EMBC.ESS.Utilities.Dynamics
                 // do not send reference properties and null values to Dynamics
                 arg.Entry.Properties = arg.Entry.Properties.Where((prop) => !prop.Name.StartsWith('_') && prop.Value != null);
             });
+        }
+
+        public EssContext Clone()
+        {
+            return new EssContext(serviceRoot, endpointUrl, tokenFactory, logger);
         }
     }
 

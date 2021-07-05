@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -173,7 +174,7 @@ namespace EMBC.ESS.Managers.Submissions
             })).Items;
             var registrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts);
 
-            var results = new List<RegistrantWithFiles>();
+            var results = new ConcurrentBag<RegistrantWithFiles>();
             var resultTasks = registrants.Select(async r =>
             {
                 var result = new RegistrantWithFiles { RegistrantProfile = r, Files = Array.Empty<Shared.Contracts.Submissions.EvacuationFile>() };
