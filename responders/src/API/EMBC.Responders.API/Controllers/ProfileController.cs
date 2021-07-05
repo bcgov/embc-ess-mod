@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Team;
+using EMBC.Responders.API.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -36,12 +37,14 @@ namespace EMBC.Responders.API.Controllers
     {
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
+        private readonly IUserService userService;
         private readonly ILogger<ProfileController> logger;
 
-        public ProfileController(IMessagingClient messagingClient, IMapper mapper, ILogger<ProfileController> logger)
+        public ProfileController(IMessagingClient messagingClient, IMapper mapper, IUserService userService, ILogger<ProfileController> logger)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
+            this.userService = userService;
             this.logger = logger;
         }
 
@@ -59,8 +62,7 @@ namespace EMBC.Responders.API.Controllers
             var sourceSystem = User.FindFirstValue("identity_source");
 
             // Get the current user
-            var reply = await messagingClient.Send(new TeamMembersQuery { UserName = userName, IncludeActiveUsersOnly = true });
-            var currentMember = reply.TeamMembers.SingleOrDefault();
+            var currentMember = await userService.GetTeamMember();
 
             if (currentMember == null)
             {

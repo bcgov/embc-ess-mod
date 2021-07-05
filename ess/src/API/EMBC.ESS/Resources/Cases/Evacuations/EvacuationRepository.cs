@@ -214,107 +214,139 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return essFileNumber;
         }
 
-        private async Task<EvacuationFile> GetEvacuationFileById(Guid id, bool maskSecurityPhrase = true)
-        {
-            var file = await essContext.era_evacuationfiles
-                .ByKey(id)
-                .Expand(f => f.era_CurrentNeedsAssessmentid)
-                .GetValueAsync();
+        private EvacuationFile MapEvacuationFile(era_evacuationfile file, bool maskSecurityPhrase = true) =>
+            mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
 
+        private async Task<era_evacuationfile> LoadEvacuationFile(era_evacuationfile file)
+        {
             if (file == null || file.statecode != (int)EntityState.Active) return null;
             if (!file._era_currentneedsassessmentid_value.HasValue) return null;
 
-            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
-            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
-            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID));
+            var ctx = essContext.Clone();
+            ctx.MergeOption = MergeOption.OverwriteChanges;
 
-            essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
+            ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
+
+            ctx.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+            ctx.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
+            ctx.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID));
+
+            if (file.era_CurrentNeedsAssessmentid == null)
+                ctx.LoadProperty(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid));
+            else
+                ctx.AttachTo(nameof(EssContext.era_needassessments), file.era_CurrentNeedsAssessmentid);
+
+            ctx.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
             foreach (var member in file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)
             {
                 if (member._era_registrant_value.HasValue)
                 {
-                    essContext.LoadProperty(member, nameof(era_householdmember.era_Registrant));
+                    ctx.LoadProperty(member, nameof(era_householdmember.era_Registrant));
                 }
             }
 
-            var evacuationFile = mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
+            ctx.DetachAll();
+            return await Task.FromResult(file);
+        }
 
-            return await Task.FromResult(evacuationFile);
+        private async Task<era_evacuationfile> LoadEvacuationFileAsync(era_evacuationfile file)
+        {
+            if (file == null || file.statecode != (int)EntityState.Active) return null;
+            if (!file._era_currentneedsassessmentid_value.HasValue) return null;
+
+            var ctx = essContext.Clone();
+            ctx.MergeOption = MergeOption.OverwriteChanges;
+
+            ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
+
+            var loadTasks = new List<Task>();
+            loadTasks.Add(Task.Run(() => essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid))));
+            loadTasks.Add(Task.Run(() => essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid))));
+            loadTasks.Add(Task.Run(() => essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID))));
+
+            loadTasks.Add(Task.Run(() =>
+            {
+                if (file.era_CurrentNeedsAssessmentid == null) essContext.LoadProperty(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid));
+                essContext.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
+                foreach (var member in file.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment)
+                {
+                    if (member._era_registrant_value.HasValue)
+                    {
+                        essContext.LoadProperty(member, nameof(era_householdmember.era_Registrant));
+                    }
+                }
+            }));
+            await Task.WhenAll(loadTasks.ToArray());
+
+            ctx.DetachAll();
+
+            return file;
         }
 
         public async Task<IEnumerable<EvacuationFile>> Read(EvacuationFilesQuery query)
         {
-            IEnumerable<Guid> fileIds = Array.Empty<Guid>();
             var queryContacts =
-                !string.IsNullOrEmpty(query.FirstName) ||
-                !string.IsNullOrEmpty(query.LastName) ||
-                !string.IsNullOrEmpty(query.DateOfBirth) ||
-                !string.IsNullOrEmpty(query.PrimaryRegistrantId);
+               !string.IsNullOrEmpty(query.FirstName) ||
+               !string.IsNullOrEmpty(query.LastName) ||
+               !string.IsNullOrEmpty(query.DateOfBirth) ||
+               !string.IsNullOrEmpty(query.PrimaryRegistrantId);
 
-            var queryFiles =
-                !string.IsNullOrEmpty(query.FileId) ||
-                query.IncludeFilesInStatuses.Any() ||
-                query.RegistraionDateFrom.HasValue ||
-                query.RegistraionDateTo.HasValue;
+            IEnumerable<era_evacuationfile> allFiles = Array.Empty<era_evacuationfile>();
 
             if (queryContacts)
             {
-                var matchingContactFileIds = await QueryHouseholdMembers(query);
-
-                //merge matching file ids
-                fileIds = fileIds.Any()
-                    ? fileIds.Intersect(matchingContactFileIds)
-                    : fileIds.Concat(matchingContactFileIds);
+                allFiles = await QueryHouseholdMemberFiles(query);
             }
-
-            if (queryFiles)
+            else
             {
-                var matchingFileIds = await QueryFiles(query);
-
-                //merge matching file ids
-                fileIds = fileIds.Any()
-                    ? fileIds.Intersect(matchingFileIds)
-                    : fileIds.Concat(matchingFileIds);
+                allFiles = await QueryEvacuationFiles(query);
             }
 
             essContext.DetachAll();
-            var evacuationFiles = new ConcurrentBag<EvacuationFile>();
-            var evacuationFilesTasks = fileIds.Distinct().Select(async id => evacuationFiles.Add(await GetEvacuationFileById(id, query.MaskSecurityPhrase)));
-            //magic to query files in parallel
-            await evacuationFilesTasks.ForEachAsync(10, async t => await t);
 
-            essContext.DetachAll();
+            var results = new ConcurrentBag<era_evacuationfile>();
+            await allFiles.ForEachAsync(10, async f => results.Add(await LoadEvacuationFile(f)));
+            //await allFiles.ForEachAsync(10, async f => results.Add(await LoadEvacuationFileAsync(f)));
 
-            var files = evacuationFiles.Where(f => f != null);
+            var files = results.Where(f => f != null).Select(f => MapEvacuationFile(f, query.MaskSecurityPhrase));
             if (query.Limit.HasValue) files = files.OrderByDescending(f => f.Id).Take(query.Limit.Value);
+
             return files.ToArray();
         }
 
-        private async Task<IEnumerable<Guid>> QueryFiles(EvacuationFilesQuery query)
-        {
-            var fileQuery = essContext.era_evacuationfiles.Where(f => f.statecode == (int)EntityState.Active);
-            if (!string.IsNullOrEmpty(query.FileId)) fileQuery = fileQuery.Where(f => f.era_name == query.FileId);
-            if (query.RegistraionDateFrom.HasValue) fileQuery = fileQuery.Where(f => f.createdon >= query.RegistraionDateFrom.Value);
-            if (query.RegistraionDateTo.HasValue) fileQuery = fileQuery.Where(f => f.createdon <= query.RegistraionDateTo.Value);
-            if (query.IncludeFilesInStatuses.Any()) fileQuery = fileQuery.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.statuscode));
-
-            var matchingFileIds = (await ((DataServiceQuery<era_evacuationfile>)fileQuery).GetAllPagesAsync()).Select(f => f.era_evacuationfileid.Value).ToArray();
-            return matchingFileIds;
-        }
-
-        private async Task<IEnumerable<Guid>> QueryHouseholdMembers(EvacuationFilesQuery query)
+        private async Task<IEnumerable<era_evacuationfile>> QueryHouseholdMemberFiles(EvacuationFilesQuery query)
         {
             var contactQuery = essContext.era_householdmembers
-              .Where(c => c.statecode == (int)EntityState.Active);
+                 .Expand(m => m.era_EvacuationFileid)
+                 .Where(m => m.statecode == (int)EntityState.Active);
 
-            if (!string.IsNullOrEmpty(query.PrimaryRegistrantId)) contactQuery = contactQuery.Where(c => c.era_isprimaryregistrant == true && c._era_registrant_value == Guid.Parse(query.PrimaryRegistrantId));
-            if (!string.IsNullOrEmpty(query.LastName)) contactQuery = contactQuery.Where(c => c.era_lastname.Equals(query.LastName, StringComparison.OrdinalIgnoreCase));
-            if (!string.IsNullOrEmpty(query.FirstName)) contactQuery = contactQuery.Where(c => c.era_firstname.Equals(query.FirstName, StringComparison.OrdinalIgnoreCase));
-            if (!string.IsNullOrEmpty(query.DateOfBirth)) contactQuery = contactQuery.Where(c => c.era_dateofbirth.Equals(Date.Parse(query.DateOfBirth)));
+            if (!string.IsNullOrEmpty(query.PrimaryRegistrantId)) contactQuery = contactQuery.Where(m => m.era_isprimaryregistrant == true && m._era_registrant_value == Guid.Parse(query.PrimaryRegistrantId));
+            if (!string.IsNullOrEmpty(query.LastName)) contactQuery = contactQuery.Where(m => m.era_lastname.Equals(query.LastName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.FirstName)) contactQuery = contactQuery.Where(m => m.era_firstname.Equals(query.FirstName, StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrEmpty(query.DateOfBirth)) contactQuery = contactQuery.Where(m => m.era_dateofbirth.Equals(Date.Parse(query.DateOfBirth)));
 
-            var matchingContactFileIds = (await ((DataServiceQuery<era_householdmember>)contactQuery).GetAllPagesAsync())
-                .Select(m => m._era_evacuationfileid_value.Value).ToArray();
-            return matchingContactFileIds;
+            var files = (await ((DataServiceQuery<era_householdmember>)contactQuery).GetAllPagesAsync()).Select(f => f.era_EvacuationFileid);
+
+            //filter files after querying the server as there is no way to have a 2nd level queries
+            if (!string.IsNullOrEmpty(query.FileId)) files = files.Where(f => f.era_name == query.FileId);
+            if (query.RegistraionDateFrom.HasValue) files = files.Where(f => f.createdon >= query.RegistraionDateFrom.Value);
+            if (query.RegistraionDateTo.HasValue) files = files.Where(f => f.createdon <= query.RegistraionDateTo.Value);
+            if (query.IncludeFilesInStatuses.Any()) files = files.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.statuscode));
+
+            return files.ToArray();
+        }
+
+        private async Task<IEnumerable<era_evacuationfile>> QueryEvacuationFiles(EvacuationFilesQuery query)
+        {
+            var files = essContext.era_evacuationfiles
+                .Expand(f => f.era_CurrentNeedsAssessmentid)
+                .Where(f => f.statecode == (int)EntityState.Active);
+            if (!string.IsNullOrEmpty(query.FileId)) files = files.Where(f => f.era_name == query.FileId);
+            if (query.RegistraionDateFrom.HasValue) files = files.Where(f => f.createdon >= query.RegistraionDateFrom.Value);
+            if (query.RegistraionDateTo.HasValue) files = files.Where(f => f.createdon <= query.RegistraionDateTo.Value);
+            if (query.IncludeFilesInStatuses.Any()) files = files.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.statuscode));
+
+            return (await ((DataServiceQuery<era_evacuationfile>)files).GetAllPagesAsync()).ToArray();
         }
 
         public async Task<string> UpdateSecurityPhrase(string fileId, string securityPhrase)

@@ -108,7 +108,7 @@ namespace EMBC.Responders.API
                          var logger = c.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("JwtBearer");
 
                          var userService = c.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                         c.Principal = await userService.CreatePrincipalForUser(c.Principal);
+                         c.Principal = await userService.GetPrincipal(c.Principal);
                          logger.LogDebug("Token validated for {0}", c.Principal.Identity.Name);
                      }
                  };
@@ -133,12 +133,12 @@ namespace EMBC.Responders.API
                 options.Filters.Add(new AuthorizeFilter());
             });
 
+            services.AddHttpContextAccessor();
             services.Configure<MessagingOptions>(configuration.GetSection("backend"));
             services.AddMessaging();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IEvacuationSearchService, EvacuationSearchService>();
             services.AddDistributedMemoryCache();
-            services.AddTransient<ICache, Cache>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -110,7 +110,7 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<RegistrantWithFiles, RegistrantProfileSearchResult>()
                 .IncludeMembers(s => s.RegistrantProfile)
-                .ForMember(d => d.EvacuationFiles, opts => opts.MapFrom(s => s.Files))
+                .ForMember(d => d.EvacuationFiles, opts => opts.MapFrom(s => s.Files.OrderByDescending(f => f.EvacuationDate).Take(3)))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.RegistrantProfile, RegistrantProfileSearchResult>()
