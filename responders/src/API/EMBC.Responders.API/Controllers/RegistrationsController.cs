@@ -112,6 +112,25 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
+        /// Updates a Registrant Profile Verified flag
+        /// </summary>
+        /// <param name="registrantId">RegistrantId</param>
+        /// <param name="verified">Verified</param>
+        /// <returns>updated registrant id</returns>
+        [HttpPost("registrants/{registrantId}/verified/{verified}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RegistrationResult>> UpdateRegistrantVerified(string registrantId, bool verified)
+        {
+            //var profile = mapper.Map<ESS.Shared.Contracts.Submissions.RegistrantProfile>(registrant);
+            //var id = await messagingClient.Send(new SaveRegistrantCommand
+            //{
+            //    Profile = profile
+            //});
+            return await Task.FromResult(Ok(new RegistrationResult { Id = registrantId }));
+        }
+
+        /// <summary>
         /// Get security questions for a registrant
         /// </summary>
         /// <param name="registrantId">registrant id</param>
@@ -573,6 +592,7 @@ namespace EMBC.Responders.API.Controllers
         public Address MailingAddress { get; set; }
         public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
         public SecurityQuestion[] SecurityQuestions { get; set; }
+        public bool AuthenticatedUser { get; set; }
         public bool VerifiedUser { get; set; }
     }
 

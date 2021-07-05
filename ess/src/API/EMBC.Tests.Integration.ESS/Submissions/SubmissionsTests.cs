@@ -263,6 +263,21 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task CanUpdateRegistrantVerified()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var currentVerifiedStatus = registrant.VerifiedUser;
+            var newStatus = !currentVerifiedStatus;
+
+            var id = await manager.Handle(new UpdateRegistrantVerifiedCommand { RegistrantId = registrant.Id, Verified = newStatus });
+
+            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            updatedRegistrant.Id.ShouldBe(id);
+            updatedRegistrant.Id.ShouldBe(registrant.Id);
+            updatedRegistrant.VerifiedUser.ShouldBe(newStatus);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchRegistrantsByName()
         {
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
