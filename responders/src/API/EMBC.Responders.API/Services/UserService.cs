@@ -82,7 +82,7 @@ namespace EMBC.Responders.API.Services
             if (sourcePrincipal == null) sourcePrincipal = currentPrincipal;
             var member = (await messagingClient.Send(new TeamMembersQuery { UserName = getCurrentUserName(sourcePrincipal), IncludeActiveUsersOnly = true })).TeamMembers.SingleOrDefault();
 
-            if (!isPrincipalValid(sourcePrincipal, member))
+            if (!IsPrincipalValid(sourcePrincipal, member))
             {
                 //replace the cached principal when not valid
                 var cacheKey = generateCacheKeyName(getCurrentUserName(sourcePrincipal));
@@ -92,7 +92,7 @@ namespace EMBC.Responders.API.Services
             return member;
         }
 
-        private bool isPrincipalValid(ClaimsPrincipal principal, TeamMember member) =>
+        private bool IsPrincipalValid(ClaimsPrincipal principal, TeamMember member) =>
             member != null ? principal.FindFirstValue("user_role") == member.Role : false;
     }
 }
