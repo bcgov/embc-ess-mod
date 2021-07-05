@@ -64,6 +64,7 @@ namespace EMBC.Responders.API.Services
 
                 var essClaims = new[]
                 {
+                    new Claim("user_id", teamMember.Id),
                     new Claim("user_role", teamMember.Role),
                     new Claim("user_team", teamMember.TeamId)
                 };
@@ -92,6 +93,6 @@ namespace EMBC.Responders.API.Services
         }
 
         private bool isPrincipalValid(ClaimsPrincipal principal, TeamMember member) =>
-            principal.FindFirstValue("user_role") == member.Role;
+            member != null ? principal.FindFirstValue("user_role") == member.Role : false;
     }
 }
