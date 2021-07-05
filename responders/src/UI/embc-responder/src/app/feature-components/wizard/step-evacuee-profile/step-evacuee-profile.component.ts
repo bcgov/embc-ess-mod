@@ -35,7 +35,7 @@ export class StepEvacueeProfileComponent {
         this.stepName = state.title;
       }
     }
-    this.tabs = this.stepEvacueeProfileService.tabs;
+    this.tabs = this.stepEvacueeProfileService.profileTabs;
 
     // Load security question list as soon as wizard is initialized
     this.securityQuestionsService.getSecurityQuestionList().subscribe(

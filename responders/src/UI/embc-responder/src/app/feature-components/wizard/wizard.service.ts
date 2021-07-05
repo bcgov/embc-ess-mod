@@ -99,8 +99,8 @@ export class WizardService {
   /**
    * Map an address from the API to an address usable by the wizard form
    *
-   * @param addressObject Address object as defined by the API
-   * @returns An Address as defined by the site's address forms
+   * @param addressObject AddressModel object with nested objects set by UI code
+   * @returns An Address that can be filled into the site's address forms
    */
   public setAddressObjectForForm(addressObject: AddressModel): AddressModel {
     const address: AddressModel = {

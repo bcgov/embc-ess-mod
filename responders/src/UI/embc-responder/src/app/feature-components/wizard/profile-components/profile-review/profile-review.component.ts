@@ -13,8 +13,10 @@ import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacu
 import { WizardService } from '../../wizard.service';
 
 import * as globalConst from 'src/app/core/services/global-constants';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { Community } from 'src/app/core/services/locations.service';
+import { RegistrantProfile } from 'src/app/core/api/models';
+import { WizardStepService } from '../../wizard-step.service';
+import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 
 @Component({
   selector: 'app-profile-review',
@@ -34,11 +36,11 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private wizardService: WizardService,
+    private wizardStepService: WizardStepService,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
-    public stepEvacueeProfileService: StepEvacueeProfileService,
-    private evacueeSession: EvacueeSessionService
+    public stepEvacueeProfileService: StepEvacueeProfileService
   ) {}
 
   ngOnInit(): void {
@@ -94,7 +96,10 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
       this.evacueeProfileService
         .createProfile(this.stepEvacueeProfileService.createProfileDTO())
         .subscribe(
-          () => {
+          (profile: RegistrantProfileModel) => {
+            // After creating and fetching profile, update Profile Step values
+            this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
+
             // Once all profile work is done, tell user save is complete and go to Step 2
             this.disableButton = true;
             this.saveLoader = false;
@@ -104,6 +109,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
               .afterClosed()
               .subscribe(() => {
                 this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
+                this.wizardStepService.essFileStepFromProfileCreation(profile);
 
                 this.router.navigate(['/ess-wizard/ess-file'], {
                   state: { step: 'STEP 2', title: 'Create ESS File' }
