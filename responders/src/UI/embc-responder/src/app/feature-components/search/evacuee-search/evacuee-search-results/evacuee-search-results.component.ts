@@ -80,8 +80,12 @@ export class EvacueeSearchResultsComponent implements OnInit {
         (results) => {
           this.isLoading = !this.isLoading;
           this.fileResults = results.files;
-          this.registrantResults = results.registrants;
-          // .sort((a, b) => new Date(b.createdOn).valueOf() - new Date(a.createdOn).valueOf())
+          this.registrantResults = results.registrants.sort(
+            (a, b) =>
+              new Date(b.modifiedOn).valueOf() -
+              new Date(a.modifiedOn).valueOf()
+          );
+          console.log(this.registrantResults)
         },
         (error) => {
           this.isLoading = !this.isLoading;

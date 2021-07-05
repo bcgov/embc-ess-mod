@@ -1,6 +1,5 @@
 import {
   EvacuationFileHouseholdMember,
-  EvacuationFileSearchResult,
   EvacuationFileStatus,
   RegistrantStatus,
   SearchResults
@@ -19,6 +18,7 @@ export interface RegistrantProfileSearchResultModel {
   id?: null | string;
   isRestricted?: boolean;
   lastName?: null | string;
+  modifiedOn?: string;
   primaryAddress?: null | AddressModel;
   status?: RegistrantStatus;
 }
