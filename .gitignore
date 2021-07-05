@@ -6,3 +6,16 @@
 **/openshift/templates/*.params
 # Angular local environment files
 **/environment.local.ts
+/evacuees/src/API/EMBC.Registrants.API/bin/Debug/netcoreapp3.1
+/evacuees/src/API/EMBC.Registrants.API/obj/Debug/netcoreapp3.1/staticwebassets
+/evacuees/src/API/EMBC.Registrants.API/obj/Debug/netcoreapp3.1
+/evacuees/src/API/EMBC.Registrants.API/obj/Release/netcoreapp3.1
+/evacuees/src/API/EMBC.Registrants.API/obj
+/evacuees/src/API/EMBC.ResourceAccess.Dynamics/bin/Debug/netcoreapp3.1
+/evacuees/src/API/EMBC.ResourceAccess.Dynamics/obj/Debug/netcoreapp3.1
+/evacuees/src/API/EMBC.ResourceAccess.Dynamics/obj/Release/netcoreapp3.1
+/evacuees/src/API/EMBC.Tests.Integration.Registrants.API/bin
+/evacuees/src/API/EMBC.Tests.Integration.Registrants.API/obj
+/evacuees/src/API/EMBC.Tests.Unit.Registrants.API/bin
+/evacuees/src/API/EMBC.Tests.Unit.Registrants.API/obj
+/evacuees/src/API/EMBC.ResourceAccess.Dynamics/obj

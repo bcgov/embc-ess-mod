@@ -104,8 +104,8 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.NeedsAssessment.HouseholdMembers))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuatedFromAddress))
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
-                .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.EvacuationDate))
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.EvacuationDate))
                 ;
 
             CreateMap<RegistrantWithFiles, RegistrantProfileSearchResult>()
