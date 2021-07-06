@@ -55,7 +55,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// <summary>
     /// Updated registrant's verified status
     /// </summary>
-    public class UpdateRegistrantVerifiedCommand : Command
+    public class SetRegistrantVerificationStatusCommand : Command
     {
         public string RegistrantId { get; set; }
         public bool Verified { get; set; }

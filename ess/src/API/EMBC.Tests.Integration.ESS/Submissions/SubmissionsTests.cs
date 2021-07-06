@@ -269,7 +269,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var currentVerifiedStatus = registrant.VerifiedUser;
             var newStatus = !currentVerifiedStatus;
 
-            var id = await manager.Handle(new UpdateRegistrantVerifiedCommand { RegistrantId = registrant.Id, Verified = newStatus });
+            var id = await manager.Handle(new SetRegistrantVerificationStatusCommand { RegistrantId = registrant.Id, Verified = newStatus });
 
             var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
             updatedRegistrant.Id.ShouldBe(id);
