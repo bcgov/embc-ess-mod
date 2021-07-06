@@ -249,7 +249,7 @@ namespace EMBC.ESS.Managers.Submissions
                 files.Add(mappedFile);
             });
 
-            await householdMemberTasks.Union(profileTasks).ToArray().ForEachAsync(10, t => t);
+            await householdMemberTasks.Union(profileTasks).ToArray().ForEachAsync(5, t => t);
 
             var profileResults = profiles.ToArray();
             var fileResults = files.ToArray();
