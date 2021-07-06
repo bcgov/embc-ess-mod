@@ -70,15 +70,13 @@ namespace EMBC.ESS.Resources.Cases
     {
         public string FileId { get; set; }
         public string PrimaryRegistrantId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DateOfBirth { get; set; }
-        public bool IncludeHouseholdMembers { get; set; }
         public bool MaskSecurityPhrase { get; set; } = true;
+
         public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
         public DateTime? RegistraionDateFrom { get; set; }
         public DateTime? RegistraionDateTo { get; set; }
         public int? Limit { get; set; }
+        public string HouseholdMemberId { get; set; }
     }
 
     public class SaveEvacuationFileNote : ManageCaseCommand
