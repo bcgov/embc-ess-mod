@@ -264,6 +264,53 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task CanUpdateRegistrantVerified()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var currentVerifiedStatus = registrant.VerifiedUser;
+            var newStatus = !currentVerifiedStatus;
+
+            var id = await manager.Handle(new SetRegistrantVerificationStatusCommand { RegistrantId = registrant.Id, Verified = newStatus });
+
+            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            updatedRegistrant.Id.ShouldBe(id);
+            updatedRegistrant.Id.ShouldBe(registrant.Id);
+            updatedRegistrant.VerifiedUser.ShouldBe(newStatus);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchRegistrantsByName()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+
+            registrant.ShouldNotBeNull();
+
+            registrant.PrimaryAddress.Country.ShouldNotBeNull();
+
+            var registrants = (await manager.Handle(new RegistrantsSearchQuery { FirstName = "Elvis", LastName = "Presley" })).Items.Select(r => r.RegistrantProfile);
+
+            registrants.ShouldNotBeNull();
+            registrants.ShouldAllBe(r => r.FirstName == "Elvis");
+            registrants.ShouldAllBe(r => r.LastName == "Presley");
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchRegistrantsIncludeFiles()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+
+            registrant.ShouldNotBeNull();
+
+            registrant.PrimaryAddress.Country.ShouldNotBeNull();
+
+            var files = (await manager.Handle(new RegistrantsSearchQuery { FirstName = "Elvis", LastName = "Presley", IncludeCases = true })).Items.SelectMany(r => r.Files);
+
+            files.ShouldNotBeNull();
+            files.ShouldAllBe(f => f.HouseholdMembers
+                .Any(m => m.FirstName.Equals("Elvis", StringComparison.OrdinalIgnoreCase) && m.LastName.Equals("Presley", StringComparison.OrdinalIgnoreCase)));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchRegistrantsByUserId()
         {
             var userId = "CHRIS-TEST";
