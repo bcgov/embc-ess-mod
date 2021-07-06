@@ -15,9 +15,9 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <Product>EMBC ESS</Product>
     <PackageProjectUrl>https://github.com/bcgov/embc-ess-mod</PackageProjectUrl>
-    <AssemblyVersion>1.0.34.0</AssemblyVersion>
-    <FileVersion>1.0.34.0</FileVersion>
-    <Version>1.0.34</Version>
+    <AssemblyVersion>1.0.35.0</AssemblyVersion>
+    <FileVersion>1.0.35.0</FileVersion>
+    <Version>1.0.35</Version>
     <AnalysisMode>Default</AnalysisMode>
   </PropertyGroup>
 
