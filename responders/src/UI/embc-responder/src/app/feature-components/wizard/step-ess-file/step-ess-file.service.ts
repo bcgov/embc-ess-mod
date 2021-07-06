@@ -6,21 +6,17 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { Subject } from 'rxjs';
 import {
-  Address,
   EvacuationFile,
   EvacuationFileHouseholdMember,
   HouseholdMemberType,
   InsuranceOption,
   NeedsAssessment,
-  NoteType,
-  PersonDetails,
   Pet,
   ReferralServices
 } from 'src/app/core/api/models';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
-import { StepEvacueeProfileService } from '../step-evacuee-profile/step-evacuee-profile.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { WizardService } from '../wizard.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
@@ -33,11 +29,10 @@ export class StepEssFileService {
   private essTabsVal: Array<TabModel> = WizardTabModelValues.essFileTabs;
   private nextTabUpdateVal: Subject<void> = new Subject();
 
-  // Required values not set on form
-  private primaryRegistrantIdVal: string;
+  // Important values not set on form
+  // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
   private primaryAddressVal: AddressModel;
   private primaryMemberVal: HouseholdMemberModel;
-  private taskIdVal: string;
 
   // Evacuation Details tab
   private paperESSFileVal: string;
@@ -84,9 +79,8 @@ export class StepEssFileService {
   constructor(
     private dialog: MatDialog,
     private wizardService: WizardService,
-    private userService: UserService,
     private evacueeSession: EvacueeSessionService,
-    private stepEvacueeProfileService: StepEvacueeProfileService
+    private userService: UserService
   ) {}
   // Wizard variables
   public get essTabs(): Array<TabModel> {
@@ -104,13 +98,7 @@ export class StepEssFileService {
   }
 
   // Required values not set on form
-  public get primaryRegistrantId(): string {
-    return this.primaryRegistrantIdVal;
-  }
-  public set primaryRegistrantId(primaryRegistrantIdVal: string) {
-    this.primaryRegistrantIdVal = primaryRegistrantIdVal;
-  }
-
+  // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
   public get primaryAddress(): AddressModel {
     return this.primaryAddressVal;
   }
@@ -123,13 +111,6 @@ export class StepEssFileService {
   }
   public set primaryMember(primaryMemberVal: HouseholdMemberModel) {
     this.primaryMemberVal = primaryMemberVal;
-  }
-
-  public get taskId(): string {
-    return this.taskIdVal;
-  }
-  public set taskId(taskIdVal: string) {
-    this.taskIdVal = taskIdVal;
   }
 
   // Evacuation Details tab
@@ -373,8 +354,6 @@ export class StepEssFileService {
    * @returns Evacuation File record usable by the API
    */
   public createEvacFileDTO(): EvacuationFile {
-    const userProfile = this.userService.currentProfile;
-
     // Get correct API values for Needs Assessment selections
     const needsClothingDTO = globalConst.needsOptions.find(
       (ins) => ins.value === this.canRegistrantProvideClothing
@@ -403,40 +382,16 @@ export class StepEssFileService {
     });
 
     const allMembers: EvacuationFileHouseholdMember[] = [
-      {
-        dateOfBirth: this.stepEvacueeProfileService.personalDetails.dateOfBirth,
-        firstName: this.stepEvacueeProfileService.personalDetails.firstName,
-        lastName: this.stepEvacueeProfileService.personalDetails.lastName,
-        gender: this.stepEvacueeProfileService.personalDetails.gender,
-        initials: this.stepEvacueeProfileService.personalDetails.initials,
-        isPrimaryRegistrant: true,
-        type: HouseholdMemberType.Registrant
-      },
+      this.primaryMember,
       ...this.householdMembers
     ];
 
     const needsObject: NeedsAssessment = {
-      // notes: [
-      //   {
-      //     type: NoteType.EvacuationImpact,
-      //     content: this.evacuationImpact
-      //   },
-      //   {
-      //     type: NoteType.HouseHoldRecoveryPlan,
-      //     content: this.householdRecoveryPlan
-      //   },
-      //   {
-      //     type: NoteType.EvacuationExternalReferrals,
-      //     content: this.evacuationExternalReferrals
-      //   },
-      //   {
-      //     type: NoteType.PetCarePlans,
-      //     content: this.petCarePlans
-      //   }
-      // ],
-
       insurance: this.insurance,
       recommendedReferralServices: this.referredServiceDetails,
+      evacuationImpact: this.evacuationImpact,
+      houseHoldRecoveryPlan: this.householdRecoveryPlan,
+      evacuationExternalReferrals: this.evacuationExternalReferrals,
 
       householdMembers: allMembers,
       haveSpecialDiet: this.haveSpecialDiet,
@@ -446,6 +401,7 @@ export class StepEssFileService {
 
       pets: this.petsList,
       havePetsFood: this.havePetsFood,
+      petCarePlans: this.petCarePlans,
 
       canProvideFood: needsFoodDTO,
       canProvideLodging: needsLodgingDTO,
@@ -467,7 +423,7 @@ export class StepEssFileService {
       securityPhrase: this.securityPhrase,
       securityPhraseEdited: !this.bypassPhrase,
       task: {
-        taskNumber: userProfile.taskNumber
+        taskNumber: this.userService.currentProfile?.taskNumber
       }
     };
   }
@@ -475,7 +431,7 @@ export class StepEssFileService {
   /**
    * Update the wizard's values with ones fetched from API
    */
-  public getEvacFileDTO(essFile: EvacuationFileModel) {
+  public setFormValuesFromFile(essFile: EvacuationFileModel) {
     const essNeeds = essFile.needsAssessment;
 
     // Wizard variables
@@ -490,37 +446,20 @@ export class StepEssFileService {
     };
 
     // Evacuation Details tab
-    this.evacAddress = this.wizardService.setAddressObjectForForm(
-      essFile.evacuatedFromAddress
-    );
+    this.evacAddress = essFile.evacuatedFromAddress;
     this.facilityName = essFile.registrationLocation;
 
-    this.evacuatedFromPrimary =
-      this.stepEvacueeProfileService?.primaryAddressDetails ===
-      this.evacAddress;
+    this.evacuatedFromPrimary = this.primaryAddress === this.evacAddress;
 
-    // Get content for API Notes fields
-    // if (essNeeds.notes?.length > 0) {
-    //   this.evacuationImpact = essNeeds.notes?.find(
-    //     (note) => note.type === NoteType.EvacuationImpact
-    //   )?.content;
-
-    //   this.householdRecoveryPlan = essNeeds.notes?.find(
-    //     (note) => note.type === NoteType.HouseHoldRecoveryPlan
-    //   )?.content;
-
-    //   this.evacuationExternalReferrals = essNeeds.notes?.find(
-    //     (note) => note.type === NoteType.EvacuationExternalReferrals
-    //   )?.content;
-
-    //   this.petCarePlans = essNeeds.notes?.find(
-    //     (note) => note.type === NoteType.PetCarePlans
-    //   )?.content;
-    // }
     this.insurance = essNeeds.insurance;
+
+    this.evacuationImpact = essNeeds.evacuationImpact;
+    this.householdRecoveryPlan = essNeeds.houseHoldRecoveryPlan;
 
     this.referredServiceDetails = essNeeds.recommendedReferralServices;
     this.referredServices = essNeeds.recommendedReferralServices.length > 0;
+
+    this.evacuationExternalReferrals = essNeeds.evacuationExternalReferrals;
 
     // Household Members tab
     // Split main applicant from other household members, remap to UI model
@@ -541,11 +480,11 @@ export class StepEssFileService {
     this.haveMedicationSupply = essNeeds.haveMedicalSupplies;
 
     // Animals tab
-    // Pet Care Plans is set in "Notes" section further up
     this.petsList = essNeeds.pets;
     this.havePets = essNeeds.pets?.length > 0;
 
     this.havePetsFood = essNeeds.havePetsFood;
+    this.petCarePlans = essNeeds.petCarePlans;
 
     // Needs tab
     this.canRegistrantProvideFood = globalConst.needsOptions.find(

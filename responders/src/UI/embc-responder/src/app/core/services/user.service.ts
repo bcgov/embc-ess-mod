@@ -14,7 +14,7 @@ import { CacheService } from './cache.service';
   providedIn: 'root'
 })
 export class UserService {
-  private profile?: LoggedInUserProfile = null;
+  private currentProfileVal?: LoggedInUserProfile = null;
 
   constructor(
     private profileService: ProfileService,
@@ -34,21 +34,25 @@ export class UserService {
             this.cacheService.get('loggedInTask') === null || undefined
               ? null
               : this.cacheService.get('loggedInTask');
-          this.profile = { ...response, taskNumber, claims: [...userClaims] };
-          return this.profile;
+          this.currentProfileVal = {
+            ...response,
+            taskNumber,
+            claims: [...userClaims]
+          };
+          return this.currentProfileVal;
         })
       )
       .toPromise();
   }
 
   public get currentProfile(): LoggedInUserProfile {
-    return this.profile;
+    return this.currentProfileVal;
   }
 
   public hasClaim(claimType: ClaimType, value: string): boolean {
     return (
-      this.profile &&
-      this.profile.claims.findIndex(
+      this.currentProfileVal &&
+      this.currentProfileVal.claims.findIndex(
         (c) => c.claimType === claimType && c.claimValue === value
       ) >= 0
     );
@@ -56,7 +60,7 @@ export class UserService {
 
   public updateTaskNumber(taskNumber: string): void {
     this.cacheService.set('loggedInTask', taskNumber);
-    this.profile = { ...this.profile, taskNumber };
+    this.currentProfileVal = { ...this.currentProfileVal, taskNumber };
   }
 
   public clearAppStorage(): void {

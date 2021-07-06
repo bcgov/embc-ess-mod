@@ -96,6 +96,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
       '/responder-access/search/evacuee'
     );
     this.evacueeSessionService.setWizardType('new-registration');
+
     this.router.navigate(['/ess-wizard'], {
       queryParams: { type: 'new-registration' },
       queryParamsHandling: 'merge'

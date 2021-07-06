@@ -9,8 +9,6 @@ import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 import * as globalConst from '../../../../core/services/global-constants';
-import { EvacueeSearchService } from 'src/app/feature-components/search/evacuee-search/evacuee-search.service';
-import { EvacueeSearchContextModel } from 'src/app/core/models/evacuee-search-context.model';
 import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -37,7 +35,6 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     /\d/,
     /\d/
   ];
-  evacueeSearchContext: EvacueeSearchContextModel;
   tabUpdateSubscription: Subscription;
   editFlag: boolean;
   verifiedProfile: boolean;
@@ -49,7 +46,6 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
     private dialog: MatDialog
   ) {}
@@ -57,7 +53,6 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.editFlag = this.evacueeSessionService.getEditWizardFlag();
     this.verifiedProfile = this.stepEvacueeProfileService.verifiedProfile;
-    this.evacueeSearchContext = this.evacueeSearchService.evacueeSearchContext;
 
     this.createEvacueeDetailsForm();
     this.initDisabledFields();
@@ -73,17 +68,11 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   createEvacueeDetailsForm(): void {
     this.evacueeDetailsForm = this.formBuilder.group({
       firstName: [
-        this.stepEvacueeProfileService.personalDetails !== undefined
-          ? this.stepEvacueeProfileService.personalDetails.firstName
-          : this.evacueeSearchService.evacueeSearchContext
-              .evacueeSearchParameters.firstName,
+        this.stepEvacueeProfileService.personalDetails?.firstName,
         [this.customValidation.whitespaceValidator()]
       ],
       lastName: [
-        this.stepEvacueeProfileService.personalDetails !== undefined
-          ? this.stepEvacueeProfileService.personalDetails.lastName
-          : this.evacueeSearchService.evacueeSearchContext
-              .evacueeSearchParameters.lastName,
+        this.stepEvacueeProfileService.personalDetails?.lastName,
         [this.customValidation.whitespaceValidator()]
       ],
       preferredName: [
@@ -103,10 +92,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
         [this.customValidation.whitespaceValidator()]
       ],
       dateOfBirth: [
-        this.stepEvacueeProfileService.personalDetails !== undefined
-          ? this.stepEvacueeProfileService.personalDetails.dateOfBirth
-          : this.evacueeSearchService.evacueeSearchContext
-              .evacueeSearchParameters.dateOfBirth,
+        this.stepEvacueeProfileService.personalDetails?.dateOfBirth,
         [Validators.required, this.customValidation.dateOfBirthValidator()]
       ]
     });
