@@ -258,13 +258,16 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrationResult>> UpdateFileNote(string fileId, string noteId, Note note)
         {
+            var now = DateTime.Now;
+            var userId = User.FindFirstValue("user_id");
+            if (!note.CreatingTeamMemberId.Equals(userId) || note.AddedOn < now.AddHours(-24)) return BadRequest();
+
             note.Id = noteId;
             var cmd = new SaveEvacuationFileNoteCommand
             {
                 Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
                 FileId = fileId
             };
-            var userId = User.FindFirstValue("user_id");
             cmd.Note.CreatingTeamMemberId = userId;
 
             var id = await messagingClient.Send(cmd);
@@ -514,6 +517,7 @@ namespace EMBC.Responders.API.Controllers
         public NoteType Type { get; set; }
         public string Content { get; set; }
         public DateTime AddedOn { get; set; }
+        public string CreatingTeamMemberId { get; set; }
         public string MemberName { get; set; }
         public string TeamName { get; set; }
         public bool IsHidden { get; set; }
