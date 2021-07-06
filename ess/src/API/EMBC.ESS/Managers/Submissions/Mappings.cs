@@ -92,6 +92,7 @@ namespace EMBC.ESS.Managers.Submissions
             CreateMap<Resources.Contacts.Contact, Shared.Contracts.Submissions.ProfileSearchResult>()
                 .ForMember(d => d.RecentEvacuationFiles, opts => opts.Ignore())
                 .ForMember(d => d.RegistrationDate, opts => opts.MapFrom(s => s.CreatedOn))
+                .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => s.Verified))
                 ;
 
             CreateMap<Resources.Cases.HouseholdMember, Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember>()
