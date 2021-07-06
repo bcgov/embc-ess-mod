@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-  HouseholdMemberType,
-  RegistrantProfile
+  HouseholdMemberType
 } from 'src/app/core/api/models';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { CacheService } from 'src/app/core/services/cache.service';
