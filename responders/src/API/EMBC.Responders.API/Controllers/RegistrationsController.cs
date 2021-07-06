@@ -260,7 +260,7 @@ namespace EMBC.Responders.API.Controllers
         {
             var now = DateTime.Now;
             var userId = User.FindFirstValue("user_id");
-            if (!note.CreatingTeamMemberId.Equals(userId) || note.AddedOn < now.AddHours(-24)) return BadRequest();
+            if (!note.CreatingTeamMemberId.Equals(userId) || note.AddedOn < now.AddHours(-24)) return BadRequest(new ProblemDetails { Detail = "The note may be edited only by the user who created it withing a 24 hour period." });
 
             note.Id = noteId;
             var cmd = new SaveEvacuationFileNoteCommand
