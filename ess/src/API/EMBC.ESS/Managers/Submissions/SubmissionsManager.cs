@@ -175,7 +175,7 @@ namespace EMBC.ESS.Managers.Submissions
             });
         }
 
-        public async Task<RegistrantsSearchQueryResult> Handle(RegistrantsSearchQuery query)
+        public async Task<RegistrantsQueryResponse> Handle(RegistrantsQuery query)
         {
             var contacts = (await contactRepository.QueryContact(new RegistrantQuery
             {
@@ -184,10 +184,10 @@ namespace EMBC.ESS.Managers.Submissions
             })).Items;
             var registrants = mapper.Map<IEnumerable<RegistrantProfile>>(contacts);
 
-            return new RegistrantsSearchQueryResult { Items = registrants.Select(r => new RegistrantWithFiles { RegistrantProfile = r }).ToArray() };
+            return new RegistrantsQueryResponse { Items = registrants.ToArray() };
         }
 
-        public async Task<EvacuationFilesSearchQueryResult> Handle(EvacuationFilesSearchQuery query)
+        public async Task<EvacuationFilesQueryResponse> Handle(Shared.Contracts.Submissions.EvacuationFilesQuery query)
         {
             if (!string.IsNullOrEmpty(query.PrimaryRegistrantUserId))
             {
@@ -195,7 +195,7 @@ namespace EMBC.ESS.Managers.Submissions
                 if (registrant == null) throw new Exception($"registrant with user id '{query.PrimaryRegistrantUserId}' not found");
                 query.PrimaryRegistrantId = registrant.Id;
             }
-            var cases = (await caseRepository.QueryCase(new EvacuationFilesQuery
+            var cases = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
             {
                 FileId = query.FileId,
                 PrimaryRegistrantId = query.PrimaryRegistrantId,
@@ -215,7 +215,7 @@ namespace EMBC.ESS.Managers.Submissions
                 note.TeamName = member.TeamName;
             }
 
-            return new EvacuationFilesSearchQueryResult { Items = results };
+            return new EvacuationFilesQueryResponse { Items = results };
         }
 
         public async Task<EvacueeSearchQueryResponse> Handle(EvacueeSearchQuery query)
@@ -230,7 +230,7 @@ namespace EMBC.ESS.Managers.Submissions
             var profileTasks = searchResults.MatchingReguistrantIds.Select(async id =>
             {
                 var profile = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = id })).Items.Single();
-                var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = id })).Items;
+                var files = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { PrimaryRegistrantId = id })).Items;
                 var mappedProfile = mapper.Map<ProfileSearchResult>(profile);
                 mappedProfile.RecentEvacuationFiles = mapper.Map<IEnumerable<EvacuationFileSearchResult>>(files);
                 profiles.Add(mappedProfile);
@@ -239,7 +239,7 @@ namespace EMBC.ESS.Managers.Submissions
             var files = new ConcurrentBag<EvacuationFileSearchResult>();
             var householdMemberTasks = searchResults.MatcingHouseholdMemberIds.Select(async id =>
             {
-                var file = (await caseRepository.QueryCase(new EvacuationFilesQuery { HouseholdMemberId = id })).Items.Single();
+                var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { HouseholdMemberId = id })).Items.Single();
                 var mappedFile = mapper.Map<EvacuationFileSearchResult>(file);
                 //mark household members that caused a match
                 foreach (var member in mappedFile.HouseholdMembers)
@@ -310,7 +310,7 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<VerifySecurityPhraseResponse> Handle(VerifySecurityPhraseQuery query)
         {
-            var file = (await caseRepository.QueryCase(new EvacuationFilesQuery
+            var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
             {
                 FileId = query.FileId,
                 MaskSecurityPhrase = false

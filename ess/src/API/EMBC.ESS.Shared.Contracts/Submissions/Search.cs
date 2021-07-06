@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Submissions
 {
-    public class EvacuationFilesSearchQuery : Query<EvacuationFilesSearchQueryResult>
+    public class EvacuationFilesQuery : Query<EvacuationFilesQueryResponse>
     {
         public string FileId { get; set; }
         public string PrimaryRegistrantId { get; set; }
@@ -27,27 +27,21 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
     }
 
-    public class EvacuationFilesSearchQueryResult
+    public class EvacuationFilesQueryResponse
     {
         public IEnumerable<EvacuationFile> Items { get; set; }
     }
 
-    public class RegistrantsSearchQuery : Query<RegistrantsSearchQueryResult>
+    public class RegistrantsQuery : Query<RegistrantsQueryResponse>
     {
         public string Id { get; set; }
         public string UserId { get; set; }
         public string FileId { get; set; }
     }
 
-    public class RegistrantsSearchQueryResult
+    public class RegistrantsQueryResponse
     {
-        public IEnumerable<RegistrantWithFiles> Items { get; set; }
-    }
-
-    public class RegistrantWithFiles
-    {
-        public RegistrantProfile RegistrantProfile { get; set; }
-        public IEnumerable<EvacuationFile> Files { get; set; }
+        public IEnumerable<RegistrantProfile> Items { get; set; }
     }
 
     public class VerifySecurityQuestionsQuery : Query<VerifySecurityQuestionsResponse>
