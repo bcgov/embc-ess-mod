@@ -6,20 +6,8 @@ using EMBC.ESS.Shared.Contracts.Submissions;
 
 namespace EMBC.Tests.Unit.Responders.API
 {
-    public class FakeGenerator
+    public static class FakeGenerator
     {
-        //public static (string Code, string Name)[] Jurisdictions = new[]
-        //{
-        //    (Code:"j1", Name:"JUR1"),
-        //    (Code:"j2", Name:"JUR2"),
-        //    (Code:"j3", Name:"JUR3"),
-        //    (Code:"j4", Name:"JUR4"),
-        //    (Code:"j5", Name:"JUR5"),
-        //    (Code:"j6", Name:"JUR6"),
-        //    (Code:"j7", Name:"JUR7"),
-        //    (Code:"j8", Name:"JUR8"),
-        //};
-
         public static RegistrantProfile CreateRegistrantProfile(bool makeRestricted = false)
         {
             var registrant = new Faker<RegistrantProfile>()
@@ -161,7 +149,7 @@ namespace EMBC.Tests.Unit.Responders.API
             }
         }
 
-        public static IEnumerable<RegistrantWithFiles> CreateRegistrantProfilesWithFiles(int numberOfregistrants = 1, bool withAtLeastOneRestrictedAccess = false)
+        public static IEnumerable<(RegistrantProfile profile, IEnumerable<EvacuationFile> files)> CreateRegistrantProfilesWithFiles(int numberOfregistrants = 1, bool withAtLeastOneRestrictedAccess = false)
         {
             var seed = Randomizer.Seed.Next(numberOfregistrants - 1);
             for (int i = 0; i < numberOfregistrants; i++)
@@ -169,12 +157,42 @@ namespace EMBC.Tests.Unit.Responders.API
                 var profile = CreateRegistrantProfile(makeRestricted: withAtLeastOneRestrictedAccess && i == seed);
                 var filesSeed = Randomizer.Seed.Next(0, 3);
                 var files = CreateEvacuationFiles(filesSeed, withAtLeastOneRestrictedAccess);
-                yield return new RegistrantWithFiles
-                {
-                    RegistrantProfile = profile,
-                    Files = files
-                };
+                yield return (profile, files);
             };
         }
+
+        public static IEnumerable<ProfileSearchResult> MapToSearchResults(this IEnumerable<(RegistrantProfile profile, IEnumerable<EvacuationFile> files)> source) =>
+            source.Select(p => new ProfileSearchResult
+            {
+                Id = p.profile.Id,
+                FirstName = p.profile.FirstName,
+                LastName = p.profile.LastName,
+                RegistrationDate = p.profile.CreatedOn,
+                IsVerified = p.profile.VerifiedUser,
+                PrimaryAddress = p.profile.PrimaryAddress,
+                RestrictedAccess = p.profile.RestrictedAccess,
+                RecentEvacuationFiles = p.files.MapToSearchResults()
+            });
+
+        public static IEnumerable<EvacuationFileSearchResult> MapToSearchResults(this IEnumerable<EvacuationFile> src) =>
+            src.Select(f => new EvacuationFileSearchResult
+            {
+                Id = f.Id,
+                CreatedOn = f.NeedsAssessment.CreatedOn,
+                EvacuationAddress = f.EvacuatedFromAddress,
+                EvacuationDate = f.EvacuationDate.Value,
+                RestrictedAccess = f.RestrictedAccess,
+                Status = f.Status,
+                TaskId = f.TaskId,
+                HouseholdMembers = f.HouseholdMembers.Select(m => new EvacuationFileSearchResultHouseholdMember
+                {
+                    Id = m.Id,
+                    FirstName = m.FirstName,
+                    LastName = m.LastName,
+                    IsPrimaryRegistrant = m.IsPrimaryRegistrant,
+                    LinkedRegistrantId = m.LinkedRegistrantId,
+                    IsSearchMatch = false
+                })
+            });
     }
 }
