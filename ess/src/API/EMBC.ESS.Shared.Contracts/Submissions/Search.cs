@@ -96,6 +96,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool RestrictedAccess { get; set; }
         public DateTime RegistrationDate { get; set; }
         public IEnumerable<EvacuationFileSearchResult> RecentEvacuationFiles { get; set; }
+        public bool IsVerified { get; set; }
     }
 
     public class EvacuationFileSearchResult
@@ -116,5 +117,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool IsSearchMatch { get; set; }
+        public string LinkedRegistrantId { get; set; }
+        public bool IsPrimaryRegistrant { get; set; }
     }
 }
