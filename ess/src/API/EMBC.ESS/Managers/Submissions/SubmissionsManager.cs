@@ -145,6 +145,15 @@ namespace EMBC.ESS.Managers.Submissions
             await contactRepository.ManageContact(new DeleteContact { ContactId = contact.Id });
         }
 
+        public async Task<string> Handle(SetRegistrantVerificationStatusCommand cmd)
+        {
+            var contact = (await contactRepository.QueryContact(new ContactQuery { ContactId = cmd.RegistrantId })).Items.SingleOrDefault();
+            if (contact == null) throw new Exception($"Couuld not find existing Registrant with id {cmd.RegistrantId}");
+            contact.Verified = cmd.Verified;
+            var res = await contactRepository.ManageContact(new SaveContact { Contact = contact });
+            return res.ContactId;
+        }
+
         private async Task SendEmailNotification(SubmissionTemplateType notificationType, string email, string name, IEnumerable<KeyValuePair<string, string>> tokens)
         {
             var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(notificationType);
