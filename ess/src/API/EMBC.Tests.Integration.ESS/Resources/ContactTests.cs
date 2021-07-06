@@ -26,7 +26,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanGetContact()
         {
-            var contactQuery = new ContactQuery
+            var contactQuery = new RegistrantQuery
             {
                 UserId = TestUserId
             };
@@ -47,7 +47,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task CanUpdateContact()
         {
             /* Get Contact */
-            var contactQuery = new ContactQuery
+            var contactQuery = new RegistrantQuery
             {
                 UserId = TestUserId
             };
@@ -70,7 +70,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var updatedContactId = saveResult.ContactId;
 
             /* Get Updated Contact */
-            var updatedContactQuery = new ContactQuery
+            var updatedContactQuery = new RegistrantQuery
             {
                 ContactId = updatedContactId
             };
@@ -84,7 +84,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         public async Task CanCreateContact()
         {
             /* Get Contact */
-            var contactQuery = new ContactQuery
+            var contactQuery = new RegistrantQuery
             {
                 UserId = TestUserId
             };
@@ -102,7 +102,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var newContactId = saveResult.ContactId;
 
             /* Get New Contact */
-            var newContactQuery = new ContactQuery
+            var newContactQuery = new RegistrantQuery
             {
                 ContactId = newContactId
             };
@@ -120,7 +120,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var deletedContactId = deleteResult.ContactId;
 
             /* Get Deleted Contact */
-            var deletedCaseQuery = new ContactQuery
+            var deletedCaseQuery = new RegistrantQuery
             {
                 ContactId = deletedContactId
             };
@@ -137,7 +137,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var city = "226adfaf-9f97-ea11-b813-005056830319";
 
             /* Get Contact */
-            var contactQuery = new ContactQuery
+            var contactQuery = new RegistrantQuery
             {
                 UserId = TestUserId
             };
@@ -163,7 +163,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var newContactId = saveResult.ContactId;
 
             /* Get New Contact */
-            var newContactQuery = new ContactQuery
+            var newContactQuery = new RegistrantQuery
             {
                 ContactId = newContactId
             };
@@ -189,7 +189,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var deletedContactId = deleteResult.ContactId;
 
             /* Get deleted contact */
-            var deletedCaseQuery = new ContactQuery
+            var deletedCaseQuery = new RegistrantQuery
             {
                 ContactId = deletedContactId
             };

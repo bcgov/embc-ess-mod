@@ -1,10 +1,9 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
   FormGroup,
-  ValidationErrors,
   Validators
 } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
@@ -13,9 +12,6 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { Subscription } from 'rxjs';
-import { AddressModel } from 'src/app/core/models/address.model';
-import { CommunityType } from '../../../../core/api/models';
-import { StepEvacueeProfileService } from '../../step-evacuee-profile/step-evacuee-profile.service';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -39,7 +35,6 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   tabUpdateSubscription: Subscription;
 
   constructor(
-    public stepEvacueeProfileService: StepEvacueeProfileService,
     public stepEssFileService: StepEssFileService,
     private router: Router,
     private formBuilder: FormBuilder,
@@ -111,7 +106,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       this.showBCAddressForm = false;
       this.evacDetailsForm
         .get('evacAddress')
-        .setValue(this.stepEvacueeProfileService.primaryAddressDetails);
+        .setValue(this.stepEssFileService.primaryAddress);
     } else {
       this.showBCAddressForm = true;
       this.evacDetailsForm.get('evacAddress').reset();
@@ -292,10 +287,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * Checks if the inserted primary address is in BC Province
    */
   private checkPrimaryAddress() {
-    if (
-      this.stepEvacueeProfileService?.primaryAddressDetails?.stateProvince
-        ?.code !== 'BC'
-    ) {
+    if (this.stepEssFileService?.primaryAddress?.stateProvince?.code !== 'BC') {
       this.evacDetailsForm.get('evacuatedFromPrimary').setValue('No');
       this.isBCAddress = false;
     }

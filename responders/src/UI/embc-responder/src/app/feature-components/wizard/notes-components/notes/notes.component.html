@@ -12,9 +12,15 @@
         <div class="col-md-8">
           <p>{{ count }} note have been added for this ESS File.</p>
 
-          <button class="button-p" mat-button>Add Notes</button>
+          <button
+            class="button-p"
+            [disabled]="isAddDisabled"
+            mat-button
+            (click)="addNotes()"
+          >
+            Add Notes
+          </button>
 
-          <!--Add component to add notes here-->
           <div class="row">
             <div class="col-md-12 loader-align">
               <app-loader
@@ -25,8 +31,14 @@
               ></app-loader>
             </div>
           </div>
-
-          <app-list-notes [notesList]="notesList"></app-list-notes>
+          <app-add-notes
+            *ngIf="addNoteFlag"
+            (closeEvent)="cancel()"
+          ></app-add-notes>
+          <app-list-notes
+            *ngIf="!addNoteFlag"
+            [notesList]="notesList"
+          ></app-list-notes>
         </div>
         <div class="col-md-4">
           <mat-card class="tips-card">

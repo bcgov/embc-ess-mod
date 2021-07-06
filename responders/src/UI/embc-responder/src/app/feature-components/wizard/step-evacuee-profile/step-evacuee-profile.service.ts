@@ -21,48 +21,93 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
-  private profileTabs: Array<TabModel> =
+  // Wizard variables
+  private profileTabsVal: Array<TabModel> =
     WizardTabModelValues.evacueeProfileTabs;
 
-  private setNextTabUpdate: Subject<void> = new Subject();
+  private nextTabUpdateVal: Subject<void> = new Subject();
 
-  private restricted: boolean;
-  private personalDetail: PersonDetails;
-  private contactDetail: ContactDetails;
-  private showContacts: boolean;
-  private confirmEmails: string;
+  // Restriction tab
+  private restrictedAccessVal: boolean;
 
-  private primaryAddressDetail: AddressModel;
-  private mailingAddressDetail: AddressModel;
+  // Evacuee Details tab
+  // First, Last, and DoB are pre-set in wizardStepService
+  private personalDetailsVal: PersonDetails;
+
+  // Address tab
+  private primaryAddressDetailsVal: AddressModel;
   private isBcAddressVal: string;
-  private isBcMailingAddressVal: string;
+
   private isMailingAddressSameAsPrimaryAddressVal: string;
+  private mailingAddressDetailsVal: AddressModel;
+  private isBcMailingAddressVal: string;
 
-  private bypassQuestions: boolean;
-  private securityQuestion: SecurityQuestion[];
-  private securityQuestionOption: string[];
+  // Contact tab
+  private showContactVal: boolean;
+  private contactDetailsVal: ContactDetails;
+  private confirmEmailVal: string;
 
-  private verified: boolean;
-  private unlockedField: boolean;
+  // Security Questions tab
+  private bypassSecurityQuestionsVal: boolean;
+  private securityQuestionsVal: SecurityQuestion[];
+  private securityQuestionOptionsVal: string[];
+
+  // Review & Save tab
+  private verifiedProfileVal: boolean;
+  private unlockedFieldsVal: boolean;
 
   constructor(
     private dialog: MatDialog,
     private wizardService: WizardService,
     private evacueeSession: EvacueeSessionService
   ) {}
+  // Wizard variables
+  public get profileTabs(): Array<TabModel> {
+    return this.profileTabsVal;
+  }
+  public set profileTabs(profileTabsVal: Array<TabModel>) {
+    this.profileTabsVal = profileTabsVal;
+  }
 
-  public get showContact(): boolean {
-    return this.showContacts;
+  public get nextTabUpdate(): Subject<void> {
+    return this.nextTabUpdateVal;
   }
-  public set showContact(showContacts: boolean) {
-    this.showContacts = showContacts;
+  public set nextTabUpdate(nextTabUpdateVal: Subject<void>) {
+    this.nextTabUpdateVal = nextTabUpdateVal;
   }
 
-  public get confirmEmail(): string {
-    return this.confirmEmails;
+  // Required values not set on form
+
+  // Restriction tab
+  public get restrictedAccess(): boolean {
+    return this.restrictedAccessVal;
   }
-  public set confirmEmail(value: string) {
-    this.confirmEmails = value;
+  public set restrictedAccess(restrictedAccessVal: boolean) {
+    this.restrictedAccessVal = restrictedAccessVal;
+  }
+
+  // Evacuee Details tab
+  // First, Last, and DoB are pre-set in wizardStepService
+  public get personalDetails(): PersonDetails {
+    return this.personalDetailsVal;
+  }
+  public set personalDetails(personalDetailsVal: PersonDetails) {
+    this.personalDetailsVal = personalDetailsVal;
+  }
+
+  // Address tab
+  public get primaryAddressDetails(): AddressModel {
+    return this.primaryAddressDetailsVal;
+  }
+  public set primaryAddressDetails(primaryAddressDetailsVal: AddressModel) {
+    this.primaryAddressDetailsVal = primaryAddressDetailsVal;
+  }
+
+  public get isBcAddress(): string {
+    return this.isBcAddressVal;
+  }
+  public set isBcAddress(isBcAddressVal: string) {
+    this.isBcAddressVal = isBcAddressVal;
   }
 
   public get isMailingAddressSameAsPrimaryAddress(): string {
@@ -74,6 +119,13 @@ export class StepEvacueeProfileService {
     this.isMailingAddressSameAsPrimaryAddressVal = isMailingAddressSameAsPrimaryAddressVal;
   }
 
+  public get mailingAddressDetails(): AddressModel {
+    return this.mailingAddressDetailsVal;
+  }
+  public set mailingAddressDetails(mailingAddressDetailsVal: AddressModel) {
+    this.mailingAddressDetailsVal = mailingAddressDetailsVal;
+  }
+
   public get isBcMailingAddress(): string {
     return this.isBcMailingAddressVal;
   }
@@ -81,100 +133,68 @@ export class StepEvacueeProfileService {
     this.isBcMailingAddressVal = isBcMailingAddressVal;
   }
 
-  public get isBcAddress(): string {
-    return this.isBcAddressVal;
+  // Contact tab
+  public get showContact(): boolean {
+    return this.showContactVal;
   }
-  public set isBcAddress(isBcAddressVal: string) {
-    this.isBcAddressVal = isBcAddressVal;
-  }
-
-  public get restrictedAccess(): boolean {
-    return this.restricted;
-  }
-  public set restrictedAccess(restricted: boolean) {
-    this.restricted = restricted;
-  }
-
-  public get verifiedProfile(): boolean {
-    return this.verified;
-  }
-  public set verifiedProfile(verified: boolean) {
-    this.verified = verified;
-  }
-
-  public get personalDetails(): PersonDetails {
-    return this.personalDetail;
-  }
-  public set personalDetails(personalDetail: PersonDetails) {
-    this.personalDetail = personalDetail;
-  }
-
-  public get primaryAddressDetails(): AddressModel {
-    return this.primaryAddressDetail;
-  }
-  public set primaryAddressDetails(primaryAddressDetail: AddressModel) {
-    this.primaryAddressDetail = primaryAddressDetail;
-  }
-
-  public get mailingAddressDetails(): AddressModel {
-    return this.mailingAddressDetail;
-  }
-  public set mailingAddressDetails(mailingAddressDetail: AddressModel) {
-    this.mailingAddressDetail = mailingAddressDetail;
+  public set showContact(showContactVal: boolean) {
+    this.showContactVal = showContactVal;
   }
 
   public get contactDetails(): ContactDetails {
-    return this.contactDetail;
+    return this.contactDetailsVal;
   }
-  public set contactDetails(contactDetail: ContactDetails) {
-    this.contactDetail = contactDetail;
+  public set contactDetails(contactDetailsVal: ContactDetails) {
+    this.contactDetailsVal = contactDetailsVal;
   }
 
-  public get bypassSecurityQuestions(): boolean {
-    return this.bypassQuestions;
+  public get confirmEmail(): string {
+    return this.confirmEmailVal;
   }
-  public set bypassSecurityQuestions(bypassQuestions: boolean) {
-    this.bypassQuestions = bypassQuestions;
+  public set confirmEmail(confirmEmailVal: string) {
+    this.confirmEmailVal = confirmEmailVal;
+  }
+
+  // Security Questions tab
+  public get bypassSecurityQuestions(): boolean {
+    return this.bypassSecurityQuestionsVal;
+  }
+  public set bypassSecurityQuestions(bypassSecurityQuestionsVal: boolean) {
+    this.bypassSecurityQuestionsVal = bypassSecurityQuestionsVal;
   }
 
   public get securityQuestions(): SecurityQuestion[] {
-    return this.securityQuestion;
+    return this.securityQuestionsVal;
   }
-  public set securityQuestions(securityQuestion: SecurityQuestion[]) {
-    this.securityQuestion = securityQuestion;
+  public set securityQuestions(securityQuestionsVal: SecurityQuestion[]) {
+    this.securityQuestionsVal = securityQuestionsVal;
   }
 
   public get securityQuestionOptions(): string[] {
-    return this.securityQuestionOption;
+    return this.securityQuestionOptionsVal;
   }
-  public set securityQuestionOptions(securityQuestionOption: string[]) {
-    this.securityQuestionOption = securityQuestionOption;
+  public set securityQuestionOptions(securityQuestionOptionsVal: string[]) {
+    this.securityQuestionOptionsVal = securityQuestionOptionsVal;
   }
 
   public get unlockedFields(): boolean {
-    return this.unlockedField;
+    return this.unlockedFieldsVal;
   }
 
-  public set unlockedFields(lockedField: boolean) {
-    this.unlockedField = lockedField;
+  public set unlockedFields(unlockedFieldsVal: boolean) {
+    this.unlockedFieldsVal = unlockedFieldsVal;
   }
 
-  public get nextTabUpdate(): Subject<void> {
-    return this.setNextTabUpdate;
+  // Review & Save tab
+  public get verifiedProfile(): boolean {
+    return this.verifiedProfileVal;
   }
-  public set nextTabUpdate(setNextTabUpdate: Subject<void>) {
-    this.setNextTabUpdate = setNextTabUpdate;
-  }
-
-  public get tabs(): Array<TabModel> {
-    return this.profileTabs;
-  }
-  public set tabs(tabs: Array<TabModel>) {
-    this.profileTabs = tabs;
+  public set verifiedProfile(verifiedProfileVal: boolean) {
+    this.verifiedProfileVal = verifiedProfileVal;
   }
 
   public setTabStatus(name: string, status: string): void {
-    this.tabs.map((tab) => {
+    this.profileTabs.map((tab) => {
       if (tab.name === name) {
         tab.status = status;
       }
@@ -209,7 +229,7 @@ export class StepEvacueeProfileService {
    * @returns true/false
    */
   checkTabsStatus(): boolean {
-    return this.tabs.some(
+    return this.profileTabs.some(
       (tab) =>
         (tab.status === 'not-started' || tab.status === 'incomplete') &&
         tab.name !== 'review'
@@ -257,8 +277,9 @@ export class StepEvacueeProfileService {
   /**
    * Update the wizard's values with ones fetched from API
    */
-  public getProfileDTO(profile: RegistrantProfileModel) {
+  public setFormValuesFromProfile(profile: RegistrantProfileModel) {
     this.evacueeSession.profileId = profile.id;
+
     this.restrictedAccess = profile.restriction;
     this.personalDetails = profile.personalDetails;
     this.contactDetails = profile.contactDetails;

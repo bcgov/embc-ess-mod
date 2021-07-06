@@ -31,6 +31,10 @@ namespace EMBC.ESS.Resources.Cases
         Task<string> Delete(string essFileNumber);
 
         Task<string> UpdateSecurityPhrase(string essFileNumber, string securityPhrase);
+
+        Task<string> CreateNote(string essFileNumber, Note note);
+
+        Task<string> UpdateNote(string essFileNumber, Note note);
     }
 
     public class EvacuationFile : Case

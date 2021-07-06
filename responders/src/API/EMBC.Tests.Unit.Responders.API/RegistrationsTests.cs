@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Responders.API;
-using EMBC.Responders.API.Services;
 using FakeItEasy;
-using Xunit;
 using Shouldly;
-using System;
+using Xunit;
 
 namespace EMBC.Tests.Unit.Responders.API
 {
@@ -189,9 +187,6 @@ namespace EMBC.Tests.Unit.Responders.API
 
                     if (!string.IsNullOrEmpty(query.Id)) ret = ret.Where(r => r.Value.RegistrantProfile.Id == query.Id);
                     if (!string.IsNullOrEmpty(query.UserId)) ret = ret.Where(r => r.Value.RegistrantProfile.UserId == query.UserId);
-                    if (!string.IsNullOrEmpty(query.FirstName)) ret = ret.Where(r => r.Value.RegistrantProfile.FirstName.Equals(query.FirstName, StringComparison.OrdinalIgnoreCase));
-                    if (!string.IsNullOrEmpty(query.LastName)) ret = ret.Where(r => r.Value.RegistrantProfile.LastName.Equals(query.LastName, StringComparison.OrdinalIgnoreCase));
-                    if (!string.IsNullOrEmpty(query.DateOfBirth)) ret = ret.Where(r => r.Value.RegistrantProfile.DateOfBirth.Equals(query.DateOfBirth, StringComparison.OrdinalIgnoreCase));
 
                     return Task.FromResult(new RegistrantsSearchQueryResult
                     {
