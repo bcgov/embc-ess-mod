@@ -230,8 +230,8 @@ namespace EMBC.ESS.Managers.Submissions
             var profileTasks = searchResults.MatchingReguistrantIds.Select(async id =>
             {
                 var profile = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = id })).Items.Single();
-                var mappedProfile = mapper.Map<ProfileSearchResult>(profile);
                 var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = id })).Items;
+                var mappedProfile = mapper.Map<ProfileSearchResult>(profile);
                 mappedProfile.RecentEvacuationFiles = mapper.Map<IEnumerable<EvacuationFileSearchResult>>(files);
                 profiles.Add(mappedProfile);
             });
@@ -241,6 +241,7 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 var file = (await caseRepository.QueryCase(new EvacuationFilesQuery { HouseholdMemberId = id })).Items.Single();
                 var mappedFile = mapper.Map<EvacuationFileSearchResult>(file);
+                //mark household members that caused a match
                 foreach (var member in mappedFile.HouseholdMembers)
                 {
                     if (member.Id == id) member.IsSearchMatch = true;
@@ -248,11 +249,11 @@ namespace EMBC.ESS.Managers.Submissions
                 files.Add(mappedFile);
             });
 
-            await householdMemberTasks.ToArray().ForEachAsync(25, t => t);
-            await profileTasks.ToArray().ForEachAsync(25, t => t);
+            await householdMemberTasks.Union(profileTasks).ToArray().ForEachAsync(10, t => t);
 
             var profileResults = profiles.ToArray();
             var fileResults = files.ToArray();
+
             if (!query.IncludeRestrictedAccess)
             {
                 //check if any restricted files exist, then return no results

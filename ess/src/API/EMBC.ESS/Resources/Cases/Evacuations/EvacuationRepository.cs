@@ -276,7 +276,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             }
 
             var results = new ConcurrentBag<era_evacuationfile>();
-            await allFiles.ForEachAsync(25, async f => results.Add(await LoadEvacuationFileAsync(readCtx, f)));
+            await allFiles.ForEachAsync(10, async f => results.Add(await LoadEvacuationFileAsync(readCtx, f)));
 
             var files = results.Where(f => f != null).Select(f => MapEvacuationFile(f, query.MaskSecurityPhrase));
             if (query.Limit.HasValue) files = files.OrderByDescending(f => f.Id).Take(query.Limit.Value);
@@ -289,7 +289,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var contactQuery = ctx.era_householdmembers
                  .Expand(m => m.era_EvacuationFileid)
                  .Where(m => m.statecode == (int)EntityState.Active)
-                 .Where(m => m._era_evacuationfileid_value.HasValue);
+                 .Where(m => m._era_evacuationfileid_value != null);
 
             if (!string.IsNullOrEmpty(query.PrimaryRegistrantId)) contactQuery = contactQuery.Where(m => m.era_isprimaryregistrant == true && m._era_registrant_value == Guid.Parse(query.PrimaryRegistrantId));
             if (!string.IsNullOrEmpty(query.HouseholdMemberId)) contactQuery = contactQuery.Where(m => m.era_householdmemberid == Guid.Parse(query.HouseholdMemberId));
