@@ -112,7 +112,7 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Updates a Registrant Profile Verified flag
+        /// Sets the Registrant Profile Verified flag to the supplied value
         /// </summary>
         /// <param name="registrantId">RegistrantId</param>
         /// <param name="verified">Verified</param>
@@ -120,14 +120,14 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("registrants/{registrantId}/verified/{verified}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> UpdateRegistrantVerified(string registrantId, bool verified)
+        public async Task<ActionResult<RegistrationResult>> SetRegistrantVerified(string registrantId, bool verified)
         {
-            //var profile = mapper.Map<ESS.Shared.Contracts.Submissions.RegistrantProfile>(registrant);
-            //var id = await messagingClient.Send(new SaveRegistrantCommand
-            //{
-            //    Profile = profile
-            //});
-            return await Task.FromResult(Ok(new RegistrationResult { Id = registrantId }));
+            var id = await messagingClient.Send(new SetRegistrantVerificationStatusCommand
+            {
+                RegistrantId = registrantId,
+                Verified = verified
+            });
+            return await Task.FromResult(Ok(new RegistrationResult { Id = id }));
         }
 
         /// <summary>
