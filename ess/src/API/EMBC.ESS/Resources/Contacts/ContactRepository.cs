@@ -29,14 +29,11 @@ namespace EMBC.ESS.Resources.Contacts
     {
         private readonly EssContext essContext;
         private readonly IMapper mapper;
-        private readonly EssContext readContext;
 
         public ContactRepository(EssContext essContext, IMapper mapper)
         {
             this.essContext = essContext;
             this.mapper = mapper;
-            readContext = essContext.Clone();
-            readContext.MergeOption = MergeOption.NoTracking;
         }
 
         public async Task<ContactCommandResult> ManageContact(ContactCommand cmd)
@@ -148,6 +145,9 @@ namespace EMBC.ESS.Resources.Contacts
 
         private async Task<ContactQueryResult> HandleSearchQuery(RegistrantQuery query)
         {
+            var readContext = essContext.Clone();
+            readContext.MergeOption = MergeOption.NoTracking;
+
             IQueryable<contact> contactQuery = readContext.contacts
                   .Expand(c => c.era_City)
                   .Expand(c => c.era_ProvinceState)
@@ -161,8 +161,6 @@ namespace EMBC.ESS.Resources.Contacts
             if (!string.IsNullOrEmpty(query.UserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.UserId, StringComparison.OrdinalIgnoreCase));
 
             var contacts = await ((DataServiceQuery<contact>)contactQuery).GetAllPagesAsync();
-
-            readContext.Detach(contacts);
 
             return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts) };
         }

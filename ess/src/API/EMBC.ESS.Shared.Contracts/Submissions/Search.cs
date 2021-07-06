@@ -24,11 +24,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string FileId { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string PrimaryRegistrantUserId { get; set; }
-
-        //public string FirstName { get; set; }
-        //public string LastName { get; set; }
-        //public string DateOfBirth { get; set; }
-        //public bool IncludeHouseholdMembers { get; set; }
         public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
     }
 
@@ -42,10 +37,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string Id { get; set; }
         public string UserId { get; set; }
         public string FileId { get; set; }
-        //public string FirstName { get; set; }
-        //public string LastName { get; set; }
-        //public string DateOfBirth { get; set; }
-        //public bool IncludeCases { get; set; } = false;
     }
 
     public class RegistrantsSearchQueryResult

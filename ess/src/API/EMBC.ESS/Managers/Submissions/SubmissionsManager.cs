@@ -239,8 +239,8 @@ namespace EMBC.ESS.Managers.Submissions
                 files.Add(mappedFile);
             });
 
-            //await Task.WhenAll(profileTasks.Union(householdMemberTasks).ToArray());
-            await profileTasks.Union(householdMemberTasks).ToArray().ForEachAsync(25, t => t);
+            await householdMemberTasks.ToArray().ForEachAsync(25, t => t);
+            await profileTasks.ToArray().ForEachAsync(25, t => t);
 
             var profileResults = profiles.ToArray();
             var fileResults = files.ToArray();
