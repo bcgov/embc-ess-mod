@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.Responders.API.Controllers;
 
 namespace EMBC.Responders.API.Services
 {
@@ -27,13 +27,46 @@ namespace EMBC.Responders.API.Services
     {
         public Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, Controllers.MemberRole userRole);
 
-        public Task<Controllers.EvacuationFile> GetEvacuationFile(string fileId);
+        public Task<EvacuationFile> GetEvacuationFile(string fileId);
     }
 
     public class SearchResults
     {
-        public IEnumerable<EvacuationFile> Files { get; set; }
-        public IEnumerable<RegistrantWithFiles> Registrants { get; set; }
+        public IEnumerable<EvacuationFileSearchResult> Files { get; set; }
+        public IEnumerable<RegistrantProfileSearchResult> Registrants { get; set; }
+    }
+
+    public class RegistrantProfileSearchResult
+    {
+        public string Id { get; set; }
+        public bool IsRestricted { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public RegistrantStatus Status { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public Address PrimaryAddress { get; set; }
+        public IEnumerable<EvacuationFileSearchResult> EvacuationFiles { get; set; }
+    }
+
+    public class EvacuationFileSearchResult
+    {
+        public string Id { get; set; }
+        public bool IsRestricted { get; set; }
+        public string TaskId { get; set; }
+        public Address EvacuatedFrom { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public EvacuationFileStatus Status { get; set; }
+        public IEnumerable<EvacuationFileSearchResultHouseholdMember> HouseholdMembers { get; set; }
+    }
+
+    public class EvacuationFileSearchResultHouseholdMember
+    {
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public bool IsSearchMatch { get; set; }
+        public HouseholdMemberType Type { get; set; }
+        public bool IsMainApplicant { get; set; }
     }
 
     public class EvacuationSearchService : IEvacuationSearchService
@@ -51,69 +84,57 @@ namespace EMBC.Responders.API.Services
 
         public async Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, Controllers.MemberRole userRole)
         {
-            IEnumerable<RegistrantWithFiles> registrants = Array.Empty<RegistrantWithFiles>();
-            IEnumerable<EvacuationFile> files = Array.Empty<EvacuationFile>();
-
-            var searchTasks = new Func<Task>[]
+            var searchResults = await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacueeSearchQuery
             {
-                //registrants
-                async () => registrants = (await messagingClient.Send(new RegistrantsSearchQuery
-                {
-                    FirstName = firstName,
-                    LastName = lastName,
-                    DateOfBirth = dateOfBirth,
-                    IncludeCases = true
-                })).Items,
-                //files
-                async () => files = (await messagingClient.Send(new EvacuationFilesSearchQuery
-                {
-                    FirstName = firstName,
-                    LastName = lastName,
-                    DateOfBirth = dateOfBirth,
-                    IncludeHouseholdMembers = true
-                })).Items
-            };
-
-            await Task.WhenAll(searchTasks.Select(t => t()).ToArray());
-
-            //check for restricted files
-            var anyRestriction =
-                registrants.Any(r => r.RegistrantProfile.RestrictedAccess) ||
-                registrants.SelectMany(r => r.Files).Any(f => f.RestrictedAccess) ||
-                files.Any(f => f.RestrictedAccess);
-            if (userRole == Controllers.MemberRole.Tier1 && anyRestriction)
-            {
-                return new SearchResults
-                {
-                    Files = Array.Empty<EvacuationFile>(),
-                    Registrants = Array.Empty<RegistrantWithFiles>()
-                };
-            }
-
-            //filter files by role
-            var statusFilter = userRole == Controllers.MemberRole.Tier1
-                ? tier1FileStatuses
-                : tier2andAboveFileStatuses;
-
-            files = files.Where(f => statusFilter.Contains(f.Status));
-            registrants = registrants.Select(r => new RegistrantWithFiles
-            {
-                RegistrantProfile = r.RegistrantProfile,
-                Files = r.Files.Where(f => statusFilter.Contains(f.Status))
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = dateOfBirth,
+                IncludeRestrictedAccess = userRole != Controllers.MemberRole.Tier1,
+                InStatuses = (userRole == Controllers.MemberRole.Tier1 ? tier1FileStatuses : tier2andAboveFileStatuses)
+                    .Select(s => Enum.Parse<ESS.Shared.Contracts.Submissions.EvacuationFileStatus>(s.ToString(), true)).ToArray()
             });
 
             return new SearchResults
             {
-                Registrants = mapper.Map<IEnumerable<RegistrantWithFiles>>(registrants),
-                Files = mapper.Map<IEnumerable<EvacuationFile>>(files)
+                Registrants = mapper.Map<IEnumerable<RegistrantProfileSearchResult>>(searchResults.Profiles),
+                Files = mapper.Map<IEnumerable<EvacuationFileSearchResult>>(searchResults.EvacuationFiles)
             };
         }
 
-        public async Task<Controllers.EvacuationFile> GetEvacuationFile(string fileId)
+        public async Task<EvacuationFile> GetEvacuationFile(string fileId)
         {
-            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery { FileId = fileId })).Items.SingleOrDefault();
+            var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesSearchQuery { FileId = fileId })).Items.SingleOrDefault();
             if (file == null) return null;
-            return mapper.Map<Controllers.EvacuationFile>(file);
+            return mapper.Map<EvacuationFile>(file);
+        }
+    }
+
+    public class EvacuationSearchMapping : Profile
+    {
+        public EvacuationSearchMapping()
+        {
+            CreateMap<Services.SearchResults, SearchResults>()
+                .ForMember(d => d.Files, opts => opts.MapFrom(s => s.Files))
+                .ForMember(d => d.Registrants, opts => opts.MapFrom(s => s.Registrants))
+                ;
+            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult, EvacuationFileSearchResult>()
+                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status))
+                .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuationAddress))
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CreatedOn))
+               ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.ProfileSearchResult, RegistrantProfileSearchResult>()
+                .ForMember(d => d.EvacuationFiles, opts => opts.MapFrom(s => s.RecentEvacuationFiles.OrderByDescending(f => f.EvacuationDate).Take(3)))
+                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => false/*s.isVerified*/ ? RegistrantStatus.Verified : RegistrantStatus.NotVerified))
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.RegistrationDate))
+              ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember, EvacuationFileSearchResultHouseholdMember>()
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.LinkedRegistrantId) ? HouseholdMemberType.Registrant : HouseholdMemberType.Registrant))
+                .ForMember(d => d.IsMainApplicant, s => s.MapFrom(s => s.IsPrimaryRegistrant))
+                ;
         }
     }
 }

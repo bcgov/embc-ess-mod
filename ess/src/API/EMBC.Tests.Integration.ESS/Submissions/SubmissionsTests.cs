@@ -163,8 +163,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
 
-            var file = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last();
+            var file = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantId = registrant.Id })).Items.Last();
 
             file.Id.ShouldNotBeNullOrEmpty();
             file.EvacuationDate.ShouldNotBe(now);
@@ -263,43 +264,28 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanSearchRegistrantsByName()
+        public async Task CanUpdateRegistrantVerified()
         {
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var currentVerifiedStatus = registrant.VerifiedUser;
+            var newStatus = !currentVerifiedStatus;
 
-            registrant.ShouldNotBeNull();
+            var id = await manager.Handle(new SetRegistrantVerificationStatusCommand { RegistrantId = registrant.Id, Verified = newStatus });
 
-            registrant.PrimaryAddress.Country.ShouldNotBeNull();
-
-            var registrants = (await manager.Handle(new RegistrantsSearchQuery { FirstName = "Elvis", LastName = "Presley" })).Items.Select(r => r.RegistrantProfile);
-
-            registrants.ShouldNotBeNull();
-            registrants.ShouldAllBe(r => r.FirstName == "Elvis");
-            registrants.ShouldAllBe(r => r.LastName == "Presley");
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task CanSearchRegistrantsIncludeFiles()
-        {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
-
-            registrant.ShouldNotBeNull();
-
-            registrant.PrimaryAddress.Country.ShouldNotBeNull();
-
-            var files = (await manager.Handle(new RegistrantsSearchQuery { FirstName = "Elvis", LastName = "Presley", IncludeCases = true })).Items.SelectMany(r => r.Files);
-
-            files.ShouldNotBeNull();
-            files.ShouldAllBe(f => f.HouseholdMembers
-                .Any(m => m.FirstName.Equals("Elvis", StringComparison.OrdinalIgnoreCase) && m.LastName.Equals("Presley", StringComparison.OrdinalIgnoreCase)));
+            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            updatedRegistrant.Id.ShouldBe(id);
+            updatedRegistrant.Id.ShouldBe(registrant.Id);
+            updatedRegistrant.VerifiedUser.ShouldBe(newStatus);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchRegistrantsByUserId()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var userId = "CHRIS-TEST";
+            var registrant = (await manager.Handle(new RegistrantsSearchQuery { UserId = userId })).Items.SingleOrDefault();
 
-            registrant.ShouldNotBeNull();
+            var profile = registrant.ShouldNotBeNull().RegistrantProfile.ShouldNotBeNull();
+            profile.UserId.ShouldBe(userId);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -307,9 +293,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             (await manager.Handle(new RegistrantsSearchQuery
             {
-                FirstName = "Elvis",
-                LastName = "Presley",
-                DateOfBirth = "2010-01-01"
+                UserId = "__nouser__"
             })).Items.ShouldBeEmpty();
         }
 
@@ -317,23 +301,31 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanSearchEvacuationFilesByRegistrantUserName()
         {
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
-            var files = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantId = registrant.Id })).Items;
+            var files = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = registrant.UserId })).Items;
 
             files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.PrimaryRegistrantId == registrant.Id);
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanSearchEvacuationFilesByPersonalDetails()
+        public async Task CanSearchEvacueesByName()
         {
-            var files = (await manager.Handle(new EvacuationFilesSearchQuery
-            {
-                FirstName = "Elvis",
-                LastName = "Presley",
-                DateOfBirth = "08/01/1935"
-            })).Items;
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
 
-            files.ShouldNotBeEmpty();
+            registrant.ShouldNotBeNull();
+
+            registrant.PrimaryAddress.Country.ShouldNotBeNull();
+
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935" });
+
+            var registrants = searchResults.Profiles;
+            registrants.ShouldNotBeNull();
+            registrants.ShouldAllBe(r => r.FirstName == "Elvis" && r.LastName == "Presley");
+
+            var files = searchResults.EvacuationFiles;
+            files.ShouldNotBeNull();
+            files.ShouldAllBe(f => f.HouseholdMembers
+                .Any(m => m.FirstName.Equals("Elvis", StringComparison.OrdinalIgnoreCase) && m.LastName.Equals("Presley", StringComparison.OrdinalIgnoreCase)));
         }
 
         [Fact(Skip = RequiresDynamics)]
