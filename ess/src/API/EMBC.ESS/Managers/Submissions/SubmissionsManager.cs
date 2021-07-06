@@ -151,7 +151,7 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<string> Handle(SetRegistrantVerificationStatusCommand cmd)
         {
-            var contact = (await contactRepository.QueryContact(new ContactQuery { ContactId = cmd.RegistrantId })).Items.SingleOrDefault();
+            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = cmd.RegistrantId })).Items.SingleOrDefault();
             if (contact == null) throw new Exception($"Couuld not find existing Registrant with id {cmd.RegistrantId}");
             contact.Verified = cmd.Verified;
             var res = await contactRepository.ManageContact(new SaveContact { Contact = contact });
@@ -239,7 +239,7 @@ namespace EMBC.ESS.Managers.Submissions
             var files = new ConcurrentBag<EvacuationFileSearchResult>();
             var householdMemberTasks = searchResults.MatcingHouseholdMemberIds.Select(async id =>
             {
-                var file = (await caseRepository.QueryCase(new EvacuationFilesQuery { HouseholdMemberId = id })).Items.SingleOrDefault();
+                var file = (await caseRepository.QueryCase(new EvacuationFilesQuery { HouseholdMemberId = id })).Items.Single();
                 var mappedFile = mapper.Map<EvacuationFileSearchResult>(file);
                 foreach (var member in mappedFile.HouseholdMembers)
                 {
