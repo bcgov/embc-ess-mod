@@ -147,6 +147,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.EvacuationDate.ShouldBeInRange(now, DateTime.UtcNow);
             evacuationFile.PrimaryRegistrantId.ShouldBe(primaryContact.Id);
             evacuationFile.RegistrationLocation.ShouldBe(originalFile.RegistrationLocation);
+            evacuationFile.TaskId.ShouldBe(originalFile.TaskId);
+            if (originalFile.TaskId != null) evacuationFile.TaskLocationCommunityCode.ShouldNotBeNull();
 
             // Needs Assessment
 
@@ -192,7 +194,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         private async Task<Contact> GetContactByUserId(string userId) =>
-            (await services.GetRequiredService<IContactRepository>().QueryContact(new ContactQuery { UserId = userId })).Items.Single();
+            (await services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
 
         private EvacuationFile CreateTestFile(Contact primaryContact)
         {

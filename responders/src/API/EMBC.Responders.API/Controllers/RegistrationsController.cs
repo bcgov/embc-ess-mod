@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -57,14 +58,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrantProfile>> GetRegistrantProfile(string registrantId)
         {
-            var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
+            var registrant = (await messagingClient.Send(new RegistrantsQuery
             {
                 Id = registrantId
             })).Items.FirstOrDefault();
 
-            if (registrant == null || registrant.RegistrantProfile == null) return NotFound();
+            if (registrant == null || registrant == null) return NotFound();
 
-            return Ok(mapper.Map<RegistrantProfile>(registrant.RegistrantProfile));
+            return Ok(mapper.Map<RegistrantProfile>(registrant));
         }
 
         /// <summary>
@@ -111,6 +112,25 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
+        /// Sets the Registrant Profile Verified flag to the supplied value
+        /// </summary>
+        /// <param name="registrantId">RegistrantId</param>
+        /// <param name="verified">Verified</param>
+        /// <returns>updated registrant id</returns>
+        [HttpPost("registrants/{registrantId}/verified/{verified}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RegistrationResult>> SetRegistrantVerified(string registrantId, bool verified)
+        {
+            var id = await messagingClient.Send(new SetRegistrantVerificationStatusCommand
+            {
+                RegistrantId = registrantId,
+                Verified = verified
+            });
+            return await Task.FromResult(Ok(new RegistrationResult { Id = id }));
+        }
+
+        /// <summary>
         /// Get security questions for a registrant
         /// </summary>
         /// <param name="registrantId">registrant id</param>
@@ -120,14 +140,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetSecurityQuestionsResponse>> GetSecurityQuestions(string registrantId)
         {
-            var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
+            var registrant = (await messagingClient.Send(new RegistrantsQuery
             {
                 Id = registrantId
             })).Items.FirstOrDefault();
 
-            if (registrant == null || registrant.RegistrantProfile == null) return NotFound();
+            if (registrant == null || registrant == null) return NotFound();
 
-            return Ok(new GetSecurityQuestionsResponse { Questions = mapper.Map<IEnumerable<SecurityQuestion>>(registrant.RegistrantProfile.SecurityQuestions) });
+            return Ok(new GetSecurityQuestionsResponse { Questions = mapper.Map<IEnumerable<SecurityQuestion>>(registrant.SecurityQuestions) });
         }
 
         /// <summary>
@@ -213,13 +233,46 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrationResult>> CreateFileNote(string fileId, Note note)
         {
-            //var id = await messagingClient.Send(new SubmitEvacuationFileCommand
-            //{
-            //    File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(note)
-            //});
+            var cmd = new SaveEvacuationFileNoteCommand
+            {
+                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
+                FileId = fileId
+            };
+            var userId = User.FindFirstValue("user_id");
+            cmd.Note.CreatingTeamMemberId = userId;
 
-            //return Ok(new RegistrationResult { Id = id });
-            return Ok(await Task.FromResult(new EvacuationFileNotesResult { Id = "note123" }));
+            var id = await messagingClient.Send(cmd);
+
+            return Ok(new EvacuationFileNotesResult { Id = id });
+        }
+
+        /// <summary>
+        /// Updates a File Note
+        /// </summary>
+        /// <param name="fileId">fileId</param>
+        /// <param name="noteId">noteId</param>
+        /// <param name="note">note</param>
+        /// <returns>newly created note id</returns>
+        [HttpPost("files/{fileId}/notes/{noteId}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RegistrationResult>> UpdateFileNote(string fileId, string noteId, Note note)
+        {
+            var now = DateTime.Now;
+            var userId = User.FindFirstValue("user_id");
+            if (!note.CreatingTeamMemberId.Equals(userId) || note.AddedOn < now.AddHours(-24)) return BadRequest(new ProblemDetails { Detail = "The note may be edited only by the user who created it withing a 24 hour period." });
+
+            note.Id = noteId;
+            var cmd = new SaveEvacuationFileNoteCommand
+            {
+                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
+                FileId = fileId
+            };
+            cmd.Note.CreatingTeamMemberId = userId;
+
+            var id = await messagingClient.Send(cmd);
+
+            return Ok(new EvacuationFileNotesResult { Id = id });
         }
 
         /// <summary>
@@ -232,7 +285,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetSecurityPhraseResponse>> GetSecurityPhrase(string fileId)
         {
-            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
+            var file = (await messagingClient.Send(new EvacuationFilesQuery
             {
                 FileId = fileId
             })).Items.FirstOrDefault();
@@ -280,6 +333,7 @@ namespace EMBC.Responders.API.Controllers
         public HouseholdMemberType Type { get; set; }
         public bool IsMatch { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
+        public bool IsHouseholdMember => !IsPrimaryRegistrant;
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -463,6 +517,7 @@ namespace EMBC.Responders.API.Controllers
         public NoteType Type { get; set; }
         public string Content { get; set; }
         public DateTime AddedOn { get; set; }
+        public string CreatingTeamMemberId { get; set; }
         public string MemberName { get; set; }
         public string TeamName { get; set; }
         public bool IsHidden { get; set; }
@@ -541,6 +596,7 @@ namespace EMBC.Responders.API.Controllers
         public Address MailingAddress { get; set; }
         public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
         public SecurityQuestion[] SecurityQuestions { get; set; }
+        public bool AuthenticatedUser { get; set; }
         public bool VerifiedUser { get; set; }
     }
 

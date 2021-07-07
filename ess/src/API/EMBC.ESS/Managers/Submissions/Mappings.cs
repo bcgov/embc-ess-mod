@@ -84,6 +84,20 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Resources.Tasks.EssTask, Shared.Contracts.Submissions.IncidentTask>();
+
+            CreateMap<Resources.Cases.EvacuationFile, Shared.Contracts.Submissions.EvacuationFileSearchResult>()
+                .ForMember(d => d.EvacuationAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
+                ;
+
+            CreateMap<Resources.Contacts.Contact, Shared.Contracts.Submissions.ProfileSearchResult>()
+                .ForMember(d => d.RecentEvacuationFiles, opts => opts.Ignore())
+                .ForMember(d => d.RegistrationDate, opts => opts.MapFrom(s => s.CreatedOn))
+                .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => s.Verified))
+                ;
+
+            CreateMap<Resources.Cases.HouseholdMember, Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember>()
+                .ForMember(d => d.IsSearchMatch, opts => opts.Ignore())
+                ;
         }
     }
 }

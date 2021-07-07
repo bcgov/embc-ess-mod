@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.Responders.API;
-using EMBC.Responders.API.Services;
 using FakeItEasy;
-using Xunit;
 using Shouldly;
-using System;
+using Xunit;
 
 namespace EMBC.Tests.Unit.Responders.API
 {
@@ -161,14 +159,11 @@ namespace EMBC.Tests.Unit.Responders.API
             return ret;
         }
 
-        private Dictionary<string, RegistrantWithFiles> stagedRegistrantsWithFiles = new Dictionary<string, RegistrantWithFiles>()
+        private Dictionary<string, RegistrantProfile> stagedRegistrantsDictionary = new Dictionary<string, RegistrantProfile>()
         {
-            { "r1", new RegistrantWithFiles { RegistrantProfile =  stagedRegistrants[0] }
-            },
-            { "r2", new RegistrantWithFiles { RegistrantProfile =  stagedRegistrants[1] }
-            },
-            { "r3", new RegistrantWithFiles { RegistrantProfile =  stagedRegistrants[2] }
-            }
+            { "r1", stagedRegistrants[0] },
+            { "r2", stagedRegistrants[1] },
+            { "r3", stagedRegistrants[2] }
         };
 
         public RegistrationsTests()
@@ -180,20 +175,17 @@ namespace EMBC.Tests.Unit.Responders.API
 
             messagingClient = A.Fake<IMessagingClient>();
 
-            //Handle RegistrantsSearchQuery
-            A.CallTo(() => messagingClient.Send(A<RegistrantsSearchQuery>.That.IsNotNull()))
+            //Handle RegistrantsQuery
+            A.CallTo(() => messagingClient.Send(A<RegistrantsQuery>.That.IsNotNull()))
                 .ReturnsLazily(o =>
                 {
-                    var query = o.GetArgument<RegistrantsSearchQuery>(0);
-                    IEnumerable<KeyValuePair<string, RegistrantWithFiles>> ret = stagedRegistrantsWithFiles.Where(a => true);
+                    var query = o.GetArgument<RegistrantsQuery>(0);
+                    IEnumerable<KeyValuePair<string, RegistrantProfile>> ret = stagedRegistrantsDictionary.Where(a => true);
 
-                    if (!string.IsNullOrEmpty(query.Id)) ret = ret.Where(r => r.Value.RegistrantProfile.Id == query.Id);
-                    if (!string.IsNullOrEmpty(query.UserId)) ret = ret.Where(r => r.Value.RegistrantProfile.UserId == query.UserId);
-                    if (!string.IsNullOrEmpty(query.FirstName)) ret = ret.Where(r => r.Value.RegistrantProfile.FirstName.Equals(query.FirstName, StringComparison.OrdinalIgnoreCase));
-                    if (!string.IsNullOrEmpty(query.LastName)) ret = ret.Where(r => r.Value.RegistrantProfile.LastName.Equals(query.LastName, StringComparison.OrdinalIgnoreCase));
-                    if (!string.IsNullOrEmpty(query.DateOfBirth)) ret = ret.Where(r => r.Value.RegistrantProfile.DateOfBirth.Equals(query.DateOfBirth, StringComparison.OrdinalIgnoreCase));
+                    if (!string.IsNullOrEmpty(query.Id)) ret = ret.Where(r => r.Value.Id == query.Id);
+                    if (!string.IsNullOrEmpty(query.UserId)) ret = ret.Where(r => r.Value.UserId == query.UserId);
 
-                    return Task.FromResult(new RegistrantsSearchQueryResult
+                    return Task.FromResult(new RegistrantsQueryResponse
                     {
                         Items = ret.Select(r => r.Value)
                     });
@@ -205,12 +197,12 @@ namespace EMBC.Tests.Unit.Responders.API
         public async Task GetRegistrantProfileById()
         {
             var registrantId = "123-abc";
-            var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
+            var registrant = (await messagingClient.Send(new RegistrantsQuery
             {
                 Id = registrantId
             })).Items.FirstOrDefault();
 
-            registrant.RegistrantProfile.Id.ShouldBe(registrantId);
+            registrant.Id.ShouldBe(registrantId);
         }
     }
 }

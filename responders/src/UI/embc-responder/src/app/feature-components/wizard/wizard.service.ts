@@ -31,6 +31,8 @@ export class WizardService {
       this.menuItems = WizardSidenavModelValues.newRegistrationMenu;
     } else if (type === WizardType.NewEssFile) {
       this.menuItems = WizardSidenavModelValues.newESSFileMenu;
+    } else if (type === 'edit-registration') {
+      this.menuItems = WizardSidenavModelValues.editProfileMenu;
     }
   }
 

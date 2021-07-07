@@ -124,7 +124,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var fileId = (await manager.Handle(cmd)).ShouldNotBeNull();
 
-            var file = (await manager.Handle(new EvacuationFilesSearchQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+            var file = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
 
             file.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
             file.NeedsAssessment.HouseholdMembers.ShouldContain(m => m.IsPrimaryRegistrant == true && m.FirstName == profile.FirstName && m.LastName == profile.LastName);
@@ -134,7 +134,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSubmitNewEvacuation()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
             var file = CreateNewTestEvacuationFile(registrant);
 
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
@@ -163,8 +163,9 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
 
-            var file = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last();
+            var file = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items.Last();
 
             file.Id.ShouldNotBeNullOrEmpty();
             file.EvacuationDate.ShouldNotBe(now);
@@ -180,7 +181,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateNewRegistrantProfile()
         {
-            var baseRegistrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var baseRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
 
             var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
             var country = "CAN";
@@ -201,7 +202,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
 
-            var newRegistrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull().RegistrantProfile;
+            var newRegistrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull();
 
             newRegistrant.Id.ShouldBe(id);
             newRegistrant.Id.ShouldNotBe(baseRegistrant.Id);
@@ -219,7 +220,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteRegistrantProfile()
         {
-            var baseRegistrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var baseRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
 
             baseRegistrant.Id = null;
             baseRegistrant.UserId = Guid.NewGuid().ToString("N").Substring(0, 10);
@@ -235,7 +236,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateProfile()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
             var currentCommunity = registrant.PrimaryAddress.Community;
             var newCommunity = currentCommunity == "406adfaf-9f97-ea11-b813-005056830319"
                 ? "226adfaf-9f97-ea11-b813-005056830319"
@@ -254,7 +255,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
-            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
             updatedRegistrant.Email.ShouldBe(registrant.Email);
@@ -263,84 +264,101 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanSearchRegistrantsByName()
+        public async Task CanUpdateRegistrantVerified()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var currentVerifiedStatus = registrant.VerifiedUser;
+            var newStatus = !currentVerifiedStatus;
 
-            registrant.ShouldNotBeNull();
+            var id = await manager.Handle(new SetRegistrantVerificationStatusCommand { RegistrantId = registrant.Id, Verified = newStatus });
 
-            registrant.PrimaryAddress.Country.ShouldNotBeNull().ShouldNotBeNull();
-            registrant.PrimaryAddress.Country.ShouldNotBeNull();
-
-            var registrants = (await manager.Handle(new RegistrantsSearchQuery { FirstName = "Elvis", LastName = "Presley" })).Items.Select(r => r.RegistrantProfile);
-
-            registrants.ShouldNotBeNull();
-            registrants.ShouldAllBe(r => r.FirstName == "Elvis");
-            registrants.ShouldAllBe(r => r.LastName == "Presley");
+            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            updatedRegistrant.Id.ShouldBe(id);
+            updatedRegistrant.Id.ShouldBe(registrant.Id);
+            updatedRegistrant.VerifiedUser.ShouldBe(newStatus);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchRegistrantsByUserId()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var userId = "CHRIS-TEST";
+            var registrant = (await manager.Handle(new RegistrantsQuery { UserId = userId })).Items.SingleOrDefault();
 
-            registrant.ShouldNotBeNull();
-
-            registrant.PrimaryAddress.Country.ShouldNotBeNull().ShouldNotBeNull();
-            registrant.PrimaryAddress.Country.ShouldNotBeNull();
-            registrant.PrimaryAddress.StateProvince.ShouldNotBeNull().ShouldNotBeNull();
-            registrant.PrimaryAddress.StateProvince.ShouldNotBeNull();
-            registrant.PrimaryAddress.Community.ShouldNotBeNull().ShouldNotBeNull();
-            registrant.PrimaryAddress.Community.ShouldNotBeNull();
+            var profile = registrant.ShouldNotBeNull().ShouldNotBeNull();
+            profile.UserId.ShouldBe(userId);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchRegistrantsByNonExistentValues()
         {
-            (await manager.Handle(new RegistrantsSearchQuery
+            (await manager.Handle(new RegistrantsQuery
             {
-                FirstName = "Elvis",
-                LastName = "Presley",
-                DateOfBirth = "2010-01-01"
+                UserId = "__nouser__"
             })).Items.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchEvacuationFilesByRegistrantUserName()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
-            var files = await GetRegistrantFilesByPrimaryRegistrantId(registrant.Id);
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var files = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantUserId = registrant.UserId })).Items;
 
             files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.PrimaryRegistrantId == registrant.Id);
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanSearchEvacuationFilesByPersonalDetails()
+        public async Task CanSearchEvacueesByName()
         {
-            var files = (await manager.Handle(new EvacuationFilesSearchQuery
-            {
-                FirstName = "Elvis",
-                LastName = "Presley",
-                DateOfBirth = "08/01/1935"
-            })).Items;
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
 
-            files.ShouldNotBeEmpty();
+            registrant.ShouldNotBeNull();
+
+            registrant.PrimaryAddress.Country.ShouldNotBeNull();
+
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935" });
+
+            var registrants = searchResults.Profiles;
+            registrants.ShouldNotBeNull();
+            registrants.ShouldAllBe(r => r.FirstName == "Elvis" && r.LastName == "Presley");
+
+            var files = searchResults.EvacuationFiles;
+            files.ShouldNotBeNull();
+            files.ShouldAllBe(f => f.HouseholdMembers
+                .Any(m => m.FirstName.Equals("Elvis", StringComparison.OrdinalIgnoreCase) && m.LastName.Equals("Presley", StringComparison.OrdinalIgnoreCase)));
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVerifySecurityQuestions()
         {
-            List<SecurityQuestion> answers = new List<SecurityQuestion>();
-            answers.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });
-            answers.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
-            answers.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3" });
+            var expectedNumberOfCorrectAnswers = 3;
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
 
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST")).RegistrantProfile;
+            var answers = registrant.SecurityQuestions.Select(q =>
+            {
+                q.Answer = $"answer{q.Id}";
+                return q;
+            }).ToArray();
+            var actualNumberOfCorrectAnswers = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId = registrant.Id });
 
-            var num = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId = registrant.Id });
+            actualNumberOfCorrectAnswers.NumberOfCorrectAnswers.ShouldBe(expectedNumberOfCorrectAnswers);
+        }
 
-            num.NumberOfCorrectAnswers.ShouldBe(answers.Count());
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanPartlyVerifySecurityQuestions()
+        {
+            var expectedNumberOfCorrectAnswers = 2;
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+
+            var answers = registrant.SecurityQuestions.Select(q =>
+            {
+                q.Answer = $"answer{q.Id}";
+                return q;
+            }).ToArray();
+            answers[2].Answer = "wrong";
+            var actualNumberOfCorrectAnswers = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId = registrant.Id });
+
+            actualNumberOfCorrectAnswers.NumberOfCorrectAnswers.ShouldBe(expectedNumberOfCorrectAnswers);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -382,16 +400,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             id.ShouldNotBeNull();
         }
 
-        private async Task<RegistrantWithFiles> GetRegistrantByUserId(string userId)
+        private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)
         {
-            return (await manager.Handle(new RegistrantsSearchQuery { UserId = userId })).Items.SingleOrDefault();
+            return (await manager.Handle(new RegistrantsQuery { UserId = userId })).Items.SingleOrDefault();
         }
 
-        private async Task<IEnumerable<EvacuationFile>> GetRegistrantFilesByPrimaryRegistrantId(string registrantId) =>
-            (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantId = registrantId })).Items;
-
         private async Task<IEnumerable<EvacuationFile>> GetEvacuationFileById(string fileId) =>
-            (await manager.Handle(new EvacuationFilesSearchQuery { FileId = fileId })).Items;
+            (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items;
 
         private EvacuationFile CreateNewTestEvacuationFile(RegistrantProfile registrant)
         {

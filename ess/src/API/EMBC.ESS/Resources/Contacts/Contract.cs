@@ -34,7 +34,7 @@ namespace EMBC.ESS.Resources.Contacts
         public string ContactId { get; set; }
     }
 
-    public class ContactQuery
+    public abstract class ContactQuery
     {
         public string ContactId { get; set; }
         public string UserId { get; set; }
@@ -56,12 +56,8 @@ namespace EMBC.ESS.Resources.Contacts
         public string ContactId { get; set; }
     }
 
-    public class SearchContactQuery : ContactQuery
+    public class RegistrantQuery : ContactQuery
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DateOfBirth { get; set; }
-        public bool IncludeRestrictedAccess { get; set; }
     }
 
     public class UpdateSecurityQuestions : ContactCommand
@@ -93,7 +89,7 @@ namespace EMBC.ESS.Resources.Contacts
         public Address MailingAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
-        public object UserId { get; set; }
+        public string UserId { get; set; }
     }
 
     public class Address
