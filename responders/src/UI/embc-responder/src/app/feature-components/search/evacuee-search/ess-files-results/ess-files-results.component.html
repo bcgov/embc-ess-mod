@@ -147,12 +147,16 @@
             <span *ngFor="let members of fileResult?.householdMembers">
               <p
                 [ngClass]="{
-                  'member-match': members?.isMatch,
-                  'p-custom members-margin': !members?.isMatch
+                  'member-match': members?.isSearchMatch,
+                  'p-custom members-margin': !members?.isSearchMatch
                 }"
               >
                 {{ members?.lastName | uppercase }}, {{ members?.firstName }}
-                <span class="member-type">({{ members?.type }})</span>
+                <span class="member-type"
+                  >({{
+                    getMemberType(members?.type, members?.isMainApplicant)
+                  }})</span
+                >
               </p>
             </span>
           </div>

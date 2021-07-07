@@ -1,10 +1,9 @@
 import {
-  EvacuationFileHouseholdMember,
-  EvacuationFileSearchResult,
   EvacuationFileStatus,
   RegistrantStatus,
   SearchResults
 } from '../api/models';
+import { EvacuationFileSearchResultHouseholdMember } from '../api/models/evacuation-file-search-result-household-member';
 import { AddressModel } from './address.model';
 
 export interface EvacueeSearchResults extends SearchResults {
@@ -19,6 +18,7 @@ export interface RegistrantProfileSearchResultModel {
   id?: null | string;
   isRestricted?: boolean;
   lastName?: null | string;
+  modifiedOn?: string;
   primaryAddress?: null | AddressModel;
   status?: RegistrantStatus;
 }
@@ -26,10 +26,9 @@ export interface RegistrantProfileSearchResultModel {
 export interface EvacuationFileSearchResultModel {
   createdOn?: string;
   evacuatedFrom?: null | AddressModel;
-  householdMembers?: null | Array<EvacuationFileHouseholdMember>;
+  householdMembers?: null | Array<EvacuationFileSearchResultHouseholdMember>;
   id?: null | string;
   isRestricted?: boolean;
-  modifiedOn?: string;
   status?: EvacuationFileStatus;
   taskId?: null | string;
 }

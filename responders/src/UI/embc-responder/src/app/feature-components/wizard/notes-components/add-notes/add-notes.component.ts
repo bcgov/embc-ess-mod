@@ -34,10 +34,17 @@ export class AddNotesComponent implements OnInit {
     return this.notesForm.controls;
   }
 
+  /**
+   * Emits the cancel event to close the text box
+   */
   cancel(): void {
     this.closeEvent.emit(true);
   }
 
+  /**
+   * Save the notes and emits a cancel event to close the text
+   * box
+   */
   save(): void {
     if (!this.notesForm.valid) {
       this.notesForm.get('note').markAsTouched();
@@ -49,17 +56,21 @@ export class AddNotesComponent implements OnInit {
           this.stepNotesService.createNoteDTO(this.notesForm.get('note').value)
         )
         .subscribe(
-          (result) => result,
+          (result) => {
+            this.closeEvent.emit(true);
+          },
           (error) => {
             this.showLoader = !this.showLoader;
             this.isSubmitted = !this.isSubmitted;
             this.alertService.setAlert('danger', globalConst.addNotesError);
           }
         );
-      this.closeEvent.emit(true);
     }
   }
 
+  /**
+   * Creates the note form
+   */
   private createNotesForm(): void {
     this.notesForm = this.formBuilder.group({
       note: ['', [this.customValidation.whitespaceValidator()]]
