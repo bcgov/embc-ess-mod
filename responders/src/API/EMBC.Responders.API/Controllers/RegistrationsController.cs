@@ -58,14 +58,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrantProfile>> GetRegistrantProfile(string registrantId)
         {
-            var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
+            var registrant = (await messagingClient.Send(new RegistrantsQuery
             {
                 Id = registrantId
             })).Items.FirstOrDefault();
 
-            if (registrant == null || registrant.RegistrantProfile == null) return NotFound();
+            if (registrant == null || registrant == null) return NotFound();
 
-            return Ok(mapper.Map<RegistrantProfile>(registrant.RegistrantProfile));
+            return Ok(mapper.Map<RegistrantProfile>(registrant));
         }
 
         /// <summary>
@@ -140,14 +140,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetSecurityQuestionsResponse>> GetSecurityQuestions(string registrantId)
         {
-            var registrant = (await messagingClient.Send(new RegistrantsSearchQuery
+            var registrant = (await messagingClient.Send(new RegistrantsQuery
             {
                 Id = registrantId
             })).Items.FirstOrDefault();
 
-            if (registrant == null || registrant.RegistrantProfile == null) return NotFound();
+            if (registrant == null || registrant == null) return NotFound();
 
-            return Ok(new GetSecurityQuestionsResponse { Questions = mapper.Map<IEnumerable<SecurityQuestion>>(registrant.RegistrantProfile.SecurityQuestions) });
+            return Ok(new GetSecurityQuestionsResponse { Questions = mapper.Map<IEnumerable<SecurityQuestion>>(registrant.SecurityQuestions) });
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetSecurityPhraseResponse>> GetSecurityPhrase(string fileId)
         {
-            var file = (await messagingClient.Send(new EvacuationFilesSearchQuery
+            var file = (await messagingClient.Send(new EvacuationFilesQuery
             {
                 FileId = fileId
             })).Items.FirstOrDefault();

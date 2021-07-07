@@ -105,7 +105,7 @@ namespace EMBC.Responders.API.Services
 
         public async Task<EvacuationFile> GetEvacuationFile(string fileId)
         {
-            var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesSearchQuery { FileId = fileId })).Items.SingleOrDefault();
+            var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { FileId = fileId })).Items.SingleOrDefault();
             if (file == null) return null;
             return mapper.Map<EvacuationFile>(file);
         }
