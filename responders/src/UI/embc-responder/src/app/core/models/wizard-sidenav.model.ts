@@ -110,4 +110,19 @@ export class WizardSidenavModelValues {
       }
     }
   ];
+
+  static editProfileMenu: Array<WizardSidenavModel> = [
+    {
+      step: 'STEP 1',
+      title: 'Edit Evacuee Profile',
+      route: '/ess-wizard/evacuee-profile',
+      isLocked: false,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-profile.svg',
+        altSrc: '/assets/images/wizard/profile.svg',
+        height: '26',
+        width: '26'
+      }
+    }
+  ];
 }

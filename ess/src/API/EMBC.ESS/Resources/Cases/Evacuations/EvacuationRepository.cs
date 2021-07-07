@@ -227,6 +227,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             loadTasks.Add(Task.Run(() => ctx.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid))));
             loadTasks.Add(Task.Run(() => ctx.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid))));
             loadTasks.Add(Task.Run(() => ctx.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID))));
+            loadTasks.Add(Task.Run(() => ctx.LoadProperty(file, nameof(era_evacuationfile.era_TaskId))));
 
             loadTasks.Add(Task.Run(() =>
             {
