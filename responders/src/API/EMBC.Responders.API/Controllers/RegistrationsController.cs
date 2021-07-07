@@ -249,13 +249,14 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Updates a File Note's content
         /// </summary>
+        /// <param name="fileId">fileId</param>
         /// <param name="noteId">noteId</param>
         /// <param name="note">note</param>
         /// <returns>updated note id</returns>
-        [HttpPost("notes/{noteId}/content")]
+        [HttpPost("files/{fileId}/notes/{noteId}/content")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> UpdateFileNoteContent(string noteId, Note note)
+        public async Task<ActionResult<RegistrationResult>> UpdateFileNoteContent(string fileId, string noteId, Note note)
         {
             var now = DateTime.Now;
             var userId = User.FindFirstValue("user_id");
@@ -277,13 +278,14 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Sets a File Note's isHidden field
         /// </summary>
+        /// <param name="fileId">fileId</param>
         /// <param name="noteId">noteId</param>
         /// <param name="note">note</param>
         /// <returns>updated note id</returns>
-        [HttpPost("notes/{noteId}/hidden")]
+        [HttpPost("files/{fileId}/notes/{noteId}/hidden")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> SetFileNoteHiddenStatus(string noteId, Note note)
+        public async Task<ActionResult<RegistrationResult>> SetFileNoteHiddenStatus(string fileId, string noteId, Note note)
         {
             var userRole = Enum.Parse<MemberRole>(User.FindFirstValue("user_role"));
             if (!(userRole == Controllers.MemberRole.Tier3 || userRole == Controllers.MemberRole.Tier4)) return BadRequest();

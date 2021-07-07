@@ -36,7 +36,7 @@ namespace EMBC.ESS.Resources.Cases
 
         Task<string> CreateNote(string essFileNumber, Note note);
 
-        Task<string> UpdateNote(Note note);
+        Task<string> UpdateNote(string essFileNumber, Note note);
     }
 
     public class EvacuationFile : Case
@@ -115,10 +115,13 @@ namespace EMBC.ESS.Resources.Cases
         public string Quantity { get; set; }
     }
 
-    public class Note : Case
+    public class Note
     {
+        public string Id { get; set; }
         public NoteType Type { get; set; }
         public string Content { get; set; }
+        public DateTime AddedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
         public string CreatingTeamMemberId { get; set; }
         public bool IsHidden { get; set; }
     }

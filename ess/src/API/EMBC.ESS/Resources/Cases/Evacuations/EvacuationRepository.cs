@@ -339,23 +339,22 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<IEnumerable<Note>> GetNotes(EvacuationFileNotesQuery query)
         {
-            if (string.IsNullOrEmpty(query.NoteId) && string.IsNullOrEmpty(query.FileId)) throw new Exception("Query filter is required");
+            if (string.IsNullOrEmpty(query.FileId)) throw new Exception("FileId is required");
 
-            var notesQuery = essContext.era_essfilenotes
-                .Where(f => f.statecode == (int)EntityState.Active);
+            var evacuationFile = essContext.era_evacuationfiles
+                .Where(f => f.era_name == query.FileId)
+                .Single();
 
-            if (!string.IsNullOrEmpty(query.FileId))
-            {
-                var file = essContext.era_evacuationfiles.Where(f => f.era_name == query.FileId).Single();
-                if (file == null) throw new Exception($"Evacuation File {query.FileId} not found");
-                notesQuery = notesQuery.Where(n => n._era_essfileid_value == file.era_evacuationfileid);
-            }
+            essContext.LoadProperty(evacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID));
+
+            var notes = evacuationFile.era_era_evacuationfile_era_essfilenote_ESSFileID.ToArray();
+
             if (!string.IsNullOrEmpty(query.NoteId))
             {
-                notesQuery = notesQuery.Where(n => n.era_essfilenoteid.Value == Guid.Parse(query.NoteId));
+                notes = notes.Where(n => n.era_essfilenoteid == Guid.Parse(query.NoteId)).ToArray();
             }
 
-            var notes = (await ((DataServiceQuery<era_essfilenote>)notesQuery).GetAllPagesAsync()).ToArray();
+            await Task.CompletedTask;
 
             return mapper.Map<IEnumerable<Note>>(notes);
         }
@@ -377,7 +376,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return era_essfilenote.era_essfilenoteid.ToString();
         }
 
-        public async Task<string> UpdateNote(Note note)
+        public async Task<string> UpdateNote(string essFileId, Note note)
         {
             var era_essfilenote = mapper.Map<era_essfilenote>(note);
             var existingNote = essContext.era_essfilenotes
