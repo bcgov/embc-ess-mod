@@ -31,4 +31,5 @@ export interface EvacuationFileSearchResultModel {
   isRestricted?: boolean;
   status?: EvacuationFileStatus;
   taskId?: null | string;
+  modifiedOn?: string;
 }
