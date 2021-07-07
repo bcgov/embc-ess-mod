@@ -365,8 +365,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanVerifySecurityPhrase()
         {
             //var fileId = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last().Id;
-            var fileId = "PAP2354234";
-            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "My New Security Phrase" });
+            var fileId = "101010";
+            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "no security phrase please" });
             response.IsCorrect.ShouldBeTrue();
         }
 

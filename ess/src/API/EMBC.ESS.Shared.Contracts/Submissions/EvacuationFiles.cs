@@ -137,8 +137,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string Id { get; set; }
         public NoteType Type { get; set; }
         public string Content { get; set; }
-        public DateTime AddedOn { get; set; }
-        public DateTime ModifiedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime LastModified { get; set; }
         public string CreatingTeamMemberId { get; set; }
         public string MemberName { get; set; }
         public string TeamId { get; set; }

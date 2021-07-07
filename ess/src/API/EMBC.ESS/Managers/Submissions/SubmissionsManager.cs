@@ -317,15 +317,15 @@ namespace EMBC.ESS.Managers.Submissions
             return id;
         }
 
-        public async Task<EvacuationFileNotesQueryResult> Handle(Shared.Contracts.Submissions.EvacuationFileNotesQuery query)
+        public async Task<EvacuationFileNotesQueryResponse> Handle(Shared.Contracts.Submissions.EvacuationFileNotesQuery query)
         {
-            var notes = (await caseRepository.QueryNotes(new Resources.Cases.EvacuationFileNotesQuery
+            var notes = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFileNotesQuery
             {
                 NoteId = query.NoteId,
                 FileId = query.FileId
             })).Items;
 
-            return new EvacuationFileNotesQueryResult { Notes = mapper.Map<IEnumerable<Shared.Contracts.Submissions.Note>>(notes) };
+            return new EvacuationFileNotesQueryResponse { Notes = mapper.Map<IEnumerable<Shared.Contracts.Submissions.Note>>(notes) };
         }
 
         public async Task<TasksSearchQueryResult> Handle(TasksSearchQuery query)

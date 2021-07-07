@@ -115,13 +115,10 @@ namespace EMBC.ESS.Resources.Cases
         public string Quantity { get; set; }
     }
 
-    public class Note
+    public class Note : Case
     {
-        public string Id { get; set; }
         public NoteType Type { get; set; }
         public string Content { get; set; }
-        public DateTime AddedOn { get; set; }
-        public DateTime ModifiedOn { get; set; }
         public string CreatingTeamMemberId { get; set; }
         public bool IsHidden { get; set; }
     }
@@ -133,13 +130,6 @@ namespace EMBC.ESS.Resources.Cases
         ExternalReferralServices,
         PetCarePlans,
         RecoveryPlan
-    }
-
-    public enum NoteStatus
-    {
-        ReadOnly,
-        Editable,
-        Hidden
     }
 
     public enum ReferralServices

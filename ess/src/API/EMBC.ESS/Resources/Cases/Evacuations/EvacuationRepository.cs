@@ -339,6 +339,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<IEnumerable<Note>> GetNotes(EvacuationFileNotesQuery query)
         {
+            if (string.IsNullOrEmpty(query.NoteId) && string.IsNullOrEmpty(query.FileId)) throw new Exception("Query filter is required");
+
             var notesQuery = essContext.era_essfilenotes
                 .Where(f => f.statecode == (int)EntityState.Active);
 
