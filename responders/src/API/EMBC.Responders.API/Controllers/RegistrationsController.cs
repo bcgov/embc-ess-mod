@@ -325,15 +325,17 @@ namespace EMBC.Responders.API.Controllers
     public class EvacuationFileHouseholdMember
     {
         public string Id { get; set; }
+        public string LinkedRegistrantId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
         public HouseholdMemberType Type { get; set; }
-        public bool IsMatch { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public bool IsHouseholdMember => !IsPrimaryRegistrant;
+        public bool IsRestricted { get; set; }
+        public bool IsVerified { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -625,7 +627,8 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()
                    .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
-                   .ForMember(d => d.IsMatch, opts => opts.Ignore())
+                   .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => false /*s.Verified*/))
+                   .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => false /*s.RestrictedAccess*/))
                    ;
 
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
@@ -677,6 +680,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.IsRestricted))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.Task.TaskNumber))
+                .ForMember(d => d.TaskLocationCommunityCode, opts => opts.Ignore())
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
                 .AfterMap((s, d) => d.NeedsAssessment.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).LinkedRegistrantId = s.PrimaryRegistrantId)
@@ -687,12 +691,13 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
-                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.TaskId == null
-                    ? null
-                    : new EvacuationFileTask
-                    {
-                        TaskNumber = s.TaskId
-                    }))
+                .ForMember(d => d.Task, opts => opts.Ignore())
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.IncidentTask, EvacuationFileTask>()
+                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.From, opts => opts.MapFrom(s => s.StartDate))
+                .ForMember(d => d.To, opts => opts.MapFrom(s => s.EndDate))
                 ;
 
             CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()

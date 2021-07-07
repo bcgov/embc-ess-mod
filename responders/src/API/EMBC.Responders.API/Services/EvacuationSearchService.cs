@@ -54,6 +54,7 @@ namespace EMBC.Responders.API.Services
         public string Id { get; set; }
         public bool IsRestricted { get; set; }
         public string TaskId { get; set; }
+        public string TaskLocationCommunityCode { get; set; }
         public Address EvacuatedFrom { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
@@ -69,6 +70,7 @@ namespace EMBC.Responders.API.Services
         public bool IsSearchMatch { get; set; }
         public HouseholdMemberType Type { get; set; }
         public bool IsMainApplicant { get; set; }
+        public bool IsRestricted { get; set; }
     }
 
     public class EvacuationSearchService : IEvacuationSearchService
@@ -107,7 +109,17 @@ namespace EMBC.Responders.API.Services
         {
             var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { FileId = fileId })).Items.SingleOrDefault();
             if (file == null) return null;
-            return mapper.Map<EvacuationFile>(file);
+
+            var mappedFile = mapper.Map<EvacuationFile>(file);
+            if (file.TaskId != null)
+            {
+                var fileTask = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.TasksSearchQuery { TaskId = file.TaskId })).Items.SingleOrDefault();
+                if (fileTask != null)
+                {
+                    mappedFile.Task = mapper.Map<EvacuationFileTask>(fileTask);
+                }
+            }
+            return mappedFile;
         }
     }
 
@@ -137,7 +149,8 @@ namespace EMBC.Responders.API.Services
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember, EvacuationFileSearchResultHouseholdMember>()
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.LinkedRegistrantId) ? HouseholdMemberType.Registrant : HouseholdMemberType.Registrant))
-                .ForMember(d => d.IsMainApplicant, s => s.MapFrom(s => s.IsPrimaryRegistrant))
+                .ForMember(d => d.IsMainApplicant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
+                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => false /*s.RestrictedAccess*/))
                 ;
         }
     }
