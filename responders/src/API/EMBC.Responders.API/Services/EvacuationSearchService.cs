@@ -124,7 +124,7 @@ namespace EMBC.Responders.API.Services
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuationAddress))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CreatedOn))
-                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.CreatedOn))
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.ProfileSearchResult, RegistrantProfileSearchResult>()
@@ -132,7 +132,7 @@ namespace EMBC.Responders.API.Services
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.IsVerified ? RegistrantStatus.Verified : RegistrantStatus.NotVerified))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.RegistrationDate))
-                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.RegistrationDate))
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
               ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember, EvacuationFileSearchResultHouseholdMember>()
