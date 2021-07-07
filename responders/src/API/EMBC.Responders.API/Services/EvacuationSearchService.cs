@@ -44,6 +44,7 @@ namespace EMBC.Responders.API.Services
         public string LastName { get; set; }
         public RegistrantStatus Status { get; set; }
         public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
         public Address PrimaryAddress { get; set; }
         public IEnumerable<EvacuationFileSearchResult> EvacuationFiles { get; set; }
     }
@@ -55,6 +56,7 @@ namespace EMBC.Responders.API.Services
         public string TaskId { get; set; }
         public Address EvacuatedFrom { get; set; }
         public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
         public EvacuationFileStatus Status { get; set; }
         public IEnumerable<EvacuationFileSearchResultHouseholdMember> HouseholdMembers { get; set; }
     }
@@ -103,7 +105,7 @@ namespace EMBC.Responders.API.Services
 
         public async Task<EvacuationFile> GetEvacuationFile(string fileId)
         {
-            var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesSearchQuery { FileId = fileId })).Items.SingleOrDefault();
+            var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { FileId = fileId })).Items.SingleOrDefault();
             if (file == null) return null;
             return mapper.Map<EvacuationFile>(file);
         }
@@ -122,13 +124,15 @@ namespace EMBC.Responders.API.Services
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s.EvacuationAddress))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CreatedOn))
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.ProfileSearchResult, RegistrantProfileSearchResult>()
                 .ForMember(d => d.EvacuationFiles, opts => opts.MapFrom(s => s.RecentEvacuationFiles.OrderByDescending(f => f.EvacuationDate).Take(3)))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => false/*s.isVerified*/ ? RegistrantStatus.Verified : RegistrantStatus.NotVerified))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.IsVerified ? RegistrantStatus.Verified : RegistrantStatus.NotVerified))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.RegistrationDate))
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
               ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember, EvacuationFileSearchResultHouseholdMember>()
