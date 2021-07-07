@@ -138,12 +138,4 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
       answer3: ['']
     });
   }
-
-  private createAnswersForm(): void {
-    this.securityQuestionsForm = this.formBuilder.group({
-      answer1: [''],
-      answer2: [''],
-      answer3: ['']
-    });
-  }
 }
