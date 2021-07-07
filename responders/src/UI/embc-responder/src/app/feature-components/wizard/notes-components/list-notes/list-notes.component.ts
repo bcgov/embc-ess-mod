@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
@@ -16,7 +17,8 @@ import { Note } from 'src/app/core/api/models';
 @Component({
   selector: 'app-list-notes',
   templateUrl: './list-notes.component.html',
-  styleUrls: ['./list-notes.component.scss']
+  styleUrls: ['./list-notes.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListNotesComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

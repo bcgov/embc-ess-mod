@@ -1,6 +1,6 @@
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { DialogContent } from '../models/dialog-content.model';
 
+export const mainApplicant = 'Main Applicant';
 export const insuranceOptions = [
   { name: 'Yes', value: 'Yes' },
   {

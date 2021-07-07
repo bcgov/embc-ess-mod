@@ -9,6 +9,7 @@ import { SecurityQuestion } from './security-question';
  * Registrant profile
  */
 export interface RegistrantProfile {
+  authenticatedUser?: boolean;
   contactDetails: ContactDetails;
   createdOn?: string;
   id?: null | string;

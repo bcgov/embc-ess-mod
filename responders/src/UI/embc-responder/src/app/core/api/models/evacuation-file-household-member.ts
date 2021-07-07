@@ -7,6 +7,7 @@ export interface EvacuationFileHouseholdMember {
   gender?: null | string;
   id?: null | string;
   initials?: null | string;
+  isHouseholdMember?: boolean;
   isMatch?: boolean;
   isPrimaryRegistrant?: boolean;
   lastName?: null | string;
