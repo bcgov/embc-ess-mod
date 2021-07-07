@@ -280,32 +280,14 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<VerifySecurityQuestionsResponse> Handle(VerifySecurityQuestionsQuery query)
         {
-            IEnumerable<Contact> contacts = Array.Empty<Contact>();
-            contacts = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = query.RegistrantId, MaskSecurityAnswers = false })).Items;
-            VerifySecurityQuestionsResponse ret = new VerifySecurityQuestionsResponse
-            {
-                NumberOfCorrectAnswers = 0
-            };
+            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = query.RegistrantId, MaskSecurityAnswers = false })).Items.FirstOrDefault();
 
-            if (contacts.Count() == 1)
-            {
-                Contact contact = contacts.First();
-                if (contact.SecurityQuestions != null && contact.SecurityQuestions.Count() > 0)
-                {
-                    for (int i = 0; i < query.Answers.Count(); ++i)
-                    {
-                        Shared.Contracts.Submissions.SecurityQuestion question = query.Answers.ElementAt(i);
-                        string submittedAnswer = question.Answer;
-                        string savedAnswer = contact.SecurityQuestions.Where(q => q.Id == question.Id).FirstOrDefault().Answer;
-                        if (string.Equals(savedAnswer, submittedAnswer, StringComparison.OrdinalIgnoreCase))
-                        {
-                            ++ret.NumberOfCorrectAnswers;
-                        }
-                    }
-                }
-            }
+            if (contact == null) throw new Exception($"registrant {query.RegistrantId} not found");
 
-            return ret;
+            var numberOfCorrectAnswers = query.Answers
+                .Select(a => contact.SecurityQuestions.Any(q => a.Answer.Equals(q.Answer, StringComparison.OrdinalIgnoreCase) && a.Answer.Equals(q.Answer, StringComparison.OrdinalIgnoreCase)))
+                .Count(a => a);
+            return new VerifySecurityQuestionsResponse { NumberOfCorrectAnswers = numberOfCorrectAnswers };
         }
 
         public async Task<VerifySecurityPhraseResponse> Handle(VerifySecurityPhraseQuery query)
@@ -318,11 +300,12 @@ namespace EMBC.ESS.Managers.Submissions
 
             if (file == null) throw new Exception($"Evacuation File {query.FileId} not found");
 
-            VerifySecurityPhraseResponse ret = new VerifySecurityPhraseResponse
+            var isCorrect = string.Equals(file.SecurityPhrase, query.SecurityPhrase, StringComparison.OrdinalIgnoreCase);
+
+            return new VerifySecurityPhraseResponse
             {
-                IsCorrect = string.Equals(file.SecurityPhrase, query.SecurityPhrase, StringComparison.OrdinalIgnoreCase)
+                IsCorrect = isCorrect
             };
-            return ret;
         }
 
         public async Task<string> Handle(SaveEvacuationFileNoteCommand cmd)
