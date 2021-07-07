@@ -49,14 +49,16 @@ export class AddNotesComponent implements OnInit {
           this.stepNotesService.createNoteDTO(this.notesForm.get('note').value)
         )
         .subscribe(
-          (result) => result,
+          (result) => {
+            result;
+            this.closeEvent.emit(true);
+          },
           (error) => {
             this.showLoader = !this.showLoader;
             this.isSubmitted = !this.isSubmitted;
             this.alertService.setAlert('danger', globalConst.addNotesError);
           }
         );
-      this.closeEvent.emit(true);
     }
   }
 
