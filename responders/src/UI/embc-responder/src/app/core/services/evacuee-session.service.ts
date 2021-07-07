@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ignoreElements } from 'rxjs/operators';
+import { WizardType } from '../models/wizard-type.model';
 import { CacheService } from './cache.service';
 
 @Injectable({ providedIn: 'root' })
@@ -46,9 +47,9 @@ export class EvacueeSessionService {
     this.cacheService.set('wizardType', wizardType);
 
     if (
-      wizardType === 'edit-registration' ||
-      wizardType === 'review-file' ||
-      wizardType === 'complete-file'
+      wizardType === WizardType.EditRegistration ||
+      wizardType === WizardType.ReviewFile ||
+      wizardType === WizardType.CompleteFile
     ) {
       this.editWizardFlag = true;
     } else {

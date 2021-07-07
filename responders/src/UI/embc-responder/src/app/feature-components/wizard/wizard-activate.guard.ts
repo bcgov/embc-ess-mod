@@ -7,6 +7,7 @@ import {
   UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
@@ -34,7 +35,7 @@ export class WizardActivateGuard implements CanActivate {
     const wizardType = this.evacueeSessionService.getWizardType();
     const registrantProfileId = this.evacueeSessionService.profileId;
 
-    if (wizardType === 'new-registration') {
+    if (wizardType === WizardType.NewRegistration) {
       if (this.isNewRegistrationAllowed(loggedInTask)) {
         this.wizardStepService.evacueeProfileStepFromSearch();
 
@@ -42,15 +43,15 @@ export class WizardActivateGuard implements CanActivate {
       }
 
       return false;
-    } else if (wizardType === 'edit-registration') {
+    } else if (wizardType === WizardType.EditRegistration) {
       return this.isProfileIdNotNull(registrantProfileId);
-    } else if (wizardType === 'new-ess-file') {
+    } else if (wizardType === WizardType.NewEssFile) {
       return this.isProfileIdNotNull(registrantProfileId);
-    } else if (wizardType === 'member-registration') {
+    } else if (wizardType === WizardType.MemberRegistration) {
       return this.isProfileCreationAllowed();
-    } else if (wizardType === 'review-file') {
+    } else if (wizardType === WizardType.ReviewFile) {
       return this.isFileReviewAllowed();
-    } else if (wizardType === 'complete-file') {
+    } else if (wizardType === WizardType.CompleteFile) {
       return this.isFileCompletionAllowed();
     } else {
       this.router.navigate(['/responder-access']);

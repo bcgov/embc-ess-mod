@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
@@ -82,9 +83,9 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       'wizardOpenedFrom',
       '/responder-access/search/evacuee-profile-dashboard'
     );
-    this.evacueeSessionService.setWizardType('new-ess-file');
+    this.evacueeSessionService.setWizardType(WizardType.NewEssFile);
     this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: 'new-ess-file' },
+      queryParams: { type: WizardType.NewEssFile },
       queryParamsHandling: 'merge'
     });
   }
@@ -94,10 +95,10 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       'wizardOpenedFrom',
       '/responder-access/search/evacuee-profile-dashboard'
     );
-    this.evacueeSessionService.setWizardType('edit-registration');
+    this.evacueeSessionService.setWizardType(WizardType.EditRegistration);
 
     this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: 'edit-registration' },
+      queryParams: { type: WizardType.EditRegistration },
       queryParamsHandling: 'merge'
     });
   }
