@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { StatusDefinitionDialogComponent } from 'src/app/shared/components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
@@ -72,7 +73,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
 
   createNewESSFile(): void {
     this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: 'new-ess-file' }
+      queryParams: { type: WizardType.NewEssFile }
     });
   }
 }
