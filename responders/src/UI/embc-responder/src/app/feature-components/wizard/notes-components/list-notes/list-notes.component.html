@@ -2,8 +2,10 @@
   <hr class="solid-hr" />
   <div class="row list-notes">
     <div class="col-md-10">
-      <p>{{ note?.memberName }} - {{ note?.teamName }}</p>
-      <p>{{ note?.addedOn }}</p>
+      <p class="list-note-name">
+        <span class="bold">{{ note?.memberName }} -</span> {{ note?.teamName }}
+      </p>
+      <p class="note-date">{{ note?.addedOn | date: 'dd-MMM-yyyy hh:mm a' }}</p>
     </div>
     <div class="col-md-2">
       <button class="edit-image" mat-icon-button aria-label="Edit">
@@ -14,7 +16,7 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <p>{{ note?.content }}</p>
+      <p class="note-format">{{ note?.content }}</p>
     </div>
   </div>
 </div>
