@@ -55,6 +55,15 @@ namespace EMBC.ESS.Resources.Cases
             };
         }
 
+        public async Task<NotesQueryResult> QueryNotes(NotesQuery query)
+        {
+            return query.GetType().Name switch
+            {
+                nameof(EvacuationFileNotesQuery) => await HandleQueryEvacuationFileNotes((EvacuationFileNotesQuery)query),
+                _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
+            };
+        }
+
         public async Task<CaseQueryResult> HandleQueryEvacuationFile(EvacuationFilesQuery query)
         {
             var result = new CaseQueryResult();
@@ -86,6 +95,15 @@ namespace EMBC.ESS.Resources.Cases
             return new ManageCaseCommandResult { CaseId = await evacuationRepository.UpdateSecurityPhrase(cmd.Id, cmd.SecurityPhrase) };
         }
 
+        public async Task<NotesQueryResult> HandleQueryEvacuationFileNotes(EvacuationFileNotesQuery query)
+        {
+            var result = new NotesQueryResult();
+
+            result.Items = await evacuationRepository.GetNotes(query);
+
+            return result;
+        }
+
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFileNote(SaveEvacuationFileNote cmd)
         {
             if (string.IsNullOrEmpty(cmd.Note.Id))
@@ -94,7 +112,7 @@ namespace EMBC.ESS.Resources.Cases
             }
             else
             {
-                return new ManageCaseCommandResult { CaseId = await evacuationRepository.UpdateNote(cmd.FileId, cmd.Note) };
+                return new ManageCaseCommandResult { CaseId = await evacuationRepository.UpdateNote(cmd.Note) };
             }
         }
     }

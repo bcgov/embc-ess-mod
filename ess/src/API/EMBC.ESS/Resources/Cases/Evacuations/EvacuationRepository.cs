@@ -337,6 +337,27 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return evacuationFile.era_name;
         }
 
+        public async Task<IEnumerable<Note>> GetNotes(EvacuationFileNotesQuery query)
+        {
+            var notesQuery = essContext.era_essfilenotes
+                .Where(f => f.statecode == (int)EntityState.Active);
+
+            if (!string.IsNullOrEmpty(query.FileId))
+            {
+                var file = essContext.era_evacuationfiles.Where(f => f.era_name == query.FileId).Single();
+                if (file == null) throw new Exception($"Evacuation File {query.FileId} not found");
+                notesQuery = notesQuery.Where(n => n._era_essfileid_value == file.era_evacuationfileid);
+            }
+            if (!string.IsNullOrEmpty(query.NoteId))
+            {
+                notesQuery = notesQuery.Where(n => n.era_essfilenoteid.Value == Guid.Parse(query.NoteId));
+            }
+
+            var notes = (await ((DataServiceQuery<era_essfilenote>)notesQuery).GetAllPagesAsync()).ToArray();
+
+            return mapper.Map<IEnumerable<Note>>(notes);
+        }
+
         public async Task<string> CreateNote(string essFileId, Note note)
         {
             var file = essContext.era_evacuationfiles
@@ -354,7 +375,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return era_essfilenote.era_essfilenoteid.ToString();
         }
 
-        public async Task<string> UpdateNote(string essFileId, Note note)
+        public async Task<string> UpdateNote(Note note)
         {
             var era_essfilenote = mapper.Map<era_essfilenote>(note);
             var existingNote = essContext.era_essfilenotes

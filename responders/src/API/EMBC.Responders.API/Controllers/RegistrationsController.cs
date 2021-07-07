@@ -247,31 +247,56 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Updates a File Note
+        /// Updates a File Note's content
         /// </summary>
-        /// <param name="fileId">fileId</param>
         /// <param name="noteId">noteId</param>
         /// <param name="note">note</param>
-        /// <returns>newly created note id</returns>
-        [HttpPost("files/{fileId}/notes/{noteId}")]
+        /// <returns>updated note id</returns>
+        [HttpPost("notes/{noteId}/content")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> UpdateFileNote(string fileId, string noteId, Note note)
+        public async Task<ActionResult<RegistrationResult>> UpdateFileNoteContent(string noteId, Note note)
         {
             var now = DateTime.Now;
             var userId = User.FindFirstValue("user_id");
-            if (!note.CreatingTeamMemberId.Equals(userId) || note.AddedOn < now.AddHours(-24)) return BadRequest(new ProblemDetails { Detail = "The note may be edited only by the user who created it withing a 24 hour period." });
 
-            note.Id = noteId;
+            var existing_note = (await messagingClient.Send(new EvacuationFileNotesQuery { NoteId = noteId })).Notes.FirstOrDefault();
+            if (!existing_note.CreatingTeamMemberId.Equals(userId) || existing_note.AddedOn < now.AddHours(-24)) return BadRequest(new ProblemDetails { Detail = "The note may be edited only by the user who created it withing a 24 hour period." });
+
+            existing_note.Content = note.Content;
+
             var cmd = new SaveEvacuationFileNoteCommand
             {
-                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
-                FileId = fileId
+                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(existing_note),
             };
-            cmd.Note.CreatingTeamMemberId = userId;
 
             var id = await messagingClient.Send(cmd);
+            return Ok(new EvacuationFileNotesResult { Id = id });
+        }
 
+        /// <summary>
+        /// Sets a File Note's isHidden field
+        /// </summary>
+        /// <param name="noteId">noteId</param>
+        /// <param name="note">note</param>
+        /// <returns>updated note id</returns>
+        [HttpPost("notes/{noteId}/hidden")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RegistrationResult>> SetFileNoteHiddenStatus(string noteId, Note note)
+        {
+            var userRole = Enum.Parse<MemberRole>(User.FindFirstValue("user_role"));
+            if (!(userRole == Controllers.MemberRole.Tier3 || userRole == Controllers.MemberRole.Tier4)) return BadRequest();
+
+            var existing_note = (await messagingClient.Send(new EvacuationFileNotesQuery { NoteId = noteId })).Notes.FirstOrDefault();
+            existing_note.IsHidden = note.IsHidden;
+
+            var cmd = new SaveEvacuationFileNoteCommand
+            {
+                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(existing_note),
+            };
+
+            var id = await messagingClient.Send(cmd);
             return Ok(new EvacuationFileNotesResult { Id = id });
         }
 

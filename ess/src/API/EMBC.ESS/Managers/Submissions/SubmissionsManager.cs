@@ -310,15 +310,22 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<string> Handle(SaveEvacuationFileNoteCommand cmd)
         {
+            if (string.IsNullOrEmpty(cmd.Note.Id) && string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("NoteId and FileId cannot both be empty/null.");
+
             var note = mapper.Map<Resources.Cases.Note>(cmd.Note);
             var id = (await caseRepository.ManageCase(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).CaseId;
             return id;
         }
 
-        public async Task<EvacuationFileNotesQueryResult> Handle(EvacuationFileNotesQuery query)
+        public async Task<EvacuationFileNotesQueryResult> Handle(Shared.Contracts.Submissions.EvacuationFileNotesQuery query)
         {
-            await Task.CompletedTask;
-            throw new NotImplementedException();
+            var notes = (await caseRepository.QueryNotes(new Resources.Cases.EvacuationFileNotesQuery
+            {
+                NoteId = query.NoteId,
+                FileId = query.FileId
+            })).Items;
+
+            return new EvacuationFileNotesQueryResult { Notes = mapper.Map<IEnumerable<Shared.Contracts.Submissions.Note>>(notes) };
         }
 
         public async Task<TasksSearchQueryResult> Handle(TasksSearchQuery query)

@@ -32,9 +32,11 @@ namespace EMBC.ESS.Resources.Cases
 
         Task<string> UpdateSecurityPhrase(string essFileNumber, string securityPhrase);
 
+        Task<IEnumerable<Note>> GetNotes(EvacuationFileNotesQuery query);
+
         Task<string> CreateNote(string essFileNumber, Note note);
 
-        Task<string> UpdateNote(string essFileNumber, Note note);
+        Task<string> UpdateNote(Note note);
     }
 
     public class EvacuationFile : Case
@@ -131,6 +133,13 @@ namespace EMBC.ESS.Resources.Cases
         ExternalReferralServices,
         PetCarePlans,
         RecoveryPlan
+    }
+
+    public enum NoteStatus
+    {
+        ReadOnly,
+        Editable,
+        Hidden
     }
 
     public enum ReferralServices

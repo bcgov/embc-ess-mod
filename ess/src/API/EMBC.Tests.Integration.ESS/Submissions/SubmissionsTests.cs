@@ -370,6 +370,25 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             response.IsCorrect.ShouldBeTrue();
         }
 
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchFileNoteByFileId()
+        {
+            var fileId = "101010";
+            var notes = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId })).Notes;
+
+            notes.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchFileNoteByNoteId()
+        {
+            var noteId = "3fe43acf-edcb-44f7-8112-a9e1a88d401d";
+            var notes = (await manager.Handle(new EvacuationFileNotesQuery { NoteId = noteId })).Notes;
+
+            notes.ShouldNotBeNull();
+        }
+
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateFileNote()
         {
@@ -387,16 +406,16 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var note = file.Notes.FirstOrDefault();
 
-            if (note.Content.Equals("Test update value 1"))
+            if (note.Content.Equals("_testing_ update value 1"))
             {
-                note.Content = "Test update value 2";
+                note.Content = "_testing_ update value 2";
             }
             else
             {
-                note.Content = "Test update value 1";
+                note.Content = "_testing_ update value 1";
             }
 
-            var id = await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note });
+            var id = await manager.Handle(new SaveEvacuationFileNoteCommand { Note = note });
             id.ShouldNotBeNull();
         }
 
