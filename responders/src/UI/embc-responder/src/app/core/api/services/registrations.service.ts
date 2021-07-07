@@ -230,21 +230,21 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * Path part for operation registrationsUpdateRegistrantVerified
+   * Path part for operation registrationsSetRegistrantVerified
    */
-  static readonly RegistrationsUpdateRegistrantVerifiedPath = '/api/Registrations/registrants/{registrantId}/verified/{verified}';
+  static readonly RegistrationsSetRegistrantVerifiedPath = '/api/Registrations/registrants/{registrantId}/verified/{verified}';
 
   /**
-   * Updates a Registrant Profile Verified flag.
+   * Sets the Registrant Profile Verified flag to the supplied value.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationsUpdateRegistrantVerified()` instead.
+   * To access only the response body, use `registrationsSetRegistrantVerified()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsUpdateRegistrantVerified$Response(params: {
+  registrationsSetRegistrantVerified$Response(params: {
 
     /**
      * RegistrantId
@@ -257,7 +257,7 @@ export class RegistrationsService extends BaseService {
     verified: boolean;
   }): Observable<StrictHttpResponse<RegistrationResult>> {
 
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateRegistrantVerifiedPath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSetRegistrantVerifiedPath, 'post');
     if (params) {
       rb.path('registrantId', params.registrantId, {});
       rb.path('verified', params.verified, {});
@@ -275,16 +275,16 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * Updates a Registrant Profile Verified flag.
+   * Sets the Registrant Profile Verified flag to the supplied value.
    *
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `registrationsUpdateRegistrantVerified$Response()` instead.
+   * To access the full response (for headers, for example), `registrationsSetRegistrantVerified$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  registrationsUpdateRegistrantVerified(params: {
+  registrationsSetRegistrantVerified(params: {
 
     /**
      * RegistrantId
@@ -297,7 +297,7 @@ export class RegistrationsService extends BaseService {
     verified: boolean;
   }): Observable<RegistrationResult> {
 
-    return this.registrationsUpdateRegistrantVerified$Response(params).pipe(
+    return this.registrationsSetRegistrantVerified$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
   }

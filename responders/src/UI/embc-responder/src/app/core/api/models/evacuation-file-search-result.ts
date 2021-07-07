@@ -9,6 +9,7 @@ export interface EvacuationFileSearchResult {
   householdMembers?: null | Array<EvacuationFileSearchResultHouseholdMember>;
   id?: null | string;
   isRestricted?: boolean;
+  modifiedOn?: string;
   status?: EvacuationFileStatus;
   taskId?: null | string;
 }
