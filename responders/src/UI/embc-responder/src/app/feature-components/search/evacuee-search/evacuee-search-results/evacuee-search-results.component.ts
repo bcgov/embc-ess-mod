@@ -80,13 +80,16 @@ export class EvacueeSearchResultsComponent implements OnInit {
       .subscribe(
         (results) => {
           this.isLoading = !this.isLoading;
-          this.fileResults = results.files;
+          this.fileResults = results.files.sort(
+            (a, b) =>
+              new Date(b.modifiedOn).valueOf() -
+              new Date(a.modifiedOn).valueOf()
+          );
           this.registrantResults = results.registrants.sort(
             (a, b) =>
               new Date(b.modifiedOn).valueOf() -
               new Date(a.modifiedOn).valueOf()
           );
-          console.log(this.registrantResults);
         },
         (error) => {
           this.isLoading = !this.isLoading;
