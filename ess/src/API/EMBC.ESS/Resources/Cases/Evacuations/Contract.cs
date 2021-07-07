@@ -103,7 +103,8 @@ namespace EMBC.ESS.Resources.Cases
         public string DateOfBirth { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public string LinkedRegistrantId { get; set; }
-        public bool HasAccessRestriction { get; set; }
+        public bool? HasAccessRestriction { get; set; }
+        public bool? IsVerifiedRegistrant { get; set; }
     }
 
     public class Pet

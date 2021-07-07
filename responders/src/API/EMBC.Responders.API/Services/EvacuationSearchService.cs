@@ -70,7 +70,7 @@ namespace EMBC.Responders.API.Services
         public bool IsSearchMatch { get; set; }
         public HouseholdMemberType Type { get; set; }
         public bool IsMainApplicant { get; set; }
-        public bool IsRestricted { get; set; }
+        public bool? IsRestricted { get; set; }
     }
 
     public class EvacuationSearchService : IEvacuationSearchService

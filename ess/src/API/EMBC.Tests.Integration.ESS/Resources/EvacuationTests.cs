@@ -149,6 +149,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.RegistrationLocation.ShouldBe(originalFile.RegistrationLocation);
             evacuationFile.TaskId.ShouldBe(originalFile.TaskId);
             if (originalFile.TaskId != null) evacuationFile.TaskLocationCommunityCode.ShouldNotBeNull();
+            evacuationFile.HouseholdMembers.Count().ShouldBe(originalFile.NeedsAssessment.HouseholdMembers.Count());
 
             // Needs Assessment
 
@@ -179,7 +180,16 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 householdMember.IsUnder19.ShouldBe(originalHouseholdMember.IsUnder19);
                 householdMember.Id.ShouldNotBeNull();
                 householdMember.LinkedRegistrantId.ShouldBe(originalHouseholdMember.LinkedRegistrantId);
-                householdMember.HasAccessRestriction.ShouldBe(originalHouseholdMember.HasAccessRestriction);
+                if (householdMember.LinkedRegistrantId != null)
+                {
+                    householdMember.HasAccessRestriction.ShouldNotBeNull().ShouldBe(originalHouseholdMember.HasAccessRestriction.Value);
+                    householdMember.IsVerifiedRegistrant.ShouldNotBeNull().ShouldBe(originalHouseholdMember.IsVerifiedRegistrant.Value);
+                }
+                else
+                {
+                    householdMember.HasAccessRestriction.ShouldBeNull();
+                    householdMember.IsVerifiedRegistrant.ShouldBeNull();
+                }
             }
             needsAssessment.Pets.Count().ShouldBe(originalNeedsAssessment.Pets.Count());
             for (var j = 0; j < originalNeedsAssessment.Pets.Count(); j++)
@@ -242,7 +252,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
                                 DateOfBirth = primaryContact.DateOfBirth,
                                 IsUnder19 = false,
                                 IsPrimaryRegistrant = true,
-                                LinkedRegistrantId = primaryContact.Id
+                                LinkedRegistrantId = primaryContact.Id,
+                                HasAccessRestriction = false,
+                                IsVerifiedRegistrant = true
                             },
                             new HouseholdMember
                             {

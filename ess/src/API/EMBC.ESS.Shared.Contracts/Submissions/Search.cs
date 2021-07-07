@@ -116,5 +116,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool IsSearchMatch { get; set; }
         public string LinkedRegistrantId { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
+        public bool? RestrictedAccess { get; set; }
     }
 }

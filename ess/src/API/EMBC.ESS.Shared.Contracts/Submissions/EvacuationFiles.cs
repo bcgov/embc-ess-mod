@@ -25,9 +25,11 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string TaskId { get; set; }
         public string TaskLocationCommunityCode { get; set; }
 
-        //public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
+
         //public User CreatedBy { get; set; }
-        //public DateTime LastModified { get; set; }
+        public DateTime LastModified { get; set; }
+
         //public User LastModified { get; set; }
         public EvacuationFileStatus Status { get; set; }
 
@@ -110,6 +112,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public bool IsUnder19 { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public string LinkedRegistrantId { get; set; }
+        public bool? RestrictedAccess { get; set; }
+        public bool? Verified { get; set; }
     }
 
     public class Pet

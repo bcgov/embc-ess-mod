@@ -334,8 +334,8 @@ namespace EMBC.Responders.API.Controllers
         public HouseholdMemberType Type { get; set; }
         public bool IsPrimaryRegistrant { get; set; }
         public bool IsHouseholdMember => !IsPrimaryRegistrant;
-        public bool IsRestricted { get; set; }
-        public bool IsVerified { get; set; }
+        public bool? IsRestricted { get; set; }
+        public bool? IsVerified { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]

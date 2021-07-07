@@ -45,6 +45,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Cases.HouseholdMember>()
                 .ForMember(d => d.HasAccessRestriction, opts => opts.Ignore())
+                .ForMember(d => d.IsVerifiedRegistrant, opts => opts.Ignore())
                 .ReverseMap()
                 ;
 
@@ -97,6 +98,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Resources.Cases.HouseholdMember, Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember>()
                 .ForMember(d => d.IsSearchMatch, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.HasAccessRestriction))
                 ;
         }
     }
