@@ -23,6 +23,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string Id { get; set; }
         public string TaskId { get; set; }
+        public string TaskLocationCommunityCode { get; set; }
 
         //public DateTime CreatedOn { get; set; }
         //public User CreatedBy { get; set; }

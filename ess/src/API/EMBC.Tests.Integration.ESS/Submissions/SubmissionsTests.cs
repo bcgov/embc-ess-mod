@@ -331,16 +331,34 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVerifySecurityQuestions()
         {
-            List<SecurityQuestion> answers = new List<SecurityQuestion>();
-            answers.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1" });
-            answers.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2" });
-            answers.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3" });
-
+            var expectedNumberOfCorrectAnswers = 3;
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
 
-            var num = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId = registrant.Id });
+            var answers = registrant.SecurityQuestions.Select(q =>
+            {
+                q.Answer = $"answer{q.Id}";
+                return q;
+            }).ToArray();
+            var actualNumberOfCorrectAnswers = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId = registrant.Id });
 
-            num.NumberOfCorrectAnswers.ShouldBe(answers.Count());
+            actualNumberOfCorrectAnswers.NumberOfCorrectAnswers.ShouldBe(expectedNumberOfCorrectAnswers);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanPartlyVerifySecurityQuestions()
+        {
+            var expectedNumberOfCorrectAnswers = 2;
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+
+            var answers = registrant.SecurityQuestions.Select(q =>
+            {
+                q.Answer = $"answer{q.Id}";
+                return q;
+            }).ToArray();
+            answers[2].Answer = "wrong";
+            var actualNumberOfCorrectAnswers = await manager.Handle(new VerifySecurityQuestionsQuery { Answers = answers, RegistrantId = registrant.Id });
+
+            actualNumberOfCorrectAnswers.NumberOfCorrectAnswers.ShouldBe(expectedNumberOfCorrectAnswers);
         }
 
         [Fact(Skip = RequiresDynamics)]

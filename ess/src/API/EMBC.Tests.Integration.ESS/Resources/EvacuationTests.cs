@@ -147,6 +147,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.EvacuationDate.ShouldBeInRange(now, DateTime.UtcNow);
             evacuationFile.PrimaryRegistrantId.ShouldBe(primaryContact.Id);
             evacuationFile.RegistrationLocation.ShouldBe(originalFile.RegistrationLocation);
+            evacuationFile.TaskId.ShouldBe(originalFile.TaskId);
+            if (originalFile.TaskId != null) evacuationFile.TaskLocationCommunityCode.ShouldNotBeNull();
 
             // Needs Assessment
 
