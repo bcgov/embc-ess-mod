@@ -85,7 +85,7 @@ export class EvacueeSearchResultsComponent implements OnInit {
               new Date(b.modifiedOn).valueOf() -
               new Date(a.modifiedOn).valueOf()
           );
-          console.log(this.registrantResults)
+          console.log(this.registrantResults);
         },
         (error) => {
           this.isLoading = !this.isLoading;

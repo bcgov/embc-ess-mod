@@ -50,7 +50,6 @@ export class AddNotesComponent implements OnInit {
         )
         .subscribe(
           (result) => {
-            result;
             this.closeEvent.emit(true);
           },
           (error) => {

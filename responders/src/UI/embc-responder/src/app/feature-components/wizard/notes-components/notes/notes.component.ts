@@ -43,7 +43,7 @@ export class NotesComponent implements OnInit {
     this.stepNotesService.getNotes().subscribe(
       (notes) => {
         this.showLoader = !this.showLoader;
-        let note = notes.sort(
+        const note = notes.sort(
           (a, b) =>
             new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
         );

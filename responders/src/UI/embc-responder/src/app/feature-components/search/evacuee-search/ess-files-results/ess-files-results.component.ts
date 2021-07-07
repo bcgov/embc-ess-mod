@@ -77,6 +77,7 @@ export class EssFilesResultsComponent
 
   /**
    * Determines the type of household member
+   *
    * @param type member type
    * @param isMainApplicant true/false
    * @returns derived member type
