@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as globalConst from '../../../core/services/global-constants';
-import {
-  TabModel,
-  WizardTabDefaultValues
-} from 'src/app/core/models/tab.model';
+import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
@@ -25,7 +22,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
   // Wizard variables
-  private profileTabsVal = new WizardTabDefaultValues().evacueeProfileTabs;
+  private profileTabsVal = WizardTabModelValues.evacueeProfileTabs;
 
   private nextTabUpdateVal: Subject<void> = new Subject();
 
@@ -281,8 +278,7 @@ export class StepEvacueeProfileService {
    */
   public clearService() {
     // Wizard variables
-    this.profileTabs = new WizardTabDefaultValues().evacueeProfileTabs;
-    this.nextTabUpdate = new Subject();
+    this.nextTabUpdate.next(null);
 
     // Restriction tab
     this.restrictedAccess = undefined;

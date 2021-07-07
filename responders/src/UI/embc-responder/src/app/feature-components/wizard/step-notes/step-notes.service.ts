@@ -3,15 +3,12 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Note, NoteType, RegistrationResult } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
-import {
-  TabModel,
-  WizardTabDefaultValues
-} from 'src/app/core/models/tab.model';
+import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepNotesService {
-  private notesTabVal: Array<TabModel> = new WizardTabDefaultValues().notesTab;
+  private notesTabVal: Array<TabModel> = WizardTabModelValues.notesTab;
 
   constructor(
     private registrationsService: RegistrationsService,

@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  TabModel,
-  WizardTabDefaultValues
-} from 'src/app/core/models/tab.model';
+import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import * as globalConst from '../../../core/services/global-constants';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
@@ -29,8 +26,7 @@ import { UserService } from 'src/app/core/services/user.service';
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
   // Wizard variables
-  private essTabsVal: Array<TabModel> = new WizardTabDefaultValues()
-    .essFileTabs;
+  private essTabsVal: Array<TabModel> = WizardTabModelValues.essFileTabs;
   private nextTabUpdateVal: Subject<void> = new Subject();
 
   // Important values not set on form
@@ -437,8 +433,7 @@ export class StepEssFileService {
    */
   public clearService() {
     // Wizard variables
-    this.essTabs = new WizardTabDefaultValues().essFileTabs;
-    this.nextTabUpdate = new Subject();
+    this.nextTabUpdate.next(null);
 
     // Important values not set on form
     // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
