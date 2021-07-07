@@ -5,8 +5,8 @@ export interface TabModel {
   status?: string;
 }
 
-export class WizardTabModelValues {
-  static evacueeProfileTabs: Array<TabModel> = [
+export class WizardTabDefaultValues {
+  evacueeProfileTabs: Array<TabModel> = [
     {
       label: 'Collection Notice',
       route: 'collection-notice',
@@ -51,7 +51,7 @@ export class WizardTabModelValues {
     }
   ];
 
-  static essFileTabs: Array<TabModel> = [
+  essFileTabs: Array<TabModel> = [
     {
       label: 'Evacuation Details',
       route: 'evacuation-details',
@@ -90,7 +90,7 @@ export class WizardTabModelValues {
     }
   ];
 
-  static notesTab: Array<TabModel> = [
+  notesTab: Array<TabModel> = [
     {
       label: 'Notes',
       route: 'notes',

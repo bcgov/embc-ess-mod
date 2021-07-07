@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as globalConst from '../../../core/services/global-constants';
-import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
+import {
+  TabModel,
+  WizardTabDefaultValues
+} from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
@@ -22,8 +25,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
   // Wizard variables
-  private profileTabsVal: Array<TabModel> =
-    WizardTabModelValues.evacueeProfileTabs;
+  private profileTabsVal = new WizardTabDefaultValues().evacueeProfileTabs;
 
   private nextTabUpdateVal: Subject<void> = new Subject();
 
@@ -272,6 +274,44 @@ export class StepEvacueeProfileService {
       securityQuestions: this.securityQuestions,
       verifiedUser: this.verifiedProfile
     };
+  }
+
+  /**
+   * Reset all values in this service to defaults
+   */
+  public clearService() {
+    // Wizard variables
+    this.profileTabs = new WizardTabDefaultValues().evacueeProfileTabs;
+    this.nextTabUpdate = new Subject();
+
+    // Restriction tab
+    this.restrictedAccess = undefined;
+
+    // Evacuee Details tab
+    // First, Last, and DoB are pre-set in wizardStepService
+    this.personalDetails = undefined;
+
+    // Address tab
+    this.primaryAddressDetails = undefined;
+    this.isBcAddress = undefined;
+
+    this.isMailingAddressSameAsPrimaryAddress = undefined;
+    this.mailingAddressDetails = undefined;
+    this.isBcMailingAddress = undefined;
+
+    // Contact tab
+    this.showContact = undefined;
+    this.contactDetails = undefined;
+    this.confirmEmail = undefined;
+
+    // Security Questions tab
+    this.bypassSecurityQuestions = undefined;
+    this.securityQuestions = undefined;
+    this.securityQuestionOptions = undefined;
+
+    // Review & Save tab
+    this.verifiedProfile = undefined;
+    this.unlockedFields = undefined;
   }
 
   /**

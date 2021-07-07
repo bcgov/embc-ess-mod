@@ -4,6 +4,7 @@ import {
   RegistrantProfile
 } from 'src/app/core/api/models';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { UserService } from 'src/app/core/services/user.service';
@@ -25,6 +26,41 @@ export class WizardStepService {
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private stepEssFileService: StepEssFileService
   ) {}
+
+  /**
+   * Clear all steps for current wizard type, usually before exiting wizard
+   */
+  public clearWizard(): void {
+    const wizType = this.evacueeSessionService.getWizardType();
+
+    switch (wizType) {
+      case WizardType.NewRegistration:
+        this.stepEvacueeProfileService.clearService();
+        this.stepEssFileService.clearService();
+        // Clear supports & notes
+        return;
+
+      case WizardType.EditRegistration:
+        this.stepEssFileService.clearService();
+        return;
+
+      case WizardType.NewEssFile:
+        this.stepEssFileService.clearService();
+        return;
+
+      case WizardType.MemberRegistration:
+        // Clear steps
+        return;
+
+      case WizardType.ReviewFile:
+        // Clear steps
+        return;
+
+      case WizardType.CompleteFile:
+        // Clear steps
+        return;
+    }
+  }
 
   /**
    * Set initial values for stepEvacueeProfileService when entering from Evacuee Search
