@@ -27,17 +27,27 @@ export class NotesComponent implements OnInit {
     this.loadNotes();
   }
 
+  /**
+   * Toggle for add notes button
+   */
   addNotes(): void {
     this.addNoteFlag = !this.addNoteFlag;
     this.isAddDisabled = !this.isAddDisabled;
   }
 
+  /**
+   * On Cancel, reloads the notes list and toggles
+   * flags
+   */
   cancel(): void {
     this.loadNotes();
     this.addNoteFlag = !this.addNoteFlag;
     this.isAddDisabled = !this.isAddDisabled;
   }
 
+  /**
+   * Loads and sorts the notes
+   */
   private loadNotes(): void {
     this.showLoader = !this.showLoader;
     this.stepNotesService.getNotes().subscribe(
