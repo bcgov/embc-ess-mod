@@ -80,7 +80,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   createNewESSFile(): void {
     this.cacheService.set(
       'wizardOpenedFrom',
-      '/responder-access/search/evacuee'
+      '/responder-access/search/evacuee-profile-dashboard'
     );
     this.evacueeSessionService.setWizardType('new-ess-file');
     this.router.navigate(['/ess-wizard'], {
@@ -92,7 +92,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   editProfile(): void {
     this.cacheService.set(
       'wizardOpenedFrom',
-      '/responder-access/search/evacuee'
+      '/responder-access/search/evacuee-profile-dashboard'
     );
     this.evacueeSessionService.setWizardType('edit-registration');
 

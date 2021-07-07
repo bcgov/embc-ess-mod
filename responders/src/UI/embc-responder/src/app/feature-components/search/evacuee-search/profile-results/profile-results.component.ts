@@ -14,8 +14,10 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { Community } from 'src/app/core/services/locations.service';
+import { StepEvacueeProfileService } from 'src/app/feature-components/wizard/step-evacuee-profile/step-evacuee-profile.service';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 @Component({
@@ -35,7 +37,9 @@ export class ProfileResultsComponent
     private evacueeSearchService: EvacueeSearchService,
     private router: Router,
     private cd: ChangeDetectorRef,
-    private evacueeSessionService: EvacueeSessionService
+    private evacueeSessionService: EvacueeSessionService,
+    private evacueeProfileService: EvacueeProfileService,
+    private stepEvacueeProfileService: StepEvacueeProfileService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -61,6 +65,13 @@ export class ProfileResultsComponent
   openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     this.evacueeSessionService.profileId = selectedRegistrant.id;
     if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
+      this.evacueeProfileService
+        .getProfileFromId(selectedRegistrant.id)
+        .subscribe((registrantProfileModel) => {
+          this.stepEvacueeProfileService.setFormValuesFromProfile(
+            registrantProfileModel
+          );
+        });
       this.router.navigate([
         'responder-access/search/evacuee-profile-dashboard'
       ]);
