@@ -47,12 +47,11 @@ namespace EMBC.ESS.Resources.Tasks
 
         private async Task<TaskQueryResult> HandleQuery(TaskQuery queryRequest)
         {
+            if (string.IsNullOrEmpty(queryRequest.ById)) throw new ArgumentNullException($"only query a specific task is currently allowed", nameof(TaskQuery.ById));
             IQueryable<era_task> taskQuery = essContext.era_tasks
                 .Expand(c => c.era_JurisdictionID);
-                //.Where(t => t. == (int)EntityState.Active);
 
             if (!string.IsNullOrEmpty(queryRequest.ById)) taskQuery = taskQuery.Where(t => t.era_name == queryRequest.ById);
-            //if (!string.IsNullOrEmpty(query.ByUserId)) contactQuery = contactQuery.Where(c => c.era_bcservicescardid.Equals(query.ByUserId, StringComparison.OrdinalIgnoreCase));
 
             var esstask = await ((DataServiceQuery<era_task>)taskQuery).GetAllPagesAsync();
 

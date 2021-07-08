@@ -31,7 +31,7 @@ namespace EMBC.ESS.Resources.Cases
 
     public class ManageCaseCommandResult
     {
-        public string CaseId { get; set; }
+        public string Id { get; set; }
     }
 
     public abstract class CaseQuery
@@ -60,12 +60,6 @@ namespace EMBC.ESS.Resources.Cases
         public string Id { get; set; }
     }
 
-    public class UpdateSecurityPhrase : ManageCaseCommand
-    {
-        public string Id { get; set; }
-        public string SecurityPhrase { get; set; }
-    }
-
     public class EvacuationFilesQuery : CaseQuery
     {
         public string FileId { get; set; }
@@ -77,6 +71,7 @@ namespace EMBC.ESS.Resources.Cases
         public DateTime? RegistraionDateTo { get; set; }
         public int? Limit { get; set; }
         public string HouseholdMemberId { get; set; }
+        public string LinkedRegistrantId { get; set; }
     }
 
     public class SaveEvacuationFileNote : ManageCaseCommand

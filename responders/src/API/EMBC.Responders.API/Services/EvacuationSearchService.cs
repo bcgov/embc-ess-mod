@@ -17,17 +17,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.Responders.API.Controllers;
+using Microsoft.AspNetCore.Http;
 
 namespace EMBC.Responders.API.Services
 {
     public interface IEvacuationSearchService
     {
-        public Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, Controllers.MemberRole userRole);
+        Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, Controllers.MemberRole userRole);
 
-        public Task<EvacuationFile> GetEvacuationFile(string fileId);
+        Task<EvacuationFile> GetEvacuationFile(string fileId);
+
+        Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFiles(string registrantId);
     }
 
     public class SearchResults
@@ -54,6 +58,7 @@ namespace EMBC.Responders.API.Services
         public string Id { get; set; }
         public bool IsRestricted { get; set; }
         public string TaskId { get; set; }
+        public string TaskLocationCommunityCode { get; set; }
         public Address EvacuatedFrom { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
@@ -69,19 +74,24 @@ namespace EMBC.Responders.API.Services
         public bool IsSearchMatch { get; set; }
         public HouseholdMemberType Type { get; set; }
         public bool IsMainApplicant { get; set; }
+        public bool? IsRestricted { get; set; }
     }
 
     public class EvacuationSearchService : IEvacuationSearchService
     {
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
+        private readonly IHttpContextAccessor httpContext;
         private static EvacuationFileStatus[] tier1FileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired };
         private static EvacuationFileStatus[] tier2andAboveFileStatuses = new[] { EvacuationFileStatus.Pending, EvacuationFileStatus.Active, EvacuationFileStatus.Expired, EvacuationFileStatus.Completed };
 
-        public EvacuationSearchService(IMessagingClient messagingClient, IMapper mapper)
+        private ClaimsPrincipal User => httpContext.HttpContext.User;
+
+        public EvacuationSearchService(IMessagingClient messagingClient, IMapper mapper, IHttpContextAccessor httpContext)
         {
             this.messagingClient = messagingClient;
             this.mapper = mapper;
+            this.httpContext = httpContext;
         }
 
         public async Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, Controllers.MemberRole userRole)
@@ -107,7 +117,17 @@ namespace EMBC.Responders.API.Services
         {
             var file = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { FileId = fileId })).Items.SingleOrDefault();
             if (file == null) return null;
-            return mapper.Map<EvacuationFile>(file);
+
+            var mappedFile = mapper.Map<EvacuationFile>(file);
+
+            return mappedFile;
+        }
+
+        public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFiles(string registrantId)
+        {
+            var files = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { LinkedRegistrantId = registrantId })).Items;
+
+            return mapper.Map<IEnumerable<EvacuationFileSummary>>(files);
         }
     }
 
@@ -115,10 +135,6 @@ namespace EMBC.Responders.API.Services
     {
         public EvacuationSearchMapping()
         {
-            CreateMap<Services.SearchResults, SearchResults>()
-                .ForMember(d => d.Files, opts => opts.MapFrom(s => s.Files))
-                .ForMember(d => d.Registrants, opts => opts.MapFrom(s => s.Registrants))
-                ;
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResult, EvacuationFileSearchResult>()
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status))
@@ -137,8 +153,22 @@ namespace EMBC.Responders.API.Services
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember, EvacuationFileSearchResultHouseholdMember>()
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.LinkedRegistrantId) ? HouseholdMemberType.Registrant : HouseholdMemberType.Registrant))
-                .ForMember(d => d.IsMainApplicant, s => s.MapFrom(s => s.IsPrimaryRegistrant))
+                .ForMember(d => d.IsMainApplicant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
+                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => false /*s.RestrictedAccess*/))
                 ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFileSummary>()
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CreatedOn))
+                .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
+                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask == null ? null : new EvacuationFileTask
+                {
+                    TaskNumber = s.RelatedTask.Id,
+                    CommunityCode = s.RelatedTask.CommunityCode,
+                    From = s.RelatedTask.StartDate,
+                    To = s.RelatedTask.EndDate
+                }))
+            ;
         }
     }
 }

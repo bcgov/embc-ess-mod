@@ -24,7 +24,6 @@ namespace EMBC.Tests.Unit.Responders.API
                 .RuleFor(o => o.Phone, f => f.Phone.PhoneNumber())
                 .RuleFor(o => o.PrimaryAddress, f => FakeAddress())
                 .RuleFor(o => o.MailingAddress, f => FakeAddress())
-                .RuleFor(o => o.IsMailingAddressSameAsPrimaryAddress, f => f.Random.Bool())
                 .RuleFor(o => o.SecurityQuestions, f => FakeSecurityQuestions())
                 .RuleFor(o => o.VerifiedUser, f => f.Random.Bool())
                 .Generate();
@@ -71,7 +70,7 @@ namespace EMBC.Tests.Unit.Responders.API
         {
             var fakedFile = new Faker<EvacuationFile>()
                 .RuleFor(o => o.NeedsAssessment, f => CreateNeedsAssessment())
-                .RuleFor(o => o.TaskId, f => f.Random.Int(1000, 9999).ToString())
+                .RuleFor(o => o.RelatedTask, f => new IncidentTask { Id = f.Random.Int(1000, 9999).ToString() })
                 ;
 
             var file = fakedFile.Generate();
@@ -115,7 +114,6 @@ namespace EMBC.Tests.Unit.Responders.API
         private static HouseholdMember CreateHouseholdMember()
         {
             return new Faker<HouseholdMember>()
-                .RuleFor(o => o.PreferredName, (string)null)
                 .RuleFor(o => o.DateOfBirth, f => f.Person.DateOfBirth.ToShortDateString())
                 .RuleFor(o => o.FirstName, f => f.Name.FirstName())
                 .RuleFor(o => o.FirstName, f => f.Name.LastName())
@@ -178,12 +176,12 @@ namespace EMBC.Tests.Unit.Responders.API
             src.Select(f => new EvacuationFileSearchResult
             {
                 Id = f.Id,
-                CreatedOn = f.NeedsAssessment.CreatedOn,
+                CreatedOn = f.NeedsAssessment.CompletedOn,
                 EvacuationAddress = f.EvacuatedFromAddress,
                 EvacuationDate = f.EvacuationDate.Value,
                 RestrictedAccess = f.RestrictedAccess,
                 Status = f.Status,
-                TaskId = f.TaskId,
+                TaskId = f.RelatedTask?.Id,
                 HouseholdMembers = f.HouseholdMembers.Select(m => new EvacuationFileSearchResultHouseholdMember
                 {
                     Id = m.Id,

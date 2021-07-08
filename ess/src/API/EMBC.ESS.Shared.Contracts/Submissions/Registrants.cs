@@ -39,7 +39,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string Phone { get; set; }
         public Address PrimaryAddress { get; set; }
         public Address MailingAddress { get; set; }
-        public bool IsMailingAddressSameAsPrimaryAddress { get; set; }
         public bool RestrictedAccess { get; set; }
         public IEnumerable<SecurityQuestion> SecurityQuestions { get; set; }
         public bool AuthenticatedUser { get; set; }
