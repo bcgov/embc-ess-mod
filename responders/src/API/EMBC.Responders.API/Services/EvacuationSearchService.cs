@@ -166,9 +166,10 @@ namespace EMBC.Responders.API.Services
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFileSummary>()
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => DateTime.Now /*s.CreatedOn*/))
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                   .ForMember(d => d.Task, opts => opts.MapFrom(s => new EvacuationFileTask { TaskNumber = s.TaskId, CommunityCode = s.TaskLocationCommunityCode }))
+                .ForMember(d => d.Task, opts => opts.MapFrom(s => new EvacuationFileTask { TaskNumber = s.TaskId, CommunityCode = s.TaskLocationCommunityCode }))
             ;
         }
     }

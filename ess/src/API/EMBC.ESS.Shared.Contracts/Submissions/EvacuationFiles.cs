@@ -24,7 +24,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string Id { get; set; }
         public IncidentTask RelatedTask { get; set; }
         public EvacuationFileStatus Status { get; set; }
-
+        public DateTime CreatedOn { get; set; }
         public bool RestrictedAccess { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string SecurityPhrase { get; set; }
