@@ -708,21 +708,21 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * Path part for operation registrationsUpdateFileNote
+   * Path part for operation registrationsUpdateFileNoteContent
    */
-  static readonly RegistrationsUpdateFileNotePath = '/api/Registrations/files/{fileId}/notes/{noteId}';
+  static readonly RegistrationsUpdateFileNoteContentPath = '/api/Registrations/files/{fileId}/notes/{noteId}';
 
   /**
-   * Updates a File Note.
+   * Updates a File Note's content.
    *
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `registrationsUpdateFileNote()` instead.
+   * To access only the response body, use `registrationsUpdateFileNoteContent()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsUpdateFileNote$Response(params: {
+  registrationsUpdateFileNoteContent$Response(params: {
 
     /**
      * fileId
@@ -740,7 +740,7 @@ export class RegistrationsService extends BaseService {
     body: Note
   }): Observable<StrictHttpResponse<RegistrationResult>> {
 
-    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateFileNotePath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsUpdateFileNoteContentPath, 'post');
     if (params) {
       rb.path('fileId', params.fileId, {});
       rb.path('noteId', params.noteId, {});
@@ -759,16 +759,16 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
-   * Updates a File Note.
+   * Updates a File Note's content.
    *
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `registrationsUpdateFileNote$Response()` instead.
+   * To access the full response (for headers, for example), `registrationsUpdateFileNoteContent$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  registrationsUpdateFileNote(params: {
+  registrationsUpdateFileNoteContent(params: {
 
     /**
      * fileId
@@ -786,7 +786,91 @@ export class RegistrationsService extends BaseService {
     body: Note
   }): Observable<RegistrationResult> {
 
-    return this.registrationsUpdateFileNote$Response(params).pipe(
+    return this.registrationsUpdateFileNoteContent$Response(params).pipe(
+      map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsSetFileNoteHiddenStatus
+   */
+  static readonly RegistrationsSetFileNoteHiddenStatusPath = '/api/Registrations/files/{fileId}/notes/{noteId}/hidden';
+
+  /**
+   * Sets a File Note's isHidden field.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsSetFileNoteHiddenStatus()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsSetFileNoteHiddenStatus$Response(params: {
+
+    /**
+     * fileId
+     */
+    fileId: string;
+
+    /**
+     * noteId
+     */
+    noteId: string;
+
+    /**
+     * isHidden
+     */
+    isHidden?: boolean;
+  }): Observable<StrictHttpResponse<RegistrationResult>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSetFileNoteHiddenStatusPath, 'post');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+      rb.path('noteId', params.noteId, {});
+      rb.query('isHidden', params.isHidden, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<RegistrationResult>;
+      })
+    );
+  }
+
+  /**
+   * Sets a File Note's isHidden field.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsSetFileNoteHiddenStatus$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsSetFileNoteHiddenStatus(params: {
+
+    /**
+     * fileId
+     */
+    fileId: string;
+
+    /**
+     * noteId
+     */
+    noteId: string;
+
+    /**
+     * isHidden
+     */
+    isHidden?: boolean;
+  }): Observable<RegistrationResult> {
+
+    return this.registrationsSetFileNoteHiddenStatus$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
     );
   }
