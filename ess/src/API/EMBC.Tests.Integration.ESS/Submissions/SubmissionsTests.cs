@@ -333,6 +333,14 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var expectedNumberOfCorrectAnswers = 3;
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
 
+            //if need to update security questions
+            //List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
+            //securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1 - test", AnswerChanged = true });
+            //securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2 - test", AnswerChanged = true });
+            //securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3 - test", AnswerChanged = true });
+            //registrant.SecurityQuestions = securityQuestions;
+            //await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
+
             var answers = registrant.SecurityQuestions.Select(q =>
             {
                 q.Answer = $"answer{q.Id}";
