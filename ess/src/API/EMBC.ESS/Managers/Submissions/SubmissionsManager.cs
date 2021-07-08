@@ -116,13 +116,6 @@ namespace EMBC.ESS.Managers.Submissions
             var contact = mapper.Map<Contact>(cmd.Profile);
             var result = await contactRepository.ManageContact(new SaveContact { Contact = contact });
 
-            var updatedQuestions = mapper.Map<IEnumerable<Resources.Contacts.SecurityQuestion>>(cmd.Profile.SecurityQuestions.Where(s => s.AnswerChanged));
-
-            if (updatedQuestions.Count() > 0)
-            {
-                await contactRepository.ManageContact(new UpdateSecurityQuestions { ContactId = result.ContactId, SecurityQuestions = updatedQuestions });
-            }
-
             if (string.IsNullOrEmpty(cmd.Profile.Id))
             {
                 //send email when creating a new registrant profile
