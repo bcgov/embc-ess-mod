@@ -24,6 +24,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string FileId { get; set; }
         public string PrimaryRegistrantId { get; set; }
         public string PrimaryRegistrantUserId { get; set; }
+        public string LinkedRegistrantId { get; set; }
         public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
     }
 
@@ -64,6 +65,19 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class VerifySecurityPhraseResponse
     {
         public bool IsCorrect { get; set; }
+    }
+
+    public class EvacuationFileNotesQuery : Query<EvacuationFileNotesQueryResponse>
+    {
+        public string FileId { get; set; }
+        public string NoteId { get; set; }
+        public IEnumerable<NoteType> IncludeTypes { get; set; } = new[] { NoteType.General };
+        public IEnumerable<NoteStatus> IncludeStatuses { get; set; } = Array.Empty<NoteStatus>();
+    }
+
+    public class EvacuationFileNotesQueryResponse
+    {
+        public IEnumerable<Note> Notes { get; set; }
     }
 
     public class EvacueeSearchQuery : Query<EvacueeSearchQueryResponse>
