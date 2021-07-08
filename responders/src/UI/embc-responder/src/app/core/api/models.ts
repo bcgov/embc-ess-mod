@@ -24,7 +24,6 @@ export { HouseholdMemberType } from './models/household-member-type';
 export { Pet } from './models/pet';
 export { NeedsAssessmentType } from './models/needs-assessment-type';
 export { Note } from './models/note';
-export { NoteType } from './models/note-type';
 export { EvacuationFileStatus } from './models/evacuation-file-status';
 export { EvacuationFileTask } from './models/evacuation-file-task';
 export { GetSecurityPhraseResponse } from './models/get-security-phrase-response';
