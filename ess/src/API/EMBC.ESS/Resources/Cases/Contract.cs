@@ -60,12 +60,6 @@ namespace EMBC.ESS.Resources.Cases
         public string Id { get; set; }
     }
 
-    public class UpdateSecurityPhrase : ManageCaseCommand
-    {
-        public string Id { get; set; }
-        public string SecurityPhrase { get; set; }
-    }
-
     public class EvacuationFilesQuery : CaseQuery
     {
         public string FileId { get; set; }
