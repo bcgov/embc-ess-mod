@@ -21,14 +21,14 @@ namespace EMBC.Tests.Unit.ESS.Admin
         {
             { "t1", new EMBC.ESS.Resources.Team.Team { Id = "t1", Name = "team1", AssignedCommunities = new []
                     {
-                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c1", DateAssigned = DateTime.Now },
-                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c2", DateAssigned = DateTime.Now }
+                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c1", DateAssigned = DateTime.UtcNow },
+                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c2", DateAssigned = DateTime.UtcNow }
                     } }
             },
             { "t2", new EMBC.ESS.Resources.Team.Team { Id = "t2", Name = "team2", AssignedCommunities = new []
                     {
-                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c3", DateAssigned = DateTime.Now },
-                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c4", DateAssigned = DateTime.Now }
+                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c3", DateAssigned = DateTime.UtcNow },
+                        new EMBC.ESS.Resources.Team.AssignedCommunity { Code = "c4", DateAssigned = DateTime.UtcNow }
                     } }
             },
             { "t3", new EMBC.ESS.Resources.Team.Team { Id = "t3", Name = "team3", AssignedCommunities = Array.Empty<EMBC.ESS.Resources.Team.AssignedCommunity>() }
