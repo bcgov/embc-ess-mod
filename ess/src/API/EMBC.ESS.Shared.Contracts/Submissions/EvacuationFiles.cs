@@ -22,9 +22,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class EvacuationFile
     {
         public string Id { get; set; }
-        public string TaskId { get; set; }
-        public string TaskLocationCommunityCode { get; set; }
-
+        public IncidentTask RelatedTask { get; set; }
         public EvacuationFileStatus Status { get; set; }
 
         public bool RestrictedAccess { get; set; }

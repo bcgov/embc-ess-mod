@@ -369,7 +369,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             response.IsCorrect.ShouldBeTrue();
         }
 
-
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchFileNoteByFileId()
         {
@@ -435,6 +434,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 PrimaryRegistrantId = registrant.Id,
                 SecurityPhrase = "SecretPhrase",
                 SecurityPhraseChanged = true,
+                RelatedTask = new IncidentTask { Id = "0001" },
                 EvacuatedFromAddress = new Address()
                 {
                     AddressLine1 = $"{uniqueSignature}-3738 Main St",

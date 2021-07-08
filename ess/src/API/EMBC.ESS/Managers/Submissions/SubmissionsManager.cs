@@ -29,7 +29,6 @@ using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.Transformation;
-using Task = System.Threading.Tasks.Task;
 
 namespace EMBC.ESS.Managers.Submissions
 {
@@ -142,7 +141,7 @@ namespace EMBC.ESS.Managers.Submissions
             return result.ContactId;
         }
 
-        public async Task Handle(DeleteRegistrantCommand cmd)
+        public async System.Threading.Tasks.Task Handle(DeleteRegistrantCommand cmd)
         {
             var contact = (await contactRepository.QueryContact(new RegistrantQuery { UserId = cmd.UserId })).Items.SingleOrDefault();
             if (contact == null) return;
@@ -158,7 +157,7 @@ namespace EMBC.ESS.Managers.Submissions
             return res.ContactId;
         }
 
-        private async Task SendEmailNotification(SubmissionTemplateType notificationType, string email, string name, IEnumerable<KeyValuePair<string, string>> tokens)
+        private async System.Threading.Tasks.Task SendEmailNotification(SubmissionTemplateType notificationType, string email, string name, IEnumerable<KeyValuePair<string, string>> tokens)
         {
             var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(notificationType);
             var emailContent = (await transformator.Transform(new TransformationData
@@ -215,6 +214,11 @@ namespace EMBC.ESS.Managers.Submissions
                         file.NeedsAssessment.CompletedBy.TeamId = member.TeamId;
                         file.NeedsAssessment.CompletedBy.TeamName = member.TeamName;
                     }
+                }
+                if (file.RelatedTask != null)
+                {
+                    var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = file.RelatedTask.Id })).Items.SingleOrDefault();
+                    if (task != null) file.RelatedTask = mapper.Map<IncidentTask>(task);
                 }
             }
 
