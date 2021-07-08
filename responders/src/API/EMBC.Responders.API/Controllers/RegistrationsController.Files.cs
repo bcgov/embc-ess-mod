@@ -173,6 +173,7 @@ namespace EMBC.Responders.API.Controllers
             var cmd = new SaveEvacuationFileNoteCommand
             {
                 Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(existing_note),
+                FileId = fileId
             };
 
             var id = await messagingClient.Send(cmd);
@@ -201,6 +202,7 @@ namespace EMBC.Responders.API.Controllers
             var cmd = new SaveEvacuationFileNoteCommand
             {
                 Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(existing_note),
+                FileId = fileId
             };
 
             var id = await messagingClient.Send(cmd);
