@@ -68,33 +68,33 @@ namespace EMBC.ESS.Resources.Cases
         {
             if (string.IsNullOrEmpty(cmd.EvacuationFile.Id))
             {
-                return new ManageCaseCommandResult { CaseId = await evacuationRepository.Create(cmd.EvacuationFile) };
+                return new ManageCaseCommandResult { Id = await evacuationRepository.Create(cmd.EvacuationFile) };
             }
             else
             {
-                return new ManageCaseCommandResult { CaseId = await evacuationRepository.Update(cmd.EvacuationFile) };
+                return new ManageCaseCommandResult { Id = await evacuationRepository.Update(cmd.EvacuationFile) };
             }
         }
 
         private async Task<ManageCaseCommandResult> HandleDeleteEvacuationFile(DeleteEvacuationFile cmd)
         {
-            return new ManageCaseCommandResult { CaseId = await evacuationRepository.Delete(cmd.Id) };
+            return new ManageCaseCommandResult { Id = await evacuationRepository.Delete(cmd.Id) };
         }
 
         private async Task<ManageCaseCommandResult> HandleUpdateSecurityPhrase(UpdateSecurityPhrase cmd)
         {
-            return new ManageCaseCommandResult { CaseId = await evacuationRepository.UpdateSecurityPhrase(cmd.Id, cmd.SecurityPhrase) };
+            return new ManageCaseCommandResult { Id = await evacuationRepository.UpdateSecurityPhrase(cmd.Id, cmd.SecurityPhrase) };
         }
 
         private async Task<ManageCaseCommandResult> HandleSaveEvacuationFileNote(SaveEvacuationFileNote cmd)
         {
             if (string.IsNullOrEmpty(cmd.Note.Id))
             {
-                return new ManageCaseCommandResult { CaseId = await evacuationRepository.CreateNote(cmd.FileId, cmd.Note) };
+                return new ManageCaseCommandResult { Id = await evacuationRepository.CreateNote(cmd.FileId, cmd.Note) };
             }
             else
             {
-                return new ManageCaseCommandResult { CaseId = await evacuationRepository.UpdateNote(cmd.FileId, cmd.Note) };
+                return new ManageCaseCommandResult { Id = await evacuationRepository.UpdateNote(cmd.FileId, cmd.Note) };
             }
         }
     }

@@ -364,9 +364,29 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanVerifySecurityPhrase()
         {
             //var fileId = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last().Id;
-            var fileId = "PAP2354234";
-            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "My New Security Phrase" });
+            var fileId = "101010";
+            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "no security phrase please" });
             response.IsCorrect.ShouldBeTrue();
+        }
+
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchFileNoteByFileId()
+        {
+            var fileId = "101010";
+            var notes = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId })).Notes;
+
+            notes.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchFileNoteByNoteId()
+        {
+            var fileId = "101010";
+            var noteId = "65dea67d-760a-445d-aa78-101564bbf0b7";
+            var notes = (await manager.Handle(new EvacuationFileNotesQuery { NoteId = noteId, FileId = fileId })).Notes;
+
+            notes.ShouldNotBeNull();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -386,16 +406,16 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var note = file.Notes.FirstOrDefault();
 
-            if (note.Content.Equals("Test update value 1"))
+            if (note.Content.Equals("_testing_ update value 1"))
             {
-                note.Content = "Test update value 2";
+                note.Content = "_testing_ update value 2";
             }
             else
             {
-                note.Content = "Test update value 1";
+                note.Content = "_testing_ update value 1";
             }
 
-            var id = await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note });
+            var id = await manager.Handle(new SaveEvacuationFileNoteCommand { Note = note, FileId = fileId });
             id.ShouldNotBeNull();
         }
 

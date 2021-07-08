@@ -70,7 +70,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public Note Note { get; set; }
     }
 
-    public class EvacuationFileNotesQuery : Query<EvacuationFileNotesQueryResult>
+    public class EvacuationFileNotesQuery : Query<EvacuationFileNotesQueryResponse>
     {
         public string FileId { get; set; }
         public string NoteId { get; set; }
@@ -78,7 +78,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public IEnumerable<NoteStatus> IncludeStatuses { get; set; } = Array.Empty<NoteStatus>();
     }
 
-    public class EvacuationFileNotesQueryResult
+    public class EvacuationFileNotesQueryResponse
     {
         public IEnumerable<Note> Notes { get; set; }
     }

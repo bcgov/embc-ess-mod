@@ -16,6 +16,7 @@ import {
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 
 @Component({
   selector: 'app-evacuee-search-results',
@@ -79,9 +80,16 @@ export class EvacueeSearchResultsComponent implements OnInit {
       .subscribe(
         (results) => {
           this.isLoading = !this.isLoading;
-          this.fileResults = results.files;
-          this.registrantResults = results.registrants;
-          // .sort((a, b) => new Date(b.createdOn).valueOf() - new Date(a.createdOn).valueOf())
+          this.fileResults = results.files.sort(
+            (a, b) =>
+              new Date(b.modifiedOn).valueOf() -
+              new Date(a.modifiedOn).valueOf()
+          );
+          this.registrantResults = results.registrants.sort(
+            (a, b) =>
+              new Date(b.modifiedOn).valueOf() -
+              new Date(a.modifiedOn).valueOf()
+          );
         },
         (error) => {
           this.isLoading = !this.isLoading;
@@ -95,10 +103,10 @@ export class EvacueeSearchResultsComponent implements OnInit {
       'wizardOpenedFrom',
       '/responder-access/search/evacuee'
     );
-    this.evacueeSessionService.setWizardType('new-registration');
+    this.evacueeSessionService.setWizardType(WizardType.NewRegistration);
 
     this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: 'new-registration' },
+      queryParams: { type: WizardType.NewRegistration },
       queryParamsHandling: 'merge'
     });
   }

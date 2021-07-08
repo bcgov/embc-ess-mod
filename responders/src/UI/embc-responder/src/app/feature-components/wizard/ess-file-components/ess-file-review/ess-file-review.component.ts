@@ -10,6 +10,7 @@ import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { WizardStepService } from '../../wizard-step.service';
 
 @Component({
   selector: 'app-ess-file-review',
@@ -47,6 +48,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     public stepEssFileService: StepEssFileService,
     private router: Router,
     private wizardService: WizardService,
+    private wizardStepService: WizardStepService,
     private userService: UserService,
     private essFileService: EssFileService,
     private alertService: AlertService
@@ -136,9 +138,9 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
               this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
 
               if (event === 'exit') {
-                this.router.navigate([
-                  'responder-access/search/essfile-dashboard'
-                ]);
+                this.router
+                  .navigate(['responder-access/search/essfile-dashboard'])
+                  .then(() => this.wizardStepService.clearWizard());
               } else {
                 this.router.navigate(['/ess-wizard/add-supports'], {
                   state: { step: 'STEP 3', title: 'Add Supports' }

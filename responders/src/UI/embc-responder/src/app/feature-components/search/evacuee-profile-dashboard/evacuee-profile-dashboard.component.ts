@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { CacheService } from 'src/app/core/services/cache.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { StatusDefinitionDialogComponent } from 'src/app/shared/components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
@@ -14,7 +17,12 @@ import * as globalConst from '../../../core/services/global-constants';
   styleUrls: ['./evacuee-profile-dashboard.component.scss']
 })
 export class EvacueeProfileDashboardComponent implements OnInit {
-  constructor(private dialog: MatDialog, private router: Router) {}
+  constructor(
+    private dialog: MatDialog,
+    private router: Router,
+    private cacheService: CacheService,
+    private evacueeSessionService: EvacueeSessionService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -71,8 +79,27 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   }
 
   createNewESSFile(): void {
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/evacuee'
+    );
+    this.evacueeSessionService.setWizardType(WizardType.NewEssFile);
     this.router.navigate(['/ess-wizard'], {
-      queryParams: { type: 'new-ess-file' }
+      queryParams: { type: WizardType.NewEssFile },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  editProfile(): void {
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/evacuee'
+    );
+    this.evacueeSessionService.setWizardType(WizardType.EditRegistration);
+
+    this.router.navigate(['/ess-wizard'], {
+      queryParams: { type: WizardType.EditRegistration },
+      queryParamsHandling: 'merge'
     });
   }
 }

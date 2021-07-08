@@ -48,7 +48,7 @@ export class StepEssFileService {
   private evacuationExternalReferralsVal: string;
 
   // Household Members tab
-  private haveHouseholdMembersVal: boolean;
+  private haveHouseHoldMembersVal: boolean;
   private householdMembersVal: HouseholdMemberModel[];
   private addMemberIndicatorVal: boolean;
 
@@ -190,10 +190,10 @@ export class StepEssFileService {
 
   // Household Members tab
   public get haveHouseHoldMembers(): boolean {
-    return this.haveHouseholdMembersVal;
+    return this.haveHouseHoldMembersVal;
   }
-  public set haveHouseHoldMembers(haveHouseholdMembersVal: boolean) {
-    this.haveHouseholdMembersVal = haveHouseholdMembersVal;
+  public set haveHouseHoldMembers(haveHouseHoldMembersVal: boolean) {
+    this.haveHouseHoldMembersVal = haveHouseHoldMembersVal;
   }
 
   public get householdMembers(): HouseholdMemberModel[] {
@@ -429,6 +429,61 @@ export class StepEssFileService {
   }
 
   /**
+   * Reset all values in this service to defaults
+   */
+  public clearService() {
+    // Wizard variables
+    this.nextTabUpdate.next(null);
+
+    // Important values not set on form
+    // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
+    this.primaryAddress = undefined;
+    this.primaryMember = undefined;
+
+    // Evacuation Details tab
+    this.paperESSFile = undefined;
+    this.evacuatedFromPrimary = undefined;
+    this.evacAddress = undefined;
+    this.facilityName = undefined;
+    this.insurance = undefined;
+
+    this.evacuationImpact = undefined;
+    this.householdRecoveryPlan = undefined;
+    this.referredServices = undefined;
+    this.referredServiceDetails = undefined;
+    this.evacuationExternalReferrals = undefined;
+
+    // Household Members tab
+    this.haveHouseHoldMembers = undefined;
+    this.householdMembers = undefined;
+    this.addMemberIndicator = undefined;
+
+    this.haveSpecialDiet = undefined;
+    this.specialDietDetails = undefined;
+    this.takeMedication = undefined;
+    this.haveMedicationSupply = undefined;
+
+    // Animals tab
+    this.havePets = undefined;
+    this.petsList = undefined;
+    this.addPetIndicator = undefined;
+
+    this.havePetsFood = undefined;
+    this.petCarePlans = undefined;
+
+    // Needs tab
+    this.canRegistrantProvideClothing = undefined;
+    this.canRegistrantProvideFood = undefined;
+    this.canRegistrantProvideIncidentals = undefined;
+    this.canRegistrantProvideLodging = undefined;
+    this.canRegistrantProvideTransportation = undefined;
+
+    // Security Phrase tab
+    this.bypassPhrase = undefined;
+    this.securityPhrase = undefined;
+  }
+
+  /**
    * Update the wizard's values with ones fetched from API
    */
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
@@ -472,7 +527,7 @@ export class StepEssFileService {
         };
       });
 
-    this.haveHouseholdMembersVal = this.householdMembers?.length > 0;
+    this.haveHouseHoldMembersVal = this.householdMembers?.length > 0;
 
     this.haveSpecialDiet = essNeeds.haveSpecialDiet;
     this.specialDietDetails = essNeeds.specialDietDetails;

@@ -11,11 +11,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { HouseholdMemberType } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { Community } from 'src/app/core/services/locations.service';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
+import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-ess-files-results',
@@ -71,5 +73,22 @@ export class EssFilesResultsComponent
    */
   communityName(address: AddressModel): string {
     return (address.community as Community).name;
+  }
+
+  /**
+   * Determines the type of household member
+   *
+   * @param type member type
+   * @param isMainApplicant true/false
+   * @returns derived member type
+   */
+  getMemberType(type: string, isMainApplicant: boolean): string {
+    if (type === HouseholdMemberType.Registrant && isMainApplicant) {
+      return globalConst.mainApplicant;
+    } else if (type === HouseholdMemberType.Registrant && !isMainApplicant) {
+      return HouseholdMemberType.Registrant;
+    } else {
+      return type;
+    }
   }
 }

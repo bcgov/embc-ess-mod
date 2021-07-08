@@ -5,6 +5,7 @@ import {
   WizardSidenavModel,
   WizardSidenavModelValues
 } from 'src/app/core/models/wizard-sidenav.model';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { Community } from 'src/app/core/services/locations.service';
 
@@ -26,10 +27,12 @@ export class WizardService {
   }
 
   public setDefaultMenuItems(type: string): void {
-    if (type === 'new-registration') {
+    if (type === WizardType.NewRegistration) {
       this.menuItems = WizardSidenavModelValues.newRegistrationMenu;
-    } else if (type === 'new-ess-file') {
+    } else if (type === WizardType.NewEssFile) {
       this.menuItems = WizardSidenavModelValues.newESSFileMenu;
+    } else if (type === 'edit-registration') {
+      this.menuItems = WizardSidenavModelValues.editProfileMenu;
     }
   }
 
