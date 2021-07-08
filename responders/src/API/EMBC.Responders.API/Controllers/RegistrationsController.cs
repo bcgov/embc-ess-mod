@@ -323,7 +323,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
-                .ForMember(d => d.Task, opts => opts.Ignore())
+                .ForMember(d => d.Task, opts => opts.MapFrom(s => new EvacuationFileTask { TaskNumber = s.TaskId, CommunityCode = s.TaskLocationCommunityCode }))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.IncidentTask, EvacuationFileTask>()

@@ -77,6 +77,7 @@ namespace EMBC.ESS.Resources.Cases
         public DateTime? RegistraionDateTo { get; set; }
         public int? Limit { get; set; }
         public string HouseholdMemberId { get; set; }
+        public string LinkedRegistrantId { get; set; }
     }
 
     public class SaveEvacuationFileNote : ManageCaseCommand

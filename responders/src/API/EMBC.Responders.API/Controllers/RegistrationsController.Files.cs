@@ -57,6 +57,30 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
+        /// Search files
+        /// </summary>
+        /// <param name="registrantId">fileId</param>
+        /// <returns>file</returns>
+        [HttpGet("files")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<EvacuationFileSummary>>> GetFiles([FromQuery] string registrantId)
+        {
+            if (string.IsNullOrEmpty(registrantId))
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Title = "Invalid request",
+                    Detail = $"{nameof(registrantId)} is mandatory"
+                });
+            }
+            var files = await evacuationSearchService.GetEvacuationFiles(registrantId);
+
+            return Ok(files);
+        }
+
+        /// <summary>
         /// Creates a File
         /// </summary>
         /// <param name="file">file</param>
@@ -250,6 +274,17 @@ namespace EMBC.Responders.API.Controllers
 
         [Required]
         public EvacuationFileTask Task { get; set; }
+    }
+
+    public class EvacuationFileSummary
+    {
+        public string Id { get; set; }
+        public EvacuationFileStatus Status { get; set; }
+        public EvacuationFileTask Task { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime EvacuationFileDate { get; set; }
+        public Address EvacuatedFromAddress { get; set; }
+        public bool? IsRestricted { get; set; }
     }
 
     public class EvacuationFileTask

@@ -301,6 +301,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             if (!string.IsNullOrEmpty(query.PrimaryRegistrantId)) contactQuery = contactQuery.Where(m => m.era_isprimaryregistrant == true && m._era_registrant_value == Guid.Parse(query.PrimaryRegistrantId));
             if (!string.IsNullOrEmpty(query.HouseholdMemberId)) contactQuery = contactQuery.Where(m => m.era_householdmemberid == Guid.Parse(query.HouseholdMemberId));
+            if (!string.IsNullOrEmpty(query.LinkedRegistrantId)) contactQuery = contactQuery.Where(m => m._era_registrant_value == Guid.Parse(query.LinkedRegistrantId));
 
             var files = (await ((DataServiceQuery<era_householdmember>)contactQuery).GetAllPagesAsync()).Select(f => f.era_EvacuationFileid);
 

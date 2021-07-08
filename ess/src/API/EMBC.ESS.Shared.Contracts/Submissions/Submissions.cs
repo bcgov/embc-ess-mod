@@ -14,9 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace EMBC.ESS.Shared.Contracts.Submissions
 {
     /// <summary>
@@ -69,6 +66,4 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string FileId { get; set; }
         public Note Note { get; set; }
     }
-
-  
 }

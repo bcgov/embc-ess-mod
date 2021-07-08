@@ -198,6 +198,7 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 FileId = query.FileId,
                 PrimaryRegistrantId = query.PrimaryRegistrantId,
+                LinkedRegistrantId = query.LinkedRegistrantId,
                 IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Cases.EvacuationFileStatus>(s.ToString())).ToArray()
             })).Items.Cast<Resources.Cases.EvacuationFile>();
 

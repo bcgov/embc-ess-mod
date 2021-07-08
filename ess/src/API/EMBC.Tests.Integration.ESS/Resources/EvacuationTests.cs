@@ -62,10 +62,23 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 PrimaryRegistrantId = primaryContact.Id,
             };
-            var queryResult = await caseRepository.QueryCase(caseQuery);
-            queryResult.Items.ShouldNotBeEmpty();
+            var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            files.ShouldNotBeEmpty();
+            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.Id == primaryContact.Id));
+            files.ShouldAllBe(f => f.PrimaryRegistrantId == primaryContact.Id);
+        }
 
-            queryResult.Items.Cast<EvacuationFile>().ShouldAllBe(f => f.PrimaryRegistrantId == primaryContact.Id);
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetEvacuationFilessByLinkedRegistrantId()
+        {
+            var contact = await GetContactByUserId(TestUserId);
+            var caseQuery = new EvacuationFilesQuery
+            {
+                LinkedRegistrantId = contact.Id
+            };
+            var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            files.ShouldNotBeEmpty();
+            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.Id == contact.Id));
         }
 
         [Fact(Skip = RequiresDynamics)]
