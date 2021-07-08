@@ -116,7 +116,7 @@ namespace EMBC.ESS.Resources.Team
             }
             else
             {
-                context.DeactivateObject(essTeamUser, (int)TeamMemberStatus.Inactive);
+                context.ActivateObject(essTeamUser, (int)TeamMemberStatus.Inactive);
             }
 
             context.UpdateObject(essTeamUser);
