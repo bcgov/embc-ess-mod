@@ -1,16 +1,44 @@
 <div *ngFor="let note of notes$ | async">
   <hr class="solid-hr" />
   <div class="row list-notes">
-    <div class="col-md-10">
+    <div class="col-md-8">
       <p class="list-note-name">
         <span class="bold">{{ note?.memberName }} -</span> {{ note?.teamName }}
       </p>
       <p class="note-date">{{ note?.addedOn | date: 'dd-MMM-yyyy hh:mm a' }}</p>
     </div>
-    <div class="col-md-2">
-      <button class="edit-image" mat-icon-button aria-label="Edit">
+    <div class="col-md-4 image-align">
+      <button
+        *ngIf="note?.isEditable"
+        class="list-image button-margin"
+        (click)="editNote(note)"
+        mat-icon-button
+        aria-label="Edit"
+      >
         <img src="/assets/images/edit.svg" height="40" width="40" />
         <img src="/assets/images/edit_onhover.svg" height="40" width="40" />
+      </button>
+
+      <button
+        *ngIf="!note?.isHidden && hasPermission('canHideUnhideNotes')"
+        class="list-image button-margin"
+        (click)="hideNote(note?.id)"
+        mat-icon-button
+        aria-label="Hide"
+      >
+        <img src="/assets/images/hide.svg" height="40" width="40" />
+        <img src="/assets/images/hide-onhover.svg" height="40" width="40" />
+      </button>
+
+      <button
+        *ngIf="note?.isHidden && hasPermission('canHideUnhideNotes')"
+        class="list-image button-margin"
+        (click)="showNote(note?.id)"
+        mat-icon-button
+        aria-label="Unhide"
+      >
+        <img src="/assets/images/unhide.svg" height="40" width="40" />
+        <img src="/assets/images/unhide-onhover.svg" height="40" width="40" />
       </button>
     </div>
   </div>
