@@ -44,7 +44,7 @@ namespace EMBC.ESS.Resources.Team
             if (!string.IsNullOrEmpty(teamId)) query = query.Where(u => u._era_essteamid_value == Guid.Parse(teamId));
             if (!string.IsNullOrEmpty(userName)) query = query.Where(u => u.era_externalsystemusername.Equals(userName, StringComparison.OrdinalIgnoreCase));
             if (!string.IsNullOrEmpty(userId)) query = query.Where(u => u.era_essteamuserid == Guid.Parse(userId));
-            if (onlyActive) query = query.Where(u => u.statuscode == (int)EntityStatus.Active);
+            if (onlyActive) query = query.Where(u => u.statuscode == (int)TeamMemberStatus.Active);
 
             var users = query.ToArray();
             context.DetachAll();
@@ -112,11 +112,11 @@ namespace EMBC.ESS.Resources.Team
 
             if (teamMember.IsActive)
             {
-                context.ActivateObject(essTeamUser);
+                context.ActivateObject(essTeamUser, (int)TeamMemberStatus.Active);
             }
             else
             {
-                context.DeactivateObject(essTeamUser);
+                context.DeactivateObject(essTeamUser, (int)TeamMemberStatus.Inactive);
             }
 
             context.UpdateObject(essTeamUser);
@@ -179,7 +179,7 @@ namespace EMBC.ESS.Resources.Team
 
             if (member == null) return false;
 
-            context.SoftDeleteObject(member);
+            context.DeactivateObject(member, (int)TeamMemberStatus.SoftDelete);
 
             await context.SaveChangesAsync();
             context.DetachAll();
@@ -196,7 +196,7 @@ namespace EMBC.ESS.Resources.Team
         private IQueryable<era_essteamuser> EssTeamUsers =>
             context.era_essteamusers
                 .Expand(u => u.era_ESSTeamId)
-                .Where(u => u.statuscode != (int)EntityStatus.SoftDelete);
+                .Where(u => u.statuscode != (int)TeamMemberStatus.SoftDelete);
 
         private era_essteam EssTeam(string teamId) =>
             context.era_essteams

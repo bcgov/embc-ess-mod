@@ -29,7 +29,6 @@ using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.Notifications;
 using EMBC.ESS.Utilities.Transformation;
-using Task = System.Threading.Tasks.Task;
 
 namespace EMBC.ESS.Managers.Submissions
 {
@@ -140,7 +139,7 @@ namespace EMBC.ESS.Managers.Submissions
             return result.ContactId;
         }
 
-        public async Task Handle(DeleteRegistrantCommand cmd)
+        public async System.Threading.Tasks.Task Handle(DeleteRegistrantCommand cmd)
         {
             var contact = (await contactRepository.QueryContact(new RegistrantQuery { UserId = cmd.UserId })).Items.SingleOrDefault();
             if (contact == null) return;
@@ -156,7 +155,7 @@ namespace EMBC.ESS.Managers.Submissions
             return res.ContactId;
         }
 
-        private async Task SendEmailNotification(SubmissionTemplateType notificationType, string email, string name, IEnumerable<KeyValuePair<string, string>> tokens)
+        private async System.Threading.Tasks.Task SendEmailNotification(SubmissionTemplateType notificationType, string email, string name, IEnumerable<KeyValuePair<string, string>> tokens)
         {
             var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(notificationType);
             var emailContent = (await transformator.Transform(new TransformationData
@@ -197,12 +196,32 @@ namespace EMBC.ESS.Managers.Submissions
             {
                 FileId = query.FileId,
                 PrimaryRegistrantId = query.PrimaryRegistrantId,
+                LinkedRegistrantId = query.LinkedRegistrantId,
                 IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Cases.EvacuationFileStatus>(s.ToString())).ToArray()
             })).Items.Cast<Resources.Cases.EvacuationFile>();
 
-            var results = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
+            var files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
 
-            foreach (var note in results.SelectMany(c => c.Notes))
+            foreach (var file in files)
+            {
+                if (file.NeedsAssessment.CompletedBy?.Id != null)
+                {
+                    var member = (await teamRepository.GetMembers(userId: file.NeedsAssessment.CompletedBy.Id, onlyActive: false)).SingleOrDefault();
+                    if (member != null)
+                    {
+                        file.NeedsAssessment.CompletedBy.DisplayName = $"{member.FirstName} {member.LastName.Substring(0, 1)}.";
+                        file.NeedsAssessment.CompletedBy.TeamId = member.TeamId;
+                        file.NeedsAssessment.CompletedBy.TeamName = member.TeamName;
+                    }
+                }
+                if (file.RelatedTask?.Id != null)
+                {
+                    var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = file.RelatedTask.Id })).Items.SingleOrDefault();
+                    if (task != null) file.RelatedTask = mapper.Map<IncidentTask>(task);
+                }
+            }
+
+            foreach (var note in files.SelectMany(c => c.Notes))
             {
                 if (string.IsNullOrEmpty(note.CreatingTeamMemberId)) continue;
                 var teamMembers = await teamRepository.GetMembers(null, null, note.CreatingTeamMemberId);
@@ -213,7 +232,7 @@ namespace EMBC.ESS.Managers.Submissions
                 note.TeamName = member.TeamName;
             }
 
-            return new EvacuationFilesQueryResponse { Items = results };
+            return new EvacuationFilesQueryResponse { Items = files };
         }
 
         public async Task<EvacueeSearchQueryResponse> Handle(EvacueeSearchQuery query)
@@ -237,7 +256,8 @@ namespace EMBC.ESS.Managers.Submissions
             var files = new ConcurrentBag<EvacuationFileSearchResult>();
             var householdMemberTasks = searchResults.MatcingHouseholdMemberIds.Select(async id =>
             {
-                var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { HouseholdMemberId = id })).Items.Single();
+                var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { HouseholdMemberId = id })).Items.SingleOrDefault();
+                if (file == null) return;
                 var mappedFile = mapper.Map<EvacuationFileSearchResult>(file);
                 //mark household members that caused a match
                 foreach (var member in mappedFile.HouseholdMembers)

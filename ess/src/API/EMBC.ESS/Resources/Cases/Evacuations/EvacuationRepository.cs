@@ -104,6 +104,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.AddLink(file, nameof(era_evacuationfile.era_needsassessment_EvacuationFile), needsAssessment);
             essContext.SetLink(needsAssessment, nameof(era_needassessment.era_EvacuationFile), file);
             essContext.SetLink(needsAssessment, nameof(era_needassessment.era_Jurisdictionid), essContext.LookupJurisdictionByCode(needsAssessment._era_jurisdictionid_value?.ToString()));
+            if (needsAssessment._era_reviewedbyid_value.HasValue)
+            {
+                var teamMember = essContext.era_essteamusers.ByKey(needsAssessment._era_reviewedbyid_value).GetValue();
+                essContext.AddLink(needsAssessment, nameof(era_needassessment.era_ReviewedByid), teamMember);
+                essContext.SetLink(teamMember, nameof(era_essteamuser.era_era_essteamuser_era_needassessment_ReviewedByid), needsAssessment);
+            }
 
             foreach (var member in needsAssessment.era_era_householdmember_era_needassessment)
             {
@@ -168,6 +174,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         private void RemovePets(era_evacuationfile file)
         {
+            essContext.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid));
             foreach (var pet in file.era_era_evacuationfile_era_animal_ESSFileid)
             {
                 essContext.DeleteObject(pet);
@@ -205,7 +212,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             if (evacuationFile != null)
             {
-                essContext.DeleteObject(evacuationFile);
+                essContext.DeactivateObject(evacuationFile, (int)EvacuationFileStatus.Inactive);
                 await essContext.SaveChangesAsync();
             }
             essContext.DetachAll();
@@ -294,6 +301,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             if (!string.IsNullOrEmpty(query.PrimaryRegistrantId)) contactQuery = contactQuery.Where(m => m.era_isprimaryregistrant == true && m._era_registrant_value == Guid.Parse(query.PrimaryRegistrantId));
             if (!string.IsNullOrEmpty(query.HouseholdMemberId)) contactQuery = contactQuery.Where(m => m.era_householdmemberid == Guid.Parse(query.HouseholdMemberId));
+            if (!string.IsNullOrEmpty(query.LinkedRegistrantId)) contactQuery = contactQuery.Where(m => m._era_registrant_value == Guid.Parse(query.LinkedRegistrantId));
 
             var files = (await ((DataServiceQuery<era_householdmember>)contactQuery).GetAllPagesAsync()).Select(f => f.era_EvacuationFileid);
 
@@ -368,5 +376,11 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 if (user != null) essContext.AddLink(user, nameof(era_essteamuser.era_era_essteamuser_era_essfilenote_ESSTeamUser), note);
             }
         }
+    }
+
+    public enum EvacuationFileStatus
+    {
+        Active = 1,
+        Inactive = 2
     }
 }

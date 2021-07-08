@@ -19,7 +19,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         // Constants
         private const string TestUserId = "CHRIS-TEST";
 
-        private const string TestEssFileNumber = "100813";
+        private const string TestEssFileNumber = "101010";
 
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -61,12 +61,24 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var caseQuery = new EvacuationFilesQuery
             {
                 PrimaryRegistrantId = primaryContact.Id,
-                //Limit = 5
             };
-            var queryResult = await caseRepository.QueryCase(caseQuery);
-            queryResult.Items.ShouldNotBeEmpty();
+            var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            files.ShouldNotBeEmpty();
+            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.Id == primaryContact.Id));
+            files.ShouldAllBe(f => f.PrimaryRegistrantId == primaryContact.Id);
+        }
 
-            queryResult.Items.Cast<EvacuationFile>().ShouldAllBe(f => f.PrimaryRegistrantId == primaryContact.Id);
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetEvacuationFilessByLinkedRegistrantId()
+        {
+            var contact = await GetContactByUserId(TestUserId);
+            var caseQuery = new EvacuationFilesQuery
+            {
+                LinkedRegistrantId = contact.Id
+            };
+            var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
+            files.ShouldNotBeEmpty();
+            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.Id == contact.Id));
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -86,12 +98,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateEvacuationFile()
         {
-            var primaryContact = await GetContactByUserId(TestUserId);
             var fileToUpdate = (await caseRepository.QueryCase(new EvacuationFilesQuery
             {
-                PrimaryRegistrantId = primaryContact.Id,
-                Limit = 1
-            })).Items.Cast<EvacuationFile>().Last();
+                FileId = TestEssFileNumber,
+            })).Items.Cast<EvacuationFile>().Single();
 
             var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
             var needsAssessment = fileToUpdate.NeedsAssessment;
@@ -117,8 +127,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 member.LastName.ShouldStartWith(newUniqueSignature);
             }
             var primaryRegistrant = updatedNeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem();
-            primaryContact.FirstName.ShouldBe(primaryContact.FirstName);
-            primaryContact.LastName.ShouldBe(primaryContact.LastName);
             updatedFile.NeedsAssessment.Pets.Count().ShouldBe(fileToUpdate.NeedsAssessment.Pets.Count());
             updatedFile.NeedsAssessment.HouseholdMembers.Count().ShouldBe(fileToUpdate.NeedsAssessment.HouseholdMembers.Count());
         }
@@ -149,6 +157,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             evacuationFile.RegistrationLocation.ShouldBe(originalFile.RegistrationLocation);
             evacuationFile.TaskId.ShouldBe(originalFile.TaskId);
             if (originalFile.TaskId != null) evacuationFile.TaskLocationCommunityCode.ShouldNotBeNull();
+            evacuationFile.HouseholdMembers.Count().ShouldBe(originalFile.NeedsAssessment.HouseholdMembers.Count());
 
             // Needs Assessment
 
@@ -179,7 +188,16 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 householdMember.IsUnder19.ShouldBe(originalHouseholdMember.IsUnder19);
                 householdMember.Id.ShouldNotBeNull();
                 householdMember.LinkedRegistrantId.ShouldBe(originalHouseholdMember.LinkedRegistrantId);
-                householdMember.HasAccessRestriction.ShouldBe(originalHouseholdMember.HasAccessRestriction);
+                if (householdMember.LinkedRegistrantId != null)
+                {
+                    householdMember.HasAccessRestriction.ShouldNotBeNull().ShouldBe(primaryContact.RestrictedAccess);
+                    householdMember.IsVerifiedRegistrant.ShouldNotBeNull().ShouldBe(primaryContact.Verified);
+                }
+                else
+                {
+                    householdMember.HasAccessRestriction.ShouldBeNull();
+                    householdMember.IsVerifiedRegistrant.ShouldBeNull();
+                }
             }
             needsAssessment.Pets.Count().ShouldBe(originalNeedsAssessment.Pets.Count());
             for (var j = 0; j < originalNeedsAssessment.Pets.Count(); j++)
@@ -193,8 +211,20 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanDeleteEvacuationFiles()
+        {
+            var registrant = await GetContactByUserId(TestUserId);
+            var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items;
+
+            foreach (var file in files.OrderByDescending(f => f.CreatedOn).Skip(10))
+            {
+                await caseRepository.ManageCase(new DeleteEvacuationFile { Id = file.Id });
+            }
+        }
+
         private async Task<Contact> GetContactByUserId(string userId) =>
-            (await services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
+        (await services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
 
         private EvacuationFile CreateTestFile(Contact primaryContact)
         {
@@ -242,7 +272,9 @@ namespace EMBC.Tests.Integration.ESS.Resources
                                 DateOfBirth = primaryContact.DateOfBirth,
                                 IsUnder19 = false,
                                 IsPrimaryRegistrant = true,
-                                LinkedRegistrantId = primaryContact.Id
+                                LinkedRegistrantId = primaryContact.Id,
+                                HasAccessRestriction = false,
+                                IsVerifiedRegistrant = true
                             },
                             new HouseholdMember
                             {

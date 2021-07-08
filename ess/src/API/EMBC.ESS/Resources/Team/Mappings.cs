@@ -16,7 +16,6 @@
 
 using System;
 using AutoMapper;
-using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
 namespace EMBC.ESS.Resources.Team
@@ -45,7 +44,7 @@ namespace EMBC.ESS.Resources.Team
                 .ForMember(d => d.Label, opts => opts.MapFrom(s => Enum.GetName(typeof(TeamUserLabelOptionSet), s.era_label)))
                 .ForMember(d => d.LastSuccessfulLogin, opts => opts.MapFrom(s => s.era_lastsuccessfullogin.HasValue ? s.era_lastsuccessfullogin.Value.DateTime : (DateTime?)null))
                 .ForMember(d => d.AgreementSignDate, opts => opts.MapFrom(s => s.era_electronicaccessagreementaccepteddate))
-                .ForMember(d => d.IsActive, opts => opts.MapFrom(s => s.statuscode == (int)EntityStatus.Active))
+                .ForMember(d => d.IsActive, opts => opts.MapFrom(s => s.statuscode == (int)TeamMemberStatus.Active))
                 ;
         }
     }
@@ -69,5 +68,12 @@ namespace EMBC.ESS.Resources.Team
     public enum ExternalSystemOptionSet
     {
         Bceid = 174360000
+    }
+
+    public enum TeamMemberStatus
+    {
+        Active = 1,
+        Inactive = 174360001,
+        SoftDelete = 174360000
     }
 }

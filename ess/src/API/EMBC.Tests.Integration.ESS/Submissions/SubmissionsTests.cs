@@ -77,7 +77,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                         DateOfBirth = profile.DateOfBirth,
                         Gender = profile.Gender,
                         Initials = profile.Initials,
-                        PreferredName = profile.PreferredName,
                     },
                     new HouseholdMember
                     {
@@ -442,6 +441,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 PrimaryRegistrantId = registrant.Id,
                 SecurityPhrase = "SecretPhrase",
                 SecurityPhraseChanged = true,
+                RelatedTask = new IncidentTask { Id = "0001" },
                 EvacuatedFromAddress = new Address()
                 {
                     AddressLine1 = $"{uniqueSignature}-3738 Main St",
@@ -472,7 +472,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                             {
                                 FirstName = registrant.FirstName,
                                 LastName = registrant.LastName,
-                                PreferredName = registrant.PreferredName,
                                 Initials = registrant.Initials,
                                 Gender = registrant.Gender,
                                 DateOfBirth = registrant.DateOfBirth,
@@ -483,7 +482,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                             {
                                 FirstName = $"{uniqueSignature}-hm1first",
                                 LastName = $"{uniqueSignature}-hm1last",
-                                PreferredName = "hm1p",
                                 Initials = $"{uniqueSignature}-1",
                                 Gender = "X",
                                 DateOfBirth = "03/15/2000",
@@ -494,7 +492,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                             {
                                 FirstName = $"{uniqueSignature}-hm2first",
                                 LastName = $"{uniqueSignature}-hm2last",
-                                PreferredName = "hm2p",
                                 Initials = $"{uniqueSignature}-2",
                                 Gender = "M",
                                 DateOfBirth = "03/16/2010",
