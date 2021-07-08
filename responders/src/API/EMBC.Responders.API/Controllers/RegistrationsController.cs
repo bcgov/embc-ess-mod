@@ -181,6 +181,11 @@ namespace EMBC.Responders.API.Controllers
 
             if (file == null) return NotFound();
 
+            foreach (var note in file.Notes)
+            {
+                note.IsEditable = UserCanEditNote(note);
+            }
+
             return Ok(file);
         }
 
@@ -253,16 +258,15 @@ namespace EMBC.Responders.API.Controllers
         /// <param name="noteId">noteId</param>
         /// <param name="note">note</param>
         /// <returns>updated note id</returns>
-        [HttpPost("files/{fileId}/notes/{noteId}/content")]
+        [HttpPost("files/{fileId}/notes/{noteId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<RegistrationResult>> UpdateFileNoteContent(string fileId, string noteId, Note note)
         {
-            var now = DateTime.Now;
-            var userId = User.FindFirstValue("user_id");
+            var existing_note = (await messagingClient.Send(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.SingleOrDefault();
+            if (existing_note == null) return NotFound();
 
-            var existing_note = (await messagingClient.Send(new EvacuationFileNotesQuery { NoteId = noteId })).Notes.FirstOrDefault();
-            if (!existing_note.CreatingTeamMemberId.Equals(userId) || existing_note.AddedOn < now.AddHours(-24)) return BadRequest(new ProblemDetails { Detail = "The note may be edited only by the user who created it withing a 24 hour period." });
+            if (!UserCanEditNote(mapper.Map<Note>(existing_note))) return BadRequest(new ProblemDetails { Detail = "The note may be edited only by the user who created it withing a 24 hour period." });
 
             existing_note.Content = note.Content;
 
@@ -280,18 +284,19 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <param name="fileId">fileId</param>
         /// <param name="noteId">noteId</param>
-        /// <param name="note">note</param>
+        /// <param name="isHidden">isHidden</param>
         /// <returns>updated note id</returns>
         [HttpPost("files/{fileId}/notes/{noteId}/hidden")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> SetFileNoteHiddenStatus(string fileId, string noteId, Note note)
+        public async Task<ActionResult<RegistrationResult>> SetFileNoteHiddenStatus(string fileId, string noteId, bool isHidden)
         {
-            var userRole = Enum.Parse<MemberRole>(User.FindFirstValue("user_role"));
-            if (!(userRole == Controllers.MemberRole.Tier3 || userRole == Controllers.MemberRole.Tier4)) return BadRequest();
+            var existing_note = (await messagingClient.Send(new EvacuationFileNotesQuery { FileId = fileId, NoteId = noteId })).Notes.SingleOrDefault();
+            if (existing_note == null) return NotFound();
 
-            var existing_note = (await messagingClient.Send(new EvacuationFileNotesQuery { NoteId = noteId })).Notes.FirstOrDefault();
-            existing_note.IsHidden = note.IsHidden;
+            if (!UserCanHideNote()) return BadRequest(new ProblemDetails { Detail = "You do not have sufficient permissions to edit a note's hidden status." });
+
+            existing_note.IsHidden = isHidden;
 
             var cmd = new SaveEvacuationFileNoteCommand
             {
@@ -336,6 +341,20 @@ namespace EMBC.Responders.API.Controllers
             VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
             var response = await messagingClient.Send(verifySecurityPhraseQuery);
             return Ok(mapper.Map<VerifySecurityPhraseResponse>(response));
+        }
+
+        private bool UserCanEditNote(Note note)
+        {
+            var now = DateTime.Now;
+            var userId = User.FindFirstValue("user_id");
+
+            return note.CreatingTeamMemberId.Equals(userId) && note.AddedOn >= now.AddHours(-24);
+        }
+
+        private bool UserCanHideNote()
+        {
+            var userRole = Enum.Parse<MemberRole>(User.FindFirstValue("user_role"));
+            return userRole == Controllers.MemberRole.Tier3 || userRole == Controllers.MemberRole.Tier4;
         }
     }
 
@@ -541,12 +560,12 @@ namespace EMBC.Responders.API.Controllers
     public class Note
     {
         public string Id { get; set; }
-        public NoteType Type { get; set; }
         public string Content { get; set; }
         public DateTime AddedOn { get; set; }
         public string CreatingTeamMemberId { get; set; }
         public string MemberName { get; set; }
         public string TeamName { get; set; }
+        public bool IsEditable { get; set; }
         public bool IsHidden { get; set; }
     }
 
@@ -663,9 +682,11 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
                 .ForMember(d => d.CreatingTeamMemberId, opts => opts.Ignore())
                 .ForMember(d => d.TeamId, opts => opts.Ignore())
+                .ForMember(d => d.Type, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.Note, Note>()
+                .ForMember(d => d.IsEditable, opts => opts.Ignore())
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()

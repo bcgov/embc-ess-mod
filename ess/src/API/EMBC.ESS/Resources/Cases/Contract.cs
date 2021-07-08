@@ -25,15 +25,13 @@ namespace EMBC.ESS.Resources.Cases
         Task<ManageCaseCommandResult> ManageCase(ManageCaseCommand cmd);
 
         Task<CaseQueryResult> QueryCase(CaseQuery query);
-
-        Task<NotesQueryResult> QueryNotes(NotesQuery query);
     }
 
     public abstract class ManageCaseCommand { }
 
     public class ManageCaseCommandResult
     {
-        public string CaseId { get; set; }
+        public string Id { get; set; }
     }
 
     public abstract class CaseQuery
@@ -79,21 +77,6 @@ namespace EMBC.ESS.Resources.Cases
         public DateTime? RegistraionDateTo { get; set; }
         public int? Limit { get; set; }
         public string HouseholdMemberId { get; set; }
-    }
-
-    public abstract class NotesQuery
-    {
-    }
-
-    public class NotesQueryResult
-    {
-        public IEnumerable<Note> Items { get; set; } = Array.Empty<Note>();
-    }
-
-    public class EvacuationFileNotesQuery : NotesQuery
-    {
-        public string FileId { get; set; }
-        public string NoteId { get; set; }
     }
 
     public class SaveEvacuationFileNote : ManageCaseCommand

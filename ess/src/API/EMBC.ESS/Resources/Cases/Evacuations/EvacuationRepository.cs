@@ -337,28 +337,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return evacuationFile.era_name;
         }
 
-        public async Task<IEnumerable<Note>> GetNotes(EvacuationFileNotesQuery query)
-        {
-            if (string.IsNullOrEmpty(query.FileId)) throw new Exception("FileId is required");
-
-            var evacuationFile = essContext.era_evacuationfiles
-                .Where(f => f.era_name == query.FileId)
-                .Single();
-
-            essContext.LoadProperty(evacuationFile, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID));
-
-            var notes = evacuationFile.era_era_evacuationfile_era_essfilenote_ESSFileID.ToArray();
-
-            if (!string.IsNullOrEmpty(query.NoteId))
-            {
-                notes = notes.Where(n => n.era_essfilenoteid == Guid.Parse(query.NoteId)).ToArray();
-            }
-
-            await Task.CompletedTask;
-
-            return mapper.Map<IEnumerable<Note>>(notes);
-        }
-
         public async Task<string> CreateNote(string essFileId, Note note)
         {
             var file = essContext.era_evacuationfiles

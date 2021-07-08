@@ -32,8 +32,6 @@ namespace EMBC.ESS.Resources.Cases
 
         Task<string> UpdateSecurityPhrase(string essFileNumber, string securityPhrase);
 
-        Task<IEnumerable<Note>> GetNotes(EvacuationFileNotesQuery query);
-
         Task<string> CreateNote(string essFileNumber, Note note);
 
         Task<string> UpdateNote(string essFileNumber, Note note);

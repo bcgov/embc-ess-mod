@@ -74,7 +74,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var primaryContact = await GetContactByUserId(TestUserId);
             var originalFile = CreateTestFile(primaryContact);
-            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).CaseId;
+            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).Id;
 
             var caseQuery = new EvacuationFilesQuery
             {
@@ -105,7 +105,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 member.LastName = $"{newUniqueSignature}_{originalLastName}";
             }
 
-            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = fileToUpdate })).CaseId;
+            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = fileToUpdate })).Id;
 
             var updatedFile = (await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Cast<EvacuationFile>().ShouldHaveSingleItem();
 
@@ -129,7 +129,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var now = DateTime.UtcNow;
             var primaryContact = await GetContactByUserId(TestUserId);
             var originalFile = CreateTestFile(primaryContact);
-            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).CaseId;
+            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).Id;
 
             var caseQuery = new EvacuationFilesQuery
             {
