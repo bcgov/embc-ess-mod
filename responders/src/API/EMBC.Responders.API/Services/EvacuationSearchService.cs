@@ -119,21 +119,13 @@ namespace EMBC.Responders.API.Services
             if (file == null) return null;
 
             var mappedFile = mapper.Map<EvacuationFile>(file);
-            if (file.TaskId != null)
-            {
-                var fileTask = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.TasksSearchQuery { TaskId = file.TaskId })).Items.SingleOrDefault();
-                if (fileTask != null)
-                {
-                    mappedFile.Task = mapper.Map<EvacuationFileTask>(fileTask);
-                }
-            }
 
             return mappedFile;
         }
 
         public async Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFiles(string registrantId)
         {
-            var files = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { PrimaryRegistrantId = registrantId })).Items;
+            var files = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesQuery { LinkedRegistrantId = registrantId })).Items;
 
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(files);
         }
@@ -166,10 +158,16 @@ namespace EMBC.Responders.API.Services
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFileSummary>()
-                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => DateTime.Now /*s.CreatedOn*/))
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.CreatedOn))
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.Task, opts => opts.MapFrom(s => new EvacuationFileTask { TaskNumber = s.TaskId, CommunityCode = s.TaskLocationCommunityCode }))
+                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask == null ? null : new EvacuationFileTask
+                {
+                    TaskNumber = s.RelatedTask.Id,
+                    CommunityCode = s.RelatedTask.CommunityCode,
+                    From = s.RelatedTask.StartDate,
+                    To = s.RelatedTask.EndDate
+                }))
             ;
         }
     }
