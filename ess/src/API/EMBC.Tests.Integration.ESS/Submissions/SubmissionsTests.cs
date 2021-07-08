@@ -365,6 +365,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             //var fileId = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last().Id;
             var fileId = "101010";
+
+            //set phrase if needed
+            //var file = (await GetEvacuationFileById(fileId)).FirstOrDefault();
+            //file.SecurityPhrase = "no security phrase please";
+            //file.SecurityPhraseChanged = true;
+            //await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+
             var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "no security phrase please" });
             response.IsCorrect.ShouldBeTrue();
         }
