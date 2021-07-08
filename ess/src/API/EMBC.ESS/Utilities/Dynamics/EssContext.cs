@@ -66,17 +66,6 @@ namespace EMBC.ESS.Utilities.Dynamics
 
     public static class EssContextEx
     {
-        public static async Task<T> SaveChangesAsync<T>(this EssContext context, SaveChangesOptions? options = null)
-            where T : BaseEntityType
-        {
-            var response = await context.SaveChangesAsync(options ?? SaveChangesOptions.BatchWithSingleChangeset);
-
-            //TODO: handle errors properly
-            var change = response.First() as ChangeOperationResponse;
-            var descriptor = change.Descriptor as EntityDescriptor;
-            return descriptor.Entity as T;
-        }
-
         public static DataServiceQuerySingle<T> GetSingleEntityByKey<T>(this DataServiceQuery<T> source, IDictionary<string, object> alternateKeys)
         {
             var keys = string.Join(',', alternateKeys.Select(kv => $"{kv.Key}={ODataUriUtils.ConvertToUriLiteral(kv.Value, ODataVersion.V4)}"));
@@ -103,32 +92,24 @@ namespace EMBC.ESS.Utilities.Dynamics
             }
         }
 
-        public static void SoftDeleteObject(this EssContext context, object entity) => ModifyEntityStatus(context, entity, EntityStatus.SoftDelete);
+        public static void ActivateObject(this EssContext context, object entity, int activeStatusValue) =>
+            ModifyEntityStatus(context, entity, (int)EntityState.Active, activeStatusValue);
 
-        public static void ActivateObject(this EssContext context, object entity) => ModifyEntityStatus(context, entity, EntityStatus.Active);
+        public static void DeactivateObject(this EssContext context, object entity, int inactiveStatusValue) =>
+            ModifyEntityStatus(context, entity, (int)EntityState.Inactive, inactiveStatusValue);
 
-        public static void DeactivateObject(this EssContext context, object entity) => ModifyEntityStatus(context, entity, EntityStatus.Inactive);
-
-        private static void ModifyEntityStatus(this EssContext context, object entity, EntityStatus status)
+        private static void ModifyEntityStatus(this EssContext context, object entity, int state, int status)
         {
             var entityType = entity.GetType();
             if (!typeof(crmbaseentity).IsAssignableFrom(entityType)) throw new InvalidOperationException($"entity {entityType.FullName} is not a valid {typeof(crmbaseentity).FullName}");
             var statusProp = entity.GetType().GetProperty("statuscode");
             var stateProp = entity.GetType().GetProperty("statecode");
 
-            statusProp.SetValue(entity, (int)status);
-            stateProp.SetValue(entity, (int)MapStatusToState(status));
+            statusProp.SetValue(entity, status);
+            stateProp.SetValue(entity, state);
 
             context.UpdateObject(entity);
         }
-
-        private static EntityState MapStatusToState(EntityStatus state) => state switch
-        {
-            EntityStatus.Active => EntityState.Active,
-            EntityStatus.Inactive => EntityState.Active,
-            EntityStatus.SoftDelete => EntityState.Inactive,
-            _ => throw new NotImplementedException()
-        };
     }
 
     public static class EssContextLookupHelpers

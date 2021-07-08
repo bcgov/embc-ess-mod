@@ -26,7 +26,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EMBC.Responders.API.Controllers
 {
     /// <summary>
-    /// Handles registration search
+    /// search related operations
     /// </summary>
     public partial class RegistrationsController
     {

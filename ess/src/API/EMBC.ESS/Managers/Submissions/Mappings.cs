@@ -31,10 +31,13 @@ namespace EMBC.ESS.Managers.Submissions
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
                 .ForMember(d => d.IsSecurityPhraseMasked, opts => opts.Ignore())
+                .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.RelatedTask == null ? null : s.RelatedTask.Id))
+                .ForMember(d => d.TaskLocationCommunityCode, opts => opts.Ignore())
                 ;
 
             CreateMap<Resources.Cases.EvacuationFile, Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.EvacuatedFromAddress, opts => opts.MapFrom(s => s.EvacuatedFrom))
+                .ForMember(d => d.RelatedTask, opts => opts.MapFrom(s => new Shared.Contracts.Submissions.IncidentTask { Id = s.TaskId }))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Address, Resources.Cases.EvacuationAddress>()
@@ -45,7 +48,12 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Cases.HouseholdMember>()
                 .ForMember(d => d.HasAccessRestriction, opts => opts.Ignore())
-                .ReverseMap()
+                .ForMember(d => d.IsVerifiedRegistrant, opts => opts.Ignore())
+                ;
+
+            CreateMap<Resources.Cases.HouseholdMember, Shared.Contracts.Submissions.HouseholdMember>()
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.HasAccessRestriction))
+                .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.IsVerifiedRegistrant))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Pet, Resources.Cases.Pet>()
@@ -55,9 +63,17 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Shared.Contracts.Submissions.NeedsAssessment, Resources.Cases.NeedsAssessment>()
                 .ForMember(d => d.EvacuatedFrom, opts => opts.Ignore())
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.LastModifiedTeamMemberId, opts => opts.Ignore())
+                .ForMember(d => d.CompletedByTeamMemberId, opts => opts.MapFrom(s => s.CompletedBy == null ? null : s.CompletedBy.Id))
                 .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.CompletedOn == default ? DateTime.UtcNow : s.CompletedOn))
-                .ReverseMap()
+                ;
+
+            CreateMap<Resources.Cases.NeedsAssessment, Shared.Contracts.Submissions.NeedsAssessment>()
+                .ForMember(d => d.CompletedBy, opts => opts.MapFrom(s => s.CompletedByTeamMemberId == null ? null : new Shared.Contracts.Submissions.TeamMember
+                {
+                    Id = s.CompletedByTeamMemberId
+                }))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Note, Resources.Cases.Note>()
@@ -70,7 +86,10 @@ namespace EMBC.ESS.Managers.Submissions
             CreateMap<Shared.Contracts.Submissions.RegistrantProfile, Resources.Contacts.Contact>()
                 .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.AuthenticatedUser))
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.VerifiedUser))
-                .ReverseMap()
+                ;
+            CreateMap<Resources.Contacts.Contact, Shared.Contracts.Submissions.RegistrantProfile>()
+                .ForMember(d => d.AuthenticatedUser, opts => opts.MapFrom(s => s.Authenticated))
+                .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.Verified))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Address, Resources.Contacts.Address>()
@@ -97,6 +116,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Resources.Cases.HouseholdMember, Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember>()
                 .ForMember(d => d.IsSearchMatch, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.HasAccessRestriction))
                 ;
         }
     }

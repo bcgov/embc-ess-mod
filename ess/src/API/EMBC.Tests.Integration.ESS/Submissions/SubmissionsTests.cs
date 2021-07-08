@@ -77,7 +77,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                         DateOfBirth = profile.DateOfBirth,
                         Gender = profile.Gender,
                         Initials = profile.Initials,
-                        PreferredName = profile.PreferredName,
                     },
                     new HouseholdMember
                     {
@@ -334,6 +333,14 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var expectedNumberOfCorrectAnswers = 3;
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
 
+            //if need to update security questions
+            //List<SecurityQuestion> securityQuestions = new List<SecurityQuestion>();
+            //securityQuestions.Add(new SecurityQuestion { Id = 1, Question = "question1", Answer = "answer1 - test", AnswerChanged = true });
+            //securityQuestions.Add(new SecurityQuestion { Id = 2, Question = "question2", Answer = "answer2 - test", AnswerChanged = true });
+            //securityQuestions.Add(new SecurityQuestion { Id = 3, Question = "question3", Answer = "answer3 - test", AnswerChanged = true });
+            //registrant.SecurityQuestions = securityQuestions;
+            //await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
+
             var answers = registrant.SecurityQuestions.Select(q =>
             {
                 q.Answer = $"answer{q.Id}";
@@ -365,9 +372,35 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanVerifySecurityPhrase()
         {
             //var fileId = (await manager.Handle(new EvacuationFilesSearchQuery { PrimaryRegistrantUserId = "CHRIS-TEST" })).Items.Last().Id;
-            var fileId = "PAP2354234";
-            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "My New Security Phrase" });
+            var fileId = "101010";
+
+            //set phrase if needed
+            //var file = (await GetEvacuationFileById(fileId)).FirstOrDefault();
+            //file.SecurityPhrase = "no security phrase please";
+            //file.SecurityPhraseChanged = true;
+            //await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+
+            var response = await manager.Handle(new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = "no security phrase please" });
             response.IsCorrect.ShouldBeTrue();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchFileNoteByFileId()
+        {
+            var fileId = "101010";
+            var notes = (await manager.Handle(new EvacuationFileNotesQuery { FileId = fileId })).Notes;
+
+            notes.ShouldNotBeNull();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchFileNoteByNoteId()
+        {
+            var fileId = "101010";
+            var noteId = "65dea67d-760a-445d-aa78-101564bbf0b7";
+            var notes = (await manager.Handle(new EvacuationFileNotesQuery { NoteId = noteId, FileId = fileId })).Notes;
+
+            notes.ShouldNotBeNull();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -387,16 +420,16 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var note = file.Notes.FirstOrDefault();
 
-            if (note.Content.Equals("Test update value 1"))
+            if (note.Content.Equals("_testing_ update value 1"))
             {
-                note.Content = "Test update value 2";
+                note.Content = "_testing_ update value 2";
             }
             else
             {
-                note.Content = "Test update value 1";
+                note.Content = "_testing_ update value 1";
             }
 
-            var id = await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note });
+            var id = await manager.Handle(new SaveEvacuationFileNoteCommand { Note = note, FileId = fileId });
             id.ShouldNotBeNull();
         }
 
@@ -416,6 +449,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 PrimaryRegistrantId = registrant.Id,
                 SecurityPhrase = "SecretPhrase",
                 SecurityPhraseChanged = true,
+                RelatedTask = new IncidentTask { Id = "0001" },
                 EvacuatedFromAddress = new Address()
                 {
                     AddressLine1 = $"{uniqueSignature}-3738 Main St",
@@ -446,7 +480,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                             {
                                 FirstName = registrant.FirstName,
                                 LastName = registrant.LastName,
-                                PreferredName = registrant.PreferredName,
                                 Initials = registrant.Initials,
                                 Gender = registrant.Gender,
                                 DateOfBirth = registrant.DateOfBirth,
@@ -457,7 +490,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                             {
                                 FirstName = $"{uniqueSignature}-hm1first",
                                 LastName = $"{uniqueSignature}-hm1last",
-                                PreferredName = "hm1p",
                                 Initials = $"{uniqueSignature}-1",
                                 Gender = "X",
                                 DateOfBirth = "03/15/2000",
@@ -468,7 +500,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                             {
                                 FirstName = $"{uniqueSignature}-hm2first",
                                 LastName = $"{uniqueSignature}-hm2last",
-                                PreferredName = "hm2p",
                                 Initials = $"{uniqueSignature}-2",
                                 Gender = "M",
                                 DateOfBirth = "03/16/2010",

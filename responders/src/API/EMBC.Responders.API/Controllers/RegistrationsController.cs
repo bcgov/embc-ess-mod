@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -165,175 +164,11 @@ namespace EMBC.Responders.API.Controllers
             var response = await messagingClient.Send(verifySecurityQuestionsQuery);
             return Ok(mapper.Map<VerifySecurityQuestionsResponse>(response));
         }
-
-        /// <summary>
-        /// Gets a File
-        /// </summary>
-        /// <param name="fileId">fileId</param>
-        /// <returns>file</returns>
-        [HttpGet("files/{fileId}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EvacuationFile>> GetFile(string fileId)
-        {
-            var file = await evacuationSearchService.GetEvacuationFile(fileId);
-
-            if (file == null) return NotFound();
-
-            return Ok(file);
-        }
-
-        /// <summary>
-        /// Creates a File
-        /// </summary>
-        /// <param name="file">file</param>
-        /// <returns>new file id</returns>
-        [HttpPost("files")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> CreateFile(EvacuationFile file)
-        {
-            var id = await messagingClient.Send(new SubmitEvacuationFileCommand
-            {
-                File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(file)
-            });
-
-            return Ok(new RegistrationResult { Id = id });
-        }
-
-        /// <summary>
-        /// Updates a File
-        /// </summary>
-        /// <param name="fileId">fileId</param>
-        /// <param name="file">file</param>
-        /// <returns>updated file id</returns>
-        [HttpPost("files/{fileId}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> UpdateFile(string fileId, EvacuationFile file)
-        {
-            file.Id = fileId;
-            var id = await messagingClient.Send(new SubmitEvacuationFileCommand
-            {
-                File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(file)
-            });
-
-            return Ok(new RegistrationResult { Id = id });
-        }
-
-        /// <summary>
-        /// Create a File Note
-        /// </summary>
-        /// <param name="fileId">fileId</param>
-        /// <param name="note">note</param>
-        /// <returns>newly created note id</returns>
-        [HttpPost("files/{fileId}/notes")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> CreateFileNote(string fileId, Note note)
-        {
-            var cmd = new SaveEvacuationFileNoteCommand
-            {
-                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
-                FileId = fileId
-            };
-            var userId = User.FindFirstValue("user_id");
-            cmd.Note.CreatingTeamMemberId = userId;
-
-            var id = await messagingClient.Send(cmd);
-
-            return Ok(new EvacuationFileNotesResult { Id = id });
-        }
-
-        /// <summary>
-        /// Updates a File Note
-        /// </summary>
-        /// <param name="fileId">fileId</param>
-        /// <param name="noteId">noteId</param>
-        /// <param name="note">note</param>
-        /// <returns>newly created note id</returns>
-        [HttpPost("files/{fileId}/notes/{noteId}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> UpdateFileNote(string fileId, string noteId, Note note)
-        {
-            var now = DateTime.Now;
-            var userId = User.FindFirstValue("user_id");
-            if (!note.CreatingTeamMemberId.Equals(userId) || note.AddedOn < now.AddHours(-24)) return BadRequest(new ProblemDetails { Detail = "The note may be edited only by the user who created it withing a 24 hour period." });
-
-            note.Id = noteId;
-            var cmd = new SaveEvacuationFileNoteCommand
-            {
-                Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
-                FileId = fileId
-            };
-            cmd.Note.CreatingTeamMemberId = userId;
-
-            var id = await messagingClient.Send(cmd);
-
-            return Ok(new EvacuationFileNotesResult { Id = id });
-        }
-
-        /// <summary>
-        /// get the security phrase of an evacuation file
-        /// </summary>
-        /// <param name="fileId">file id</param>
-        /// <returns>masked security phrase</returns>
-        [HttpGet("files/{fileId}/security")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GetSecurityPhraseResponse>> GetSecurityPhrase(string fileId)
-        {
-            var file = (await messagingClient.Send(new EvacuationFilesQuery
-            {
-                FileId = fileId
-            })).Items.FirstOrDefault();
-
-            if (file == null) return NotFound();
-
-            return Ok(new GetSecurityPhraseResponse { SecurityPhrase = file.SecurityPhrase });
-        }
-
-        /// <summary>
-        /// verify an evacuation file's security phrase
-        /// </summary>
-        /// <param name="fileId">file id</param>
-        /// <param name="request">security phrase to verify</param>
-        /// <returns>result of verification</returns>
-        [HttpPost("files/{fileId}/security")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<VerifySecurityPhraseResponse>> VerifySecurityPhrase(string fileId, VerifySecurityPhraseRequest request)
-        {
-            VerifySecurityPhraseQuery verifySecurityPhraseQuery = new VerifySecurityPhraseQuery { FileId = fileId, SecurityPhrase = request.Answer };
-            var response = await messagingClient.Send(verifySecurityPhraseQuery);
-            return Ok(mapper.Map<VerifySecurityPhraseResponse>(response));
-        }
     }
 
     public class RegistrationResult
     {
         public string Id { get; set; }
-    }
-
-    public class EvacuationFileNotesResult
-    {
-        public string Id { get; set; }
-    }
-
-    public class EvacuationFileHouseholdMember
-    {
-        public string Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Initials { get; set; }
-        public string Gender { get; set; }
-        public string DateOfBirth { get; set; }
-        public HouseholdMemberType Type { get; set; }
-        public bool IsMatch { get; set; }
-        public bool IsPrimaryRegistrant { get; set; }
-        public bool IsHouseholdMember => !IsPrimaryRegistrant;
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -344,32 +179,6 @@ namespace EMBC.Responders.API.Controllers
 
         [Description("Not Verified")]
         NotVerified
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum EvacuationFileStatus
-    {
-        [Description("Pending")]
-        Pending,
-
-        [Description("Active")]
-        Active,
-
-        [Description("Expired")]
-        Expired,
-
-        [Description("Completed")]
-        Completed
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum HouseholdMemberType
-    {
-        [Description("Registrant")]
-        Registrant,
-
-        [Description("Household Member")]
-        HouseholdMember
     }
 
     public class SecurityQuestion
@@ -393,184 +202,6 @@ namespace EMBC.Responders.API.Controllers
     public class VerifySecurityQuestionsResponse
     {
         public int NumberOfCorrectAnswers { get; set; }
-    }
-
-    public class GetSecurityPhraseResponse
-    {
-        public string SecurityPhrase { get; set; }
-    }
-
-    public class VerifySecurityPhraseRequest
-    {
-        public string Answer { get; set; }
-    }
-
-    public class VerifySecurityPhraseResponse
-    {
-        public bool IsCorrect { get; set; }
-    }
-
-    /// <summary>
-    /// Evacuation File
-    /// </summary>
-    public class EvacuationFile
-    {
-        public string Id { get; set; }
-
-        [Required]
-        public string PrimaryRegistrantId { get; set; }
-
-        [Required]
-        public Address EvacuatedFromAddress { get; set; }
-
-        [Required]
-        public string RegistrationLocation { get; set; }
-
-        [Required]
-        public NeedsAssessment NeedsAssessment { get; set; }
-
-        public IEnumerable<Note> Notes { get; set; }
-
-        public string SecurityPhrase { get; set; }
-        public bool SecurityPhraseEdited { get; set; }
-
-        public bool? IsRestricted { get; set; }
-        public EvacuationFileStatus? Status { get; set; }
-        public DateTime? EvacuationFileDate { get; set; }
-        public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; }
-
-        [Required]
-        public EvacuationFileTask Task { get; set; }
-    }
-
-    public class EvacuationFileTask
-    {
-        [Required]
-        public string TaskNumber { get; set; }
-
-        public string CommunityCode { get; set; }
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
-    }
-
-    /// <summary>
-    /// Needs assessment form
-    /// </summary>
-    public class NeedsAssessment
-    {
-        public string Id { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public DateTime ModifiedOn { get; set; }
-
-        [Required]
-        public InsuranceOption Insurance { get; set; }
-
-        public string EvacuationImpact { get; set; }
-        public string EvacuationExternalReferrals { get; set; }
-        public string PetCarePlans { get; set; }
-        public string HouseHoldRecoveryPlan { get; set; }
-        public IEnumerable<ReferralServices> RecommendedReferralServices { get; set; }
-
-        [Required]
-        public IEnumerable<EvacuationFileHouseholdMember> HouseholdMembers { get; set; } = Array.Empty<EvacuationFileHouseholdMember>();
-
-        public bool HaveSpecialDiet { get; set; }
-        public string SpecialDietDetails { get; set; }
-        public bool TakeMedication { get; set; }
-        public bool? HaveMedicalSupplies { get; set; }
-        public IEnumerable<Pet> Pets { get; set; } = Array.Empty<Pet>();
-        public bool? HavePetsFood { get; set; }
-        public bool? CanProvideFood { get; set; }
-        public bool? CanProvideLodging { get; set; }
-        public bool? CanProvideClothing { get; set; }
-        public bool? CanProvideTransportation { get; set; }
-        public bool? CanProvideIncidentals { get; set; }
-        public NeedsAssessmentType Type { get; set; }
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum InsuranceOption
-    {
-        [Description("No")]
-        No,
-
-        [Description("Yes")]
-        Yes,
-
-        [Description("Unsure")]
-        Unsure,
-
-        [Description("Unknown")]
-        Unknown
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum NeedsAssessmentType
-    {
-        Preliminary,
-        Assessed
-    }
-
-    public class Note
-    {
-        public string Id { get; set; }
-        public NoteType Type { get; set; }
-        public string Content { get; set; }
-        public DateTime AddedOn { get; set; }
-        public string CreatingTeamMemberId { get; set; }
-        public string MemberName { get; set; }
-        public string TeamName { get; set; }
-        public bool IsHidden { get; set; }
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum NoteType
-    {
-        [Description("General")]
-        General,
-
-        [Description("Evacuation Impact")]
-        EvacuationImpact,
-
-        [Description("Evacuation External Referrals")]
-        EvacuationExternalReferrals,
-
-        [Description("Pet Care Plans")]
-        PetCarePlans,
-
-        [Description("HouseHold Recovery Plan")]
-        HouseHoldRecoveryPlan
-    }
-
-    /// <summary>
-    /// Pet
-    /// </summary>
-    public class Pet
-    {
-        public string Type { get; set; }
-        public string Quantity { get; set; }
-    }
-
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum ReferralServices
-    {
-        [Description("Inquiry")]
-        Inquiry,
-
-        [Description("Health")]
-        Health,
-
-        [Description("First Aid")]
-        FirstAid,
-
-        [Description("Personal")]
-        Personal,
-
-        [Description("Child Care")]
-        ChildCare,
-
-        [Description("Pet Care")]
-        PetCare
     }
 
     /// <summary>
@@ -625,7 +256,8 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()
                    .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
-                   .ForMember(d => d.IsMatch, opts => opts.Ignore())
+                   .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => false /*s.Verified*/))
+                   .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => false /*s.RestrictedAccess*/))
                    ;
 
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
@@ -636,9 +268,11 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
                 .ForMember(d => d.CreatingTeamMemberId, opts => opts.Ignore())
                 .ForMember(d => d.TeamId, opts => opts.Ignore())
+                .ForMember(d => d.Type, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.Note, Note>()
+                .ForMember(d => d.IsEditable, opts => opts.Ignore())
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
@@ -677,8 +311,10 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.IsRestricted))
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
                 .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.Task.TaskNumber))
+                .ForMember(d => d.TaskLocationCommunityCode, opts => opts.Ignore())
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
+                .ForMember(d => d.TaskLocationCommunityCode, opts => opts.Ignore())
                 .AfterMap((s, d) => d.NeedsAssessment.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).LinkedRegistrantId = s.PrimaryRegistrantId)
                 ;
 
@@ -687,12 +323,13 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
-                .ForMember(d => d.Task, opts => opts.MapFrom(s => s.TaskId == null
-                    ? null
-                    : new EvacuationFileTask
-                    {
-                        TaskNumber = s.TaskId
-                    }))
+                .ForMember(d => d.Task, opts => opts.MapFrom(s => new EvacuationFileTask { TaskNumber = s.TaskId, CommunityCode = s.TaskLocationCommunityCode }))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.IncidentTask, EvacuationFileTask>()
+                .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.From, opts => opts.MapFrom(s => s.StartDate))
+                .ForMember(d => d.To, opts => opts.MapFrom(s => s.EndDate))
                 ;
 
             CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()

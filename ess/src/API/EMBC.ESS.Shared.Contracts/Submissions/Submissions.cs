@@ -14,9 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace EMBC.ESS.Shared.Contracts.Submissions
 {
     /// <summary>
@@ -68,18 +65,5 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string FileId { get; set; }
         public Note Note { get; set; }
-    }
-
-    public class EvacuationFileNotesQuery : Query<EvacuationFileNotesQueryResult>
-    {
-        public string FileId { get; set; }
-        public string NoteId { get; set; }
-        public IEnumerable<NoteType> IncludeTypes { get; set; } = new[] { NoteType.General };
-        public IEnumerable<NoteStatus> IncludeStatuses { get; set; } = Array.Empty<NoteStatus>();
-    }
-
-    public class EvacuationFileNotesQueryResult
-    {
-        public IEnumerable<Note> Notes { get; set; }
     }
 }
