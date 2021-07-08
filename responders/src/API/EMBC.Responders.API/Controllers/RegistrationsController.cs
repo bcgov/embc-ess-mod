@@ -277,10 +277,9 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
                 .ForMember(d => d.UserId, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
                 .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
                 .ForMember(d => d.CreatedByDisplayName, opts => opts.Ignore())
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.ModifiedOn))
                 .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 ;
