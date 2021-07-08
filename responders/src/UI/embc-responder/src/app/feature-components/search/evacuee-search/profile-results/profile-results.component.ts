@@ -16,6 +16,7 @@ import { AddressModel } from 'src/app/core/models/address.model';
 import { RegistrantProfileSearchResultModel } from 'src/app/core/models/evacuee-search-results';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { Community } from 'src/app/core/services/locations.service';
+import { WizardStepService } from 'src/app/feature-components/wizard/wizard-step.service';
 import { EvacueeSearchService } from '../../evacuee-search/evacuee-search.service';
 
 @Component({
