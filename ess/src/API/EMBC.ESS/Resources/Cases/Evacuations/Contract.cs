@@ -28,7 +28,7 @@ namespace EMBC.ESS.Resources.Cases
 
         Task<string> Update(EvacuationFile evacuationFile);
 
-        Task<string> Delete(string essFileNumber);
+        Task<string> Delete(string id);
 
         Task<string> UpdateSecurityPhrase(string essFileNumber, string securityPhrase);
 
@@ -68,12 +68,9 @@ namespace EMBC.ESS.Resources.Cases
         public string Id { get; set; }
         public EvacuationAddress EvacuatedFrom { get; set; }
         public DateTime CompletedOn { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public string CreatedByUserId { get; set; }
-        public string CreatedByDisplayName { get; set; }
+        public string CompletedByTeamMemberId { get; set; }
         public DateTime LastModified { get; set; }
-        public string LastModifiedUserId { get; set; }
-        public string LastModifiedDisplayName { get; set; }
+        public string LastModifiedTeamMemberId { get; set; }
         public InsuranceOption Insurance { get; set; }
         public bool? CanProvideFood { get; set; }
         public bool? CanProvideLodging { get; set; }

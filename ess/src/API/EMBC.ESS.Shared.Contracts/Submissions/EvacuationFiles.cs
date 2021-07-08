@@ -25,12 +25,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string TaskId { get; set; }
         public string TaskLocationCommunityCode { get; set; }
 
-        public DateTime CreatedOn { get; set; }
-
-        //public User CreatedBy { get; set; }
-        public DateTime LastModified { get; set; }
-
-        //public User LastModified { get; set; }
         public EvacuationFileStatus Status { get; set; }
 
         public bool RestrictedAccess { get; set; }
@@ -45,20 +39,13 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public NeedsAssessment NeedsAssessment { get; set; }
     }
 
-    //public class User
-    //{
-    //    public string UserId { get; set; }
-    //    public string UserName { get; set; }
-    //    public UserType Type { get; set; }
-    //    public string DisplayName { get; set; }
-    //}
-
-    //public enum UserType
-    //{
-    //    Anonymous,
-    //    Registrant,
-    //    Responder
-    //}
+    public class TeamMember
+    {
+        public string Id { get; set; }
+        public string DisplayName { get; set; }
+        public string TeamId { get; set; }
+        public string TeamName { get; set; }
+    }
 
     public enum EvacuationFileStatus
     {
@@ -73,12 +60,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public string Id { get; set; }
         public DateTime CompletedOn { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public string CreatedByUserId { get; set; }
-        public string CreatedByDisplayName { get; set; }
-        public DateTime LastModified { get; set; }
-        public string LastModifiedUserId { get; set; }
-        public string LastModifiedDisplayName { get; set; }
+        public TeamMember CompletedBy { get; set; }
         public NeedsAssessmentType Type { get; set; }
         public InsuranceOption Insurance { get; set; }
         public bool? CanProvideFood { get; set; }
@@ -103,10 +85,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Initials { get; set; }
-
-        //TODO: delete as no longer used
-        public string PreferredName { get; set; }
-
         public string Gender { get; set; }
         public string DateOfBirth { get; set; }
         public bool IsUnder19 { get; set; }

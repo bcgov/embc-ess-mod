@@ -64,8 +64,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             Func<Note, string> resolveNoteContent = n => n?.Content;
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)
                 .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => Guid.NewGuid())) //TODO: need to enable update in some scenarios
-                .ForMember(d => d.era_needsassessmentdate, opts => opts.MapFrom(s => s.CompletedOn))
-                //TODO - add era_reviewedbyid
+                .ForMember(d => d._era_reviewedbyid_value, opts => opts.MapFrom(s => s.CompletedByTeamMemberId))
                 .ForMember(d => d.era_needsassessmenttype, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentTypeOptionSet>(s.Type.ToString())))
                 .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => Lookup(s.CanProvideFood)))
                 .ForMember(d => d.era_canevacueeprovideclothing, opts => opts.MapFrom(s => Lookup(s.CanProvideClothing)))
@@ -106,13 +105,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             CreateMap<era_needassessment, NeedsAssessment>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_needassessmentid))
                 .ForMember(d => d.EvacuatedFrom, opts => opts.MapFrom(s => s))
-                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.createdon.Value.DateTime))
-                .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
-                .ForMember(d => d.CreatedByDisplayName, opts => opts.Ignore())
-                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.era_needsassessmentdate.HasValue ? s.era_needsassessmentdate.Value.DateTime : s.createdon.Value.DateTime))
+                .ForMember(d => d.CompletedByTeamMemberId, opts => opts.MapFrom(s => s._era_reviewedbyid_value))
+                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => s.createdon.Value.DateTime))
                 .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.modifiedon.Value.DateTime))
-                .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
-                .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
+                .ForMember(d => d.LastModifiedTeamMemberId, opts => opts.MapFrom(s => s._era_reviewedbyid_value))
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentType>(((NeedsAssessmentTypeOptionSet)s.era_needsassessmenttype).ToString())))
                 .ForMember(d => d.CanProvideClothing, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovideclothing)))
                 .ForMember(d => d.CanProvideFood, opts => opts.MapFrom(s => Lookup(s.era_canevacueeprovidefood)))

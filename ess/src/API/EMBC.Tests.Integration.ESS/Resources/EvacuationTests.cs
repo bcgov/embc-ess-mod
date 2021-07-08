@@ -19,7 +19,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         // Constants
         private const string TestUserId = "CHRIS-TEST";
 
-        private const string TestEssFileNumber = "100813";
+        private const string TestEssFileNumber = "101010";
 
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -86,12 +86,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateEvacuationFile()
         {
-            var primaryContact = await GetContactByUserId(TestUserId);
             var fileToUpdate = (await caseRepository.QueryCase(new EvacuationFilesQuery
             {
-                PrimaryRegistrantId = primaryContact.Id,
-                Limit = 1
-            })).Items.Cast<EvacuationFile>().Last();
+                FileId = TestEssFileNumber,
+            })).Items.Cast<EvacuationFile>().Single();
 
             var newUniqueSignature = Guid.NewGuid().ToString().Substring(0, 5);
             var needsAssessment = fileToUpdate.NeedsAssessment;
@@ -117,8 +115,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 member.LastName.ShouldStartWith(newUniqueSignature);
             }
             var primaryRegistrant = updatedNeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem();
-            primaryContact.FirstName.ShouldBe(primaryContact.FirstName);
-            primaryContact.LastName.ShouldBe(primaryContact.LastName);
             updatedFile.NeedsAssessment.Pets.Count().ShouldBe(fileToUpdate.NeedsAssessment.Pets.Count());
             updatedFile.NeedsAssessment.HouseholdMembers.Count().ShouldBe(fileToUpdate.NeedsAssessment.HouseholdMembers.Count());
         }
@@ -182,8 +178,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 householdMember.LinkedRegistrantId.ShouldBe(originalHouseholdMember.LinkedRegistrantId);
                 if (householdMember.LinkedRegistrantId != null)
                 {
-                    householdMember.HasAccessRestriction.ShouldNotBeNull().ShouldBe(originalHouseholdMember.HasAccessRestriction.Value);
-                    householdMember.IsVerifiedRegistrant.ShouldNotBeNull().ShouldBe(originalHouseholdMember.IsVerifiedRegistrant.Value);
+                    householdMember.HasAccessRestriction.ShouldNotBeNull().ShouldBe(primaryContact.RestrictedAccess);
+                    householdMember.IsVerifiedRegistrant.ShouldNotBeNull().ShouldBe(primaryContact.Verified);
                 }
                 else
                 {
@@ -203,8 +199,20 @@ namespace EMBC.Tests.Integration.ESS.Resources
             }
         }
 
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanDeleteEvacuationFiles()
+        {
+            var registrant = await GetContactByUserId("CHRIS-TESET");
+            var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items;
+
+            foreach (var file in files.OrderByDescending(f => f.CreatedOn).Skip(50))
+            {
+                await caseRepository.ManageCase(new DeleteEvacuationFile { Id = file.Id });
+            }
+        }
+
         private async Task<Contact> GetContactByUserId(string userId) =>
-            (await services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
+        (await services.GetRequiredService<IContactRepository>().QueryContact(new RegistrantQuery { UserId = userId })).Items.Single();
 
         private EvacuationFile CreateTestFile(Contact primaryContact)
         {

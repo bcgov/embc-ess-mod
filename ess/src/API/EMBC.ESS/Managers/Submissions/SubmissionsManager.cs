@@ -202,9 +202,23 @@ namespace EMBC.ESS.Managers.Submissions
                 IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Cases.EvacuationFileStatus>(s.ToString())).ToArray()
             })).Items.Cast<Resources.Cases.EvacuationFile>();
 
-            var results = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
+            var files = mapper.Map<IEnumerable<Shared.Contracts.Submissions.EvacuationFile>>(cases);
 
-            foreach (var note in results.SelectMany(c => c.Notes))
+            foreach (var file in files)
+            {
+                if (file.NeedsAssessment.CompletedBy?.Id != null)
+                {
+                    var member = (await teamRepository.GetMembers(userId: file.NeedsAssessment.CompletedBy.Id, onlyActive: false)).SingleOrDefault();
+                    if (member != null)
+                    {
+                        file.NeedsAssessment.CompletedBy.DisplayName = $"{member.FirstName} {member.LastName.Substring(0, 1)}.";
+                        file.NeedsAssessment.CompletedBy.TeamId = member.TeamId;
+                        file.NeedsAssessment.CompletedBy.TeamName = member.TeamName;
+                    }
+                }
+            }
+
+            foreach (var note in files.SelectMany(c => c.Notes))
             {
                 if (string.IsNullOrEmpty(note.CreatingTeamMemberId)) continue;
                 var teamMembers = await teamRepository.GetMembers(null, null, note.CreatingTeamMemberId);
@@ -215,7 +229,7 @@ namespace EMBC.ESS.Managers.Submissions
                 note.TeamName = member.TeamName;
             }
 
-            return new EvacuationFilesQueryResponse { Items = results };
+            return new EvacuationFilesQueryResponse { Items = files };
         }
 
         public async Task<EvacueeSearchQueryResponse> Handle(EvacueeSearchQuery query)
