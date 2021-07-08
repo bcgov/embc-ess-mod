@@ -201,6 +201,16 @@ export class StepEvacueeProfileService {
     });
   }
 
+  // TODO: To be reviewed later by Avisha
+  public setEditTabStatus(): void {
+    this.profileTabs.map((tab) => {
+      if (tab.name !== 'review') {
+        tab.status = 'complete';
+      }
+      return tab;
+    });
+  }
+
   /**
    * Determines if the tab navigation is allowed or not
    *
