@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using EMBC.Responders.API.Services;
 using Microsoft.AspNetCore.Http;
@@ -39,7 +38,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<SearchResults>> Search([FromQuery] SearchParameters searchParameters)
         {
-            var userRole = Enum.Parse<MemberRole>(User.FindFirstValue("user_role"));
+            var userRole = Enum.Parse<MemberRole>(currentUserRole);
             var searchResults = await evacuationSearchService.Search(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
 
             return Ok(searchResults);
