@@ -97,8 +97,6 @@ namespace EMBC.ESS.Managers.Submissions
 
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
 
-            if (cmd.File.SecurityPhraseChanged) await caseRepository.ManageCase(new UpdateSecurityPhrase { Id = caseId, SecurityPhrase = file.SecurityPhrase });
-
             if (string.IsNullOrEmpty(file.Id) && !string.IsNullOrEmpty(contact.Email))
             {
                 //notify registrant of the new file and has email

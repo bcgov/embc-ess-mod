@@ -327,24 +327,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             return (await ((DataServiceQuery<era_evacuationfile>)files).GetAllPagesAsync()).ToArray();
         }
 
-        public async Task<string> UpdateSecurityPhrase(string fileId, string securityPhrase)
-        {
-            var evacuationFile = essContext.era_evacuationfiles
-                .Where(f => f.era_name == fileId)
-                .ToArray()
-                .FirstOrDefault();
-
-            if (evacuationFile == null) throw new Exception($"Evacuation File {fileId} not found");
-
-            evacuationFile.era_securityphrase = securityPhrase;
-            essContext.UpdateObject(evacuationFile);
-            await essContext.SaveChangesAsync();
-
-            essContext.DetachAll();
-
-            return evacuationFile.era_name;
-        }
-
         public async Task<string> CreateNote(string essFileId, Note note)
         {
             var file = essContext.era_evacuationfiles
