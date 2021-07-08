@@ -242,10 +242,7 @@ namespace EMBC.Responders.API.Controllers
             return Ok(mapper.Map<VerifySecurityPhraseResponse>(response));
         }
 
-        private bool UserCanEditNote(Note note)
-        {
-            return note.CreatingTeamMemberId.Equals(currentUserId) && note.AddedOn >= DateTime.Now.AddHours(-24);
-        }
+        private bool UserCanEditNote(Note note) => note.CreatingTeamMemberId.Equals(currentUserId) && note.AddedOn >= DateTime.Now.AddHours(-24);
 
         private bool UserCanHideNote()
         {
