@@ -24,7 +24,6 @@ namespace EMBC.Tests.Unit.Responders.API
             {
                 SecurityQuestions = InitializeSecurityQuestions(),
                 RestrictedAccess = false,
-                IsMailingAddressSameAsPrimaryAddress = false,
                 MailingAddress = new Address
                 {
                     AddressLine1 = "123 fake st",
@@ -60,7 +59,6 @@ namespace EMBC.Tests.Unit.Responders.API
             {
                 SecurityQuestions = InitializeSecurityQuestions(),
                 RestrictedAccess = false,
-                IsMailingAddressSameAsPrimaryAddress = false,
                 MailingAddress = new Address
                 {
                     AddressLine1 = "1234 fake st",
@@ -96,7 +94,6 @@ namespace EMBC.Tests.Unit.Responders.API
             {
                 SecurityQuestions = InitializeSecurityQuestions(),
                 RestrictedAccess = false,
-                IsMailingAddressSameAsPrimaryAddress = false,
                 MailingAddress = new Address
                 {
                     AddressLine1 = "455 fake st",

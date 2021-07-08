@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -39,6 +40,9 @@ namespace EMBC.Responders.API.Controllers
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
         private readonly IEvacuationSearchService evacuationSearchService;
+
+        private string currentUserId => User.FindFirstValue("user_id");
+        private string currentUserRole => User.FindFirstValue("user_role");
 
         public RegistrationsController(IMessagingClient messagingClient, IMapper mapper, IEvacuationSearchService evacuationSearchService)
         {
@@ -235,64 +239,12 @@ namespace EMBC.Responders.API.Controllers
     {
         public RegistrationsMapping()
         {
-            CreateMap<VerifySecurityPhraseResponse, ESS.Shared.Contracts.Submissions.VerifySecurityPhraseResponse>()
-                .ReverseMap()
-                ;
-
             CreateMap<VerifySecurityQuestionsResponse, ESS.Shared.Contracts.Submissions.VerifySecurityQuestionsResponse>()
                 .ReverseMap()
                 ;
 
             CreateMap<SecurityQuestion, ESS.Shared.Contracts.Submissions.SecurityQuestion>()
                 .ReverseMap()
-                ;
-
-            CreateMap<EvacuationFileHouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
-                .ForMember(d => d.PreferredName, opts => opts.Ignore())
-                .ForMember(d => d.IsUnder19, opts => opts.Ignore())
-                .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.Type == HouseholdMemberType.Registrant))
-                .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
-                ;
-
-            CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()
-                   .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
-                   .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => false /*s.Verified*/))
-                   .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => false /*s.RestrictedAccess*/))
-                   ;
-
-            CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
-                .ReverseMap()
-                ;
-
-            CreateMap<Note, ESS.Shared.Contracts.Submissions.Note>()
-                .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
-                .ForMember(d => d.CreatingTeamMemberId, opts => opts.Ignore())
-                .ForMember(d => d.TeamId, opts => opts.Ignore())
-                .ForMember(d => d.Type, opts => opts.Ignore())
-                ;
-
-            CreateMap<ESS.Shared.Contracts.Submissions.Note, Note>()
-                .ForMember(d => d.IsEditable, opts => opts.Ignore())
-                ;
-
-            CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
-                .ForMember(d => d.CompletedOn, opts => opts.Ignore())
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
-                .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
-                .ForMember(d => d.CreatedByDisplayName, opts => opts.Ignore())
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
-                .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
-                .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
-                .ForMember(d => d.Type, opts => opts.MapFrom(s => NeedsAssessmentType.Assessed))
-                .ForMember(d => d.Notes, opts => opts.ConvertUsing<NeedsAssessmentNotesConverter, NeedsAssessment>(n => n))
-                ;
-
-            CreateMap<ESS.Shared.Contracts.Submissions.NeedsAssessment, NeedsAssessment>()
-                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
-                .ForMember(d => d.EvacuationImpact, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact).SingleOrDefault().Content))
-                .ForMember(d => d.EvacuationExternalReferrals, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals).SingleOrDefault().Content))
-                .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans).SingleOrDefault().Content))
-                .ForMember(d => d.HouseHoldRecoveryPlan, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan).SingleOrDefault().Content))
                 ;
 
             CreateMap<Address, ESS.Shared.Contracts.Submissions.Address>()
@@ -307,25 +259,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
                 ;
 
-            CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
-                .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.IsRestricted))
-                .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => s.SecurityPhraseEdited))
-                .ForMember(d => d.TaskId, opts => opts.MapFrom(s => s.Task.TaskNumber))
-                .ForMember(d => d.TaskLocationCommunityCode, opts => opts.Ignore())
-                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
-                .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
-                .ForMember(d => d.TaskLocationCommunityCode, opts => opts.Ignore())
-                .AfterMap((s, d) => d.NeedsAssessment.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).LinkedRegistrantId = s.PrimaryRegistrantId)
-                ;
-
-            CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
-                .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
-                .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
-                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
-                .ForMember(d => d.Task, opts => opts.MapFrom(s => new EvacuationFileTask { TaskNumber = s.TaskId, CommunityCode = s.TaskLocationCommunityCode }))
-                ;
-
             CreateMap<ESS.Shared.Contracts.Submissions.IncidentTask, EvacuationFileTask>()
                 .ForMember(d => d.TaskNumber, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.From, opts => opts.MapFrom(s => s.StartDate))
@@ -334,7 +267,6 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<RegistrantProfile, ESS.Shared.Contracts.Submissions.RegistrantProfile>()
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.Restriction))
-                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.ContactDetails.Phone))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.ContactDetails.Email))
                 .ForMember(d => d.DateOfBirth, opts => opts.MapFrom(s => s.PersonalDetails.DateOfBirth))
@@ -345,10 +277,9 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.PersonalDetails.FirstName))
                 .ForMember(d => d.UserId, opts => opts.Ignore())
                 .ForMember(d => d.AuthenticatedUser, opts => opts.Ignore())
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
                 .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
                 .ForMember(d => d.CreatedByDisplayName, opts => opts.Ignore())
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
+                .ForMember(d => d.LastModified, opts => opts.MapFrom(s => s.ModifiedOn))
                 .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
                 .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
                 ;
