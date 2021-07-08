@@ -197,6 +197,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_essfilenoteid, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.era_notetext, opts => opts.MapFrom(s => s.Content))
                 .ForMember(d => d._era_essteamuserid_value, opts => opts.MapFrom(s => isGuid(s.CreatingTeamMemberId) ? Guid.Parse(s.CreatingTeamMemberId) : (Guid?)null))
+                .ForMember(d => d.era_ishidden, opts => opts.MapFrom(s => s.IsHidden))
                 ;
         }
 

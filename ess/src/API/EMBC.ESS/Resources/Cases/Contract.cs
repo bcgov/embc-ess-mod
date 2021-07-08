@@ -31,7 +31,7 @@ namespace EMBC.ESS.Resources.Cases
 
     public class ManageCaseCommandResult
     {
-        public string CaseId { get; set; }
+        public string Id { get; set; }
     }
 
     public abstract class CaseQuery

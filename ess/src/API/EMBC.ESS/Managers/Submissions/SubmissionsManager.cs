@@ -75,7 +75,7 @@ namespace EMBC.ESS.Managers.Submissions
             file.PrimaryRegistrantId = (await contactRepository.ManageContact(new SaveContact { Contact = contact })).ContactId;
             file.NeedsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).Single().LinkedRegistrantId = file.PrimaryRegistrantId;
 
-            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).CaseId;
+            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
 
             if (contact.Email != null)
             {
@@ -96,7 +96,7 @@ namespace EMBC.ESS.Managers.Submissions
 
             if (contact == null) throw new Exception($"Registrant not found '{file.PrimaryRegistrantId}'");
 
-            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).CaseId;
+            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
 
             if (cmd.File.SecurityPhraseChanged) await caseRepository.ManageCase(new UpdateSecurityPhrase { Id = caseId, SecurityPhrase = file.SecurityPhrase });
 
@@ -310,15 +310,27 @@ namespace EMBC.ESS.Managers.Submissions
 
         public async Task<string> Handle(SaveEvacuationFileNoteCommand cmd)
         {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
+
             var note = mapper.Map<Resources.Cases.Note>(cmd.Note);
-            var id = (await caseRepository.ManageCase(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).CaseId;
+            var id = (await caseRepository.ManageCase(new SaveEvacuationFileNote { FileId = cmd.FileId, Note = note })).Id;
             return id;
         }
 
-        public async Task<EvacuationFileNotesQueryResult> Handle(EvacuationFileNotesQuery query)
+        public async Task<EvacuationFileNotesQueryResponse> Handle(Shared.Contracts.Submissions.EvacuationFileNotesQuery query)
         {
-            await Task.CompletedTask;
-            throw new NotImplementedException();
+            var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
+            {
+                FileId = query.FileId,
+            })).Items.Cast<Resources.Cases.EvacuationFile>().FirstOrDefault();
+
+            if (file == null) throw new Exception($"Evacuation File {query.FileId} not found");
+
+            var notes = file.Notes;
+
+            if (!string.IsNullOrEmpty(query.NoteId)) notes = notes.Where(n => n.Id == query.NoteId).ToArray();
+
+            return new EvacuationFileNotesQueryResponse { Notes = mapper.Map<IEnumerable<Shared.Contracts.Submissions.Note>>(notes) };
         }
 
         public async Task<TasksSearchQueryResult> Handle(TasksSearchQuery query)
