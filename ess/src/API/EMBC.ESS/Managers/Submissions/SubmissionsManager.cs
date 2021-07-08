@@ -215,7 +215,7 @@ namespace EMBC.ESS.Managers.Submissions
                         file.NeedsAssessment.CompletedBy.TeamName = member.TeamName;
                     }
                 }
-                if (file.RelatedTask != null)
+                if (file.RelatedTask?.Id != null)
                 {
                     var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = file.RelatedTask.Id })).Items.SingleOrDefault();
                     if (task != null) file.RelatedTask = mapper.Map<IncidentTask>(task);
