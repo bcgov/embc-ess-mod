@@ -3,6 +3,7 @@ import { HouseholdMemberType } from 'src/app/core/api/models';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
@@ -20,6 +21,7 @@ export class WizardStepService {
     private cacheService: CacheService,
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
+    private evacueeProfileService: EvacueeProfileService,
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private stepEssFileService: StepEssFileService
   ) {}
@@ -107,5 +109,18 @@ export class WizardStepService {
    */
   public essFileStepFromDashboard() {
     //TODO
+  }
+
+  /**
+   * Set initial values for stepProfileService for editing the Profile when entering from Evacuee Profile Dashboard
+   */
+  public editProfileFromDashboard(profileId: string) {
+    this.evacueeProfileService
+      .getProfileFromId(profileId)
+      .subscribe((registrantProfileModel) => {
+        this.stepEvacueeProfileService.setFormValuesFromProfile(
+          registrantProfileModel
+        );
+      });
   }
 }
