@@ -5,6 +5,7 @@ import { InsuranceOption } from './insurance-option';
 import { NeedsAssessmentType } from './needs-assessment-type';
 import { Pet } from './pet';
 import { ReferralServices } from './referral-services';
+import { Support } from './support';
 
 /**
  * Needs assessment form
@@ -29,7 +30,10 @@ export interface NeedsAssessment {
   petCarePlans?: null | string;
   pets?: null | Array<Pet>;
   recommendedReferralServices?: null | Array<ReferralServices>;
+  reviewingTeamMemberDisplayName?: null | string;
+  reviewingTeamMemberId?: null | string;
   specialDietDetails?: null | string;
+  supports?: null | Array<Support>;
   takeMedication?: boolean;
   type?: NeedsAssessmentType;
 }
