@@ -38,6 +38,8 @@
           <app-list-notes
             *ngIf="!addNoteFlag"
             [notesList]="notesList"
+            (hideUnhideToggle)="hideUnhideNotes($event)"
+            (editNoteFlag)="editNote($event)"
           ></app-list-notes>
         </div>
         <div class="col-md-4">
