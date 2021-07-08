@@ -212,7 +212,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             if (evacuationFile != null)
             {
-                essContext.DeactivateObject(evacuationFile);
+                essContext.DeactivateObject(evacuationFile, (int)EvacuationFileStatus.Inactive);
                 await essContext.SaveChangesAsync();
             }
             essContext.DetachAll();
@@ -393,5 +393,11 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 if (user != null) essContext.AddLink(user, nameof(era_essteamuser.era_era_essteamuser_era_essfilenote_ESSTeamUser), note);
             }
         }
+    }
+
+    public enum EvacuationFileStatus
+    {
+        Active = 1,
+        Inactive = 2
     }
 }

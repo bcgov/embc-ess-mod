@@ -61,7 +61,6 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var caseQuery = new EvacuationFilesQuery
             {
                 PrimaryRegistrantId = primaryContact.Id,
-                //Limit = 5
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
             queryResult.Items.ShouldNotBeEmpty();
@@ -202,10 +201,10 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteEvacuationFiles()
         {
-            var registrant = await GetContactByUserId("CHRIS-TESET");
+            var registrant = await GetContactByUserId(TestUserId);
             var files = (await caseRepository.QueryCase(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items;
 
-            foreach (var file in files.OrderByDescending(f => f.CreatedOn).Skip(50))
+            foreach (var file in files.OrderByDescending(f => f.CreatedOn).Skip(10))
             {
                 await caseRepository.ManageCase(new DeleteEvacuationFile { Id = file.Id });
             }

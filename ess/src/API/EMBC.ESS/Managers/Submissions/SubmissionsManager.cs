@@ -253,7 +253,8 @@ namespace EMBC.ESS.Managers.Submissions
             var files = new ConcurrentBag<EvacuationFileSearchResult>();
             var householdMemberTasks = searchResults.MatcingHouseholdMemberIds.Select(async id =>
             {
-                var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { HouseholdMemberId = id })).Items.Single();
+                var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { HouseholdMemberId = id })).Items.SingleOrDefault();
+                if (file == null) return;
                 var mappedFile = mapper.Map<EvacuationFileSearchResult>(file);
                 //mark household members that caused a match
                 foreach (var member in mappedFile.HouseholdMembers)
