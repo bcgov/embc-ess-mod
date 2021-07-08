@@ -28,7 +28,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresDynamics)]
         public async Task CanCreateMember()
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
 
             var newMember = new TeamMember

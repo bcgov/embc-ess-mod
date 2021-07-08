@@ -42,7 +42,7 @@ namespace EMBC.ESS.Resources.Team
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.era_phone))
                 .ForMember(d => d.Role, opts => opts.MapFrom(s => Enum.GetName(typeof(TeamUserRoleOptionSet), s.era_role)))
                 .ForMember(d => d.Label, opts => opts.MapFrom(s => Enum.GetName(typeof(TeamUserLabelOptionSet), s.era_label)))
-                .ForMember(d => d.LastSuccessfulLogin, opts => opts.MapFrom(s => s.era_lastsuccessfullogin.HasValue ? s.era_lastsuccessfullogin.Value.DateTime : (DateTime?)null))
+                .ForMember(d => d.LastSuccessfulLogin, opts => opts.MapFrom(s => s.era_lastsuccessfullogin.HasValue ? s.era_lastsuccessfullogin.Value.UtcDateTime : (DateTime?)null))
                 .ForMember(d => d.AgreementSignDate, opts => opts.MapFrom(s => s.era_electronicaccessagreementaccepteddate))
                 .ForMember(d => d.IsActive, opts => opts.MapFrom(s => s.statuscode == (int)TeamMemberStatus.Active))
                 ;
