@@ -17,8 +17,6 @@ import { WizardService } from './wizard.service';
 export class WizardStepService {
   constructor(
     private wizardService: WizardService,
-    private userService: UserService,
-    private cacheService: CacheService,
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
@@ -121,6 +119,7 @@ export class WizardStepService {
         this.stepEvacueeProfileService.setFormValuesFromProfile(
           registrantProfileModel
         );
+        this.stepEvacueeProfileService.setEditTabStatus();
       });
   }
 }

@@ -36,8 +36,7 @@ export class ProfileResultsComponent
     private evacueeSearchService: EvacueeSearchService,
     private router: Router,
     private cd: ChangeDetectorRef,
-    private evacueeSessionService: EvacueeSessionService,
-    private wizardStep: WizardStepService
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -63,7 +62,6 @@ export class ProfileResultsComponent
   openProfile(selectedRegistrant: RegistrantProfileSearchResultModel): void {
     this.evacueeSessionService.profileId = selectedRegistrant.id;
     if (this.evacueeSearchService.evacueeSearchContext.hasShownIdentification) {
-      this.wizardStep.editProfileFromDashboard(selectedRegistrant.id);
       this.router.navigate([
         'responder-access/search/evacuee-profile-dashboard'
       ]);
