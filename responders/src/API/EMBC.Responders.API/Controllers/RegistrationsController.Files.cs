@@ -114,9 +114,14 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<RegistrationResult>> UpdateFile(string fileId, EvacuationFile file)
         {
             file.Id = fileId;
+            var mappedFile = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(file);
+
+            mappedFile.NeedsAssessment.CompletedOn = DateTime.UtcNow;
+            mappedFile.NeedsAssessment.CompletedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = currentUserId };
+
             var id = await messagingClient.Send(new SubmitEvacuationFileCommand
             {
-                File = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(file)
+                File = mappedFile
             });
 
             return Ok(new RegistrationResult { Id = id });
