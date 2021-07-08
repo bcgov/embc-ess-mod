@@ -23,9 +23,11 @@ export { EvacuationFileHouseholdMember } from './models/evacuation-file-househol
 export { HouseholdMemberType } from './models/household-member-type';
 export { Pet } from './models/pet';
 export { NeedsAssessmentType } from './models/needs-assessment-type';
+export { Support } from './models/support';
 export { Note } from './models/note';
 export { EvacuationFileStatus } from './models/evacuation-file-status';
 export { EvacuationFileTask } from './models/evacuation-file-task';
+export { EvacuationFileSummary } from './models/evacuation-file-summary';
 export { GetSecurityPhraseResponse } from './models/get-security-phrase-response';
 export { VerifySecurityPhraseResponse } from './models/verify-security-phrase-response';
 export { VerifySecurityPhraseRequest } from './models/verify-security-phrase-request';

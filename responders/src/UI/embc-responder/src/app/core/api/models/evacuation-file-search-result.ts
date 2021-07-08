@@ -12,4 +12,5 @@ export interface EvacuationFileSearchResult {
   modifiedOn?: string;
   status?: EvacuationFileStatus;
   taskId?: null | string;
+  taskLocationCommunityCode?: null | string;
 }
