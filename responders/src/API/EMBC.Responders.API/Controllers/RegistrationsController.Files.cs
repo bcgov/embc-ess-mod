@@ -75,7 +75,8 @@ namespace EMBC.Responders.API.Controllers
                     Detail = $"{nameof(registrantId)} is mandatory"
                 });
             }
-            var files = await evacuationSearchService.GetEvacuationFiles(registrantId);
+            var userRole = Enum.Parse<MemberRole>(currentUserRole);
+            var files = await evacuationSearchService.GetEvacuationFiles(registrantId, userRole);
 
             return Ok(files);
         }
