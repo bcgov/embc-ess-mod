@@ -136,6 +136,11 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
             var file = CreateNewTestEvacuationFile(registrant);
 
+            string developerA2TeamMemberId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
+
+            file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
+            file.NeedsAssessment.CompletedBy = new TeamMember { Id = developerA2TeamMemberId };
+
             var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
             fileId.ShouldNotBeNull();
 
@@ -165,6 +170,11 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
 
             var file = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items.Last();
+
+            string developerA2TeamMemberId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
+
+            file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
+            file.NeedsAssessment.CompletedBy = new TeamMember { Id = developerA2TeamMemberId };
 
             file.Id.ShouldNotBeNullOrEmpty();
             file.EvacuationDate.ShouldNotBe(now);
