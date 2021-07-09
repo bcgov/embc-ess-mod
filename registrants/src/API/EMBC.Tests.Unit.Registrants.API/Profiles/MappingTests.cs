@@ -68,8 +68,6 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             profile.MailingAddress.StateProvince.ShouldBe(registrantProfile.MailingAddress.StateProvince);
             profile.MailingAddress.Country.ShouldBe(registrantProfile.MailingAddress.Country);
             profile.MailingAddress.PostalCode.ShouldBe(registrantProfile.MailingAddress.PostalCode);
-
-            profile.IsMailingAddressSameAsPrimaryAddress.ShouldBe(registrantProfile.IsMailingAddressSameAsPrimaryAddress);
         }
 
         [Fact]
@@ -114,8 +112,6 @@ namespace EMBC.Tests.Unit.Registrants.API.Profiles
             registrantProfile.MailingAddress.StateProvince.ShouldBe(profile.MailingAddress.StateProvince);
             registrantProfile.MailingAddress.Country.ShouldBe(profile.MailingAddress.Country);
             registrantProfile.MailingAddress.PostalCode.ShouldBe(profile.MailingAddress.PostalCode);
-
-            registrantProfile.IsMailingAddressSameAsPrimaryAddress.ShouldBe(profile.IsMailingAddressSameAsPrimaryAddress);
         }
 
         //[Fact]
