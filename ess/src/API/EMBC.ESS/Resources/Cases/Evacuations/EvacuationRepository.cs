@@ -107,8 +107,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (needsAssessment._era_reviewedbyid_value.HasValue)
             {
                 var teamMember = essContext.era_essteamusers.ByKey(needsAssessment._era_reviewedbyid_value).GetValue();
-                essContext.AddLink(needsAssessment, nameof(era_needassessment.era_ReviewedByid), teamMember);
-                essContext.SetLink(teamMember, nameof(era_essteamuser.era_era_essteamuser_era_needassessment_ReviewedByid), needsAssessment);
+                essContext.SetLink(needsAssessment, nameof(era_needassessment.era_ReviewedByid), teamMember);
+                essContext.AddLink(teamMember, nameof(era_essteamuser.era_era_essteamuser_era_needassessment_ReviewedByid), needsAssessment);
             }
 
             foreach (var member in needsAssessment.era_era_householdmember_era_needassessment)
