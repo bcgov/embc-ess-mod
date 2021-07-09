@@ -19,7 +19,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.Json.Serialization;
-using EMBC.Registrants.API.Security;
 using EMBC.Registrants.API.SecurityModule;
 using EMBC.Registrants.API.Services;
 using EMBC.Registrants.API.Utils;
@@ -64,7 +63,6 @@ namespace EMBC.Registrants.API
             {
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
-            services.Configure<ADFSTokenProviderOptions>(configuration.GetSection("Dynamics:ADFS"));
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardLimit = 2;
@@ -101,7 +99,6 @@ namespace EMBC.Registrants.API
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
             services.AddDistributedMemoryCache(); // TODO: configure proper distributed cache
             services.AddSecurityModule();
-            services.AddADFSTokenProvider();
 
             services.Configure<MessagingOptions>(configuration.GetSection("backend"));
             services.AddMessaging();
