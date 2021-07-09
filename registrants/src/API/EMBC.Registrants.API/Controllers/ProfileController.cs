@@ -98,13 +98,12 @@ namespace EMBC.Registrants.API.Controllers
         [Authorize]
         public async Task<ActionResult<string>> Upsert(Profile profile)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (profile.Id != userId)
-            {
-                //TODO: replace with bad request response
-                profile.Id = userId;
-            }
-            var profileId = await messagingClient.Send(new SaveRegistrantCommand { Profile = mapper.Map<RegistrantProfile>(profile) });
+            profile.Id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var mappedProfile = mapper.Map<RegistrantProfile>(profile);
+            //BCSC profiles are authenticated and verified
+            mappedProfile.AuthenticatedUser = true;
+            mappedProfile.VerifiedUser = true;
+            var profileId = await messagingClient.Send(new SaveRegistrantCommand { Profile = mappedProfile });
             return Ok(profileId);
         }
 
