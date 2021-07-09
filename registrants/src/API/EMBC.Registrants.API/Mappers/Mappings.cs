@@ -61,12 +61,6 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(d => d.RecommendedReferralServices, opts => opts.Ignore())
                 .ForMember(d => d.HaveMedicalSupplies, opts => opts.Ignore())
-                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
-                .ForMember(d => d.LastModified, opts => opts.Ignore())
-                .ForMember(d => d.CreatedByDisplayName, opts => opts.Ignore())
-                .ForMember(d => d.CreatedByUserId, opts => opts.Ignore())
-                .ForMember(d => d.LastModifiedDisplayName, opts => opts.Ignore())
-                .ForMember(d => d.LastModifiedUserId, opts => opts.Ignore())
                 .ForMember(d => d.CanProvideFood, opts => opts.MapFrom(s => s.CanEvacueeProvideFood))
                 .ForMember(d => d.CanProvideLodging, opts => opts.MapFrom(s => s.CanEvacueeProvideLodging))
                 .ForMember(d => d.CanProvideClothing, opts => opts.MapFrom(s => s.CanEvacueeProvideClothing))
@@ -74,6 +68,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.CanProvideIncidentals, opts => opts.MapFrom(s => s.CanEvacueeProvideIncidentals))
                 .ForMember(d => d.TakeMedication, opts => opts.MapFrom(s => s.HaveMedication))
                 .ForMember(d => d.HavePetsFood, opts => opts.MapFrom(s => s.HasPetsFood))
+                .ForMember(d => d.CompletedBy, opts => opts.Ignore())
              ;
 
             CreateMap<HouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
@@ -82,9 +77,10 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.Details.LastName))
                 .ForMember(d => d.Gender, opts => opts.MapFrom(s => s.Details.Gender))
                 .ForMember(d => d.Initials, opts => opts.MapFrom(s => s.Details.Initials))
-                .ForMember(d => d.PreferredName, opts => opts.MapFrom(s => s.Details.PreferredName))
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
+                .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
+                .ForMember(d => d.Verified, opts => opts.Ignore())
                 ;
 
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
@@ -92,7 +88,8 @@ namespace EMBC.Registrants.API.Mappers
 
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
-                .ForMember(d => d.TaskId, opts => opts.Ignore())
+                .ForMember(d => d.RelatedTask, opts => opts.Ignore())
+                .ForMember(d => d.CreatedOn, opts => opts.Ignore())
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.Ignore())
