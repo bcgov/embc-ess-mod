@@ -22,7 +22,8 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
   // Wizard variables
-  private profileTabsVal: Array<TabModel> = WizardTabModelValues.evacueeProfileTabs;
+  private profileTabsVal: Array<TabModel> =
+    WizardTabModelValues.evacueeProfileTabs;
 
   private nextTabUpdateVal: Subject<void> = new Subject();
 
