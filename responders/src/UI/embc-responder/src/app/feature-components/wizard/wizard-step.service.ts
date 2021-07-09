@@ -38,6 +38,7 @@ export class WizardStepService {
         return;
 
       case WizardType.EditRegistration:
+        this.stepEvacueeProfileService.clearService();
         this.stepEssFileService.clearService();
         return;
 

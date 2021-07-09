@@ -54,7 +54,10 @@ export class StepEvacueeProfileService {
 
   // Review & Save tab
   private verifiedProfileVal: boolean;
+
+  // Edit Profile Flags
   private unlockedFieldsVal: boolean;
+  private authorizedUserVal: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -177,6 +180,15 @@ export class StepEvacueeProfileService {
     this.securityQuestionOptionsVal = securityQuestionOptionsVal;
   }
 
+  // Review & Save tab
+  public get verifiedProfile(): boolean {
+    return this.verifiedProfileVal;
+  }
+  public set verifiedProfile(verifiedProfileVal: boolean) {
+    this.verifiedProfileVal = verifiedProfileVal;
+  }
+
+  //Edit Profile Flags
   public get unlockedFields(): boolean {
     return this.unlockedFieldsVal;
   }
@@ -185,12 +197,12 @@ export class StepEvacueeProfileService {
     this.unlockedFieldsVal = unlockedFieldsVal;
   }
 
-  // Review & Save tab
-  public get verifiedProfile(): boolean {
-    return this.verifiedProfileVal;
+  public get authorizedUser(): boolean {
+    return this.authorizedUserVal;
   }
-  public set verifiedProfile(verifiedProfileVal: boolean) {
-    this.verifiedProfileVal = verifiedProfileVal;
+
+  public set authorizedUser(authorizedUserVal: boolean) {
+    this.authorizedUserVal = authorizedUserVal;
   }
 
   public setTabStatus(name: string, status: string): void {
@@ -318,7 +330,10 @@ export class StepEvacueeProfileService {
 
     // Review & Save tab
     this.verifiedProfile = undefined;
+
+    // Edit Profile Flags
     this.unlockedFields = undefined;
+    this.authorizedUser = undefined;
   }
 
   /**
@@ -349,6 +364,7 @@ export class StepEvacueeProfileService {
 
     this.securityQuestions = profile.securityQuestions;
     this.verifiedProfile = profile.verifiedUser;
+    this.authorizedUser = profile.authenticatedUser;
   }
 
   /**
