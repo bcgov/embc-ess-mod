@@ -10,7 +10,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-dialog',

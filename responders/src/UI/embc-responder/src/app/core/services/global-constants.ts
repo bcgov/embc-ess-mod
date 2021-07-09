@@ -142,6 +142,22 @@ export const unlockFieldsProfile: DialogContent = {
   confirmButton: 'Unlock'
 };
 
+export const hideNote: DialogContent = {
+  title: '<p class="dialog-title">Hide Note<p>',
+  text:
+    '<div class="row"><div class="col-md-12"><p>Are you sure you want to hide this note?</p><p>Hidden notes will only be viewable by Tier 3 responders and above.</p></div></div>',
+  cancelButton: 'No, Cancel',
+  confirmButton: 'Yes, Hide Note'
+};
+
+export const showNote: DialogContent = {
+  title: '<p class="dialog-title">Show Note<p>',
+  text:
+    '<div class="row"><div class="col-md-12"><p>Are you sure you want to show this note?</p><p>This note will now be viewable by all responders.</p></div></div>',
+  cancelButton: 'No, Cancel',
+  confirmButton: 'Yes, Show Note'
+};
+
 // Generic error messages
 export const genericError =
   'An error occurred while loading this page. Please refresh and try again.';
@@ -171,3 +187,9 @@ export const notesListError =
   'Unable to retrieve notes at this time. Please try again later';
 export const addNotesError =
   'Unable to add notes at this time. Please try again later';
+export const hideNoteError =
+  'Unable to hide note at this time. Please try again later';
+export const showNoteError =
+  'Unable to show note at this time. Please try again later';
+export const editNotesError =
+  'Unable to edit note at this time. Please try again later';

@@ -43,6 +43,47 @@ export class NotesComponent implements OnInit {
     this.loadNotes();
     this.addNoteFlag = !this.addNoteFlag;
     this.isAddDisabled = !this.isAddDisabled;
+    this.stepNotesService.selectedNote = {};
+  }
+
+  /**
+   * Hides/shows the note on user action
+   *
+   * @param note Note to hide/show
+   */
+  hideUnhideNotes(note: Note): void {
+    this.showLoader = !this.showLoader;
+    this.stepNotesService.hideUnhideNotes(note.id, note.isHidden).subscribe(
+      (notes) => {
+        this.showLoader = !this.showLoader;
+        const sortedNotes = notes.sort(
+          (a, b) =>
+            new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
+        );
+        this.notesList = sortedNotes;
+        this.count = notes.length;
+      },
+      (error) => {
+        this.showLoader = !this.showLoader;
+        if (note.isHidden) {
+          this.alertService.setAlert('danger', globalConst.hideNoteError);
+        } else {
+          this.alertService.setAlert('danger', globalConst.showNoteError);
+        }
+      }
+    );
+  }
+
+  /**
+   * Sets the edit view
+   *
+   * @param allowEdit true/false flag
+   */
+  editNote(allowEdit: boolean) {
+    if (allowEdit) {
+      this.addNoteFlag = !this.addNoteFlag;
+      this.isAddDisabled = !this.isAddDisabled;
+    }
   }
 
   /**
@@ -58,6 +99,7 @@ export class NotesComponent implements OnInit {
             new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
         );
         this.notesList = note;
+        console.log(note);
         this.count = notes.length;
         this.cd.detectChanges();
       },

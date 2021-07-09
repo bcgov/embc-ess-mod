@@ -59,7 +59,7 @@ namespace EMBC.Responders.API.Services
             try
             {
                 var cacheKey = generateCacheKeyName(userName);
-                var teamMember = await cache.GetOrAdd(cacheKey, async () => await GetTeamMember(sourcePrincipal), DateTimeOffset.Now.AddMinutes(10));
+                var teamMember = await cache.GetOrAdd(cacheKey, async () => await GetTeamMember(sourcePrincipal), DateTimeOffset.UtcNow.AddMinutes(10));
                 if (teamMember == null) return sourcePrincipal;
 
                 var essClaims = new[]

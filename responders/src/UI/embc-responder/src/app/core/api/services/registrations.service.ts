@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { EvacuationFile } from '../models/evacuation-file';
+import { EvacuationFileSummary } from '../models/evacuation-file-summary';
 import { GetSecurityPhraseResponse } from '../models/get-security-phrase-response';
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
 import { Note } from '../models/note';
@@ -569,6 +570,68 @@ export class RegistrationsService extends BaseService {
 
     return this.registrationsUpdateFile$Response(params).pipe(
       map((r: StrictHttpResponse<RegistrationResult>) => r.body as RegistrationResult)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsGetFiles
+   */
+  static readonly RegistrationsGetFilesPath = '/api/Registrations/files';
+
+  /**
+   * Search files.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsGetFiles()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsGetFiles$Response(params?: {
+
+    /**
+     * fileId
+     */
+    registrantId?: string;
+  }): Observable<StrictHttpResponse<Array<EvacuationFileSummary>>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsGetFilesPath, 'get');
+    if (params) {
+      rb.query('registrantId', params.registrantId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<EvacuationFileSummary>>;
+      })
+    );
+  }
+
+  /**
+   * Search files.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsGetFiles$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsGetFiles(params?: {
+
+    /**
+     * fileId
+     */
+    registrantId?: string;
+  }): Observable<Array<EvacuationFileSummary>> {
+
+    return this.registrationsGetFiles$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<EvacuationFileSummary>>) => r.body as Array<EvacuationFileSummary>)
     );
   }
 

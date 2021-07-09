@@ -21,7 +21,10 @@ export enum ActionPermission {
   canViewSummaryReports,
   canViewDetailedReports,
 
-  canViewCompletedESSFiles
+  canViewCompletedESSFiles,
+
+  canHideUnhideNotes,
+  canSeeHiddenNotes
 }
 
 export enum ModulePermission {
@@ -105,6 +108,14 @@ export class AuthorizationService {
       {
         claimType: ClaimType.action,
         claimValue: ActionPermission.canViewDetailedReports
+      },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canHideUnhideNotes
+      },
+      {
+        claimType: ClaimType.action,
+        claimValue: ActionPermission.canSeeHiddenNotes
       }
     ];
     permissionSet.tier4 = [
