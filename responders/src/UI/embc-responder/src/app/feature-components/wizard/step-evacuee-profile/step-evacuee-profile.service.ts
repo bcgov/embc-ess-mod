@@ -22,7 +22,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
   // Wizard variables
-  private profileTabsVal = WizardTabModelValues.evacueeProfileTabs;
+  private profileTabsVal: Array<TabModel> = WizardTabModelValues.evacueeProfileTabs;
 
   private nextTabUpdateVal: Subject<void> = new Subject();
 
@@ -202,14 +202,14 @@ export class StepEvacueeProfileService {
   }
 
   // TODO: To be reviewed later by Avisha
-  public setEditTabStatus(): void {
-    this.profileTabs.map((tab) => {
-      if (tab.name !== 'review') {
-        tab.status = 'complete';
-      }
-      return tab;
-    });
-  }
+  // public setEditTabStatus(): void {
+  //   this.profileTabs.map((tab) => {
+  //     if (tab.name !== 'review') {
+  //       tab.status = 'complete';
+  //     }
+  //     return tab;
+  //   });
+  // }
 
   /**
    * Determines if the tab navigation is allowed or not
