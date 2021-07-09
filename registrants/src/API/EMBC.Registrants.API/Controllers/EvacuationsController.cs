@@ -60,6 +60,7 @@ namespace EMBC.Registrants.API.Controllers
             if (registration == null) return BadRequest();
 
             var profile = mapper.Map<RegistrantProfile>(registration.RegistrationDetails);
+            //anonymous profiles are unverified and not authenticated
             profile.AuthenticatedUser = false;
             profile.VerifiedUser = false;
             var file = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(registration);

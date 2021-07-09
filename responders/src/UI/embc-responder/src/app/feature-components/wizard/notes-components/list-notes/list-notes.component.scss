@@ -1,12 +1,12 @@
-.edit-image img:last-child {
+.list-image img:last-child {
   display: none;
 }
 
-.edit-image:hover img:last-child {
+.list-image:hover img:last-child {
   display: inline;
 }
 
-.edit-image:hover img:first-child {
+.list-image:hover img:first-child {
   display: none;
 }
 
@@ -30,4 +30,12 @@
 
 .note-format {
   white-space: pre-wrap;
+}
+
+.button-margin {
+  margin: 2px
+}
+
+.image-align {
+  text-align: center;
 }

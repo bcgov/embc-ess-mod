@@ -107,7 +107,7 @@ namespace EMBC.ESS.Managers.Admin
             var alreadyAssignedCommunities = cmd.Communities.Intersect(allAssignedCommunities).ToArray();
             if (alreadyAssignedCommunities.Any()) throw new CommunitiesAlreadyAssignedException(alreadyAssignedCommunities);
 
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             var newCommunities = cmd.Communities
                 .Where(c => !team.AssignedCommunities.Any(ac => ac.Code == c))
                 .Select(c => new Resources.Team.AssignedCommunity { Code = c, DateAssigned = now });
@@ -138,7 +138,7 @@ namespace EMBC.ESS.Managers.Admin
                 member.ExternalUserId = cmd.UserId;
             }
 
-            member.LastSuccessfulLogin = DateTime.Now;
+            member.LastSuccessfulLogin = DateTime.UtcNow;
 
             await teamRepository.SaveMember(member);
 

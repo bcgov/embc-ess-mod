@@ -38,7 +38,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var team = (await teamRepository.GetTeams(teamId)).ShouldHaveSingleItem();
 
-            team.AssignedCommunities = (await metaDataRepository.GetCommunities()).Take(10).Select(c => new AssignedCommunity { Code = c.Code, DateAssigned = DateTime.Now });
+            team.AssignedCommunities = (await metaDataRepository.GetCommunities()).Take(10).Select(c => new AssignedCommunity { Code = c.Code, DateAssigned = DateTime.UtcNow });
 
             var updatedTeamId = await teamRepository.SaveTeam(team);
 
@@ -57,7 +57,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         [Fact(Skip = RequiresDynamics)]
         public async Task CanAddTeamMember()
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), DateTimeKind.Unspecified);
 
             var newTeamMember = new TeamMember
@@ -102,7 +102,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         {
             var members = await teamRepository.GetMembers(teamId);
 
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
 
             var memberToUpdate = members.First();
             memberToUpdate.AgreementSignDate.ShouldNotBe(now);
