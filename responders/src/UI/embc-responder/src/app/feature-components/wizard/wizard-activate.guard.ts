@@ -44,7 +44,11 @@ export class WizardActivateGuard implements CanActivate {
 
       return false;
     } else if (wizardType === WizardType.EditRegistration) {
-      return this.isProfileIdNotNull(registrantProfileId);
+      if (this.isProfileIdNotNull(registrantProfileId)) {
+        this.wizardStepService.editProfileFromDashboard(registrantProfileId);
+        return true;
+      }
+      return false;
     } else if (wizardType === WizardType.NewEssFile) {
       return this.isProfileIdNotNull(registrantProfileId);
     } else if (wizardType === WizardType.MemberRegistration) {
