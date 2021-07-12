@@ -26,7 +26,7 @@ import { UserService } from 'src/app/core/services/user.service';
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
   // Wizard variables
-  private essTabsVal: Array<TabModel> = WizardTabModelValues.essFileTabs;
+  private essTabsVal: Array<TabModel>;
   private nextTabUpdateVal: Subject<void> = new Subject();
 
   // Important values not set on form
@@ -340,7 +340,7 @@ export class StepEssFileService {
    * @param status of the tab
    */
   public setTabStatus(name: string, status: string): void {
-    this.essTabsVal.map((tab) => {
+    this.essTabs.map((tab) => {
       if (tab.name === name) {
         tab.status = status;
       }
@@ -432,6 +432,10 @@ export class StepEssFileService {
    * Reset all values in this service to defaults
    */
   public clearService() {
+    if (this.essTabs) {
+      this.essTabs.length = 0;
+    }
+
     // Wizard variables
     this.nextTabUpdate.next(null);
 
@@ -592,7 +596,7 @@ export class StepEssFileService {
    * @returns true/false
    */
   checkTabsStatus(): boolean {
-    return this.essTabsVal.some(
+    return this.essTabs.some(
       (tab) =>
         (tab.status === 'not-started' || tab.status === 'incomplete') &&
         tab.name !== 'review'

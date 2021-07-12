@@ -120,7 +120,7 @@ export class WizardStepService {
         this.stepEvacueeProfileService.setFormValuesFromProfile(
           registrantProfileModel
         );
-        //this.stepEvacueeProfileService.setEditTabStatus();
+        this.stepEvacueeProfileService.setEditTabStatus();
       });
   }
 }

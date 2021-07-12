@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TabModel } from 'src/app/core/models/tab.model';
+import { WizardDataService } from '../wizard-data.service';
 import { StepEssFileService } from './step-ess-file.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class StepEssFileComponent {
 
   constructor(
     private router: Router,
-    private stepEssFileService: StepEssFileService
+    private stepEssFileService: StepEssFileService,
+    private wizardDataService: WizardDataService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -25,6 +27,7 @@ export class StepEssFileComponent {
         };
         this.stepId = state.step;
         this.stepName = state.title;
+        this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
       }
     }
     this.tabs = this.stepEssFileService.essTabs;

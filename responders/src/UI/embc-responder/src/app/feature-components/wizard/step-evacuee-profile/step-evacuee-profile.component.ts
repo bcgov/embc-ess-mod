@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { TabModel } from 'src/app/core/models/tab.model';
+import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
 import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepEvacueeProfileService } from './step-evacuee-profile.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { WizardDataService } from '../wizard-data.service';
 
 @Component({
   selector: 'app-step-evacuee-profile',
@@ -23,7 +24,8 @@ export class StepEvacueeProfileComponent {
     private router: Router,
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private securityQuestionsService: SecurityQuestionsService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private wizardDataService: WizardDataService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -33,6 +35,7 @@ export class StepEvacueeProfileComponent {
         };
         this.stepId = state.step;
         this.stepName = state.title;
+        this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
       }
     }
     this.tabs = this.stepEvacueeProfileService.profileTabs;
