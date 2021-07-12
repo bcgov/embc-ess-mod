@@ -14,8 +14,7 @@ import { WizardService } from '../../wizard.service';
 
 import * as globalConst from 'src/app/core/services/global-constants';
 import { Community } from 'src/app/core/services/locations.service';
-import { RegistrantProfile } from 'src/app/core/api/models';
-import { WizardStepService } from '../../wizard-step.service';
+import { WizardAdapterService } from '../../wizard-adapter.service';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 
 @Component({
@@ -36,7 +35,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private wizardService: WizardService,
-    private wizardStepService: WizardStepService,
+    private wizardAdapterService: WizardAdapterService,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
@@ -109,7 +108,9 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
               .afterClosed()
               .subscribe(() => {
                 this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
-                this.wizardStepService.essFileStepFromProfileCreation(profile);
+                this.wizardAdapterService.essFileStepFromProfileCreation(
+                  profile
+                );
 
                 this.router.navigate(['/ess-wizard/ess-file'], {
                   state: { step: 'STEP 2', title: 'Create ESS File' }
