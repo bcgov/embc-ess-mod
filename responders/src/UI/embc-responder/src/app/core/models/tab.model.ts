@@ -7,11 +7,4 @@ export interface TabModel {
 
 export class WizardTabModelValues {
 
-  static notesTab: Array<TabModel> = [
-    {
-      label: 'Notes',
-      route: 'notes',
-      name: 'notes'
-    }
-  ];
 }

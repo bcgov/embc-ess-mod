@@ -7,6 +7,88 @@ import * as globalConst from '../../core/services/global-constants';
   providedIn: 'root'
 })
 export class WizardDataService {
+  /**
+   * Creates the profile tabs to load
+   * @returns profile tab array
+   */
+  public createNewProfileSteps(): Array<TabModel> {
+    const profileTabs: Array<TabModel> = new Array<TabModel>();
+    let tab: TabModel;
+    for (const tabs of this.evacueeProfileTabs) {
+      profileTabs.push({ ...tab, ...tabs });
+    }
+    return profileTabs;
+  }
+
+  /**
+   * Creates the ess files tabs to load
+   * @returns essFile tab array
+   */
+  public createNewESSFileSteps(): Array<TabModel> {
+    const essFileTabs: Array<TabModel> = new Array<TabModel>();
+    let tab: TabModel;
+    for (const tabs of this.essFileTabs) {
+      essFileTabs.push({ ...tab, ...tabs });
+    }
+    return essFileTabs;
+  }
+
+  /**
+   * Creates new registration menu
+   * @returns side menu array
+   */
+  public createNewRegistrationMenu(): Array<WizardSidenavModel> {
+    const newRegMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.newRegistrationMenu) {
+      newRegMenu.push({ ...menuItems, ...menu });
+    }
+    return newRegMenu;
+  }
+
+  /**
+   * Creates new ess file menu
+   * @returns side menu array
+   */
+  public createNewESSFileMenu(): Array<WizardSidenavModel> {
+    const newEssMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.newESSFileMenu) {
+      newEssMenu.push({ ...menuItems, ...menu });
+    }
+    return newEssMenu;
+  }
+
+  /**
+   * Creates edit profile menu
+   * @returns side menu array
+   */
+  public createEditProfileMenu(): Array<WizardSidenavModel> {
+    const editProfileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.editProfileMenu) {
+      editProfileMenu.push({ ...menuItems, ...menu });
+    }
+    return editProfileMenu;
+  }
+
+  public createNotesSteps(): Array<TabModel> {
+    const notesTab: Array<TabModel> = new Array<TabModel>();
+    let tab: TabModel;
+    for (const tabs of this.notesTab) {
+      notesTab.push({ ...tab, ...tabs });
+    }
+    return notesTab;
+  }
+
+  private notesTab: Array<TabModel> = [
+    {
+      label: 'Notes',
+      route: 'notes',
+      name: 'notes'
+    }
+  ];
+
   private evacueeProfileTabs: Array<TabModel> = [
     {
       label: 'Collection Notice',
@@ -91,24 +173,6 @@ export class WizardDataService {
     }
   ];
 
-  public createNewProfileSteps(): Array<TabModel> {
-    const profileTabs: Array<TabModel> = new Array<TabModel>();
-    let tab: TabModel;
-    for (const tabs of this.evacueeProfileTabs) {
-      profileTabs.push({ ...tab, ...tabs });
-    }
-    return profileTabs;
-  }
-
-  public createNewESSFileSteps(): Array<TabModel> {
-    const essFileTabs: Array<TabModel> = new Array<TabModel>();
-    let tab: TabModel;
-    for (const tabs of this.essFileTabs) {
-      essFileTabs.push({ ...tab, ...tabs });
-    }
-    return essFileTabs;
-  }
-
   private newRegistrationMenu: Array<WizardSidenavModel> = [
     {
       step: 'STEP 1',
@@ -161,33 +225,6 @@ export class WizardDataService {
       }
     }
   ];
-
-  public createNewRegistrationMenu(): Array<WizardSidenavModel> {
-    const newRegMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
-    let menuItems: WizardSidenavModel;
-    for (const menu of this.newRegistrationMenu) {
-      newRegMenu.push({ ...menuItems, ...menu });
-    }
-    return newRegMenu;
-  }
-
-  public createNewESSFileMenu(): Array<WizardSidenavModel> {
-    const newEssMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
-    let menuItems: WizardSidenavModel;
-    for (const menu of this.newESSFileMenu) {
-      newEssMenu.push({ ...menuItems, ...menu });
-    }
-    return newEssMenu;
-  }
-
-  public createEditProfileMenu(): Array<WizardSidenavModel> {
-    const editProfileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
-    let menuItems: WizardSidenavModel;
-    for (const menu of this.editProfileMenu) {
-      editProfileMenu.push({ ...menuItems, ...menu });
-    }
-    return editProfileMenu;
-  }
 
   private newESSFileMenu: Array<WizardSidenavModel> = [
     {

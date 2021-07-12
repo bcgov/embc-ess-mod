@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
+import { TabModel } from 'src/app/core/models/tab.model';
 import { SecurityQuestionsService } from 'src/app/core/services/security-questions.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepEvacueeProfileService } from './step-evacuee-profile.service';
