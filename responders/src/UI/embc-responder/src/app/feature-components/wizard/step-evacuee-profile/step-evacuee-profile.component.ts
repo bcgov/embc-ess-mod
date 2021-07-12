@@ -6,6 +6,7 @@ import { SecurityQuestionsService } from 'src/app/core/services/security-questio
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepEvacueeProfileService } from './step-evacuee-profile.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { WizardDataService } from '../wizard-data.service';
 
 @Component({
   selector: 'app-step-evacuee-profile',
@@ -23,7 +24,8 @@ export class StepEvacueeProfileComponent {
     private router: Router,
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private securityQuestionsService: SecurityQuestionsService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private wizardDataService: WizardDataService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -33,6 +35,9 @@ export class StepEvacueeProfileComponent {
         };
         this.stepId = state.step;
         this.stepName = state.title;
+        if (!this.stepEvacueeProfileService.profileTabs) {
+          this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
+        }
       }
     }
     this.tabs = this.stepEvacueeProfileService.profileTabs;

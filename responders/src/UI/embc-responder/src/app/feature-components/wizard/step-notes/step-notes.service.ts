@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Note, RegistrationResult } from 'src/app/core/api/models';
 import { RegistrationsService } from 'src/app/core/api/services';
-import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
+import { TabModel } from 'src/app/core/models/tab.model';
 import {
   ActionPermission,
   ClaimType
@@ -13,7 +13,7 @@ import { UserService } from 'src/app/core/services/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepNotesService {
-  private notesTabVal: Array<TabModel> = WizardTabModelValues.notesTab;
+  private notesTabVal: Array<TabModel>;
   private selectedNoteVal: Note;
 
   constructor(

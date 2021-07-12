@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TabModel } from 'src/app/core/models/tab.model';
+import { WizardDataService } from '../wizard-data.service';
 import { StepNotesService } from './step-notes.service';
 
 @Component({
@@ -14,7 +15,8 @@ export class StepNotesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private stepNotesService: StepNotesService
+    private stepNotesService: StepNotesService,
+    private wizardDataService: WizardDataService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -23,6 +25,9 @@ export class StepNotesComponent implements OnInit {
           title: string;
         };
         this.stepName = state.title;
+        if (!this.stepNotesService.notesTab) {
+          this.stepNotesService.notesTab = this.wizardDataService.createNotesSteps();
+        }
       }
     }
     this.tabs = this.stepNotesService.notesTab;

@@ -11,7 +11,7 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
-import { WizardStepService } from './wizard-step.service';
+import { WizardAdapterService } from './wizard-adapter.service';
 
 @Injectable({ providedIn: 'root' })
 export class WizardActivateGuard implements CanActivate {
@@ -19,7 +19,7 @@ export class WizardActivateGuard implements CanActivate {
     private cacheService: CacheService,
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
-    private wizardStepService: WizardStepService,
+    private wizardAdapterService: WizardAdapterService,
     private router: Router
   ) {}
 
@@ -37,7 +37,7 @@ export class WizardActivateGuard implements CanActivate {
 
     if (wizardType === WizardType.NewRegistration) {
       if (this.isNewRegistrationAllowed(loggedInTask)) {
-        this.wizardStepService.evacueeProfileStepFromSearch();
+        this.wizardAdapterService.evacueeProfileStepFromSearch();
 
         return true;
       }
@@ -45,7 +45,7 @@ export class WizardActivateGuard implements CanActivate {
       return false;
     } else if (wizardType === WizardType.EditRegistration) {
       if (this.isProfileIdNotNull(registrantProfileId)) {
-        this.wizardStepService.editProfileFromDashboard(registrantProfileId);
+        this.wizardAdapterService.editProfileFromDashboard(registrantProfileId);
         return true;
       }
       return false;
