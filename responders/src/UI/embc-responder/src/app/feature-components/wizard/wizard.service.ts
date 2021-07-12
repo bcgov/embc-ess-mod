@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Address } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
-import {
-  WizardSidenavModel,
-  WizardSidenavModelValues
-} from 'src/app/core/models/wizard-sidenav.model';
+import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { Community } from 'src/app/core/services/locations.service';
+import { WizardDataService } from './wizard-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class WizardService {
   private sideMenuItems: Array<WizardSidenavModel>;
 
-  constructor(private cacheService: CacheService) {}
+  constructor(
+    private cacheService: CacheService,
+    private wizardDataService: WizardDataService
+  ) {}
 
   public get menuItems(): Array<WizardSidenavModel> {
     if (this.sideMenuItems === null || this.sideMenuItems === undefined)
@@ -28,11 +29,11 @@ export class WizardService {
 
   public setDefaultMenuItems(type: string): void {
     if (type === WizardType.NewRegistration) {
-      this.menuItems = WizardSidenavModelValues.newRegistrationMenu;
+      this.menuItems = this.wizardDataService.createNewRegistrationMenu();
     } else if (type === WizardType.NewEssFile) {
-      this.menuItems = WizardSidenavModelValues.newESSFileMenu;
-    } else if (type === 'edit-registration') {
-      this.menuItems = WizardSidenavModelValues.editProfileMenu;
+      this.menuItems = this.wizardDataService.createNewESSFileMenu();
+    } else if (type === WizardType.EditRegistration) {
+      this.menuItems = this.wizardDataService.createEditProfileMenu();
     }
   }
 

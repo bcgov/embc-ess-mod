@@ -38,6 +38,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   tabUpdateSubscription: Subscription;
   editFlag: boolean;
   verifiedProfile: boolean;
+  authorizedUser: boolean;
   showLockIcon = true;
   showUnlockLink = false;
 
@@ -53,6 +54,7 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.editFlag = this.evacueeSessionService.getEditWizardFlag();
     this.verifiedProfile = this.stepEvacueeProfileService.verifiedProfile;
+    this.authorizedUser = this.stepEvacueeProfileService.authorizedUser;
 
     this.createEvacueeDetailsForm();
     this.initDisabledFields();
@@ -175,28 +177,30 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
    * Function that determines whether firstName, lastName and DoB fields should be disabled or not
    */
   private initDisabledFields(): void {
-    // If component is opened as a new profile or edit and verified profile
-    if (
-      (this.editFlag && !this.verifiedProfile) ||
-      (this.editFlag && this.stepEvacueeProfileService.unlockedFields)
-    ) {
-      // If the profile is been edited and the evacuee is unverified
-      this.evacueeDetailsForm.get('firstName').enable();
-      this.evacueeDetailsForm.get('lastName').enable();
-      this.evacueeDetailsForm.get('dateOfBirth').enable();
-      this.showLockIcon = false;
-    } else if (
-      (!this.editFlag && this.verifiedProfile === undefined) ||
-      (this.editFlag && this.verifiedProfile)
-    ) {
+    if (this.editFlag) {
+      if (this.stepEvacueeProfileService.unlockedFields) {
+        this.showLockIcon = false;
+        this.showUnlockLink = false;
+      } else if (this.verifiedProfile) {
+        this.evacueeDetailsForm.get('firstName').disable();
+        this.evacueeDetailsForm.get('lastName').disable();
+        this.evacueeDetailsForm.get('dateOfBirth').disable();
+        this.showLockIcon = true;
+        this.showUnlockLink = true;
+      } else if (this.authorizedUser) {
+        this.evacueeDetailsForm.get('firstName').disable();
+        this.evacueeDetailsForm.get('lastName').disable();
+        this.evacueeDetailsForm.get('dateOfBirth').disable();
+        this.showLockIcon = true;
+      } else {
+        this.showLockIcon = false;
+        this.showUnlockLink = false;
+      }
+    } else {
       this.evacueeDetailsForm.get('firstName').disable();
       this.evacueeDetailsForm.get('lastName').disable();
       this.evacueeDetailsForm.get('dateOfBirth').disable();
       this.showLockIcon = true;
-
-      if (this.editFlag && this.verifiedProfile) {
-        this.showUnlockLink = true;
-      }
     }
   }
 }

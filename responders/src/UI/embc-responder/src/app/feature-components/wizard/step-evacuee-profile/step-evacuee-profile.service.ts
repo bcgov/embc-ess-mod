@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as globalConst from '../../../core/services/global-constants';
-import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
+import { TabModel } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
@@ -21,8 +21,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
   // Wizard variables
-  private profileTabsVal: Array<TabModel> =
-    WizardTabModelValues.evacueeProfileTabs;
+  private profileTabsVal: Array<TabModel>;
 
   private nextTabUpdateVal: Subject<void> = new Subject();
 
@@ -45,7 +44,10 @@ export class StepEvacueeProfileService {
   private showContactVal: boolean;
   private contactDetailsVal: ContactDetails;
   private confirmEmailVal: string;
+
+  // Edit Profile Flags for Contact tab
   private unlockedFieldsVal: boolean;
+  private authorizedUserVal: boolean;
 
   // Security Questions tab
   private bypassSecurityQuestionsVal: boolean;
@@ -157,12 +159,21 @@ export class StepEvacueeProfileService {
     this.confirmEmailVal = confirmEmailVal;
   }
 
+  // Edit Profile Flags for Contact tab
   public get unlockedFields(): boolean {
     return this.unlockedFieldsVal;
   }
 
   public set unlockedFields(unlockedFieldsVal: boolean) {
     this.unlockedFieldsVal = unlockedFieldsVal;
+  }
+
+  public get authorizedUser(): boolean {
+    return this.authorizedUserVal;
+  }
+
+  public set authorizedUser(authorizedUserVal: boolean) {
+    this.authorizedUserVal = authorizedUserVal;
   }
 
   // Security Questions tab
@@ -219,14 +230,14 @@ export class StepEvacueeProfileService {
   }
 
   // TODO: To be reviewed later by Avisha
-  // public setEditTabStatus(): void {
-  //   this.profileTabs.map((tab) => {
-  //     if (tab.name !== 'review') {
-  //       tab.status = 'complete';
-  //     }
-  //     return tab;
-  //   });
-  // }
+  public setEditTabStatus(): void {
+    this.profileTabs.map((tab) => {
+      if (tab.name !== 'review') {
+        tab.status = 'complete';
+      }
+      return tab;
+    });
+  }
 
   /**
    * Determines if the tab navigation is allowed or not
@@ -309,6 +320,9 @@ export class StepEvacueeProfileService {
    * Reset all values in this service to defaults
    */
   public clearService() {
+    if (this.profileTabs) {
+      this.profileTabs.length = 0;
+    }
     // Wizard variables
     this.nextTabUpdate.next(null);
 
@@ -331,7 +345,10 @@ export class StepEvacueeProfileService {
     this.showContact = undefined;
     this.contactDetails = undefined;
     this.confirmEmail = undefined;
+
+    // Edit Profile Flags for Contact tab
     this.unlockedFields = undefined;
+    this.authorizedUser = undefined;
 
     // Security Questions tab
     this.bypassSecurityQuestions = undefined;
@@ -391,6 +408,7 @@ export class StepEvacueeProfileService {
 
     // Review & Save tab
     this.verifiedProfile = profile.verifiedUser;
+    this.authorizedUser = profile.authenticatedUser;
   }
 
   /**

@@ -14,11 +14,11 @@ import { WizardService } from '../../wizard.service';
 
 import * as globalConst from 'src/app/core/services/global-constants';
 import { Community } from 'src/app/core/services/locations.service';
-import { RegistrantProfile, SecurityQuestion } from 'src/app/core/api/models';
-import { WizardStepService } from '../../wizard-step.service';
+import { WizardAdapterService } from '../../wizard-adapter.service';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { SecurityQuestion } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-profile-review',
@@ -40,7 +40,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private wizardService: WizardService,
-    private wizardStepService: WizardStepService,
+    private wizardAdapterService: WizardAdapterService,
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
@@ -121,7 +121,9 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
                     '/ess-wizard/ess-file',
                     false
                   );
-                  this.wizardStepService.createEssFileFromProfileStep(profile);
+                  this.wizardAdapterService.createEssFileFromProfileStep(
+                    profile
+                  );
 
                   this.router.navigate(['/ess-wizard/ess-file'], {
                     state: { step: 'STEP 2', title: 'Create ESS File' }
@@ -162,7 +164,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
                         '/ess-wizard/ess-file',
                         false
                       );
-                      this.wizardStepService.createEssFileFromProfileStep(
+                      this.wizardAdapterService.createEssFileFromProfileStep(
                         profile
                       );
 

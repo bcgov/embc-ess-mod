@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { HouseholdMemberType } from 'src/app/core/api/models';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
 import { StepEssFileService } from './step-ess-file/step-ess-file.service';
 import { StepEvacueeProfileService } from './step-evacuee-profile/step-evacuee-profile.service';
@@ -14,7 +12,7 @@ import { WizardService } from './wizard.service';
 @Injectable({
   providedIn: 'root'
 })
-export class WizardStepService {
+export class WizardAdapterService {
   constructor(
     private wizardService: WizardService,
     private evacueeSearchService: EvacueeSearchService,
@@ -38,6 +36,7 @@ export class WizardStepService {
         return;
 
       case WizardType.EditRegistration:
+        this.stepEvacueeProfileService.clearService();
         this.stepEssFileService.clearService();
         return;
 
@@ -75,7 +74,7 @@ export class WizardStepService {
   }
 
   /**
-   * Set initial values for Edit Registrant Profile (stepEvacueeProfileService) when entering from Evacuee Profile Dashboard
+   * Set initial values for stepProfileService for editing the Profile when entering from Evacuee Profile Dashboard
    */
   public editProfileFromDashboard(profileId: string) {
     this.evacueeProfileService
@@ -84,7 +83,7 @@ export class WizardStepService {
         this.stepEvacueeProfileService.setFormValuesFromProfile(
           registrantProfileModel
         );
-        //this.stepEvacueeProfileService.setEditTabStatus();
+        this.stepEvacueeProfileService.setEditTabStatus();
       });
   }
 
