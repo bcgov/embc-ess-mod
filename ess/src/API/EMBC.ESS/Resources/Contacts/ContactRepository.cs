@@ -76,11 +76,11 @@ namespace EMBC.ESS.Resources.Contacts
                 essContext.UpdateObject(contact);
             }
             essContext.AddLink(essContext.LookupCountryByCode(cmd.Contact.PrimaryAddress.Country), nameof(era_country.era_contact_Country), contact);
-            SetStateProvinceLink(cmd.Contact.PrimaryAddress.StateProvince, nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact, existingContact?.era_ProvinceState?.era_code.ToString());
+            SetStateProvinceLink(cmd.Contact.PrimaryAddress.StateProvince, nameof(era_provinceterritories.era_provinceterritories_contact_ProvinceState), contact, existingContact?._era_provincestate_value?.ToString());
             SetJurisdictionLink(cmd.Contact.PrimaryAddress.Community, nameof(era_jurisdiction.era_jurisdiction_contact_City), contact, existingContact?._era_city_value?.ToString());
 
             essContext.AddLink(essContext.LookupCountryByCode(cmd.Contact.MailingAddress.Country), nameof(era_country.era_country_contact_MailingCountry), contact);
-            SetStateProvinceLink(cmd.Contact.MailingAddress.StateProvince, nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact, existingContact?.era_MailingProvinceState?.era_code.ToString());
+            SetStateProvinceLink(cmd.Contact.MailingAddress.StateProvince, nameof(era_provinceterritories.era_provinceterritories_contact_MailingProvinceState), contact, existingContact?._era_mailingprovincestate_value?.ToString());
             SetJurisdictionLink(cmd.Contact.MailingAddress.Community, nameof(era_jurisdiction.era_jurisdiction_contact_MailingCity), contact, existingContact?._era_mailingcity_value?.ToString());
 
             var results = await essContext.SaveChangesAsync();
@@ -142,7 +142,7 @@ namespace EMBC.ESS.Resources.Contacts
             }
             else
             {
-                stateProvince = essContext.LookupStateProvinceByCode(oldCode);
+                stateProvince = essContext.LookupStateProvinceById(oldCode);
                 if (stateProvince != null)
                 {
                     essContext.DeleteLink(stateProvince, sourceProperty, target);

@@ -258,9 +258,15 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                 : "Vancouver";
             //newCity = null;
 
+            var currentProvince = registrant.PrimaryAddress.StateProvince;
+            var newProvince = currentProvince == "BC"
+                ? "AB"
+                : "BC";
+
             registrant.Email = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
             registrant.PrimaryAddress.Community = newCommunity;
             registrant.PrimaryAddress.City = newCity;
+            registrant.PrimaryAddress.StateProvince = newProvince;
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
