@@ -35,7 +35,9 @@ export class StepEvacueeProfileComponent {
         };
         this.stepId = state.step;
         this.stepName = state.title;
-        this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
+        if (!this.stepEvacueeProfileService.profileTabs) {
+          this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
+        }
       }
     }
     this.tabs = this.stepEvacueeProfileService.profileTabs;

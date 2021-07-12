@@ -27,7 +27,9 @@ export class StepEssFileComponent {
         };
         this.stepId = state.step;
         this.stepName = state.title;
-        this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
+        if (!this.stepEssFileService.essTabs) {
+          this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
+        }
       }
     }
     this.tabs = this.stepEssFileService.essTabs;
