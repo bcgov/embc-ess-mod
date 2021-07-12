@@ -60,9 +60,9 @@ export class WizardStepService {
   }
 
   /**
-   * Set initial values for stepEvacueeProfileService when entering from Evacuee Search
+   * Set initial values for Create Registrant Profile (stepEvacueeProfileService) when entering from Evacuee Search
    */
-  public evacueeProfileStepFromSearch() {
+  public createProfileFromSearch() {
     this.stepEvacueeProfileService.personalDetails = {
       ...this.stepEvacueeProfileService.personalDetails,
       firstName: this.evacueeSearchService.evacueeSearchContext
@@ -75,16 +75,23 @@ export class WizardStepService {
   }
 
   /**
-   * Set initial values for stepEvacueeProfileService when entering from Evacuee Profile Dashboard
+   * Set initial values for Edit Registrant Profile (stepEvacueeProfileService) when entering from Evacuee Profile Dashboard
    */
-  public evacueeProfileStepFromDashboard() {
-    //TODO
+  public editProfileFromDashboard(profileId: string) {
+    this.evacueeProfileService
+      .getProfileFromId(profileId)
+      .subscribe((registrantProfileModel) => {
+        this.stepEvacueeProfileService.setFormValuesFromProfile(
+          registrantProfileModel
+        );
+        //this.stepEvacueeProfileService.setEditTabStatus();
+      });
   }
 
   /**
-   * Set initial values for stepEssFileService after ceating new profile on wizard
+   * Set initial values for Create ESS File (stepEssFileService) after creating/updating profile on wizard
    */
-  public essFileStepFromProfileCreation(profile: RegistrantProfileModel) {
+  public createEssFileFromProfileStep(profile: RegistrantProfileModel) {
     this.evacueeSessionService.profileId = profile.id;
     this.stepEssFileService.primaryAddress = this.wizardService.setAddressObjectForForm(
       profile.primaryAddress
@@ -103,23 +110,9 @@ export class WizardStepService {
   }
 
   /**
-   * Set initial values for stepEssFileService when entering from Evacuee Profile Dashboard
+   * Set initial values for Create ESS File (stepEssFileService) when entering from Evacuee Profile Dashboard
    */
-  public essFileStepFromDashboard() {
+  public createEssFileFromDashboard() {
     //TODO
-  }
-
-  /**
-   * Set initial values for stepProfileService for editing the Profile when entering from Evacuee Profile Dashboard
-   */
-  public editProfileFromDashboard(profileId: string) {
-    this.evacueeProfileService
-      .getProfileFromId(profileId)
-      .subscribe((registrantProfileModel) => {
-        this.stepEvacueeProfileService.setFormValuesFromProfile(
-          registrantProfileModel
-        );
-        //this.stepEvacueeProfileService.setEditTabStatus();
-      });
   }
 }
