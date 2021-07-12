@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
+import { TabModel } from 'src/app/core/models/tab.model';
 import * as globalConst from '../../../core/services/global-constants';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
