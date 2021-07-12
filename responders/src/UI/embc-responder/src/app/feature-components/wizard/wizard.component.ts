@@ -108,9 +108,8 @@ export class WizardComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((event) => {
         if (event === 'confirm') {
-          this.router
-            .navigate([navigateTo])
-            //.then(() => this.wizardStepService.clearWizard());
+          this.router.navigate([navigateTo]);
+          //.then(() => this.wizardStepService.clearWizard());
         }
       });
   }

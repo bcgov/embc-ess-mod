@@ -108,7 +108,9 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
               .afterClosed()
               .subscribe(() => {
                 this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
-                this.wizardAdapterService.essFileStepFromProfileCreation(profile);
+                this.wizardAdapterService.essFileStepFromProfileCreation(
+                  profile
+                );
 
                 this.router.navigate(['/ess-wizard/ess-file'], {
                   state: { step: 'STEP 2', title: 'Create ESS File' }

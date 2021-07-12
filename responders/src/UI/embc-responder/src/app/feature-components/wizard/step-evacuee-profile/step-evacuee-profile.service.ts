@@ -298,8 +298,8 @@ export class StepEvacueeProfileService {
    * Reset all values in this service to defaults
    */
   public clearService() {
-    if(this.profileTabs) {
-      this.profileTabs.length = 0
+    if (this.profileTabs) {
+      this.profileTabs.length = 0;
     }
     // Wizard variables
     this.nextTabUpdate.next(null);
