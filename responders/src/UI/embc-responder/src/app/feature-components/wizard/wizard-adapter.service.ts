@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { HouseholdMemberType } from 'src/app/core/api/models';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
-import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
 import { StepEssFileService } from './step-ess-file/step-ess-file.service';
 import { StepEvacueeProfileService } from './step-evacuee-profile/step-evacuee-profile.service';
@@ -14,7 +12,7 @@ import { WizardService } from './wizard.service';
 @Injectable({
   providedIn: 'root'
 })
-export class WizardStepService {
+export class WizardAdapterService {
   constructor(
     private wizardService: WizardService,
     private evacueeSearchService: EvacueeSearchService,

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { WizardActivateGuard } from './feature-components/wizard/wizard-activate.guard';
+import { WizardDeactivateGuard } from './feature-components/wizard/wizard-deactivate.guard';
 import { AccessDeniedComponent } from './shared/error-handling/access-denied/access-denied.component';
 
 const routes: Routes = [
@@ -24,8 +25,8 @@ const routes: Routes = [
       import('./feature-components/wizard/wizard.module').then(
         (m) => m.WizardModule
       ),
-    canActivate: [WizardActivateGuard]
-    //runGuardsAndResolvers: ''
+    canActivate: [WizardActivateGuard],
+    canDeactivate: [WizardDeactivateGuard]
   },
   {
     path: 'access-denied',

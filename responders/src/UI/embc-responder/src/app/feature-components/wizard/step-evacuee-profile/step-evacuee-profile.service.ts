@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as globalConst from '../../../core/services/global-constants';
-import { TabModel, WizardTabModelValues } from 'src/app/core/models/tab.model';
+import { TabModel } from 'src/app/core/models/tab.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import {
-  Address,
   ContactDetails,
   RegistrantProfile,
   PersonDetails,

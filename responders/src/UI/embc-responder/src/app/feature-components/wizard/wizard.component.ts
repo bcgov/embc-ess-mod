@@ -9,7 +9,6 @@ import { WizardService } from './wizard.service';
 import { Subscription } from 'rxjs';
 import * as globalConst from '../../core/services/global-constants';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
-import { WizardStepService } from './wizard-step.service';
 
 @Component({
   selector: 'app-wizard',
@@ -23,7 +22,6 @@ export class WizardComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private wizardService: WizardService,
-    private wizardStepService: WizardStepService,
     private cacheService: CacheService,
     private dialog: MatDialog,
     private route: ActivatedRoute
@@ -112,7 +110,7 @@ export class WizardComponent implements OnInit, OnDestroy {
         if (event === 'confirm') {
           this.router
             .navigate([navigateTo])
-            .then(() => this.wizardStepService.clearWizard());
+            //.then(() => this.wizardStepService.clearWizard());
         }
       });
   }
