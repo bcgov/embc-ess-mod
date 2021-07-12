@@ -4,7 +4,3 @@ export interface TabModel {
   name?: string;
   status?: string;
 }
-
-export class WizardTabModelValues {
-
-}
