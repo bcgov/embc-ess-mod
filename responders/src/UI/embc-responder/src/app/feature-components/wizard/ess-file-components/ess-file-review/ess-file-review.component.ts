@@ -125,7 +125,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
           this.saveLoader = false;
 
           this.stepEssFileService
-            .openModal(globalConst.essFileCreatedMessage)
+            .openModal(globalConst.newRegWizardEssFileCreatedMessage)
             .afterClosed()
             .subscribe((event) => {
               this.wizardService.setStepStatus(
