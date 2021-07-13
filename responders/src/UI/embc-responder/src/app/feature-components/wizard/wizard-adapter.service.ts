@@ -61,7 +61,7 @@ export class WizardAdapterService {
   /**
    * Set initial values for Create Registrant Profile (stepEvacueeProfileService) when entering from Evacuee Search
    */
-  public createProfileFromSearch() {
+  public stepCreateProfileFromSearch() {
     this.stepEvacueeProfileService.personalDetails = {
       ...this.stepEvacueeProfileService.personalDetails,
       firstName: this.evacueeSearchService.evacueeSearchContext
@@ -74,9 +74,9 @@ export class WizardAdapterService {
   }
 
   /**
-   * Set initial values for stepProfileService for editing the Profile when entering from Evacuee Profile Dashboard
+   * Set initial values for Edit Registrant Profile (stepProfileService), from an Evacuee Profile ID
    */
-  public editProfileFromDashboard(profileId: string) {
+  public stepEditProfileFromProfileId(profileId: string) {
     this.evacueeProfileService
       .getProfileFromId(profileId)
       .subscribe((registrantProfileModel) => {
@@ -88,9 +88,20 @@ export class WizardAdapterService {
   }
 
   /**
-   * Set initial values for Create ESS File (stepEssFileService) after creating/updating profile on wizard
+   * Set initial values for Create ESS File (stepEssFileService), from an Evacuee Profile ID
    */
-  public createEssFileFromProfileStep(profile: RegistrantProfileModel) {
+  public stepCreateEssFileFromProfileId(profileId: string) {
+    this.evacueeProfileService
+      .getProfileFromId(profileId)
+      .subscribe((registrantProfileModel) => {
+        this.stepCreateEssFileFromProfileRecord(registrantProfileModel);
+      });
+  }
+
+  /**
+   * Set initial values for Create ESS File (stepEssFileService), from a full Evacuee Profile record
+   */
+  public stepCreateEssFileFromProfileRecord(profile: RegistrantProfileModel) {
     this.evacueeSessionService.profileId = profile.id;
     this.stepEssFileService.primaryAddress = this.wizardService.setAddressObjectForForm(
       profile.primaryAddress
@@ -106,12 +117,5 @@ export class WizardAdapterService {
       isPrimaryRegistrant: true,
       type: HouseholdMemberType.Registrant
     };
-  }
-
-  /**
-   * Set initial values for Create ESS File (stepEssFileService) when entering from Evacuee Profile Dashboard
-   */
-  public createEssFileFromDashboard() {
-    //TODO
   }
 }

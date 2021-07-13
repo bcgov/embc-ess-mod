@@ -70,9 +70,11 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     });
 
     // Set up displayed version of Security Questions, depending on if they've been edited
-    this.displayQuestions = this.stepEvacueeProfileService.editQuestions
-      ? this.stepEvacueeProfileService.securityQuestions
-      : this.stepEvacueeProfileService.savedQuestions;
+    this.displayQuestions =
+      this.stepEvacueeProfileService.editQuestions ||
+      !(this.stepEvacueeProfileService.savedQuestions?.length > 0)
+        ? this.stepEvacueeProfileService.securityQuestions
+        : this.stepEvacueeProfileService.savedQuestions;
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate?.subscribe(
@@ -121,7 +123,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
                     '/ess-wizard/ess-file',
                     false
                   );
-                  this.wizardAdapterService.createEssFileFromProfileStep(
+                  this.wizardAdapterService.stepCreateEssFileFromProfileRecord(
                     profile
                   );
 
@@ -164,7 +166,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
                         '/ess-wizard/ess-file',
                         false
                       );
-                      this.wizardAdapterService.createEssFileFromProfileStep(
+                      this.wizardAdapterService.stepCreateEssFileFromProfileRecord(
                         profile
                       );
 
