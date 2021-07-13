@@ -255,17 +255,14 @@
               class="row"
               *ngIf="
                 !stepEvacueeProfileService?.bypassSecurityQuestions &&
-                stepEvacueeProfileService?.securityQuestions?.length > 0
+                displayQuestions?.length > 0
               "
             >
               <div class="col-4">
-                {{ stepEvacueeProfileService?.securityQuestions[0]?.question }}
+                {{ displayQuestions[0]?.question }}
               </div>
               <div class="col-8 bold">
-                {{
-                  stepEvacueeProfileService?.securityQuestions[0]?.answer
-                    | maskText
-                }}
+                {{ displayQuestions[0]?.answer | maskText }}
               </div>
             </div>
 
@@ -273,17 +270,14 @@
               class="row"
               *ngIf="
                 !stepEvacueeProfileService?.bypassSecurityQuestions &&
-                stepEvacueeProfileService?.securityQuestions?.length > 1
+                displayQuestions?.length > 1
               "
             >
               <div class="col-4">
-                {{ stepEvacueeProfileService?.securityQuestions[1]?.question }}
+                {{ displayQuestions[1]?.question }}
               </div>
               <div class="col-8 bold">
-                {{
-                  stepEvacueeProfileService?.securityQuestions[1]?.answer
-                    | maskText
-                }}
+                {{ displayQuestions[1]?.answer | maskText }}
               </div>
             </div>
 
@@ -291,23 +285,20 @@
               class="row"
               *ngIf="
                 !stepEvacueeProfileService?.bypassSecurityQuestions &&
-                stepEvacueeProfileService?.securityQuestions?.length > 2
+                displayQuestions?.length > 2
               "
             >
               <div class="col-4">
-                {{ stepEvacueeProfileService?.securityQuestions[2]?.question }}
+                {{ displayQuestions[2]?.question }}
               </div>
               <div class="col-8 bold">
-                {{
-                  stepEvacueeProfileService?.securityQuestions[2]?.answer
-                    | maskText
-                }}
+                {{ displayQuestions[2]?.answer | maskText }}
               </div>
             </div>
           </div>
         </div>
 
-        <div class="col-12">
+        <div class="col-12" *ngIf="!evacueeSessionService?.profileId">
           <div class="confirm-panel">
             <label class="tab-subtitle">Identification</label>
 

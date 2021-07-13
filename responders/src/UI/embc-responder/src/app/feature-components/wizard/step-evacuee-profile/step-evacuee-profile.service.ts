@@ -45,17 +45,20 @@ export class StepEvacueeProfileService {
   private contactDetailsVal: ContactDetails;
   private confirmEmailVal: string;
 
+  // Edit Profile Flags for Contact tab
+  private unlockedFieldsVal: boolean;
+  private authorizedUserVal: boolean;
+
   // Security Questions tab
   private bypassSecurityQuestionsVal: boolean;
   private securityQuestionsVal: SecurityQuestion[];
   private securityQuestionOptionsVal: string[];
 
+  private editQuestionsVal = true;
+  private savedQuestionsVal: SecurityQuestion[];
+
   // Review & Save tab
   private verifiedProfileVal: boolean;
-
-  // Edit Profile Flags
-  private unlockedFieldsVal: boolean;
-  private authorizedUserVal: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -156,6 +159,23 @@ export class StepEvacueeProfileService {
     this.confirmEmailVal = confirmEmailVal;
   }
 
+  // Edit Profile Flags for Contact tab
+  public get unlockedFields(): boolean {
+    return this.unlockedFieldsVal;
+  }
+
+  public set unlockedFields(unlockedFieldsVal: boolean) {
+    this.unlockedFieldsVal = unlockedFieldsVal;
+  }
+
+  public get authorizedUser(): boolean {
+    return this.authorizedUserVal;
+  }
+
+  public set authorizedUser(authorizedUserVal: boolean) {
+    this.authorizedUserVal = authorizedUserVal;
+  }
+
   // Security Questions tab
   public get bypassSecurityQuestions(): boolean {
     return this.bypassSecurityQuestionsVal;
@@ -178,29 +198,26 @@ export class StepEvacueeProfileService {
     this.securityQuestionOptionsVal = securityQuestionOptionsVal;
   }
 
+  public get editQuestions(): boolean {
+    return this.editQuestionsVal;
+  }
+  public set editQuestions(editQuestionsVal: boolean) {
+    this.editQuestionsVal = editQuestionsVal;
+  }
+
+  public get savedQuestions(): SecurityQuestion[] {
+    return this.savedQuestionsVal;
+  }
+  public set savedQuestions(savedQuestionsVal: SecurityQuestion[]) {
+    this.savedQuestionsVal = savedQuestionsVal;
+  }
+
   // Review & Save tab
   public get verifiedProfile(): boolean {
     return this.verifiedProfileVal;
   }
   public set verifiedProfile(verifiedProfileVal: boolean) {
     this.verifiedProfileVal = verifiedProfileVal;
-  }
-
-  //Edit Profile Flags
-  public get unlockedFields(): boolean {
-    return this.unlockedFieldsVal;
-  }
-
-  public set unlockedFields(unlockedFieldsVal: boolean) {
-    this.unlockedFieldsVal = unlockedFieldsVal;
-  }
-
-  public get authorizedUser(): boolean {
-    return this.authorizedUserVal;
-  }
-
-  public set authorizedUser(authorizedUserVal: boolean) {
-    this.authorizedUserVal = authorizedUserVal;
   }
 
   public setTabStatus(name: string, status: string): void {
@@ -279,7 +296,7 @@ export class StepEvacueeProfileService {
    * @returns Profile record usable by the API
    */
   public createProfileDTO(): RegistrantProfile {
-    return {
+    const profile: RegistrantProfile = {
       restriction: this.restrictedAccess,
       personalDetails: this.personalDetails,
       contactDetails: this.contactDetails,
@@ -289,9 +306,14 @@ export class StepEvacueeProfileService {
       mailingAddress: this.wizardService.setAddressObjectForDTO(
         this.mailingAddressDetails
       ),
-      securityQuestions: this.securityQuestions,
       verifiedUser: this.verifiedProfile
     };
+
+    // Only set security questions if they've been changed
+    if (this.editQuestions || !(this.savedQuestions?.length > 0))
+      profile.securityQuestions = this.securityQuestions;
+
+    return profile;
   }
 
   /**
@@ -324,37 +346,45 @@ export class StepEvacueeProfileService {
     this.contactDetails = undefined;
     this.confirmEmail = undefined;
 
+    // Edit Profile Flags for Contact tab
+    this.unlockedFields = undefined;
+    this.authorizedUser = undefined;
+
     // Security Questions tab
     this.bypassSecurityQuestions = undefined;
     this.securityQuestions = undefined;
     this.securityQuestionOptions = undefined;
 
+    this.editQuestions = true;
+    this.savedQuestions = undefined;
+
     // Review & Save tab
     this.verifiedProfile = undefined;
-
-    // Edit Profile Flags
-    this.unlockedFields = undefined;
-    this.authorizedUser = undefined;
   }
 
   /**
    * Update the wizard's values with ones fetched from API
    */
   public setFormValuesFromProfile(profile: RegistrantProfileModel) {
+    // Wizard variables
     this.evacueeSession.profileId = profile.id;
 
+    // Restriction tab
     this.restrictedAccess = profile.restriction;
-    this.personalDetails = profile.personalDetails;
-    this.contactDetails = profile.contactDetails;
 
+    // Evacuee Details tab
+    this.personalDetails = profile.personalDetails;
+
+    // Address tab
+    this.primaryAddressDetails = this.wizardService.setAddressObjectForForm(
+      profile.primaryAddress
+    );
     this.isBcAddress = this.checkForBCAddress(
       profile.primaryAddress.stateProvinceCode
     );
+
     this.isBcMailingAddress = this.checkForBCAddress(
       profile.mailingAddress.stateProvinceCode
-    );
-    this.primaryAddressDetails = this.wizardService.setAddressObjectForForm(
-      profile.primaryAddress
     );
     this.mailingAddressDetails = this.wizardService.setAddressObjectForForm(
       profile.mailingAddress
@@ -363,7 +393,20 @@ export class StepEvacueeProfileService {
       profile.isMailingAddressSameAsPrimaryAddress
     );
 
-    this.securityQuestions = profile.securityQuestions;
+    // Contact tab
+    this.contactDetails = profile.contactDetails;
+    this.confirmEmail = profile.contactDetails?.email;
+
+    this.showContact =
+      this.contactDetails.email?.length > 0 ||
+      this.contactDetails.phone?.length > 0;
+
+    // Security Questions tab
+    this.securityQuestions = [];
+    this.savedQuestions = profile.securityQuestions;
+    this.editQuestions = false;
+
+    // Review & Save tab
     this.verifiedProfile = profile.verifiedUser;
     this.authorizedUser = profile.authenticatedUser;
   }

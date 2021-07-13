@@ -35,7 +35,10 @@ export class StepEvacueeProfileComponent {
         };
         this.stepId = state.step;
         this.stepName = state.title;
-        if (!this.stepEvacueeProfileService.profileTabs) {
+        if (
+          this.stepEvacueeProfileService.profileTabs === undefined ||
+          this.stepEvacueeProfileService.profileTabs.length === 0
+        ) {
           this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
         }
       }
