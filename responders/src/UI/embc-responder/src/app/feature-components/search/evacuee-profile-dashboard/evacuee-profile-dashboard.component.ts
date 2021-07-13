@@ -25,7 +25,6 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   evacueeProfileId: string;
   restrictionStatus: string;
   verificationStatus: string;
-  communityName: any;
 
   constructor(
     private dialog: MatDialog,
@@ -122,12 +121,10 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       .getProfileFromId(evacueeProfileId)
       .subscribe((profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
-        this.communityName = profile.primaryAddress.community;
         this.restrictionStatus = this.getRestrictionStatus(profile.restriction);
         this.verificationStatus = this.getVerificationStatus(
           profile.verifiedUser
         );
-        console.log(profile);
       });
   }
 
