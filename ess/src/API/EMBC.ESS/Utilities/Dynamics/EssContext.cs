@@ -120,12 +120,6 @@ namespace EMBC.ESS.Utilities.Dynamics
             return context.era_provinceterritorieses.Where(p => p.era_code == code).FirstOrDefault();
         }
 
-        public static era_provinceterritories LookupStateProvinceById(this EssContext context, string id)
-        {
-            if (string.IsNullOrEmpty(id)) return null;
-            return context.era_provinceterritorieses.Where(p => p.era_provinceterritoriesid == Guid.Parse(id)).FirstOrDefault();
-        }
-
         public static era_country LookupCountryByCode(this EssContext context, string code)
         {
             if (string.IsNullOrEmpty(code)) return null;
