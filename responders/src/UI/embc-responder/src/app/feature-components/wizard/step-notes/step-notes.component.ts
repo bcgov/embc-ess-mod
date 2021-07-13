@@ -27,7 +27,7 @@ export class StepNotesComponent implements OnInit {
         this.stepName = state.title;
         if (
           this.stepNotesService.notesTab === undefined ||
-          this.stepNotesService.notesTab.length == 0
+          this.stepNotesService.notesTab.length === 0
         ) {
           this.stepNotesService.notesTab = this.wizardDataService.createNotesSteps();
         }

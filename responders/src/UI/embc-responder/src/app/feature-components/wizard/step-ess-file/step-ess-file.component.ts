@@ -29,7 +29,7 @@ export class StepEssFileComponent {
         this.stepName = state.title;
         if (
           this.stepEssFileService.essTabs === undefined ||
-          this.stepEssFileService.essTabs.length == 0
+          this.stepEssFileService.essTabs.length === 0
         ) {
           this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
         }

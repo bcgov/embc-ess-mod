@@ -37,7 +37,7 @@ export class StepEvacueeProfileComponent {
         this.stepName = state.title;
         if (
           this.stepEvacueeProfileService.profileTabs === undefined ||
-          this.stepEvacueeProfileService.profileTabs.length == 0
+          this.stepEvacueeProfileService.profileTabs.length === 0
         ) {
           this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
         }
