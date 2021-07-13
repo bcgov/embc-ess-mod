@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { Community } from 'src/app/core/services/locations.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { StatusDefinitionDialogComponent } from 'src/app/shared/components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
@@ -17,14 +21,24 @@ import * as globalConst from '../../../core/services/global-constants';
   styleUrls: ['./evacuee-profile-dashboard.component.scss']
 })
 export class EvacueeProfileDashboardComponent implements OnInit {
+  evacueeProfile: RegistrantProfileModel;
+  evacueeProfileId: string;
+  restrictionStatus: string;
+  verificationStatus: string;
+  communityName: any;
+
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private cacheService: CacheService,
-    private evacueeSessionService: EvacueeSessionService
+    private evacueeSessionService: EvacueeSessionService,
+    private evacueeProfileService: EvacueeProfileService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.evacueeProfileId = this.evacueeSessionService.profileId;
+    this.getEvacueeProfile(this.evacueeProfileId);
+  }
 
   /**
    * Open the dialog with definition of
@@ -101,5 +115,35 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       queryParams: { type: WizardType.EditRegistration },
       queryParamsHandling: 'merge'
     });
+  }
+
+  private getEvacueeProfile(evacueeProfileId) {
+    this.evacueeProfileService
+      .getProfileFromId(evacueeProfileId)
+      .subscribe((profile: RegistrantProfileModel) => {
+        this.evacueeProfile = profile;
+        this.communityName = profile.primaryAddress.community;
+        this.restrictionStatus = this.getRestrictionStatus(profile.restriction);
+        this.verificationStatus = this.getVerificationStatus(
+          profile.verifiedUser
+        );
+        console.log(profile);
+      });
+  }
+
+  private getRestrictionStatus(status: boolean): string {
+    if (status) {
+      return 'Restricted File';
+    } else {
+      return 'Unrestricted File';
+    }
+  }
+
+  private getVerificationStatus(status: boolean): string {
+    if (status) {
+      return 'Verified';
+    } else {
+      return 'Unverified';
+    }
   }
 }
