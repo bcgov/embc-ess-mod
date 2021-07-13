@@ -14,6 +14,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { Subscription } from 'rxjs';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-security-questions',
@@ -27,9 +28,10 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    public stepEvacueeProfileService: StepEvacueeProfileService,
     private formBuilder: FormBuilder,
-    private customValidationService: CustomValidationService
+    private customValidationService: CustomValidationService,
+    public stepEvacueeProfileService: StepEvacueeProfileService,
+    public evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
@@ -51,17 +53,7 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
    * Set up main FormGroup with security Q&A inputs and validation
    */
   createQuestionForm(): void {
-    if (!this.stepEvacueeProfileService.securityQuestions)
-      this.stepEvacueeProfileService.securityQuestions = [];
-
-    // Set up 3 blank security question values if not already there
-    while (this.stepEvacueeProfileService.securityQuestions.length < 3) {
-      this.stepEvacueeProfileService.securityQuestions.push({
-        id: this.stepEvacueeProfileService.securityQuestions.length + 1,
-        question: '',
-        answer: ''
-      });
-    }
+    this.setQuestionArray(false);
 
     this.questionForm = this.formBuilder.group(
       {
@@ -133,6 +125,25 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Make sure that the securityQuestion array is set to the correct length
+   *
+   * @param clear If true, reset securityQuestions to empty/default values
+   */
+  setQuestionArray(clear) {
+    if (!this.stepEvacueeProfileService.securityQuestions || clear)
+      this.stepEvacueeProfileService.securityQuestions = [];
+
+    // Set up 3 blank security question values if not already there
+    while (this.stepEvacueeProfileService.securityQuestions.length < 3) {
+      this.stepEvacueeProfileService.securityQuestions.push({
+        id: this.stepEvacueeProfileService.securityQuestions.length + 1,
+        question: '',
+        answer: ''
+      });
+    }
+  }
+
+  /**
    * Handle changed state of "Bypass Security Questions" checkbox
    *
    * @param event Mat-checkbox change event, automatically passed in when triggered by form
@@ -155,6 +166,25 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
       this.questionForm.reset();
     } else {
       this.questionForm.enable();
+    }
+  }
+
+  /**
+   * Switches security question tab between readonly mode and editable mode
+   *
+   * @param edit True to set "Edit" mode, False to set "Readonly" mode and clear form
+   */
+  toggleEditQuestions(edit) {
+    this.stepEvacueeProfileService.editQuestions = edit;
+
+    if (!edit) {
+      // Reset bypass Questions if selected
+      this.stepEvacueeProfileService.bypassSecurityQuestions = false;
+      this.setFormDisabled(false);
+
+      // Clear now-hidden Q&A form
+      this.setQuestionArray(true);
+      this.questionForm.reset();
     }
   }
 
@@ -211,7 +241,11 @@ export class SecurityQuestionsComponent implements OnInit, OnDestroy {
     }
 
     // Based on state of form, set tab status
-    if (this.parentForm.valid) {
+    if (
+      this.parentForm.valid ||
+      (!this.stepEvacueeProfileService.editQuestions &&
+        this.stepEvacueeProfileService.savedQuestions?.length > 0)
+    ) {
       this.stepEvacueeProfileService.setTabStatus(
         'security-questions',
         'complete'

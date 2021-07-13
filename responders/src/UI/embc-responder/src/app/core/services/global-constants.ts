@@ -71,22 +71,41 @@ export const wizardProfileMessage: DialogContent = {
     '<p>Please complete all sections of the Evacuee Profile prior to submitting.</p>',
   cancelButton: 'Close'
 };
-export const evacueeProfileCreatedMessage: DialogContent = {
-  title: 'Evacuee Profile Saved',
-  text: '<p>Evacuee profile has been successfully created.</p>',
-  confirmButton: 'Proceed to Step 2'
-};
 export const wizardESSFileMessage: DialogContent = {
   title: 'Complete all steps',
   text:
     '<p>Please complete all sections of the ESS File prior to submitting.</p>',
   cancelButton: 'Close'
 };
-export const essFileCreatedMessage: DialogContent = {
+
+export const newRegWizardProfileCreatedMessage: DialogContent = {
+  title: 'Evacuee Profile Saved',
+  text: '<p>Evacuee profile has been successfully created.</p>',
+  confirmButton: 'Proceed to Step 2'
+};
+export const newRegWizardEssFileCreatedMessage: DialogContent = {
   title: 'ESS File Saved',
   text: '<p>ESS File has been successfully created.</p>',
   confirmButton: 'Proceed to Step 3',
   exitLink: 'Exit Wizard'
+};
+
+export const newRegWizardProfileUpdatedMessage: DialogContent = {
+  title: 'Evacuee Profile Updated',
+  text: '<p>Evacuee profile has been successfully updated.</p>',
+  confirmButton: 'Proceed to Step 2'
+};
+
+export const editRegWizardProfileCreatedMessage: DialogContent = {
+  title: 'Evacuee Profile Saved',
+  text: '<p>Evacuee profile has been successfully updated.</p>',
+  confirmButton: 'Proceed to Step 2'
+};
+
+export const evacueeProfileUpdatedMessage: DialogContent = {
+  title: 'Evacuee Profile Updated',
+  text: '<p>Evacuee profile has been successfully updated.</p>',
+  cancelButton: 'Close'
 };
 
 export const householdMemberDeleteDialog: DialogContent = {

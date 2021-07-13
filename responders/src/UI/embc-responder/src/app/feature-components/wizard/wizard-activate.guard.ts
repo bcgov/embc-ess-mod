@@ -37,7 +37,7 @@ export class WizardActivateGuard implements CanActivate {
 
     if (wizardType === WizardType.NewRegistration) {
       if (this.isNewRegistrationAllowed(loggedInTask)) {
-        this.wizardAdapterService.evacueeProfileStepFromSearch();
+        this.wizardAdapterService.createProfileFromSearch();
 
         return true;
       }

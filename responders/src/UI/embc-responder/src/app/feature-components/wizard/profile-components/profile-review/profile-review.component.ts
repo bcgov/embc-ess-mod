@@ -16,6 +16,9 @@ import * as globalConst from 'src/app/core/services/global-constants';
 import { Community } from 'src/app/core/services/locations.service';
 import { WizardAdapterService } from '../../wizard-adapter.service';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { SecurityQuestion } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-profile-review',
@@ -29,6 +32,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
   saveLoader = false;
   disableButton = false;
 
+  displayQuestions: SecurityQuestion[];
+
   primaryCommunity: string;
   mailingCommunity: string;
 
@@ -39,7 +44,8 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     private evacueeProfileService: EvacueeProfileService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
-    public stepEvacueeProfileService: StepEvacueeProfileService
+    public stepEvacueeProfileService: StepEvacueeProfileService,
+    public evacueeSessionService: EvacueeSessionService
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +68,11 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         Validators.required
       ]
     });
+
+    // Set up displayed version of Security Questions, depending on if they've been edited
+    this.displayQuestions = this.stepEvacueeProfileService.editQuestions
+      ? this.stepEvacueeProfileService.securityQuestions
+      : this.stepEvacueeProfileService.savedQuestions;
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEvacueeProfileService.nextTabUpdate?.subscribe(
@@ -90,45 +101,101 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     if (this.verifiedProfileGroup.valid) {
       this.saveLoader = true;
 
-      // TODO: If profile's already been created, update existing record
-      //if (!this.evacueeSession.profileId) {
-      this.evacueeProfileService
-        .createProfile(this.stepEvacueeProfileService.createProfileDTO())
-        .subscribe(
-          (profile: RegistrantProfileModel) => {
-            // After creating and fetching profile, update Profile Step values
-            this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
+      if (!this.evacueeSessionService.profileId) {
+        this.evacueeProfileService
+          .createProfile(this.stepEvacueeProfileService.createProfileDTO())
+          .subscribe(
+            (profile: RegistrantProfileModel) => {
+              // After creating and fetching profile, update Profile Step values
+              this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
 
-            // Once all profile work is done, tell user save is complete and go to Step 2
-            this.disableButton = true;
-            this.saveLoader = false;
+              // Once all profile work is done, tell user save is complete and go to Step 2
+              this.disableButton = true;
+              this.saveLoader = false;
 
-            this.stepEvacueeProfileService
-              .openModal(globalConst.evacueeProfileCreatedMessage)
-              .afterClosed()
-              .subscribe(() => {
-                this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
-                this.wizardAdapterService.essFileStepFromProfileCreation(
-                  profile
-                );
+              this.stepEvacueeProfileService
+                .openModal(globalConst.newRegWizardProfileCreatedMessage)
+                .afterClosed()
+                .subscribe(() => {
+                  this.wizardService.setStepStatus(
+                    '/ess-wizard/ess-file',
+                    false
+                  );
+                  this.wizardAdapterService.createEssFileFromProfileStep(
+                    profile
+                  );
 
-                this.router.navigate(['/ess-wizard/ess-file'], {
-                  state: { step: 'STEP 2', title: 'Create ESS File' }
+                  this.router.navigate(['/ess-wizard/ess-file'], {
+                    state: { step: 'STEP 2', title: 'Create ESS File' }
+                  });
                 });
-              });
-          },
-          (error) => {
-            this.saveLoader = false;
-            this.alertService.setAlert(
-              'danger',
-              globalConst.createRegProfileError
-            );
-          }
-        );
-      //}
-      //else {
-      //TODO: Update Profile code to go here
-      //}
+            },
+            (error) => {
+              this.saveLoader = false;
+              this.alertService.setAlert(
+                'danger',
+                globalConst.createRegProfileError
+              );
+            }
+          );
+      } else {
+        // Update existing record
+        this.evacueeProfileService
+          .updateProfile(
+            this.evacueeSessionService.profileId,
+            this.stepEvacueeProfileService.createProfileDTO()
+          )
+          .subscribe(
+            (profile: RegistrantProfileModel) => {
+              // After creating and fetching profile, update Profile Step values
+              this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
+
+              // Once all profile work is done, tell user save is complete and go to Step 2
+              this.disableButton = true;
+              this.saveLoader = false;
+
+              switch (this.evacueeSessionService.getWizardType()) {
+                case WizardType.NewRegistration:
+                  this.stepEvacueeProfileService
+                    .openModal(globalConst.newRegWizardProfileUpdatedMessage)
+                    .afterClosed()
+                    .subscribe(() => {
+                      this.wizardService.setStepStatus(
+                        '/ess-wizard/ess-file',
+                        false
+                      );
+                      this.wizardAdapterService.createEssFileFromProfileStep(
+                        profile
+                      );
+
+                      this.router.navigate(['/ess-wizard/ess-file'], {
+                        state: { step: 'STEP 2', title: 'Create ESS File' }
+                      });
+                    });
+                  return;
+
+                case WizardType.EditRegistration:
+                  this.router
+                    .navigate([
+                      'responder-access/search/evacuee-profile-dashboard'
+                    ])
+                    .then(() =>
+                      this.stepEvacueeProfileService.openModal(
+                        globalConst.evacueeProfileUpdatedMessage
+                      )
+                    );
+                  return;
+              }
+            },
+            (error) => {
+              this.saveLoader = false;
+              this.alertService.setAlert(
+                'danger',
+                globalConst.createRegProfileError
+              );
+            }
+          );
+      }
     } else {
       this.verifiedProfileControl.verifiedProfile.markAsTouched();
     }
