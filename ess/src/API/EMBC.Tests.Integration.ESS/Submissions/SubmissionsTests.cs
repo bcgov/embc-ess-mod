@@ -248,7 +248,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var newCommunity = currentCommunity == "406adfaf-9f97-ea11-b813-005056830319"
                 ? "226adfaf-9f97-ea11-b813-005056830319"
                 : "406adfaf-9f97-ea11-b813-005056830319";
-            newCommunity = null;
 
             string currentCountry = registrant.PrimaryAddress.Country;
             string newCountry;
@@ -264,7 +263,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             {
                 newCountry = "CAN";
                 newProvince = "BC";
-                //newProvince = null;
                 newCity = "Vancouver";
             }
 
@@ -272,7 +270,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             registrant.PrimaryAddress.StateProvince = newProvince;
             registrant.PrimaryAddress.Community = newCommunity;
             registrant.PrimaryAddress.City = newCity;
-            
 
             registrant.Email = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
 
@@ -286,6 +283,32 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             updatedRegistrant.PrimaryAddress.StateProvince.ShouldBe(newProvince);
             updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
             updatedRegistrant.PrimaryAddress.City.ShouldBe(newCity);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanDeleteProfileAddressLinks()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            string currentProvince = registrant.PrimaryAddress.StateProvince;
+            if (string.IsNullOrEmpty(currentProvince))
+            {
+                await CanUpdateProfile(); //populates the community and state/province fields 
+                registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            }
+            
+            string newProvince = null;
+            string newCommunity = null;
+            registrant.PrimaryAddress.StateProvince = newProvince;
+            registrant.PrimaryAddress.Community = newCommunity;
+
+            var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
+
+            var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            updatedRegistrant.Id.ShouldBe(id);
+            updatedRegistrant.Id.ShouldBe(registrant.Id);
+            updatedRegistrant.Email.ShouldBe(registrant.Email);
+            updatedRegistrant.PrimaryAddress.StateProvince.ShouldBe(newProvince);
+            updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
         }
 
         [Fact(Skip = RequiresDynamics)]
