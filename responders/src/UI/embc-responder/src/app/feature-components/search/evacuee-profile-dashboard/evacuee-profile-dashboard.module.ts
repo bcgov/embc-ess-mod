@@ -7,6 +7,7 @@ import { MaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatchedEssfilesComponent } from './matched-essfiles/matched-essfiles.component';
 import { PossibleMatchedEssfilesComponent } from './possible-matched-essfiles/possible-matched-essfiles.component';
+import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { PossibleMatchedEssfilesComponent } from './possible-matched-essfiles/po
     CommonModule,
     EvacueeProfileDashboardRoutingModule,
     MaterialModule,
-    SharedModule
+    SharedModule,
+    CustomPipeModule
   ]
 })
 export class EvacueeProfileDashboardModule {}
