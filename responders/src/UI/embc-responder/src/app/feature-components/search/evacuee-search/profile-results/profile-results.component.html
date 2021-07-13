@@ -44,7 +44,7 @@
           </div>
           <div class="col-md-10">
             <p class="p-custom section-heading">Physical Address</p>
-            <p class="p-custom">
+            <!-- <p class="p-custom">
               <b>{{ registrantResult?.primaryAddress?.addressLine1 }}</b>
             </p>
             <p
@@ -74,7 +74,12 @@
             </p>
             <p class="p-custom">
               <b>{{ registrantResult?.primaryAddress?.country?.name }}</b>
-            </p>
+            </p> -->
+            <p
+              class="p-custom"
+              [innerHTML]="registrantResult?.primaryAddress | maskFullAddress"
+              style="font-weight: 700"
+            ></p>
           </div>
         </div>
       </div>

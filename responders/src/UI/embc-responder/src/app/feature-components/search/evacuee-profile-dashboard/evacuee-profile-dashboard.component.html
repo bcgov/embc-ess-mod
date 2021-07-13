@@ -1,41 +1,78 @@
-<div class="row dashboard-container">
+<div *ngIf="evacueeProfile?.restriction" class="row">
+  <span class="restricted-text">- - - RESTRICTED FILE - - -</span>
+</div>
+
+<div class="row dashboard-container container-frame">
   <div class="col-md-12">
-    <span class="page-heading">LASTNAME, FirstName</span>
+    <span
+      class="page-heading"
+      [ngStyle]="{ color: evacueeProfile?.restriction ? '#C90000' : '#003366' }"
+      >{{ evacueeProfile?.personalDetails?.lastName | uppercase }},
+      {{ evacueeProfile?.personalDetails?.firstName | titlecase }}</span
+    >
   </div>
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    <span class="dashboard-subheading">Date of birth here</span>
+  <div class="col-md-12 no-margin">
+    <span class="dashboard-subheading">{{
+      evacueeProfile?.personalDetails?.dateOfBirth | date: 'dd-MMM-YYYY'
+    }}</span>
   </div>
 </div>
 
 <div class="row status-row-margin">
   <div class="col-md-5">
-    <img src="/assets/images/unverified.svg" height="34" width="34" />
-    <span class="status">Verification Status: <b>Some Value</b></span>
+    <img
+      *ngIf="!evacueeProfile?.verifiedUser"
+      src="/assets/images/unverified.svg"
+      height="34"
+      width="34"
+    />
+    <img
+      *ngIf="evacueeProfile?.verifiedUser"
+      src="/assets/images/verified.svg"
+      height="34"
+      width="34"
+    />
+    <span class="status"
+      >Verification Status: <b>{{ verificationStatus }}</b></span
+    >
 
     <a class="info-test" (click)="openStatusDefinition()">
       <img src="/assets/images/info.svg" height="32" width="32" />
       <img src="/assets/images/info-on-hover.svg" height="32" width="32"
     /></a>
-    <button class="button-p verify-button" (click)="verifyEvacuee()" mat-button>
+    <button
+      *ngIf="!evacueeProfile?.verifiedUser"
+      class="button-p verify-button"
+      (click)="verifyEvacuee()"
+      mat-button
+    >
       Verify
     </button>
   </div>
   <div class="col-md-1 divider">
     <img src="/assets/images/vertical-line.svg" height="41" width="2" />
   </div>
-  <div class="col-md-3">
+  <div class="col-md-4">
     <img src="/assets/images/unlock.svg" height="31" width="21" />
-    <span class="status">Restriction Status: <b>Some Value</b></span>
+    <span class="status">Restriction Status:</span>
+    <span
+      class="status"
+      [ngStyle]="{ color: evacueeProfile?.restriction ? '#C90000' : '#3C9D0F' }"
+      ><b>{{ restrictionStatus }}</b></span
+    >
   </div>
   <div class="col-md-1 divider">
     <img src="/assets/images/vertical-line.svg" height="41" width="2" />
   </div>
   <div class="col">
     <img src="/assets/images/calendar.svg" height="31" width="32" />
-    <span class="status">Created: <b>Some Value</b></span>
+    <span class="status"
+      >Created:
+      <b>{{ evacueeProfile?.createdOn | date: 'dd-MMM-YYYY' }}</b></span
+    >
   </div>
 </div>
 
@@ -69,7 +106,10 @@
               <p class="margins card-heading">Profile Overview</p>
             </div>
           </div>
-          <div class="row services-card">
+          <div
+            class="row services-card"
+            *ngIf="!evacueeProfile?.authenticatedUser"
+          >
             <div class="col-md-8">
               <p class="services-heading">
                 Connect profile with BC Services Card
@@ -100,64 +140,108 @@
           </div>
           <div class="row evacuee-info-row">
             <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-3">
+              <div class="row section-padding">
+                <div class="col-md-3 subtitle-name">
                   <img
                     src="/assets/images/profile-user.svg"
                     height="69"
                     width="69"
                   />
-                  <p style="font-size: 21px">Personal</p>
-                  <p style="font-size: 21px">Details</p>
+                  <p>Personal</p>
+                  <p>Details</p>
                 </div>
-                <div class="col-md-2">
-                  <p>First Name:</p>
-                  <p>Last Name:</p>
-                  <p>Preferred Name:</p>
-                  <p>Initials:</p>
-                  <p>Date of Birth:</p>
-                  <p>Gender:</p>
-                </div>
-                <div>
-                  <p>FirstName</p>
-                  <p>LastName</p>
-                  <p>PreferredName</p>
-                  <p>Initials</p>
-                  <p>DateofBirth:</p>
-                  <p>Gender</p>
+                <div class="col-md-9 table-parent">
+                  <table class="table-details">
+                    <tr>
+                      <th>First Name:</th>
+                      <td>
+                        <b>{{ evacueeProfile?.personalDetails?.firstName }}</b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Last Name:</th>
+                      <td>
+                        <b>{{ evacueeProfile?.personalDetails?.lastName }}</b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Preferred Name:</th>
+                      <td>
+                        <b>{{
+                          evacueeProfile?.personalDetails?.preferredName
+                        }}</b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Initials:</th>
+                      <td>
+                        <b>{{ evacueeProfile?.personalDetails?.initials }}</b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Date of Birth:</th>
+                      <td>
+                        <b>{{
+                          evacueeProfile?.personalDetails?.dateOfBirth
+                            | date: 'dd-MMM-YYYY'
+                        }}</b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Gender:</th>
+                      <td>
+                        <b>{{ evacueeProfile?.personalDetails?.gender }}</b>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
               </div>
               <hr class="dotted-hr" />
-              <div class="row">
-                <div class="col-md-3">
+              <div class="row section-padding">
+                <div class="col-md-3 subtitle-name">
                   <img
                     src="/assets/images/address.svg"
                     height="71"
                     width="71"
                   />
-                  <p style="font-size: 21px">Primary</p>
-                  <p style="font-size: 21px">Address</p>
+                  <p>Primary</p>
+                  <p>Address</p>
                 </div>
-                <div>some address</div>
+                <div class="col-md-9 table-parent">
+                  <p
+                    class="address-content"
+                    [innerHTML]="
+                      evacueeProfile?.primaryAddress | maskFullAddress
+                    "
+                  ></p>
+                </div>
               </div>
               <hr class="dotted-hr" />
-              <div class="row">
-                <div class="col-md-3">
+              <div class="row section-padding">
+                <div class="col-md-3 subtitle-name">
                   <img
                     src="/assets/images/contact.svg"
                     height="65"
                     width="65"
                   />
-                  <p style="font-size: 21px">Contact</p>
-                  <p style="font-size: 21px">Details</p>
+                  <p>Contact</p>
+                  <p>Details</p>
                 </div>
-                <div class="col-md-2">
-                  <p>Email Address:</p>
-                  <p>Telephone:</p>
-                </div>
-                <div>
-                  <p>EmailAddress</p>
-                  <p>Telephone</p>
+                <div class="col-md-9 table-parent">
+                  <table class="table-details">
+                    <tr>
+                      <th>Email Address:</th>
+                      <td>
+                        <b>{{ evacueeProfile?.contactDetails?.email }}</b>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Telephone:</th>
+                      <td>
+                        <b>{{ evacueeProfile?.contactDetails?.phone }}</b>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
               </div>
               <div class="button-div">

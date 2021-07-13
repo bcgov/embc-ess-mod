@@ -11,6 +11,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { EvacueeSearchResultsComponent } from './evacuee-search-results/evacuee-search-results.component';
 import { EssFilesResultsComponent } from './ess-files-results/ess-files-results.component';
 import { ProfileResultsComponent } from './profile-results/profile-results.component';
+import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ProfileResultsComponent } from './profile-results/profile-results.compo
     MaterialModule,
     ReactiveFormsModule,
     TextMaskModule,
-    SharedModule
+    SharedModule,
+    CustomPipeModule
   ],
   exports: [EvacueeIdVerifyComponent, EvacueeNameSearchComponent]
 })
