@@ -38,7 +38,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
                 .RuleFor(o => o.era_initial, f => f.Name.Prefix())
                 .RuleFor(o => o.era_preferredname, f => f.Name.Suffix())
 
-                .RuleFor(o => o.telephone1, f => f.Phone.PhoneNumber())
+                .RuleFor(o => o.address1_telephone1, f => f.Phone.PhoneNumber())
                 .RuleFor(o => o.emailaddress1, f => f.Internet.Email())
 
                 .RuleFor(o => o.address1_line1, f => f.Address.StreetAddress())
