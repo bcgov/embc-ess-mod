@@ -100,6 +100,7 @@ export class LocationsService {
 
   /**
    * Maps the community from code
+   *
    * @param code community code
    * @returns community object
    */

@@ -85,7 +85,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 300px;
+  width: 275px;
   background-color: white;
 }
 
@@ -105,7 +105,6 @@
 .active-side-item {
   background-color: #169bd5 !important;
   color: white !important;
-  height: 100% !important;
 }
 
 .a-mat-button:hover {
@@ -121,4 +120,10 @@ a:not(.btn):focus {
   text-align: unset;
   line-height: unset;
   color: #234075;
+}
+
+.content-row {
+  background-color: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }

@@ -9,6 +9,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { Community } from 'src/app/core/services/locations.service';
 import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-components/file-status-definition/file-status-definition.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { EssfileDashboardService } from './essfile-dashboard.service';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -22,20 +23,12 @@ export class EssfileDashboardComponent implements OnInit {
     private essFileService: EssFileService,
     private evacueeSessionService: EvacueeSessionService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private essfileDashboardService: EssfileDashboardService
   ) {}
 
   ngOnInit(): void {
     this.getEssFile();
-  }
-
-  private getEssFile(): void {
-    this.essFileService
-      .getFileFromId(this.evacueeSessionService.essFileNumber)
-      .subscribe((file) => {
-        console.log(file);
-        this.essFile = file;
-      });
   }
 
   communityName(address: AddressModel): string {
@@ -68,5 +61,25 @@ export class EssfileDashboardComponent implements OnInit {
       queryParams: { type: WizardType.ReviewFile },
       queryParamsHandling: 'merge'
     });
+  }
+
+  loadDefaultOverviewSection(essFile: EvacuationFileModel) {
+    this.router.navigate(
+      ['/responder-access/search/essfile-dashboard/overview'],
+      {
+        state: { file: essFile }
+      }
+    );
+  }
+
+  private getEssFile(): void {
+    this.essFileService
+      .getFileFromId(this.evacueeSessionService.essFileNumber)
+      .subscribe((file) => {
+        console.log(file);
+        this.essFile = file;
+        this.essfileDashboardService.essFile = file;
+        this.loadDefaultOverviewSection(file);
+      });
   }
 }
