@@ -42,6 +42,7 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.address1_country, opts => opts.MapFrom(s => s.PrimaryAddress.Country))
                 .ForMember(d => d.address1_stateorprovince, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.PrimaryAddress.StateProvince) ? string.Empty : s.PrimaryAddress.StateProvince))
                 .ForMember(d => d.address1_city, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.PrimaryAddress.City) ? string.Empty : s.PrimaryAddress.City))
+                .ForMember(d => d.address1_postalcode, opts => opts.MapFrom(s => s.PrimaryAddress.PostalCode))
                 .ForMember(d => d.era_primarybcresident, opts => opts.MapFrom(s => s.PrimaryAddress.StateProvince == "BC"))
 
                 .ForMember(d => d.address2_line1, opts => opts.MapFrom(s => s.MailingAddress.AddressLine1))
@@ -49,6 +50,7 @@ namespace EMBC.ESS.Resources.Contacts
                 .ForMember(d => d.address2_country, opts => opts.MapFrom(s => s.MailingAddress.Country))
                 .ForMember(d => d.address2_stateorprovince, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.MailingAddress.StateProvince) ? string.Empty : s.MailingAddress.StateProvince))
                 .ForMember(d => d.address2_city, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.MailingAddress.City) ? string.Empty : s.MailingAddress.City))
+                .ForMember(d => d.address2_postalcode, opts => opts.MapFrom(s => s.MailingAddress.PostalCode))
                 .ForMember(d => d.era_isbcmailingaddress, opts => opts.MapFrom(s => s.MailingAddress.StateProvince == "BC"))
                 .ForMember(d => d.era_issamemailingaddress, opts => opts.MapFrom(s =>
                     s.MailingAddress.Country == s.PrimaryAddress.Country &&
