@@ -36,7 +36,7 @@
       width="34"
     />
     <span class="status"
-      >Verification Status: <b>{{ verificationStatus }}</b></span
+      >Verification Status: <b>{{ evacueeProfile?.verifiedUser ? 'Verified' : 'Unverified' }}</b></span
     >
 
     <a class="info-test" (click)="openStatusDefinition()">
@@ -61,7 +61,7 @@
     <span
       class="status"
       [ngStyle]="{ color: evacueeProfile?.restriction ? '#C90000' : '#3C9D0F' }"
-      ><b>{{ restrictionStatus }}</b></span
+      ><b>{{ evacueeProfile?.restriction ? 'Restricted File' : 'Unrestricted File' }}</b></span
     >
   </div>
   <div class="col-md-1 divider">
