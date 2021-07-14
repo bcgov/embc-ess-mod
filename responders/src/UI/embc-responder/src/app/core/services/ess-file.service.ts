@@ -34,6 +34,9 @@ export class EssFileService {
               ...file,
               evacuatedFromAddress: this.locationsService.getAddressModelFromAddress(
                 file.evacuatedFromAddress
+              ),
+              assignedTaskCommunity: this.locationsService.mapCommunityFromCode(
+                file?.task?.communityCode
               )
             };
           }

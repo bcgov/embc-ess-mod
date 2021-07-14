@@ -21,6 +21,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { StatusDefinitionDialogComponent } from './components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from './components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 import { OverlayLoaderComponent } from './components/overlay-loader/overlay-loader.component';
+import { FileStatusDefinitionComponent } from './components/dialog-components/file-status-definition/file-status-definition.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { OverlayLoaderComponent } from './components/overlay-loader/overlay-load
     PetFormComponent,
     StatusDefinitionDialogComponent,
     VerifyEvacueeDialogComponent,
-    OverlayLoaderComponent
+    OverlayLoaderComponent,
+    FileStatusDefinitionComponent
   ],
   imports: [
     CommonModule,
@@ -67,7 +69,8 @@ import { OverlayLoaderComponent } from './components/overlay-loader/overlay-load
     PetFormComponent,
     StatusDefinitionDialogComponent,
     VerifyEvacueeDialogComponent,
-    OverlayLoaderComponent
+    OverlayLoaderComponent,
+    FileStatusDefinitionComponent
   ]
 })
 export class SharedModule {}
