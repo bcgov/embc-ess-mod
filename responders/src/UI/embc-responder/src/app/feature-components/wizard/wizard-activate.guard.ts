@@ -37,7 +37,7 @@ export class WizardActivateGuard implements CanActivate {
 
     if (wizardType === WizardType.NewRegistration) {
       if (this.isNewRegistrationAllowed(loggedInTask)) {
-        this.wizardAdapterService.createProfileFromSearch();
+        this.wizardAdapterService.stepCreateProfileFromSearch();
 
         return true;
       }
@@ -45,12 +45,24 @@ export class WizardActivateGuard implements CanActivate {
       return false;
     } else if (wizardType === WizardType.EditRegistration) {
       if (this.isProfileIdNotNull(registrantProfileId)) {
-        this.wizardAdapterService.editProfileFromDashboard(registrantProfileId);
+        this.wizardAdapterService.stepEditProfileFromProfileId(
+          registrantProfileId
+        );
+
         return true;
       }
+
       return false;
     } else if (wizardType === WizardType.NewEssFile) {
-      return this.isProfileIdNotNull(registrantProfileId);
+      if (this.isProfileIdNotNull(registrantProfileId)) {
+        this.wizardAdapterService.stepCreateEssFileFromProfileId(
+          registrantProfileId
+        );
+
+        return true;
+      }
+
+      return false;
     } else if (wizardType === WizardType.MemberRegistration) {
       return this.isProfileCreationAllowed();
     } else if (wizardType === WizardType.ReviewFile) {

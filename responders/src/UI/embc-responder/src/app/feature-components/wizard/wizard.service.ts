@@ -92,9 +92,10 @@ export class WizardService {
           : null,
       postalCode: addressObject.postalCode,
       stateProvinceCode:
-        addressObject.stateProvince === null
+        addressObject.stateProvince === null ||
+        addressObject.stateProvince === undefined
           ? null
-          : addressObject.stateProvince.code
+          : addressObject.stateProvince?.code
     };
 
     return address;
