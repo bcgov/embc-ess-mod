@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ignoreElements } from 'rxjs/operators';
 import { WizardType } from '../models/wizard-type.model';
 import { CacheService } from './cache.service';
 
@@ -41,6 +40,8 @@ export class EvacueeSessionService {
     this.cacheService.remove('registrantProfileId');
     this.cacheService.remove('fileNumber');
     this.cacheService.remove('wizardType');
+    this.cacheService.remove('evacueeSearchContext');
+    this.cacheService.remove('essFile');
   }
 
   public setWizardType(wizardType: string) {
