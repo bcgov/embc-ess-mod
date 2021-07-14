@@ -47,7 +47,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
             profile.Gender.ShouldBe(FakeGenerator.GenderResolver(contact.gendercode));
 
             profile.Email.ShouldBe(contact.emailaddress1);
-            profile.Phone.ShouldBe(contact.telephone1);
+            profile.Phone.ShouldBe(contact.address1_telephone1);
 
             profile.PrimaryAddress.AddressLine1.ShouldBe(contact.address1_line1);
             profile.PrimaryAddress.AddressLine2.ShouldBe(contact.address1_line2);
@@ -92,7 +92,7 @@ namespace EMBC.Tests.Unit.ESS.Contacts
             contact.gendercode.ShouldBe(FakeGenerator.GenderResolver(profile.Gender));
 
             contact.emailaddress1.ShouldBe(profile.Email);
-            contact.telephone1.ShouldBe(profile.Phone);
+            contact.address1_telephone1.ShouldBe(profile.Phone);
 
             contact.address1_line1.ShouldBe(profile.PrimaryAddress.AddressLine1);
             contact.address1_line2.ShouldBe(profile.PrimaryAddress.AddressLine2);

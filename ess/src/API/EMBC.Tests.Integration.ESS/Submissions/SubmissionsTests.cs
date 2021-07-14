@@ -253,49 +253,59 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             string newCountry;
             string newProvince;
             string newCity;
+            string newPostalCode;
             if (currentCountry.Equals("CAN"))
             {
                 newCountry = "USA";
                 newProvince = "WA";
                 newCity = "Seattle";
+                newPostalCode = "12345";
             }
             else
             {
                 newCountry = "CAN";
                 newProvince = "BC";
                 newCity = "Vancouver";
+                newPostalCode = "v1v 1v1";
             }
 
             registrant.PrimaryAddress.Country = newCountry;
             registrant.PrimaryAddress.StateProvince = newProvince;
             registrant.PrimaryAddress.Community = newCommunity;
             registrant.PrimaryAddress.City = newCity;
+            registrant.PrimaryAddress.PostalCode = newPostalCode;
 
-            registrant.Email = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
+            string newEmail = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
+            registrant.Email = newEmail;
+
+            var currentPhone = registrant.Phone;
+            string newPhone = currentPhone == "7789877897" ? "6045557777" : "7789998888";
+            registrant.Phone = newPhone;
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
             var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
-            updatedRegistrant.Email.ShouldBe(registrant.Email);
+            updatedRegistrant.Email.ShouldBe(newEmail);
+            updatedRegistrant.Phone.ShouldBe(newPhone);
             updatedRegistrant.PrimaryAddress.Country.ShouldBe(newCountry);
             updatedRegistrant.PrimaryAddress.StateProvince.ShouldBe(newProvince);
             updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
             updatedRegistrant.PrimaryAddress.City.ShouldBe(newCity);
+            updatedRegistrant.PrimaryAddress.PostalCode.ShouldBe(newPostalCode);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteProfileAddressLinks()
         {
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
-            string currentProvince = registrant.PrimaryAddress.StateProvince;
-            if (string.IsNullOrEmpty(currentProvince))
+            if (string.IsNullOrEmpty(registrant.PrimaryAddress.StateProvince))
             {
-                await CanUpdateProfile(); //populates the community and state/province fields 
+                await CanUpdateProfile(); //populates the community and state/province fields
                 registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
             }
-            
+
             string newProvince = null;
             string newCommunity = null;
             registrant.PrimaryAddress.StateProvince = newProvince;
@@ -306,7 +316,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
-            updatedRegistrant.Email.ShouldBe(registrant.Email);
             updatedRegistrant.PrimaryAddress.StateProvince.ShouldBe(newProvince);
             updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
         }
