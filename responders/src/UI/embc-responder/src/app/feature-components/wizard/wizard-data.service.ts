@@ -207,6 +207,60 @@ export class WizardDataService {
     }
   ];
 
+  private reviewESSFileMenu: Array<WizardSidenavModel> = [
+    {
+      step: 'STEP 1',
+      title: 'Review ESS File',
+      route: '/ess-wizard/ess-file',
+      isLocked: false,
+      incompleteMsg: globalConst.essFileStepIncompleteMessage,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-ess-file.svg',
+        altSrc: '/assets/images/wizard/ess-file.svg',
+        height: '29',
+        width: '28'
+      }
+    },
+    {
+      step: 'STEP 2',
+      title: 'Add Supports',
+      route: '/ess-wizard/add-supports',
+      isLocked: true,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-supports.svg',
+        altSrc: '/assets/images/wizard/supports.svg',
+        height: '33',
+        width: '33'
+      }
+    },
+    {
+      step: 'NOTES',
+      title: 'Add ESS File Notes',
+      route: '/ess-wizard/add-notes',
+      isLocked: true,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-notes.svg',
+        altSrc: '/assets/images/wizard/notes.svg',
+        height: '42',
+        width: '42'
+      }
+    }
+  ];
+
+  /**
+   * Creates review file menu
+   *
+   * @returns side menu array
+   */
+  public createReviewFileMenu(): Array<WizardSidenavModel> {
+    const reviewFileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.reviewESSFileMenu) {
+      reviewFileMenu.push({ ...menuItems, ...menu });
+    }
+    return reviewFileMenu;
+  }
+
   /**
    * Creates the profile tabs to load
    *

@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-md-12">
+    <p class="heading">Status Definitions</p>
+  </div>
+</div>
+<div *ngIf="content === 'Expired'">
+  <p class="expired-status">
+    <img src="/assets/images/expired-flag.svg" height="40" width="33" /><span
+      class="status-heading"
+      >Expired ESS File</span
+    >
+  </p>
+  <p>
+    An ESS File <b>NOT</b> associated with a task number and created more then 1
+    month ago, but less then 6 months ago.
+  </p>
+</div>
+<div *ngIf="content === 'Pending'">
+  <p class="pending-status">
+    <img src="/assets/images/pending-flag.svg" height="40" width="33" /><span
+      class="status-heading"
+      >Pending ESS File</span
+    >
+  </p>
+  <p>
+    An ESS File <b>NOT</b> associated with a task number and created within the
+    last 1 month.
+  </p>
+</div>
+<div *ngIf="content === 'Active'">
+  <p class="active-status">
+    <img src="/assets/images/active-flag.svg" height="40" width="33" /><span
+      class="status-heading"
+      >Active ESS File</span
+    >
+  </p>
+  <p>An ESS File associated with an active task number.</p>
+</div>
+<div *ngIf="content === 'Completed'">
+  <p class="complete-status">
+    <img src="/assets/images/complete-flag.svg" height="40" width="33" /><span
+      class="status-heading"
+      >Completed ESS File</span
+    >
+  </p>
+  <p>An ESS File where the Task number associated with the file has expired.</p>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <button class="button-s button-width" mat-button (click)="close()">
+      Close
+    </button>
+  </div>
+</div>

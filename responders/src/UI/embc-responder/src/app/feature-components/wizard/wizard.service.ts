@@ -34,6 +34,8 @@ export class WizardService {
       this.menuItems = this.wizardDataService.createNewESSFileMenu();
     } else if (type === WizardType.EditRegistration) {
       this.menuItems = this.wizardDataService.createEditProfileMenu();
+    } else if (type === WizardType.ReviewFile) {
+      this.menuItems = this.wizardDataService.createReviewFileMenu();
     }
   }
 
