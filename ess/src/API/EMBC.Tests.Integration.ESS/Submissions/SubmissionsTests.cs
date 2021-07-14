@@ -275,14 +275,20 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             registrant.PrimaryAddress.City = newCity;
             registrant.PrimaryAddress.PostalCode = newPostalCode;
 
-            registrant.Email = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
+            string newEmail = "christest3@email" + Guid.NewGuid().ToString("N").Substring(0, 10);
+            registrant.Email = newEmail;
+
+            var currentPhone = registrant.Phone;
+            string newPhone = currentPhone == "7789877897" ? "6045557777" : "7789998888";
+            registrant.Phone = newPhone;
 
             var id = await manager.Handle(new SaveRegistrantCommand { Profile = registrant });
 
             var updatedRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
             updatedRegistrant.Id.ShouldBe(id);
             updatedRegistrant.Id.ShouldBe(registrant.Id);
-            updatedRegistrant.Email.ShouldBe(registrant.Email);
+            updatedRegistrant.Email.ShouldBe(newEmail);
+            updatedRegistrant.Phone.ShouldBe(newPhone);
             updatedRegistrant.PrimaryAddress.Country.ShouldBe(newCountry);
             updatedRegistrant.PrimaryAddress.StateProvince.ShouldBe(newProvince);
             updatedRegistrant.PrimaryAddress.Community.ShouldBe(newCommunity);
