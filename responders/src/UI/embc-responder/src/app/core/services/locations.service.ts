@@ -98,6 +98,18 @@ export class LocationsService {
     };
   }
 
+  /**
+   * Maps the community from code
+   * @param code community code
+   * @returns community object
+   */
+  public mapCommunityFromCode(code: string): Community {
+    if (code !== null && code !== undefined) {
+      const communities = this.getCommunityList();
+      return communities.find((comm) => comm.code === code);
+    }
+  }
+
   private setCommunityList(communityList: Community[]): void {
     this.communityList = communityList;
     this.cacheService.set('communityList', communityList);
