@@ -1,1 +1,221 @@
-<p>essfile-dashboard works!</p>
+<div *ngIf="essFile?.isRestricted" class="row restricted-div">
+  <span class="restricted-text">---RESTRICTED FILE---</span>
+</div>
+
+<div class="row dashboard-container container-frame page-heading">
+  <div class="col-md-12">
+    <span
+      [ngClass]="{
+        'file-active': essFile?.status === 'Active',
+        'file-pending': essFile?.status === 'Pending',
+        'file-complete': essFile?.status === 'Completed',
+        'file-expired': essFile?.status === 'Expired'
+      }"
+      >ESS File # <span class="bold">{{ essFile?.id }}</span></span
+    >
+    <span class="file-heading"
+      ><img
+        *ngIf="essFile?.status === 'Pending'"
+        src="/assets/images/pending-flag.svg"
+        height="40"
+        width="33" />
+      <img
+        *ngIf="essFile?.status === 'Active'"
+        src="/assets/images/active-flag.svg"
+        height="40"
+        width="33" />
+      <img
+        *ngIf="essFile?.status === 'Completed'"
+        src="/assets/images/complete-flag.svg"
+        height="40"
+        width="33" />
+      <img
+        *ngIf="essFile?.status === 'Expired'"
+        src="/assets/images/expired-flag.svg"
+        height="40"
+        width="33"
+    /></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="row dashboard-subheading">
+      <div class="col-md-7">
+        <span> Status:</span>
+        <span
+          class="bold"
+          [ngClass]="{
+            'file-active': essFile?.status === 'Active',
+            'file-pending': essFile?.status === 'Pending',
+            'file-complete': essFile?.status === 'Completed',
+            'file-expired': essFile?.status === 'Expired'
+          }"
+          >{{ essFile?.status }}</span
+        >
+      </div>
+      <div>
+        <a class="status-info" (click)="openStatusDefinition()">
+          <img src="/assets/images/info.svg" height="28" width="28" />
+          <img src="/assets/images/info-on-hover.svg" height="28" width="28"
+        /></a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <span class="field-label">Restriction Status:</span>
+        <span
+          [ngClass]="{
+            'not-restricted-field': !essFile?.isRestricted,
+            'restricted-field': essFile?.isRestricted
+          }"
+          >{{ essFile?.isRestricted ? 'Restricted' : 'Unrestricted' }}</span
+        >
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <span class="field-label">Main Applicant:</span>
+        <span class="bold">Applicant name</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1">
+    <div class="row">
+      <div class="col-md-6">
+        <img src="/assets/images/vertical-line.svg" height="108" width="2" />
+      </div>
+      <div class="col-md-6">
+        <img src="/assets/images/task-board.svg" height="34" width="25" />
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="row dashboard-subheading">
+      <div class="col-md-12">
+        <span>Task #</span>
+        <span class="bold">{{ essFile?.task?.taskNumber }} - </span>
+        <span>{{ essFile?.assignedTaskCommunity?.name }}</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <span class="field-label">Task Start Date:</span>
+        <span class="bold">{{
+          essFile?.task?.from | date: 'dd-MMM-yyyy'
+        }}</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <span class="field-label">Task End Date:</span>
+        <span class="bold">{{ essFile?.task?.to | date: 'dd-MMM-yyyy' }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-1">
+    <div class="row">
+      <div class="col-md-6">
+        <img src="/assets/images/vertical-line.svg" height="108" width="2" />
+      </div>
+      <div class="col-md-6">
+        <img src="/assets/images/location-pointer.svg" height="34" width="21" />
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="row dashboard-subheading">
+      <div class="col-md-12">
+        <span>Evacuated From</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <span class="bold">
+          {{ essFile?.evacuatedFromAddress?.addressLine1 }},</span
+        >
+        <span
+          *ngIf="essFile?.evacuatedFromAddress?.addressLine2 !== null"
+          class="bold"
+          >{{ essFile?.evacuatedFromAddress?.addressLine2 }}</span
+        >
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <span class="bold">
+          {{ communityName(essFile?.evacuatedFromAddress) }}
+        </span>
+        <span
+          *ngIf="essFile?.evacuatedFromAddress?.postalCode !== null"
+          class="bold"
+          >, {{ essFile?.evacuatedFromAddress?.postalCode }}</span
+        >
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row banner">
+  <div class="col-md-9 center-content">
+    <img src="/assets/images/exclaimation.svg" height="32" width="32" />
+    <span class="banner-heading">Support Extensions:</span>
+    <span>To extend or to add new supports, review the Current ESS File.</span>
+  </div>
+  <div class="col-md-3">
+    <button
+      class="button-p ess-file-button"
+      (click)="reviewEssFile()"
+      mat-button
+    >
+      Review ESS File
+    </button>
+  </div>
+</div>
+
+<div class="row content-row">
+  <div class="col-md-12 file-side-menu">
+    <mat-sidenav-container class="file-container">
+      <mat-sidenav
+        [autoFocus]="true"
+        #sidenav
+        mode="side"
+        opened
+        class="file-sideNav"
+        [fixedInViewport]="false"
+      >
+        <a
+          mat-button
+          class="a-mat-button"
+          routerLinkActive="active-side-item"
+          [routerLink]="'/responder-access/search/essfile-dashboard/overview'"
+          [state]="{ file: essFile }"
+        >
+          Overview</a
+        >
+        <a mat-button class="a-mat-button" routerLinkActive="active-side-item">
+          ESS File Details</a
+        >
+        <a mat-button class="a-mat-button" routerLinkActive="active-side-item">
+          Supports</a
+        >
+        <a mat-button class="a-mat-button" routerLinkActive="active-side-item">
+          Notes</a
+        >
+      </mat-sidenav>
+
+      <mat-sidenav-content class="file-content">
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+
+      <mat-sidenav opened mode="side" position="end" class="file-endNav"
+        >End Content sectionn</mat-sidenav
+      >
+    </mat-sidenav-container>
+  </div>
+</div>
