@@ -34,6 +34,7 @@ export class DialogComponent implements OnInit, OnDestroy {
     const factory = this.resolver.resolveComponentFactory(this.data.component);
     this.componentRef = this.vcRef.createComponent(factory);
     this.componentRef.instance.content = this.data.content;
+    this.componentRef.instance.profileData = this.data.profileData;
 
     this.componentRef.instance.outputEvent.subscribe((value) => {
       this.buttonAction(value);

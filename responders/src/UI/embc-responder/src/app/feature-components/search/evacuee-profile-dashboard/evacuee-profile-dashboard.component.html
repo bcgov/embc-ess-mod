@@ -22,7 +22,7 @@
 </div>
 
 <div class="row status-row-margin">
-  <div class="col-md-5">
+  <div class="verified-column">
     <img
       *ngIf="!evacueeProfile?.verifiedUser"
       src="/assets/images/unverified.svg"
@@ -36,39 +36,49 @@
       width="34"
     />
     <span class="status"
-      >Verification Status: <b>{{ verificationStatus }}</b></span
+      >Verification Status:
+      <b>{{
+        evacueeProfile?.verifiedUser ? 'Verified' : 'Unverified'
+      }}</b></span
     >
 
     <a class="info-test" (click)="openStatusDefinition()">
       <img src="/assets/images/info.svg" height="32" width="32" />
       <img src="/assets/images/info-on-hover.svg" height="32" width="32"
     /></a>
-    <button
-      *ngIf="!evacueeProfile?.verifiedUser"
-      class="button-p verify-button"
-      (click)="verifyEvacuee()"
-      mat-button
-    >
-      Verify
-    </button>
   </div>
+
+  <button
+    *ngIf="!evacueeProfile?.verifiedUser"
+    class="button-p verify-button"
+    (click)="verifyEvacuee()"
+    mat-button
+  >
+    Verify
+  </button>
+
   <div class="col-md-1 divider">
     <img src="/assets/images/vertical-line.svg" height="41" width="2" />
   </div>
-  <div class="col-md-4">
-    <img src="/assets/images/unlock.svg" height="31" width="21" />
+
+  <div class="col-md-3">
+    <img src="/assets/images/unlock.svg" height="31" width="34" />
     <span class="status">Restriction Status:</span>
     <span
       class="status"
       [ngStyle]="{ color: evacueeProfile?.restriction ? '#C90000' : '#3C9D0F' }"
-      ><b>{{ restrictionStatus }}</b></span
+      ><b>{{
+        evacueeProfile?.restriction ? 'Restricted File' : 'Unrestricted File'
+      }}</b></span
     >
   </div>
+
   <div class="col-md-1 divider">
     <img src="/assets/images/vertical-line.svg" height="41" width="2" />
   </div>
-  <div class="col">
-    <img src="/assets/images/calendar.svg" height="31" width="32" />
+
+  <div class="col-md-3">
+    <img src="/assets/images/calendar.svg" height="31" width="34" />
     <span class="status"
       >Created:
       <b>{{ evacueeProfile?.createdOn | date: 'dd-MMM-YYYY' }}</b></span
@@ -264,3 +274,5 @@
     </div>
   </div>
 </div>
+
+<app-overlay-loader [showLoader]="isLoading"></app-overlay-loader>
