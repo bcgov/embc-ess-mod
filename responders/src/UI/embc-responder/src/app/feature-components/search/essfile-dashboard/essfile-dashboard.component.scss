@@ -81,19 +81,25 @@
   padding-left: 17px;
 }
 
-.wizard-sideNav {
+.file-endNav {
+  width: 275px;
+  background-color: white;
+}
+
+.file-sideNav {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 275px;
   background-color: white;
+  border-right: 0px !important;
 }
 
-.wizard-content {
+.file-content {
   background-color: white;
 }
 
-.wizard-container {
+.file-container {
   position: relative;
 }
 
@@ -117,9 +123,10 @@ a:not(.btn):focus {
 
 .a-mat-button {
   width: 100%;
-  text-align: unset;
-  line-height: unset;
+  text-align: center;
+  line-height: 5;
   color: #234075;
+  font-weight: bold;
 }
 
 .content-row {
