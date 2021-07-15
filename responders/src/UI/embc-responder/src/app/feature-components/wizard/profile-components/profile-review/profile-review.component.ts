@@ -108,9 +108,6 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
           .createProfile(this.stepEvacueeProfileService.createProfileDTO())
           .subscribe(
             (profile: RegistrantProfileModel) => {
-              // After creating and fetching profile, update Profile Step values
-              this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
-
               // Once all profile work is done, tell user save is complete and go to Step 2
               this.disableButton = true;
               this.saveLoader = false;
@@ -130,6 +127,11 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
                   this.router.navigate(['/ess-wizard/ess-file'], {
                     state: { step: 'STEP 2', title: 'Create ESS File' }
                   });
+
+                  // Update Profile step after navigation to prevent form from changing behind modal
+                  this.stepEvacueeProfileService.setFormValuesFromProfile(
+                    profile
+                  );
                 });
             },
             (error) => {

@@ -45,21 +45,17 @@ export class WizardActivateGuard implements CanActivate {
       return false;
     } else if (wizardType === WizardType.EditRegistration) {
       if (this.isProfileIdNotNull(registrantProfileId)) {
-        this.wizardAdapterService.stepEditProfileFromProfileId(
+        return this.wizardAdapterService.stepEditProfileFromProfileId(
           registrantProfileId
         );
-
-        return true;
       }
 
       return false;
     } else if (wizardType === WizardType.NewEssFile) {
       if (this.isProfileIdNotNull(registrantProfileId)) {
-        this.wizardAdapterService.stepCreateEssFileFromProfileId(
+        return this.wizardAdapterService.stepCreateEssFileFromProfileId(
           registrantProfileId
         );
-
-        return true;
       }
 
       return false;

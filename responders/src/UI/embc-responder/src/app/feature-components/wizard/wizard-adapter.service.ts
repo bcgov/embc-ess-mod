@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HouseholdMemberType } from 'src/app/core/api/models';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
@@ -7,6 +9,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
 import { StepEssFileService } from './step-ess-file/step-ess-file.service';
 import { StepEvacueeProfileService } from './step-evacuee-profile/step-evacuee-profile.service';
+import { WizardDataService } from './wizard-data.service';
 import { WizardService } from './wizard.service';
 
 @Injectable({
@@ -15,6 +18,7 @@ import { WizardService } from './wizard.service';
 export class WizardAdapterService {
   constructor(
     private wizardService: WizardService,
+    private wizardDataService: WizardDataService,
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
@@ -71,37 +75,58 @@ export class WizardAdapterService {
       dateOfBirth: this.evacueeSearchService.evacueeSearchContext
         ?.evacueeSearchParameters?.dateOfBirth
     };
+
+    this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
   }
 
   /**
    * Set initial values for Edit Registrant Profile (stepProfileService), from an Evacuee Profile ID
    */
-  public stepEditProfileFromProfileId(profileId: string) {
-    this.evacueeProfileService
-      .getProfileFromId(profileId)
-      .subscribe((registrantProfileModel) => {
-        this.stepEvacueeProfileService.setFormValuesFromProfile(
-          registrantProfileModel
-        );
-        this.stepEvacueeProfileService.setEditTabStatus();
-      });
+  public stepEditProfileFromProfileId(profileId: string): Observable<boolean> {
+    return new Observable<boolean>((obs) => {
+      this.evacueeProfileService.getProfileFromId(profileId).subscribe(
+        (registrantProfileModel: RegistrantProfileModel) => {
+          this.stepEvacueeProfileService.setFormValuesFromProfile(
+            registrantProfileModel
+          );
+
+          this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
+          this.stepEvacueeProfileService.setEditTabStatus();
+
+          obs.next(true);
+        },
+        (error) => {
+          obs.next(false);
+        }
+      );
+    });
   }
 
   /**
    * Set initial values for Create ESS File (stepEssFileService), from an Evacuee Profile ID
    */
-  public stepCreateEssFileFromProfileId(profileId: string) {
-    this.evacueeProfileService
-      .getProfileFromId(profileId)
-      .subscribe((registrantProfileModel) => {
-        this.stepCreateEssFileFromProfileRecord(registrantProfileModel);
-      });
+  public stepCreateEssFileFromProfileId(
+    profileId: string
+  ): Observable<boolean> {
+    return new Observable<boolean>((obs) => {
+      this.evacueeProfileService.getProfileFromId(profileId).subscribe(
+        (registrantProfileModel) => {
+          this.stepCreateEssFileFromProfileRecord(registrantProfileModel);
+          obs.next(true);
+        },
+        (error) => {
+          obs.next(false);
+        }
+      );
+    });
   }
 
   /**
    * Set initial values for Create ESS File (stepEssFileService), from a full Evacuee Profile record
    */
   public stepCreateEssFileFromProfileRecord(profile: RegistrantProfileModel) {
+    this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
+
     this.evacueeSessionService.profileId = profile.id;
     this.stepEssFileService.primaryAddress = this.wizardService.setAddressObjectForForm(
       profile.primaryAddress
