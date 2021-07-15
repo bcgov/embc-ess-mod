@@ -52,13 +52,17 @@
 
 .verify-button {
   height: 35px !important;
-  margin-left: 10px;
-  width: 30%;
+  width: 15%;
+  margin: 0 15px;
 }
 
 .status-row-margin {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+.verified-column {
+  margin-left: 15px;
 }
 
 .info-test {
@@ -172,5 +176,11 @@
 
 .edit-profile-button {
   width: 40%;
+}
+
+@media(max-width: 864px) {
+  .divider {
+      display: none;
+  }
 }
 

@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 
 @Component({
   selector: 'app-verify-evacuee-dialog',
@@ -15,6 +16,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 })
 export class VerifyEvacueeDialogComponent implements OnInit {
   @Input() content: DialogContent;
+  @Input() profileData?: RegistrantProfileModel;
   @Output() outputEvent = new EventEmitter<string>();
   verificationForm: FormGroup;
   noIdFlag = true;

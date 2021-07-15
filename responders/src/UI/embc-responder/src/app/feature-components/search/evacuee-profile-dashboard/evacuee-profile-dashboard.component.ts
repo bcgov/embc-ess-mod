@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { Community } from 'src/app/core/services/locations.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { StatusDefinitionDialogComponent } from 'src/app/shared/components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
@@ -23,15 +22,15 @@ import * as globalConst from '../../../core/services/global-constants';
 export class EvacueeProfileDashboardComponent implements OnInit {
   evacueeProfile: RegistrantProfileModel;
   evacueeProfileId: string;
-  restrictionStatus: string;
-  verificationStatus: string;
+  isLoading = false;
 
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private cacheService: CacheService,
     private evacueeSessionService: EvacueeSessionService,
-    private evacueeProfileService: EvacueeProfileService
+    private evacueeProfileService: EvacueeProfileService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -57,40 +56,28 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * Verifies the evacuee
    */
   verifyEvacuee(): void {
+    this.isLoading = !this.isLoading;
     this.dialog
       .open(DialogComponent, {
         data: {
           component: VerifyEvacueeDialogComponent,
-          content: globalConst.verifyEvacueeProfile
+          content: globalConst.verifyEvacueeProfile,
+          profileData: this.evacueeProfile
         },
-        height: '580px',
+        height: '550px',
         width: '620px'
       })
       .afterClosed()
       .subscribe((value) => {
         if (value === 'verified') {
-          this.openSuccessModal(globalConst.successfulVerification);
+          this.verifyProfile();
         }
       });
   }
 
   /**
-   * Open the dialog to indicate evacuee has been successfully
-   * verified
-   *
-   * @param text Text to be displayed
+   * Navigates to the Wizard configured to insert a new ESS File
    */
-  openSuccessModal(content: DialogContent): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        content
-      },
-      height: '230px',
-      width: '530px'
-    });
-  }
-
   createNewESSFile(): void {
     this.cacheService.set(
       'wizardOpenedFrom',
@@ -103,6 +90,9 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     });
   }
 
+  /**
+   * Navigates to the Wizard configured to update the current registrant Profile
+   */
   editProfile(): void {
     this.cacheService.set(
       'wizardOpenedFrom',
@@ -116,31 +106,56 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     });
   }
 
-  private getEvacueeProfile(evacueeProfileId) {
+  /**
+   * Open the dialog to indicate evacuee has been successfully
+   * verified
+   *
+   * @param text Text to be displayed
+   */
+  private openSuccessModal(content: DialogContent): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content
+      },
+      height: '230px',
+      width: '530px'
+    });
+  }
+
+  /**
+   * Calls the API to verify the Registrant Profile
+   */
+  private verifyProfile(): void {
+    this.evacueeProfileService
+      .setVerifiedStatus(this.evacueeProfileId, true)
+      .subscribe(
+        (evacueeProfile) => {
+          this.evacueeProfile = evacueeProfile;
+          // this.isLoading = !this.isLoading;
+          this.openSuccessModal(globalConst.successfulVerification);
+        },
+        (error) => {
+          this.isLoading = !this.isLoading;
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.verifyRegistrantProfileError
+          );
+        }
+      );
+  }
+
+  /**
+   * Sets local variables with the selected Profile to displayed them into the Profile Dashboard
+   *
+   * @param evacueeProfileId the evacuee Profile ID needed to get the profile details
+   */
+  private getEvacueeProfile(evacueeProfileId): void {
     this.evacueeProfileService
       .getProfileFromId(evacueeProfileId)
       .subscribe((profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
-        this.restrictionStatus = this.getRestrictionStatus(profile.restriction);
-        this.verificationStatus = this.getVerificationStatus(
-          profile.verifiedUser
-        );
       });
-  }
-
-  private getRestrictionStatus(status: boolean): string {
-    if (status) {
-      return 'Restricted File';
-    } else {
-      return 'Unrestricted File';
-    }
-  }
-
-  private getVerificationStatus(status: boolean): string {
-    if (status) {
-      return 'Verified';
-    } else {
-      return 'Unverified';
-    }
   }
 }

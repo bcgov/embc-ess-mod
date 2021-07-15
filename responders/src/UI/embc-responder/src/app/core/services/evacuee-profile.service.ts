@@ -87,4 +87,26 @@ export class EvacueeProfileService {
         )
       );
   }
+
+  /**
+   *
+   * @param registrantId ID of Registrant Profile to set the verification flag
+   * @param verified boolean response to set
+   * @returns API profile mapped as EvacueeProfile
+   */
+  public setVerifiedStatus(
+    registrantId: string,
+    verified: boolean
+  ): Observable<RegistrantProfileModel> {
+    return this.registrationsService
+      .registrationsSetRegistrantVerified({
+        registrantId,
+        verified
+      })
+      .pipe(
+        mergeMap((regResult: RegistrationResult) =>
+          this.getProfileFromId(regResult.id)
+        )
+      );
+  }
 }
