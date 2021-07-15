@@ -30,29 +30,27 @@
 
 <div *ngIf="profileData" class="row">
   <div class="col-md-12 table-parent">
-  <table class="table-details">
-    <tr>
-      <th><b>First Name:</b></th>
-      <td>
-        {{ profileData?.personalDetails?.firstName }}
-      </td>
-    </tr>
-    <tr>
-      <th><b>Last Name:</b></th>
-      <td>
-        {{ profileData?.personalDetails?.lastName }}
-      </td>
-    </tr>
-    <tr>
-      <th><b>Date of Birth:</b></th>
-      <td>
-        {{
-          profileData?.personalDetails?.dateOfBirth | date: 'dd-MMM-YYYY'
-        }}
-      </td>
-    </tr>
-  </table>
-</div>
+    <table class="table-details">
+      <tr>
+        <th><b>First Name:</b></th>
+        <td>
+          {{ profileData?.personalDetails?.firstName }}
+        </td>
+      </tr>
+      <tr>
+        <th><b>Last Name:</b></th>
+        <td>
+          {{ profileData?.personalDetails?.lastName }}
+        </td>
+      </tr>
+      <tr>
+        <th><b>Date of Birth:</b></th>
+        <td>
+          {{ profileData?.personalDetails?.dateOfBirth | date: 'dd-MMM-YYYY' }}
+        </td>
+      </tr>
+    </table>
+  </div>
   <!-- <div class="col-md-3">
     <p><b>First Name:</b></p>
     <p><b>Last Name:</b></p>
@@ -68,19 +66,31 @@
 <div class="row">
   <div class="col-md-12">
     <form [formGroup]="verificationForm">
-      <mat-radio-group formControlName="verified" aria-labelledby="verified-radio-group-label"
-        class="primary-radio-group" (change)="isVerified($event)" required>
-        <mat-radio-button [value]="true"><span class="radio-text"><b>Yes</b></span> - I saw government issued
-          identification</mat-radio-button>
-        <mat-radio-button [value]="false"><span class="radio-text"><b>No</b></span> - I did not see government
-          issued identification</mat-radio-button>
+      <mat-radio-group
+        formControlName="verified"
+        aria-labelledby="verified-radio-group-label"
+        class="primary-radio-group"
+        (change)="isVerified($event)"
+        required
+      >
+        <mat-radio-button [value]="true"
+          ><span class="radio-text"><b>Yes</b></span> - I saw government issued
+          identification</mat-radio-button
+        >
+        <mat-radio-button [value]="false"
+          ><span class="radio-text"><b>No</b></span> - I did not see government
+          issued identification</mat-radio-button
+        >
       </mat-radio-group>
 
-      <div class="field-error" *ngIf="
+      <div
+        class="field-error"
+        *ngIf="
           verifiedFormControl?.verified.touched &&
           verifiedFormControl?.verified.invalid &&
           verifiedFormControl?.verified.hasError('required')
-        ">
+        "
+      >
         Please make a selection
       </div>
 
@@ -99,7 +109,12 @@
     </button>
   </div>
   <div class="col-md-6">
-    <button *ngIf="noIdFlag" class="button-p button-width" mat-button (click)="verify()">
+    <button
+      *ngIf="noIdFlag"
+      class="button-p button-width"
+      mat-button
+      (click)="verify()"
+    >
       {{ content?.confirmButton }}
     </button>
   </div>

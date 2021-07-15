@@ -7,6 +7,7 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { StatusDefinitionDialogComponent } from 'src/app/shared/components/dialog-components/status-definition-dialog/status-definition-dialog.component';
 import { VerifyEvacueeDialogComponent } from 'src/app/shared/components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
@@ -21,13 +22,15 @@ import * as globalConst from '../../../core/services/global-constants';
 export class EvacueeProfileDashboardComponent implements OnInit {
   evacueeProfile: RegistrantProfileModel;
   evacueeProfileId: string;
+  isLoading = false;
 
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private cacheService: CacheService,
     private evacueeSessionService: EvacueeSessionService,
-    private evacueeProfileService: EvacueeProfileService
+    private evacueeProfileService: EvacueeProfileService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +56,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * Verifies the evacuee
    */
   verifyEvacuee(): void {
+    this.isLoading = !this.isLoading;
     this.dialog
       .open(DialogComponent, {
         data: {
@@ -108,7 +112,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    *
    * @param text Text to be displayed
    */
-   private openSuccessModal(content: DialogContent): void {
+  private openSuccessModal(content: DialogContent): void {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
@@ -119,13 +123,27 @@ export class EvacueeProfileDashboardComponent implements OnInit {
     });
   }
 
+  /**
+   * Calls the API to verify the Registrant Profile
+   */
   private verifyProfile(): void {
-   
-    this.evacueeProfileService.setVerifiedStatus(this.evacueeProfileId, true).subscribe(evacueeProfile => {
-      this.evacueeProfile = evacueeProfile;
-      
-      this.openSuccessModal(globalConst.successfulVerification);
-    });
+    this.evacueeProfileService
+      .setVerifiedStatus(this.evacueeProfileId, true)
+      .subscribe(
+        (evacueeProfile) => {
+          this.evacueeProfile = evacueeProfile;
+          // this.isLoading = !this.isLoading;
+          this.openSuccessModal(globalConst.successfulVerification);
+        },
+        (error) => {
+          this.isLoading = !this.isLoading;
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.verifyRegistrantProfileError
+          );
+        }
+      );
   }
 
   /**
@@ -138,7 +156,6 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       .getProfileFromId(evacueeProfileId)
       .subscribe((profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
-        console.log(this.evacueeProfile);
       });
   }
 }
