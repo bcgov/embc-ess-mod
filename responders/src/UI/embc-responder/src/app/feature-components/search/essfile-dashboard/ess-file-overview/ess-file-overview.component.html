@@ -1,0 +1,164 @@
+<mat-card class="overview-card">
+  <div class="row card-heading-outer">
+    <div class="col-md-12">
+      <p class="margins card-heading">Overview</p>
+    </div>
+  </div>
+
+  <div class="row evacuee-info-row">
+    <div class="col-md-12">
+      <div class="row section-padding">
+        <div class="col-md-3 subtitle-name">
+          <img src="/assets/images/file.svg" height="65" width="49" />
+          <p>ESS File</p>
+          <p>Details</p>
+        </div>
+        <div class="col-md-9 table-parent">
+          <table class="table-details">
+            <tr>
+              <th>ESS File Last Reviewed:</th>
+              <td>
+                <b>{{
+                  essFile?.needsAssessment?.modifiedOn | date: 'dd-MMM-yyyy'
+                }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>ESS File Last Reviewed by:</th>
+              <td>
+                <b>{{
+                  essFile?.needsAssessment?.reviewingTeamMemberDisplayName
+                }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>Supports Issued:</th>
+              <td>
+                <b>{{
+                  essFile?.needsAssessment?.supports?.length === 0
+                    ? 'No'
+                    : 'Yes'
+                }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>Insurance:</th>
+              <td>
+                <b>{{ essFile?.needsAssessment?.insurance }}</b>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <hr class="dotted-hr" />
+      <div class="row section-padding">
+        <div class="col-md-3 subtitle-name">
+          <img src="/assets/images/house.svg" height="56" width="58" />
+          <p>Current</p>
+          <p>Household</p>
+        </div>
+        <div class="col-md-1 bold count">
+          {{ essFile?.householdMembers?.length }}
+        </div>
+        <div class="col-md-8">
+          <div *ngFor="let member of essFile?.householdMembers">
+            {{ member.lastName | uppercase }}, {{ member.firstName }}
+          </div>
+        </div>
+      </div>
+      <hr class="dotted-hr" />
+      <div class="row section-padding">
+        <div class="col-md-3 subtitle-name">
+          <img src="/assets/images/animal-paw.svg" height="73" width="73" />
+          <p>Animals</p>
+        </div>
+        <div class="col-md-1 bold count">
+          {{ essFile?.needsAssessment?.pets?.length }}
+        </div>
+        <div class="col-md-8">
+          <div *ngFor="let pet of essFile?.needsAssessment?.pets">
+            {{ pet }}
+          </div>
+        </div>
+      </div>
+      <hr class="dotted-hr" />
+      <div class="row section-padding">
+        <div class="col-md-3 subtitle-name">
+          <img
+            src="/assets/images/wizard/needs-food.svg"
+            height="67"
+            width="44"
+          />
+          <p>Needs</p>
+          <p>Identified</p>
+        </div>
+        <div class="col-md-9 table-parent">
+          <table class="table-details">
+            <tr>
+              <th>Food</th>
+              <td>
+                <b>{{
+                  essFile?.needsAssessment?.canProvideFood === null
+                    ? 'I dont know'
+                    : essFile?.needsAssessment?.canProvideFood
+                }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>Lodging</th>
+              <td>
+                <b>{{
+                  essFile?.needsAssessment?.canProvideLodging === null
+                    ? 'I dont know'
+                    : essFile?.needsAssessment?.canProvideLodging
+                }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>Incidentals</th>
+              <td>
+                <b>{{
+                  essFile?.needsAssessment?.canProvideIncidentals === null
+                    ? 'I dont know'
+                    : essFile?.needsAssessment?.canProvideIncidentals
+                }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>Clothing</th>
+              <td>
+                <b>{{
+                  essFile?.needsAssessment?.canProvideClothing === null
+                    ? 'I dont know'
+                    : essFile?.needsAssessment?.canProvideClothing
+                }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>Transportation</th>
+              <td>
+                <b>{{
+                  essFile?.needsAssessment?.canProvideTransportation === null
+                    ? 'I dont know'
+                    : essFile?.needsAssessment?.canProvideTransportation
+                }}</b>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <hr class="dotted-hr" />
+      <div class="row section-padding">
+        <div class="col-md-3 subtitle-name">
+          <img src="/assets/images/evac-impact.svg" height="55" width="59" />
+          <p>Evacuation</p>
+          <p>Impact</p>
+        </div>
+        <div class="col-md-9">
+          {{ essFile?.needsAssessment?.evacuationImpact }}
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-card>
