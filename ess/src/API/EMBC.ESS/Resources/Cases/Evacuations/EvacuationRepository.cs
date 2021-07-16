@@ -268,7 +268,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             readCtx.MergeOption = MergeOption.NoTracking;
 
             var queryContacts =
-
+               !string.IsNullOrEmpty(query.LinkedRegistrantId) ||
                !string.IsNullOrEmpty(query.PrimaryRegistrantId) ||
                 !string.IsNullOrEmpty(query.HouseholdMemberId);
 
@@ -309,22 +309,25 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (!string.IsNullOrEmpty(query.FileId)) files = files.Where(f => f.era_name == query.FileId);
             if (query.RegistraionDateFrom.HasValue) files = files.Where(f => f.createdon >= query.RegistraionDateFrom.Value);
             if (query.RegistraionDateTo.HasValue) files = files.Where(f => f.createdon <= query.RegistraionDateTo.Value);
-            if (query.IncludeFilesInStatuses.Any()) files = files.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.statuscode));
+            if (query.IncludeFilesInStatuses.Any()) files = files.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.era_essfilestatus));
 
             return files.ToArray();
         }
 
         private static async Task<IEnumerable<era_evacuationfile>> QueryEvacuationFiles(EssContext ctx, EvacuationFilesQuery query)
         {
-            var files = ctx.era_evacuationfiles
+            var filesQuery = ctx.era_evacuationfiles
                 .Expand(f => f.era_CurrentNeedsAssessmentid)
                 .Where(f => f.statecode == (int)EntityState.Active);
-            if (!string.IsNullOrEmpty(query.FileId)) files = files.Where(f => f.era_name == query.FileId);
-            if (query.RegistraionDateFrom.HasValue) files = files.Where(f => f.createdon >= query.RegistraionDateFrom.Value);
-            if (query.RegistraionDateTo.HasValue) files = files.Where(f => f.createdon <= query.RegistraionDateTo.Value);
-            if (query.IncludeFilesInStatuses.Any()) files = files.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.statuscode));
+            if (!string.IsNullOrEmpty(query.FileId)) filesQuery = filesQuery.Where(f => f.era_name == query.FileId);
+            if (query.RegistraionDateFrom.HasValue) filesQuery = filesQuery.Where(f => f.createdon >= query.RegistraionDateFrom.Value);
+            if (query.RegistraionDateTo.HasValue) filesQuery = filesQuery.Where(f => f.createdon <= query.RegistraionDateTo.Value);
 
-            return (await ((DataServiceQuery<era_evacuationfile>)files).GetAllPagesAsync()).ToArray();
+            var files = await ((DataServiceQuery<era_evacuationfile>)filesQuery).GetAllPagesAsync();
+
+            if (query.IncludeFilesInStatuses.Any()) files = files.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.era_essfilestatus));
+
+            return files.ToArray();
         }
 
         public async Task<string> CreateNote(string essFileId, Note note)

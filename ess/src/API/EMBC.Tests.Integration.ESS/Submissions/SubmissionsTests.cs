@@ -365,6 +365,19 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchEvacuationFilesByLinkedRegistrantId()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var statuses = new[] { EvacuationFileStatus.Active, EvacuationFileStatus.Archived, EvacuationFileStatus.Completed, EvacuationFileStatus.Expired, EvacuationFileStatus.Pending };
+
+            var files = (await manager.Handle(new EvacuationFilesQuery { LinkedRegistrantId = registrant.Id, IncludeFilesInStatuses = statuses })).Items;
+
+            files.ShouldNotBeEmpty();
+
+            files.ShouldAllBe(f => f.HouseholdMembers.Any(h => h.LinkedRegistrantId == registrant.Id));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchEvacueesByName()
         {
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
