@@ -373,7 +373,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             var files = (await manager.Handle(new EvacuationFilesQuery { LinkedRegistrantId = registrant.Id, IncludeFilesInStatuses = statuses })).Items;
 
             files.ShouldNotBeEmpty();
-            //files.ShouldAllBe(f => f.PrimaryRegistrantId == registrant.Id);
+
+            files.ShouldAllBe(f => f.HouseholdMembers.Any(h => h.LinkedRegistrantId == registrant.Id));
         }
 
         [Fact(Skip = RequiresDynamics)]
