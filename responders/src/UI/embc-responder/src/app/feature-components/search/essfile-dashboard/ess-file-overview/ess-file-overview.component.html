@@ -62,7 +62,8 @@
         </div>
         <div class="col-md-8">
           <div *ngFor="let member of essFile?.householdMembers">
-            {{ member.lastName | uppercase }}, {{ member.firstName }}
+            {{ member.lastName | uppercase }},
+            {{ member.firstName }}
           </div>
         </div>
       </div>
@@ -85,7 +86,7 @@
       <div class="row section-padding">
         <div class="col-md-3 subtitle-name">
           <img
-            src="/assets/images/wizard/needs-food.svg"
+            src="/assets/images/needs-identified.svg"
             height="67"
             width="44"
           />
@@ -98,9 +99,7 @@
               <th>Food</th>
               <td>
                 <b>{{
-                  essFile?.needsAssessment?.canProvideFood === null
-                    ? 'I dont know'
-                    : essFile?.needsAssessment?.canProvideFood
+                  mapNeedsValues(essFile?.needsAssessment?.canProvideFood)
                 }}</b>
               </td>
             </tr>
@@ -108,9 +107,7 @@
               <th>Lodging</th>
               <td>
                 <b>{{
-                  essFile?.needsAssessment?.canProvideLodging === null
-                    ? 'I dont know'
-                    : essFile?.needsAssessment?.canProvideLodging
+                  mapNeedsValues(essFile?.needsAssessment?.canProvideLodging)
                 }}</b>
               </td>
             </tr>
@@ -118,9 +115,9 @@
               <th>Incidentals</th>
               <td>
                 <b>{{
-                  essFile?.needsAssessment?.canProvideIncidentals === null
-                    ? 'I dont know'
-                    : essFile?.needsAssessment?.canProvideIncidentals
+                  mapNeedsValues(
+                    essFile?.needsAssessment?.canProvideIncidentals
+                  )
                 }}</b>
               </td>
             </tr>
@@ -128,9 +125,7 @@
               <th>Clothing</th>
               <td>
                 <b>{{
-                  essFile?.needsAssessment?.canProvideClothing === null
-                    ? 'I dont know'
-                    : essFile?.needsAssessment?.canProvideClothing
+                  mapNeedsValues(essFile?.needsAssessment?.canProvideClothing)
                 }}</b>
               </td>
             </tr>
@@ -138,9 +133,9 @@
               <th>Transportation</th>
               <td>
                 <b>{{
-                  essFile?.needsAssessment?.canProvideTransportation === null
-                    ? 'I dont know'
-                    : essFile?.needsAssessment?.canProvideTransportation
+                  mapNeedsValues(
+                    essFile?.needsAssessment?.canProvideTransportation
+                  )
                 }}</b>
               </td>
             </tr>
