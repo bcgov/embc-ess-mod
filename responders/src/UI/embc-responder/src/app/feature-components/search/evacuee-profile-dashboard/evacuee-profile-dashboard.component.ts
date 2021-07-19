@@ -132,7 +132,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       .subscribe(
         (evacueeProfile) => {
           this.evacueeProfile = evacueeProfile;
-          // this.isLoading = !this.isLoading;
+          this.isLoading = !this.isLoading;
           this.openSuccessModal(globalConst.successfulVerification);
         },
         (error) => {
