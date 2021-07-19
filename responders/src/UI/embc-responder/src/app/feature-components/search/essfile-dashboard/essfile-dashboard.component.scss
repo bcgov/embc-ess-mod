@@ -111,6 +111,12 @@
 .active-side-item {
   background-color: #169bd5 !important;
   color: white !important;
+  img:last-child {
+    display: block !important;
+  }
+  img:first-child {
+    display: none !important;
+  }
 }
 
 .a-mat-button:hover {
@@ -133,4 +139,16 @@ a:not(.btn):focus {
   background-color: white;
   padding-top: 20px;
   padding-bottom: 20px;
+}
+
+.img-align {
+  margin-left: 27px;
+}
+
+.img-align-col {
+  align-self: center;
+}
+
+.menu-title {
+  text-align: left;
 }
