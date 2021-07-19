@@ -23,34 +23,34 @@
       <mat-panel-title>
         <span
           [ngClass]="{
-            'pending-status': file.status === 'pending',
-            'active-status': file.status === 'active',
-            'complete-status': file.status === 'complete',
-            'expired-status': file.status === 'expired'
+            'pending-status': file.status === 'Pending',
+            'active-status': file.status === 'Active',
+            'complete-status': file.status === 'Completed',
+            'expired-status': file.status === 'Expired'
           }"
-          >ESS File # {{ file.fileNumber }}</span
+          >ESS File # {{ file.id }}</span
         >
         <div class="file-heading">
           <img
-            *ngIf="file.status === 'pending'"
+            *ngIf="file.status === 'Pending'"
             src="/assets/images/pending-flag.svg"
             height="30"
             width="25"
           />
           <img
-            *ngIf="file.status === 'active'"
+            *ngIf="file.status === 'Active'"
             src="/assets/images/active-flag.svg"
             height="30"
             width="25"
           />
           <img
-            *ngIf="file.status === 'complete'"
+            *ngIf="file.status === 'Completed'"
             src="/assets/images/complete-flag.svg"
             height="30"
             width="25"
           />
           <img
-            *ngIf="file.status === 'expired'"
+            *ngIf="file.status === 'Expired'"
             src="/assets/images/expired-flag.svg"
             height="30"
             width="25"
@@ -73,29 +73,47 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <div class="row">
-      <div class="col-md-6">Task#:</div>
-      <div class="col-md-6 file-details">{{ file.taskNumber }}</div>
+    <div class="row table-parent">
+      <table class="table-details">
+        <tr>
+          <th>Task#:</th>
+          <td>
+            <b>{{ file?.task?.taskNumber }}</b>
+          </td>
+        </tr>
+        <tr>
+          <th>Task Start Date:</th>
+          <td>
+            <b>{{ file?.task?.from | date: 'dd-MMM-yyyy' }}</b>
+          </td>
+        </tr>
+        <tr>
+          <th>Task End Date:</th>
+          <td>
+            <b>{{ file?.task?.to | date: 'dd-MMM-yyyy' }}</b>
+          </td>
+        </tr>
+        <tr>
+          <th>ESS File Created:</th>
+          <td>
+            <b>{{ file?.createdOn | date: 'dd-MMM-yyyy' }}</b>
+          </td>
+        </tr>
+        <tr>
+          <th>Evacuated From:</th>
+          <td>
+            <p
+              style="font-weight: 700"
+              [innerHTML]="file?.evacuatedFromAddress | maskEvacuatedaddress"
+            ></p>
+          </td>
+        </tr>
+      </table>
     </div>
-
-    <div class="row">
-      <div class="col-md-6">Task Start Date</div>
-      <div class="col-md-6 file-details">{{ file.startDate }}</div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-6">Task End Date:</div>
-      <div class="col-md-6 file-details">{{ file.endDate }}</div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-6">ESS File Created:</div>
-      <div class="col-md-6 file-details">{{ file.createdDate }}</div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-6">Evacuated From:</div>
-      <div class="col-md-6 file-details">{{ file.evacuatedFrom }}</div>
+    <div class="row button-div">
+      <button class="button-p proceed-button" (click)="goToESSFile(file?.id)">
+        Proceed to ESS File
+      </button>
     </div>
   </mat-expansion-panel>
 </mat-card>
