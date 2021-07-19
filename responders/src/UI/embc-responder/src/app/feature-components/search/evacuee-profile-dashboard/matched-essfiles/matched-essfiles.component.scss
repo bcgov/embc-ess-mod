@@ -59,3 +59,30 @@ display: inline;
 .info-image:hover img:first-child {
 display: none;
 }
+
+.table-parent {
+  display: table;
+}
+
+.table-details {
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 15px;
+  border-collapse: separate;
+
+  th {
+    padding-right: 50px;
+    font-weight: 400;
+    vertical-align: top;
+  }
+}
+
+.button-div {
+  padding-left: 15px;
+  margin-top: 40px;
+}
+
+.proceed-button {
+  height: auto;
+  width: 50%;
+}

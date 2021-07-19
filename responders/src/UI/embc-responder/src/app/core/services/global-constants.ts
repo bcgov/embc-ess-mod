@@ -214,3 +214,5 @@ export const editNotesError =
   'Unable to edit note at this time. Please try again later';
 export const verifyRegistrantProfileError =
   'Unable to verify the Registrant Profile at this time. Please try again later';
+export const getProfileEssFilesError =
+  'Unable to verify get the ESS Files asspciated to the registrant at this time. Please try again later';

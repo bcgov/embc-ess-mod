@@ -1,8 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatAccordion } from '@angular/material/expansion';
+import { Router } from '@angular/router';
+import { EvacuationFileSummaryModel } from 'src/app/core/models/evacuation-file-summary.model';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-components/file-status-definition/file-status-definition.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-matched-essfiles',
@@ -12,48 +18,23 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 export class MatchedEssfilesComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   currentlyOpenedItemIndex = -1;
+  essFiles: Array<EvacuationFileSummaryModel>;
+  registrantId: string;
+  isLoading = false;
 
-  essFiles = [
-    {
-      fileNumber: '12345',
-      taskNumber: '34567',
-      startDate: '20-Mar-2021',
-      endDate: '23-Mar-2021',
-      createdDate: '20-Mar-2021',
-      evacuatedFrom: 'something',
-      status: 'active'
-    },
-    {
-      fileNumber: '12345',
-      taskNumber: '34567',
-      startDate: '20-Mar-2021',
-      endDate: '23-Mar-2021',
-      createdDate: '20-Mar-2021',
-      evacuatedFrom: 'something',
-      status: 'pending'
-    },
-    {
-      fileNumber: '12345',
-      taskNumber: '34567',
-      startDate: '20-Mar-2021',
-      endDate: '23-Mar-2021',
-      createdDate: '20-Mar-2021',
-      evacuatedFrom: 'something',
-      status: 'expired'
-    },
-    {
-      fileNumber: '12345',
-      taskNumber: '34567',
-      startDate: '20-Mar-2021',
-      endDate: '23-Mar-2021',
-      createdDate: '20-Mar-2021',
-      evacuatedFrom: 'something',
-      status: 'complete'
-    }
-  ];
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    private evacueeSessionService: EvacueeSessionService,
+    private evacueeProfileService: EvacueeProfileService,
+    private alertService: AlertService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.registrantId = this.evacueeSessionService.profileId;
+    console.log(this.registrantId);
+    this.getProfileESSFiles(this.registrantId);
+  }
 
   /**
    * Sets expanded input value for panel
@@ -98,5 +79,38 @@ export class MatchedEssfilesComponent implements OnInit {
       height: '650px',
       width: '500px'
     });
+  }
+
+  /**
+   * Redirects to the ESSFile dashboard to display details of the selected file
+   *
+   * @param essFileId the essFileID of the selected item
+   */
+  goToESSFile(essFileId: string): void {
+    this.evacueeSessionService.essFileNumber = essFileId;
+    this.router.navigate([
+      '/responder-access/search/essfile-dashboard/overview'
+    ]);
+  }
+
+  /**
+   * Gets all the matched ESSFile list related to the selected profile Dashboard to be diplayed on the ESSFiles section.
+   *
+   * @param registrantId the selected registrandID
+   */
+  private getProfileESSFiles(registrantId): void {
+    this.evacueeProfileService.getProfileFiles(registrantId).subscribe(
+      (essFilesArray) => {
+        this.essFiles = essFilesArray;
+      },
+      (error) => {
+        this.isLoading = !this.isLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.getProfileEssFilesError
+        );
+      }
+    );
   }
 }
