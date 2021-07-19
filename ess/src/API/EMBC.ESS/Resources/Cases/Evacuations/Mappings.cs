@@ -39,7 +39,13 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_securityphrase, opts => opts.MapFrom(s => s.SecurityPhraseChanged ? s.SecurityPhrase : null))
                 .ForMember(d => d._era_registrant_value, opts => opts.MapFrom(s => s.PrimaryRegistrantId))
                 .ForMember(d => d.era_era_evacuationfile_era_animal_ESSFileid, opts => opts.MapFrom(s => s.NeedsAssessment.Pets))
-                ;
+                .AfterMap((s, d) =>
+                {
+                    //set link to primary regitrant's household member entity
+                    var primaryHouseholdMember = d.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment.SingleOrDefault(m => m.era_isprimaryregistrant == true);
+                    if (primaryHouseholdMember == null) throw new Exception($"no primary household member was included in evacuation file {s.Id}");
+                    primaryHouseholdMember._era_registrant_value = Guid.Parse(s.PrimaryRegistrantId);
+                });
 
             CreateMap<era_evacuationfile, EvacuationFile>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
@@ -142,8 +148,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                ;
 
             CreateMap<era_householdmember, HouseholdMember>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_householdmemberid.ToString()))
-                .ForMember(d => d.LinkedRegistrantId, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.contactid))
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_householdmemberid))
+                .ForMember(d => d.LinkedRegistrantId, opts => opts.MapFrom(s => s._era_registrant_value))
                 .ForMember(d => d.HasAccessRestriction, opts => opts.MapFrom(s => s.era_Registrant == null ? (bool?)null : s.era_Registrant.era_restriction))
                 .ForMember(d => d.IsVerifiedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? (bool?)null : s.era_Registrant.era_verified))
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.era_isprimaryregistrant))
