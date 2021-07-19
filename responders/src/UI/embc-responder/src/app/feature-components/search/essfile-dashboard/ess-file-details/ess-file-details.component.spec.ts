@@ -8,9 +8,8 @@ describe('EssFileDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EssFileDetailsComponent ]
-    })
-    .compileComponents();
+      declarations: [EssFileDetailsComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {
