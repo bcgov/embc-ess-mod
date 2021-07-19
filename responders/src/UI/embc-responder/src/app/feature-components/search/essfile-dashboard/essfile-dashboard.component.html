@@ -196,17 +196,87 @@
           [routerLink]="'/responder-access/search/essfile-dashboard/overview'"
           [state]="{ file: essFile }"
         >
-          Overview</a
+          <div class="row">
+            <div class="col-md-3 img-align-col">
+              <img
+                class="img-align"
+                src="/assets/images/file-dashboard-menu/overview-inactive.svg"
+                width="32"
+                height="32"
+              />
+              <img
+                class="img-align"
+                src="/assets/images/file-dashboard-menu/overview-active.svg"
+                width="32"
+                height="32"
+              />
+            </div>
+            <div class="col-md-9 menu-title">Overview</div>
+          </div>
+        </a>
+        <a
+          mat-button
+          class="a-mat-button"
+          routerLinkActive="active-side-item"
+          [routerLink]="'/responder-access/search/essfile-dashboard/details'"
+          [state]="{ file: essFile }"
         >
+          <div class="row">
+            <div class="col-md-3 img-align-col">
+              <img
+                class="img-align"
+                src="/assets/images/wizard/locked-ess-file.svg"
+                width="32"
+                height="32"
+              />
+              <img
+                class="img-align"
+                src="/assets/images/wizard/ess-file.svg"
+                width="32"
+                height="32"
+              />
+            </div>
+            <div class="col-md-9 menu-title">ESS File Details</div>
+          </div>
+        </a>
         <a mat-button class="a-mat-button" routerLinkActive="active-side-item">
-          ESS File Details</a
-        >
+          <div class="row">
+            <div class="col-md-3 img-align-col">
+              <img
+                class="img-align"
+                src="/assets/images/wizard/locked-supports.svg"
+                width="32"
+                height="32"
+              />
+              <img
+                class="img-align"
+                src="/assets/images/wizard/supports.svg"
+                width="32"
+                height="32"
+              />
+            </div>
+            <div class="col-md-9 menu-title">Supports</div>
+          </div>
+        </a>
         <a mat-button class="a-mat-button" routerLinkActive="active-side-item">
-          Supports</a
-        >
-        <a mat-button class="a-mat-button" routerLinkActive="active-side-item">
-          Notes</a
-        >
+          <div class="row">
+            <div class="col-md-3 img-align-col">
+              <img
+                class="img-align"
+                src="/assets/images/wizard/locked-notes.svg"
+                width="42"
+                height="42"
+              />
+              <img
+                class="img-align"
+                src="/assets/images/wizard/notes.svg"
+                width="42"
+                height="42"
+              />
+            </div>
+            <div class="col-md-9 menu-title">Notes</div>
+          </div>
+        </a>
       </mat-sidenav>
 
       <mat-sidenav-content class="file-content">

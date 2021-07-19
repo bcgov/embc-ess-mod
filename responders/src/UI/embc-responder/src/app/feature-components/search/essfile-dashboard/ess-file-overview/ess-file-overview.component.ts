@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { EssfileDashboardService } from '../essfile-dashboard.service';
+import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-ess-file-overview',
@@ -29,4 +30,16 @@ export class EssFileOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  /**
+   * Maps needs assessment api value to UI string
+   *
+   * @param incomingValue needs assessment value
+   * @returns
+   */
+  mapNeedsValues(incomingValue: boolean | null): string {
+    return globalConst.needsOptions.find(
+      (ins) => ins.apiValue === incomingValue
+    )?.name;
+  }
 }

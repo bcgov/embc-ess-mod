@@ -39,9 +39,18 @@ mat-expansion-panel {
   padding-left: 17px;
 }
 
+.info-parent {
+  padding: 0 15px;
+  display: block;
+  margin: auto;
+}
+
 .info-test {
   @extend .info-image;
-  margin-left: 10px;
+  display: block;
+  margin: auto;
+  text-align: center;
+
 }
 
 .info-test :hover {
