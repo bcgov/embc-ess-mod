@@ -240,7 +240,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             {
                 if (file.era_CurrentNeedsAssessmentid == null)
                     ctx.LoadProperty(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid));
-                // else
+
                 ctx.AttachTo(nameof(EssContext.era_needassessments), file.era_CurrentNeedsAssessmentid);
 
                 ctx.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));
