@@ -1,5 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatAccordion } from '@angular/material/expansion';
+import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-components/file-status-definition/file-status-definition.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 
 @Component({
   selector: 'app-matched-essfiles',
@@ -48,7 +51,7 @@ export class MatchedEssfilesComponent implements OnInit {
       status: 'complete'
     }
   ];
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {}
 
@@ -80,5 +83,20 @@ export class MatchedEssfilesComponent implements OnInit {
     if (this.currentlyOpenedItemIndex === itemIndex) {
       this.currentlyOpenedItemIndex = -1;
     }
+  }
+
+  /**
+   * Open the dialog with definition of
+   * profile status
+   */
+  openStatusDefinition(): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: FileStatusDefinitionComponent,
+        content: 'All'
+      },
+      height: '650px',
+      width: '500px'
+    });
   }
 }

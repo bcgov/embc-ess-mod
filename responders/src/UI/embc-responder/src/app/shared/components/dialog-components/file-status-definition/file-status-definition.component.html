@@ -3,7 +3,7 @@
     <p class="heading">Status Definitions</p>
   </div>
 </div>
-<div *ngIf="content === 'Expired'">
+<div *ngIf="content === 'Expired' || content === 'All'">
   <p class="expired-status">
     <img src="/assets/images/expired-flag.svg" height="40" width="33" /><span
       class="status-heading"
@@ -15,7 +15,7 @@
     month ago, but less then 6 months ago.
   </p>
 </div>
-<div *ngIf="content === 'Pending'">
+<div *ngIf="content === 'Pending' || content === 'All'">
   <p class="pending-status">
     <img src="/assets/images/pending-flag.svg" height="40" width="33" /><span
       class="status-heading"
@@ -27,7 +27,7 @@
     last 1 month.
   </p>
 </div>
-<div *ngIf="content === 'Active'">
+<div *ngIf="content === 'Active' || content === 'All'">
   <p class="active-status">
     <img src="/assets/images/active-flag.svg" height="40" width="33" /><span
       class="status-heading"
@@ -36,7 +36,7 @@
   </p>
   <p>An ESS File associated with an active task number.</p>
 </div>
-<div *ngIf="content === 'Completed'">
+<div *ngIf="content === 'Completed' || content === 'All'">
   <p class="complete-status">
     <img src="/assets/images/complete-flag.svg" height="40" width="33" /><span
       class="status-heading"

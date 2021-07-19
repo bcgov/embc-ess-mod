@@ -38,3 +38,24 @@ mat-expansion-panel {
 .file-heading {
   padding-left: 17px;
 }
+
+.info-test {
+  @extend .info-image;
+  margin-left: 10px;
+}
+
+.info-test :hover {
+  cursor: pointer;
+}
+
+.info-image img:last-child {
+display: none;
+}
+
+.info-image:hover img:last-child {
+display: inline;
+}
+
+.info-image:hover img:first-child {
+display: none;
+}
