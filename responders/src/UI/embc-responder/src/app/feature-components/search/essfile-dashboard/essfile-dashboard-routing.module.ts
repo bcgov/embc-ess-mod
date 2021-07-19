@@ -7,16 +7,18 @@ const routes: Routes = [
     path: '',
     component: EssfileDashboardComponent,
     children: [
-      // {
-      //   path: '',
-      //   redirectTo: 'overview',
-      //   pathMatch: 'full'
-      // },
       {
         path: 'overview',
         loadChildren: () =>
           import('./ess-file-overview/ess-file-overview.module').then(
             (m) => m.EssFileOverviewModule
+          )
+      },
+      {
+        path: 'details',
+        loadChildren: () =>
+          import('./ess-file-details/ess-file-details.module').then(
+            (m) => m.EssFileDetailsModule
           )
       }
     ]
