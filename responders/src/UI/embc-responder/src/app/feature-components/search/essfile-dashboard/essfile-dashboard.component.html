@@ -78,7 +78,10 @@
     <div class="row">
       <div class="col-md-12">
         <span class="field-label">Main Applicant:</span>
-        <span class="bold">Applicant name</span>
+        <span class="bold">
+          {{ essFile?.primaryRegistrantLastName | uppercase }},
+          {{ essFile?.primaryRegistrantFirstName }}</span
+        >
       </div>
     </div>
   </div>
