@@ -197,10 +197,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             {
                 throw new Exception($"File {evacuationFile.Id} must have a single primary registrant household member");
             }
-            if (evacuationFile.NeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId != null) != 1)
-            {
-                throw new Exception($"File {evacuationFile.Id} primary registrant household member must be linked to a profile");
-            }
         }
 
         public async Task<string> Delete(string essFileNumber)
