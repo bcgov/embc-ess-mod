@@ -197,10 +197,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             {
                 throw new Exception($"File {evacuationFile.Id} must have a single primary registrant household member");
             }
-            if (evacuationFile.NeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId != null) != 1)
-            {
-                throw new Exception($"File {evacuationFile.Id} primary registrant household member must be linked to a profile");
-            }
         }
 
         public async Task<string> Delete(string essFileNumber)
@@ -240,7 +236,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             {
                 if (file.era_CurrentNeedsAssessmentid == null)
                     ctx.LoadProperty(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid));
-                // else
+
                 ctx.AttachTo(nameof(EssContext.era_needassessments), file.era_CurrentNeedsAssessmentid);
 
                 ctx.LoadProperty(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_householdmember_era_needassessment));

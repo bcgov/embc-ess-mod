@@ -264,6 +264,9 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public string PrimaryRegistrantId { get; set; }
 
+        public string PrimaryRegistrantFirstName { get; set; }
+        public string PrimaryRegistrantLastName { get; set; }
+
         [Required]
         public Address EvacuatedFromAddress { get; set; }
 
@@ -509,7 +512,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
-                .AfterMap((s, d) => d.NeedsAssessment.HouseholdMembers.Single(m => m.IsPrimaryRegistrant).LinkedRegistrantId = s.PrimaryRegistrantId)
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
@@ -517,6 +519,8 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
+                .ForMember(d => d.PrimaryRegistrantFirstName, opts => opts.Ignore())
+                .ForMember(d => d.PrimaryRegistrantLastName, opts => opts.Ignore())
                 .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask == null ? null : new EvacuationFileTask
                 {
                     TaskNumber = s.RelatedTask.Id,
@@ -524,6 +528,13 @@ namespace EMBC.Responders.API.Controllers
                     From = s.RelatedTask.StartDate,
                     To = s.RelatedTask.EndDate
                 }))
+                .AfterMap((s, d) =>
+                {
+                    var primaryRegistrant = s.HouseholdMembers.SingleOrDefault(m => m.IsPrimaryRegistrant && m.LinkedRegistrantId == s.PrimaryRegistrantId);
+                    if (primaryRegistrant == null) throw new Exception($"Could not find the primary registrant in household member list");
+                    d.PrimaryRegistrantFirstName = primaryRegistrant.FirstName;
+                    d.PrimaryRegistrantLastName = primaryRegistrant.LastName;
+                })
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
@@ -545,7 +556,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Supports, opts => opts.Ignore())
                 ;
 
-            CreateMap<EvacuationFileHouseholdMember, ESS.Shared.Contracts.Submissions.HouseholdMember>()
+            CreateMap<EvacuationFileHouseholdMember, HouseholdMember>()
                 .ForMember(d => d.IsUnder19, opts => opts.Ignore())
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
@@ -554,8 +565,8 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()
                    .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
-                   .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => false /*s.Verified*/))
-                   .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => false /*s.RestrictedAccess*/))
+                   .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => s.Verified))
+                   .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                    ;
 
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()

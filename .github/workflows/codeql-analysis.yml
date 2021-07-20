@@ -11,7 +11,7 @@
 #
 name: "CodeQL"
 
-on:
+on:  
   # push:
     # branches: [ master ]
   # pull_request:
@@ -19,6 +19,7 @@ on:
     # branches: [ master ]
   schedule:
     - cron: '22 23 * * 1'
+  workflow_dispatch:    
 
 jobs:
   analyze:
@@ -40,7 +41,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
+        
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
@@ -51,7 +52,13 @@ jobs:
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
+    # Login to Github private package repo
+    - name: github login
+      run: |
+        dotnet nuget remove source bcgov_github
+        dotnet nuget add source "https://nuget.pkg.github.com/bcgov/index.json" --name bcgov_github --username github --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text      
+
+# Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
       uses: github/codeql-action/autobuild@v1

@@ -3,7 +3,7 @@
 The purpose of the system is to streamline processes so evacuated individuals can access services more easily and efficiently.
 
 [![img](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
-
+[![CodeQL](https://github.com/bcgov/embc-ess-mod/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/bcgov/embc-ess-mod/actions/workflows/codeql-analysis.yml)
 ## Applications and services in this repository
 
 ### [Suppliers portal](./suppliers)

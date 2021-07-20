@@ -64,7 +64,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             };
             var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
             files.ShouldNotBeEmpty();
-            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.Id == primaryContact.Id));
+            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == primaryContact.Id));
             files.ShouldAllBe(f => f.PrimaryRegistrantId == primaryContact.Id);
         }
 
@@ -78,7 +78,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             };
             var files = (await caseRepository.QueryCase(caseQuery)).Items.Cast<EvacuationFile>().ToArray();
             files.ShouldNotBeEmpty();
-            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.Id == contact.Id));
+            files.ShouldAllBe(f => f.HouseholdMembers.Any(m => m.LinkedRegistrantId == contact.Id));
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -176,6 +176,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             needsAssessment.SpecialDietDetails.ShouldBe(originalNeedsAssessment.SpecialDietDetails);
 
             needsAssessment.HouseholdMembers.Count().ShouldBe(originalNeedsAssessment.HouseholdMembers.Count());
+            needsAssessment.HouseholdMembers.Where(m => m.IsPrimaryRegistrant).ShouldHaveSingleItem().LinkedRegistrantId.ShouldBe(primaryContact.Id);
             for (var j = 0; j < originalNeedsAssessment.HouseholdMembers.Count(); j++)
             {
                 var originalHouseholdMember = originalNeedsAssessment.HouseholdMembers.OrderBy(m => m.DateOfBirth).ElementAt(j);

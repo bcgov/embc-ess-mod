@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
-import { RegistrantProfile, RegistrationResult } from '../api/models';
+import {
+  EvacuationFileSummary,
+  RegistrantProfile,
+  RegistrationResult
+} from '../api/models';
+import { EvacuationFileSummaryModel } from '../models/evacuation-file-summary.model';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
 import { LocationsService } from './locations.service';
 
@@ -106,6 +111,39 @@ export class EvacueeProfileService {
       .pipe(
         mergeMap((regResult: RegistrationResult) =>
           this.getProfileFromId(regResult.id)
+        )
+      );
+  }
+
+  /**
+   *
+   * @param registrantId ID of Registrant Profile
+   * @returns an Array of matched ESS Files with the Registrant ID
+   */
+  public getProfileFiles(
+    registrantId: string
+  ): Observable<Array<EvacuationFileSummaryModel>> {
+    const evacFileSummaryModelArray: Array<EvacuationFileSummaryModel> = [];
+    return this.registrationsService
+      .registrationsGetFiles({
+        registrantId
+      })
+      .pipe(
+        map(
+          (
+            response: Array<EvacuationFileSummary>
+          ): Array<EvacuationFileSummaryModel> => {
+            response.forEach((item) => {
+              const evacFileSummary: EvacuationFileSummaryModel = {
+                ...item,
+                evacuatedFromAddress: this.locationsService.getAddressModelFromAddress(
+                  item.evacuatedFromAddress
+                )
+              };
+              evacFileSummaryModelArray.push(evacFileSummary);
+            });
+            return evacFileSummaryModelArray;
+          }
         )
       );
   }

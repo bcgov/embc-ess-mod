@@ -18,7 +18,9 @@ export interface EvacuationFile {
   isRestricted?: null | boolean;
   needsAssessment: NeedsAssessment;
   notes?: null | Array<Note>;
+  primaryRegistrantFirstName?: null | string;
   primaryRegistrantId: string;
+  primaryRegistrantLastName?: null | string;
   registrationLocation: string;
   securityPhrase?: null | string;
   securityPhraseEdited?: boolean;

@@ -132,7 +132,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       .subscribe(
         (evacueeProfile) => {
           this.evacueeProfile = evacueeProfile;
-          // this.isLoading = !this.isLoading;
+          this.isLoading = !this.isLoading;
           this.openSuccessModal(globalConst.successfulVerification);
         },
         (error) => {
@@ -152,10 +152,18 @@ export class EvacueeProfileDashboardComponent implements OnInit {
    * @param evacueeProfileId the evacuee Profile ID needed to get the profile details
    */
   private getEvacueeProfile(evacueeProfileId): void {
-    this.evacueeProfileService
-      .getProfileFromId(evacueeProfileId)
-      .subscribe((profile: RegistrantProfileModel) => {
+    this.evacueeProfileService.getProfileFromId(evacueeProfileId).subscribe(
+      (profile: RegistrantProfileModel) => {
         this.evacueeProfile = profile;
-      });
+      },
+      (error) => {
+        this.isLoading = !this.isLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.verifyRegistrantProfileError
+        );
+      }
+    );
   }
 }
