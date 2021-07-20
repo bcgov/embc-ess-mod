@@ -135,15 +135,10 @@ export class EvacueeProfileService {
           ): Array<EvacuationFileSummaryModel> => {
             response.forEach((item) => {
               const evacFileSummary: EvacuationFileSummaryModel = {
-                createdOn: item.createdOn,
+                ...item,
                 evacuatedFromAddress: this.locationsService.getAddressModelFromAddress(
                   item.evacuatedFromAddress
-                ),
-                evacuationFileDate: item.evacuationFileDate,
-                id: item.id,
-                isRestricted: item.isRestricted,
-                status: item.status,
-                task: item.task
+                )
               };
               evacFileSummaryModelArray.push(evacFileSummary);
             });

@@ -31,6 +31,12 @@ export class EssfileDashboardComponent implements OnInit {
     this.getEssFile();
   }
 
+  /**
+   * Returns community name
+   *
+   * @param address evacuated from address
+   * @returns community name
+   */
   communityName(address: AddressModel): string {
     return (address?.community as Community)?.name;
   }
@@ -50,11 +56,10 @@ export class EssfileDashboardComponent implements OnInit {
     });
   }
 
+  /**
+   * Navigates the wizard for review ess file
+   */
   reviewEssFile(): void {
-    // this.cacheService.set(
-    //   'wizardOpenedFrom',
-    //   '/responder-access/search/evacuee-profile-dashboard'
-    // );
     this.evacueeSessionService.setWizardType(WizardType.ReviewFile);
 
     this.router.navigate(['/ess-wizard'], {
@@ -63,6 +68,11 @@ export class EssfileDashboardComponent implements OnInit {
     });
   }
 
+  /**
+   * Loads the default file overview page
+   *
+   * @param essFile retrieved evacuation file
+   */
   loadDefaultOverviewSection(essFile: EvacuationFileModel) {
     this.router.navigate(
       ['/responder-access/search/essfile-dashboard/overview'],
@@ -72,11 +82,11 @@ export class EssfileDashboardComponent implements OnInit {
     );
   }
 
+  //TODO: Error handling and overlay loader
   private getEssFile(): void {
     this.essFileService
       .getFileFromId(this.evacueeSessionService.essFileNumber)
       .subscribe((file) => {
-        console.log(file);
         this.essFile = file;
         this.essfileDashboardService.essFile = file;
         this.loadDefaultOverviewSection(file);
