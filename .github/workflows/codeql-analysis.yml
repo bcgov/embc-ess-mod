@@ -55,7 +55,7 @@ jobs:
     # Login to Github private package repo
     - name: github login
       run: |
-        dotnet nuget add source "https://nuget.pkg.github.com/bcgov/index.json" --name "github" --username github --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text      
+        dotnet nuget update source "https://nuget.pkg.github.com/bcgov/index.json" --name "github" --username github --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text      
 
 # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
