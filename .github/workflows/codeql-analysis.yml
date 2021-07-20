@@ -41,6 +41,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Login to Github private package repo
+      run: |
+        RUN dotnet nuget add source "https://nuget.pkg.github.com/bcgov/index.json" --name "github" --username "${GITHUB_NUGET_USERNAME}" --password "${GITHUB_NUGET_PAT}" --store-password-in-clear-text      
+        
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
