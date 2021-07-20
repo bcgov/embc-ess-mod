@@ -53,6 +53,19 @@ mat-expansion-panel {
 
 }
 
+.essFile-parent {
+  padding: 0px;
+  display: block;
+  margin: auto;
+}
+
+.essFile-detail {
+  @extend .info-image;
+  display: block;
+  margin: auto;
+  text-align: right;
+}
+
 .info-test :hover {
   cursor: pointer;
 }
