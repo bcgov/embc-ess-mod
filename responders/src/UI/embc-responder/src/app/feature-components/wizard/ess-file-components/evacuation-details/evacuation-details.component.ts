@@ -45,14 +45,17 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.createEvacDetailsForm();
     this.checkPrimaryAddress();
 
-    // Evacuation Province/Country must always be system defaults
-    this.evacDetailsForm
-      .get('evacAddress.stateProvince')
-      .setValue(globalConst.defaultProvince);
+    if (!this.isBCAddress) {
+      // Make sure province/country are set to BC/Can whenever address form is displayed
+      // Only set when displayed, otherwise run into "incomplete step status" issues
+      this.evacDetailsForm
+        .get('evacAddress.stateProvince')
+        .setValue(globalConst.defaultProvince);
 
-    this.evacDetailsForm
-      .get('evacAddress.country')
-      .setValue(globalConst.defaultCountry);
+      this.evacDetailsForm
+        .get('evacAddress.country')
+        .setValue(globalConst.defaultCountry);
+    }
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
@@ -108,8 +111,18 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         .get('evacAddress')
         .setValue(this.stepEssFileService.primaryAddress);
     } else {
-      this.showBCAddressForm = true;
       this.evacDetailsForm.get('evacAddress').reset();
+
+      // Make sure province/country are set to BC/Can when address form displayed
+      this.evacDetailsForm
+        .get('evacAddress.stateProvince')
+        .setValue(globalConst.defaultProvince);
+
+      this.evacDetailsForm
+        .get('evacAddress.country')
+        .setValue(globalConst.defaultCountry);
+
+      this.showBCAddressForm = true;
     }
   }
 
