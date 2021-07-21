@@ -36,15 +36,15 @@ export class EssFileDetailsComponent implements OnInit {
 
   ngOnInit(): void {}
 
-    /**
+  /**
    * Maps needs assessment api value to UI string
    *
    * @param incomingValue needs assessment value
    * @returns
    */
-     mapNeedsValues(incomingValue: boolean | null): string {
-      return globalConst.needsOptions.find(
-        (ins) => ins.apiValue === incomingValue
-      )?.name;
-    }
+  mapNeedsValues(incomingValue: boolean | null): string {
+    return globalConst.needsOptions.find(
+      (ins) => ins.apiValue === incomingValue
+    )?.name;
+  }
 }

@@ -87,6 +87,9 @@ export class EssfileDashboardComponent implements OnInit {
     );
   }
 
+  //TODO: Wizard Navigation
+  completeEssFile(): void {}
+
   /**
    * Loads the ESS file for a give file number
    */
@@ -107,7 +110,4 @@ export class EssfileDashboardComponent implements OnInit {
         }
       );
   }
-
-  //TODO: Wizard Navigation
-  completeEssFile(): void {}
 }
