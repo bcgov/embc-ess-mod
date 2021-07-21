@@ -12,6 +12,7 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import * as globalConst from '../../../../core/services/global-constants';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { Subscription } from 'rxjs';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -30,20 +31,24 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   showBCAddressForm = false;
   isBCAddress = true;
   showInsuranceMsg = false;
+  wizardType: string;
 
   selection = new SelectionModel<any>(true, []);
   tabUpdateSubscription: Subscription;
 
   constructor(
     public stepEssFileService: StepEssFileService,
+    private evacueeSessionService: EvacueeSessionService,
     private router: Router,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService
   ) {}
 
   ngOnInit(): void {
+    this.wizardType = this.evacueeSessionService.getWizardType();
+
     this.createEvacDetailsForm();
-    this.checkPrimaryAddress();
+    this.checkAddress();
 
     // Evacuation Province/Country must always be system defaults
     this.evacDetailsForm
@@ -286,7 +291,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   /**
    * Checks if the inserted primary address is in BC Province
    */
-  private checkPrimaryAddress() {
+  private checkAddress() {
     if (this.stepEssFileService?.primaryAddress?.stateProvince?.code !== 'BC') {
       this.evacDetailsForm.get('evacuatedFromPrimary').setValue('No');
       this.isBCAddress = false;
