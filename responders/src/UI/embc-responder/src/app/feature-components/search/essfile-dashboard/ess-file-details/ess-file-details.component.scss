@@ -1,0 +1,73 @@
+.overview-card {
+  box-shadow: none !important;
+  border: 1px solid rgb(221, 221, 221);
+  padding-top: 0px !important;
+  margin-right: 15px;
+  margin-left: 15px;
+}
+
+.card-heading-outer {
+  background-color: rgb(35, 64, 117);
+}
+
+.card-heading {
+  color: white;
+  font-size: 23px;
+  line-height: 60px;
+}
+
+.margins {
+  margin: 0 !important;
+}
+
+.evacuee-info-row {
+  padding: 30px;
+}
+
+.subsection-heading {
+  color: rgb(35, 64, 117);
+  font-weight: bold;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-size: 21px;
+}
+
+.row-align {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.data-panel {
+  .row:not(:first-child) {
+    margin-top: 0.5em;
+  }
+}
+
+.review-panel {
+  padding: 20px;
+  margin: 8px 0;
+  line-height: 2em;
+  background-color: #f2f2f2;
+}
+
+.table-header {
+  background-color: #234075 !important;
+}
+
+.header-cell {
+  color: white !important;
+  font-size: 15px;
+}
+
+.table-outline {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  margin-bottom: 18px;
+}
+
+.hr-padding {
+  margin-top: 25px;
+}
+
+.section-padding {
+  padding: 25px;
+}

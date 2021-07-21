@@ -7,9 +7,11 @@ import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { Community } from 'src/app/core/services/locations.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-components/file-status-definition/file-status-definition.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { EssfileDashboardService } from './essfile-dashboard.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -18,13 +20,16 @@ import { EssfileDashboardService } from './essfile-dashboard.service';
 })
 export class EssfileDashboardComponent implements OnInit {
   essFile: EvacuationFileModel;
+  isLoading = false;
+  color = '#169BD5';
 
   constructor(
     private essFileService: EssFileService,
     private evacueeSessionService: EvacueeSessionService,
     private dialog: MatDialog,
     private router: Router,
-    private essfileDashboardService: EssfileDashboardService
+    private essfileDashboardService: EssfileDashboardService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -82,14 +87,27 @@ export class EssfileDashboardComponent implements OnInit {
     );
   }
 
-  //TODO: Error handling and overlay loader
+  //TODO: Wizard Navigation
+  completeEssFile(): void {}
+
+  /**
+   * Loads the ESS file for a give file number
+   */
   private getEssFile(): void {
+    this.isLoading = !this.isLoading;
     this.essFileService
       .getFileFromId(this.evacueeSessionService.essFileNumber)
-      .subscribe((file) => {
-        this.essFile = file;
-        this.essfileDashboardService.essFile = file;
-        this.loadDefaultOverviewSection(file);
-      });
+      .subscribe(
+        (file) => {
+          this.isLoading = !this.isLoading;
+          this.essFile = file;
+          this.essfileDashboardService.essFile = file;
+          this.loadDefaultOverviewSection(file);
+        },
+        (error) => {
+          this.isLoading = !this.isLoading;
+          this.alertService.setAlert('danger', globalConst.fileDashboardError);
+        }
+      );
   }
 }
