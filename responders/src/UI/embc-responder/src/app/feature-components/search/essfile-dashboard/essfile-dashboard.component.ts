@@ -12,6 +12,7 @@ import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { EssfileDashboardService } from './essfile-dashboard.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -29,7 +30,8 @@ export class EssfileDashboardComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +67,10 @@ export class EssfileDashboardComponent implements OnInit {
    * Navigates the wizard for review ess file
    */
   reviewEssFile(): void {
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/essfile-dashboard/overview'
+    );
     this.evacueeSessionService.setWizardType(WizardType.ReviewFile);
 
     this.router.navigate(['/ess-wizard'], {
