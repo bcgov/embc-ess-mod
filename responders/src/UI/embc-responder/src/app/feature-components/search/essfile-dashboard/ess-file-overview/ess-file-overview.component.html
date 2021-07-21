@@ -17,34 +17,60 @@
           <table class="table-details">
             <tr>
               <th>ESS File Last Reviewed:</th>
-              <td>
-                <b>{{
-                  essFile?.needsAssessment?.modifiedOn | date: 'dd-MMM-yyyy'
-                }}</b>
+              <td
+                class="bold"
+                *ngIf="
+                  essFile?.status !== 'Pending' ||
+                    essFile?.status !== 'Expired';
+                  else notReviewed
+                "
+              >
+                {{ essFile?.needsAssessment?.modifiedOn | date: 'dd-MMM-yyyy' }}
               </td>
+              <ng-template #notReviewed>
+                <td class="bold">N/A</td>
+              </ng-template>
             </tr>
             <tr>
               <th>ESS File Last Reviewed by:</th>
-              <td>
-                <b>{{
-                  essFile?.needsAssessment?.reviewingTeamMemberDisplayName
-                }}</b>
+              <td
+                class="bold"
+                *ngIf="
+                  essFile?.status !== 'Pending' ||
+                    essFile?.status !== 'Expired';
+                  else notReviewed
+                "
+              >
+                {{ essFile?.needsAssessment?.reviewingTeamMemberDisplayName }}
               </td>
+              <ng-template #notReviewed>
+                <td class="bold">N/A</td>
+              </ng-template>
             </tr>
             <tr>
               <th>Supports Issued:</th>
-              <td>
-                <b>{{
+              <td
+                class="bold"
+                *ngIf="
+                  essFile?.status !== 'Pending' ||
+                    essFile?.status !== 'Expired';
+                  else notReviewed
+                "
+              >
+                {{
                   essFile?.needsAssessment?.supports?.length === 0
                     ? 'No'
                     : 'Yes'
-                }}</b>
+                }}
               </td>
+              <ng-template #notReviewed>
+                <td class="bold">N/A</td>
+              </ng-template>
             </tr>
             <tr>
               <th>Insurance:</th>
-              <td>
-                <b>{{ essFile?.needsAssessment?.insurance }}</b>
+              <td class="bold">
+                {{ essFile?.needsAssessment?.insurance }}
               </td>
             </tr>
           </table>
@@ -97,46 +123,44 @@
           <table class="table-details">
             <tr>
               <th>Food</th>
-              <td>
-                <b>{{
-                  mapNeedsValues(essFile?.needsAssessment?.canProvideFood)
-                }}</b>
+              <td class="bold">
+                {{ mapNeedsValues(essFile?.needsAssessment?.canProvideFood) }}
               </td>
             </tr>
             <tr>
               <th>Lodging</th>
-              <td>
-                <b>{{
+              <td class="bold">
+                {{
                   mapNeedsValues(essFile?.needsAssessment?.canProvideLodging)
-                }}</b>
+                }}
               </td>
             </tr>
             <tr>
               <th>Incidentals</th>
-              <td>
-                <b>{{
+              <td class="bold">
+                {{
                   mapNeedsValues(
                     essFile?.needsAssessment?.canProvideIncidentals
                   )
-                }}</b>
+                }}
               </td>
             </tr>
             <tr>
               <th>Clothing</th>
-              <td>
-                <b>{{
+              <td class="bold">
+                {{
                   mapNeedsValues(essFile?.needsAssessment?.canProvideClothing)
-                }}</b>
+                }}
               </td>
             </tr>
             <tr>
               <th>Transportation</th>
-              <td>
-                <b>{{
+              <td class="bold">
+                {{
                   mapNeedsValues(
                     essFile?.needsAssessment?.canProvideTransportation
                   )
-                }}</b>
+                }}
               </td>
             </tr>
           </table>
@@ -146,7 +170,11 @@
       <hr class="dotted-hr" />
       <div class="row section-padding">
         <div class="col-md-3 subtitle-name">
-          <img src="/assets/images/evac-impact.svg" height="55" width="59" />
+          <img
+            src="/assets/images/wizard/noun_run_1428994.svg"
+            height="55"
+            width="59"
+          />
           <p>Evacuation</p>
           <p>Impact</p>
         </div>

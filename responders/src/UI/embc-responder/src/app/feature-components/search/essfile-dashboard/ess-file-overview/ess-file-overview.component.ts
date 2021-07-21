@@ -37,7 +37,7 @@ export class EssFileOverviewComponent implements OnInit {
    * @param incomingValue needs assessment value
    * @returns
    */
-  mapNeedsValues(incomingValue: boolean | null): string {
+   mapNeedsValues(incomingValue: boolean | null): string {
     return globalConst.needsOptions.find(
       (ins) => ins.apiValue === incomingValue
     )?.name;
