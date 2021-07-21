@@ -266,7 +266,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
 
     this.householdForm = this.formBuilder.group({
       hasHouseholdMembers: [
-        this.stepEssFileService.haveHouseHoldMembers ?? '',
+        this.stepEssFileService.haveHouseHoldMembers,
         Validators.required
       ],
       houseHoldMembers: [
@@ -280,7 +280,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       ],
       houseHoldMember: this.createHouseholdMemberForm(),
       hasSpecialDiet: [
-        this.stepEssFileService.haveSpecialDiet ?? '',
+        this.stepEssFileService.haveSpecialDiet,
         Validators.required
       ],
       specialDietDetails: [
@@ -295,11 +295,11 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         ]
       ],
       hasMedication: [
-        this.stepEssFileService.takeMedication ?? '',
+        this.stepEssFileService.takeMedication,
         Validators.required
       ],
       medicationSupply: [
-        this.stepEssFileService.haveMedicationSupply ?? '',
+        this.stepEssFileService.haveMedicationSupply,
         [
           this.customValidation
             .conditionalValidation(
