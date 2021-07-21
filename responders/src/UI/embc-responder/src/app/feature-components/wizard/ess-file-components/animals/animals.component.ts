@@ -22,8 +22,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   radioOption = globalConst.radioButtonOptions1;
   showPetsForm = false;
   displayedColumns: string[] = ['type', 'quantity', 'buttons'];
-  dataSource = new BehaviorSubject([]);
-  data = [];
+  petSource = new BehaviorSubject([]);
+  pets = [];
   editIndex: number;
   rowEdit = false;
   showTable = true;
@@ -41,8 +41,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.createAnimalsForm();
 
     // Adds pets list in case the user has previously inserted data
-    this.dataSource.next(this.animalsForm.get('pets').value);
-    this.data = this.animalsForm.get('pets').value;
+    this.petSource.next(this.animalsForm.get('pets').value);
+    this.pets = this.animalsForm.get('pets').value;
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
@@ -77,6 +77,8 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       this.addPets();
     } else {
       this.cancel();
+      this.pets = [];
+      this.petSource.next(this.pets);
     }
   }
 
@@ -89,16 +91,16 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   save(): void {
     if (this.animalsForm.get('pet').status === 'VALID') {
       if (this.editIndex !== undefined && this.rowEdit) {
-        this.data[this.editIndex] = this.animalsForm.get('pet').value;
+        this.pets[this.editIndex] = this.animalsForm.get('pet').value;
         this.rowEdit = !this.rowEdit;
         this.editIndex = undefined;
       } else {
-        this.data.push(this.animalsForm.get('pet').value);
+        this.pets.push(this.animalsForm.get('pet').value);
       }
 
       this.animalsForm.get('addPetIndicator').setValue(false);
-      this.dataSource.next(this.data);
-      this.animalsForm.get('pets').setValue(this.data);
+      this.petSource.next(this.pets);
+      this.animalsForm.get('pets').setValue(this.pets);
       this.showPetsForm = false;
     } else {
       this.animalsForm.get('pet').markAllAsTouched();
@@ -110,7 +112,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.animalsForm.get('pet').reset();
     this.animalsForm.get('addPetIndicator').setValue(false);
 
-    if (this.data.length === 0) {
+    if (this.pets.length === 0) {
       this.animalsForm.get('hasPets').setValue(false);
     }
   }
@@ -130,12 +132,12 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   }
 
   deleteRow(index: number): void {
-    this.data.splice(index, 1);
-    this.dataSource.next(this.data);
-    this.animalsForm.get('pets').setValue(this.data);
+    this.pets.splice(index, 1);
+    this.petSource.next(this.pets);
+    this.animalsForm.get('pets').setValue(this.pets);
     this.animalsForm.get('addPetIndicator').setValue(false);
 
-    if (this.data.length === 0) {
+    if (this.pets.length === 0) {
       this.animalsForm.get('hasPetsFood').reset();
       this.animalsForm.get('petCareDetails').reset();
       this.animalsForm.get('hasPets').setValue(false);

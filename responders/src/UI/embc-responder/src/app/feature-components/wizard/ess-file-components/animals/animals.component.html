@@ -40,7 +40,7 @@
           </mat-error>
         </mat-radio-group>
 
-        <div class="row" *ngIf="dataSource.getValue().length > 0">
+        <div class="row" *ngIf="petSource.getValue().length > 0">
           <div class="col-8">
             <div class="col-4">
               <button
@@ -49,11 +49,11 @@
                 type="button"
                 (click)="addPets()"
               >
-                + Add Pets
+                + Add More Pets
               </button>
             </div>
 
-            <mat-table class="bottom-space-large" [dataSource]="dataSource">
+            <mat-table class="bottom-space-large" [dataSource]="petSource">
               <ng-container matColumnDef="type">
                 <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
                 <mat-cell
@@ -150,7 +150,7 @@
           </div>
         </div>
 
-        <div *ngIf="dataSource.getValue().length > 0" class="card-align">
+        <div *ngIf="petSource.getValue().length > 0" class="card-align">
           <div class="row">
             <div class="col-md-12">
               <label
