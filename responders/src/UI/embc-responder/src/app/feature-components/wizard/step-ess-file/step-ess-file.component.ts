@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TabModel } from 'src/app/core/models/tab.model';
-import { WizardDataService } from '../wizard-data.service';
 import { StepEssFileService } from './step-ess-file.service';
 
 @Component({
@@ -16,8 +15,7 @@ export class StepEssFileComponent {
 
   constructor(
     private router: Router,
-    private stepEssFileService: StepEssFileService,
-    private wizardDataService: WizardDataService
+    private stepEssFileService: StepEssFileService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
