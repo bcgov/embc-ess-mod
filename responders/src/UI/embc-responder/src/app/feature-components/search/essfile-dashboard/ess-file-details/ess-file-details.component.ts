@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
+import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
+import { EssfileDashboardService } from '../essfile-dashboard.service';
+import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-ess-file-details',
@@ -6,7 +11,40 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ess-file-details.component.scss']
 })
 export class EssFileDetailsComponent implements OnInit {
-  constructor() {}
+  essFile: EvacuationFileModel;
+
+  memberListDisplay: HouseholdMemberModel[];
+
+  memberColumns: string[] = ['firstName', 'lastName', 'dateOfBirth'];
+  petColumns: string[] = ['type', 'quantity'];
+
+  constructor(
+    private router: Router,
+    private essfileDashboardService: EssfileDashboardService
+  ) {
+    if (this.router.getCurrentNavigation() !== null) {
+      if (this.router.getCurrentNavigation().extras.state !== undefined) {
+        const state = this.router.getCurrentNavigation().extras.state as {
+          file: EvacuationFileModel;
+        };
+        this.essFile = state.file;
+      }
+    } else {
+      this.essFile = this.essfileDashboardService.essFile;
+    }
+  }
 
   ngOnInit(): void {}
+
+  /**
+   * Maps needs assessment api value to UI string
+   *
+   * @param incomingValue needs assessment value
+   * @returns
+   */
+  mapNeedsValues(incomingValue: boolean | null): string {
+    return globalConst.needsOptions.find(
+      (ins) => ins.apiValue === incomingValue
+    )?.name;
+  }
 }
