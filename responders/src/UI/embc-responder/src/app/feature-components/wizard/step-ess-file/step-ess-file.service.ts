@@ -653,4 +653,19 @@ export class StepEssFileService {
     const result = fields.filter((field) => !!field);
     return result.length !== 0;
   }
+
+  /**
+   * Sets the tab status from ESS File wizard
+   */
+  public setReviewEssFileTabStatus(): void {
+    this.essTabs.map((tab) => {
+      if (tab.name !== 'review') {
+        tab.status = 'complete';
+      }
+      if (tab.name === 'household-members') {
+        tab.status = 'incomplete';
+      }
+      return tab;
+    });
+  }
 }

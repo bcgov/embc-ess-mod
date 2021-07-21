@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { HouseholdMemberType } from 'src/app/core/api/models';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { EvacueeSearchService } from '../search/evacuee-search/evacuee-search.service';
@@ -22,6 +23,7 @@ export class WizardAdapterService {
     private evacueeSearchService: EvacueeSearchService,
     private evacueeSessionService: EvacueeSessionService,
     private evacueeProfileService: EvacueeProfileService,
+    private essFileService: EssFileService,
     private stepEvacueeProfileService: StepEvacueeProfileService,
     private stepEssFileService: StepEssFileService
   ) {}
@@ -91,7 +93,7 @@ export class WizardAdapterService {
           );
 
           this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
-          this.stepEvacueeProfileService.setEditTabStatus();
+          this.stepEvacueeProfileService.setEditProfileTabStatus();
 
           obs.next(true);
         },
@@ -142,5 +144,23 @@ export class WizardAdapterService {
       isPrimaryRegistrant: true,
       type: HouseholdMemberType.Registrant
     };
+  }
+
+  public stepReviewESSFileFromESSFileRecord(): Observable<boolean> {
+    return new Observable<boolean>((obs) => {
+      this.essFileService
+        .getFileFromId(this.evacueeSessionService.essFileNumber)
+        .subscribe(
+          (evacuationFileModel) => {
+            this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
+            this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
+            this.stepEssFileService.setReviewEssFileTabStatus();
+            obs.next(true);
+          },
+          (error) => {
+            obs.next(false);
+          }
+        );
+    });
   }
 }
