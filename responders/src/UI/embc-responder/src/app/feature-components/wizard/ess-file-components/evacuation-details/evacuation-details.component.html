@@ -36,64 +36,91 @@
                   </div>
                 </div>
               </div>
-
-              <div class="col-12">
-                <label
-                  id="evacuatedFromPrimary-radio-group-label"
-                  class="tab-subtitle requiredField"
-                  *ngIf="isBCAddress"
-                >
-                  Are you being evacuated from your primary address?
-                </label>
-                <label class="tab-subtitle requiredField" *ngIf="!isBCAddress">
-                  Where are you being evacuated from?
-                </label>
-
-                <ng-container *ngIf="isBCAddress">
-                  <mat-radio-group
-                    formControlName="evacuatedFromPrimary"
-                    aria-labelledby="evacuatedFromPrimary-radio-group-label"
-                    class="options-group"
-                    (change)="evacPrimaryAddressChange($event)"
-                    required
+              <ng-container
+                *ngIf="wizardType === 'new-ess-file'; else editEssFile"
+              >
+                <div class="col-12">
+                  <label
+                    id="evacuatedFromPrimary-radio-group-label"
+                    class="tab-subtitle requiredField"
+                    *ngIf="isBCAddress"
                   >
-                    <mat-radio-button [value]="true">Yes</mat-radio-button>
-                    <div class="prim-address">
-                      <p
-                        [innerHTML]="
-                          stepEssFileService?.primaryAddress
-                            | maskEvacuatedaddress
-                        "
-                      ></p>
-                    </div>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
-                    <mat-error
-                      class="custom-mat-error"
-                      *ngIf="
-                        evacDetailsFormControl?.evacuatedFromPrimary.touched &&
-                        evacDetailsFormControl?.evacuatedFromPrimary.invalid &&
-                        evacDetailsFormControl?.evacuatedFromPrimary.hasError(
-                          'required'
-                        )
-                      "
-                    >
-                      Evacuation Address is required
-                    </mat-error>
-                  </mat-radio-group>
-                </ng-container>
-              </div>
+                    Are you being evacuated from your primary address?
+                  </label>
+                  <label
+                    class="tab-subtitle requiredField"
+                    *ngIf="!isBCAddress"
+                  >
+                    Where are you being evacuated from?
+                  </label>
 
-              <div class="col-12" *ngIf="!isBCAddress">
-                <app-bc-address
-                  [addressForm]="evacAddressFormGroup"
-                ></app-bc-address>
-              </div>
-              <div class="col-12" *ngIf="showBCAddressForm">
-                <p class="bold">Where are you being evacuated from?</p>
-                <app-bc-address
-                  [addressForm]="evacAddressFormGroup"
-                ></app-bc-address>
-              </div>
+                  <ng-container *ngIf="isBCAddress">
+                    <mat-radio-group
+                      formControlName="evacuatedFromPrimary"
+                      aria-labelledby="evacuatedFromPrimary-radio-group-label"
+                      class="options-group"
+                      (change)="evacPrimaryAddressChange($event)"
+                      required
+                    >
+                      <mat-radio-button [value]="true">Yes</mat-radio-button>
+                      <div class="prim-address">
+                        <p
+                          [innerHTML]="
+                            stepEssFileService?.primaryAddress
+                              | maskEvacuatedaddress
+                          "
+                        ></p>
+                      </div>
+                      <mat-radio-button [value]="false">No</mat-radio-button>
+                      <mat-error
+                        class="custom-mat-error"
+                        *ngIf="
+                          evacDetailsFormControl?.evacuatedFromPrimary
+                            .touched &&
+                          evacDetailsFormControl?.evacuatedFromPrimary
+                            .invalid &&
+                          evacDetailsFormControl?.evacuatedFromPrimary.hasError(
+                            'required'
+                          )
+                        "
+                      >
+                        Evacuation Address is required
+                      </mat-error>
+                    </mat-radio-group>
+                  </ng-container>
+                </div>
+
+                <div class="col-12" *ngIf="!isBCAddress">
+                  <app-bc-address
+                    [addressForm]="evacAddressFormGroup"
+                  ></app-bc-address>
+                </div>
+                <div class="col-12" *ngIf="showBCAddressForm">
+                  <p class="bold">Where are you being evacuated from?</p>
+                  <app-bc-address
+                    [addressForm]="evacAddressFormGroup"
+                  ></app-bc-address>
+                </div>
+              </ng-container>
+
+              <ng-template #editEssFile>
+                <div class="col-12">
+                  <p class="tab-subtitle requiredField">
+                    Where are you being evacuated from?
+                  </p>
+                  <p
+                    *ngIf="wizardType === 'review-file'"
+                    class="evac-address"
+                    [innerHTML]="
+                      stepEssFileService?.evacAddress | maskEvacuatedaddress
+                    "
+                  ></p>
+                  <app-bc-address
+                    *ngIf="wizardType === 'complete-file'"
+                    [addressForm]="evacAddressFormGroup"
+                  ></app-bc-address>
+                </div>
+              </ng-template>
 
               <div class="col-12">
                 <label class="tab-subtitle requiredField">

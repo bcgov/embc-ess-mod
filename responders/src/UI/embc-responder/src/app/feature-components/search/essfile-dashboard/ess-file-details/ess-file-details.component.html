@@ -1,1 +1,307 @@
-<p>ess-file-details works!</p>
+<mat-card class="overview-card">
+  <div class="row card-heading-outer">
+    <div class="col-md-12">
+      <p class="margins card-heading">Details</p>
+    </div>
+  </div>
+
+  <div class="row section-padding">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12">
+          <p class="subsection-heading">Evacuation Details</p>
+        </div>
+      </div>
+      <div class="row row-align">
+        <div class="col-md-4">Paper Based ESS File Number</div>
+        <div class="col-md-8 bold">n/a</div>
+      </div>
+      <div class="row row-align">
+        <div class="col-md-4">Evacuated From</div>
+        <div class="col-md-8">
+          <p
+            class="bold"
+            [innerHTML]="essFile?.evacuatedFromAddress | maskEvacuatedaddress"
+          ></p>
+        </div>
+      </div>
+      <div class="row row-align">
+        <div class="col-md-4">Facility/ Registration Location</div>
+        <div class="col-md-8 bold">
+          {{
+            essFile?.registrationLocation
+              ? essFile?.registrationLocation
+              : 'n/a'
+          }}
+        </div>
+      </div>
+      <div class="row row-align">
+        <div class="col-md-4">Task #</div>
+        <div class="col-md-8 bold">
+          {{ essFile?.task?.taskNumber ? essFile?.task?.taskNumber : 'n/a' }}
+        </div>
+      </div>
+      <div class="row row-align">
+        <div class="col-md-4">Insurance</div>
+        <div class="col-md-8 bold">
+          {{ essFile?.needsAssessment?.insurance }}
+        </div>
+      </div>
+      <div class="row row-align">
+        <div class="col-md-4">How Affected by the Evacuation</div>
+        <div class="col-md-8 bold">
+          {{
+            essFile?.needsAssessment?.evacuationImpact
+              ? essFile?.needsAssessment?.evacuationImpact
+              : 'n/a'
+          }}
+        </div>
+      </div>
+      <div class="row row-align">
+        <div class="col-md-4">Post Evacuation Recovery Plans</div>
+        <div class="col-md-8 bold">
+          {{
+            essFile?.needsAssessment?.houseHoldRecoveryPlan
+              ? essFile?.needsAssessment?.houseHoldRecoveryPlan
+              : 'n/a'
+          }}
+        </div>
+      </div>
+      <div class="row row-align">
+        <div class="col-md-4">
+          Service Recommendations within the Reception Centre
+        </div>
+        <div class="col-md-8 bold">
+          {{
+            essFile?.needsAssessment?.recommendedReferralServices.length === 0
+              ? 'No'
+              : 'Yes - ' +
+                essFile?.needsAssessment?.recommendedReferralServices.join(',')
+          }}
+        </div>
+      </div>
+      <div class="row row-align">
+        <div class="col-md-4">
+          Service Recommendations external of Reception Centre
+        </div>
+        <div class="col-md-8 bold">
+          {{
+            essFile?.needsAssessment?.evacuationExternalReferrals
+              ? essFile?.needsAssessment?.evacuationExternalReferrals
+              : 'n/a'
+          }}
+        </div>
+      </div>
+
+      <hr class="dotted-hr hr-padding" />
+      <div class="row">
+        <div class="col-md-12">
+          <p class="subsection-heading">Household Members</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-8">
+              <mat-table
+                class="table-outline"
+                [dataSource]="essFile?.householdMembers"
+              >
+                <ng-container matColumnDef="firstName">
+                  <mat-header-cell class="header-cell" *matHeaderCellDef
+                    >First Name</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let element">
+                    {{ element.firstName }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="lastName">
+                  <mat-header-cell class="header-cell" *matHeaderCellDef
+                    >Last Name</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let element">
+                    {{ element.lastName }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="dateOfBirth">
+                  <mat-header-cell class="header-cell" *matHeaderCellDef>
+                    Date of Birth
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element.dateOfBirth }}
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row
+                  class="table-header"
+                  *matHeaderRowDef="memberColumns"
+                ></mat-header-row>
+                <mat-row
+                  class="bold"
+                  *matRowDef="let row; columns: memberColumns"
+                ></mat-row>
+              </mat-table>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">Household Medication Requirements</div>
+            <div class="col-8 bold">
+              {{ essFile?.needsAssessment?.takeMedication ? 'Yes' : 'No' }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">Household Dietary Requirements</div>
+            <div class="col-8 bold">
+              {{
+                essFile?.needsAssessment?.haveSpecialDiet
+                  ? 'Yes - ' + essFile?.needsAssessment?.specialDietDetails
+                  : 'No'
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="dotted-hr hr-padding" />
+      <div class="row">
+        <div class="col-md-12">
+          <p class="subsection-heading">Animals</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-4">Do you have pets?</div>
+            <div class="col-8 bold">
+              {{ essFile?.needsAssessment?.pets?.length !== 0 ? 'Yes' : 'No' }}
+            </div>
+          </div>
+
+          <div class="row" *ngIf="essFile?.needsAssessment?.pets?.length > 0">
+            <div class="col-8">
+              <mat-table
+                class="table-outline"
+                [dataSource]="essFile?.needsAssessment?.pets"
+              >
+                <ng-container matColumnDef="type">
+                  <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element.type }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                  <mat-header-cell *matHeaderCellDef>
+                    How Many
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    {{ element.quantity }}
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row
+                  class="table-header"
+                  *matHeaderRowDef="petColumns"
+                ></mat-header-row>
+                <mat-row
+                  class="bold"
+                  *matRowDef="let row; columns: petColumns"
+                ></mat-row>
+              </mat-table>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="essFile?.needsAssessment?.pets?.length > 0">
+            <div class="col-4">Sufficient pet food?</div>
+            <div class="col-8 bold">
+              {{ essFile?.needsAssessment?.havePetsFood ? 'Yes' : 'No' }}
+            </div>
+          </div>
+
+          <div class="row" *ngIf="essFile?.needsAssessment?.pets?.length > 0">
+            <div class="col-4">Pet Care Plan</div>
+            <div class="col-8 bold">
+              {{ essFile?.needsAssessment?.petCarePlans }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="dotted-hr hr-padding" />
+      <div class="row">
+        <div class="col-md-12">
+          <p class="subsection-heading">Needs Assessment</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-4">Food</div>
+            <div class="col-8 bold">
+              {{ mapNeedsValues(essFile?.needsAssessment?.canProvideFood) }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">Lodging</div>
+            <div class="col-8 bold">
+              {{ mapNeedsValues(essFile?.needsAssessment?.canProvideLodging) }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">Clothing</div>
+            <div class="col-8 bold">
+              {{ mapNeedsValues(essFile?.needsAssessment?.canProvideClothing) }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">Transportation</div>
+            <div class="col-8 bold">
+              {{
+                mapNeedsValues(
+                  essFile?.needsAssessment?.canProvideTransportation
+                )
+              }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">Incidentals</div>
+            <div class="col-8 bold">
+              {{
+                mapNeedsValues(essFile?.needsAssessment?.canProvideIncidentals)
+              }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="dotted-hr hr-padding" />
+      <div class="row">
+        <div class="col-md-12">
+          <p class="subsection-heading">Security Phrase</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-4">Security Phrase</div>
+            <div class="col-8 bold">
+              {{ essFile?.securityPhrase | maskText }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-card>

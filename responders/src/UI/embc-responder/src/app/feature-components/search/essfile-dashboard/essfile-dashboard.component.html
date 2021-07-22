@@ -98,25 +98,49 @@
   <div class="col-md-4">
     <div class="row dashboard-subheading">
       <div class="col-md-12">
-        <span>Task #</span>
-        <span class="bold">{{ essFile?.task?.taskNumber }} - </span>
-        <span>{{ essFile?.assignedTaskCommunity?.name }}</span>
+        <div *ngIf="essFile?.task; else noTask">
+          <span>Task #</span>
+          <span class="bold">{{ essFile?.task?.taskNumber }} - </span>
+          <span>{{ essFile?.assignedTaskCommunity?.name }}</span>
+        </div>
+        <ng-template #noTask>
+          <span>Task #</span>
+          <span class="bold"> n/a</span>
+        </ng-template>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-12">
-        <span class="field-label">Task Start Date:</span>
-        <span class="bold">{{
-          essFile?.task?.from | date: 'dd-MMM-yyyy'
-        }}</span>
+        <div *ngIf="essFile?.task; else noTask">
+          <span class="field-label">Task Start Date:</span>
+          <span *ngIf="essFile?.task" class="bold">{{
+            essFile?.task?.from | date: 'dd-MMM-yyyy'
+          }}</span>
+        </div>
+        <ng-template #noTask>
+          <span class="field-label">Task Start Date:</span>
+          <span class="bold"> n/a</span>
+        </ng-template>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-12">
-        <span class="field-label">Task End Date:</span>
-        <span class="bold">{{ essFile?.task?.to | date: 'dd-MMM-yyyy' }}</span>
+        <div *ngIf="essFile?.task; else noTask">
+          <span class="field-label">Task End Date:</span>
+          <span
+            [ngClass]="{
+              'complete-task-date': essFile?.status === 'Completed',
+              bold: essFile?.status !== 'Completed'
+            }"
+            >{{ essFile?.task?.to | date: 'dd-MMM-yyyy' }}</span
+          >
+        </div>
+        <ng-template #noTask>
+          <span class="field-label">Task End Date:</span>
+          <span class="bold"> n/a</span>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -164,7 +188,7 @@
     </div>
   </div>
 </div>
-<div class="row banner">
+<div *ngIf="essFile?.status === 'Active'" class="row banner">
   <div class="col-md-9 center-content">
     <img src="/assets/images/exclaimation.svg" height="32" width="32" />
     <span class="banner-heading">Support Extensions:</span>
@@ -178,6 +202,39 @@
     >
       Review ESS File
     </button>
+  </div>
+</div>
+
+<div
+  *ngIf="essFile?.status === 'Pending' || essFile?.status === 'Expired'"
+  class="row banner"
+>
+  <div class="col-md-9 center-content">
+    <img src="/assets/images/exclaimation.svg" height="32" width="32" />
+    <span class="banner-heading">Complete ESS File:</span>
+    <span
+      >ESS File is partially complete. Complete ESS File & add supports.</span
+    >
+  </div>
+  <div class="col-md-3">
+    <button
+      class="button-p ess-file-button"
+      (click)="completeEssFile()"
+      mat-button
+    >
+      Complete ESS File
+    </button>
+  </div>
+</div>
+
+<div *ngIf="essFile?.status === 'Completed'" class="row banner">
+  <div class="col-md-12 center-content">
+    <img src="/assets/images/exclaimation.svg" height="32" width="32" />
+    <span class="banner-heading">Support Extensions:</span>
+    <span
+      >Task number end date has expired. To extend or to add new supports,
+      please extend the task number.</span
+    >
   </div>
 </div>
 
@@ -292,3 +349,4 @@
     </mat-sidenav-container>
   </div>
 </div>
+<app-overlay-loader [showLoader]="isLoading"></app-overlay-loader>
