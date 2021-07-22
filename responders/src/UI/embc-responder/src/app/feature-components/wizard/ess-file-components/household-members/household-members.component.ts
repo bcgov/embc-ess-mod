@@ -176,7 +176,6 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       .open(DialogComponent, {
         data: {
           component: InformationDialogComponent,
-          title: 'Remove Household Member',
           content: globalConst.householdMemberDeleteDialog
         },
         height: 'auto',
