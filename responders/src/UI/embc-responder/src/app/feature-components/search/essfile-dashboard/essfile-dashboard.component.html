@@ -318,7 +318,13 @@
             <div class="col-md-9 menu-title">Supports</div>
           </div>
         </a>
-        <a mat-button class="a-mat-button" routerLinkActive="active-side-item">
+        <a
+          mat-button
+          class="a-mat-button"
+          routerLinkActive="active-side-item"
+          [routerLink]="'/responder-access/search/essfile-dashboard/notes'"
+          [state]="{ notes: notesList }"
+        >
           <div class="row">
             <div class="col-md-3 img-align-col">
               <img
@@ -334,7 +340,9 @@
                 height="42"
               />
             </div>
-            <div class="col-md-9 menu-title">Notes</div>
+            <div class="col-md-9 menu-title">
+              Notes ({{ notesList?.length }})
+            </div>
           </div>
         </a>
       </mat-sidenav>
