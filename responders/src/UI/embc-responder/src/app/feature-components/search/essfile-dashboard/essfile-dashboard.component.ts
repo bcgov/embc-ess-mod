@@ -15,6 +15,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { Note } from 'src/app/core/api/models';
 import { StepNotesService } from '../../wizard/step-notes/step-notes.service';
 import { map } from 'rxjs/operators';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -34,7 +35,8 @@ export class EssfileDashboardComponent implements OnInit {
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
     private alertService: AlertService,
-    private stepNotesService: StepNotesService
+    private stepNotesService: StepNotesService,
+    private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +72,10 @@ export class EssfileDashboardComponent implements OnInit {
    * Navigates the wizard for review ess file
    */
   reviewEssFile(): void {
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/essfile-dashboard/overview'
+    );
     this.evacueeSessionService.setWizardType(WizardType.ReviewFile);
 
     this.router.navigate(['/ess-wizard'], {
