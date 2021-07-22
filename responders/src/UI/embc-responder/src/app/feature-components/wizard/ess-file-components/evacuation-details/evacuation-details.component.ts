@@ -192,6 +192,9 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.tabUpdateSubscription.unsubscribe();
   }
 
+  /**
+   * Creates a new Evacuation Details form
+   */
   private createEvacDetailsForm(): void {
     if (!this.stepEssFileService.referredServiceDetails)
       this.stepEssFileService.referredServiceDetails = [];
