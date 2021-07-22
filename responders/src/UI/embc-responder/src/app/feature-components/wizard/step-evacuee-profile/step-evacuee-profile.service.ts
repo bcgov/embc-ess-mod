@@ -229,8 +229,10 @@ export class StepEvacueeProfileService {
     });
   }
 
-  // TODO: To be reviewed later by Avisha
-  public setEditTabStatus(): void {
+  /**
+   * Sets the tab status from Profile wizard
+   */
+  public setEditProfileTabStatus(): void {
     this.profileTabs.map((tab) => {
       if (tab.name !== 'review') {
         tab.status = 'complete';
