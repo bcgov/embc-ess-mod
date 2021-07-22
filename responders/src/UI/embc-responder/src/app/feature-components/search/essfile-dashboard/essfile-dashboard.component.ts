@@ -12,6 +12,9 @@ import { FileStatusDefinitionComponent } from 'src/app/shared/components/dialog-
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { EssfileDashboardService } from './essfile-dashboard.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { Note } from 'src/app/core/api/models';
+import { StepNotesService } from '../../wizard/step-notes/step-notes.service';
+import { map } from 'rxjs/operators';
 import { CacheService } from 'src/app/core/services/cache.service';
 
 @Component({
@@ -21,6 +24,7 @@ import { CacheService } from 'src/app/core/services/cache.service';
 })
 export class EssfileDashboardComponent implements OnInit {
   essFile: EvacuationFileModel;
+  notesList: Array<Note>;
   isLoading = false;
   color = '#169BD5';
 
@@ -31,6 +35,7 @@ export class EssfileDashboardComponent implements OnInit {
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
     private alertService: AlertService,
+    private stepNotesService: StepNotesService,
     private cacheService: CacheService
   ) {}
 
@@ -103,17 +108,34 @@ export class EssfileDashboardComponent implements OnInit {
     this.isLoading = !this.isLoading;
     this.essFileService
       .getFileFromId(this.evacueeSessionService.essFileNumber)
-      .subscribe(
-        (file) => {
-          this.isLoading = !this.isLoading;
+      .pipe(
+        map((file) => {
+          this.loadNotes();
           this.essFile = file;
           this.essfileDashboardService.essFile = file;
           this.loadDefaultOverviewSection(file);
+        })
+      )
+      .subscribe(
+        (essFile) => {
+          this.isLoading = !this.isLoading;
         },
         (error) => {
           this.isLoading = !this.isLoading;
           this.alertService.setAlert('danger', globalConst.fileDashboardError);
         }
       );
+  }
+
+  /**
+   * Loads and sorts the notes
+   */
+  private loadNotes(): void {
+    this.stepNotesService.getNotes().subscribe((notes) => {
+      const note = notes.sort(
+        (a, b) => new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
+      );
+      this.notesList = note;
+    });
   }
 }

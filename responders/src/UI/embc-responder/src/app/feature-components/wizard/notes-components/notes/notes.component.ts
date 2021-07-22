@@ -99,7 +99,6 @@ export class NotesComponent implements OnInit {
             new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
         );
         this.notesList = note;
-        console.log(note);
         this.count = notes.length;
         this.cd.detectChanges();
       },
