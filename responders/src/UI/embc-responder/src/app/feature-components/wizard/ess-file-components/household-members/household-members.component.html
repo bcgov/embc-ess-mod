@@ -43,9 +43,9 @@
           >
         </mat-radio-group>
 
-        <div class="row" *ngIf="dataSource.getValue().length > 0">
+        <div class="row">
           <div class="col-8">
-            <div class="col-4">
+            <div class="col-4" *ngIf="memberSource.getValue().length > 1">
               <button
                 class="family-button details-button"
                 mat-button
@@ -56,36 +56,36 @@
               </button>
             </div>
 
-            <mat-table class="bottom-space" [dataSource]="dataSource">
+            <mat-table class="bottom-space" [dataSource]="memberSource">
               <ng-container matColumnDef="firstName">
                 <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
-                <mat-cell *matCellDef="let element">
+                <mat-cell *matCellDef="let member">
                   <span class="mobile-label">First Name:</span>
-                  {{ element.firstName }}
+                  {{ member.firstName }}
                 </mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="lastName">
                 <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
-                <mat-cell *matCellDef="let element">
+                <mat-cell *matCellDef="let member">
                   <span class="mobile-label">Last Name:</span>
-                  {{ element.lastName }}
+                  {{ member.lastName }}
                 </mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="initials">
                 <mat-header-cell *matHeaderCellDef>Initials</mat-header-cell>
-                <mat-cell *matCellDef="let element">
+                <mat-cell *matCellDef="let member">
                   <span class="mobile-label">Initials:</span>
-                  {{ element.initials }}
+                  {{ member.initials }}
                 </mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="gender">
                 <mat-header-cell *matHeaderCellDef>Gender</mat-header-cell>
-                <mat-cell *matCellDef="let element">
+                <mat-cell *matCellDef="let member">
                   <span class="mobile-label">Gender:</span>
-                  {{ element.gender }}
+                  {{ member.gender }}
                 </mat-cell>
               </ng-container>
 
@@ -93,22 +93,22 @@
                 <mat-header-cell *matHeaderCellDef>
                   Date of Birth
                 </mat-header-cell>
-                <mat-cell *matCellDef="let element">
+                <mat-cell *matCellDef="let member">
                   <span class="mobile-label">Date of Birth:</span>
-                  {{ element.dateOfBirth }}
+                  {{ member.dateOfBirth }}
                 </mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="buttons">
                 <mat-header-cell *matHeaderCellDef></mat-header-cell>
-                <mat-cell *matCellDef="let element; let index = index">
+                <mat-cell *matCellDef="let member; let index = index">
                   <!-- <span class="mobile-label">11</span> -->
                   <button
-                    *ngIf="!editFlag"
+                    *ngIf="!editFlag && !member.isPrimaryRegistrant"
                     class="edit-image"
                     mat-icon-button
                     aria-label="Edit"
-                    (click)="editRow(element, index)"
+                    (click)="editRow(member, index)"
                   >
                     <img src="/assets/images/edit.svg" height="35" width="35" />
                     <img
@@ -119,7 +119,7 @@
                   </button>
 
                   <button
-                    *ngIf="!editFlag"
+                    *ngIf="!editFlag && !member.isPrimaryRegistrant"
                     class="delete-image"
                     mat-icon-button
                     aria-label="Remove"
@@ -143,7 +143,8 @@
                 *matHeaderRowDef="displayedColumns"
               ></mat-header-row>
               <mat-row
-                *matRowDef="let row; columns: displayedColumns"
+                *matRowDef="let member; columns: displayedColumns"
+                [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"
               ></mat-row>
             </mat-table>
           </div>
