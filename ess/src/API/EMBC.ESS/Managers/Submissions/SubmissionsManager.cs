@@ -233,6 +233,7 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrWhiteSpace(query.FirstName)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.FirstName));
             if (string.IsNullOrWhiteSpace(query.LastName)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.LastName));
             if (string.IsNullOrWhiteSpace(query.DateOfBirth)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.DateOfBirth));
+            if (query.InStatuses == null) query.InStatuses = Array.Empty<Shared.Contracts.Submissions.EvacuationFileStatus>();
 
             var searchMode = !query.IncludeEvacuationFilesOnly && query.IncludeRegistrantProfilesOnly
                 ? SearchMode.Registrants
