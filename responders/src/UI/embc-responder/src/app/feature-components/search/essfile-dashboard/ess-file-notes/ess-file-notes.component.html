@@ -1,0 +1,43 @@
+<mat-card class="overview-card">
+  <div class="row card-heading-outer">
+    <div class="col-md-12">
+      <p class="margins card-heading">Notes ({{ notesList?.length }})</p>
+    </div>
+  </div>
+
+  <div class="row section-padding">
+    <div class="col-md-12">
+      <p>{{ notesList?.length }} notes have been added for this ESS File.</p>
+      <div *ngFor="let note of notes$ | async">
+        <hr class="solid-hr" />
+        <div class="row list-notes">
+          <div class="col-md-8">
+            <p class="list-note-name">
+              <span class="bold">{{ note?.memberName }} -</span>
+              {{ note?.teamName }}
+            </p>
+            <p class="note-date">
+              {{ note?.addedOn | date: 'dd-MMM-yyyy hh:mm a' }}
+            </p>
+          </div>
+          <div
+            *ngIf="note?.isHidden && hasPermission('canSeeHiddenNotes')"
+            class="col-md-4 image-align"
+          >
+            <img src="/assets/images/unhide.svg" height="40" width="40" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <p class="note-format">{{ note?.content }}</p>
+          </div>
+        </div>
+      </div>
+
+      <mat-paginator
+        class="custom-paginator custom-paginator-align"
+        [pageSizeOptions]="[10]"
+      ></mat-paginator>
+    </div>
+  </div>
+</mat-card>
