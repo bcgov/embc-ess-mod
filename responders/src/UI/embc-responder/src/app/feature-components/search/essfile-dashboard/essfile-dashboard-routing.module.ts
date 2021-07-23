@@ -20,6 +20,13 @@ const routes: Routes = [
           import('./ess-file-details/ess-file-details.module').then(
             (m) => m.EssFileDetailsModule
           )
+      },
+      {
+        path: 'notes',
+        loadChildren: () =>
+          import('./ess-file-notes/ess-file-notes.module').then(
+            (m) => m.EssFileNotesModule
+          )
       }
     ]
   }
