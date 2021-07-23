@@ -55,11 +55,11 @@ export class WizardAdapterService {
         return;
 
       case WizardType.ReviewFile:
-        // Clear steps
+        this.stepEssFileService.clearService();
         return;
 
       case WizardType.CompleteFile:
-        // Clear steps
+        this.stepEssFileService.clearService();
         return;
     }
   }
