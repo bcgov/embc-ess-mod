@@ -9,6 +9,8 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { UserService } from 'src/app/core/services/user.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-ess-file-review',
@@ -21,6 +23,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
 
   saveLoader = false;
   disableButton = false;
+  wizardType: string;
 
   insuranceDisplay: string;
 
@@ -44,6 +47,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
 
   constructor(
     public stepEssFileService: StepEssFileService,
+    private evacueeSessionService: EvacueeSessionService,
     private router: Router,
     private wizardService: WizardService,
     private userService: UserService,
@@ -53,6 +57,9 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.taskNumber = this.userService.currentProfile?.taskNumber;
+    this.wizardType = this.evacueeSessionService.getWizardType();
+
+    console.log(this.wizardType);
 
     // Get the displayed value for radio options
     this.insuranceDisplay = globalConst.insuranceOptions.find(
@@ -110,9 +117,37 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
    */
   save(): void {
     this.stepEssFileService.nextTabUpdate.next();
-
     this.saveLoader = true;
 
+    if (this.wizardType === 'new-ess-file') {
+      this.createNewEssFile();
+    } else {
+      this.editEssFile();
+    }
+  }
+
+  /**
+   * Checks the wizard validity and updates the tab status
+   */
+  updateTabStatus() {
+    // If all other tabs are complete and this tab has been viewed, mark complete
+    if (!this.stepEssFileService.checkTabsStatus()) {
+      this.stepEssFileService.setTabStatus('review', 'complete');
+    }
+  }
+
+  /**
+   * When navigating away from tab, update variable value and status indicator
+   */
+  ngOnDestroy(): void {
+    this.stepEssFileService.nextTabUpdate.next();
+    this.tabUpdateSubscription.unsubscribe();
+  }
+
+  /**
+   * Calls Create new ESS File API
+   */
+  private createNewEssFile() {
     this.essFileService
       .createFile(this.stepEssFileService.createEvacFileDTO())
       .subscribe(
@@ -154,20 +189,49 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Checks the wizard validity and updates the tab status
+   * Calls Update ESS File API either when Review ESS File or Complete ESS File process is triggered
    */
-  updateTabStatus() {
-    // If all other tabs are complete and this tab has been viewed, mark complete
-    if (!this.stepEssFileService.checkTabsStatus()) {
-      this.stepEssFileService.setTabStatus('review', 'complete');
-    }
-  }
+  private editEssFile() {
+    this.essFileService
+      .updateFile(
+        this.evacueeSessionService.essFileNumber,
+        this.stepEssFileService.createEvacFileDTO()
+      )
+      .subscribe(
+        (essFile: EvacuationFileModel) => {
+          // After creating and fetching ESS File, update ESS File Step values
+          this.stepEssFileService.setFormValuesFromFile(essFile);
 
-  /**
-   * When navigating away from tab, update variable value and status indicator
-   */
-  ngOnDestroy(): void {
-    this.stepEssFileService.nextTabUpdate.next();
-    this.tabUpdateSubscription.unsubscribe();
+          // Once all profile work is done, user can close wizard or proceed to step 3
+          this.disableButton = true;
+          this.saveLoader = false;
+
+          this.stepEssFileService
+            .openModal(globalConst.newRegWizardEssFileCreatedMessage)
+            .afterClosed()
+            .subscribe((event) => {
+              this.wizardService.setStepStatus(
+                '/ess-wizard/add-supports',
+                false
+              );
+              this.wizardService.setStepStatus('/ess-wizard/add-notes', false);
+
+              if (event === 'exit') {
+                this.router.navigate([
+                  'responder-access/search/essfile-dashboard'
+                ]);
+                // .then(() => this.wizardStepService.clearWizard());
+              } else {
+                this.router.navigate(['/ess-wizard/add-supports'], {
+                  state: { step: 'STEP 3', title: 'Add Supports' }
+                });
+              }
+            });
+        },
+        (error) => {
+          this.saveLoader = false;
+          this.alertService.setAlert('danger', globalConst.editEssFileError);
+        }
+      );
   }
 }
