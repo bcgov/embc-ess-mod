@@ -245,6 +245,13 @@ namespace EMBC.Responders.API.Controllers
             return Ok(mapper.Map<VerifySecurityPhraseResponse>(response));
         }
 
+        [HttpPost("files/{fileId}/link")]
+        public async Task<ActionResult> LinkRegistrantToHouseholdMember(string fileId, RegistrantLinkRequest request)
+        {
+            //TODO: implement backend call to link a registrant to a household member
+            return await Task.FromResult(Ok());
+        }
+
         private bool UserCanEditNote(Note note) => note.CreatingTeamMemberId.Equals(currentUserId) && note.AddedOn >= DateTime.UtcNow.AddHours(-24);
 
         private bool UserCanHideNote()
@@ -499,6 +506,12 @@ namespace EMBC.Responders.API.Controllers
 
         [Description("Household Member")]
         HouseholdMember
+    }
+
+    public class RegistrantLinkRequest
+    {
+        public string RegistantId { get; set; }
+        public string HouseholdMemberId { get; set; }
     }
 
     public class EvacuationFileMapping : Profile

@@ -43,6 +43,22 @@ namespace EMBC.Responders.API.Controllers
 
             return Ok(searchResults);
         }
+
+        [HttpGet("registrants/matches")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<RegistrantProfile>>> SearchMatchingRegistrants([FromQuery] string householdMemberId)
+        {
+            var results = await evacuationSearchService.SearchRegistrantMatches(householdMemberId);
+            return Ok(results);
+        }
+
+        [HttpGet("files/matches")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<EvacuationFileSearchResult>>> SearchMatchingEvacuationFiles([FromQuery] string registrantId)
+        {
+            var results = await evacuationSearchService.SearchEvacuationFileMatches(registrantId);
+            return Ok(results);
+        }
     }
 
     public class SearchParameters

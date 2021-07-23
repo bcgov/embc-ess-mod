@@ -32,6 +32,10 @@ namespace EMBC.Responders.API.Services
         Task<EvacuationFile> GetEvacuationFile(string fileId);
 
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFiles(string registrantId, MemberRole userRole);
+
+        Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string householdMemberId);
+
+        Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string registrantId);
     }
 
     public class SearchResults
@@ -133,6 +137,26 @@ namespace EMBC.Responders.API.Services
             })).Items;
 
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(files);
+        }
+
+        public async Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string householdmemberId)
+        {
+            await Task.CompletedTask;
+            //var registrants = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.RegistrantsSearchQuery
+            //{
+            //    HouseholdMemberId = householdmemberId
+            //})).Items;
+            return mapper.Map<IEnumerable<RegistrantProfile>>(Array.Empty<RegistrantProfile>());
+        }
+
+        public async Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string registrantId)
+        {
+            await Task.CompletedTask;
+            //var files = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesSearchQuery
+            //{
+            //    RegistrantId = registrantId
+            //})).Items;
+            return mapper.Map<IEnumerable<EvacuationFileSearchResult>>(Array.Empty<EvacuationFileSearchResult>());
         }
     }
 
