@@ -101,7 +101,7 @@
               <div class="col-8">
                 <mat-table
                   class="bottom-space"
-                  [dataSource]="memberListDisplay"
+                  [dataSource]="stepEssFileService?.householdMembers"
                 >
                   <ng-container matColumnDef="firstName">
                     <mat-header-cell *matHeaderCellDef

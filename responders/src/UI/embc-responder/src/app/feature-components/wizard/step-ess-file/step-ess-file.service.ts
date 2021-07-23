@@ -32,7 +32,6 @@ export class StepEssFileService {
   // Important values not set on form
   // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
   private primaryAddressVal: AddressModel;
-  private primaryMemberVal: HouseholdMemberModel;
 
   // Evacuation Details tab
   private paperESSFileVal: string;
@@ -106,13 +105,6 @@ export class StepEssFileService {
   }
   public set primaryAddress(primaryAddressVal: AddressModel) {
     this.primaryAddressVal = primaryAddressVal;
-  }
-
-  public get primaryMember(): HouseholdMemberModel {
-    return this.primaryMemberVal;
-  }
-  public set primaryMember(primaryMemberVal: HouseholdMemberModel) {
-    this.primaryMemberVal = primaryMemberVal;
   }
 
   // Evacuation Details tab
@@ -384,17 +376,6 @@ export class StepEssFileService {
       (ins) => ins.value === this.canRegistrantProvideTransportation
     )?.apiValue;
 
-    // Create new HouseholdMembers array that includes primary registrant, set member types
-    this.householdMembers.forEach((mem) => {
-      mem.isPrimaryRegistrant = false;
-      mem.type = HouseholdMemberType.HouseholdMember;
-    });
-
-    const allMembers: EvacuationFileHouseholdMember[] = [
-      this.primaryMember,
-      ...this.householdMembers
-    ];
-
     const needsObject: NeedsAssessment = {
       insurance: this.insurance,
       recommendedReferralServices: this.referredServiceDetails,
@@ -402,7 +383,7 @@ export class StepEssFileService {
       houseHoldRecoveryPlan: this.householdRecoveryPlan,
       evacuationExternalReferrals: this.evacuationExternalReferrals,
 
-      householdMembers: allMembers,
+      householdMembers: this.householdMembers,
       haveSpecialDiet: this.haveSpecialDiet,
       specialDietDetails: this.specialDietDetails,
       takeMedication: this.takeMedication,
@@ -451,7 +432,6 @@ export class StepEssFileService {
     // Important values not set on form
     // ESS File ID, Primary Registrant ID, and Task Number are set on EvacueeSession
     this.primaryAddress = undefined;
-    this.primaryMember = undefined;
 
     // Evacuation Details tab
     this.paperESSFile = undefined;
@@ -502,17 +482,12 @@ export class StepEssFileService {
    */
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
     const essNeeds = essFile.needsAssessment;
+    const primaryLastName = essNeeds.householdMembers?.find(
+      (member) => member.type === HouseholdMemberType.Registrant
+    ).lastName;
 
     // Wizard variables
     this.evacueeSession.essFileNumber = essFile.id;
-
-    // Required values not set on form
-    this.primaryMember = {
-      sameLastName: true,
-      ...essNeeds.householdMembers?.find(
-        (member) => member.type === HouseholdMemberType.Registrant
-      )
-    };
 
     // Evacuation Details tab
     this.evacAddress = essFile.evacuatedFromAddress;
@@ -532,14 +507,14 @@ export class StepEssFileService {
 
     // Household Members tab
     // Split main applicant from other household members, remap to UI model
-    this.householdMembers = essNeeds.householdMembers
-      ?.filter((member) => member.type !== HouseholdMemberType.Registrant)
-      .map<HouseholdMemberModel>((member) => {
+    this.householdMembers = essNeeds.householdMembers?.map<HouseholdMemberModel>(
+      (member) => {
         return {
           ...member,
-          sameLastName: member.lastName === this.primaryMember.lastName
+          sameLastName: member.lastName === primaryLastName
         };
-      });
+      }
+    );
 
     this.haveHouseHoldMembersVal = this.householdMembers?.length > 0;
 

@@ -134,16 +134,18 @@ export class WizardAdapterService {
       profile.primaryAddress
     );
 
-    this.stepEssFileService.primaryMember = {
-      dateOfBirth: profile.personalDetails.dateOfBirth,
-      firstName: profile.personalDetails.firstName,
-      lastName: profile.personalDetails.lastName,
-      gender: profile.personalDetails.gender,
-      initials: profile.personalDetails.initials,
-      sameLastName: true,
-      isPrimaryRegistrant: true,
-      type: HouseholdMemberType.Registrant
-    };
+    this.stepEssFileService.householdMembers = [
+      {
+        dateOfBirth: profile.personalDetails.dateOfBirth,
+        firstName: profile.personalDetails.firstName,
+        lastName: profile.personalDetails.lastName,
+        gender: profile.personalDetails.gender,
+        initials: profile.personalDetails.initials,
+        sameLastName: true,
+        isPrimaryRegistrant: true,
+        type: HouseholdMemberType.Registrant
+      }
+    ];
   }
 
   public stepReviewESSFileFromESSFileRecord(): Observable<boolean> {

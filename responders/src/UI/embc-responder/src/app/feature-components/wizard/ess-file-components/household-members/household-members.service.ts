@@ -21,13 +21,14 @@ export class HouseholdMembersService {
   addMembers(householdForm: FormGroup): FormGroup {
     householdForm.get('houseHoldMember').reset();
     householdForm.get('addMemberIndicator').setValue(true);
+
     return householdForm;
   }
 
   saveHouseholdMember(householdForm: FormGroup, data: any[]): FormGroup {
-    householdForm.get('houseHoldMembers').setValue(data);
     householdForm.get('houseHoldMember').reset();
     householdForm.get('addMemberIndicator').setValue(false);
+
     return householdForm;
   }
 
