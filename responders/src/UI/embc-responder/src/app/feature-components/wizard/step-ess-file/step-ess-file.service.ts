@@ -75,6 +75,7 @@ export class StepEssFileService {
   // Security Phrase tab
   private bypassPhraseVal: boolean;
   private securityPhraseVal: string;
+  private editedSecurityPhraseVal: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -82,6 +83,7 @@ export class StepEssFileService {
     private evacueeSession: EvacueeSessionService,
     private userService: UserService
   ) {}
+
   // Wizard variables
   public get essTabs(): Array<TabModel> {
     return this.essTabsVal;
@@ -333,6 +335,13 @@ export class StepEssFileService {
     this.securityPhraseVal = securityPhraseVal;
   }
 
+  public get editedSecurityPhrase(): boolean {
+    return this.editedSecurityPhraseVal;
+  }
+  public set editedSecurityPhrase(editedSecurityPhraseVal: boolean) {
+    this.editedSecurityPhraseVal = editedSecurityPhraseVal;
+  }
+
   /**
    * Set the given status to the given tab
    *
@@ -421,7 +430,7 @@ export class StepEssFileService {
 
       needsAssessment: needsObject,
       securityPhrase: this.securityPhrase,
-      securityPhraseEdited: !this.bypassPhrase,
+      securityPhraseEdited: this.editedSecurityPhrase,
       task: {
         taskNumber: this.userService.currentProfile?.taskNumber
       }
@@ -485,6 +494,7 @@ export class StepEssFileService {
     // Security Phrase tab
     this.bypassPhrase = undefined;
     this.securityPhrase = undefined;
+    this.editedSecurityPhrase = undefined;
   }
 
   /**
@@ -568,6 +578,7 @@ export class StepEssFileService {
 
     // Security Phrase tab
     this.securityPhrase = essFile.securityPhrase;
+    this.editedSecurityPhrase = essFile.securityPhraseEdited;
   }
 
   /**

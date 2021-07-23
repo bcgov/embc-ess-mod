@@ -39,6 +39,19 @@ p, .tips-card {
   }
 }
 
+.edit-phrase-row {
+  padding: 1.8em 0.9em;
+}
+
 ::ng-deep .mat-form-field-wrapper {
 	padding-bottom: 0.25em;
+}
+
+.edit-phrase {
+  padding: 0;
+  color: #169BD5;
+}
+
+.edit-phrase:hover {
+  text-decoration: underline;
 }
