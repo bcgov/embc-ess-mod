@@ -147,7 +147,7 @@ namespace EMBC.Responders.API.Services
                 LastName = lastName,
                 DateOfBirth = dateOfBirth,
                 IncludeRestrictedAccess = true,
-                // IncludeRegistrantProfilesOnly = true
+                IncludeRegistrantProfilesOnly = true
             });
             return mapper.Map<IEnumerable<RegistrantProfile>>(searchResults.Profiles);
         }
@@ -160,7 +160,9 @@ namespace EMBC.Responders.API.Services
                 LastName = lastName,
                 DateOfBirth = dateOfBirth,
                 IncludeRestrictedAccess = true,
-                // IncludeEvacuationFilesOnly = true
+                IncludeEvacuationFilesOnly = true,
+                InStatuses = (userRole == MemberRole.Tier1 ? tier1FileStatuses : tier2andAboveFileStatuses)
+                    .Select(s => Enum.Parse<ESS.Shared.Contracts.Submissions.EvacuationFileStatus>(s.ToString(), true)).ToArray()
             });
             return mapper.Map<IEnumerable<EvacuationFileSearchResult>>(searchResults.EvacuationFiles);
         }
@@ -186,10 +188,28 @@ namespace EMBC.Responders.API.Services
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
               ;
 
+            CreateMap<ESS.Shared.Contracts.Submissions.ProfileSearchResult, RegistrantProfile>()
+                .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
+                .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.IsVerified))
+                .ForMember(d => d.AuthenticatedUser, opts => opts.MapFrom(s => false /*s.IsAuthenticated - MISSING*/))
+                .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.RegistrationDate))
+                .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
+                .ForMember(d => d.ContactDetails, opts => opts.Ignore())
+                .ForMember(d => d.PersonalDetails, opts => opts.MapFrom(s => new PersonDetails
+                {
+                    FirstName = s.FirstName,
+                    LastName = s.LastName,
+                    //DateOfBirth = DateOfBirth, TODO: missing!
+                }))
+                .ForMember(d => d.MailingAddress, opts => opts.Ignore())
+                .ForMember(d => d.SecurityQuestions, opts => opts.Ignore())
+                .ForMember(d => d.IsMailingAddressSameAsPrimaryAddress, opts => opts.Ignore())
+              ;
+
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember, EvacuationFileSearchResultHouseholdMember>()
                 .ForMember(d => d.Type, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.LinkedRegistrantId) ? HouseholdMemberType.Registrant : HouseholdMemberType.Registrant))
                 .ForMember(d => d.IsMainApplicant, opts => opts.MapFrom(s => s.IsPrimaryRegistrant))
-                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => false /*s.RestrictedAccess*/))
+                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFileSummary>()
