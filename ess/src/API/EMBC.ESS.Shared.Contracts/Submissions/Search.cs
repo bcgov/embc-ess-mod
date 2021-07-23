@@ -86,7 +86,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string LastName { get; set; }
         public string DateOfBirth { get; set; }
         public bool IncludeRestrictedAccess { get; set; }
-        public EvacuationFileStatus[] InStatuses { get; set; }
+        public EvacuationFileStatus[] InStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
         public bool IncludeEvacuationFilesOnly { get; set; } = false;
         public bool IncludeRegistrantProfilesOnly { get; set; } = false;
     }
