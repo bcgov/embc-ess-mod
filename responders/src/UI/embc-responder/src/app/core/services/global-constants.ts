@@ -108,7 +108,16 @@ export const evacueeProfileUpdatedMessage: DialogContent = {
   cancelButton: 'Close'
 };
 
+export const petDeleteDialog: DialogContent = {
+  title: 'Remove Pet',
+  text:
+    '<p>Are you sure you want to <b>remove</b> this pet from your evacuation file?</p>',
+  confirmButton: 'Yes, Remove Pet',
+  cancelButton: 'No, Cancel'
+};
+
 export const householdMemberDeleteDialog: DialogContent = {
+  title: 'Remove Household Member',
   text:
     '<p>Are you sure you want to <b>remove</b> this household member from your evacuation file?</p>',
   confirmButton: 'Yes, Remove Household Member',
