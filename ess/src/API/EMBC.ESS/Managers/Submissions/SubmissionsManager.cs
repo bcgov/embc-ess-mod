@@ -234,10 +234,22 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrWhiteSpace(query.LastName)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.LastName));
             if (string.IsNullOrWhiteSpace(query.DateOfBirth)) throw new ArgumentNullException(nameof(EvacueeSearchQuery.DateOfBirth));
 
-            var searchResults = (EvacueeSearchResponse)await searchEngine.Search(new EvacueeSearchRequest { FirstName = query.FirstName, LastName = query.LastName, DateOfBirth = query.DateOfBirth });
+            var searchMode = !query.IncludeEvacuationFilesOnly && query.IncludeRegistrantProfilesOnly
+                ? SearchMode.Registrants
+                : query.IncludeEvacuationFilesOnly && !query.IncludeRegistrantProfilesOnly
+                    ? SearchMode.HouseholdMembers
+                    : SearchMode.Both;
+
+            var searchResults = (EvacueeSearchResponse)await searchEngine.Search(new EvacueeSearchRequest
+            {
+                FirstName = query.FirstName,
+                LastName = query.LastName,
+                DateOfBirth = query.DateOfBirth,
+                SearchMode = searchMode
+            });
 
             var profiles = new ConcurrentBag<ProfileSearchResult>();
-            var profileTasks = searchResults.MatchingReguistrantIds.Select(async id =>
+            var profileTasks = searchResults.MatchingRegistrantIds.Select(async id =>
             {
                 var profile = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = id })).Items.Single();
                 var files = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { PrimaryRegistrantId = id })).Items;

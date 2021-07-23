@@ -311,7 +311,13 @@
               </div>
             </div>
 
-            <div class="row" *ngIf="!stepEssFileService?.bypassPhrase">
+            <div
+              class="row"
+              *ngIf="
+                !stepEssFileService?.bypassPhrase ||
+                wizardType !== 'new-ess-file'
+              "
+            >
               <div class="col-4">Security Phrase</div>
               <div class="col-8 bold">
                 {{ stepEssFileService?.securityPhrase | maskText }}

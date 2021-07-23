@@ -10,7 +10,13 @@
   <div class="row">
     <div class="col-12 content-container">
       <div class="row">
-        <div class="col-8">
+        <div
+          class="col-8"
+          *ngIf="
+            wizardType === 'new-ess-file' || editedSecurityPhrase;
+            else editEssFile
+          "
+        >
           <p>
             The security phrase is a vital piece of information to ensure an
             Emergency Support Services (ESS) Responder can verbally verify your
@@ -72,7 +78,7 @@
               </mat-form-field>
             </div>
 
-            <div class="row checkbox-row">
+            <div class="row checkbox-row" *ngIf="wizardType === 'new-ess-file'">
               <div class="col-12">
                 <mat-checkbox
                   class="example-margin"
@@ -83,8 +89,36 @@
                 </mat-checkbox>
               </div>
             </div>
+
+            <div
+              class="row edit-phrase-row"
+              *ngIf="
+                wizardType === 'review-file' || wizardType === 'complete-file'
+              "
+            >
+              <button class="btn edit-phrase" (click)="editSecurityPhrase()">
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
+
+        <ng-template #editEssFile>
+          <div class="col-8">
+            <div class="row">
+              <div class="col-md-6"><label> Security Phrase</label></div>
+              <div class="col-md-6">
+                <label>******</label>
+              </div>
+            </div>
+
+            <div class="row edit-phrase-row">
+              <button class="btn edit-phrase" (click)="editSecurityPhrase()">
+                Add new security phrase
+              </button>
+            </div>
+          </div>
+        </ng-template>
 
         <div class="col-md-4">
           <mat-card class="tips-card">

@@ -12,6 +12,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 
 @Component({
   selector: 'app-security-phrase',
@@ -21,8 +22,11 @@ import {
 export class SecurityPhraseComponent implements OnInit, OnDestroy {
   securityForm: FormGroup = null;
   tabUpdateSubscription: Subscription;
+  wizardType: string;
+  editedSecurityPhrase: boolean;
 
   constructor(
+    private evacueeSessionService: EvacueeSessionService,
     private stepEssFileService: StepEssFileService,
     private customValidationService: CustomValidationService,
     private formBuilder: FormBuilder,
@@ -31,20 +35,16 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Set up form validation for verification check
-    this.securityForm = this.formBuilder.group({
-      securityPhrase: [
-        this.stepEssFileService.securityPhrase,
-        [
-          Validators.minLength(6),
-          Validators.maxLength(50),
-          Validators.pattern(globalConst.securityPhrasePattern),
-          this.customValidationService.whitespaceValidator()
-        ]
-      ],
-      bypassPhrase: this.stepEssFileService.bypassPhrase
-    });
+    this.createSecurityPhraseForm();
 
-    this.setFormDisabled(this.stepEssFileService.bypassPhrase);
+    // Set up wizard type
+    this.wizardType = this.evacueeSessionService.getWizardType();
+
+    // Setting form validation
+    this.formValidation();
+
+    // Setting the edites Security Flag in case the wizard type is set to edit an ESS File
+    this.editedPhraseFlag();
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
@@ -54,6 +54,9 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Get form controls from the security Phrase form
+   */
   get securityFormControl(): { [key: string]: AbstractControl } {
     return this.securityForm.controls;
   }
@@ -75,7 +78,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   setFormDisabled(checked) {
     this.stepEssFileService.bypassPhrase = checked;
 
-    if (this.stepEssFileService.bypassPhrase) {
+    if (checked) {
       // Reset input
       this.securityFormControl.securityPhrase.disable();
       this.securityFormControl.securityPhrase.reset();
@@ -105,6 +108,15 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Activates the form to edit the security phrase
+   */
+  editSecurityPhrase() {
+    this.editedSecurityPhrase = !this.editedSecurityPhrase;
+    this.stepEssFileService.editedSecurityPhrase = this.editedSecurityPhrase;
+    this.formValidation();
+  }
+
+  /**
    * Set Security Phrase values in global var, update tab's status indicator
    */
   updateTabStatus() {
@@ -130,5 +142,52 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.stepEssFileService.nextTabUpdate.next();
     this.tabUpdateSubscription.unsubscribe();
+  }
+
+  /**
+   * Creates a new security phrase form
+   */
+  private createSecurityPhraseForm() {
+    this.securityForm = this.formBuilder.group({
+      securityPhrase: [
+        this.stepEssFileService.securityPhrase,
+        [
+          Validators.minLength(6),
+          Validators.maxLength(50),
+          Validators.pattern(globalConst.securityPhrasePattern),
+          this.customValidationService.whitespaceValidator()
+        ]
+      ],
+      bypassPhrase: this.stepEssFileService.bypassPhrase
+    });
+  }
+
+  private formValidation() {
+    if (
+      this.wizardType === 'review-file' ||
+      this.wizardType === 'complete-file'
+    ) {
+      if (this.editedSecurityPhrase) {
+        this.setFormDisabled(false);
+      } else {
+        this.setFormDisabled(true);
+      }
+    } else if (this.wizardType === 'new-ess-file') {
+      this.setFormDisabled(this.stepEssFileService.bypassPhrase);
+    }
+  }
+
+  private editedPhraseFlag() {
+    if (
+      this.wizardType === 'review-file' ||
+      this.wizardType === 'complete-file'
+    ) {
+      // If the editedSecurityFlag is not defined, set its default as false
+      if (this.stepEssFileService.editedSecurityPhrase === undefined)
+        this.stepEssFileService.editedSecurityPhrase = false;
+
+      // Set up editedSecurityPhrase
+      this.editedSecurityPhrase = this.stepEssFileService.editedSecurityPhrase;
+    }
   }
 }
