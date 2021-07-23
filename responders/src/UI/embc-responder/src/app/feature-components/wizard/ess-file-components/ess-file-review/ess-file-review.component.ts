@@ -56,10 +56,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.stepEssFileService.securityPhrase);
-    console.log(this.stepEssFileService.bypassPhrase);
-    console.log(this.stepEssFileService.editedSecurityPhrase);
-
     this.taskNumber = this.userService.currentProfile?.taskNumber;
     this.wizardType = this.evacueeSessionService.getWizardType();
 
