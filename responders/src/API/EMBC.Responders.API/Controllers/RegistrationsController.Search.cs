@@ -39,24 +39,25 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<SearchResults>> Search([FromQuery] SearchParameters searchParameters)
         {
             var userRole = Enum.Parse<MemberRole>(currentUserRole);
-            var searchResults = await evacuationSearchService.Search(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
+            var searchResults = await evacuationSearchService.SearchEvacuations(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
 
             return Ok(searchResults);
         }
 
         [HttpGet("registrants/matches")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<RegistrantProfile>>> SearchMatchingRegistrants([FromQuery] string householdMemberId)
+        public async Task<ActionResult<IEnumerable<RegistrantProfile>>> SearchMatchingRegistrants([FromQuery] SearchParameters searchParameters)
         {
-            var results = await evacuationSearchService.SearchRegistrantMatches(householdMemberId);
+            var results = await evacuationSearchService.SearchRegistrantMatches(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth);
             return Ok(results);
         }
 
         [HttpGet("files/matches")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<EvacuationFileSearchResult>>> SearchMatchingEvacuationFiles([FromQuery] string registrantId)
+        public async Task<ActionResult<IEnumerable<EvacuationFileSearchResult>>> SearchMatchingEvacuationFiles([FromQuery] SearchParameters searchParameters)
         {
-            var results = await evacuationSearchService.SearchEvacuationFileMatches(registrantId);
+            var userRole = Enum.Parse<MemberRole>(currentUserRole);
+            var results = await evacuationSearchService.SearchEvacuationFileMatches(searchParameters.firstName, searchParameters.lastName, searchParameters.dateOfBirth, userRole);
             return Ok(results);
         }
     }

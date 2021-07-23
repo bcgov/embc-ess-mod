@@ -33,11 +33,19 @@ namespace EMBC.ESS.Engines.Search
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DateOfBirth { get; set; }
+        public SearchMode SearchMode { get; set; } = SearchMode.Both;
+    }
+
+    public enum SearchMode
+    {
+        Registrants,
+        HouseholdMembers,
+        Both
     }
 
     public class EvacueeSearchResponse : SearchResponse
     {
-        public IEnumerable<string> MatchingReguistrantIds { get; set; }
+        public IEnumerable<string> MatchingRegistrantIds { get; set; }
         public IEnumerable<string> MatcingHouseholdMemberIds { get; set; }
     }
 }

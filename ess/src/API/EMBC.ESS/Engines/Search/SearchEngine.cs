@@ -45,26 +45,30 @@ namespace EMBC.ESS.Engines.Search
             if (string.IsNullOrWhiteSpace(request.LastName)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.LastName));
             if (string.IsNullOrWhiteSpace(request.DateOfBirth)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.DateOfBirth));
 
-            var membersQuery = essContext.era_householdmembers
-                .Where(m => m.statecode == (int)EntityState.Active)
-                .Where(m => m.era_firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
-                .Where(m => m.era_lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
-                .Where(m => m.era_dateofbirth.Equals(Date.Parse(request.DateOfBirth)))
-                .ToArray()
-                .Select(m => m.era_householdmemberid.Value.ToString());
+            var membersQuery = request.SearchMode == SearchMode.Both || request.SearchMode == SearchMode.HouseholdMembers
+                ? essContext.era_householdmembers
+                    .Where(m => m.statecode == (int)EntityState.Active)
+                    .Where(m => m.era_firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
+                    .Where(m => m.era_lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
+                    .Where(m => m.era_dateofbirth.Equals(Date.Parse(request.DateOfBirth)))
+                    .ToArray()
+                    .Select(m => m.era_householdmemberid.Value.ToString())
+                : Array.Empty<string>();
 
-            var registrantsQuery = essContext.contacts
-                .Where(m => m.statecode == (int)EntityState.Active)
-                .Where(m => m.firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
-                .Where(m => m.lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
-                .Where(m => m.birthdate.Equals(Date.Parse(request.DateOfBirth)))
-                .ToArray()
-                .Select(m => m.contactid.Value.ToString());
+            var registrantsQuery = request.SearchMode == SearchMode.Both || request.SearchMode == SearchMode.Registrants
+                ? essContext.contacts
+                    .Where(m => m.statecode == (int)EntityState.Active)
+                    .Where(m => m.firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
+                    .Where(m => m.lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
+                    .Where(m => m.birthdate.Equals(Date.Parse(request.DateOfBirth)))
+                    .ToArray()
+                    .Select(m => m.contactid.Value.ToString())
+                : Array.Empty<string>();
 
             var response = new EvacueeSearchResponse
             {
                 MatcingHouseholdMemberIds = membersQuery.ToArray(),
-                MatchingReguistrantIds = registrantsQuery.ToArray()
+                MatchingRegistrantIds = registrantsQuery.ToArray()
             };
 
             return await Task.FromResult(response);

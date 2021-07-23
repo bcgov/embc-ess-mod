@@ -27,15 +27,15 @@ namespace EMBC.Responders.API.Services
 {
     public interface IEvacuationSearchService
     {
-        Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
+        Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
 
         Task<EvacuationFile> GetEvacuationFile(string fileId);
 
         Task<IEnumerable<EvacuationFileSummary>> GetEvacuationFiles(string registrantId, MemberRole userRole);
 
-        Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string householdMemberId);
+        Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth);
 
-        Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string registrantId);
+        Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole);
     }
 
     public class SearchResults
@@ -98,7 +98,7 @@ namespace EMBC.Responders.API.Services
             this.httpContext = httpContext;
         }
 
-        public async Task<SearchResults> Search(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
+        public async Task<SearchResults> SearchEvacuations(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
         {
             var searchResults = await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacueeSearchQuery
             {
@@ -139,24 +139,30 @@ namespace EMBC.Responders.API.Services
             return mapper.Map<IEnumerable<EvacuationFileSummary>>(files);
         }
 
-        public async Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string householdmemberId)
+        public async Task<IEnumerable<RegistrantProfile>> SearchRegistrantMatches(string firstName, string lastName, string dateOfBirth)
         {
-            await Task.CompletedTask;
-            //var registrants = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.RegistrantsSearchQuery
-            //{
-            //    HouseholdMemberId = householdmemberId
-            //})).Items;
-            return mapper.Map<IEnumerable<RegistrantProfile>>(Array.Empty<RegistrantProfile>());
+            var searchResults = await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacueeSearchQuery
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = dateOfBirth,
+                IncludeRestrictedAccess = true,
+                // IncludeRegistrantProfilesOnly = true
+            });
+            return mapper.Map<IEnumerable<RegistrantProfile>>(searchResults.Profiles);
         }
 
-        public async Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string registrantId)
+        public async Task<IEnumerable<EvacuationFileSearchResult>> SearchEvacuationFileMatches(string firstName, string lastName, string dateOfBirth, MemberRole userRole)
         {
-            await Task.CompletedTask;
-            //var files = (await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacuationFilesSearchQuery
-            //{
-            //    RegistrantId = registrantId
-            //})).Items;
-            return mapper.Map<IEnumerable<EvacuationFileSearchResult>>(Array.Empty<EvacuationFileSearchResult>());
+            var searchResults = await messagingClient.Send(new ESS.Shared.Contracts.Submissions.EvacueeSearchQuery
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = dateOfBirth,
+                IncludeRestrictedAccess = true,
+                // IncludeEvacuationFilesOnly = true
+            });
+            return mapper.Map<IEnumerable<EvacuationFileSearchResult>>(searchResults.EvacuationFiles);
         }
     }
 
