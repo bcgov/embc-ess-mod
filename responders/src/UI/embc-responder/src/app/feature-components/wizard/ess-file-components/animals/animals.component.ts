@@ -11,6 +11,9 @@ import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { MatRadioChange } from '@angular/material/radio';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-animals',
@@ -31,6 +34,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private dialog: MatDialog,
     private stepEssFileService: StepEssFileService,
     private customValidation: CustomValidationService,
     private formBuilder: FormBuilder
@@ -68,6 +72,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       this.stepEssFileService.havePets === true &&
       this.stepEssFileService.petsList.length === 0
     ) {
+      this.addPets();
       this.showPetsForm = true;
     }
   }
@@ -132,16 +137,30 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   }
 
   deleteRow(index: number): void {
-    this.pets.splice(index, 1);
-    this.petSource.next(this.pets);
-    this.animalsForm.get('pets').setValue(this.pets);
-    this.animalsForm.get('addPetIndicator').setValue(false);
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: InformationDialogComponent,
+          content: globalConst.petDeleteDialog
+        },
+        height: 'auto',
+        width: '650px'
+      })
+      .afterClosed()
+      .subscribe((event) => {
+        if (event === 'confirm') {
+          this.pets.splice(index, 1);
+          this.petSource.next(this.pets);
+          this.animalsForm.get('pets').setValue(this.pets);
+          this.animalsForm.get('addPetIndicator').setValue(false);
 
-    if (this.pets.length === 0) {
-      this.animalsForm.get('hasPetsFood').reset();
-      this.animalsForm.get('petCareDetails').reset();
-      this.animalsForm.get('hasPets').setValue(false);
-    }
+          if (this.pets.length === 0) {
+            this.animalsForm.get('hasPetsFood').reset();
+            this.animalsForm.get('petCareDetails').reset();
+            this.animalsForm.get('hasPets').setValue(false);
+          }
+        }
+      });
   }
 
   /**
