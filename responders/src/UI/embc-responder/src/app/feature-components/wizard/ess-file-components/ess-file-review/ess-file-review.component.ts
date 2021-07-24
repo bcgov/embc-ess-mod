@@ -33,8 +33,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
   needsTransportationDisplay: string;
   needsIncidentalsDisplay: string;
 
-  memberListDisplay: HouseholdMemberModel[];
-
   memberColumns: string[] = [
     'firstName',
     'lastName',
@@ -90,12 +88,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
       (ins) =>
         ins.value === this.stepEssFileService?.canRegistrantProvideIncidentals
     )?.name;
-
-    // Add main member to "Household Members" table
-    this.memberListDisplay = [
-      this.stepEssFileService.primaryMember,
-      ...this.stepEssFileService?.householdMembers
-    ];
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(

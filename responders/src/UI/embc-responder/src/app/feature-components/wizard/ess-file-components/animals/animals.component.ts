@@ -14,6 +14,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Pet } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-animals',
@@ -26,7 +27,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   showPetsForm = false;
   displayedColumns: string[] = ['type', 'quantity', 'buttons'];
   petSource = new BehaviorSubject([]);
-  pets = [];
+  pets: Pet[] = [];
   editIndex: number;
   rowEdit = false;
   showTable = true;

@@ -12,7 +12,7 @@
       <div class="row">
         <div class="col-12">
           <div class="review-panel data-panel">
-            <label class="tab-subtitle">Restriction</label>
+            <label class="tab-subtitle">Evacuation Details</label>
 
             <div class="row">
               <div class="col-4">Paper Based ESS File Number</div>
@@ -101,15 +101,15 @@
               <div class="col-8">
                 <mat-table
                   class="bottom-space"
-                  [dataSource]="memberListDisplay"
+                  [dataSource]="stepEssFileService?.householdMembers"
                 >
                   <ng-container matColumnDef="firstName">
                     <mat-header-cell *matHeaderCellDef
                       >First Name</mat-header-cell
                     >
-                    <mat-cell *matCellDef="let element">
+                    <mat-cell *matCellDef="let member">
                       <span class="mobile-label">First Name:</span>
-                      {{ element.firstName }}
+                      {{ member.firstName }}
                     </mat-cell>
                   </ng-container>
 
@@ -117,9 +117,9 @@
                     <mat-header-cell *matHeaderCellDef
                       >Last Name</mat-header-cell
                     >
-                    <mat-cell *matCellDef="let element">
+                    <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Last Name:</span>
-                      {{ element.lastName }}
+                      {{ member.lastName }}
                     </mat-cell>
                   </ng-container>
 
@@ -127,17 +127,17 @@
                     <mat-header-cell *matHeaderCellDef
                       >Initials</mat-header-cell
                     >
-                    <mat-cell *matCellDef="let element">
+                    <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Initials:</span>
-                      {{ element.initials }}
+                      {{ member.initials }}
                     </mat-cell>
                   </ng-container>
 
                   <ng-container matColumnDef="gender">
                     <mat-header-cell *matHeaderCellDef>Gender</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
+                    <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Gender:</span>
-                      {{ element.gender }}
+                      {{ member.gender }}
                     </mat-cell>
                   </ng-container>
 
@@ -145,9 +145,9 @@
                     <mat-header-cell *matHeaderCellDef>
                       Date of Birth
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let element">
+                    <mat-cell *matCellDef="let member">
                       <span class="mobile-label">Date of Birth:</span>
-                      {{ element.dateOfBirth }}
+                      {{ member.dateOfBirth }}
                     </mat-cell>
                   </ng-container>
 
@@ -155,7 +155,8 @@
                     *matHeaderRowDef="memberColumns"
                   ></mat-header-row>
                   <mat-row
-                    *matRowDef="let row; columns: memberColumns"
+                    *matRowDef="let member; columns: memberColumns"
+                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"
                   ></mat-row>
                 </mat-table>
               </div>
