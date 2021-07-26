@@ -46,6 +46,6 @@ namespace EMBC.ESS.Engines.Search
     public class EvacueeSearchResponse : SearchResponse
     {
         public IEnumerable<string> MatchingRegistrantIds { get; set; }
-        public IEnumerable<string> MatcingHouseholdMemberIds { get; set; }
+        public IEnumerable<string> MatchingHouseholdMemberIds { get; set; }
     }
 }

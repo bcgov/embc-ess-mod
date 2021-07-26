@@ -260,7 +260,7 @@ namespace EMBC.ESS.Managers.Submissions
             });
 
             var files = new ConcurrentBag<EvacuationFileSearchResult>();
-            var householdMemberTasks = searchResults.MatcingHouseholdMemberIds.Select(async id =>
+            var householdMemberTasks = searchResults.MatchingHouseholdMemberIds.Select(async id =>
             {
                 var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { HouseholdMemberId = id })).Items.SingleOrDefault();
                 if (file == null) return;

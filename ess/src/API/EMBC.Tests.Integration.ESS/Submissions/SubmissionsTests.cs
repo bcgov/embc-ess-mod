@@ -399,6 +399,33 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task Search_EvacuationFiles_IncludeRegistrantProfilesOnly()
+        {
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeRegistrantProfilesOnly = true, IncludeRestrictedAccess = true });
+
+            searchResults.EvacuationFiles.Count().ShouldBe(0);
+            searchResults.Profiles.Count().ShouldNotBe(0);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Search_EvacuationFiles_IncludeEvacuationFilesOnly()
+        {
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeEvacuationFilesOnly = true, IncludeRestrictedAccess = true });
+
+            searchResults.EvacuationFiles.Count().ShouldNotBe(0);
+            searchResults.Profiles.Count().ShouldBe(0);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Search_EvacuationFiles_IncludeBoth()
+        {
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeRestrictedAccess = true });
+
+            searchResults.EvacuationFiles.Count().ShouldNotBe(0);
+            searchResults.Profiles.Count().ShouldNotBe(0);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanVerifySecurityQuestions()
         {
             var expectedNumberOfCorrectAnswers = 3;
