@@ -22,8 +22,8 @@ import { EssfileDashboardService } from '../essfile-dashboard.service';
 })
 export class HouseholdMemberComponent implements OnInit {
   @ViewChild(MatAccordion) accordion: MatAccordion;
-  currentlyOpenedItemIndex = -1;
   @Input() essFile: EvacuationFileModel;
+  currentlyOpenedItemIndex = -1;
   registrantId: string;
   isLoading = false;
   matchedProfileCount: number;

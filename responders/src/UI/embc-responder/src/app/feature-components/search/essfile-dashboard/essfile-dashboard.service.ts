@@ -33,9 +33,9 @@ export class EssfileDashboardService {
     dateOfBirth: string
   ): Observable<RegistrantProfile[]> {
     return this.registrationService.registrationsSearchMatchingRegistrants({
-      firstName: firstName,
-      lastName: lastName,
-      dateOfBirth: dateOfBirth
+      firstName,
+      lastName,
+      dateOfBirth
     });
   }
 }
