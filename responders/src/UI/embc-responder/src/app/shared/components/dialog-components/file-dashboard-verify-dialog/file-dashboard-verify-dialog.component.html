@@ -1,0 +1,57 @@
+<div class="row">
+  <div class="col-md-12">
+    <p class="heading">{{ content?.subtitle }}</p>
+  </div>
+</div>
+<div class="text-content" [innerHTML]="content?.text"></div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form [formGroup]="verificationForm">
+      <mat-radio-group
+        formControlName="verified"
+        aria-labelledby="verified-radio-group-label"
+        class="primary-radio-group"
+        required
+      >
+        <mat-radio-button [value]="'Yes'"
+          ><span class="radio-text"><b>Yes</b></span> - I saw government issued
+          identification</mat-radio-button
+        >
+        <mat-radio-button [value]="'No'"
+          ><span class="radio-text"><b>No</b></span> - I did not see government
+          issued identification</mat-radio-button
+        >
+        <mat-radio-button [value]="'answered'"
+          ><span class="radio-text"><b>No</b></span> - I did not see government
+          issued identification, but the evacuee has answered their security
+          questions correctly</mat-radio-button
+        >
+      </mat-radio-group>
+
+      <div
+        class="field-error"
+        *ngIf="
+          verifiedFormControl?.verified.touched &&
+          verifiedFormControl?.verified.invalid &&
+          verifiedFormControl?.verified.hasError('required')
+        "
+      >
+        Please make a selection
+      </div>
+    </form>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col-md-6">
+    <button class="button-s button-width" mat-button (click)="close()">
+      {{ content?.cancelButton }}
+    </button>
+  </div>
+  <div class="col-md-6">
+    <button class="button-p button-width" mat-button (click)="verify()">
+      {{ content?.confirmButton }}
+    </button>
+  </div>
+</div>

@@ -22,6 +22,7 @@ import { StatusDefinitionDialogComponent } from './components/dialog-components/
 import { VerifyEvacueeDialogComponent } from './components/dialog-components/verify-evacuee-dialog/verify-evacuee-dialog.component';
 import { OverlayLoaderComponent } from './components/overlay-loader/overlay-loader.component';
 import { FileStatusDefinitionComponent } from './components/dialog-components/file-status-definition/file-status-definition.component';
+import { FileDashboardVerifyDialogComponent } from './components/dialog-components/file-dashboard-verify-dialog/file-dashboard-verify-dialog.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { FileStatusDefinitionComponent } from './components/dialog-components/fi
     StatusDefinitionDialogComponent,
     VerifyEvacueeDialogComponent,
     OverlayLoaderComponent,
-    FileStatusDefinitionComponent
+    FileStatusDefinitionComponent,
+    FileDashboardVerifyDialogComponent
   ],
   imports: [
     CommonModule,
@@ -70,7 +72,8 @@ import { FileStatusDefinitionComponent } from './components/dialog-components/fi
     StatusDefinitionDialogComponent,
     VerifyEvacueeDialogComponent,
     OverlayLoaderComponent,
-    FileStatusDefinitionComponent
+    FileStatusDefinitionComponent,
+    FileDashboardVerifyDialogComponent
   ]
 })
 export class SharedModule {}

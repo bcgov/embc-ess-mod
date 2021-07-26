@@ -81,11 +81,6 @@
   padding-left: 17px;
 }
 
-.file-endNav {
-  width: 275px;
-  background-color: white;
-}
-
 .file-sideNav {
   display: flex;
   align-items: center;
@@ -156,4 +151,13 @@ a:not(.btn):focus {
 .complete-task-date {
   color: red;
   font-weight: bold;
+}
+
+.file-endNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 375px;
+  background-color: white;
+  border-left: 0px !important;
 }
