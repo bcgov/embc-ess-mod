@@ -36,6 +36,8 @@ export class WizardService {
       this.menuItems = this.wizardDataService.createEditProfileMenu();
     } else if (type === WizardType.ReviewFile) {
       this.menuItems = this.wizardDataService.createReviewFileMenu();
+    } else if (type === WizardType.CompleteFile) {
+      this.menuItems = this.wizardDataService.createCompleteFileMenu();
     }
   }
 

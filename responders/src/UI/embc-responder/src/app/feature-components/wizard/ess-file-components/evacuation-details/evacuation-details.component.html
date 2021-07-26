@@ -37,7 +37,11 @@
                 </div>
               </div>
               <ng-container
-                *ngIf="wizardType === 'new-ess-file'; else editEssFile"
+                *ngIf="
+                  wizardType === 'new-ess-file' ||
+                    wizardType === 'new-registration';
+                  else editEssFile
+                "
               >
                 <div class="col-12">
                   <label

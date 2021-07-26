@@ -165,4 +165,22 @@ export class WizardAdapterService {
         );
     });
   }
+
+  public stepCompleteESSFileFromESSFileRecord(): Observable<boolean> {
+    return new Observable<boolean>((obs) => {
+      this.essFileService
+        .getFileFromId(this.evacueeSessionService.essFileNumber)
+        .subscribe(
+          (evacuationFileModel) => {
+            this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
+            this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
+            this.stepEssFileService.setCompleteEssFileTabStatus();
+            obs.next(true);
+          },
+          (error) => {
+            obs.next(false);
+          }
+        );
+    });
+  }
 }
