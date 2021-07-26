@@ -31,6 +31,7 @@ export { EvacuationFileSummary } from './models/evacuation-file-summary';
 export { GetSecurityPhraseResponse } from './models/get-security-phrase-response';
 export { VerifySecurityPhraseResponse } from './models/verify-security-phrase-response';
 export { VerifySecurityPhraseRequest } from './models/verify-security-phrase-request';
+export { RegistrantLinkRequest } from './models/registrant-link-request';
 export { SearchResults } from './models/search-results';
 export { RegistrantProfileSearchResult } from './models/registrant-profile-search-result';
 export { RegistrantStatus } from './models/registrant-status';

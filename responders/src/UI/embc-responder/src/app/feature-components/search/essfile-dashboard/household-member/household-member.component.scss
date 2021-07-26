@@ -1,0 +1,114 @@
+.overview-card {
+  box-shadow: none !important;
+  border: 1px solid rgb(221, 221, 221);
+  padding-top: 0px !important;
+}
+
+.card-heading-outer {
+  background-color: rgb(35, 64, 117);
+}
+
+.card-heading {
+  color: white;
+  font-size: 21px;
+  line-height: 60px;
+}
+
+.margins {
+  margin: 0 !important;
+}
+
+.member-title {
+  font-size: 18px;
+  color: rgb(35, 64, 117);
+}
+
+.description-align {
+  justify-content: flex-end !important;
+}
+
+.file-details {
+  font-weight: bold;
+}
+
+mat-expansion-panel {
+  margin: 0px !important;
+  padding-top: 15px;
+}
+
+.expansion-divider {
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.file-heading {
+  padding-left: 17px;
+}
+
+.info-parent {
+  padding: 0 15px;
+  display: block;
+  margin: auto;
+}
+
+.info-test {
+  @extend .info-image;
+  display: block;
+  margin: auto;
+  text-align: center;
+}
+
+.essFile-parent {
+  padding: 0px;
+  display: block;
+  margin: auto;
+}
+
+.essFile-detail {
+  @extend .info-image;
+  display: block;
+  margin: auto;
+  text-align: right;
+}
+
+.info-test :hover {
+  cursor: pointer;
+}
+
+.info-image img:last-child {
+  display: none;
+}
+
+.info-image:hover img:last-child {
+  display: inline;
+}
+
+.info-image:hover img:first-child {
+  display: none;
+}
+
+.table-parent {
+  display: table;
+}
+
+.table-details {
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 15px;
+  border-collapse: separate;
+
+  th {
+    padding-right: 50px;
+    font-weight: 400;
+    vertical-align: top;
+  }
+}
+
+.button-div {
+  padding-left: 15px;
+  margin-top: 40px;
+}
+
+.proceed-button {
+  height: auto;
+  width: 50%;
+}

@@ -10,10 +10,12 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { EvacuationFile } from '../models/evacuation-file';
+import { EvacuationFileSearchResult } from '../models/evacuation-file-search-result';
 import { EvacuationFileSummary } from '../models/evacuation-file-summary';
 import { GetSecurityPhraseResponse } from '../models/get-security-phrase-response';
 import { GetSecurityQuestionsResponse } from '../models/get-security-questions-response';
 import { Note } from '../models/note';
+import { RegistrantLinkRequest } from '../models/registrant-link-request';
 import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrationResult } from '../models/registration-result';
 import { SearchResults } from '../models/search-results';
@@ -1074,6 +1076,55 @@ export class RegistrationsService extends BaseService {
   }
 
   /**
+   * Path part for operation registrationsLinkRegistrantToHouseholdMember
+   */
+  static readonly RegistrationsLinkRegistrantToHouseholdMemberPath = '/api/Registrations/files/{fileId}/link';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsLinkRegistrantToHouseholdMember()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsLinkRegistrantToHouseholdMember$Response(params: {
+    fileId: string;
+    body: RegistrantLinkRequest
+  }): Observable<StrictHttpResponse<Blob>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsLinkRegistrantToHouseholdMemberPath, 'post');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'blob',
+      accept: 'application/octet-stream'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Blob>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsLinkRegistrantToHouseholdMember$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  registrationsLinkRegistrantToHouseholdMember(params: {
+    fileId: string;
+    body: RegistrantLinkRequest
+  }): Observable<Blob> {
+
+    return this.registrationsLinkRegistrantToHouseholdMember$Response(params).pipe(
+      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
+    );
+  }
+
+  /**
    * Path part for operation registrationsSearch
    */
   static readonly RegistrationsSearchPath = '/api/Registrations';
@@ -1130,6 +1181,110 @@ export class RegistrationsService extends BaseService {
 
     return this.registrationsSearch$Response(params).pipe(
       map((r: StrictHttpResponse<SearchResults>) => r.body as SearchResults)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsSearchMatchingRegistrants
+   */
+  static readonly RegistrationsSearchMatchingRegistrantsPath = '/api/Registrations/registrants/matches';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsSearchMatchingRegistrants()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsSearchMatchingRegistrants$Response(params?: {
+    firstName?: string;
+    lastName?: string;
+    dateOfBirth?: string;
+  }): Observable<StrictHttpResponse<Array<RegistrantProfile>>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingRegistrantsPath, 'get');
+    if (params) {
+      rb.query('firstName', params.firstName, {});
+      rb.query('lastName', params.lastName, {});
+      rb.query('dateOfBirth', params.dateOfBirth, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<RegistrantProfile>>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsSearchMatchingRegistrants$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsSearchMatchingRegistrants(params?: {
+    firstName?: string;
+    lastName?: string;
+    dateOfBirth?: string;
+  }): Observable<Array<RegistrantProfile>> {
+
+    return this.registrationsSearchMatchingRegistrants$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<RegistrantProfile>>) => r.body as Array<RegistrantProfile>)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsSearchMatchingEvacuationFiles
+   */
+  static readonly RegistrationsSearchMatchingEvacuationFilesPath = '/api/Registrations/files/matches';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsSearchMatchingEvacuationFiles()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsSearchMatchingEvacuationFiles$Response(params?: {
+    firstName?: string;
+    lastName?: string;
+    dateOfBirth?: string;
+  }): Observable<StrictHttpResponse<Array<EvacuationFileSearchResult>>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsSearchMatchingEvacuationFilesPath, 'get');
+    if (params) {
+      rb.query('firstName', params.firstName, {});
+      rb.query('lastName', params.lastName, {});
+      rb.query('dateOfBirth', params.dateOfBirth, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<EvacuationFileSearchResult>>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsSearchMatchingEvacuationFiles$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsSearchMatchingEvacuationFiles(params?: {
+    firstName?: string;
+    lastName?: string;
+    dateOfBirth?: string;
+  }): Observable<Array<EvacuationFileSearchResult>> {
+
+    return this.registrationsSearchMatchingEvacuationFiles$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<EvacuationFileSearchResult>>) => r.body as Array<EvacuationFileSearchResult>)
     );
   }
 
