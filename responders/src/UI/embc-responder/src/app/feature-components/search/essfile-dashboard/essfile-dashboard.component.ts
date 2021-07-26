@@ -113,6 +113,7 @@ export class EssfileDashboardComponent implements OnInit {
           this.loadNotes();
           this.essFile = file;
           this.essfileDashboardService.essFile = file;
+          this.evacueeSessionService.profileId = file.primaryRegistrantId;
           this.loadDefaultOverviewSection(file);
         })
       )

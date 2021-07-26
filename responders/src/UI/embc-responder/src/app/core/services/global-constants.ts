@@ -170,6 +170,14 @@ export const unlockFieldsProfile: DialogContent = {
   confirmButton: 'Unlock'
 };
 
+export const dashboardViewProfile: DialogContent = {
+  subtitle: 'Identify Verification',
+  text:
+    '<div class="row"><div class="col-md-12"><p id="verified-radio-group-label" class="bold">Did you see government issued identification from this individual?</p></div></div>',
+  cancelButton: 'Cancel',
+  confirmButton: 'Next'
+};
+
 export const hideNote: DialogContent = {
   title: '<p class="dialog-title">Hide Note<p>',
   text:

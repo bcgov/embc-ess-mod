@@ -5,9 +5,8 @@ import { CacheService } from './cache.service';
 @Injectable({ providedIn: 'root' })
 export class EvacueeSessionService {
   private profileIdVal: string;
-  //private registrantProfile: RegistrantProfile;
   private essFileNumberVal: string;
-
+  private securityQuestionsOpenedFromVal: string;
   private editWizardFlag: boolean;
 
   constructor(private cacheService: CacheService) {}
@@ -32,6 +31,20 @@ export class EvacueeSessionService {
     return this.essFileNumberVal
       ? this.essFileNumberVal
       : this.cacheService.get('fileNumber');
+  }
+
+  set securityQuestionsOpenedFrom(securityQuestionsOpenedFromVal: string) {
+    this.securityQuestionsOpenedFromVal = securityQuestionsOpenedFromVal;
+    this.cacheService.set(
+      'securityQuestionsOpenedFrom',
+      securityQuestionsOpenedFromVal
+    );
+  }
+
+  get securityQuestionsOpenedFrom(): string {
+    return this.securityQuestionsOpenedFromVal
+      ? this.securityQuestionsOpenedFromVal
+      : this.cacheService.get('securityQuestionsOpenedFrom');
   }
 
   clearEvacueeSession() {

@@ -5,9 +5,10 @@ import { EssfileDashboardRoutingModule } from './essfile-dashboard-routing.modul
 import { EssfileDashboardComponent } from './essfile-dashboard.component';
 import { MaterialModule } from 'src/app/material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { HouseholdMemberComponent } from './household-member/household-member.component';
 
 @NgModule({
-  declarations: [EssfileDashboardComponent],
+  declarations: [EssfileDashboardComponent, HouseholdMemberComponent],
   imports: [
     CommonModule,
     EssfileDashboardRoutingModule,
