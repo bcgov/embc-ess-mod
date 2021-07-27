@@ -30,7 +30,6 @@ export class DialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data);
     const factory = this.resolver.resolveComponentFactory(this.data.component);
     this.componentRef = this.vcRef.createComponent(factory);
     this.componentRef.instance.content = this.data.content;

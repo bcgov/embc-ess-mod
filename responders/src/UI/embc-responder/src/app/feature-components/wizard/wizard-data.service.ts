@@ -247,6 +247,88 @@ export class WizardDataService {
     }
   ];
 
+  private completeESSFileMenu: Array<WizardSidenavModel> = [
+    {
+      step: 'STEP 1',
+      title: 'Complete ESS File',
+      route: '/ess-wizard/ess-file',
+      isLocked: false,
+      incompleteMsg: globalConst.essFileStepIncompleteMessage,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-ess-file.svg',
+        altSrc: '/assets/images/wizard/ess-file.svg',
+        height: '29',
+        width: '28'
+      }
+    },
+    {
+      step: 'STEP 2',
+      title: 'Add Supports',
+      route: '/ess-wizard/add-supports',
+      isLocked: true,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-supports.svg',
+        altSrc: '/assets/images/wizard/supports.svg',
+        height: '33',
+        width: '33'
+      }
+    },
+    {
+      step: 'NOTES',
+      title: 'Add ESS File Notes',
+      route: '/ess-wizard/add-notes',
+      isLocked: true,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-notes.svg',
+        altSrc: '/assets/images/wizard/notes.svg',
+        height: '42',
+        width: '42'
+      }
+    }
+  ];
+
+  /**
+   * Creates new registration menu
+   *
+   * @returns side menu array
+   */
+  public createNewRegistrationMenu(): Array<WizardSidenavModel> {
+    const newRegMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.newRegistrationMenu) {
+      newRegMenu.push({ ...menuItems, ...menu });
+    }
+    return newRegMenu;
+  }
+
+  /**
+   * Creates edit profile menu
+   *
+   * @returns side menu array
+   */
+  public createEditProfileMenu(): Array<WizardSidenavModel> {
+    const editProfileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.editProfileMenu) {
+      editProfileMenu.push({ ...menuItems, ...menu });
+    }
+    return editProfileMenu;
+  }
+
+  /**
+   * Creates new ess file menu
+   *
+   * @returns side menu array
+   */
+  public createNewESSFileMenu(): Array<WizardSidenavModel> {
+    const newEssMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.newESSFileMenu) {
+      newEssMenu.push({ ...menuItems, ...menu });
+    }
+    return newEssMenu;
+  }
+
   /**
    * Creates review file menu
    *
@@ -256,6 +338,20 @@ export class WizardDataService {
     const reviewFileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
     let menuItems: WizardSidenavModel;
     for (const menu of this.reviewESSFileMenu) {
+      reviewFileMenu.push({ ...menuItems, ...menu });
+    }
+    return reviewFileMenu;
+  }
+
+  /**
+   * Creates review file menu
+   *
+   * @returns side menu array
+   */
+  public createCompleteFileMenu(): Array<WizardSidenavModel> {
+    const reviewFileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.completeESSFileMenu) {
       reviewFileMenu.push({ ...menuItems, ...menu });
     }
     return reviewFileMenu;
@@ -290,47 +386,10 @@ export class WizardDataService {
   }
 
   /**
-   * Creates new registration menu
+   * Creates the notes steps tabs
    *
-   * @returns side menu array
+   * @returns notes tab array
    */
-  public createNewRegistrationMenu(): Array<WizardSidenavModel> {
-    const newRegMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
-    let menuItems: WizardSidenavModel;
-    for (const menu of this.newRegistrationMenu) {
-      newRegMenu.push({ ...menuItems, ...menu });
-    }
-    return newRegMenu;
-  }
-
-  /**
-   * Creates new ess file menu
-   *
-   * @returns side menu array
-   */
-  public createNewESSFileMenu(): Array<WizardSidenavModel> {
-    const newEssMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
-    let menuItems: WizardSidenavModel;
-    for (const menu of this.newESSFileMenu) {
-      newEssMenu.push({ ...menuItems, ...menu });
-    }
-    return newEssMenu;
-  }
-
-  /**
-   * Creates edit profile menu
-   *
-   * @returns side menu array
-   */
-  public createEditProfileMenu(): Array<WizardSidenavModel> {
-    const editProfileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
-    let menuItems: WizardSidenavModel;
-    for (const menu of this.editProfileMenu) {
-      editProfileMenu.push({ ...menuItems, ...menu });
-    }
-    return editProfileMenu;
-  }
-
   public createNotesSteps(): Array<TabModel> {
     const notesTab: Array<TabModel> = new Array<TabModel>();
     let tab: TabModel;

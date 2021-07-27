@@ -26,8 +26,8 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
   editedSecurityPhrase: boolean;
 
   constructor(
+    public stepEssFileService: StepEssFileService,
     private evacueeSessionService: EvacueeSessionService,
-    private stepEssFileService: StepEssFileService,
     private customValidationService: CustomValidationService,
     private formBuilder: FormBuilder,
     private router: Router
@@ -40,11 +40,11 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     // Set up wizard type
     this.wizardType = this.evacueeSessionService.getWizardType();
 
-    // Setting form validation
-    this.formValidation();
-
     // Setting the edites Security Flag in case the wizard type is set to edit an ESS File
     this.editedPhraseFlag();
+
+    // Setting form validation
+    this.formValidation();
 
     // Set "update tab status" method, called for any tab navigation
     this.tabUpdateSubscription = this.stepEssFileService.nextTabUpdate.subscribe(
@@ -112,7 +112,6 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
    */
   editSecurityPhrase() {
     this.editedSecurityPhrase = !this.editedSecurityPhrase;
-    this.stepEssFileService.editedSecurityPhrase = this.editedSecurityPhrase;
     this.formValidation();
   }
 
@@ -126,6 +125,7 @@ export class SecurityPhraseComponent implements OnInit, OnDestroy {
     const anyValueSet = curVal.length > 0;
 
     this.stepEssFileService.securityPhrase = curVal;
+    this.stepEssFileService.editedSecurityPhrase = this.editedSecurityPhrase;
 
     if (this.securityForm.valid) {
       this.stepEssFileService.setTabStatus('security-phrase', 'complete');

@@ -1,0 +1,111 @@
+<mat-card class="overview-card">
+  <div class="row card-heading-outer">
+    <div class="col-md-12">
+      <p class="margins card-heading">Household Member</p>
+    </div>
+  </div>
+
+  <mat-accordion>
+    <mat-expansion-panel
+      class="expansion-divider"
+      *ngFor="let file of essFile?.householdMembers; let index = index"
+      (opened)="setOpened(index, file)"
+      (closed)="setClosed(index)"
+      hideToggle="true"
+      [expanded]="false"
+      ><!--[expanded]="isExpanded(index)"-->
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span class="member-title">
+            <span class="bold">{{ file.lastName | uppercase }},</span>
+            {{ file.firstName }}
+          </span>
+        </mat-panel-title>
+        <mat-panel-description class="description-align essFile-parent">
+          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex != index">
+            <img src="/assets/images/add-expand.svg" height="20" width="20" />
+            <img
+              src="/assets/images/add-expand-hover.svg"
+              height="20"
+              width="20"
+            />
+          </a>
+          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex == index">
+            <img src="/assets/images/collapse.svg" height="20" width="20" />
+            <img
+              src="/assets/images/collapse-hover.svg"
+              height="20"
+              width="20"
+            />
+          </a>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div *ngIf="!isLoading">
+        <div class="row table-parent">
+          <table class="table-details">
+            <tr>
+              <th>Type:</th>
+              <td>
+                <b>{{ file?.type }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>Verification Status:</th>
+              <td>
+                <b>{{ file?.isVerified ? file?.isVerified : 'Unverified' }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>Restriction Status:</th>
+              <td>
+                <b>{{ file?.isRestricted }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>Date of Birth:</th>
+              <td>
+                <b>{{ file?.dateOfBirth | date: 'dd-MMM-yyyy' }}</b>
+              </td>
+            </tr>
+            <tr>
+              <th>Gender:</th>
+              <td>
+                <b>{{ file?.gender }}</b>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div *ngIf="file?.type === 'Registrant'" class="row button-div">
+          <button class="button-p proceed-button" (click)="viewProfile(file)">
+            View Profile
+          </button>
+        </div>
+        <div
+          *ngIf="matchedProfileCount === 0 && file?.type === 'HouseholdMember'"
+          class="row button-div"
+        >
+          <button class="button-p proceed-button" (click)="createProfile(file)">
+            Create Profile
+          </button>
+        </div>
+        <div
+          *ngIf="matchedProfileCount > 0 && file?.type === 'HouseholdMember'"
+          class="row button-div"
+        >
+          <button class="button-p proceed-button" (click)="linkToProfile(file)">
+            Link to this Profile
+          </button>
+        </div>
+      </div>
+      <div class="loader-align">
+        <app-loader
+          class="spinner"
+          [showLoader]="isLoading"
+          [strokeWidth]="10"
+          [diameter]="30"
+          [color]="color"
+        ></app-loader>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</mat-card>

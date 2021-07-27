@@ -98,8 +98,21 @@ export class EssfileDashboardComponent implements OnInit {
     );
   }
 
-  //TODO: Wizard Navigation
-  completeEssFile(): void {}
+  /**
+   * Navigates the wizard for complete ess file
+   */
+  completeEssFile(): void {
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/essfile-dashboard/overview'
+    );
+    this.evacueeSessionService.setWizardType(WizardType.CompleteFile);
+
+    this.router.navigate(['/ess-wizard'], {
+      queryParams: { type: WizardType.CompleteFile },
+      queryParamsHandling: 'merge'
+    });
+  }
 
   /**
    * Loads the ESS file for a give file number
@@ -113,6 +126,7 @@ export class EssfileDashboardComponent implements OnInit {
           this.loadNotes();
           this.essFile = file;
           this.essfileDashboardService.essFile = file;
+          this.evacueeSessionService.profileId = file.primaryRegistrantId;
           this.loadDefaultOverviewSection(file);
         })
       )

@@ -1,22 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EssFileOverviewComponent } from './ess-file-overview.component';
+import { HouseholdMemberComponent } from './household-member.component';
+import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('EssFileOverviewComponent', () => {
-  let component: EssFileOverviewComponent;
-  let fixture: ComponentFixture<EssFileOverviewComponent>;
+describe('HouseholdMemberComponent', () => {
+  let component: HouseholdMemberComponent;
+  let fixture: ComponentFixture<HouseholdMemberComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
-      declarations: [EssFileOverviewComponent]
+      imports: [MatDialogModule, RouterTestingModule, HttpClientTestingModule],
+      declarations: [HouseholdMemberComponent]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EssFileOverviewComponent);
+    fixture = TestBed.createComponent(HouseholdMemberComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
