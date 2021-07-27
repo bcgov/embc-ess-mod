@@ -400,6 +400,22 @@ export class StepEssFileService {
       canProvideIncidentals: needsIncidentalsDTO
     };
 
+    console.log({
+      primaryRegistrantId: this.evacueeSession.profileId,
+
+      evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(
+        this.evacAddress
+      ),
+      registrationLocation: this.facilityName,
+
+      needsAssessment: needsObject,
+      securityPhrase: this.securityPhrase,
+      securityPhraseEdited: this.editedSecurityPhrase,
+      task: {
+        taskNumber: this.userService.currentProfile?.taskNumber
+      }
+    });
+
     // Map out into DTO object and return
     return {
       primaryRegistrantId: this.evacueeSession.profileId,
@@ -481,6 +497,7 @@ export class StepEssFileService {
    * Update the wizard's values with ones fetched from API
    */
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
+    console.log(essFile);
     const essNeeds = essFile.needsAssessment;
     const primaryLastName = essNeeds.householdMembers?.find(
       (member) => member.type === HouseholdMemberType.Registrant
@@ -516,7 +533,7 @@ export class StepEssFileService {
       }
     );
 
-    this.haveHouseHoldMembersVal = this.householdMembers?.length > 0;
+    this.haveHouseHoldMembersVal = this.householdMembers?.length > 1;
 
     this.haveSpecialDiet = essNeeds.haveSpecialDiet;
     this.specialDietDetails = essNeeds.specialDietDetails;
@@ -641,7 +658,7 @@ export class StepEssFileService {
   }
 
   /**
-   * Sets the tab status from ESS File wizard
+   * Sets the tab status for the Review ESS File wizard
    */
   public setReviewEssFileTabStatus(): void {
     this.essTabs.map((tab) => {
@@ -649,6 +666,24 @@ export class StepEssFileService {
         tab.status = 'complete';
       }
       if (tab.name === 'household-members') {
+        tab.status = 'incomplete';
+      }
+      return tab;
+    });
+  }
+
+  /**
+   * Sets the tab status for the Complete ESS File wizard
+   */
+  public setCompleteEssFileTabStatus(): void {
+    this.essTabs.map((tab) => {
+      if (tab.name !== 'review') {
+        tab.status = 'complete';
+      }
+      if (
+        tab.name === 'household-members' ||
+        tab.name === 'evacuation-details'
+      ) {
         tab.status = 'incomplete';
       }
       return tab;

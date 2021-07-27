@@ -67,7 +67,10 @@ export class WizardActivateGuard implements CanActivate {
       }
       return false;
     } else if (wizardType === WizardType.CompleteFile) {
-      return this.isFileCompletionAllowed();
+      if (this.isFileCompletionAllowed()) {
+        return this.wizardAdapterService.stepCompleteESSFileFromESSFileRecord();
+      }
+      return false;
     } else {
       this.router.navigate(['/responder-access']);
     }
