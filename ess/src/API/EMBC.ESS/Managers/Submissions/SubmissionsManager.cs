@@ -132,6 +132,16 @@ namespace EMBC.ESS.Managers.Submissions
             return result.ContactId;
         }
 
+        public async Task<string> Handle(LinkRegistrantCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.RegistantId)) throw new ArgumentNullException("RegistantId is required");
+            if (string.IsNullOrEmpty(cmd.HouseholdMemberId)) throw new ArgumentNullException("HouseholdMemberId is required");
+
+            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = cmd.RegistantId })).Items.SingleOrDefault();
+            var result = await contactRepository.ManageContact(new LinkContactToHouseholdMember { Contact = contact, HouseholdMemberId = cmd.HouseholdMemberId });
+            return result.ContactId;
+        }
+
         public async System.Threading.Tasks.Task Handle(DeleteRegistrantCommand cmd)
         {
             var contact = (await contactRepository.QueryContact(new RegistrantQuery { UserId = cmd.UserId })).Items.SingleOrDefault();

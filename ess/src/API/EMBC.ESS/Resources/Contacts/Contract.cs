@@ -51,6 +51,12 @@ namespace EMBC.ESS.Resources.Contacts
         public Contact Contact { get; set; }
     }
 
+    public class LinkContactToHouseholdMember : ContactCommand
+    {
+        public Contact Contact { get; set; }
+        public string HouseholdMemberId { get; set; }
+    }
+
     public class DeleteContact : ContactCommand
     {
         public string ContactId { get; set; }

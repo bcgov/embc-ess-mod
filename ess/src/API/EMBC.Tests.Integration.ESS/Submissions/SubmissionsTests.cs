@@ -297,6 +297,18 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task Link_RegistrantToHouseholdMember_ReturnsRegistrantId()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+
+            var file = (await GetEvacuationFileById("101010")).FirstOrDefault();
+            var member = file.NeedsAssessment.HouseholdMembers.FirstOrDefault();
+            var linkResults = await manager.Handle(new LinkRegistrantCommand { RegistantId = registrant.Id, HouseholdMemberId = member.Id });
+
+            linkResults.ShouldBe(registrant.Id);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteProfileAddressLinks()
         {
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
