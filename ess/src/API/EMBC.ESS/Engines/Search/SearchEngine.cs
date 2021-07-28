@@ -67,7 +67,7 @@ namespace EMBC.ESS.Engines.Search
 
             var response = new EvacueeSearchResponse
             {
-                MatcingHouseholdMemberIds = membersQuery.ToArray(),
+                MatchingHouseholdMemberIds = membersQuery.ToArray(),
                 MatchingRegistrantIds = registrantsQuery.ToArray()
             };
 

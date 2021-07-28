@@ -297,6 +297,20 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task Link_RegistrantToHouseholdMember_ReturnsRegistrantId()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+
+            var file = (await GetEvacuationFileById("101010")).FirstOrDefault();
+            var member = file.NeedsAssessment.HouseholdMembers.FirstOrDefault();
+            var fileId = await manager.Handle(new LinkRegistrantCommand { FileId = file.Id, RegistantId = registrant.Id, HouseholdMemberId = member.Id });
+            fileId.ShouldBe(file.Id);
+
+            var updatedFile = (await GetEvacuationFileById("101010")).FirstOrDefault();
+            updatedFile.NeedsAssessment.HouseholdMembers.Where(m => m.Id == member.Id).SingleOrDefault().LinkedRegistrantId.ShouldBe(registrant.Id);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanDeleteProfileAddressLinks()
         {
             var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
@@ -396,6 +410,33 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             files.ShouldNotBeNull();
             files.ShouldAllBe(f => f.HouseholdMembers
                 .Any(m => m.FirstName.Equals("Elvis", StringComparison.OrdinalIgnoreCase) && m.LastName.Equals("Presley", StringComparison.OrdinalIgnoreCase)));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Search_EvacuationFiles_IncludeRegistrantProfilesOnly()
+        {
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeRegistrantProfilesOnly = true, IncludeRestrictedAccess = true });
+
+            searchResults.EvacuationFiles.Count().ShouldBe(0);
+            searchResults.Profiles.Count().ShouldNotBe(0);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Search_EvacuationFiles_IncludeEvacuationFilesOnly()
+        {
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeEvacuationFilesOnly = true, IncludeRestrictedAccess = true });
+
+            searchResults.EvacuationFiles.Count().ShouldNotBe(0);
+            searchResults.Profiles.Count().ShouldBe(0);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Search_EvacuationFiles_IncludeBoth()
+        {
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeRestrictedAccess = true });
+
+            searchResults.EvacuationFiles.Count().ShouldNotBe(0);
+            searchResults.Profiles.Count().ShouldNotBe(0);
         }
 
         [Fact(Skip = RequiresDynamics)]

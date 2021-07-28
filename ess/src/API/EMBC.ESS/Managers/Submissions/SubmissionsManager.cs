@@ -132,6 +132,19 @@ namespace EMBC.ESS.Managers.Submissions
             return result.ContactId;
         }
 
+        public async Task<string> Handle(LinkRegistrantCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.RegistantId)) throw new ArgumentNullException("RegistantId is required");
+            if (string.IsNullOrEmpty(cmd.HouseholdMemberId)) throw new ArgumentNullException("HouseholdMemberId is required");
+
+            var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = cmd.FileId })).Items.SingleOrDefault();
+            var file = mapper.Map<Resources.Cases.EvacuationFile>(caseRecord);
+            file.NeedsAssessment.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault().LinkedRegistrantId = cmd.RegistantId;
+            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
+
+            return caseId;
+        }
+
         public async System.Threading.Tasks.Task Handle(DeleteRegistrantCommand cmd)
         {
             var contact = (await contactRepository.QueryContact(new RegistrantQuery { UserId = cmd.UserId })).Items.SingleOrDefault();
@@ -260,7 +273,7 @@ namespace EMBC.ESS.Managers.Submissions
             });
 
             var files = new ConcurrentBag<EvacuationFileSearchResult>();
-            var householdMemberTasks = searchResults.MatcingHouseholdMemberIds.Select(async id =>
+            var householdMemberTasks = searchResults.MatchingHouseholdMemberIds.Select(async id =>
             {
                 var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { HouseholdMemberId = id })).Items.SingleOrDefault();
                 if (file == null) return;

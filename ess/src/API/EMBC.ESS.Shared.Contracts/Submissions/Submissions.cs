@@ -66,4 +66,14 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string FileId { get; set; }
         public Note Note { get; set; }
     }
+
+    /// <summary>
+    /// Link Registrant and Household Member
+    /// </summary>
+    public class LinkRegistrantCommand : Command
+    {
+        public string FileId { get; set; }
+        public string RegistantId { get; set; }
+        public string HouseholdMemberId { get; set; }
+    }
 }
