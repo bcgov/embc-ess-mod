@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
@@ -16,6 +16,7 @@ import { Note } from 'src/app/core/api/models';
 import { StepNotesService } from '../../wizard/step-notes/step-notes.service';
 import { map } from 'rxjs/operators';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -41,6 +42,14 @@ export class EssfileDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEssFile();
+    if (this.evacueeSessionService.fileLinkFlag) {
+      this.openLinkDialog()
+        .afterClosed()
+        .subscribe((value) => {
+          this.evacueeSessionService.fileLinkFlag = null;
+          this.evacueeSessionService.fileLinkMetaData = null;
+        });
+    }
   }
 
   /**
@@ -150,6 +159,20 @@ export class EssfileDashboardComponent implements OnInit {
         (a, b) => new Date(b.addedOn).valueOf() - new Date(a.addedOn).valueOf()
       );
       this.notesList = note;
+    });
+  }
+
+  /**
+   * Opens link success dialog box
+   * @returns mat dialog reference
+   */
+  private openLinkDialog() {
+    return this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: globalConst.profileLinkMessage
+      },
+      width: '530px'
     });
   }
 }

@@ -5,6 +5,7 @@ import {
   SecurityQuestion,
   VerifySecurityQuestionsRequest
 } from 'src/app/core/api/models';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { ProfileSecurityQuestionsService } from './profile-security-questions.service';
 
@@ -31,7 +32,8 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
     private profileSecurityQuestionsService: ProfileSecurityQuestionsService,
     private router: Router,
     private evacueeSessionService: EvacueeSessionService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private evacueeProfileService: EvacueeProfileService
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +70,6 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
         id: question.id
       };
       counter++;
-      console.log(securityAQuestion);
       this.securityAnswers.push(securityAQuestion);
     }
   }
@@ -108,6 +109,11 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
         ) {
           this.correctAnswerFlag = true;
           this.showLoader = true;
+          if (this.evacueeSessionService.fileLinkFlag === 'Y') {
+            this.evacueeProfileService.linkMemberProfile(
+              this.evacueeSessionService.fileLinkMetaData
+            );
+          }
           setTimeout(() => {
             this.router.navigate([
               'responder-access/search/evacuee-profile-dashboard'
@@ -120,8 +126,10 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
   /**
    * Function that redirects to Search Results page
    */
-  goToSearchResults() {
-    this.router.navigate(['responder-access/search/evacuee']);
+  back() {
+    this.router.navigate([
+      this.evacueeSessionService.securityQuestionsOpenedFrom
+    ]);
   }
 
   /**

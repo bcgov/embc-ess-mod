@@ -65,6 +65,8 @@ export class ProfileResultsComponent
         'responder-access/search/evacuee-profile-dashboard'
       ]);
     } else {
+      this.evacueeSessionService.securityQuestionsOpenedFrom =
+        'responder-access/search/evacuee';
       this.router.navigate(['responder-access/search/security-questions']);
     }
   }

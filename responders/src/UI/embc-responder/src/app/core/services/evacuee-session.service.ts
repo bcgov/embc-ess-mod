@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { WizardType } from '../models/wizard-type.model';
 import { CacheService } from './cache.service';
 
@@ -8,6 +9,8 @@ export class EvacueeSessionService {
   private essFileNumberVal: string;
   private securityQuestionsOpenedFromVal: string;
   private editWizardFlag: boolean;
+  private fileLinkFlagVal: string;
+  private fileLinkMetaDataVal: FileLinkRequestModel;
 
   constructor(private cacheService: CacheService) {}
 
@@ -47,6 +50,28 @@ export class EvacueeSessionService {
       : this.cacheService.get('securityQuestionsOpenedFrom');
   }
 
+  get fileLinkFlag(): string {
+    return this.fileLinkFlagVal
+      ? this.fileLinkFlagVal
+      : this.cacheService.get('fileLinkFlag');
+  }
+
+  set fileLinkFlag(fileLinkFlagVal: string) {
+    this.fileLinkFlagVal = fileLinkFlagVal;
+    this.cacheService.set('fileLinkFlag', fileLinkFlagVal);
+  }
+
+  get fileLinkMetaData(): FileLinkRequestModel {
+    return this.fileLinkMetaDataVal
+      ? this.fileLinkMetaDataVal
+      : JSON.parse(this.cacheService.get('fileLinkMetaData'));
+  }
+
+  set fileLinkMetaData(fileLinkMetaDataVal: FileLinkRequestModel) {
+    this.fileLinkMetaDataVal = fileLinkMetaDataVal;
+    this.cacheService.set('fileLinkMetaData', fileLinkMetaDataVal);
+  }
+
   clearEvacueeSession() {
     this.profileId = null;
     this.essFileNumber = null;
@@ -55,6 +80,8 @@ export class EvacueeSessionService {
     this.cacheService.remove('wizardType');
     this.cacheService.remove('evacueeSearchContext');
     this.cacheService.remove('essFile');
+    this.cacheService.remove('securityQuestionsOpenedFrom');
+    this.cacheService.remove('fileLinkFlag');
   }
 
   public setWizardType(wizardType: string) {
