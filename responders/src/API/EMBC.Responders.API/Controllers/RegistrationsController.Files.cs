@@ -248,8 +248,8 @@ namespace EMBC.Responders.API.Controllers
         [HttpPost("files/{fileId}/link")]
         public async Task<ActionResult> LinkRegistrantToHouseholdMember(string fileId, RegistrantLinkRequest request)
         {
-            //TODO: implement backend call to link a registrant to a household member
-            return await Task.FromResult(Ok());
+            var res = await messagingClient.Send(new LinkRegistrantCommand { FileId = fileId, RegistantId = request.RegistantId, HouseholdMemberId = request.HouseholdMemberId });
+            return Ok(res);
         }
 
         private bool UserCanEditNote(Note note) => note.CreatingTeamMemberId.Equals(currentUserId) && note.AddedOn >= DateTime.UtcNow.AddHours(-24);
