@@ -11,6 +11,7 @@ export class EvacueeSessionService {
   private editWizardFlag: boolean;
   private fileLinkFlagVal: string;
   private fileLinkMetaDataVal: FileLinkRequestModel;
+  private fileLinkStatusVal: string;
 
   constructor(private cacheService: CacheService) {}
 
@@ -50,6 +51,17 @@ export class EvacueeSessionService {
       : this.cacheService.get('securityQuestionsOpenedFrom');
   }
 
+  get fileLinkStatus(): string {
+    return this.fileLinkStatusVal
+      ? this.fileLinkStatusVal
+      : this.cacheService.get('fileLinkStatus');
+  }
+
+  set fileLinkStatus(fileLinkStatusVal: string) {
+    this.fileLinkStatusVal = fileLinkStatusVal;
+    this.cacheService.set('fileLinkStatus', fileLinkStatusVal);
+  }
+
   get fileLinkFlag(): string {
     return this.fileLinkFlagVal
       ? this.fileLinkFlagVal
@@ -82,6 +94,8 @@ export class EvacueeSessionService {
     this.cacheService.remove('essFile');
     this.cacheService.remove('securityQuestionsOpenedFrom');
     this.cacheService.remove('fileLinkFlag');
+    this.cacheService.remove('fileLinkStatus');
+    this.cacheService.remove('fileLinkMetaData');
   }
 
   public setWizardType(wizardType: string) {

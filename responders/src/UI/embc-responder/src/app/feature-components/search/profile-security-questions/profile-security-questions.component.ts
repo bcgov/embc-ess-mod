@@ -110,15 +110,30 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
           this.correctAnswerFlag = true;
           this.showLoader = true;
           if (this.evacueeSessionService.fileLinkFlag === 'Y') {
-            this.evacueeProfileService.linkMemberProfile(
-              this.evacueeSessionService.fileLinkMetaData
-            );
+            this.evacueeProfileService
+              .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
+              .subscribe(
+                (value) => {
+                  this.evacueeSessionService.fileLinkStatus = 'S';
+                  this.router.navigate([
+                    'responder-access/search/essfile-dashboard'
+                  ]);
+                },
+                (error) => {
+                  this.evacueeSessionService.fileLinkStatus = 'E';
+                  this.router.navigate([
+                    'responder-access/search/essfile-dashboard'
+                  ]);
+                }
+              );
+              
+          } else {
+            setTimeout(() => {
+              this.router.navigate([
+                'responder-access/search/evacuee-profile-dashboard'
+              ]);
+            }, 1000);
           }
-          setTimeout(() => {
-            this.router.navigate([
-              'responder-access/search/evacuee-profile-dashboard'
-            ]);
-          }, 1000);
         }
       });
   }
