@@ -72,6 +72,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     /// </summary>
     public class LinkRegistrantCommand : Command
     {
+        public string FileId { get; set; }
         public string RegistantId { get; set; }
         public string HouseholdMemberId { get; set; }
     }

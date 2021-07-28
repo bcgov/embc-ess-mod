@@ -303,9 +303,11 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var file = (await GetEvacuationFileById("101010")).FirstOrDefault();
             var member = file.NeedsAssessment.HouseholdMembers.FirstOrDefault();
-            var linkResults = await manager.Handle(new LinkRegistrantCommand { RegistantId = registrant.Id, HouseholdMemberId = member.Id });
+            var fileId = await manager.Handle(new LinkRegistrantCommand { FileId = file.Id, RegistantId = registrant.Id, HouseholdMemberId = member.Id });
+            fileId.ShouldBe(file.Id);
 
-            linkResults.ShouldBe(registrant.Id);
+            var updatedFile = (await GetEvacuationFileById("101010")).FirstOrDefault();
+            updatedFile.NeedsAssessment.HouseholdMembers.Where(m => m.Id == member.Id).SingleOrDefault().LinkedRegistrantId.ShouldBe(registrant.Id);
         }
 
         [Fact(Skip = RequiresDynamics)]

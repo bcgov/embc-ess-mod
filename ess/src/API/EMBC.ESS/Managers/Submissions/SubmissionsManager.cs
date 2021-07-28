@@ -137,9 +137,12 @@ namespace EMBC.ESS.Managers.Submissions
             if (string.IsNullOrEmpty(cmd.RegistantId)) throw new ArgumentNullException("RegistantId is required");
             if (string.IsNullOrEmpty(cmd.HouseholdMemberId)) throw new ArgumentNullException("HouseholdMemberId is required");
 
-            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = cmd.RegistantId })).Items.SingleOrDefault();
-            var result = await contactRepository.ManageContact(new LinkContactToHouseholdMember { Contact = contact, HouseholdMemberId = cmd.HouseholdMemberId });
-            return result.ContactId;
+            var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = cmd.FileId })).Items.SingleOrDefault();
+            var file = mapper.Map<Resources.Cases.EvacuationFile>(caseRecord);
+            file.NeedsAssessment.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault().LinkedRegistrantId = cmd.RegistantId;
+            var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
+
+            return caseId;
         }
 
         public async System.Threading.Tasks.Task Handle(DeleteRegistrantCommand cmd)

@@ -41,7 +41,6 @@ namespace EMBC.ESS.Resources.Contacts
             return cmd.GetType().Name switch
             {
                 nameof(SaveContact) => await HandleSaveContact((SaveContact)cmd),
-                nameof(LinkContactToHouseholdMember) => await HandleLinkContactToHouseholdMember((LinkContactToHouseholdMember)cmd),
                 nameof(DeleteContact) => await HandleDeleteContact((DeleteContact)cmd),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
@@ -103,30 +102,6 @@ namespace EMBC.ESS.Resources.Contacts
                 : essContext.contacts
                     .Where(c => c.era_bcservicescardid == bcscId)
                     .SingleOrDefault();
-
-        private async Task<ContactCommandResult> HandleLinkContactToHouseholdMember(LinkContactToHouseholdMember cmd)
-        {
-            var contact = mapper.Map<contact>(cmd.Contact);
-            var existingContact = contact.contactid.HasValue
-                ? essContext.contacts
-                    .Where(c => c.contactid == contact.contactid.Value).SingleOrDefault()
-                : GetContactIdForBcscId(contact.era_bcservicescardid);
-
-            //essContext.DetachAll();
-
-            var existingMember = essContext.era_householdmembers.Where(m => m.era_householdmemberid == Guid.Parse(cmd.HouseholdMemberId)).SingleOrDefault();
-
-            if (existingContact != null && existingMember != null)
-            {
-                essContext.SetLink(existingMember, nameof(era_householdmember.era_Registrant), existingContact);
-                essContext.AddLink(existingContact, nameof(contact.era_contact_era_householdmember_Registrantid), existingMember);
-                var results = await essContext.SaveChangesAsync();
-            }
-
-            essContext.DetachAll();
-
-            return new ContactCommandResult { ContactId = contact.contactid.ToString() };
-        }
 
         private async Task<ContactCommandResult> HandleDeleteContact(DeleteContact cmd)
         {
