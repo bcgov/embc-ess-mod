@@ -42,12 +42,13 @@ export class EssfileDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEssFile();
-    if (this.evacueeSessionService.fileLinkFlag) {
+    if (this.evacueeSessionService.fileLinkStatus === 'S') {
       this.openLinkDialog()
         .afterClosed()
         .subscribe((value) => {
           this.evacueeSessionService.fileLinkFlag = null;
           this.evacueeSessionService.fileLinkMetaData = null;
+          this.evacueeSessionService.fileLinkStatus = null;
         });
     }
   }
@@ -164,6 +165,7 @@ export class EssfileDashboardComponent implements OnInit {
 
   /**
    * Opens link success dialog box
+   *
    * @returns mat dialog reference
    */
   private openLinkDialog() {

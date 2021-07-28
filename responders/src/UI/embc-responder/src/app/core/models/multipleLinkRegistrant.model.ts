@@ -1,4 +1,4 @@
-import { RegistrantProfile } from "../api/models";
+import { RegistrantProfile } from '../api/models';
 
 export class MultipleLinkRegistrantModel {
   profiles: RegistrantProfile[];

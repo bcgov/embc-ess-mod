@@ -126,7 +126,6 @@ export class ProfileSecurityQuestionsComponent implements OnInit {
                   ]);
                 }
               );
-              
           } else {
             setTimeout(() => {
               this.router.navigate([
