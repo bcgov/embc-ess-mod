@@ -84,7 +84,7 @@ export class EssfileDashboardComponent implements OnInit {
   reviewEssFile(): void {
     this.cacheService.set(
       'wizardOpenedFrom',
-      '/responder-access/search/essfile-dashboard/overview'
+      '/responder-access/search/essfile-dashboard'
     );
     this.evacueeSessionService.setWizardType(WizardType.ReviewFile);
 
@@ -114,7 +114,7 @@ export class EssfileDashboardComponent implements OnInit {
   completeEssFile(): void {
     this.cacheService.set(
       'wizardOpenedFrom',
-      '/responder-access/search/essfile-dashboard/overview'
+      '/responder-access/search/essfile-dashboard'
     );
     this.evacueeSessionService.setWizardType(WizardType.CompleteFile);
 
@@ -132,16 +132,17 @@ export class EssfileDashboardComponent implements OnInit {
     this.essFileService
       .getFileFromId(this.evacueeSessionService.essFileNumber)
       .pipe(
-        map((file) => {
+        map((file: EvacuationFileModel) => {
           this.loadNotes();
           this.essFile = file;
           this.essfileDashboardService.essFile = file;
           this.evacueeSessionService.profileId = file.primaryRegistrantId;
-          this.loadDefaultOverviewSection(file);
+          return file;
         })
       )
       .subscribe(
-        (essFile) => {
+        (essFile: EvacuationFileModel) => {
+          this.loadDefaultOverviewSection(essFile);
           this.isLoading = !this.isLoading;
         },
         (error) => {
