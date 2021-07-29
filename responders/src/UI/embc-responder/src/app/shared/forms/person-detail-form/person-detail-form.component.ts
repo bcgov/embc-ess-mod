@@ -60,7 +60,7 @@ export class PersonDetailFormComponent implements OnInit {
   }
 
   sameLastNameEditForm(): void {
-    if (this.personalDetailsForm?.get('sameLastNameCheck').value) {
+    if (this.personalDetailsForm?.get('sameLastName').value) {
       this.readOnlyInput = true;
     } else {
       this.readOnlyInput = false;

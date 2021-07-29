@@ -9,9 +9,10 @@
 }
 
 .responder-instruction {
-  background-color: #f2f2f2;
+  background-color: rgba(35, 64, 117, 1);
+  color: white;
   text-align: center;
-  padding: 1.5em;
+  padding: 1em;
 }
 
 .no-margin {
@@ -20,10 +21,6 @@
 
 .notes {
   color: #797979;
-}
-
-.primary-member {
-  background-color: rgb(242, 242, 242);
 }
 
 .primary-radio-group {
@@ -47,6 +44,88 @@
 
 .details-button {
   width: 100%;
+}
+
+.add-members {
+  margin: 20px 0px;
+}
+
+.table-header {
+  background-color: rgba(113, 113, 113, 1) !important;
+}
+
+.header-cell {
+  color: white !important;
+  font-size: 15px;
+  padding-left: 10px !important
+}
+
+.table-outline {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  margin-bottom: 18px;
+}
+
+::ng-deep th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+  border-bottom-width: 0px !important;
+  border-bottom-style: none !important;
+}
+
+::ng-deep mat-row, mat-header-row, mat-footer-row {
+  align-items: inherit !important;
+}
+
+mat-row:nth-child(even) {
+  background-color: rgb(242, 242, 242);
+}
+
+.selection-header {
+  padding-top: 20px;
+}
+
+.cell-selection {
+  padding-top: 25px;
+}
+
+.cell-member-details  {
+  flex: 0 0 80%;
+  display: block;
+}
+
+.cell-button {
+  flex: 0 0 10%;
+}
+
+.table-members-details {
+  width: 100%;
+  display: table-cell;
+  vertical-align: middle;
+  padding: 0px 0px 20px 0px;
+
+  th {
+    padding-right: 50px;
+    font-weight: 400;
+  }
+
+  .right-tr {
+    padding-left: 5vw;
+  }
+}
+
+.mobile-table-members {
+  @extend .table-members-details;
+  display: none;
+}
+
+.member-name {
+  font-size: 18px;
+  color: #234075;
+  padding: 20px 0px 0px 0px;
+  font-weight: 700;
+}
+
+.main-applicant::after {
+  content: '  (Main Applicant)';
+  font-weight: 400;
 }
 
 .next {
@@ -86,10 +165,43 @@
   display: none;
 }
 
-@media(max-width: 600px) {
-  .mobile-label {
-    width: 80px;
-    display: inline-block;
-    font-weight: bold;
+.tips-info {
+  color: white;
+  padding: 8px;
+  margin-top: 20px !important;
+}
+
+.tips-heading {
+  color: white;
+  font-size: 21px;
+  margin-left: 5px;
+}
+
+.tips-card {
+  background-color: rgba(35, 64, 117, 1);
+}
+
+.description-div {
+  padding-left: 0px;
+  padding-bottom: 20px;
+}
+
+@media(max-width: 1400px) {
+  .cell-member-details  {
+    flex: 0 0 70%;
+  }
+  
+  .cell-button {
+    flex: 0 0 15%;
+  }
+}
+
+@media(max-width: 1360px) {
+  .table-members-details {
+    display: none;
+  }
+
+  .mobile-table-members {
+    display: block;
   }
 }

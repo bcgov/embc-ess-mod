@@ -23,9 +23,9 @@ export const referredServiceOptions = [
   { name: 'Child Care', value: 'ChildCare' },
   { name: 'Pet Care', value: 'PetCare' }
 ];
-export const radioButtonOptions1 = [
-  { name: 'Yes', value: true },
-  { name: 'No', value: false }
+export const radioButtonOptions = [
+  { name: 'Yes', value: 'Yes', apiValue: true },
+  { name: 'No', value: 'No', apiValue: false }
 ];
 export const deleteMessage: DialogContent = {
   text: '<p>User has been successfully deleted from the ERA Tool.</p>',
