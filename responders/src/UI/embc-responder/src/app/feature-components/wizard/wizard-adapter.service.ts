@@ -142,6 +142,7 @@ export class WizardAdapterService {
         gender: profile.personalDetails.gender,
         initials: profile.personalDetails.initials,
         sameLastName: true,
+        fromDataBase: true,
         isPrimaryRegistrant: true,
         type: HouseholdMemberType.Registrant
       }
