@@ -17,6 +17,8 @@ import { HouseholdMembersService } from './household-members.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { HouseholdMemberType } from 'src/app/core/api/models';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-household-members',
@@ -26,24 +28,21 @@ import { HouseholdMemberType } from 'src/app/core/api/models';
 export class HouseholdMembersComponent implements OnInit, OnDestroy {
   householdForm: FormGroup;
   memberSource = new BehaviorSubject([]);
+  selection = new SelectionModel<HouseholdMemberModel>(true, []);
   members: HouseholdMemberModel[] = [];
-  radioOption = globalConst.radioButtonOptions1;
+  radioOption = globalConst.radioButtonOptions;
+  wizardType: string;
   editIndex: number;
-
   editFlag = false;
   showMemberForm = false;
-  displayedColumns: string[] = [
-    'firstName',
-    'lastName',
-    'initials',
-    'gender',
-    'dateOfBirth',
-    'buttons'
-  ];
+  newMembersColumns: string[] = ['members', 'buttons'];
+  editMembersColumns: string[] = ['select', 'members', 'buttons'];
+  membersColumns: string[] = [];
   tabUpdateSubscription: Subscription;
 
   constructor(
     public stepEssFileService: StepEssFileService,
+    private evacueeSessionService: EvacueeSessionService,
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
@@ -52,6 +51,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.wizardType = this.evacueeSessionService.getWizardType();
+
     // Main form creation
     this.createHouseholdForm();
 
@@ -59,9 +60,25 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.members = this.stepEssFileService.householdMembers;
     this.memberSource.next(this.members);
 
+    // Set up type of members table to display
+    if (
+      this.wizardType === 'new-registration' ||
+      this.wizardType === 'new-ess-file'
+    ) {
+      this.membersColumns = this.newMembersColumns;
+    } else {
+      this.membersColumns = this.editMembersColumns;
+      //   if (this.stepEssFileService.selectedHouseholdMembers.length > 0) {
+      //     for (const option of this.stepEssFileService.selectedHouseholdMembers) {
+      //       this.selection.toggle(option);
+      //     }
+      //   }
+      console.log(this.stepEssFileService.selectedHouseholdMembers);
+    }
+
     // Displaying household member form in case 'haveHouseholdMembers' has been set to true
     if (
-      this.stepEssFileService.haveHouseHoldMembers === true &&
+      this.stepEssFileService.haveHouseHoldMembers === 'Yes' &&
       this.stepEssFileService.householdMembers.length === 0
     ) {
       this.showMemberForm = true;
@@ -138,26 +155,27 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       if (this.editIndex !== undefined && this.editFlag) {
         // Editing existing Member
         this.members[this.editIndex] = {
-          ...this.householdForm.get('houseHoldMember').value,
-          isPrimaryRegistrant: false,
-          type: HouseholdMemberType.HouseholdMember
+          ...this.householdForm.get('houseHoldMember').value
         };
 
+        //Adding edited household members to selected items
+        this.selection.select(this.members[this.editIndex]);
         this.editIndex = undefined;
       } else {
         // Adding new Member
         this.members.push({
           ...this.householdForm.get('houseHoldMember').value,
           isPrimaryRegistrant: false,
+          fromDataBase: false,
           type: HouseholdMemberType.HouseholdMember
         });
+
+        //Adding edited household members to selected items
+        this.selection.select(this.members[this.members.length - 1]);
       }
 
       this.memberSource.next(this.members);
-      this.householdService.saveHouseholdMember(
-        this.householdForm,
-        this.members
-      );
+      this.householdService.saveHouseholdMember(this.householdForm);
 
       this.showMemberForm = false;
       this.editFlag = false;
@@ -213,7 +231,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * @param event
    */
   hasHouseholdMembers(event: MatRadioChange): void {
-    if (event.value === false) {
+    if (event.value === 'No') {
       this.showMemberForm = false;
       this.editFlag = false;
 
@@ -232,13 +250,38 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.members.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.members);
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: HouseholdMemberModel): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'}`;
+  }
+
   /**
    * Listen to changes on special diet option to display the special diet details field
    *
    * @param event
    */
   hasSpecialDietChange(event: MatRadioChange): void {
-    if (event.value === false) {
+    if (event.value === 'No') {
       this.householdForm.get('specialDietDetails').reset();
     }
   }
@@ -249,7 +292,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * @param event
    */
   hasMedicationChange(event: MatRadioChange): void {
-    if (event.value === false) {
+    if (event.value === 'No') {
       this.householdForm.get('medicationSupply').reset();
     }
   }
@@ -265,6 +308,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
    * Goes to the next tab from the ESS File Wizard
    */
   next(): void {
+    console.log(this.selection);
     this.router.navigate(['/ess-wizard/ess-file/animals']);
   }
 
@@ -298,7 +342,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         [
           this.customValidation
             .conditionalValidation(
-              () => this.householdForm.get('hasSpecialDiet').value === true,
+              () => this.householdForm.get('hasSpecialDiet').value === 'Yes',
               this.customValidation.whitespaceValidator()
             )
             .bind(this.customValidation)
@@ -313,7 +357,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         [
           this.customValidation
             .conditionalValidation(
-              () => this.householdForm.get('hasMedication').value === true,
+              () => this.householdForm.get('hasMedication').value === 'Yes',
               Validators.required
             )
             .bind(this.customValidation)
@@ -375,8 +419,8 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         ]
       ],
       initials: [''],
-      preferredName: [''],
-      sameLastNameCheck: ['']
+      sameLastName: [''],
+      id: ['']
     });
   }
 
@@ -397,7 +441,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     if (
       this.householdForm.valid &&
       !(
-        this.householdForm.get('hasHouseholdMembers').value &&
+        this.householdForm.get('hasHouseholdMembers').value === 'Yes' &&
         this.members.length < 2
       )
     ) {
@@ -419,7 +463,10 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     this.stepEssFileService.haveHouseHoldMembers = this.householdForm.get(
       'hasHouseholdMembers'
     ).value;
+
     this.stepEssFileService.householdMembers = this.members;
+    this.stepEssFileService.selectedHouseholdMembers = this.selection.selected;
+
     this.stepEssFileService.haveSpecialDiet = this.householdForm.get(
       'hasSpecialDiet'
     ).value;

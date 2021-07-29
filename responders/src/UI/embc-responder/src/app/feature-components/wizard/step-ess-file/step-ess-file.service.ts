@@ -7,7 +7,6 @@ import { InformationDialogComponent } from 'src/app/shared/components/dialog-com
 import { Subject } from 'rxjs';
 import {
   EvacuationFile,
-  EvacuationFileHouseholdMember,
   HouseholdMemberType,
   InsuranceOption,
   NeedsAssessment,
@@ -42,26 +41,27 @@ export class StepEssFileService {
 
   private evacuationImpactVal: string;
   private householdRecoveryPlanVal: string;
-  private referredServicesVal: boolean;
+  private referredServicesVal: string;
   private referredServiceDetailsVal: ReferralServices[];
   private evacuationExternalReferralsVal: string;
 
   // Household Members tab
-  private haveHouseHoldMembersVal: boolean;
+  private haveHouseHoldMembersVal: string;
   private householdMembersVal: HouseholdMemberModel[];
+  private selectedHouseholdMembersVal: HouseholdMemberModel[];
   private addMemberIndicatorVal: boolean;
 
-  private haveSpecialDietVal: boolean;
+  private haveSpecialDietVal: string;
   private specialDietDetailsVal: string;
-  private takeMedicationVal: boolean;
-  private haveMedicationSupplyVal: boolean;
+  private takeMedicationVal: string;
+  private haveMedicationSupplyVal: string;
 
   // Animals tab
-  private havePetsVal: boolean;
+  private havePetsVal: string;
   private petsListVal: Pet[];
   private addPetIndicatorVal: boolean;
 
-  private havePetsFoodVal: boolean;
+  private havePetsFoodVal: string;
   private petCarePlansVal: string;
 
   // Needs tab
@@ -157,10 +157,10 @@ export class StepEssFileService {
     this.householdRecoveryPlanVal = householdRecoveryPlanVal;
   }
 
-  public get referredServices(): boolean {
+  public get referredServices(): string {
     return this.referredServicesVal;
   }
-  public set referredServices(referredServicesVal: boolean) {
+  public set referredServices(referredServicesVal: string) {
     this.referredServicesVal = referredServicesVal;
   }
 
@@ -183,10 +183,10 @@ export class StepEssFileService {
   }
 
   // Household Members tab
-  public get haveHouseHoldMembers(): boolean {
+  public get haveHouseHoldMembers(): string {
     return this.haveHouseHoldMembersVal;
   }
-  public set haveHouseHoldMembers(haveHouseHoldMembersVal: boolean) {
+  public set haveHouseHoldMembers(haveHouseHoldMembersVal: string) {
     this.haveHouseHoldMembersVal = haveHouseHoldMembersVal;
   }
 
@@ -197,6 +197,15 @@ export class StepEssFileService {
     this.householdMembersVal = householdMembersVal;
   }
 
+  public get selectedHouseholdMembers(): HouseholdMemberModel[] {
+    return this.selectedHouseholdMembersVal;
+  }
+  public set selectedHouseholdMembers(
+    selectedHouseholdMembersVal: HouseholdMemberModel[]
+  ) {
+    this.selectedHouseholdMembersVal = selectedHouseholdMembersVal;
+  }
+
   public get addMemberIndicator(): boolean {
     return this.addMemberIndicatorVal;
   }
@@ -204,10 +213,10 @@ export class StepEssFileService {
     this.addMemberIndicatorVal = addMemberIndicatorVal;
   }
 
-  public get haveSpecialDiet(): boolean {
+  public get haveSpecialDiet(): string {
     return this.haveSpecialDietVal;
   }
-  public set haveSpecialDiet(haveSpecialDietVal: boolean) {
+  public set haveSpecialDiet(haveSpecialDietVal: string) {
     this.haveSpecialDietVal = haveSpecialDietVal;
   }
 
@@ -218,25 +227,25 @@ export class StepEssFileService {
     this.specialDietDetailsVal = specialDietDetailsVal;
   }
 
-  public get takeMedication(): boolean {
+  public get takeMedication(): string {
     return this.takeMedicationVal;
   }
-  public set takeMedication(takeMedicationVal: boolean) {
+  public set takeMedication(takeMedicationVal: string) {
     this.takeMedicationVal = takeMedicationVal;
   }
 
-  public get haveMedicationSupply(): boolean {
+  public get haveMedicationSupply(): string {
     return this.haveMedicationSupplyVal;
   }
-  public set haveMedicationSupply(haveMedicationSupplyVal: boolean) {
+  public set haveMedicationSupply(haveMedicationSupplyVal: string) {
     this.haveMedicationSupplyVal = haveMedicationSupplyVal;
   }
 
   // Animals tab
-  public get havePets(): boolean {
+  public get havePets(): string {
     return this.havePetsVal;
   }
-  public set havePets(havePetsVal: boolean) {
+  public set havePets(havePetsVal: string) {
     this.havePetsVal = havePetsVal;
   }
 
@@ -254,10 +263,10 @@ export class StepEssFileService {
     this.addPetIndicatorVal = addPetIndicatorVal;
   }
 
-  public get havePetsFood(): boolean {
+  public get havePetsFood(): string {
     return this.havePetsFoodVal;
   }
-  public set havePetsFood(havePetsFoodVal: boolean) {
+  public set havePetsFood(havePetsFoodVal: string) {
     this.havePetsFoodVal = havePetsFoodVal;
   }
 
@@ -355,6 +364,25 @@ export class StepEssFileService {
    * @returns Evacuation File record usable by the API
    */
   public createEvacFileDTO(): EvacuationFile {
+    // Get Correct API values for Household Members selections
+
+    const haveSpecialDietDTO = globalConst.radioButtonOptions.find(
+      (ins) => ins.value === this.haveSpecialDiet
+    )?.apiValue;
+
+    const takeMedicationDTO = globalConst.radioButtonOptions.find(
+      (ins) => ins.value === this.takeMedication
+    )?.apiValue;
+
+    const haveMedicalSuppliesDTO = globalConst.radioButtonOptions.find(
+      (ins) => ins.value === this.haveMedicationSupply
+    )?.apiValue;
+
+    // Get correct API values for Animals selections
+    const havePetsFoodDTO = globalConst.radioButtonOptions.find(
+      (ins) => ins.value === this.havePetsFood
+    )?.apiValue;
+
     // Get correct API values for Needs Assessment selections
     const needsClothingDTO = globalConst.needsOptions.find(
       (ins) => ins.value === this.canRegistrantProvideClothing
@@ -384,13 +412,13 @@ export class StepEssFileService {
       evacuationExternalReferrals: this.evacuationExternalReferrals,
 
       householdMembers: this.householdMembers,
-      haveSpecialDiet: this.haveSpecialDiet,
+      haveSpecialDiet: haveSpecialDietDTO,
       specialDietDetails: this.specialDietDetails,
-      takeMedication: this.takeMedication,
-      haveMedicalSupplies: this.haveMedicationSupply,
+      takeMedication: takeMedicationDTO,
+      haveMedicalSupplies: haveMedicalSuppliesDTO,
 
       pets: this.petsList,
-      havePetsFood: this.havePetsFood,
+      havePetsFood: havePetsFoodDTO,
       petCarePlans: this.petCarePlans,
 
       canProvideFood: needsFoodDTO,
@@ -518,33 +546,52 @@ export class StepEssFileService {
     this.householdRecoveryPlan = essNeeds.houseHoldRecoveryPlan;
 
     this.referredServiceDetails = essNeeds.recommendedReferralServices;
-    this.referredServices = essNeeds.recommendedReferralServices.length > 0;
+
+    this.referredServices = globalConst.radioButtonOptions.find(
+      (ins) => ins.apiValue === essNeeds.recommendedReferralServices.length > 0
+    )?.value;
 
     this.evacuationExternalReferrals = essNeeds.evacuationExternalReferrals;
 
     // Household Members tab
     // Split main applicant from other household members, remap to UI model
-    this.householdMembers = essNeeds.householdMembers?.map<HouseholdMemberModel>(
+    this.householdMembers = essFile.householdMembers?.map<HouseholdMemberModel>(
       (member) => {
         return {
           ...member,
-          sameLastName: member.lastName === primaryLastName
+          sameLastName: member.lastName === primaryLastName,
+          fromDataBase: true
         };
       }
     );
 
-    this.haveHouseHoldMembersVal = this.householdMembers?.length > 1;
+    this.haveHouseHoldMembers = globalConst.radioButtonOptions.find(
+      (ins) => ins.apiValue === this.householdMembers?.length > 2
+    )?.value;
 
-    this.haveSpecialDiet = essNeeds.haveSpecialDiet;
+    this.haveSpecialDiet = globalConst.radioButtonOptions.find(
+      (ins) => ins.apiValue === essNeeds.haveSpecialDiet
+    )?.value;
+
     this.specialDietDetails = essNeeds.specialDietDetails;
-    this.takeMedication = essNeeds.takeMedication;
-    this.haveMedicationSupply = essNeeds.haveMedicalSupplies;
+
+    this.takeMedication = globalConst.radioButtonOptions.find(
+      (ins) => ins.apiValue === essNeeds.takeMedication
+    )?.value;
+
+    this.haveMedicationSupply = globalConst.radioButtonOptions.find(
+      (ins) => ins.apiValue === essNeeds.haveMedicalSupplies
+    )?.value;
 
     // Animals tab
     this.petsList = essNeeds.pets;
-    this.havePets = essNeeds.pets?.length > 0;
+    this.havePets = globalConst.radioButtonOptions.find(
+      (ins) => ins.apiValue === essNeeds.pets?.length > 0
+    )?.value;
 
-    this.havePetsFood = essNeeds.havePetsFood;
+    this.havePetsFood = globalConst.radioButtonOptions.find(
+      (ins) => ins.apiValue === essNeeds.havePetsFood
+    )?.value;
     this.petCarePlans = essNeeds.petCarePlans;
 
     // Needs tab

@@ -25,7 +25,7 @@ export class HouseholdMembersService {
     return householdForm;
   }
 
-  saveHouseholdMember(householdForm: FormGroup, data: any[]): FormGroup {
+  saveHouseholdMember(householdForm: FormGroup): FormGroup {
     householdForm.get('houseHoldMember').reset();
     householdForm.get('addMemberIndicator').setValue(false);
 
@@ -39,7 +39,7 @@ export class HouseholdMembersService {
    * @param index
    */
   editRow(householdForm: FormGroup, element): FormGroup {
-    householdForm.get('houseHoldMember').setValue(element);
+    householdForm.get('houseHoldMember').patchValue(element);
     householdForm.get('addMemberIndicator').setValue(true);
     return householdForm;
   }
