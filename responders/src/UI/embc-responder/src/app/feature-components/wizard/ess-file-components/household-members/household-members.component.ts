@@ -59,6 +59,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     // Set up Members array
     this.members = this.stepEssFileService.householdMembers;
     this.memberSource.next(this.members);
+    console.log(this.members);
 
     // Set up type of members table to display
     if (
@@ -68,13 +69,14 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       this.membersColumns = this.newMembersColumns;
     } else {
       this.membersColumns = this.editMembersColumns;
-      //   if (this.stepEssFileService.selectedHouseholdMembers.length > 0) {
-      //     for (const option of this.stepEssFileService.selectedHouseholdMembers) {
-      //       this.selection.toggle(option);
-      //     }
-      //   }
-      console.log(this.stepEssFileService.selectedHouseholdMembers);
+      if (this.stepEssFileService.selectedHouseholdMembers.length > 0) {
+        for (const option of this.stepEssFileService.selectedHouseholdMembers) {
+          this.selection.toggle(option);
+        }
+      }
     }
+
+    console.log(this.selection.selected);
 
     // Displaying household member form in case 'haveHouseholdMembers' has been set to true
     if (
@@ -155,6 +157,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       if (this.editIndex !== undefined && this.editFlag) {
         // Editing existing Member
         this.members[this.editIndex] = {
+          ...this.members[this.editIndex],
           ...this.householdForm.get('houseHoldMember').value
         };
 
@@ -166,7 +169,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
         this.members.push({
           ...this.householdForm.get('houseHoldMember').value,
           isPrimaryRegistrant: false,
-          fromDataBase: false,
+          householdMemberFromDatabase: false,
           type: HouseholdMemberType.HouseholdMember
         });
 
@@ -439,20 +442,45 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     if (this.editFlag) this.cancel();
 
     if (
-      this.householdForm.valid &&
-      !(
-        this.householdForm.get('hasHouseholdMembers').value === 'Yes' &&
-        this.members.length < 2
-      )
+      this.wizardType === 'new-ess-file' ||
+      this.wizardType === 'new-registration'
     ) {
-      this.stepEssFileService.setTabStatus('household-members', 'complete');
+      if (
+        this.householdForm.valid &&
+        !(
+          this.householdForm.get('hasHouseholdMembers').value === 'Yes' &&
+          this.members.length < 2
+        )
+      ) {
+        this.stepEssFileService.setTabStatus('household-members', 'complete');
+      } else if (
+        this.stepEssFileService.checkForPartialUpdates(this.householdForm)
+      ) {
+        this.stepEssFileService.setTabStatus('household-members', 'incomplete');
+      } else {
+        this.stepEssFileService.setTabStatus(
+          'household-members',
+          'not-started'
+        );
+      }
     } else if (
-      this.stepEssFileService.checkForPartialUpdates(this.householdForm)
+      this.wizardType === 'review-file' ||
+      this.wizardType === 'complete-file'
     ) {
-      this.stepEssFileService.setTabStatus('household-members', 'incomplete');
-    } else {
-      this.stepEssFileService.setTabStatus('household-members', 'not-started');
+      if (this.householdForm.valid && this.selection.selected.length > 1) {
+        this.stepEssFileService.setTabStatus('household-members', 'complete');
+      } else if (
+        this.stepEssFileService.checkForPartialUpdates(this.householdForm)
+      ) {
+        this.stepEssFileService.setTabStatus('household-members', 'incomplete');
+      } else {
+        this.stepEssFileService.setTabStatus(
+          'household-members',
+          'not-started'
+        );
+      }
     }
+
     this.saveFormData();
   }
 

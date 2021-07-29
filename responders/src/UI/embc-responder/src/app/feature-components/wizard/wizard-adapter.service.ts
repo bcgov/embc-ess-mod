@@ -142,7 +142,7 @@ export class WizardAdapterService {
         gender: profile.personalDetails.gender,
         initials: profile.personalDetails.initials,
         sameLastName: true,
-        fromDataBase: true,
+        householdMemberFromDatabase: true,
         isPrimaryRegistrant: true,
         type: HouseholdMemberType.Registrant
       }
@@ -158,6 +158,7 @@ export class WizardAdapterService {
             this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
             this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
             this.stepEssFileService.setReviewEssFileTabStatus();
+            this.stepEssFileService.selectedHouseholdMembers = [];
             obs.next(true);
           },
           (error) => {
@@ -176,6 +177,7 @@ export class WizardAdapterService {
             this.stepEssFileService.setFormValuesFromFile(evacuationFileModel);
             this.stepEssFileService.essTabs = this.wizardDataService.createNewESSFileSteps();
             this.stepEssFileService.setCompleteEssFileTabStatus();
+            this.stepEssFileService.selectedHouseholdMembers = [];
             obs.next(true);
           },
           (error) => {
