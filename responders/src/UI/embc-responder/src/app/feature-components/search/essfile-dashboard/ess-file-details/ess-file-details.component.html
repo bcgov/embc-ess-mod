@@ -106,7 +106,7 @@
             <div class="col-8">
               <mat-table
                 class="table-outline"
-                [dataSource]="essFile?.householdMembers"
+                [dataSource]="essFile?.needsAssessment?.householdMembers"
               >
                 <ng-container matColumnDef="firstName">
                   <mat-header-cell class="header-cell" *matHeaderCellDef

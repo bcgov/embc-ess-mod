@@ -88,9 +88,7 @@ export class MatchedEssfilesComponent implements OnInit {
    */
   goToESSFile(essFileId: string): void {
     this.evacueeSessionService.essFileNumber = essFileId;
-    this.router.navigate([
-      '/responder-access/search/essfile-dashboard/overview'
-    ]);
+    this.router.navigate(['/responder-access/search/essfile-dashboard']);
   }
 
   /**
