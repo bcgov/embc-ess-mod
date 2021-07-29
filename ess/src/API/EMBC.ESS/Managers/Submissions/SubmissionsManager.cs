@@ -139,7 +139,11 @@ namespace EMBC.ESS.Managers.Submissions
 
             var caseRecord = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery { FileId = cmd.FileId })).Items.SingleOrDefault();
             var file = mapper.Map<Resources.Cases.EvacuationFile>(caseRecord);
-            file.NeedsAssessment.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault().LinkedRegistrantId = cmd.RegistantId;
+            var member = file.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
+
+            if (member == null) throw new Exception($"HouseholdMember not found '{cmd.HouseholdMemberId}'");
+
+            member.LinkedRegistrantId = cmd.RegistantId;
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
 
             return caseId;
