@@ -207,6 +207,21 @@ export class WizardDataService {
     }
   ];
 
+  private membersProfileMenu: Array<WizardSidenavModel> = [
+    {
+      step: 'STEP 1',
+      title: 'Edit Evacuee Profile',
+      route: '/ess-wizard/evacuee-profile',
+      isLocked: false,
+      img: {
+        imgSrc: '/assets/images/wizard/locked-profile.svg',
+        altSrc: '/assets/images/wizard/profile.svg',
+        height: '26',
+        width: '26'
+      }
+    }
+  ];
+
   private reviewESSFileMenu: Array<WizardSidenavModel> = [
     {
       step: 'STEP 1',
@@ -313,6 +328,20 @@ export class WizardDataService {
       editProfileMenu.push({ ...menuItems, ...menu });
     }
     return editProfileMenu;
+  }
+
+  /**
+   * Creates edit profile menu
+   *
+   * @returns side menu array
+   */
+  public createMembersProfileMenu(): Array<WizardSidenavModel> {
+    const membersProfileMenu: Array<WizardSidenavModel> = new Array<WizardSidenavModel>();
+    let menuItems: WizardSidenavModel;
+    for (const menu of this.membersProfileMenu) {
+      membersProfileMenu.push({ ...menuItems, ...menu });
+    }
+    return membersProfileMenu;
   }
 
   /**

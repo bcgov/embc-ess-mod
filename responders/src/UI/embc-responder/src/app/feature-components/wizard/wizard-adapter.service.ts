@@ -51,7 +51,8 @@ export class WizardAdapterService {
         return;
 
       case WizardType.MemberRegistration:
-        // Clear steps
+        this.stepEvacueeProfileService.clearService();
+        this.stepEssFileService.clearService();
         return;
 
       case WizardType.ReviewFile:
@@ -71,14 +72,26 @@ export class WizardAdapterService {
     this.stepEvacueeProfileService.personalDetails = {
       ...this.stepEvacueeProfileService.personalDetails,
       firstName: this.evacueeSearchService.evacueeSearchContext
-        ?.evacueeSearchParameters?.firstName,
+        ?.evacueeSearchParameters.firstName,
       lastName: this.evacueeSearchService.evacueeSearchContext
-        ?.evacueeSearchParameters?.lastName,
+        ?.evacueeSearchParameters.lastName,
       dateOfBirth: this.evacueeSearchService.evacueeSearchContext
-        ?.evacueeSearchParameters?.dateOfBirth
+        ?.evacueeSearchParameters.dateOfBirth
     };
 
     this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
+  }
+
+  public stepCreateProfileForMembers() {
+    this.stepEvacueeProfileService.personalDetails = {
+      ...this.stepEvacueeProfileService.personalDetails,
+      firstName: this.evacueeSessionService.memberRegistration.firstName,
+      lastName: this.evacueeSessionService.memberRegistration.lastName,
+      dateOfBirth: this.evacueeSessionService.memberRegistration.dateOfBirth,
+      gender: this.evacueeSessionService.memberRegistration.gender
+    };
+    this.stepEvacueeProfileService.profileTabs = this.wizardDataService.createNewProfileSteps();
+    this.stepEvacueeProfileService.setMemberProfileTabStatus();
   }
 
   /**

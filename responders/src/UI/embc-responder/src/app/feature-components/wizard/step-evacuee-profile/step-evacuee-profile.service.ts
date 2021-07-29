@@ -241,6 +241,15 @@ export class StepEvacueeProfileService {
     });
   }
 
+  public setMemberProfileTabStatus(): void {
+    this.profileTabs.map((tab) => {
+      if (tab.name === 'evacuee-details') {
+        tab.status = 'complete';
+      }
+      return tab;
+    });
+  }
+
   /**
    * Determines if the tab navigation is allowed or not
    *

@@ -43,6 +43,10 @@ export const profileLinkMessage: DialogContent = {
   text: '<p>Profile Successfully Linked</p>',
   cancelButton: 'Close'
 };
+export const profileLinkErrorMessage: DialogContent = {
+  text: '<p>Error while linking the profile. Please try again later</p>',
+  cancelButton: 'Close'
+};
 export const tier2Notes = 'Notes regarding Tier 2 Supervisor';
 export const tier3Notes = 'Notes regarding Tier 3 ESS Director/ Manager';
 export const tier1Notes = 'Notes regarding Tier 1 Responder';
@@ -109,6 +113,12 @@ export const editRegWizardProfileCreatedMessage: DialogContent = {
 export const evacueeProfileUpdatedMessage: DialogContent = {
   title: 'Evacuee Profile Updated',
   text: '<p>Evacuee profile has been successfully updated.</p>',
+  cancelButton: 'Close'
+};
+
+export const memberProfileCreateMessage: DialogContent = {
+  title: 'Profile Created Successfully',
+  text: '<p>Evacuee profile has been successfully created.</p>',
   cancelButton: 'Close'
 };
 

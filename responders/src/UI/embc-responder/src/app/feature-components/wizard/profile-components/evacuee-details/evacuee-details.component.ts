@@ -196,6 +196,9 @@ export class EvacueeDetailsComponent implements OnInit, OnDestroy {
         this.showLockIcon = false;
         this.showUnlockLink = false;
       }
+    } else if (this.evacueeSessionService.getMemberFlag()) {
+      this.showLockIcon = false;
+      this.showUnlockLink = false;
     } else {
       this.evacueeDetailsForm.get('firstName').disable();
       this.evacueeDetailsForm.get('lastName').disable();

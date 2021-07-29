@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanDeactivate, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardAdapterService } from './wizard-adapter.service';
 import { WizardComponent } from './wizard.component';
 
@@ -9,7 +10,8 @@ import { WizardComponent } from './wizard.component';
 export class WizardDeactivateGuard implements CanDeactivate<WizardComponent> {
   constructor(
     private cacheService: CacheService,
-    private wizardAdapterService: WizardAdapterService
+    private wizardAdapterService: WizardAdapterService,
+    private evacueeSessionService: EvacueeSessionService
   ) {}
 
   public canDeactivate():
@@ -26,5 +28,7 @@ export class WizardDeactivateGuard implements CanDeactivate<WizardComponent> {
     this.cacheService.remove('wizardMenu');
     this.cacheService.remove('wizardType');
     this.cacheService.remove('wizardOpenedFrom');
+    this.evacueeSessionService.setMemberFlag(null);
+    this.evacueeSessionService.setEditWizardFlag(null);
   }
 }

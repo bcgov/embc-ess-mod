@@ -38,6 +38,8 @@ export class WizardService {
       this.menuItems = this.wizardDataService.createReviewFileMenu();
     } else if (type === WizardType.CompleteFile) {
       this.menuItems = this.wizardDataService.createCompleteFileMenu();
+    } else if (type === WizardType.MemberRegistration) {
+      this.menuItems = this.wizardDataService.createMembersProfileMenu();
     }
   }
 

@@ -60,7 +60,11 @@ export class WizardActivateGuard implements CanActivate {
 
       return false;
     } else if (wizardType === WizardType.MemberRegistration) {
-      return this.isProfileCreationAllowed();
+      if (this.isProfileCreationAllowed()) {
+        this.wizardAdapterService.stepCreateProfileForMembers();
+        return true;
+      }
+      return false;
     } else if (wizardType === WizardType.ReviewFile) {
       if (this.isFileReviewAllowed()) {
         return this.wizardAdapterService.stepReviewESSFileFromESSFileRecord();
