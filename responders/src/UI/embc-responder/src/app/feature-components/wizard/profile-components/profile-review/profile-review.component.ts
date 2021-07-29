@@ -115,6 +115,7 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
         this.evacueeSessionService.getWizardType() ===
           WizardType.MemberRegistration
       ) {
+        this.createMemberRegistration();
       } else {
         this.editProfile();
       }
