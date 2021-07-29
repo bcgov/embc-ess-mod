@@ -1,0 +1,88 @@
+<div class="row">
+  <div class="col-md-12 heading">Multiple Profile Results</div>
+</div>
+<br />
+<div class="row">
+  <div class="col-md-12">
+    <p class="bold">
+      There are multiple possible profile matches for this evacuee.
+    </p>
+    <p>
+      Please ask this evacuee to confirm their physical address to determine
+      which is a correct match. If multiple matches for physical address exist,
+      opt for profiles connected though BC Services Card Online Authentication.
+      Alternatively, select the profile with the most recent created on date.
+    </p>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col-md-3">First Name:</div>
+  <div class="col-md-3 bold">{{ profileData?.firstName }}</div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">Last Name:</div>
+  <div class="col-md-3 bold">{{ profileData?.lastName }}</div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">Date of Birth:</div>
+  <div class="col-md-3 bold">{{ profileData?.dateOfBirth }}</div>
+</div>
+
+<div class="row">
+  <div
+    *ngFor="let profile of profileData?.profiles"
+    class="col-md-5 box-background mt-4"
+  >
+    <div class="row">
+      <div class="col-md-7">
+        <p class="p-margin">BC Services Card Online Authenticated:</p>
+      </div>
+      <div class="col-md-5 bold">
+        <p class="p-margin">{{ profile?.authenticatedUser ? 'Yes' : 'No' }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"><p class="p-margin">Verification Status:</p></div>
+      <div class="col-md-6 bold">
+        <p class="p-margin">
+          {{ profile?.verifiedUser ? 'Verified' : 'Unverified' }}
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6"><p class="p-margin">Profile Created:</p></div>
+      <div class="col-md-6 bold">
+        <p class="p-margin">{{ profile?.createdOn | date: 'dd-MMM-YYYY' }}</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6"><p class="p-margin">Physical Address:</p></div>
+      <div class="col-md-6 bold">
+        <p class="p-margin">{{ profile?.primaryAddress?.addressLine1 }}</p>
+        <p class="p-margin">
+          {{ profile?.primaryAddress?.addressLine2 }}
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <button class="button-p link-button" mat-button>
+          Link to this Profile
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <button class="button-s cancel-button" mat-button (click)="cancel()">
+      Cancel
+    </button>
+  </div>
+</div>

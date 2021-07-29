@@ -13,7 +13,7 @@
       (closed)="setClosed(index)"
       hideToggle="true"
       [expanded]="false"
-      ><!--[expanded]="isExpanded(index)"-->
+    >
       <mat-expansion-panel-header>
         <mat-panel-title>
           <span class="member-title">
@@ -95,6 +95,7 @@
           <button class="button-p proceed-button" (click)="linkToProfile(file)">
             Link to this Profile
           </button>
+          <span class="no-match">Not a Match? Create Profile</span>
         </div>
       </div>
       <div class="loader-align">
