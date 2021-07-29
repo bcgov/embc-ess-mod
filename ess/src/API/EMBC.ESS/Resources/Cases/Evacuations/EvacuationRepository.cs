@@ -77,17 +77,31 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
 
             RemovePets(currentFile);
-
             essContext.Detach(currentFile);
             var file = mapper.Map<era_evacuationfile>(evacuationFile);
             file.era_evacuationfileid = currentFile.era_evacuationfileid;
 
             essContext.AttachTo(nameof(essContext.era_evacuationfiles), file);
+
+            foreach (var member in file.era_era_evacuationfile_era_householdmember_EvacuationFileid)
+            {
+                if (member.era_householdmemberid.HasValue)
+                {
+                    //update member
+                    essContext.AttachTo(nameof(essContext.era_householdmembers), member);
+                    essContext.UpdateObject(member);
+                    AssignHouseholdMember(file, member);
+                }
+            }
+
             essContext.UpdateObject(file);
             AssignPrimaryRegistrant(file, primaryContact);
             AssignToTask(file, evacuationFile.TaskId);
             AddPets(file);
 
+            await essContext.SaveChangesAsync();
+            essContext.DetachAll();
+            essContext.AttachTo(nameof(essContext.era_evacuationfiles), file);
             AddNeedsAssessment(file, file.era_CurrentNeedsAssessmentid);
 
             await essContext.SaveChangesAsync();
