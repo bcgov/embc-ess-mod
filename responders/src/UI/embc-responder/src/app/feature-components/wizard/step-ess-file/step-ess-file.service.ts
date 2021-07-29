@@ -525,7 +525,6 @@ export class StepEssFileService {
    * Update the wizard's values with ones fetched from API
    */
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
-    console.log(essFile);
     const essNeeds = essFile.needsAssessment;
     const primaryLastName = essNeeds.householdMembers?.find(
       (member) => member.type === HouseholdMemberType.Registrant
@@ -560,7 +559,7 @@ export class StepEssFileService {
         return {
           ...member,
           sameLastName: member.lastName === primaryLastName,
-          fromDataBase: true
+          householdMemberFromDatabase: true
         };
       }
     );
