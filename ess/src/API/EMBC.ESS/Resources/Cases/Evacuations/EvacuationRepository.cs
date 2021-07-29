@@ -227,13 +227,24 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
 
             var loadTasks = new List<Task>();
-            loadTasks.Add(Task.Run(() => ctx.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid))));
             loadTasks.Add(Task.Run(() => ctx.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid))));
             loadTasks.Add(Task.Run(() => ctx.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID))));
             loadTasks.Add(Task.Run(() => ctx.LoadProperty(file, nameof(era_evacuationfile.era_TaskId))));
 
             loadTasks.Add(Task.Run(() =>
             {
+                ctx.LoadProperty(file, nameof(era_evacuationfile.era_era_evacuationfile_era_householdmember_EvacuationFileid));
+
+                foreach (var member in file.era_era_evacuationfile_era_householdmember_EvacuationFileid)
+                {
+                    if (member._era_registrant_value.HasValue)
+                    {
+                        ctx.AttachTo(nameof(EssContext.era_householdmembers), member);
+                        ctx.LoadProperty(member, nameof(era_householdmember.era_Registrant));
+                        ctx.Detach(member);
+                    }
+                }
+
                 if (file.era_CurrentNeedsAssessmentid == null)
                     ctx.LoadProperty(file, nameof(era_evacuationfile.era_CurrentNeedsAssessmentid));
 
