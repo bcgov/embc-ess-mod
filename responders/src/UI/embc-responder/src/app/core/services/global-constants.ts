@@ -39,6 +39,10 @@ export const addMessage: DialogContent = {
   text: '<p>Team member has been <b>saved</b> & added successfully.</p>',
   cancelButton: 'Close'
 };
+export const profileLinkMessage: DialogContent = {
+  text: '<p>Profile Successfully Linked</p>',
+  cancelButton: 'Close'
+};
 export const tier2Notes = 'Notes regarding Tier 2 Supervisor';
 export const tier3Notes = 'Notes regarding Tier 3 ESS Director/ Manager';
 export const tier1Notes = 'Notes regarding Tier 1 Responder';

@@ -4,10 +4,12 @@ import { map, mergeMap } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
 import {
   EvacuationFileSummary,
+  RegistrantLinkRequest,
   RegistrantProfile,
   RegistrationResult
 } from '../api/models';
 import { EvacuationFileSummaryModel } from '../models/evacuation-file-summary.model';
+import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
 import { LocationsService } from './locations.service';
 
@@ -146,5 +148,11 @@ export class EvacueeProfileService {
           }
         )
       );
+  }
+
+  public linkMemberProfile(fileLinkMetData: FileLinkRequestModel) {
+    return this.registrationsService.registrationsLinkRegistrantToHouseholdMember(
+      { fileId: fileLinkMetData.fileId, body: fileLinkMetData.linkRequest }
+    );
   }
 }
