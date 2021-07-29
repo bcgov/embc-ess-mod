@@ -23,7 +23,7 @@ import { Pet } from 'src/app/core/api/models';
 })
 export class AnimalsComponent implements OnInit, OnDestroy {
   animalsForm: FormGroup;
-  radioOption = globalConst.radioButtonOptions1;
+  radioOption = globalConst.radioButtonOptions;
   showPetsForm = false;
   displayedColumns: string[] = ['type', 'quantity', 'buttons'];
   petSource = new BehaviorSubject([]);
@@ -70,7 +70,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
 
     // Shows the petsGroupForm if hasPets is true and none pets has been inserted yet
     if (
-      this.stepEssFileService.havePets === true &&
+      this.stepEssFileService.havePets === 'Yes' &&
       this.stepEssFileService.petsList.length === 0
     ) {
       this.addPets();
@@ -79,7 +79,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
   }
 
   hasPetsChange(event: MatRadioChange): void {
-    if (event.value) {
+    if (event.value === 'Yes') {
       this.addPets();
     } else {
       this.cancel();
@@ -119,7 +119,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
     this.animalsForm.get('addPetIndicator').setValue(false);
 
     if (this.pets.length === 0) {
-      this.animalsForm.get('hasPets').setValue(false);
+      this.animalsForm.get('hasPets').setValue('No');
     }
   }
 

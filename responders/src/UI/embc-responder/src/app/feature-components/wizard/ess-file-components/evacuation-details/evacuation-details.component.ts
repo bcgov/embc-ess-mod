@@ -22,7 +22,7 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   evacDetailsForm: FormGroup;
   insuranceOption = globalConst.insuranceOptions;
-  radioOption = globalConst.radioButtonOptions1;
+  radioOption = globalConst.radioButtonOptions;
   referredServicesOption = globalConst.referredServiceOptions;
   defaultCountry = globalConst.defaultCountry;
   defaultProvince = globalConst.defaultProvince;
@@ -79,7 +79,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       });
 
     // Display the referredServiceDetails in case referred Service is set as true
-    if (this.stepEssFileService.referredServices === true) {
+    if (this.stepEssFileService.referredServices === 'Yes') {
       this.showReferredServicesForm = true;
 
       for (const option of this.stepEssFileService.referredServiceDetails) {
