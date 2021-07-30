@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
 import {
   EvacuationFileSummary,
@@ -11,6 +11,7 @@ import {
 import { EvacuationFileSummaryModel } from '../models/evacuation-file-summary.model';
 import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
+import { EvacueeSessionService } from './evacuee-session.service';
 import { LocationsService } from './locations.service';
 
 @Injectable({
@@ -19,7 +20,8 @@ import { LocationsService } from './locations.service';
 export class EvacueeProfileService {
   constructor(
     private registrationsService: RegistrationsService,
-    private locationsService: LocationsService
+    private locationsService: LocationsService,
+    public evacueeSessionService: EvacueeSessionService
   ) {}
 
   /**
@@ -154,5 +156,31 @@ export class EvacueeProfileService {
     return this.registrationsService.registrationsLinkRegistrantToHouseholdMember(
       { fileId: fileLinkMetData.fileId, body: fileLinkMetData.linkRequest }
     );
+  }
+
+  public createMemberRegistration(
+    regProfile: RegistrantProfile,
+    memberId: string,
+    essFileId: string
+  ): Observable<void> {
+    const profile$ = this.registrationsService.registrationsCreateRegistrantProfile(
+      { body: regProfile }
+    );
+    const $result = profile$.pipe(
+      mergeMap((regResult) =>
+        this.linkMemberProfile({
+          fileId: essFileId,
+          linkRequest: {
+            householdMemberId: memberId,
+            registantId: regResult.id
+          }
+        })
+      ),
+      withLatestFrom(profile$),
+      map(([blob, regResult]) => {
+        this.evacueeSessionService.profileId = regResult.id;
+      })
+    );
+    return $result;
   }
 }

@@ -19,7 +19,7 @@ import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.m
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { SecurityQuestion } from 'src/app/core/api/models';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-review',
@@ -145,22 +145,13 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
 
   createMemberRegistration() {
     this.evacueeProfileService
-      .createProfile(this.stepEvacueeProfileService.createProfileDTO())
-      .pipe(
-        map((profile: RegistrantProfileModel) => {
-          this.evacueeProfileService.linkMemberProfile({
-            fileId: this.evacueeSessionService.essFileNumber,
-            linkRequest: {
-              householdMemberId: this.evacueeSessionService.memberRegistration
-                .id,
-              registantId: profile.id
-            }
-          });
-          return profile;
-        })
+      .createMemberRegistration(
+        this.stepEvacueeProfileService.createProfileDTO(),
+        this.evacueeSessionService.memberRegistration.id,
+        this.evacueeSessionService.essFileNumber
       )
       .subscribe(
-        (profile: RegistrantProfileModel) => {
+        (profile) => {
           this.disableButton = true;
           this.saveLoader = false;
           this.memberProfileDialog();
