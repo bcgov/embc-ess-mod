@@ -1,1 +1,22 @@
-<p>supplier-management works!</p>
+<div class="container-frame container">
+  <div class="row heading-container">
+    <div class="col-md-12">
+      <span class="page-heading">Supplier Management</span>
+    </div>
+  </div>
+  <br />
+  <nav mat-tab-nav-bar dynamicHeight>
+    <a
+      mat-tab-link
+      *ngFor="let tabItem of tabs"
+      [routerLink]="tabItem.route"
+      routerLinkActive="active-tab"
+    >
+      {{ tabItem.label }}
+    </a>
+  </nav>
+
+  <div class="content-container">
+    <router-outlet></router-outlet>
+  </div>
+</div>
