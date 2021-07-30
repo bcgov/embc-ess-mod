@@ -190,14 +190,16 @@
                 [dataSource]="essFile?.needsAssessment?.pets"
               >
                 <ng-container matColumnDef="type">
-                  <mat-header-cell *matHeaderCellDef>Pet Type</mat-header-cell>
+                  <mat-header-cell class="header-cell" *matHeaderCellDef
+                    >Pet Type</mat-header-cell
+                  >
                   <mat-cell *matCellDef="let element">
                     {{ element.type }}
                   </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="quantity">
-                  <mat-header-cell *matHeaderCellDef>
+                  <mat-header-cell class="header-cell" *matHeaderCellDef>
                     How Many
                   </mat-header-cell>
                   <mat-cell *matCellDef="let element">

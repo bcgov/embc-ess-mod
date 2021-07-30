@@ -210,7 +210,7 @@ export class WizardDataService {
   private membersProfileMenu: Array<WizardSidenavModel> = [
     {
       step: 'STEP 1',
-      title: 'Edit Evacuee Profile',
+      title: 'Create Evacuee Profile',
       route: '/ess-wizard/evacuee-profile',
       isLocked: false,
       img: {
