@@ -120,5 +120,16 @@ mat-expansion-panel {
 
 .no-match {
   padding-top: 10px;
-  color: #169BD5;
+  color: #169bd5;
+  text-decoration: none;
+}
+
+.profile-restricted {
+  color: rgba(201, 0, 0, 1);
+  font-weight: bold;
+}
+
+.profile-not-restricted {
+  color: #3c9d0f;
+  font-weight: bold;
 }

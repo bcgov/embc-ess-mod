@@ -47,37 +47,49 @@
           <table class="table-details">
             <tr>
               <th>Type:</th>
-              <td>
-                <b>{{ file?.type }}</b>
+              <td class="bold">
+                {{ file?.type }}
               </td>
             </tr>
-            <tr>
+            <tr *ngIf="file?.isVerified !== null">
               <th>Verification Status:</th>
-              <td>
-                <b>{{ file?.isVerified ? file?.isVerified : 'Unverified' }}</b>
+              <td class="bold">
+                {{ file?.isVerified ? 'Verified' : 'Unverified' }}
               </td>
             </tr>
-            <tr>
+            <tr *ngIf="file?.isRestricted !== null">
               <th>Restriction Status:</th>
-              <td>
-                <b>{{ file?.isRestricted }}</b>
+              <td
+                [ngClass]="{
+                  'profile-restricted': file?.isRestricted,
+                  'profile-not-restricted': !file?.isRestricted
+                }"
+              >
+                {{ file?.isRestricted ? 'Restricted' : 'Unrestricted' }}
               </td>
             </tr>
             <tr>
               <th>Date of Birth:</th>
-              <td>
-                <b>{{ file?.dateOfBirth | date: 'dd-MMM-yyyy' }}</b>
+              <td class="bold">
+                {{ file?.dateOfBirth | date: 'dd-MMM-yyyy' }}
               </td>
             </tr>
             <tr>
               <th>Gender:</th>
-              <td>
-                <b>{{ file?.gender }}</b>
+              <td class="bold">
+                {{ file?.gender }}
               </td>
             </tr>
           </table>
         </div>
-        <div *ngIf="file?.type === 'Registrant'" class="row button-div">
+        <div
+          *ngIf="
+            file?.type === 'Registrant' ||
+            (file?.type === 'HouseholdMember' &&
+              file?.linkedRegistrantId !== null)
+          "
+          class="row button-div"
+        >
           <button class="button-p proceed-button" (click)="viewProfile(file)">
             View Profile
           </button>
@@ -91,13 +103,19 @@
           </button>
         </div>
         <div
-          *ngIf="matchedProfileCount > 0 && file?.type === 'HouseholdMember'"
+          *ngIf="
+            matchedProfileCount > 0 &&
+            file?.type === 'HouseholdMember' &&
+            file?.linkedRegistrantId === null
+          "
           class="row button-div"
         >
           <button class="button-p proceed-button" (click)="linkToProfile(file)">
             Link to this Profile
           </button>
-          <span class="no-match">Not a Match? Create Profile</span>
+          <a (click)="createProfile(file)" class="no-match"
+            >Not a Match? Create Profile</a
+          >
         </div>
       </div>
       <div class="loader-align">
