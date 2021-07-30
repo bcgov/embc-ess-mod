@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { HouseholdMemberType } from 'src/app/core/api/models';
 import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.model';
 import { WizardType } from 'src/app/core/models/wizard-type.model';

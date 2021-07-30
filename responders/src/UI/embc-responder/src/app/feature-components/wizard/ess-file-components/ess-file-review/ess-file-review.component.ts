@@ -166,7 +166,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
                 this.router.navigate([
                   'responder-access/search/essfile-dashboard'
                 ]);
-                // .then(() => this.wizardStepService.clearWizard());
               } else {
                 this.router.navigate(['/ess-wizard/add-supports'], {
                   state: { step: 'STEP 3', title: 'Add Supports' }
@@ -188,7 +187,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.essFileService
       .updateFile(
         this.evacueeSessionService.essFileNumber,
-        this.stepEssFileService.createEvacFileDTO()
+        this.stepEssFileService.updateEvacFileDTO()
       )
       .subscribe(
         (essFile: EvacuationFileModel) => {
@@ -213,7 +212,6 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
                 this.router.navigate([
                   'responder-access/search/essfile-dashboard'
                 ]);
-                // .then(() => this.wizardStepService.clearWizard());
               } else {
                 this.router.navigate(['/ess-wizard/add-supports'], {
                   state: { step: 'STEP 3', title: 'Add Supports' }
