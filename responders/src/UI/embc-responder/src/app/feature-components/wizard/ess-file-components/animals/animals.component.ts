@@ -85,6 +85,9 @@ export class AnimalsComponent implements OnInit, OnDestroy {
       this.cancel();
       this.pets = [];
       this.petSource.next(this.pets);
+      this.animalsForm.get('pets').setValue(this.pets);
+      this.animalsForm.get('hasPetsFood').reset();
+      this.animalsForm.get('petCareDetails').reset();
     }
   }
 
@@ -214,7 +217,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
         this.stepEssFileService.petsList,
         this.customValidation
           .conditionalValidation(
-            () => this.animalsForm.get('hasPets').value === true,
+            () => this.animalsForm.get('hasPets').value === 'Yes',
             Validators.required
           )
           .bind(this.customValidation)
@@ -223,7 +226,7 @@ export class AnimalsComponent implements OnInit, OnDestroy {
         this.stepEssFileService.havePetsFood,
         this.customValidation
           .conditionalValidation(
-            () => this.animalsForm.get('hasPets').value === true,
+            () => this.animalsForm.get('hasPets').value === 'Yes',
             Validators.required
           )
           .bind(this.customValidation)
