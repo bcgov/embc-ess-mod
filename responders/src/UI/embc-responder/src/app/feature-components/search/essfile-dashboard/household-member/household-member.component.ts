@@ -22,6 +22,8 @@ import {
   ScrollStrategyOptions
 } from '@angular/cdk/overlay';
 import { FixedSizeVirtualScrollStrategy } from '@angular/cdk/scrolling';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
+import { CacheService } from 'src/app/core/services/cache.service';
 
 @Component({
   selector: 'app-household-member',
@@ -44,7 +46,8 @@ export class HouseholdMemberComponent implements OnInit {
     private alertService: AlertService,
     private router: Router,
     private essfileDashboardService: EssfileDashboardService,
-    private evacueeSessionService: EvacueeSessionService
+    private evacueeSessionService: EvacueeSessionService,
+    private cacheService: CacheService
   ) {}
 
   ngOnInit(): void {}
@@ -123,7 +126,20 @@ export class HouseholdMemberComponent implements OnInit {
       });
   }
 
-  createProfile(file) {}
+  createProfile(memberDetails: EvacuationFileHouseholdMember) {
+    this.evacueeSessionService.memberRegistration = memberDetails;
+    this.evacueeSessionService.profileId = null;
+    this.cacheService.set(
+      'wizardOpenedFrom',
+      '/responder-access/search/essfile-dashboard'
+    );
+    this.evacueeSessionService.setWizardType(WizardType.MemberRegistration);
+
+    this.router.navigate(['/ess-wizard'], {
+      queryParams: { type: WizardType.MemberRegistration },
+      queryParamsHandling: 'merge'
+    });
+  }
 
   linkToProfile(memberDetails: EvacuationFileHouseholdMember) {
     if (this.matchedProfileCount === 1) {

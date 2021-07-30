@@ -19,6 +19,7 @@ import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.m
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardType } from 'src/app/core/models/wizard-type.model';
 import { SecurityQuestion } from 'src/app/core/api/models';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-review',
@@ -103,106 +104,157 @@ export class ProfileReviewComponent implements OnInit, OnDestroy {
     if (this.verifiedProfileGroup.valid) {
       this.saveLoader = true;
 
-      if (!this.evacueeSessionService.profileId) {
-        this.evacueeProfileService
-          .createProfile(this.stepEvacueeProfileService.createProfileDTO())
-          .subscribe(
-            (profile: RegistrantProfileModel) => {
-              // Once all profile work is done, tell user save is complete and go to Step 2
-              this.disableButton = true;
-              this.saveLoader = false;
-
-              this.stepEvacueeProfileService
-                .openModal(globalConst.newRegWizardProfileCreatedMessage)
-                .afterClosed()
-                .subscribe(() => {
-                  this.wizardService.setStepStatus(
-                    '/ess-wizard/ess-file',
-                    false
-                  );
-                  this.wizardAdapterService.stepCreateEssFileFromProfileRecord(
-                    profile
-                  );
-
-                  this.router.navigate(['/ess-wizard/ess-file'], {
-                    state: { step: 'STEP 2', title: 'Create ESS File' }
-                  });
-
-                  // Update Profile step after navigation to prevent form from changing behind modal
-                  this.stepEvacueeProfileService.setFormValuesFromProfile(
-                    profile
-                  );
-                });
-            },
-            (error) => {
-              this.saveLoader = false;
-              this.alertService.setAlert(
-                'danger',
-                globalConst.createRegProfileError
-              );
-            }
-          );
+      if (
+        !this.evacueeSessionService.profileId &&
+        this.evacueeSessionService.getWizardType() ===
+          WizardType.NewRegistration
+      ) {
+        this.createNewProfile();
+      } else if (
+        !this.evacueeSessionService.profileId &&
+        this.evacueeSessionService.getWizardType() ===
+          WizardType.MemberRegistration
+      ) {
+        this.createMemberRegistration();
       } else {
-        // Update existing record
-        this.evacueeProfileService
-          .updateProfile(
-            this.evacueeSessionService.profileId,
-            this.stepEvacueeProfileService.createProfileDTO()
-          )
-          .subscribe(
-            (profile: RegistrantProfileModel) => {
-              // After creating and fetching profile, update Profile Step values
-              this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
-
-              // Once all profile work is done, tell user save is complete and go to Step 2
-              this.disableButton = true;
-              this.saveLoader = false;
-
-              switch (this.evacueeSessionService.getWizardType()) {
-                case WizardType.NewRegistration:
-                  this.stepEvacueeProfileService
-                    .openModal(globalConst.newRegWizardProfileUpdatedMessage)
-                    .afterClosed()
-                    .subscribe(() => {
-                      this.wizardService.setStepStatus(
-                        '/ess-wizard/ess-file',
-                        false
-                      );
-                      this.wizardAdapterService.stepCreateEssFileFromProfileRecord(
-                        profile
-                      );
-
-                      this.router.navigate(['/ess-wizard/ess-file'], {
-                        state: { step: 'STEP 2', title: 'Create ESS File' }
-                      });
-                    });
-                  return;
-
-                case WizardType.EditRegistration:
-                  this.router
-                    .navigate([
-                      'responder-access/search/evacuee-profile-dashboard'
-                    ])
-                    .then(() =>
-                      this.stepEvacueeProfileService.openModal(
-                        globalConst.evacueeProfileUpdatedMessage
-                      )
-                    );
-                  return;
-              }
-            },
-            (error) => {
-              this.saveLoader = false;
-              this.alertService.setAlert(
-                'danger',
-                globalConst.createRegProfileError
-              );
-            }
-          );
+        this.editProfile();
       }
     } else {
       this.verifiedProfileControl.verifiedProfile.markAsTouched();
     }
+  }
+
+  createNewProfile() {
+    this.evacueeProfileService
+      .createProfile(this.stepEvacueeProfileService.createProfileDTO())
+      .subscribe(
+        (profile: RegistrantProfileModel) => {
+          this.disableButton = true;
+          this.saveLoader = false;
+          this.createNewProfileDialog(profile);
+        },
+        (error) => {
+          this.saveLoader = false;
+          this.alertService.setAlert(
+            'danger',
+            globalConst.createRegProfileError
+          );
+        }
+      );
+  }
+
+  createMemberRegistration() {
+    this.evacueeProfileService
+      .createProfile(this.stepEvacueeProfileService.createProfileDTO())
+      .pipe(
+        map((profile: RegistrantProfileModel) => {
+          this.evacueeProfileService.linkMemberProfile({
+            fileId: this.evacueeSessionService.essFileNumber,
+            linkRequest: {
+              householdMemberId: this.evacueeSessionService.memberRegistration
+                .id,
+              registantId: profile.id
+            }
+          });
+          return profile;
+        })
+      )
+      .subscribe(
+        (profile: RegistrantProfileModel) => {
+          this.disableButton = true;
+          this.saveLoader = false;
+          this.memberProfileDialog();
+        },
+        (error) => {
+          this.saveLoader = false;
+          this.alertService.setAlert(
+            'danger',
+            globalConst.createRegProfileError
+          );
+        }
+      );
+  }
+
+  createNewProfileDialog(profile: RegistrantProfileModel) {
+    this.stepEvacueeProfileService
+      .openModal(globalConst.newRegWizardProfileCreatedMessage)
+      .afterClosed()
+      .subscribe(() => {
+        this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
+        this.wizardAdapterService.stepCreateEssFileFromProfileRecord(profile);
+
+        this.router.navigate(['/ess-wizard/ess-file'], {
+          state: { step: 'STEP 2', title: 'Create ESS File' }
+        });
+
+        this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
+      });
+  }
+
+  editProfile() {
+    this.evacueeProfileService
+      .updateProfile(
+        this.evacueeSessionService.profileId,
+        this.stepEvacueeProfileService.createProfileDTO()
+      )
+      .subscribe(
+        (profile: RegistrantProfileModel) => {
+          this.stepEvacueeProfileService.setFormValuesFromProfile(profile);
+          this.disableButton = true;
+          this.saveLoader = false;
+
+          switch (this.evacueeSessionService.getWizardType()) {
+            case WizardType.NewRegistration:
+              this.editNewRegistrationProfileDialog(profile);
+              return;
+
+            case WizardType.EditRegistration:
+              this.editProfileDialog();
+              return;
+          }
+        },
+        (error) => {
+          this.saveLoader = false;
+          this.alertService.setAlert(
+            'danger',
+            globalConst.createRegProfileError
+          );
+        }
+      );
+  }
+
+  editNewRegistrationProfileDialog(profile: RegistrantProfileModel) {
+    this.stepEvacueeProfileService
+      .openModal(globalConst.newRegWizardProfileUpdatedMessage)
+      .afterClosed()
+      .subscribe(() => {
+        this.wizardService.setStepStatus('/ess-wizard/ess-file', false);
+        this.wizardAdapterService.stepCreateEssFileFromProfileRecord(profile);
+
+        this.router.navigate(['/ess-wizard/ess-file'], {
+          state: { step: 'STEP 2', title: 'Create ESS File' }
+        });
+      });
+  }
+
+  memberProfileDialog() {
+    this.router
+      .navigate(['responder-access/search/evacuee-profile-dashboard'])
+      .then(() =>
+        this.stepEvacueeProfileService.openModal(
+          globalConst.memberProfileCreateMessage
+        )
+      );
+  }
+
+  editProfileDialog() {
+    this.router
+      .navigate(['responder-access/search/evacuee-profile-dashboard'])
+      .then(() =>
+        this.stepEvacueeProfileService.openModal(
+          globalConst.evacueeProfileUpdatedMessage
+        )
+      );
   }
 
   /**

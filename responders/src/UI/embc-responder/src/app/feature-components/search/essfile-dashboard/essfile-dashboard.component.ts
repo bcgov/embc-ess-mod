@@ -17,6 +17,7 @@ import { StepNotesService } from '../../wizard/step-notes/step-notes.service';
 import { map } from 'rxjs/operators';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 
 @Component({
   selector: 'app-essfile-dashboard',
@@ -43,7 +44,15 @@ export class EssfileDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.getEssFile();
     if (this.evacueeSessionService.fileLinkStatus === 'S') {
-      this.openLinkDialog()
+      this.openLinkDialog(globalConst.profileLinkMessage)
+        .afterClosed()
+        .subscribe((value) => {
+          this.evacueeSessionService.fileLinkFlag = null;
+          this.evacueeSessionService.fileLinkMetaData = null;
+          this.evacueeSessionService.fileLinkStatus = null;
+        });
+    } else if (this.evacueeSessionService.fileLinkStatus === 'E') {
+      this.openLinkDialog(globalConst.profileLinkErrorMessage)
         .afterClosed()
         .subscribe((value) => {
           this.evacueeSessionService.fileLinkFlag = null;
@@ -169,11 +178,11 @@ export class EssfileDashboardComponent implements OnInit {
    *
    * @returns mat dialog reference
    */
-  private openLinkDialog() {
+  private openLinkDialog(displayMessage: DialogContent) {
     return this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,
-        content: globalConst.profileLinkMessage
+        content: displayMessage
       },
       width: '530px'
     });
