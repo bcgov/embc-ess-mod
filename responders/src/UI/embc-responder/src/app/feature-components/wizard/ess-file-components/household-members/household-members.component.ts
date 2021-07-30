@@ -81,7 +81,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     // Displaying household member form in case 'haveHouseholdMembers' has been set to true
     if (
       this.stepEssFileService.haveHouseHoldMembers === 'Yes' &&
-      this.stepEssFileService.householdMembers.length === 0
+      this.stepEssFileService.householdMembers.length === 1
     ) {
       this.showMemberForm = true;
       this.householdForm.get('addMemberIndicator').setValue(true);
@@ -222,7 +222,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
           this.memberSource.next(this.members);
 
           if (this.members.length < 2) {
-            this.householdForm.get('hasHouseholdMembers').setValue(false);
+            this.householdForm.get('hasHouseholdMembers').setValue('No');
           }
         }
       });
@@ -467,7 +467,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
       this.wizardType === 'review-file' ||
       this.wizardType === 'complete-file'
     ) {
-      if (this.householdForm.valid && this.selection.selected.length > 1) {
+      if (this.householdForm.valid && this.selection.selected.length >= 1) {
         this.stepEssFileService.setTabStatus('household-members', 'complete');
       } else if (
         this.stepEssFileService.checkForPartialUpdates(this.householdForm)

@@ -72,7 +72,7 @@
               </div>
               <div class="col-8 bold">
                 {{
-                  stepEssFileService?.referredServices
+                  stepEssFileService?.referredServices === 'Yes'
                     ? 'Yes - ' +
                       stepEssFileService?.referredServiceDetails?.join(', ')
                     : 'No'
@@ -102,6 +102,75 @@
                 <mat-table
                   class="bottom-space"
                   [dataSource]="stepEssFileService?.householdMembers"
+                  *ngIf="
+                    wizardType === 'new-registration' ||
+                    wizardType === 'new-ess-file'
+                  "
+                >
+                  <ng-container matColumnDef="firstName">
+                    <mat-header-cell *matHeaderCellDef
+                      >First Name</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let member">
+                      <span class="mobile-label">First Name:</span>
+                      {{ member.firstName }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="lastName">
+                    <mat-header-cell *matHeaderCellDef
+                      >Last Name</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let member">
+                      <span class="mobile-label">Last Name:</span>
+                      {{ member.lastName }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="initials">
+                    <mat-header-cell *matHeaderCellDef
+                      >Initials</mat-header-cell
+                    >
+                    <mat-cell *matCellDef="let member">
+                      <span class="mobile-label">Initials:</span>
+                      {{ member.initials }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="gender">
+                    <mat-header-cell *matHeaderCellDef>Gender</mat-header-cell>
+                    <mat-cell *matCellDef="let member">
+                      <span class="mobile-label">Gender:</span>
+                      {{ member.gender }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dateOfBirth">
+                    <mat-header-cell *matHeaderCellDef>
+                      Date of Birth
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let member">
+                      <span class="mobile-label">Date of Birth:</span>
+                      {{ member.dateOfBirth }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row
+                    *matHeaderRowDef="memberColumns"
+                  ></mat-header-row>
+                  <mat-row
+                    *matRowDef="let member; columns: memberColumns"
+                    [ngClass]="{ 'primary-member': member.isPrimaryRegistrant }"
+                  ></mat-row>
+                </mat-table>
+
+                <mat-table
+                  class="bottom-space"
+                  [dataSource]="stepEssFileService?.selectedHouseholdMembers"
+                  *ngIf="
+                    wizardType === 'review-file' ||
+                    wizardType === 'complete-file'
+                  "
                 >
                   <ng-container matColumnDef="firstName">
                     <mat-header-cell *matHeaderCellDef
@@ -166,7 +235,7 @@
               <div class="col-4">Household Dietary Requirements</div>
               <div class="col-8 bold">
                 {{
-                  stepEssFileService?.haveSpecialDiet
+                  stepEssFileService?.haveSpecialDiet === 'Yes'
                     ? 'Yes - ' + stepEssFileService?.specialDietDetails
                     : 'No'
                 }}
@@ -176,14 +245,14 @@
             <div class="row">
               <div class="col-4">Household Medication Requirements</div>
               <div class="col-8 bold">
-                {{ stepEssFileService?.takeMedication ? 'Yes' : 'No' }}
+                {{ stepEssFileService?.takeMedication }}
               </div>
             </div>
 
             <div class="row" *ngIf="stepEssFileService?.takeMedication">
               <div class="col-4">Has Sufficient Medication</div>
               <div class="col-8 bold">
-                {{ stepEssFileService?.haveMedicationSupply ? 'Yes' : 'No' }}
+                {{ stepEssFileService?.haveMedicationSupply }}
               </div>
             </div>
           </div>
@@ -198,7 +267,7 @@
             <div class="row">
               <div class="col-4">Do you have pets?</div>
               <div class="col-8 bold">
-                {{ stepEssFileService?.havePets ? 'Yes' : 'No' }}
+                {{ stepEssFileService?.havePets }}
               </div>
             </div>
 
@@ -242,7 +311,7 @@
             <div class="row" *ngIf="stepEssFileService?.petsList?.length > 0">
               <div class="col-4">Sufficient pet food?</div>
               <div class="col-8 bold">
-                {{ stepEssFileService?.havePetsFood ? 'Yes' : 'No' }}
+                {{ stepEssFileService?.havePetsFood }}
               </div>
             </div>
 

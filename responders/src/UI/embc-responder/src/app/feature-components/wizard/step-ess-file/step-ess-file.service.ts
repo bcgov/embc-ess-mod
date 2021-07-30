@@ -438,6 +438,110 @@ export class StepEssFileService {
 
       needsAssessment: needsObject,
       securityPhrase: this.securityPhrase,
+      securityPhraseEdited: !this.bypassPhrase,
+      task: {
+        taskNumber: this.userService.currentProfile?.taskNumber
+      }
+    });
+
+    // Map out into DTO object and return
+    return {
+      primaryRegistrantId: this.evacueeSession.profileId,
+
+      evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(
+        this.evacAddress
+      ),
+      registrationLocation: this.facilityName,
+
+      needsAssessment: needsObject,
+      securityPhrase: this.securityPhrase,
+      securityPhraseEdited: !this.bypassPhrase,
+      task: {
+        taskNumber: this.userService.currentProfile?.taskNumber
+      }
+    };
+  }
+
+  /**
+   * Convert Update ESS File form data into object that can be submitted to the API
+   *
+   * @returns Evacuation File record usable by the API
+   */
+  public updateEvacFileDTO(): EvacuationFile {
+    // Get Correct API values for Household Members selections
+
+    const haveSpecialDietDTO = globalConst.radioButtonOptions.find(
+      (ins) => ins.value === this.haveSpecialDiet
+    )?.apiValue;
+
+    const takeMedicationDTO = globalConst.radioButtonOptions.find(
+      (ins) => ins.value === this.takeMedication
+    )?.apiValue;
+
+    const haveMedicalSuppliesDTO = globalConst.radioButtonOptions.find(
+      (ins) => ins.value === this.haveMedicationSupply
+    )?.apiValue;
+
+    // Get correct API values for Animals selections
+    const havePetsFoodDTO = globalConst.radioButtonOptions.find(
+      (ins) => ins.value === this.havePetsFood
+    )?.apiValue;
+
+    // Get correct API values for Needs Assessment selections
+    const needsClothingDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canRegistrantProvideClothing
+    )?.apiValue;
+
+    const needsFoodDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canRegistrantProvideFood
+    )?.apiValue;
+
+    const needsIncidentalsDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canRegistrantProvideIncidentals
+    )?.apiValue;
+
+    const needsLodgingDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canRegistrantProvideLodging
+    )?.apiValue;
+
+    const needsTransportationDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canRegistrantProvideTransportation
+    )?.apiValue;
+
+    const needsObject: NeedsAssessment = {
+      insurance: this.insurance,
+      recommendedReferralServices: this.referredServiceDetails,
+      evacuationImpact: this.evacuationImpact,
+      houseHoldRecoveryPlan: this.householdRecoveryPlan,
+      evacuationExternalReferrals: this.evacuationExternalReferrals,
+
+      householdMembers: this.selectedHouseholdMembers,
+      haveSpecialDiet: haveSpecialDietDTO,
+      specialDietDetails: this.specialDietDetails,
+      takeMedication: takeMedicationDTO,
+      haveMedicalSupplies: haveMedicalSuppliesDTO,
+
+      pets: this.petsList,
+      havePetsFood: havePetsFoodDTO,
+      petCarePlans: this.petCarePlans,
+
+      canProvideFood: needsFoodDTO,
+      canProvideLodging: needsLodgingDTO,
+      canProvideClothing: needsClothingDTO,
+      canProvideTransportation: needsTransportationDTO,
+      canProvideIncidentals: needsIncidentalsDTO
+    };
+
+    console.log({
+      primaryRegistrantId: this.evacueeSession.profileId,
+
+      evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(
+        this.evacAddress
+      ),
+      registrationLocation: this.facilityName,
+
+      needsAssessment: needsObject,
+      securityPhrase: this.securityPhrase,
       securityPhraseEdited: this.editedSecurityPhrase,
       task: {
         taskNumber: this.userService.currentProfile?.taskNumber
