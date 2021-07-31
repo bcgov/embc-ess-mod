@@ -46,6 +46,13 @@ const routes: Routes = [
           import(
             '../team/team-member-management/team-member-management.module'
           ).then((m) => m.TeamMemberManagementModule)
+      },
+      {
+        path: 'supplier-management',
+        loadChildren: () =>
+          import('../supplier-management/supplier-management.module').then(
+            (m) => m.SupplierManagementModule
+          )
       }
     ]
   }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
   selector: 'app-supplier-management',
@@ -6,6 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./supplier-management.component.scss']
 })
 export class SupplierManagementComponent implements OnInit {
+  /**
+   * Team Management wrapper component to enable routing via tabs
+   */
+  tabs: TabModel[] = [
+    {
+      label: 'Supplier List',
+      route: 'list-suppliers'
+    },
+    {
+      label: 'Add Supplier',
+      route: 'add-supplier'
+    }
+  ];
   constructor() {}
 
   ngOnInit(): void {}
