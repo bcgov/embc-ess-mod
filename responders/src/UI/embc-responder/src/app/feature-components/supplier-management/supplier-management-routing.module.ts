@@ -18,6 +18,20 @@ const routes: Routes = [
           import(
             '../supplier-management/list-suppliers/list-suppliers.module'
           ).then((m) => m.ListSuppliersModule)
+      },
+      {
+        path: 'add-supplier',
+        loadChildren: () =>
+          import(
+            '../supplier-management/add-supplier/add-supplier.module'
+          ).then((m) => m.AddSupplierModule)
+      },
+      {
+        path: 'new-supplier',
+        loadChildren: () =>
+          import(
+            '../supplier-management/new-supplier/new-supplier.module'
+          ).then((m) => m.NewSupplierModule)
       }
     ]
   }
