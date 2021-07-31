@@ -13,11 +13,11 @@ export class SupplierManagementComponent implements OnInit {
   tabs: TabModel[] = [
     {
       label: 'Supplier List',
-      route: ''
+      route: 'list-suppliers'
     },
     {
       label: 'Add Supplier',
-      route: ''
+      route: 'add-supplier'
     }
   ];
   constructor() {}
