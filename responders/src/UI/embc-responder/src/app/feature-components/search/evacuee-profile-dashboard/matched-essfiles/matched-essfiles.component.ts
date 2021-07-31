@@ -21,6 +21,7 @@ export class MatchedEssfilesComponent implements OnInit {
   essFiles: Array<EvacuationFileSummaryModel>;
   registrantId: string;
   isLoading = false;
+  public color = '#169BD5';
 
   constructor(
     private dialog: MatDialog,
@@ -32,7 +33,6 @@ export class MatchedEssfilesComponent implements OnInit {
 
   ngOnInit(): void {
     this.registrantId = this.evacueeSessionService.profileId;
-    console.log(this.registrantId);
     this.getProfileESSFiles(this.registrantId);
   }
 
@@ -96,10 +96,12 @@ export class MatchedEssfilesComponent implements OnInit {
    *
    * @param registrantId the selected registrandID
    */
-  private getProfileESSFiles(registrantId): void {
+  private getProfileESSFiles(registrantId: string): void {
+    this.isLoading = !this.isLoading;
     this.evacueeProfileService.getProfileFiles(registrantId).subscribe(
       (essFilesArray) => {
         this.essFiles = essFilesArray;
+        this.isLoading = !this.isLoading;
       },
       (error) => {
         this.isLoading = !this.isLoading;

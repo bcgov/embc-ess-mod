@@ -1,4 +1,7 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { PossibleMatchedEssfilesComponent } from './possible-matched-essfiles.component';
 
@@ -8,6 +11,7 @@ describe('PossibleMatchedEssfilesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [MatDialogModule, RouterTestingModule, HttpClientTestingModule],
       declarations: [PossibleMatchedEssfilesComponent]
     }).compileComponents();
   });

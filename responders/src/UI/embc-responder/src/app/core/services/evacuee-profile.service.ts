@@ -3,11 +3,12 @@ import { Observable } from 'rxjs';
 import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { RegistrationsService } from 'src/app/core/api/services';
 import {
+  EvacuationFileSearchResult,
   EvacuationFileSummary,
-  RegistrantLinkRequest,
   RegistrantProfile,
   RegistrationResult
 } from '../api/models';
+import { EvacuationFileSearchResultModel } from '../models/evacuation-file-search-result.model';
 import { EvacuationFileSummaryModel } from '../models/evacuation-file-summary.model';
 import { FileLinkRequestModel } from '../models/fileLinkRequest.model';
 import { RegistrantProfileModel } from '../models/registrant-profile.model';
@@ -182,5 +183,44 @@ export class EvacueeProfileService {
       })
     );
     return $result;
+  }
+
+  /**
+   *
+   * @param firstName first Name of the Evacuee
+   * @param lastName last Name of the Evacuee
+   * @param dateOfBirth date of birth of the Evacuee
+   * @returns an array of possible ESS File matches related to this evacuee
+   */
+  public getFileMatches(
+    firstName: string,
+    lastName: string,
+    dateOfBirth: string
+  ): Observable<Array<EvacuationFileSearchResultModel>> {
+    const evacFileSearchResultsModelArray: Array<EvacuationFileSearchResultModel> = [];
+    return this.registrationsService
+      .registrationsSearchMatchingEvacuationFiles({
+        firstName,
+        lastName,
+        dateOfBirth
+      })
+      .pipe(
+        map(
+          (
+            response: Array<EvacuationFileSearchResult>
+          ): Array<EvacuationFileSearchResultModel> => {
+            response.forEach((item) => {
+              const evacFileSearchResult: EvacuationFileSearchResultModel = {
+                ...item,
+                evacuatedFromAddress: this.locationsService.getAddressModelFromAddress(
+                  item.evacuatedFrom
+                )
+              };
+              evacFileSearchResultsModelArray.push(evacFileSearchResult);
+            });
+            return evacFileSearchResultsModelArray;
+          }
+        )
+      );
   }
 }

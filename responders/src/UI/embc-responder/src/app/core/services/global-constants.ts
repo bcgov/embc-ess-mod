@@ -47,6 +47,14 @@ export const profileLinkErrorMessage: DialogContent = {
   text: '<p>Error while linking the profile. Please try again later</p>',
   cancelButton: 'Close'
 };
+export const essFileLinkMessage: DialogContent = {
+  text: '<p>ESS File Successfully Linked</p>',
+  cancelButton: 'Close'
+};
+export const essFileLinkErrorMessage: DialogContent = {
+  text: '<p>Error while linking the ESS File. Please try again later</p>',
+  cancelButton: 'Close'
+};
 export const tier2Notes = 'Notes regarding Tier 2 Supervisor';
 export const tier3Notes = 'Notes regarding Tier 3 ESS Director/ Manager';
 export const tier1Notes = 'Notes regarding Tier 1 Responder';
@@ -248,6 +256,8 @@ export const editNotesError =
 export const verifyRegistrantProfileError =
   'Unable to verify the Registrant Profile at this time. Please try again later';
 export const getProfileEssFilesError =
-  'Unable to verify get the ESS Files asspciated to the registrant at this time. Please try again later';
+  'Unable to verify get the ESS Files associated to the registrant at this time. Please try again later';
+export const getPossibleEssfileMatchError =
+  'Unable to get possible ESS Files associated to the registrant at this time. Please try again later';
 export const fileDashboardError =
   'Unable to load ESS File at this time. Please try again later';

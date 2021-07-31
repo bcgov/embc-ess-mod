@@ -43,3 +43,47 @@ mat-expansion-panel {
   padding-bottom: 10px;
   background-color: rgb(242, 242, 242);
 }
+
+.essFile-parent {
+  padding: 0px;
+  display: block;
+  margin: auto;
+}
+
+.essFile-detail {
+  @extend .info-image;
+  display: block;
+  margin: auto;
+  text-align: right;
+}
+
+.info-test :hover {
+  cursor: pointer;
+}
+
+.info-image img:last-child {
+display: none;
+}
+
+.info-image:hover img:last-child {
+display: inline;
+}
+
+.info-image:hover img:first-child {
+display: none;
+}
+
+.button-div {
+  padding-left: 15px;
+  margin-top: 40px;
+}
+
+.proceed-button {
+  height: auto;
+  width: 50%;
+}
+
+.loader-align {
+  text-align: center;
+  padding-top: 20px;
+}

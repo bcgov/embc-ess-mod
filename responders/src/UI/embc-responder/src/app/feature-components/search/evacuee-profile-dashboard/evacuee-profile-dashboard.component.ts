@@ -36,6 +36,23 @@ export class EvacueeProfileDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.evacueeProfileId = this.evacueeSessionService.profileId;
     this.getEvacueeProfile(this.evacueeProfileId);
+    if (this.evacueeSessionService.fileLinkStatus === 'S') {
+      this.openLinkDialog(globalConst.essFileLinkMessage)
+        .afterClosed()
+        .subscribe((value) => {
+          this.evacueeSessionService.fileLinkFlag = null;
+          this.evacueeSessionService.fileLinkMetaData = null;
+          this.evacueeSessionService.fileLinkStatus = null;
+        });
+    } else if (this.evacueeSessionService.fileLinkStatus === 'E') {
+      this.openLinkDialog(globalConst.essFileLinkErrorMessage)
+        .afterClosed()
+        .subscribe((value) => {
+          this.evacueeSessionService.fileLinkFlag = null;
+          this.evacueeSessionService.fileLinkMetaData = null;
+          this.evacueeSessionService.fileLinkStatus = null;
+        });
+    }
   }
 
   /**
@@ -165,5 +182,20 @@ export class EvacueeProfileDashboardComponent implements OnInit {
         );
       }
     );
+  }
+
+  /**
+   * Opens link success dialog box
+   *
+   * @returns mat dialog reference
+   */
+  private openLinkDialog(displayMessage: DialogContent) {
+    return this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: displayMessage
+      },
+      width: '530px'
+    });
   }
 }
