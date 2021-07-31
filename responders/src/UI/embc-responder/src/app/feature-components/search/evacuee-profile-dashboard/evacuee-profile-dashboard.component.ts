@@ -40,7 +40,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       this.openLinkDialog(globalConst.essFileLinkMessage)
         .afterClosed()
         .subscribe((value) => {
-          // this.evacueeSessionService.fileLinkFlag = null;
+          this.evacueeSessionService.fileLinkFlag = null;
           this.evacueeSessionService.fileLinkMetaData = null;
           this.evacueeSessionService.fileLinkStatus = null;
         });
@@ -48,7 +48,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       this.openLinkDialog(globalConst.essFileLinkErrorMessage)
         .afterClosed()
         .subscribe((value) => {
-          // this.evacueeSessionService.fileLinkFlag = null;
+          this.evacueeSessionService.fileLinkFlag = null;
           this.evacueeSessionService.fileLinkMetaData = null;
           this.evacueeSessionService.fileLinkStatus = null;
         });
