@@ -1,7 +1,9 @@
 <mat-card class="overview-card">
   <div class="row card-heading-outer">
     <div class="col-md-12">
-      <p class="margins card-heading">Possible ESS File Match</p>
+      <p class="margins card-heading">
+        Possible ESS File Match ({{ essFiles?.length }})
+      </p>
     </div>
   </div>
   <div class="row section-info">
@@ -13,77 +15,107 @@
       </p>
     </div>
   </div>
+  <div class="loader-align" *ngIf="isLoading">
+    <app-loader
+      class="spinner"
+      [showLoader]="isLoading"
+      [strokeWidth]="10"
+      [diameter]="30"
+      [color]="color"
+    ></app-loader>
+  </div>
+  <mat-accordion>
+    <mat-expansion-panel
+      class="expansion-divider"
+      *ngFor="let file of essFiles; let index = index"
+      [expanded]="isExpanded(index)"
+      (opened)="setOpened(index)"
+      (closed)="setClosed(index)"
+      hideToggle="true"
+      [expanded]="false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span
+            [ngClass]="{
+              'pending-status': file?.status === 'Pending',
+              'active-status': file?.status === 'Active',
+              'complete-status': file?.status === 'Completed',
+              'expired-status': file?.status === 'Expired'
+            }"
+            >ESS File # {{ file.id }}</span
+          >
+          <div class="file-heading">
+            <img
+              *ngIf="file.status === 'Pending'"
+              src="/assets/images/pending-flag.svg"
+              height="30"
+              width="25"
+            />
+            <img
+              *ngIf="file?.status === 'Active'"
+              src="/assets/images/active-flag.svg"
+              height="30"
+              width="25"
+            />
+            <img
+              *ngIf="file?.status === 'Completed'"
+              src="/assets/images/complete-flag.svg"
+              height="30"
+              width="25"
+            />
+            <img
+              *ngIf="file?.status === 'Expired'"
+              src="/assets/images/expired-flag.svg"
+              height="30"
+              width="25"
+            />
+          </div>
+        </mat-panel-title>
+        <mat-panel-description class="description-align essFile-parent">
+          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex != index">
+            <img src="/assets/images/add-expand.svg" height="20" width="20" />
+            <img
+              src="/assets/images/add-expand-hover.svg"
+              height="20"
+              width="20"
+            />
+          </a>
+          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex == index">
+            <img src="/assets/images/collapse.svg" height="20" width="20" />
+            <img
+              src="/assets/images/collapse-hover.svg"
+              height="20"
+              width="20"
+            />
+          </a>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
 
-  <mat-expansion-panel
-    class="expansion-divider"
-    *ngFor="let file of essFiles; let index = index"
-    [expanded]="isExpanded(index)"
-    (opened)="setOpened(index)"
-    (closed)="setClosed(index)"
-    hideToggle="true"
-  >
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <span
-          [ngClass]="{
-            'pending-status': file.status === 'pending',
-            'active-status': file.status === 'active',
-            'complete-status': file.status === 'complete',
-            'expired-status': file.status === 'expired'
-          }"
-          >ESS File # {{ file.fileNumber }}</span
-        >
-        <div class="file-heading">
-          <img
-            *ngIf="file.status === 'pending'"
-            src="/assets/images/pending-flag.svg"
-            height="30"
-            width="25"
-          />
-          <img
-            *ngIf="file.status === 'active'"
-            src="/assets/images/active-flag.svg"
-            height="30"
-            width="25"
-          />
-          <img
-            *ngIf="file.status === 'complete'"
-            src="/assets/images/complete-flag.svg"
-            height="30"
-            width="25"
-          />
-          <img
-            *ngIf="file.status === 'expired'"
-            src="/assets/images/expired-flag.svg"
-            height="30"
-            width="25"
-          />
+      <div class="row">
+        <div class="col-md-6">ESS File Created:</div>
+        <div class="col-md-6 file-details">
+          {{ file?.createdOn | date: 'dd-MMM-yyyy' }}
         </div>
-      </mat-panel-title>
-      <mat-panel-description class="description-align">
-        <img
-          *ngIf="currentlyOpenedItemIndex == index"
-          src="/assets/images/add-expand.svg"
-          height="20"
-          width="20"
-        />
-        <img
-          *ngIf="currentlyOpenedItemIndex != index"
-          src="/assets/images/collapse.svg"
-          height="20"
-          width="20"
-        />
-      </mat-panel-description>
-    </mat-expansion-panel-header>
+      </div>
 
-    <div class="row">
-      <div class="col-md-6">ESS File Created:</div>
-      <div class="col-md-6 file-details">{{ file.createdDate }}</div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-6">Evacuated From:</div>
-      <div class="col-md-6 file-details">{{ file.evacuatedFrom }}</div>
-    </div>
-  </mat-expansion-panel>
+      <div class="row">
+        <div class="col-md-6">Evacuated From:</div>
+        <div class="col-md-6 file-details">
+          <p
+            style="font-weight: 700"
+            [innerHTML]="file?.evacuatedFromAddress | maskEvacuatedaddress"
+          ></p>
+        </div>
+      </div>
+      <div class="row button-div">
+        <button
+          class="button-p proceed-button"
+          (click)="linkToESSFile(file?.id)"
+        >
+          Link to this ESS File
+        </button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 </mat-card>

@@ -6,6 +6,7 @@ import {
   GetSecurityPhraseResponse,
   VerifySecurityPhraseRequest
 } from 'src/app/core/api/models';
+import { EvacueeProfileService } from 'src/app/core/services/evacuee-profile.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { EssFileSecurityPhraseService } from './essfile-security-phrase.service';
 
@@ -17,7 +18,6 @@ import { EssFileSecurityPhraseService } from './essfile-security-phrase.service'
 export class EssfileSecurityPhraseComponent implements OnInit {
   securityPhraseForm: FormGroup;
   securityPhrase: GetSecurityPhraseResponse;
-  // givenAnswer: string;
   attemptsRemaning = 3;
   isLoading = false;
   showLoader = false;
@@ -29,6 +29,7 @@ export class EssfileSecurityPhraseComponent implements OnInit {
     private router: Router,
     private essFileSecurityPhraseService: EssFileSecurityPhraseService,
     private evacueeSessionService: EvacueeSessionService,
+    private evacueeProfileService: EvacueeProfileService,
     private formBuilder: FormBuilder
   ) {}
 
@@ -41,7 +42,6 @@ export class EssfileSecurityPhraseComponent implements OnInit {
       this.essFileSecurityPhraseService
         .getSecurityPhrase(this.evacueeSessionService.essFileNumber)
         .subscribe((results) => {
-          console.log(results);
           this.securityPhrase = results;
         });
     }
@@ -71,9 +71,33 @@ export class EssfileSecurityPhraseComponent implements OnInit {
         if (results.isCorrect) {
           this.wrongAnswerFlag = false;
           this.correctAnswerFlag = true;
-          setTimeout(() => {
-            this.router.navigate(['responder-access/search/essfile-dashboard']);
-          }, 1000);
+
+          if (this.evacueeSessionService.fileLinkFlag === 'Y') {
+            this.evacueeProfileService
+              .linkMemberProfile(this.evacueeSessionService.fileLinkMetaData)
+              .subscribe(
+                (value) => {
+                  this.evacueeSessionService.fileLinkStatus = 'S';
+                  console.log(this.evacueeSessionService.fileLinkStatus);
+                  this.router.navigate([
+                    'responder-access/search/evacuee-profile-dashboard'
+                  ]);
+                },
+                (error) => {
+                  this.evacueeSessionService.fileLinkStatus = 'E';
+                  console.log(this.evacueeSessionService.fileLinkStatus);
+                  this.router.navigate([
+                    'responder-access/search/evacuee-profile-dashboard'
+                  ]);
+                }
+              );
+          } else {
+            setTimeout(() => {
+              this.router.navigate([
+                'responder-access/search/essfile-dashboard'
+              ]);
+            }, 1000);
+          }
         } else {
           this.securityPhraseForm.get('phraseAnswer').reset();
           this.attemptsRemaning--;

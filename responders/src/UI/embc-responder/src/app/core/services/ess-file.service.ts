@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { RegistrationResult } from '../api/models';
+import { EvacuationFileSearchResult, RegistrationResult } from '../api/models';
 import { EvacuationFile } from '../api/models/evacuation-file';
 import { RegistrationsService } from '../api/services';
 import { EvacuationFileModel } from '../models/evacuation-file.model';

@@ -9,6 +9,7 @@ export class EvacueeSessionService {
   private profileIdVal: string;
   private essFileNumberVal: string;
   private securityQuestionsOpenedFromVal: string;
+  private securityPhraseOpenedFromVal: string;
   private editWizardFlag: boolean;
   private fileLinkFlagVal: string;
   private fileLinkMetaDataVal: FileLinkRequestModel;
@@ -77,6 +78,20 @@ export class EvacueeSessionService {
       : this.cacheService.get('securityQuestionsOpenedFrom');
   }
 
+  set securityPhraseOpenedFrom(securityPhraseOpenedFromVal: string) {
+    this.securityPhraseOpenedFromVal = securityPhraseOpenedFromVal;
+    this.cacheService.set(
+      'securityPhraseOpenedFrom',
+      securityPhraseOpenedFromVal
+    );
+  }
+
+  get securityPhraseOpenedFrom(): string {
+    return this.securityPhraseOpenedFromVal
+      ? this.securityPhraseOpenedFromVal
+      : this.cacheService.get('securityPhraseOpenedFrom');
+  }
+
   get fileLinkStatus(): string {
     return this.fileLinkStatusVal
       ? this.fileLinkStatusVal
@@ -126,6 +141,7 @@ export class EvacueeSessionService {
     this.profileId = null;
     this.essFileNumber = null;
     this.securityQuestionsOpenedFrom = null;
+    this.securityPhraseOpenedFrom = null;
     this.fileLinkFlag = null;
     this.fileLinkStatus = null;
     this.fileLinkMetaData = null;
@@ -138,6 +154,7 @@ export class EvacueeSessionService {
     this.cacheService.remove('evacueeSearchContext');
     this.cacheService.remove('essFile');
     this.cacheService.remove('securityQuestionsOpenedFrom');
+    this.cacheService.remove('securityPhraseOpenedFrom');
     this.cacheService.remove('fileLinkFlag');
     this.cacheService.remove('fileLinkStatus');
     this.cacheService.remove('fileLinkMetaData');

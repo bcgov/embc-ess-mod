@@ -10,110 +10,125 @@
       /></a>
     </div>
   </div>
+  <div class="loader-align" *ngIf="isLoading">
+    <app-loader
+      class="spinner"
+      [showLoader]="isLoading"
+      [strokeWidth]="10"
+      [diameter]="30"
+      [color]="color"
+    ></app-loader>
+  </div>
+  <mat-accordion>
+    <mat-expansion-panel
+      class="expansion-divider"
+      *ngFor="let file of essFiles; let index = index"
+      [expanded]="isExpanded(index)"
+      (opened)="setOpened(index)"
+      (closed)="setClosed(index)"
+      hideToggle="true"
+      [expanded]="false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span
+            [ngClass]="{
+              'pending-status': file.status === 'Pending',
+              'active-status': file.status === 'Active',
+              'complete-status': file.status === 'Completed',
+              'expired-status': file.status === 'Expired'
+            }"
+            >ESS File # {{ file.id }}</span
+          >
+          <div class="file-heading">
+            <img
+              *ngIf="file.status === 'Pending'"
+              src="/assets/images/pending-flag.svg"
+              height="30"
+              width="25"
+            />
+            <img
+              *ngIf="file.status === 'Active'"
+              src="/assets/images/active-flag.svg"
+              height="30"
+              width="25"
+            />
+            <img
+              *ngIf="file.status === 'Completed'"
+              src="/assets/images/complete-flag.svg"
+              height="30"
+              width="25"
+            />
+            <img
+              *ngIf="file.status === 'Expired'"
+              src="/assets/images/expired-flag.svg"
+              height="30"
+              width="25"
+            />
+          </div>
+        </mat-panel-title>
+        <mat-panel-description class="description-align essFile-parent">
+          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex != index">
+            <img src="/assets/images/add-expand.svg" height="20" width="20" />
+            <img
+              src="/assets/images/add-expand-hover.svg"
+              height="20"
+              width="20"
+            />
+          </a>
+          <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex == index">
+            <img src="/assets/images/collapse.svg" height="20" width="20" />
+            <img
+              src="/assets/images/collapse-hover.svg"
+              height="20"
+              width="20"
+            />
+          </a>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
 
-  <mat-expansion-panel
-    class="expansion-divider"
-    *ngFor="let file of essFiles; let index = index"
-    [expanded]="isExpanded(index)"
-    (opened)="setOpened(index)"
-    (closed)="setClosed(index)"
-    hideToggle="true"
-  >
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <span
-          [ngClass]="{
-            'pending-status': file.status === 'Pending',
-            'active-status': file.status === 'Active',
-            'complete-status': file.status === 'Completed',
-            'expired-status': file.status === 'Expired'
-          }"
-          >ESS File # {{ file.id }}</span
-        >
-        <div class="file-heading">
-          <img
-            *ngIf="file.status === 'Pending'"
-            src="/assets/images/pending-flag.svg"
-            height="30"
-            width="25"
-          />
-          <img
-            *ngIf="file.status === 'Active'"
-            src="/assets/images/active-flag.svg"
-            height="30"
-            width="25"
-          />
-          <img
-            *ngIf="file.status === 'Completed'"
-            src="/assets/images/complete-flag.svg"
-            height="30"
-            width="25"
-          />
-          <img
-            *ngIf="file.status === 'Expired'"
-            src="/assets/images/expired-flag.svg"
-            height="30"
-            width="25"
-          />
-        </div>
-      </mat-panel-title>
-      <mat-panel-description class="description-align essFile-parent">
-        <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex == index">
-          <img src="/assets/images/add-expand.svg" height="20" width="20" />
-          <img
-            src="/assets/images/add-expand-hover.svg"
-            height="20"
-            width="20"
-          />
-        </a>
-        <a class="essFile-detail" *ngIf="currentlyOpenedItemIndex != index">
-          <img src="/assets/images/collapse.svg" height="20" width="20" />
-          <img src="/assets/images/collapse-hover.svg" height="20" width="20" />
-        </a>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-
-    <div class="row table-parent">
-      <table class="table-details">
-        <tr>
-          <th>Task#:</th>
-          <td>
-            <b>{{ file?.task?.taskNumber }}</b>
-          </td>
-        </tr>
-        <tr>
-          <th>Task Start Date:</th>
-          <td>
-            <b>{{ file?.task?.from | date: 'dd-MMM-yyyy' }}</b>
-          </td>
-        </tr>
-        <tr>
-          <th>Task End Date:</th>
-          <td>
-            <b>{{ file?.task?.to | date: 'dd-MMM-yyyy' }}</b>
-          </td>
-        </tr>
-        <tr>
-          <th>ESS File Created:</th>
-          <td>
-            <b>{{ file?.createdOn | date: 'dd-MMM-yyyy' }}</b>
-          </td>
-        </tr>
-        <tr>
-          <th>Evacuated From:</th>
-          <td>
-            <p
-              style="font-weight: 700"
-              [innerHTML]="file?.evacuatedFromAddress | maskEvacuatedaddress"
-            ></p>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <div class="row button-div">
-      <button class="button-p proceed-button" (click)="goToESSFile(file?.id)">
-        Proceed to ESS File
-      </button>
-    </div>
-  </mat-expansion-panel>
+      <div class="row table-parent">
+        <table class="table-details">
+          <tr>
+            <th>Task#:</th>
+            <td>
+              <b>{{ file?.task?.taskNumber }}</b>
+            </td>
+          </tr>
+          <tr>
+            <th>Task Start Date:</th>
+            <td>
+              <b>{{ file?.task?.from | date: 'dd-MMM-yyyy' }}</b>
+            </td>
+          </tr>
+          <tr>
+            <th>Task End Date:</th>
+            <td>
+              <b>{{ file?.task?.to | date: 'dd-MMM-yyyy' }}</b>
+            </td>
+          </tr>
+          <tr>
+            <th>ESS File Created:</th>
+            <td>
+              <b>{{ file?.createdOn | date: 'dd-MMM-yyyy' }}</b>
+            </td>
+          </tr>
+          <tr>
+            <th>Evacuated From:</th>
+            <td>
+              <p
+                style="font-weight: 700"
+                [innerHTML]="file?.evacuatedFromAddress | maskEvacuatedaddress"
+              ></p>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="row button-div">
+        <button class="button-p proceed-button" (click)="goToESSFile(file?.id)">
+          Proceed to ESS File
+        </button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 </mat-card>
