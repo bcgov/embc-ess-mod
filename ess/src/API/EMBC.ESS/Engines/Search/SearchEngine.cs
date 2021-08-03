@@ -51,6 +51,7 @@ namespace EMBC.ESS.Engines.Search
                     .Where(m => m.era_firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
                     .Where(m => m.era_lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
                     .Where(m => m.era_dateofbirth.Equals(Date.Parse(request.DateOfBirth)))
+                    .Where(m => m._era_registrant_value == null)
                     .ToArray()
                     .Select(m => m.era_householdmemberid.Value.ToString())
                 : Array.Empty<string>();
