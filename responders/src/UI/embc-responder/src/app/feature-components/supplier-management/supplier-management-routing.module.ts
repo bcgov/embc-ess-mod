@@ -9,15 +9,15 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'list-suppliers',
+        redirectTo: 'suppliers-list',
         pathMatch: 'full'
       },
       {
-        path: 'list-suppliers',
+        path: 'suppliers-list',
         loadChildren: () =>
-          import(
-            '../supplier-management/list-suppliers/list-suppliers.module'
-          ).then((m) => m.ListSuppliersModule)
+          import('./suppliers-list/suppliers-list.module').then(
+            (m) => m.SuppliersListModule
+          )
       },
       {
         path: 'add-supplier',
@@ -32,6 +32,13 @@ const routes: Routes = [
           import(
             '../supplier-management/new-supplier/new-supplier.module'
           ).then((m) => m.NewSupplierModule)
+      },
+      {
+        path: 'supplier-detail',
+        loadChildren: () =>
+          import(
+            '../supplier-management/supplier-detail/supplier-detail.module'
+          ).then((m) => m.SupplierDetailModule)
       }
     ]
   }
