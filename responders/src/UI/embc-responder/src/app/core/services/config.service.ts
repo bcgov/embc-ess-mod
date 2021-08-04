@@ -4,7 +4,7 @@ import { AuthConfig } from 'angular-oauth2-oidc';
 import { Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Configuration } from '../api/models';
+import { Configuration, VersionInformation } from '../api/models';
 import { ConfigurationService } from '../api/services';
 
 @Injectable({
@@ -45,5 +45,14 @@ export class ConfigService {
 
   public isConfigured(): boolean {
     return this.config === null;
+  }
+
+  /**
+   * Gets the current versions manage on the BackEnd
+   *
+   * @returns an array with details of services and its current versions
+   **/
+  public getVersionInfo(): Observable<Array<VersionInformation>> {
+    return this.configurationService.configurationGetApplicationVersionInfo();
   }
 }

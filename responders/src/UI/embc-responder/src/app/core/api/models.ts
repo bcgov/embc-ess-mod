@@ -4,6 +4,7 @@ export { ProblemDetails } from './models/problem-details';
 export { Code } from './models/code';
 export { CommunityCode } from './models/community-code';
 export { CommunityType } from './models/community-type';
+export { VersionInformation } from './models/version-information';
 export { UserProfile } from './models/user-profile';
 export { UpdateUserProfileRequest } from './models/update-user-profile-request';
 export { RegistrantProfile } from './models/registrant-profile';

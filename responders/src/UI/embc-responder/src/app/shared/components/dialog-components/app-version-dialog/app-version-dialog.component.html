@@ -1,0 +1,14 @@
+<div class="row info-div">
+  <div class="col-md-12" *ngFor="let info of versionArray">
+    <p>
+      <span class="version-name">{{ info?.name }}:</span> {{ info?.version
+      }}<span *ngIf="info?.build">.{{ info?.build }}</span>
+    </p>
+  </div>
+</div>
+
+<div class="row button-row">
+  <button class="button-p button-width" mat-button (click)="close()">
+    Close
+  </button>
+</div>

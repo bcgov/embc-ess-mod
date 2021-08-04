@@ -70,9 +70,11 @@
           >
         </li>
       </ul>
-      <span *ngIf="appVersion" class="nav-link app-version">{{
-        appVersion
-      }}</span>
+      <span *ngIf="appVersion" class="nav-link app-version">
+        <a (click)="openAppVersionDetails()"
+          >{{ appVersion[0]?.version }}.{{ appVersion[0]?.build }}</a
+        >
+      </span>
     </div>
   </nav>
 </footer>
