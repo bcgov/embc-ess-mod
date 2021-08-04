@@ -141,6 +141,29 @@ namespace EMBC.Responders.API.Controllers
             var questions = (await client.Send(new SecurityQuestionsQuery())).Items;
             return Ok(questions);
         }
+
+        [HttpGet("version-info")]
+        public async Task<ActionResult<IEnumerable<VersionInformation>>> GetApplicationVersionInfo()
+        {
+            List<VersionInformation> ret = new List<VersionInformation>
+            {
+                new VersionInformation
+                {
+                    Name = "Responders API",
+                    Version = "0.0.1",
+                    Build = "0001"
+                },
+
+                new VersionInformation
+                {
+                    Name = "ESS Backend",
+                    Version = "0.0.1",
+                    Build = "0001"
+                }
+            };
+
+            return Ok(await Task.FromResult(ret));
+        }
     }
 
     public class Configuration
@@ -166,6 +189,13 @@ namespace EMBC.Responders.API.Controllers
     {
         public CommunityType CommunityType { get; set; }
         public string DistrictName { get; set; }
+    }
+
+    public class VersionInformation
+    {
+        public string Name { get; set; }
+        public string Version { get; set; }
+        public string Build { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
