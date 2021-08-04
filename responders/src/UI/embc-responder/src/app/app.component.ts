@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { VersionInformation } from './core/api/models/version-information';
 import { AuthenticationService } from './core/services/authentication.service';
 import { ConfigService } from './core/services/config.service';
 import { LocationsService } from './core/services/locations.service';
@@ -15,6 +16,7 @@ export class AppComponent implements OnInit {
   public isLoading = true;
   public color = '#169BD5';
   public show = true;
+  public version: Array<VersionInformation>;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -47,6 +49,7 @@ export class AppComponent implements OnInit {
       const nextUrl = await this.authenticationService.login();
       const userProfile = await this.userService.loadUserProfile();
       this.loadStaticLists();
+      this.getBackendVersionInfo();
       const nextRoute = decodeURIComponent(
         userProfile.requiredToSignAgreement
           ? 'electronic-agreement'
@@ -69,5 +72,11 @@ export class AppComponent implements OnInit {
     this.locationService.getCountriesList();
     this.locationService.getRegionalDistricts();
     this.locationService.getStateProvinceList();
+  }
+
+  private getBackendVersionInfo(): void {
+    this.configService.getVersionInfo().subscribe((version) => {
+      this.version = version;
+    });
   }
 }
