@@ -25,6 +25,7 @@ import { FileStatusDefinitionComponent } from './components/dialog-components/fi
 import { FileDashboardVerifyDialogComponent } from './components/dialog-components/file-dashboard-verify-dialog/file-dashboard-verify-dialog.component';
 import { RegistrantLinkDialogComponent } from './components/dialog-components/registrant-link-dialog/registrant-link-dialog.component';
 import { CustomPipeModule } from './pipes/customPipe.module';
+import { AppVersionDialogComponent } from './components/dialog-components/app-version-dialog/app-version-dialog.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { CustomPipeModule } from './pipes/customPipe.module';
     OverlayLoaderComponent,
     FileStatusDefinitionComponent,
     FileDashboardVerifyDialogComponent,
-    RegistrantLinkDialogComponent
+    RegistrantLinkDialogComponent,
+    AppVersionDialogComponent
   ],
   imports: [
     CommonModule,
