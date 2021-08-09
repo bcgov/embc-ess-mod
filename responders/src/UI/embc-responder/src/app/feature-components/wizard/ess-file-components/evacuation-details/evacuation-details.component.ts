@@ -137,7 +137,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
    * @param event
    */
   referredServiceChange(event: MatRadioChange): void {
-    if (event.value === true) {
+    if (event.value === 'Yes') {
       this.showReferredServicesForm = true;
     } else {
       this.showReferredServicesForm = false;
@@ -244,7 +244,8 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
         [
           this.customValidation
             .conditionalValidation(
-              () => this.evacDetailsForm.get('referredServices').value === true,
+              () =>
+                this.evacDetailsForm.get('referredServices').value === 'Yes',
               Validators.required
             )
             .bind(this.customValidation)

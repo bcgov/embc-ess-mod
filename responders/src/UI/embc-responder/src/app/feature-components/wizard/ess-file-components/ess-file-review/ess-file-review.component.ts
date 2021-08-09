@@ -11,6 +11,7 @@ import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { ThisReceiver } from '@angular/compiler';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 
 @Component({
   selector: 'app-ess-file-review',
@@ -112,7 +113,10 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.stepEssFileService.nextTabUpdate.next();
     this.saveLoader = true;
 
-    if (this.wizardType === 'new-ess-file') {
+    if (
+      this.wizardType === WizardType.NewRegistration ||
+      this.wizardType === WizardType.NewEssFile
+    ) {
       this.createNewEssFile();
     } else {
       this.editEssFile();
