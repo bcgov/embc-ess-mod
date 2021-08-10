@@ -40,34 +40,7 @@
           </div>
         </div>
 
-        <div formGroupName="gstNumber">
-          <div class="row">
-            <div class="col-md-3">
-              <mat-form-field appearance="outline">
-                <mat-label>GST Number</mat-label>
-                <input
-                  formControlName="part1"
-                  maxlength="9"
-                  matInput
-                  placeholder="999999999"
-                  required
-                />
-              </mat-form-field>
-            </div>
-            <span class="bold gst-text">RT</span>
-            <div class="col-md-2">
-              <mat-form-field appearance="outline">
-                <input
-                  formControlName="part2"
-                  maxlength="4"
-                  matInput
-                  placeholder="9999"
-                  required
-                />
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
+        <app-custom-gst-field [gstFormGroup]="gstNumber"></app-custom-gst-field>
       </form>
       <div class="row">
         <div class="col-md-3">
