@@ -40,7 +40,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<string> Create(EvacuationFile evacuationFile)
         {
-            VerifyEvacuationFileInvariants(evacuationFile);
+            VerifyEvacuationFileInvariants(evacuationFile, true);
 
             var primaryContact = essContext.contacts.Where(c => c.statecode == (int)EntityState.Active && c.contactid == Guid.Parse(evacuationFile.PrimaryRegistrantId)).SingleOrDefault();
             if (primaryContact == null) throw new Exception($"Primary registrant {evacuationFile.PrimaryRegistrantId} not found");
@@ -67,7 +67,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<string> Update(EvacuationFile evacuationFile)
         {
-            VerifyEvacuationFileInvariants(evacuationFile);
+            VerifyEvacuationFileInvariants(evacuationFile, false);
 
             var currentFile = essContext.era_evacuationfiles
                 .Where(f => f.era_name == evacuationFile.Id).SingleOrDefault();
@@ -196,7 +196,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             }
         }
 
-        private void VerifyEvacuationFileInvariants(EvacuationFile evacuationFile)
+        private void VerifyEvacuationFileInvariants(EvacuationFile evacuationFile, bool isCreate)
         {
             //Check invariants
             if (string.IsNullOrEmpty(evacuationFile.PrimaryRegistrantId))
@@ -207,7 +207,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             {
                 throw new Exception($"File {evacuationFile.Id} must have a needs assessment");
             }
-            if (evacuationFile.NeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant) != 1)
+            //this rule should only be enforced during create of a file
+            if (isCreate && evacuationFile.NeedsAssessment.HouseholdMembers.Count(m => m.IsPrimaryRegistrant) != 1)
             {
                 throw new Exception($"File {evacuationFile.Id} must have a single primary registrant household member");
             }
