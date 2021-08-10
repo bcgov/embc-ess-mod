@@ -45,7 +45,17 @@ namespace EMBC.ESS.Engines.Search
             if (string.IsNullOrWhiteSpace(request.LastName)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.LastName));
             if (string.IsNullOrWhiteSpace(request.DateOfBirth)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.DateOfBirth));
 
-            var membersQuery = request.SearchMode == SearchMode.Both || request.SearchMode == SearchMode.HouseholdMembers
+            //TODO - clean this up
+            //if the search is for file matches only - which is search mode HouseholdMembers - then it should only return results that are not already linked to a Registrant.
+            var membersQuery = request.SearchMode == SearchMode.Both
+                ? essContext.era_householdmembers
+                    .Where(m => m.statecode == (int)EntityState.Active)
+                    .Where(m => m.era_firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
+                    .Where(m => m.era_lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
+                    .Where(m => m.era_dateofbirth.Equals(Date.Parse(request.DateOfBirth)))
+                    .ToArray()
+                    .Select(m => m.era_householdmemberid.Value.ToString())
+                : request.SearchMode == SearchMode.HouseholdMembers
                 ? essContext.era_householdmembers
                     .Where(m => m.statecode == (int)EntityState.Active)
                     .Where(m => m.era_firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
