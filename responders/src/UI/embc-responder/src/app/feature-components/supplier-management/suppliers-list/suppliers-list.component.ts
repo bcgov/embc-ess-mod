@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
@@ -17,30 +17,102 @@ export class SuppliersListComponent implements OnInit {
     {
       legalName: 'Save-on-Foods Ltd',
       name: 'SAVE-ON-FOODS',
-      address: '120 Main Street',
+      address: {
+        addressLine1: '120 Main Street',
+        addressLine2: 'Office 123',
+        postalCode: 'V6Z 0G7',
+        stateProvince: {
+          code: 'BC',
+          countryCode: 'CA',
+          name: 'British Columbia'
+        },
+        community: 'Victoria',
+        country: { code: 'CA', name: 'Canada' }
+      },
       isMutualAid: true,
-      isActive: true
+      isActive: true,
+      gstNumber: '222222222-RT-2222',
+      primaryContact: {
+        firstName: 'John',
+        lastName: 'Smith',
+        phoneNumber: '250 678 5789',
+        email: 'john@sleepeasyhotel.ca'
+      }
     },
     {
       legalName: 'Master Foods',
       name: 'FRESH FOODS',
-      address: '23 Wilson Street',
+      address: {
+        addressLine1: '120 Main Street',
+        addressLine2: 'Office 123',
+        postalCode: 'V6Z 0G7',
+        stateProvince: {
+          code: 'BC',
+          countryCode: 'CA',
+          name: 'British Columbia'
+        },
+        community: 'Victoria',
+        country: { code: 'CA', name: 'Canada' }
+      },
       isMutualAid: false,
-      isActive: true
+      isActive: true,
+      gstNumber: '999999999-RT-9999',
+      primaryContact: {
+        firstName: 'William',
+        lastName: 'Terrace',
+        phoneNumber: '250 678 5789',
+        email: 'william@freshfoods.ca'
+      }
     },
     {
       legalName: 'Hotels Inc.',
       name: 'SLEEP EASY HOTEL',
-      address: '970 Douglas Street',
+      address: {
+        addressLine1: '120 Main Street',
+        addressLine2: 'Office 123',
+        postalCode: 'V6Z 0G7',
+        stateProvince: {
+          code: 'BC',
+          countryCode: 'CA',
+          name: 'British Columbia'
+        },
+        community: 'Victoria',
+        country: { code: 'CA', name: 'Canada' }
+      },
       isMutualAid: false,
-      isActive: false
+      isActive: false,
+      gstNumber: '333333333-RT-3333',
+      primaryContact: {
+        firstName: 'Rosalyn',
+        lastName: 'Smith',
+        phoneNumber: '250 678 5789',
+        email: 'rsmith@hotelsinc.ca'
+      }
     },
     {
       legalName: 'Victoria Cabs',
       name: 'VICTORIA CABS',
-      address: '647 Rose Street',
+      address: {
+        addressLine1: '120 Main Street',
+        addressLine2: 'Office 123',
+        postalCode: 'V6Z 0G7',
+        stateProvince: {
+          code: 'BC',
+          countryCode: 'CA',
+          name: 'British Columbia'
+        },
+        community: 'Victoria',
+        country: { code: 'CA', name: 'Canada' }
+      },
       isMutualAid: false,
-      isActive: false
+      isActive: false,
+      gstNumber: '555555555-RT-9999',
+      primaryContact: {
+        firstName: 'Anne',
+        lastName: 'Boots',
+        phoneNumber: '250 678 5789',
+        email: 'aboots@victoriacabs.ca'
+      }
     }
   ];
 
@@ -55,6 +127,7 @@ export class SuppliersListComponent implements OnInit {
   constructor(
     private listSupplierDataService: SupplierListDataService,
     private router: Router,
+    private route: ActivatedRoute,
     private userService: UserService
   ) {}
 
@@ -84,7 +157,7 @@ export class SuppliersListComponent implements OnInit {
    * @param $event Selected team member object
    */
   openSupplierDetails($event: SupplierTemp): void {
-    this.listSupplierDataService.setSelectedSupplier($event);
+    this.listSupplierDataService.selectedSupplier = $event;
     this.router.navigate(
       ['/responder-access/supplier-management/supplier-detail'],
       {

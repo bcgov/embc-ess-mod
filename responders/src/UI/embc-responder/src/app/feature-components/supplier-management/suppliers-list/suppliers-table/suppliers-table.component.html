@@ -12,18 +12,16 @@
         *matCellDef="let row; let index = index"
         (click)="disableRowInteraction($event, column?.ref)"
       >
+        <span *ngIf="column?.ref === 'legalName'">
+          <span>{{ row[column?.ref] }}</span>
+        </span>
         <span *ngIf="column?.ref === 'name'">
           <span class="name-cell">{{ row[column?.ref] | uppercase }}</span>
         </span>
-        <span
-          *ngIf="
-            column?.ref !== 'isMutualAid' &&
-            column?.ref !== 'name' &&
-            column?.ref !== 'isActive'
-          "
-        >
-          <span>{{ row[column?.ref] }}</span>
+        <span *ngIf="column?.ref === 'address'">
+          <span>{{ row[column?.ref].addressLine1 }}</span>
         </span>
+
         <span *ngIf="column?.ref == 'isMutualAid'">
           <span>{{ row[column?.ref] ? 'Yes' : 'No' }}</span>
         </span>

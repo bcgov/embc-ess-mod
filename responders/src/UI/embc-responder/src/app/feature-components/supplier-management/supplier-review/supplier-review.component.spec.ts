@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { SupplierDetailComponent } from './supplier-detail.component';
+import { SupplierReviewComponent } from './supplier-review.component';
 
-describe('SupplierDetailComponent', () => {
-  let component: SupplierDetailComponent;
-  let fixture: ComponentFixture<SupplierDetailComponent>;
+describe('SupplierReviewComponent', () => {
+  let component: SupplierReviewComponent;
+  let fixture: ComponentFixture<SupplierReviewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule],
-      declarations: [SupplierDetailComponent]
+      declarations: [SupplierReviewComponent]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SupplierDetailComponent);
+    fixture = TestBed.createComponent(SupplierReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

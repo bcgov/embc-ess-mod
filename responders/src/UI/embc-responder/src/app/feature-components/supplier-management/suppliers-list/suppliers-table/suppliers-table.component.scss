@@ -6,6 +6,10 @@ table {
     font-size: 16px;
   }
 
+  tr:hover {
+    cursor: pointer;
+  }
+
   ::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
     background-color: rgba(37, 168, 0, 1) !important;
 }

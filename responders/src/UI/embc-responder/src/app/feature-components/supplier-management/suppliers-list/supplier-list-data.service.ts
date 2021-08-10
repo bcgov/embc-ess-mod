@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AddressModel } from 'src/app/core/models/address.model';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { CacheService } from 'src/app/core/services/cache.service';
@@ -6,9 +7,18 @@ import { CacheService } from 'src/app/core/services/cache.service';
 export interface SupplierTemp {
   legalName: string;
   name: string;
-  address: string;
+  address: AddressModel;
   isMutualAid: boolean;
   isActive: boolean;
+  gstNumber: string;
+  primaryContact: SupplierContact;
+}
+
+export interface SupplierContact {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -29,22 +39,19 @@ export class SupplierListDataService {
     { label: 'Status', ref: 'isActive' }
   ];
 
-  private selectedSupplier: SupplierTemp;
+  private selectedSupplierVal: SupplierTemp;
 
-  constructor(private cacheService: CacheService) {}
+  constructor() {}
 
-  public getSelectedSupplier(): SupplierTemp {
-    return this.selectedSupplier
-      ? this.selectedSupplier
-      : JSON.parse(this.cacheService.get('selectedSupplier'));
+  public get selectedSupplier(): SupplierTemp {
+    return this.selectedSupplierVal;
   }
 
-  public setSelectedSupplier(selectedSupplier: SupplierTemp): void {
-    this.cacheService.set('selectedSupplier', selectedSupplier);
-    this.selectedSupplier = selectedSupplier;
+  public set selectedSupplier(selectedSupplierVal: SupplierTemp) {
+    this.selectedSupplierVal = selectedSupplierVal;
   }
 
-  clear(): void {
-    this.cacheService.remove('selectedSupplier');
+  clearSupplierData(): void {
+    this.selectedSupplier = undefined;
   }
 }
