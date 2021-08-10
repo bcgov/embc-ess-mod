@@ -100,6 +100,7 @@ export class EvacueeProfileDashboardComponent implements OnInit {
       'wizardOpenedFrom',
       '/responder-access/search/evacuee-profile-dashboard'
     );
+    this.evacueeSessionService.essFileNumber = null;
     this.evacueeSessionService.setWizardType(WizardType.NewEssFile);
     this.router.navigate(['/ess-wizard'], {
       queryParams: { type: WizardType.NewEssFile },

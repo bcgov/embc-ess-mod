@@ -3,15 +3,12 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import * as globalConst from '../../../../core/services/global-constants';
-import { HouseholdMemberModel } from 'src/app/core/models/household-member.model';
 import { WizardService } from '../../wizard.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { UserService } from 'src/app/core/services/user.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
-import { ThisReceiver } from '@angular/compiler';
-import { WizardType } from 'src/app/core/models/wizard-type.model';
 
 @Component({
   selector: 'app-ess-file-review',
@@ -113,10 +110,7 @@ export class EssFileReviewComponent implements OnInit, OnDestroy {
     this.stepEssFileService.nextTabUpdate.next();
     this.saveLoader = true;
 
-    if (
-      this.wizardType === WizardType.NewRegistration ||
-      this.wizardType === WizardType.NewEssFile
-    ) {
+    if (!this.evacueeSessionService.essFileNumber) {
       this.createNewEssFile();
     } else {
       this.editEssFile();
