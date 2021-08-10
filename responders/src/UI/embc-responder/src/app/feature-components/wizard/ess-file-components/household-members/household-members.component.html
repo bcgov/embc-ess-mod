@@ -12,13 +12,7 @@
       <div class="row">
         <div class="col-8">
           <form [formGroup]="householdForm">
-            <div
-              *ngIf="
-                wizardType === 'new-ess-file' ||
-                  wizardType === 'new-registration';
-                else editEssFile
-              "
-            >
+            <div *ngIf="!essFileNumber; else editEssFile">
               <p class="no-margin requiredField">
                 Do you have any household members (including dependents) who
                 live in the same household with you?
@@ -441,10 +435,7 @@
           </form>
         </div>
 
-        <div
-          class="col-md-4"
-          *ngIf="wizardType === 'review-file' || wizardType === 'complete-file'"
-        >
+        <div class="col-md-4" *ngIf="essFileNumber">
           <mat-card class="tips-card">
             <div>
               <img

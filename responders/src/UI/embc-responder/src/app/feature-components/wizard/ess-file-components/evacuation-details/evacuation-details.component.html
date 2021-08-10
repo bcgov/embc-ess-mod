@@ -36,13 +36,7 @@
                   </div>
                 </div>
               </div>
-              <ng-container
-                *ngIf="
-                  wizardType === 'new-ess-file' ||
-                    wizardType === 'new-registration';
-                  else editEssFile
-                "
-              >
+              <ng-container *ngIf="!essFileNumber; else editEssFile">
                 <div class="col-12">
                   <label
                     id="evacuatedFromPrimary-radio-group-label"
@@ -113,7 +107,7 @@
                     Where are you being evacuated from?
                   </p>
                   <p
-                    *ngIf="wizardType === 'review-file'"
+                    *ngIf="essFileNumber"
                     class="evac-address"
                     [innerHTML]="
                       stepEssFileService?.evacAddress | maskEvacuatedaddress
