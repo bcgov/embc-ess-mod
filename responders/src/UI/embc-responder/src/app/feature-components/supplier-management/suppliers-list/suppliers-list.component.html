@@ -1,0 +1,27 @@
+<mat-card>
+  <div class="row">
+    <div class="col-md-12">
+      <p class="bold list-subheading">Primary Suppliers Directory</p>
+    </div>
+  </div>
+  <div class="filter-margin">
+    <app-search-filter
+      [filtersToLoad]="filtersToLoad"
+      (filterEvent)="filter($event)"
+    ></app-search-filter>
+  </div>
+  <div class="data-margin">
+    <app-suppliers-table
+      [incomingData]="suppliersList"
+      [displayedColumns]="displayedColumns"
+      [filterTerm]="filterTerm"
+      [isLoading]="isLoading"
+      [statusLoading]="statusLoading"
+      [loggedInRole]="loggedInRole"
+      (clickedRow)="openSupplierDetails($event)"
+      (toggleActive)="activateSupplier($event)"
+      (toggleInactive)="deactivateSupplier($event)"
+    >
+    </app-suppliers-table>
+  </div>
+</mat-card>

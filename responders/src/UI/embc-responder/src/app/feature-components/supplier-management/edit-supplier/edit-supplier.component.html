@@ -1,0 +1,104 @@
+<div class="row">
+  <div class="col-md-8">
+    <mat-card>
+      <p class="step-heading">Edit Supplier Details</p>
+      <form [formGroup]="editForm">
+        <p class="details-subtitle">Supplier Details</p>
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Supplier Legal Name</mat-label>
+              <input
+                formControlName="supplierLegalName"
+                maxlength="100"
+                matInput
+                placeholder="Supplier Legal Name"
+                required
+              />
+              <mat-error
+                *ngIf="
+                  editFormControl.supplierLegalName.invalid &&
+                  editFormControl.supplierLegalName.hasError('whitespaceError')
+                "
+              >
+                Supplier Legal Name is required</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Supplier Name</mat-label>
+              <input
+                formControlName="supplierName"
+                maxlength="100"
+                matInput
+                placeholder="Supplier Name"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div formGroupName="gstNumber">
+          <div class="row">
+            <div class="col-md-3">
+              <mat-form-field appearance="outline">
+                <mat-label>GST Number</mat-label>
+                <input
+                  formControlName="part1"
+                  maxlength="9"
+                  matInput
+                  placeholder="999999999"
+                  required
+                />
+              </mat-form-field>
+            </div>
+            <span class="bold gst-text">RT</span>
+            <div class="col-md-2">
+              <mat-form-field appearance="outline">
+                <input
+                  formControlName="part2"
+                  maxlength="4"
+                  matInput
+                  placeholder="9999"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <p class="details-subtitle">Supplier Address</p>
+        <app-bc-address [addressForm]="addressFormGroup"></app-bc-address>
+      </form>
+      <div class="row">
+        <div class="col-md-3">
+          <button class="button-s button-width" mat-button (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+        <div class="col-md-3">
+          <button
+            class="button-p button-width"
+            mat-button
+            [disabled]="!editForm.valid"
+            (click)="next()"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <div class="col-md-4">
+    <mat-card class="tips-card">
+      <div>
+        <img src="/assets/images/tips-lightbulb.svg" height="63" width="62" />
+        <span class="tips-heading"><b>Tips: </b>Legal Name</span>
+      </div>
+      <p class="tips-info">Some Information-TBD</p>
+    </mat-card>
+  </div>
+</div>

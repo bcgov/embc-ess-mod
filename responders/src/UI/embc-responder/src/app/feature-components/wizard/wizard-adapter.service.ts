@@ -159,6 +159,8 @@ export class WizardAdapterService {
         type: HouseholdMemberType.Registrant
       }
     ];
+
+    console.log(this.stepEssFileService.householdMembers);
   }
 
   public stepReviewESSFileFromESSFileRecord(): Observable<boolean> {
