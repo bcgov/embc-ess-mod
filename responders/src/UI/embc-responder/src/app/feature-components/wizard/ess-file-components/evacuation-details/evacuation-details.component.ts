@@ -13,6 +13,8 @@ import * as globalConst from '../../../../core/services/global-constants';
 import { StepEssFileService } from '../../step-ess-file/step-ess-file.service';
 import { Subscription } from 'rxjs';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { WizardSidenavModel } from 'src/app/core/models/wizard-sidenav.model';
+import { WizardType } from 'src/app/core/models/wizard-type.model';
 
 @Component({
   selector: 'app-evacuation-details',
@@ -32,6 +34,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
   isBCAddress = true;
   showInsuranceMsg = false;
   wizardType: string;
+  essFileNumber: string;
 
   selection = new SelectionModel<any>(true, []);
   tabUpdateSubscription: Subscription;
@@ -46,6 +49,7 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.wizardType = this.evacueeSessionService.getWizardType();
+    this.essFileNumber = this.evacueeSessionService.essFileNumber;
 
     this.createEvacDetailsForm();
     this.checkAddress();

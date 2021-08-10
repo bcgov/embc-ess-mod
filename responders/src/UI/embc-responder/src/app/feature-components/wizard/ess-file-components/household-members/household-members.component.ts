@@ -31,7 +31,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<HouseholdMemberModel>(true, []);
   members: HouseholdMemberModel[] = [];
   radioOption = globalConst.radioButtonOptions;
-  wizardType: string;
+  essFileNumber: string;
   editIndex: number;
   editFlag = false;
   showMemberForm = false;
@@ -51,7 +51,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.wizardType = this.evacueeSessionService.getWizardType();
+    this.essFileNumber = this.evacueeSessionService.essFileNumber;
 
     // Main form creation
     this.createHouseholdForm();
@@ -62,10 +62,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     console.log(this.members);
 
     // Set up type of members table to display
-    if (
-      this.wizardType === 'new-registration' ||
-      this.wizardType === 'new-ess-file'
-    ) {
+    if (!this.essFileNumber) {
       this.membersColumns = this.newMembersColumns;
     } else {
       this.membersColumns = this.editMembersColumns;
@@ -441,10 +438,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
     // Remove Edit form if displayed while tabbing out
     if (this.editFlag) this.cancel();
 
-    if (
-      this.wizardType === 'new-ess-file' ||
-      this.wizardType === 'new-registration'
-    ) {
+    if (!this.essFileNumber) {
       if (
         this.householdForm.valid &&
         !(
@@ -463,10 +457,7 @@ export class HouseholdMembersComponent implements OnInit, OnDestroy {
           'not-started'
         );
       }
-    } else if (
-      this.wizardType === 'review-file' ||
-      this.wizardType === 'complete-file'
-    ) {
+    } else if (this.essFileNumber) {
       if (this.householdForm.valid && this.selection.selected.length >= 1) {
         this.stepEssFileService.setTabStatus('household-members', 'complete');
       } else if (
