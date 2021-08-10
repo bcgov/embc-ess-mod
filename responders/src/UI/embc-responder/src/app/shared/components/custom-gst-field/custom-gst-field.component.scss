@@ -1,0 +1,19 @@
+.gst-text {
+  align-self: center;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.custom-padding {
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0px !important;
+  }
+}
+
+.field-padding {
+  padding-bottom: 1.34375em;
+}
+
+label {
+  color: rgba(0, 0, 0, 0.6);
+}

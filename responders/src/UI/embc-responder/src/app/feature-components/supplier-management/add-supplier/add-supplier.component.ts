@@ -31,10 +31,21 @@ export class AddSupplierComponent implements OnInit {
       supplierLegalName: ['', [this.customValidation.whitespaceValidator()]],
       supplierName: [''],
       gstNumber: this.builder.group(
-        //TODO: Avisha need to check this
         {
-          part1: ['', [Validators.maxLength(9)]],
-          part2: ['', [Validators.maxLength(4)]]
+          part1: [
+            '',
+            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+          ],
+          part2: [
+            '',
+            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+          ]
+        },
+        {
+          validators: [
+            this.customValidation.groupRequiredValidator(),
+            this.customValidation.groupMinLengthValidator()
+          ]
         }
       )
     });
@@ -57,5 +68,9 @@ export class AddSupplierComponent implements OnInit {
     this.router.navigate([
       '/responder-access/supplier-management/list-suppliers'
     ]);
+  }
+
+  get gstNumber(): FormGroup {
+    return this.addForm.get('gstNumber') as FormGroup;
   }
 }
