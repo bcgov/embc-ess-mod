@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SupplierManagementComponent } from './supplier-management.component';
+import { SuppliersListComponent } from './suppliers-list.component';
 
-describe('SupplierManagementComponent', () => {
-  let component: SupplierManagementComponent;
-  let fixture: ComponentFixture<SupplierManagementComponent>;
+describe('ListSuppliersComponent', () => {
+  let component: SuppliersListComponent;
+  let fixture: ComponentFixture<SuppliersListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SupplierManagementComponent]
+      declarations: [SuppliersListComponent]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SupplierManagementComponent);
+    fixture = TestBed.createComponent(SuppliersListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

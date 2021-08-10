@@ -1,0 +1,78 @@
+<mat-card>
+  <div class="content-align">
+    <div class="row">
+      <div class="col-md-12">
+        <p class="review-heading">Review Supplier Details</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <p class="details-subtitle">
+          Please review all of the information below before submitting.
+        </p>
+      </div>
+    </div>
+
+    <br />
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Supplier Legal Name</div>
+      <div class="col-md-8">
+        <b>{{ selectedSupplier?.legalName }}</b>
+      </div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">GST Number</div>
+      <div class="col-md-8">{{ selectedSupplier?.gstNumber }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Supplier Address</div>
+      <div class="col-md-8">
+        <p [innerHTML]="selectedSupplier?.address | maskFullAddress"></p>
+      </div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Contact Person</div>
+      <div class="col-md-8 contact-info">
+        <p>
+          {{ selectedSupplier?.primaryContact?.firstName }}
+          {{ selectedSupplier?.primaryContact?.lastName | uppercase }}
+        </p>
+      </div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Contact Person Telephone Number</div>
+      <div class="col-md-8 contact-info">
+        <p>{{ selectedSupplier?.primaryContact?.phoneNumber }}</p>
+      </div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Email Address</div>
+      <div class="col-md-8 contact-info">
+        <p class="email-decoration">
+          {{ selectedSupplier?.primaryContact?.email }}
+        </p>
+      </div>
+    </div>
+
+    <div class="row buttons-section">
+      <div class="col-md-6">
+        <button
+          class="button-s button-width button-margin"
+          mat-button
+          (click)="back()"
+        >
+          Back
+        </button>
+        <button class="button-p button-width" mat-button (click)="save()">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</mat-card>

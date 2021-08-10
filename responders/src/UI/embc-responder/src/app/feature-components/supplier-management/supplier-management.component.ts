@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { TabModel } from 'src/app/core/models/tab.model';
 
 @Component({
@@ -13,13 +14,14 @@ export class SupplierManagementComponent implements OnInit {
   tabs: TabModel[] = [
     {
       label: 'Supplier List',
-      route: 'list-suppliers'
+      route: 'suppliers-list'
     },
     {
       label: 'Add Supplier',
       route: 'add-supplier'
     }
   ];
+
   constructor() {}
 
   ngOnInit(): void {}
