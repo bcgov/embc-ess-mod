@@ -6,8 +6,8 @@ import {
   RouterStateSnapshot,
   UrlTree
 } from '@angular/router';
-import { ProfileService } from '../../sharedModules/components/profile/profile.service';
-import { ProfileMappingService } from '../../sharedModules/components/profile/profile-mapping.service';
+import { ProfileService } from '../../feature-components/profile/profile.service';
+import { ProfileMappingService } from '../../feature-components/profile/profile-mapping.service';
 import { ConflictManagementService } from 'src/app/sharedModules/components/conflict-management/conflict-management.service';
 import { EvacuationFileMappingService } from 'src/app/sharedModules/components/evacuation-file/evacuation-file-mapping.service';
 import { EvacuationFileDataService } from 'src/app/sharedModules/components/evacuation-file/evacuation-file-data.service';

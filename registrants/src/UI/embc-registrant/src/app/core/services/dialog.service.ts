@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
-import { NeedsAssessmentService } from 'src/app/sharedModules/components/needs-assessment/needs-assessment.service';
+import { NeedsAssessmentService } from 'src/app/feature-components/needs-assessment/needs-assessment.service';
 import { FormCreationService } from './formCreation.service';
 
 @Injectable({ providedIn: 'root' })

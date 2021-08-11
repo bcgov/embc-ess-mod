@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormCreationService } from '../core/services/formCreation.service';
-import { NeedsAssessmentService } from '../sharedModules/components/needs-assessment/needs-assessment.service';
+import { FormCreationService } from '../../core/services/formCreation.service';
+import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
 
 @Component({
   selector: 'app-non-verified-registration',

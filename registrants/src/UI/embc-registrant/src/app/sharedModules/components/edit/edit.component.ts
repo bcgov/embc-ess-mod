@@ -6,9 +6,9 @@ import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file/evacuation-file.service';
-import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
-import { ProfileDataService } from '../profile/profile-data.service';
-import { ProfileService } from '../profile/profile.service';
+import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
+import { ProfileDataService } from '../../../feature-components/profile/profile-data.service';
+import { ProfileService } from '../../../feature-components/profile/profile.service';
 import { EditService } from './edit.service';
 
 @Component({

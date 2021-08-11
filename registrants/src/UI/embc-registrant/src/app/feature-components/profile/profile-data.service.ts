@@ -6,7 +6,7 @@ import {
   ContactDetails
 } from 'src/app/core/api/models';
 import { CacheService } from 'src/app/core/services/cache.service';
-import { RestrictionService } from '../restriction/restriction.service';
+import { RestrictionService } from '../../sharedModules/components/restriction/restriction.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileDataService {

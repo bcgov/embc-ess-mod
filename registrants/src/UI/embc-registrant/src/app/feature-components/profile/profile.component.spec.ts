@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ProfileComponent } from './profile.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ComponentCreationService } from '../../../core/services/componentCreation.service';
-import { FormCreationService } from '../../../core/services/formCreation.service';
+import { ComponentCreationService } from '../../core/services/componentCreation.service';
+import { FormCreationService } from '../../core/services/formCreation.service';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 
 describe('ProfileComponent', () => {

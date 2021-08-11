@@ -17,13 +17,13 @@ const routes: Routes = [
     path: 'non-verified-registration',
     loadChildren: () =>
       import(
-        './non-verified-registration/non-verified-registration.module'
+        './feature-components/non-verified-registration/non-verified-registration.module'
       ).then((m) => m.NonVerifiedRegistrationModule)
   },
   {
     path: 'verified-registration',
     loadChildren: () =>
-      import('./verified-registration/verified-registration.module').then(
+      import('./feature-components/verified-registration/verified-registration.module').then(
         (m) => m.VerifiedRegistrationModule
       ),
     canActivate: [AuthGuard]

@@ -7,7 +7,7 @@ import {
   NeedsAssessment
 } from 'src/app/core/api/models';
 import { EvacuationsService } from 'src/app/core/api/services';
-import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
+import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileDataService {

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Profile, ProfileDataConflict } from '../../../core/api/models';
-import { ProfileService as Service } from '../../../core/api/services/profile.service';
+import { Profile, ProfileDataConflict } from '../../core/api/models';
+import { ProfileService as Service } from '../../core/api/services/profile.service';
 import { ProfileMappingService } from './profile-mapping.service';
 
 @Injectable({ providedIn: 'root' })
