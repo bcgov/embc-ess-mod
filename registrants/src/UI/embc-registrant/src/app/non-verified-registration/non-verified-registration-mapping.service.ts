@@ -64,7 +64,7 @@ export class NonVerifiedRegistrationMappingService {
       personalDetails: null,
       primaryAddress: null,
       restrictedAccess: null,
-      secretPhrase: null
+      securityQuestions: null
     };
   }
 
@@ -73,10 +73,10 @@ export class NonVerifiedRegistrationMappingService {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
       country: addressObject.country.code,
-      jurisdiction:
-        addressObject.jurisdiction.code === undefined
+      community:
+        addressObject.community.code === undefined
           ? null
-          : addressObject.jurisdiction.code,
+          : addressObject.community.code,
       postalCode: addressObject.postalCode,
       stateProvince:
         addressObject.stateProvince === null

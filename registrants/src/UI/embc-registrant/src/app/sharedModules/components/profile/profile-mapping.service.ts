@@ -36,7 +36,7 @@ export class ProfileMappingService {
     this.setPersonalDetails(profile);
     this.setAddressDetails(profile);
     this.setContactDetails(profile);
-    this.setSecretDetails(profile);
+    //  this.setSecretDetails(profile);
   }
 
   setLoginProfile(profile: Profile): void {
@@ -146,17 +146,17 @@ export class ProfileMappingService {
     }
   }
 
-  private setSecretDetails(profile: Profile): void {
-    let formGroup: FormGroup;
-    this.formCreationService
-      .getSecretForm()
-      .pipe(first())
-      .subscribe((secret) => {
-        secret.setValue({ secretPhrase: profile.secretPhrase });
-        formGroup = secret;
-      });
-    this.profileDataService.secretWordPhrase = profile.secretPhrase;
-  }
+  // private setSecretDetails(profile: Profile): void {
+  //   let formGroup: FormGroup;
+  //   this.formCreationService
+  //     .getSecretForm()
+  //     .pipe(first())
+  //     .subscribe((secret) => {
+  //       secret.setValue({ secretPhrase: profile.secretPhrase });
+  //       formGroup = secret;
+  //     });
+  //   this.profileDataService.secretWordPhrase = profile.secretPhrase;
+  // }
 
   private isSameMailingAddress(
     isMailingAddressSameAsPrimaryAddress: boolean
