@@ -6,9 +6,9 @@ import { ProfileComponent } from './profile.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ComponentWrapperModule } from '../../components/component-wrapper/component-wrapper.module';
-import { ReviewModule } from '../../components/review/review.module';
-import { CoreModule } from '../../../core/core.module';
+import { ComponentWrapperModule } from '../../sharedModules/components/component-wrapper/component-wrapper.module';
+import { ReviewModule } from '../../sharedModules/components/review/review.module';
+import { CoreModule } from '../../core/core.module';
 
 @NgModule({
   declarations: [ProfileComponent],

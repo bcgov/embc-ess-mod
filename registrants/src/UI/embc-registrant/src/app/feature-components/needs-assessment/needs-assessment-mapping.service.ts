@@ -9,7 +9,7 @@ import {
 } from 'src/app/core/api/models';
 import { PersonDetails } from 'src/app/core/model/profile.model';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
-import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
+import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 import { ProfileDataService } from '../profile/profile-data.service';
 import { NeedsAssessmentService } from './needs-assessment.service';
 

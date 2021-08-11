@@ -4,7 +4,7 @@ import { FormCreationService } from 'src/app/core/services/formCreation.service'
 import { DialogService } from 'src/app/core/services/dialog.service';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { TabModel } from 'src/app/core/model/tab.model';
-import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
+import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
 import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
 
 @Component({

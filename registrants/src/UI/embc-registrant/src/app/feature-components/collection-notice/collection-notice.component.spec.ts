@@ -10,7 +10,7 @@ import { CollectionNoticeComponent } from './collection-notice.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule, MatCheckbox } from '@angular/material/checkbox';
-import { CoreModule } from '../../../core/core.module';
+import { CoreModule } from '../../core/core.module';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';

@@ -8,8 +8,8 @@ import {
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import { Profile, ProfileDataConflict } from 'src/app/core/api/models';
-import { ProfileDataService } from '../profile/profile-data.service';
-import { ProfileService } from '../profile/profile.service';
+import { ProfileDataService } from '../../../feature-components/profile/profile-data.service';
+import { ProfileService } from '../../../feature-components/profile/profile.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { FormGroup } from '@angular/forms';

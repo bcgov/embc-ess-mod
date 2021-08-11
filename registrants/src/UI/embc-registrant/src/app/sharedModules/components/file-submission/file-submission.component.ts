@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
+import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
 
 @Component({
   selector: 'app-file-submission',

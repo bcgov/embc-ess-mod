@@ -8,16 +8,16 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { ComponentMetaDataModel } from '../../../core/model/componentMetaData.model';
-import { ComponentCreationService } from '../../../core/services/componentCreation.service';
+import { ComponentMetaDataModel } from '../../core/model/componentMetaData.model';
+import { ComponentCreationService } from '../../core/services/componentCreation.service';
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription } from 'rxjs';
-import { FormCreationService } from '../../../core/services/formCreation.service';
-import { RegistrationResult } from '../../../core/api/models/registration-result';
+import { FormCreationService } from '../../core/services/formCreation.service';
+import { RegistrationResult } from '../../core/api/models/registration-result';
 import { AlertService } from 'src/app/core/services/alert.service';
-import { NonVerifiedRegistrationService } from '../../../non-verified-registration/non-verified-registration.services';
+import { NonVerifiedRegistrationService } from '../non-verified-registration/non-verified-registration.services';
 import { NeedsAssessmentService } from './needs-assessment.service';
-import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
+import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
 
 @Component({
   selector: 'app-needs-assessment',

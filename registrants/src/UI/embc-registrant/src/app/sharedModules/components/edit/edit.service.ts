@@ -3,9 +3,9 @@ import { FormGroup } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
-import { NeedsAssessmentMappingService } from '../needs-assessment/needs-assessment-mapping.service';
-import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
-import { ProfileDataService } from '../profile/profile-data.service';
+import { NeedsAssessmentMappingService } from '../../../feature-components/needs-assessment/needs-assessment-mapping.service';
+import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
+import { ProfileDataService } from '../../../feature-components/profile/profile-data.service';
 import { RestrictionService } from '../restriction/restriction.service';
 
 @Injectable({ providedIn: 'root' })

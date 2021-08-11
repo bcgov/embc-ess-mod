@@ -4,10 +4,10 @@ import {
   AnonymousRegistration,
   NeedsAssessment,
   Profile
-} from '../core/api/models';
-import { EvacuationFileDataService } from '../sharedModules/components/evacuation-file/evacuation-file-data.service';
-import { NeedsAssessmentService } from '../sharedModules/components/needs-assessment/needs-assessment.service';
-import { ProfileDataService } from '../sharedModules/components/profile/profile-data.service';
+} from '../../core/api/models';
+import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
+import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
+import { ProfileDataService } from '../profile/profile-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class NonVerifiedRegistrationMappingService {
