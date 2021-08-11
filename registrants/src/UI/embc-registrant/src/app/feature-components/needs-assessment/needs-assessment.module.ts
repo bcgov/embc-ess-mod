@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ComponentWrapperModule } from '../../sharedModules/components/component-wrapper/component-wrapper.module';
-import { ReviewModule } from '../../sharedModules/components/review/review.module';
+import { ReviewModule } from '../review/review.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialogModule } from '@angular/material/dialog';

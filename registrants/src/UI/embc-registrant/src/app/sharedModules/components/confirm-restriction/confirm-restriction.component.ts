@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
-import { RestrictionService } from '../restriction/restriction.service';
+import { RestrictionService } from '../../../feature-components/restriction/restriction.service';
 
 @Component({
   selector: 'app-confirm-restriction',

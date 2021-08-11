@@ -24,9 +24,9 @@ const routes: Routes = [
       {
         path: 'restriction',
         loadChildren: () =>
-          import(
-            '../../sharedModules/components/restriction/restriction.module'
-          ).then((m) => m.RestrictionModule),
+          import('../restriction/restriction.module').then(
+            (m) => m.RestrictionModule
+          ),
         data: { flow: 'non-verified-registration' }
       },
       {
@@ -46,17 +46,15 @@ const routes: Routes = [
       {
         path: 'edit/:type',
         loadChildren: () =>
-          import('../../sharedModules/components/edit/edit.module').then(
-            (m) => m.EditModule
-          ),
+          import('../edit/edit.module').then((m) => m.EditModule),
         data: { flow: 'non-verified-registration' }
       },
       {
         path: 'file-submission',
         loadChildren: () =>
-          import(
-            '../../sharedModules/components/file-submission/file-submission.module'
-          ).then((m) => m.FileSubmissionModule),
+          import('../file-submission/file-submission.module').then(
+            (m) => m.FileSubmissionModule
+          ),
         data: { flow: 'non-verified-registration' },
         canDeactivate: [DisableBackGuard]
       }
