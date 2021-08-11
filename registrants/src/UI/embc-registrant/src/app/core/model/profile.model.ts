@@ -191,7 +191,7 @@ export class AddressForm {
     this.address = builder.group({
       addressLine1: ['', [Validators.required]],
       addressLine2: [''],
-      jurisdiction: ['', [Validators.required]],
+      community: ['', [Validators.required]],
       stateProvince: [
         '',
         [
@@ -222,7 +222,7 @@ export class AddressForm {
     this.mailingAddress = builder.group({
       addressLine1: ['', [Validators.required]],
       addressLine2: [''],
-      jurisdiction: ['', [Validators.required]],
+      community: ['', [Validators.required]],
       stateProvince: [
         '',
         [

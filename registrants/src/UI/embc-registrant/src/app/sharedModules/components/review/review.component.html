@@ -216,7 +216,7 @@
           >
             {{
               (formCreationService.addressForm$ | async)?.value?.address
-                ?.jurisdiction?.name
+                ?.community?.name
             }}
           </div>
           <div
@@ -228,7 +228,7 @@
           >
             {{
               (formCreationService.addressForm$ | async)?.value?.address
-                ?.jurisdiction
+                ?.community
             }}
           </div>
         </div>
@@ -305,24 +305,24 @@
             class="col-md-3"
             *ngIf="
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.jurisdiction.name !== undefined
+                ?.community.name !== undefined
             "
           >
             {{
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.jurisdiction?.name
+                ?.community?.name
             }}
           </div>
           <div
             class="col-md-3"
             *ngIf="
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.jurisdiction.name === undefined
+                ?.community.name === undefined
             "
           >
             {{
               (formCreationService.addressForm$ | async)?.value?.mailingAddress
-                ?.jurisdiction
+                ?.community
             }}
           </div>
         </div>
@@ -564,7 +564,7 @@
               <span
                 >{{
                   (formCreationService.evacuatedForm$ | async)?.value
-                    ?.evacuatedFromAddress?.jurisdiction?.name
+                    ?.evacuatedFromAddress?.community?.name
                 }},
               </span>
               <span>{{
