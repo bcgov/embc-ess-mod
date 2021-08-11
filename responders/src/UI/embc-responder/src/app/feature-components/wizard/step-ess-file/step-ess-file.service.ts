@@ -630,7 +630,7 @@ export class StepEssFileService {
    */
   public setFormValuesFromFile(essFile: EvacuationFileModel) {
     const essNeeds = essFile.needsAssessment;
-    const primaryLastName = essNeeds.householdMembers?.find(
+    const primaryLastName = essFile.householdMembers?.find(
       (member) => member.type === HouseholdMemberType.Registrant
     ).lastName;
 
