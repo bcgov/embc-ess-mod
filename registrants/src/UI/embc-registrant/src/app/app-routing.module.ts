@@ -23,9 +23,9 @@ const routes: Routes = [
   {
     path: 'verified-registration',
     loadChildren: () =>
-      import('./feature-components/verified-registration/verified-registration.module').then(
-        (m) => m.VerifiedRegistrationModule
-      ),
+      import(
+        './feature-components/verified-registration/verified-registration.module'
+      ).then((m) => m.VerifiedRegistrationModule),
     canActivate: [AuthGuard]
   }
 ];

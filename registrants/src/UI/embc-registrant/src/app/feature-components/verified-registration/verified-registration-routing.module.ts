@@ -21,9 +21,9 @@ const routes: Routes = [
       {
         path: 'collection-notice',
         loadChildren: () =>
-          import(
-            '../collection-notice/collection-notice.module'
-          ).then((m) => m.CollectionNoticeModule),
+          import('../collection-notice/collection-notice.module').then(
+            (m) => m.CollectionNoticeModule
+          ),
         data: { flow: 'verified-registration' }
       },
       {
@@ -37,17 +37,15 @@ const routes: Routes = [
       {
         path: 'create-profile',
         loadChildren: () =>
-          import('../profile/profile.module').then(
-            (m) => m.ProfileModule
-          ),
+          import('../profile/profile.module').then((m) => m.ProfileModule),
         data: { flow: 'verified-registration' }
       },
       {
         path: 'dashboard',
         loadChildren: () =>
-          import('../../sharedModules/components/dashboard/dashboard.module').then(
-            (m) => m.DashboardModule
-          ),
+          import(
+            '../../sharedModules/components/dashboard/dashboard.module'
+          ).then((m) => m.DashboardModule),
         data: { flow: 'verified-registration' }
       },
       {
@@ -69,9 +67,9 @@ const routes: Routes = [
       {
         path: 'needs-assessment',
         loadChildren: () =>
-          import(
-            '../needs-assessment/needs-assessment.module'
-          ).then((m) => m.NeedsAssessmentModule),
+          import('../needs-assessment/needs-assessment.module').then(
+            (m) => m.NeedsAssessmentModule
+          ),
         data: { flow: 'verified-registration' }
       },
       {

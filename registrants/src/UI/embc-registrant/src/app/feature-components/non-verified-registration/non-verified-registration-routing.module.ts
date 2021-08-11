@@ -16,9 +16,9 @@ const routes: Routes = [
       {
         path: 'collection-notice',
         loadChildren: () =>
-          import(
-            '../collection-notice/collection-notice.module'
-          ).then((m) => m.CollectionNoticeModule),
+          import('../collection-notice/collection-notice.module').then(
+            (m) => m.CollectionNoticeModule
+          ),
         data: { flow: 'non-verified-registration' }
       },
       {
@@ -32,17 +32,15 @@ const routes: Routes = [
       {
         path: 'create-profile',
         loadChildren: () =>
-          import('../profile/profile.module').then(
-            (m) => m.ProfileModule
-          ),
+          import('../profile/profile.module').then((m) => m.ProfileModule),
         data: { flow: 'non-verified-registration' }
       },
       {
         path: 'needs-assessment',
         loadChildren: () =>
-          import(
-            '../needs-assessment/needs-assessment.module'
-          ).then((m) => m.NeedsAssessmentModule),
+          import('../needs-assessment/needs-assessment.module').then(
+            (m) => m.NeedsAssessmentModule
+          ),
         data: { flow: 'non-verified-registration' }
       },
       {
