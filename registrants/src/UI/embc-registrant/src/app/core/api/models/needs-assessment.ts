@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* tslint:disable */
 /* eslint-disable */
 import { HouseholdMember } from './household-member';
 import { InsuranceOption } from './insurance-option';

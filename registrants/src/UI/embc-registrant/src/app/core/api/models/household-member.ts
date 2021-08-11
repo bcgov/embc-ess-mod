@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* tslint:disable */
 /* eslint-disable */
 import { PersonDetails } from './person-details';
 
@@ -8,5 +8,6 @@ import { PersonDetails } from './person-details';
 export interface HouseholdMember {
   details?: null | PersonDetails;
   id?: null | string;
+  isPrimaryRegistrant?: boolean;
   isUnder19?: boolean;
 }

@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* tslint:disable */
 /* eslint-disable */
 import { Address } from './address';
 import { EvacuationFileStatus } from './evacuation-file-status';
@@ -12,6 +12,9 @@ export interface EvacuationFile {
   evacuatedFromAddress: Address;
   evacuationFileDate?: null | string;
   isRestricted?: boolean;
+  lastModified?: string;
   needsAssessments: Array<NeedsAssessment>;
+  secretPhrase?: null | string;
+  secretPhraseEdited?: boolean;
   status?: EvacuationFileStatus;
 }
