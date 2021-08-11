@@ -184,9 +184,7 @@ export default class AddressComponent
     this.primaryAddressForm
       .get('address.addressLine1')
       .updateValueAndValidity();
-    this.primaryAddressForm
-      .get('address.community')
-      .updateValueAndValidity();
+    this.primaryAddressForm.get('address.community').updateValueAndValidity();
     this.primaryAddressForm
       .get('address.stateProvince')
       .updateValueAndValidity();
