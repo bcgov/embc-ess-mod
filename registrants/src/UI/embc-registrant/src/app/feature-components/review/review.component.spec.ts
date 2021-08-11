@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReviewComponent } from './review.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { FormCreationService } from '../../../core/services/formCreation.service';
+import { FormCreationService } from '../../core/services/formCreation.service';
 
 describe('ReviewComponent', () => {
   let component: ReviewComponent;

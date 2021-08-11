@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
-import { FormCreationService } from '../../../core/services/formCreation.service';
+import { FormCreationService } from '../../core/services/formCreation.service';
 import { first } from 'rxjs/operators';
 
 @Component({

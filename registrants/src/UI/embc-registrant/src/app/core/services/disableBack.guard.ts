@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CanDeactivate } from '@angular/router';
-import { FileSubmissionComponent } from '../../sharedModules/components/file-submission/file-submission.component';
+import { FileSubmissionComponent } from '../../feature-components/file-submission/file-submission.component';
 import { DialogService } from './dialog.service';
 
 @Injectable({ providedIn: 'root' })
