@@ -107,7 +107,7 @@
                     Where are you being evacuated from?
                   </p>
                   <p
-                    *ngIf="essFileNumber"
+                    *ngIf="wizardType === 'review-file'"
                     class="evac-address"
                     [innerHTML]="
                       stepEssFileService?.evacAddress | maskEvacuatedaddress
