@@ -55,6 +55,18 @@ export const essFileLinkErrorMessage: DialogContent = {
   text: '<p>Error while linking the ESS File. Please try again later</p>',
   cancelButton: 'Close'
 };
+export const deleteSupplierMessage: DialogContent = {
+  text: '<p>Supplier was successfully removed.</p>',
+  cancelButton: 'Close'
+};
+export const editSupplierMessage: DialogContent = {
+  text: '<p>Supplier was successfully edited.</p>',
+  cancelButton: 'Close'
+};
+export const addSupplierMessage: DialogContent = {
+  text: '<p>Supplier was successfully added.</p>',
+  cancelButton: 'Close'
+};
 export const tier2Notes = 'Notes regarding Tier 2 Supervisor';
 export const tier3Notes = 'Notes regarding Tier 3 ESS Director/ Manager';
 export const tier1Notes = 'Notes regarding Tier 1 Responder';
@@ -269,3 +281,5 @@ export const getPossibleEssfileMatchError =
   'Unable to get possible ESS Files associated to the registrant at this time. Please try again later';
 export const fileDashboardError =
   'Unable to load ESS File at this time. Please try again later';
+export const supplierCheckerror =
+  'Unable to check supplier at this time. Please try again later';

@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { UserService } from 'src/app/core/services/user.service';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { SupplierListDataService } from './supplier-list-data.service';
 import { SupplierTemp } from './supplier-list-data.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-suppliers-list',
@@ -15,6 +20,7 @@ import { SupplierTemp } from './supplier-list-data.service';
 export class SuppliersListComponent implements OnInit {
   suppliersListData: SupplierTemp[] = [
     {
+      id: '0001',
       legalName: 'Save-on-Foods Ltd',
       name: 'SAVE-ON-FOODS',
       address: {
@@ -31,7 +37,7 @@ export class SuppliersListComponent implements OnInit {
       },
       isMutualAid: true,
       isActive: true,
-      gstNumber: '222222222-RT-2222',
+      gstNumber: { part1: '222222222', part2: '2222' },
       primaryContact: {
         firstName: 'John',
         lastName: 'Smith',
@@ -40,6 +46,7 @@ export class SuppliersListComponent implements OnInit {
       }
     },
     {
+      id: '0002',
       legalName: 'Master Foods',
       name: 'FRESH FOODS',
       address: {
@@ -56,7 +63,7 @@ export class SuppliersListComponent implements OnInit {
       },
       isMutualAid: false,
       isActive: true,
-      gstNumber: '999999999-RT-9999',
+      gstNumber: { part1: '999999999', part2: '9999' },
       primaryContact: {
         firstName: 'William',
         lastName: 'Terrace',
@@ -65,6 +72,7 @@ export class SuppliersListComponent implements OnInit {
       }
     },
     {
+      id: '0003',
       legalName: 'Hotels Inc.',
       name: 'SLEEP EASY HOTEL',
       address: {
@@ -81,7 +89,7 @@ export class SuppliersListComponent implements OnInit {
       },
       isMutualAid: false,
       isActive: false,
-      gstNumber: '333333333-RT-3333',
+      gstNumber: { part1: '333333333', part2: '3333' },
       primaryContact: {
         firstName: 'Rosalyn',
         lastName: 'Smith',
@@ -90,6 +98,7 @@ export class SuppliersListComponent implements OnInit {
       }
     },
     {
+      id: '0004',
       legalName: 'Victoria Cabs',
       name: 'VICTORIA CABS',
       address: {
@@ -106,7 +115,7 @@ export class SuppliersListComponent implements OnInit {
       },
       isMutualAid: false,
       isActive: false,
-      gstNumber: '555555555-RT-9999',
+      gstNumber: { part1: '555555555', part2: '9999' },
       primaryContact: {
         firstName: 'Anne',
         lastName: 'Boots',
@@ -128,8 +137,16 @@ export class SuppliersListComponent implements OnInit {
     private listSupplierDataService: SupplierListDataService,
     private router: Router,
     private route: ActivatedRoute,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private dialog: MatDialog
+  ) {
+    if (this.router.getCurrentNavigation() !== null) {
+      if (this.router.getCurrentNavigation().extras.state !== undefined) {
+        const state = this.router.getCurrentNavigation().extras.state;
+        this.enableActionNotification(state);
+      }
+    }
+  }
 
   ngOnInit(): void {
     this.filtersToLoad = this.listSupplierDataService.filtersToLoad;
@@ -140,6 +157,18 @@ export class SuppliersListComponent implements OnInit {
       this.suppliersList = this.suppliersListData;
       this.isLoading = !this.isLoading;
     }, 5000);
+
+    // this.teamListService.getTeamMembers().subscribe(
+    //   (values) => {
+    //     this.isLoading = !this.isLoading;
+    //     this.teamMembers = values;
+    //   },
+    //   (error) => {
+    //     this.isLoading = !this.isLoading;
+    //     this.alertService.clearAlert();
+    //     this.alertService.setAlert('danger', globalConst.teamMemberListError);
+    //   }
+    // );
   }
 
   /**
@@ -157,7 +186,7 @@ export class SuppliersListComponent implements OnInit {
    * @param $event Selected team member object
    */
   openSupplierDetails($event: SupplierTemp): void {
-    this.listSupplierDataService.selectedSupplier = $event;
+    this.listSupplierDataService.setSelectedSupplier($event);
     this.router.navigate(
       ['/responder-access/supplier-management/supplier-detail'],
       {
@@ -219,5 +248,39 @@ export class SuppliersListComponent implements OnInit {
     this.router.navigate([
       '/responder-access/supplier-management/add-supplier'
     ]);
+  }
+
+  /**
+   * Populates action basec notification and open confirmation box
+   *
+   * @param state navigation state string
+   */
+  enableActionNotification(state: { [k: string]: any }): void {
+    let displayText: DialogContent;
+    if (state?.action === 'delete') {
+      displayText = globalConst.deleteSupplierMessage;
+    } else if (state?.action === 'edit') {
+      displayText = globalConst.editSupplierMessage;
+    } else {
+      displayText = globalConst.addSupplierMessage;
+    }
+    setTimeout(() => {
+      this.openConfirmation(displayText);
+    }, 500);
+  }
+
+  /**
+   * Open confirmation modal window
+   *
+   * @param text text to display
+   */
+  private openConfirmation(content: DialogContent): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content
+      },
+      width: '530px'
+    });
   }
 }

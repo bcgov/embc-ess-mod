@@ -11,7 +11,6 @@ import {
   SupplierListDataService,
   SupplierTemp
 } from '../suppliers-list/supplier-list-data.service';
-import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-edit-supplier',
@@ -30,7 +29,7 @@ export class EditSupplierComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.selectedSupplier = this.supplierListDataService.selectedSupplier;
+    this.selectedSupplier = this.supplierListDataService.getSelectedSupplier();
     this.createEditForm();
   }
 
@@ -49,11 +48,12 @@ export class EditSupplierComponent implements OnInit {
   }
 
   next(): void {
-    this.saveFormData();
+    const updatedSupplier: SupplierTemp = this.editForm.getRawValue();
     this.router.navigate(
       ['/responder-access/supplier-management/review-supplier'],
       {
-        queryParams: { action: 'edit' }
+        queryParams: { action: 'edit' },
+        state: { ...this.selectedSupplier, ...updatedSupplier }
       }
     );
   }
@@ -74,12 +74,30 @@ export class EditSupplierComponent implements OnInit {
         this.selectedSupplier?.name ?? '',
         [this.customValidation.whitespaceValidator()]
       ],
-      gstNumber: this.formBuilder.group({
-        part1: ['', [Validators.maxLength(9)]],
-        part2: ['', [Validators.maxLength(4)]]
-      }),
+      gstNumber: this.formBuilder.group(
+        {
+          part1: [
+            this.selectedSupplier?.gstNumber?.part1 ?? '',
+            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+          ],
+          part2: [
+            this.selectedSupplier?.gstNumber?.part2 ?? '',
+            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+          ]
+        },
+        {
+          validators: [
+            this.customValidation.groupRequiredValidator(),
+            this.customValidation.groupMinLengthValidator()
+          ]
+        }
+      ),
       address: this.createSupplierAddressEditForm()
     });
+  }
+
+  get gstNumber(): FormGroup {
+    return this.editForm.get('gstNumber') as FormGroup;
   }
 
   /**
@@ -111,20 +129,5 @@ export class EditSupplierComponent implements OnInit {
         [this.customValidation.postalValidation().bind(this.customValidation)]
       ]
     });
-  }
-
-  private saveFormData(): void {
-    this.supplierListDataService.selectedSupplier.legalName = this.editForm.get(
-      'supplierLegalName'
-    ).value;
-    this.supplierListDataService.selectedSupplier.name = this.editForm.get(
-      'supplierName'
-    ).value;
-    this.supplierListDataService.selectedSupplier.gstNumber = this.editForm.get(
-      'gstNumber'
-    ).value;
-    this.supplierListDataService.selectedSupplier.address = this.editForm.get(
-      'address'
-    ).value;
   }
 }

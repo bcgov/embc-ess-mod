@@ -38,15 +38,13 @@ export class SupplierDetailComponent implements OnInit {
         this.selectedSupplier = state;
       }
     } else {
-      this.selectedSupplier = this.supplierListDataService.selectedSupplier;
+      this.selectedSupplier = this.supplierListDataService.getSelectedSupplier();
     }
   }
 
   ngOnInit(): void {
     this.loggedInRole = this.userService.currentProfile.role;
     this.createSearchMutualAidForm();
-    console.log(this.selectedSupplier);
-    console.log(this.supplierListDataService.selectedSupplier);
   }
 
   /**
@@ -69,10 +67,10 @@ export class SupplierDetailComponent implements OnInit {
           //       this.teamDetailsService
           //         .deleteTeamMember(this.teamMember.id)
           //         .subscribe((value) => {
-          //           const stateIndicator = { action: 'delete' };
+          const stateIndicator = { action: 'delete' };
           this.router.navigate(
-            ['/responder-access/supplier-management/suppliers-list']
-            // { state: stateIndicator }
+            ['/responder-access/supplier-management/suppliers-list'],
+            { state: stateIndicator }
           );
           // });
         }
