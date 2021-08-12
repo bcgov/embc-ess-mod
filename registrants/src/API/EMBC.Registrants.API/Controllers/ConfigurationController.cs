@@ -125,6 +125,15 @@ namespace EMBC.Responders.API.Controllers
 
             return Ok(mapper.Map<IEnumerable<Code>>(items));
         }
+
+        [HttpGet("security-questions")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<string[]>> GetSecurityQuestions()
+        {
+            var questions = (await client.Send(new SecurityQuestionsQuery())).Items;
+            return Ok(questions);
+        }
     }
 
     public class Configuration
