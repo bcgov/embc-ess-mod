@@ -38,6 +38,11 @@ export { RegistrantProfileSearchResult } from './models/registrant-profile-searc
 export { RegistrantStatus } from './models/registrant-status';
 export { EvacuationFileSearchResult } from './models/evacuation-file-search-result';
 export { EvacuationFileSearchResultHouseholdMember } from './models/evacuation-file-search-result-household-member';
+export { SupplierSearchResult } from './models/supplier-search-result';
+export { SupplierStatus } from './models/supplier-status';
+export { Supplier } from './models/supplier';
+export { SupplierContact } from './models/supplier-contact';
+export { SupplierResult } from './models/supplier-result';
 export { EssTask } from './models/ess-task';
 export { AssignedCommunity } from './models/assigned-community';
 export { TeamMember } from './models/team-member';

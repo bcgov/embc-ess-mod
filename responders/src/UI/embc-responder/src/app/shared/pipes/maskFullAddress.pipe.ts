@@ -22,6 +22,7 @@ export class MaskFullAddressPipe implements PipeTransform {
    * @returns Sanitized Two-line SafeHTML string, <br> as only included HTML
    */
   transform(address: AddressModel): SafeHtml {
+    console.log(address);
     if (address !== null && address !== undefined) {
       const communities = this.locationService.getCommunityList();
 

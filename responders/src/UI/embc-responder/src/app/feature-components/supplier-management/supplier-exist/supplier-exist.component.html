@@ -1,0 +1,84 @@
+<mat-card>
+  <div class="content-align">
+    <div class="row">
+      <div class="col-md-12">
+        <p class="title-heading">Supplier Already Exists</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <p>
+          <b
+            >The GST number that you entered already has 1 or more suppliers
+            associated with it</b
+          >
+        </p>
+        <p>
+          Please make sure that you are not trying to add the same supplier
+          again. If the supplier does not have a Primary ESS Team already
+          associated with it, you may claim it.
+        </p>
+      </div>
+    </div>
+
+    <mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="legalName">
+        <mat-header-cell *matHeaderCellDef>Supplier Legal Name</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.legalName }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Supplier Name </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.name }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="gstNumber">
+        <mat-header-cell *matHeaderCellDef> GST # </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.gstNumber.part1 }} -RT- {{ element.gstNumber.part2 }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="address">
+        <mat-header-cell *matHeaderCellDef> Address </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <p [innerHTML]="element?.address | maskFullAddress"></p>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="primaryTeam">
+        <mat-header-cell *matHeaderCellDef> Primary ESS Team </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <p *ngIf="element.primaryTeam">{{ element.primaryTeam }}</p>
+          <a
+            class="supplier-link"
+            *ngIf="!element.primaryTeam"
+            (click)="claimSupplier()"
+          >
+            Claim Supplier</a
+          >
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+    <div class="row">
+      <div class="col-md-3">
+        <button class="button-s button-width" mat-button (click)="close()">
+          Close
+        </button>
+      </div>
+      <div class="col-md-3">
+        <button class="button-p button-width" mat-button (click)="continue()">
+          Continue
+        </button>
+      </div>
+    </div>
+  </div>
+</mat-card>
