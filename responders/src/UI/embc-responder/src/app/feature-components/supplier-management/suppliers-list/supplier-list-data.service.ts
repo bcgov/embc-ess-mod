@@ -5,12 +5,13 @@ import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 
 export interface SupplierTemp {
+  id?: string;
   legalName: string;
   name: string;
   address: AddressModel;
   isMutualAid: boolean;
   isActive: boolean;
-  gstNumber: string;
+  gstNumber: GstModel;
   primaryContact: SupplierContact;
 }
 
@@ -19,6 +20,19 @@ export interface SupplierContact {
   lastName: string;
   phoneNumber: string;
   email: string;
+}
+
+export interface GstModel {
+  part1: string;
+  part2: string;
+}
+
+export interface ExistingSupplier {
+  legalName: string;
+  name: string;
+  gstNumber: GstModel;
+  address: AddressModel;
+  primaryTeam: null | string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -39,19 +53,36 @@ export class SupplierListDataService {
     { label: 'Status', ref: 'isActive' }
   ];
 
-  private selectedSupplierVal: SupplierTemp;
+  private selectedSupplier: SupplierTemp;
 
-  constructor() {}
+  constructor(private cacheService: CacheService) {}
 
-  public get selectedSupplier(): SupplierTemp {
-    return this.selectedSupplierVal;
+  /**
+   * get the selected supplier
+   *
+   * @returns the selected supplier
+   */
+  public getSelectedSupplier(): SupplierTemp {
+    return this.selectedSupplier
+      ? this.selectedSupplier
+      : JSON.parse(this.cacheService.get('selectedSupplier'));
   }
 
-  public set selectedSupplier(selectedSupplierVal: SupplierTemp) {
-    this.selectedSupplierVal = selectedSupplierVal;
+  /**
+   * Sets a selected supplier
+   *
+   * @param selectedSupplier
+   */
+  public setSelectedSupplier(selectedSupplier: SupplierTemp) {
+    this.cacheService.set('selectedSupplier', selectedSupplier);
+    this.selectedSupplier = selectedSupplier;
   }
 
+  /**
+   * Cleans data of the selected supplier
+   */
   clearSupplierData(): void {
     this.selectedSupplier = undefined;
+    this.cacheService.remove('selectedSupplier');
   }
 }

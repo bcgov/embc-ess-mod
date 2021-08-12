@@ -2,7 +2,10 @@
   <div class="content-align">
     <div class="row">
       <div class="col-md-12">
-        <p class="review-heading">Review Supplier Details</p>
+        <p class="review-heading" *ngIf="reviewAction === 'edit'">
+          Review Supplier Details
+        </p>
+        <p class="review-heading" *ngIf="reviewAction === 'add'">Step 3 of 3</p>
       </div>
     </div>
 
@@ -24,7 +27,11 @@
 
     <div class="row row-align">
       <div class="col-md-4 detail-label">GST Number</div>
-      <div class="col-md-8">{{ selectedSupplier?.gstNumber }}</div>
+      <div class="col-md-8">
+        {{ selectedSupplier?.gstNumber?.part1 }}-RT-{{
+          selectedSupplier?.gstNumber?.part2
+        }}
+      </div>
     </div>
 
     <div class="row row-align">
@@ -71,6 +78,11 @@
         </button>
         <button class="button-p button-width" mat-button (click)="save()">
           Save
+          <app-loader
+            [strokeWidth]="3"
+            [diameter]="25"
+            [showLoader]="showLoader"
+          ></app-loader>
         </button>
       </div>
     </div>

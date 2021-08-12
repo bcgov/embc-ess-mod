@@ -7,6 +7,10 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { GstModel } from '../suppliers-list/supplier-list-data.service';
+import { AddSupplierService } from './add-supplier.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Component({
   selector: 'app-add-supplier',
@@ -15,11 +19,14 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 })
 export class AddSupplierComponent implements OnInit {
   addForm: FormGroup;
+  showLoader = false;
 
   constructor(
     private builder: FormBuilder,
     private customValidation: CustomValidationService,
-    private router: Router
+    private router: Router,
+    private addSupplierService: AddSupplierService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -59,9 +66,15 @@ export class AddSupplierComponent implements OnInit {
   }
 
   next(): void {
-    this.router.navigate([
-      '/responder-access/supplier-management/new-supplier'
-    ]);
+    // this.saveDataForm();
+    // this.router.navigate([
+    //   '/responder-access/supplier-management/new-supplier'
+    // ]);
+    const gstNumber: GstModel = {
+      part1: this.addForm.get('gstNumber.part1').value,
+      part2: this.addForm.get('gstNumber.part2').value
+    };
+    this.checkSupplierExistance(gstNumber);
   }
 
   cancel(): void {
@@ -72,5 +85,51 @@ export class AddSupplierComponent implements OnInit {
 
   get gstNumber(): FormGroup {
     return this.addForm.get('gstNumber') as FormGroup;
+  }
+
+  /**
+   * Checks if the supplier exists in the ERA system
+   *
+   * @param $event username input change event
+   */
+  private checkSupplierExistance(gstNumber: GstModel): void {
+    this.showLoader = !this.showLoader;
+    // this.addSupplierService.checkSupplierExists(gstNumber).subscribe(
+    //   (value) => {
+    //     this.showLoader = !this.showLoader;
+    //     console.log(value);
+    //   },
+    //   (error) => {
+    //     console.log(error);
+    //     this.showLoader = !this.showLoader;
+    //     this.alertService.clearAlert();
+    //     this.alertService.setAlert('danger', globalConst.supplierCheckerror);
+    //   }
+    // );
+    if (true) {
+      this.router.navigate([
+        '/responder-access/supplier-management/supplier-exist'
+      ]);
+    } else {
+      this.saveDataForm();
+      this.router.navigate([
+        '/responder-access/supplier-management/new-supplier'
+      ]);
+    }
+  }
+
+  private saveDataForm() {
+    this.addSupplierService.supplierLegalName = this.addForm.get(
+      'supplierLegalName'
+    ).value;
+    this.addSupplierService.supplierName = this.addForm.get(
+      'supplierName'
+    ).value;
+
+    const gstNumber: GstModel = {
+      part1: this.addForm.get('gstNumber.part1').value,
+      part2: this.addForm.get('gstNumber.part2').value
+    };
+    this.addSupplierService.gstNumber = gstNumber;
   }
 }

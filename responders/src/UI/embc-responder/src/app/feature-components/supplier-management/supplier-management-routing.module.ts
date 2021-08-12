@@ -17,16 +17,21 @@ const routes: Routes = [
         loadChildren: () =>
           import('./suppliers-list/suppliers-list.module').then(
             (m) => m.SuppliersListModule
-          ),
-        data: { title: 'Supplier Management' }
+          )
       },
       {
         path: 'add-supplier',
         loadChildren: () =>
           import(
             '../supplier-management/add-supplier/add-supplier.module'
-          ).then((m) => m.AddSupplierModule),
-        data: { title: 'Add Supplier' }
+          ).then((m) => m.AddSupplierModule)
+      },
+      {
+        path: 'supplier-exist',
+        loadChildren: () =>
+          import(
+            '../supplier-management/supplier-exist/supplier-exist.module'
+          ).then((m) => m.SupplierExistModule)
       },
       {
         path: 'new-supplier',
@@ -47,16 +52,14 @@ const routes: Routes = [
         loadChildren: () =>
           import(
             '../supplier-management/supplier-detail/supplier-detail.module'
-          ).then((m) => m.SupplierDetailModule),
-        data: { title: 'View Supplier' }
+          ).then((m) => m.SupplierDetailModule)
       },
       {
         path: 'edit-supplier',
         loadChildren: () =>
           import(
             '../supplier-management/edit-supplier/edit-supplier.module'
-          ).then((m) => m.EditSupplierModule),
-        data: { title: 'Edit Supplier Details' }
+          ).then((m) => m.EditSupplierModule)
       }
     ]
   }

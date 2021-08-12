@@ -7,6 +7,107 @@
         <app-bc-address
           [addressForm]="supplierAddressFormGroup"
         ></app-bc-address>
+
+        <ng-container [formGroup]="supplierContactFormGroup">
+          <p class="bold">Supplier Contact Person</p>
+
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Last Name</mat-label>
+                <input
+                  formControlName="lastName"
+                  maxlength="50"
+                  matInput
+                  placeholder="Last Name"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    contactFormControl.lastName.invalid &&
+                    contactFormControl.lastName.hasError('whitespaceError')
+                  "
+                >
+                  Last Name is required</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>First Name</mat-label>
+                <input
+                  formControlName="firstName"
+                  maxlength="50"
+                  matInput
+                  placeholder="First Name"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    contactFormControl.firstName.invalid &&
+                    contactFormControl.firstName.hasError('whitespaceError')
+                  "
+                >
+                  First Name is required</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Contact Telephone Number</mat-label>
+                <input
+                  formControlName="phoneNumber"
+                  matInput
+                  placeholder="Contact Telephone Number"
+                  [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+                  required
+                />
+                <mat-error
+                  *ngIf="
+                    contactFormControl.phoneNumber.invalid &&
+                    contactFormControl.phoneNumber.hasError('required')
+                  "
+                >
+                  Telephone Number is required</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    contactFormControl.phoneNumber.invalid &&
+                    contactFormControl.phoneNumber.hasError('incorrectLength')
+                  "
+                >
+                  Telephone number must have 10 digits</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Email Address</mat-label>
+                <input
+                  formControlName="email"
+                  matInput
+                  placeholder="Email Address"
+                />
+                <mat-error
+                  *ngIf="
+                    contactFormControl.email.invalid &&
+                    contactFormControl.email.hasError('email')
+                  "
+                  >Invalid email</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </ng-container>
       </form>
       <div class="row">
         <div class="col-md-3">
