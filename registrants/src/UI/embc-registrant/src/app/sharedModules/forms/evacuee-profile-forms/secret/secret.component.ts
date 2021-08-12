@@ -33,11 +33,11 @@ export default class SecretComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.secretForm$ = this.formCreationService
-      .getSecretForm()
-      .subscribe((secretForm) => {
-        this.secretForm = secretForm;
-      });
+    // this.secretForm$ = this.formCreationService
+    //   .setSecurityQuestionsForm()
+    //   .subscribe((secretForm) => {
+    //     this.secretForm = secretForm;
+    //   });
   }
 
   /**

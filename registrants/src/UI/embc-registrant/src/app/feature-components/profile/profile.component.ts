@@ -162,9 +162,9 @@ export class ProfileComponent
       case 'contact-info':
         this.profileDataService.contactDetails = this.form.value;
         break;
-      case 'secret':
-        this.profileDataService.secretWordPhrase =
-          this.form.get('secretPhrase').value;
+      case 'security-questions':
+        // this.profileDataService.secretWordPhrase =
+        //   this.form.get('secretPhrase').value;
         break;
       default:
     }
@@ -200,9 +200,9 @@ export class ProfileComponent
         break;
       case 3:
         this.form$ = this.formCreationService
-          .getSecretForm()
-          .subscribe((secret) => {
-            this.form = secret;
+          .getSecurityQuestionsForm()
+          .subscribe((securityQues) => {
+            this.form = securityQues;
           });
         break;
     }

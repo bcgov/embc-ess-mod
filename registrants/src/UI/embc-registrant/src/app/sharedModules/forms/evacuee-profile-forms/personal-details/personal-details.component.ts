@@ -42,8 +42,7 @@ export default class PersonalDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject('formBuilder') formBuilder: FormBuilder,
-    @Inject('formCreationService') formCreationService: FormCreationService,
-    private router: Router
+    @Inject('formCreationService') formCreationService: FormCreationService
   ) {
     this.formBuilder = formBuilder;
     this.formCreationService = formCreationService;

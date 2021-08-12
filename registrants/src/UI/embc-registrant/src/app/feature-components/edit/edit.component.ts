@@ -202,12 +202,12 @@ export class EditComponent implements OnInit, OnDestroy {
         this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
-      case 'secret':
-        this.form$ = this.formCreationService
-          .getSecretForm()
-          .subscribe((secret) => {
-            this.form = secret;
-          });
+      case 'security-questions':
+        // this.form$ = this.formCreationService
+        //   .getSecretForm()
+        //   .subscribe((secret) => {
+        //     this.form = secret;
+        //   });
         this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;

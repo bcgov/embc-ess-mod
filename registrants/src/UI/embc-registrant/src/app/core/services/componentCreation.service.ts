@@ -39,13 +39,13 @@ export class ComponentCreationService {
       stepName: 'Contact'
     },
     {
-      component: 'secret',
+      component: 'security-questions',
       nextButtonLabel: 'Next - Create Evacuation File',
       backButtonLabel: 'Go Back & Edit',
       isLast: true,
       loadWrapperButton: false,
       lastStep: 0,
-      stepName: 'Security Question'
+      stepName: 'Security Questions'
     }
   ];
 

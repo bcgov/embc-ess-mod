@@ -1,0 +1,43 @@
+button.back {
+  float: left;
+  width: 20%;
+}
+button.next {
+  float: right;
+  width: 20%;
+}
+
+p {
+  margin: 1.8em 0;
+}
+
+.row.nav-buttons {
+  margin-top: 1em;
+}
+
+.question-row {
+  .mat-form-field:last-child {
+    padding-left: 0;
+  }
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0.25em;
+  }
+}
+
+.checkbox-row {
+  padding: 1.8em 0;
+
+  ::ng-deep .mat-checkbox-label {
+    margin-left: 0.8em;
+  }
+}
+
+.readonly-questions .row:last-child {
+  margin-bottom: 4.5em;
+}
+
+.edit-toggle .btn {
+  font-size: 1em;
+  text-align: left;
+}

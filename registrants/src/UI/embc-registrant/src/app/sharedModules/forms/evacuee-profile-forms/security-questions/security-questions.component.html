@@ -1,0 +1,199 @@
+<mat-card class="card-align">
+  <mat-card-content>
+    <p class="card-heading">Security Questions</p>
+    <div class="section-intro">
+      <p>
+        You will be asked to answer your questions should you meet with an
+        Emergency Support Services (ESS) Responder again.<br />
+        If you are unable to answer your security questions, you will be asked
+        to provide government issue identification to confirm your identity.
+      </p>
+
+      <p>
+        Tips for creating strong security questions:<br />
+        1. Choose answers that are easy to remember, but difficult for others to
+        guess.<br />
+        2. Try not to choose questions that you have answered on public sites or
+        social media.
+      </p>
+
+      <p>
+        Please select <span class="bold">3 security questions</span> from the
+        list of options below.
+      </p>
+
+      <p>
+        Please Note: Your answers need to be greater than 2 characters and
+        should not include any special characters.<br />
+        You may include numbers and letters. Your security answers are not case
+        sensitive.
+      </p>
+    </div>
+    <br />
+    <form [formGroup]="securityQuestionsForm">
+      <div formGroupName="questions">
+        <div class="row question-row">
+          <mat-form-field class="col-6" appearance="outline">
+            <mat-label>Security Question 1</mat-label>
+
+            <mat-select formControlName="question1">
+              <mat-option
+                *ngFor="let question of securityQuestionOptions"
+                [value]="question"
+              >
+                {{ question }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error
+              *ngIf="questionsFormControl?.question1?.hasError('required')"
+            >
+              Security Question is required.
+            </mat-error>
+            <mat-error
+              *ngIf="questionsFormControl?.question1?.hasError('notUnique')"
+            >
+              Security Questions must all be different.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="col-6" appearance="outline">
+            <mat-label>Question 1 Answer</mat-label>
+
+            <input matInput maxlength="50" formControlName="answer1" />
+
+            <mat-error
+              *ngIf="
+                questionsFormControl?.answer1?.hasError('required') ||
+                questionsFormControl?.answer1?.hasError('whitespaceError')
+              "
+            >
+              Answer is required.
+            </mat-error>
+            <mat-error
+              *ngIf="
+                questionsFormControl?.answer1?.hasError('minlength') ||
+                questionsFormControl?.answer1?.hasError('maxlength')
+              "
+            >
+              Answer must be between 6 and 50 characters long.
+            </mat-error>
+            <mat-error
+              *ngIf="questionsFormControl?.answer1?.hasError('pattern')"
+            >
+              Answer cannot contain special characters.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row question-row">
+          <mat-form-field class="col-6" appearance="outline">
+            <mat-label>Security Question 2</mat-label>
+
+            <mat-select formControlName="question2">
+              <mat-option
+                *ngFor="let question of securityQuestionOptions"
+                [value]="question"
+              >
+                {{ question }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error
+              *ngIf="questionsFormControl?.question2?.hasError('required')"
+            >
+              Security Question is required.
+            </mat-error>
+            <mat-error
+              *ngIf="questionsFormControl?.question2?.hasError('notUnique')"
+            >
+              Security Questions must all be different.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="col-6" appearance="outline">
+            <mat-label>Question 2 Answer</mat-label>
+
+            <input matInput maxlength="50" formControlName="answer2" />
+
+            <mat-error
+              *ngIf="
+                questionsFormControl?.answer2?.hasError('required') ||
+                questionsFormControl?.answer2?.hasError('whitespaceError')
+              "
+            >
+              Answer is required.
+            </mat-error>
+            <mat-error
+              *ngIf="
+                questionsFormControl?.answer2?.hasError('minlength') ||
+                questionsFormControl?.answer2?.hasError('maxlength')
+              "
+            >
+              Answer must be between 3 and 50 characters long.
+            </mat-error>
+            <mat-error
+              *ngIf="questionsFormControl?.answer2?.hasError('pattern')"
+            >
+              Answer cannot contain special characters.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row question-row">
+          <mat-form-field class="col-6" appearance="outline">
+            <mat-label>Security Question 3</mat-label>
+
+            <mat-select formControlName="question3">
+              <mat-option
+                *ngFor="let question of securityQuestionOptions"
+                [value]="question"
+              >
+                {{ question }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error
+              *ngIf="questionsFormControl?.question3?.hasError('required')"
+            >
+              Security Question is required.
+            </mat-error>
+            <mat-error
+              *ngIf="questionsFormControl?.question3?.hasError('notUnique')"
+            >
+              Security Questions must all be different.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="col-6" appearance="outline">
+            <mat-label>Question 3 Answer</mat-label>
+
+            <input matInput maxlength="50" formControlName="answer3" />
+
+            <mat-error
+              *ngIf="
+                questionsFormControl?.answer3?.hasError('required') ||
+                questionsFormControl?.answer3?.hasError('whitespaceError')
+              "
+            >
+              Answer is required.
+            </mat-error>
+            <mat-error
+              *ngIf="
+                questionsFormControl?.answer3?.hasError('minlength') ||
+                questionsFormControl?.answer3?.hasError('maxlength')
+              "
+            >
+              Answer must be between 3 and 50 characters long.
+            </mat-error>
+            <mat-error
+              *ngIf="questionsFormControl?.answer3?.hasError('pattern')"
+            >
+              Answer cannot contain special characters.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

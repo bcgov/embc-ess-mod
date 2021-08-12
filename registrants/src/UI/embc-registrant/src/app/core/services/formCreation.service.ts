@@ -6,12 +6,12 @@ import {
   PersonDetails,
   ContactDetailsForm,
   ContactDetails,
-  Secret,
-  SecretForm,
   AddressForm,
   Address,
   RestrictionForm,
-  Restriction
+  Restriction,
+  SecurityQuestions,
+  SecurityQuestionsForm
 } from '../model/profile.model';
 import { CustomValidationService } from './customValidation.service';
 import {
@@ -53,12 +53,6 @@ export class FormCreationService {
   contactDetailsForm$: Observable<FormGroup> =
     this.contactDetailsForm.asObservable();
 
-  secretForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
-    this.formBuilder.group(new SecretForm(new Secret()))
-  );
-
-  secretForm$: Observable<FormGroup> = this.secretForm.asObservable();
-
   addressForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
     this.formBuilder.group(
       new AddressForm(new Address(), this.formBuilder, this.customValidator)
@@ -66,6 +60,20 @@ export class FormCreationService {
   );
 
   addressForm$: Observable<FormGroup> = this.addressForm.asObservable();
+
+  securityQuestionsForm: BehaviorSubject<FormGroup | undefined> =
+    new BehaviorSubject(
+      this.formBuilder.group(
+        new SecurityQuestionsForm(
+          new SecurityQuestions(),
+          this.formBuilder,
+          this.customValidator
+        )
+      )
+    );
+
+  securityQuestionsForm$: Observable<FormGroup> =
+    this.securityQuestionsForm.asObservable();
 
   evacuatedForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
     this.formBuilder.group(
@@ -134,12 +142,12 @@ export class FormCreationService {
     this.contactDetailsForm.next(contactForm);
   }
 
-  getSecretForm(): Observable<FormGroup> {
-    return this.secretForm$;
+  getSecurityQuestionsForm(): Observable<FormGroup> {
+    return this.securityQuestionsForm$;
   }
 
-  setSecretForm(secretForm: FormGroup): void {
-    this.secretForm.next(secretForm);
+  setSecurityQuestionsForm(securityQuestionsForm: FormGroup): void {
+    return this.securityQuestionsForm.next(securityQuestionsForm);
   }
 
   getAddressForm(): Observable<FormGroup> {
@@ -201,7 +209,15 @@ export class FormCreationService {
         new ContactDetailsForm(new ContactDetails(), this.customValidator)
       )
     );
-    this.secretForm.next(this.formBuilder.group(new SecretForm(new Secret())));
+    this.securityQuestionsForm.next(
+      this.formBuilder.group(
+        new SecurityQuestionsForm(
+          new SecurityQuestions(),
+          this.formBuilder,
+          this.customValidator
+        )
+      )
+    );
   }
 
   clearNeedsAssessmentData(): void {
@@ -233,3 +249,9 @@ export class FormCreationService {
     );
   }
 }
+
+// secretForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
+//   this.formBuilder.group(new SecretForm(new Secret()))
+// );
+
+// secretForm$: Observable<FormGroup> = this.secretForm.asObservable();

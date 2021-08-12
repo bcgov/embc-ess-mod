@@ -151,18 +151,63 @@ export class ContactDetailsForm {
   }
 }
 
-export class Secret {
-  secretPhrase: string;
+export class SecurityQuestions {
+  question1: string;
+  answer1: string;
+
+  question2: string;
+  answer2: string;
+
+  question3: string;
+  answer3: string;
 
   constructor() {}
 }
 
-export class SecretForm {
-  secretPhrase = new FormControl();
+export class SecurityQuestionsForm {
+  questions: FormGroup;
 
-  constructor(secret: Secret) {
-    this.secretPhrase.setValue(secret.secretPhrase);
-    this.secretPhrase.setValidators([Validators.required]);
+  constructor(
+    securityQuestions: SecurityQuestions,
+    builder: FormBuilder,
+    customValidator: CustomValidationService
+  ) {
+    this.questions = builder.group(
+      {
+        question1: [securityQuestions.question1 ?? '', [Validators.required]],
+        answer1: [
+          securityQuestions.answer1 ?? '',
+          [
+            Validators.minLength(3),
+            Validators.maxLength(50),
+            customValidator.whitespaceValidator()
+          ]
+        ],
+        question2: [securityQuestions.question2 ?? '', [Validators.required]],
+        answer2: [
+          securityQuestions.answer2 ?? '',
+          [
+            Validators.minLength(3),
+            Validators.maxLength(50),
+            customValidator.whitespaceValidator()
+          ]
+        ],
+        question3: [securityQuestions.question3 ?? '', [Validators.required]],
+        answer3: [
+          securityQuestions.answer3 ?? '',
+          [
+            Validators.minLength(3),
+            Validators.maxLength(50),
+            customValidator.whitespaceValidator()
+          ]
+        ]
+      },
+      {
+        validators: [
+          customValidator.uniqueValueValidator(['question1', 'question2', 'question3'])
+        ]
+      }
+    );
   }
 }
 
@@ -274,3 +319,18 @@ export class AddressForm {
     return c1.code === c2.code;
   }
 }
+
+// export class Secret {
+//   secretPhrase: string;
+
+//   constructor() {}
+// }
+
+// export class SecretForm {
+//   secretPhrase = new FormControl();
+
+//   constructor(secret: Secret) {
+//     this.secretPhrase.setValue(secret.secretPhrase);
+//     this.secretPhrase.setValidators([Validators.required]);
+//   }
+// }
