@@ -7,7 +7,7 @@ import {
   NeedsAssessment
 } from 'src/app/core/api/models';
 import { EvacuationsService } from 'src/app/core/api/services';
-import { NeedsAssessmentService } from '../needs-assessment/needs-assessment.service';
+import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
 
 @Injectable({ providedIn: 'root' })
 export class EvacuationFileDataService {
@@ -111,10 +111,10 @@ export class EvacuationFileDataService {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
       country: addressObject.country.code,
-      jurisdiction:
-        addressObject.jurisdiction.code === undefined
+      community:
+        addressObject.community.code === undefined
           ? null
-          : addressObject.jurisdiction.code,
+          : addressObject.community.code,
       postalCode: addressObject.postalCode,
       stateProvince:
         addressObject.stateProvince === null

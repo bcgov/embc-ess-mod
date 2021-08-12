@@ -141,7 +141,7 @@ export default class AddressComponent
   setCountryConfig(event: MatAutocompleteSelectedEvent): void {
     this.primaryAddressForm.get('address.addressLine1').reset();
     this.primaryAddressForm.get('address.addressLine2').reset();
-    this.primaryAddressForm.get('address.jurisdiction').reset();
+    this.primaryAddressForm.get('address.community').reset();
     this.primaryAddressForm.get('address.stateProvince').reset();
     this.primaryAddressForm.get('address.postalCode').reset();
     this.updateOnVisibility();
@@ -150,7 +150,7 @@ export default class AddressComponent
   setMailingCountryConfig(event: MatAutocompleteSelectedEvent): void {
     this.primaryAddressForm.get('mailingAddress.addressLine1').reset();
     this.primaryAddressForm.get('mailingAddress.addressLine2').reset();
-    this.primaryAddressForm.get('mailingAddress.jurisdiction').reset();
+    this.primaryAddressForm.get('mailingAddress.community').reset();
     this.primaryAddressForm.get('mailingAddress.stateProvince').reset();
     this.primaryAddressForm.get('mailingAddress.postalCode').reset();
     this.updateOnVisibility();
@@ -184,9 +184,7 @@ export default class AddressComponent
     this.primaryAddressForm
       .get('address.addressLine1')
       .updateValueAndValidity();
-    this.primaryAddressForm
-      .get('address.jurisdiction')
-      .updateValueAndValidity();
+    this.primaryAddressForm.get('address.community').updateValueAndValidity();
     this.primaryAddressForm
       .get('address.stateProvince')
       .updateValueAndValidity();

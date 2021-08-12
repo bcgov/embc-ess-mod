@@ -1,0 +1,132 @@
+<mat-card>
+  <div class="content-align">
+    <div class="row">
+      <div class="col-md-12">
+        <p class="details-heading">{{ selectedSupplier?.name }}</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <p class="details-subtitle">Supplier Details</p>
+      </div>
+    </div>
+
+    <br />
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Supplier Legal Name</div>
+      <div class="col-md-8">{{ selectedSupplier?.legalName }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">GST Number</div>
+      <div class="col-md-8">{{ selectedSupplier?.gstNumber }}</div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Supplier Address</div>
+      <div class="col-md-8">
+        <p [innerHTML]="selectedSupplier?.address | maskFullAddress"></p>
+      </div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Supplier Primary Contact</div>
+      <div class="col-md-8 contact-info">
+        <p>
+          {{ selectedSupplier?.primaryContact?.lastName | uppercase }},
+          {{ selectedSupplier?.primaryContact?.firstName }}
+        </p>
+        <p>{{ selectedSupplier?.primaryContact?.phoneNumber }}</p>
+        <p class="email-decoration">
+          {{ selectedSupplier?.primaryContact?.email }}
+        </p>
+      </div>
+    </div>
+
+    <div class="row buttons-section">
+      <div class="col-md-6">
+        <button
+          class="button-s button-width button-margin"
+          mat-button
+          (click)="deleteSupplier()"
+        >
+          Remove Supplier
+        </button>
+        <button
+          class="button-p button-width"
+          mat-button
+          (click)="editSupplier()"
+        >
+          Edit Supplier Details
+        </button>
+      </div>
+    </div>
+  </div>
+</mat-card>
+
+<div class="row mutual-aid-section" *ngIf="showMutualAid()">
+  <div class="col-md-8">
+    <mat-card>
+      <div class="content-align">
+        <div class="row">
+          <div class="col-md-12">
+            <p class="aid-heading">Mutual Aid</p>
+            <p>
+              If you have a <b>mutual aid agreement</b> with another ESS Team
+              for the use of this supplier, please add them below. Search by ESS
+              Team Name, or, if you do not know the name of the ESS Team, search
+              by the community name.
+            </p>
+          </div>
+        </div>
+        <form [formGroup]="searchMutualAidForm">
+          <div class="row">
+            <div class="col-md-5">
+              <mat-form-field appearance="outline">
+                <mat-label>Search by ESS Team Name</mat-label>
+                <input
+                  formControlName="essTeam"
+                  maxlength="100"
+                  matInput
+                  placeholder="Search by ESS Team Name"
+                />
+              </mat-form-field>
+            </div>
+
+            <span class="span-text">OR</span>
+
+            <div class="col-md-5">
+              <mat-form-field appearance="outline">
+                <mat-label>Community</mat-label>
+                <input
+                  formControlName="community"
+                  maxlength="100"
+                  matInput
+                  placeholder="Community"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+  <div class="col-md-4">
+    <mat-card class="tips-card">
+      <div>
+        <img
+          class="img-align"
+          src="/assets/images/tips-lightbulb.svg"
+          height="63"
+          width="62"
+        />
+        <span class="tips-heading"><b>Tips: </b>Mutual Aid</span>
+      </div>
+      <p class="tips-info">
+        Please only add ESS Teams that you have a mutual aid agreement with.
+      </p>
+      <p class="tips-info">You can revoke access at any time.</p>
+    </mat-card>
+  </div>
+</div>

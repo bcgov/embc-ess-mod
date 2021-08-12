@@ -216,6 +216,14 @@ export const showNote: DialogContent = {
   confirmButton: 'Yes, Show Note'
 };
 
+export const deleteSupplierFromList: DialogContent = {
+  title: 'Remove Supplier from Supplier List',
+  text:
+    '<p>Are you sure you want to remove this supplier from your supplier list? Any ESS Teams who have this supplier on their list due to a mutual aid agreement will also have this supplier removed from their list.</p>',
+  cancelButton: 'No, Cancel',
+  confirmButton: 'Yes, Remove Supplier'
+};
+
 // Generic error messages
 export const genericError =
   'An error occurred while loading this page. Please refresh and try again.';

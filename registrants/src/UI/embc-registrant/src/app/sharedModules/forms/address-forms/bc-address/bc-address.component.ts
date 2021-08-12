@@ -33,12 +33,10 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
   ngOnInit(): void {
     this.city = this.locationService.getCommunityList();
 
-    this.filteredOptions = this.addressForm
-      .get('jurisdiction')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) => (value ? this.filter(value) : this.city.slice()))
-      );
+    this.filteredOptions = this.addressForm.get('community').valueChanges.pipe(
+      startWith(''),
+      map((value) => (value ? this.filter(value) : this.city.slice()))
+    );
   }
 
   ngAfterViewChecked(): void {
@@ -56,11 +54,11 @@ export class BcAddressComponent implements OnInit, AfterViewChecked {
    * Checks if the city value exists in the list
    */
   validateCity(): boolean {
-    const currentCity = this.addressForm.get('jurisdiction').value;
+    const currentCity = this.addressForm.get('community').value;
     let invalidCity = false;
     if (currentCity !== null && currentCity.name === undefined) {
       invalidCity = !invalidCity;
-      this.addressForm.get('jurisdiction').setErrors({ invalidCity: true });
+      this.addressForm.get('community').setErrors({ invalidCity: true });
     }
     return invalidCity;
   }

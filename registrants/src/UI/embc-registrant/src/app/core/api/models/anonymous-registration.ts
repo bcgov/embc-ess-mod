@@ -1,15 +1,10 @@
+/* tslint:disable */
 /* eslint-disable */
-/* eslint-disable */
-import { Address } from './address';
+import { EvacuationFile } from './evacuation-file';
 import { NeedsAssessment } from './needs-assessment';
 import { Profile } from './profile';
-
-/**
- * Registration form for anonymous registrants
- */
-export interface AnonymousRegistration {
+export interface AnonymousRegistration extends EvacuationFile {
   captcha: string;
-  evacuatedFromAddress: Address;
   informationCollectionConsent: boolean;
   preliminaryNeedsAssessment: NeedsAssessment;
   registrationDetails: Profile;

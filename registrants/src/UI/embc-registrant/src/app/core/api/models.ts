@@ -5,6 +5,7 @@ export { Profile } from './models/profile';
 export { PersonDetails } from './models/person-details';
 export { ContactDetails } from './models/contact-details';
 export { Address } from './models/address';
+export { SecurityQuestion } from './models/security-question';
 export { NeedsAssessment } from './models/needs-assessment';
 export { InsuranceOption } from './models/insurance-option';
 export { HouseholdMember } from './models/household-member';

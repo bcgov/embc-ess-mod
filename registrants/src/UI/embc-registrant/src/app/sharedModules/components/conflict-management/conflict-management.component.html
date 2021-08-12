@@ -136,7 +136,7 @@
               <div *ngIf="addressConflict?.originalValue?.addressLine2">
                 {{ addressConflict?.originalValue?.addressLine2 }}<br />
               </div>
-              {{ addressConflict?.originalValue?.jurisdiction?.name }}
+              {{ addressConflict?.originalValue?.community?.name }}
               {{ addressConflict?.originalValue?.stateProvince?.code }}
               {{ addressConflict?.originalValue?.postalCode }}<br />
               {{ addressConflict?.originalValue?.country?.name }}
@@ -146,7 +146,7 @@
               <div *ngIf="addressConflict?.conflictingValue?.addressLine2">
                 {{ addressConflict?.conflictingValue?.addressLine2 }}<br />
               </div>
-              {{ addressConflict?.conflictingValue?.jurisdiction?.name }}
+              {{ addressConflict?.conflictingValue?.community?.name }}
               {{ addressConflict?.conflictingValue?.stateProvince?.code }}
               {{ addressConflict?.conflictingValue?.postalCode }}<br />
               {{ addressConflict?.conflictingValue?.country?.name }}

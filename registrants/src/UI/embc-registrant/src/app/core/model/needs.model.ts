@@ -7,7 +7,6 @@ import {
 import { HouseholdMember } from '../api/models';
 import { CustomValidationService } from '../services/customValidation.service';
 import { RegAddress } from './address';
-import { PersonDetails } from './profile.model';
 
 export class Evacuated {
   evacuatedFromAddress: RegAddress;
@@ -29,7 +28,7 @@ export class EvacuatedForm {
     this.evacuatedFromAddress = builder.group({
       addressLine1: ['', [Validators.required]],
       addressLine2: [''],
-      jurisdiction: ['', [Validators.required]],
+      community: ['', [Validators.required]],
       stateProvince: ['', [Validators.required]],
       country: ['', [Validators.required]],
       postalCode: [

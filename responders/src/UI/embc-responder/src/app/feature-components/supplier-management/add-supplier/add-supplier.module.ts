@@ -5,6 +5,7 @@ import { AddSupplierRoutingModule } from './add-supplier-routing.module';
 import { AddSupplierComponent } from './add-supplier.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [AddSupplierComponent],
@@ -12,7 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     AddSupplierRoutingModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ]
 })
 export class AddSupplierModule {}

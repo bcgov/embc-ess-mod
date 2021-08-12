@@ -213,4 +213,46 @@ export class CustomValidationService {
       return null;
     };
   }
+
+  /**
+   * Group required validation for custom gst field
+   *
+   * @returns validation errors
+   */
+  groupRequiredValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value !== undefined) {
+        const value1 = control.get('part1').value;
+        const value2 = control.get('part2').value;
+        if (
+          (value1 || '').trim().length === 0 ||
+          (value2 || '').trim().length === 0
+        ) {
+          return { groupRequiredError: true };
+        }
+      }
+    };
+  }
+
+  /**
+   * Group minimum length validation for custom gst field
+   *
+   * @returns validation errors
+   */
+  groupMinLengthValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value !== undefined) {
+        const value1 = control.get('part1').value;
+        const value2 = control.get('part2').value;
+        if (value1 !== '' && value2 !== '') {
+          if (
+            (value1 || '').trim().length < 9 ||
+            (value2 || '').trim().length < 4
+          ) {
+            return { groupMinLengthError: true };
+          }
+        }
+      }
+    };
+  }
 }

@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* tslint:disable */
 /* eslint-disable */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
@@ -133,57 +133,6 @@ export class ProfileService extends BaseService {
 
     return this.profileUpsert$Response(params).pipe(
       map((r: StrictHttpResponse<string>) => r.body as string)
-    );
-  }
-
-  /**
-   * Path part for operation profileDeleteProfile
-   */
-  static readonly ProfileDeleteProfilePath = '/api/profiles/current';
-
-  /**
-   * Get the current logged in user's profile.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `profileDeleteProfile()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  profileDeleteProfile$Response(params?: {
-  }): Observable<StrictHttpResponse<Profile>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ProfileService.ProfileDeleteProfilePath, 'delete');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Profile>;
-      })
-    );
-  }
-
-  /**
-   * Get the current logged in user's profile.
-   *
-   *
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `profileDeleteProfile$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  profileDeleteProfile(params?: {
-  }): Observable<Profile> {
-
-    return this.profileDeleteProfile$Response(params).pipe(
-      map((r: StrictHttpResponse<Profile>) => r.body as Profile)
     );
   }
 

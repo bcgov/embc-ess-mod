@@ -48,7 +48,7 @@ export class EvacuationFileListComponent implements OnInit {
             files.length
           );
           this.evacuatedFrom =
-            this.dataSourceActive[0].evacuatedFromAddress.jurisdiction;
+            this.dataSourceActive[0].evacuatedFromAddress.community;
           this.showLoading = false;
         });
     } else if (this.currentPath === '/verified-registration/dashboard/past') {

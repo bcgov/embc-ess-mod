@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* tslint:disable */
 /* eslint-disable */
 import { Address } from './address';
 import { ProfileDataConflict } from './profile-data-conflict';
