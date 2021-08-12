@@ -45,7 +45,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                     //set link to primary regitrant's household member entity
                     var primaryHouseholdMember = d.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment.SingleOrDefault(m => m.era_isprimaryregistrant == true);
                     if (primaryHouseholdMember != null) //throw new Exception($"no primary household member was included in evacuation file {s.Id}");
-                    primaryHouseholdMember._era_registrant_value = Guid.Parse(s.PrimaryRegistrantId);
+                        primaryHouseholdMember._era_registrant_value = Guid.Parse(s.PrimaryRegistrantId);
                 });
 
             CreateMap<era_evacuationfile, EvacuationFile>()

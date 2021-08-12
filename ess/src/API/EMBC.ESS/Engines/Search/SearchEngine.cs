@@ -45,26 +45,33 @@ namespace EMBC.ESS.Engines.Search
             if (string.IsNullOrWhiteSpace(request.LastName)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.LastName));
             if (string.IsNullOrWhiteSpace(request.DateOfBirth)) throw new ArgumentNullException(nameof(EvacueeSearchRequest.DateOfBirth));
 
-            //TODO - clean this up
-            //if the search is for file matches only - which is search mode HouseholdMembers - then it should only return results that are not already linked to a Registrant.
-            var membersQuery = request.SearchMode == SearchMode.Both
-                ? essContext.era_householdmembers
+            System.Collections.Generic.IEnumerable<string> membersQuery;
+            if (request.SearchMode == SearchMode.Both)
+            {
+                membersQuery = essContext.era_householdmembers
                     .Where(m => m.statecode == (int)EntityState.Active)
                     .Where(m => m.era_firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
                     .Where(m => m.era_lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
                     .Where(m => m.era_dateofbirth.Equals(Date.Parse(request.DateOfBirth)))
                     .ToArray()
-                    .Select(m => m.era_householdmemberid.Value.ToString())
-                : request.SearchMode == SearchMode.HouseholdMembers
-                ? essContext.era_householdmembers
+                    .Select(m => m.era_householdmemberid.Value.ToString());
+            }
+            else if (request.SearchMode == SearchMode.HouseholdMembers)
+            {
+                //when searching HouseholdMembers only, we only return results that are not already linked to a Registrant.
+                membersQuery = essContext.era_householdmembers
                     .Where(m => m.statecode == (int)EntityState.Active)
                     .Where(m => m.era_firstname.Equals(request.FirstName, StringComparison.OrdinalIgnoreCase))
                     .Where(m => m.era_lastname.Equals(request.LastName, StringComparison.OrdinalIgnoreCase))
                     .Where(m => m.era_dateofbirth.Equals(Date.Parse(request.DateOfBirth)))
                     .Where(m => m._era_registrant_value == null)
                     .ToArray()
-                    .Select(m => m.era_householdmemberid.Value.ToString())
-                : Array.Empty<string>();
+                    .Select(m => m.era_householdmemberid.Value.ToString());
+            }
+            else
+            {
+                membersQuery = Array.Empty<string>();
+            }
 
             var registrantsQuery = request.SearchMode == SearchMode.Both || request.SearchMode == SearchMode.Registrants
                 ? essContext.contacts
