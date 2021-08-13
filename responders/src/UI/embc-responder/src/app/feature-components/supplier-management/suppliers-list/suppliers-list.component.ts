@@ -125,10 +125,68 @@ export class SuppliersListComponent implements OnInit {
     }
   ];
 
-  filterTerm: TableFilterValueModel;
+  mutualAidListData: SupplierTemp[] = [
+    {
+      id: '0001',
+      legalName: 'Save-on-Foods Ltd',
+      name: 'SAVE-ON-FOODS',
+      address: {
+        addressLine1: '120 Main Street',
+        addressLine2: 'Office 123',
+        postalCode: 'V6Z 0G7',
+        stateProvince: {
+          code: 'BC',
+          countryCode: 'CA',
+          name: 'British Columbia'
+        },
+        community: 'Victoria',
+        country: { code: 'CA', name: 'Canada' }
+      },
+      isMutualAid: true,
+      isActive: true,
+      gstNumber: { part1: '222222222', part2: '2222' },
+      primaryContact: {
+        firstName: 'John',
+        lastName: 'Smith',
+        phoneNumber: '250 678 5789',
+        email: 'john@sleepeasyhotel.ca'
+      }
+    },
+    {
+      id: '0002',
+      legalName: 'Master Foods',
+      name: 'FRESH FOODS',
+      address: {
+        addressLine1: '120 Main Street',
+        addressLine2: 'Office 123',
+        postalCode: 'V6Z 0G7',
+        stateProvince: {
+          code: 'BC',
+          countryCode: 'CA',
+          name: 'British Columbia'
+        },
+        community: 'Victoria',
+        country: { code: 'CA', name: 'Canada' }
+      },
+      isMutualAid: false,
+      isActive: true,
+      gstNumber: { part1: '999999999', part2: '9999' },
+      primaryContact: {
+        firstName: 'William',
+        lastName: 'Terrace',
+        phoneNumber: '250 678 5789',
+        email: 'william@freshfoods.ca'
+      }
+    }
+  ];
+
+  primarySupplierFilterTerm: TableFilterValueModel;
+  mutualAidSupplierFilterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
-  displayedColumns: TableColumnModel[];
+  primarySuppliersColumns: TableColumnModel[];
+  mutualAidSuppliersColumns: TableColumnModel[];
   suppliersList: SupplierTemp[];
+  mutualAidList: SupplierTemp[];
   isLoading = false;
   statusLoading = true;
   loggedInRole: string;
@@ -150,11 +208,13 @@ export class SuppliersListComponent implements OnInit {
 
   ngOnInit(): void {
     this.filtersToLoad = this.listSupplierDataService.filtersToLoad;
-    this.displayedColumns = this.listSupplierDataService.displayedColumns;
+    this.primarySuppliersColumns = this.listSupplierDataService.primarySupplierColumns;
+    this.mutualAidSuppliersColumns = this.listSupplierDataService.mutualAidSupplierColumns;
     this.loggedInRole = this.userService.currentProfile.role;
 
     setTimeout(() => {
       this.suppliersList = this.suppliersListData;
+      this.mutualAidList = this.mutualAidListData;
       this.isLoading = !this.isLoading;
     }, 5000);
 
@@ -176,8 +236,17 @@ export class SuppliersListComponent implements OnInit {
    *
    * @param event user selected filters
    */
-  filter(event: TableFilterValueModel): void {
-    this.filterTerm = event;
+  primarySupplierFilter(event: TableFilterValueModel): void {
+    this.primarySupplierFilterTerm = event;
+  }
+
+  /**
+   * Sets the user selected filers
+   *
+   * @param event user selected filters
+   */
+  mutualAidSupplierFilter(event: TableFilterValueModel): void {
+    this.mutualAidSupplierFilterTerm = event;
   }
 
   /**
@@ -189,9 +258,15 @@ export class SuppliersListComponent implements OnInit {
     this.listSupplierDataService.setSelectedSupplier($event);
     this.router.navigate(
       ['/responder-access/supplier-management/supplier-detail'],
-      {
-        state: $event
-      }
+      { state: { ...$event }, queryParams: { type: 'supplier' } }
+    );
+  }
+
+  openMutualAidDetails($event: SupplierTemp): void {
+    this.listSupplierDataService.setSelectedSupplier($event);
+    this.router.navigate(
+      ['/responder-access/supplier-management/supplier-detail'],
+      { state: { ...$event }, queryParams: { type: 'mutualAid' } }
     );
   }
 

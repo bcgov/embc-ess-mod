@@ -20,6 +20,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class SupplierDetailComponent implements OnInit {
   searchMutualAidForm: FormGroup;
   selectedSupplier: SupplierTemp;
+  detailsType: string;
   loggedInRole: string;
 
   constructor(
@@ -36,6 +37,11 @@ export class SupplierDetailComponent implements OnInit {
         const state = this.router.getCurrentNavigation().extras
           .state as SupplierTemp;
         this.selectedSupplier = state;
+
+        const params = this.router.getCurrentNavigation().extras.queryParams;
+        if (params) {
+          this.detailsType = params.type;
+        }
       }
     } else {
       this.selectedSupplier = this.supplierListDataService.getSelectedSupplier();

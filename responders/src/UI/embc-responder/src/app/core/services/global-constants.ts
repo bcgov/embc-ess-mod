@@ -236,6 +236,12 @@ export const deleteSupplierFromList: DialogContent = {
   confirmButton: 'Yes, Remove Supplier'
 };
 
+export const supplierStatusDefinition: DialogContent = {
+  title: 'Status Definitions',
+  text:
+    '<p class="green-info"><b>Active</b></p><p>ACTIVE suppliers will appear in your supplier list for responders to use during referral creation.</p><p class="red-alert"><b>Deactivated</b></p><p>DEACTIVATED suppliers will NOT appear in your supplier list for responders to use during referral creation</p><p><b>Status changes affect your ESS Team, as well as any ESS Teams connected to your supplier via a mutual aid agreement.</b></p>',
+  cancelButton: 'Close'
+};
 // Generic error messages
 export const genericError =
   'An error occurred while loading this page. Please refresh and try again.';

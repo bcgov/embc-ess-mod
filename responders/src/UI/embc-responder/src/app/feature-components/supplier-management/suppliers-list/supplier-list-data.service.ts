@@ -45,11 +45,19 @@ export class SupplierListDataService {
     }
   };
 
-  public displayedColumns: TableColumnModel[] = [
+  public primarySupplierColumns: TableColumnModel[] = [
     { label: 'Supplier Legal Name', ref: 'legalName' },
     { label: 'Supplier Name', ref: 'name' },
     { label: 'Address', ref: 'address' },
     { label: 'Mutual Aid', ref: 'isMutualAid' },
+    { label: 'Status', ref: 'isActive' }
+  ];
+
+  public mutualAidSupplierColumns: TableColumnModel[] = [
+    { label: 'Supplier Legal Name', ref: 'legalName' },
+    { label: 'Supplier Name', ref: 'name' },
+    { label: 'Address', ref: 'address' },
+    { label: 'Mutual Aid Provided by', ref: 'isMutualAid' },
     { label: 'Status', ref: 'isActive' }
   ];
 
