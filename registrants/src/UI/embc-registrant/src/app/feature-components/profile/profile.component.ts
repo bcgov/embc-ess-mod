@@ -162,9 +162,10 @@ export class ProfileComponent
       case 'contact-info':
         this.profileDataService.contactDetails = this.form.value;
         break;
-      case 'secret':
-        this.profileDataService.secretWordPhrase =
-          this.form.get('secretPhrase').value;
+      case 'security-questions':
+        console.log(this.form.get('questions'));
+        this.saveSecurityQuestions(this.form.get('questions') as FormGroup);
+        console.log(this.profileDataService.securityQuestions);
         break;
       default:
     }
@@ -200,9 +201,9 @@ export class ProfileComponent
         break;
       case 3:
         this.form$ = this.formCreationService
-          .getSecretForm()
-          .subscribe((secret) => {
-            this.form = secret;
+          .getSecurityQuestionsForm()
+          .subscribe((securityQues) => {
+            this.form = securityQues;
           });
         break;
     }
@@ -223,5 +224,26 @@ export class ProfileComponent
           this.alertService.setAlert('danger', error.title);
         }
       );
+  }
+
+  private saveSecurityQuestions(questionForm: FormGroup) {
+    let anyValueSet = false;
+    // Create SecurityQuestion objects and save to array, and check if any value set
+    for (let i = 1; i <= 3; i++) {
+      const question = questionForm.get(`question${i}`).value?.trim() ?? '';
+
+      const answer = questionForm.get(`answer${i}`).value?.trim() ?? '';
+
+      if (question.length > 0 || answer.length > 0) {
+        anyValueSet = true;
+      }
+
+      this.profileDataService.securityQuestions.push({
+        id: i,
+        answerChanged: true,
+        question,
+        answer
+      });
+    }
   }
 }

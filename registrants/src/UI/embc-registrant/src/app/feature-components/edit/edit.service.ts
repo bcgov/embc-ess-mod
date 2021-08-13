@@ -61,8 +61,8 @@ export class EditService {
         console.log(this.profileDataService.contactDetails);
         break;
       case 'secret':
-        this.profileDataService.secretWordPhrase =
-          form.get('secretPhrase').value;
+        // this.profileDataService.secretWordPhrase =
+        //   form.get('secretPhrase').value;
         break;
       case 'evac-address':
         this.evacuationFileDataService.evacuatedFromAddress = form.get(
@@ -143,13 +143,13 @@ export class EditService {
         }
         break;
       case 'secret':
-        if (this.profileDataService.secretWordPhrase !== undefined) {
-          form
-            .get('secretPhrase')
-            .patchValue(this.profileDataService.secretWordPhrase);
-        } else {
-          form.reset();
-        }
+        // if (this.profileDataService.secretWordPhrase !== undefined) {
+        //   form
+        //     .get('secretPhrase')
+        //     .patchValue(this.profileDataService.secretWordPhrase);
+        // } else {
+        //   form.reset();
+        // }
         break;
       case 'evac-address':
         if (

@@ -154,4 +154,53 @@ export class CustomValidationService {
     return (control: AbstractControl): { [key: string]: boolean } | null =>
       Validators.pattern(globalConst.petsQuantityPattern)(control);
   }
+
+  whitespaceValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value !== undefined) {
+        if ((control.value || '').trim().length === 0) {
+          return { whitespaceError: true };
+        }
+      }
+    };
+  }
+
+  /**
+   * Checks an array of controls by name, to see if they all have different values (unless empty)
+   *
+   * @returns validation errors
+   */
+  uniqueValueValidator(controlNames: string[]): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control) {
+        const values = [];
+
+        // Fill array of values
+        for (const controlName of controlNames) {
+          values.push(control.get(controlName).value?.trim() ?? '');
+        }
+
+        // Get index of every repeated value in array
+        const dupeIndexes = [];
+        for (let i = 0; i < values.length; i++) {
+          // Skip empty strings
+          if (values[i].length === 0) continue;
+
+          const iFirst = values.indexOf(values[i]);
+
+          if (iFirst !== i) {
+            dupeIndexes.push(i);
+          }
+        }
+
+        //For each duplicate, set notUnique error
+        for (const dupeIndex of dupeIndexes) {
+          const controlVal = control.get(controlNames[dupeIndex]);
+          controlVal.setErrors({ notUnique: true });
+          return { notUnique: true };
+        }
+      }
+      return null;
+    };
+  }
 }

@@ -3,7 +3,8 @@ import {
   Address,
   Profile,
   PersonDetails,
-  ContactDetails
+  ContactDetails,
+  SecurityQuestion
 } from 'src/app/core/api/models';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { RestrictionService } from '../restriction/restriction.service';
@@ -17,7 +18,8 @@ export class ProfileDataService {
   private primaryAddressDetail: Address;
   private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
-  private secretPhrase: string;
+  private securityQuestionsVal: Array<SecurityQuestion> =
+    new Array<SecurityQuestion>();
 
   public get personalDetails(): PersonDetails {
     return this.personalDetail;
@@ -47,11 +49,11 @@ export class ProfileDataService {
     this.contactDetail = value;
   }
 
-  public get secretWordPhrase(): string {
-    return this.secretPhrase;
+  public get securityQuestions(): Array<SecurityQuestion> {
+    return this.securityQuestionsVal;
   }
-  public set secretWordPhrase(value: string) {
-    this.secretPhrase = value;
+  public set securityQuestions(value: Array<SecurityQuestion>) {
+    this.securityQuestionsVal = value;
   }
 
   constructor(

@@ -31,18 +31,6 @@ export const gender = [
   { name: 'X', value: 'X' }
 ];
 
-// export const noticeBody = {
-//   body: '<p>To register with the Evacuee Registration & Assistance (ERA) tool, you must select \'I agree\'.</p>',
-//   buttons:
-//     [
-//       {
-//         name: 'Close',
-//         class: 'button-p',
-//         function: 'close'
-//       }
-//     ]
-// };
-
 export const deleteMemberInfoBody = {
   body: '<p>Are you sure you want to remove this family member from your evacuation file?</p>',
   buttons: [
@@ -59,14 +47,5 @@ export const deleteMemberInfoBody = {
   ]
 };
 
-// export const invalidGoBackMessage = {
-//   body: '<p>The Go Back action is disabled on this page</p>',
-//   buttons:
-//     [
-//       {
-//         name: 'Ok',
-//         class: 'button-p',
-//         function: 'ok'
-//       }
-//     ]
-// };
+export const securityQuesError =
+  'An error occurred while loading the security questions. Please try again later';
