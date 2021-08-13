@@ -204,7 +204,11 @@ export class SecurityQuestionsForm {
       },
       {
         validators: [
-          customValidator.uniqueValueValidator(['question1', 'question2', 'question3'])
+          customValidator.uniqueValueValidator([
+            'question1',
+            'question2',
+            'question3'
+          ])
         ]
       }
     );

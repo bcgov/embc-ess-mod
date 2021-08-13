@@ -171,27 +171,6 @@ export class ProfileComponent
     }
   }
 
-  private saveSecurityQuestions(questionForm: FormGroup) {
-    let anyValueSet = false;
-    // Create SecurityQuestion objects and save to array, and check if any value set
-    for (let i = 1; i <= 3; i++) {
-      const question = questionForm.get(`question${i}`).value?.trim() ?? '';
-
-      const answer = questionForm.get(`answer${i}`).value?.trim() ?? '';
-
-      if (question.length > 0 || answer.length > 0) {
-        anyValueSet = true;
-      }
-
-      this.profileDataService.securityQuestions.push({
-        id: i,
-        answerChanged: true,
-        question,
-        answer
-      });
-    }
-  }
-
   /**
    * Loads appropriate forms based on the current step
    *
@@ -245,5 +224,26 @@ export class ProfileComponent
           this.alertService.setAlert('danger', error.title);
         }
       );
+  }
+
+  private saveSecurityQuestions(questionForm: FormGroup) {
+    let anyValueSet = false;
+    // Create SecurityQuestion objects and save to array, and check if any value set
+    for (let i = 1; i <= 3; i++) {
+      const question = questionForm.get(`question${i}`).value?.trim() ?? '';
+
+      const answer = questionForm.get(`answer${i}`).value?.trim() ?? '';
+
+      if (question.length > 0 || answer.length > 0) {
+        anyValueSet = true;
+      }
+
+      this.profileDataService.securityQuestions.push({
+        id: i,
+        answerChanged: true,
+        question,
+        answer
+      });
+    }
   }
 }

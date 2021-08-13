@@ -18,7 +18,8 @@ export class ProfileDataService {
   private primaryAddressDetail: Address;
   private mailingAddressDetail: Address;
   private contactDetail: ContactDetails;
-  private securityQuestionsVal: Array<SecurityQuestion> = new Array<SecurityQuestion>();
+  private securityQuestionsVal: Array<SecurityQuestion> =
+    new Array<SecurityQuestion>();
 
   public get personalDetails(): PersonDetails {
     return this.personalDetail;
