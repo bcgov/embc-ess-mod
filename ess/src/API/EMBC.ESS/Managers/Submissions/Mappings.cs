@@ -118,6 +118,36 @@ namespace EMBC.ESS.Managers.Submissions
                 .ForMember(d => d.IsSearchMatch, opts => opts.Ignore())
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.HasAccessRestriction))
                 ;
+
+            CreateMap<Resources.Suppliers.TeamSupplier, Shared.Contracts.Submissions.TeamSupplier>()
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.TeamSupplier, Resources.Suppliers.TeamSupplier>()
+                ;
+
+            CreateMap<Resources.Suppliers.Supplier, Shared.Contracts.Submissions.Supplier>()
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.Supplier, Resources.Suppliers.Supplier>()
+                ;
+
+            CreateMap<Resources.Suppliers.SupplierContact, Shared.Contracts.Submissions.SupplierContact>()
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.SupplierContact, Resources.Suppliers.SupplierContact>()
+                ;
+
+            CreateMap<Resources.Suppliers.Team, Shared.Contracts.Submissions.Team>()
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.Team, Resources.Suppliers.Team>()
+                ;
+
+            CreateMap<Resources.Suppliers.Address, Shared.Contracts.Submissions.Address>()
+                ;
+
+            CreateMap<Shared.Contracts.Submissions.Address, Resources.Suppliers.Address>()
+                ;
         }
     }
 }
