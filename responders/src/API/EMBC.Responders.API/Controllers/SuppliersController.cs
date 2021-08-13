@@ -18,9 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts.Submissions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +34,8 @@ namespace EMBC.Responders.API.Controllers
     {
         private readonly IMessagingClient messagingClient;
         private readonly IMapper mapper;
+
+        private string teamId => User.FindFirstValue("user_team");
 
         public SuppliersController(IMessagingClient messagingClient, IMapper mapper)
         {
@@ -48,29 +52,13 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SupplierSearchResult>>> SearchSupppliers(string name)
         {
-            List<SupplierSearchResult> ret = new List<SupplierSearchResult>
+            var suppliers = (await messagingClient.Send(new TeamSuppliersSearchQuery
             {
-                new SupplierSearchResult
-                {
-                    Id = "123",
-                    LegalName = "Test Supplier",
-                    Name = "Test Supplier",
-                    SupplierAddress = "123 Fake St.",
-                    MutualAid = false,
-                    Status = SupplierStatus.Active,
-                },
-                new SupplierSearchResult
-                {
-                    Id = "321",
-                    LegalName = "Test Supplier 2",
-                    Name = "Test Supplier 2",
-                    SupplierAddress = "321 Main St.",
-                    MutualAid = true,
-                    Status = SupplierStatus.Active,
-                }
-            };
+                TeamId = teamId,
+                Name = name
+            })).Items;
 
-            return await Task.FromResult(ret);
+            return Ok(mapper.Map<IEnumerable<SupplierSearchResult>>(suppliers));
         }
 
         /// <summary>
@@ -176,5 +164,19 @@ namespace EMBC.Responders.API.Controllers
 
         [Description("Deactivated")]
         Deactivated
+    }
+
+    public class SuppliersMapping : Profile
+    {
+        public SuppliersMapping()
+        {
+            CreateMap<TeamSupplier, SupplierSearchResult>()
+                .ForMember(d => d.Name, opts => opts.MapFrom(s => s.Supplier.Name))
+                .ForMember(d => d.LegalName, opts => opts.MapFrom(s => s.Supplier.LegalName))
+                .ForMember(d => d.SupplierAddress, opts => opts.MapFrom(s => s.Supplier.Address.AddressLine1))
+                .ForMember(d => d.MutualAid, opts => opts.MapFrom(s => !s.IsPrimarySupplier))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
+                ;
+        }
     }
 }
