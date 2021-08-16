@@ -22,7 +22,9 @@ import {
   IdentifyNeeds,
   IdentifyNeedsForm,
   Pet,
-  PetForm
+  PetForm,
+  Secret,
+  SecretForm
 } from '../model/needs.model';
 
 @Injectable({ providedIn: 'root' })
@@ -113,6 +115,12 @@ export class FormCreationService {
   identifyNeedsForm$: Observable<FormGroup> =
     this.identifyNeedsForm.asObservable();
 
+  secretForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
+    this.formBuilder.group(new SecretForm(new Secret()))
+  );
+
+  secretForm$: Observable<FormGroup> = this.secretForm.asObservable();
+
   constructor(
     private formBuilder: FormBuilder,
     private customValidator: CustomValidationService
@@ -190,6 +198,14 @@ export class FormCreationService {
     this.identifyNeedsForm.next(identifyNeedsForm);
   }
 
+  getSecretForm(): Observable<FormGroup> {
+    return this.secretForm$;
+  }
+
+  setSecretForm(secretForm: FormGroup): void {
+    this.secretForm.next(secretForm);
+  }
+
   clearProfileData(): void {
     this.restrictionForm.next(
       this.formBuilder.group(new RestrictionForm(new Restriction()))
@@ -247,11 +263,6 @@ export class FormCreationService {
     this.identifyNeedsForm.next(
       this.formBuilder.group(new IdentifyNeedsForm(new IdentifyNeeds()))
     );
+    this.secretForm.next(this.formBuilder.group(new SecretForm(new Secret())));
   }
 }
-
-// secretForm: BehaviorSubject<FormGroup | undefined> = new BehaviorSubject(
-//   this.formBuilder.group(new SecretForm(new Secret()))
-// );
-
-// secretForm$: Observable<FormGroup> = this.secretForm.asObservable();

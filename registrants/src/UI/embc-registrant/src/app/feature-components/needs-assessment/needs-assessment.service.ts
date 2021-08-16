@@ -28,6 +28,7 @@ export class NeedsAssessmentService {
   private mainHouseholdMembers: HouseholdMember;
   private registrationResult: RegistrationResult;
   private verifiedRegistrationResult: string;
+  private secretPhrase: string;
 
   constructor() {}
 
@@ -138,6 +139,13 @@ export class NeedsAssessmentService {
 
   public set mainHouseholdMember(value: HouseholdMember) {
     this.mainHouseholdMembers = value;
+  }
+
+  public get secretWordPhrase(): string {
+    return this.secretPhrase;
+  }
+  public set secretWordPhrase(value: string) {
+    this.secretPhrase = value;
   }
 
   public setHouseHoldMembers(members: PersonDetails[]): void {

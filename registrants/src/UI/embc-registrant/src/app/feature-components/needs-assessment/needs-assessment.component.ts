@@ -126,6 +126,13 @@ export class NeedsAssessmentComponent
             this.form = identifyNeedsForm;
           });
         break;
+      case 4:
+        this.form$ = this.formCreationService
+          .getSecretForm()
+          .subscribe((secret) => {
+            this.form = secret;
+          });
+        break;
     }
   }
 
@@ -186,6 +193,10 @@ export class NeedsAssessmentComponent
         break;
       case 'identify-needs':
         this.needsAssessmentService.setNeedsDetails(this.form);
+        break;
+      case 'secret':
+        this.needsAssessmentService.secretWordPhrase =
+          this.form.get('secretPhrase').value;
         break;
       default:
     }

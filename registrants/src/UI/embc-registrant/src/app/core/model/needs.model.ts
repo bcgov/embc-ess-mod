@@ -228,3 +228,21 @@ export class IdentifyNeedsForm {
     this.canEvacueeProvideTransportation.setValidators([Validators.required]);
   }
 }
+
+export class Secret {
+  secretPhrase: string;
+
+  constructor() {}
+}
+
+export class SecretForm {
+  secretPhrase = new FormControl();
+
+  constructor(secret: Secret) {
+    this.secretPhrase.setValue(secret.secretPhrase);
+    this.secretPhrase.setValidators([
+      Validators.required,
+      Validators.minLength(8)
+    ]);
+  }
+}

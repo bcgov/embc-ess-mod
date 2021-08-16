@@ -31,7 +31,8 @@ export class NonVerifiedRegistrationMappingService {
         this.createRegistration(),
         this.profileDataService.createProfileDTO()
       ),
-      captcha: 'abc'
+      captcha: 'abc',
+      secretPhrase: this.needsService.secretWordPhrase
     };
   }
 
