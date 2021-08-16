@@ -23,7 +23,6 @@ using AutoMapper;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
-using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Shared.Contracts.Submissions;
@@ -43,7 +42,6 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly INotificationSender notificationSender;
         private readonly ITaskRepository taskRepository;
         private readonly ITeamRepository teamRepository;
-        private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
 
         public SubmissionsManager(
@@ -55,7 +53,6 @@ namespace EMBC.ESS.Managers.Submissions
             INotificationSender notificationSender,
             ITaskRepository taskRepository,
             ITeamRepository teamRepository,
-            ISupplierRepository supplierRepository,
             ISearchEngine searchEngine)
         {
             this.mapper = mapper;
@@ -66,7 +63,6 @@ namespace EMBC.ESS.Managers.Submissions
             this.notificationSender = notificationSender;
             this.taskRepository = taskRepository;
             this.teamRepository = teamRepository;
-            this.supplierRepository = supplierRepository;
             this.searchEngine = searchEngine;
         }
 
@@ -387,31 +383,6 @@ namespace EMBC.ESS.Managers.Submissions
             var esstasks = mapper.Map<IEnumerable<IncidentTask>>(esstask);
 
             return new TasksSearchQueryResult { Items = esstasks };
-        }
-
-        public async Task<TeamSuppliersSearchQueryResult> Handle(TeamSuppliersSearchQuery query)
-        {
-            var teamSuplliers = (await supplierRepository.QueryTeamSupplier(new TeamSupplierQuery
-            {
-                Name = query.Name,
-                TeamId = query.TeamId
-            })).Items;
-
-            foreach (var ts in teamSuplliers)
-            {
-                if (ts.Supplier.PrimaryContact.Id == null) continue;
-                var contacts = (await supplierRepository.QuerySupplierContact(new SupplierContactQuery
-                {
-                    ContactId = ts.Supplier.PrimaryContact.Id
-                })).Items;
-
-                var primaryContact = contacts.SingleOrDefault();
-                if (primaryContact == null) continue;
-                ts.Supplier.PrimaryContact = primaryContact;
-            }
-
-            var res = mapper.Map<IEnumerable<Shared.Contracts.Submissions.TeamSupplier>>(teamSuplliers);
-            return new TeamSuppliersSearchQueryResult { Items = res };
         }
     }
 }

@@ -70,13 +70,6 @@ namespace EMBC.ESS.Resources.Suppliers
 
             var items = mapper.Map<IEnumerable<TeamSupplier>>(teamSuppliers);
 
-            if (!string.IsNullOrEmpty(queryRequest.Name))
-            {
-                items = items.Where(s =>
-                            (s.Supplier.Name != null && s.Supplier.Name.Contains(queryRequest.Name, StringComparison.OrdinalIgnoreCase))
-                            || (s.Supplier.LegalName != null && s.Supplier.LegalName.Contains(queryRequest.Name, StringComparison.OrdinalIgnoreCase)));
-            }
-
             return new TeamSupplierQueryResult { Items = items };
         }
 

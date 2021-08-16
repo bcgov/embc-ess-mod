@@ -18,7 +18,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         private readonly SubmissionsManager manager;
 
         private readonly string teamUserId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
-        private readonly string teamDemoId = "80ff138b-fa96-eb11-b827-00505683fbf4";
 
         public SubmissionsTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -544,26 +543,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var id = await manager.Handle(new SaveEvacuationFileNoteCommand { Note = note, FileId = fileId });
             id.ShouldNotBeNull();
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task Search_TeamSuppliers_ReturnsAllSuplliersForTeam()
-        {
-            var teamId = teamDemoId;
-            var searchResults = await manager.Handle(new TeamSuppliersSearchQuery { TeamId = teamId });
-
-            searchResults.Items.ShouldAllBe(s => s.Team.Id == teamId);
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task Search_TeamSuppliers_ReturnsSuplliersByName()
-        {
-            var teamId = teamDemoId;
-            var name = "Bob";
-            var searchResults = await manager.Handle(new TeamSuppliersSearchQuery { TeamId = teamId, Name = name });
-
-            searchResults.Items.ShouldAllBe(s => s.Team.Id == teamId);
-            searchResults.Items.ShouldAllBe(s => s.Supplier.Name.Contains(name) || s.Supplier.LegalName.Contains(name));
         }
 
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)

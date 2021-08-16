@@ -19,8 +19,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Profile;
+using EMBC.ESS.Shared.Contracts.Suppliers;
 using EMBC.ESS.Shared.Contracts.Team;
 
 namespace EMBC.ESS.Managers.Admin
@@ -28,11 +30,13 @@ namespace EMBC.ESS.Managers.Admin
     public class AdminManager
     {
         private readonly Resources.Team.ITeamRepository teamRepository;
+        private readonly ISupplierRepository supplierRepository;
         private readonly IMapper mapper;
 
-        public AdminManager(Resources.Team.ITeamRepository teamRepository, IMapper mapper)
+        public AdminManager(Resources.Team.ITeamRepository teamRepository, ISupplierRepository supplierRepository, IMapper mapper)
         {
             this.teamRepository = teamRepository;
+            this.supplierRepository = supplierRepository;
             this.mapper = mapper;
         }
 
@@ -40,7 +44,7 @@ namespace EMBC.ESS.Managers.Admin
         {
             var teams = await teamRepository.GetTeams(id: cmd.TeamId);
 
-            return new TeamsQueryResponse { Teams = mapper.Map<IEnumerable<Team>>(teams) };
+            return new TeamsQueryResponse { Teams = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Team.Team>>(teams) };
         }
 
         public async Task<TeamMembersQueryResponse> Handle(TeamMembersQuery cmd)
@@ -152,6 +156,30 @@ namespace EMBC.ESS.Managers.Admin
 
             member.AgreementSignDate = cmd.SignatureDate;
             await teamRepository.SaveMember(member);
+        }
+
+        public async Task<TeamSuppliersQueryResult> Handle(TeamSuppliersQuery query)
+        {
+            var teamSuplliers = (await supplierRepository.QueryTeamSupplier(new TeamSupplierQuery
+            {
+                TeamId = query.TeamId
+            })).Items;
+
+            foreach (var ts in teamSuplliers)
+            {
+                if (ts.Supplier.PrimaryContact.Id == null) continue;
+                var contacts = (await supplierRepository.QuerySupplierContact(new SupplierContactQuery
+                {
+                    ContactId = ts.Supplier.PrimaryContact.Id
+                })).Items;
+
+                var primaryContact = contacts.SingleOrDefault();
+                if (primaryContact == null) continue;
+                ts.Supplier.PrimaryContact = primaryContact;
+            }
+
+            var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.TeamSupplier>>(teamSuplliers);
+            return new TeamSuppliersQueryResult { Items = res };
         }
     }
 }
