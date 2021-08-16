@@ -6,19 +6,19 @@
     color: rgba(35, 64, 117, 1);
     font-size: 21px;
     margin-bottom: 30px;
-  }
+}
 
-  mat-table {
+mat-table {
     overflow: auto;
     max-height: 500px;
     padding: 20px 0px 50px 0px;
-  }
+}
 
-  mat-header-cell {
-      background-color: rgba(0, 51, 102, 1);
-      color: white;
-      font-size: 15px;
-      text-align: center;    
+mat-header-cell {
+    background-color: rgba(0, 51, 102, 1);
+    color: white;
+    font-size: 15px;
+    text-align: center;
 }
 
 .supplier-link {
@@ -28,11 +28,9 @@
 }
 
 .supplier-link:hover {
-    // cursor: pointer;
-    // color: rgb(22, 155, 213);
     text-decoration: underline;
 }
 
 .button-width {
     width: 100%;
-  }
+}

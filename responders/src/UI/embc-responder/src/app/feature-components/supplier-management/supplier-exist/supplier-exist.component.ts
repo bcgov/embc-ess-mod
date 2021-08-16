@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { AddSupplierService } from '../add-supplier/add-supplier.service';
 import { ExistingSupplier } from '../suppliers-list/supplier-list-data.service';
 
 @Component({
@@ -90,13 +92,23 @@ export class SupplierExistComponent implements OnInit {
     'primaryTeam'
   ];
   dataSource = new BehaviorSubject([]);
-  constructor() {}
+  constructor(
+    private addSupplierService: AddSupplierService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.dataSource.next(this.dummyData);
   }
 
   continue(): void {}
-  close(): void {}
-  claimSupplier(): void {}
+  close(): void {
+    this.addSupplierService.clearAddedSupplier();
+    this.router.navigate([
+      '/responder-access/supplier-management/suppliers-list'
+    ]);
+  }
+  claimSupplier($event): void {
+    console.log($event);
+  }
 }

@@ -4,6 +4,8 @@ table {
 
   th {
     font-size: 16px;
+    background-color: rgba(113, 113, 113, 1);
+    color: white
   }
 
   ::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {

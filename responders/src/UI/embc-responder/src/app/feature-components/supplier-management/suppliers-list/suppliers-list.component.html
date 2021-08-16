@@ -7,20 +7,46 @@
   <div class="filter-margin">
     <app-search-filter
       [filtersToLoad]="filtersToLoad"
-      (filterEvent)="filter($event)"
+      (filterEvent)="primarySupplierFilter($event)"
     ></app-search-filter>
   </div>
   <div class="data-margin">
     <app-suppliers-table
       [incomingData]="suppliersList"
-      [displayedColumns]="displayedColumns"
-      [filterTerm]="filterTerm"
+      [displayedColumns]="primarySuppliersColumns"
+      [filterTerm]="primarySupplierFilterTerm"
       [isLoading]="isLoading"
       [statusLoading]="statusLoading"
       [loggedInRole]="loggedInRole"
+      [showToggle]="true"
       (clickedRow)="openSupplierDetails($event)"
       (toggleActive)="activateSupplier($event)"
       (toggleInactive)="deactivateSupplier($event)"
+    >
+    </app-suppliers-table>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="bold list-subheading">Mutual Aid Suppliers</p>
+    </div>
+  </div>
+  <div class="filter-margin">
+    <app-search-filter
+      [filtersToLoad]="filtersToLoad"
+      (filterEvent)="mutualAidSupplierFilter($event)"
+    ></app-search-filter>
+  </div>
+  <div class="data-margin">
+    <app-suppliers-table
+      [incomingData]="mutualAidList"
+      [displayedColumns]="mutualAidSuppliersColumns"
+      [filterTerm]="mutualAidSupplierFilterTerm"
+      [isLoading]="isLoading"
+      [statusLoading]="statusLoading"
+      [loggedInRole]="loggedInRole"
+      [showToggle]="false"
+      (clickedRow)="openMutualAidDetails($event)"
     >
     </app-suppliers-table>
   </div>

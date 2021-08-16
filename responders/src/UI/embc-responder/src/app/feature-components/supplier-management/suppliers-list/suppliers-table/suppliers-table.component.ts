@@ -8,13 +8,17 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { SupplierTemp } from '../supplier-list-data.service';
+import * as globalConst from '../../../../core/services/global-constants';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-suppliers-table',
@@ -30,6 +34,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   @Input() isLoading: boolean;
   @Input() statusLoading: boolean;
   @Input() loggedInRole: string;
+  @Input() showToggle: boolean;
   @Output() toggleActive = new EventEmitter<string>();
   @Output() toggleInactive = new EventEmitter<string>();
   @Output() clickedRow = new EventEmitter<SupplierTemp>();
@@ -40,7 +45,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   data: any;
   selectedIndex: number;
 
-  constructor() {}
+  constructor(private dialog: MatDialog) {}
 
   /**
    * Listens to input events and popluate values
@@ -147,5 +152,20 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
     } else {
       this.toggleInactive.emit(row.id);
     }
+  }
+
+  /**
+   * Open the dialog with definition of
+   * profile status
+   */
+  openStatusDefinition(): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: globalConst.supplierStatusDefinition
+      },
+      height: '450px',
+      width: '563px'
+    });
   }
 }

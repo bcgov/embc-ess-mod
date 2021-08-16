@@ -4,6 +4,8 @@ table {
 
   th {
     font-size: 16px;
+    background-color: rgba(113, 113, 113, 1);
+    color: white
   }
 
   tr:hover {
@@ -20,6 +22,27 @@ table {
 
 ::ng-deep .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
   background-color: white !important;
+}
+
+.info-image img:last-child {
+  display: none;
+  }
+  
+  .info-image:hover img:last-child {
+  display: inline;
+  }
+  
+  .info-image:hover img:first-child {
+  display: none;
+  }
+
+.info-card {
+  @extend .info-image;
+  display: block;
+  margin: auto;
+  text-align: center;
+  margin-left: 20px;
+
 }
 
 .active-style {
