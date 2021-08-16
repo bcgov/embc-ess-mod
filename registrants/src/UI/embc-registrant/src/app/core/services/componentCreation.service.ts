@@ -79,12 +79,21 @@ export class ComponentCreationService {
     },
     {
       component: 'identify-needs',
-      nextButtonLabel: 'Next - Review Submission',
+      nextButtonLabel: 'Next - Security Phrase',
       backButtonLabel: 'Go Back & Edit',
       isLast: false,
       loadWrapperButton: false,
       lastStep: 0,
       stepName: 'Needs'
+    },
+    {
+      component: 'secret',
+      nextButtonLabel: 'Next - Review Submission',
+      backButtonLabel: 'Go Back & Edit',
+      isLast: false,
+      loadWrapperButton: false,
+      lastStep: 0,
+      stepName: 'Security Phrase'
     }
   ];
 
