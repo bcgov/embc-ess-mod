@@ -50,7 +50,7 @@ namespace EMBC.Responders.API.Controllers
         /// <returns>list of suppliers</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<SupplierSearchResult>>> SearchSupppliers(string name)
+        public async Task<ActionResult<IEnumerable<SupplierSearchResult>>> SearchSuppliers(string name)
         {
             var suppliers = (await messagingClient.Send(new TeamSuppliersSearchQuery
             {
@@ -64,16 +64,16 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Get supplier by id
         /// </summary>
-        /// <param name="suppplierId">suppplierId</param>
+        /// <param name="supplierId">supplierId</param>
         /// <returns>supplier</returns>
-        [HttpGet("{suppplierId}")]
+        [HttpGet("{supplierId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Supplier>> GetSupplierById(string suppplierId)
+        public async Task<ActionResult<Supplier>> GetSupplierById(string supplierId)
         {
             Supplier ret = new Supplier
             {
-                Id = suppplierId,
+                Id = supplierId,
                 LegalName = "Test Supplier",
                 Name = "Test Supplier",
                 GSTNumber = "123456789-RT-1234",
@@ -103,13 +103,13 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Update Supplier Status
         /// </summary>
-        /// <param name="suppplierId">SuppplierId</param>
+        /// <param name="supplierId">SupplierId</param>
         /// <param name="status">Status</param>
         /// <returns>updated supplier id</returns>
-        [HttpPost("{suppplierId}/status/{status}")]
+        [HttpPost("{supplierId}/status/{status}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<SupplierResult>> SetSupplierStatus(string suppplierId, bool status)
+        public async Task<ActionResult<SupplierResult>> SetSupplierStatus(string supplierId, bool status)
         {
             SupplierResult ret = new SupplierResult
             {
