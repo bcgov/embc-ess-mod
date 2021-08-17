@@ -76,7 +76,7 @@ namespace EMBC.Responders.API.Controllers
                 Id = suppplierId,
                 LegalName = "Test Supplier",
                 Name = "Test Supplier",
-                GSTNumber = "gst123",
+                GSTNumber = "123456789-RT-1234",
                 Address = new Address
                 {
                     AddressLine1 = "123 Fake St.",

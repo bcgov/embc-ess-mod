@@ -74,7 +74,7 @@ namespace EMBC.ESS.Resources.Suppliers
         public string LegalName { get; set; }
         public string GSTNumber { get; set; }
         public Address Address { get; set; }
-        public SupplierContact PrimaryContact { get; set; }
+        public SupplierContact Contact { get; set; }
     }
 
     public class Address

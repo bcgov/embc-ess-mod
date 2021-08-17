@@ -217,10 +217,10 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task Query_TeamSuppliers_ReturnsAllSuplliersForTeam()
+        public async Task Query_TeamSuppliers_ReturnsAllSuppliersForTeam()
         {
             var teamId = teamDemoId;
-            var searchResults = await adminManager.Handle(new TeamSuppliersQuery { TeamId = teamId });
+            var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = teamId });
 
             searchResults.Items.ShouldAllBe(s => s.Team.Id == teamId);
         }

@@ -158,28 +158,28 @@ namespace EMBC.ESS.Managers.Admin
             await teamRepository.SaveMember(member);
         }
 
-        public async Task<TeamSuppliersQueryResult> Handle(TeamSuppliersQuery query)
+        public async Task<SuppliersQueryResult> Handle(SuppliersQuery query)
         {
-            var teamSuplliers = (await supplierRepository.QueryTeamSupplier(new TeamSupplierQuery
+            var teamSuppliers = (await supplierRepository.QueryTeamSupplier(new TeamSupplierQuery
             {
                 TeamId = query.TeamId
             })).Items;
 
-            foreach (var ts in teamSuplliers)
+            foreach (var ts in teamSuppliers)
             {
-                if (ts.Supplier.PrimaryContact.Id == null) continue;
+                if (ts.Supplier.Contact.Id == null) continue;
                 var contacts = (await supplierRepository.QuerySupplierContact(new SupplierContactQuery
                 {
-                    ContactId = ts.Supplier.PrimaryContact.Id
+                    ContactId = ts.Supplier.Contact.Id
                 })).Items;
 
                 var primaryContact = contacts.SingleOrDefault();
                 if (primaryContact == null) continue;
-                ts.Supplier.PrimaryContact = primaryContact;
+                ts.Supplier.Contact = primaryContact;
             }
 
-            var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.TeamSupplier>>(teamSuplliers);
-            return new TeamSuppliersQueryResult { Items = res };
+            var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(teamSuppliers);
+            return new SuppliersQueryResult { Items = res };
         }
     }
 }

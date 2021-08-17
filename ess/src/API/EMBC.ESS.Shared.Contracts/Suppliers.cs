@@ -18,34 +18,28 @@ using System.Collections.Generic;
 
 namespace EMBC.ESS.Shared.Contracts.Suppliers
 {
-    public class TeamSuppliersQuery : Query<TeamSuppliersQueryResult>
+    public class SuppliersQuery : Query<SuppliersQueryResult>
     {
         public string TeamId { get; set; }
     }
 
-    public class TeamSuppliersQueryResult
+    public class SuppliersQueryResult
     {
-        public IEnumerable<TeamSupplier> Items { get; set; }
-    }
-
-    public class TeamSupplier
-    {
-        public string Id { get; set; }
-        public Supplier Supplier { get; set; }
-        public Team Team { get; set; }
-
-        public bool IsPrimarySupplier { get; set; }
-        public bool Active { get; set; }
+        public IEnumerable<Supplier> Items { get; set; }
     }
 
     public class Supplier
     {
         public string Id { get; set; }
+        public string SupplierId { get; set; }
         public string Name { get; set; }
         public string LegalName { get; set; }
         public string GSTNumber { get; set; }
         public Address Address { get; set; }
-        public SupplierContact PrimaryContact { get; set; }
+        public SupplierContact Contact { get; set; }
+        public Team Team { get; set; }
+        public bool IsPrimarySupplier { get; set; }
+        public bool Active { get; set; }
     }
 
     public class Address
