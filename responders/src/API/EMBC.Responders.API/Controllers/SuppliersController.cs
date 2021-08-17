@@ -121,6 +121,7 @@ namespace EMBC.Responders.API.Controllers
         {
             CreateMap<ESS.Shared.Contracts.Suppliers.Supplier, Supplier>()
                 .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom(s => s.IsPrimarySupplier))
+                .ForMember(d => d.MutualAid, opts => opts.Ignore())
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
                 ;
 
