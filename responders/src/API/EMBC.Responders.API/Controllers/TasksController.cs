@@ -62,10 +62,11 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SuppliersListItem>>> GetSuppliersList(string taskId)
         {
+            var supplierAddress = new Address { AddressLine1 = "12 meh st.", CommunityCode = "226adfaf-9f97-ea11-b813-005056830319", PostalCode = "V1V 1V1", StateProvinceCode = "BC", CountryCode = "CAN" };
             var suppliers = new[]
             {
-                new SuppliersListItem { Name = "supplier 1", Address = new Address { AddressLine1 = "add1" } },
-                new SuppliersListItem { Name = "supplier 2", Address = new Address { AddressLine1 = "add2" } },
+                new SuppliersListItem { Id = "1", Name = "supplier 1", Address = supplierAddress },
+                new SuppliersListItem { Id = "2", Name = "supplier 2", Address = supplierAddress },
             };
 
             return await Task.FromResult(suppliers);
