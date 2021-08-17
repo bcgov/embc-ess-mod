@@ -63,14 +63,12 @@ namespace EMBC.ESS.Resources.Suppliers
             {
                 if (ts.IsPrimarySupplier)
                 {
-                    var mutualAidQuery = essContext.era_essteamsuppliers
+                    var mutualAid = essContext.era_essteamsuppliers
                         .Where(s => s.statecode == (int)EntityState.Active)
                         .Where(s => s._era_supplierid_value == Guid.Parse(ts.SupplierId))
                         .Where(s => s.era_isprimarysupplier != true)
-                        .Where(s => s._era_essteamid_value != Guid.Parse(queryRequest.TeamId));
+                        .Where(s => s._era_essteamid_value != Guid.Parse(queryRequest.TeamId)).FirstOrDefault() != null;
 
-                    var mutualTeamSuppliers = await ((DataServiceQuery<era_essteamsupplier>)mutualAidQuery).GetAllPagesAsync();
-                    var mutualAid = mutualTeamSuppliers.Count() > 0;
                     ts.MutualAid = mutualAid;
                 }
 
