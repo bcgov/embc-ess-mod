@@ -40,7 +40,9 @@ namespace EMBC.Responders.API.Controllers
             var supports = new Support[]
             {
                 new ClothingReferral(),
-                new IncidentalsReferral()
+                new IncidentalsReferral(),
+                new FoodGroceriesReferral(),
+                new FoodRestaurantReferral()
             };
 
             return await Task.FromResult(supports);
@@ -88,7 +90,7 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public abstract SupportCategory Category { get; }
 
-        public abstract SupportSubCategory? SubCategory { get; }
+        public abstract SupportSubCategory SubCategory { get; }
 
         [Required]
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
@@ -113,13 +115,13 @@ namespace EMBC.Responders.API.Controllers
     {
         public bool ExtremeWinterConditions { get; set; }
         public override SupportCategory Category => SupportCategory.Clothing;
-        public override SupportSubCategory? SubCategory => null;
+        public override SupportSubCategory SubCategory => SupportSubCategory.None;
     }
 
     public class IncidentalsReferral : Referral
     {
         public override SupportCategory Category => SupportCategory.Incidentals;
-        public override SupportSubCategory? SubCategory => null;
+        public override SupportSubCategory SubCategory => SupportSubCategory.None;
 
         [Required]
         public string ApprovedItems { get; set; }
@@ -128,7 +130,7 @@ namespace EMBC.Responders.API.Controllers
     public class FoodGroceriesReferral : Referral
     {
         public override SupportCategory Category => SupportCategory.Food;
-        public override SupportSubCategory? SubCategory => SupportSubCategory.Food_Groceries;
+        public override SupportSubCategory SubCategory => SupportSubCategory.Food_Groceries;
 
         [Required]
         public int NumberOfDays { get; set; }
@@ -137,7 +139,7 @@ namespace EMBC.Responders.API.Controllers
     public class FoodRestaurantReferral : Referral
     {
         public override SupportCategory Category => SupportCategory.Food;
-        public override SupportSubCategory? SubCategory => SupportSubCategory.Food_Restaurant;
+        public override SupportSubCategory SubCategory => SupportSubCategory.Food_Restaurant;
 
         [Required]
         public int NumberOfBreakfastsPerPerson { get; set; }
@@ -228,6 +230,7 @@ namespace EMBC.Responders.API.Controllers
 
         public override Support Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
+            //parse the support meta properties to identify the support type (method, category, sub category)
             var clonedReader = reader;
             SupportMethod method = SupportMethod.Unknown;
             SupportCategory category = SupportCategory.Unknown;
@@ -260,7 +263,9 @@ namespace EMBC.Responders.API.Controllers
                 }
             }
 
-            if (method == SupportMethod.Unknown || category == SupportCategory.Unknown) throw new JsonException($"Could not determine the support method and category");
+            if (method == SupportMethod.Unknown || category == SupportCategory.Unknown) throw new JsonException($"Could not determine the support method or category");
+
+            //Dserialize to the correct type
             return category switch
             {
                 SupportCategory.Clothing => JsonSerializer.Deserialize<ClothingReferral>(ref reader, options),
