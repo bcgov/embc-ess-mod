@@ -22,18 +22,17 @@ using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Responders.API.Controllers
 {
     [ApiController]
-    [Route("api/registrations/{fileId}/supports")]
-    [AllowAnonymous]
+    [Route("api/registrations/{fileId}/[controller]")]
     public class SupportsController : ControllerBase
     {
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Support>>> Get(string fileId)
         {
@@ -58,9 +57,10 @@ namespace EMBC.Responders.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Post(IEnumerable<Support> supports)
+        public async Task<IActionResult> Post(string fileId, IEnumerable<Support> supports)
         {
             await Task.CompletedTask;
             return Ok();

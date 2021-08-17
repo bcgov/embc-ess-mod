@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -55,6 +56,20 @@ namespace EMBC.Responders.API.Controllers
             if (task == null) return NotFound(taskId);
             return Ok(mapper.Map<ESSTask>(task));
         }
+
+        [HttpGet("{taskId}/suppliers")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<SuppliersListItem>>> GetSuppliersList(string taskId)
+        {
+            var suppliers = new[]
+            {
+                new SuppliersListItem { Name = "supplier 1", Address = new Address { AddressLine1 = "add1" } },
+                new SuppliersListItem { Name = "supplier 2", Address = new Address { AddressLine1 = "add2" } },
+            };
+
+            return await Task.FromResult(suppliers);
+        }
     }
 
     public class ESSTask
@@ -65,6 +80,15 @@ namespace EMBC.Responders.API.Controllers
         public string CommunityCode { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
+    }
+
+    public class SuppliersListItem
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public Address Address { get; set; }
     }
 
     public class TaskMapping : Profile
