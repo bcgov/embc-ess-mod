@@ -108,7 +108,9 @@ namespace EMBC.Responders.API.Controllers
         public string SupplierId { get; set; }
 
         public string SupplierName { get; set; }
-        public string NotesToSupplier { get; set; }
+        public Address SupplierAddress { get; set; }
+        public string SupplierNotes { get; set; }
+        public string IssuedToPersonName { get; set; }
     }
 
     public class ClothingReferral : Referral
