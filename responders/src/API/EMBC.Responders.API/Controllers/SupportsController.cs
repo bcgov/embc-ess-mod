@@ -42,7 +42,12 @@ namespace EMBC.Responders.API.Controllers
                 new ClothingReferral { Id = "1", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
                 new IncidentalsReferral { Id = "2", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 2", SupplierId = "2", SupplierName = "sup 2", SupplierAddress = supplierAddress, Status = SupportStatus.Expired },
                 new FoodGroceriesReferral { Id = "3", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Void },
-                new FoodRestaurantReferral { Id = "1", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active }
+                new FoodRestaurantReferral { Id = "4", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new LodgingHotelReferral { Id = "5", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new LodgingBilletingReferral { Id = "6", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new LodgingGroupReferral { Id = "7", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new TransportationTaxiReferral { Id = "8", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new TransportationOtherReferral { Id = "9", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
             };
 
             return await Task.FromResult(supports);
@@ -81,9 +86,6 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         public DateTime To { get; set; }
 
-        [Required]
-        public double TotalAmount { get; set; }
-
         public SupportStatus Status { get; set; }
 
         [Required]
@@ -112,6 +114,8 @@ namespace EMBC.Responders.API.Controllers
         public string SupplierName { get; set; }
         public Address SupplierAddress { get; set; }
         public string SupplierNotes { get; set; }
+
+        [Required]
         public string IssuedToPersonName { get; set; }
     }
 
@@ -120,6 +124,10 @@ namespace EMBC.Responders.API.Controllers
         public bool ExtremeWinterConditions { get; set; }
         public override SupportCategory Category => SupportCategory.Clothing;
         public override SupportSubCategory SubCategory => SupportSubCategory.None;
+
+        [Required]
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
     }
 
     public class IncidentalsReferral : Referral
@@ -129,6 +137,10 @@ namespace EMBC.Responders.API.Controllers
 
         [Required]
         public string ApprovedItems { get; set; }
+
+        [Required]
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
     }
 
     public class FoodGroceriesReferral : Referral
@@ -137,7 +149,12 @@ namespace EMBC.Responders.API.Controllers
         public override SupportSubCategory SubCategory => SupportSubCategory.Food_Groceries;
 
         [Required]
+        [Range(0, int.MaxValue)]
         public int NumberOfDays { get; set; }
+
+        [Required]
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
     }
 
     public class FoodRestaurantReferral : Referral
@@ -146,13 +163,79 @@ namespace EMBC.Responders.API.Controllers
         public override SupportSubCategory SubCategory => SupportSubCategory.Food_Restaurant;
 
         [Required]
+        [Range(0, int.MaxValue)]
         public int NumberOfBreakfastsPerPerson { get; set; }
 
         [Required]
+        [Range(0, int.MaxValue)]
         public int NumberOfLunchesPerPerson { get; set; }
 
         [Required]
+        [Range(0, int.MaxValue)]
         public int NumberOfDinnersPerPerson { get; set; }
+
+        [Required]
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
+    }
+
+    public class LodgingHotelReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Lodging;
+        public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Hotel;
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int NumberOfNights { get; set; }
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int NumberOfRooms { get; set; }
+    }
+
+    public class LodgingBilletingReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Lodging;
+        public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Billeting;
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int NumberOfNights { get; set; }
+    }
+
+    public class TransportationTaxiReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Transportation;
+        public override SupportSubCategory SubCategory => SupportSubCategory.Transportation_Taxi;
+
+        [Required]
+        public string FromAddress { get; set; }
+
+        [Required]
+        public string ToAddress { get; set; }
+    }
+
+    public class TransportationOtherReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Transportation;
+        public override SupportSubCategory SubCategory => SupportSubCategory.Transportation_Other;
+
+        [Required]
+        [Range(0, double.MaxValue)]
+        public double TotalAmount { get; set; }
+
+        [Required]
+        public string TransportMode { get; set; }
+    }
+
+    public class LodgingGroupReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Lodging;
+        public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Group;
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int NumberOfNights { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -218,7 +301,7 @@ namespace EMBC.Responders.API.Controllers
         [Description("Groceries")]
         Food_Groceries,
 
-        [Description("Restaurant")]
+        [Description("Restaurant Meals")]
         Food_Restaurant,
 
         [Description("Taxi")]
@@ -276,7 +359,12 @@ namespace EMBC.Responders.API.Controllers
                 SupportCategory.Incidentals => JsonSerializer.Deserialize<IncidentalsReferral>(ref reader, options),
                 SupportCategory.Food when subCategory == SupportSubCategory.Food_Groceries => JsonSerializer.Deserialize<FoodGroceriesReferral>(ref reader, options),
                 SupportCategory.Food when subCategory == SupportSubCategory.Food_Restaurant => JsonSerializer.Deserialize<FoodRestaurantReferral>(ref reader, options),
-                _ => throw new NotSupportedException()
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Hotel => JsonSerializer.Deserialize<LodgingHotelReferral>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Billeting => JsonSerializer.Deserialize<LodgingBilletingReferral>(ref reader, options),
+                SupportCategory.Lodging when subCategory == SupportSubCategory.Lodging_Group => JsonSerializer.Deserialize<LodgingGroupReferral>(ref reader, options),
+                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Taxi => JsonSerializer.Deserialize<TransportationTaxiReferral>(ref reader, options),
+                SupportCategory.Transportation when subCategory == SupportSubCategory.Transportation_Other => JsonSerializer.Deserialize<TransportationOtherReferral>(ref reader, options),
+                _ => throw new NotSupportedException($"Support with method {method}, category {category}, sub category {subCategory}")
             };
         }
 
@@ -300,7 +388,27 @@ namespace EMBC.Responders.API.Controllers
                     JsonSerializer.Serialize(writer, (FoodRestaurantReferral)value, options);
                     break;
 
-                default: throw new NotSupportedException();
+                case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Hotel:
+                    JsonSerializer.Serialize(writer, (LodgingHotelReferral)value, options);
+                    break;
+
+                case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Billeting:
+                    JsonSerializer.Serialize(writer, (LodgingBilletingReferral)value, options);
+                    break;
+
+                case SupportCategory.Lodging when value.SubCategory == SupportSubCategory.Lodging_Group:
+                    JsonSerializer.Serialize(writer, (LodgingGroupReferral)value, options);
+                    break;
+
+                case SupportCategory.Transportation when value.SubCategory == SupportSubCategory.Transportation_Taxi:
+                    JsonSerializer.Serialize(writer, (TransportationTaxiReferral)value, options);
+                    break;
+
+                case SupportCategory.Transportation when value.SubCategory == SupportSubCategory.Transportation_Other:
+                    JsonSerializer.Serialize(writer, (TransportationOtherReferral)value, options);
+                    break;
+
+                default: throw new NotSupportedException($"Support with method {value.Method}, category {value.Category}, sub category {value.SubCategory}");
             }
         }
     }
