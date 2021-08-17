@@ -36,27 +36,18 @@ namespace EMBC.ESS.Resources.Suppliers
             this.mapper = mapper;
         }
 
-        public async Task<TeamSupplierQueryResult> QueryTeamSupplier(TeamSupplierQuery query)
+        public async Task<SupplierQueryResult> QuerySupplier(SupplierQuery query)
         {
             return query.GetType().Name switch
             {
-                nameof(TeamSupplierQuery) => await HandleQuery(query),
+                nameof(SupplierQuery) => await HandleQuery(query),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
         }
 
-        public async Task<SupplierContactQueryResult> QuerySupplierContact(SupplierContactQuery query)
+        private async Task<SupplierQueryResult> HandleQuery(SupplierQuery queryRequest)
         {
-            return query.GetType().Name switch
-            {
-                nameof(SupplierContactQuery) => await HandleQuery(query),
-                _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
-            };
-        }
-
-        private async Task<TeamSupplierQueryResult> HandleQuery(TeamSupplierQuery queryRequest)
-        {
-            if (string.IsNullOrEmpty(queryRequest.TeamId)) throw new ArgumentNullException(nameof(TeamSupplierQuery.TeamId));
+            if (string.IsNullOrEmpty(queryRequest.TeamId)) throw new ArgumentNullException(nameof(SupplierQuery.TeamId));
 
             IQueryable<era_essteamsupplier> supplierQuery = essContext.era_essteamsuppliers
                 .Expand(s => s.era_SupplierId)
@@ -66,34 +57,23 @@ namespace EMBC.ESS.Resources.Suppliers
 
             var teamSuppliers = await ((DataServiceQuery<era_essteamsupplier>)supplierQuery).GetAllPagesAsync();
 
-            essContext.DetachAll();
+            var items = mapper.Map<IEnumerable<Supplier>>(teamSuppliers);
 
-            var items = mapper.Map<IEnumerable<TeamSupplier>>(teamSuppliers);
-
-            if (!string.IsNullOrEmpty(queryRequest.Name))
+            foreach (var ts in items)
             {
-                items = items.Where(s =>
-                            (s.Supplier.Name != null && s.Supplier.Name.Contains(queryRequest.Name, StringComparison.OrdinalIgnoreCase))
-                            || (s.Supplier.LegalName != null && s.Supplier.LegalName.Contains(queryRequest.Name, StringComparison.OrdinalIgnoreCase)));
+                if (ts.Contact.Id == null) continue;
+                var contact = essContext.era_suppliercontacts
+                    .Where(s => s.statecode == (int)EntityState.Active)
+                    .Where(s => s.era_suppliercontactid == Guid.Parse(ts.Contact.Id))
+                    .SingleOrDefault();
+
+                if (contact == null) continue;
+                ts.Contact = mapper.Map<SupplierContact>(contact);
             }
 
-            return new TeamSupplierQueryResult { Items = items };
-        }
-
-        private async Task<SupplierContactQueryResult> HandleQuery(SupplierContactQuery queryRequest)
-        {
-            if (string.IsNullOrEmpty(queryRequest.ContactId)) throw new ArgumentNullException(nameof(SupplierContactQuery.ContactId));
-
-            IQueryable<era_suppliercontact> supplierQuery = essContext.era_suppliercontacts
-                .Where(s => s.statecode == (int)EntityState.Active)
-                .Where(s => s.era_suppliercontactid == Guid.Parse(queryRequest.ContactId));
-
-            var supplierContacts = await ((DataServiceQuery<era_suppliercontact>)supplierQuery).GetAllPagesAsync();
-
             essContext.DetachAll();
 
-            var items = mapper.Map<IEnumerable<SupplierContact>>(supplierContacts);
-            return new SupplierContactQueryResult { Items = items };
+            return new SupplierQueryResult { Items = items };
         }
     }
 }

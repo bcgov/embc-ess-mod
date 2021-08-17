@@ -22,13 +22,7 @@ namespace EMBC.ESS.Resources.Suppliers
 {
     public interface ISupplierRepository
     {
-        Task<TeamSupplierQueryResult> QueryTeamSupplier(TeamSupplierQuery request);
-        Task<SupplierContactQueryResult> QuerySupplierContact(SupplierContactQuery request);
-    }
-
-    public class SupplierQuery
-    {
-        public string Id { get; set; }
+        Task<SupplierQueryResult> QuerySupplier(SupplierQuery request);
     }
 
     public class SupplierQueryResult
@@ -36,45 +30,23 @@ namespace EMBC.ESS.Resources.Suppliers
         public IEnumerable<Supplier> Items { get; set; }
     }
 
-    public class TeamSupplierQuery
+    public class SupplierQuery
     {
-        public string Name { get; set; }
         public string TeamId { get; set; }
-    }
-
-    public class TeamSupplierQueryResult
-    {
-        public IEnumerable<TeamSupplier> Items { get; set; }
-    }
-
-    public class SupplierContactQuery
-    {
-        public string ContactId { get; set; }
-    }
-
-    public class SupplierContactQueryResult
-    {
-        public IEnumerable<SupplierContact> Items { get; set; }
-    }
-
-    public class TeamSupplier
-    {
-        public string Id { get; set; }
-        public Supplier Supplier { get; set; }
-        public Team Team { get; set; }
-
-        public bool IsPrimarySupplier { get; set; }
-        public bool Active { get; set; }
     }
 
     public class Supplier
     {
         public string Id { get; set; }
+        public string SupplierId { get; set; }
         public string Name { get; set; }
         public string LegalName { get; set; }
         public string GSTNumber { get; set; }
         public Address Address { get; set; }
-        public SupplierContact PrimaryContact { get; set; }
+        public SupplierContact Contact { get; set; }
+        public Team Team { get; set; }
+        public bool IsPrimarySupplier { get; set; }
+        public bool Active { get; set; }
     }
 
     public class Address
