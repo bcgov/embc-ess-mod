@@ -356,11 +356,6 @@ namespace EMBC.Responders.API.Controllers
         public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
     }
 
-    public class Support
-    {
-        public string Id { get; set; }
-    }
-
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum InsuranceOption
     {

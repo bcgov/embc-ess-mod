@@ -33,6 +33,6 @@ namespace EMBC.Responders.API.Utilities
         private static string GetEnumDescription(Type enumType, string value) =>
             (enumType.GetField(value.ToString())
                 .GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[])
-                .FirstOrDefault().Description;
+                .FirstOrDefault()?.Description;
     }
 }
