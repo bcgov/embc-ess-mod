@@ -165,19 +165,6 @@ namespace EMBC.ESS.Managers.Admin
                 TeamId = query.TeamId
             })).Items;
 
-            foreach (var ts in teamSuppliers)
-            {
-                if (ts.Supplier.Contact.Id == null) continue;
-                var contacts = (await supplierRepository.QuerySupplierContact(new SupplierContactQuery
-                {
-                    ContactId = ts.Supplier.Contact.Id
-                })).Items;
-
-                var primaryContact = contacts.SingleOrDefault();
-                if (primaryContact == null) continue;
-                ts.Supplier.Contact = primaryContact;
-            }
-
             var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(teamSuppliers);
             return new SuppliersQueryResult { Items = res };
         }

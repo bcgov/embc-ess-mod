@@ -23,8 +23,6 @@ namespace EMBC.ESS.Resources.Suppliers
     public interface ISupplierRepository
     {
         Task<TeamSupplierQueryResult> QueryTeamSupplier(TeamSupplierQuery request);
-
-        Task<SupplierContactQueryResult> QuerySupplierContact(SupplierContactQuery request);
     }
 
     public class SupplierQuery
@@ -45,16 +43,6 @@ namespace EMBC.ESS.Resources.Suppliers
     public class TeamSupplierQueryResult
     {
         public IEnumerable<TeamSupplier> Items { get; set; }
-    }
-
-    public class SupplierContactQuery
-    {
-        public string ContactId { get; set; }
-    }
-
-    public class SupplierContactQueryResult
-    {
-        public IEnumerable<SupplierContact> Items { get; set; }
     }
 
     public class TeamSupplier
