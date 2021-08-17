@@ -14,15 +14,13 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
-using EMBC.ESS.Shared.Contracts.Submissions;
+using EMBC.ESS.Shared.Contracts.Suppliers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,58 +44,17 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Search Suppliers
         /// </summary>
-        /// /// <param name="name">name</param>
-        /// <returns>list of suppliers</returns>
+        /// <returns>list of suppliers for the user's team</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<SupplierSearchResult>>> SearchSuppliers(string name)
+        public async Task<ActionResult<IEnumerable<Supplier>>> GetSuppliers()
         {
-            var suppliers = (await messagingClient.Send(new TeamSuppliersSearchQuery
+            var suppliers = (await messagingClient.Send(new SuppliersQuery
             {
                 TeamId = teamId,
-                Name = name
             })).Items;
 
-            return Ok(mapper.Map<IEnumerable<SupplierSearchResult>>(suppliers));
-        }
-
-        /// <summary>
-        /// Get supplier by id
-        /// </summary>
-        /// <param name="supplierId">supplierId</param>
-        /// <returns>supplier</returns>
-        [HttpGet("{supplierId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Supplier>> GetSupplierById(string supplierId)
-        {
-            Supplier ret = new Supplier
-            {
-                Id = supplierId,
-                LegalName = "Test Supplier",
-                Name = "Test Supplier",
-                GSTNumber = "123456789-RT-1234",
-                Address = new Address
-                {
-                    AddressLine1 = "123 Fake St.",
-                    AddressLine2 = string.Empty,
-                    City = "Vancouver",
-                    StateProvinceCode = "BC",
-                    CountryCode = "CAN"
-                },
-                PrimaryContact = new SupplierContact
-                {
-                    FirstName = "Mat",
-                    LastName = "Cauthon",
-                    PhoneNumber = "6043211231",
-                    HomeAddress = "321 Test St",
-                    Email = "matcauthon@wot.com"
-                },
-                MutualAid = true,
-                Status = SupplierStatus.Active,
-            };
-
-            return await Task.FromResult(ret);
+            return Ok(mapper.Map<IEnumerable<Supplier>>(suppliers));
         }
 
         /// <summary>
@@ -120,24 +77,16 @@ namespace EMBC.Responders.API.Controllers
         }
     }
 
-    public class SupplierSearchResult
-    {
-        public string Id { get; set; }
-        public string LegalName { get; set; }
-        public string Name { get; set; }
-        public string SupplierAddress { get; set; }
-        public bool MutualAid { get; set; }
-        public SupplierStatus Status { get; set; }
-    }
-
     public class Supplier
     {
         public string Id { get; set; }
-        public string LegalName { get; set; }
+        public string SupplierId { get; set; }
         public string Name { get; set; }
+        public string LegalName { get; set; }
         public string GSTNumber { get; set; }
         public Address Address { get; set; }
-        public SupplierContact PrimaryContact { get; set; }
+        public SupplierContact Contact { get; set; }
+        public Team Team { get; set; }
         public bool MutualAid { get; set; }
         public SupplierStatus Status { get; set; }
     }
@@ -146,8 +95,7 @@ namespace EMBC.Responders.API.Controllers
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string HomeAddress { get; set; }
+        public string Phone { get; set; }
         public string Email { get; set; }
     }
 
@@ -170,12 +118,40 @@ namespace EMBC.Responders.API.Controllers
     {
         public SuppliersMapping()
         {
-            CreateMap<TeamSupplier, SupplierSearchResult>()
-                .ForMember(d => d.Name, opts => opts.MapFrom(s => s.Supplier.Name))
-                .ForMember(d => d.LegalName, opts => opts.MapFrom(s => s.Supplier.LegalName))
-                .ForMember(d => d.SupplierAddress, opts => opts.MapFrom(s => s.Supplier.Address.AddressLine1))
+            CreateMap<ESS.Shared.Contracts.Suppliers.Supplier, Supplier>()
                 .ForMember(d => d.MutualAid, opts => opts.MapFrom(s => !s.IsPrimarySupplier))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
+                ;
+
+            CreateMap<Supplier, ESS.Shared.Contracts.Suppliers.Supplier>()
+                .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom(s => !s.MutualAid))
+                .ForMember(d => d.Active, opts => opts.MapFrom(s => s.Status == SupplierStatus.Active))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Suppliers.Team, Team>()
+                .ForMember(d => d.IsActive, opts => opts.Ignore())
+                ;
+
+            CreateMap<Team, ESS.Shared.Contracts.Suppliers.Team>()
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Suppliers.Address, Address>()
+                .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.Community))
+                .ForMember(d => d.StateProvinceCode, opts => opts.MapFrom(s => s.StateProvince))
+                .ForMember(d => d.CountryCode, opts => opts.MapFrom(s => s.Country))
+                ;
+
+            CreateMap<Address, ESS.Shared.Contracts.Suppliers.Address>()
+                .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
+                .ForMember(d => d.StateProvince, opts => opts.MapFrom(s => s.StateProvinceCode))
+                .ForMember(d => d.Country, opts => opts.MapFrom(s => s.CountryCode))
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Suppliers.SupplierContact, SupplierContact>()
+                ;
+
+            CreateMap<SupplierContact, ESS.Shared.Contracts.Suppliers.SupplierContact>()
+                .ForMember(d => d.Id, opts => opts.Ignore())
                 ;
         }
     }
