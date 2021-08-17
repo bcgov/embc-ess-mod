@@ -5,6 +5,7 @@ using EMBC.ESS;
 using EMBC.ESS.Managers.Admin;
 using EMBC.ESS.Managers.Metadata;
 using EMBC.ESS.Shared.Contracts.Metadata;
+using EMBC.ESS.Shared.Contracts.Suppliers;
 using EMBC.ESS.Shared.Contracts.Team;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         private readonly AdminManager adminManager;
 
         private string teamId = "98275853-2581-eb11-b825-00505683fbf4";
+        private readonly string teamDemoId = "80ff138b-fa96-eb11-b827-00505683fbf4";
 
         public AdminTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -212,6 +214,15 @@ namespace EMBC.Tests.Integration.ESS.Admin
             var updatedTeam = (await adminManager.Handle(new TeamsQuery { TeamId = teamId })).Teams.ShouldHaveSingleItem();
 
             updatedTeam.AssignedCommunities.Where(c => removedCommunities.Contains(c)).ShouldBeEmpty();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Query_Suppliers_ReturnsAllSuppliersForTeam()
+        {
+            var teamId = teamDemoId;
+            var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = teamId });
+
+            searchResults.Items.ShouldAllBe(s => s.Team.Id == teamId);
         }
     }
 }

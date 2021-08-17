@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS;
 using EMBC.ESS.Managers.Admin;
+using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Shared.Contracts.Team;
 using FakeItEasy;
@@ -56,6 +57,8 @@ namespace EMBC.Tests.Unit.ESS.Admin
 
             //wire team repository fake
             var teamRepository = A.Fake<ITeamRepository>();
+
+            var supplierRepository = A.Fake<ISupplierRepository>();
 
             //get all teams
             A.CallTo(() => teamRepository.GetTeams(A<string>.That.IsNullOrEmpty()))
@@ -125,7 +128,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
                     stagedTeamMembers[teamMember.Id] = teamMember;
                     return Task.FromResult(teamMember.Id);
                 });
-            adminManager = new AdminManager(teamRepository, mapper);
+            adminManager = new AdminManager(teamRepository, supplierRepository, mapper);
         }
 
         [Fact]
