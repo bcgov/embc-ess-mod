@@ -44,6 +44,7 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForPath(d => d.Team.Id, opts => opts.MapFrom(s => s.era_ESSTeamID.era_essteamid))
                 .ForPath(d => d.Team.Name, opts => opts.MapFrom(s => s.era_ESSTeamID.era_name))
                 .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom(s => s.era_isprimarysupplier))
+                .ForMember(d => d.MutualAid, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.Active, opts => opts.MapFrom(s => s.era_active))
                 ;
 

@@ -39,6 +39,7 @@ namespace EMBC.ESS.Shared.Contracts.Suppliers
         public SupplierContact Contact { get; set; }
         public Team Team { get; set; }
         public bool IsPrimarySupplier { get; set; }
+        public bool MutualAid { get; set; }
         public bool Active { get; set; }
     }
 
