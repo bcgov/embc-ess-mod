@@ -217,7 +217,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task Query_TeamSuppliers_ReturnsAllSuppliersForTeam()
+        public async Task Query_Suppliers_ReturnsAllSuppliersForTeam()
         {
             var teamId = teamDemoId;
             var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = teamId });

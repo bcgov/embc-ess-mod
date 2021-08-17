@@ -160,12 +160,12 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<SuppliersQueryResult> Handle(SuppliersQuery query)
         {
-            var teamSuppliers = (await supplierRepository.QueryTeamSupplier(new TeamSupplierQuery
+            var suppliers = (await supplierRepository.QuerySupplier(new SupplierQuery
             {
                 TeamId = query.TeamId
             })).Items;
 
-            var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(teamSuppliers);
+            var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
             return new SuppliersQueryResult { Items = res };
         }
     }

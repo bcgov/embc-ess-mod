@@ -36,18 +36,18 @@ namespace EMBC.ESS.Resources.Suppliers
             this.mapper = mapper;
         }
 
-        public async Task<TeamSupplierQueryResult> QueryTeamSupplier(TeamSupplierQuery query)
+        public async Task<SupplierQueryResult> QuerySupplier(SupplierQuery query)
         {
             return query.GetType().Name switch
             {
-                nameof(TeamSupplierQuery) => await HandleQuery(query),
+                nameof(SupplierQuery) => await HandleQuery(query),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
         }
 
-        private async Task<TeamSupplierQueryResult> HandleQuery(TeamSupplierQuery queryRequest)
+        private async Task<SupplierQueryResult> HandleQuery(SupplierQuery queryRequest)
         {
-            if (string.IsNullOrEmpty(queryRequest.TeamId)) throw new ArgumentNullException(nameof(TeamSupplierQuery.TeamId));
+            if (string.IsNullOrEmpty(queryRequest.TeamId)) throw new ArgumentNullException(nameof(SupplierQuery.TeamId));
 
             IQueryable<era_essteamsupplier> supplierQuery = essContext.era_essteamsuppliers
                 .Expand(s => s.era_SupplierId)
@@ -57,23 +57,23 @@ namespace EMBC.ESS.Resources.Suppliers
 
             var teamSuppliers = await ((DataServiceQuery<era_essteamsupplier>)supplierQuery).GetAllPagesAsync();
 
-            var items = mapper.Map<IEnumerable<TeamSupplier>>(teamSuppliers);
+            var items = mapper.Map<IEnumerable<Supplier>>(teamSuppliers);
 
             foreach (var ts in items)
             {
-                if (ts.Supplier.Contact.Id == null) continue;
+                if (ts.Contact.Id == null) continue;
                 var contact = essContext.era_suppliercontacts
                     .Where(s => s.statecode == (int)EntityState.Active)
-                    .Where(s => s.era_suppliercontactid == Guid.Parse(ts.Supplier.Contact.Id))
+                    .Where(s => s.era_suppliercontactid == Guid.Parse(ts.Contact.Id))
                     .SingleOrDefault();
 
                 if (contact == null) continue;
-                ts.Supplier.Contact = mapper.Map<SupplierContact>(contact);
+                ts.Contact = mapper.Map<SupplierContact>(contact);
             }
 
             essContext.DetachAll();
 
-            return new TeamSupplierQueryResult { Items = items };
+            return new SupplierQueryResult { Items = items };
         }
     }
 }

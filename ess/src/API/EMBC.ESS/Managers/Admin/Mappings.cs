@@ -39,22 +39,10 @@ namespace EMBC.ESS.Managers.Admin
                 .ForMember(d => d.RequiredToSignAgreement, opts => opts.MapFrom(s => !s.AgreementSignDate.HasValue))
                 ;
 
-            CreateMap<Resources.Suppliers.TeamSupplier, Shared.Contracts.Suppliers.Supplier>()
-                .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.Supplier.Id))
-                .ForMember(d => d.Name, opts => opts.MapFrom(s => s.Supplier.Name))
-                .ForMember(d => d.LegalName, opts => opts.MapFrom(s => s.Supplier.LegalName))
-                .ForMember(d => d.GSTNumber, opts => opts.MapFrom(s => s.Supplier.GSTNumber))
-                .ForMember(d => d.Contact, opts => opts.MapFrom(s => s.Supplier.Contact))
-                .ForMember(d => d.Address, opts => opts.MapFrom(s => s.Supplier.Address))
+            CreateMap<Resources.Suppliers.Supplier, Shared.Contracts.Suppliers.Supplier>()
                 ;
 
-            CreateMap<Shared.Contracts.Suppliers.Supplier, Resources.Suppliers.TeamSupplier>()
-                .ForPath(d => d.Supplier.Id, opts => opts.MapFrom(s => s.SupplierId))
-                .ForPath(d => d.Supplier.Name, opts => opts.MapFrom(s => s.Name))
-                .ForPath(d => d.Supplier.LegalName, opts => opts.MapFrom(s => s.LegalName))
-                .ForPath(d => d.Supplier.GSTNumber, opts => opts.MapFrom(s => s.GSTNumber))
-                .ForPath(d => d.Supplier.Contact, opts => opts.MapFrom(s => s.Contact))
-                .ForPath(d => d.Supplier.Address, opts => opts.MapFrom(s => s.Address))
+            CreateMap<Shared.Contracts.Suppliers.Supplier, Resources.Suppliers.Supplier>()
                 ;
 
             CreateMap<Resources.Suppliers.SupplierContact, Shared.Contracts.Suppliers.SupplierContact>()
