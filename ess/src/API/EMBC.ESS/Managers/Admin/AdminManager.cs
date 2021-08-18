@@ -160,13 +160,32 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<SuppliersQueryResult> Handle(SuppliersQuery query)
         {
-            var suppliers = (await supplierRepository.QuerySupplier(new SupplierQuery
+            if (!string.IsNullOrEmpty(query.TeamId))
             {
-                TeamId = query.TeamId
-            })).Items;
+                var suppliers = (await supplierRepository.QuerySupplier(new SuppliersByTeamQuery
+                {
+                    TeamId = query.TeamId,
+                })).Items;
 
-            var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
-            return new SuppliersQueryResult { Items = res };
+                var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
+                return new SuppliersQueryResult { Items = res };
+            }
+            else if (!string.IsNullOrEmpty(query.SupplierId) || !string.IsNullOrEmpty(query.LegalName) || !string.IsNullOrEmpty(query.GSTNumber))
+            {
+                var suppliers = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
+                {
+                    SupplierId = query.SupplierId,
+                    LegalName = query.LegalName,
+                    GSTNumber = query.GSTNumber
+                })).Items;
+
+                var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
+                return new SuppliersQueryResult { Items = res };
+            }
+            else
+            {
+                throw new Exception($"Unknown query type");
+            }
         }
     }
 }

@@ -57,11 +57,7 @@
                   else notReviewed
                 "
               >
-                {{
-                  essFile?.needsAssessment?.supports?.length === 0
-                    ? 'No'
-                    : 'Yes'
-                }}
+                {{ essFile?.supports?.length === 0 ? 'No' : 'Yes' }}
               </td>
               <ng-template #notReviewed>
                 <td class="bold">N/A</td>

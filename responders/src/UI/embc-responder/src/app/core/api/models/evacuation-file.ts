@@ -6,6 +6,7 @@ import { EvacuationFileStatus } from './evacuation-file-status';
 import { EvacuationFileTask } from './evacuation-file-task';
 import { NeedsAssessment } from './needs-assessment';
 import { Note } from './note';
+import { Support } from './support';
 
 /**
  * Evacuation File
@@ -25,5 +26,6 @@ export interface EvacuationFile {
   securityPhrase?: null | string;
   securityPhraseEdited?: boolean;
   status?: null | EvacuationFileStatus;
+  supports?: null | Array<Support>;
   task: EvacuationFileTask;
 }

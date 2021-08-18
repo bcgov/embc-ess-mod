@@ -35,8 +35,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   @Input() statusLoading: boolean;
   @Input() loggedInRole: string;
   @Input() showToggle: boolean;
-  @Output() toggleActive = new EventEmitter<string>();
-  @Output() toggleInactive = new EventEmitter<string>();
+  @Output() toggleChange = new EventEmitter<{ id: string; status: boolean }>();
   @Output() clickedRow = new EventEmitter<SupplierModel>();
 
   dataSource = new MatTableDataSource();
@@ -136,7 +135,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
    * @param columnLabel table column name
    */
   disableRowInteraction($event, columnLabel): void {
-    if (columnLabel === 'isActive') {
+    if (columnLabel === 'status') {
       $event.stopPropagation();
     }
   }
@@ -150,11 +149,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
    */
   slideToggle($event: MatSlideToggleChange, row, index): void {
     this.selectedIndex = index;
-    if ($event.checked) {
-      this.toggleActive.emit(row.id);
-    } else {
-      this.toggleInactive.emit(row.id);
-    }
+    this.toggleChange.emit({ id: row.id, status: $event.checked });
   }
 
   /**

@@ -6,7 +6,7 @@ import { SuppliersService } from '../api/services';
 import { Observable } from 'rxjs/internal/Observable';
 import { Supplier, SupplierResult } from '../api/models';
 import { StrictHttpResponse } from '../api/strict-http-response';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { SupplierManagementService } from 'src/app/feature-components/supplier-management/supplier-management.service';
 
 @Injectable({
@@ -57,10 +57,17 @@ export class SupplierService {
   setSuppliersStatus(
     supplierId: string,
     status: boolean
-  ): Observable<SupplierResult> {
-    return this.suppliersService.suppliersSetSupplierStatus({
-      supplierId,
-      status
-    });
+  ): Observable<Array<SupplierModel>> {
+    return this.suppliersService
+      .suppliersSetSupplierStatus({
+        supplierId,
+        status
+      })
+      .pipe(
+        mergeMap((result) => {
+          console.log(result);
+          return this.getSuppliersList();
+        })
+      );
   }
 }

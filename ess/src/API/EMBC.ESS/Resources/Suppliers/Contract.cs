@@ -30,23 +30,41 @@ namespace EMBC.ESS.Resources.Suppliers
         public IEnumerable<Supplier> Items { get; set; }
     }
 
-    public class SupplierQuery
+    public abstract class SupplierQuery
+    {
+    }
+
+    public class SuppliersByTeamQuery : SupplierQuery
     {
         public string TeamId { get; set; }
+    }
+
+    public class SupplierSearchQuery : SupplierQuery
+    {
+        public string SupplierId { get; set; }
+        public string LegalName { get; set; }
+        public string GSTNumber { get; set; }
     }
 
     public class Supplier
     {
         public string Id { get; set; }
-        public string SupplierId { get; set; }
         public string Name { get; set; }
         public string LegalName { get; set; }
         public string GSTNumber { get; set; }
+        public bool Verified { get; set; }
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
         public Team Team { get; set; }
-        public bool IsPrimarySupplier { get; set; }
-        public bool Active { get; set; }
+        public IEnumerable<Team> SharedWithTeams { get; set; }
+        public SupplierStatus Status { get; set; }
+    }
+
+    public enum SupplierStatus
+    {
+        NotSet,
+        Active,
+        Inactive
     }
 
     public class Address

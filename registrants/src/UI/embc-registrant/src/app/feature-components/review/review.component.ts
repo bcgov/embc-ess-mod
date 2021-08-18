@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
 import { FormCreationService } from '../../core/services/formCreation.service';
-import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-review',
@@ -50,14 +49,12 @@ export class ReviewComponent implements OnInit {
   }
 
   public onValidToken(token: any): void {
-    console.log('Valid token received: ', token);
     this.captchaVerified = true;
     this.captchaFilled = true;
     this.captchaPassed.emit(true);
   }
 
   public onServerError(error: any): void {
-    console.log('Server error: ', error);
     this.captchaVerified = true;
     this.captchaFilled = true;
   }

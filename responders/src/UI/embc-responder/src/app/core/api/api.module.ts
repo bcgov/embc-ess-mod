@@ -9,7 +9,6 @@ import { ConfigurationService } from './services/configuration.service';
 import { ProfileService } from './services/profile.service';
 import { RegistrationsService } from './services/registrations.service';
 import { SuppliersService } from './services/suppliers.service';
-import { SupportsService } from './services/supports.service';
 import { TasksService } from './services/tasks.service';
 import { TeamCommunitiesAssignmentsService } from './services/team-communities-assignments.service';
 import { TeamMembersService } from './services/team-members.service';
@@ -27,7 +26,6 @@ import { TeamMembersService } from './services/team-members.service';
     ProfileService,
     RegistrationsService,
     SuppliersService,
-    SupportsService,
     TasksService,
     TeamCommunitiesAssignmentsService,
     TeamMembersService,
