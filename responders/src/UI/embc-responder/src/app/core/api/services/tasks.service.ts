@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { EssTask } from '../models/ess-task';
+import { SuppliersListItem } from '../models/suppliers-list-item';
 
 @Injectable({
   providedIn: 'root',
@@ -81,6 +82,52 @@ export class TasksService extends BaseService {
 
     return this.tasksGetTask$Response(params).pipe(
       map((r: StrictHttpResponse<EssTask>) => r.body as EssTask)
+    );
+  }
+
+  /**
+   * Path part for operation tasksGetSuppliersList
+   */
+  static readonly TasksGetSuppliersListPath = '/api/Tasks/{taskId}/suppliers';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `tasksGetSuppliersList()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  tasksGetSuppliersList$Response(params: {
+    taskId: string;
+  }): Observable<StrictHttpResponse<Array<SuppliersListItem>>> {
+
+    const rb = new RequestBuilder(this.rootUrl, TasksService.TasksGetSuppliersListPath, 'get');
+    if (params) {
+      rb.path('taskId', params.taskId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Array<SuppliersListItem>>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `tasksGetSuppliersList$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  tasksGetSuppliersList(params: {
+    taskId: string;
+  }): Observable<Array<SuppliersListItem>> {
+
+    return this.tasksGetSuppliersList$Response(params).pipe(
+      map((r: StrictHttpResponse<Array<SuppliersListItem>>) => r.body as Array<SuppliersListItem>)
     );
   }
 

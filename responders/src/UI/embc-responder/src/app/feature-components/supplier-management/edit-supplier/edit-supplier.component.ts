@@ -6,11 +6,9 @@ import {
   FormGroup
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
-import {
-  SupplierListDataService,
-  SupplierTemp
-} from '../suppliers-list/supplier-list-data.service';
+import { SupplierListDataService } from '../suppliers-list/supplier-list-data.service';
 
 @Component({
   selector: 'app-edit-supplier',
@@ -19,7 +17,7 @@ import {
 })
 export class EditSupplierComponent implements OnInit {
   editForm: FormGroup;
-  selectedSupplier: SupplierTemp;
+  selectedSupplier: SupplierModel;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,7 +46,7 @@ export class EditSupplierComponent implements OnInit {
   }
 
   next(): void {
-    const updatedSupplier: SupplierTemp = this.editForm.getRawValue();
+    const updatedSupplier: SupplierModel = this.editForm.getRawValue();
     this.router.navigate(
       ['/responder-access/supplier-management/review-supplier'],
       {
@@ -77,11 +75,11 @@ export class EditSupplierComponent implements OnInit {
       gstNumber: this.formBuilder.group(
         {
           part1: [
-            this.selectedSupplier?.gstNumber?.part1 ?? '',
+            this.selectedSupplier?.supplierGstNumber?.part1 ?? '',
             [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
           ],
           part2: [
-            this.selectedSupplier?.gstNumber?.part2 ?? '',
+            this.selectedSupplier?.supplierGstNumber?.part2 ?? '',
             [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
           ]
         },
