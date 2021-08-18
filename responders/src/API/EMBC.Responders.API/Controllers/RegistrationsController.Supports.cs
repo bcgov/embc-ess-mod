@@ -27,47 +27,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EMBC.Responders.API.Controllers
 {
-    [ApiController]
-    [Route("api/registrations/{fileId}/[controller]")]
-    public class SupportsController : ControllerBase
+    /// <summary>
+    /// Supports
+    /// </summary>
+    public partial class RegistrationsController
     {
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Support>>> Get(string fileId)
-        {
-            var supplierAddress = new Address { AddressLine1 = "12 meh st.", CommunityCode = "226adfaf-9f97-ea11-b813-005056830319", PostalCode = "V1V 1V1", StateProvinceCode = "BC", CountryCode = "CAN" };
-            var supports = new Support[]
-            {
-                new ClothingReferral { Id = "1", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new IncidentalsReferral { Id = "2", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 2", SupplierId = "2", SupplierName = "sup 2", SupplierAddress = supplierAddress, Status = SupportStatus.Expired },
-                new FoodGroceriesReferral { Id = "3", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Void },
-                new FoodRestaurantReferral { Id = "4", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new LodgingHotelReferral { Id = "5", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new LodgingBilletingReferral { Id = "6", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new LodgingGroupReferral { Id = "7", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new TransportationTaxiReferral { Id = "8", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new TransportationOtherReferral { Id = "9", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-            };
-
-            return await Task.FromResult(supports);
-        }
-
-        [HttpGet("{supportId}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Support>> GetOne(string fileId, string supportId)
-        {
-            var supplierAddress = new Address { AddressLine1 = "12 meh st.", CommunityCode = "226adfaf-9f97-ea11-b813-005056830319", PostalCode = "V1V 1V1", StateProvinceCode = "BC", CountryCode = "CAN" };
-            var support = new ClothingReferral { Id = "1", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Active };
-            return await Task.FromResult(support);
-        }
-
-        [HttpPost]
+        [HttpPost("files/{fileId}/supports")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Post(string fileId, IEnumerable<Support> supports)
+        public async Task<IActionResult> ProcessSupports(string fileId, IEnumerable<Support> supports)
         {
             await Task.CompletedTask;
             return Ok();
@@ -79,6 +48,7 @@ namespace EMBC.Responders.API.Controllers
     public abstract class Support
     {
         public string Id { get; set; }
+        public string NeedsAssessmentId { get; set; }
 
         [Required]
         public DateTime From { get; set; }
@@ -104,6 +74,12 @@ namespace EMBC.Responders.API.Controllers
     [KnownType(typeof(IncidentalsReferral))]
     [KnownType(typeof(FoodGroceriesReferral))]
     [KnownType(typeof(FoodRestaurantReferral))]
+    [KnownType(typeof(FoodRestaurantReferral))]
+    [KnownType(typeof(LodgingBilletingReferral))]
+    [KnownType(typeof(LodgingGroupReferral))]
+    [KnownType(typeof(LodgingHotelReferral))]
+    [KnownType(typeof(TransportationOtherReferral))]
+    [KnownType(typeof(TransportationTaxiReferral))]
     public abstract class Referral : Support
     {
         public override SupportMethod Method => SupportMethod.Referral;

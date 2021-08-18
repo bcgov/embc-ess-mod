@@ -37,12 +37,13 @@ namespace EMBC.Responders.API.Controllers
         /// Gets a File
         /// </summary>
         /// <param name="fileId">fileId</param>
+        /// <param name="needsAssessmentId">optional historical needs aseesment id</param>
         /// <returns>file</returns>
         [HttpGet("files/{fileId}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EvacuationFile>> GetFile(string fileId)
+        public async Task<ActionResult<EvacuationFile>> GetFile(string fileId, string needsAssessmentId = null)
         {
             var file = await evacuationSearchService.GetEvacuationFile(fileId);
 
@@ -52,6 +53,21 @@ namespace EMBC.Responders.API.Controllers
             {
                 note.IsEditable = UserCanEditNote(note);
             }
+
+            //temporarily add supports
+            var supplierAddress = new Address { AddressLine1 = "12 meh st.", CommunityCode = "226adfaf-9f97-ea11-b813-005056830319", PostalCode = "V1V 1V1", StateProvinceCode = "BC", CountryCode = "CAN" };
+            file.Supports = new Support[]
+            {
+                new ClothingReferral { Id = "1", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new IncidentalsReferral { Id = "2", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 2", SupplierId = "2", SupplierName = "sup 2", SupplierAddress = supplierAddress, Status = SupportStatus.Expired },
+                new FoodGroceriesReferral { Id = "3", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Void },
+                new FoodRestaurantReferral { Id = "4", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new LodgingHotelReferral { Id = "5", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new LodgingBilletingReferral { Id = "6", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new LodgingGroupReferral { Id = "7", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new TransportationTaxiReferral { Id = "8", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+                new TransportationOtherReferral { Id = "9", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
+            };
 
             return Ok(file);
         }
@@ -284,6 +300,7 @@ namespace EMBC.Responders.API.Controllers
         public NeedsAssessment NeedsAssessment { get; set; }
 
         public IEnumerable<Note> Notes { get; set; }
+        public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
 
         public string SecurityPhrase { get; set; }
         public bool SecurityPhraseEdited { get; set; }
@@ -353,7 +370,6 @@ namespace EMBC.Responders.API.Controllers
         public bool? CanProvideTransportation { get; set; }
         public bool? CanProvideIncidentals { get; set; }
         public NeedsAssessmentType Type { get; set; }
-        public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -543,6 +559,7 @@ namespace EMBC.Responders.API.Controllers
                     d.PrimaryRegistrantFirstName = primaryRegistrant.FirstName;
                     d.PrimaryRegistrantLastName = primaryRegistrant.LastName;
                 })
+                .ForMember(d => d.Supports, opts => opts.Ignore())
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
@@ -561,7 +578,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.EvacuationExternalReferrals, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals).SingleOrDefault().Content))
                 .ForMember(d => d.PetCarePlans, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans).SingleOrDefault().Content))
                 .ForMember(d => d.HouseHoldRecoveryPlan, opts => opts.MapFrom(s => s.Notes.Where(n => n.Type == ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan).SingleOrDefault().Content))
-                .ForMember(d => d.Supports, opts => opts.Ignore())
                 ;
 
             CreateMap<EvacuationFileHouseholdMember, HouseholdMember>()
