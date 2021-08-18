@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { SupplierStatus } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-new-supplier',
@@ -124,10 +125,8 @@ export class NewSupplierComponent implements OnInit {
    */
   private saveDataForm() {
     this.addSupplierService.supplierAddress = this.newForm.get('address').value;
-    this.addSupplierService.primaryContact = this.newForm.get(
-      'primaryContact'
-    ).value;
-    this.addSupplierService.isActive = true;
-    this.addSupplierService.isMutualAid = false;
+    this.addSupplierService.contact = this.newForm.get('primaryContact').value;
+    this.addSupplierService.status = SupplierStatus.Active;
+    this.addSupplierService.mutualAid = false;
   }
 }

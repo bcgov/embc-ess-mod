@@ -16,9 +16,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import { SupplierTemp } from '../supplier-list-data.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { SupplierModel } from 'src/app/core/models/supplier.model';
 
 @Component({
   selector: 'app-suppliers-table',
@@ -29,7 +29,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() displayedColumns: TableColumnModel[];
-  @Input() incomingData: SupplierTemp[] = [];
+  @Input() incomingData: SupplierModel[] = [];
   @Input() filterTerm: TableFilterValueModel;
   @Input() isLoading: boolean;
   @Input() statusLoading: boolean;
@@ -37,7 +37,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   @Input() showToggle: boolean;
   @Output() toggleActive = new EventEmitter<string>();
   @Output() toggleInactive = new EventEmitter<string>();
-  @Output() clickedRow = new EventEmitter<SupplierTemp>();
+  @Output() clickedRow = new EventEmitter<SupplierModel>();
 
   dataSource = new MatTableDataSource();
   columns: string[];
@@ -57,10 +57,13 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      console.log(this.dataSource);
+      console.log(this.incomingData);
     }
 
     if (changes.displayedColumns) {
       this.columns = this.displayedColumns.map((column) => column.ref);
+      console.log(this.columns);
     }
     if (changes.filterTerm && this.filterTerm !== undefined) {
       this.filter(this.filterTerm);
@@ -97,7 +100,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
    * @param filter filter term
    * @returns true/false
    */
-  supplierFilterPredicate = (data: SupplierTemp, filter: string): boolean => {
+  supplierFilterPredicate = (data: SupplierModel, filter: string): boolean => {
     const searchString: TableFilterValueModel = JSON.parse(filter);
     if (searchString.type === 'text') {
       if (
