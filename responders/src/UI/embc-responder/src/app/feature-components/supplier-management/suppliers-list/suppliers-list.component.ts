@@ -9,8 +9,10 @@ import { UserService } from 'src/app/core/services/user.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { SupplierListDataService } from './supplier-list-data.service';
-import { SupplierTemp } from './supplier-list-data.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { SupplierService } from 'src/app/core/services/suppliers.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { SupplierModel } from 'src/app/core/models/supplier.model';
 
 @Component({
   selector: 'app-suppliers-list',
@@ -18,176 +20,18 @@ import * as globalConst from '../../../core/services/global-constants';
   styleUrls: ['./suppliers-list.component.scss']
 })
 export class SuppliersListComponent implements OnInit {
-  suppliersListData: SupplierTemp[] = [
-    {
-      id: '0001',
-      legalName: 'Save-on-Foods Ltd',
-      name: 'SAVE-ON-FOODS',
-      address: {
-        addressLine1: '120 Main Street',
-        addressLine2: 'Office 123',
-        postalCode: 'V6Z 0G7',
-        stateProvince: {
-          code: 'BC',
-          countryCode: 'CA',
-          name: 'British Columbia'
-        },
-        community: 'Victoria',
-        country: { code: 'CA', name: 'Canada' }
-      },
-      isMutualAid: true,
-      isActive: true,
-      gstNumber: { part1: '222222222', part2: '2222' },
-      primaryContact: {
-        firstName: 'John',
-        lastName: 'Smith',
-        phoneNumber: '250 678 5789',
-        email: 'john@sleepeasyhotel.ca'
-      }
-    },
-    {
-      id: '0002',
-      legalName: 'Master Foods',
-      name: 'FRESH FOODS',
-      address: {
-        addressLine1: '120 Main Street',
-        addressLine2: 'Office 123',
-        postalCode: 'V6Z 0G7',
-        stateProvince: {
-          code: 'BC',
-          countryCode: 'CA',
-          name: 'British Columbia'
-        },
-        community: 'Victoria',
-        country: { code: 'CA', name: 'Canada' }
-      },
-      isMutualAid: false,
-      isActive: true,
-      gstNumber: { part1: '999999999', part2: '9999' },
-      primaryContact: {
-        firstName: 'William',
-        lastName: 'Terrace',
-        phoneNumber: '250 678 5789',
-        email: 'william@freshfoods.ca'
-      }
-    },
-    {
-      id: '0003',
-      legalName: 'Hotels Inc.',
-      name: 'SLEEP EASY HOTEL',
-      address: {
-        addressLine1: '120 Main Street',
-        addressLine2: 'Office 123',
-        postalCode: 'V6Z 0G7',
-        stateProvince: {
-          code: 'BC',
-          countryCode: 'CA',
-          name: 'British Columbia'
-        },
-        community: 'Victoria',
-        country: { code: 'CA', name: 'Canada' }
-      },
-      isMutualAid: false,
-      isActive: false,
-      gstNumber: { part1: '333333333', part2: '3333' },
-      primaryContact: {
-        firstName: 'Rosalyn',
-        lastName: 'Smith',
-        phoneNumber: '250 678 5789',
-        email: 'rsmith@hotelsinc.ca'
-      }
-    },
-    {
-      id: '0004',
-      legalName: 'Victoria Cabs',
-      name: 'VICTORIA CABS',
-      address: {
-        addressLine1: '120 Main Street',
-        addressLine2: 'Office 123',
-        postalCode: 'V6Z 0G7',
-        stateProvince: {
-          code: 'BC',
-          countryCode: 'CA',
-          name: 'British Columbia'
-        },
-        community: 'Victoria',
-        country: { code: 'CA', name: 'Canada' }
-      },
-      isMutualAid: false,
-      isActive: false,
-      gstNumber: { part1: '555555555', part2: '9999' },
-      primaryContact: {
-        firstName: 'Anne',
-        lastName: 'Boots',
-        phoneNumber: '250 678 5789',
-        email: 'aboots@victoriacabs.ca'
-      }
-    }
-  ];
-
-  mutualAidListData: SupplierTemp[] = [
-    {
-      id: '0001',
-      legalName: 'Save-on-Foods Ltd',
-      name: 'SAVE-ON-FOODS',
-      address: {
-        addressLine1: '120 Main Street',
-        addressLine2: 'Office 123',
-        postalCode: 'V6Z 0G7',
-        stateProvince: {
-          code: 'BC',
-          countryCode: 'CA',
-          name: 'British Columbia'
-        },
-        community: 'Victoria',
-        country: { code: 'CA', name: 'Canada' }
-      },
-      isMutualAid: true,
-      isActive: true,
-      gstNumber: { part1: '222222222', part2: '2222' },
-      primaryContact: {
-        firstName: 'John',
-        lastName: 'Smith',
-        phoneNumber: '250 678 5789',
-        email: 'john@sleepeasyhotel.ca'
-      }
-    },
-    {
-      id: '0002',
-      legalName: 'Master Foods',
-      name: 'FRESH FOODS',
-      address: {
-        addressLine1: '120 Main Street',
-        addressLine2: 'Office 123',
-        postalCode: 'V6Z 0G7',
-        stateProvince: {
-          code: 'BC',
-          countryCode: 'CA',
-          name: 'British Columbia'
-        },
-        community: 'Victoria',
-        country: { code: 'CA', name: 'Canada' }
-      },
-      isMutualAid: false,
-      isActive: true,
-      gstNumber: { part1: '999999999', part2: '9999' },
-      primaryContact: {
-        firstName: 'William',
-        lastName: 'Terrace',
-        phoneNumber: '250 678 5789',
-        email: 'william@freshfoods.ca'
-      }
-    }
-  ];
+  suppliersListData: Array<SupplierModel>;
+  mutualAidListData: Array<SupplierModel>;
 
   primarySupplierFilterTerm: TableFilterValueModel;
   mutualAidSupplierFilterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
   primarySuppliersColumns: TableColumnModel[];
   mutualAidSuppliersColumns: TableColumnModel[];
-  suppliersList: SupplierTemp[];
-  mutualAidList: SupplierTemp[];
-  isLoading = false;
+  suppliersList: SupplierModel[];
+  mutualAidList: SupplierModel[];
+  suppliersLoader = false;
+  mutualAidLoader = false;
   statusLoading = true;
   loggedInRole: string;
 
@@ -196,7 +40,9 @@ export class SuppliersListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private supplierServices: SupplierService,
+    private alertService: AlertService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -213,22 +59,27 @@ export class SuppliersListComponent implements OnInit {
     this.loggedInRole = this.userService.currentProfile.role;
 
     setTimeout(() => {
-      this.suppliersList = this.suppliersListData;
-      this.mutualAidList = this.mutualAidListData;
-      this.isLoading = !this.isLoading;
+      // this.suppliersList = this.suppliersListData;
+      // this.mutualAidList = this.mutualAidListData;
+      // this.mutualAidLoader = !this.mutualAidLoader;
     }, 5000);
 
-    // this.teamListService.getTeamMembers().subscribe(
-    //   (values) => {
-    //     this.isLoading = !this.isLoading;
-    //     this.teamMembers = values;
-    //   },
-    //   (error) => {
-    //     this.isLoading = !this.isLoading;
-    //     this.alertService.clearAlert();
-    //     this.alertService.setAlert('danger', globalConst.teamMemberListError);
-    //   }
-    // );
+    // this.suppliersLoader = !this.suppliersLoader;
+    this.supplierServices.getSuppliersList().subscribe(
+      (values) => {
+        console.log(values);
+        this.suppliersLoader = !this.suppliersLoader;
+        this.suppliersList = values;
+      },
+      (error) => {
+        this.suppliersLoader = !this.suppliersLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.mainSuppliersListError
+        );
+      }
+    );
   }
 
   /**
@@ -254,7 +105,7 @@ export class SuppliersListComponent implements OnInit {
    *
    * @param $event Selected team member object
    */
-  openSupplierDetails($event: SupplierTemp): void {
+  openSupplierDetails($event: SupplierModel): void {
     this.listSupplierDataService.setSelectedSupplier($event);
     this.router.navigate(
       ['/responder-access/supplier-management/supplier-detail'],
@@ -262,7 +113,7 @@ export class SuppliersListComponent implements OnInit {
     );
   }
 
-  openMutualAidDetails($event: SupplierTemp): void {
+  openMutualAidDetails($event: SupplierModel): void {
     this.listSupplierDataService.setSelectedSupplier($event);
     this.router.navigate(
       ['/responder-access/supplier-management/supplier-detail'],

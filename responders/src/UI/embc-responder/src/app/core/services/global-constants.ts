@@ -289,3 +289,7 @@ export const fileDashboardError =
   'Unable to load ESS File at this time. Please try again later';
 export const supplierCheckerror =
   'Unable to check supplier at this time. Please try again later';
+export const mainSuppliersListError =
+  'Unable to retrieve suppliers list at this time. Please try again later';
+export const mutualAidListError =
+  'Unable to retrieve mutual aid suppliers list at this time. Please try again later';

@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { SupplierContact, SupplierStatus } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
-import {
-  GstModel,
-  SupplierContact,
-  SupplierTemp
-} from '../suppliers-list/supplier-list-data.service';
+import { GstNumberModel } from 'src/app/core/models/gst-number.model';
+import { SupplierModel } from 'src/app/core/models/supplier.model';
 
 @Injectable({ providedIn: 'root' })
 export class AddSupplierService {
   private supplierLegalNameVal: string;
   private supplierNameVal: string;
   private supplierAddressVal: AddressModel;
-  private isMutualAidVal: boolean;
-  private isActiveVal: boolean;
-  private gstNumberVal: GstModel;
-  private primaryContactVal: SupplierContact;
+  private mutualAidVal: boolean;
+  private statusVal: SupplierStatus;
+  private supplierGstNumberVal: GstNumberModel;
+  private contactVal: SupplierContact;
 
   public get supplierLegalName(): string {
     return this.supplierLegalNameVal;
@@ -38,35 +36,35 @@ export class AddSupplierService {
     this.supplierAddressVal = value;
   }
 
-  public get isMutualAid(): boolean {
-    return this.isMutualAidVal;
+  public get mutualAid(): boolean {
+    return this.mutualAidVal;
   }
-  public set isMutualAid(value: boolean) {
-    this.isMutualAidVal = value;
-  }
-
-  public get isActive(): boolean {
-    return this.isActiveVal;
-  }
-  public set isActive(value: boolean) {
-    this.isActiveVal = value;
+  public set mutualAid(value: boolean) {
+    this.mutualAidVal = value;
   }
 
-  public get gstNumber(): GstModel {
-    return this.gstNumberVal;
+  public get status(): SupplierStatus {
+    return this.statusVal;
   }
-  public set gstNumber(gstNumberVal: GstModel) {
-    this.gstNumberVal = gstNumberVal;
-  }
-
-  public get primaryContact(): SupplierContact {
-    return this.primaryContactVal;
-  }
-  public set primaryContact(value: SupplierContact) {
-    this.primaryContactVal = value;
+  public set status(value: SupplierStatus) {
+    this.statusVal = value;
   }
 
-  checkSupplierExists(gstNumber: GstModel): Observable<boolean> {
+  public get supplierGstNumber(): GstNumberModel {
+    return this.supplierGstNumberVal;
+  }
+  public set supplierGstNumber(supplierGstNumberVal: GstNumberModel) {
+    this.supplierGstNumberVal = supplierGstNumberVal;
+  }
+
+  public get contact(): SupplierContact {
+    return this.contactVal;
+  }
+  public set contact(value: SupplierContact) {
+    this.contactVal = value;
+  }
+
+  checkSupplierExists(gstNumber: GstNumberModel): Observable<boolean> {
     const result = new Subject<boolean>();
     result.next(true);
     return result;
@@ -77,25 +75,25 @@ export class AddSupplierService {
    *
    * @returns Supplier object
    */
-  getAddedSupplier(): SupplierTemp {
+  getAddedSupplier(): SupplierModel {
     console.log({
       legalName: this.supplierLegalName,
       name: this.supplierName,
       address: this.supplierAddress,
-      isMutualAid: this.isMutualAid,
-      isActive: this.isActive,
-      gstNumber: this.gstNumber,
-      primaryContact: this.primaryContact
+      mutualAid: this.mutualAid,
+      isActive: this.status,
+      supplierGstNumber: this.supplierGstNumber,
+      contact: this.contact
     });
 
     return {
       legalName: this.supplierLegalName,
       name: this.supplierName,
       address: this.supplierAddress,
-      isMutualAid: this.isMutualAid,
-      isActive: this.isActive,
-      gstNumber: this.gstNumber,
-      primaryContact: this.primaryContact
+      mutualAid: this.mutualAid,
+      status: this.status,
+      supplierGstNumber: this.supplierGstNumber,
+      contact: this.contact
     };
   }
 
@@ -106,9 +104,9 @@ export class AddSupplierService {
     this.supplierLegalName = undefined;
     this.supplierName = undefined;
     this.supplierAddress = undefined;
-    this.isMutualAid = undefined;
-    this.isActive = undefined;
-    this.gstNumber = undefined;
-    this.primaryContact = undefined;
+    this.mutualAid = undefined;
+    this.status = undefined;
+    this.supplierGstNumber = undefined;
+    this.contact = undefined;
   }
 }

@@ -31,11 +31,10 @@
         <span *ngIf="column?.ref === 'address'">
           <span>{{ row[column?.ref].addressLine1 }}</span>
         </span>
-
-        <span *ngIf="column?.ref == 'isMutualAid'">
+        <span *ngIf="column?.ref === 'mutualAid'">
           <span>{{ row[column?.ref] ? 'Yes' : 'No' }}</span>
         </span>
-        <span *ngIf="column?.ref === 'isActive'">
+        <span *ngIf="column?.ref === 'status'">
           <span *ngIf="showToggle; else status">
             <mat-slide-toggle
               [checked]="row[column?.ref]"
