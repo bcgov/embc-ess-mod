@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { MatSelectModule } from '@angular/material/select';
-import { SecurityQuestionsService } from './security-questions.service';
+import { SecurityQuestionsService } from '../../../../core/services/security-questions.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { Subscription } from 'rxjs';
@@ -42,14 +42,8 @@ export default class SecurityQuestionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.createQuestionForm();
-    this.securityQuesService.getSecurityQuestionList().subscribe(
-      (list) => {
-        this.securityQuestionOptions = list;
-      },
-      (error) => {
-        this.alertService.setAlert('danger', globalConst.securityQuesError);
-      }
-    );
+    this.securityQuestionOptions =
+      this.securityQuesService.securityQuestionOptions;
   }
 
   /**
@@ -59,7 +53,6 @@ export default class SecurityQuestionsComponent implements OnInit {
     this.securityQuestionsForm$ = this.formCreationService
       .getSecurityQuestionsForm()
       .subscribe((securityQuestionsForm) => {
-        console.log(securityQuestionsForm);
         this.securityQuestionsForm = securityQuestionsForm;
       });
   }

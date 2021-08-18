@@ -9,6 +9,7 @@ import {
   NeedsAssessmentType,
   HouseholdMember
 } from 'src/app/core/api/models';
+import { ProfileDataService } from '../profile/profile-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class NeedsAssessmentService {
@@ -30,7 +31,7 @@ export class NeedsAssessmentService {
   private verifiedRegistrationResult: string;
   private secretPhrase: string;
 
-  constructor() {}
+  constructor(private profileDataService: ProfileDataService) {}
 
   public get id(): string {
     return this.needsAssessmentID;
@@ -185,23 +186,6 @@ export class NeedsAssessmentService {
   }
 
   public createNeedsAssessmentDTO(): NeedsAssessment {
-    console.log({
-      id: this.id,
-      canEvacueeProvideClothing: this.canEvacueeProvideClothing,
-      canEvacueeProvideFood: this.canEvacueeProvideFood,
-      canEvacueeProvideIncidentals: this.canEvacueeProvideIncidentals,
-      canEvacueeProvideLodging: this.canEvacueeProvideLodging,
-      canEvacueeProvideTransportation: this.canEvacueeProvideTransportation,
-      householdMembers: this.householdMembers,
-      hasPetsFood: this.hasPetsFood,
-      haveMedication: this.haveMedication,
-      haveSpecialDiet: this.haveSpecialDiet,
-      specialDietDetails: this.specialDietDetails,
-      insurance: this.insurance,
-      pets: this.pets,
-      type: NeedsAssessmentType.Preliminary
-    });
-
     return {
       id: this.id,
       canEvacueeProvideClothing: this.canEvacueeProvideClothing,
@@ -209,7 +193,7 @@ export class NeedsAssessmentService {
       canEvacueeProvideIncidentals: this.canEvacueeProvideIncidentals,
       canEvacueeProvideLodging: this.canEvacueeProvideLodging,
       canEvacueeProvideTransportation: this.canEvacueeProvideTransportation,
-      householdMembers: this.householdMembers,
+      householdMembers: this.addPrimaryApplicantToHousehold(),
       hasPetsFood: this.hasPetsFood,
       haveMedication: this.haveMedication,
       haveSpecialDiet: this.haveSpecialDiet,
@@ -241,5 +225,23 @@ export class NeedsAssessmentService {
   public clearEvacuationFileNo(): void {
     this.registrationResult = { referenceNumber: null };
     this.verifiedRegistrationResult = null;
+  }
+
+  addPrimaryApplicantToHousehold() {
+    const primaryMember: HouseholdMember = {
+      details: this.profileDataService.createProfileDTO().personalDetails,
+      isPrimaryRegistrant: true
+    };
+    if (this.householdMembers.length === 0) {
+      return [...this.householdMembers, primaryMember];
+    } else if (
+      !this.householdMembers.find(
+        (member) => member.isPrimaryRegistrant === true
+      )
+    ) {
+      return [...this.householdMembers, primaryMember];
+    } else {
+      return this.householdMembers;
+    }
   }
 }
