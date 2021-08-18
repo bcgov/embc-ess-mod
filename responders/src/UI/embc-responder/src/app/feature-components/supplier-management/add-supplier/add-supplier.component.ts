@@ -8,9 +8,9 @@ import {
 import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { GstModel } from '../suppliers-list/supplier-list-data.service';
 import { AddSupplierService } from './add-supplier.service';
 import * as globalConst from '../../../core/services/global-constants';
+import { GstNumberModel } from 'src/app/core/models/gst-number.model';
 
 @Component({
   selector: 'app-add-supplier',
@@ -70,7 +70,7 @@ export class AddSupplierComponent implements OnInit {
     // this.router.navigate([
     //   '/responder-access/supplier-management/new-supplier'
     // ]);
-    const gstNumber: GstModel = {
+    const gstNumber: GstNumberModel = {
       part1: this.addForm.get('gstNumber.part1').value,
       part2: this.addForm.get('gstNumber.part2').value
     };
@@ -92,7 +92,7 @@ export class AddSupplierComponent implements OnInit {
    *
    * @param $event username input change event
    */
-  private checkSupplierExistance(gstNumber: GstModel): void {
+  private checkSupplierExistance(gstNumber: GstNumberModel): void {
     this.showLoader = !this.showLoader;
     // this.addSupplierService.checkSupplierExists(gstNumber).subscribe(
     //   (value) => {
@@ -126,10 +126,10 @@ export class AddSupplierComponent implements OnInit {
       'supplierName'
     ).value;
 
-    const gstNumber: GstModel = {
+    const gstNumber: GstNumberModel = {
       part1: this.addForm.get('gstNumber.part1').value,
       part2: this.addForm.get('gstNumber.part2').value
     };
-    this.addSupplierService.gstNumber = gstNumber;
+    this.addSupplierService.supplierGstNumber = gstNumber;
   }
 }

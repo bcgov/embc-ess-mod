@@ -4,13 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/core/services/user.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import {
-  SupplierListDataService,
-  SupplierTemp
-} from '../suppliers-list/supplier-list-data.service';
+import { SupplierListDataService } from '../suppliers-list/supplier-list-data.service';
 import { MemberRole } from 'src/app/core/api/models';
 import * as globalConst from '../../../core/services/global-constants';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { SupplierModel } from 'src/app/core/models/supplier.model';
 
 @Component({
   selector: 'app-supplier-detail',
@@ -19,7 +17,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class SupplierDetailComponent implements OnInit {
   searchMutualAidForm: FormGroup;
-  selectedSupplier: SupplierTemp;
+  selectedSupplier: SupplierModel;
   detailsType: string;
   loggedInRole: string;
 
@@ -35,7 +33,7 @@ export class SupplierDetailComponent implements OnInit {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         console.log(this.router.getCurrentNavigation().extras.state);
         const state = this.router.getCurrentNavigation().extras
-          .state as SupplierTemp;
+          .state as SupplierModel;
         this.selectedSupplier = state;
 
         const params = this.router.getCurrentNavigation().extras.queryParams;
