@@ -33,31 +33,6 @@ export class AddSupplierComponent implements OnInit {
     this.constructAddForm();
   }
 
-  constructAddForm(): void {
-    this.addForm = this.builder.group({
-      supplierLegalName: ['', [this.customValidation.whitespaceValidator()]],
-      supplierName: [''],
-      gstNumber: this.builder.group(
-        {
-          part1: [
-            '',
-            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
-          ],
-          part2: [
-            '',
-            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
-          ]
-        },
-        {
-          validators: [
-            this.customValidation.groupRequiredValidator(),
-            this.customValidation.groupMinLengthValidator()
-          ]
-        }
-      )
-    });
-  }
-
   /**
    * Returns form control
    */
@@ -65,6 +40,9 @@ export class AddSupplierComponent implements OnInit {
     return this.addForm.controls;
   }
 
+  /**
+   * Navigates to a new page according to the verification whether the supplier exists or not
+   */
   next(): void {
     // this.saveDataForm();
     // this.router.navigate([
@@ -77,6 +55,9 @@ export class AddSupplierComponent implements OnInit {
     this.checkSupplierExistance(gstNumber);
   }
 
+  /**
+   * Cancel the action of adding a new supplier by going back to the suppliers list page
+   */
   cancel(): void {
     this.router.navigate([
       '/responder-access/supplier-management/list-suppliers'
@@ -118,6 +99,37 @@ export class AddSupplierComponent implements OnInit {
     }
   }
 
+  /**
+   * Creates a new form to handle the addition of new supplier to the system
+   */
+  private constructAddForm(): void {
+    this.addForm = this.builder.group({
+      supplierLegalName: ['', [this.customValidation.whitespaceValidator()]],
+      supplierName: [''],
+      gstNumber: this.builder.group(
+        {
+          part1: [
+            '',
+            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+          ],
+          part2: [
+            '',
+            [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)]
+          ]
+        },
+        {
+          validators: [
+            this.customValidation.groupRequiredValidator(),
+            this.customValidation.groupMinLengthValidator()
+          ]
+        }
+      )
+    });
+  }
+
+  /**
+   * Saves the data from the form and save it into the addSUpplier service
+   */
   private saveDataForm() {
     this.addSupplierService.supplierLegalName = this.addForm.get(
       'supplierLegalName'
