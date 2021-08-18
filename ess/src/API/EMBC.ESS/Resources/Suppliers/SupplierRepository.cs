@@ -40,69 +40,90 @@ namespace EMBC.ESS.Resources.Suppliers
         {
             return query.GetType().Name switch
             {
-                nameof(SupplierQuery) => await HandleQuery(query),
+                nameof(SuppliersByTeamQuery) => await HandleQuery((SuppliersByTeamQuery)query),
+                nameof(SupplierSearchQuery) => await HandleQuery((SupplierSearchQuery)query),
                 _ => throw new NotSupportedException($"{query.GetType().Name} is not supported")
             };
         }
 
-        private async Task<SupplierQueryResult> HandleQuery(SupplierQuery queryRequest)
+        private async Task<SupplierQueryResult> HandleQuery(SuppliersByTeamQuery queryRequest)
         {
-            if (string.IsNullOrEmpty(queryRequest.TeamId)) throw new ArgumentNullException(nameof(SupplierQuery.TeamId));
-
             IQueryable<era_essteamsupplier> supplierQuery = essContext.era_essteamsuppliers
                 .Expand(s => s.era_SupplierId)
                 .Expand(s => s.era_ESSTeamID)
                 .Where(s => s.statecode == (int)EntityState.Active);
 
             if (!string.IsNullOrEmpty(queryRequest.TeamId)) supplierQuery = supplierQuery.Where(s => s._era_essteamid_value == Guid.Parse(queryRequest.TeamId));
-            if (!string.IsNullOrEmpty(queryRequest.SupplierId)) supplierQuery = supplierQuery.Where(s => s._era_supplierid_value == Guid.Parse(queryRequest.SupplierId));
 
-            var teamSuppliers = await ((DataServiceQuery<era_essteamsupplier>)supplierQuery).GetAllPagesAsync();
+            var suppliers = (await ((DataServiceQuery<era_essteamsupplier>)supplierQuery).GetAllPagesAsync()).ToArray();
 
-            if (!string.IsNullOrEmpty(queryRequest.LegalName) && !string.IsNullOrEmpty(queryRequest.GSTNumber)) teamSuppliers = teamSuppliers.Where(s => s.era_SupplierId.era_supplierlegalname == queryRequest.LegalName && s.era_SupplierId.era_gstnumber == queryRequest.GSTNumber);
-
-            var items = mapper.Map<IEnumerable<Supplier>>(teamSuppliers);
-
-            foreach (var ts in items)
+            foreach (var supplier in suppliers)
             {
-                if (ts.IsPrimarySupplier)
+                essContext.LoadProperty(supplier.era_SupplierId, nameof(era_supplier.era_PrimaryContact));
+
+                var teamSupplierQuery = essContext.era_essteamsuppliers
+                    .Expand(s => s.era_ESSTeamID)
+                    .Where(s => s._era_supplierid_value == supplier._era_supplierid_value);
+
+                var teamSuppliers = (await ((DataServiceQuery<era_essteamsupplier>)teamSupplierQuery).GetAllPagesAsync()).ToArray();
+
+                foreach (var ts in teamSuppliers)
                 {
-                    var mutualTeamsQuery = essContext.era_essteamsuppliers
-                        .Expand(s => s.era_ESSTeamID)
-                        .Where(s => s.statecode == (int)EntityState.Active)
-                        .Where(s => s._era_supplierid_value == Guid.Parse(ts.SupplierId))
-                        .Where(s => s.era_isprimarysupplier != true)
-                        .Where(s => s._era_essteamid_value != Guid.Parse(queryRequest.TeamId));
-
-                    var mutualTeams = await ((DataServiceQuery<era_essteamsupplier>)mutualTeamsQuery).GetAllPagesAsync();
-
-                    ts.GivenTeams = mapper.Map<IEnumerable<Team>>(mutualTeams.Select(t => t.era_ESSTeamID));
+                    supplier.era_SupplierId.era_era_supplier_era_essteamsupplier_SupplierId.Add(ts);
                 }
-                else
-                {
-                    var managingTeam = essContext.era_essteamsuppliers
-                        .Expand(s => s.era_ESSTeamID)
-                        .Where(s => s.statecode == (int)EntityState.Active)
-                        .Where(s => s._era_supplierid_value == Guid.Parse(ts.SupplierId))
-                        .Where(s => s.era_isprimarysupplier == true)
-                        .SingleOrDefault();
-
-                    ts.Team = mapper.Map<Team>(managingTeam.era_ESSTeamID);
-                }
-
-                if (ts.Contact.Id == null) continue;
-                var contact = essContext.era_suppliercontacts
-                    .Where(s => s.statecode == (int)EntityState.Active)
-                    .Where(s => s.era_suppliercontactid == Guid.Parse(ts.Contact.Id))
-                    .SingleOrDefault();
-
-                if (contact == null) continue;
-                ts.Contact = mapper.Map<SupplierContact>(contact);
             }
+
+            var items = mapper.Map<IEnumerable<Supplier>>(suppliers.Select(s => s.era_SupplierId));
 
             essContext.DetachAll();
 
             return new SupplierQueryResult { Items = items };
         }
+
+        private async Task<SupplierQueryResult> HandleQuery(SupplierSearchQuery queryRequest)
+        {
+            if ((!string.IsNullOrEmpty(queryRequest.LegalName) && string.IsNullOrEmpty(queryRequest.GSTNumber)) ||
+                (!string.IsNullOrEmpty(queryRequest.LegalName) && string.IsNullOrEmpty(queryRequest.GSTNumber)))
+            {
+                throw new Exception("If searching by legal name and gst, both are required");
+            }
+
+            if (string.IsNullOrEmpty(queryRequest.SupplierId) && string.IsNullOrEmpty(queryRequest.LegalName) && string.IsNullOrEmpty(queryRequest.GSTNumber))
+            {
+                throw new Exception("no search criteria");
+            }
+
+            IQueryable<era_supplier> supplierQuery = essContext.era_suppliers;
+
+            if (!string.IsNullOrEmpty(queryRequest.SupplierId)) supplierQuery = supplierQuery.Where(s => s.era_supplierid == Guid.Parse(queryRequest.SupplierId));
+            if (!string.IsNullOrEmpty(queryRequest.LegalName) && !string.IsNullOrEmpty(queryRequest.GSTNumber)) supplierQuery = supplierQuery.Where(s => s.era_supplierlegalname == queryRequest.LegalName && s.era_gstnumber == queryRequest.GSTNumber);
+
+            var suppliers = (await ((DataServiceQuery<era_supplier>)supplierQuery).GetAllPagesAsync()).ToArray();
+            foreach (var supplier in suppliers)
+            {
+                var teamSupplierQuery = essContext.era_essteamsuppliers
+                        .Expand(s => s.era_ESSTeamID)
+                        .Where(s => s._era_supplierid_value == supplier.era_supplierid);
+
+                var teamSuppliers = (await ((DataServiceQuery<era_essteamsupplier>)teamSupplierQuery).GetAllPagesAsync()).ToArray();
+
+                foreach (var ts in teamSuppliers)
+                {
+                    supplier.era_era_supplier_era_essteamsupplier_SupplierId.Add(ts);
+                }
+            }
+
+            var items = mapper.Map<IEnumerable<Supplier>>(suppliers);
+
+            essContext.DetachAll();
+
+            return new SupplierQueryResult { Items = items };
+        }
+    }
+
+    public enum SupplierStatusReason
+    {
+        Verified = 174360000,
+        NotVerified = 1
     }
 }

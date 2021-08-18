@@ -225,24 +225,28 @@ namespace EMBC.Tests.Integration.ESS.Admin
             var teamId = teamDemoId;
             var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = teamId });
 
-            searchResults.Items.Where(s => s.GivenTeams.Count() > 0).ShouldAllBe(s => s.Team.Id == teamId);
+            var primarySuppliers = searchResults.Items.Where(s => s.Team.Id == teamId);
+            var mutualAidSuppliers = searchResults.Items.Where(s => s.Team.Id != teamId);
+
+            primarySuppliers.ShouldAllBe(s => !s.SharedWithTeams.Any(t => t.Id == teamId));
+            mutualAidSuppliers.ShouldAllBe(s => s.SharedWithTeams.Any(t => t.Id == teamId));
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task Query_Suppliers_ReturnsSuppliersById()
         {
             var teamId = teamDemoId;
-            var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = teamId, SupplierId = supplierId });
+            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId });
 
             searchResults.Items.Count().ShouldBe(1);
-            searchResults.Items.ShouldAllBe(s => s.SupplierId == supplierId);
+            searchResults.Items.ShouldAllBe(s => s.Id == supplierId);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task Query_Suppliers_ReturnsSuppliersByLegalNameAndGSTNumber()
         {
             var teamId = teamDemoId;
-            var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = teamId, LegalName = legalName, GSTNumber = gstNumber });
+            var searchResults = await adminManager.Handle(new SuppliersQuery { LegalName = legalName, GSTNumber = gstNumber });
 
             searchResults.Items.ShouldAllBe(s => s.LegalName == legalName && s.GSTNumber == gstNumber);
         }

@@ -160,24 +160,32 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<SuppliersQueryResult> Handle(SuppliersQuery query)
         {
-            if (string.IsNullOrEmpty(query.TeamId)) throw new ArgumentNullException("TeamId is required");
-
-            if ((!string.IsNullOrEmpty(query.LegalName) && string.IsNullOrEmpty(query.GSTNumber))
-                || (string.IsNullOrEmpty(query.LegalName) && !string.IsNullOrEmpty(query.GSTNumber)))
+            if (!string.IsNullOrEmpty(query.TeamId))
             {
-                throw new Exception("If searching by LegalName and GSTNumber, both must be provided");
+                var suppliers = (await supplierRepository.QuerySupplier(new SuppliersByTeamQuery
+                {
+                    TeamId = query.TeamId,
+                })).Items;
+
+                var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
+                return new SuppliersQueryResult { Items = res };
             }
-
-            var suppliers = (await supplierRepository.QuerySupplier(new SupplierQuery
+            else if (!string.IsNullOrEmpty(query.SupplierId) || !string.IsNullOrEmpty(query.LegalName) || !string.IsNullOrEmpty(query.GSTNumber))
             {
-                TeamId = query.TeamId,
-                SupplierId = query.SupplierId,
-                LegalName = query.LegalName,
-                GSTNumber = query.GSTNumber
-            })).Items;
+                var suppliers = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
+                {
+                    SupplierId = query.SupplierId,
+                    LegalName = query.LegalName,
+                    GSTNumber = query.GSTNumber
+                })).Items;
 
-            var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
-            return new SuppliersQueryResult { Items = res };
+                var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
+                return new SuppliersQueryResult { Items = res };
+            }
+            else
+            {
+                throw new Exception($"Unknown query type");
+            }
         }
     }
 }

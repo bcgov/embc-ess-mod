@@ -33,16 +33,23 @@ namespace EMBC.ESS.Shared.Contracts.Suppliers
 
     public class Supplier
     {
-        public string TeamSupplierId { get; set; }
-        public string SupplierId { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string LegalName { get; set; }
         public string GSTNumber { get; set; }
+        public bool Verified { get; set; }
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
         public Team Team { get; set; }
-        public IEnumerable<Team> GivenTeams { get; set; }
-        public bool Active { get; set; }
+        public IEnumerable<Team> SharedWithTeams { get; set; }
+        public SupplierStatus Status { get; set; }
+    }
+
+    public enum SupplierStatus
+    {
+        NotSet,
+        Active,
+        Inactive
     }
 
     public class Address
