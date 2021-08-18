@@ -358,7 +358,7 @@ namespace EMBC.ESS.Managers.Submissions
             return id;
         }
 
-        public async Task<EvacuationFileNotesQueryResponse> Handle(Shared.Contracts.Submissions.EvacuationFileNotesQuery query)
+        public async Task<EvacuationFileNotesQueryResponse> Handle(EvacuationFileNotesQuery query)
         {
             var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
             {
@@ -383,6 +383,22 @@ namespace EMBC.ESS.Managers.Submissions
             var esstasks = mapper.Map<IEnumerable<IncidentTask>>(esstask);
 
             return new TasksSearchQueryResult { Items = esstasks };
+        }
+
+        public async System.Threading.Tasks.Task Handle(ProcessSupportsCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
+
+            var supportIds = new List<string>();
+            foreach (var support in cmd.supports)
+            {
+                var supportId = await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
+                {
+                    FileId = cmd.FileId,
+                    Support = mapper.Map<Resources.Cases.Support>(support)
+                });
+                supportId.Equals(supportId);
+            }
         }
     }
 }

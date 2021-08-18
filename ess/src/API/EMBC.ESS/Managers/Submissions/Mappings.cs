@@ -118,6 +118,9 @@ namespace EMBC.ESS.Managers.Submissions
                 .ForMember(d => d.IsSearchMatch, opts => opts.Ignore())
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.HasAccessRestriction))
                 ;
+
+            CreateMap<Resources.Cases.Support, Shared.Contracts.Submissions.Support>()
+                .ReverseMap().ValidateMemberList(MemberList.Destination);
         }
     }
 }

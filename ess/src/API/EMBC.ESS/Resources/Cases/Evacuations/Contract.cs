@@ -30,9 +30,13 @@ namespace EMBC.ESS.Resources.Cases
 
         Task<string> Delete(string id);
 
-        Task<string> CreateNote(string essFileNumber, Note note);
+        Task<string> CreateNote(string fileId, Note note);
 
-        Task<string> UpdateNote(string essFileNumber, Note note);
+        Task<string> UpdateNote(string fileId, Note note);
+
+        Task<string> CreateSupport(string fileId, Support support);
+
+        Task<string> UpdateSupport(string fileId, Support support);
     }
 
     public class EvacuationFile : Case
@@ -51,6 +55,7 @@ namespace EMBC.ESS.Resources.Cases
         public string RegistrationLocation { get; set; }
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
         public IEnumerable<Note> Notes { get; set; }
+        public IEnumerable<Support> Supports { get; set; }
     }
 
     public class EvacuationAddress
@@ -160,5 +165,117 @@ namespace EMBC.ESS.Resources.Cases
         Completed = 174360002,
         Expired = 174360003,
         Archived = 174360004
+    }
+
+    public abstract class Support
+    {
+        public string Id { get; set; }
+        public string OriginatingNeedsAssessmentId { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
+        public SupportStatus Status { get; set; } = SupportStatus.Active;
+        public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
+    }
+
+    public abstract class Referral : Support
+    {
+        public string SupplierId { get; set; }
+        public string SupplierNotes { get; set; }
+        public string IssuedToPersonName { get; set; }
+    }
+
+    public class ClothingReferral : Referral
+    {
+        public bool ExtremeWinterConditions { get; set; }
+        public double TotalAmount { get; set; }
+    }
+
+    public class IncidentalsReferral : Referral
+    {
+        public string ApprovedItems { get; set; }
+        public double TotalAmount { get; set; }
+    }
+
+    public class FoodGroceriesReferral : Referral
+    {
+        public int NumberOfDays { get; set; }
+        public double TotalAmount { get; set; }
+    }
+
+    public class FoodRestaurantReferral : Referral
+    {
+        public int NumberOfBreakfastsPerPerson { get; set; }
+        public int NumberOfLunchesPerPerson { get; set; }
+        public int NumberOfDinnersPerPerson { get; set; }
+        public double TotalAmount { get; set; }
+    }
+
+    public class LodgingHotelReferral : Referral
+    {
+        public int NumberOfNights { get; set; }
+        public int NumberOfRooms { get; set; }
+    }
+
+    public class LodgingBilletingReferral : Referral
+    {
+        public int NumberOfNights { get; set; }
+        public string HostName { get; set; }
+        public string HostAddress { get; set; }
+        public string HostCity { get; set; }
+        public string HostEmail { get; set; }
+        public string HostPhone { get; set; }
+    }
+
+    public class LodgingGroupReferral : Referral
+    {
+        public int NumberOfNights { get; set; }
+        public string FacilityName { get; set; }
+        public string FacilityAddress { get; set; }
+        public string FacilityCity { get; set; }
+        public string FacilityCommunityCode { get; set; }
+        public string FacilityContactPhone { get; set; }
+    }
+
+    public class TransportationTaxiReferral : Referral
+    {
+        public string FromAddress { get; set; }
+        public string ToAddress { get; set; }
+    }
+
+    public class TransportationOtherReferral : Referral
+    {
+        public double TotalAmount { get; set; }
+        public string TransportMode { get; set; }
+    }
+
+    public enum SupportStatus
+    {
+        Active = 1,
+        Expired = 174360000,
+        Void = 2
+    }
+
+    public enum EraTwoOptions
+    {
+        Yes = 174360000,
+        No = 174360001
+    }
+
+    public enum SupportMethod
+    {
+        Referral = 174360000
+    }
+
+    public static class SupportType
+    {
+        public const string Clothing = "8c4356e9-bf85-ea11-b818-00505683fbf4";
+        public const string Incidentals = "82368af1-bf85-ea11-b818-00505683fbf4";
+        public const string FoodRestaurant = "541d48e3-bf85-ea11-b818-00505683fbf4";
+        public const string FoodGroceries = "531d48e3-bf85-ea11-b818-00505683fbf4";
+        public const string LodgingHotel = "3d983b11-c085-ea11-b818-00505683fbf4";
+        public const string LodgingGroup = "3145c288-559c-ea11-b818-00505683fbf4";
+        public const string LodgingBilleting = "161ca617-c085-ea11-b818-00505683fbf4";
+        public const string TransporationTaxi = "068b0ed3-bf85-ea11-b818-00505683fbf4";
+        public const string TransportationOther = "f9e9a9dc-bf85-ea11-b818-00505683fbf4";
     }
 }

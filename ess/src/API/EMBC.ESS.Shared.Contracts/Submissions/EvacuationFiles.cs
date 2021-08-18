@@ -35,6 +35,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public IEnumerable<HouseholdMember> HouseholdMembers { get; set; }
         public IEnumerable<Note> Notes { get; set; } = Array.Empty<Note>();
         public NeedsAssessment NeedsAssessment { get; set; }
+        public IEnumerable<Support> Supports { get; set; } = Array.Empty<Support>();
     }
 
     public class TeamMember
