@@ -430,13 +430,13 @@
 
       <mat-card-content>
         <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Secret Word / Phrase</div>
+          <div class="col-md-6 card-heading">Security Questions</div>
           <div class="col-md-2">
             <button
               class="edit-image"
               mat-icon-button
               aria-label="Edit"
-              (click)="editDetails('secret')"
+              (click)="editDetails('security-questions')"
             >
               <img src="/assets/images/edit.svg" height="35" width="35" />
               <img
@@ -449,11 +449,46 @@
         </div>
         <hr />
         <div class="row info-detail">
-          <div class="col-md-3">Secret Word / Phrase:</div>
           <div class="col-md-3">
             {{
-              (formCreationService.secretForm$ | async)?.value?.secretPhrase
-                | maskText
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.question1
+            }}
+          </div>
+          <div class="col-md-3">
+            {{
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.answer1
+            }}
+          </div>
+        </div>
+
+        <div class="row info-detail">
+          <div class="col-md-3">
+            {{
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.question2
+            }}
+          </div>
+          <div class="col-md-3">
+            {{
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.answer2
+            }}
+          </div>
+        </div>
+
+        <div class="row info-detail">
+          <div class="col-md-3">
+            {{
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.question3
+            }}
+          </div>
+          <div class="col-md-3">
+            {{
+              (formCreationService.securityQuestionsForm$ | async)?.value
+                .questions.answer3
             }}
           </div>
         </div>
@@ -795,7 +830,7 @@
 
       <mat-card-content>
         <div class="row justify-content-between">
-          <div class="col-md-6 card-heading">Needs Identified</div>
+          <div class="col-md-6 card-heading">Self-Provided Needs</div>
           <div class="col-md-2">
             <button
               class="edit-image"
@@ -881,6 +916,34 @@
                 ? 'Yes'
                 : 'No'
             }}
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-content>
+        <div class="row justify-content-between">
+          <div class="col-md-6 card-heading">Security Phrase</div>
+          <div class="col-md-2">
+            <button
+              class="edit-image"
+              mat-icon-button
+              aria-label="Edit"
+              (click)="editDetails('secret')"
+            >
+              <img src="/assets/images/edit.svg" height="35" width="35" />
+              <img
+                src="/assets/images/edit_onhover.svg"
+                height="35"
+                width="35"
+              />
+            </button>
+          </div>
+        </div>
+        <hr />
+        <div class="row info-detail">
+          <div class="col-md-3">Security Phrase</div>
+          <div class="col-md-3">
+            {{ (formCreationService.secretForm$ | async)?.value?.secretPhrase }}
           </div>
         </div>
       </mat-card-content>

@@ -60,9 +60,8 @@ export class EditService {
         this.profileDataService.contactDetails = form.value;
         console.log(this.profileDataService.contactDetails);
         break;
-      case 'secret':
-        // this.profileDataService.secretWordPhrase =
-        //   form.get('secretPhrase').value;
+      case 'security-questions':
+        this.saveSecurityQuestions(form.get('questions') as FormGroup);
         break;
       case 'evac-address':
         this.evacuationFileDataService.evacuatedFromAddress = form.get(
@@ -91,6 +90,10 @@ export class EditService {
         break;
       case 'identify-needs':
         this.needsAssessmentDataService.setNeedsDetails(form);
+        break;
+      case 'secret':
+        this.needsAssessmentDataService.secretWordPhrase =
+          form.get('secretPhrase').value;
         break;
       default:
     }
@@ -142,14 +145,20 @@ export class EditService {
           form.reset();
         }
         break;
-      case 'secret':
-        // if (this.profileDataService.secretWordPhrase !== undefined) {
-        //   form
-        //     .get('secretPhrase')
-        //     .patchValue(this.profileDataService.secretWordPhrase);
-        // } else {
-        //   form.reset();
-        // }
+      case 'security-questions':
+        console.log(this.profileDataService.securityQuestions);
+        if (this.profileDataService.securityQuestions !== undefined) {
+          form
+            .get('questions.question1')
+            .patchValue(
+              this.profileDataService?.securityQuestions[0]?.question
+            );
+          form
+            .get('questions.answer1')
+            .patchValue(this.profileDataService?.securityQuestions[0]?.answer);
+        } else {
+          form.reset();
+        }
         break;
       case 'evac-address':
         if (
@@ -260,7 +269,41 @@ export class EditService {
           form.reset();
         }
         break;
+
+      case 'secret':
+        if (this.needsAssessmentDataService.secretWordPhrase !== undefined) {
+          form
+            .get('secretPhrase')
+            .patchValue(this.needsAssessmentDataService.secretWordPhrase);
+        } else {
+          form.reset();
+        }
+        break;
       default:
     }
+  }
+
+  private saveSecurityQuestions(questionForm: FormGroup) {
+    let anyValueSet = false;
+    const questionSet = [];
+    // Create SecurityQuestion objects and save to array, and check if any value set
+    for (let i = 1; i <= 3; i++) {
+      const question = questionForm.get(`question${i}`).value?.trim() ?? '';
+
+      const answer = questionForm.get(`answer${i}`).value?.trim() ?? '';
+
+      if (question.length > 0 || answer.length > 0) {
+        anyValueSet = true;
+      }
+
+      questionSet.push({
+        id: i,
+        answerChanged: true,
+        question,
+        answer
+      });
+    }
+
+    this.profileDataService.securityQuestions = questionSet;
   }
 }
