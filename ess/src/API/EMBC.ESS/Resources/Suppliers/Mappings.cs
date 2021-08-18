@@ -30,7 +30,7 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.era_suppliername))
                 .ForMember(d => d.LegalName, opts => opts.MapFrom(s => s.era_supplierlegalname))
                 .ForMember(d => d.GSTNumber, opts => opts.MapFrom(s => s.era_gstnumber))
-                .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.statuscode == (int)SupplierStatusReason.Verified))
+                .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.statuscode == (int)SupplierVerificationStatus.Verified))
                 .ForMember(d => d.Status, opts => opts.Ignore())
                 .ForPath(d => d.Address.AddressLine1, opts => opts.MapFrom(s => s.era_addressline1))
                 .ForPath(d => d.Address.AddressLine2, opts => opts.MapFrom(s => s.era_addressline2))

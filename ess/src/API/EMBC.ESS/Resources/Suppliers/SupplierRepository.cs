@@ -121,7 +121,7 @@ namespace EMBC.ESS.Resources.Suppliers
         }
     }
 
-    public enum SupplierStatusReason
+    public enum SupplierVerificationStatus
     {
         Verified = 174360000,
         NotVerified = 1

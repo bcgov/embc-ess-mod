@@ -87,7 +87,6 @@ namespace EMBC.Responders.API.Controllers
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
         public Team Team { get; set; }
-        public bool IsPrimarySupplier { get; set; }
         public bool MutualAid { get; set; }
         public SupplierStatus Status { get; set; }
     }
@@ -120,13 +119,12 @@ namespace EMBC.Responders.API.Controllers
         public SuppliersMapping()
         {
             CreateMap<ESS.Shared.Contracts.Suppliers.Supplier, Supplier>()
-                .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom(s => s.IsPrimarySupplier))
-                .ForMember(d => d.MutualAid, opts => opts.Ignore())
+                .ForMember(d => d.MutualAid, opts => opts.MapFrom(s => !s.IsPrimarySupplier))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
                 ;
 
             CreateMap<Supplier, ESS.Shared.Contracts.Suppliers.Supplier>()
-                .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom(s => s.IsPrimarySupplier))
+                .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom(s => !s.MutualAid))
                 .ForMember(d => d.Active, opts => opts.MapFrom(s => s.Status == SupplierStatus.Active))
                 ;
 
