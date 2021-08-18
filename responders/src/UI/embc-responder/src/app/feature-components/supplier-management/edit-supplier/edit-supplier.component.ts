@@ -32,10 +32,17 @@ export class EditSupplierComponent implements OnInit {
   }
 
   /**
-   * Returns form control
+   * Returns edit form control
    */
   get editFormControl(): { [key: string]: AbstractControl } {
     return this.editForm.controls;
+  }
+
+  /**
+   * Returns the gstNumber form
+   */
+  get gstNumber(): FormGroup {
+    return this.editForm.get('gstNumber') as FormGroup;
   }
 
   /**
@@ -45,6 +52,9 @@ export class EditSupplierComponent implements OnInit {
     return this.editForm.get('address') as FormGroup;
   }
 
+  /**
+   * Goes to the Review page displaying recent changes
+   */
   next(): void {
     const updatedSupplier: SupplierModel = this.editForm.getRawValue();
     this.router.navigate(
@@ -56,12 +66,18 @@ export class EditSupplierComponent implements OnInit {
     );
   }
 
+  /**
+   * Cancels the action of editing by going back to the Suppliers list page
+   */
   cancel(): void {
     this.router.navigate([
       '/responder-access/supplier-management/suppliers-list'
     ]);
   }
 
+  /**
+   * Creates a form to handle supplier's data edition
+   */
   private createEditForm(): void {
     this.editForm = this.formBuilder.group({
       supplierLegalName: [
@@ -92,10 +108,6 @@ export class EditSupplierComponent implements OnInit {
       ),
       address: this.createSupplierAddressEditForm()
     });
-  }
-
-  get gstNumber(): FormGroup {
-    return this.editForm.get('gstNumber') as FormGroup;
   }
 
   /**
