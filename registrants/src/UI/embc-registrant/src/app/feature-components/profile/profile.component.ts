@@ -163,7 +163,6 @@ export class ProfileComponent
         this.profileDataService.contactDetails = this.form.value;
         break;
       case 'security-questions':
-        console.log(this.form.get('questions'));
         this.saveSecurityQuestions(this.form.get('questions') as FormGroup);
         console.log(this.profileDataService.securityQuestions);
         break;

@@ -122,49 +122,31 @@ export class SuppliersListComponent implements OnInit {
   }
 
   /**
-   * Activates an inactive user
+   * Activates/ Deactivates a main supplier
    *
    * @param $event team member id
    */
-  activateSupplier($event: string): void {
-    // this.statusLoading = !this.statusLoading;
-    // this.teamListService.activateTeamMember($event).subscribe(
-    //   (value) => {
-    //     this.statusLoading = !this.statusLoading;
-    //     this.teamMembers = value;
-    //   },
-    //   (error) => {
-    //     this.statusLoading = !this.statusLoading;
-    //     this.alertService.clearAlert();
-    //     this.alertService.setAlert(
-    //       'danger',
-    //       globalConst.activateTeamMemberError
-    //     );
-    //   }
-    // );
-  }
+  changeSupplierStatus($event: { id: string; status: boolean }): void {
+    this.statusLoading = !this.statusLoading;
+    console.log($event);
 
-  /**
-   * Inactivate an active user
-   *
-   * @param $event team member id
-   */
-  deactivateSupplier($event: string): void {
-    // this.statusLoading = !this.statusLoading;
-    // this.teamListService.deactivatedTeamMember($event).subscribe(
-    //   (value) => {
-    //     this.statusLoading = !this.statusLoading;
-    //     this.teamMembers = value;
-    //   },
-    //   (error) => {
-    //     this.statusLoading = !this.statusLoading;
-    //     this.alertService.clearAlert();
-    //     this.alertService.setAlert(
-    //       'danger',
-    //       globalConst.deActivateTeamMemberError
-    //     );
-    //   }
-    // );
+    this.supplierServices
+      .setSuppliersStatus($event.id, $event.status)
+      .subscribe(
+        (value) => {
+          this.statusLoading = !this.statusLoading;
+          this.suppliersList = value;
+          console.log(value);
+        },
+        (error) => {
+          this.statusLoading = !this.statusLoading;
+          this.alertService.clearAlert();
+          this.alertService.setAlert(
+            'danger',
+            globalConst.changeSupplierStatusError
+          );
+        }
+      );
   }
 
   /**

@@ -19,7 +19,7 @@ import { EditService } from './edit.service';
 export class EditComponent implements OnInit, OnDestroy {
   componentToLoad: string;
   profileFolderPath: string;
-  navigationExtras: NavigationExtras = { state: { stepIndex: 4 } };
+  navigationExtras: NavigationExtras = { state: { stepIndex: 5 } };
   form$: Subscription;
   form: FormGroup;
   editHeading: string;
@@ -29,7 +29,6 @@ export class EditComponent implements OnInit, OnDestroy {
   nonVerfiedRoute = '/non-verified-registration/needs-assessment';
   verifiedRoute = '/verified-registration/create-profile';
   verifiedNeedsAssessments = '/verified-registration/needs-assessment';
-  // disabledSavedButton = false;
 
   constructor(
     private router: Router,
@@ -59,23 +58,7 @@ export class EditComponent implements OnInit, OnDestroy {
       this.componentToLoad = params.get('type');
       this.loadForm(this.componentToLoad);
     });
-    // this.onChanges();
   }
-
-  // onChanges(): void {
-  //   console.log(this.form);
-  //   this.form.statusChanges.subscribe(val => {
-  //     if (val === 'VALID') {
-  //       setTimeout(() => {
-  //         this.disabledSavedButton = false;
-  //       }, 0);
-  //     } else {
-  //       setTimeout(() => {
-  //         this.disabledSavedButton = true;
-  //       }, 0);
-  //     }
-  //   });
-  // }
 
   /**
    * Saves the updates information and navigates to review
@@ -125,7 +108,6 @@ export class EditComponent implements OnInit, OnDestroy {
             },
             (error) => {
               this.showLoader = !this.showLoader;
-              console.log(error);
               this.alertService.setAlert('danger', error.title);
             }
           );
@@ -203,11 +185,11 @@ export class EditComponent implements OnInit, OnDestroy {
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
       case 'security-questions':
-        // this.form$ = this.formCreationService
-        //   .getSecretForm()
-        //   .subscribe((secret) => {
-        //     this.form = secret;
-        //   });
+        this.form$ = this.formCreationService
+          .getSecurityQuestionsForm()
+          .subscribe((questions) => {
+            this.form = questions;
+          });
         this.editHeading = 'Edit Profile';
         this.profileFolderPath = 'evacuee-profile-forms';
         break;
@@ -244,6 +226,15 @@ export class EditComponent implements OnInit, OnDestroy {
           .getIndentifyNeedsForm()
           .subscribe((identifyNeedsForm) => {
             this.form = identifyNeedsForm;
+          });
+        this.editHeading = 'Edit Evacuation File';
+        this.profileFolderPath = 'needs-assessment-forms';
+        break;
+      case 'secret':
+        this.form$ = this.formCreationService
+          .getSecretForm()
+          .subscribe((secret) => {
+            this.form = secret;
           });
         this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';

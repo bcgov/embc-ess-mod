@@ -76,7 +76,7 @@ export class NeedsAssessmentComponent
   }
 
   ngAfterViewInit(): void {
-    if (this.stepToDisplay === 4) {
+    if (this.stepToDisplay === 5) {
       setTimeout(() => {
         this.needsStepper.selectedIndex = this.stepToDisplay;
       }, 0);
@@ -220,7 +220,6 @@ export class NeedsAssessmentComponent
         this.router.navigate(['/non-verified-registration/file-submission']);
       },
       (error: any) => {
-        console.log(error);
         this.showLoader = !this.showLoader;
         this.isSubmitted = !this.isSubmitted;
         this.alertService.setAlert('danger', error.error.title);

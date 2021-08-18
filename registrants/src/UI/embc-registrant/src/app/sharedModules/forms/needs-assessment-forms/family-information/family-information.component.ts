@@ -70,7 +70,6 @@ export default class FamilyInformationComponent implements OnInit {
   addMembers(): void {
     this.householdMemberForm.get('householdMember').reset();
     this.showFamilyForm = !this.showFamilyForm;
-    // this.showTable = !this.showTable;
     this.editFlag = !this.editFlag;
     this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
   }
@@ -89,7 +88,6 @@ export default class FamilyInformationComponent implements OnInit {
       this.householdMemberForm.get('householdMembers').setValue(this.data);
       this.showFamilyForm = !this.showFamilyForm;
       this.editFlag = !this.editFlag;
-      // this.showTable = !this.showTable;
     } else {
       this.householdMemberForm.get('householdMember').markAllAsTouched();
     }
@@ -98,10 +96,7 @@ export default class FamilyInformationComponent implements OnInit {
   cancel(): void {
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
-    // this.showTable = !this.showTable;
-    // if (this.data.length === 0) {
     this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(false);
-    // }
   }
 
   /**
@@ -140,7 +135,6 @@ export default class FamilyInformationComponent implements OnInit {
     this.showFamilyForm = !this.showFamilyForm;
     this.editFlag = !this.editFlag;
     this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
-    // this.showTable = !this.showTable;
     this.householdMemberForm.get('addHouseholdMemberIndicator').setValue(true);
   }
 

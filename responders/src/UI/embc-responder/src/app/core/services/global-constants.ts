@@ -293,3 +293,5 @@ export const mainSuppliersListError =
   'Unable to retrieve suppliers list at this time. Please try again later';
 export const mutualAidListError =
   'Unable to retrieve mutual aid suppliers list at this time. Please try again later';
+export const changeSupplierStatusError =
+  "Unable to change current supplier's status at this time. Please try again later";

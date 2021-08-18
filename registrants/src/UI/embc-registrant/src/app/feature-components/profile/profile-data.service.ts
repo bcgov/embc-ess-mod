@@ -99,7 +99,7 @@ export class ProfileDataService {
       personalDetails: this.personalDetails,
       primaryAddress: this.setAddressObject(this.primaryAddressDetails),
       restrictedAccess: this.restrictionService.restrictedAccess,
-      securityQuestions: null
+      securityQuestions: this.securityQuestions
     };
   }
 
