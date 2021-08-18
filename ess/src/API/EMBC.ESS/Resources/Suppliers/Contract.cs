@@ -33,11 +33,14 @@ namespace EMBC.ESS.Resources.Suppliers
     public class SupplierQuery
     {
         public string TeamId { get; set; }
+        public string SupplierId { get; set; }
+        public string LegalName { get; set; }
+        public string GSTNumber { get; set; }
     }
 
     public class Supplier
     {
-        public string Id { get; set; }
+        public string TeamSupplierId { get; set; }
         public string SupplierId { get; set; }
         public string Name { get; set; }
         public string LegalName { get; set; }
@@ -45,8 +48,8 @@ namespace EMBC.ESS.Resources.Suppliers
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
         public Team Team { get; set; }
+        public IEnumerable<Team> GivenTeams { get; set; }
         public bool IsPrimarySupplier { get; set; }
-        public bool MutualAid { get; set; }
         public bool Active { get; set; }
     }
 

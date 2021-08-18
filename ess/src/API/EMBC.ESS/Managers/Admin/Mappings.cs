@@ -43,6 +43,7 @@ namespace EMBC.ESS.Managers.Admin
                 ;
 
             CreateMap<Shared.Contracts.Suppliers.Supplier, Resources.Suppliers.Supplier>()
+                .ForMember(d => d.IsPrimarySupplier, opts => opts.Ignore())
                 ;
 
             CreateMap<Resources.Suppliers.SupplierContact, Shared.Contracts.Suppliers.SupplierContact>()

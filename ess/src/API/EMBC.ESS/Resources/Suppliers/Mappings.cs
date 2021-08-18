@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
 
@@ -24,7 +25,7 @@ namespace EMBC.ESS.Resources.Suppliers
         public Mappings()
         {
             CreateMap<era_essteamsupplier, Supplier>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_essteamsupplierid))
+                .ForMember(d => d.TeamSupplierId, opts => opts.MapFrom(s => s.era_essteamsupplierid))
                 .ForPath(d => d.SupplierId, opts => opts.MapFrom(s => s.era_SupplierId.era_supplierid))
                 .ForPath(d => d.Name, opts => opts.MapFrom(s => s.era_SupplierId.era_suppliername))
                 .ForPath(d => d.LegalName, opts => opts.MapFrom(s => s.era_SupplierId.era_supplierlegalname))
@@ -43,9 +44,14 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForPath(d => d.Contact.Email, opts => opts.MapFrom(s => s.era_SupplierId.era_PrimaryContact != null ? s.era_SupplierId.era_PrimaryContact.emailaddress : null))
                 .ForPath(d => d.Team.Id, opts => opts.MapFrom(s => s.era_ESSTeamID.era_essteamid))
                 .ForPath(d => d.Team.Name, opts => opts.MapFrom(s => s.era_ESSTeamID.era_name))
+                .ForMember(d => d.GivenTeams, opts => opts.MapFrom(s => Array.Empty<Team>()))
                 .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom(s => s.era_isprimarysupplier))
-                .ForMember(d => d.MutualAid, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.Active, opts => opts.MapFrom(s => s.era_active))
+                ;
+
+            CreateMap<era_essteam, Team>()
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_essteamid))
+                .ForMember(d => d.Name, opts => opts.MapFrom(s => s.era_name))
                 ;
 
             CreateMap<era_suppliercontact, SupplierContact>()

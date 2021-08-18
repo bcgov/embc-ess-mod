@@ -21,6 +21,9 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
         private string teamId = "98275853-2581-eb11-b825-00505683fbf4";
         private readonly string teamDemoId = "80ff138b-fa96-eb11-b827-00505683fbf4";
+        private readonly string supplierId = "a4481e78-5998-ea11-b818-00505683fbf4";
+        private readonly string legalName = "ABC General Store";
+        private readonly string gstNumber = "678953424 RT 0001";
 
         public AdminTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -222,7 +225,26 @@ namespace EMBC.Tests.Integration.ESS.Admin
             var teamId = teamDemoId;
             var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = teamId });
 
-            searchResults.Items.ShouldAllBe(s => s.Team.Id == teamId);
+            searchResults.Items.Where(s => s.GivenTeams.Count() > 0).ShouldAllBe(s => s.Team.Id == teamId);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Query_Suppliers_ReturnsSuppliersById()
+        {
+            var teamId = teamDemoId;
+            var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = teamId, SupplierId = supplierId });
+
+            searchResults.Items.Count().ShouldBe(1);
+            searchResults.Items.ShouldAllBe(s => s.SupplierId == supplierId);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Query_Suppliers_ReturnsSuppliersByLegalNameAndGSTNumber()
+        {
+            var teamId = teamDemoId;
+            var searchResults = await adminManager.Handle(new SuppliersQuery { TeamId = teamId, LegalName = legalName, GSTNumber = gstNumber });
+
+            searchResults.Items.ShouldAllBe(s => s.LegalName == legalName && s.GSTNumber == gstNumber);
         }
     }
 }

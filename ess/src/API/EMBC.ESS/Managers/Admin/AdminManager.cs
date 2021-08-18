@@ -160,9 +160,20 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<SuppliersQueryResult> Handle(SuppliersQuery query)
         {
+            if (string.IsNullOrEmpty(query.TeamId)) throw new ArgumentNullException("TeamId is required");
+
+            if ((!string.IsNullOrEmpty(query.LegalName) && string.IsNullOrEmpty(query.GSTNumber))
+                || (string.IsNullOrEmpty(query.LegalName) && !string.IsNullOrEmpty(query.GSTNumber)))
+            {
+                throw new Exception("If searching by LegalName and GSTNumber, both must be provided");
+            }
+
             var suppliers = (await supplierRepository.QuerySupplier(new SupplierQuery
             {
-                TeamId = query.TeamId
+                TeamId = query.TeamId,
+                SupplierId = query.SupplierId,
+                LegalName = query.LegalName,
+                GSTNumber = query.GSTNumber
             })).Items;
 
             var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);

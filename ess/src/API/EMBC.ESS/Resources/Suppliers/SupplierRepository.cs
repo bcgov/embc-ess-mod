@@ -52,10 +52,14 @@ namespace EMBC.ESS.Resources.Suppliers
             IQueryable<era_essteamsupplier> supplierQuery = essContext.era_essteamsuppliers
                 .Expand(s => s.era_SupplierId)
                 .Expand(s => s.era_ESSTeamID)
-                .Where(s => s.statecode == (int)EntityState.Active)
-                .Where(s => s._era_essteamid_value == Guid.Parse(queryRequest.TeamId));
+                .Where(s => s.statecode == (int)EntityState.Active);
+
+            if (!string.IsNullOrEmpty(queryRequest.TeamId)) supplierQuery = supplierQuery.Where(s => s._era_essteamid_value == Guid.Parse(queryRequest.TeamId));
+            if (!string.IsNullOrEmpty(queryRequest.SupplierId)) supplierQuery = supplierQuery.Where(s => s._era_supplierid_value == Guid.Parse(queryRequest.SupplierId));
 
             var teamSuppliers = await ((DataServiceQuery<era_essteamsupplier>)supplierQuery).GetAllPagesAsync();
+
+            if (!string.IsNullOrEmpty(queryRequest.LegalName) && !string.IsNullOrEmpty(queryRequest.GSTNumber)) teamSuppliers = teamSuppliers.Where(s => s.era_SupplierId.era_supplierlegalname == queryRequest.LegalName && s.era_SupplierId.era_gstnumber == queryRequest.GSTNumber);
 
             var items = mapper.Map<IEnumerable<Supplier>>(teamSuppliers);
 
@@ -63,13 +67,27 @@ namespace EMBC.ESS.Resources.Suppliers
             {
                 if (ts.IsPrimarySupplier)
                 {
-                    var mutualAid = essContext.era_essteamsuppliers
+                    var mutualTeamsQuery = essContext.era_essteamsuppliers
+                        .Expand(s => s.era_ESSTeamID)
                         .Where(s => s.statecode == (int)EntityState.Active)
                         .Where(s => s._era_supplierid_value == Guid.Parse(ts.SupplierId))
                         .Where(s => s.era_isprimarysupplier != true)
-                        .Where(s => s._era_essteamid_value != Guid.Parse(queryRequest.TeamId)).FirstOrDefault() != null;
+                        .Where(s => s._era_essteamid_value != Guid.Parse(queryRequest.TeamId));
 
-                    ts.MutualAid = mutualAid;
+                    var mutualTeams = await ((DataServiceQuery<era_essteamsupplier>)mutualTeamsQuery).GetAllPagesAsync();
+
+                    ts.GivenTeams = mapper.Map<IEnumerable<Team>>(mutualTeams.Select(t => t.era_ESSTeamID));
+                }
+                else
+                {
+                    var managingTeam = essContext.era_essteamsuppliers
+                        .Expand(s => s.era_ESSTeamID)
+                        .Where(s => s.statecode == (int)EntityState.Active)
+                        .Where(s => s._era_supplierid_value == Guid.Parse(ts.SupplierId))
+                        .Where(s => s.era_isprimarysupplier == true)
+                        .SingleOrDefault();
+
+                    ts.Team = mapper.Map<Team>(managingTeam.era_ESSTeamID);
                 }
 
                 if (ts.Contact.Id == null) continue;
