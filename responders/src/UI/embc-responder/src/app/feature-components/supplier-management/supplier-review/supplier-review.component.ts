@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  SupplierListDataService,
-  SupplierTemp
-} from '../suppliers-list/supplier-list-data.service';
+import { SupplierModel } from 'src/app/core/models/supplier.model';
+import { SupplierListDataService } from '../suppliers-list/supplier-list-data.service';
 
 @Component({
   selector: 'app-supplier-review',
@@ -11,7 +9,7 @@ import {
   styleUrls: ['./supplier-review.component.scss']
 })
 export class SupplierReviewComponent {
-  selectedSupplier: SupplierTemp;
+  selectedSupplier: SupplierModel;
   reviewAction: string;
   showLoader = false;
 
@@ -23,7 +21,7 @@ export class SupplierReviewComponent {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
         console.log(this.router.getCurrentNavigation().extras);
         const state = this.router.getCurrentNavigation().extras
-          .state as SupplierTemp;
+          .state as SupplierModel;
         this.selectedSupplier = state;
 
         const params = this.router.getCurrentNavigation().extras.queryParams;

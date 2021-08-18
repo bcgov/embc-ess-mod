@@ -28,8 +28,8 @@
     <div class="row row-align">
       <div class="col-md-4 detail-label">GST Number</div>
       <div class="col-md-8">
-        {{ selectedSupplier?.gstNumber?.part1 }}-RT-{{
-          selectedSupplier?.gstNumber?.part2
+        {{ selectedSupplier?.supplierGstNumber?.part1 }}-RT-{{
+          selectedSupplier?.supplierGstNumber?.part2
         }}
       </div>
     </div>
@@ -45,8 +45,8 @@
       <div class="col-md-4 detail-label">Contact Person</div>
       <div class="col-md-8 contact-info">
         <p>
-          {{ selectedSupplier?.primaryContact?.firstName }}
-          {{ selectedSupplier?.primaryContact?.lastName | uppercase }}
+          {{ selectedSupplier?.contact?.firstName }}
+          {{ selectedSupplier?.contact?.lastName | uppercase }}
         </p>
       </div>
     </div>
@@ -54,7 +54,7 @@
     <div class="row row-align">
       <div class="col-md-4 detail-label">Contact Person Telephone Number</div>
       <div class="col-md-8 contact-info">
-        <p>{{ selectedSupplier?.primaryContact?.phoneNumber }}</p>
+        <p>{{ selectedSupplier?.contact?.phone }}</p>
       </div>
     </div>
 
@@ -62,7 +62,7 @@
       <div class="col-md-4 detail-label">Email Address</div>
       <div class="col-md-8 contact-info">
         <p class="email-decoration">
-          {{ selectedSupplier?.primaryContact?.email }}
+          {{ selectedSupplier?.contact?.email }}
         </p>
       </div>
     </div>
