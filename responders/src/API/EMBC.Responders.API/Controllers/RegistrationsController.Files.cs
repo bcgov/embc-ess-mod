@@ -54,21 +54,6 @@ namespace EMBC.Responders.API.Controllers
                 note.IsEditable = UserCanEditNote(note);
             }
 
-            //temporarily add supports
-            var supplierAddress = new Address { AddressLine1 = "12 meh st.", CommunityCode = "226adfaf-9f97-ea11-b813-005056830319", PostalCode = "V1V 1V1", StateProvinceCode = "BC", CountryCode = "CAN" };
-            file.Supports = new Support[]
-            {
-                new ClothingReferral { Id = "1", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new IncidentalsReferral { Id = "2", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 2", SupplierId = "2", SupplierName = "sup 2", SupplierAddress = supplierAddress, Status = SupportStatus.Expired },
-                new FoodGroceriesReferral { Id = "3", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 1", SupplierId = "1", SupplierName = "sup 1", SupplierAddress = supplierAddress, Status = SupportStatus.Void },
-                new FoodRestaurantReferral { Id = "4", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new LodgingHotelReferral { Id = "5", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new LodgingBilletingReferral { Id = "6", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new LodgingGroupReferral { Id = "7", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new TransportationTaxiReferral { Id = "8", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-                new TransportationOtherReferral { Id = "9", From = DateTime.Now, To = DateTime.Now.AddDays(3), IssuedToPersonName = "person 4", SupplierId = "4", SupplierName = "sup 4", SupplierAddress = supplierAddress, Status = SupportStatus.Active },
-            };
-
             return Ok(file);
         }
 
@@ -160,7 +145,7 @@ namespace EMBC.Responders.API.Controllers
                 Note = mapper.Map<ESS.Shared.Contracts.Submissions.Note>(note),
                 FileId = fileId
             };
-            cmd.Note.CreatingTeamMemberId = currentUserId;
+            cmd.Note.CreatedBy.Id = currentUserId;
 
             var id = await messagingClient.Send(cmd);
 
@@ -535,6 +520,8 @@ namespace EMBC.Responders.API.Controllers
                 .ForPath(d => d.RelatedTask.Id, opts => opts.MapFrom(s => s.Task.TaskNumber))
                 .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
+                .ForMember(d => d.Notes, opts => opts.Ignore())
+                .ForMember(d => d.Supports, opts => opts.Ignore())
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
                 ;
 
@@ -542,7 +529,6 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.SecurityPhraseEdited, opts => opts.MapFrom(s => s.SecurityPhraseChanged))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.HouseholdMembers))
                 .ForMember(d => d.PrimaryRegistrantFirstName, opts => opts.Ignore())
                 .ForMember(d => d.PrimaryRegistrantLastName, opts => opts.Ignore())
                 .ForMember(d => d.Task, opts => opts.MapFrom(s => s.RelatedTask == null ? null : new EvacuationFileTask
@@ -559,7 +545,6 @@ namespace EMBC.Responders.API.Controllers
                     d.PrimaryRegistrantFirstName = primaryRegistrant.FirstName;
                     d.PrimaryRegistrantLastName = primaryRegistrant.LastName;
                 })
-                .ForMember(d => d.Supports, opts => opts.Ignore())
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
@@ -588,10 +573,10 @@ namespace EMBC.Responders.API.Controllers
                 ;
 
             CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()
-                   .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
-                   .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => s.Verified))
-                   .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
-                   ;
+                .ForMember(d => d.Type, opts => opts.MapFrom(s => s.IsPrimaryRegistrant ? HouseholdMemberType.Registrant : HouseholdMemberType.HouseholdMember))
+                .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => s.Verified))
+                .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
+                ;
 
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()
                 .ReverseMap()
@@ -599,18 +584,66 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<Note, ESS.Shared.Contracts.Submissions.Note>()
                 .ForMember(d => d.ModifiedOn, opts => opts.Ignore())
-                .ForMember(d => d.CreatingTeamMemberId, opts => opts.Ignore())
-                .ForMember(d => d.TeamId, opts => opts.Ignore())
+                .ForMember(d => d.CreatedBy, opts => opts.Ignore())
                 .ForMember(d => d.Type, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.Note, Note>()
                 .ForMember(d => d.IsEditable, opts => opts.Ignore())
+                .ForMember(d => d.CreatingTeamMemberId, opts => opts.MapFrom(s => s.CreatedBy.Id))
+                .ForMember(d => d.MemberName, opts => opts.MapFrom(s => s.CreatedBy.DisplayName))
+                .ForMember(d => d.TeamName, opts => opts.MapFrom(s => s.CreatedBy.TeamName))
                 ;
 
             CreateMap<VerifySecurityPhraseResponse, ESS.Shared.Contracts.Submissions.VerifySecurityPhraseResponse>()
                 .ReverseMap()
                 ;
+        }
+    }
+
+    public class NeedsAssessmentNotesConverter : IValueConverter<NeedsAssessment, IEnumerable<ESS.Shared.Contracts.Submissions.Note>>
+    {
+        public IEnumerable<ESS.Shared.Contracts.Submissions.Note> Convert(NeedsAssessment sourceMember, ResolutionContext context)
+        {
+            List<ESS.Shared.Contracts.Submissions.Note> ret = new List<ESS.Shared.Contracts.Submissions.Note>();
+
+            if (!string.IsNullOrEmpty(sourceMember.EvacuationImpact))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.EvacuationImpact,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact,
+                });
+            }
+
+            if (!string.IsNullOrEmpty(sourceMember.EvacuationExternalReferrals))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.EvacuationExternalReferrals,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals,
+                });
+            }
+
+            if (!string.IsNullOrEmpty(sourceMember.PetCarePlans))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.PetCarePlans,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans,
+                });
+            }
+
+            if (!string.IsNullOrEmpty(sourceMember.HouseHoldRecoveryPlan))
+            {
+                ret.Add(new ESS.Shared.Contracts.Submissions.Note
+                {
+                    Content = sourceMember.HouseHoldRecoveryPlan,
+                    Type = ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan,
+                });
+            }
+
+            return ret;
         }
     }
 }
