@@ -235,15 +235,15 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var supports = new Support[]
             {
-                new ClothingReferral(),
-                new IncidentalsReferral(),
-                new FoodGroceriesReferral(),
-                new FoodRestaurantReferral(),
-                new LodgingBilletingReferral() { NumberOfNights = 1 },
-                new LodgingGroupReferral() { NumberOfNights = 1 },
-                new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
-                new TransportationOtherReferral(),
-                new TransportationTaxiReferral(),
+               new ClothingReferral { SupplierId = "9f584892-94fb-eb11-b82b-00505683fbf4"  },
+               new IncidentalsReferral(),
+               new FoodGroceriesReferral { SupplierId = "87dcf79d-acfb-eb11-b82b-00505683fbf4" } ,
+               new FoodRestaurantReferral { SupplierId = "8e290f97-b910-eb11-b820-00505683fbf4" } ,
+               new LodgingBilletingReferral() { NumberOfNights = 1 },
+               new LodgingGroupReferral() { NumberOfNights = 1 },
+               new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
+               new TransportationOtherReferral(),
+               new TransportationTaxiReferral(),
             };
 
             var supportIds = new List<string>();

@@ -138,9 +138,13 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Resources.Cases.Referral, Shared.Contracts.Submissions.Referral>()
                 .IncludeAllDerived()
-                .ReverseMap()
+                .ForMember(d => d.SupplierDetails, opts => opts.MapFrom(s => s.SupplierId == null
+                    ? null
+                    : new Shared.Contracts.Submissions.SupplierDetails { Id = s.SupplierId }))
+               .ReverseMap()
                 .ValidateMemberList(MemberList.Destination)
-                .IncludeAllDerived();
+                .IncludeAllDerived()
+                .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null));
 
             CreateMap<Resources.Cases.ClothingReferral, Shared.Contracts.Submissions.ClothingReferral>()
                 .ReverseMap()

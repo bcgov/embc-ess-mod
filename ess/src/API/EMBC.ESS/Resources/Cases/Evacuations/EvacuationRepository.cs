@@ -414,6 +414,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_EvacuationFileId), file);
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_NeedsAssessmentID), file.era_CurrentNeedsAssessmentid);
             AssignHouseholdMembersToSupport(newSupport);
+            AssignSupplierToSupport(newSupport);
 
             await essContext.SaveChangesAsync();
 
@@ -447,6 +448,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.AttachTo(nameof(EssContext.era_evacueesupports), updatedSupport);
             essContext.UpdateObject(updatedSupport);
             AssignHouseholdMembersToSupport(updatedSupport);
+            AssignSupplierToSupport(updatedSupport);
 
             await essContext.SaveChangesAsync();
 
@@ -471,6 +473,16 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             foreach (var member in householdMembers)
             {
                 essContext.DeleteLink(member, nameof(era_householdmember.era_era_evacueesupport_era_householdmember), support);
+            }
+        }
+
+        private void AssignSupplierToSupport(era_evacueesupport support)
+        {
+            if (support._era_supplierid_value.HasValue)
+            {
+                var supplier = essContext.era_suppliers.Where(s => s.era_supplierid == support._era_supplierid_value).SingleOrDefault();
+                if (supplier == null) throw new Exception($"Supplier id {support._era_supplierid_value} not found");
+                essContext.SetLink(support, nameof(era_evacueesupport.era_SupplierId), supplier);
             }
         }
     }
