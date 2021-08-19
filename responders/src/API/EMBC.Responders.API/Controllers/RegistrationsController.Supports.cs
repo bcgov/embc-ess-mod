@@ -22,6 +22,8 @@ using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AutoMapper;
+using EMBC.ESS.Shared.Contracts.Submissions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,7 +40,19 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ProcessSupports(string fileId, IEnumerable<Support> supports)
         {
-            await Task.CompletedTask;
+            var userId = currentUserId;
+            var mappedSupports = mapper.Map<IEnumerable<ESS.Shared.Contracts.Submissions.Support>>(supports ?? Array.Empty<Support>());
+            foreach (var support in mappedSupports)
+            {
+                support.IssuedBy = new ESS.Shared.Contracts.Submissions.TeamMember { Id = userId };
+            }
+
+            var result = await messagingClient.Send(new ProcessSupportsCommand
+            {
+                FileId = fileId,
+                supports = mappedSupports
+            });
+
             return Ok();
         }
     }
@@ -48,6 +62,9 @@ namespace EMBC.Responders.API.Controllers
     public abstract class Support
     {
         public string Id { get; set; }
+        public DateTime IssuedOn { get; set; }
+        public string IssuingMemberName { get; set; }
+        public string IssuingMemberTeamName { get; set; }
         public string NeedsAssessmentId { get; set; }
 
         [Required]
@@ -177,6 +194,28 @@ namespace EMBC.Responders.API.Controllers
         [Required]
         [Range(0, int.MaxValue)]
         public int NumberOfNights { get; set; }
+
+        public string HostName { get; set; }
+        public string HostAddress { get; set; }
+        public string HostCity { get; set; }
+        public string HostEmail { get; set; }
+        public string HostPhone { get; set; }
+    }
+
+    public class LodgingGroupReferral : Referral
+    {
+        public override SupportCategory Category => SupportCategory.Lodging;
+        public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Group;
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int NumberOfNights { get; set; }
+
+        public string FacilityName { get; set; }
+        public string FacilityAddress { get; set; }
+        public string FacilityCity { get; set; }
+        public string FacilityCommunityCode { get; set; }
+        public string FacilityContactPhone { get; set; }
     }
 
     public class TransportationTaxiReferral : Referral
@@ -202,16 +241,6 @@ namespace EMBC.Responders.API.Controllers
 
         [Required]
         public string TransportMode { get; set; }
-    }
-
-    public class LodgingGroupReferral : Referral
-    {
-        public override SupportCategory Category => SupportCategory.Lodging;
-        public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Group;
-
-        [Required]
-        [Range(0, int.MaxValue)]
-        public int NumberOfNights { get; set; }
     }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -386,6 +415,79 @@ namespace EMBC.Responders.API.Controllers
 
                 default: throw new NotSupportedException($"Support with method {value.Method}, category {value.Category}, sub category {value.SubCategory}");
             }
+        }
+    }
+
+    public class SupportMapping : Profile
+    {
+        public SupportMapping()
+        {
+            CreateMap<ESS.Shared.Contracts.Submissions.Support, Support>()
+                .IncludeAllDerived()
+                .ForMember(d => d.NeedsAssessmentId, opts => opts.MapFrom(s => s.OriginatingNeedsAssessmentId))
+                .ForMember(d => d.IssuingMemberName, opts => opts.MapFrom(s => s.IssuedBy.DisplayName))
+                .ForMember(d => d.IssuingMemberTeamName, opts => opts.MapFrom(s => s.IssuedBy.TeamName))
+                .ReverseMap()
+                .IncludeAllDerived()
+                .ValidateMemberList(MemberList.Destination)
+                .ForMember(d => d.IssuedBy, opts => opts.Ignore())
+                .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.Ignore())
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.Referral, Referral>()
+                .IncludeAllDerived()
+                //TODO: map supplier details
+                .ForMember(d => d.SupplierName, opts => opts.Ignore())
+                .ForMember(d => d.SupplierAddress, opts => opts.Ignore())
+                .ReverseMap()
+                .IncludeAllDerived()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.ClothingReferral, ClothingReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.IncidentalsReferral, IncidentalsReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.FoodGroceriesReferral, FoodGroceriesReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.FoodRestaurantReferral, FoodRestaurantReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.LodgingBilletingReferral, LodgingBilletingReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.LodgingGroupReferral, LodgingGroupReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.LodgingHotelReferral, LodgingHotelReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.TransportationOtherReferral, TransportationOtherReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
+
+            CreateMap<ESS.Shared.Contracts.Submissions.TransportationTaxiReferral, TransportationTaxiReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                ;
         }
     }
 }
