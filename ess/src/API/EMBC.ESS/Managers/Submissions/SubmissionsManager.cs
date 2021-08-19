@@ -233,13 +233,15 @@ namespace EMBC.ESS.Managers.Submissions
 
             foreach (var note in files.SelectMany(c => c.Notes))
             {
-                if (string.IsNullOrEmpty(note.CreatingTeamMemberId)) continue;
-                var teamMembers = await teamRepository.GetMembers(null, null, note.CreatingTeamMemberId);
+                if (string.IsNullOrEmpty(note.CreatedBy?.Id)) continue;
+                var teamMembers = await teamRepository.GetMembers(null, null, note.CreatedBy.Id);
                 var member = teamMembers.SingleOrDefault();
-                if (member == null) continue;
-                note.MemberName = $"{member.FirstName}, {member.LastName.Substring(0, 1)}";
-                note.TeamId = member.TeamId;
-                note.TeamName = member.TeamName;
+                if (member != null)
+                {
+                    note.CreatedBy.DisplayName = $"{member.FirstName}, {member.LastName.Substring(0, 1)}";
+                    note.CreatedBy.TeamId = member.TeamId;
+                    note.CreatedBy.TeamName = member.TeamName;
+                }
             }
 
             foreach (var support in files.SelectMany(f => f.Supports))
