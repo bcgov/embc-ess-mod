@@ -242,6 +242,18 @@ namespace EMBC.ESS.Managers.Submissions
                 note.TeamName = member.TeamName;
             }
 
+            foreach (var support in files.SelectMany(f => f.Supports))
+            {
+                if (string.IsNullOrEmpty(support.IssuedBy?.Id)) continue;
+                var teamMember = (await teamRepository.GetMembers(userId: support.IssuedBy.Id)).SingleOrDefault();
+                if (teamMember != null)
+                {
+                    support.IssuedBy.DisplayName = $"{teamMember.FirstName}, {teamMember.LastName.Substring(0, 1)}";
+                    support.IssuedBy.TeamId = teamMember.TeamId;
+                    support.IssuedBy.TeamName = teamMember.TeamName;
+                }
+            }
+
             return new EvacuationFilesQueryResponse { Items = files };
         }
 

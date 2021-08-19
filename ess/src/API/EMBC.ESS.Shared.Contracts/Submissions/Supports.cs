@@ -22,6 +22,8 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public abstract class Support
     {
         public string Id { get; set; }
+        public DateTime IssuedOn { get; set; }
+        public TeamMember IssuedBy { get; set; }
         public string OriginatingNeedsAssessmentId { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }

@@ -44,7 +44,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 {
                     //set link to primary regitrant's household member entity
                     var primaryHouseholdMember = d.era_CurrentNeedsAssessmentid.era_era_householdmember_era_needassessment.SingleOrDefault(m => m.era_isprimaryregistrant == true);
-                    if (primaryHouseholdMember != null) //throw new Exception($"no primary household member was included in evacuation file {s.Id}");
+                    if (primaryHouseholdMember != null)
                         primaryHouseholdMember._era_registrant_value = Guid.Parse(s.PrimaryRegistrantId);
                 });
 
@@ -218,18 +218,22 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 SupportType.TransportationOther => new TransportationOtherReferral(),
                 _ => throw new NotImplementedException($"No known type for support type value '{s.era_supporttype}'")
             };
+
             CreateMap<era_evacueesupport, Support>()
                 .IncludeAllDerived()
                 .ConstructUsing(s => supportTypeResolver(s))
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
+                .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
+                .ForMember(d => d.IssuedByTeamMemberId, opts => opts.MapFrom(s => s._era_issuedbyid_value))
                 .ForMember(d => d.OriginatingNeedsAssessmentId, opts => opts.MapFrom(s => s._era_needsassessmentid_value))
-                .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.DateTime : DateTime.MinValue))
-                .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.DateTime : DateTime.MinValue))
+                .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime : DateTime.MinValue))
+                .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_householdmember.Select(m => m.era_householdmemberid)))
                 .ReverseMap()
                 .IncludeAllDerived()
                 .ForMember(d => d.statuscode, opts => opts.MapFrom(s => s.Status))
+                .ForMember(d => d._era_issuedbyid_value, opts => opts.MapFrom(s => s.IssuedByTeamMemberId))
                 .ForMember(d => d.era_era_evacueesupport_era_householdmember,
                     opts => opts.MapFrom(s => s.IncludedHouseholdMembers.Select(m => new era_householdmember { era_householdmemberid = Guid.Parse(m) })))
                 ;

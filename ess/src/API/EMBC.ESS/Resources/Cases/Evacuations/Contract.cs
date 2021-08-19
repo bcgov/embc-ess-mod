@@ -170,6 +170,8 @@ namespace EMBC.ESS.Resources.Cases
     public abstract class Support
     {
         public string Id { get; set; }
+        public DateTime IssuedOn { get; set; }
+        public string IssuedByTeamMemberId { get; set; }
         public string OriginatingNeedsAssessmentId { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }

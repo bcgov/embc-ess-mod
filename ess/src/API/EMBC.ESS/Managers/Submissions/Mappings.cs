@@ -70,10 +70,10 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Resources.Cases.NeedsAssessment, Shared.Contracts.Submissions.NeedsAssessment>()
-                .ForMember(d => d.CompletedBy, opts => opts.MapFrom(s => s.CompletedByTeamMemberId == null ? null : new Shared.Contracts.Submissions.TeamMember
-                {
-                    Id = s.CompletedByTeamMemberId
-                }))
+                .ForMember(d => d.CompletedBy, opts => opts.MapFrom(s => s.CompletedByTeamMemberId == null
+                    ? null
+                    :
+                    new Shared.Contracts.Submissions.TeamMember { Id = s.CompletedByTeamMemberId }))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Note, Resources.Cases.Note>()
@@ -121,9 +121,14 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Resources.Cases.Support, Shared.Contracts.Submissions.Support>()
                 .IncludeAllDerived()
+                .ForMember(d => d.IssuedBy, opts => opts.MapFrom(s => s.IssuedByTeamMemberId == null
+                    ? null
+                    : new Shared.Contracts.Submissions.TeamMember { Id = s.IssuedByTeamMemberId }))
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination)
-                .IncludeAllDerived();
+                .IncludeAllDerived()
+                .ForMember(d => d.IssuedByTeamMemberId, opts => opts.MapFrom(s => s.IssuedBy.Id))
+                ;
 
             CreateMap<Resources.Cases.Referral, Shared.Contracts.Submissions.Referral>()
                 .IncludeAllDerived()

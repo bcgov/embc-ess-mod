@@ -8100,6 +8100,7 @@
         <NavigationProperty Name="era_era_essteamuser_era_essfilenote_ESSTeamUser" Type="Collection(mscrm.era_essfilenote)" Partner="era_ESSTeamUserID" />
         <NavigationProperty Name="era_era_essteamuser_era_needassessment_ReviewedByid" Type="Collection(mscrm.era_needassessment)" Partner="era_ReviewedByid" />
         <NavigationProperty Name="era_era_essteamuser_contact_ReviewedBy" Type="Collection(mscrm.contact)" Partner="era_ReviewedByid" />
+        <NavigationProperty Name="era_era_essteamuser_era_evacueesupport_IssuedBy" Type="Collection(mscrm.era_evacueesupport)" Partner="era_IssuedById" />
       </EntityType>
       <EntityType Name="era_evacuationfile" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -8192,58 +8193,59 @@
         <Key>
           <PropertyRef Name="era_evacueesupportid" />
         </Key>
-        <Property Name="era_voidreason" Type="Edm.Int32" />
-        <Property Name="era_numberofnights" Type="Edm.Int32" />
-        <Property Name="_era_grouplodgingcityid_value" Type="Edm.Guid" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="era_lodgingaddress" Type="Edm.String" Unicode="false" />
-        <Property Name="era_purchaserofgoods" Type="Edm.String" Unicode="false" />
-        <Property Name="era_numberofbreakfasts" Type="Edm.Int32" />
-        <Property Name="era_evacueesupportid" Type="Edm.Guid" />
-        <Property Name="era_numberofdinners" Type="Edm.Int32" />
-        <Property Name="era_numberofmeals" Type="Edm.Int32" />
-        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="_era_evacuationfileid_value" Type="Edm.Guid" />
-        <Property Name="era_lodgingemailaddress" Type="Edm.String" Unicode="false" />
-        <Property Name="era_totalamount" Type="Edm.Decimal" Scale="Variable" />
-        <Property Name="era_approveditems" Type="Edm.String" Unicode="false" />
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="era_validto" Type="Edm.DateTimeOffset" />
-        <Property Name="_era_needsassessmentid_value" Type="Edm.Guid" />
-        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
-        <Property Name="_era_supplierid_value" Type="Edm.Guid" />
-        <Property Name="era_supportdeliverytype" Type="Edm.Int32" />
-        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
         <Property Name="_transactioncurrencyid_value" Type="Edm.Guid" />
-        <Property Name="statuscode" Type="Edm.Int32" />
-        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
-        <Property Name="era_lodgingcontactnumber" Type="Edm.String" Unicode="false" />
-        <Property Name="era_numberoflunches" Type="Edm.Int32" />
-        <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="statecode" Type="Edm.Int32" />
-        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="era_lodgingname" Type="Edm.String" Unicode="false" />
-        <Property Name="era_supporttype" Type="Edm.Int32" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
-        <Property Name="_owningteam_value" Type="Edm.Guid" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
-        <Property Name="era_numberofrooms" Type="Edm.Int32" />
-        <Property Name="_era_supporttypeid_value" Type="Edm.Guid" />
         <Property Name="era_fromaddress" Type="Edm.String" Unicode="false" />
-        <Property Name="era_validfrom" Type="Edm.DateTimeOffset" />
-        <Property Name="exchangerate" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
+        <Property Name="_era_issuedbyid_value" Type="Edm.Guid" />
+        <Property Name="era_lodgingcity" Type="Edm.String" Unicode="false" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="era_validto" Type="Edm.DateTimeOffset" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
+        <Property Name="era_numberofdinners" Type="Edm.Int32" />
+        <Property Name="era_supporttype" Type="Edm.Int32" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="era_totalamount_base" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="_era_needsassessmentid_value" Type="Edm.Guid" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
+        <Property Name="era_extremewinterconditions" Type="Edm.Int32" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="era_suppliernote" Type="Edm.String" Unicode="false" />
+        <Property Name="era_lodgingaddress" Type="Edm.String" Unicode="false" />
+        <Property Name="era_numberofmeals" Type="Edm.Int32" />
+        <Property Name="era_voidreason" Type="Edm.Int32" />
         <Property Name="era_toaddress" Type="Edm.String" Unicode="false" />
         <Property Name="era_billetinglodgingcity" Type="Edm.String" Unicode="false" />
-        <Property Name="era_suppliernote" Type="Edm.String" Unicode="false" />
-        <Property Name="era_totalamount_base" Type="Edm.Decimal" Scale="Variable" />
-        <Property Name="era_extremewinterconditions" Type="Edm.Int32" />
-        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_lodgingcontactnumber" Type="Edm.String" Unicode="false" />
+        <Property Name="era_validfrom" Type="Edm.DateTimeOffset" />
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="era_numberofnights" Type="Edm.Int32" />
+        <Property Name="era_totalamount" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="era_supportdeliverytype" Type="Edm.Int32" />
+        <Property Name="era_lodgingemailaddress" Type="Edm.String" Unicode="false" />
+        <Property Name="_era_supplierid_value" Type="Edm.Guid" />
+        <Property Name="era_approveditems" Type="Edm.String" Unicode="false" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="exchangerate" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="era_numberofrooms" Type="Edm.Int32" />
+        <Property Name="era_lodgingname" Type="Edm.String" Unicode="false" />
+        <Property Name="statuscode" Type="Edm.Int32" />
+        <Property Name="era_evacueesupportid" Type="Edm.Guid" />
+        <Property Name="_era_supporttypeid_value" Type="Edm.Guid" />
+        <Property Name="era_numberofbreakfasts" Type="Edm.Int32" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_purchaserofgoods" Type="Edm.String" Unicode="false" />
+        <Property Name="_era_evacuationfileid_value" Type="Edm.Guid" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
         <Property Name="era_transportmode" Type="Edm.String" Unicode="false" />
-        <Property Name="era_lodgingcity" Type="Edm.String" Unicode="false" />
+        <Property Name="_era_grouplodgingcityid_value" Type="Edm.Guid" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="era_numberoflunches" Type="Edm.Int32" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_evacueesupport_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -8294,6 +8296,9 @@
         </NavigationProperty>
         <NavigationProperty Name="era_GroupLodgingCityID" Type="mscrm.era_jurisdiction" Nullable="false" Partner="era_era_jurisdiction_era_evacueesupport_GroupLodgingCityID">
           <ReferentialConstraint Property="_era_grouplodgingcityid_value" ReferencedProperty="era_jurisdictionid" />
+        </NavigationProperty>
+        <NavigationProperty Name="era_IssuedById" Type="mscrm.era_essteamuser" Nullable="false" Partner="era_era_essteamuser_era_evacueesupport_IssuedBy">
+          <ReferentialConstraint Property="_era_issuedbyid_value" ReferencedProperty="era_essteamuserid" />
         </NavigationProperty>
       </EntityType>
       <EntityType Name="era_householdmember" BaseType="mscrm.crmbaseentity">
@@ -31774,6 +31779,7 @@
           <NavigationPropertyBinding Path="era_era_essteamuser_era_essfilenote_ESSTeamUser" Target="era_essfilenotes" />
           <NavigationPropertyBinding Path="era_era_essteamuser_era_needassessment_ReviewedByid" Target="era_needassessments" />
           <NavigationPropertyBinding Path="era_era_essteamuser_contact_ReviewedBy" Target="contacts" />
+          <NavigationPropertyBinding Path="era_era_essteamuser_era_evacueesupport_IssuedBy" Target="era_evacueesupports" />
         </EntitySet>
         <EntitySet Name="era_evacuationfiles" EntityType="Microsoft.Dynamics.CRM.era_evacuationfile">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31826,6 +31832,7 @@
           <NavigationPropertyBinding Path="era_NeedsAssessmentID" Target="era_needassessments" />
           <NavigationPropertyBinding Path="era_EvacuationFileId" Target="era_evacuationfiles" />
           <NavigationPropertyBinding Path="era_GroupLodgingCityID" Target="era_jurisdictions" />
+          <NavigationPropertyBinding Path="era_IssuedById" Target="era_essteamusers" />
         </EntitySet>
         <EntitySet Name="era_householdmembers" EntityType="Microsoft.Dynamics.CRM.era_householdmember">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
