@@ -25,7 +25,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string OriginatingNeedsAssessmentId { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
-        public SupportStatus Status { get; set; }
+        public SupportStatus Status { get; set; } = SupportStatus.Active;
         public IEnumerable<string> IncludedHouseholdMembers { get; set; } = Array.Empty<string>();
     }
 
@@ -71,6 +71,21 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     public class LodgingBilletingReferral : Referral
     {
         public int NumberOfNights { get; set; }
+        public string HostName { get; set; }
+        public string HostAddress { get; set; }
+        public string HostCity { get; set; }
+        public string HostEmail { get; set; }
+        public string HostPhone { get; set; }
+    }
+
+    public class LodgingGroupReferral : Referral
+    {
+        public int NumberOfNights { get; set; }
+        public string FacilityName { get; set; }
+        public string FacilityAddress { get; set; }
+        public string FacilityCity { get; set; }
+        public string FacilityCommunityCode { get; set; }
+        public string FacilityContactPhone { get; set; }
     }
 
     public class TransportationTaxiReferral : Referral
@@ -83,11 +98,6 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
     {
         public double TotalAmount { get; set; }
         public string TransportMode { get; set; }
-    }
-
-    public class LodgingGroupReferral : Referral
-    {
-        public int NumberOfNights { get; set; }
     }
 
     public enum SupportStatus
