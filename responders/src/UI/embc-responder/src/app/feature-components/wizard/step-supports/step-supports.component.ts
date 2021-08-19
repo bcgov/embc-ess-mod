@@ -30,5 +30,6 @@ export class StepSupportsComponent implements OnInit {
   ngOnInit(): void {
     this.stepSupportsService.getCategoryList();
     this.stepSupportsService.getSubCategoryList();
+    this.stepSupportsService.getEvacFile();
   }
 }
