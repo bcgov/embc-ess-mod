@@ -313,49 +313,5 @@ namespace EMBC.Responders.API.Controllers
         }
     }
 
-    public class NeedsAssessmentNotesConverter : IValueConverter<NeedsAssessment, IEnumerable<ESS.Shared.Contracts.Submissions.Note>>
-    {
-        public IEnumerable<ESS.Shared.Contracts.Submissions.Note> Convert(NeedsAssessment sourceMember, ResolutionContext context)
-        {
-            List<ESS.Shared.Contracts.Submissions.Note> ret = new List<ESS.Shared.Contracts.Submissions.Note>();
-
-            if (!string.IsNullOrEmpty(sourceMember.EvacuationImpact))
-            {
-                ret.Add(new ESS.Shared.Contracts.Submissions.Note
-                {
-                    Content = sourceMember.EvacuationImpact,
-                    Type = ESS.Shared.Contracts.Submissions.NoteType.EvacuationImpact,
-                });
-            }
-
-            if (!string.IsNullOrEmpty(sourceMember.EvacuationExternalReferrals))
-            {
-                ret.Add(new ESS.Shared.Contracts.Submissions.Note
-                {
-                    Content = sourceMember.EvacuationExternalReferrals,
-                    Type = ESS.Shared.Contracts.Submissions.NoteType.EvacuationExternalReferrals,
-                });
-            }
-
-            if (!string.IsNullOrEmpty(sourceMember.PetCarePlans))
-            {
-                ret.Add(new ESS.Shared.Contracts.Submissions.Note
-                {
-                    Content = sourceMember.PetCarePlans,
-                    Type = ESS.Shared.Contracts.Submissions.NoteType.PetCarePlans,
-                });
-            }
-
-            if (!string.IsNullOrEmpty(sourceMember.HouseHoldRecoveryPlan))
-            {
-                ret.Add(new ESS.Shared.Contracts.Submissions.Note
-                {
-                    Content = sourceMember.HouseHoldRecoveryPlan,
-                    Type = ESS.Shared.Contracts.Submissions.NoteType.RecoveryPlan,
-                });
-            }
-
-            return ret;
-        }
-    }
+   
 }
