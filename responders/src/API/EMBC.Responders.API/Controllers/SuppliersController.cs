@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -44,17 +45,46 @@ namespace EMBC.Responders.API.Controllers
         /// <summary>
         /// Search Suppliers
         /// </summary>
+        /// <param name="legalName">legalName</param>
+        /// <param name="gstNumber">gstNumber</param>
         /// <returns>list of suppliers for the user's team</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Supplier>>> GetSuppliers()
+        public async Task<ActionResult<IEnumerable<Supplier>>> GetSuppliers(string legalName, string gstNumber)
         {
-            var suppliers = (await messagingClient.Send(new SuppliersQuery
+            var query = new SuppliersQuery();
+            if (!string.IsNullOrEmpty(legalName) && !string.IsNullOrEmpty(gstNumber))
             {
-                TeamId = teamId,
-            })).Items;
+                query.LegalName = legalName;
+                query.GSTNumber = gstNumber;
+            }
+            else
+            {
+                query.TeamId = teamId;
+            }
+            var suppliers = (await messagingClient.Send(query)).Items;
 
-            return Ok(mapper.Map<IEnumerable<Supplier>>(suppliers));
+            return Ok(mapper.Map<IEnumerable<SupplierListItem>>(suppliers, opt => opt.Items["UserTeamId"] = teamId));
+        }
+
+        /// <summary>
+        /// Get Supplier by id
+        /// </summary>
+        /// <param name="supplierId">SupplierId</param>
+        /// <returns>updated supplier id</returns>
+        [HttpGet("{supplierId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<SupplierResult>> GetSupplierById(string supplierId)
+        {
+            var supplier = (await messagingClient.Send(new SuppliersQuery
+            {
+                SupplierId = supplierId,
+            })).Items.FirstOrDefault();
+
+            if (supplier == null) return NotFound();
+
+            return Ok(mapper.Map<Supplier>(supplier));
         }
 
         /// <summary>
@@ -77,17 +107,28 @@ namespace EMBC.Responders.API.Controllers
         }
     }
 
+    public class SupplierListItem
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string LegalName { get; set; }
+        public Address Address { get; set; }
+        public Team Team { get; set; }
+        public SupplierStatus Status { get; set; }
+        public bool IsPrimarySupplier { get; set; }
+        public bool ProvidesMutualAid { get; set; }
+    }
+
     public class Supplier
     {
         public string Id { get; set; }
-        public string SupplierId { get; set; }
         public string Name { get; set; }
         public string LegalName { get; set; }
         public string GSTNumber { get; set; }
         public Address Address { get; set; }
         public SupplierContact Contact { get; set; }
         public Team Team { get; set; }
-        public bool MutualAid { get; set; }
+        public IEnumerable<Team> SharedWithTeams { get; set; }
         public SupplierStatus Status { get; set; }
     }
 
@@ -118,14 +159,18 @@ namespace EMBC.Responders.API.Controllers
     {
         public SuppliersMapping()
         {
+            CreateMap<ESS.Shared.Contracts.Suppliers.Supplier, SupplierListItem>()
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status == ESS.Shared.Contracts.Suppliers.SupplierStatus.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
+                .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom((s, dst, arg, context) => context.Options.Items.ContainsKey("UserTeamId") && s.Team != null ? context.Options.Items["UserTeamId"].Equals(s.Team.Id) : false))
+                .ForMember(d => d.ProvidesMutualAid, opts => opts.MapFrom((s, dst, arg, context) => context.Options.Items.ContainsKey("UserTeamId") && s.Team != null ? context.Options.Items["UserTeamId"].Equals(s.Team.Id) && s.SharedWithTeams.Count() > 0 : false))
+                ;
+
             CreateMap<ESS.Shared.Contracts.Suppliers.Supplier, Supplier>()
-                .ForMember(d => d.MutualAid, opts => opts.MapFrom(s => !s.IsPrimarySupplier))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => s.Status == ESS.Shared.Contracts.Suppliers.SupplierStatus.Active ? SupplierStatus.Active : SupplierStatus.Deactivated))
                 ;
 
             CreateMap<Supplier, ESS.Shared.Contracts.Suppliers.Supplier>()
-                .ForMember(d => d.IsPrimarySupplier, opts => opts.MapFrom(s => !s.MutualAid))
-                .ForMember(d => d.Active, opts => opts.MapFrom(s => s.Status == SupplierStatus.Active))
+                .ForMember(d => d.Verified, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Suppliers.Team, Team>()
