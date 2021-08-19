@@ -77,8 +77,7 @@ namespace EMBC.ESS.Managers.Submissions
             CreateMap<Resources.Cases.NeedsAssessment, Shared.Contracts.Submissions.NeedsAssessment>()
                 .ForMember(d => d.CompletedBy, opts => opts.MapFrom(s => s.CompletedByTeamMemberId == null
                     ? null
-                    :
-                    new Shared.Contracts.Submissions.TeamMember { Id = s.CompletedByTeamMemberId }))
+                    : new Shared.Contracts.Submissions.TeamMember { Id = s.CompletedByTeamMemberId }))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Note, Resources.Cases.Note>()
