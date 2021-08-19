@@ -312,6 +312,4 @@ namespace EMBC.Responders.API.Controllers
                 ;
         }
     }
-
-   
 }

@@ -590,6 +590,9 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<ESS.Shared.Contracts.Submissions.Note, Note>()
                 .ForMember(d => d.IsEditable, opts => opts.Ignore())
+                .ForMember(d => d.CreatingTeamMemberId, opts => opts.MapFrom(s => s.CreatedBy.Id))
+                .ForMember(d => d.MemberName, opts => opts.MapFrom(s => s.CreatedBy.DisplayName))
+                .ForMember(d => d.TeamName, opts => opts.MapFrom(s => s.CreatedBy.TeamName))
                 ;
 
             CreateMap<VerifySecurityPhraseResponse, ESS.Shared.Contracts.Submissions.VerifySecurityPhraseResponse>()
