@@ -52,10 +52,11 @@ export { RegistrantProfileSearchResult } from './models/registrant-profile-searc
 export { RegistrantStatus } from './models/registrant-status';
 export { EvacuationFileSearchResult } from './models/evacuation-file-search-result';
 export { EvacuationFileSearchResultHouseholdMember } from './models/evacuation-file-search-result-household-member';
-export { Supplier } from './models/supplier';
-export { SupplierContact } from './models/supplier-contact';
+export { SupplierListItem } from './models/supplier-list-item';
 export { Team } from './models/team';
 export { SupplierStatus } from './models/supplier-status';
+export { Supplier } from './models/supplier';
+export { SupplierContact } from './models/supplier-contact';
 export { SupplierResult } from './models/supplier-result';
 export { EssTask } from './models/ess-task';
 export { SuppliersListItem } from './models/suppliers-list-item';
