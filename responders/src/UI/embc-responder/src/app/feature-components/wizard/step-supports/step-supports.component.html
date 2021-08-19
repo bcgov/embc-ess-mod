@@ -1,1 +1,19 @@
-<p>step-supports works!</p>
+<div class="container wizard-border">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="step-id">{{ stepId }}</p>
+    </div>
+  </div>
+  <div class="row heading-container support-heading">
+    <div class="col-md-12">
+      <span class="page-heading">{{ stepName }}</span>
+    </div>
+  </div>
+  <br />
+
+  <div class="content-container">
+    <!-- <app-alert></app-alert> -->
+
+    <router-outlet></router-outlet>
+  </div>
+</div>
