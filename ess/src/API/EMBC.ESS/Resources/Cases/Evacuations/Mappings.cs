@@ -205,7 +205,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_ishidden, opts => opts.MapFrom(s => s.IsHidden))
                 ;
 
-            Func<era_evacueesupport, Support> supportTypeResolver = s => s._era_supporttypeid_value.Value.ToString() switch
+            Func<era_evacueesupport, Support> supportTypeResolver = s => (SupportType?)s.era_supporttype switch
             {
                 SupportType.Clothing => new ClothingReferral(),
                 SupportType.Incidentals => new IncidentalsReferral(),
@@ -216,7 +216,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 SupportType.LodgingHotel => new LodgingHotelReferral(),
                 SupportType.TransporationTaxi => new TransportationTaxiReferral(),
                 SupportType.TransportationOther => new TransportationOtherReferral(),
-                _ => throw new NotImplementedException()
+                _ => throw new NotImplementedException($"No known type for support type value '{s.era_supporttype}'")
             };
             CreateMap<era_evacueesupport, Support>()
                 .IncludeAllDerived()
@@ -249,21 +249,21 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.ExtremeWinterConditions, opts => opts.MapFrom(s => s.era_extremewinterconditions == (int)EraTwoOptions.Yes))
                 .ReverseMap()
                 .ForMember(d => d.era_extremewinterconditions, opts => opts.MapFrom(s => s.ExtremeWinterConditions ? EraTwoOptions.Yes : EraTwoOptions.No))
-                .ForMember(d => d._era_supporttypeid_value, opts => opts.MapFrom(s => SupportType.Clothing))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.Clothing))
                 ;
 
             CreateMap<era_evacueesupport, IncidentalsReferral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.ApprovedItems, opts => opts.MapFrom(s => s.era_extremewinterconditions))
                 .ReverseMap()
-                .ForMember(d => d._era_supporttypeid_value, opts => opts.MapFrom(s => SupportType.Incidentals))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.Incidentals))
                 ;
 
             CreateMap<era_evacueesupport, FoodGroceriesReferral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.NumberOfDays, opts => opts.MapFrom(s => s.era_numberofmeals))
                 .ReverseMap()
-                .ForMember(d => d._era_supporttypeid_value, opts => opts.MapFrom(s => SupportType.FoodGroceries))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.FoodGroceries))
                 ;
 
             CreateMap<era_evacueesupport, FoodRestaurantReferral>()
@@ -272,7 +272,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.NumberOfLunchesPerPerson, opts => opts.MapFrom(s => s.era_numberoflunches))
                 .ForMember(d => d.NumberOfDinnersPerPerson, opts => opts.MapFrom(s => s.era_numberofdinners))
                 .ReverseMap()
-                .ForMember(d => d._era_supporttypeid_value, opts => opts.MapFrom(s => SupportType.FoodRestaurant))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.FoodRestaurant))
                 ;
 
             CreateMap<era_evacueesupport, LodgingBilletingReferral>()
@@ -283,7 +283,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.HostPhone, opts => opts.MapFrom(s => s.era_lodgingcontactnumber))
                 .ForMember(d => d.HostName, opts => opts.MapFrom(s => s.era_lodgingname))
                 .ReverseMap()
-                .ForMember(d => d._era_supporttypeid_value, opts => opts.MapFrom(s => SupportType.LodgingBilleting))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.LodgingBilleting))
                 ;
 
             CreateMap<era_evacueesupport, LodgingGroupReferral>()
@@ -294,28 +294,28 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.FacilityContactPhone, opts => opts.MapFrom(s => s.era_lodgingcontactnumber))
                 .ForMember(d => d.FacilityName, opts => opts.MapFrom(s => s.era_lodgingname))
                 .ReverseMap()
-                .ForMember(d => d._era_supporttypeid_value, opts => opts.MapFrom(s => SupportType.LodgingGroup))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.LodgingGroup))
                 ;
 
             CreateMap<era_evacueesupport, LodgingHotelReferral>()
                 .ForMember(d => d.NumberOfNights, opts => opts.MapFrom(s => s.era_numberofnights))
                 .ForMember(d => d.NumberOfRooms, opts => opts.MapFrom(s => s.era_numberofrooms))
                 .ReverseMap()
-                .ForMember(d => d._era_supporttypeid_value, opts => opts.MapFrom(s => SupportType.LodgingHotel))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.LodgingHotel))
                 ;
 
             CreateMap<era_evacueesupport, TransportationOtherReferral>()
                 .ForMember(d => d.TotalAmount, opts => opts.MapFrom(s => s.era_totalamount))
                 .ForMember(d => d.TransportMode, opts => opts.MapFrom(s => s.era_transportmode))
                 .ReverseMap()
-                .ForMember(d => d._era_supporttypeid_value, opts => opts.MapFrom(s => SupportType.TransportationOther))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.TransportationOther))
                ;
 
             CreateMap<era_evacueesupport, TransportationTaxiReferral>()
                 .ForMember(d => d.FromAddress, opts => opts.MapFrom(s => s.era_fromaddress))
                 .ForMember(d => d.ToAddress, opts => opts.MapFrom(s => s.era_toaddress))
                 .ReverseMap()
-                .ForMember(d => d._era_supporttypeid_value, opts => opts.MapFrom(s => SupportType.TransporationTaxi))
+                .ForMember(d => d.era_supporttype, opts => opts.MapFrom(s => SupportType.TransporationTaxi))
                 ;
         }
 

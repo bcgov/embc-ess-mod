@@ -266,16 +266,16 @@ namespace EMBC.ESS.Resources.Cases
         Referral = 174360000
     }
 
-    public static class SupportType
+    public enum SupportType
     {
-        public const string Clothing = "8c4356e9-bf85-ea11-b818-00505683fbf4";
-        public const string Incidentals = "82368af1-bf85-ea11-b818-00505683fbf4";
-        public const string FoodRestaurant = "541d48e3-bf85-ea11-b818-00505683fbf4";
-        public const string FoodGroceries = "531d48e3-bf85-ea11-b818-00505683fbf4";
-        public const string LodgingHotel = "3d983b11-c085-ea11-b818-00505683fbf4";
-        public const string LodgingGroup = "3145c288-559c-ea11-b818-00505683fbf4";
-        public const string LodgingBilleting = "161ca617-c085-ea11-b818-00505683fbf4";
-        public const string TransporationTaxi = "068b0ed3-bf85-ea11-b818-00505683fbf4";
-        public const string TransportationOther = "f9e9a9dc-bf85-ea11-b818-00505683fbf4";
+        FoodGroceries = 174360000,
+        FoodRestaurant = 174360001,
+        LodgingHotel = 174360002,
+        LodgingBilleting = 174360003,
+        LodgingGroup = 174360004,
+        Incidentals = 174360005,
+        Clothing = 174360006,
+        TransporationTaxi = 174360007,
+        TransportationOther = 174360008
     }
 }

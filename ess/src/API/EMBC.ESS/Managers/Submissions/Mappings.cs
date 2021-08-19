@@ -120,7 +120,52 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Resources.Cases.Support, Shared.Contracts.Submissions.Support>()
-                .ReverseMap().ValidateMemberList(MemberList.Destination);
+                .IncludeAllDerived()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                .IncludeAllDerived();
+
+            CreateMap<Resources.Cases.Referral, Shared.Contracts.Submissions.Referral>()
+                .IncludeAllDerived()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                .IncludeAllDerived();
+
+            CreateMap<Resources.Cases.ClothingReferral, Shared.Contracts.Submissions.ClothingReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.IncidentalsReferral, Shared.Contracts.Submissions.IncidentalsReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.FoodGroceriesReferral, Shared.Contracts.Submissions.FoodGroceriesReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.FoodRestaurantReferral, Shared.Contracts.Submissions.FoodRestaurantReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.LodgingBilletingReferral, Shared.Contracts.Submissions.LodgingBilletingReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.LodgingGroupReferral, Shared.Contracts.Submissions.LodgingGroupReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.LodgingHotelReferral, Shared.Contracts.Submissions.LodgingHotelReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.TransportationTaxiReferral, Shared.Contracts.Submissions.TransportationTaxiReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.TransportationOtherReferral, Shared.Contracts.Submissions.TransportationOtherReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
         }
     }
 }

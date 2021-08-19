@@ -361,42 +361,43 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .Where(f => f.era_name == fileId).SingleOrDefault();
             if (file == null) throw new Exception($"Evacuation file {fileId} not found");
 
-            var era_essfilenote = mapper.Map<era_essfilenote>(note);
-            era_essfilenote.era_essfilenoteid = Guid.NewGuid();
-            essContext.AddToera_essfilenotes(era_essfilenote);
-            essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID), note);
-            essContext.SetLink(note, nameof(era_essfilenote.era_ESSFileID), file);
+            var newNote = mapper.Map<era_essfilenote>(note);
+            newNote.era_essfilenoteid = Guid.NewGuid();
+            essContext.AddToera_essfilenotes(newNote);
+            essContext.AddLink(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID), newNote);
+            essContext.SetLink(newNote, nameof(newNote.era_ESSFileID), file);
 
-            if (era_essfilenote._era_essteamuserid_value.HasValue)
+            if (newNote._era_essteamuserid_value.HasValue)
             {
-                var user = essContext.era_essteamusers.Where(u => u.era_essteamuserid == era_essfilenote._era_essteamuserid_value).SingleOrDefault();
-                if (user != null) essContext.AddLink(user, nameof(era_essteamuser.era_era_essteamuser_era_essfilenote_ESSTeamUser), note);
+                var user = essContext.era_essteamusers.Where(u => u.era_essteamuserid == newNote._era_essteamuserid_value).SingleOrDefault();
+                if (user != null) essContext.AddLink(user, nameof(era_essteamuser.era_era_essteamuser_era_essfilenote_ESSTeamUser), newNote);
             }
             await essContext.SaveChangesAsync();
 
             essContext.DetachAll();
 
-            return era_essfilenote.era_essfilenoteid.ToString();
+            return newNote.era_essfilenoteid.ToString();
         }
 
         public async Task<string> UpdateNote(string fileId, Note note)
         {
-            var era_essfilenote = mapper.Map<era_essfilenote>(note);
             var existingNote = essContext.era_essfilenotes
                 .Where(n => n.era_essfilenoteid == new Guid(note.Id)).SingleOrDefault();
             essContext.DetachAll();
 
             if (existingNote == null) throw new Exception($"Evacuation file note {note.Id} not found");
 
-            era_essfilenote.era_essfilenoteid = existingNote.era_essfilenoteid;
-            essContext.AttachTo(nameof(EssContext.era_essfilenotes), era_essfilenote);
-            essContext.UpdateObject(era_essfilenote);
+            var updatedNote = mapper.Map<era_essfilenote>(note);
+
+            updatedNote.era_essfilenoteid = existingNote.era_essfilenoteid;
+            essContext.AttachTo(nameof(EssContext.era_essfilenotes), updatedNote);
+            essContext.UpdateObject(updatedNote);
 
             await essContext.SaveChangesAsync();
 
             essContext.DetachAll();
 
-            return era_essfilenote.era_essfilenoteid.ToString();
+            return updatedNote.era_essfilenoteid.ToString();
         }
 
         public async Task<string> CreateSupport(string fileId, Support support)
@@ -412,9 +413,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.AddLink(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_evacueesupport_NeedsAssessmentID), newSupport);
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_EvacuationFileId), file);
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_NeedsAssessmentID), file.era_CurrentNeedsAssessmentid);
-            var supportType = new era_support { era_supportid = newSupport._era_supporttypeid_value };
-            essContext.AttachTo(nameof(EssContext.era_supports), supportType);
-            essContext.SetLink(newSupport, nameof(era_evacueesupport.era_SupportTypeId), supportType);
             AssignHouseholdMembersToSupport(newSupport);
 
             await essContext.SaveChangesAsync();

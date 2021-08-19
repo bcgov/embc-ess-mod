@@ -8227,6 +8227,7 @@
         <Property Name="statecode" Type="Edm.Int32" />
         <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
         <Property Name="era_lodgingname" Type="Edm.String" Unicode="false" />
+        <Property Name="era_supporttype" Type="Edm.Int32" />
         <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="_modifiedby_value" Type="Edm.Guid" />
