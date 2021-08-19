@@ -43,7 +43,11 @@ namespace EMBC.ESS.Managers.Submissions
             CreateMap<Shared.Contracts.Submissions.Address, Resources.Cases.EvacuationAddress>()
                 .ForMember(d => d.CommunityCode, opts => opts.MapFrom(s => s.Community))
                 .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
                 .ForMember(d => d.Community, opts => opts.MapFrom(s => s.CommunityCode))
+                .ForMember(d => d.City, opts => opts.Ignore())
+                .ForMember(d => d.StateProvince, opts => opts.Ignore())
+                .ForMember(d => d.Country, opts => opts.Ignore())
                 ;
 
             CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Cases.HouseholdMember>()
@@ -59,6 +63,7 @@ namespace EMBC.ESS.Managers.Submissions
             CreateMap<Shared.Contracts.Submissions.Pet, Resources.Cases.Pet>()
                 .ForMember(d => d.Id, opts => opts.Ignore())
                 .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
                 ;
 
             CreateMap<Shared.Contracts.Submissions.NeedsAssessment, Resources.Cases.NeedsAssessment>()
@@ -70,17 +75,16 @@ namespace EMBC.ESS.Managers.Submissions
                 ;
 
             CreateMap<Resources.Cases.NeedsAssessment, Shared.Contracts.Submissions.NeedsAssessment>()
-                .ForMember(d => d.CompletedBy, opts => opts.MapFrom(s => s.CompletedByTeamMemberId == null ? null : new Shared.Contracts.Submissions.TeamMember
-                {
-                    Id = s.CompletedByTeamMemberId
-                }))
+                .ForMember(d => d.CompletedBy, opts => opts.MapFrom(s => s.CompletedByTeamMemberId == null
+                    ? null
+                    : new Shared.Contracts.Submissions.TeamMember { Id = s.CompletedByTeamMemberId }))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Note, Resources.Cases.Note>()
+                .ForMember(d => d.CreatingTeamMemberId, opts => opts.MapFrom(s => s.CreatedBy == null ? null : s.CreatedBy.Id))
                 .ReverseMap()
-                .ForMember(d => d.MemberName, opts => opts.Ignore())
-                .ForMember(d => d.TeamId, opts => opts.Ignore())
-                .ForMember(d => d.TeamName, opts => opts.Ignore())
+                .ValidateMemberList(MemberList.Destination)
+                .ForMember(d => d.CreatedBy, opts => opts.MapFrom(s => new Shared.Contracts.Submissions.TeamMember { Id = s.CreatingTeamMemberId }))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.RegistrantProfile, Resources.Contacts.Contact>()
@@ -94,12 +98,14 @@ namespace EMBC.ESS.Managers.Submissions
 
             CreateMap<Shared.Contracts.Submissions.Address, Resources.Contacts.Address>()
                 .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
                 ;
 
             CreateMap<Shared.Contracts.Submissions.SecurityQuestion, Resources.Contacts.SecurityQuestion>()
                 .ForMember(d => d.AnswerIsMasked, opts => opts.MapFrom(s => !s.AnswerChanged))
                 .ReverseMap()
                 .ForMember(d => d.AnswerChanged, opts => opts.MapFrom(s => false))
+                .ValidateMemberList(MemberList.Destination)
                 ;
 
             CreateMap<Resources.Tasks.EssTask, Shared.Contracts.Submissions.IncidentTask>();
@@ -118,6 +124,59 @@ namespace EMBC.ESS.Managers.Submissions
                 .ForMember(d => d.IsSearchMatch, opts => opts.Ignore())
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.HasAccessRestriction))
                 ;
+
+            CreateMap<Resources.Cases.Support, Shared.Contracts.Submissions.Support>()
+                .IncludeAllDerived()
+                .ForMember(d => d.IssuedBy, opts => opts.MapFrom(s => s.IssuedByTeamMemberId == null
+                    ? null
+                    : new Shared.Contracts.Submissions.TeamMember { Id = s.IssuedByTeamMemberId }))
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                .IncludeAllDerived()
+                .ForMember(d => d.IssuedByTeamMemberId, opts => opts.MapFrom(s => s.IssuedBy == null ? null : s.IssuedBy.Id))
+                ;
+
+            CreateMap<Resources.Cases.Referral, Shared.Contracts.Submissions.Referral>()
+                .IncludeAllDerived()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination)
+                .IncludeAllDerived();
+
+            CreateMap<Resources.Cases.ClothingReferral, Shared.Contracts.Submissions.ClothingReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.IncidentalsReferral, Shared.Contracts.Submissions.IncidentalsReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.FoodGroceriesReferral, Shared.Contracts.Submissions.FoodGroceriesReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.FoodRestaurantReferral, Shared.Contracts.Submissions.FoodRestaurantReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.LodgingBilletingReferral, Shared.Contracts.Submissions.LodgingBilletingReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.LodgingGroupReferral, Shared.Contracts.Submissions.LodgingGroupReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.LodgingHotelReferral, Shared.Contracts.Submissions.LodgingHotelReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.TransportationTaxiReferral, Shared.Contracts.Submissions.TransportationTaxiReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Cases.TransportationOtherReferral, Shared.Contracts.Submissions.TransportationOtherReferral>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
         }
     }
 }

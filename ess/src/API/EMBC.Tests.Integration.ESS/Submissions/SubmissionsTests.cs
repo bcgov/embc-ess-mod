@@ -519,7 +519,7 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         public async Task CanCreateFileNote()
         {
             var fileId = "101010";
-            var note = new Note { Content = "Test create note", Type = NoteType.General, CreatingTeamMemberId = "170b9e4d-731e-4ab8-a0df-ff2612bf6840" };
+            var note = new Note { Content = "Test create note", Type = NoteType.General, CreatedBy = new TeamMember { Id = "170b9e4d-731e-4ab8-a0df-ff2612bf6840" } };
             var id = await manager.Handle(new SaveEvacuationFileNoteCommand { FileId = fileId, Note = note });
             id.ShouldNotBeNull();
         }

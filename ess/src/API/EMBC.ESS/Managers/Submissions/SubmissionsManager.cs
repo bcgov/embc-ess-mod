@@ -233,13 +233,27 @@ namespace EMBC.ESS.Managers.Submissions
 
             foreach (var note in files.SelectMany(c => c.Notes))
             {
-                if (string.IsNullOrEmpty(note.CreatingTeamMemberId)) continue;
-                var teamMembers = await teamRepository.GetMembers(null, null, note.CreatingTeamMemberId);
+                if (string.IsNullOrEmpty(note.CreatedBy?.Id)) continue;
+                var teamMembers = await teamRepository.GetMembers(null, null, note.CreatedBy.Id);
                 var member = teamMembers.SingleOrDefault();
-                if (member == null) continue;
-                note.MemberName = $"{member.FirstName}, {member.LastName.Substring(0, 1)}";
-                note.TeamId = member.TeamId;
-                note.TeamName = member.TeamName;
+                if (member != null)
+                {
+                    note.CreatedBy.DisplayName = $"{member.FirstName}, {member.LastName.Substring(0, 1)}";
+                    note.CreatedBy.TeamId = member.TeamId;
+                    note.CreatedBy.TeamName = member.TeamName;
+                }
+            }
+
+            foreach (var support in files.SelectMany(f => f.Supports))
+            {
+                if (string.IsNullOrEmpty(support.IssuedBy?.Id)) continue;
+                var teamMember = (await teamRepository.GetMembers(userId: support.IssuedBy.Id)).SingleOrDefault();
+                if (teamMember != null)
+                {
+                    support.IssuedBy.DisplayName = $"{teamMember.FirstName}, {teamMember.LastName.Substring(0, 1)}";
+                    support.IssuedBy.TeamId = teamMember.TeamId;
+                    support.IssuedBy.TeamName = teamMember.TeamName;
+                }
             }
 
             return new EvacuationFilesQueryResponse { Items = files };
@@ -358,7 +372,7 @@ namespace EMBC.ESS.Managers.Submissions
             return id;
         }
 
-        public async Task<EvacuationFileNotesQueryResponse> Handle(Shared.Contracts.Submissions.EvacuationFileNotesQuery query)
+        public async Task<EvacuationFileNotesQueryResponse> Handle(EvacuationFileNotesQuery query)
         {
             var file = (await caseRepository.QueryCase(new Resources.Cases.EvacuationFilesQuery
             {
@@ -383,6 +397,22 @@ namespace EMBC.ESS.Managers.Submissions
             var esstasks = mapper.Map<IEnumerable<IncidentTask>>(esstask);
 
             return new TasksSearchQueryResult { Items = esstasks };
+        }
+
+        public async System.Threading.Tasks.Task Handle(ProcessSupportsCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
+
+            var supportIds = new List<string>();
+            foreach (var support in cmd.supports)
+            {
+                var supportId = await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
+                {
+                    FileId = cmd.FileId,
+                    Support = mapper.Map<Resources.Cases.Support>(support)
+                });
+                supportId.Equals(supportId);
+            }
         }
     }
 }

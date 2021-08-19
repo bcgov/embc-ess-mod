@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EMBC.ESS;
@@ -222,6 +223,40 @@ namespace EMBC.Tests.Integration.ESS.Resources
             {
                 await caseRepository.ManageCase(new DeleteEvacuationFile { Id = file.Id });
             }
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanCreateSupports()
+        {
+            var now = DateTime.UtcNow;
+            var primaryContact = await GetContactByUserId(TestUserId);
+            var originalFile = CreateTestFile(primaryContact);
+            var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).Id;
+
+            var supports = new Support[]
+            {
+                new ClothingReferral(),
+                new IncidentalsReferral(),
+                new FoodGroceriesReferral(),
+                new FoodRestaurantReferral(),
+                new LodgingBilletingReferral() { NumberOfNights = 1 },
+                new LodgingGroupReferral() { NumberOfNights = 1 },
+                new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
+                new TransportationOtherReferral(),
+                new TransportationTaxiReferral(),
+            };
+
+            var supportIds = new List<string>();
+            foreach (var support in supports)
+            {
+                var supportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = fileId, Support = support })).Id;
+                supportIds.Add(supportId);
+            }
+
+            var file = (EvacuationFile)(await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Single();
+
+            var readSupportIds = file.Supports.Select(s => s.Id).OrderBy(id => id).ToArray();
+            readSupportIds.ShouldBe(supportIds.OrderBy(id => id).ToArray());
         }
 
         private async Task<Contact> GetContactByUserId(string userId) =>

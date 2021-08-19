@@ -14,6 +14,8 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace EMBC.ESS.Shared.Contracts.Submissions
 {
     /// <summary>
@@ -75,5 +77,11 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string FileId { get; set; }
         public string RegistantId { get; set; }
         public string HouseholdMemberId { get; set; }
+    }
+
+    public class ProcessSupportsCommand : Command
+    {
+        public string FileId { get; set; }
+        public IEnumerable<Support> supports { get; set; }
     }
 }
