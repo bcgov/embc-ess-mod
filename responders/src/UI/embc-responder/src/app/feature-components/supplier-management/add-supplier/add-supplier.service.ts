@@ -80,7 +80,7 @@ export class AddSupplierService {
       legalName: this.supplierLegalName,
       name: this.supplierName,
       address: this.supplierAddress,
-      mutualAid: this.mutualAid,
+      //mutualAid: this.mutualAid,
       isActive: this.status,
       supplierGstNumber: this.supplierGstNumber,
       contact: this.contact
@@ -90,7 +90,7 @@ export class AddSupplierService {
       legalName: this.supplierLegalName,
       name: this.supplierName,
       address: this.supplierAddress,
-      mutualAid: this.mutualAid,
+     // mutualAid: this.mutualAid,
       status: this.status,
       supplierGstNumber: this.supplierGstNumber,
       contact: this.contact
