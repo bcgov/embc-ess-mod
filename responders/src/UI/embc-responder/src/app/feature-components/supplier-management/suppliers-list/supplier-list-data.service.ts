@@ -37,8 +37,6 @@ export class SupplierListDataService {
   ];
 
   private selectedSupplier: SupplierModel;
-  private mainSuppliersList: Array<SupplierModel>;
-  private mutualAidSuppliersList: Array<SupplierModel>;
 
   constructor(
     private cacheService: CacheService,
@@ -69,49 +67,11 @@ export class SupplierListDataService {
   }
 
   /**
-   * Gets the main suppliers list
-   *
-   * @returns an array of main suppliers
-   */
-  public getMainSuppliersList(): Array<SupplierModel> {
-    return this.mainSuppliersList;
-  }
-
-  /**
-   * Sets an array of suppliers as primary suppliers
-   *
-   * @param suppliersList the list of suppliers to assign as primary suppliers
-   */
-  public setMainSuppliersList(suppliersList: Array<SupplierModel>): void {
-    this.mainSuppliersList = suppliersList;
-  }
-
-  /**
-   * Gets the mutual Aid Suppliers list
-   *
-   * @returns an array of mutual aid suppliers
-   */
-  public getMutualAidSuppliersList(): Array<SupplierModel> {
-    return this.mutualAidSuppliersList;
-  }
-
-  /**
-   * Sets an array of suppliers as mutual aid
-   *
-   * @param suppliersList the list of suppliers to assign as mutual aid suppliers
-   */
-  public setMutualAidSuppliersList(suppliersList: Array<SupplierModel>): void {
-    this.mutualAidSuppliersList = suppliersList;
-  }
-
-  /**
    * Cleans data of the selected supplier
    */
   clearSupplierData(): void {
     this.selectedSupplier = undefined;
     this.cacheService.remove('selectedSupplier');
-    this.mainSuppliersList = undefined;
-    this.mutualAidSuppliersList = undefined;
   }
 
   /**
