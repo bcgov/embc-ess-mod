@@ -181,6 +181,10 @@ namespace EMBC.ESS.Managers.Submissions
             CreateMap<Resources.Cases.TransportationOtherReferral, Shared.Contracts.Submissions.TransportationOtherReferral>()
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Suppliers.Address, Shared.Contracts.Submissions.Address>()
+                .ReverseMap()
+                .ValidateMemberList(MemberList.Destination);
         }
     }
 }

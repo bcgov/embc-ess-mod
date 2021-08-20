@@ -272,7 +272,7 @@ namespace EMBC.ESS.Managers.Submissions
                     var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id })).Items.SingleOrDefault();
                     if (supplier != null)
                     {
-                        referral.SupplierDetails.Name = supplier.Name;
+                        referral.SupplierDetails.Name = supplier.LegalName;
                         referral.SupplierDetails.Address = mapper.Map<Shared.Contracts.Submissions.Address>(supplier.Address);
                         referral.SupplierDetails.TeamId = supplier.Team?.Id;
                         referral.SupplierDetails.TeamName = supplier.Team?.Name;

@@ -15,6 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
@@ -65,7 +66,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.RegistrationLocation, opts => opts.MapFrom(s => s.era_CurrentNeedsAssessmentid.era_registrationlocation))
                 .ForMember(d => d.HouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_householdmember_EvacuationFileid))
                 .ForMember(d => d.Notes, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_essfilenote_ESSFileID))
-                .ForMember(d => d.Supports, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_evacueesupport_ESSFileId))
+                .ForMember(d => d.Supports, opts => opts.ConvertUsing<SupportConverter, IEnumerable<era_evacueesupport>>(s => s.era_era_evacuationfile_era_evacueesupport_ESSFileId))
                 .ForPath(d => d.NeedsAssessment.Pets, opts => opts.MapFrom(s => s.era_era_evacuationfile_era_animal_ESSFileid))
                 ;
 
@@ -205,23 +206,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.era_ishidden, opts => opts.MapFrom(s => s.IsHidden))
                 ;
 
-            Func<era_evacueesupport, Support> supportTypeResolver = s => (SupportType?)s.era_supporttype switch
-            {
-                SupportType.Clothing => new ClothingReferral(),
-                SupportType.Incidentals => new IncidentalsReferral(),
-                SupportType.FoodGroceries => new FoodGroceriesReferral(),
-                SupportType.FoodRestaurant => new FoodRestaurantReferral(),
-                SupportType.LodgingBilleting => new LodgingBilletingReferral(),
-                SupportType.LodgingGroup => new LodgingGroupReferral(),
-                SupportType.LodgingHotel => new LodgingHotelReferral(),
-                SupportType.TransporationTaxi => new TransportationTaxiReferral(),
-                SupportType.TransportationOther => new TransportationOtherReferral(),
-                _ => throw new NotImplementedException($"No known type for support type value '{s.era_supporttype}'")
-            };
-
             CreateMap<era_evacueesupport, Support>()
                 .IncludeAllDerived()
-                .ConstructUsing(s => supportTypeResolver(s))
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_name))
                 .ForMember(d => d.IssuedOn, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
                 .ForMember(d => d.IssuedByTeamMemberId, opts => opts.MapFrom(s => s._era_issuedbyid_value))
@@ -232,8 +218,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_householdmember.Select(m => m.era_householdmemberid)))
                 .ReverseMap()
                 .IncludeAllDerived()
-                .ForMember(d => d.statuscode, opts => opts.MapFrom(s => s.Status))
-                .ForMember(d => d._era_issuedbyid_value, opts => opts.MapFrom(s => s.IssuedByTeamMemberId))
                 .ForMember(d => d.era_era_evacueesupport_era_householdmember,
                     opts => opts.MapFrom(s => s.IncludedHouseholdMembers.Select(m => new era_householdmember { era_householdmemberid = Guid.Parse(m) })))
                 ;
@@ -398,5 +382,35 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             3 => "X",
             _ => null
         };
+    }
+
+    /// <summary>
+    /// Automapper converter to help transforming Dynamics support entity into the correct Support concrete object
+    /// </summary>
+    public class SupportConverter :
+        IValueConverter<era_evacueesupport, Support>,
+        IValueConverter<IEnumerable<era_evacueesupport>, IEnumerable<Support>>
+    {
+        public Support Convert(era_evacueesupport sourceMember, ResolutionContext context) =>
+            (Support)context.Mapper.Map(sourceMember, sourceMember.GetType(), supportTypeResolver((SupportType?)sourceMember.era_supporttype));
+
+        public IEnumerable<Support> Convert(IEnumerable<era_evacueesupport> sourceMember, ResolutionContext context) =>
+            sourceMember.Select(s => Convert(s, context));
+
+        private Type supportTypeResolver(SupportType? supportType) =>
+            supportType switch
+            {
+                SupportType.Clothing => typeof(ClothingReferral),
+                SupportType.Incidentals => typeof(IncidentalsReferral),
+                SupportType.FoodGroceries => typeof(FoodGroceriesReferral),
+                SupportType.FoodRestaurant => typeof(FoodRestaurantReferral),
+                SupportType.LodgingBilleting => typeof(LodgingBilletingReferral),
+                SupportType.LodgingGroup => typeof(LodgingGroupReferral),
+                SupportType.LodgingHotel => typeof(LodgingHotelReferral),
+                SupportType.TransporationTaxi => typeof(TransportationTaxiReferral),
+                SupportType.TransportationOther => typeof(TransportationOtherReferral),
+
+                _ => throw new NotImplementedException($"No known type for support type value '{supportType}'")
+            };
     }
 }

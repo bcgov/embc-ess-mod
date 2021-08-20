@@ -14,7 +14,6 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using System;
 using System.Linq;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
@@ -28,7 +27,7 @@ namespace EMBC.ESS.Resources.Suppliers
             CreateMap<era_supplier, Supplier>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_supplierid))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.era_suppliername))
-                .ForMember(d => d.LegalName, opts => opts.MapFrom(s => s.era_supplierlegalname))
+                .ForMember(d => d.LegalName, opts => opts.MapFrom(s => s.era_name))
                 .ForMember(d => d.GSTNumber, opts => opts.MapFrom(s => s.era_gstnumber))
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.statuscode == (int)SupplierVerificationStatus.Verified))
                 .ForMember(d => d.Status, opts => opts.Ignore())

@@ -559,10 +559,10 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
             var supports = new Support[]
             {
-                new ClothingReferral { SupplierDetails = new SupplierDetails { Id="9f584892-94fb-eb11-b82b-00505683fbf4" } },
+                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = "9f584892-94fb-eb11-b82b-00505683fbf4" } },
                 new IncidentalsReferral(),
-                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id="87dcf79d-acfb-eb11-b82b-00505683fbf4" } },
-                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id="8e290f97-b910-eb11-b820-00505683fbf4" } },
+                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = "87dcf79d-acfb-eb11-b82b-00505683fbf4" } },
+                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = "8e290f97-b910-eb11-b820-00505683fbf4" } },
                 new LodgingBilletingReferral() { NumberOfNights = 1 },
                 new LodgingGroupReferral() { NumberOfNights = 1 },
                 new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
@@ -578,8 +578,13 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             foreach (var support in refreshedFile.Supports.Cast<Referral>())
             {
                 var sourceSupport = (Referral)supports.Where(s => s.GetType() == support.GetType()).ShouldHaveSingleItem();
-                if (sourceSupport.SupplierDetails != null) support.SupplierDetails.ShouldNotBeNull().Id.ShouldBe(sourceSupport.Id);
-                support.SupplierDetails.Name.ShouldNotBeNull();
+                if (sourceSupport.SupplierDetails != null)
+                {
+                    support.SupplierDetails.ShouldNotBeNull();
+                    support.SupplierDetails.Id.ShouldBe(sourceSupport.SupplierDetails.Id);
+                    support.SupplierDetails.Name.ShouldNotBeNull();
+                    support.SupplierDetails.Address.ShouldNotBeNull();
+                }
             }
         }
 
