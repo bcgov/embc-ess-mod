@@ -13,6 +13,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
+import { SupplierListItem } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-suppliers-list',
@@ -20,16 +21,13 @@ import { SupplierModel } from 'src/app/core/models/supplier.model';
   styleUrls: ['./suppliers-list.component.scss']
 })
 export class SuppliersListComponent implements OnInit {
-  suppliersListData: Array<SupplierModel>;
-  mutualAidListData: Array<SupplierModel>;
-
   primarySupplierFilterTerm: TableFilterValueModel;
   mutualAidSupplierFilterTerm: TableFilterValueModel;
   filtersToLoad: TableFilterModel;
   primarySuppliersColumns: TableColumnModel[];
   mutualAidSuppliersColumns: TableColumnModel[];
-  suppliersList: SupplierModel[];
-  mutualAidList: SupplierModel[];
+  suppliersList: SupplierListItem[];
+  mutualAidList: SupplierListItem[];
   suppliersLoader = false;
   mutualAidLoader = false;
   statusLoading = true;
@@ -58,20 +56,31 @@ export class SuppliersListComponent implements OnInit {
     this.mutualAidSuppliersColumns = this.listSupplierDataService.mutualAidSupplierColumns;
     this.loggedInRole = this.userService.currentProfile.role;
 
-    setTimeout(() => {
-      // this.suppliersList = this.suppliersListData;
-      // this.mutualAidList = this.mutualAidListData;
-      // this.mutualAidLoader = !this.mutualAidLoader;
-    }, 5000);
-
-    // this.suppliersLoader = !this.suppliersLoader;
-    this.supplierServices.getSuppliersList().subscribe(
+    this.supplierServices.getMainSuppliersList().subscribe(
       (values) => {
         console.log(values);
-        this.suppliersLoader = !this.suppliersLoader;
+        this.mutualAidLoader = !this.mutualAidLoader;
         this.suppliersList = values;
       },
       (error) => {
+        console.log(error);
+        this.mutualAidLoader = !this.mutualAidLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.mainSuppliersListError
+        );
+      }
+    );
+
+    this.supplierServices.getMutualAidSuppliersList().subscribe(
+      (values) => {
+        console.log(values);
+        this.suppliersLoader = !this.suppliersLoader;
+        this.mutualAidList = values;
+      },
+      (error) => {
+        console.log(error);
         this.suppliersLoader = !this.suppliersLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert(

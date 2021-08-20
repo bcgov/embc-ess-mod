@@ -28,7 +28,7 @@ export class SupplierListDataService {
     { label: 'Supplier Legal Name', ref: 'legalName' },
     { label: 'Supplier Name', ref: 'name' },
     { label: 'Address', ref: 'address' },
-    { label: 'Mutual Aid', ref: 'mutualAid' },
+    { label: 'Mutual Aid', ref: 'providesMutualAid' },
     { label: 'Status', ref: 'status' }
   ];
 
@@ -36,7 +36,7 @@ export class SupplierListDataService {
     { label: 'Supplier Legal Name', ref: 'legalName' },
     { label: 'Supplier Name', ref: 'name' },
     { label: 'Address', ref: 'address' },
-    { label: 'Mutual Aid Provided by', ref: 'mutualAid' },
+    { label: 'Mutual Aid Provided by', ref: 'team' },
     { label: 'Status', ref: 'status' }
   ];
 
