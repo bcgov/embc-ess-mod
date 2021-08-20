@@ -545,6 +545,49 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             id.ShouldNotBeNull();
         }
 
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanProcessSupports()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var file = CreateNewTestEvacuationFile(registrant);
+
+            file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
+            file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
+
+            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+            fileId.ShouldNotBeNull();
+
+            var supports = new Support[]
+            {
+                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = "9f584892-94fb-eb11-b82b-00505683fbf4" } },
+                new IncidentalsReferral(),
+                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = "87dcf79d-acfb-eb11-b82b-00505683fbf4" } },
+                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = "8e290f97-b910-eb11-b820-00505683fbf4" } },
+                new LodgingBilletingReferral() { NumberOfNights = 1 },
+                new LodgingGroupReferral() { NumberOfNights = 1 },
+                new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
+                new TransportationOtherReferral(),
+                new TransportationTaxiReferral(),
+            };
+
+            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports });
+
+            var refreshedFile = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+            refreshedFile.Supports.ShouldNotBeEmpty();
+            refreshedFile.Supports.Count().ShouldBe(supports.Length);
+            foreach (var support in refreshedFile.Supports.Cast<Referral>())
+            {
+                var sourceSupport = (Referral)supports.Where(s => s.GetType() == support.GetType()).ShouldHaveSingleItem();
+                if (sourceSupport.SupplierDetails != null)
+                {
+                    support.SupplierDetails.ShouldNotBeNull();
+                    support.SupplierDetails.Id.ShouldBe(sourceSupport.SupplierDetails.Id);
+                    support.SupplierDetails.Name.ShouldNotBeNull();
+                    support.SupplierDetails.Address.ShouldNotBeNull();
+                }
+            }
+        }
+
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)
         {
             return (await manager.Handle(new RegistrantsQuery { UserId = userId })).Items.SingleOrDefault();

@@ -33,9 +33,18 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
 
     public abstract class Referral : Support
     {
-        public string SupplierId { get; set; }
         public string SupplierNotes { get; set; }
         public string IssuedToPersonName { get; set; }
+        public SupplierDetails SupplierDetails { get; set; }
+    }
+
+    public class SupplierDetails
+    {
+        public string Id { get; set; }
+        public Address Address { get; set; }
+        public string Name { get; set; }
+        public string TeamId { get; set; }
+        public string TeamName { get; set; }
     }
 
     public class ClothingReferral : Referral

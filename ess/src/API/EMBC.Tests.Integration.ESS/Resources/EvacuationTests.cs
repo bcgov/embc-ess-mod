@@ -235,15 +235,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var supports = new Support[]
             {
-                new ClothingReferral(),
-                new IncidentalsReferral(),
-                new FoodGroceriesReferral(),
-                new FoodRestaurantReferral(),
-                new LodgingBilletingReferral() { NumberOfNights = 1 },
-                new LodgingGroupReferral() { NumberOfNights = 1 },
-                new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
-                new TransportationOtherReferral(),
-                new TransportationTaxiReferral(),
+               new ClothingReferral { SupplierId = "9f584892-94fb-eb11-b82b-00505683fbf4", SupplierNotes = "notes", IssuedByTeamMemberId = "ad3c5df0-608b-eb11-b827-00505683fbf4", IssuedToPersonName = "test person"  },
             };
 
             var supportIds = new List<string>();
@@ -257,6 +249,14 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var readSupportIds = file.Supports.Select(s => s.Id).OrderBy(id => id).ToArray();
             readSupportIds.ShouldBe(supportIds.OrderBy(id => id).ToArray());
+            foreach (var support in file.Supports)
+            {
+                var sourceSupport = (Referral)supports.Where(s => s.GetType() == support.GetType()).Single();
+                if (support is Referral referral && sourceSupport.SupplierId != null)
+                {
+                    referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
+                }
+            }
         }
 
         private async Task<Contact> GetContactByUserId(string userId) =>

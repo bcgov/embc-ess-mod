@@ -23,6 +23,7 @@ using AutoMapper;
 using EMBC.ESS.Engines.Search;
 using EMBC.ESS.Resources.Cases;
 using EMBC.ESS.Resources.Contacts;
+using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Shared.Contracts.Submissions;
@@ -42,6 +43,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly INotificationSender notificationSender;
         private readonly ITaskRepository taskRepository;
         private readonly ITeamRepository teamRepository;
+        private readonly ISupplierRepository supplierRepository;
         private readonly ISearchEngine searchEngine;
 
         public SubmissionsManager(
@@ -53,6 +55,7 @@ namespace EMBC.ESS.Managers.Submissions
             INotificationSender notificationSender,
             ITaskRepository taskRepository,
             ITeamRepository teamRepository,
+            ISupplierRepository supplierRepository,
             ISearchEngine searchEngine)
         {
             this.mapper = mapper;
@@ -63,6 +66,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.notificationSender = notificationSender;
             this.taskRepository = taskRepository;
             this.teamRepository = teamRepository;
+            this.supplierRepository = supplierRepository;
             this.searchEngine = searchEngine;
         }
 
@@ -214,24 +218,31 @@ namespace EMBC.ESS.Managers.Submissions
 
             foreach (var file in files)
             {
-                if (file.NeedsAssessment.CompletedBy?.Id != null)
-                {
-                    var member = (await teamRepository.GetMembers(userId: file.NeedsAssessment.CompletedBy.Id, onlyActive: false)).SingleOrDefault();
-                    if (member != null)
-                    {
-                        file.NeedsAssessment.CompletedBy.DisplayName = $"{member.FirstName} {member.LastName.Substring(0, 1)}.";
-                        file.NeedsAssessment.CompletedBy.TeamId = member.TeamId;
-                        file.NeedsAssessment.CompletedBy.TeamName = member.TeamName;
-                    }
-                }
-                if (file.RelatedTask?.Id != null)
-                {
-                    var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = file.RelatedTask.Id })).Items.SingleOrDefault();
-                    if (task != null) file.RelatedTask = mapper.Map<IncidentTask>(task);
-                }
+                await PostFillEvacuationFiles(file);
             }
 
-            foreach (var note in files.SelectMany(c => c.Notes))
+            return new EvacuationFilesQueryResponse { Items = files };
+        }
+
+        private async System.Threading.Tasks.Task PostFillEvacuationFiles(Shared.Contracts.Submissions.EvacuationFile file)
+        {
+            if (file.NeedsAssessment.CompletedBy?.Id != null)
+            {
+                var member = (await teamRepository.GetMembers(userId: file.NeedsAssessment.CompletedBy.Id, onlyActive: false)).SingleOrDefault();
+                if (member != null)
+                {
+                    file.NeedsAssessment.CompletedBy.DisplayName = $"{member.FirstName} {member.LastName.Substring(0, 1)}.";
+                    file.NeedsAssessment.CompletedBy.TeamId = member.TeamId;
+                    file.NeedsAssessment.CompletedBy.TeamName = member.TeamName;
+                }
+            }
+            if (file.RelatedTask?.Id != null)
+            {
+                var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = file.RelatedTask.Id })).Items.SingleOrDefault();
+                if (task != null) file.RelatedTask = mapper.Map<IncidentTask>(task);
+            }
+
+            foreach (var note in file.Notes)
             {
                 if (string.IsNullOrEmpty(note.CreatedBy?.Id)) continue;
                 var teamMembers = await teamRepository.GetMembers(null, null, note.CreatedBy.Id);
@@ -244,19 +255,30 @@ namespace EMBC.ESS.Managers.Submissions
                 }
             }
 
-            foreach (var support in files.SelectMany(f => f.Supports))
+            foreach (var support in file.Supports)
             {
-                if (string.IsNullOrEmpty(support.IssuedBy?.Id)) continue;
-                var teamMember = (await teamRepository.GetMembers(userId: support.IssuedBy.Id)).SingleOrDefault();
-                if (teamMember != null)
+                if (!string.IsNullOrEmpty(support.IssuedBy?.Id))
                 {
-                    support.IssuedBy.DisplayName = $"{teamMember.FirstName}, {teamMember.LastName.Substring(0, 1)}";
-                    support.IssuedBy.TeamId = teamMember.TeamId;
-                    support.IssuedBy.TeamName = teamMember.TeamName;
+                    var teamMember = (await teamRepository.GetMembers(userId: support.IssuedBy.Id)).SingleOrDefault();
+                    if (teamMember != null)
+                    {
+                        support.IssuedBy.DisplayName = $"{teamMember.FirstName}, {teamMember.LastName.Substring(0, 1)}";
+                        support.IssuedBy.TeamId = teamMember.TeamId;
+                        support.IssuedBy.TeamName = teamMember.TeamName;
+                    }
+                }
+                if (support is Shared.Contracts.Submissions.Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))
+                {
+                    var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id })).Items.SingleOrDefault();
+                    if (supplier != null)
+                    {
+                        referral.SupplierDetails.Name = supplier.LegalName;
+                        referral.SupplierDetails.Address = mapper.Map<Shared.Contracts.Submissions.Address>(supplier.Address);
+                        referral.SupplierDetails.TeamId = supplier.Team?.Id;
+                        referral.SupplierDetails.TeamName = supplier.Team?.Name;
+                    }
                 }
             }
-
-            return new EvacuationFilesQueryResponse { Items = files };
         }
 
         public async Task<EvacueeSearchQueryResponse> Handle(EvacueeSearchQuery query)
