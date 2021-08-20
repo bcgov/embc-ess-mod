@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Injectable } from '@angular/core';
 import { GstNumberModel } from '../models/gst-number.model';
 import { SupplierModel } from '../models/supplier.model';
 import { LocationsService } from './locations.service';
 import { SuppliersService } from '../api/services';
 import { Observable } from 'rxjs/internal/Observable';
-import { Supplier, SupplierResult } from '../api/models';
+import { Supplier, SupplierListItem, SupplierResult } from '../api/models';
 import { StrictHttpResponse } from '../api/strict-http-response';
 import { map, mergeMap } from 'rxjs/operators';
 import { SupplierManagementService } from 'src/app/feature-components/supplier-management/supplier-management.service';
@@ -20,31 +21,51 @@ export class SupplierService {
   ) {}
 
   /**
-   * Gives an array of Suppliers Search Results
+   * Gives an array of Main Suppliers
    *
-   * @returns an array of Supplier Search Results
+   * @returns an array of Main Supplier
    */
-  getSuppliersList(): Observable<Array<SupplierModel>> {
-    const suppliersModelArray: Array<SupplierModel> = [];
-    return this.suppliersService.suppliersGetSuppliers().pipe(
-      map(
-        (suppliers: Array<Supplier>): Array<SupplierModel> => {
-          suppliers.forEach((supplier) => {
-            const convertedSupplier: SupplierModel = {
-              ...supplier,
-              address: this.locationServices.getAddressModelFromAddress(
-                supplier.address
-              ),
-              supplierGstNumber: this.supplierManagementService.convertSupplierGSTNumberFromGSTNumber(
-                supplier.gstNumber
-              )
-            };
-            suppliersModelArray.push(convertedSupplier);
+  getMainSuppliersList(
+    legalName?: string,
+    gstNumber?: string
+  ): Observable<Array<SupplierListItem>> {
+    const suppliersListArray: Array<SupplierListItem> = [];
+    return this.suppliersService
+      .suppliersGetSuppliers({
+        legalName,
+        gstNumber
+      })
+      .pipe(
+        map((suppliers: Array<SupplierListItem>) => {
+          return suppliers.filter((supplier) => {
+            return supplier.isPrimarySupplier === true;
           });
-          return suppliersModelArray;
-        }
-      )
-    );
+        })
+      );
+  }
+
+  /**
+   * Gives an array of Mutual Aid Suppliers
+   *
+   * @returns an array of Mutual Aid Suppliers
+   */
+  getMutualAidSuppliersList(
+    legalName?: string,
+    gstNumber?: string
+  ): Observable<Array<SupplierListItem>> {
+    const suppliersListArray: Array<SupplierListItem> = [];
+    return this.suppliersService
+      .suppliersGetSuppliers({
+        legalName,
+        gstNumber
+      })
+      .pipe(
+        map((suppliers: Array<SupplierListItem>) => {
+          return suppliers.filter((supplier) => {
+            return supplier.isPrimarySupplier === false;
+          });
+        })
+      );
   }
 
   /**
@@ -57,7 +78,7 @@ export class SupplierService {
   setSuppliersStatus(
     supplierId: string,
     status: boolean
-  ): Observable<Array<SupplierModel>> {
+  ): Observable<Array<SupplierListItem>> {
     return this.suppliersService
       .suppliersSetSupplierStatus({
         supplierId,
@@ -66,7 +87,7 @@ export class SupplierService {
       .pipe(
         mergeMap((result) => {
           console.log(result);
-          return this.getSuppliersList();
+          return this.getMainSuppliersList();
         })
       );
   }
