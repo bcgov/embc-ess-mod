@@ -53,11 +53,13 @@ namespace EMBC.ESS.Managers.Submissions
             CreateMap<Shared.Contracts.Submissions.HouseholdMember, Resources.Cases.HouseholdMember>()
                 .ForMember(d => d.HasAccessRestriction, opts => opts.Ignore())
                 .ForMember(d => d.IsVerifiedRegistrant, opts => opts.Ignore())
+                .ForMember(d => d.IsAuthenticatedRegistrant, opts => opts.Ignore())
                 ;
 
             CreateMap<Resources.Cases.HouseholdMember, Shared.Contracts.Submissions.HouseholdMember>()
                 .ForMember(d => d.RestrictedAccess, opts => opts.MapFrom(s => s.HasAccessRestriction))
                 .ForMember(d => d.Verified, opts => opts.MapFrom(s => s.IsVerifiedRegistrant))
+                .ForMember(d => d.Authenticated, opts => opts.MapFrom(s => s.IsAuthenticatedRegistrant))
                 ;
 
             CreateMap<Shared.Contracts.Submissions.Pet, Resources.Cases.Pet>()
@@ -118,6 +120,7 @@ namespace EMBC.ESS.Managers.Submissions
                 .ForMember(d => d.RecentEvacuationFiles, opts => opts.Ignore())
                 .ForMember(d => d.RegistrationDate, opts => opts.MapFrom(s => s.CreatedOn))
                 .ForMember(d => d.IsVerified, opts => opts.MapFrom(s => s.Verified))
+                .ForMember(d => d.IsAuthenticated, opts => opts.MapFrom(s => s.Authenticated))
                 ;
 
             CreateMap<Resources.Cases.HouseholdMember, Shared.Contracts.Submissions.EvacuationFileSearchResultHouseholdMember>()

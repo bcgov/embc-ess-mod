@@ -155,6 +155,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.MapFrom(s => s._era_registrant_value))
                 .ForMember(d => d.HasAccessRestriction, opts => opts.MapFrom(s => s.era_Registrant == null ? (bool?)null : s.era_Registrant.era_restriction))
                 .ForMember(d => d.IsVerifiedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? (bool?)null : s.era_Registrant.era_verified))
+                .ForMember(d => d.IsAuthenticatedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? (bool?)null : s.era_Registrant.era_authenticated))
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.era_isprimaryregistrant))
                 .ForMember(d => d.IsUnder19, opts => opts.MapFrom(s => s.era_isunder19))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname.ToString()))

@@ -105,6 +105,7 @@ namespace EMBC.ESS.Resources.Cases
         public string LinkedRegistrantId { get; set; }
         public bool? HasAccessRestriction { get; set; }
         public bool? IsVerifiedRegistrant { get; set; }
+        public bool? IsAuthenticatedRegistrant { get; set; }
     }
 
     public class Pet
