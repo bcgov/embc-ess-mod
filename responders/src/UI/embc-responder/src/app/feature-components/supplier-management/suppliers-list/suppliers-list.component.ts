@@ -1,19 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { UserService } from 'src/app/core/services/user.service';
-import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
-import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { SupplierListDataService } from './supplier-list-data.service';
 import * as globalConst from '../../../core/services/global-constants';
-import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
-import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { SupplierListItem } from 'src/app/core/api/models';
+import { SupplierService } from 'src/app/core/services/suppliers.service';
 
 @Component({
   selector: 'app-suppliers-list',
@@ -38,7 +34,6 @@ export class SuppliersListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
-    private dialog: MatDialog,
     private supplierServices: SupplierService,
     private alertService: AlertService
   ) {
@@ -58,7 +53,6 @@ export class SuppliersListComponent implements OnInit {
 
     this.supplierServices.getMainSuppliersList().subscribe(
       (values) => {
-        console.log(values);
         this.mutualAidLoader = !this.mutualAidLoader;
         this.suppliersList = values;
       },
@@ -75,7 +69,6 @@ export class SuppliersListComponent implements OnInit {
 
     this.supplierServices.getMutualAidSuppliersList().subscribe(
       (values) => {
-        console.log(values);
         this.suppliersLoader = !this.suppliersLoader;
         this.mutualAidList = values;
       },
@@ -83,10 +76,7 @@ export class SuppliersListComponent implements OnInit {
         console.log(error);
         this.suppliersLoader = !this.suppliersLoader;
         this.alertService.clearAlert();
-        this.alertService.setAlert(
-          'danger',
-          globalConst.mainSuppliersListError
-        );
+        this.alertService.setAlert('danger', globalConst.mutualAidListError);
       }
     );
   }
@@ -114,20 +104,12 @@ export class SuppliersListComponent implements OnInit {
    *
    * @param $event Selected team member object
    */
-  openSupplierDetails($event: SupplierModel): void {
-    this.listSupplierDataService.setSelectedSupplier($event);
-    this.router.navigate(
-      ['/responder-access/supplier-management/supplier-detail'],
-      { state: { ...$event }, queryParams: { type: 'supplier' } }
-    );
+  openSupplierDetails($event: SupplierListItem): void {
+    this.listSupplierDataService.getSupplierDetails($event.id, 'supplier');
   }
 
-  openMutualAidDetails($event: SupplierModel): void {
-    this.listSupplierDataService.setSelectedSupplier($event);
-    this.router.navigate(
-      ['/responder-access/supplier-management/supplier-detail'],
-      { state: { ...$event }, queryParams: { type: 'mutualAid' } }
-    );
+  openMutualAidDetails($event: SupplierListItem): void {
+    this.listSupplierDataService.getSupplierDetails($event.id, 'mutualAid');
   }
 
   /**
@@ -182,22 +164,7 @@ export class SuppliersListComponent implements OnInit {
       displayText = globalConst.addSupplierMessage;
     }
     setTimeout(() => {
-      this.openConfirmation(displayText);
+      this.listSupplierDataService.openConfirmation(displayText);
     }, 500);
-  }
-
-  /**
-   * Open confirmation modal window
-   *
-   * @param text text to display
-   */
-  private openConfirmation(content: DialogContent): void {
-    this.dialog.open(DialogComponent, {
-      data: {
-        component: InformationDialogComponent,
-        content
-      },
-      width: '530px'
-    });
   }
 }
