@@ -11,6 +11,7 @@ export class SupplierManagementService {
   constructor(private locationServices: LocationsService) {}
 
   convertSupplierGSTNumberFromGSTNumber(gstNumber: string): GstNumberModel {
+    console.log(gstNumber);
     const gstArray: string[] = gstNumber.split('-RT-', 2);
     const convertedGstNumber: GstNumberModel = {
       part1: gstArray[0],
