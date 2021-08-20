@@ -570,6 +570,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.Verified, opts => opts.Ignore())
+                .ForMember(d => d.Authenticated, opts => opts.Ignore())
                 ;
 
             CreateMap<HouseholdMember, EvacuationFileHouseholdMember>()

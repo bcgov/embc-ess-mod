@@ -16,9 +16,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace EMBC.ESS.Shared.Contracts.Submissions
 {
+    [JsonConverter(typeof(PolymorphicJsonConverter<Support>))]
     public abstract class Support
     {
         public string Id { get; set; }

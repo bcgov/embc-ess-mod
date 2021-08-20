@@ -191,7 +191,7 @@ namespace EMBC.Responders.API.Services
             CreateMap<ESS.Shared.Contracts.Submissions.ProfileSearchResult, RegistrantProfile>()
                 .ForMember(d => d.Restriction, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.VerifiedUser, opts => opts.MapFrom(s => s.IsVerified))
-                .ForMember(d => d.AuthenticatedUser, opts => opts.MapFrom(s => false /*s.IsAuthenticated - MISSING*/))
+                .ForMember(d => d.AuthenticatedUser, opts => opts.MapFrom(s => s.IsAuthenticated))
                 .ForMember(d => d.CreatedOn, opts => opts.MapFrom(s => s.RegistrationDate))
                 .ForMember(d => d.ModifiedOn, opts => opts.MapFrom(s => s.LastModified))
                 .ForMember(d => d.ContactDetails, opts => opts.Ignore())
@@ -199,7 +199,7 @@ namespace EMBC.Responders.API.Services
                 {
                     FirstName = s.FirstName,
                     LastName = s.LastName,
-                    //DateOfBirth = DateOfBirth, TODO: missing!
+                    DateOfBirth = s.DateOfBirth
                 }))
                 .ForMember(d => d.MailingAddress, opts => opts.Ignore())
                 .ForMember(d => d.SecurityQuestions, opts => opts.Ignore())
