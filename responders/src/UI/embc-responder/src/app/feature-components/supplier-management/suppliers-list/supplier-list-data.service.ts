@@ -119,7 +119,7 @@ export class SupplierListDataService {
    *
    * @param text text to display
    */
-   openConfirmation(content: DialogContent): void {
+  openConfirmation(content: DialogContent): void {
     this.dialog.open(DialogComponent, {
       data: {
         component: InformationDialogComponent,

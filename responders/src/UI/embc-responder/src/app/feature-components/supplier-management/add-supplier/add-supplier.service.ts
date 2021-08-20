@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { SupplierContact, SupplierStatus, Team, SupplierListItem } from 'src/app/core/api/models';
+import {
+  SupplierContact,
+  SupplierStatus,
+  Team,
+  SupplierListItem
+} from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { GstNumberModel } from 'src/app/core/models/gst-number.model';
 import { SupplierModel } from 'src/app/core/models/supplier.model';

@@ -106,6 +106,7 @@ export class SupplierService {
 
   /**
    * Gets the supplier's details based on the given ID
+   *
    * @param supplierId the supplier's ID
    * @returns a SupplierModel object
    */
