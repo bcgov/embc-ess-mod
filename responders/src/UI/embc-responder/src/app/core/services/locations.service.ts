@@ -76,6 +76,7 @@ export class LocationsService {
    * @returns AddressModel object usable by the UI
    */
   public getAddressModelFromAddress(addressObject: Address): AddressModel {
+    console.log(addressObject);
     const communities = this.getCommunityList();
     const countries = this.getCountriesList();
     const stateProvinces = this.getStateProvinceList();

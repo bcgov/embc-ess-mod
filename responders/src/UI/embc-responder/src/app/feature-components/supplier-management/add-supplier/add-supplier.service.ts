@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { SupplierContact, SupplierStatus, Team } from 'src/app/core/api/models';
+import {
+  SupplierContact,
+  SupplierStatus,
+  Team,
+  SupplierListItem
+} from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { GstNumberModel } from 'src/app/core/models/gst-number.model';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
@@ -14,6 +18,8 @@ export class AddSupplierService {
   private statusVal: SupplierStatus;
   private supplierGstNumberVal: GstNumberModel;
   private contactVal: SupplierContact;
+
+  private existingSuppliersListVal: Array<SupplierListItem>;
 
   public get supplierLegalName(): string {
     return this.supplierLegalNameVal;
@@ -64,10 +70,11 @@ export class AddSupplierService {
     this.contactVal = value;
   }
 
-  checkSupplierExists(gstNumber: GstNumberModel): Observable<boolean> {
-    const result = new Subject<boolean>();
-    result.next(true);
-    return result;
+  public get existingSuppliersList(): Array<SupplierListItem> {
+    return this.existingSuppliersListVal;
+  }
+  public set existingSuppliersList(value: Array<SupplierListItem>) {
+    this.existingSuppliersListVal = value;
   }
 
   /**

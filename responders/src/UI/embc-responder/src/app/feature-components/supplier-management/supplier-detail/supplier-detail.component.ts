@@ -30,18 +30,12 @@ export class SupplierDetailComponent implements OnInit {
     private userService: UserService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
-      if (this.router.getCurrentNavigation().extras.state !== undefined) {
-        console.log(this.router.getCurrentNavigation().extras.state);
-        const state = this.router.getCurrentNavigation().extras
-          .state as SupplierModel;
-        this.selectedSupplier = state;
-
+      if (this.router.getCurrentNavigation().extras !== undefined) {
         const params = this.router.getCurrentNavigation().extras.queryParams;
         if (params) {
           this.detailsType = params.type;
         }
       }
-    } else {
       this.selectedSupplier = this.supplierListDataService.getSelectedSupplier();
     }
   }
@@ -101,9 +95,11 @@ export class SupplierDetailComponent implements OnInit {
       this.loggedInRole === MemberRole.Tier4 ||
       this.loggedInRole === MemberRole.Tier3
     ) {
-      return true;
-    } else {
-      return false;
+      if (this.detailsType === 'supplier') {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 

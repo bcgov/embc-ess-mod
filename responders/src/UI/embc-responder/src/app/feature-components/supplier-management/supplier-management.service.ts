@@ -10,7 +10,7 @@ import { LocationsService } from '../../core/services/locations.service';
 export class SupplierManagementService {
   constructor(private locationServices: LocationsService) {}
 
-  convertSupplierGSTNumberFromGSTNumber(gstNumber: string): GstNumberModel {
+  convertSupplierGSTNumberToFormModel(gstNumber: string): GstNumberModel {
     console.log(gstNumber);
     const gstArray: string[] = gstNumber.split('-RT-', 2);
     const convertedGstNumber: GstNumberModel = {
@@ -28,7 +28,7 @@ export class SupplierManagementService {
   getSupplierModelFromSupplier(supplier: Supplier): SupplierModel {
     return {
       ...supplier,
-      supplierGstNumber: this.convertSupplierGSTNumberFromGSTNumber(
+      supplierGstNumber: this.convertSupplierGSTNumberToFormModel(
         supplier.gstNumber
       ),
       address: this.locationServices.getAddressModelFromAddress(
