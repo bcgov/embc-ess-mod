@@ -23,7 +23,7 @@ namespace EMBC.ESS.Shared.Contracts
     public class PolymorphicJsonConverter<T> : JsonConverter<T>
     {
         private const string TypePropertyName = "type";
-        private const string ValuePropertyName = "type";
+        private const string ValuePropertyName = "value";
 
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
