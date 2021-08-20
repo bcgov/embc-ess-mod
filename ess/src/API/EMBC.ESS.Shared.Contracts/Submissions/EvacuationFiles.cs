@@ -91,6 +91,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string LinkedRegistrantId { get; set; }
         public bool? RestrictedAccess { get; set; }
         public bool? Verified { get; set; }
+        public bool? Authenticated { get; set; }
     }
 
     public class Pet

@@ -436,12 +436,13 @@ namespace EMBC.Responders.API.Controllers
 
             CreateMap<ESS.Shared.Contracts.Submissions.Referral, Referral>()
                 .IncludeAllDerived()
-                //TODO: map supplier details
-                .ForMember(d => d.SupplierName, opts => opts.Ignore())
-                .ForMember(d => d.SupplierAddress, opts => opts.Ignore())
+                .ForMember(d => d.SupplierId, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Id : null))
+                .ForMember(d => d.SupplierName, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Name : null))
+                .ForMember(d => d.SupplierAddress, opts => opts.MapFrom(s => s.SupplierDetails != null ? s.SupplierDetails.Address : null))
                 .ReverseMap()
                 .IncludeAllDerived()
                 .ValidateMemberList(MemberList.Destination)
+                .ForMember(d => d.SupplierDetails, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.SupplierId) ? null : new SupplierDetails { Id = s.SupplierId }))
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.ClothingReferral, ClothingReferral>()
