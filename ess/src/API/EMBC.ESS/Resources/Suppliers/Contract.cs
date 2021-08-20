@@ -23,6 +23,20 @@ namespace EMBC.ESS.Resources.Suppliers
     public interface ISupplierRepository
     {
         Task<SupplierQueryResult> QuerySupplier(SupplierQuery request);
+
+        Task<SupplierCommandResult> ManageSupplier(SupplierCommand cmd);
+    }
+
+    public abstract class SupplierCommand { }
+
+    public class SupplierCommandResult
+    {
+        public string SupplierId { get; set; }
+    }
+
+    public class SaveSupplier : SupplierCommand
+    {
+        public Supplier Supplier { get; set; }
     }
 
     public class SupplierQueryResult

@@ -88,16 +88,88 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
-        /// Update Supplier Status
+        /// Create Supplier
         /// </summary>
-        /// <param name="supplierId">SupplierId</param>
-        /// <param name="status">Status</param>
-        /// <returns>updated supplier id</returns>
-        [HttpPost("{supplierId}/status/{status}")]
+        /// <param name="supplier">supplier</param>
+        /// <returns>supplier id if success or bad request</returns>
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<SupplierResult>> SetSupplierStatus(string supplierId, bool status)
+        public async Task<ActionResult<SupplierResult>> CreateSupplier([FromBody] Supplier supplier)
         {
+            SupplierResult ret = new SupplierResult
+            {
+                Id = "123"
+            };
+
+            return await Task.FromResult(ret);
+        }
+
+        /// <summary>
+        /// Update supplier
+        /// </summary>
+        /// <param name="supplier">supplier</param>
+        /// <param name="supplierId">supplier id</param>
+        /// <returns>supplier id if success or bad request</returns>
+        [HttpPost("{supplierId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<SupplierResult>> UpdateSupplier([FromBody] Supplier supplier, string supplierId)
+        {
+            SupplierResult ret = new SupplierResult
+            {
+                Id = "123"
+            };
+
+            return await Task.FromResult(ret);
+        }
+
+        /// <summary>
+        /// Activate a supplier
+        /// </summary>
+        /// <param name="supplierId">supplier id</param>
+        /// <returns>supplier id if success or bad request</returns>
+        [HttpPost("{supplierId}/active")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<SupplierResult>> ActivateSupplier(string supplierId)
+        {
+            //if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
+
+            //var reply = await messagingClient.Send(new ActivateSupplierCommand
+            //{
+            //    TeamId = teamId,
+            //    SupplierId = supplierId
+            //});
+            //return Ok(new SupplierResult { Id = reply });
+
+            SupplierResult ret = new SupplierResult
+            {
+                Id = "123"
+            };
+
+            return await Task.FromResult(ret);
+        }
+
+        /// <summary>
+        /// Activate a supplier
+        /// </summary>
+        /// <param name="supplierId">supplier id</param>
+        /// <returns>supplier id if success or bad request</returns>
+        [HttpPost("{supplierId}/inactive")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<SupplierResult>> DeactivateSupplier(string supplierId)
+        {
+            //if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
+
+            //var reply = await messagingClient.Send(new DeactivateSupplierCommand
+            //{
+            //    TeamId = teamId,
+            //    SupplierId = supplierId
+            //});
+            //return Ok(new SupplierResult { Id = reply });
+
             SupplierResult ret = new SupplierResult
             {
                 Id = "123"
