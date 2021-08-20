@@ -57,13 +57,10 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
       this.dataSource = new MatTableDataSource(this.incomingData);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      console.log(this.dataSource);
-      console.log(this.incomingData);
     }
 
     if (changes.displayedColumns) {
       this.columns = this.displayedColumns.map((column) => column.ref);
-      console.log(this.columns);
     }
     if (changes.filterTerm && this.filterTerm !== undefined) {
       this.filter(this.filterTerm);

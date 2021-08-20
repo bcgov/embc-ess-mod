@@ -39,9 +39,7 @@
 
       <ng-container matColumnDef="gstNumber">
         <mat-header-cell *matHeaderCellDef> GST # </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.gstNumber.part1 }} -RT- {{ element.gstNumber.part2 }}
-        </mat-cell>
+        <mat-cell *matCellDef="let element"> TODO </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="address">
@@ -54,10 +52,10 @@
       <ng-container matColumnDef="primaryTeam">
         <mat-header-cell *matHeaderCellDef> Primary ESS Team </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <p *ngIf="element.primaryTeam">{{ element.primaryTeam }}</p>
+          <p *ngIf="element?.team">{{ element.team.name }}</p>
           <a
             class="supplier-link"
-            *ngIf="!element.primaryTeam"
+            *ngIf="!element?.team.id"
             (click)="claimSupplier(element)"
           >
             Claim Supplier</a

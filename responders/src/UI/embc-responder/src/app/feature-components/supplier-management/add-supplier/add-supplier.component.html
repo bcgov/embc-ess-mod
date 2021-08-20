@@ -56,6 +56,13 @@
             (click)="next()"
           >
             Next
+            <app-loader
+              [strokeWidth]="3"
+              [diameter]="25"
+              [showLoader]="showLoader"
+              [color]="color"
+            >
+            </app-loader>
           </button>
         </div>
       </div>
