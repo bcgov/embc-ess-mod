@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Injectable } from '@angular/core';
-import { GstNumberModel } from '../models/gst-number.model';
 import { SupplierModel } from '../models/supplier.model';
 import { LocationsService } from './locations.service';
 import { SuppliersService } from '../api/services';
 import { Observable } from 'rxjs/internal/Observable';
-import { Supplier, SupplierListItem, SupplierResult } from '../api/models';
-import { StrictHttpResponse } from '../api/strict-http-response';
+import { Supplier, SupplierListItem } from '../api/models';
 import { map, mergeMap } from 'rxjs/operators';
 import { SupplierManagementService } from 'src/app/feature-components/supplier-management/supplier-management.service';
 
@@ -29,7 +27,6 @@ export class SupplierService {
     legalName?: string,
     gstNumber?: string
   ): Observable<Array<SupplierListItem>> {
-    const suppliersListArray: Array<SupplierListItem> = [];
     return this.suppliersService
       .suppliersGetSuppliers({
         legalName,
@@ -53,7 +50,6 @@ export class SupplierService {
     legalName?: string,
     gstNumber?: string
   ): Observable<Array<SupplierListItem>> {
-    const suppliersListArray: Array<SupplierListItem> = [];
     return this.suppliersService
       .suppliersGetSuppliers({
         legalName,
@@ -66,6 +62,22 @@ export class SupplierService {
           });
         })
       );
+  }
+
+  /**
+   *
+   * @param legalName supplier's legal name
+   * @param gstNumber supplier's gst number
+   * @returns an array of suppliers that match with the inserted input
+   */
+  checkSupplierExists(
+    legalName?: string,
+    gstNumber?: string
+  ): Observable<Array<SupplierListItem>> {
+    return this.suppliersService.suppliersGetSuppliers({
+      legalName,
+      gstNumber
+    });
   }
 
   /**
@@ -90,5 +102,30 @@ export class SupplierService {
           return this.getMainSuppliersList();
         })
       );
+  }
+
+  /**
+   * Gets the supplier's details based on the given ID
+   * @param supplierId the supplier's ID
+   * @returns a SupplierModel object
+   */
+  getSupplierById(supplierId: string): Observable<SupplierModel> {
+    return this.suppliersService.suppliersGetSupplierById({ supplierId }).pipe(
+      map(
+        (supplier: Supplier): SupplierModel => {
+          const supplierModel = {
+            ...supplier,
+            supplierGstNumber: this.supplierManagementService.convertSupplierGSTNumberToFormModel(
+              supplier.gstNumber
+            ),
+            address: this.locationServices.getAddressModelFromAddress(
+              supplier.address
+            )
+          };
+
+          return supplierModel;
+        }
+      )
+    );
   }
 }
