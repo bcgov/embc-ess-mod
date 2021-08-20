@@ -50,7 +50,7 @@ namespace EMBC.Responders.API.Controllers
         /// <returns>list of suppliers for the user's team</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Supplier>>> GetSuppliers(string legalName, string gstNumber)
+        public async Task<ActionResult<IEnumerable<SupplierListItem>>> GetSuppliers(string legalName, string gstNumber)
         {
             var query = new SuppliersQuery();
             if (!string.IsNullOrEmpty(legalName) && !string.IsNullOrEmpty(gstNumber))
@@ -75,7 +75,7 @@ namespace EMBC.Responders.API.Controllers
         [HttpGet("{supplierId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<SupplierResult>> GetSupplierById(string supplierId)
+        public async Task<ActionResult<Supplier>> GetSupplierById(string supplierId)
         {
             var supplier = (await messagingClient.Send(new SuppliersQuery
             {

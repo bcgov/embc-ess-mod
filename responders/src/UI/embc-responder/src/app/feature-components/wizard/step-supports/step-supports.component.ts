@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { StepSupportsService } from './step-supports.service';
 
 @Component({
   selector: 'app-step-supports',
@@ -6,7 +8,28 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./step-supports.component.scss']
 })
 export class StepSupportsComponent implements OnInit {
-  constructor() {}
+  stepName: string;
+  stepId: string;
 
-  ngOnInit(): void {}
+  constructor(
+    private router: Router,
+    private stepSupportsService: StepSupportsService
+  ) {
+    if (this.router.getCurrentNavigation() !== null) {
+      if (this.router.getCurrentNavigation().extras.state !== undefined) {
+        const state = this.router.getCurrentNavigation().extras.state as {
+          step: string;
+          title: string;
+        };
+        this.stepId = state.step;
+        this.stepName = state.title;
+      }
+    }
+  }
+
+  ngOnInit(): void {
+    this.stepSupportsService.getCategoryList();
+    this.stepSupportsService.getSubCategoryList();
+    this.stepSupportsService.getEvacFile();
+  }
 }

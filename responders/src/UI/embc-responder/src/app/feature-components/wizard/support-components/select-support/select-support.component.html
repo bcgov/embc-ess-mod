@@ -1,1 +1,130 @@
-<p>select-support works!</p>
+<div class="container container-frame">
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <a (click)="back()"
+        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span
+          class="back-link"
+          >Supports</span
+        ></a
+      >
+    </div>
+  </div>
+
+  <div class="heading-container">
+    <div class="row">
+      <div class="col-md-7">
+        <div class="row row-padding">
+          <div class="col-md-12">
+            <span class="wizard-tab-heading">Select Support</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <p>Please select the required support from the list below.</p>
+          </div>
+        </div>
+
+        <form [formGroup]="supportTypeForm">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Support Type</mat-label>
+                <mat-select formControlName="type" required>
+                  <mat-option
+                    *ngFor="let type of supportList"
+                    [value]="type.value"
+                  >
+                    {{ type.description }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    typeFormControl.type.invalid &&
+                    typeFormControl.type.hasError('required')
+                  "
+                >
+                  Support Type is required</mat-error
+                >
+              </mat-form-field>
+
+              <!-- <div class="field-error" *ngIf="!noIdFlag">
+                      Evacuee profile cannot be verified without the presentation of
+                      government issued identification
+                  </div> -->
+            </div>
+          </div>
+        </form>
+
+        <div class="row">
+          <div class="col-md-12">
+            <button
+              class="button-p add-details"
+              mat-button
+              (click)="addDetails()"
+            >
+              Next - Support Details
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-5">
+        <mat-card class="needs-box">
+          <div class="row">
+            <div class="col-md-12">
+              <p class="bold">
+                Support requirements based on current Needs Assessment
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="row"
+            *ngIf="!stepSupportsService?.currentNeedsAssessment?.canProvideFood"
+          >
+            <div class="col-4">Food</div>
+          </div>
+
+          <div
+            class="row"
+            *ngIf="
+              !stepSupportsService?.currentNeedsAssessment?.canProvideLodging
+            "
+          >
+            <div class="col-4">Lodging</div>
+          </div>
+
+          <div
+            class="row"
+            *ngIf="
+              !stepSupportsService?.currentNeedsAssessment?.canProvideClothing
+            "
+          >
+            <div class="col-4">Clothing</div>
+          </div>
+
+          <div
+            class="row"
+            *ngIf="
+              !stepSupportsService?.currentNeedsAssessment
+                ?.canProvideTransportation
+            "
+          >
+            <div class="col-4">Transportation</div>
+          </div>
+
+          <div
+            class="row"
+            *ngIf="
+              !stepSupportsService?.currentNeedsAssessment
+                ?.canProvideIncidentals
+            "
+          >
+            <div class="col-4">Incidentals</div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

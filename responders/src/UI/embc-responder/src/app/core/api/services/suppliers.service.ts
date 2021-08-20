@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { Supplier } from '../models/supplier';
+import { SupplierListItem } from '../models/supplier-list-item';
 import { SupplierResult } from '../models/supplier-result';
 
 @Injectable({
@@ -39,10 +40,22 @@ export class SuppliersService extends BaseService {
    * This method doesn't expect any request body.
    */
   suppliersGetSuppliers$Response(params?: {
-  }): Observable<StrictHttpResponse<Array<Supplier>>> {
+
+    /**
+     * legalName
+     */
+    legalName?: string;
+
+    /**
+     * gstNumber
+     */
+    gstNumber?: string;
+  }): Observable<StrictHttpResponse<Array<SupplierListItem>>> {
 
     const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersGetSuppliersPath, 'get');
     if (params) {
+      rb.query('legalName', params.legalName, {});
+      rb.query('gstNumber', params.gstNumber, {});
     }
 
     return this.http.request(rb.build({
@@ -51,7 +64,7 @@ export class SuppliersService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Supplier>>;
+        return r as StrictHttpResponse<Array<SupplierListItem>>;
       })
     );
   }
@@ -67,10 +80,82 @@ export class SuppliersService extends BaseService {
    * This method doesn't expect any request body.
    */
   suppliersGetSuppliers(params?: {
-  }): Observable<Array<Supplier>> {
+
+    /**
+     * legalName
+     */
+    legalName?: string;
+
+    /**
+     * gstNumber
+     */
+    gstNumber?: string;
+  }): Observable<Array<SupplierListItem>> {
 
     return this.suppliersGetSuppliers$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<Supplier>>) => r.body as Array<Supplier>)
+      map((r: StrictHttpResponse<Array<SupplierListItem>>) => r.body as Array<SupplierListItem>)
+    );
+  }
+
+  /**
+   * Path part for operation suppliersGetSupplierById
+   */
+  static readonly SuppliersGetSupplierByIdPath = '/api/Suppliers/{supplierId}';
+
+  /**
+   * Get Supplier by id.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `suppliersGetSupplierById()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  suppliersGetSupplierById$Response(params: {
+
+    /**
+     * SupplierId
+     */
+    supplierId: string;
+  }): Observable<StrictHttpResponse<Supplier>> {
+
+    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersGetSupplierByIdPath, 'get');
+    if (params) {
+      rb.path('supplierId', params.supplierId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Supplier>;
+      })
+    );
+  }
+
+  /**
+   * Get Supplier by id.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `suppliersGetSupplierById$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  suppliersGetSupplierById(params: {
+
+    /**
+     * SupplierId
+     */
+    supplierId: string;
+  }): Observable<Supplier> {
+
+    return this.suppliersGetSupplierById$Response(params).pipe(
+      map((r: StrictHttpResponse<Supplier>) => r.body as Supplier)
     );
   }
 

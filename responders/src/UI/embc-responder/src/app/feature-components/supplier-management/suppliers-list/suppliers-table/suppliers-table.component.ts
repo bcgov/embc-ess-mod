@@ -19,6 +19,7 @@ import { DialogComponent } from 'src/app/shared/components/dialog/dialog.compone
 import * as globalConst from '../../../../core/services/global-constants';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
+import { SupplierListItem } from 'src/app/core/api/models';
 
 @Component({
   selector: 'app-suppliers-table',
@@ -29,7 +30,7 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() displayedColumns: TableColumnModel[];
-  @Input() incomingData: SupplierModel[] = [];
+  @Input() incomingData: SupplierListItem[] = [];
   @Input() filterTerm: TableFilterValueModel;
   @Input() isLoading: boolean;
   @Input() statusLoading: boolean;

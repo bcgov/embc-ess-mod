@@ -54,6 +54,12 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
     this.createEvacDetailsForm();
     this.checkAddress();
 
+    console.log(this.stepEssFileService.evacuatedFromPrimary);
+    console.log(this.stepEssFileService.primaryAddress);
+    console.log(this.stepEssFileService.evacAddress);
+    console.log(this.wizardType);
+    console.log(this.evacueeSessionService.essFileNumber);
+
     if (!this.isBCAddress) {
       // Make sure province/country are set to BC/Can whenever address form is displayed
       // Only set when displayed, otherwise run into "incomplete step status" issues
@@ -291,13 +297,13 @@ export class EvacuationDetailsComponent implements OnInit, OnDestroy {
       stateProvince: [
         this.stepEssFileService?.evacAddress?.stateProvince !== undefined
           ? this.stepEssFileService.evacAddress.stateProvince
-          : '',
+          : globalConst.defaultProvince,
         [Validators.required]
       ],
       country: [
         this.stepEssFileService?.evacAddress?.country !== undefined
           ? this.stepEssFileService.evacAddress.country
-          : '',
+          : globalConst.defaultCountry,
         [Validators.required]
       ],
       postalCode: [

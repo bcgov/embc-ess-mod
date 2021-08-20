@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { SupplierContact, SupplierStatus } from 'src/app/core/api/models';
+import { SupplierContact, SupplierStatus, Team } from 'src/app/core/api/models';
 import { AddressModel } from 'src/app/core/models/address.model';
 import { GstNumberModel } from 'src/app/core/models/gst-number.model';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
@@ -10,7 +10,7 @@ export class AddSupplierService {
   private supplierLegalNameVal: string;
   private supplierNameVal: string;
   private supplierAddressVal: AddressModel;
-  private mutualAidVal: boolean;
+  private sharedWithTeamsVal: Array<Team>;
   private statusVal: SupplierStatus;
   private supplierGstNumberVal: GstNumberModel;
   private contactVal: SupplierContact;
@@ -36,11 +36,11 @@ export class AddSupplierService {
     this.supplierAddressVal = value;
   }
 
-  public get mutualAid(): boolean {
-    return this.mutualAidVal;
+  public get sharedWithTeams(): Array<Team> {
+    return this.sharedWithTeamsVal;
   }
-  public set mutualAid(value: boolean) {
-    this.mutualAidVal = value;
+  public set sharedWithTeams(value: Array<Team>) {
+    this.sharedWithTeamsVal = value;
   }
 
   public get status(): SupplierStatus {
@@ -80,7 +80,7 @@ export class AddSupplierService {
       legalName: this.supplierLegalName,
       name: this.supplierName,
       address: this.supplierAddress,
-      mutualAid: this.mutualAid,
+      sharedWithTeams: this.sharedWithTeams,
       isActive: this.status,
       supplierGstNumber: this.supplierGstNumber,
       contact: this.contact
@@ -90,7 +90,7 @@ export class AddSupplierService {
       legalName: this.supplierLegalName,
       name: this.supplierName,
       address: this.supplierAddress,
-      mutualAid: this.mutualAid,
+      sharedWithTeams: this.sharedWithTeams,
       status: this.status,
       supplierGstNumber: this.supplierGstNumber,
       contact: this.contact
@@ -104,7 +104,7 @@ export class AddSupplierService {
     this.supplierLegalName = undefined;
     this.supplierName = undefined;
     this.supplierAddress = undefined;
-    this.mutualAid = undefined;
+    this.sharedWithTeams = undefined;
     this.status = undefined;
     this.supplierGstNumber = undefined;
     this.contact = undefined;
