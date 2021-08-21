@@ -60,11 +60,8 @@ namespace EMBC.ESS.Resources.Suppliers
             var supplier = mapper.Map<era_supplier>(cmd.Supplier);
             var existingSupplier = supplier.era_supplierid.HasValue
                 ? essContext.era_suppliers
-                    .Expand(s => s.era_era_supplier_era_essteamsupplier_SupplierId)
                     .Where(s => s.era_supplierid == supplier.era_supplierid.Value).SingleOrDefault()
                     : null;
-
-            essContext.DetachAll();
 
             if (existingSupplier == null)
             {
@@ -73,87 +70,31 @@ namespace EMBC.ESS.Resources.Suppliers
             }
             else
             {
+                RemoveTeamSuppliers(existingSupplier, supplier);
+                essContext.Detach(existingSupplier);
                 supplier.era_supplierid = existingSupplier.era_supplierid;
-                supplier.era_era_supplier_era_essteamsupplier_SupplierId = existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId;
                 essContext.AttachTo(nameof(EssContext.era_suppliers), supplier);
                 essContext.UpdateObject(supplier);
             }
 
+            essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCountry), essContext.LookupCountryByCode(cmd.Supplier.Address.Country));
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedCity), essContext.LookupJurisdictionByCode(cmd.Supplier.Address.Community));
             essContext.SetLink(supplier, nameof(era_supplier.era_RelatedProvinceState), essContext.LookupStateProvinceByCode(cmd.Supplier.Address.StateProvince));
 
-            await essContext.SaveChangesAsync();
-            essContext.DetachAll();
-            essContext.AttachTo(nameof(EssContext.era_suppliers), supplier);
+            var contact = mapper.Map<era_suppliercontact>(cmd.Supplier.Contact);
 
-            //Save/Create SupplierContact
-            var supplierContact = mapper.Map<era_suppliercontact>(cmd.Supplier);
-
-            var existinContact = supplier._era_primarycontact_value.HasValue
-                ? essContext.era_suppliercontacts
-                    .Where(s => s.era_suppliercontactid == supplier._era_primarycontact_value.Value).SingleOrDefault()
-                    : null;
-
-            essContext.DetachAll();
-            essContext.AttachTo(nameof(EssContext.era_suppliers), supplier);
-
-            if (existinContact == null)
-            {
-                supplierContact.era_suppliercontactid = Guid.NewGuid();
-                essContext.AddToera_suppliercontacts(supplierContact);
-            }
-            else
-            {
-                supplierContact.era_suppliercontactid = existinContact.era_suppliercontactid;
-                essContext.AttachTo(nameof(EssContext.era_suppliercontacts), supplierContact);
-                essContext.UpdateObject(supplierContact);
-            }
-
-            essContext.SetLink(supplier, nameof(era_supplier.era_PrimaryContact), supplierContact);
-
-            await essContext.SaveChangesAsync();
-            essContext.DetachAll();
-            essContext.AttachTo(nameof(EssContext.era_suppliers), supplier);
-
-            //Save/Create TeamSupplier
-            if (!string.IsNullOrEmpty(cmd.Supplier.Team.Id))
-            {
-                var teamSupplier = essContext.era_essteamsuppliers
-                    .Where(s => s._era_essteamid_value == Guid.Parse(cmd.Supplier.Team.Id))
-                    .Where(s => s._era_supplierid_value == supplier.era_supplierid).SingleOrDefault();
-
-                if (teamSupplier == null)
-                {
-                    teamSupplier = new era_essteamsupplier();
-                    teamSupplier.era_essteamsupplierid = Guid.NewGuid();
-                    teamSupplier.era_isprimarysupplier = true;
-
-                    essContext.AddToera_essteamsuppliers(teamSupplier);
-                }
-
-                teamSupplier.era_active = cmd.Supplier.Status == SupplierStatus.Active;
-                essContext.UpdateObject(teamSupplier);
-                essContext.SetLink(teamSupplier, nameof(era_essteamsupplier.era_SupplierId), supplier);
-
-                await essContext.SaveChangesAsync();
-
-                var team = essContext.era_essteams
-                    .Where(t => t.era_essteamid == Guid.Parse(cmd.Supplier.Team.Id)).SingleOrDefault();
-
-                if (team != null) essContext.SetLink(teamSupplier, nameof(era_essteamsupplier.era_ESSTeamID), team);
-
-                await essContext.SaveChangesAsync();
-                essContext.DetachAll();
-            }
+            AddSupplierContact(supplier, contact);
 
             foreach (var ts in supplier.era_era_supplier_era_essteamsupplier_SupplierId)
             {
                 ts.era_active = cmd.Supplier.Status == SupplierStatus.Active;
-                essContext.AttachTo(nameof(EssContext.era_essteamsuppliers), ts);
-                essContext.UpdateObject(ts);
+                ts.era_isprimarysupplier = cmd.Supplier.Team.Id != null ? ts._era_essteamid_value == Guid.Parse(cmd.Supplier.Team.Id) : false;
             }
 
+            AddTeamSuppliers(existingSupplier, supplier);
+
             await essContext.SaveChangesAsync();
+            essContext.DetachAll();
 
             return new SupplierCommandResult { SupplierId = supplier.era_supplierid.ToString() };
         }
@@ -233,6 +174,72 @@ namespace EMBC.ESS.Resources.Suppliers
             essContext.DetachAll();
 
             return new SupplierQueryResult { Items = items };
+        }
+
+        private void AddSupplierContact(era_supplier supplier, era_suppliercontact contact)
+        {
+            var existinContact = supplier._era_primarycontact_value.HasValue
+                ? essContext.era_suppliercontacts
+                    .Where(s => s.era_suppliercontactid == supplier._era_primarycontact_value.Value).SingleOrDefault()
+                    : null;
+
+            if (existinContact == null)
+            {
+                contact.era_suppliercontactid = Guid.NewGuid();
+                essContext.AddToera_suppliercontacts(contact);
+            }
+            else
+            {
+                essContext.Detach(existinContact);
+                contact.era_suppliercontactid = existinContact.era_suppliercontactid;
+                essContext.AttachTo(nameof(EssContext.era_suppliercontacts), contact);
+                essContext.UpdateObject(contact);
+            }
+
+            essContext.SetLink(supplier, nameof(era_supplier.era_PrimaryContact), contact);
+        }
+
+        private void AddTeamSuppliers(era_supplier existingSupplier, era_supplier updatedSupplier)
+        {
+            foreach (var ts1 in updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId)
+            {
+                var team = essContext.era_essteams
+                        .Where(t => t.era_essteamid == ts1._era_essteamid_value).SingleOrDefault();
+
+                var currentTeamSupplier = existingSupplier != null ? existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value).SingleOrDefault() : null;
+                if (currentTeamSupplier == null)
+                {
+                    essContext.AddToera_essteamsuppliers(ts1);
+                    essContext.AddLink(updatedSupplier, nameof(updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId), ts1);
+                    essContext.SetLink(ts1, nameof(era_essteamsupplier.era_SupplierId), updatedSupplier);
+
+                    essContext.AddLink(team, nameof(team.era_essteam_essteamsupplier_ESSTeamID), ts1);
+                    essContext.SetLink(ts1, nameof(era_essteamsupplier.era_ESSTeamID), team);
+                }
+                else
+                {
+                    currentTeamSupplier.era_isprimarysupplier = ts1.era_isprimarysupplier;
+                    currentTeamSupplier.era_active = ts1.era_active;
+                    essContext.UpdateObject(currentTeamSupplier);
+                    essContext.SetLink(currentTeamSupplier, nameof(era_essteamsupplier.era_SupplierId), updatedSupplier);
+                    essContext.SetLink(currentTeamSupplier, nameof(era_essteamsupplier.era_ESSTeamID), team);
+                }
+            }
+        }
+
+        private void RemoveTeamSuppliers(era_supplier existingSupplier, era_supplier updatedSupplier)
+        {
+            essContext.LoadProperty(existingSupplier, nameof(existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId));
+
+            foreach (var ts1 in existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId)
+            {
+                var currentTeamSupplier = updatedSupplier.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value).SingleOrDefault();
+                if (currentTeamSupplier == null)
+                {
+                    essContext.DeleteObject(ts1);
+                    essContext.DeleteLink(existingSupplier, nameof(existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId), ts1);
+                }
+            }
         }
     }
 
