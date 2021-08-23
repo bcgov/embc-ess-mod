@@ -25,9 +25,14 @@ namespace EMBC.ESS.Resources.Team
         public Mappings()
         {
             CreateMap<era_essteam, Team>()
-                .ForMember(d => d.AssignedCommunities, opts => opts.Ignore())
+                .ForMember(d => d.AssignedCommunities, opts => opts.MapFrom(s => s.era_ESSTeam_ESSTeamArea_ESSTeamID))
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_essteamid.ToString()))
                 .ForMember(d => d.Name, opts => opts.MapFrom(s => s.era_name))
+                ;
+
+            CreateMap<era_essteamarea, AssignedCommunity>()
+                .ForMember(d => d.Code, opts => opts.MapFrom(s => s._era_jurisdictionid_value))
+                .ForMember(d => d.DateAssigned, opts => opts.MapFrom(s => s.createdon.Value.UtcDateTime))
                 ;
 
             CreateMap<era_essteamuser, TeamMember>()

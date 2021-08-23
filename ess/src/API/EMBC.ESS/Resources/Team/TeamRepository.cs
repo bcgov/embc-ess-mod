@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Dynamics.Microsoft.Dynamics.CRM;
+using Microsoft.OData.Client;
 
 namespace EMBC.ESS.Resources.Team
 {
@@ -35,6 +36,27 @@ namespace EMBC.ESS.Resources.Team
         {
             this.context = dynamicsClientContext;
             this.mapper = mapper;
+        }
+
+        public async Task<TeamQueryResponse> QueryTeams(TeamQuery query)
+        {
+            IQueryable<era_essteam> teamsQuery = context.era_essteams
+                .Expand(t => t.era_ESSTeam_ESSTeamArea_ESSTeamID)
+                .Where(t => t.statecode == (int)EntityState.Active);
+
+            if (!string.IsNullOrEmpty(query.Id)) teamsQuery = teamsQuery.Where(t => t.era_essteamid == Guid.Parse(query.Id));
+
+            var teams = (await ((DataServiceQuery<era_essteam>)teamsQuery).GetAllPagesAsync()).ToArray();
+            foreach (var team in teams)
+            {
+                await context.LoadPropertyAsync(team, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
+                await context.LoadPropertyAsync(team, nameof(era_essteam.era_essteamuser_ESSTeamId));
+            }
+
+            if (!string.IsNullOrEmpty(query.AssignedCommunityCode))
+                teams = teams.Where(t => t.era_ESSTeam_ESSTeamArea_ESSTeamID.Any(a => a._era_jurisdictionid_value == Guid.Parse(query.AssignedCommunityCode))).ToArray();
+
+            return new TeamQueryResponse { Items = mapper.Map<IEnumerable<Team>>(teams) };
         }
 
         public async Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, bool onlyActive = true)
@@ -52,50 +74,24 @@ namespace EMBC.ESS.Resources.Team
             return await Task.FromResult(mapper.Map<IEnumerable<TeamMember>>(users));
         }
 
-        public async Task<IEnumerable<Team>> GetTeams(string id = null)
-        {
-            await Task.CompletedTask;
-
-            IQueryable<era_essteam> essTeams = context.era_essteams.Where(t => t.statuscode == DynamicsActiveStatus);
-            IQueryable<era_essteamarea> communities = context.era_essteamareas.Expand(a => a.era_JurisdictionID);
-
-            if (!string.IsNullOrEmpty(id))
-            {
-                essTeams = essTeams.Where(t => t.era_essteamid == Guid.Parse(id));
-                communities = communities.Where(a => a.era_ESSTeamID.era_essteamid == Guid.Parse(id));
-            }
-
-            var teams = essTeams.ToArray();
-            var assignedCommunities = communities.ToArray();
-
-            context.DetachAll();
-
-            return teams.Select(t =>
-            {
-                var team = mapper.Map<Team>(t);
-                team.AssignedCommunities = assignedCommunities
-                    .Where(c => c._era_essteamid_value == t.era_essteamid)
-                    .Select(c => new AssignedCommunity
-                    {
-                        Code = c.era_JurisdictionID.era_jurisdictionid.Value.ToString(),
-                        DateAssigned = c.createdon.Value.Date
-                    })
-                    .ToArray();
-                return team;
-            }).ToArray();
-        }
-
         public async Task<string> SaveMember(TeamMember teamMember)
         {
-            var essTeam = EssTeam(teamMember.TeamId);
+            var essTeam = EssTeam(Guid.Parse(teamMember.TeamId));
             if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new Exception($"team {teamMember.TeamId} not found");
 
-            var essTeamUser = teamMember.Id == null
-                ? CreateTeamUser()
-                : EssTeamUsers
-                .Where(u => u._era_essteamid_value == Guid.Parse(teamMember.TeamId) && u.era_essteamuserid == Guid.Parse(teamMember.Id))
-                .SingleOrDefault();
-            if (essTeamUser == null) throw new Exception($"team member {teamMember.Id} not found in team {teamMember.TeamId}");
+            era_essteamuser essTeamUser;
+            if (teamMember.Id == null)
+            {
+                essTeamUser = new era_essteamuser { era_essteamuserid = Guid.NewGuid() };
+                context.AddToera_essteamusers(essTeamUser);
+            }
+            else
+            {
+                essTeamUser = context.era_essteamusers
+                    .Where(u => u._era_essteamid_value == Guid.Parse(teamMember.TeamId) && u.era_essteamuserid == Guid.Parse(teamMember.Id))
+                    .SingleOrDefault();
+                if (essTeamUser == null) throw new Exception($"team member {teamMember.Id} not found in team {teamMember.TeamId}");
+            }
 
             //TODO: move to automapper profile
             essTeamUser.era_firstname = teamMember.FirstName;
@@ -130,40 +126,34 @@ namespace EMBC.ESS.Resources.Team
 
         public async Task<string> SaveTeam(Team team)
         {
-            var essTeam = EssTeam(team.Id);
-            if (essTeam == null || essTeam.statuscode == DynamicsInactiveStatus) throw new Exception($"team {team.Id} not found");
+            if (string.IsNullOrEmpty(team.Id)) throw new ArgumentException($"Team ID cannot be empty", nameof(team.Id));
+            var essTeam = EssTeam(Guid.Parse(team.Id));
+            if (essTeam == null) throw new Exception($"Team {team.Id} not found");
 
-            var currentAssignments = context.era_essteamareas
-                .Expand(a => a.era_JurisdictionID)
-                .Where(a => a.era_ESSTeamID.era_essteamid == essTeam.era_essteamid)
-                .ToArray();
+            await context.LoadPropertyAsync(essTeam, nameof(era_essteam.era_ESSTeam_ESSTeamArea_ESSTeamID));
 
-            var teamCommunities = team.AssignedCommunities.Select(c => Guid.Parse(c.Code)).Distinct().ToArray();
-
-            var assignementsToDelete = currentAssignments.Where(c => !teamCommunities.Contains(c.era_JurisdictionID.era_jurisdictionid.Value)).ToArray();
-
-            foreach (var assignmnent in assignementsToDelete)
+            //delete current assigned communities
+            foreach (var community in essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID)
             {
-                context.DeleteObject(assignmnent);
+                context.DeleteObject(community);
             }
 
-            var assignementsToAdd = teamCommunities.Where(c => !currentAssignments.Any(a => a.era_JurisdictionID.era_jurisdictionid == c)).ToArray();
-
-            foreach (var communityId in assignementsToAdd)
+            //add all assigned communities
+            foreach (var community in team.AssignedCommunities)
             {
-                var jurisdiction = new era_jurisdiction { era_jurisdictionid = communityId };
                 var teamArea = new era_essteamarea
                 {
                     era_essteamareaid = Guid.NewGuid(),
                     era_ESSTeamID = essTeam,
+                    createdon = community.DateAssigned
                 };
                 context.AddToera_essteamareas(teamArea);
+                context.AddLink(essTeam, nameof(essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID), teamArea);
+                var jurisdiction = new era_jurisdiction { era_jurisdictionid = Guid.Parse(community.Code) };
                 context.AttachTo(nameof(context.era_jurisdictions), jurisdiction);
                 context.SetLink(teamArea, nameof(era_essteamarea.era_JurisdictionID), jurisdiction);
-                context.AddLink(essTeam, nameof(essTeam.era_ESSTeam_ESSTeamArea_ESSTeamID), teamArea);
             }
 
-            context.UpdateObject(essTeam);
             await context.SaveChangesAsync();
 
             context.DetachAll();
@@ -186,21 +176,14 @@ namespace EMBC.ESS.Resources.Team
             return true;
         }
 
-        private era_essteamuser CreateTeamUser()
-        {
-            var newUser = new era_essteamuser { era_essteamuserid = Guid.NewGuid() };
-            context.AddToera_essteamusers(newUser);
-            return newUser;
-        }
+        private era_essteam EssTeam(Guid id) =>
+            context.era_essteams
+            .Where(t => t.era_essteamid == id && t.statecode == (int)EntityState.Active)
+            .SingleOrDefault();
 
         private IQueryable<era_essteamuser> EssTeamUsers =>
             context.era_essteamusers
                 .Expand(u => u.era_ESSTeamId)
                 .Where(u => u.statuscode != (int)TeamMemberStatus.SoftDelete);
-
-        private era_essteam EssTeam(string teamId) =>
-            context.era_essteams
-                .GetSingleEntityByKey(new Dictionary<string, object> { { "era_essteamid", Guid.Parse(teamId) } })
-                .GetValue();
     }
 }

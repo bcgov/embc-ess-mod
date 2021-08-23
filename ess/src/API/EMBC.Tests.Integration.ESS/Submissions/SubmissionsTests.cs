@@ -588,6 +588,14 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             }
         }
 
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanQuerySupplierList()
+        {
+            var taskId = "UNIT-TEST-ACTIVE-TASK";
+            var list = (await manager.Handle(new SuppliersListQuery { TaskId = taskId })).Items;
+            list.ShouldNotBeEmpty();
+        }
+
         private async Task<RegistrantProfile> GetRegistrantByUserId(string userId)
         {
             return (await manager.Handle(new RegistrantsQuery { UserId = userId })).Items.SingleOrDefault();

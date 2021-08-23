@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EMBC.ESS;
 using EMBC.ESS.Managers.Admin;
-using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Team;
 using EMBC.ESS.Shared.Contracts.Team;
-using FakeItEasy;
 using Shouldly;
 using Xunit;
 
@@ -16,9 +14,88 @@ namespace EMBC.Tests.Unit.ESS.Admin
 {
     public class AdminManagerTests
     {
+        private TestTeamRepository teamRepository;
         private readonly AdminManager adminManager;
 
-        private Dictionary<string, EMBC.ESS.Resources.Team.Team> stagedTeams = new Dictionary<string, EMBC.ESS.Resources.Team.Team>()
+        public AdminManagerTests()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddMaps(typeof(Startup));
+            }).CreateMapper();
+
+            teamRepository = new TestTeamRepository();
+            adminManager = new AdminManager(teamRepository, null, mapper);
+        }
+
+        [Fact]
+        public async Task AssignCommunities_AlreadyAssignedCommunity_Throws()
+        {
+            var team = teamRepository.stagedTeams.First().Value;
+            var updatedAssignedCommunities = team.AssignedCommunities.Select(c => c.Code).Append("c3").ToArray();
+            var exception = await adminManager.Handle(new AssignCommunitiesToTeamCommand
+            {
+                TeamId = team.Id,
+                Communities = updatedAssignedCommunities
+            }).ShouldThrowAsync<CommunitiesAlreadyAssignedException>();
+
+            exception.Communities.ShouldBe(new[] { "c3" });
+        }
+
+        [Fact]
+        public async Task AssignCommunities_UnassignedCommuity_CommunitiesAdded()
+        {
+            var team = teamRepository.stagedTeams.First().Value;
+            var updatedAssignedCommunities = team.AssignedCommunities.Select(c => c.Code).Append("c5").ToArray();
+            await adminManager.Handle(new AssignCommunitiesToTeamCommand
+            {
+                TeamId = team.Id,
+                Communities = updatedAssignedCommunities
+            });
+
+            team.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(updatedAssignedCommunities.OrderBy(c => c));
+        }
+
+        [Fact]
+        public async Task SaveMember_NewWithUniqueUserName_Added()
+        {
+            var team = teamRepository.stagedTeams.First().Value;
+            var teamMember = new EMBC.ESS.Shared.Contracts.Team.TeamMember
+            {
+                Id = null,
+                FirstName = "newf",
+                LastName = "lastf",
+                UserName = "newunique",
+                TeamId = team.Id
+            };
+
+            var memberId = await adminManager.Handle(new SaveTeamMemberCommand { Member = teamMember });
+            memberId.ShouldNotBeNull();
+            teamRepository.stagedTeamMembers.Keys.ShouldContain(memberId);
+        }
+
+        [Fact]
+        public async Task SaveMember_NewWithExistingUserName_Throws()
+        {
+            var team = teamRepository.stagedTeams.First().Value;
+            var existingTeamMember = teamRepository.stagedTeamMembers.First();
+            var teamMember = new EMBC.ESS.Shared.Contracts.Team.TeamMember
+            {
+                Id = null,
+                FirstName = "newf",
+                LastName = "lastf",
+                UserName = existingTeamMember.Value.UserName,
+                TeamId = team.Id
+            };
+
+            var exception = await adminManager.Handle(new SaveTeamMemberCommand { Member = teamMember }).ShouldThrowAsync<UsernameAlreadyExistsException>();
+            exception.UserName.ShouldBe(teamMember.UserName);
+        }
+    }
+
+    public class TestTeamRepository : ITeamRepository
+    {
+        public Dictionary<string, EMBC.ESS.Resources.Team.Team> stagedTeams = new Dictionary<string, EMBC.ESS.Resources.Team.Team>()
         {
             { "t1", new EMBC.ESS.Resources.Team.Team { Id = "t1", Name = "team1", AssignedCommunities = new []
                     {
@@ -36,7 +113,7 @@ namespace EMBC.Tests.Unit.ESS.Admin
             }
         };
 
-        private Dictionary<string, EMBC.ESS.Resources.Team.TeamMember> stagedTeamMembers = new Dictionary<string, EMBC.ESS.Resources.Team.TeamMember>
+        public Dictionary<string, EMBC.ESS.Resources.Team.TeamMember> stagedTeamMembers = new Dictionary<string, EMBC.ESS.Resources.Team.TeamMember>
         {
             { "t1m1", new EMBC.ESS.Resources.Team.TeamMember{ Id = "t1m1", FirstName = "t1m1f", LastName = "t1m1l", IsActive = true, UserName = "t1m1un", TeamId = "t1" } },
             { "t1m2", new EMBC.ESS.Resources.Team.TeamMember{ Id = "t1m2", FirstName = "t1m2f", LastName = "t1m2l", IsActive = true, UserName = "t1m2un", TeamId = "t1" } },
@@ -48,151 +125,59 @@ namespace EMBC.Tests.Unit.ESS.Admin
             { "t3m2", new EMBC.ESS.Resources.Team.TeamMember{ Id = "t3m2", FirstName = "t3m2f", LastName = "t3m2l", IsActive = true, UserName = "t3m2un", TeamId = "t3" } },
         };
 
-        public AdminManagerTests()
+        public async Task<bool> DeleteMember(string teamId, string teamMemberId)
         {
-            var mapper = new MapperConfiguration(cfg =>
-            {
-                cfg.AddMaps(typeof(Startup));
-            }).CreateMapper();
+            await Task.CompletedTask;
+            stagedTeamMembers.Remove(teamMemberId, out var memeber);
 
-            //wire team repository fake
-            var teamRepository = A.Fake<ITeamRepository>();
-
-            var supplierRepository = A.Fake<ISupplierRepository>();
-
-            //get all teams
-            A.CallTo(() => teamRepository.GetTeams(A<string>.That.IsNullOrEmpty()))
-                .Returns(Task.FromResult((IEnumerable<EMBC.ESS.Resources.Team.Team>)stagedTeams.Values));
-
-            //get single team
-            A.CallTo(() => teamRepository.GetTeams(A<string>.That.IsNotNull()))
-                .ReturnsLazily(o => Task.FromResult(stagedTeams
-                    .Where(t => t.Key == o.GetArgument<string>(0))
-                    .Select(t => t.Value)));
-
-            //update team
-            A.CallTo(() => teamRepository.SaveTeam(A<EMBC.ESS.Resources.Team.Team>.That.Matches(t => t.Id != null)))
-                .ReturnsLazily(o =>
-                {
-                    var team = o.GetArgument<EMBC.ESS.Resources.Team.Team>(0);
-                    stagedTeams[team.Id] = team;
-                    return Task.FromResult(team.Id);
-                });
-
-            //add team
-            A.CallTo(() => teamRepository.SaveTeam(A<EMBC.ESS.Resources.Team.Team>.That.Matches(t => t.Id == null)))
-                .ReturnsLazily(o =>
-                {
-                    var team = o.GetArgument<EMBC.ESS.Resources.Team.Team>(0);
-                    team.Id = $"t{stagedTeams.Count() + 1}";
-                    stagedTeams.Add(team.Id, team);
-                    return Task.FromResult(team.Id);
-                });
-
-            //get team members for a team
-            A.CallTo(() => teamRepository.GetMembers(A<string>.That.IsNotNull(), A<string>.That.IsNullOrEmpty(), A<string>.That.IsNullOrEmpty(), true))
-                .ReturnsLazily(o =>
-                {
-                    return Task.FromResult(stagedTeamMembers.Values.Where(m => m.TeamId == o.GetArgument<string>(0)));
-                });
-
-            //get team members by user name
-            A.CallTo(() => teamRepository.GetMembers(A<string>.That.IsNullOrEmpty(), A<string>.That.IsNotNull(), A<string>.That.IsNullOrEmpty(), true))
-                .ReturnsLazily(o =>
-                {
-                    return Task.FromResult(stagedTeamMembers.Values.Where(m => m.UserName == o.GetArgument<string>(1)));
-                });
-
-            //get team members by user id
-            A.CallTo(() => teamRepository.GetMembers(A<string>.That.IsNullOrEmpty(), A<string>.That.IsNullOrEmpty(), A<string>.That.IsNotNull(), true))
-                .ReturnsLazily(o =>
-                {
-                    return Task.FromResult(stagedTeamMembers.Values.Where(m => m.ExternalUserId == o.GetArgument<string>(2)));
-                });
-
-            //add team member
-            A.CallTo(() => teamRepository.SaveMember(A<EMBC.ESS.Resources.Team.TeamMember>.That.Matches(m => m.Id == null)))
-                .ReturnsLazily(o =>
-                {
-                    var teamMember = o.GetArgument<EMBC.ESS.Resources.Team.TeamMember>(0);
-                    teamMember.Id = $"{teamMember.TeamId}m{stagedTeamMembers.Where(m => m.Value.TeamId == teamMember.TeamId).Count() + 1}";
-                    stagedTeamMembers.Add(teamMember.Id, teamMember);
-                    return Task.FromResult(teamMember.Id);
-                });
-
-            //update team member
-            A.CallTo(() => teamRepository.SaveMember(A<EMBC.ESS.Resources.Team.TeamMember>.That.Matches(m => m.Id != null)))
-                .ReturnsLazily(o =>
-                {
-                    var teamMember = o.GetArgument<EMBC.ESS.Resources.Team.TeamMember>(0);
-                    stagedTeamMembers[teamMember.Id] = teamMember;
-                    return Task.FromResult(teamMember.Id);
-                });
-            adminManager = new AdminManager(teamRepository, supplierRepository, mapper);
+            return memeber != null;
         }
 
-        [Fact]
-        public async Task AssignCommunities_AlreadyAssignedCommunity_Throws()
+        public async Task<IEnumerable<EMBC.ESS.Resources.Team.TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, bool onlyActive = true)
         {
-            var team = stagedTeams.First().Value;
-            var updatedAssignedCommunities = team.AssignedCommunities.Select(c => c.Code).Append("c3").ToArray();
-            var exception = await adminManager.Handle(new AssignCommunitiesToTeamCommand
-            {
-                TeamId = team.Id,
-                Communities = updatedAssignedCommunities
-            }).ShouldThrowAsync<CommunitiesAlreadyAssignedException>();
-
-            exception.Communities.ShouldBe(new[] { "c3" });
+            await Task.CompletedTask;
+            return stagedTeamMembers.Values.Where(m =>
+                (teamId == null || m.TeamId == teamId) &&
+                (userId == null || m.Id == userId) &&
+                (userName == null || m.UserName == userName) &&
+                (onlyActive && m.IsActive)
+            );
         }
 
-        [Fact]
-        public async Task AssignCommunities_UnassignedCommuity_CommunitiesAdded()
+        public async Task<TeamQueryResponse> QueryTeams(TeamQuery query)
         {
-            var team = stagedTeams.First().Value;
-            var updatedAssignedCommunities = team.AssignedCommunities.Select(c => c.Code).Append("c5").ToArray();
-            await adminManager.Handle(new AssignCommunitiesToTeamCommand
-            {
-                TeamId = team.Id,
-                Communities = updatedAssignedCommunities
-            });
-
-            team.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(updatedAssignedCommunities.OrderBy(c => c));
+            await Task.CompletedTask;
+            if (query.Id != null) return new TeamQueryResponse { Items = stagedTeams.Values.Where(t => t.Id == query.Id) };
+            if (query.AssignedCommunityCode != null) return new TeamQueryResponse { Items = stagedTeams.Values.Where(t => t.AssignedCommunities.Any(c => c.Code == query.AssignedCommunityCode)) };
+            return new TeamQueryResponse { Items = stagedTeams.Values };
         }
 
-        [Fact]
-        public async Task SaveMember_NewWithUniqueUserName_Added()
+        public async Task<string> SaveMember(EMBC.ESS.Resources.Team.TeamMember teamMember)
         {
-            var team = stagedTeams.First().Value;
-            var teamMember = new EMBC.ESS.Shared.Contracts.Team.TeamMember
+            await Task.CompletedTask;
+            if (teamMember.Id == null)
             {
-                Id = null,
-                FirstName = "newf",
-                LastName = "lastf",
-                UserName = "newunique",
-                TeamId = team.Id
-            };
+                teamMember.Id = $"{teamMember.TeamId}m{stagedTeamMembers.Count + 1}";
+                stagedTeamMembers.Add(teamMember.Id, teamMember);
+            }
+            else
+                stagedTeamMembers[teamMember.Id] = teamMember;
 
-            var memberId = await adminManager.Handle(new SaveTeamMemberCommand { Member = teamMember });
-            memberId.ShouldNotBeNull();
-            stagedTeamMembers.Keys.ShouldContain(memberId);
+            return teamMember.Id;
         }
 
-        [Fact]
-        public async Task SaveMember_NewWithExistingUserName_Throws()
+        public async Task<string> SaveTeam(EMBC.ESS.Resources.Team.Team team)
         {
-            var team = stagedTeams.First().Value;
-            var existingTeamMember = stagedTeamMembers.First();
-            var teamMember = new EMBC.ESS.Shared.Contracts.Team.TeamMember
+            await Task.CompletedTask;
+            if (team.Id == null)
             {
-                Id = null,
-                FirstName = "newf",
-                LastName = "lastf",
-                UserName = existingTeamMember.Value.UserName,
-                TeamId = team.Id
-            };
+                team.Id = $"t{stagedTeams.Count + 1}";
+                stagedTeams.Add(team.Id, team);
+            }
+            else
+                stagedTeams[team.Id] = team;
 
-            var exception = await adminManager.Handle(new SaveTeamMemberCommand { Member = teamMember }).ShouldThrowAsync<UsernameAlreadyExistsException>();
-            exception.UserName.ShouldBe(teamMember.UserName);
+            return team.Id;
         }
     }
 }

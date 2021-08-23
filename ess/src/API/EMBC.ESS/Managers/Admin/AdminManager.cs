@@ -42,7 +42,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<TeamsQueryResponse> Handle(TeamsQuery cmd)
         {
-            var teams = await teamRepository.GetTeams(id: cmd.TeamId);
+            var teams = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery { Id = cmd.TeamId })).Items;
 
             return new TeamsQueryResponse { Teams = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Team.Team>>(teams) };
         }
@@ -103,7 +103,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(AssignCommunitiesToTeamCommand cmd)
         {
-            var allTeams = await teamRepository.GetTeams();
+            var allTeams = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery())).Items;
             var team = allTeams.SingleOrDefault(t => t.Id == cmd.TeamId);
             if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
 
@@ -121,7 +121,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task Handle(UnassignCommunitiesFromTeamCommand cmd)
         {
-            var team = (await teamRepository.GetTeams(id: cmd.TeamId)).SingleOrDefault();
+            var team = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery { Id = cmd.TeamId })).Items.SingleOrDefault();
             if (team == null) throw new NotFoundException($"Team {cmd.TeamId} not found", cmd.TeamId);
 
             team.AssignedCommunities = team.AssignedCommunities.Where(c => !cmd.Communities.Contains(c.Code));

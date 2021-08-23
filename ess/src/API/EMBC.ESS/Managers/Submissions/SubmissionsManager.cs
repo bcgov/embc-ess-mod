@@ -26,6 +26,7 @@ using EMBC.ESS.Resources.Contacts;
 using EMBC.ESS.Resources.Suppliers;
 using EMBC.ESS.Resources.Tasks;
 using EMBC.ESS.Resources.Team;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.Notifications;
@@ -435,6 +436,17 @@ namespace EMBC.ESS.Managers.Submissions
                 });
                 supportId.Equals(supportId);
             }
+        }
+
+        public async Task<SuppliersListQueryResult> Handle(SuppliersListQuery query)
+        {
+            var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = query.TaskId })).Items.SingleOrDefault();
+            if (task == null) throw new NotFoundException($"Task not found", query.TaskId);
+            var team = (await teamRepository.QueryTeams(new TeamQuery { AssignedCommunityCode = task.CommunityCode })).Items.SingleOrDefault();
+            if (team == null) throw new NotFoundException($"No team is managing community {task.CommunityCode}", task.CommunityCode);
+            var suppliers = (await supplierRepository.QuerySupplier(new SuppliersByTeamQuery { TeamId = team.Id })).Items;
+
+            return new SuppliersListQueryResult { Items = mapper.Map<IEnumerable<SupplierDetails>>(suppliers) };
         }
     }
 }

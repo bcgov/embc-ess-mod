@@ -84,4 +84,14 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string FileId { get; set; }
         public IEnumerable<Support> supports { get; set; }
     }
+
+    public class SuppliersListQuery : Query<SuppliersListQueryResult>
+    {
+        public string TaskId { get; set; }
+    }
+
+    public class SuppliersListQueryResult
+    {
+        public IEnumerable<SupplierDetails> Items { get; set; }
+    }
 }

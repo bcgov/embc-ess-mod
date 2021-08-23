@@ -23,27 +23,47 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetTeam()
+        public async Task CanQueryAllTeams()
         {
-            var team = (await teamRepository.GetTeams(teamId)).ShouldHaveSingleItem();
+            (await teamRepository.QueryTeams(new TeamQuery())).Items.ShouldNotBeEmpty();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanQueryTeamById()
+        {
+            var team = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
             team.ShouldNotBeNull();
+            team.Id.ShouldBe(teamId);
             team.Name.ShouldNotBeNull();
             team.AssignedCommunities.ShouldNotBeEmpty();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanQueryTeamByAssignedCommunity()
+        {
+            var originalTeam = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
+            var communityCode = originalTeam.AssignedCommunities.First().Code;
+            var team = (await teamRepository.QueryTeams(new TeamQuery { AssignedCommunityCode = communityCode })).Items.ShouldHaveSingleItem();
+            team.ShouldNotBeNull();
+            team.Name.ShouldNotBeNull();
+            team.AssignedCommunities.Where(c => c.Code == communityCode).ShouldHaveSingleItem();
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSaveTeam()
         {
             var metaDataRepository = services.GetRequiredService<IMetadataRepository>();
+            var unavailableCommunities = (await teamRepository.QueryTeams(new TeamQuery())).Items.SelectMany(t => t.AssignedCommunities).Select(c => c.Code).ToArray();
+            var allCommunities = (await metaDataRepository.GetCommunities()).Select(c => c.Code).ToArray();
+            var availableCommunities = allCommunities.Where(c => !unavailableCommunities.Any(uc => uc == c)).ToArray();
 
-            var team = (await teamRepository.GetTeams(teamId)).ShouldHaveSingleItem();
-
-            team.AssignedCommunities = (await metaDataRepository.GetCommunities()).Take(10).Select(c => new AssignedCommunity { Code = c.Code, DateAssigned = DateTime.UtcNow });
+            var team = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
+            team.AssignedCommunities = availableCommunities.Take(10).Select(c => new AssignedCommunity { Code = c, DateAssigned = DateTime.UtcNow });
 
             var updatedTeamId = await teamRepository.SaveTeam(team);
 
-            var updatedTeam = (await teamRepository.GetTeams(updatedTeamId)).ShouldHaveSingleItem();
-            updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ShouldBe(team.AssignedCommunities.Select(c => c.Code).OrderBy(c => c));
+            var updatedTeam = (await teamRepository.QueryTeams(new TeamQuery { Id = teamId })).Items.ShouldHaveSingleItem();
+            updatedTeam.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ToArray().ShouldBe(team.AssignedCommunities.Select(c => c.Code).OrderBy(c => c).ToArray());
         }
 
         [Fact(Skip = RequiresDynamics)]
