@@ -97,12 +97,16 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<SupplierResult>> CreateSupplier([FromBody] Supplier supplier)
         {
-            SupplierResult ret = new SupplierResult
+            if (supplier.Team == null)
             {
-                Id = "123"
-            };
-
-            return await Task.FromResult(ret);
+                supplier.Team = new Team();
+            }
+            supplier.Team.Id = teamId;
+            var id = await messagingClient.Send(new SaveSupplierCommand
+            {
+                Supplier = mapper.Map<ESS.Shared.Contracts.Suppliers.Supplier>(supplier),
+            });
+            return Ok(new SupplierResult { Id = id });
         }
 
         /// <summary>
@@ -116,12 +120,12 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<SupplierResult>> UpdateSupplier([FromBody] Supplier supplier, string supplierId)
         {
-            SupplierResult ret = new SupplierResult
+            supplier.Id = supplierId;
+            var id = await messagingClient.Send(new SaveSupplierCommand
             {
-                Id = "123"
-            };
-
-            return await Task.FromResult(ret);
+                Supplier = mapper.Map<ESS.Shared.Contracts.Suppliers.Supplier>(supplier),
+            });
+            return Ok(new SupplierResult { Id = id });
         }
 
         /// <summary>
@@ -134,21 +138,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<SupplierResult>> ActivateSupplier(string supplierId)
         {
-            //if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
+            if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
 
-            //var reply = await messagingClient.Send(new ActivateSupplierCommand
-            //{
-            //    TeamId = teamId,
-            //    SupplierId = supplierId
-            //});
-            //return Ok(new SupplierResult { Id = reply });
-
-            SupplierResult ret = new SupplierResult
+            var reply = await messagingClient.Send(new ActivateSupplierCommand
             {
-                Id = "123"
-            };
-
-            return await Task.FromResult(ret);
+                TeamId = teamId,
+                SupplierId = supplierId
+            });
+            return Ok(new SupplierResult { Id = reply });
         }
 
         /// <summary>
@@ -161,21 +158,14 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<SupplierResult>> DeactivateSupplier(string supplierId)
         {
-            //if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
+            if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
 
-            //var reply = await messagingClient.Send(new DeactivateSupplierCommand
-            //{
-            //    TeamId = teamId,
-            //    SupplierId = supplierId
-            //});
-            //return Ok(new SupplierResult { Id = reply });
-
-            SupplierResult ret = new SupplierResult
+            var reply = await messagingClient.Send(new DeactivateSupplierCommand
             {
-                Id = "123"
-            };
-
-            return await Task.FromResult(ret);
+                TeamId = teamId,
+                SupplierId = supplierId
+            });
+            return Ok(new SupplierResult { Id = reply });
         }
     }
 
@@ -184,6 +174,7 @@ namespace EMBC.Responders.API.Controllers
         public string Id { get; set; }
         public string Name { get; set; }
         public string LegalName { get; set; }
+        public string GSTNumber { get; set; }
         public Address Address { get; set; }
         public Team Team { get; set; }
         public SupplierStatus Status { get; set; }

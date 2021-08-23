@@ -147,6 +147,7 @@ namespace EMBC.ESS.Resources.Suppliers
             }
 
             IQueryable<era_supplier> supplierQuery = essContext.era_suppliers
+                .Expand(s => s.era_PrimaryContact)
                 .Expand(s => s.era_RelatedCity)
                 .Expand(s => s.era_RelatedCountry)
                 .Expand(s => s.era_RelatedProvinceState);
