@@ -9,6 +9,7 @@ import { MemberRole } from 'src/app/core/api/models';
 import * as globalConst from '../../../core/services/global-constants';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
+import { EditSupplierService } from '../edit-supplier/edit-supplier.service';
 
 @Component({
   selector: 'app-supplier-detail',
@@ -27,7 +28,8 @@ export class SupplierDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private supplierListDataService: SupplierListDataService,
-    private userService: UserService
+    private userService: UserService,
+    private editSupplierService: EditSupplierService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras !== undefined) {
@@ -79,10 +81,10 @@ export class SupplierDetailComponent implements OnInit {
    * Navigates to edit team member component
    */
   editSupplier(): void {
-    this.router.navigate(
-      ['/responder-access/supplier-management/edit-supplier'],
-      { state: this.selectedSupplier }
-    );
+    this.editSupplierService.editedSupplier = this.selectedSupplier;
+    this.router.navigate([
+      '/responder-access/supplier-management/edit-supplier'
+    ]);
   }
 
   /**

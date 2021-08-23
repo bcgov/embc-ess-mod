@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
+import { SupplierService } from 'src/app/core/services/suppliers.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { AddSupplierService } from '../add-supplier/add-supplier.service';
+import { EditSupplierService } from '../edit-supplier/edit-supplier.service';
 import { SupplierListDataService } from '../suppliers-list/supplier-list-data.service';
 
 @Component({
@@ -12,10 +16,15 @@ export class SupplierReviewComponent {
   selectedSupplier: SupplierModel;
   reviewAction: string;
   showLoader = false;
+  isSubmitted = false;
 
   constructor(
     private supplierListDataService: SupplierListDataService,
-    private router: Router
+    private router: Router,
+    private supplierService: SupplierService,
+    private alertService: AlertService,
+    private addSupplierService: AddSupplierService,
+    private editSupplierService: EditSupplierService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -45,7 +54,7 @@ export class SupplierReviewComponent {
       );
     } else {
       this.router.navigate([
-        '/responder-access/responder-management/add-supplier'
+        '/responder-access/supplier-management/new-supplier'
       ]);
     }
   }
@@ -65,49 +74,55 @@ export class SupplierReviewComponent {
    * Updates the selected supplier and navigates to team list
    */
   private updateSupplier(): void {
-    // this.teamMemberReviewService
-    //   .updateTeamMember(this.teamMember.id, this.teamMember)
-    //   .subscribe(
-    //     (value) => {
-    const stateIndicator = { action: 'edit' };
-    this.router.navigate(
-      ['/responder-access/supplier-management/suppliers-list'],
-      { state: stateIndicator }
-    );
-    //     },
-    //     (error) => {
-    //       this.showLoader = !this.showLoader;
-    //       this.isSubmitted = !this.isSubmitted;
-    //       if (error.title) {
-    //         this.alertService.setAlert('danger', error.title);
-    //       } else {
-    //         this.alertService.setAlert('danger', error.statusText);
-    //       }
-    //     }
-    //   );
+    this.supplierService
+      .updateSupplier(
+        this.editSupplierService.editedSupplier.id,
+        this.editSupplierService.getEditedSupplierDTO()
+      )
+      .subscribe(
+        (value) => {
+          const stateIndicator = { action: 'edit' };
+          this.router.navigate(
+            ['/responder-access/supplier-management/suppliers-list'],
+            { state: stateIndicator }
+          );
+        },
+        (error) => {
+          this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
+          if (error.title) {
+            this.alertService.setAlert('danger', error.title);
+          } else {
+            this.alertService.setAlert('danger', error.statusText);
+          }
+        }
+      );
   }
 
   /**
    * Adds a new Supplier and navigates to the suppliers' list
    */
   private addSupplier(): void {
-    // this.teamMemberReviewService.addTeamMember(this.teamMember).subscribe(
-    //   (value) => {
-    const stateIndicator = { action: 'add' };
-    this.router.navigate(
-      ['/responder-access/supplier-management/suppliers-list'],
-      { state: stateIndicator }
-    );
-    //   },
-    //   (error) => {
-    //     this.showLoader = !this.showLoader;
-    //     this.isSubmitted = !this.isSubmitted;
-    //     if (error.title) {
-    //       this.alertService.setAlert('danger', error.title);
-    //     } else {
-    //       this.alertService.setAlert('danger', error.statusText);
-    //     }
-    //   }
-    // );
+    this.supplierService
+      .createNewSupplier(this.addSupplierService.getCreateSupplierDTO())
+      .subscribe(
+        (value) => {
+          console.log(value);
+          const stateIndicator = { action: 'add' };
+          this.router.navigate(
+            ['/responder-access/supplier-management/suppliers-list'],
+            { state: stateIndicator }
+          );
+        },
+        (error) => {
+          this.showLoader = !this.showLoader;
+          this.isSubmitted = !this.isSubmitted;
+          if (error.title) {
+            this.alertService.setAlert('danger', error.title);
+          } else {
+            this.alertService.setAlert('danger', error.statusText);
+          }
+        }
+      );
   }
 }

@@ -36,7 +36,8 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
   @Input() statusLoading: boolean;
   @Input() loggedInRole: string;
   @Input() showToggle: boolean;
-  @Output() toggleChange = new EventEmitter<{ id: string; status: boolean }>();
+  @Output() toggleActive = new EventEmitter<string>();
+  @Output() toggleInactive = new EventEmitter<string>();
   @Output() clickedRow = new EventEmitter<SupplierModel>();
 
   dataSource = new MatTableDataSource();
@@ -147,7 +148,11 @@ export class SuppliersTableComponent implements AfterViewInit, OnChanges {
    */
   slideToggle($event: MatSlideToggleChange, row, index): void {
     this.selectedIndex = index;
-    this.toggleChange.emit({ id: row.id, status: $event.checked });
+    if ($event.checked) {
+      this.toggleActive.emit(row.id);
+    } else {
+      this.toggleInactive.emit(row.id);
+    }
   }
 
   /**
