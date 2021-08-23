@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EMBC.ESS.Shared.Contracts;
 using EMBC.ESS.Shared.Contracts.Submissions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -62,14 +63,15 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SuppliersListItem>>> GetSuppliersList(string taskId)
         {
-            var supplierAddress = new Address { AddressLine1 = "12 meh st.", CommunityCode = "226adfaf-9f97-ea11-b813-005056830319", PostalCode = "V1V 1V1", StateProvinceCode = "BC", CountryCode = "CAN" };
-            var suppliers = new[]
+            try
             {
-                new SuppliersListItem { Id = "1", Name = "supplier 1", Address = supplierAddress },
-                new SuppliersListItem { Id = "2", Name = "supplier 2", Address = supplierAddress },
-            };
-
-            return await Task.FromResult(suppliers);
+                var suppliers = (await messagingClient.Send(new SuppliersListQuery { TaskId = taskId })).Items;
+                return Ok(mapper.Map<SuppliersListItem>(suppliers));
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(new ProblemDetails { Title = e.Message });
+            }
         }
     }
 
@@ -97,6 +99,14 @@ namespace EMBC.Responders.API.Controllers
         public TaskMapping()
         {
             CreateMap<IncidentTask, ESSTask>();
+            CreateMap<SupplierDetails, SupplierListItem>()
+                .ForMember(d => d.LegalName, opts => opts.MapFrom(s => s.Name))
+                .ForMember(d => d.Team, opts => opts.MapFrom(s => new Team { Id = s.TeamId, Name = s.TeamName }))
+                .ForMember(d => d.Status, opts => opts.MapFrom(s => SupplierStatus.Active))
+                .ForMember(d => d.IsPrimarySupplier, opts => opts.Ignore())
+                .ForMember(d => d.ProvidesMutualAid, opts => opts.Ignore())
+                .ForMember(d => d.GSTNumber, opts => opts.Ignore())
+                ;
         }
     }
 }
