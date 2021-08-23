@@ -156,6 +156,24 @@ export class EditService {
           form
             .get('questions.answer1')
             .patchValue(this.profileDataService?.securityQuestions[0]?.answer);
+
+          form
+            .get('questions.question2')
+            .patchValue(
+              this.profileDataService?.securityQuestions[1]?.question
+            );
+          form
+            .get('questions.answer2')
+            .patchValue(this.profileDataService?.securityQuestions[1]?.answer);
+
+          form
+            .get('questions.question3')
+            .patchValue(
+              this.profileDataService?.securityQuestions[2]?.question
+            );
+          form
+            .get('questions.answer3')
+            .patchValue(this.profileDataService?.securityQuestions[2]?.answer);
         } else {
           form.reset();
         }
