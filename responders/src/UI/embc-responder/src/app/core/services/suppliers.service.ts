@@ -4,7 +4,7 @@ import { SupplierModel } from '../models/supplier.model';
 import { LocationsService } from './locations.service';
 import { SuppliersService } from '../api/services';
 import { Observable } from 'rxjs/internal/Observable';
-import { Supplier, SupplierListItem } from '../api/models';
+import { Supplier, SuppliersListItem } from '../api/models';
 import { map, mergeMap } from 'rxjs/operators';
 import { SupplierManagementService } from 'src/app/feature-components/supplier-management/supplier-management.service';
 
@@ -26,16 +26,16 @@ export class SupplierService {
   getMainSuppliersList(
     legalName?: string,
     gstNumber?: string
-  ): Observable<Array<SupplierListItem>> {
+  ): Observable<Array<SuppliersListItem>> {
     return this.suppliersService
       .suppliersGetSuppliers({
         legalName,
         gstNumber
       })
       .pipe(
-        map((suppliers: Array<SupplierListItem>) => {
+        map((suppliers: Array<SuppliersListItem>) => {
           return suppliers.filter((supplier) => {
-            return supplier.isPrimarySupplier === true;
+           // return supplier.isPrimarySupplier === true;
           });
         })
       );
@@ -49,16 +49,16 @@ export class SupplierService {
   getMutualAidSuppliersList(
     legalName?: string,
     gstNumber?: string
-  ): Observable<Array<SupplierListItem>> {
+  ): Observable<Array<SuppliersListItem>> {
     return this.suppliersService
       .suppliersGetSuppliers({
         legalName,
         gstNumber
       })
       .pipe(
-        map((suppliers: Array<SupplierListItem>) => {
+        map((suppliers: Array<SuppliersListItem>) => {
           return suppliers.filter((supplier) => {
-            return supplier.isPrimarySupplier === false;
+           // return supplier.isPrimarySupplier === false;
           });
         })
       );
@@ -73,7 +73,7 @@ export class SupplierService {
   checkSupplierExists(
     legalName?: string,
     gstNumber?: string
-  ): Observable<Array<SupplierListItem>> {
+  ): Observable<Array<SuppliersListItem>> {
     return this.suppliersService.suppliersGetSuppliers({
       legalName,
       gstNumber
@@ -90,18 +90,19 @@ export class SupplierService {
   setSuppliersStatus(
     supplierId: string,
     status: boolean
-  ): Observable<Array<SupplierListItem>> {
-    return this.suppliersService
-      .suppliersSetSupplierStatus({
-        supplierId,
-        status
-      })
-      .pipe(
-        mergeMap((result) => {
-          console.log(result);
-          return this.getMainSuppliersList();
-        })
-      );
+  ): Observable<Array<SuppliersListItem>> {
+    return null
+    // this.suppliersService
+    //   .suppliersSetSupplierStatus({
+    //     supplierId,
+    //     status
+    //   })
+    //   .pipe(
+    //     mergeMap((result) => {
+    //       console.log(result);
+    //       return this.getMainSuppliersList();
+    //     })
+    //   );
   }
 
   /**
@@ -111,22 +112,23 @@ export class SupplierService {
    * @returns a SupplierModel object
    */
   getSupplierById(supplierId: string): Observable<SupplierModel> {
-    return this.suppliersService.suppliersGetSupplierById({ supplierId }).pipe(
-      map(
-        (supplier: Supplier): SupplierModel => {
-          const supplierModel = {
-            ...supplier,
-            supplierGstNumber: this.supplierManagementService.convertSupplierGSTNumberToFormModel(
-              supplier.gstNumber
-            ),
-            address: this.locationServices.getAddressModelFromAddress(
-              supplier.address
-            )
-          };
+    return null
+    // this.suppliersService.suppliersGetSupplierById({ supplierId }).pipe(
+    //   map(
+    //     (supplier: Supplier): SupplierModel => {
+    //       const supplierModel = {
+    //         ...supplier,
+    //         supplierGstNumber: this.supplierManagementService.convertSupplierGSTNumberToFormModel(
+    //           supplier.gstNumber
+    //         ),
+    //         address: this.locationServices.getAddressModelFromAddress(
+    //           supplier.address
+    //         )
+    //       };
 
-          return supplierModel;
-        }
-      )
-    );
+    //       return supplierModel;
+    //     }
+    //   )
+    // );
   }
 }
