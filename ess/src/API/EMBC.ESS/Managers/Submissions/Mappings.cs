@@ -188,6 +188,9 @@ namespace EMBC.ESS.Managers.Submissions
             CreateMap<Resources.Suppliers.Address, Shared.Contracts.Submissions.Address>()
                 .ReverseMap()
                 .ValidateMemberList(MemberList.Destination);
+
+            CreateMap<Resources.Suppliers.Supplier, Shared.Contracts.Submissions.SupplierDetails>()
+                ;
         }
     }
 }

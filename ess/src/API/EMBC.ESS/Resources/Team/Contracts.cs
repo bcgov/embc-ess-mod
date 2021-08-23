@@ -20,11 +20,8 @@ using System.Threading.Tasks;
 
 namespace EMBC.ESS.Resources.Team
 {
-    //TODO: refactor to message based interface
     public interface ITeamRepository
     {
-        Task<IEnumerable<Team>> GetTeams(string id = null);
-
         Task<IEnumerable<TeamMember>> GetMembers(string teamId = null, string userName = null, string userId = null, bool onlyActive = true);
 
         Task<string> SaveMember(TeamMember teamMember);
@@ -32,6 +29,19 @@ namespace EMBC.ESS.Resources.Team
         Task<string> SaveTeam(Team team);
 
         Task<bool> DeleteMember(string teamId, string teamMemberId);
+
+        Task<TeamQueryResponse> QueryTeams(TeamQuery query);
+    }
+
+    public class TeamQuery
+    {
+        public string Id { get; set; }
+        public string AssignedCommunityCode { get; set; }
+    }
+
+    public class TeamQueryResponse
+    {
+        public IEnumerable<Team> Items { get; set; }
     }
 
     public class Team
