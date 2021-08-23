@@ -250,5 +250,82 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             searchResults.Items.ShouldAllBe(s => s.LegalName == legalName && s.GSTNumber == gstNumber);
         }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Create_Suppliers_ReturnsSupplierId()
+        {
+            Supplier supplier = new Supplier
+            {
+                Name = "Test Supplier",
+                LegalName = "Test Supplier Ltd.",
+                GSTNumber = "123456789 RT 1234",
+                Address = new Address
+                {
+                    AddressLine1 = "123 Test St.",
+                    Country = "CAN",
+                    StateProvince = "BC",
+                    PostalCode = "v1v 1v1",
+                    Community = "226adfaf-9f97-ea11-b813-005056830319"
+                },
+                Contact = new SupplierContact
+                {
+                    FirstName = "Test",
+                    LastName = "Contact",
+                    Phone = "6049877897",
+                    Email = "suppliercontact@email.com"
+                },
+                Team = new EMBC.ESS.Shared.Contracts.Suppliers.Team
+                {
+                    Id = teamDemoId
+                },
+                Status = SupplierStatus.Active
+            };
+
+            var supplierId = await adminManager.Handle(new SaveSupplierCommand { Supplier = supplier });
+
+            var newSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.SingleOrDefault();
+            newSupplier.Status.ShouldBe(SupplierStatus.Active);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Update_Suppliers_ReturnsSupplierId()
+        {
+            var supplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.SingleOrDefault();
+
+            var currentCommunity = supplier.Address.Community;
+            var newCommunity = currentCommunity == "406adfaf-9f97-ea11-b813-005056830319"
+                ? "226adfaf-9f97-ea11-b813-005056830319"
+                : "406adfaf-9f97-ea11-b813-005056830319";
+
+            supplier.Address.Community = newCommunity;
+
+            await adminManager.Handle(new SaveSupplierCommand { Supplier = supplier });
+
+            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.SingleOrDefault();
+            updatedSupplier.Address.Community.ShouldBe(newCommunity);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Activate_Suppliers_ReturnsSupplierId()
+        {
+            var results = await adminManager.Handle(new ActivateSupplierCommand { TeamId = teamDemoId, SupplierId = supplierId });
+
+            results.ShouldBe(supplierId);
+
+            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId });
+            var updatedSupplier = searchResults.Items.SingleOrDefault();
+            updatedSupplier.Status.ShouldBe(SupplierStatus.Active);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Deactivate_Suppliers_ReturnsSupplierId()
+        {
+            var results = await adminManager.Handle(new DeactivateSupplierCommand { TeamId = teamDemoId, SupplierId = supplierId });
+
+            results.ShouldBe(supplierId);
+
+            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.SingleOrDefault();
+            updatedSupplier.Status.ShouldBe(SupplierStatus.Inactive);
+        }
     }
 }

@@ -53,9 +53,16 @@ namespace EMBC.ESS.Resources.Suppliers
                         : responsibleTeam.era_active == true ? SupplierStatus.Active : SupplierStatus.Inactive;
                 });
 
-            CreateMap<era_essteamsupplier, Team>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_ESSTeamID.era_essteamid))
-                .ForMember(d => d.Name, opts => opts.MapFrom(s => s.era_ESSTeamID.era_name))
+            CreateMap<Supplier, era_supplier>(MemberList.None)
+                .ForMember(d => d.era_supplierid, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.era_suppliername, opts => opts.MapFrom(s => s.Name))
+                .ForMember(d => d.era_name, opts => opts.MapFrom(s => s.LegalName))
+                .ForMember(d => d.era_gstnumber, opts => opts.MapFrom(s => s.GSTNumber))
+                .ForMember(d => d.era_addressline1, opts => opts.MapFrom(s => s.Address.AddressLine1))
+                .ForMember(d => d.era_addressline2, opts => opts.MapFrom(s => s.Address.AddressLine2))
+                .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.Address.PostalCode))
+                .ForMember(d => d._era_primarycontact_value, opts => opts.MapFrom(s => s.Contact.Id))
+                .ForMember(d => d.era_era_supplier_era_essteamsupplier_SupplierId, opts => opts.MapFrom(s => s.SharedWithTeams.Concat(new[] { s.Team })))
                 ;
 
             CreateMap<era_suppliercontact, SupplierContact>()
@@ -64,6 +71,23 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForMember(d => d.LastName, opts => opts.MapFrom(s => s.era_lastname))
                 .ForMember(d => d.Phone, opts => opts.MapFrom(s => s.era_homephone))
                 .ForMember(d => d.Email, opts => opts.MapFrom(s => s.emailaddress))
+                ;
+
+            CreateMap<SupplierContact, era_suppliercontact>(MemberList.None)
+                .ForMember(d => d.era_suppliercontactid, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.era_firstname, opts => opts.MapFrom(s => s.FirstName))
+                .ForMember(d => d.era_lastname, opts => opts.MapFrom(s => s.LastName))
+                .ForMember(d => d.era_homephone, opts => opts.MapFrom(s => s.Phone))
+                .ForMember(d => d.emailaddress, opts => opts.MapFrom(s => s.Email))
+                ;
+
+            CreateMap<era_essteamsupplier, Team>()
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_ESSTeamID.era_essteamid))
+                .ForMember(d => d.Name, opts => opts.MapFrom(s => s.era_ESSTeamID.era_name))
+                ;
+
+            CreateMap<Team, era_essteamsupplier>(MemberList.None)
+                .ForMember(d => d._era_essteamid_value, opts => opts.MapFrom(s => s.Id))
                 ;
         }
     }

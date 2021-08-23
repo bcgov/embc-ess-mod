@@ -31,6 +31,23 @@ namespace EMBC.ESS.Shared.Contracts.Suppliers
         public IEnumerable<Supplier> Items { get; set; }
     }
 
+    public class SaveSupplierCommand : Command
+    {
+        public Supplier Supplier { get; set; }
+    }
+
+    public class ActivateSupplierCommand : Command
+    {
+        public string TeamId { get; set; }
+        public string SupplierId { get; set; }
+    }
+
+    public class DeactivateSupplierCommand : Command
+    {
+        public string TeamId { get; set; }
+        public string SupplierId { get; set; }
+    }
+
     public class Supplier
     {
         public string Id { get; set; }

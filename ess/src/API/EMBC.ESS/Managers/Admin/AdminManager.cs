@@ -187,5 +187,41 @@ namespace EMBC.ESS.Managers.Admin
                 throw new Exception($"Unknown query type");
             }
         }
+
+        public async Task<string> Handle(SaveSupplierCommand cmd)
+        {
+            var supplier = mapper.Map<Resources.Suppliers.Supplier>(cmd.Supplier);
+            var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
+
+            return res.SupplierId;
+        }
+
+        public async Task<string> Handle(ActivateSupplierCommand cmd)
+        {
+            var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
+            {
+                SupplierId = cmd.SupplierId,
+            })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
+            if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
+
+            supplier.Status = Resources.Suppliers.SupplierStatus.Active;
+            var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
+
+            return res.SupplierId;
+        }
+
+        public async Task<string> Handle(DeactivateSupplierCommand cmd)
+        {
+            var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
+            {
+                SupplierId = cmd.SupplierId,
+            })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
+            if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
+
+            supplier.Status = Resources.Suppliers.SupplierStatus.Inactive;
+            var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
+
+            return res.SupplierId;
+        }
     }
 }
