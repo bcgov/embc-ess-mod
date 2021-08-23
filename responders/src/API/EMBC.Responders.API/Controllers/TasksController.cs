@@ -105,6 +105,7 @@ namespace EMBC.Responders.API.Controllers
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => SupplierStatus.Active))
                 .ForMember(d => d.IsPrimarySupplier, opts => opts.Ignore())
                 .ForMember(d => d.ProvidesMutualAid, opts => opts.Ignore())
+                .ForMember(d => d.GSTNumber, opts => opts.Ignore())
                 ;
         }
     }
