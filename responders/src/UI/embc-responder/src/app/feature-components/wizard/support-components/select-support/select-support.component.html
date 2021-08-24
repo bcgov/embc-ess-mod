@@ -33,7 +33,7 @@
                 <mat-select formControlName="type" required>
                   <mat-option
                     *ngFor="let type of supportList"
-                    [value]="type.value"
+                    [value]="type"
                   >
                     {{ type.description }}
                   </mat-option>
@@ -47,11 +47,6 @@
                   Support Type is required</mat-error
                 >
               </mat-form-field>
-
-              <!-- <div class="field-error" *ngIf="!noIdFlag">
-                      Evacuee profile cannot be verified without the presentation of
-                      government issued identification
-                  </div> -->
             </div>
           </div>
         </form>
