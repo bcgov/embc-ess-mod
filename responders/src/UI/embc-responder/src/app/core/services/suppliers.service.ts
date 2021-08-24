@@ -4,7 +4,7 @@ import { SupplierModel } from '../models/supplier.model';
 import { LocationsService } from './locations.service';
 import { SuppliersService } from '../api/services';
 import { Observable } from 'rxjs/internal/Observable';
-import { Supplier, SupplierListItem } from '../api/models';
+import { Supplier, SupplierListItem, SupplierResult } from '../api/models';
 import { map, mergeMap } from 'rxjs/operators';
 import { SupplierManagementService } from 'src/app/feature-components/supplier-management/supplier-management.service';
 
@@ -81,20 +81,38 @@ export class SupplierService {
   }
 
   /**
-   * Allows to change the status of a supplier
+   * Allows to change the status of a supplier to active
    *
    * @param supplierId the supplier's ID
-   * @param status the supplier's new status
-   * @returns Supplier's new details
+   * @returns an array of updated supplierListItem
    */
-  setSuppliersStatus(
-    supplierId: string,
-    status: boolean
+  activateSuppliersStatus(
+    supplierId: string
   ): Observable<Array<SupplierListItem>> {
     return this.suppliersService
-      .suppliersSetSupplierStatus({
-        supplierId,
-        status
+      .suppliersActivateSupplier({
+        supplierId
+      })
+      .pipe(
+        mergeMap((result) => {
+          console.log(result);
+          return this.getMainSuppliersList();
+        })
+      );
+  }
+
+  /**
+   * Allows to change the status of a supplier de inactive
+   *
+   * @param supplierId the supplier's ID
+   * @returns an array of updated supplierListItem
+   */
+  deactivateSuppliersStatus(
+    supplierId: string
+  ): Observable<Array<SupplierListItem>> {
+    return this.suppliersService
+      .suppliersDeactivateSupplier({
+        supplierId
       })
       .pipe(
         mergeMap((result) => {
@@ -128,5 +146,34 @@ export class SupplierService {
         }
       )
     );
+  }
+
+  /**
+   * Creates a new supplier in the ERA system
+   *
+   * @param supplierData new supplier's data
+   * @returns new supplier's ID
+   */
+  createNewSupplier(supplierData: Supplier): Observable<SupplierResult> {
+    return this.suppliersService.suppliersCreateSupplier({
+      body: supplierData
+    });
+  }
+
+  /**
+   * Updates a selected supplier in the ERA system
+   *
+   * @param supplierId the supplier's ID
+   * @param supplierData the supplier's new data
+   * @returns updated supplier's ID
+   */
+  updateSupplier(
+    supplierId: string,
+    supplierData: Supplier
+  ): Observable<SupplierResult> {
+    return this.suppliersService.suppliersUpdateSupplier({
+      supplierId,
+      body: supplierData
+    });
   }
 }

@@ -40,15 +40,15 @@
         <span *ngIf="column?.ref === 'status'">
           <span *ngIf="showToggle; else status">
             <mat-slide-toggle
-              [checked]="row[column?.ref]"
+              [checked]="row[column?.ref] === 'Active'"
               (change)="slideToggle($event, row, index)"
             >
               <span
                 [ngClass]="{
-                  'active-style': row[column?.ref],
-                  'inactive-style': !row[column?.ref]
+                  'active-style': row[column?.ref] === 'Active',
+                  'inactive-style': row[column?.ref] === 'Deactivated'
                 }"
-                >{{ row[column?.ref] ? 'Active' : 'Deactivated' }}</span
+                >{{ row[column?.ref] }}</span
               >
               <span>
                 <app-loader
@@ -74,7 +74,7 @@
                 'active-style': row[column?.ref],
                 'inactive-style': !row[column?.ref]
               }"
-              >{{ row[column?.ref] ? 'Active' : 'Deactivated' }}</span
+              >{{ row[column?.ref] }}</span
             >
           </ng-template>
         </span>

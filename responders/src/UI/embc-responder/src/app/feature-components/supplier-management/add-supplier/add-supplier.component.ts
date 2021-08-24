@@ -86,7 +86,6 @@ export class AddSupplierComponent implements OnInit {
     this.supplierService.checkSupplierExists(legalName, gstNumber).subscribe(
       (value) => {
         this.showLoader = !this.showLoader;
-        console.log(value);
         if (value.length === 0) {
           this.router.navigate([
             '/responder-access/supplier-management/new-supplier'

@@ -62,7 +62,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Contact Telephone Number</mat-label>
                 <input
-                  formControlName="phoneNumber"
+                  formControlName="phone"
                   matInput
                   placeholder="Contact Telephone Number"
                   [textMask]="{ mask: phoneMask, keepCharPositions: true }"
@@ -70,16 +70,16 @@
                 />
                 <mat-error
                   *ngIf="
-                    contactFormControl.phoneNumber.invalid &&
-                    contactFormControl.phoneNumber.hasError('required')
+                    contactFormControl.phone.invalid &&
+                    contactFormControl.phone.hasError('required')
                   "
                 >
                   Telephone Number is required</mat-error
                 >
                 <mat-error
                   *ngIf="
-                    contactFormControl.phoneNumber.invalid &&
-                    contactFormControl.phoneNumber.hasError('incorrectLength')
+                    contactFormControl.phone.invalid &&
+                    contactFormControl.phone.hasError('incorrectLength')
                   "
                 >
                   Telephone number must have 10 digits</mat-error

@@ -113,31 +113,46 @@ export class SuppliersListComponent implements OnInit {
   }
 
   /**
-   * Activates/ Deactivates a main supplier
+   * Activates an inactive user
    *
    * @param $event team member id
    */
-  changeSupplierStatus($event: { id: string; status: boolean }): void {
+  activateSupplier($event: string): void {
     this.statusLoading = !this.statusLoading;
-    console.log($event);
+    this.supplierServices.activateSuppliersStatus($event).subscribe(
+      (value) => {
+        this.statusLoading = !this.statusLoading;
+        this.suppliersList = value;
+      },
+      (error) => {
+        this.statusLoading = !this.statusLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.activateSupplierError);
+      }
+    );
+  }
 
-    this.supplierServices
-      .setSuppliersStatus($event.id, $event.status)
-      .subscribe(
-        (value) => {
-          this.statusLoading = !this.statusLoading;
-          this.suppliersList = value;
-          console.log(value);
-        },
-        (error) => {
-          this.statusLoading = !this.statusLoading;
-          this.alertService.clearAlert();
-          this.alertService.setAlert(
-            'danger',
-            globalConst.changeSupplierStatusError
-          );
-        }
-      );
+  /**
+   * Inactivate an active user
+   *
+   * @param $event team member id
+   */
+  deactivateSupplier($event: string): void {
+    this.statusLoading = !this.statusLoading;
+    this.supplierServices.deactivateSuppliersStatus($event).subscribe(
+      (value) => {
+        this.statusLoading = !this.statusLoading;
+        this.suppliersList = value;
+      },
+      (error) => {
+        this.statusLoading = !this.statusLoading;
+        this.alertService.clearAlert();
+        this.alertService.setAlert(
+          'danger',
+          globalConst.deActivateSupplierError
+        );
+      }
+    );
   }
 
   /**

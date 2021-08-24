@@ -97,7 +97,6 @@ export class SupplierListDataService {
    */
   getSupplierDetails(supplierId: string, viewType: string): void {
     this.supplierServices.getSupplierById(supplierId).subscribe((supplier) => {
-      console.log(supplier);
       this.setSelectedSupplier(supplier);
 
       this.router.navigate(

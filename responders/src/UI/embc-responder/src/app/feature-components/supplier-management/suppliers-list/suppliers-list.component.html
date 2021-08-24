@@ -20,7 +20,8 @@
       [loggedInRole]="loggedInRole"
       [showToggle]="true"
       (clickedRow)="openSupplierDetails($event)"
-      (toggleChange)="changeSupplierStatus($event)"
+      (toggleActive)="activateSupplier($event)"
+      (toggleInactive)="deactivateSupplier($event)"
     >
     </app-suppliers-table>
   </div>

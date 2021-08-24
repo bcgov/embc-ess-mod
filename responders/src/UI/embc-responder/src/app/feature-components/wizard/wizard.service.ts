@@ -76,36 +76,36 @@ export class WizardService {
     });
   }
 
-  /**
-   * Map an address from the wizard to an address usable by the API
-   *
-   * @param addressObject An Address as defined by the site's address forms
-   * @returns Address object as defined by the API
-   */
-  public setAddressObjectForDTO(addressObject: AddressModel): Address {
-    const address: Address = {
-      addressLine1: addressObject.addressLine1,
-      addressLine2: addressObject.addressLine2,
-      countryCode: addressObject.country.code,
-      communityCode:
-        (addressObject.community as Community).code === undefined
-          ? null
-          : (addressObject.community as Community).code,
-      city:
-        (addressObject.community as Community).code === undefined &&
-        typeof addressObject.community === 'string'
-          ? addressObject.community
-          : null,
-      postalCode: addressObject.postalCode,
-      stateProvinceCode:
-        addressObject.stateProvince === null ||
-        addressObject.stateProvince === undefined
-          ? null
-          : addressObject.stateProvince?.code
-    };
+  // /**
+  //  * Map an address from the wizard to an address usable by the API
+  //  *
+  //  * @param addressObject An Address as defined by the site's address forms
+  //  * @returns Address object as defined by the API
+  //  */
+  // public setAddressObjectForDTO(addressObject: AddressModel): Address {
+  //   const address: Address = {
+  //     addressLine1: addressObject.addressLine1,
+  //     addressLine2: addressObject.addressLine2,
+  //     countryCode: addressObject.country.code,
+  //     communityCode:
+  //       (addressObject.community as Community).code === undefined
+  //         ? null
+  //         : (addressObject.community as Community).code,
+  //     city:
+  //       (addressObject.community as Community).code === undefined &&
+  //       typeof addressObject.community === 'string'
+  //         ? addressObject.community
+  //         : null,
+  //     postalCode: addressObject.postalCode,
+  //     stateProvinceCode:
+  //       addressObject.stateProvince === null ||
+  //       addressObject.stateProvince === undefined
+  //         ? null
+  //         : addressObject.stateProvince?.code
+  //   };
 
-    return address;
-  }
+  //   return address;
+  // }
 
   /**
    * Map an address from the API to an address usable by the wizard form

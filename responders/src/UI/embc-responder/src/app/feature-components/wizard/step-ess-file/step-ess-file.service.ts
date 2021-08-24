@@ -21,6 +21,7 @@ import { WizardService } from '../wizard.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { UserService } from 'src/app/core/services/user.service';
+import { LocationsService } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepEssFileService {
@@ -80,7 +81,8 @@ export class StepEssFileService {
     private dialog: MatDialog,
     private wizardService: WizardService,
     private evacueeSession: EvacueeSessionService,
-    private userService: UserService
+    private userService: UserService,
+    private locationService: LocationsService
   ) {}
 
   // Wizard variables
@@ -431,7 +433,7 @@ export class StepEssFileService {
     console.log({
       primaryRegistrantId: this.evacueeSession.profileId,
 
-      evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacAddress
       ),
       registrationLocation: this.facilityName,
@@ -448,7 +450,7 @@ export class StepEssFileService {
     return {
       primaryRegistrantId: this.evacueeSession.profileId,
 
-      evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacAddress
       ),
       registrationLocation: this.facilityName,
@@ -535,7 +537,7 @@ export class StepEssFileService {
     console.log({
       primaryRegistrantId: this.evacueeSession.profileId,
 
-      evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacAddress
       ),
       registrationLocation: this.facilityName,
@@ -552,7 +554,7 @@ export class StepEssFileService {
     return {
       primaryRegistrantId: this.evacueeSession.profileId,
 
-      evacuatedFromAddress: this.wizardService.setAddressObjectForDTO(
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacAddress
       ),
       registrationLocation: this.facilityName,

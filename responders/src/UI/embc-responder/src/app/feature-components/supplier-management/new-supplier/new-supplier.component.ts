@@ -93,21 +93,43 @@ export class NewSupplierComponent implements OnInit {
   private createNewSupplierForm(): void {
     this.newForm = this.formBuilder.group({
       address: this.formBuilder.group({
-        addressLine1: ['', [this.customValidation.whitespaceValidator()]],
-        addressLine2: [''],
-        community: ['', [Validators.required]],
-        stateProvince: [globalConst.defaultProvince, [Validators.required]],
-        country: [globalConst.defaultCountry, [Validators.required]],
+        addressLine1: [
+          this.addSupplierService.supplierAddress?.addressLine1 ?? '',
+          [this.customValidation.whitespaceValidator()]
+        ],
+        addressLine2: [
+          this.addSupplierService.supplierAddress?.addressLine2 ?? ''
+        ],
+        community: [
+          this.addSupplierService.supplierAddress?.community ?? '',
+          [Validators.required]
+        ],
+        stateProvince: [
+          this.addSupplierService.supplierAddress?.stateProvince ??
+            globalConst.defaultProvince,
+          [Validators.required]
+        ],
+        country: [
+          this.addSupplierService.supplierAddress?.country ??
+            globalConst.defaultCountry,
+          [Validators.required]
+        ],
         postalCode: [
-          '',
+          this.addSupplierService.supplierAddress?.postalCode ?? '',
           [this.customValidation.postalValidation().bind(this.customValidation)]
         ]
       }),
       primaryContact: this.formBuilder.group({
-        lastName: ['', [this.customValidation.whitespaceValidator()]],
-        firstName: ['', [this.customValidation.whitespaceValidator()]],
-        phoneNumber: [
-          '',
+        lastName: [
+          this.addSupplierService.contact?.lastName ?? '',
+          [this.customValidation.whitespaceValidator()]
+        ],
+        firstName: [
+          this.addSupplierService.contact?.firstName ?? '',
+          [this.customValidation.whitespaceValidator()]
+        ],
+        phone: [
+          this.addSupplierService.contact?.phone ?? '',
           [
             Validators.required,
             this.customValidation
@@ -115,7 +137,10 @@ export class NewSupplierComponent implements OnInit {
               .bind(this.customValidation)
           ]
         ],
-        email: ['', [Validators.email]]
+        email: [
+          this.addSupplierService.contact?.email ?? '',
+          [Validators.email]
+        ]
       })
     });
   }
