@@ -5,12 +5,7 @@
       [matColumnDef]="column?.ref"
     >
       <div *ngIf="column?.ref === 'select'; else noSelect">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          mat-sort-header
-          class="arrow-color"
-        >
+        <th mat-header-cell *matHeaderCellDef class="arrow-color">
           <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
                         [checked]="selection.hasValue() && isAllSelected()"
                         [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
