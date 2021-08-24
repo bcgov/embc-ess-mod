@@ -24,10 +24,7 @@ export class ViewSupportsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.supportList = this.stepSupportsService.existingSupportList.sort(
-      (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
-    );
-
+    this.supportList = this.stepSupportsService.existingSupportList;
     this.filtersToLoad = this.viewSupportsService.load();
   }
 
