@@ -54,17 +54,17 @@ export class StepSupportsService {
     return this.existingSupportListVal;
   }
 
-  set supportTypeToAdd(supportTypeToAddVal: Code) {
-    this.supportTypeToAddVal = supportTypeToAddVal;
-    this.cacheService.set('supportType', JSON.stringify(supportTypeToAddVal));
-  }
-
   set evacFile(evacFileVal: EvacuationFileModel) {
     this.evacFileVal = evacFileVal;
   }
 
   get evacFile(): EvacuationFileModel {
     return this.evacFileVal;
+  }
+
+  set supportTypeToAdd(supportTypeToAddVal: Code) {
+    this.supportTypeToAddVal = supportTypeToAddVal;
+    this.cacheService.set('supportType', JSON.stringify(supportTypeToAddVal));
   }
 
   get supportTypeToAdd(): Code {

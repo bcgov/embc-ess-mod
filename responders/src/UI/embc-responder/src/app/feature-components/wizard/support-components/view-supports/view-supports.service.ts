@@ -41,7 +41,7 @@ export class ViewSupportsService {
 
   statusList() {
     console.log(this.typesList);
-    let status = [];
+    const status = [];
     for (const [propertyKey, propertyValue] of Object.entries(SupportStatus)) {
       if (!Number.isNaN(Number(propertyKey))) {
         continue;

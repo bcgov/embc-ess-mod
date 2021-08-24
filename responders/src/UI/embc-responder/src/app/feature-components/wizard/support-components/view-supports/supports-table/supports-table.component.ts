@@ -59,8 +59,7 @@ export class SupportsTableComponent
     }
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   /**
    * Sets paginator and sort on tables
@@ -70,42 +69,41 @@ export class SupportsTableComponent
     this.dataSource.sort = this.sort;
   }
 
-    /**
+  /**
    * Filters the datatable
    *
    * @param term user selected filters
    */
-     filter(term: TableFilterValueModel): void {
-      this.data = this.dataSource.filteredData;
-      this.dataSource.filterPredicate = this.teamFilterPredicate;
-      this.dataSource.filter = JSON.stringify(term);
-  
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
+  filter(term: TableFilterValueModel): void {
+    this.data = this.dataSource.filteredData;
+    this.dataSource.filterPredicate = this.teamFilterPredicate;
+    this.dataSource.filter = JSON.stringify(term);
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  teamFilterPredicate = (data: any, filter: string): boolean => {
+    const searchString: TableFilterValueModel = JSON.parse(filter);
+    if (searchString.type === 'status') {
+      if (
+        data.status
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.value.trim().toLowerCase()) !== -1
+      ) {
+        return true;
+      }
+    } else if (searchString.type === 'type') {
+      if (
+        data.category
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.value.trim().toLowerCase()) !== -1
+      ) {
+        return true;
       }
     }
-
-
-    teamFilterPredicate = (data: any, filter: string): boolean => {
-      const searchString: TableFilterValueModel = JSON.parse(filter);
-      if (searchString.type === 'status') {
-        if (
-          data.status
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1
-        ) {
-          return true;
-        }
-      } else if (searchString.type === 'type') {
-        if (
-          data.category
-            .trim()
-            .toLowerCase()
-            .indexOf(searchString.value.trim().toLowerCase()) !== -1
-        ) {
-          return true;
-        }
-      }
-    };
+  };
 }

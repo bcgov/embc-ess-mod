@@ -35,7 +35,7 @@ export class ViewSupportsComponent implements OnInit {
   process() {}
 
   selected(event: MatSelectChange, filterType: string): void {
-    let selectedValue =
+    const selectedValue =
       event.value === undefined || event.value === ''
         ? ''
         : event.value.description;
