@@ -223,5 +223,54 @@ namespace EMBC.ESS.Managers.Admin
 
             return res.SupplierId;
         }
+
+        public async Task<string> Handle(ClaimSupplierCommand cmd)
+        {
+            var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
+            {
+                SupplierId = cmd.SupplierId,
+            })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
+            if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
+            if (supplier.Team != null && supplier.Team.Id != null) throw new Exception($"Supplier already has a primary team");
+
+            supplier.Team = new Resources.Suppliers.Team { Id = cmd.TeamId };
+            supplier.Status = Resources.Suppliers.SupplierStatus.Active;
+            var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
+
+            return res.SupplierId;
+        }
+
+        public async Task<string> Handle(AddSupplierSharedWithTeamCommand cmd)
+        {
+            var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
+            {
+                SupplierId = cmd.SupplierId,
+            })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
+            if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
+            if (supplier.Team.Id == cmd.TeamId) throw new Exception("Can not share with primary team");
+            if (supplier.SharedWithTeams.Any(t => t.Id == cmd.TeamId)) throw new Exception("Already shared with this team");
+
+            var team = new Resources.Suppliers.Team { Id = cmd.TeamId };
+            supplier.SharedWithTeams = supplier.SharedWithTeams.Concat(new[] { team });
+            var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
+
+            return res.SupplierId;
+        }
+
+        public async Task<string> Handle(RemoveSupplierSharedWithTeamCommand cmd)
+        {
+            var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
+            {
+                SupplierId = cmd.SupplierId,
+            })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
+            if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
+            if (supplier.Team.Id == cmd.TeamId) throw new Exception("Can not remove primary team");
+            if (!supplier.SharedWithTeams.Any(t => t.Id == cmd.TeamId)) throw new Exception("Not shared with this team");
+
+            supplier.SharedWithTeams = supplier.SharedWithTeams.Where(t => t.Id != cmd.TeamId);
+            var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
+
+            return res.SupplierId;
+        }
     }
 }

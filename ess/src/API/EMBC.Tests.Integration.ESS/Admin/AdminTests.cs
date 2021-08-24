@@ -21,9 +21,11 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
         private string teamId = "98275853-2581-eb11-b825-00505683fbf4";
         private readonly string teamDemoId = "80ff138b-fa96-eb11-b827-00505683fbf4";
-        private readonly string supplierId = "a4481e78-5998-ea11-b818-00505683fbf4";
+        private readonly string teamOneId = "b4fe0e73-f980-eb11-b825-00505683fbf4";
+        private readonly string ACBSupplierId = "a4481e78-5998-ea11-b818-00505683fbf4";
         private readonly string legalName = "ABC General Store";
         private readonly string gstNumber = "678953424 RT 0001";
+        private readonly string testSupplierId = "253fc502-ca6c-4845-867b-41ba565ea121";
 
         public AdminTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -235,11 +237,10 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresDynamics)]
         public async Task Query_Suppliers_ReturnsSuppliersById()
         {
-            var teamId = teamDemoId;
-            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId });
+            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = ACBSupplierId });
 
             searchResults.Items.Count().ShouldBe(1);
-            searchResults.Items.ShouldAllBe(s => s.Id == supplierId);
+            searchResults.Items.ShouldAllBe(s => s.Id == ACBSupplierId);
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -290,7 +291,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresDynamics)]
         public async Task Update_Suppliers_ReturnsSupplierId()
         {
-            var supplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.SingleOrDefault();
+            var supplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = ACBSupplierId })).Items.SingleOrDefault();
 
             var currentCommunity = supplier.Address.Community;
             var newCommunity = currentCommunity == "406adfaf-9f97-ea11-b813-005056830319"
@@ -301,18 +302,18 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             await adminManager.Handle(new SaveSupplierCommand { Supplier = supplier });
 
-            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.SingleOrDefault();
+            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = ACBSupplierId })).Items.SingleOrDefault();
             updatedSupplier.Address.Community.ShouldBe(newCommunity);
         }
 
         [Fact(Skip = RequiresDynamics)]
         public async Task Activate_Suppliers_ReturnsSupplierId()
         {
-            var results = await adminManager.Handle(new ActivateSupplierCommand { TeamId = teamDemoId, SupplierId = supplierId });
+            var results = await adminManager.Handle(new ActivateSupplierCommand { TeamId = teamDemoId, SupplierId = ACBSupplierId });
 
-            results.ShouldBe(supplierId);
+            results.ShouldBe(ACBSupplierId);
 
-            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId });
+            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = ACBSupplierId });
             var updatedSupplier = searchResults.Items.SingleOrDefault();
             updatedSupplier.Status.ShouldBe(SupplierStatus.Active);
         }
@@ -320,12 +321,81 @@ namespace EMBC.Tests.Integration.ESS.Admin
         [Fact(Skip = RequiresDynamics)]
         public async Task Deactivate_Suppliers_ReturnsSupplierId()
         {
-            var results = await adminManager.Handle(new DeactivateSupplierCommand { TeamId = teamDemoId, SupplierId = supplierId });
+            var results = await adminManager.Handle(new DeactivateSupplierCommand { TeamId = teamDemoId, SupplierId = ACBSupplierId });
 
-            results.ShouldBe(supplierId);
+            results.ShouldBe(ACBSupplierId);
 
-            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = supplierId })).Items.SingleOrDefault();
+            var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = ACBSupplierId })).Items.SingleOrDefault();
             updatedSupplier.Status.ShouldBe(SupplierStatus.Inactive);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Claim_Suppliers_ReturnsSupplierId()
+        {
+            var testSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplierId })).Items.SingleOrDefault();
+
+            if (testSupplier.Team != null && testSupplier.Team.Id != null)
+            {
+                testSupplier.Team.Id = null;
+                testSupplier.Team.Name = null;
+
+                testSupplier.SharedWithTeams = Array.Empty<EMBC.ESS.Shared.Contracts.Suppliers.Team>();
+
+                await adminManager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
+                var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.SingleOrDefault();
+
+                updatedSupplier.Team.ShouldBe(null);
+            }
+
+            await adminManager.Handle(new ClaimSupplierCommand { SupplierId = testSupplier.Id, TeamId = teamDemoId });
+
+            var twiceUpdatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.SingleOrDefault();
+
+            twiceUpdatedSupplier.Team.Id.ShouldBe(teamDemoId);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task AddSharedWithTeam_Suppliers_ReturnsSupplierId()
+        {
+            var testSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplierId })).Items.SingleOrDefault();
+
+            if (testSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == teamOneId) != null)
+            {
+                testSupplier.SharedWithTeams = testSupplier.SharedWithTeams.Where(t => t.Id != teamOneId);
+                await adminManager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
+                var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.SingleOrDefault();
+
+                updatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == teamOneId).ShouldBe(null);
+            }
+
+            await adminManager.Handle(new AddSupplierSharedWithTeamCommand { SupplierId = testSupplier.Id, TeamId = teamOneId });
+
+            var twiceUpdatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.SingleOrDefault();
+
+            twiceUpdatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == teamOneId).ShouldNotBe(null);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task RemoveSharedWithTeam_Suppliers_ReturnsSupplierId()
+        {
+            var testSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplierId })).Items.SingleOrDefault();
+
+            if (testSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == teamOneId) == null)
+            {
+                var team = new EMBC.ESS.Shared.Contracts.Suppliers.Team { Id = teamOneId };
+                testSupplier.SharedWithTeams = testSupplier.SharedWithTeams.Concat(new[] { team });
+
+                await adminManager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
+                var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.SingleOrDefault();
+
+                updatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == teamOneId).ShouldNotBe(null);
+            }
+
+            await adminManager.Handle(new RemoveSupplierSharedWithTeamCommand { SupplierId = testSupplier.Id, TeamId = teamOneId });
+
+            var twiceUpdatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.SingleOrDefault();
+
+            twiceUpdatedSupplier.SharedWithTeams.SingleOrDefault(t => t.Id == teamOneId).ShouldBe(null);
         }
     }
 }
