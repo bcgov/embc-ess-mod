@@ -8,6 +8,10 @@ table {
     color: white !important
   }
 
+  ::ng-deep .arrow-color .mat-sort-header-arrow {
+    color: #ffff !important;
+  }
+
   .tooltip-red {
     background: #b71c1c !important;
     font-size: 14px;
