@@ -17,6 +17,7 @@ import { RegistrantProfileModel } from 'src/app/core/models/registrant-profile.m
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { WizardService } from '../wizard.service';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { LocationsService } from 'src/app/core/services/locations.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepEvacueeProfileService {
@@ -63,7 +64,8 @@ export class StepEvacueeProfileService {
   constructor(
     private dialog: MatDialog,
     private wizardService: WizardService,
-    private evacueeSession: EvacueeSessionService
+    private evacueeSession: EvacueeSessionService,
+    private locationService: LocationsService
   ) {}
   // Wizard variables
   public get profileTabs(): Array<TabModel> {
@@ -311,10 +313,10 @@ export class StepEvacueeProfileService {
       restriction: this.restrictedAccess,
       personalDetails: this.personalDetails,
       contactDetails: this.contactDetails,
-      primaryAddress: this.wizardService.setAddressObjectForDTO(
+      primaryAddress: this.locationService.setAddressObjectForDTO(
         this.primaryAddressDetails
       ),
-      mailingAddress: this.wizardService.setAddressObjectForDTO(
+      mailingAddress: this.locationService.setAddressObjectForDTO(
         this.mailingAddressDetails
       ),
       verifiedUser: this.verifiedProfile
