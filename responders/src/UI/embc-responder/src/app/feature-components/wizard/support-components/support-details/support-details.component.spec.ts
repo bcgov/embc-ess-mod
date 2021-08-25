@@ -5,6 +5,7 @@ import { SupportDetailsComponent } from './support-details.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatePipe } from '@angular/common';
+import { FormBuilder } from '@angular/forms';
 
 describe('SupportDetailsComponent', () => {
   let component: SupportDetailsComponent;
@@ -14,7 +15,7 @@ describe('SupportDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule],
       declarations: [SupportDetailsComponent],
-      providers: [DatePipe]
+      providers: [DatePipe, FormBuilder]
     }).compileComponents();
   });
 

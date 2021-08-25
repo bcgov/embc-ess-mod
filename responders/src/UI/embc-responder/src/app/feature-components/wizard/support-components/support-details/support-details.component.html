@@ -273,6 +273,15 @@
                       >
                     </div>
                   </div>
+                  <mat-error
+                    class="custom-mat-error"
+                    *ngIf="
+                      supportDetailsFormControl.members.invalid &&
+                      supportDetailsFormControl.members.hasError('noSelection')
+                    "
+                  >
+                    Required</mat-error
+                  >
                 </form>
               </div>
             </div>
