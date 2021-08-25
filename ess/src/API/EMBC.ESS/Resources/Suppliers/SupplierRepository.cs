@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -108,7 +109,8 @@ namespace EMBC.ESS.Resources.Suppliers
 
             if (!string.IsNullOrEmpty(queryRequest.TeamId)) supplierQuery = supplierQuery.Where(s => s._era_essteamid_value == Guid.Parse(queryRequest.TeamId));
 
-            var suppliers = (await ((DataServiceQuery<era_essteamsupplier>)supplierQuery).GetAllPagesAsync()).ToArray();
+            var suppliers = await ((DataServiceQuery<era_essteamsupplier>)supplierQuery).GetAllPagesAsync();
+            suppliers = suppliers.Where(s => s.era_SupplierId.statecode == (int)EntityState.Active).ToArray();
 
             foreach (var supplier in suppliers)
             {
@@ -150,7 +152,8 @@ namespace EMBC.ESS.Resources.Suppliers
                 .Expand(s => s.era_PrimaryContact)
                 .Expand(s => s.era_RelatedCity)
                 .Expand(s => s.era_RelatedCountry)
-                .Expand(s => s.era_RelatedProvinceState);
+                .Expand(s => s.era_RelatedProvinceState)
+                .Where(s => s.statecode == (int)EntityState.Active);
 
             if (!string.IsNullOrEmpty(queryRequest.SupplierId)) supplierQuery = supplierQuery.Where(s => s.era_supplierid == Guid.Parse(queryRequest.SupplierId));
             if (!string.IsNullOrEmpty(queryRequest.LegalName) && !string.IsNullOrEmpty(queryRequest.GSTNumber)) supplierQuery = supplierQuery.Where(s => s.era_name == queryRequest.LegalName && s.era_gstnumber == queryRequest.GSTNumber);
@@ -162,12 +165,7 @@ namespace EMBC.ESS.Resources.Suppliers
                         .Expand(s => s.era_ESSTeamID)
                         .Where(s => s._era_supplierid_value == supplier.era_supplierid);
 
-                var teamSuppliers = (await ((DataServiceQuery<era_essteamsupplier>)teamSupplierQuery).GetAllPagesAsync()).ToArray();
-
-                foreach (var ts in teamSuppliers)
-                {
-                    supplier.era_era_supplier_era_essteamsupplier_SupplierId.Add(ts);
-                }
+                supplier.era_era_supplier_era_essteamsupplier_SupplierId = new Collection<era_essteamsupplier>((await ((DataServiceQuery<era_essteamsupplier>)teamSupplierQuery).GetAllPagesAsync()).ToArray());
             }
 
             var items = mapper.Map<IEnumerable<Supplier>>(suppliers);
