@@ -20,6 +20,10 @@ table {
   background-color: white !important;
 }
 
+::ng-deep .arrow-color .mat-sort-header-arrow {
+  color: #fff;
+}
+
 .active-style {
   color: rgba(37, 168, 0, 1) !important;
 }

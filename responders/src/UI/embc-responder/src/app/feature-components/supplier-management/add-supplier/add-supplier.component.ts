@@ -78,7 +78,6 @@ export class AddSupplierComponent implements OnInit {
     legalName: string,
     supplierGstNumber: GstNumberModel
   ): void {
-    console.log(supplierGstNumber);
     this.showLoader = !this.showLoader;
     const gstNumber: string = this.supplierManagementService.convertSupplierGSTNumbertoString(
       supplierGstNumber

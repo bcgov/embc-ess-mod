@@ -27,13 +27,30 @@ export class SupplierExistComponent implements OnInit {
     this.dataSource.next(this.addSupplierService.existingSuppliersList);
   }
 
-  continue(): void {}
+  /**
+   * Navigates to the step 2 of 3 of creating a new supplier
+   */
+  continue(): void {
+    this.router.navigate([
+      '/responder-access/supplier-management/new-supplier'
+    ]);
+  }
+
+  /**
+   * Redirects back to the suppliers' list
+   */
   close(): void {
     this.addSupplierService.clearAddedSupplier();
     this.router.navigate([
       '/responder-access/supplier-management/suppliers-list'
     ]);
   }
+
+  /**
+   * Claims a supplier as a main supplier for responder's ESS Team
+   *
+   * @param $event the supplier object to be claimed as main supplier
+   */
   claimSupplier($event): void {
     console.log($event);
   }
