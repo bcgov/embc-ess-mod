@@ -142,8 +142,8 @@ namespace EMBC.Responders.API.Controllers
 
             var reply = await messagingClient.Send(new ActivateSupplierCommand
             {
-                TeamId = teamId,
-                SupplierId = supplierId
+                SupplierId = supplierId,
+                TeamId = teamId
             });
             return Ok(new SupplierResult { Id = reply });
         }
@@ -162,10 +162,72 @@ namespace EMBC.Responders.API.Controllers
 
             var reply = await messagingClient.Send(new DeactivateSupplierCommand
             {
-                TeamId = teamId,
-                SupplierId = supplierId
+                SupplierId = supplierId,
+                TeamId = teamId
             });
             return Ok(new SupplierResult { Id = reply });
+        }
+
+        /// <summary>
+        /// Claim a supplier
+        /// </summary>
+        /// <param name="supplierId">supplier id</param>
+        /// <returns>supplier id if success or bad request</returns>
+        [HttpPost("{supplierId}/claim")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<SupplierResult>> ClaimSupplier(string supplierId)
+        {
+            if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
+
+            //var reply = await messagingClient.Send(new ClaimSupplierCommand
+            //{
+            //    SupplierId = supplierId,
+            //    TeamId = teamId
+            //});
+            return await Task.FromResult(Ok(new SupplierResult { Id = "123" }));
+        }
+
+        /// <summary>
+        /// Add a Team the Supplier is shared with
+        /// </summary>
+        /// <param name="supplierId">supplier id</param>
+        /// <param name="sharedTeamId">shared team id</param>
+        /// <returns>supplier id if success or bad request</returns>
+        [HttpPost("{supplierId}/add-team/{mutualTeamId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<SupplierResult>> AddSupplierSharedWithTeam(string supplierId, string sharedTeamId)
+        {
+            if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
+
+            //var reply = await messagingClient.Send(new AddSupplierSharedWithTeamCommand
+            //{
+            //    SupplierId = supplierId,
+            //    TeamId = sharedTeamId
+            //});
+            return await Task.FromResult(Ok(new SupplierResult { Id = "123" }));
+        }
+
+        /// <summary>
+        /// Remove a Team the Supplier is shared with
+        /// </summary>
+        /// <param name="supplierId">supplier id</param>
+        /// <param name="sharedTeamId">shared team id</param>
+        /// <returns>supplier id if success or bad request</returns>
+        [HttpPost("{supplierId}/remove-team/{mutualTeamId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<SupplierResult>> RemoveSupplierSharedWithTeam(string supplierId, string sharedTeamId)
+        {
+            if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
+
+            //var reply = await messagingClient.Send(new RemoveSupplierSharedWithTeamCommand
+            //{
+            //    SupplierId = supplierId,
+            //    TeamId = sharedTeamId
+            //});
+            return await Task.FromResult(Ok(new SupplierResult { Id = "123" }));
         }
     }
 
