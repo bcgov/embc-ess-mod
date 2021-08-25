@@ -55,7 +55,7 @@
           <p *ngIf="element?.team">{{ element.team.name }}</p>
           <a
             class="supplier-link"
-            *ngIf="!element?.team.id"
+            *ngIf="element?.team === null"
             (click)="claimSupplier(element)"
           >
             Claim Supplier</a

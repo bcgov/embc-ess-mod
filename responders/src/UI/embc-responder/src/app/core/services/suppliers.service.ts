@@ -197,4 +197,19 @@ export class SupplierService {
       body: supplierData
     });
   }
+
+  /**
+   * Claims a supplier without primary Team as Main supplier
+   *
+   * @param supplierId the supplier's id
+   * @returns a list of main suppliers list
+   */
+  claimSupplier(supplierId: string): Observable<Array<SupplierListItem>> {
+    return this.suppliersService.suppliersClaimSupplier({ supplierId }).pipe(
+      mergeMap((result) => {
+        console.log(result);
+        return this.getMainSuppliersList();
+      })
+    );
+  }
 }
