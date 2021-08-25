@@ -35,7 +35,7 @@
           <span>{{ row[column?.ref] ? 'Yes' : 'No' }}</span>
         </span>
         <span *ngIf="column?.ref === 'team'">
-          <span>{{ row[column?.ref].name }}</span>
+          <span>{{ row[column?.ref]?.name }}</span>
         </span>
         <span *ngIf="column?.ref === 'status'">
           <span *ngIf="showToggle; else status">
