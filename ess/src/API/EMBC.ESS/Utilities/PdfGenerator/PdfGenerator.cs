@@ -14,18 +14,34 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
-using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
+using Wkhtmltopdf.NetCore;
+using Wkhtmltopdf.NetCore.Options;
 
-namespace EMBC.ESS.Utilities.Transformation
+namespace EMBC.ESS.Utilities.PdfGenerator
 {
-    public static class Configuration
+    public interface IPdfGenerator
     {
-        public static IServiceCollection AddTransformator(this IServiceCollection services)
+        public Task<byte[]> Generate(string source);
+    }
+
+    public class PdfGenerator : IPdfGenerator
+    {
+        private readonly IGeneratePdf generatePdf;
+
+        public PdfGenerator(IGeneratePdf generatePdf)
         {
-            services.AddTransient<SuperSimpleTransformator>();
-            services.AddTransient<HbsTransformator>();
-            services.AddTransient<ITransformatorFactory, TransformatorFactory>(sp => new TransformatorFactory(sp));
-            return services;
+            this.generatePdf = generatePdf;
+            this.generatePdf.SetConvertOptions(new ConvertOptions
+            {
+                PageSize = Size.Letter,
+                //PageMargins = new Margins(5, 5, 5, 5)
+            });
+        }
+
+        public async Task<byte[]> Generate(string source)
+        {
+            return await generatePdf.GetByteArrayViewInHtml(source);
         }
     }
 }

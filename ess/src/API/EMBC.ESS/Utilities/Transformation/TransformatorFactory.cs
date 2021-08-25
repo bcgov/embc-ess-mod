@@ -14,18 +14,36 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EMBC.ESS.Utilities.Transformation
 {
-    public static class Configuration
+    public interface ITransformatorFactory
     {
-        public static IServiceCollection AddTransformator(this IServiceCollection services)
+        ITransformator CreateFor(TransformationType type);
+    }
+
+    public enum TransformationType
+    {
+        TokensTemplates,
+        HandlbarsTemplates
+    }
+
+    public class TransformatorFactory : ITransformatorFactory
+    {
+        private readonly IServiceProvider sp;
+
+        public TransformatorFactory(IServiceProvider sp)
         {
-            services.AddTransient<SuperSimpleTransformator>();
-            services.AddTransient<HbsTransformator>();
-            services.AddTransient<ITransformatorFactory, TransformatorFactory>(sp => new TransformatorFactory(sp));
-            return services;
+            this.sp = sp;
         }
+
+        public ITransformator CreateFor(TransformationType type) => type switch
+        {
+            TransformationType.TokensTemplates => sp.GetRequiredService<SuperSimpleTransformator>(),
+            TransformationType.HandlbarsTemplates => sp.GetRequiredService<HbsTransformator>(),
+            _ => throw new NotImplementedException()
+        };
     }
 }

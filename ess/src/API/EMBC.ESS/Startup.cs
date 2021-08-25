@@ -28,6 +28,7 @@ using EMBC.ESS.Utilities.Cache;
 using EMBC.ESS.Utilities.Dynamics;
 using EMBC.ESS.Utilities.Messaging;
 using EMBC.ESS.Utilities.Notifications;
+using EMBC.ESS.Utilities.PdfGenerator;
 using EMBC.ESS.Utilities.Transformation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -82,6 +83,7 @@ namespace EMBC.ESS
                 .AddDynamics(configuration)
                 .AddCache()
                 .AddTransformator()
+                .AddPdfGenerator()
                 .AddNotificationSenders(configuration);
         }
 

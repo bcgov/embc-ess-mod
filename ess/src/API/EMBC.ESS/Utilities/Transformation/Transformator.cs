@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using HandlebarsDotNet;
 
 namespace EMBC.ESS.Utilities.Transformation
 {
@@ -39,13 +40,23 @@ namespace EMBC.ESS.Utilities.Transformation
     {
         public async Task<TransformationResult> Transform(TransformationData transformationData)
         {
-            var transformedTemplate = string.Empty;
+            var transformedTemplate = transformationData.Template;
             foreach (var token in transformationData.Tokens)
             {
                 transformedTemplate = transformedTemplate.Replace($"{{{token.Key}}}", token.Value);
             }
 
             return await Task.FromResult(new TransformationResult { Content = transformedTemplate });
+        }
+    }
+
+    public class HbsTransformator : ITransformator
+    {
+        public async Task<TransformationResult> Transform(TransformationData transformationData)
+        {
+            var template = Handlebars.Compile(transformationData.Template);
+
+            return await Task.FromResult(new TransformationResult { Content = template(transformationData.Tokens) });
         }
     }
 }

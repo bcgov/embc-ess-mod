@@ -15,16 +15,17 @@
 // -------------------------------------------------------------------------
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Wkhtmltopdf.NetCore;
 
-namespace EMBC.ESS.Utilities.Transformation
+namespace EMBC.ESS.Utilities.PdfGenerator
 {
     public static class Configuration
     {
-        public static IServiceCollection AddTransformator(this IServiceCollection services)
+        public static IServiceCollection AddPdfGenerator(this IServiceCollection services)
         {
-            services.AddTransient<SuperSimpleTransformator>();
-            services.AddTransient<HbsTransformator>();
-            services.AddTransient<ITransformatorFactory, TransformatorFactory>(sp => new TransformatorFactory(sp));
+            services.AddWkhtmltopdf(@"C:\Program Files\wkhtmltopdf");
+            services.TryAddTransient<IPdfGenerator, PdfGenerator>();
             return services;
         }
     }

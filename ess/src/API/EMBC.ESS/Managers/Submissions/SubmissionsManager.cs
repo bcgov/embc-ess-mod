@@ -40,7 +40,7 @@ namespace EMBC.ESS.Managers.Submissions
         private readonly IContactRepository contactRepository;
         private readonly ITemplateProviderResolver templateProviderResolver;
         private readonly ICaseRepository caseRepository;
-        private readonly ITransformator transformator;
+        private readonly ITransformatorFactory transformatorFactory;
         private readonly INotificationSender notificationSender;
         private readonly ITaskRepository taskRepository;
         private readonly ITeamRepository teamRepository;
@@ -52,7 +52,7 @@ namespace EMBC.ESS.Managers.Submissions
             IContactRepository contactRepository,
             ITemplateProviderResolver templateProviderResolver,
             ICaseRepository caseRepository,
-            ITransformator transformator,
+            ITransformatorFactory transformatorFactory,
             INotificationSender notificationSender,
             ITaskRepository taskRepository,
             ITeamRepository teamRepository,
@@ -63,7 +63,7 @@ namespace EMBC.ESS.Managers.Submissions
             this.contactRepository = contactRepository;
             this.templateProviderResolver = templateProviderResolver;
             this.caseRepository = caseRepository;
-            this.transformator = transformator;
+            this.transformatorFactory = transformatorFactory;
             this.notificationSender = notificationSender;
             this.taskRepository = taskRepository;
             this.teamRepository = teamRepository;
@@ -173,7 +173,7 @@ namespace EMBC.ESS.Managers.Submissions
         private async System.Threading.Tasks.Task SendEmailNotification(SubmissionTemplateType notificationType, string email, string name, IEnumerable<KeyValuePair<string, string>> tokens)
         {
             var template = (EmailTemplate)await templateProviderResolver.Resolve(NotificationChannelType.Email).Get(notificationType);
-            var emailContent = (await transformator.Transform(new TransformationData
+            var emailContent = (await transformatorFactory.CreateFor(TransformationType.TokensTemplates).Transform(new TransformationData
             {
                 Template = template.Content,
                 Tokens = tokens
@@ -429,12 +429,12 @@ namespace EMBC.ESS.Managers.Submissions
             var supportIds = new List<string>();
             foreach (var support in cmd.supports)
             {
-                var supportId = await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
+                var supportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand
                 {
                     FileId = cmd.FileId,
                     Support = mapper.Map<Resources.Cases.Support>(support)
-                });
-                supportId.Equals(supportId);
+                })).Id;
+                supportIds.Add(supportId);
             }
         }
 
