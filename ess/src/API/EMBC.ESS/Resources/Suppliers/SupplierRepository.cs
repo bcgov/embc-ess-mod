@@ -207,6 +207,8 @@ namespace EMBC.ESS.Resources.Suppliers
                 var team = essContext.era_essteams
                         .Where(t => t.era_essteamid == ts1._era_essteamid_value).SingleOrDefault();
 
+                if (team == null) continue;
+
                 var currentTeamSupplier = existingSupplier != null ? existingSupplier.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts2 => ts2._era_essteamid_value == ts1._era_essteamid_value).SingleOrDefault() : null;
                 if (currentTeamSupplier == null)
                 {

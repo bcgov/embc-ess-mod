@@ -48,6 +48,24 @@ namespace EMBC.ESS.Shared.Contracts.Suppliers
         public string SupplierId { get; set; }
     }
 
+    public class ClaimSupplierCommand : Command
+    {
+        public string TeamId { get; set; }
+        public string SupplierId { get; set; }
+    }
+
+    public class AddSupplierSharedWithTeamCommand : Command
+    {
+        public string TeamId { get; set; }
+        public string SupplierId { get; set; }
+    }
+
+    public class RemoveSupplierSharedWithTeamCommand : Command
+    {
+        public string TeamId { get; set; }
+        public string SupplierId { get; set; }
+    }
+
     public class Supplier
     {
         public string Id { get; set; }
