@@ -25,6 +25,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   imports: [
@@ -53,7 +55,9 @@ import { OverlayModule } from '@angular/cdk/overlay';
     MatProgressSpinnerModule,
     MatRadioModule,
     MatAutocompleteModule,
-    OverlayModule
+    OverlayModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     CommonModule,
@@ -81,7 +85,9 @@ import { OverlayModule } from '@angular/cdk/overlay';
     MatRadioModule,
     MatExpansionModule,
     MatAutocompleteModule,
-    OverlayModule
+    OverlayModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class MaterialModule {}

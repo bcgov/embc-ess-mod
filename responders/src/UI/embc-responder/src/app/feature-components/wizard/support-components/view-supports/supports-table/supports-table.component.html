@@ -1,0 +1,79 @@
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Support#</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Support Type</th>
+      <td mat-cell *matCellDef="let element">
+        {{
+          element.subCategory === 'None'
+            ? element.category
+            : element.subCategory
+        }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="from">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>From</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.from | date: 'dd-MMM-yyyy' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="to">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>To</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.to | date: 'dd-MMM-yyyy' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="supplierName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Supplier</th>
+      <td mat-cell *matCellDef="let element">{{ element.supplierName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.totalAmount !== '' ? element.totalAmount : 'n/a' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td
+        mat-cell
+        [ngClass]="{
+          active: element.status === 'Active',
+          draft: element.status === 'Draft',
+          void: element.status === 'Void',
+          expired: element.status === 'Expired'
+        }"
+        *matCellDef="let element"
+      >
+        {{ element.status }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <!-- <app-loader
+    style="display: flex; justify-content: center; align-items: center"
+    class="mat-progress"
+    [showLoader]="!isLoading"
+    [strokeWidth]="3"
+    [diameter]="50"
+    [color]="color"
+  ></app-loader> -->
+
+  <mat-paginator
+    [pageSize]="10"
+    [pageSizeOptions]="[10, 20, 30, 50]"
+    showFirstLastButtons
+  ></mat-paginator>
+</div>

@@ -115,24 +115,6 @@ export class CustomValidationService {
     };
   }
 
-  // requiredConfirmEmailValidator(): ValidatorFn {
-  //     return (control: AbstractControl): { [key: string]: boolean } | null => {
-  //         if (control) {
-  //             const email = control.get('email').value;
-  //             const confirmEmail = control.get('confirmEmail').value;
-  //             const phone = control.get('phone').value;
-
-  //             if (control.get('showContacts').value === true && (phone === null || phone === undefined || phone === '')) {
-  //                 if ((email !== undefined || email !== null || email === '') &&
-  //                     (confirmEmail === null || confirmEmail === '' || confirmEmail === undefined)) {
-  //                     return { confirmEmailRequired: true };
-  //                 }
-  //             }
-  //             return null;
-  //         }
-  //     };
-  // }
-
   /**
    * Checks the postal address pattern for Canada and USA
    */
@@ -253,6 +235,15 @@ export class CustomValidationService {
           }
         }
       }
+    };
+  }
+
+  validDateValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value === null) {
+        return { invalidDate: true };
+      }
+      return null;
     };
   }
 }
