@@ -238,10 +238,32 @@ export class CustomValidationService {
     };
   }
 
+  /**
+   * Validates date picker date
+   *
+   * @returns validation error
+   */
   validDateValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       if (control.value === null) {
         return { invalidDate: true };
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Checks if form array is empty
+   *
+   * @returns validation error
+   */
+  memberCheckboxValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value !== null) {
+        console.log(control.value);
+        if (control.value.length === 0) {
+          return { noSelection: true };
+        }
       }
       return null;
     };
