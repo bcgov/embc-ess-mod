@@ -66,7 +66,7 @@ namespace EMBC.Responders.API.Controllers
             try
             {
                 var suppliers = (await messagingClient.Send(new SuppliersListQuery { TaskId = taskId })).Items;
-                return Ok(mapper.Map<SuppliersListItem>(suppliers));
+                return Ok(mapper.Map<IEnumerable<SuppliersListItem>>(suppliers));
             }
             catch (NotFoundException e)
             {
@@ -99,13 +99,7 @@ namespace EMBC.Responders.API.Controllers
         public TaskMapping()
         {
             CreateMap<IncidentTask, ESSTask>();
-            CreateMap<SupplierDetails, SupplierListItem>()
-                .ForMember(d => d.LegalName, opts => opts.MapFrom(s => s.Name))
-                .ForMember(d => d.Team, opts => opts.MapFrom(s => new Team { Id = s.TeamId, Name = s.TeamName }))
-                .ForMember(d => d.Status, opts => opts.MapFrom(s => SupplierStatus.Active))
-                .ForMember(d => d.IsPrimarySupplier, opts => opts.Ignore())
-                .ForMember(d => d.ProvidesMutualAid, opts => opts.Ignore())
-                .ForMember(d => d.GSTNumber, opts => opts.Ignore())
+            CreateMap<SupplierDetails, SuppliersListItem>()
                 ;
         }
     }
