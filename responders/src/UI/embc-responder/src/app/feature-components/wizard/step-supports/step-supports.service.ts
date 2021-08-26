@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Code, NeedsAssessment, Support } from 'src/app/core/api/models';
-import { ConfigurationService } from 'src/app/core/api/services';
+import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
+import { ConfigurationService, TasksService } from 'src/app/core/api/services';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -19,7 +22,9 @@ export class StepSupportsService {
     private configService: ConfigurationService,
     private evacueeSessionService: EvacueeSessionService,
     private essFileService: EssFileService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private taskService: TasksService,
+    private userService: UserService
   ) {}
 
   set supportCategory(supportCategoryVal: Code[]) {
@@ -102,7 +107,9 @@ export class StepSupportsService {
 
   public getEvacFile(): void {
     this.essFileService
-      .getFileFromId(this.evacueeSessionService.essFileNumber)
+      .getFileFromId(
+        '101169' //this.evacueeSessionService.essFileNumber
+      )
       .subscribe((file) => {
         this.currentNeedsAssessment = file.needsAssessment;
         console.log(file.supports);
@@ -111,5 +118,11 @@ export class StepSupportsService {
         );
         this.evacFile = file;
       });
+  }
+
+  public getSupplierList(): Observable<SupplierListItem[]> {
+    return this.taskService.tasksGetSuppliersList({
+      taskId: this.userService.currentProfile.taskNumber
+    });
   }
 }
