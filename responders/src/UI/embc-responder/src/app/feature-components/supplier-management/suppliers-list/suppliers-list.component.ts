@@ -53,6 +53,7 @@ export class SuppliersListComponent implements OnInit {
 
     this.supplierServices.getMainSuppliersList().subscribe(
       (values) => {
+        console.log(values);
         this.mutualAidLoader = !this.mutualAidLoader;
         this.suppliersList = values;
       },

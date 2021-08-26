@@ -1,0 +1,51 @@
+.back-link {
+  color: rgb(55, 171, 221);
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.row-padding {
+  padding-bottom: 20px;
+}
+
+.wizard-support-type {
+  font-size: 26px;
+}
+
+.support-time-box {
+  background-color: #f2f2f2;
+  box-shadow: none !important;
+}
+
+.time-heading {
+  color: #234075;
+  font-size: 21px;
+}
+
+.next-button {
+  width: 30%;
+}
+
+.override {
+  color: rgb(55, 171, 221);
+  font-weight: bold;
+}
+
+.override:hover {
+  text-decoration: underline;
+}
+
+.add-detail {
+  margin-bottom: 25px;
+  margin-top: 25px;
+}
+
+.button-row {
+  justify-content: flex-end;
+}
+
+.button-col {
+  text-align: right;
+}

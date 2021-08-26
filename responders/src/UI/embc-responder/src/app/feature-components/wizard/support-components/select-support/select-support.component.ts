@@ -50,7 +50,10 @@ export class SelectSupportComponent implements OnInit {
     if (!this.supportTypeForm.valid) {
       this.supportTypeForm.get('type').markAsTouched();
     } else {
-      //navigate
+      this.stepSupportsService.supportTypeToAdd = this.supportTypeForm.get(
+        'type'
+      ).value;
+      this.router.navigate(['/ess-wizard/add-supports/details']);
     }
   }
 }
