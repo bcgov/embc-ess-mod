@@ -26,6 +26,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         private readonly string legalName = "ABC General Store";
         private readonly string gstNumber = "678953424 RT 0001";
         private readonly string testSupplierId = "72c7fccb-32d7-4791-b21d-55247af39da0";
+        private readonly string abbotsfordCommunityId = "7069dfaf-9f97-ea11-b813-005056830319";
 
         public AdminTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
@@ -177,6 +178,14 @@ namespace EMBC.Tests.Integration.ESS.Admin
             team.Id.ShouldBe(teamId);
             team.Name.ShouldNotBeNull();
             team.AssignedCommunities.ShouldNotBeEmpty();
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanQueryTeamByCommunity()
+        {
+            var teams = (await adminManager.Handle(new TeamsQuery { CommunityCode = abbotsfordCommunityId })).Teams;
+            teams.Count().ShouldNotBe(0);
+            teams.ShouldAllBe(t => t.AssignedCommunities.Any(c => c.Code == abbotsfordCommunityId));
         }
 
         [Fact(Skip = RequiresDynamics)]

@@ -42,7 +42,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<TeamsQueryResponse> Handle(TeamsQuery cmd)
         {
-            var teams = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery { Id = cmd.TeamId })).Items;
+            var teams = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery { Id = cmd.TeamId, AssignedCommunityCode = cmd.CommunityCode })).Items;
 
             return new TeamsQueryResponse { Teams = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Team.Team>>(teams) };
         }
