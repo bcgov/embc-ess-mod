@@ -69,13 +69,17 @@ export class ProfileComponent
 
   ngAfterViewInit(): void {
     if (this.stepToDisplay === 3) {
+      this.profileStepper.linear = false;
       setTimeout(() => {
         this.profileStepper.selectedIndex = this.stepToDisplay;
+        this.profileStepper.linear = true;
       }, 0);
     }
     if (this.stepToDisplay === 4) {
+      this.profileStepper.linear = false;
       setTimeout(() => {
         this.profileStepper.selectedIndex = this.stepToDisplay;
+        this.profileStepper.linear = true;
       }, 0);
     }
   }
