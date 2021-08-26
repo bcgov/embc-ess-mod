@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
 
 @Component({
@@ -19,6 +20,7 @@ export class SupplierExistComponent implements OnInit {
   dataSource = new BehaviorSubject([]);
   constructor(
     private addSupplierService: AddSupplierService,
+    private supplierService: SupplierService,
     private router: Router
   ) {}
 
@@ -52,6 +54,11 @@ export class SupplierExistComponent implements OnInit {
    * @param $event the supplier object to be claimed as main supplier
    */
   claimSupplier($event): void {
-    console.log($event);
+    this.supplierService.getSupplierById($event.id).subscribe((supplier) => {
+      this.router.navigate(
+        ['/responder-access/supplier-management/review-supplier'],
+        { state: { ...supplier }, queryParams: { action: 'claim' } }
+      );
+    });
   }
 }

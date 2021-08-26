@@ -11,6 +11,7 @@
     (animationDone)="currentStep(needsStepper?.selectedIndex)"
     (selectionChange)="stepChanged($event, needsStepper)"
     #needsStepper
+    linear
   >
     <mat-step *ngFor="let step of needsSteps" [stepControl]="form">
       <ng-template matStepLabel>{{ step.stepName }}</ng-template>
