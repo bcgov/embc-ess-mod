@@ -13,13 +13,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 // -------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -31,28 +29,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace EMBC.Responders.API.Controllers
 {
     /// <summary>
-    /// Manages members within the team.
-    /// The team is derived from the logged in user's security context
+    /// Members related endpoints
     /// </summary>
-    [ApiController]
-    [Route("api/team/members")]
-    public class TeamMembersController : ControllerBase
+    public partial class TeamsController
     {
-        private readonly IMessagingClient client;
-        private readonly IMapper mapper;
-        private string teamId => User.FindFirstValue("user_team");
-
-        public TeamMembersController(IMessagingClient client, IMapper mapper)
-        {
-            this.client = client;
-            this.mapper = mapper;
-        }
-
         /// <summary>
         /// Get all team members
         /// </summary>
         /// <returns>list of team members</returns>
-        [HttpGet]
+        [HttpGet("members")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TeamMember>>> GetTeamMembers()
         {
@@ -65,7 +50,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <param name="memberId">team member id</param>
         /// <returns>team member or not found</returns>
-        [HttpGet("{memberId}")]
+        [HttpGet("members/{memberId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TeamMember>> GetTeamMember(string memberId)
@@ -82,7 +67,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <param name="teamMember">team member</param>
         /// <returns>new team member id</returns>
-        [HttpPost]
+        [HttpPost("members")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TeamMemberResult>> CreateTeamMember([FromBody] TeamMember teamMember)
@@ -101,7 +86,7 @@ namespace EMBC.Responders.API.Controllers
         /// <param name="memberId">team member id to update</param>
         /// <param name="teamMember">team member</param>
         /// <returns>team member id if success, not found or bad request</returns>
-        [HttpPost("{memberId}")]
+        [HttpPost("members/{memberId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -123,7 +108,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <param name="memberId">team member id</param>
         /// <returns>team member id if success, not found or bad request</returns>
-        [HttpDelete("{memberId}")]
+        [HttpDelete("members/{memberId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -145,7 +130,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <param name="memberId">team member id</param>
         /// <returns>team member id if success, not found or bad request</returns>
-        [HttpPost("{memberId}/active")]
+        [HttpPost("members/{memberId}/active")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TeamMemberResult>> ActivateTeamMember(string memberId)
@@ -165,7 +150,7 @@ namespace EMBC.Responders.API.Controllers
         /// </summary>
         /// <param name="memberId">team member id</param>
         /// <returns>team member id if success, not found or bad request</returns>
-        [HttpPost("{memberId}/inactive")]
+        [HttpPost("members/{memberId}/inactive")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeactivateTeamMember(string memberId)
@@ -180,7 +165,7 @@ namespace EMBC.Responders.API.Controllers
             return Ok(new TeamMemberResult { Id = memberId });
         }
 
-        [HttpGet("username")]
+        [HttpGet("members/username")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<bool>> IsUserNameExists(string userName, string memberId = null)
@@ -196,7 +181,7 @@ namespace EMBC.Responders.API.Controllers
         /// Provides a list of team member roles
         /// </summary>
         /// <returns>list of role codes with description</returns>
-        [HttpGet("codes/memberrole")]
+        [HttpGet("members/codes/memberrole")]
         public async Task<ActionResult<IEnumerable<MemberRoleDescription>>> GetMemberRoles()
         {
             var enumList = EnumDescriptionHelper.GetEnumDescriptions<MemberRole>();
@@ -207,7 +192,7 @@ namespace EMBC.Responders.API.Controllers
         /// Provides a list of team member labels
         /// </summary>
         /// <returns>list of label codes with description</returns>
-        [HttpGet("codes/memberlabel")]
+        [HttpGet("members/codes/memberlabel")]
         public async Task<ActionResult<IEnumerable<MemberLabelDescription>>> GetMemberLabels()
         {
             var enumList = EnumDescriptionHelper.GetEnumDescriptions<MemberLabel>();
@@ -218,20 +203,6 @@ namespace EMBC.Responders.API.Controllers
     public class TeamMemberResult
     {
         public string Id { get; set; }
-    }
-
-    /// <summary>
-    /// Team details
-    /// </summary>
-    public class Team
-    {
-        [Required]
-        public string Id { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        public bool IsActive { get; set; } = true;
     }
 
     /// <summary>
@@ -328,9 +299,9 @@ namespace EMBC.Responders.API.Controllers
         EMBCEmployee,
     }
 
-    public class Mapping : Profile
+    public class TeamMemberMapping : Profile
     {
-        public Mapping()
+        public TeamMemberMapping()
         {
             CreateMap<ESS.Shared.Contracts.Team.TeamMember, TeamMember>()
                 .ForMember(d => d.Role, opts => opts.MapFrom(s => Enum.Parse<MemberRole>(s.Role)))
