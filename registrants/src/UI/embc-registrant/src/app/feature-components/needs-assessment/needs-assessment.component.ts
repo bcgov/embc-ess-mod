@@ -77,8 +77,10 @@ export class NeedsAssessmentComponent
 
   ngAfterViewInit(): void {
     if (this.stepToDisplay === 5) {
+      this.needsStepper.linear = false;
       setTimeout(() => {
         this.needsStepper.selectedIndex = this.stepToDisplay;
+        this.needsStepper.linear = true;
       }, 0);
     }
   }

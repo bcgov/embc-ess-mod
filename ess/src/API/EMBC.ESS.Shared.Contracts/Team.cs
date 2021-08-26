@@ -35,6 +35,7 @@ namespace EMBC.ESS.Shared.Contracts.Team
     public class TeamsQuery : Query<TeamsQueryResponse>
     {
         public string TeamId { get; set; }
+        public string CommunityCode { get; set; }
     }
 
     public class TeamsQueryResponse

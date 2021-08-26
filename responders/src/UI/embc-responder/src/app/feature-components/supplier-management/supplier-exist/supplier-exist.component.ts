@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { AddSupplierService } from '../add-supplier/add-supplier.service';
 
 @Component({
@@ -19,6 +20,7 @@ export class SupplierExistComponent implements OnInit {
   dataSource = new BehaviorSubject([]);
   constructor(
     private addSupplierService: AddSupplierService,
+    private supplierService: SupplierService,
     private router: Router
   ) {}
 
@@ -27,14 +29,36 @@ export class SupplierExistComponent implements OnInit {
     this.dataSource.next(this.addSupplierService.existingSuppliersList);
   }
 
-  continue(): void {}
+  /**
+   * Navigates to the step 2 of 3 of creating a new supplier
+   */
+  continue(): void {
+    this.router.navigate([
+      '/responder-access/supplier-management/new-supplier'
+    ]);
+  }
+
+  /**
+   * Redirects back to the suppliers' list
+   */
   close(): void {
     this.addSupplierService.clearAddedSupplier();
     this.router.navigate([
       '/responder-access/supplier-management/suppliers-list'
     ]);
   }
+
+  /**
+   * Claims a supplier as a main supplier for responder's ESS Team
+   *
+   * @param $event the supplier object to be claimed as main supplier
+   */
   claimSupplier($event): void {
-    console.log($event);
+    this.supplierService.getSupplierById($event.id).subscribe((supplier) => {
+      this.router.navigate(
+        ['/responder-access/supplier-management/review-supplier'],
+        { state: { ...supplier }, queryParams: { action: 'claim' } }
+      );
+    });
   }
 }

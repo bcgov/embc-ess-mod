@@ -70,6 +70,32 @@ export class SupplierReviewComponent {
       this.addSupplier();
     }
   }
+
+  claim(): void {
+    this.showLoader = !this.showLoader;
+    console.log(this.selectedSupplier);
+    this.supplierService.claimSupplier(this.selectedSupplier.id).subscribe(
+      (value) => {
+        console.log(value);
+        this.showLoader = !this.showLoader;
+        const stateIndicator = { action: 'add' };
+        this.router.navigate(
+          ['/responder-access/supplier-management/suppliers-list'],
+          { state: stateIndicator }
+        );
+      },
+      (error) => {
+        console.log(error);
+        this.showLoader = !this.showLoader;
+        this.isSubmitted = !this.isSubmitted;
+        if (error.title) {
+          this.alertService.setAlert('danger', error.title);
+        } else {
+          this.alertService.setAlert('danger', error.statusText);
+        }
+      }
+    );
+  }
   /**
    * Updates the selected supplier and navigates to team list
    */
@@ -81,6 +107,7 @@ export class SupplierReviewComponent {
       )
       .subscribe(
         (value) => {
+          this.showLoader = !this.showLoader;
           const stateIndicator = { action: 'edit' };
           this.router.navigate(
             ['/responder-access/supplier-management/suppliers-list'],
@@ -107,6 +134,7 @@ export class SupplierReviewComponent {
       .createNewSupplier(this.addSupplierService.getCreateSupplierDTO())
       .subscribe(
         (value) => {
+          this.showLoader = !this.showLoader;
           console.log(value);
           const stateIndicator = { action: 'add' };
           this.router.navigate(

@@ -1,0 +1,16 @@
+table {
+  width: 100%;
+}
+
+.active {
+  color: #3c9d0f;
+}
+.draft {
+  color: #f28200;
+}
+.void {
+  color: #696969;
+}
+.expired {
+  color: rgba(201, 0, 0, 1);
+}

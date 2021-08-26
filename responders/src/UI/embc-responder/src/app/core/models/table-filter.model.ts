@@ -1,6 +1,6 @@
 export interface TableFilterModel {
   loadDropdownFilters: DropdownFilterModel[];
-  loadInputFilter: InputFilterModel;
+  loadInputFilter?: InputFilterModel;
 }
 
 export interface DropdownFilterModel {
