@@ -29,7 +29,7 @@ export class MaskFullAddressPipe implements PipeTransform {
       const line1 = address.addressLine1;
       const line2 = address.addressLine2;
       let line3 = '';
-      const line4 = address.country.name;
+      let line4 = '';
 
       const communityName =
         (address.community as Community)?.name ?? address.city ?? '';
@@ -39,9 +39,11 @@ export class MaskFullAddressPipe implements PipeTransform {
         line3 = communityName;
 
         if (address.stateProvince?.name.length > 0)
-          line3 += ', ' + address.stateProvince.name;
-        if (address.postalCode?.length > 0) line3 += ', ' + address.postalCode;
+          line3 += ', ' + address.stateProvince.code;
+        if (address.postalCode?.length > 0) line4 += address.postalCode + ', ';
       }
+
+      line4 += address.country.name;
 
       // All values must be HTML-sanitized for us to include <br> line break.
       let addressStr = _.escape(line1);

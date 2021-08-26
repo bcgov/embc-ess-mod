@@ -6,22 +6,36 @@
           Review Supplier Details
         </p>
         <p class="review-heading" *ngIf="reviewAction === 'add'">Step 3 of 3</p>
+        <p class="review-heading" *ngIf="reviewAction === 'claim'">
+          Claim Supplier
+        </p>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-12">
-        <p class="details-subtitle">
+        <p class="details-subtitle" *ngIf="reviewAction !== 'claim'">
           Please review all of the information below before submitting.
+        </p>
+        <p *ngIf="reviewAction === 'claim'">
+          Please review all of the information below before submitting. Once
+          added to your ESS Team you will be able to edit the suppliers details.
         </p>
       </div>
     </div>
-
     <br />
+
     <div class="row row-align">
       <div class="col-md-4 detail-label">Supplier Legal Name</div>
       <div class="col-md-8">
         <b>{{ selectedSupplier?.legalName }}</b>
+      </div>
+    </div>
+
+    <div class="row row-align">
+      <div class="col-md-4 detail-label">Supplier Name</div>
+      <div class="col-md-8">
+        <b>{{ selectedSupplier?.name }}</b>
       </div>
     </div>
 
@@ -76,8 +90,28 @@
         >
           Back
         </button>
-        <button class="button-p button-width" mat-button (click)="save()">
+
+        <button
+          class="button-p button-width"
+          mat-button
+          (click)="save()"
+          *ngIf="reviewAction !== 'claim'"
+        >
           Save
+          <app-loader
+            [strokeWidth]="3"
+            [diameter]="25"
+            [showLoader]="showLoader"
+          ></app-loader>
+        </button>
+
+        <button
+          class="button-p button-width"
+          mat-button
+          (click)="claim()"
+          *ngIf="reviewAction === 'claim'"
+        >
+          Claim Supplier
           <app-loader
             [strokeWidth]="3"
             [diameter]="25"

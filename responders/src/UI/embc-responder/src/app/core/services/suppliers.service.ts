@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { Supplier, SupplierListItem, SupplierResult } from '../api/models';
 import { map, mergeMap } from 'rxjs/operators';
 import { SupplierManagementService } from 'src/app/feature-components/supplier-management/supplier-management.service';
+import { SupplierListItemModel } from '../models/supplier-list-item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -73,11 +74,31 @@ export class SupplierService {
   checkSupplierExists(
     legalName?: string,
     gstNumber?: string
-  ): Observable<Array<SupplierListItem>> {
-    return this.suppliersService.suppliersGetSuppliers({
-      legalName,
-      gstNumber
-    });
+  ): Observable<Array<SupplierListItemModel>> {
+    const suppliersItemsResult: Array<SupplierListItemModel> = [];
+    return this.suppliersService
+      .suppliersGetSuppliers({
+        legalName,
+        gstNumber
+      })
+      .pipe(
+        map(
+          (
+            supplierItemsResult: Array<SupplierListItem>
+          ): Array<SupplierListItemModel> => {
+            supplierItemsResult.forEach((item) => {
+              const supplierItem: SupplierListItemModel = {
+                ...item,
+                address: this.locationServices.getAddressModelFromAddress(
+                  item.address
+                )
+              };
+              suppliersItemsResult.push(supplierItem);
+            });
+            return suppliersItemsResult;
+          }
+        )
+      );
   }
 
   /**
@@ -175,5 +196,20 @@ export class SupplierService {
       supplierId,
       body: supplierData
     });
+  }
+
+  /**
+   * Claims a supplier without primary Team as Main supplier
+   *
+   * @param supplierId the supplier's id
+   * @returns a list of main suppliers list
+   */
+  claimSupplier(supplierId: string): Observable<Array<SupplierListItem>> {
+    return this.suppliersService.suppliersClaimSupplier({ supplierId }).pipe(
+      mergeMap((result) => {
+        console.log(result);
+        return this.getMainSuppliersList();
+      })
+    );
   }
 }
