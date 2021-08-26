@@ -17,6 +17,7 @@ export class StepSupportsService {
   private existingSupportListVal: Support[];
   private supportTypeToAddVal: Code;
   private evacFileVal: EvacuationFileModel;
+  private supplierListVal: SupplierListItem[];
 
   constructor(
     private configService: ConfigurationService,
@@ -78,6 +79,14 @@ export class StepSupportsService {
       : JSON.parse(this.cacheService.get('supportType'));
   }
 
+  set supplierList(supplierListVal: SupplierListItem[]) {
+    this.supplierListVal = supplierListVal;
+  }
+
+  get supplierList(): SupplierListItem[] {
+    return this.supplierListVal;
+  }
+
   public getCategoryList(): void {
     this.configService
       .configurationGetCodes({ forEnumType: 'SupportCategory' })
@@ -107,9 +116,7 @@ export class StepSupportsService {
 
   public getEvacFile(): void {
     this.essFileService
-      .getFileFromId(
-        '101169' //this.evacueeSessionService.essFileNumber
-      )
+      .getFileFromId(this.evacueeSessionService.essFileNumber)
       .subscribe((file) => {
         this.currentNeedsAssessment = file.needsAssessment;
         console.log(file.supports);
@@ -120,9 +127,13 @@ export class StepSupportsService {
       });
   }
 
-  public getSupplierList(): Observable<SupplierListItem[]> {
-    return this.taskService.tasksGetSuppliersList({
-      taskId: this.userService.currentProfile.taskNumber
-    });
+  public getSupplierList(): void {
+    this.taskService
+      .tasksGetSuppliersList({
+        taskId: this.userService.currentProfile.taskNumber
+      })
+      .subscribe((value) => {
+        this.supplierList = value;
+      });
   }
 }

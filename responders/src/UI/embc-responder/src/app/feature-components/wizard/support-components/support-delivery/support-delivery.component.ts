@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -23,6 +24,8 @@ export class SupportDeliveryComponent implements OnInit {
   showTextField = false;
   filteredOptions: Observable<SupplierListItem[]>;
   supplierList: SupplierListItem[];
+  selectedSupplierItem: SupplierListItem;
+  showSupplierFlag = false;
 
   constructor(
     public stepSupportsService: StepSupportsService,
@@ -33,7 +36,7 @@ export class SupportDeliveryComponent implements OnInit {
 
   ngOnInit(): void {
     this.createSupportDetailsForm();
-    this.getSupplierList();
+    this.supplierList = this.stepSupportsService.supplierList;
     this.supportDeliveryForm.get('issuedTo').valueChanges.subscribe((value) => {
       this.supportDeliveryForm.get('name').updateValueAndValidity();
     });
@@ -61,10 +64,10 @@ export class SupportDeliveryComponent implements OnInit {
     }
   }
 
-  getSupplierList(): void {
-    this.stepSupportsService.getSupplierList().subscribe((value) => {
-      this.supplierList = value;
-    });
+  displaySupplier(item: SupplierListItem) {
+    if (item) {
+      return item.name;
+    }
   }
 
   /**
@@ -113,5 +116,11 @@ export class SupportDeliveryComponent implements OnInit {
     } else {
       this.showTextField = false;
     }
+  }
+
+  showDetails($event: MatAutocompleteSelectedEvent) {
+    console.log($event);
+    this.selectedSupplierItem = $event.option.value;
+    this.showSupplierFlag = true;
   }
 }

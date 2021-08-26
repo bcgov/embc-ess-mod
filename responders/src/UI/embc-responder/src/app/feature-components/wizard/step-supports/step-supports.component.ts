@@ -31,5 +31,6 @@ export class StepSupportsComponent implements OnInit {
     this.stepSupportsService.getCategoryList();
     this.stepSupportsService.getSubCategoryList();
     this.stepSupportsService.getEvacFile();
+    this.stepSupportsService.getSupplierList();
   }
 }
