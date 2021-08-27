@@ -1,6 +1,6 @@
-import { SupplierListItem } from '../api/models';
+import { SuppliersListItem } from '../api/models';
 import { AddressModel } from './address.model';
 
-export interface SupplierListItemModel extends SupplierListItem {
+export interface SupplierListItemModel extends SuppliersListItem {
   address: AddressModel;
 }

@@ -1,23 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Code, NeedsAssessment, Support } from 'src/app/core/api/models';
 import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
 import { ConfigurationService, TasksService } from 'src/app/core/api/services';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
+import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { LocationsService } from 'src/app/core/services/locations.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
   private supportCategoryVal: Code[] = [];
   private supportSubCategoryVal: Code[] = [];
   private currentNeedsAssessmentVal: NeedsAssessment;
-  private existingSupportListVal: Support[];
+  private existingSupportListVal: BehaviorSubject<
+    Support[]
+  > = new BehaviorSubject<Support[]>([]);
+  private existingSupportListVal$: Observable<
+    Support[]
+  > = this.existingSupportListVal.asObservable();
   private supportTypeToAddVal: Code;
   private evacFileVal: EvacuationFileModel;
-  private supplierListVal: SupplierListItem[];
+  private supplierListVal: SupplierListItemModel[];
 
   constructor(
     private configService: ConfigurationService,
@@ -25,7 +35,9 @@ export class StepSupportsService {
     private essFileService: EssFileService,
     private cacheService: CacheService,
     private taskService: TasksService,
-    private userService: UserService
+    private userService: UserService,
+    private locationService: LocationsService,
+    private alertService: AlertService
   ) {}
 
   set supportCategory(supportCategoryVal: Code[]) {
@@ -52,12 +64,12 @@ export class StepSupportsService {
     return this.currentNeedsAssessmentVal;
   }
 
-  set existingSupportList(existingSupportListVal: Support[]) {
-    this.existingSupportListVal = existingSupportListVal;
+  setExistingSupportList(existingSupportListVal: Support[]) {
+    this.existingSupportListVal.next(existingSupportListVal);
   }
 
-  get existingSupportList(): Support[] {
-    return this.existingSupportListVal;
+  getExistingSupportList(): Observable<Support[]> {
+    return this.existingSupportListVal$;
   }
 
   set evacFile(evacFileVal: EvacuationFileModel) {
@@ -79,11 +91,11 @@ export class StepSupportsService {
       : JSON.parse(this.cacheService.get('supportType'));
   }
 
-  set supplierList(supplierListVal: SupplierListItem[]) {
+  set supplierList(supplierListVal: SupplierListItemModel[]) {
     this.supplierListVal = supplierListVal;
   }
 
-  get supplierList(): SupplierListItem[] {
+  get supplierList(): SupplierListItemModel[] {
     return this.supplierListVal;
   }
 
@@ -117,23 +129,40 @@ export class StepSupportsService {
   public getEvacFile(): void {
     this.essFileService
       .getFileFromId(this.evacueeSessionService.essFileNumber)
-      .subscribe((file) => {
-        this.currentNeedsAssessment = file.needsAssessment;
-        console.log(file.supports);
-        this.existingSupportList = file.supports.sort(
-          (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
-        );
-        this.evacFile = file;
-      });
+      .subscribe(
+        (file) => {
+          this.currentNeedsAssessment = file.needsAssessment;
+          console.log(file.supports);
+          this.setExistingSupportList(
+            file.supports.sort(
+              (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
+            )
+          );
+          this.evacFile = file;
+        },
+        (error) => {
+          this.alertService.clearAlert();
+          this.alertService.setAlert('danger', globalConst.genericError);
+        }
+      );
   }
 
-  public getSupplierList(): void {
-    this.taskService
+  public getSupplierList(): Observable<Array<SupplierListItemModel>> {
+    return this.taskService
       .tasksGetSuppliersList({
         taskId: this.userService.currentProfile.taskNumber
       })
-      .subscribe((value) => {
-        this.supplierList = value;
-      });
+      .pipe(
+        map((supplierList: Array<SupplierListItem>) => {
+          return supplierList.map((item: SupplierListItemModel) => {
+            return {
+              ...item,
+              address: this.locationService.getAddressModelFromAddress(
+                item.address
+              )
+            };
+          });
+        })
+      );
   }
 }

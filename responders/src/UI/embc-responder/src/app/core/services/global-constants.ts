@@ -329,3 +329,7 @@ export const activateSupplierError =
   'Unable to activate supplier at this time. Please try again later';
 export const deActivateSupplierError =
   'Unable to deactivate supplier at this time. Please try again later';
+export const supplierRefresherror =
+  'Unable to refresh supplier list at this time. Please try again later';
+export const supportListerror =
+  'Unable to retrieve support list at this time. Please try again later';

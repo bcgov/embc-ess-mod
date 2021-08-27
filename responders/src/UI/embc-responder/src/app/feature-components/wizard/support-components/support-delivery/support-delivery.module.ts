@@ -5,6 +5,8 @@ import { SupportDeliveryRoutingModule } from './support-delivery-routing.module'
 import { SupportDeliveryComponent } from './support-delivery.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [SupportDeliveryComponent],
@@ -12,7 +14,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     SupportDeliveryRoutingModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CustomPipeModule,
+    SharedModule
   ]
 })
 export class SupportDeliveryModule {}

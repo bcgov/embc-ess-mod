@@ -10,9 +10,11 @@ import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
+import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
+import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
+import * as globalConst from '../../../../core/services/global-constants';
 
 @Component({
   selector: 'app-support-delivery',
@@ -22,16 +24,19 @@ import { StepSupportsService } from '../../step-supports/step-supports.service';
 export class SupportDeliveryComponent implements OnInit {
   supportDeliveryForm: FormGroup;
   showTextField = false;
-  filteredOptions: Observable<SupplierListItem[]>;
-  supplierList: SupplierListItem[];
-  selectedSupplierItem: SupplierListItem;
+  filteredOptions: Observable<SupplierListItemModel[]>;
+  supplierList: SupplierListItemModel[];
+  selectedSupplierItem: SupplierListItemModel;
   showSupplierFlag = false;
+  showLoader = false;
+  color = '#169BD5';
 
   constructor(
     public stepSupportsService: StepSupportsService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private customValidation: CustomValidationService
+    private customValidation: CustomValidationService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -55,7 +60,7 @@ export class SupportDeliveryComponent implements OnInit {
       );
   }
 
-  displaySupplier(item: SupplierListItem) {
+  displaySupplier(item: SupplierListItemModel) {
     if (item) {
       return item.name;
     }
@@ -112,12 +117,26 @@ export class SupportDeliveryComponent implements OnInit {
   }
 
   showDetails($event: MatAutocompleteSelectedEvent) {
-    console.log($event);
     this.selectedSupplierItem = $event.option.value;
     this.showSupplierFlag = true;
   }
 
-  private filter(value?: string): SupplierListItem[] {
+  refreshList() {
+    this.showLoader = !this.showLoader;
+    this.stepSupportsService.getSupplierList().subscribe(
+      (value) => {
+        this.showLoader = !this.showLoader;
+        this.stepSupportsService.supplierList = value;
+      },
+      (error) => {
+        this.showLoader = !this.showLoader;
+        this.alertService.clearAlert();
+        this.alertService.setAlert('danger', globalConst.supplierRefresherror);
+      }
+    );
+  }
+
+  private filter(value?: string): SupplierListItemModel[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
       return this.supplierList.filter((option) =>
