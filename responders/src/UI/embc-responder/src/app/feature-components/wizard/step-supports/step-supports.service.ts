@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Code, NeedsAssessment, Support } from 'src/app/core/api/models';
-import { ConfigurationService } from 'src/app/core/api/services';
+import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
+import { ConfigurationService, TasksService } from 'src/app/core/api/services';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
 import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -14,12 +17,15 @@ export class StepSupportsService {
   private existingSupportListVal: Support[];
   private supportTypeToAddVal: Code;
   private evacFileVal: EvacuationFileModel;
+  private supplierListVal: SupplierListItem[];
 
   constructor(
     private configService: ConfigurationService,
     private evacueeSessionService: EvacueeSessionService,
     private essFileService: EssFileService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private taskService: TasksService,
+    private userService: UserService
   ) {}
 
   set supportCategory(supportCategoryVal: Code[]) {
@@ -73,6 +79,14 @@ export class StepSupportsService {
       : JSON.parse(this.cacheService.get('supportType'));
   }
 
+  set supplierList(supplierListVal: SupplierListItem[]) {
+    this.supplierListVal = supplierListVal;
+  }
+
+  get supplierList(): SupplierListItem[] {
+    return this.supplierListVal;
+  }
+
   public getCategoryList(): void {
     this.configService
       .configurationGetCodes({ forEnumType: 'SupportCategory' })
@@ -110,6 +124,16 @@ export class StepSupportsService {
           (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
         );
         this.evacFile = file;
+      });
+  }
+
+  public getSupplierList(): void {
+    this.taskService
+      .tasksGetSuppliersList({
+        taskId: this.userService.currentProfile.taskNumber
+      })
+      .subscribe((value) => {
+        this.supplierList = value;
       });
   }
 }

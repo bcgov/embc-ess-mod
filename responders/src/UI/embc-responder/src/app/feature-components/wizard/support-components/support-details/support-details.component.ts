@@ -198,6 +198,8 @@ export class SupportDetailsComponent implements OnInit {
   addDelivery() {
     if (!this.supportDetailsForm.valid) {
       this.supportDetailsForm.markAllAsTouched();
+    } else {
+      this.router.navigate(['/ess-wizard/add-supports/delivery']);
     }
   }
 }
