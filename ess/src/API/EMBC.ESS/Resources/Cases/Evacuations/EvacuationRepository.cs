@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -236,11 +235,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         private EvacuationFile MapEvacuationFile(era_evacuationfile file, bool maskSecurityPhrase = true) =>
             mapper.Map<EvacuationFile>(file, opt => opt.Items["MaskSecurityPhrase"] = maskSecurityPhrase.ToString());
 
-        private static async Task<era_evacuationfile> ParallelLoadEvacuationFileAsync(EssContext ctx, era_evacuationfile file)
+        private static async Task ParallelLoadEvacuationFileAsync(EssContext ctx, era_evacuationfile file)
         {
-            if (file == null || file.statecode != (int)EntityState.Active) return null;
-            if (!file._era_currentneedsassessmentid_value.HasValue) return null;
-
             ctx.AttachTo(nameof(EssContext.era_evacuationfiles), file);
 
             var loadTasks = new List<Task>();
@@ -279,8 +275,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 }
             }));
             await Task.WhenAll(loadTasks.ToArray());
-
-            return file;
         }
 
         private static async Task<IEnumerable<era_evacuationfile>> ParallelLoadEvacuationFilesAsync(EssContext ctx, IEnumerable<era_evacuationfile> files)
@@ -288,16 +282,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var readCtx = ctx.Clone();
             readCtx.MergeOption = MergeOption.NoTracking;
 
-            var loadedFiles = new ConcurrentBag<era_evacuationfile>();
+            //load files' properties
+            await files.Select(file => ParallelLoadEvacuationFileAsync(readCtx, file)).ToArray().ForEachAsync(10, t => t);
 
-            await files.Select(async file =>
-            {
-                var loadedFile = await ParallelLoadEvacuationFileAsync(readCtx, file);
-                if (loadedFile == null) return;
-                loadedFiles.Add(loadedFile);
-            }).ToArray().ForEachAsync(50, t => t);
-
-            return loadedFiles.ToArray();
+            return files.ToArray();
         }
 
         public async Task<IEnumerable<EvacuationFile>> Read(EvacuationFilesQuery query)
@@ -315,10 +303,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (query.IncludeFilesInStatuses.Any()) files = files.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.era_essfilestatus));
             if (query.Limit.HasValue) files = files.OrderByDescending(f => f.era_name).Take(query.Limit.Value);
 
-            //ensure files will be loaded only once
-            files = files.Distinct(new LambdaComparer<era_evacuationfile>((f1, f2) => f1.era_evacuationfileid == f2.era_evacuationfileid));
+            //ensure files will be loaded only once and have a needs assessment
+            files = files
+                .Where(f => f.statecode == (int)EntityState.Active && f._era_currentneedsassessmentid_value.HasValue)
+                .Distinct(new LambdaComparer<era_evacuationfile>((f1, f2) => f1.era_evacuationfileid == f2.era_evacuationfileid));
 
-            return (await ParallelLoadEvacuationFilesAsync(essContext, files.ToArray())).Select(f => MapEvacuationFile(f, query.MaskSecurityPhrase)).ToArray();
+            return (await ParallelLoadEvacuationFilesAsync(essContext, files)).Select(f => MapEvacuationFile(f, query.MaskSecurityPhrase)).ToArray();
         }
 
         private static async Task<IEnumerable<era_evacuationfile>> QueryHouseholdMemberFiles(EssContext ctx, EvacuationFilesQuery query)
@@ -344,8 +334,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var shouldQueryFiles =
                 !string.IsNullOrEmpty(query.FileId) ||
                 query.RegistraionDateFrom.HasValue ||
-                query.RegistraionDateTo.HasValue ||
-                query.IncludeFilesInStatuses.Any();
+                query.RegistraionDateTo.HasValue;
 
             if (!shouldQueryFiles) return Array.Empty<era_evacuationfile>();
 
