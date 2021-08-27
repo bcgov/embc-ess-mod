@@ -72,7 +72,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             Func<Note, string> resolveNoteContent = n => n?.Content;
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)
-                .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => string.IsNullOrEmpty(s.Id) ? Guid.NewGuid() : Guid.Parse(s.Id)))
+                .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => Guid.NewGuid()))
                 .ForMember(d => d._era_reviewedbyid_value, opts => opts.MapFrom(s => s.CompletedByTeamMemberId))
                 .ForMember(d => d.era_needsassessmenttype, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentTypeOptionSet>(s.Type.ToString())))
                 .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => Lookup(s.CanProvideFood)))
