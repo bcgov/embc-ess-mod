@@ -122,7 +122,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var updatedNeedsAssessment = updatedFile.NeedsAssessment;
             updatedNeedsAssessment.HavePetsFood.ShouldBe(needsAssessment.HavePetsFood);
-            foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
+            foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.LinkedRegistrantId == null))
             {
                 member.FirstName.ShouldStartWith(newUniqueSignature);
                 member.LastName.ShouldStartWith(newUniqueSignature);
