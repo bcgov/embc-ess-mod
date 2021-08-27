@@ -394,22 +394,22 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchEvacueesByName()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var firstName = "Elvis";
+            var lastName = "Presley";
+            var dateOfBirth = "08/01/1935";
 
-            registrant.ShouldNotBeNull();
-
-            registrant.PrimaryAddress.Country.ShouldNotBeNull();
-
-            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935" });
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, IncludeRestrictedAccess = true });
 
             var registrants = searchResults.Profiles;
-            registrants.ShouldNotBeNull();
-            registrants.ShouldAllBe(r => r.FirstName == "Elvis" && r.LastName == "Presley");
+            registrants.ShouldNotBeEmpty();
+            registrants.ShouldAllBe(r => r.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) && r.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
 
             var files = searchResults.EvacuationFiles;
-            files.ShouldNotBeNull();
+            files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.HouseholdMembers
-                .Any(m => m.FirstName.Equals("Elvis", StringComparison.OrdinalIgnoreCase) && m.LastName.Equals("Presley", StringComparison.OrdinalIgnoreCase)));
+                .Any(m => m.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
+                m.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase) &&
+                m.DateOfBirth == dateOfBirth));
         }
 
         [Fact(Skip = RequiresDynamics)]

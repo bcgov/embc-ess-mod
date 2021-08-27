@@ -28,7 +28,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetEvacuationFilessByFileId()
+        public async Task CanGetEvacuationFilesByFileId()
         {
             var caseQuery = new EvacuationFilesQuery
             {

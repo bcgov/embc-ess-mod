@@ -26,7 +26,7 @@ namespace EMBC.ESS.Utilities.Extensions
     {
         //https://devblogs.microsoft.com/pfxteam/implementing-a-simple-foreachasync-part-2/
 
-        public static Task ForEachAsync<T>(this IEnumerable<T> source, int dop, Func<T, Task> body)
+        public static async Task ForEachAsync<T>(this IEnumerable<T> source, int dop, Func<T, Task> body)
         {
             var tasks = from partition in Partitioner.Create(source).GetPartitions(dop)
                         select Task.Run(async () =>
@@ -36,7 +36,7 @@ namespace EMBC.ESS.Utilities.Extensions
                                 while (partition.MoveNext()) await body(partition.Current);
                             }
                         });
-            return Task.WhenAll(tasks);
+            await Task.WhenAll(tasks);
         }
     }
 }
