@@ -32,6 +32,13 @@ const routes: Routes = [
           import(
             '../support-components/support-details/support-details.module'
           ).then((m) => m.SupportDetailsModule)
+      },
+      {
+        path: 'delivery',
+        loadChildren: () =>
+          import(
+            '../support-components/support-delivery/support-delivery.module'
+          ).then((m) => m.SupportDeliveryModule)
       }
     ]
   }
