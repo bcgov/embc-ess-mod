@@ -55,15 +55,6 @@ export class SupportDeliveryComponent implements OnInit {
       );
   }
 
-  private filter(value?: string): SupplierListItem[] {
-    if (value !== null && value !== undefined && typeof value === 'string') {
-      const filterValue = value.toLowerCase();
-      return this.supplierList.filter((option) =>
-        option.name.toLowerCase().includes(filterValue)
-      );
-    }
-  }
-
   displaySupplier(item: SupplierListItem) {
     if (item) {
       return item.name;
@@ -105,7 +96,9 @@ export class SupportDeliveryComponent implements OnInit {
     return this.supportDeliveryForm.controls;
   }
 
-  backToDetails() {}
+  backToDetails() {
+    this.router.navigate(['/ess-wizard/add-supports/details']);
+  }
 
   next() {}
 
@@ -122,5 +115,14 @@ export class SupportDeliveryComponent implements OnInit {
     console.log($event);
     this.selectedSupplierItem = $event.option.value;
     this.showSupplierFlag = true;
+  }
+
+  private filter(value?: string): SupplierListItem[] {
+    if (value !== null && value !== undefined && typeof value === 'string') {
+      const filterValue = value.toLowerCase();
+      return this.supplierList.filter((option) =>
+        option.name.toLowerCase().includes(filterValue)
+      );
+    }
   }
 }
