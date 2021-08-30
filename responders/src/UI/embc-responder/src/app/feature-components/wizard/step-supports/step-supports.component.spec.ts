@@ -4,6 +4,7 @@ import { StepSupportsComponent } from './step-supports.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UserService } from 'src/app/core/services/user.service';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('StepSupportsComponent', () => {
   let component: StepSupportsComponent;
@@ -11,7 +12,7 @@ describe('StepSupportsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule],
       declarations: [StepSupportsComponent],
       providers: [UserService]
     }).compileComponents();

@@ -53,7 +53,14 @@ export class SupportDetailsComponent implements OnInit {
    * Navigates to select-support page
    */
   back() {
-    this.router.navigate(['/ess-wizard/add-supports/select-support']);
+    this.stepSupportsService
+      .openDataLossPopup(globalConst.supportDataLossDialog)
+      .afterClosed()
+      .subscribe((event) => {
+        if (event === 'confirm') {
+          this.router.navigate(['/ess-wizard/add-supports/view']);
+        }
+      });
   }
 
   /**

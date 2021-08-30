@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormBuilder } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('SupportDeliveryComponent', () => {
   let component: SupportDeliveryComponent;
@@ -15,7 +16,8 @@ describe('SupportDeliveryComponent', () => {
       imports: [
         RouterTestingModule,
         HttpClientTestingModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatDialogModule
       ],
       declarations: [SupportDeliveryComponent],
       providers: [FormBuilder]
