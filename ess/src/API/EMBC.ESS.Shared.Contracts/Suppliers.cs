@@ -36,6 +36,11 @@ namespace EMBC.ESS.Shared.Contracts.Suppliers
         public Supplier Supplier { get; set; }
     }
 
+    public class RemoveSupplierCommand : Command
+    {
+        public string SupplierId { get; set; }
+    }
+
     public class ActivateSupplierCommand : Command
     {
         public string TeamId { get; set; }

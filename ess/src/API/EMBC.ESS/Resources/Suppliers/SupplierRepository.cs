@@ -115,6 +115,9 @@ namespace EMBC.ESS.Resources.Suppliers
             foreach (var supplier in suppliers)
             {
                 essContext.LoadProperty(supplier.era_SupplierId, nameof(era_supplier.era_PrimaryContact));
+                essContext.LoadProperty(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCity));
+                essContext.LoadProperty(supplier.era_SupplierId, nameof(era_supplier.era_RelatedCountry));
+                essContext.LoadProperty(supplier.era_SupplierId, nameof(era_supplier.era_RelatedProvinceState));
 
                 var teamSupplierQuery = essContext.era_essteamsuppliers
                     .Expand(s => s.era_ESSTeamID)
