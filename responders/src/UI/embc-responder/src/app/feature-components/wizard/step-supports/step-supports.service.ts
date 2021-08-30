@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Code, NeedsAssessment, Support } from 'src/app/core/api/models';
 import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
 import { ConfigurationService, TasksService } from 'src/app/core/api/services';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { CacheService } from 'src/app/core/services/cache.service';
@@ -12,6 +14,8 @@ import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.ser
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../core/services/global-constants';
 
 @Injectable({ providedIn: 'root' })
@@ -37,7 +41,8 @@ export class StepSupportsService {
     private taskService: TasksService,
     private userService: UserService,
     private locationService: LocationsService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog
   ) {}
 
   set supportCategory(supportCategoryVal: Code[]) {
@@ -164,5 +169,17 @@ export class StepSupportsService {
           });
         })
       );
+  }
+
+  public openDataLossPopup(
+    content: DialogContent
+  ): MatDialogRef<DialogComponent, string> {
+    return this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content
+      },
+      width: '530px'
+    });
   }
 }
