@@ -365,6 +365,28 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task Remove_Suppliers_ReturnsSupplierId()
+        {
+            var testSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplierId })).Items.SingleOrDefault();
+
+            if (testSupplier.Team == null)
+            {
+                testSupplier.Team = new EMBC.ESS.Shared.Contracts.Suppliers.Team { Id = teamDemoId };
+
+                await adminManager.Handle(new SaveSupplierCommand { Supplier = testSupplier });
+                var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.SingleOrDefault();
+
+                updatedSupplier.Team.Id.ShouldBe(teamDemoId);
+            }
+
+            await adminManager.Handle(new RemoveSupplierCommand { SupplierId = testSupplierId });
+
+            var twiceUpdatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplier.Id })).Items.SingleOrDefault();
+            twiceUpdatedSupplier.Team.ShouldBe(null);
+            twiceUpdatedSupplier.SharedWithTeams.Count().ShouldBe(0);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task AddSharedWithTeam_Suppliers_ReturnsSupplierId()
         {
             var testSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplierId })).Items.SingleOrDefault();

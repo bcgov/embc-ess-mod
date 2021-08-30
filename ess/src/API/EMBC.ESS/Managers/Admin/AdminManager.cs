@@ -196,6 +196,22 @@ namespace EMBC.ESS.Managers.Admin
             return res.SupplierId;
         }
 
+        public async Task<string> Handle(RemoveSupplierCommand cmd)
+        {
+            var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
+            {
+                SupplierId = cmd.SupplierId,
+            })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
+            if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
+            if (supplier.Team == null && supplier.SharedWithTeams.Count() == 0) throw new Exception("Supplier has already been removed");
+
+            if (supplier.Team != null && supplier.Team.Id != null) supplier.Team.Id = null;
+            supplier.SharedWithTeams = Array.Empty<Resources.Suppliers.Team>();
+            var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
+
+            return res.SupplierId;
+        }
+
         public async Task<string> Handle(ActivateSupplierCommand cmd)
         {
             var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
