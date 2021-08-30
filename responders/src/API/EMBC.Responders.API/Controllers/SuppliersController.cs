@@ -139,7 +139,7 @@ namespace EMBC.Responders.API.Controllers
         public async Task<ActionResult<SupplierResult>> RemoveSupplier(string supplierId)
         {
             if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
-            
+
             var id = await messagingClient.Send(new RemoveSupplierCommand
             {
                 SupplierId = supplierId
