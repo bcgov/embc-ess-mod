@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatePipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('SupportDetailsComponent', () => {
   let component: SupportDetailsComponent;
@@ -13,7 +14,7 @@ describe('SupportDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule],
       declarations: [SupportDetailsComponent],
       providers: [DatePipe, FormBuilder]
     }).compileComponents();

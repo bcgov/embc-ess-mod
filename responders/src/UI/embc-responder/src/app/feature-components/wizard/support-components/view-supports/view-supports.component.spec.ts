@@ -4,6 +4,7 @@ import { ViewSupportsComponent } from './view-supports.component';
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('ViewSupportsComponent', () => {
   let component: ViewSupportsComponent;
@@ -11,7 +12,7 @@ describe('ViewSupportsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, MatDialogModule],
       declarations: [ViewSupportsComponent]
     }).compileComponents();
   });
