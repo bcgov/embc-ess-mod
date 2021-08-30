@@ -129,6 +129,25 @@ namespace EMBC.Responders.API.Controllers
         }
 
         /// <summary>
+        /// Remove supplier
+        /// </summary>
+        /// <param name="supplierId">supplier id</param>
+        /// <returns>supplier id if success or bad request</returns>
+        [HttpPost("{supplierId}/remove")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<SupplierResult>> RemoveSupplier(string supplierId)
+        {
+            if (string.IsNullOrEmpty(supplierId)) return BadRequest(nameof(supplierId));
+
+            var id = await messagingClient.Send(new RemoveSupplierCommand
+            {
+                SupplierId = supplierId
+            });
+            return Ok(new SupplierResult { Id = id });
+        }
+
+        /// <summary>
         /// Activate a supplier
         /// </summary>
         /// <param name="supplierId">supplier id</param>
