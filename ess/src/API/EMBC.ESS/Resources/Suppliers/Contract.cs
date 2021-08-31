@@ -46,6 +46,7 @@ namespace EMBC.ESS.Resources.Suppliers
 
     public abstract class SupplierQuery
     {
+        public bool ActiveOnly { get; set; }
     }
 
     public class SuppliersByTeamQuery : SupplierQuery

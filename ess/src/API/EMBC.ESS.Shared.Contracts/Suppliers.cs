@@ -24,6 +24,7 @@ namespace EMBC.ESS.Shared.Contracts.Suppliers
         public string SupplierId { get; set; }
         public string LegalName { get; set; }
         public string GSTNumber { get; set; }
+        public bool IncludeActiveSuppliersOnly { get; set; } = true;
     }
 
     public class SuppliersQueryResult

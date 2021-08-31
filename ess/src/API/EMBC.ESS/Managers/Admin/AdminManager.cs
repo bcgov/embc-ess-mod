@@ -165,6 +165,7 @@ namespace EMBC.ESS.Managers.Admin
                 var suppliers = (await supplierRepository.QuerySupplier(new SuppliersByTeamQuery
                 {
                     TeamId = query.TeamId,
+                    ActiveOnly = query.IncludeActiveSuppliersOnly
                 })).Items;
 
                 var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
@@ -176,7 +177,8 @@ namespace EMBC.ESS.Managers.Admin
                 {
                     SupplierId = query.SupplierId,
                     LegalName = query.LegalName,
-                    GSTNumber = query.GSTNumber
+                    GSTNumber = query.GSTNumber,
+                    ActiveOnly = query.IncludeActiveSuppliersOnly
                 })).Items;
 
                 var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
