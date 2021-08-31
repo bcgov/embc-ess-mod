@@ -256,7 +256,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task QueryActiveOnlyById_Suppliers_ReturnsNothing()
+        public async Task QueryInActiveById_Suppliers_ReturnsNothing()
         {
             var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = inactiveSupplierId });
 
@@ -264,28 +264,11 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task QueryActiveAndInactiveById_Suppliers_ReturnsSuppliersById()
-        {
-            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = inactiveSupplierId, IncludeActiveSuppliersOnly = false });
-
-            searchResults.Items.Count().ShouldBe(1);
-            searchResults.Items.ShouldAllBe(s => s.Id == inactiveSupplierId);
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task QueryActiveOnlyByName_Suppliers_ReturnsNothing()
+        public async Task QueryInActiveByName_Suppliers_ReturnsNothing()
         {
             var searchResults = await adminManager.Handle(new SuppliersQuery { LegalName = inactiveSupplierName, GSTNumber = inactiveSupplierGSTNumber });
 
             searchResults.Items.Count().ShouldBe(0);
-        }
-
-        [Fact(Skip = RequiresDynamics)]
-        public async Task QueryActiveAndInactiveByName_Suppliers_ReturnsSuppliersByLegalNameAndGSTNumber()
-        {
-            var searchResults = await adminManager.Handle(new SuppliersQuery { LegalName = inactiveSupplierName, GSTNumber = inactiveSupplierGSTNumber, IncludeActiveSuppliersOnly = false });
-
-            searchResults.Items.ShouldAllBe(s => s.LegalName == inactiveSupplierName && s.GSTNumber == inactiveSupplierGSTNumber);
         }
 
         [Fact(Skip = RequiresDynamics)]
