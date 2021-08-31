@@ -11,7 +11,7 @@ import { RegistrationsService } from './services/registrations.service';
 import { SuppliersService } from './services/suppliers.service';
 import { TasksService } from './services/tasks.service';
 import { TeamCommunitiesAssignmentsService } from './services/team-communities-assignments.service';
-import { TeamMembersService } from './services/team-members.service';
+import { TeamsService } from './services/teams.service';
 
 /**
  * Module that provides all services and configuration.
@@ -28,7 +28,7 @@ import { TeamMembersService } from './services/team-members.service';
     SuppliersService,
     TasksService,
     TeamCommunitiesAssignmentsService,
-    TeamMembersService,
+    TeamsService,
     ApiConfiguration
   ],
 })

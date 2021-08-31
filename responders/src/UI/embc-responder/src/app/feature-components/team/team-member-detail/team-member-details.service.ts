@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TeamMember, TeamMemberResult } from 'src/app/core/api/models';
-import { TeamMembersService } from 'src/app/core/api/services';
+import { TeamMemberResult } from 'src/app/core/api/models';
+import { TeamsService } from 'src/app/core/api/services';
 
 @Injectable({ providedIn: 'root' })
 export class TeamMemberDetailsService {
-  constructor(private teamMembersService: TeamMembersService) {}
+  constructor(private teamMembersService: TeamsService) {}
 
   deleteTeamMember(memberId: string): Observable<TeamMemberResult> {
-    return this.teamMembersService.teamMembersDeleteTeamMember({ memberId });
+    return this.teamMembersService.teamsDeleteTeamMember({ memberId });
   }
 }

@@ -54,12 +54,12 @@ export class SuppliersListComponent implements OnInit {
     this.supplierServices.getMainSuppliersList().subscribe(
       (values) => {
         console.log(values);
-        this.mutualAidLoader = !this.mutualAidLoader;
+        this.suppliersLoader = !this.suppliersLoader;
         this.suppliersList = values;
       },
       (error) => {
         console.log(error);
-        this.mutualAidLoader = !this.mutualAidLoader;
+        this.suppliersLoader = !this.suppliersLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert(
           'danger',
@@ -70,12 +70,12 @@ export class SuppliersListComponent implements OnInit {
 
     this.supplierServices.getMutualAidSuppliersList().subscribe(
       (values) => {
-        this.suppliersLoader = !this.suppliersLoader;
+        this.mutualAidLoader = !this.mutualAidLoader;
         this.mutualAidList = values;
       },
       (error) => {
         console.log(error);
-        this.suppliersLoader = !this.suppliersLoader;
+        this.mutualAidLoader = !this.mutualAidLoader;
         this.alertService.clearAlert();
         this.alertService.setAlert('danger', globalConst.mutualAidListError);
       }
