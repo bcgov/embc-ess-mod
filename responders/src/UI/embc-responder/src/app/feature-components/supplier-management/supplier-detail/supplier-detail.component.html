@@ -93,10 +93,22 @@
                   maxlength="100"
                   matInput
                   placeholder="Search by ESS Team Name"
+                  [matAutocomplete]="essTeamAuto"
                 />
+                <mat-autocomplete
+                  #essTeamAuto="matAutocomplete"
+                  [displayWith]="essTeamDisplayFn"
+                >
+                  <mat-option
+                    *ngFor="let option of essTeamFilteredOptions | async"
+                    [value]="option"
+                    (click)="searchEssTeamByName(option)"
+                  >
+                    {{ option.name }}
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
             </div>
-
             <span class="span-text">OR</span>
 
             <div class="col-md-5">
@@ -107,11 +119,110 @@
                   maxlength="100"
                   matInput
                   placeholder="Community"
+                  [matAutocomplete]="commAuto"
                 />
+                <mat-autocomplete
+                  #commAuto="matAutocomplete"
+                  [displayWith]="cityDisplayFn"
+                >
+                  <mat-option
+                    *ngFor="let option of communityFilteredOptions | async"
+                    [value]="option"
+                    (click)="searchEssTeamByComm(option)"
+                  >
+                    {{ option.name }}
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
+            </div>
+            <div class="col-md-1 loader-col">
+              <app-loader
+                [strokeWidth]="3"
+                [diameter]="25"
+                [showLoader]="searchESSTeamLoader"
+                [color]="blueColor"
+              ></app-loader>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <mat-radio-group
+                formControlName="selectedEssTeam"
+                class="options-group"
+                (change)="selectEssTeamChange($event)"
+                required
+              >
+                <mat-radio-button
+                  *ngFor="let option of essTeamsListResult"
+                  [value]="option"
+                >
+                  {{ option.name }}
+                </mat-radio-button>
+                <mat-error
+                  class="custom-mat-error"
+                  *ngIf="
+                    searchMutualAidFormControl?.selectedEssTeam.touched &&
+                    searchMutualAidFormControl?.selectedEssTeam.invalid &&
+                    searchMutualAidFormControl?.selectedEssTeam.hasError(
+                      'required'
+                    )
+                  "
+                >
+                  An Ess Team is required</mat-error
+                >
+              </mat-radio-group>
+            </div>
+            <div class="col-md-12" *ngIf="essTeamsListResult?.length > 0">
+              <button
+                class="button-p button-width"
+                [disabled]="!searchMutualAidForm.valid"
+              >
+                Add this ESS Team
+              </button>
             </div>
           </div>
         </form>
+        <div class="row" *ngIf="selectedSupplier?.sharedWithTeams.length > 0">
+          <div class="col-md-12">
+            <p><b>Mutual Aid Recipient</b></p>
+            <table mat-table [dataSource]="mutualAidDataSource">
+              <ng-container matColumnDef="essTeam">
+                <th mat-header-cell *matHeaderCellDef>ESS Teams</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.name }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dateAdded">
+                <th mat-header-cell *matHeaderCellDef>Date Added</th>
+                <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let element">
+                  <a class="supplier-link" (click)="rescindSupplier(element)"
+                    >Rescind Supplier</a
+                  >
+                  <app-loader
+                    [strokeWidth]="3"
+                    [diameter]="25"
+                    [showLoader]="showLoader"
+                  ></app-loader>
+                </td>
+              </ng-container>
+
+              <tr
+                mat-header-row
+                *matHeaderRowDef="mutualAidDisplayedColumns"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: mutualAidDisplayedColumns"
+              ></tr>
+            </table>
+          </div>
+        </div>
       </div>
     </mat-card>
   </div>

@@ -1,15 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { UserService } from 'src/app/core/services/user.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { SupplierListDataService } from '../suppliers-list/supplier-list-data.service';
-import { MemberRole } from 'src/app/core/api/models';
+import { MemberRole, Team } from 'src/app/core/api/models';
 import * as globalConst from '../../../core/services/global-constants';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import { SupplierModel } from 'src/app/core/models/supplier.model';
 import { EditSupplierService } from '../edit-supplier/edit-supplier.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { SupplierDetailService } from './supplier-detail.service';
+import {
+  Community,
+  LocationsService
+} from 'src/app/core/services/locations.service';
+import { Observable } from 'rxjs/internal/Observable';
+import { map, startWith } from 'rxjs/operators';
+import { SupplierService } from 'src/app/core/services/suppliers.service';
+import { MatRadioChange } from '@angular/material/radio/public-api';
+import { SupplierManagementService } from '../supplier-management.service';
 
 @Component({
   selector: 'app-supplier-detail',
@@ -22,14 +38,28 @@ export class SupplierDetailComponent implements OnInit {
   detailsType: string;
   loggedInRole: string;
 
+  mutualAidDisplayedColumns: string[] = ['essTeam', 'dateAdded', 'action'];
+  mutualAidDataSource = new MatTableDataSource();
+  showLoader = false;
+  searchESSTeamLoader = false;
+  blueColor = '#234075';
+  city: Community[] = [];
+  communityFilteredOptions: Observable<Community[]>;
+  essTeam: Team[] = [];
+  essTeamFilteredOptions: Observable<Team[]>;
+  essTeamsListResult: Team[];
+
   constructor(
     private builder: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
     private dialog: MatDialog,
     private supplierListDataService: SupplierListDataService,
     private userService: UserService,
-    private editSupplierService: EditSupplierService
+    private editSupplierService: EditSupplierService,
+    private supplierDetailService: SupplierDetailService,
+    private locationService: LocationsService,
+    private supplierService: SupplierService,
+    private cd: ChangeDetectorRef
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras !== undefined) {
@@ -43,8 +73,70 @@ export class SupplierDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // sets the current user's role to check access
     this.loggedInRole = this.userService.currentProfile.role;
+
+    // Creates the mutual aid search form
     this.createSearchMutualAidForm();
+
+    // In case the selected supplier has associated mutual Aid Teams, the corresponding table is filled up with this information.
+    this.mutualAidDataSource = new MatTableDataSource(
+      this.selectedSupplier?.sharedWithTeams
+    );
+
+    // Gets the community List for mutual Aid Search by Community field
+    this.city = this.locationService.getCommunityList();
+
+    // Filters options as the user inserts characters on the Community field
+    this.communityFilteredOptions = this.searchMutualAidForm
+      .get('community')
+      .valueChanges.pipe(
+        startWith(''),
+        map((value) => (value ? this.filterComm(value) : this.city.slice()))
+      );
+
+    // Gets the Ess Team names of all existing teams
+    this.essTeam = this.supplierDetailService.getEssTeamsList();
+
+    this.essTeamFilteredOptions = this.searchMutualAidForm
+      .get('essTeam')
+      .valueChanges.pipe(
+        startWith(''),
+        map((value) =>
+          value ? this.filterEssTeam(value) : this.essTeam.slice()
+        )
+      );
+  }
+
+  selectEssTeamChange(event: MatRadioChange): void {}
+
+  /**
+   * Returns the control of the form
+   */
+  get searchMutualAidFormControl(): { [key: string]: AbstractControl } {
+    return this.searchMutualAidForm.controls;
+  }
+
+  /**
+   * Returns the display value of autocomplete
+   *
+   * @param city : Selected city object
+   */
+  cityDisplayFn(city: Community): string {
+    if (city) {
+      return city.name;
+    }
+  }
+
+  /**
+   * Returns the display value of autocomplete
+   *
+   * @param essTeam : Selected ESS Team object
+   */
+  essTeamDisplayFn(essTeam: Team): string {
+    if (essTeam) {
+      return essTeam.name;
+    }
   }
 
   /**
@@ -64,15 +156,15 @@ export class SupplierDetailComponent implements OnInit {
       .afterClosed()
       .subscribe((event) => {
         if (event === 'confirm') {
-          //       this.teamDetailsService
-          //         .deleteTeamMember(this.teamMember.id)
-          //         .subscribe((value) => {
-          const stateIndicator = { action: 'delete' };
-          this.router.navigate(
-            ['/responder-access/supplier-management/suppliers-list'],
-            { state: stateIndicator }
-          );
-          // });
+          this.supplierService
+            .deleteSupplier(this.selectedSupplier.id)
+            .subscribe((value) => {
+              const stateIndicator = { action: 'delete' };
+              this.router.navigate(
+                ['/responder-access/supplier-management/suppliers-list'],
+                { state: stateIndicator }
+              );
+            });
         }
       });
   }
@@ -106,12 +198,80 @@ export class SupplierDetailComponent implements OnInit {
   }
 
   /**
+   * Search ESS Teams belonging to the inserted Community Code
+   *
+   * @param community the selected community object
+   */
+  searchEssTeamByComm(community: Community): void {
+    this.essTeamsListResult = [];
+    this.searchESSTeamLoader = !this.searchESSTeamLoader;
+    this.supplierService
+      .getMutualAidByCommunity(community.code)
+      .subscribe((results) => {
+        this.essTeamsListResult = results;
+        this.searchESSTeamLoader = !this.searchESSTeamLoader;
+      });
+  }
+
+  searchEssTeamByName(essTeam: Team): void {
+    this.essTeamsListResult = [];
+    console.log(essTeam);
+    this.essTeamsListResult.push(essTeam);
+  }
+
+  //TODO
+  addMutualAidEssTeam(): void {}
+
+  /**
+   * Rescinds the selected Supplier for the selected ESS Team
+   *
+   * @param team The Team which mutual Aid relationship will be rescind
+   */
+  rescindSupplier(team: Team): void {
+    this.showLoader = !this.showLoader;
+    console.log(team);
+    this.supplierDetailService.rescindMutualAid(
+      this.selectedSupplier.id,
+      team.id
+    );
+  }
+
+  /**
    * Builds the form to search for Mutual Aid Suppliers
    */
   private createSearchMutualAidForm(): void {
     this.searchMutualAidForm = this.builder.group({
       essTeam: [''],
-      community: ['']
+      community: [''],
+      selectedEssTeam: ['', Validators.required]
     });
+  }
+
+  /**
+   * Filters the city list for autocomplete field
+   *
+   * @param value : User typed value
+   */
+  private filterComm(value?: string): Community[] {
+    if (value !== null && value !== undefined && typeof value === 'string') {
+      const filterValue = value.toLowerCase();
+      return this.city.filter((option) =>
+        option.name.toLowerCase().includes(filterValue)
+      );
+    }
+  }
+
+  /**
+   * Filters the city list for autocomplete field
+   *
+   * @param value : User typed value
+   */
+  private filterEssTeam(value?: string): Team[] {
+    if (value !== null && value !== undefined && typeof value === 'string') {
+      const filterValue = value.toLowerCase();
+      return this.essTeam.filter((option) =>
+        option.name.toLowerCase().includes(filterValue)
+      );
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MemberLabelDescription, MemberRoleDescription } from '../api/models';
-import { TeamMembersService } from '../api/services';
+import { TeamsService } from '../api/services';
 import { CacheService } from './cache.service';
 
 @Injectable({ providedIn: 'root' })
@@ -8,7 +8,7 @@ export class LoadTeamListService {
   private memberRoles: MemberRoleDescription[];
   private memberLabels: MemberLabelDescription[];
   constructor(
-    private teamMembersService: TeamMembersService,
+    private teamMembersService: TeamsService,
     private cacheService: CacheService
   ) {}
 
@@ -40,7 +40,7 @@ export class LoadTeamListService {
 
   private getMemberRole(): MemberRoleDescription[] {
     let memberRoles: MemberRoleDescription[] = [];
-    this.teamMembersService.teamMembersGetMemberRoles().subscribe((roles) => {
+    this.teamMembersService.teamsGetMemberRoles().subscribe((roles) => {
       memberRoles = roles;
       this.setMemberRoles(memberRoles);
     });
@@ -49,7 +49,7 @@ export class LoadTeamListService {
 
   private getMemberLabel(): MemberLabelDescription[] {
     let memberLabels: MemberLabelDescription[] = [];
-    this.teamMembersService.teamMembersGetMemberLabels().subscribe((labels) => {
+    this.teamMembersService.teamsGetMemberLabels().subscribe((labels) => {
       memberLabels = labels;
       this.setMemberLabels(memberLabels);
     });

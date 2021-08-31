@@ -74,3 +74,29 @@
     padding: 8px;
     margin-top: 20px;
 }
+
+table {
+    width: 100%;
+}
+
+th {
+    font-size: 16px;
+    background-color: rgba(35, 64, 117, 1);
+    color: white
+  }
+
+  .supplier-link {
+    cursor: pointer;
+    color: rgb(22, 155, 213);
+    text-decoration: none;
+}
+
+.options-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+  }
+
+  .loader-col{
+      margin-top: 15px;
+  }

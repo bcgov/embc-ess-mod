@@ -2,9 +2,14 @@
 import { Injectable } from '@angular/core';
 import { SupplierModel } from '../models/supplier.model';
 import { LocationsService } from './locations.service';
-import { SuppliersService } from '../api/services';
+import { SuppliersService, TeamsService } from '../api/services';
 import { Observable } from 'rxjs/internal/Observable';
-import { Supplier, SupplierListItem, SupplierResult } from '../api/models';
+import {
+  Supplier,
+  SupplierListItem,
+  SupplierResult,
+  Team
+} from '../api/models';
 import { map, mergeMap } from 'rxjs/operators';
 import { SupplierManagementService } from 'src/app/feature-components/supplier-management/supplier-management.service';
 import { SupplierListItemModel } from '../models/supplier-list-item.model';
@@ -16,7 +21,8 @@ export class SupplierService {
   constructor(
     private locationServices: LocationsService,
     private suppliersService: SuppliersService,
-    private supplierManagementService: SupplierManagementService
+    private supplierManagementService: SupplierManagementService,
+    private teamsService: TeamsService
   ) {}
 
   /**
@@ -199,6 +205,16 @@ export class SupplierService {
   }
 
   /**
+   * Deletes the selected supplier and gives an updated list of main suppliers
+   *
+   * @param supplierId the supplier's ID to be deleted
+   * @returns a list of main suppliers
+   */
+  deleteSupplier(supplierId: string): Observable<SupplierResult> {
+    return this.suppliersService.suppliersRemoveSupplier({ supplierId });
+  }
+
+  /**
    * Claims a supplier without primary Team as Main supplier
    *
    * @param supplierId the supplier's id
@@ -211,5 +227,66 @@ export class SupplierService {
         return this.getMainSuppliersList();
       })
     );
+  }
+
+  /**
+   * Get Mutual Aid ESS Team List
+   *
+   * @returns a list of ESS Team
+   */
+  getMutualAidByEssTeam(): Observable<Array<Team>> {
+    return this.teamsService.teamsGetTeams();
+  }
+
+  /**
+   * Gets Ess Teams by community code
+   *
+   * @param communityCode the community code which ESS Team belongs to
+   * @returns a list of ESS Team
+   */
+  getMutualAidByCommunity(communityCode: string): Observable<Array<Team>> {
+    return this.teamsService.teamsGetTeamsByCommunity({ communityCode });
+  }
+
+  /**
+   * Adds a supplier as a mutual Aid to responders's current ESS Team
+   *
+   * @param supplierId supplier's ID
+   * @param sharedTeamId responder's ESS Team ID
+   * @returns a list of mutual aid suppliers
+   */
+  addMutualAidSupplier(
+    supplierId: string,
+    sharedTeamId: string
+  ): Observable<Array<SupplierListItem>> {
+    return this.suppliersService
+      .suppliersAddSupplierSharedWithTeam({ supplierId, sharedTeamId })
+      .pipe(
+        mergeMap((result) => {
+          console.log(result);
+          return this.getMutualAidSuppliersList();
+        })
+      );
+  }
+
+  /**
+   * Deletes a mutual aid supplier from responder's current ESS Team
+   *
+   * @param supplierId supplier's ID
+   * @param sharedTeamId responder's ESS Team ID
+   * @returns a list of mutual aid suppliers
+   */
+  rescindMutualAidSupplier(
+    supplierId: string,
+    sharedTeamId: string
+  ): Observable<Array<SupplierListItem>> {
+    return this.suppliersService
+      .suppliersRemoveSupplierSharedWithTeam({ supplierId, sharedTeamId })
+      .pipe(
+        mergeMap((result) => {
+          console.log(result);
+          return this.getMutualAidSuppliersList();
+        })
+      );
   }
 }
