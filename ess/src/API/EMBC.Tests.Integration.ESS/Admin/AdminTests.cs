@@ -26,6 +26,9 @@ namespace EMBC.Tests.Integration.ESS.Admin
         private readonly string legalName = "ABC General Store";
         private readonly string gstNumber = "678953424 RT 0001";
         private readonly string testSupplierId = "72c7fccb-32d7-4791-b21d-55247af39da0";
+        private readonly string inactiveSupplierId = "062e897a-790a-ec11-b82d-00505683fbf4";
+        private readonly string inactiveSupplierName = "Test Inactive Supplier Ltd.";
+        private readonly string inactiveSupplierGSTNumber = "678953424 RT 1111";
         private readonly string abbotsfordCommunityId = "7069dfaf-9f97-ea11-b813-005056830319";
 
         public AdminTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
@@ -250,6 +253,22 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             searchResults.Items.Count().ShouldBe(1);
             searchResults.Items.ShouldAllBe(s => s.Id == ACBSupplierId);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task QueryInActiveById_Suppliers_ReturnsNothing()
+        {
+            var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = inactiveSupplierId });
+
+            searchResults.Items.Count().ShouldBe(0);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task QueryInActiveByName_Suppliers_ReturnsNothing()
+        {
+            var searchResults = await adminManager.Handle(new SuppliersQuery { LegalName = inactiveSupplierName, GSTNumber = inactiveSupplierGSTNumber });
+
+            searchResults.Items.Count().ShouldBe(0);
         }
 
         [Fact(Skip = RequiresDynamics)]

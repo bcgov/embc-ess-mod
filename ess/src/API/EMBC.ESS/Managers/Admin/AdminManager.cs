@@ -176,7 +176,7 @@ namespace EMBC.ESS.Managers.Admin
                 {
                     SupplierId = query.SupplierId,
                     LegalName = query.LegalName,
-                    GSTNumber = query.GSTNumber
+                    GSTNumber = query.GSTNumber,
                 })).Items;
 
                 var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
