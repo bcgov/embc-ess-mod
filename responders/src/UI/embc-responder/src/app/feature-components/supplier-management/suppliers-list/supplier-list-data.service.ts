@@ -9,6 +9,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Supplier, Team } from 'src/app/core/api/models';
 
 @Injectable({ providedIn: 'root' })
 export class SupplierListDataService {
@@ -37,6 +38,8 @@ export class SupplierListDataService {
   ];
 
   private selectedSupplier: SupplierModel;
+  private essTeams: Team[];
+  private nonMutualAidEssTeams: Team[];
 
   constructor(
     private cacheService: CacheService,
@@ -64,6 +67,24 @@ export class SupplierListDataService {
   public setSelectedSupplier(selectedSupplier: SupplierModel) {
     this.cacheService.set('selectedSupplier', selectedSupplier);
     this.selectedSupplier = selectedSupplier;
+  }
+
+  /**
+   * Gets the ESS Teams that currently are not associated as Mutual Aid to the selected supplier
+   *
+   * @returns a list of ESS Teams that are not mutual Aid to the selected supplier
+   */
+  public getNonMutualAidTeams(): Team[] {
+    return this.nonMutualAidEssTeams;
+  }
+
+  /**
+   * Sets a list of ESS Teams that are not associated as Mutual Aid to the selected supplier
+   *
+   * @param teams a list of ESS Teams that are not mutual Aid to the selected supplier
+   */
+  public setNonMutualAidTeams(teams: Team[]) {
+    this.nonMutualAidEssTeams = teams;
   }
 
   /**
@@ -98,11 +119,81 @@ export class SupplierListDataService {
   getSupplierDetails(supplierId: string, viewType: string): void {
     this.supplierServices.getSupplierById(supplierId).subscribe((supplier) => {
       this.setSelectedSupplier(supplier);
+      console.log(supplier);
+
+      const essTeams: Team[] = this.getEssTeamsList();
+      const filteredEssTeams = this.filterEssTeams(essTeams);
+      this.setNonMutualAidTeams(filteredEssTeams);
 
       this.router.navigate(
         ['/responder-access/supplier-management/supplier-detail'],
         { queryParams: { type: viewType } }
       );
     });
+  }
+
+  /**
+   * Filters ESS Teams that are already associated as Mutual Aid to the selected supplier
+   *
+   * @param allEssTeamList All ESs Team existing in ERA system
+   * @param supplierMutualAidList ESS Teams already asociated to the selected supplier
+   * @returns a list of ESS Teams that has no mutual Aid relationship with the selected supplier
+   */
+  public filterEssTeams(allEssTeamList: Team[]): Team[] {
+    let filteredEssTeams: Team[] = [];
+
+    // Filtering the ESS Teams that are already has a mutual Aid relationship with this supplier
+    filteredEssTeams = allEssTeamList.filter((e) => {
+      return !this.selectedSupplier.sharedWithTeams.find((item) => {
+        return item.id === e.id;
+      });
+    });
+
+    // Filtering the main ESS Team from the list
+    filteredEssTeams = filteredEssTeams.filter((e) => {
+      return e.id !== this.selectedSupplier.team.id;
+    });
+
+    return filteredEssTeams;
+  }
+
+  /**
+   * Gets a list of ESS Teams calling the REST API Service
+   *
+   * @returns a list os ESS Teams
+   */
+  public getEssTeams(): Team[] {
+    let essTeams: Team[] = [];
+    this.supplierServices
+      .getMutualAidByEssTeam()
+      .subscribe((essTeamsResult) => {
+        essTeams = essTeamsResult;
+        this.setEssTeams(essTeamsResult);
+      });
+    return essTeams;
+    // return this.supplierServices.getMutualAidByEssTeam();
+  }
+
+  /**
+   * Gets a list of all ESS Teams existing in the ERA System and saves it in cache
+   *
+   * @returns a list of ESS Teams
+   */
+  public getEssTeamsList(): Team[] {
+    return this.essTeams
+      ? this.essTeams
+      : JSON.parse(this.cacheService.get('essTeams'))
+      ? JSON.parse(this.cacheService.get('essTeams'))
+      : this.getEssTeams();
+  }
+
+  /**
+   * Sets a list of ESS Teams
+   *
+   * @param essTeams a list os ESS Teams
+   */
+  private setEssTeams(essTeams: Team[]): void {
+    this.essTeams = essTeams;
+    this.cacheService.set('essTeams', essTeams);
   }
 }

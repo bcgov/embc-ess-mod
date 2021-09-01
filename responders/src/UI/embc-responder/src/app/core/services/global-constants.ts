@@ -275,6 +275,14 @@ export const deleteSupplierFromList: DialogContent = {
   confirmButton: 'Yes, Remove Supplier'
 };
 
+export const rescindSupplierFromList: DialogContent = {
+  title: 'Rescind',
+  text:
+    '<p>Are you sure you want to permanently remove this ESS Team?</p><p>They will no longer have access to use this supplier.</p>',
+  cancelButton: 'No, Cancel',
+  confirmButton: 'Yes, Remove ESS Team'
+};
+
 export const supplierStatusDefinition: DialogContent = {
   title: 'Status Definitions',
   text:

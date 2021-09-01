@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { TableColumnModel } from 'src/app/core/models/table-column.model';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
@@ -10,6 +10,7 @@ import * as globalConst from '../../../core/services/global-constants';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { SupplierListItem } from 'src/app/core/api/models';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
+import { SupplierDetailService } from '../supplier-detail/supplier-detail.service';
 
 @Component({
   selector: 'app-suppliers-list',
@@ -32,7 +33,6 @@ export class SuppliersListComponent implements OnInit {
   constructor(
     private listSupplierDataService: SupplierListDataService,
     private router: Router,
-    private route: ActivatedRoute,
     private userService: UserService,
     private supplierServices: SupplierService,
     private alertService: AlertService
@@ -53,7 +53,6 @@ export class SuppliersListComponent implements OnInit {
 
     this.supplierServices.getMainSuppliersList().subscribe(
       (values) => {
-        console.log(values);
         this.suppliersLoader = !this.suppliersLoader;
         this.suppliersList = values;
       },
