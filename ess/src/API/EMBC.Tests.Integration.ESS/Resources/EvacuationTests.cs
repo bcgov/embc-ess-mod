@@ -37,8 +37,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 FileId = TestEssFileNumber
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
-            queryResult.Items.ShouldNotBeEmpty();
-            queryResult.Items.FirstOrDefault().ShouldNotBeNull();
+            queryResult.Items.ShouldHaveSingleItem();
 
             var evacuationFile = (EvacuationFile)queryResult.Items.ShouldHaveSingleItem();
             evacuationFile.Id.ShouldBe(TestEssFileNumber);
@@ -53,8 +52,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 NeedsAssessmentId = TestNeedsAssessmentId
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
-            queryResult.Items.ShouldNotBeEmpty();
-            queryResult.Items.FirstOrDefault().ShouldNotBeNull();
+            queryResult.Items.ShouldHaveSingleItem();
 
             var evacuationFile = (EvacuationFile)queryResult.Items.ShouldHaveSingleItem();
             evacuationFile.Id.ShouldBe(TestEssFileNumber);
@@ -69,7 +67,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                 NeedsAssessmentId = TestNeedsAssessmentId
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
-            queryResult.Items.Count().ShouldBe(0);
+            queryResult.Items.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]

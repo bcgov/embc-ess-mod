@@ -417,8 +417,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeRegistrantProfilesOnly = true, IncludeRestrictedAccess = true });
 
-            searchResults.EvacuationFiles.Count().ShouldBe(0);
-            searchResults.Profiles.Count().ShouldNotBe(0);
+            searchResults.EvacuationFiles.ShouldBeEmpty();
+            searchResults.Profiles.ShouldNotBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -426,8 +426,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeEvacuationFilesOnly = true, IncludeRestrictedAccess = true });
 
-            searchResults.EvacuationFiles.Count().ShouldNotBe(0);
-            searchResults.Profiles.Count().ShouldBe(0);
+            searchResults.EvacuationFiles.ShouldNotBeEmpty();
+            searchResults.Profiles.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -435,8 +435,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeRestrictedAccess = true });
 
-            searchResults.EvacuationFiles.Count().ShouldNotBe(0);
-            searchResults.Profiles.Count().ShouldNotBe(0);
+            searchResults.EvacuationFiles.ShouldNotBeEmpty();
+            searchResults.Profiles.ShouldNotBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
