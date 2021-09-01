@@ -187,7 +187,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         public async Task CanQueryTeamByCommunity()
         {
             var teams = (await adminManager.Handle(new TeamsQuery { CommunityCode = abbotsfordCommunityId })).Teams;
-            teams.Count().ShouldNotBe(0);
+            teams.ShouldNotBeEmpty();
             teams.ShouldAllBe(t => t.AssignedCommunities.Any(c => c.Code == abbotsfordCommunityId));
         }
 
@@ -196,7 +196,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         {
             var teams = (await adminManager.Handle(new TeamsQuery())).Teams;
 
-            teams.Count().ShouldNotBe(0);
+            teams.ShouldNotBeEmpty();
             teams.Single(t => t.Id == teamId).AssignedCommunities.ShouldNotBeEmpty();
         }
 
@@ -251,7 +251,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         {
             var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = ACBSupplierId });
 
-            searchResults.Items.Count().ShouldBe(1);
+            searchResults.Items.ShouldHaveSingleItem();
             searchResults.Items.ShouldAllBe(s => s.Id == ACBSupplierId);
         }
 
@@ -260,7 +260,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         {
             var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = inactiveSupplierId });
 
-            searchResults.Items.Count().ShouldBe(0);
+            searchResults.Items.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -268,7 +268,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
         {
             var searchResults = await adminManager.Handle(new SuppliersQuery { LegalName = inactiveSupplierName, GSTNumber = inactiveSupplierGSTNumber });
 
-            searchResults.Items.Count().ShouldBe(0);
+            searchResults.Items.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -390,7 +390,7 @@ namespace EMBC.Tests.Integration.ESS.Admin
 
             var updatedSupplier = (await adminManager.Handle(new SuppliersQuery { SupplierId = testSupplierId })).Items.SingleOrDefault();
             updatedSupplier.Team.ShouldBe(null);
-            updatedSupplier.SharedWithTeams.Count().ShouldBe(0);
+            updatedSupplier.SharedWithTeams.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]

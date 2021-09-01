@@ -294,7 +294,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             readCtx.MergeOption = MergeOption.NoTracking;
 
             //get all matching files
-            var files = (await QueryHouseholdMemberFiles(readCtx, query)).Concat(await QueryEvacuationFiles(readCtx, query));
+            var files = (await QueryHouseholdMemberFiles(readCtx, query)).Concat(await QueryEvacuationFiles(readCtx, query)).Concat(await QueryNeedsAssessments(readCtx, query));
 
             //secondary filter after loading the files
             if (!string.IsNullOrEmpty(query.FileId)) files = files.Where(f => f.era_name == query.FileId);
@@ -314,9 +314,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         private static async Task<IEnumerable<era_evacuationfile>> QueryHouseholdMemberFiles(EssContext ctx, EvacuationFilesQuery query)
         {
             var shouldQueryHouseholdMembers =
-             !string.IsNullOrEmpty(query.LinkedRegistrantId) ||
+                string.IsNullOrEmpty(query.FileId) && string.IsNullOrEmpty(query.NeedsAssessmentId) &&
+             (!string.IsNullOrEmpty(query.LinkedRegistrantId) ||
              !string.IsNullOrEmpty(query.PrimaryRegistrantId) ||
-             !string.IsNullOrEmpty(query.HouseholdMemberId);
+             !string.IsNullOrEmpty(query.HouseholdMemberId));
 
             if (!shouldQueryHouseholdMembers) return Array.Empty<era_evacuationfile>();
 
@@ -332,9 +333,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         private static async Task<IEnumerable<era_evacuationfile>> QueryEvacuationFiles(EssContext ctx, EvacuationFilesQuery query)
         {
             var shouldQueryFiles =
-                !string.IsNullOrEmpty(query.FileId) ||
+                string.IsNullOrEmpty(query.NeedsAssessmentId) &&
+                (!string.IsNullOrEmpty(query.FileId) ||
                 query.RegistraionDateFrom.HasValue ||
-                query.RegistraionDateTo.HasValue;
+                query.RegistraionDateTo.HasValue);
 
             if (!shouldQueryFiles) return Array.Empty<era_evacuationfile>();
 
@@ -345,6 +347,23 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (query.RegistraionDateTo.HasValue) filesQuery = filesQuery.Where(f => f.createdon <= query.RegistraionDateTo.Value);
 
             return (await ((DataServiceQuery<era_evacuationfile>)filesQuery).GetAllPagesAsync()).ToArray();
+        }
+
+        private static async Task<IEnumerable<era_evacuationfile>> QueryNeedsAssessments(EssContext ctx, EvacuationFilesQuery query)
+        {
+            var shouldQueryNeedsAssessments = !string.IsNullOrEmpty(query.NeedsAssessmentId) && !string.IsNullOrEmpty(query.FileId);
+
+            if (!shouldQueryNeedsAssessments) return Array.Empty<era_evacuationfile>();
+
+            var needsAssessmentQuery = ctx.era_needassessments
+               .Expand(na => na.era_EvacuationFile)
+                        .Where(n => n.era_needassessmentid == Guid.Parse(query.NeedsAssessmentId));
+
+            return (await ((DataServiceQuery<era_needassessment>)needsAssessmentQuery).GetAllPagesAsync()).Select(na =>
+            {
+                na.era_EvacuationFile.era_CurrentNeedsAssessmentid = na;
+                return na.era_EvacuationFile;
+            }).Where(f => f.era_name == query.FileId).ToArray();
         }
 
         public async Task<string> CreateNote(string fileId, Note note)

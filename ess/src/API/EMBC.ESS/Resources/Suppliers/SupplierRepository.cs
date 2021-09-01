@@ -158,7 +158,6 @@ namespace EMBC.ESS.Resources.Suppliers
                 .Expand(s => s.era_RelatedProvinceState);
 
             if (queryRequest.ActiveOnly) supplierQuery = supplierQuery.Where(s => s.statecode == (int)EntityState.Active);
-
             if (!string.IsNullOrEmpty(queryRequest.SupplierId)) supplierQuery = supplierQuery.Where(s => s.era_supplierid == Guid.Parse(queryRequest.SupplierId));
             if (!string.IsNullOrEmpty(queryRequest.LegalName) && !string.IsNullOrEmpty(queryRequest.GSTNumber)) supplierQuery = supplierQuery.Where(s => s.era_name == queryRequest.LegalName && s.era_gstnumber == queryRequest.GSTNumber);
 
