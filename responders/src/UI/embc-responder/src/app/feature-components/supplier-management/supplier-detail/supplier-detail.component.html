@@ -141,15 +141,15 @@
                 [diameter]="25"
                 [showLoader]="searchESSTeamLoader"
                 [color]="blueColor"
-              ></app-loader>
+              >
+              </app-loader>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" *ngIf="essTeamsListResult?.length > 0">
               <mat-radio-group
                 formControlName="selectedEssTeam"
                 class="options-group"
-                (change)="selectEssTeamChange($event)"
                 required
               >
                 <mat-radio-button
@@ -172,19 +172,41 @@
                 >
               </mat-radio-group>
             </div>
-            <div class="col-md-12" *ngIf="essTeamsListResult?.length > 0">
+            <div class="col-md-12" *ngIf="noneResults">
+              <p class="no-results"><b>None ESS Team were found</b></p>
+            </div>
+            <div
+              class="col-md-12 btn-section"
+              *ngIf="essTeamsListResult?.length > 0"
+            >
               <button
-                class="button-p button-width"
+                class="button-p secondary-btn-width"
                 [disabled]="!searchMutualAidForm.valid"
+                (click)="addMutualAidEssTeam()"
               >
                 Add this ESS Team
+                <app-loader
+                  [strokeWidth]="3"
+                  [diameter]="25"
+                  [showLoader]="addESSTeamLoader"
+                ></app-loader>
               </button>
             </div>
           </div>
         </form>
         <div class="row" *ngIf="selectedSupplier?.sharedWithTeams.length > 0">
           <div class="col-md-12">
-            <p><b>Mutual Aid Recipient</b></p>
+            <div class="col-md-6">
+              <p>
+                <b>Mutual Aid Recipient</b>
+                <app-loader
+                  [strokeWidth]="3"
+                  [diameter]="25"
+                  [showLoader]="showLoader"
+                ></app-loader>
+              </p>
+            </div>
+
             <table mat-table [dataSource]="mutualAidDataSource">
               <ng-container matColumnDef="essTeam">
                 <th mat-header-cell *matHeaderCellDef>ESS Teams</th>
@@ -204,11 +226,6 @@
                   <a class="supplier-link" (click)="rescindSupplier(element)"
                     >Rescind Supplier</a
                   >
-                  <app-loader
-                    [strokeWidth]="3"
-                    [diameter]="25"
-                    [showLoader]="showLoader"
-                  ></app-loader>
                 </td>
               </ng-container>
 

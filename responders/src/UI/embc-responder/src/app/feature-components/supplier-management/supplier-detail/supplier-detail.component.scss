@@ -10,7 +10,7 @@
 }
 
 .detail-label {
-   color: #717171;
+    color: #717171;
 }
 
 .content-align {
@@ -23,12 +23,20 @@
     margin-bottom: 20px;
 }
 
+.btn-section {
+    margin-bottom: 50px;
+}
+
 .button-margin {
     margin-right: 20px;
 }
 
 .button-width {
     width: 45%;
+}
+
+.secondary-btn-width {
+    width: 30%;
 }
 
 .contact-info {
@@ -82,10 +90,10 @@ table {
 th {
     font-size: 16px;
     background-color: rgba(35, 64, 117, 1);
-    color: white
-  }
+    color: white;
+}
 
-  .supplier-link {
+.supplier-link {
     cursor: pointer;
     color: rgb(22, 155, 213);
     text-decoration: none;
@@ -95,8 +103,13 @@ th {
     display: flex;
     flex-direction: column;
     margin: 15px 0;
-  }
+}
 
-  .loader-col{
-      margin-top: 15px;
-  }
+.loader-col {
+    margin-top: 15px;
+}
+
+.no-results {
+    margin-left: 20px;
+    font-weight: 400;
+}

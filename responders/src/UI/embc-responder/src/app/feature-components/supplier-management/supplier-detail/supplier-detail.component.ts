@@ -22,7 +22,7 @@ import {
   LocationsService
 } from 'src/app/core/services/locations.service';
 import { Observable } from 'rxjs/internal/Observable';
-import { map, startWith } from 'rxjs/operators';
+import { debounceTime, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { SupplierService } from 'src/app/core/services/suppliers.service';
 import { MatRadioChange } from '@angular/material/radio/public-api';
 import { SupplierManagementService } from '../supplier-management.service';
@@ -42,12 +42,14 @@ export class SupplierDetailComponent implements OnInit {
   mutualAidDataSource = new MatTableDataSource();
   showLoader = false;
   searchESSTeamLoader = false;
+  addESSTeamLoader = false;
   blueColor = '#234075';
   city: Community[] = [];
   communityFilteredOptions: Observable<Community[]>;
   essTeam: Team[] = [];
   essTeamFilteredOptions: Observable<Team[]>;
   essTeamsListResult: Team[];
+  noneResults = false;
 
   constructor(
     private builder: FormBuilder,
@@ -96,7 +98,7 @@ export class SupplierDetailComponent implements OnInit {
       );
 
     // Gets the Ess Team names of all existing teams
-    this.essTeam = this.supplierDetailService.getEssTeamsList();
+    this.essTeam = this.supplierListDataService.getNonMutualAidTeams();
 
     this.essTeamFilteredOptions = this.searchMutualAidForm
       .get('essTeam')
@@ -107,8 +109,6 @@ export class SupplierDetailComponent implements OnInit {
         )
       );
   }
-
-  selectEssTeamChange(event: MatRadioChange): void {}
 
   /**
    * Returns the control of the form
@@ -204,23 +204,41 @@ export class SupplierDetailComponent implements OnInit {
    */
   searchEssTeamByComm(community: Community): void {
     this.essTeamsListResult = [];
+    this.noneResults = false;
     this.searchESSTeamLoader = !this.searchESSTeamLoader;
     this.supplierService
       .getMutualAidByCommunity(community.code)
       .subscribe((results) => {
-        this.essTeamsListResult = results;
+        this.essTeamsListResult = this.supplierListDataService.filterEssTeams(
+          results
+        );
+        if (this.essTeamsListResult.length === 0) {
+          this.noneResults = true;
+        }
         this.searchESSTeamLoader = !this.searchESSTeamLoader;
       });
   }
 
+  /**
+   * Search ESS Teams by name
+   *
+   * @param essTeam the selected ESS Team object
+   */
   searchEssTeamByName(essTeam: Team): void {
     this.essTeamsListResult = [];
+    this.noneResults = false;
     console.log(essTeam);
     this.essTeamsListResult.push(essTeam);
   }
 
-  //TODO
-  addMutualAidEssTeam(): void {}
+  /**
+   * Adds the selected supplier as a mutual Aid for the ESS Team that was selected
+   */
+  addMutualAidEssTeam(): void {
+    this.addESSTeamLoader = !this.addESSTeamLoader;
+    const team = this.searchMutualAidForm.get('selectedEssTeam').value;
+    this.supplierDetailService.addMutualAid(this.selectedSupplier.id, team.id);
+  }
 
   /**
    * Rescinds the selected Supplier for the selected ESS Team
@@ -228,12 +246,25 @@ export class SupplierDetailComponent implements OnInit {
    * @param team The Team which mutual Aid relationship will be rescind
    */
   rescindSupplier(team: Team): void {
-    this.showLoader = !this.showLoader;
-    console.log(team);
-    this.supplierDetailService.rescindMutualAid(
-      this.selectedSupplier.id,
-      team.id
-    );
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: InformationDialogComponent,
+          content: globalConst.rescindSupplierFromList
+        },
+        height: '250px',
+        width: '600px'
+      })
+      .afterClosed()
+      .subscribe((event) => {
+        if (event === 'confirm') {
+          this.showLoader = !this.showLoader;
+          this.supplierDetailService.rescindMutualAid(
+            this.selectedSupplier.id,
+            team.id
+          );
+        }
+      });
   }
 
   /**
