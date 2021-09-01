@@ -271,7 +271,7 @@ namespace EMBC.ESS.Managers.Submissions
                 }
                 if (support is Shared.Contracts.Submissions.Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))
                 {
-                    var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id })).Items.SingleOrDefault();
+                    var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id, ActiveOnly = false })).Items.SingleOrDefault();
                     if (supplier != null)
                     {
                         referral.SupplierDetails.Name = supplier.LegalName;
