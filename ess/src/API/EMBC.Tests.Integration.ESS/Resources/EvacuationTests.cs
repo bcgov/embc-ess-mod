@@ -22,6 +22,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         private const string TestEssFileNumber = "101010";
 
+        private const string TestNeedsAssessmentId = "b67cbdb4-75af-4cbb-a291-c390be77f83d";
+
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             caseRepository = services.GetRequiredService<ICaseRepository>();
@@ -40,6 +42,23 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var evacuationFile = (EvacuationFile)queryResult.Items.ShouldHaveSingleItem();
             evacuationFile.Id.ShouldBe(TestEssFileNumber);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetEvacuationFilesByFileIdAndRelatedNeedsAssessmentId()
+        {
+            var caseQuery = new EvacuationFilesQuery
+            {
+                FileId = TestEssFileNumber,
+                NeedsAssessmentId = TestNeedsAssessmentId
+            };
+            var queryResult = await caseRepository.QueryCase(caseQuery);
+            queryResult.Items.ShouldNotBeEmpty();
+            queryResult.Items.FirstOrDefault().ShouldNotBeNull();
+
+            var evacuationFile = (EvacuationFile)queryResult.Items.ShouldHaveSingleItem();
+            evacuationFile.Id.ShouldBe(TestEssFileNumber);
+            evacuationFile.NeedsAssessment.Id.ShouldBe(TestNeedsAssessmentId);
         }
 
         [Fact(Skip = RequiresDynamics)]

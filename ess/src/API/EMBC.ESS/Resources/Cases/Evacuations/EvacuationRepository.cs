@@ -303,6 +303,16 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (query.IncludeFilesInStatuses.Any()) files = files.Where(f => query.IncludeFilesInStatuses.Any(s => (int)s == f.era_essfilestatus));
             if (query.Limit.HasValue) files = files.OrderByDescending(f => f.era_name).Take(query.Limit.Value);
 
+            if (!string.IsNullOrEmpty(query.NeedsAssessmentId))
+            {
+                foreach (var file in files)
+                {
+                    essContext.AttachTo(nameof(EssContext.era_evacuationfiles), file);
+                    essContext.LoadProperty(file, nameof(era_evacuationfile.era_needsassessment_EvacuationFile));
+                    file.era_CurrentNeedsAssessmentid = file.era_needsassessment_EvacuationFile.Where(n => n.era_needassessmentid == Guid.Parse(query.NeedsAssessmentId)).SingleOrDefault();
+                }
+            }
+
             //ensure files will be loaded only once and have a needs assessment
             files = files
                 .Where(f => f.statecode == (int)EntityState.Active && f._era_currentneedsassessmentid_value.HasValue)

@@ -25,6 +25,7 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public string PrimaryRegistrantId { get; set; }
         public string PrimaryRegistrantUserId { get; set; }
         public string LinkedRegistrantId { get; set; }
+        public string NeedsAssessmentId { get; set; }
         public EvacuationFileStatus[] IncludeFilesInStatuses { get; set; } = Array.Empty<EvacuationFileStatus>();
     }
 

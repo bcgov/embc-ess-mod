@@ -72,6 +72,7 @@ namespace EMBC.ESS.Resources.Cases
         public int? Limit { get; set; }
         public string HouseholdMemberId { get; set; }
         public string LinkedRegistrantId { get; set; }
+        public string NeedsAssessmentId { get; set; }
     }
 
     public class SaveEvacuationFileNote : ManageCaseCommand
