@@ -256,12 +256,11 @@ namespace EMBC.Tests.Integration.ESS.Admin
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task QueryInActiveById_Suppliers_ReturnsSuppliersById()
+        public async Task QueryInActiveById_Suppliers_ReturnsNothing()
         {
             var searchResults = await adminManager.Handle(new SuppliersQuery { SupplierId = inactiveSupplierId });
 
-            searchResults.Items.Count().ShouldBe(1);
-            searchResults.Items.ShouldAllBe(s => s.Id == inactiveSupplierId);
+            searchResults.Items.Count().ShouldBe(0);
         }
 
         [Fact(Skip = RequiresDynamics)]

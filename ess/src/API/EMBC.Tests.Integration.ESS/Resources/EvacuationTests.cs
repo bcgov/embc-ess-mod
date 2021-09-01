@@ -62,6 +62,17 @@ namespace EMBC.Tests.Integration.ESS.Resources
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetNoEvacuationFilesByRelatedNeedsAssessmentIdOnly()
+        {
+            var caseQuery = new EvacuationFilesQuery
+            {
+                NeedsAssessmentId = TestNeedsAssessmentId
+            };
+            var queryResult = await caseRepository.QueryCase(caseQuery);
+            queryResult.Items.Count().ShouldBe(0);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanGetNoEvacuationFilessByFileIdAndRegistrant()
         {
             var primaryContact = await GetContactByUserId(TestUserId);
