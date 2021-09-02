@@ -4,20 +4,23 @@ import { EnumToArrayPipe } from './EnumToArray.pipe';
 import { MaskTextPipe } from './maskText.pipe';
 import { MaskEvacuatedAddressPipe } from './maskEvacuatedAddress.pipe';
 import { MaskFullAddressPipe } from './maskFullAddress.pipe';
+import { NumberArrayPipe } from './numberArray.pipe';
 
 @NgModule({
   declarations: [
     EnumToArrayPipe,
     MaskEvacuatedAddressPipe,
     MaskTextPipe,
-    MaskFullAddressPipe
+    MaskFullAddressPipe,
+    NumberArrayPipe
   ],
   imports: [CommonModule],
   exports: [
     EnumToArrayPipe,
     MaskEvacuatedAddressPipe,
     MaskTextPipe,
-    MaskFullAddressPipe
+    MaskFullAddressPipe,
+    NumberArrayPipe
   ]
 })
 export class CustomPipeModule {}

@@ -45,7 +45,7 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EvacuationFile>> GetFile(string fileId, string needsAssessmentId = null)
         {
-            var file = await evacuationSearchService.GetEvacuationFile(fileId);
+            var file = await evacuationSearchService.GetEvacuationFile(fileId, needsAssessmentId);
 
             if (file == null) return NotFound();
 
@@ -253,7 +253,7 @@ namespace EMBC.Responders.API.Controllers
             return Ok(res);
         }
 
-        private bool UserCanEditNote(Note note) => note.CreatingTeamMemberId.Equals(currentUserId) && note.AddedOn >= DateTime.UtcNow.AddHours(-24);
+        private bool UserCanEditNote(Note note) => !string.IsNullOrEmpty(note.CreatingTeamMemberId) && note.CreatingTeamMemberId.Equals(currentUserId) && note.AddedOn >= DateTime.UtcNow.AddHours(-24);
 
         private bool UserCanHideNote()
         {
