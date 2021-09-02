@@ -1,0 +1,80 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: job-scheduling build config template
+
+parameters:
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+
+objects:
+  - kind: ImageStream
+    apiVersion: image.openshift.io/v1
+    metadata:
+      name: dotnet-21
+      namespace: ${NAMESPACE_PREFIX}-tools
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - name: latest
+          annotations: null
+          from:
+            kind: DockerImage
+            name: registry.access.redhat.com/ubi8/dotnet-21
+          generation: 2
+          importPolicy: {}
+          referencePolicy:
+            type: Source
+
+  - kind: ImageStream
+    apiVersion: image.openshift.io/v1
+    metadata:
+      name: job-scheduling
+      namespace: ${NAMESPACE_PREFIX}-tools
+
+  - kind: BuildConfig
+    apiVersion: build.openshift.io/v1
+    metadata:
+      name: job-scheduling-build
+      namespace: ${NAMESPACE_PREFIX}-tools
+      labels:
+        app: job-scheduling
+    spec:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: "job-scheduling:latest"
+      resources:
+        limits:
+          cpu: "1"
+          memory: 2Gi
+        requests:
+          cpu: 250m
+          memory: 1Gi
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
+      strategy:
+        type: Source
+        sourceStrategy:
+          from:
+            kind: ImageStreamTag
+            name: "dotnet-21:latest"
+          env:
+            - name: DOTNET_STARTUP_PROJECT
+              value: job-scheduling/job-scheduling.csproj
+          forcePull: true
+      postCommit: {}
+      source:
+        type: Git
+        git:
+          uri: "https://github.com/JonTaylorBCGov/job-scheduling"
+          ref: master
+      triggers:
+        - type: ConfigChange
+        - type: GitHub
+          github:
+            secretReference:
+              name: webhook
+      runPolicy: Serial
