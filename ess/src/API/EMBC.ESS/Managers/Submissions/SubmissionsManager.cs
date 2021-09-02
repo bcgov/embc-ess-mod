@@ -439,6 +439,21 @@ namespace EMBC.ESS.Managers.Submissions
             }
         }
 
+        public async Task<string> Handle(VoidSupportCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
+
+            if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
+
+            var id = (await caseRepository.ManageCase(new VoidEvacuationFileSupportCommand
+            {
+                FileId = cmd.FileId,
+                SupportId = cmd.SupportId,
+                VoidReason = Enum.Parse<Resources.Cases.SupportVoidReason>(cmd.VoidReason.ToString())
+            })).Id;
+            return id;
+        }
+
         public async Task<SuppliersListQueryResult> Handle(SuppliersListQuery query)
         {
             var task = (EssTask)(await taskRepository.QueryTask(new TaskQuery { ById = query.TaskId })).Items.SingleOrDefault();

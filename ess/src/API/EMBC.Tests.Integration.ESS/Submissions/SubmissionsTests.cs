@@ -19,6 +19,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
         private readonly string teamUserId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
 
+        private readonly string fileIdWithSupports = "101610";
+
         public SubmissionsTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             manager = services.GetRequiredService<SubmissionsManager>();
@@ -586,6 +588,26 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     support.SupplierDetails.Address.ShouldNotBeNull();
                 }
             }
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanVoidSupport()
+        {
+            var file = (await GetEvacuationFileById(fileIdWithSupports)).SingleOrDefault();
+
+            var support = file.Supports.FirstOrDefault();
+
+            await manager.Handle(new VoidSupportCommand
+            {
+                FileId = fileIdWithSupports,
+                SupportId = support.Id,
+                VoidReason = SupportVoidReason.ErrorOnPrintedReferral
+            });
+
+            var updatedFile = (await GetEvacuationFileById(fileIdWithSupports)).ShouldHaveSingleItem();
+            var updatedSupport = updatedFile.Supports.Where(s => s.Id == support.Id).ShouldHaveSingleItem();
+
+            updatedSupport.Status.ShouldBe(SupportStatus.Void);
         }
 
         [Fact(Skip = RequiresDynamics)]

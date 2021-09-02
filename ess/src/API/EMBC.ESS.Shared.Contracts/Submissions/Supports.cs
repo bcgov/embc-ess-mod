@@ -119,4 +119,11 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         Expired,
         Void
     }
+
+    public enum SupportVoidReason
+    {
+        ErrorOnPrintedReferral,
+        NewSupplierRequired,
+        SupplierCouldNotMeetNeed
+    }
 }
