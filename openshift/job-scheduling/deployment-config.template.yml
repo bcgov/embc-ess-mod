@@ -1,0 +1,122 @@
+kind: Template
+apiVersion: v1
+
+parameters:
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+  - description: openshift namespace env name
+    name: ENV
+    required: true
+  - description: app name
+    name: APP_NAME
+    required: true
+  - description: image tag for deployments
+    name: TAG
+    required: true
+  - description: ASPNET runtime environment (Development/Staging/Production)
+    name: RUNTIME_ENVIRONMENT
+    value: Staging
+  - name: DYNAMICS_OAUTH_ENDPOINT
+    required: true
+  - description: Dynamics ADFS client ID
+    name: DYNAMICS_OAUTH_CLIENT_ID
+    required: true
+  - description: Dynamics ADFS client secret
+    name: DYNAMICS_OAUTH_CLIENT_SECRET
+    required: true
+  - description: Dynamics ADFS resource name
+    name: DYNAMICS_OAUTH_RESOURCE
+    required: true
+  - description: Dynamics API endpoint
+    name: DYNAMICS_ENDPOINT
+    required: true
+  - description: Dynamics service account domain
+    name: DYNAMICS_SERVICE_ACCOUNT_DOMAIN
+    required: true
+  - description: Dynamics service account name
+    name: DYNAMICS_SERVICE_ACCOUNT_NAME
+    required: true
+  - description: Dynamics service account password
+    name: DYNAMICS_SERVICE_ACCOUNT_PASSWORD
+    required: true
+  - description: Dynamics service account password
+    name: DYNAMICS_JOB_NAME
+    required: true
+    value: "era_GetCASTransactionProgress"
+  - description: cron schedule syntax for the scheduler
+    name: CRON_SCHEDULE
+    required: true
+    value: "*/2 * * * *"
+
+objects:
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-dynamics-job-scheduling-config
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-dynamics-job-scheduling
+        app.kubernetes.io/part-of: ${APP_NAME}
+    data:
+      ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
+      ADFS_OAUTH2_URI: ${DYNAMICS_OAUTH_ENDPOINT}
+      DYNAMICS_ODATA_URI: ${DYNAMICS_ENDPOINT}
+      DYNAMICS_JOB_NAME: ${DYNAMICS_JOB_NAME}
+
+  - kind: Secret
+    apiVersion: v1
+    type: Opaque
+    metadata:
+      name: ${APP_NAME}-dynamics-job-scheduling-secrets
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-dynamics-job-scheduling
+        app.kubernetes.io/part-of: ${APP_NAME}
+    stringData:
+      DYNAMICS_APP_GROUP_RESOURCE: ${DYNAMICS_OAUTH_RESOURCE}
+      DYNAMICS_APP_GROUP_CLIENT_ID: ${DYNAMICS_OAUTH_CLIENT_ID}
+      DYNAMICS_APP_GROUP_SECRET: ${DYNAMICS_OAUTH_CLIENT_SECRET}
+      DYNAMICS_USERNAME: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}\${DYNAMICS_SERVICE_ACCOUNT_NAME}
+      DYNAMICS_PASSWORD: ${DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
+
+  - kind: CronJob
+    apiVersion: batch/v1beta1
+    metadata:
+      name: dynamics-job-scheduling
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        cronjob: ${APP_NAME}-dynamics-job-scheduling
+    spec:
+      schedule: ${CRON_SCHEDULE}
+      concurrencyPolicy: Forbid
+      successfulJobsHistoryLimit: 5
+      failedJobsHistoryLimit: 5
+      jobTemplate:
+        metadata:
+          labels:
+            cronjob: ${APP_NAME}-dynamics-job-scheduling
+        spec:
+          backoffLimit: 0
+          template:
+            labels:
+              cronjob: ${APP_NAME}-dynamics-job-scheduling
+            spec:
+              restartPolicy: Never
+              activeDeadlineSeconds: 1600
+              serviceAccountName: default
+              schedulerName: default-scheduler
+              terminationGracePeriodSeconds: 30
+              containers:
+                - resources: {}
+                  terminationMessagePath: /dev/termination-log
+                  name: ${APP_NAME}-dynamics-job-scheduling
+                  imagePullPolicy: Always
+                  terminationMessagePolicy: File
+                  image: image-registry.openshift-image-registry.svc:5000/${NAMESPACE_PREFIX}-tools/job-scheduling:latest
+                  envFrom:
+                    - configMapRef:
+                        name: ${APP_NAME}-dynamics-job-scheduling-config
+                    - secretRef:
+                        name: ${APP_NAME}-dynamics-job-scheduling-secrets
+              serviceAccount: default

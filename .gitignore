@@ -3,6 +3,7 @@
 # environment variables for docker-compose
 *.env
 # Openshift parameter files
+/openshift/**/*.params
 **/openshift/templates/*.params
 # Angular local environment files
 **/environment.local.ts
