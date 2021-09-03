@@ -96,9 +96,21 @@ namespace EMBC.ESS.Managers.Submissions
         public async Task<string> Handle(SubmitEvacuationFileCommand cmd)
         {
             var file = mapper.Map<Resources.Cases.EvacuationFile>(cmd.File);
-            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
+
+            var query = new RegistrantQuery();
+            if (Guid.TryParse(file.PrimaryRegistrantId, out var _))
+            {
+                query.ContactId = file.PrimaryRegistrantId;
+            }
+            else
+            {
+                query.UserId = file.PrimaryRegistrantId;
+            }
+
+            var contact = (await contactRepository.QueryContact(query)).Items.SingleOrDefault();
 
             if (contact == null) throw new Exception($"Registrant not found '{file.PrimaryRegistrantId}'");
+            file.PrimaryRegistrantId = contact.Id;
 
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
 
