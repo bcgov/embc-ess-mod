@@ -1,4 +1,16 @@
 .background {
     background-image: url(/assets/images/ess-background.jpg);
     background-repeat: repeat-x;
-   }
+}
+
+.spinner {
+    position: absolute;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+}
+
+.app-error {
+    line-height: 4;
+    font-size: 25px;
+}

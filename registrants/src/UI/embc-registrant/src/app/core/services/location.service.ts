@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CommunityType, CommunityCode, Code } from '../api/models';
+import { CommunityType, CommunityCode, Code, Address } from '../api/models';
 import { ConfigurationService } from '../api/services';
+import { RegAddress } from '../model/address';
 import { CacheService } from './cache.service';
 
 export interface Country {
@@ -64,6 +65,68 @@ export class LocationService {
       ? this.regionalDistricts
       : JSON.parse(this.cacheService.get('regionalDistrictsList'));
   }
+
+  /**
+   * Replace codes from Address object to full objects for AddressModel
+   *
+   * @param addressObject Address object as defined by the API
+   * @returns AddressModel object usable by the UI
+   */
+  public getAddressRegFromAddress(addressObject: Address): RegAddress {
+    const communities = this.getCommunityList();
+    const countries = this.getCountriesList();
+    const stateProvinces = this.getStateProvinceList();
+
+    const addressCommunity = communities.find(
+      (comm) => comm.code === addressObject.community
+    );
+    const addressCountry = countries.find(
+      (coun) => coun.code === addressObject.country
+    );
+    const addressStateProvince = stateProvinces.find(
+      (sp) => sp.code === addressObject.stateProvince
+    );
+
+    return {
+      addressLine1: addressObject.addressLine1,
+      addressLine2: addressObject.addressLine2,
+      community: addressCommunity,
+      stateProvince: addressStateProvince,
+      country: addressCountry,
+      postalCode: addressObject.postalCode
+    };
+  }
+
+  /**
+   * Map an address from the wizard to an address usable by the API
+   *
+   * @param addressObject An Address as defined by the site's address forms
+   * @returns Address object as defined by the API
+   */
+  // public setAddressObjectForDTO(addressObject: AddressModel): Address {
+  //   const address: Address = {
+  //     addressLine1: addressObject.addressLine1,
+  //     addressLine2: addressObject.addressLine2,
+  //     countryCode: addressObject.country.code,
+  //     communityCode:
+  //       (addressObject.community as Community).code === undefined
+  //         ? null
+  //         : (addressObject.community as Community).code,
+  //     city:
+  //       (addressObject.community as Community).code === undefined &&
+  //         typeof addressObject.community === 'string'
+  //         ? addressObject.community
+  //         : null,
+  //     postalCode: addressObject.postalCode,
+  //     stateProvinceCode:
+  //       addressObject.stateProvince === null ||
+  //         addressObject.stateProvince === undefined
+  //         ? null
+  //         : addressObject.stateProvince?.code
+  //   };
+
+  //   return address;
+  // }
 
   private setCommunityList(communityList: Community[]): void {
     this.communityList = communityList;

@@ -37,6 +37,7 @@ export class EvacuationFileListComponent implements OnInit {
       this.evacuationFileService
         .getCurrentEvacuationFiles()
         .subscribe((files) => {
+          console.log(files);
           this.dataSourceActive = files;
           this.dataSourceActive.sort(
             (a, b) =>
@@ -48,7 +49,7 @@ export class EvacuationFileListComponent implements OnInit {
             files.length
           );
           this.evacuatedFrom =
-            this.dataSourceActive[0].evacuatedFromAddress.community;
+            this.dataSourceActive[0]?.evacuatedFromAddress?.community;
           this.showLoading = false;
         });
     } else if (this.currentPath === '/verified-registration/dashboard/past') {
@@ -60,7 +61,7 @@ export class EvacuationFileListComponent implements OnInit {
             new Date(b.evacuationFileDate).valueOf() -
             new Date(a.evacuationFileDate).valueOf()
         );
-        // console.log(this.dataSourceInactive);
+        console.log(this.dataSourceInactive);
         this.showLoading = false;
       });
     }
