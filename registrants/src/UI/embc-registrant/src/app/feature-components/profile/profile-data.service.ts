@@ -104,6 +104,7 @@ export class ProfileDataService {
   }
 
   public setAddressObject(addressObject): Address {
+    console.log(addressObject);
     const address: Address = {
       addressLine1: addressObject.addressLine1,
       addressLine2: addressObject.addressLine2,
