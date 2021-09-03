@@ -10,6 +10,8 @@
     </div>
   </div>
 
+  <!-- {{ supportDetailsForm.value | json }} -->
+
   <div class="heading-container row-padding">
     <div class="row">
       <div class="col-md-8">
@@ -282,6 +284,32 @@
                   >
                     Required</mat-error
                   >
+
+                  <div
+                    [ngSwitch]="
+                      stepSupportsService.supportTypeToAdd.description
+                    "
+                  >
+                    <div *ngSwitchCase="'Food'">
+                      <app-food-meals
+                        [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                        [supportDetailsForm]="supportDetailsForm"
+                        [noOfHouseholdMembers]="
+                          supportDetailsForm.get('members').value.length
+                        "
+                      ></app-food-meals>
+                    </div>
+
+                    <div *ngSwitchCase="'Groceries'">
+                      <app-food-groceries
+                        [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                        [supportDetailsForm]="supportDetailsForm"
+                        [noOfHouseholdMembers]="
+                          supportDetailsForm.get('members').value.length
+                        "
+                      ></app-food-groceries>
+                    </div>
+                  </div>
                 </form>
               </div>
             </div>

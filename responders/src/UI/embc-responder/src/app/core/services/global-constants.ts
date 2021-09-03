@@ -1,5 +1,16 @@
 import { DialogContent } from '../models/dialog-content.model';
 
+export const mealRate = {
+  total: 45,
+  breakfast: 10,
+  lunch: 13,
+  dinner: 22
+};
+
+export const groceriesRate = {
+  rate: 22.5
+};
+
 export const supportNoOfDays = [
   1,
   2,

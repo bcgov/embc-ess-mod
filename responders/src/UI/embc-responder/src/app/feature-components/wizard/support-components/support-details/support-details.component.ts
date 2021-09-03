@@ -8,12 +8,13 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models/evacuation-file-household-member';
+import { SupportDetailsService } from './support-details.service';
 
 @Component({
   selector: 'app-support-details',
@@ -35,7 +36,8 @@ export class SupportDetailsComponent implements OnInit {
     public stepSupportsService: StepSupportsService,
     private datePipe: DatePipe,
     private formBuilder: FormBuilder,
-    private customValidation: CustomValidationService
+    private customValidation: CustomValidationService,
+    private supportDetailsService: SupportDetailsService
   ) {
     this.currentDate = this.datePipe.transform(Date.now(), 'dd-MMM-yyyy');
     this.currentTime = this.datePipe.transform(Date.now(), 'HH:mm');
@@ -47,6 +49,7 @@ export class SupportDetailsComponent implements OnInit {
     this.supportDetailsForm.get('noOfDays').valueChanges.subscribe((value) => {
       this.updateValidToDate();
     });
+    this.addExistingMembers();
   }
 
   /**
@@ -101,23 +104,55 @@ export class SupportDetailsComponent implements OnInit {
   createSupportDetailsForm(): void {
     this.supportDetailsForm = this.formBuilder.group({
       fromDate: [
-        new Date(this.currentDate),
+        this.stepSupportsService?.supportDetails?.fromDate
+          ? this.stepSupportsService?.supportDetails?.fromDate
+          : new Date(this.currentDate),
         [this.customValidation.validDateValidator(), Validators.required]
       ],
-      fromTime: [this.currentTime, [Validators.required]],
-      noOfDays: ['', [Validators.required]],
+      fromTime: [
+        this.stepSupportsService?.supportDetails?.fromTime
+          ? this.stepSupportsService?.supportDetails?.fromTime
+          : this.currentTime,
+        [Validators.required]
+      ],
+      noOfDays: [
+        this.stepSupportsService?.supportDetails?.noOfDays
+          ? this.stepSupportsService?.supportDetails?.noOfDays
+          : '',
+        [Validators.required]
+      ],
       toDate: [
         {
-          value: this.datePipe.transform(this.currentDate, 'MM/dd/yyyy'),
+          value: this.stepSupportsService?.supportDetails?.toDate
+            ? this.stepSupportsService?.supportDetails?.toDate
+            : this.datePipe.transform(this.currentDate, 'MM/dd/yyyy'),
           disabled: true
         }
       ],
-      toTime: [this.currentTime, [Validators.required]],
+      toTime: [
+        this.stepSupportsService?.supportDetails?.toTime
+          ? this.stepSupportsService?.supportDetails?.toTime
+          : this.currentTime,
+        [Validators.required]
+      ],
       members: this.formBuilder.array(
         [],
         [this.customValidation.memberCheckboxValidator()]
+      ),
+      referral: this.supportDetailsService.generateDynamicForm(
+        this.stepSupportsService?.supportTypeToAdd?.description
       )
     });
+  }
+
+  addExistingMembers() {
+    if (this.stepSupportsService?.supportDetails?.members) {
+      const members = this.supportDetailsForm.get('members') as FormArray;
+      this.stepSupportsService?.supportDetails?.members.forEach((member) => {
+        members.push(new FormControl(member));
+      });
+      this.nextDetails();
+    }
   }
 
   /**
@@ -202,11 +237,22 @@ export class SupportDetailsComponent implements OnInit {
     this.supportDetailsForm.get('toDate').patchValue(finalValue);
   }
 
+  /**
+   * Navigates to support delivery page
+   */
   addDelivery() {
     if (!this.supportDetailsForm.valid) {
       this.supportDetailsForm.markAllAsTouched();
     } else {
+      this.stepSupportsService.supportDetails = this.supportDetailsForm.getRawValue();
+      console.log(this.stepSupportsService.supportDetails);
       this.router.navigate(['/ess-wizard/add-supports/delivery']);
     }
+  }
+
+  dynamicFormGroup(): FormGroup {
+    return this.supportDetailsService.generateDynamicForm(
+      this.stepSupportsService.supportTypeToAdd.description
+    );
   }
 }
