@@ -19,8 +19,6 @@ namespace EMBC.Tests.Integration.ESS.Submissions
 
         private readonly string teamUserId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
 
-        private readonly string fileIdWithSupports = "101610";
-
         public SubmissionsTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             manager = services.GetRequiredService<SubmissionsManager>();
@@ -593,18 +591,42 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanVoidSupport()
         {
-            var file = (await GetEvacuationFileById(fileIdWithSupports)).SingleOrDefault();
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var file = CreateNewTestEvacuationFile(registrant);
 
-            var support = file.Supports.FirstOrDefault();
+            file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
+            file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
+
+            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+            fileId.ShouldNotBeNull();
+
+            var supports = new Support[]
+            {
+                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = "9f584892-94fb-eb11-b82b-00505683fbf4" } },
+                new IncidentalsReferral(),
+                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = "87dcf79d-acfb-eb11-b82b-00505683fbf4" } },
+                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = "8e290f97-b910-eb11-b820-00505683fbf4" } },
+                new LodgingBilletingReferral() { NumberOfNights = 1 },
+                new LodgingGroupReferral() { NumberOfNights = 1 },
+                new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
+                new TransportationOtherReferral(),
+                new TransportationTaxiReferral(),
+            };
+
+            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports });
+
+            var fileWithSupports = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+
+            var support = fileWithSupports.Supports.FirstOrDefault();
 
             await manager.Handle(new VoidSupportCommand
             {
-                FileId = fileIdWithSupports,
+                FileId = fileId,
                 SupportId = support.Id,
                 VoidReason = SupportVoidReason.ErrorOnPrintedReferral
             });
 
-            var updatedFile = (await GetEvacuationFileById(fileIdWithSupports)).ShouldHaveSingleItem();
+            var updatedFile = (await GetEvacuationFileById(fileId)).ShouldHaveSingleItem();
             var updatedSupport = updatedFile.Supports.Where(s => s.Id == support.Id).ShouldHaveSingleItem();
 
             updatedSupport.Status.ShouldBe(SupportStatus.Void);
