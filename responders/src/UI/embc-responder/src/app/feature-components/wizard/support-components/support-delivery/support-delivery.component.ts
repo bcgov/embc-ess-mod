@@ -40,7 +40,7 @@ export class SupportDeliveryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.createSupportDetailsForm();
+    this.createSupportDeliveryForm();
     this.supplierList = this.stepSupportsService.supplierList;
     this.supportDeliveryForm.get('issuedTo').valueChanges.subscribe((value) => {
       this.supportDeliveryForm.get('name').updateValueAndValidity();
@@ -80,7 +80,10 @@ export class SupportDeliveryComponent implements OnInit {
       });
   }
 
-  createSupportDetailsForm(): void {
+  /**
+   * Creates support delivery form
+   */
+  createSupportDeliveryForm(): void {
     this.supportDeliveryForm = this.formBuilder.group({
       issuedTo: ['', [Validators.required]],
       name: [
@@ -108,14 +111,32 @@ export class SupportDeliveryComponent implements OnInit {
     return this.supportDeliveryForm.controls;
   }
 
+  /**
+   * Navigates to details page
+   */
   backToDetails() {
     this.router.navigate(['/ess-wizard/add-supports/details']);
   }
 
-  next() {}
+  /**
+   * Navigates to view support page and saves the new support as drafts
+   */
+  next() {
+    if (!this.supportDeliveryForm.valid) {
+      this.supportDeliveryForm.markAllAsTouched();
+    } else {
+      this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
+      this.stepSupportsService.saveAsDraft();
+      this.router.navigate(['/ess-wizard/add-supports/view']);
+    }
+  }
 
+  /**
+   * Toggles the select field based on event
+   *
+   * @param $event select change event
+   */
   memberSelect($event: MatSelectChange) {
-    console.log($event);
     if ($event.value === 'Someone else') {
       this.showTextField = true;
     } else {
@@ -123,11 +144,19 @@ export class SupportDeliveryComponent implements OnInit {
     }
   }
 
+  /**
+   * Shows the supplier details box
+   *
+   * @param $event auto complete event
+   */
   showDetails($event: MatAutocompleteSelectedEvent) {
     this.selectedSupplierItem = $event.option.value;
     this.showSupplierFlag = true;
   }
 
+  /**
+   * Refreshes the supplier list
+   */
   refreshList() {
     this.showLoader = !this.showLoader;
     this.stepSupportsService.getSupplierList().subscribe(

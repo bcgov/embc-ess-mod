@@ -11,18 +11,18 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 import * as globalConst from '../../../../../../core/services/global-constants';
 
 @Component({
-  selector: 'app-food-groceries',
-  templateUrl: './food-groceries.component.html',
-  styleUrls: ['./food-groceries.component.scss']
+  selector: 'app-food-meals',
+  templateUrl: './food-meals.component.html',
+  styleUrls: ['./food-meals.component.scss']
 })
-export class FoodGroceriesComponent
-  implements OnInit, OnChanges, AfterViewInit {
+export class FoodMealsComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() supportDetailsForm: FormGroup;
   @Input() noOfDays: number;
   @Input() noOfHouseholdMembers: number;
   referralForm: FormGroup;
   days: number;
   totalAmount = 0;
+
   constructor(private cd: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
@@ -35,7 +35,9 @@ export class FoodGroceriesComponent
     }
     if (changes.noOfDays) {
       this.days = this.noOfDays;
-      this.referralForm.get('noOfMeals').patchValue(this.noOfDays + 1);
+      this.referralForm.get('noOfBreakfast').patchValue(this.noOfDays + 1);
+      this.referralForm.get('noOfLunches').patchValue(this.noOfDays + 1);
+      this.referralForm.get('noOfDinners').patchValue(this.noOfDays + 1);
     }
     if (changes.noOfHouseholdMembers) {
       this.updateTotalAmount();
@@ -43,7 +45,15 @@ export class FoodGroceriesComponent
   }
 
   ngOnInit(): void {
-    this.referralForm.get('noOfMeals').valueChanges.subscribe((value) => {
+    this.referralForm.get('noOfBreakfast').valueChanges.subscribe((value) => {
+      this.updateTotalAmount();
+    });
+
+    this.referralForm.get('noOfLunches').valueChanges.subscribe((value) => {
+      this.updateTotalAmount();
+    });
+
+    this.referralForm.get('noOfDinners').valueChanges.subscribe((value) => {
       this.updateTotalAmount();
     });
   }
@@ -59,10 +69,19 @@ export class FoodGroceriesComponent
    * Calculates the total restaurant meals amount
    */
   updateTotalAmount() {
-    this.totalAmount =
-      globalConst.groceriesRate.rate *
-      this.referralForm.get('noOfMeals').value *
+    const breakfastAmount =
+      globalConst.mealRate.breakfast *
+      this.referralForm.get('noOfBreakfast').value *
       this.noOfHouseholdMembers;
+    const lunchAmount =
+      globalConst.mealRate.lunch *
+      this.referralForm.get('noOfLunches').value *
+      this.noOfHouseholdMembers;
+    const dinnerAmount =
+      globalConst.mealRate.dinner *
+      this.referralForm.get('noOfDinners').value *
+      this.noOfHouseholdMembers;
+    this.totalAmount = breakfastAmount + lunchAmount + dinnerAmount;
     this.referralForm.get('totalAmount').patchValue(this.totalAmount);
   }
 }
