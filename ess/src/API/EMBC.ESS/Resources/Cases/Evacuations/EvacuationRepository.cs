@@ -444,9 +444,11 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         public async Task<string> UpdateSupport(string fileId, Support support)
         {
-            var existingSupport = essContext.era_evacueesupports
-                .Where(s => s.era_EvacuationFileId.era_name == fileId && s.era_name == support.Id)
-                .SingleOrDefault();
+            var supports = essContext.era_evacueesupports
+                .Expand(s => s.era_EvacuationFileId)
+                .Where(s => s.era_name == support.Id).ToArray();
+
+            var existingSupport = supports.Where(s => s.era_EvacuationFileId.era_name == fileId).SingleOrDefault();
 
             if (existingSupport == null) throw new Exception($"Support {support.Id} not found in file {fileId}");
 
@@ -466,6 +468,25 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.DetachAll();
 
             return updatedSupport.era_name.ToString();
+        }
+
+        public async Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason)
+        {
+            var supports = essContext.era_evacueesupports
+                .Expand(s => s.era_EvacuationFileId)
+                .Where(s => s.era_name == supportId).ToArray();
+
+            var existingSupport = supports.Where(s => s.era_EvacuationFileId.era_name == fileId).SingleOrDefault();
+
+            if (existingSupport != null)
+            {
+                existingSupport.era_voidreason = (int)reason;
+                essContext.DeactivateObject(existingSupport, (int)SupportStatus.Void);
+                await essContext.SaveChangesAsync();
+            }
+            essContext.DetachAll();
+
+            return fileId;
         }
 
         private void AssignHouseholdMembersToSupport(era_evacueesupport support)

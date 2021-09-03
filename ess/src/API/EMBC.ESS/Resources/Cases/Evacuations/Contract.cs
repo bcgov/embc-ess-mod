@@ -37,6 +37,8 @@ namespace EMBC.ESS.Resources.Cases
         Task<string> CreateSupport(string fileId, Support support);
 
         Task<string> UpdateSupport(string fileId, Support support);
+
+        Task<string> VoidSupport(string fileId, string supportId, SupportVoidReason reason);
     }
 
     public class EvacuationFile : Case
@@ -256,6 +258,13 @@ namespace EMBC.ESS.Resources.Cases
         Active = 1,
         Expired = 174360000,
         Void = 2
+    }
+
+    public enum SupportVoidReason
+    {
+        ErrorOnPrintedReferral = 174360000,
+        NewSupplierRequired = 174360001,
+        SupplierCouldNotMeetNeed = 174360002
     }
 
     public enum EraTwoOptions
