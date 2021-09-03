@@ -91,6 +91,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.LinkedRegistrantId, opts => opts.Ignore())
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.Verified, opts => opts.Ignore())
+                .ForMember(d => d.Authenticated, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.HouseholdMember, HouseholdMember>()
@@ -118,6 +119,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
                 .ForMember(d => d.NeedsAssessment, opts => opts.MapFrom(s => s.NeedsAssessments.First()))
                 .ForMember(d => d.Notes, opts => opts.Ignore())
+                .ForMember(d => d.Supports, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
