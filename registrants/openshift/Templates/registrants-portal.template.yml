@@ -240,9 +240,13 @@ objects:
                   port: 8080
               startupProbe:
                 httpGet:
+                  path: /hc/startup
+                  port: 8080
+              readynessProb:
+                httpGet:
                   path: /hc/ready
                   port: 8080
-            dnsPolicy: ClusterFirst
+          dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
           securityContext: {}
