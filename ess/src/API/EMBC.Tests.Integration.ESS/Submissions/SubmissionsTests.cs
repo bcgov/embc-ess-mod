@@ -394,22 +394,22 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task CanSearchEvacueesByName()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var firstName = "Elvis";
+            var lastName = "Presley";
+            var dateOfBirth = "08/01/1935";
 
-            registrant.ShouldNotBeNull();
-
-            registrant.PrimaryAddress.Country.ShouldNotBeNull();
-
-            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935" });
+            var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = firstName, LastName = lastName, DateOfBirth = dateOfBirth, IncludeRestrictedAccess = true });
 
             var registrants = searchResults.Profiles;
-            registrants.ShouldNotBeNull();
-            registrants.ShouldAllBe(r => r.FirstName == "Elvis" && r.LastName == "Presley");
+            registrants.ShouldNotBeEmpty();
+            registrants.ShouldAllBe(r => r.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) && r.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
 
             var files = searchResults.EvacuationFiles;
-            files.ShouldNotBeNull();
+            files.ShouldNotBeEmpty();
             files.ShouldAllBe(f => f.HouseholdMembers
-                .Any(m => m.FirstName.Equals("Elvis", StringComparison.OrdinalIgnoreCase) && m.LastName.Equals("Presley", StringComparison.OrdinalIgnoreCase)));
+                .Any(m => m.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
+                m.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase) &&
+                m.DateOfBirth == dateOfBirth));
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -417,8 +417,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeRegistrantProfilesOnly = true, IncludeRestrictedAccess = true });
 
-            searchResults.EvacuationFiles.Count().ShouldBe(0);
-            searchResults.Profiles.Count().ShouldNotBe(0);
+            searchResults.EvacuationFiles.ShouldBeEmpty();
+            searchResults.Profiles.ShouldNotBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -426,8 +426,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeEvacuationFilesOnly = true, IncludeRestrictedAccess = true });
 
-            searchResults.EvacuationFiles.Count().ShouldNotBe(0);
-            searchResults.Profiles.Count().ShouldBe(0);
+            searchResults.EvacuationFiles.ShouldNotBeEmpty();
+            searchResults.Profiles.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -435,8 +435,8 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         {
             var searchResults = await manager.Handle(new EvacueeSearchQuery { FirstName = "Elvis", LastName = "Presley", DateOfBirth = "08/01/1935", IncludeRestrictedAccess = true });
 
-            searchResults.EvacuationFiles.Count().ShouldNotBe(0);
-            searchResults.Profiles.Count().ShouldNotBe(0);
+            searchResults.EvacuationFiles.ShouldNotBeEmpty();
+            searchResults.Profiles.ShouldNotBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -586,6 +586,50 @@ namespace EMBC.Tests.Integration.ESS.Submissions
                     support.SupplierDetails.Address.ShouldNotBeNull();
                 }
             }
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanVoidSupport()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var file = CreateNewTestEvacuationFile(registrant);
+
+            file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
+            file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
+
+            var fileId = await manager.Handle(new SubmitEvacuationFileCommand { File = file });
+            fileId.ShouldNotBeNull();
+
+            var supports = new Support[]
+            {
+                new ClothingReferral { SupplierDetails = new SupplierDetails { Id = "9f584892-94fb-eb11-b82b-00505683fbf4" } },
+                new IncidentalsReferral(),
+                new FoodGroceriesReferral { SupplierDetails = new SupplierDetails { Id = "87dcf79d-acfb-eb11-b82b-00505683fbf4" } },
+                new FoodRestaurantReferral { SupplierDetails = new SupplierDetails { Id = "8e290f97-b910-eb11-b820-00505683fbf4" } },
+                new LodgingBilletingReferral() { NumberOfNights = 1 },
+                new LodgingGroupReferral() { NumberOfNights = 1 },
+                new LodgingHotelReferral() { NumberOfNights = 1, NumberOfRooms = 1 },
+                new TransportationOtherReferral(),
+                new TransportationTaxiReferral(),
+            };
+
+            await manager.Handle(new ProcessSupportsCommand { FileId = fileId, supports = supports });
+
+            var fileWithSupports = (await manager.Handle(new EvacuationFilesQuery { FileId = fileId })).Items.ShouldHaveSingleItem();
+
+            var support = fileWithSupports.Supports.FirstOrDefault();
+
+            await manager.Handle(new VoidSupportCommand
+            {
+                FileId = fileId,
+                SupportId = support.Id,
+                VoidReason = SupportVoidReason.ErrorOnPrintedReferral
+            });
+
+            var updatedFile = (await GetEvacuationFileById(fileId)).ShouldHaveSingleItem();
+            var updatedSupport = updatedFile.Supports.Where(s => s.Id == support.Id).ShouldHaveSingleItem();
+
+            updatedSupport.Status.ShouldBe(SupportStatus.Void);
         }
 
         [Fact(Skip = RequiresDynamics)]

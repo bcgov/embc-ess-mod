@@ -22,24 +22,52 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
         private const string TestEssFileNumber = "101010";
 
+        private const string TestNeedsAssessmentId = "b67cbdb4-75af-4cbb-a291-c390be77f83d";
+
         public EvacuationTests(ITestOutputHelper output, WebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
             caseRepository = services.GetRequiredService<ICaseRepository>();
         }
 
         [Fact(Skip = RequiresDynamics)]
-        public async Task CanGetEvacuationFilessByFileId()
+        public async Task CanGetEvacuationFilesByFileId()
         {
             var caseQuery = new EvacuationFilesQuery
             {
                 FileId = TestEssFileNumber
             };
             var queryResult = await caseRepository.QueryCase(caseQuery);
-            queryResult.Items.ShouldNotBeEmpty();
-            queryResult.Items.FirstOrDefault().ShouldNotBeNull();
+            queryResult.Items.ShouldHaveSingleItem();
 
             var evacuationFile = (EvacuationFile)queryResult.Items.ShouldHaveSingleItem();
             evacuationFile.Id.ShouldBe(TestEssFileNumber);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetEvacuationFilesByFileIdAndRelatedNeedsAssessmentId()
+        {
+            var caseQuery = new EvacuationFilesQuery
+            {
+                FileId = TestEssFileNumber,
+                NeedsAssessmentId = TestNeedsAssessmentId
+            };
+            var queryResult = await caseRepository.QueryCase(caseQuery);
+            queryResult.Items.ShouldHaveSingleItem();
+
+            var evacuationFile = (EvacuationFile)queryResult.Items.ShouldHaveSingleItem();
+            evacuationFile.Id.ShouldBe(TestEssFileNumber);
+            evacuationFile.NeedsAssessment.Id.ShouldBe(TestNeedsAssessmentId);
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanGetNoEvacuationFilesByRelatedNeedsAssessmentIdOnly()
+        {
+            var caseQuery = new EvacuationFilesQuery
+            {
+                NeedsAssessmentId = TestNeedsAssessmentId
+            };
+            var queryResult = await caseRepository.QueryCase(caseQuery);
+            queryResult.Items.ShouldBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]
@@ -122,7 +150,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
             var updatedNeedsAssessment = updatedFile.NeedsAssessment;
             updatedNeedsAssessment.HavePetsFood.ShouldBe(needsAssessment.HavePetsFood);
-            foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant))
+            foreach (var member in updatedNeedsAssessment.HouseholdMembers.Where(m => !m.IsPrimaryRegistrant && m.LinkedRegistrantId == null))
             {
                 member.FirstName.ShouldStartWith(newUniqueSignature);
                 member.LastName.ShouldStartWith(newUniqueSignature);

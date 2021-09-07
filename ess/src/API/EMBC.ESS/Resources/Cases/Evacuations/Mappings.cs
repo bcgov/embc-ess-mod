@@ -72,7 +72,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             Func<Note, string> resolveNoteContent = n => n?.Content;
             CreateMap<NeedsAssessment, era_needassessment>(MemberList.None)
-                .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => Guid.NewGuid())) //TODO: need to enable update in some scenarios
+                .ForMember(d => d.era_needassessmentid, opts => opts.MapFrom(s => Guid.NewGuid()))
                 .ForMember(d => d._era_reviewedbyid_value, opts => opts.MapFrom(s => s.CompletedByTeamMemberId))
                 .ForMember(d => d.era_needsassessmenttype, opts => opts.MapFrom(s => (int?)Enum.Parse<NeedsAssessmentTypeOptionSet>(s.Type.ToString())))
                 .ForMember(d => d.era_canevacueeprovidefood, opts => opts.MapFrom(s => Lookup(s.CanProvideFood)))
@@ -152,10 +152,10 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
             CreateMap<era_householdmember, HouseholdMember>()
                 .ForMember(d => d.Id, opts => opts.MapFrom(s => s.era_householdmemberid))
-                .ForMember(d => d.LinkedRegistrantId, opts => opts.MapFrom(s => s._era_registrant_value))
-                .ForMember(d => d.HasAccessRestriction, opts => opts.MapFrom(s => s.era_Registrant == null ? (bool?)null : s.era_Registrant.era_restriction))
-                .ForMember(d => d.IsVerifiedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? (bool?)null : s.era_Registrant.era_verified))
-                .ForMember(d => d.IsAuthenticatedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? (bool?)null : s.era_Registrant.era_authenticated))
+                .ForMember(d => d.LinkedRegistrantId, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.contactid))
+                .ForMember(d => d.HasAccessRestriction, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_restriction))
+                .ForMember(d => d.IsVerifiedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_verified))
+                .ForMember(d => d.IsAuthenticatedRegistrant, opts => opts.MapFrom(s => s.era_Registrant == null ? null : s.era_Registrant.era_authenticated))
                 .ForMember(d => d.IsPrimaryRegistrant, opts => opts.MapFrom(s => s.era_isprimaryregistrant))
                 .ForMember(d => d.IsUnder19, opts => opts.MapFrom(s => s.era_isunder19))
                 .ForMember(d => d.FirstName, opts => opts.MapFrom(s => s.era_firstname.ToString()))

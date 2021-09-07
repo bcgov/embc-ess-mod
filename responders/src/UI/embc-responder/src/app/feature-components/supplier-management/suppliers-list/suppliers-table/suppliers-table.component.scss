@@ -24,6 +24,10 @@ table {
   background-color: white !important;
 }
 
+::ng-deep .arrow-color .mat-sort-header-arrow {
+  color: #fff;
+}
+
 .info-image img:last-child {
   display: none;
   }

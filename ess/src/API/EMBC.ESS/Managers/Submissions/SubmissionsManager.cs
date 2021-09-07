@@ -96,9 +96,21 @@ namespace EMBC.ESS.Managers.Submissions
         public async Task<string> Handle(SubmitEvacuationFileCommand cmd)
         {
             var file = mapper.Map<Resources.Cases.EvacuationFile>(cmd.File);
-            var contact = (await contactRepository.QueryContact(new RegistrantQuery { ContactId = file.PrimaryRegistrantId })).Items.SingleOrDefault();
+
+            var query = new RegistrantQuery();
+            if (Guid.TryParse(file.PrimaryRegistrantId, out var _))
+            {
+                query.ContactId = file.PrimaryRegistrantId;
+            }
+            else
+            {
+                query.UserId = file.PrimaryRegistrantId;
+            }
+
+            var contact = (await contactRepository.QueryContact(query)).Items.SingleOrDefault();
 
             if (contact == null) throw new Exception($"Registrant not found '{file.PrimaryRegistrantId}'");
+            file.PrimaryRegistrantId = contact.Id;
 
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
 
@@ -212,6 +224,7 @@ namespace EMBC.ESS.Managers.Submissions
                 FileId = query.FileId,
                 PrimaryRegistrantId = query.PrimaryRegistrantId,
                 LinkedRegistrantId = query.LinkedRegistrantId,
+                NeedsAssessmentId = query.NeedsAssessmentId,
                 IncludeFilesInStatuses = query.IncludeFilesInStatuses.Select(s => Enum.Parse<Resources.Cases.EvacuationFileStatus>(s.ToString())).ToArray()
             })).Items.Cast<Resources.Cases.EvacuationFile>();
 
@@ -270,7 +283,7 @@ namespace EMBC.ESS.Managers.Submissions
                 }
                 if (support is Shared.Contracts.Submissions.Referral referral && !string.IsNullOrEmpty(referral.SupplierDetails?.Id))
                 {
-                    var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id })).Items.SingleOrDefault();
+                    var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery { SupplierId = referral.SupplierDetails.Id, ActiveOnly = false })).Items.SingleOrDefault();
                     if (supplier != null)
                     {
                         referral.SupplierDetails.Name = supplier.LegalName;
@@ -436,6 +449,21 @@ namespace EMBC.ESS.Managers.Submissions
                 })).Id;
                 supportIds.Add(supportId);
             }
+        }
+
+        public async Task<string> Handle(VoidSupportCommand cmd)
+        {
+            if (string.IsNullOrEmpty(cmd.FileId)) throw new ArgumentNullException("FileId is required");
+
+            if (string.IsNullOrEmpty(cmd.SupportId)) throw new ArgumentNullException("SupportId is required");
+
+            var id = (await caseRepository.ManageCase(new VoidEvacuationFileSupportCommand
+            {
+                FileId = cmd.FileId,
+                SupportId = cmd.SupportId,
+                VoidReason = Enum.Parse<Resources.Cases.SupportVoidReason>(cmd.VoidReason.ToString())
+            })).Id;
+            return id;
         }
 
         public async Task<SuppliersListQueryResult> Handle(SuppliersListQuery query)

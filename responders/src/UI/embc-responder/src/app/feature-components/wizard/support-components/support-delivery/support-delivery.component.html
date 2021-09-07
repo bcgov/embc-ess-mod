@@ -1,1 +1,219 @@
-<p>support-delivery works!</p>
+<div class="container container-frame">
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <a (click)="back()"
+        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span
+          class="back-link"
+          >Supports</span
+        ></a
+      >
+    </div>
+  </div>
+
+  <div class="heading-container row-padding">
+    <div class="row">
+      <div class="col-md-8">
+        <span class="wizard-tab-heading">Support Details</span>
+      </div>
+      <div class="col-md-4">ESS Rate sheet</div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-support-type">{{
+          stepSupportsService?.supportTypeToAdd?.description
+        }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        This support can be provisioned to the evacuee by means of a
+        <span class="bold">referral.</span>
+      </p>
+      <p>Please enter the referral details below.</p>
+    </div>
+  </div>
+
+  <form [formGroup]="supportDeliveryForm">
+    <div class="row">
+      <div class="col-md-12">
+        <p class="question-heading requiredField">
+          Who will be responsible for the purchasing of goods?
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-select
+            formControlName="issuedTo"
+            (selectionChange)="memberSelect($event)"
+            required
+          >
+            <mat-option
+              *ngFor="
+                let member of stepSupportsService?.evacFile?.needsAssessment
+                  ?.householdMembers
+              "
+              [value]="member"
+            >
+              {{ member.lastName | uppercase }},
+              {{ member.firstName }}
+            </mat-option>
+            <mat-option [value]="'Someone else'">Someone else</mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl.issuedTo.invalid &&
+              supportDeliveryFormControl.issuedTo.hasError('required')
+            "
+          >
+            Required</mat-error
+          >
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="showTextField" class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Enter Name</mat-label>
+          <input
+            formControlName="name"
+            maxlength="100"
+            matInput
+            placeholder="Enter Name"
+          />
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              supportDeliveryFormControl?.name.invalid &&
+              supportDeliveryFormControl?.name.hasError('whitespaceError')
+            "
+          >
+            Name is required</mat-error
+          >
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <p class="question-heading requiredField">Select Supplier</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Supplier</mat-label>
+          <input
+            maxlength="100"
+            type="text"
+            formControlName="supplier"
+            matInput
+            placeholder="Supplier"
+            [matAutocomplete]="auto"
+            required
+          />
+          <mat-autocomplete
+            (optionSelected)="showDetails($event)"
+            #auto="matAutocomplete"
+            [displayWith]="displaySupplier"
+          >
+            <mat-option
+              *ngFor="let option of filteredOptions | async"
+              [value]="option"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error
+            *ngIf="
+              supportDeliveryFormControl?.supplier.invalid &&
+              supportDeliveryFormControl?.supplier.hasError('required')
+            "
+          >
+            Supplier is required</mat-error
+          >
+          <!-- <mat-error *ngIf="validateCity()"> City is invalid</mat-error> -->
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <button
+          class="search-button button-transparent"
+          mat-button
+          (click)="refreshList()"
+        >
+          <img src="/assets/images/reset.svg" height="20" width="20" /><span
+            class="reset-img"
+            >Refresh Supplier List</span
+          >
+        </button>
+      </div>
+      <div class="col-md-4">
+        <app-loader
+          [strokeWidth]="3"
+          [diameter]="25"
+          [showLoader]="showLoader"
+          [color]="color"
+        >
+        </app-loader>
+      </div>
+    </div>
+
+    <mat-card *ngIf="showSupplierFlag" class="supplier-box">
+      <p span="bold">{{ selectedSupplierItem?.name }}</p>
+      <p>{{ selectedSupplierItem?.address | maskEvacuatedaddress }}</p>
+    </mat-card>
+
+    <div class="row">
+      <div class="col-md-12">
+        <p class="question-heading requiredField">Supplier Support Notes</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        <p>
+          These notes are for the supplier, and will be visible on the referral.
+          Support notes privacy piece.
+        </p>
+        <mat-form-field appearance="outline">
+          <textarea
+            rows="10"
+            formControlName="supplierNote"
+            placeholder="Add Notes"
+            maxlength="250"
+            matInput
+            required
+          ></textarea>
+          <mat-error
+            class="custom-mat-error"
+            *ngIf="
+              supportDeliveryFormControl?.supplierNote.touched &&
+              supportDeliveryFormControl?.supplierNote.invalid &&
+              supportDeliveryFormControl?.supplierNote.hasError(
+                'whitespaceError'
+              )
+            "
+          >
+            Required
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+
+  <div class="row">
+    <div class="col-md-6">
+      <button class="button-s back" mat-button (click)="backToDetails()">
+        Back - Support Details
+      </button>
+    </div>
+    <div class="col-md-6">
+      <button class="button-p next" mat-button (click)="next()">
+        Next - Save Support
+      </button>
+    </div>
+  </div>
+</div>

@@ -85,8 +85,8 @@ namespace EMBC.ESS.Engines.Search
 
             var response = new EvacueeSearchResponse
             {
-                MatchingHouseholdMemberIds = membersQuery.ToArray(),
-                MatchingRegistrantIds = registrantsQuery.ToArray()
+                MatchingHouseholdMemberIds = membersQuery.Distinct().ToArray(),
+                MatchingRegistrantIds = registrantsQuery.Distinct().ToArray()
             };
 
             return await Task.FromResult(response);

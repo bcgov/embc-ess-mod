@@ -10,20 +10,70 @@
   <div class="row">
     <div class="col-md-12">
       <p>
-        <span class="bold">0 supports</span> have been recorded for Evacuation
-        File # 12345 within the ERA Tool.
+        <span class="bold p-margin">{{ supportList?.length }} support(s)</span>
+        have been recorded for Evacuation File #
+        {{ stepSupportsService?.evacFile?.id }} within the ERA Tool.
       </p>
     </div>
   </div>
 
-  <div class="row">
+  <div *ngIf="supportList?.length === 0" class="row row-padding">
     <div class="col-md-6">
       <button class="button-p add-support" mat-button (click)="addSupports()">
-        Add Supports
+        + Add Supports
       </button>
     </div>
-    <!-- <div class="col-md-6">
-      <button class="button-p next" mat-button (click)="next()">Next</button>
-    </div> -->
+  </div>
+
+  <div *ngIf="supportList?.length !== 0">
+    <div class="row row-padding">
+      <div class="col-md-2">
+        <button
+          class="button-p button-width"
+          mat-button
+          (click)="addSupports()"
+        >
+          Add Supports
+        </button>
+      </div>
+      <div class="col-md-3">
+        <button class="button-p button-width" mat-button (click)="process()">
+          Process Draft Support/s
+        </button>
+      </div>
+
+      <div
+        *ngFor="let filter of filtersToLoad?.loadDropdownFilters"
+        class="col-md-3"
+      >
+        <mat-form-field appearance="outline">
+          <mat-label>{{ filter?.label.description }}</mat-label>
+          <mat-select
+            #matRef
+            id="custom-select"
+            (selectionChange)="selected($event, filter?.type)"
+          >
+            <mat-option value="">{{ filter?.label.description }}</mat-option>
+            <mat-option *ngFor="let val of filter?.values" [value]="val">
+              <div *ngIf="val?.description !== undefined; else value">
+                {{ val?.description }}
+              </div>
+              <ng-template #value>{{ val }}</ng-template>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <app-supports-table
+          [supportList]="supportList"
+          [filterTerm]="filterTerm"
+        ></app-supports-table>
+      </div>
+    </div>
   </div>
 </div>
+
+<app-overlay-loader [showLoader]="showLoader"></app-overlay-loader>

@@ -1,0 +1,56 @@
+<form [formGroup]="referralForm">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Number of Days for Meals</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-form-field appearance="outline">
+        <mat-label>#</mat-label>
+        <mat-select formControlName="noOfMeals" required>
+          <mat-option *ngFor="let no of noOfDays | numberArray" [value]="no">
+            {{ no }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            referralFormControl.noOfMeals.invalid &&
+            referralFormControl.noOfMeals.hasError('required')
+          "
+        >
+          Required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Total Amount</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        Up to a maximum value of: <span class="amount">${{ totalAmount }}</span>
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-form-field appearance="outline">
+        <input
+          formControlName="userTotalAmount"
+          matInput
+          type="number"
+          class="amount-right-align"
+          placeholder="0"
+        />
+        <span matPrefix>$&nbsp;</span>
+        <span matSuffix>.00</span>
+      </mat-form-field>
+    </div>
+  </div>
+</form>

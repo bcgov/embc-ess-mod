@@ -25958,6 +25958,16 @@
         <Parameter Name="SearchType" Type="Edm.String" Unicode="false" />
         <ReturnType Type="mscrm.era_EvacueeSearchResponse" Nullable="false" />
       </Action>
+      <ComplexType Name="era_EvacueeSearchByIDResponse">
+        <Property Name="JSONResults" Type="Edm.String" Unicode="false" />
+        <Property Name="Message" Type="Edm.String" Unicode="false" />
+      </ComplexType>
+      <Action Name="era_EvacueeSearchByID">
+        <Parameter Name="ESSFileGUIDs" Type="Edm.String" Unicode="false" />
+        <Parameter Name="ESSFileNumbers" Type="Edm.String" Unicode="false" />
+        <Parameter Name="RegistrantGUIDs" Type="Edm.String" Unicode="false" />
+        <ReturnType Type="mscrm.era_EvacueeSearchByIDResponse" Nullable="false" />
+      </Action>
       <ComplexType Name="era_SubmitUnauthInvoicesResponse">
         <Property Name="submissionFlag" Type="Edm.Boolean" />
         <Property Name="message" Type="Edm.String" Unicode="false" />
@@ -37589,6 +37599,7 @@
         <ActionImport Name="ConvertSalesOrderToInvoice" Action="Microsoft.Dynamics.CRM.ConvertSalesOrderToInvoice" />
         <ActionImport Name="CreateActivitiesList" Action="Microsoft.Dynamics.CRM.CreateActivitiesList" />
         <ActionImport Name="era_EvacueeSearch" Action="Microsoft.Dynamics.CRM.era_EvacueeSearch" />
+        <ActionImport Name="era_EvacueeSearchByID" Action="Microsoft.Dynamics.CRM.era_EvacueeSearchByID" />
         <ActionImport Name="era_SubmitUnauthInvoices" Action="Microsoft.Dynamics.CRM.era_SubmitUnauthInvoices" />
         <ActionImport Name="GenerateInvoiceFromOpportunity" Action="Microsoft.Dynamics.CRM.GenerateInvoiceFromOpportunity" />
         <ActionImport Name="GenerateQuoteFromOpportunity" Action="Microsoft.Dynamics.CRM.GenerateQuoteFromOpportunity" />

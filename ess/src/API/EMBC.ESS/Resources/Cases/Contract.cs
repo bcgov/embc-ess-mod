@@ -72,6 +72,7 @@ namespace EMBC.ESS.Resources.Cases
         public int? Limit { get; set; }
         public string HouseholdMemberId { get; set; }
         public string LinkedRegistrantId { get; set; }
+        public string NeedsAssessmentId { get; set; }
     }
 
     public class SaveEvacuationFileNote : ManageCaseCommand
@@ -84,5 +85,12 @@ namespace EMBC.ESS.Resources.Cases
     {
         public string FileId { get; set; }
         public Support Support { get; set; }
+    }
+
+    public class VoidEvacuationFileSupportCommand : ManageCaseCommand
+    {
+        public string FileId { get; set; }
+        public string SupportId { get; set; }
+        public SupportVoidReason VoidReason { get; set; }
     }
 }

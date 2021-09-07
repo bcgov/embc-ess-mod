@@ -1,0 +1,79 @@
+<form [formGroup]="referralForm">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Number of Meals</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-form-field appearance="outline">
+        <mat-label># of Breakfasts per person</mat-label>
+        <mat-select formControlName="noOfBreakfast" required>
+          <mat-option *ngFor="let no of noOfDays | numberArray" [value]="no">
+            {{ no }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            referralFormControl.noOfBreakfast.invalid &&
+            referralFormControl.noOfBreakfast.hasError('required')
+          "
+        >
+          Required</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-4">
+      <mat-form-field appearance="outline">
+        <mat-label># of Lunches per person</mat-label>
+        <mat-select formControlName="noOfLunches" required>
+          <mat-option *ngFor="let no of noOfDays | numberArray" [value]="no">
+            {{ no }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            referralFormControl.noOfLunches.invalid &&
+            referralFormControl.noOfLunches.hasError('required')
+          "
+        >
+          Required</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-4">
+      <mat-form-field appearance="outline">
+        <mat-label># of Dinners per person</mat-label>
+        <mat-select formControlName="noOfDinners" required>
+          <mat-option *ngFor="let no of noOfDays | numberArray" [value]="no">
+            {{ no }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            referralFormControl.noOfDinners.invalid &&
+            referralFormControl.noOfDinners.hasError('required')
+          "
+        >
+          Required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Total Amount</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        Up to a maximum value of: <span class="amount">${{ totalAmount }}</span>
+      </p>
+    </div>
+  </div>
+</form>

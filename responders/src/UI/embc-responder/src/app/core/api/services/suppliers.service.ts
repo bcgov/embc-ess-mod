@@ -295,6 +295,68 @@ export class SuppliersService extends BaseService {
   }
 
   /**
+   * Path part for operation suppliersRemoveSupplier
+   */
+  static readonly SuppliersRemoveSupplierPath = '/api/Suppliers/{supplierId}/remove';
+
+  /**
+   * Remove supplier.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `suppliersRemoveSupplier()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  suppliersRemoveSupplier$Response(params: {
+
+    /**
+     * supplier id
+     */
+    supplierId: string;
+  }): Observable<StrictHttpResponse<SupplierResult>> {
+
+    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersRemoveSupplierPath, 'post');
+    if (params) {
+      rb.path('supplierId', params.supplierId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<SupplierResult>;
+      })
+    );
+  }
+
+  /**
+   * Remove supplier.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `suppliersRemoveSupplier$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  suppliersRemoveSupplier(params: {
+
+    /**
+     * supplier id
+     */
+    supplierId: string;
+  }): Observable<SupplierResult> {
+
+    return this.suppliersRemoveSupplier$Response(params).pipe(
+      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+    );
+  }
+
+  /**
    * Path part for operation suppliersActivateSupplier
    */
   static readonly SuppliersActivateSupplierPath = '/api/Suppliers/{supplierId}/active';
@@ -414,6 +476,214 @@ export class SuppliersService extends BaseService {
   }): Observable<SupplierResult> {
 
     return this.suppliersDeactivateSupplier$Response(params).pipe(
+      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+    );
+  }
+
+  /**
+   * Path part for operation suppliersClaimSupplier
+   */
+  static readonly SuppliersClaimSupplierPath = '/api/Suppliers/{supplierId}/claim';
+
+  /**
+   * Claim a supplier.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `suppliersClaimSupplier()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  suppliersClaimSupplier$Response(params: {
+
+    /**
+     * supplier id
+     */
+    supplierId: string;
+  }): Observable<StrictHttpResponse<SupplierResult>> {
+
+    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersClaimSupplierPath, 'post');
+    if (params) {
+      rb.path('supplierId', params.supplierId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<SupplierResult>;
+      })
+    );
+  }
+
+  /**
+   * Claim a supplier.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `suppliersClaimSupplier$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  suppliersClaimSupplier(params: {
+
+    /**
+     * supplier id
+     */
+    supplierId: string;
+  }): Observable<SupplierResult> {
+
+    return this.suppliersClaimSupplier$Response(params).pipe(
+      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+    );
+  }
+
+  /**
+   * Path part for operation suppliersAddSupplierSharedWithTeam
+   */
+  static readonly SuppliersAddSupplierSharedWithTeamPath = '/api/Suppliers/{supplierId}/add-team/{sharedTeamId}';
+
+  /**
+   * Add a Team the Supplier is shared with.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `suppliersAddSupplierSharedWithTeam()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  suppliersAddSupplierSharedWithTeam$Response(params: {
+
+    /**
+     * supplier id
+     */
+    supplierId: string;
+
+    /**
+     * shared team id
+     */
+    sharedTeamId: string;
+  }): Observable<StrictHttpResponse<SupplierResult>> {
+
+    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersAddSupplierSharedWithTeamPath, 'post');
+    if (params) {
+      rb.path('supplierId', params.supplierId, {});
+      rb.path('sharedTeamId', params.sharedTeamId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<SupplierResult>;
+      })
+    );
+  }
+
+  /**
+   * Add a Team the Supplier is shared with.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `suppliersAddSupplierSharedWithTeam$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  suppliersAddSupplierSharedWithTeam(params: {
+
+    /**
+     * supplier id
+     */
+    supplierId: string;
+
+    /**
+     * shared team id
+     */
+    sharedTeamId: string;
+  }): Observable<SupplierResult> {
+
+    return this.suppliersAddSupplierSharedWithTeam$Response(params).pipe(
+      map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
+    );
+  }
+
+  /**
+   * Path part for operation suppliersRemoveSupplierSharedWithTeam
+   */
+  static readonly SuppliersRemoveSupplierSharedWithTeamPath = '/api/Suppliers/{supplierId}/remove-team/{sharedTeamId}';
+
+  /**
+   * Remove a Team the Supplier is shared with.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `suppliersRemoveSupplierSharedWithTeam()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  suppliersRemoveSupplierSharedWithTeam$Response(params: {
+
+    /**
+     * supplier id
+     */
+    supplierId: string;
+
+    /**
+     * shared team id
+     */
+    sharedTeamId: string;
+  }): Observable<StrictHttpResponse<SupplierResult>> {
+
+    const rb = new RequestBuilder(this.rootUrl, SuppliersService.SuppliersRemoveSupplierSharedWithTeamPath, 'post');
+    if (params) {
+      rb.path('supplierId', params.supplierId, {});
+      rb.path('sharedTeamId', params.sharedTeamId, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<SupplierResult>;
+      })
+    );
+  }
+
+  /**
+   * Remove a Team the Supplier is shared with.
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `suppliersRemoveSupplierSharedWithTeam$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  suppliersRemoveSupplierSharedWithTeam(params: {
+
+    /**
+     * supplier id
+     */
+    supplierId: string;
+
+    /**
+     * shared team id
+     */
+    sharedTeamId: string;
+  }): Observable<SupplierResult> {
+
+    return this.suppliersRemoveSupplierSharedWithTeam$Response(params).pipe(
       map((r: StrictHttpResponse<SupplierResult>) => r.body as SupplierResult)
     );
   }

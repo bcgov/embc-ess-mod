@@ -42,7 +42,7 @@ namespace EMBC.ESS.Managers.Admin
 
         public async Task<TeamsQueryResponse> Handle(TeamsQuery cmd)
         {
-            var teams = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery { Id = cmd.TeamId })).Items;
+            var teams = (await teamRepository.QueryTeams(new Resources.Team.TeamQuery { Id = cmd.TeamId, AssignedCommunityCode = cmd.CommunityCode })).Items;
 
             return new TeamsQueryResponse { Teams = mapper.Map<IEnumerable<EMBC.ESS.Shared.Contracts.Team.Team>>(teams) };
         }
@@ -176,7 +176,7 @@ namespace EMBC.ESS.Managers.Admin
                 {
                     SupplierId = query.SupplierId,
                     LegalName = query.LegalName,
-                    GSTNumber = query.GSTNumber
+                    GSTNumber = query.GSTNumber,
                 })).Items;
 
                 var res = mapper.Map<IEnumerable<Shared.Contracts.Suppliers.Supplier>>(suppliers);
@@ -191,6 +191,21 @@ namespace EMBC.ESS.Managers.Admin
         public async Task<string> Handle(SaveSupplierCommand cmd)
         {
             var supplier = mapper.Map<Resources.Suppliers.Supplier>(cmd.Supplier);
+            var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
+
+            return res.SupplierId;
+        }
+
+        public async Task<string> Handle(RemoveSupplierCommand cmd)
+        {
+            var supplier = (await supplierRepository.QuerySupplier(new SupplierSearchQuery
+            {
+                SupplierId = cmd.SupplierId,
+            })).Items.SingleOrDefault(m => m.Id == cmd.SupplierId);
+            if (supplier == null) throw new NotFoundException($"Supplier {cmd.SupplierId} not found", cmd.SupplierId);
+
+            if (supplier.Team != null && supplier.Team.Id != null) supplier.Team.Id = null;
+            supplier.SharedWithTeams = Array.Empty<Resources.Suppliers.Team>();
             var res = await supplierRepository.ManageSupplier(new SaveSupplier { Supplier = supplier });
 
             return res.SupplierId;

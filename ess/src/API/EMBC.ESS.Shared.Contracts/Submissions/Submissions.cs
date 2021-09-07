@@ -85,6 +85,13 @@ namespace EMBC.ESS.Shared.Contracts.Submissions
         public IEnumerable<Support> supports { get; set; }
     }
 
+    public class VoidSupportCommand : Command
+    {
+        public string FileId { get; set; }
+        public string SupportId { get; set; }
+        public SupportVoidReason VoidReason { get; set; }
+    }
+
     public class SuppliersListQuery : Query<SuppliersListQueryResult>
     {
         public string TaskId { get; set; }

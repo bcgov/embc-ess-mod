@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SupportDeliveryComponent } from './support-delivery.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormBuilder } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('SupportDeliveryComponent', () => {
   let component: SupportDeliveryComponent;
@@ -8,7 +13,14 @@ describe('SupportDeliveryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SupportDeliveryComponent]
+      imports: [
+        RouterTestingModule,
+        HttpClientTestingModule,
+        MatAutocompleteModule,
+        MatDialogModule
+      ],
+      declarations: [SupportDeliveryComponent],
+      providers: [FormBuilder]
     }).compileComponents();
   });
 

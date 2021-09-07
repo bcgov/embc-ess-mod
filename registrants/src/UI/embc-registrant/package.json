@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 5200 --proxy-config proxy.conf.json",
+    "start": "ng serve --port 5200 --proxy-config proxy.dev.conf.json",
     "startlocal": "npm run gen-api-local && npm start --  --configuration=local",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "gen-api": "ng-openapi-gen -i https://dev1-era-registrants.apps.silver.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false",
-    "gen-api-local": "ng-openapi-gen -i http://localhost:5020/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
+    "gen-api": "ng-openapi-gen -i https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false",
+    "gen-api-local": "ng-openapi-gen -i https://dev1-era-registrants.apps.silver.devops.gov.bc.ca/api/openapi/v1/openapi.json -o ./src/app/core/api --ignoreUnusedModels false"
   },
   "private": true,
   "dependencies": {

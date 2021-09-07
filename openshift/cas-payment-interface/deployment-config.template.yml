@@ -1,0 +1,186 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: cas-payment-interface deployment config template
+
+parameters:
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+  - description: openshift namespace env name
+    name: ENV
+    required: true
+  - description: app name
+    name: APP_NAME
+    required: true
+  - description: image tag for deployments
+    name: TAG
+    required: true
+  - description: ASPNET runtime environment (Development/Staging/Production)
+    name: RUNTIME_ENVIRONMENT
+    value: Staging
+  - name: DYNAMICS_OAUTH_ENDPOINT
+    required: true
+  - description: Dynamics ADFS client ID
+    name: DYNAMICS_OAUTH_CLIENT_ID
+    required: true
+  - description: Dynamics ADFS client secret
+    name: DYNAMICS_OAUTH_CLIENT_SECRET
+    required: true
+  - description: Dynamics ADFS resource name
+    name: DYNAMICS_OAUTH_RESOURCE
+    required: true
+  - description: Dynamics API endpoint
+    name: DYNAMICS_ENDPOINT
+    required: true
+  - description: Dynamics service account domain
+    name: DYNAMICS_SERVICE_ACCOUNT_DOMAIN
+    required: true
+  - description: Dynamics service account name
+    name: DYNAMICS_SERVICE_ACCOUNT_NAME
+    required: true
+  - description: Dynamics service account password
+    name: DYNAMICS_SERVICE_ACCOUNT_PASSWORD
+    required: true
+  - description: CAS API URL
+    name: CAS_API_URL
+    required: true
+
+objects:
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-cas-interface-config
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-cas-interface
+        app.kubernetes.io/part-of: ${APP_NAME}
+    data:
+      ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
+      ADFS_OAUTH2_URI: ${DYNAMICS_OAUTH_ENDPOINT}
+      DYNAMICS_ODATA_URI: ${DYNAMICS_ENDPOINT}
+      CAS_API_URI: ${CAS_API_URL}
+
+  - kind: Secret
+    apiVersion: v1
+    type: Opaque
+    metadata:
+      name: ${APP_NAME}-cas-interface-secrets
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-cas-interface
+        app.kubernetes.io/part-of: ${APP_NAME}
+    stringData:
+      DYNAMICS_APP_GROUP_RESOURCE: ${DYNAMICS_OAUTH_RESOURCE}
+      DYNAMICS_APP_GROUP_CLIENT_ID: ${DYNAMICS_OAUTH_CLIENT_ID}
+      DYNAMICS_APP_GROUP_SECRET: ${DYNAMICS_OAUTH_CLIENT_SECRET}
+      DYNAMICS_USERNAME: ${DYNAMICS_SERVICE_ACCOUNT_DOMAIN}\${DYNAMICS_SERVICE_ACCOUNT_NAME}
+      DYNAMICS_PASSWORD: ${DYNAMICS_SERVICE_ACCOUNT_PASSWORD}
+
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      name: ${APP_NAME}-cas-interface
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-cas-interface
+        app.kubernetes.io/part-of: ${APP_NAME}
+    spec:
+      strategy:
+        type: Rolling
+        rollingParams:
+          updatePeriodSeconds: 1
+          intervalSeconds: 1
+          timeoutSeconds: 600
+          maxUnavailable: 25%
+          maxSurge: 25%
+        resources: {}
+        activeDeadlineSeconds: 21600
+      triggers:
+        - type: ImageChange
+          imageChangeParams:
+            containerNames:
+              - cas-interface-service
+            from:
+              kind: ImageStreamTag
+              namespace: ${NAMESPACE_PREFIX}-tools
+              name: "cas-interface-service:${TAG}"
+        - type: ConfigChange
+      replicas: 1
+      revisionHistoryLimit: 10
+      test: false
+      selector:
+        deploymentconfig: ${APP_NAME}-cas-interface
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            app: ${APP_NAME}-cas-interface
+            app.kubernetes.io/part-of: ${APP_NAME}
+            deploymentconfig: ${APP_NAME}-cas-interface
+        spec:
+          containers:
+            - name: cas-interface-service
+              image: image-registry.openshift-image-registry.svc:5000/${NAMESPACE_PREFIX}-tools/cas-interface-service:${TAG}
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              envFrom:
+                - configMapRef:
+                    name: ${APP_NAME}-cas-interface-config
+                - secretRef:
+                    name: ${APP_NAME}-cas-interface-secrets
+              imagePullPolicy: Always
+          restartPolicy: Always
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: ${APP_NAME}-cas-interface
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-cas-interface
+        app.kubernetes.io/part-of: ${APP_NAME}
+    spec:
+      ports:
+        - name: 8080-tcp
+          protocol: TCP
+          port: 8080
+          targetPort: 8080
+      selector:
+        deploymentconfig: ${APP_NAME}-cas-interface
+
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      name: ${APP_NAME}-cas-interface
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+      labels:
+        app: ${APP_NAME}-cas-interface
+        app.kubernetes.io/part-of: ${APP_NAME}
+    spec:
+      host: ${APP_NAME}-cas-interface.silver.devops.bcgov
+      to:
+        kind: Service
+        name: ${APP_NAME}-cas-interface
+      port:
+        targetPort: 8080-tcp
+      tls:
+        termination: edge
+
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: ${APP_NAME}-cas-interface
+      labels:
+        app: ${APP_NAME}-cas-interface
+        app.kubernetes.io/part-of: ${APP_NAME}
+      namespace: ${NAMESPACE_PREFIX}-${ENV}
+    spec:
+      podSelector:
+        matchLabels:
+          app: ${APP_NAME}-cas-interface
+      ingress:
+        - ports:
+            - protocol: TCP
+              port: 8080

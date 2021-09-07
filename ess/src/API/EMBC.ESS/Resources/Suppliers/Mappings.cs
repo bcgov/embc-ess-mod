@@ -62,7 +62,7 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForMember(d => d.era_addressline2, opts => opts.MapFrom(s => s.Address.AddressLine2))
                 .ForMember(d => d.era_postalcode, opts => opts.MapFrom(s => s.Address.PostalCode))
                 .ForMember(d => d._era_primarycontact_value, opts => opts.MapFrom(s => s.Contact.Id))
-                .ForMember(d => d.era_era_supplier_era_essteamsupplier_SupplierId, opts => opts.MapFrom(s => s.SharedWithTeams.Concat(new[] { s.Team })))
+                .ForMember(d => d.era_era_supplier_era_essteamsupplier_SupplierId, opts => opts.MapFrom(s => s.Team != null ? s.SharedWithTeams.Concat(new[] { s.Team }) : s.SharedWithTeams))
                 ;
 
             CreateMap<era_suppliercontact, SupplierContact>()

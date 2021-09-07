@@ -1,5 +1,48 @@
 import { DialogContent } from '../models/dialog-content.model';
 
+export const mealRate = {
+  total: 45,
+  breakfast: 10,
+  lunch: 13,
+  dinner: 22
+};
+
+export const groceriesRate = {
+  rate: 22.5
+};
+
+export const supportNoOfDays = [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30
+];
 export const mainApplicant = 'Main Applicant';
 export const insuranceOptions = [
   { name: 'Yes', value: 'Yes' },
@@ -92,6 +135,13 @@ export const gender = [
   { name: 'Female', value: 'Female' },
   { name: 'X', value: 'X' }
 ];
+
+export const supportDataLossDialog: DialogContent = {
+  text:
+    '<p>Warning this will result in the current Support data being lost. Do you wish to continue?</p>',
+  confirmButton: 'Yes',
+  cancelButton: 'No'
+};
 
 export const wizardProfileMessage: DialogContent = {
   title: 'Complete all steps',
@@ -236,6 +286,14 @@ export const deleteSupplierFromList: DialogContent = {
   confirmButton: 'Yes, Remove Supplier'
 };
 
+export const rescindSupplierFromList: DialogContent = {
+  title: 'Rescind',
+  text:
+    '<p>Are you sure you want to permanently remove this ESS Team?</p><p>They will no longer have access to use this supplier.</p>',
+  cancelButton: 'No, Cancel',
+  confirmButton: 'Yes, Remove ESS Team'
+};
+
 export const supplierStatusDefinition: DialogContent = {
   title: 'Status Definitions',
   text:
@@ -297,3 +355,7 @@ export const activateSupplierError =
   'Unable to activate supplier at this time. Please try again later';
 export const deActivateSupplierError =
   'Unable to deactivate supplier at this time. Please try again later';
+export const supplierRefresherror =
+  'Unable to refresh supplier list at this time. Please try again later';
+export const supportListerror =
+  'Unable to retrieve support list at this time. Please try again later';

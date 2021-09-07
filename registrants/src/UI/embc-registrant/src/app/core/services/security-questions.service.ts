@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConfigurationService } from 'src/app/core/api/services';
+import { CacheService } from './cache.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,14 +9,20 @@ import { ConfigurationService } from 'src/app/core/api/services';
 export class SecurityQuestionsService {
   private securityQuestionOptionsVal: string[];
 
-  constructor(private configurationService: ConfigurationService) {}
+  constructor(
+    private configurationService: ConfigurationService,
+    private cacheService: CacheService
+  ) {}
 
   set securityQuestionOptions(securityQuestionOptionsVal: string[]) {
     this.securityQuestionOptionsVal = securityQuestionOptionsVal;
+    this.cacheService.set('securityQues', securityQuestionOptionsVal);
   }
 
   get securityQuestionOptions(): string[] {
-    return this.securityQuestionOptionsVal;
+    return this.securityQuestionOptionsVal
+      ? this.securityQuestionOptionsVal
+      : JSON.parse(this.cacheService.get('securityQues'));
   }
 
   /**

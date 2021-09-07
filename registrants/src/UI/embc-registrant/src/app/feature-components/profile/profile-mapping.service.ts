@@ -5,13 +5,15 @@ import { Profile, ProfileDataConflict } from '../../core/api/models';
 import { ProfileDataService } from './profile-data.service';
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { ConflictManagementService } from '../../sharedModules/components/conflict-management/conflict-management.service';
+import { LocationService } from 'src/app/core/services/location.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
   constructor(
     private formCreationService: FormCreationService,
     private profileDataService: ProfileDataService,
-    private conflictService: ConflictManagementService
+    private conflictService: ConflictManagementService,
+    private locationService: LocationService
   ) {}
 
   mapProfile(profile: Profile): void {
@@ -101,8 +103,14 @@ export class ProfileMappingService {
       .getAddressForm()
       .pipe(first())
       .subscribe((address) => {
+        const primaryAddress = this.locationService.getAddressRegFromAddress(
+          profile.primaryAddress
+        );
+        const mailingAddress = this.locationService.getAddressRegFromAddress(
+          profile.mailingAddress
+        );
         address.setValue({
-          address: profile.primaryAddress,
+          address: primaryAddress,
           isBcAddress: this.isBCAddress(profile.primaryAddress.stateProvince),
           isNewMailingAddress: this.isSameMailingAddress(
             profile.isMailingAddressSameAsPrimaryAddress
@@ -110,7 +118,7 @@ export class ProfileMappingService {
           isBcMailingAddress: this.isBCAddress(
             profile.mailingAddress.stateProvince
           ),
-          mailingAddress: profile.mailingAddress
+          mailingAddress
         });
         formGroup = address;
       });

@@ -13,7 +13,7 @@ export interface EvacuationFile {
   evacuationFileDate?: null | string;
   isRestricted?: boolean;
   lastModified?: string;
-  needsAssessments?: Array<NeedsAssessment>;
+  needsAssessments: Array<NeedsAssessment>;
   secretPhrase?: null | string;
   secretPhraseEdited?: boolean;
   status?: EvacuationFileStatus;

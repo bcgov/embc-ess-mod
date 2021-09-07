@@ -1,1 +1,329 @@
-<p>support-details works!</p>
+<div class="container container-frame">
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <a (click)="back()"
+        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span
+          class="back-link"
+          >Supports</span
+        ></a
+      >
+    </div>
+  </div>
+
+  <!-- {{ supportDetailsForm.value | json }} -->
+
+  <div class="heading-container row-padding">
+    <div class="row">
+      <div class="col-md-8">
+        <span class="wizard-tab-heading">Support Details</span>
+      </div>
+      <div class="col-md-4">ESS Rate sheet</div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <span class="wizard-support-type">{{
+          stepSupportsService?.supportTypeToAdd?.description
+        }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <mat-card class="support-time-box">
+        <div class="row row-padding">
+          <div class="col-md-12">
+            <p *ngIf="isVisible" class="time-heading requiredField">
+              Please confirm timing for commencement of supports:
+            </p>
+            <p *ngIf="!isVisible" class="time-heading requiredField">
+              Support Commencement Details:
+            </p>
+          </div>
+        </div>
+
+        <div class="row row-padding">
+          <div class="col-md-4">
+            <p>Task Number Start Date & Time:</p>
+          </div>
+          <div class="col-md-4">
+            <p class="bold">
+              {{
+                stepSupportsService?.evacFile?.task?.from | date: 'dd-MMM-yyyy'
+              }}
+              at
+              {{ stepSupportsService?.evacFile?.task?.from | date: 'hh:mm a' }}
+            </p>
+          </div>
+        </div>
+
+        <div class="row row-padding">
+          <div class="col-md-4">
+            <p>Support Start Date & Time:</p>
+          </div>
+          <div class="col-md-4">
+            <p class="bold">
+              {{ currentDate | date: 'dd-MMM-yyyy' }} at {{ currentTime }}
+              {{ now | date: 'a' }}
+            </p>
+          </div>
+          <div *ngIf="isVisible" class="col-md-4">
+            <a class="override" (click)="toggle = !toggle"
+              >Override start time</a
+            >
+          </div>
+        </div>
+
+        <div *ngIf="toggle" class="row row-padding">
+          <div class="col-md-12">
+            <app-override-datetime
+              [currentDate]="currentDate"
+              [currentTime]="currentTime"
+              (collapse)="collapse($event)"
+              (dateTime)="setDateTime($event)"
+            ></app-override-datetime>
+          </div>
+        </div>
+
+        <div *ngIf="isVisible" class="row">
+          <div class="col-md-12">
+            <button
+              class="button-p next-button"
+              mat-button
+              (click)="nextDetails()"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </mat-card>
+
+      <div *ngIf="!isVisible" class="row-padding">
+        <div class="row">
+          <div class="col-md-12 add-detail">
+            <div class="row">
+              <div class="col-md-12">
+                <p class="time-heading requiredField">Support Period:</p>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <p>Valid From:</p>
+                <form [formGroup]="supportDetailsForm">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Valid From Date</mat-label>
+                        <input
+                          matInput
+                          formControlName="fromDate"
+                          [matDatepicker]="picker"
+                          required
+                        />
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="picker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+
+                        <mat-error
+                          *ngIf="
+                            supportDetailsFormControl.fromDate.invalid &&
+                            supportDetailsFormControl.fromDate.hasError(
+                              'invalidDate'
+                            )
+                          "
+                        >
+                          Please enter a valid date</mat-error
+                        >
+
+                        <mat-error
+                          *ngIf="
+                            supportDetailsFormControl.fromDate.invalid &&
+                            supportDetailsFormControl.fromDate.hasError(
+                              'required'
+                            )
+                          "
+                        >
+                          From Date is required</mat-error
+                        >
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Valid From Time</mat-label>
+                        <input
+                          type="time"
+                          formControlName="fromTime"
+                          matInput
+                          placeholder="Valid From Time"
+                          required
+                        />
+                        <mat-error
+                          *ngIf="
+                            supportDetailsFormControl.fromTime.invalid &&
+                            supportDetailsFormControl.fromTime.hasError(
+                              'required'
+                            )
+                          "
+                        >
+                          From Time is required</mat-error
+                        >
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Number of Days</mat-label>
+                        <mat-select formControlName="noOfDays" required>
+                          <mat-option
+                            *ngFor="let no of noOfDaysList"
+                            [value]="no"
+                          >
+                            {{ no }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error
+                          *ngIf="
+                            supportDetailsFormControl.noOfDays.invalid &&
+                            supportDetailsFormControl.noOfDays.hasError(
+                              'required'
+                            )
+                          "
+                        >
+                          Required</mat-error
+                        >
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-4">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Valid To Date</mat-label>
+                        <input matInput formControlName="toDate" />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Valid To Time</mat-label>
+                        <input
+                          type="time"
+                          formControlName="toTime"
+                          matInput
+                          placeholder="Valid To Time"
+                          required
+                        />
+                        <mat-error
+                          *ngIf="
+                            supportDetailsFormControl.toTime.invalid &&
+                            supportDetailsFormControl.toTime.hasError(
+                              'required'
+                            )
+                          "
+                        >
+                          To Time Required</mat-error
+                        >
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <p class="time-heading requiredField">
+                        Which people in your household require
+                        <span class="bold"
+                          >{{
+                            stepSupportsService?.supportTypeToAdd?.description
+                          }}
+                          ?</span
+                        >
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <mat-checkbox
+                        [checked]="isChecked()"
+                        [indeterminate]="isIndeterminate()"
+                        (change)="$event ? selectAll($event) : null"
+                        ><span class="bold"
+                          >All household members</span
+                        ></mat-checkbox
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="row"
+                    *ngFor="
+                      let member of stepSupportsService?.evacFile
+                        ?.needsAssessment?.householdMembers
+                    "
+                  >
+                    <div class="col-md-12">
+                      <mat-checkbox
+                        (click)="$event.stopPropagation()"
+                        (change)="$event ? onChange($event, member) : null"
+                        [checked]="exists(member)"
+                      >
+                        {{ member.lastName | uppercase }},
+                        {{ member.firstName }}</mat-checkbox
+                      >
+                    </div>
+                  </div>
+                  <mat-error
+                    class="custom-mat-error"
+                    *ngIf="
+                      supportDetailsFormControl.members.invalid &&
+                      supportDetailsFormControl.members.hasError('noSelection')
+                    "
+                  >
+                    Required</mat-error
+                  >
+
+                  <div
+                    [ngSwitch]="
+                      stepSupportsService.supportTypeToAdd.description
+                    "
+                  >
+                    <div *ngSwitchCase="'Food'">
+                      <app-food-meals
+                        [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                        [supportDetailsForm]="supportDetailsForm"
+                        [noOfHouseholdMembers]="
+                          supportDetailsForm.get('members').value.length
+                        "
+                      ></app-food-meals>
+                    </div>
+
+                    <div *ngSwitchCase="'Groceries'">
+                      <app-food-groceries
+                        [noOfDays]="supportDetailsForm.get('noOfDays').value"
+                        [supportDetailsForm]="supportDetailsForm"
+                        [noOfHouseholdMembers]="
+                          supportDetailsForm.get('members').value.length
+                        "
+                      ></app-food-groceries>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isVisible" class="row button-row">
+    <div class="col-md-6 button-col">
+      <button class="button-p" mat-button (click)="addDelivery()">
+        Next - Support Delivery
+      </button>
+    </div>
+  </div>
+</div>
