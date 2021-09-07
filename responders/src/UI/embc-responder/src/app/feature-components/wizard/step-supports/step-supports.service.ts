@@ -177,7 +177,7 @@ export class StepSupportsService {
 
   public getEvacFile(): void {
     this.essFileService
-      .getFileFromId(this.evacueeSessionService.essFileNumber) //101169
+      .getFileFromId(this.evacueeSessionService.essFileNumber) //'101169'
       .subscribe(
         (file) => {
           this.currentNeedsAssessment = file.needsAssessment;
@@ -260,7 +260,8 @@ export class StepSupportsService {
         numberOfLunchesPerPerson: (this.supportDetails
           .referral as RestaurantMeal).noOfLunches,
         subCategory: SupportSubCategory.Food_Restaurant,
-        totalAmount: this.supportDetails.referral.totalAmount
+        totalAmount: (this.supportDetails.referral as RestaurantMeal)
+          .totalAmount
       };
       this.cacheService.set('mealReferral', mealReferral);
     }
