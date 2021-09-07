@@ -1,3 +1,9 @@
 <div class="loader-align">
-  <mat-spinner strokeWidth="3" [diameter]="25" *ngIf="showLoader"></mat-spinner>
+  <mat-spinner
+    [ngStyle]="spinnerColor"
+    strokeWidth="strokeWidth"
+    [diameter]="diameter"
+    *ngIf="showLoader"
+  >
+  </mat-spinner>
 </div>

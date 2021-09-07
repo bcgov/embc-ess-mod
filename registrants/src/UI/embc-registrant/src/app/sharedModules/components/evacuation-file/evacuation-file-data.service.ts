@@ -92,6 +92,7 @@ export class EvacuationFileDataService {
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
+    console.log(this.getNeedsAssessment());
     return {
       essFileNumber: this.essFilenumber,
       evacuatedFromAddress: this.setAddressObject(this.evacuatedFromAddress),
