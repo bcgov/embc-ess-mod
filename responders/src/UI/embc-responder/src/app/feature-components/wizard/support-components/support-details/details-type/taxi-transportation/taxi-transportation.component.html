@@ -1,1 +1,57 @@
-<p>taxi-transportation works!</p>
+<form [formGroup]="referralForm">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">From (address)</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline">
+        <mat-label>From</mat-label>
+        <input
+          formControlName="fromAddress"
+          matInput
+          placeholder="From"
+          maxlength="50"
+          required
+        />
+        <mat-error
+          *ngIf="
+            referralFormControl?.fromAddress.invalid &&
+            referralFormControl?.fromAddress.hasError('whitespaceError')
+          "
+        >
+          From Address is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">To (address)</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline">
+        <mat-label>To</mat-label>
+        <input
+          formControlName="toAddress"
+          matInput
+          placeholder="To"
+          maxlength="50"
+          required
+        />
+        <mat-error
+          *ngIf="
+            referralFormControl?.toAddress.invalid &&
+            referralFormControl?.toAddress.hasError('required')
+          "
+        >
+          To Address is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+</form>

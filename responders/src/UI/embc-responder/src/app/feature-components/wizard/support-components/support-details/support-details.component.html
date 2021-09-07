@@ -10,7 +10,7 @@
     </div>
   </div>
 
-  <!-- {{ supportDetailsForm.value | json }} -->
+  {{ supportDetailsForm.value | json }}
 
   <div class="heading-container row-padding">
     <div class="row">
@@ -290,6 +290,7 @@
                       stepSupportsService.supportTypeToAdd.description
                     "
                   >
+                    <!--Restaurant Meals-->
                     <div *ngSwitchCase="'Food'">
                       <app-food-meals
                         [noOfDays]="supportDetailsForm.get('noOfDays').value"
@@ -299,7 +300,7 @@
                         "
                       ></app-food-meals>
                     </div>
-
+                    <!--Groceries-->
                     <div *ngSwitchCase="'Groceries'">
                       <app-food-groceries
                         [noOfDays]="supportDetailsForm.get('noOfDays').value"
@@ -309,6 +310,36 @@
                         "
                       ></app-food-groceries>
                     </div>
+                    <!--Taxi-->
+                    <div *ngSwitchCase="'Taxi'">
+                      <app-taxi-transportation
+                        [supportDetailsForm]="supportDetailsForm"
+                      ></app-taxi-transportation>
+                    </div>
+                    <!--Transport-Other-->
+                    <div *ngSwitchCase="'Other'">
+                      <app-other-transportation
+                        [supportDetailsForm]="supportDetailsForm"
+                      ></app-other-transportation>
+                    </div>
+
+                    <!-- <div *ngSwitchCase="'Hotel/Motel'">
+                      <app-lodging-hotel-motel
+                        [supportDetailsForm]="supportDetailsForm"
+                      ></app-lodging-hotel-motel>
+                    </div> -->
+
+                    <!-- <div *ngSwitchCase="'Billeting'">
+                      <app-other-transportation
+                        [supportDetailsForm]="supportDetailsForm"
+                      ></app-other-transportation>
+                    </div>
+
+                    <div *ngSwitchCase="'Group Lodging'">
+                      <app-other-transportation
+                        [supportDetailsForm]="supportDetailsForm"
+                      ></app-other-transportation>
+                    </div> -->
                   </div>
                 </form>
               </div>
