@@ -1,1 +1,60 @@
-<p>other-transportation works!</p>
+<form [formGroup]="referralForm">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Please specify mode of transport</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline">
+        <mat-label>Mode of transport</mat-label>
+        <input
+          formControlName="transportMode"
+          matInput
+          placeholder="Mode of transport"
+          maxlength="50"
+          required
+        />
+        <mat-error
+          *ngIf="
+            referralFormControl?.transportMode.invalid &&
+            referralFormControl?.transportMode.hasError('whitespaceError')
+          "
+        >
+          Mode of transport is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Total Amount</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <mat-form-field appearance="outline">
+        <input
+          formControlName="totalAmount"
+          matInput
+          type="number"
+          class="amount-right-align"
+          placeholder="0"
+          required
+        />
+        <span matPrefix>$&nbsp;</span>
+        <span matSuffix>.00</span>
+        <mat-error
+          *ngIf="
+            referralFormControl?.totalAmount.invalid &&
+            referralFormControl?.totalAmount.hasError('required')
+          "
+        >
+          Total Amount is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+</form>

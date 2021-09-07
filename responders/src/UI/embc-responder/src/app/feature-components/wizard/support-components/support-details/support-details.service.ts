@@ -15,6 +15,10 @@ export class SupportDetailsService {
       return this.mealForm();
     } else if (supportType === 'Groceries') {
       return this.groceriesForm();
+    } else if (supportType === 'Taxi') {
+      return this.taxiForm();
+    } else if (supportType === 'Other') {
+      return this.otherTransportForm();
     }
   }
 
@@ -32,6 +36,20 @@ export class SupportDetailsService {
       noOfMeals: ['', [Validators.required]],
       totalAmount: [''],
       userTotalAmount: ['']
+    });
+  }
+
+  taxiForm(): FormGroup {
+    return this.formBuilder.group({
+      fromAddress: ['', [this.customValidation.whitespaceValidator()]],
+      toAddress: ['', [this.customValidation.whitespaceValidator()]]
+    });
+  }
+
+  otherTransportForm(): FormGroup {
+    return this.formBuilder.group({
+      transportMode: ['', [this.customValidation.whitespaceValidator()]],
+      totalAmount: ['', [Validators.required]]
     });
   }
 }
