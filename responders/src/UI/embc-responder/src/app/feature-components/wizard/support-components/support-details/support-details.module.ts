@@ -20,7 +20,7 @@ import { OtherTransportationComponent } from './details-type/other-transportatio
     FoodMealsComponent,
     FoodGroceriesComponent,
     TaxiTransportationComponent,
-    OtherTransportationComponent,
+    OtherTransportationComponent
     // LodgingHotelMotelComponent
   ],
   imports: [
