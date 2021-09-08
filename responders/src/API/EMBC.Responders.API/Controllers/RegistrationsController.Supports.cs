@@ -60,25 +60,25 @@ namespace EMBC.Responders.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> VoidSupport(string fileId, string supportId, SupportVoidReason voidReason)
+        public async Task<IActionResult> VoidSupport(string fileId, string supportId, SupportVoidReason voidReason)
         {
-            var id = await messagingClient.Send(new VoidSupportCommand
+            var result = await messagingClient.Send(new VoidSupportCommand
             {
                 FileId = fileId,
                 SupportId = supportId,
                 VoidReason = Enum.Parse<ESS.Shared.Contracts.Submissions.SupportVoidReason>(voidReason.ToString(), true)
             });
 
-            return Ok(new RegistrationResult { Id = id });
+            return Ok();
         }
 
         [HttpPost("files/{fileId}/supports/{supportId}/reprint")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<RegistrationResult>> ReprintSupport(string fileId, string supportId, SupportReprintReason reprintReason)
+        public async Task<IActionResult> ReprintSupport(string fileId, string supportId, SupportReprintReason reprintReason)
         {
-            return await Task.FromResult(Ok(new RegistrationResult { Id = "123" }));
+            return await Task.FromResult(Ok());
         }
     }
 
