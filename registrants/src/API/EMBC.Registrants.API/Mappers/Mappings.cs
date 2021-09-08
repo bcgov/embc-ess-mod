@@ -15,7 +15,6 @@
 // -------------------------------------------------------------------------
 
 using System;
-using System.Linq;
 using EMBC.Registrants.API.Controllers;
 
 namespace EMBC.Registrants.API.Mappers
@@ -57,7 +56,7 @@ namespace EMBC.Registrants.API.Mappers
                 ;
 
             CreateMap<NeedsAssessment, ESS.Shared.Contracts.Submissions.NeedsAssessment>()
-                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => DateTime.Now))
+                .ForMember(d => d.CompletedOn, opts => opts.MapFrom(s => DateTime.UtcNow))
                 .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(d => d.RecommendedReferralServices, opts => opts.Ignore())
                 .ForMember(d => d.HaveMedicalSupplies, opts => opts.Ignore())
@@ -106,10 +105,10 @@ namespace EMBC.Registrants.API.Mappers
                 ;
 
             CreateMap<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
-                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.EssFileNumber))
+                .ForMember(d => d.Id, opts => opts.MapFrom(s => s.FileId))
                 .ForMember(d => d.RelatedTask, opts => opts.Ignore())
                 .ForMember(d => d.CreatedOn, opts => opts.Ignore())
-                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => s.EvacuationFileDate))
+                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => DateTime.UtcNow))
                 .ForMember(d => d.RestrictedAccess, opts => opts.Ignore())
                 .ForMember(d => d.PrimaryRegistrantId, opts => opts.Ignore())
                 .ForMember(d => d.SecurityPhraseChanged, opts => opts.MapFrom(s => !s.SecretPhraseEdited))
@@ -117,28 +116,17 @@ namespace EMBC.Registrants.API.Mappers
                 .ForMember(d => d.RegistrationLocation, opts => opts.Ignore())
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => EvacuationFileStatus.Pending))
                 .ForMember(d => d.HouseholdMembers, opts => opts.Ignore())
-                .ForMember(d => d.NeedsAssessment, opts => opts.MapFrom(s => s.NeedsAssessments.First()))
                 .ForMember(d => d.Notes, opts => opts.Ignore())
                 .ForMember(d => d.Supports, opts => opts.Ignore())
                 ;
 
             CreateMap<ESS.Shared.Contracts.Submissions.EvacuationFile, EvacuationFile>()
-                .ForMember(d => d.EssFileNumber, opts => opts.MapFrom(s => s.Id))
+                .ForMember(d => d.FileId, opts => opts.MapFrom(s => s.Id))
                 .ForMember(d => d.EvacuationFileDate, opts => opts.MapFrom(s => s.EvacuationDate))
                 .ForMember(d => d.IsRestricted, opts => opts.MapFrom(s => s.RestrictedAccess))
                 .ForMember(d => d.SecretPhrase, opts => opts.MapFrom(s => s.SecurityPhrase))
                 .ForMember(d => d.SecretPhraseEdited, opts => opts.MapFrom(s => false))
                 .ForMember(d => d.LastModified, opts => opts.Ignore())
-                .ForMember(d => d.NeedsAssessments, opts => opts.MapFrom(s => new[] { s.NeedsAssessment }))
-                ;
-
-            CreateMap<AnonymousRegistration, ESS.Shared.Contracts.Submissions.EvacuationFile>()
-                .IncludeBase<EvacuationFile, ESS.Shared.Contracts.Submissions.EvacuationFile>()
-                .ForMember(d => d.Id, opts => opts.Ignore())
-                .ForMember(d => d.EvacuationDate, opts => opts.MapFrom(s => DateTime.Now))
-                .ForMember(d => d.PrimaryRegistrantId, opts => opts.MapFrom(s => (string)null))
-                .ForMember(d => d.NeedsAssessment, opts => opts.MapFrom(s => s.PreliminaryNeedsAssessment))
-                .ForMember(d => d.Notes, opts => opts.Ignore())
                 ;
         }
     }

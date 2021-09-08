@@ -63,7 +63,7 @@ namespace EMBC.Registrants.API.Controllers
             //anonymous profiles are unverified and not authenticated
             profile.AuthenticatedUser = false;
             profile.VerifiedUser = false;
-            var file = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(registration);
+            var file = mapper.Map<ESS.Shared.Contracts.Submissions.EvacuationFile>(registration.PreliminaryNeedsAssessment);
             var id = await messagingClient.Send(new SubmitAnonymousEvacuationFileCommand
             {
                 File = file,
@@ -134,7 +134,7 @@ namespace EMBC.Registrants.API.Controllers
     /// </summary>
     public class EvacuationFile
     {
-        public string EssFileNumber { get; set; }
+        public string FileId { get; set; }
         public EvacuationFileStatus Status { get; set; }
 
         public string EvacuationFileDate { get; set; }
@@ -145,7 +145,7 @@ namespace EMBC.Registrants.API.Controllers
         public Address EvacuatedFromAddress { get; set; }
 
         [Required]
-        public IEnumerable<NeedsAssessment> NeedsAssessments { get; set; } = Array.Empty<NeedsAssessment>();
+        public NeedsAssessment NeedsAssessment { get; set; }
 
         public string SecretPhrase { get; set; }
         public bool SecretPhraseEdited { get; set; }
@@ -199,13 +199,13 @@ namespace EMBC.Registrants.API.Controllers
     /// <summary>
     /// Registration form for anonymous registrants
     /// </summary>
-    public class AnonymousRegistration : EvacuationFile
+    public class AnonymousRegistration
     {
         [Required]
         public Profile RegistrationDetails { get; set; }
 
         [Required]
-        public NeedsAssessment PreliminaryNeedsAssessment { get; set; }
+        public EvacuationFile PreliminaryNeedsAssessment { get; set; }
 
         [Required]
         public bool InformationCollectionConsent { get; set; }
