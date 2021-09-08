@@ -184,6 +184,11 @@ objects:
               startupProbe:
                 httpGet:
                   scheme: HTTPS
+                  path: /hc/startup
+                  port: 8080
+              readinessProbe:
+                httpGet:
+                  scheme: HTTPS
                   path: /hc/ready
                   port: 8080
           dnsPolicy: ClusterFirst
