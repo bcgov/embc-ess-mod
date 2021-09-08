@@ -32,6 +32,7 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import * as globalConst from '../../../core/services/global-constants';
+import { ReferralCreationService } from './referral-creation.service';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -60,7 +61,8 @@ export class StepSupportsService {
     private userService: UserService,
     private locationService: LocationsService,
     private alertService: AlertService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private referralService: ReferralCreationService
   ) {}
 
   set mealReferral(mealReferralVal: FoodRestaurantReferral) {
@@ -249,21 +251,58 @@ export class StepSupportsService {
       supplierName: this.supportDelivery.supplier.name,
       supplierNotes: this.supportDelivery.supplierNote
     };
-    if (this.supportTypeToAdd.description === SupportCategory.Food) {
-      const mealReferral: FoodRestaurantReferral = {
-        ...referral,
-        category: SupportCategory.Food,
-        numberOfBreakfastsPerPerson: (this.supportDetails
-          .referral as RestaurantMeal).noOfBreakfast,
-        numberOfDinnersPerPerson: (this.supportDetails
-          .referral as RestaurantMeal).noOfDinners,
-        numberOfLunchesPerPerson: (this.supportDetails
-          .referral as RestaurantMeal).noOfLunches,
-        subCategory: SupportSubCategory.Food_Restaurant,
-        totalAmount: (this.supportDetails.referral as RestaurantMeal)
-          .totalAmount
-      };
-      this.cacheService.set('mealReferral', mealReferral);
+    if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
+      this.referralService.createMealReferral(referral, this.supportDetails);
+      // const mealReferral: FoodRestaurantReferral = {
+      //   ...referral,
+      //   category: SupportCategory.Food,
+      //   numberOfBreakfastsPerPerson: (this.supportDetails
+      //     .referral as RestaurantMeal).noOfBreakfast,
+      //   numberOfDinnersPerPerson: (this.supportDetails
+      //     .referral as RestaurantMeal).noOfDinners,
+      //   numberOfLunchesPerPerson: (this.supportDetails
+      //     .referral as RestaurantMeal).noOfLunches,
+      //   subCategory: SupportSubCategory.Food_Restaurant,
+      //   totalAmount: (this.supportDetails.referral as RestaurantMeal)
+      //     .totalAmount
+      // };
+      // this.cacheService.set('mealReferral', mealReferral);
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Food_Groceries
+    ) {
+      this.referralService.createGroceriesReferral(
+        referral,
+        this.supportDetails
+      );
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Transportation_Taxi
+    ) {
+      this.referralService.createTaxiReferral(referral, this.supportDetails);
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Transportation_Other
+    ) {
+      this.referralService.createOtherReferral(referral, this.supportDetails);
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Billeting
+    ) {
+      this.referralService.createBilletingReferral(
+        referral,
+        this.supportDetails
+      );
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Group
+    ) {
+      this.referralService.createGroupLodgingReferral(
+        referral,
+        this.supportDetails
+      );
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel
+    ) {
+      this.referralService.createHotelMotelReferral(
+        referral,
+        this.supportDetails
+      );
     }
   }
 }

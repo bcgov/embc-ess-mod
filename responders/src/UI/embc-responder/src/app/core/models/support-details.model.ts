@@ -9,7 +9,14 @@ export class SupportDetailsModel {
   toDate: string;
   toTime: string;
   members: Array<EvacuationFileHouseholdMember>;
-  referral: RestaurantMeal | Groceries | Taxi | OtherTransport;
+  referral:
+    | RestaurantMeal
+    | Groceries
+    | Taxi
+    | OtherTransport
+    | Billeting
+    | GroupLodging
+    | HotelMotel;
 }
 
 export class SupportDeliveryModel {
@@ -40,4 +47,17 @@ export class Taxi {
 export class OtherTransport {
   transportMode: string;
   totalAmount: number;
+}
+
+export class HotelMotel {
+  noOfNights: number;
+  noOfRooms: number;
+}
+
+export class Billeting {
+  noOfNights: number;
+}
+
+export class GroupLodging {
+  noOfNights: number;
 }

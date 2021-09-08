@@ -11,7 +11,9 @@ import { CustomPipeModule } from 'src/app/shared/pipes/customPipe.module';
 import { FoodGroceriesComponent } from './details-type/food-groceries/food-groceries.component';
 import { TaxiTransportationComponent } from './details-type/taxi-transportation/taxi-transportation.component';
 import { OtherTransportationComponent } from './details-type/other-transportation/other-transportation.component';
-// import { LodgingHotelMotelComponent } from './details-type/lodging-hotel-motel/lodging-hotel-motel.component';
+import { LodgingHotelMotelComponent } from './details-type/lodging-hotel-motel/lodging-hotel-motel.component';
+import { LodgingBilletingComponent } from './details-type/lodging-billeting/lodging-billeting.component';
+import { LodgingGroupComponent } from './details-type/lodging-group/lodging-group.component';
 
 @NgModule({
   declarations: [
@@ -20,8 +22,10 @@ import { OtherTransportationComponent } from './details-type/other-transportatio
     FoodMealsComponent,
     FoodGroceriesComponent,
     TaxiTransportationComponent,
-    OtherTransportationComponent
-    // LodgingHotelMotelComponent
+    OtherTransportationComponent,
+    LodgingHotelMotelComponent,
+    LodgingBilletingComponent,
+    LodgingGroupComponent
   ],
   imports: [
     CommonModule,
