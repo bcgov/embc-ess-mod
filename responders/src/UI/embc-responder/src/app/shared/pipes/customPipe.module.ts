@@ -5,6 +5,7 @@ import { MaskTextPipe } from './maskText.pipe';
 import { MaskEvacuatedAddressPipe } from './maskEvacuatedAddress.pipe';
 import { MaskFullAddressPipe } from './maskFullAddress.pipe';
 import { NumberArrayPipe } from './numberArray.pipe';
+import { NumberOfNightsPipe } from './numberOfNights.pipe';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { NumberArrayPipe } from './numberArray.pipe';
     MaskEvacuatedAddressPipe,
     MaskTextPipe,
     MaskFullAddressPipe,
-    NumberArrayPipe
+    NumberArrayPipe,
+    NumberOfNightsPipe
   ],
   imports: [CommonModule],
   exports: [
@@ -20,7 +22,8 @@ import { NumberArrayPipe } from './numberArray.pipe';
     MaskEvacuatedAddressPipe,
     MaskTextPipe,
     MaskFullAddressPipe,
-    NumberArrayPipe
+    NumberArrayPipe,
+    NumberOfNightsPipe
   ]
 })
 export class CustomPipeModule {}

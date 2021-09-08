@@ -1,1 +1,53 @@
-<p>lodging-hotel-motel works!</p>
+<form [formGroup]="referralForm">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Number of Nights</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline">
+        <mat-label>Number of Nights</mat-label>
+        <mat-select formControlName="noOfNights" required>
+          <mat-option *ngFor="let no of noOfDays | nightsArray" [value]="no">
+            {{ no }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            referralFormControl?.noOfNights.invalid &&
+            referralFormControl?.noOfNights.hasError('required')
+          "
+        >
+          Number of Nights is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Number of Rooms</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline">
+        <mat-label>Number of Rooms</mat-label>
+        <mat-select formControlName="noOfRooms" required>
+          <mat-option *ngFor="let no of noOfRooms" [value]="no">
+            {{ no }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            referralFormControl?.noOfRooms.invalid &&
+            referralFormControl?.noOfRooms.hasError('required')
+          "
+        >
+          Number of Rooms is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+</form>
