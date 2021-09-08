@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -41,7 +42,7 @@ namespace EMBC.Registrants.API
                 Log.Information("Stopped");
                 return 0;
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Log.Fatal(e, "An unhandled exception occured during bootstrapping");
                 return 1;
@@ -83,7 +84,7 @@ namespace EMBC.Registrants.API
                                   eventCollectorToken: splunkToken,
                                   messageHandler: new HttpClientHandler
                                   {
-                                      ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                                      ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                                   },
                                   renderTemplate: false);
                       }

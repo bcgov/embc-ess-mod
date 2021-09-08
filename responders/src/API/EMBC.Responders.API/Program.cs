@@ -83,7 +83,7 @@ namespace EMBC.Responders.API
                                   eventCollectorToken: splunkToken,
                                   messageHandler: new HttpClientHandler
                                   {
-                                      ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                                      ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                                   },
                                   renderTemplate: false);
                       }
