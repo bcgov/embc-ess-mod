@@ -55,6 +55,31 @@ namespace EMBC.Responders.API.Controllers
 
             return Ok();
         }
+
+        [HttpPost("files/{fileId}/supports/{supportId}/void")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RegistrationResult>> VoidSupport(string fileId, string supportId, SupportVoidReason voidReason)
+        {
+            var id = await messagingClient.Send(new VoidSupportCommand
+            {
+                FileId = fileId,
+                SupportId = supportId,
+                VoidReason = Enum.Parse<ESS.Shared.Contracts.Submissions.SupportVoidReason>(voidReason.ToString(), true)
+            });
+
+            return Ok(new RegistrationResult { Id = id });
+        }
+
+        [HttpPost("files/{fileId}/supports/{supportId}/reprint")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<RegistrationResult>> ReprintSupport(string fileId, string supportId, SupportReprintReason reprintReason)
+        {
+            return await Task.FromResult(Ok(new RegistrationResult { Id = "123" }));
+        }
     }
 
     [JsonConverter(typeof(SupportJsonConverter))]
@@ -314,6 +339,32 @@ namespace EMBC.Responders.API.Controllers
 
         [Description("Other")]
         Transportation_Other
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum SupportVoidReason
+    {
+        [Description("Error On Printed Referral")]
+        ErrorOnPrintedReferral,
+
+        [Description("New Supplier Required")]
+        NewSupplierRequired,
+
+        [Description("Supplier Could Not Meet Need")]
+        SupplierCouldNotMeetNeed
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum SupportReprintReason
+    {
+        [Description("Error On Printed Referral")]
+        ErrorOnPrintedReferral,
+
+        [Description("Printed Error")]
+        PrintedError,
+
+        [Description("Evacuee Lost Referral")]
+        EvacueeLostReferral
     }
 
     public class SupportJsonConverter : JsonConverter<Support>
