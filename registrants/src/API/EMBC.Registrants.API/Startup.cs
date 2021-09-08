@@ -46,6 +46,8 @@ namespace EMBC.Registrants.API
     public class Startup
     {
         private const string HealthCheckReadyTag = "ready";
+        private const string HealthCheckAliveTag = "alive";
+
         private readonly IHostEnvironment env;
         private readonly IConfiguration configuration;
 
@@ -89,7 +91,10 @@ namespace EMBC.Registrants.API
                     policy.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins(corsOrigins);
                 }
             }));
-            services.AddHealthChecks().AddCheck("Registrants API", () => HealthCheckResult.Healthy("API OK"), new[] { HealthCheckReadyTag });
+            services.AddHealthChecks()
+                .AddCheck("Registrants API ready hc", () => HealthCheckResult.Healthy("API ready"), new[] { HealthCheckReadyTag })
+                .AddCheck("Registrants API live hc", () => HealthCheckResult.Healthy("API alive"), new[] { HealthCheckAliveTag });
+
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
@@ -150,15 +155,9 @@ namespace EMBC.Registrants.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions()
-                {
-                    Predicate = (check) => check.Tags.Contains(HealthCheckReadyTag)
-                });
-
-                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions()
-                {
-                    Predicate = (_) => false
-                });
+                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
+                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
+                endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
             });
         }
 

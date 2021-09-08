@@ -25,6 +25,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
 
@@ -32,9 +33,25 @@ namespace EMBC.ESS
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Console(formatter: new RenderedCompactJsonFormatter())
+                .CreateBootstrapLogger();
+
+            try
+            {
+                CreateHostBuilder(args).Build().Run();
+                Log.Information("Stopped");
+                return 0;
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e, "An unhandled exception occured during bootstrapping");
+                return 1;
+            }
         }
 
         // Additional configuration is required to successfully run gRPC on macOS.
@@ -58,22 +75,23 @@ namespace EMBC.ESS
                     }
                     else
                     {
-                        loggerConfiguration.WriteTo.Console(formatter: new RenderedCompactJsonFormatter());
                         var splunkUrl = hostingContext.Configuration.GetValue("SPLUNK_URL", string.Empty);
                         var splunkToken = hostingContext.Configuration.GetValue("SPLUNK_TOKEN", string.Empty);
                         if (string.IsNullOrWhiteSpace(splunkToken) || string.IsNullOrWhiteSpace(splunkUrl))
                         {
+                            loggerConfiguration.WriteTo.Console(formatter: new RenderedCompactJsonFormatter());
                             Log.Warning($"Splunk logging sink is not configured properly, check SPLUNK_TOKEN and SPLUNK_URL env vars");
                         }
                         else
                         {
                             loggerConfiguration
+                                .WriteTo.Console(formatter: new RenderedCompactJsonFormatter())
                                 .WriteTo.EventCollector(
                                     splunkHost: splunkUrl,
                                     eventCollectorToken: splunkToken,
                                     messageHandler: new HttpClientHandler
                                     {
-                                        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
                                     },
                                     renderTemplate: false);
                         }
