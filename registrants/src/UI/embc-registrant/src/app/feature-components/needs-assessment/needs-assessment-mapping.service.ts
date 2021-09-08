@@ -7,6 +7,7 @@ import {
   NeedsAssessment,
   Pet
 } from 'src/app/core/api/models';
+import { RegAddress } from 'src/app/core/model/address';
 import { PersonDetails } from 'src/app/core/model/profile.model';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../../sharedModules/components/evacuation-file/evacuation-file-data.service';
@@ -23,11 +24,11 @@ export class NeedsAssessmentMappingService {
   ) {}
 
   setNeedsAssessment(
-    evacuatedFromAddress: Address,
+    evacuatedAddress: RegAddress,
     needsAssessment: NeedsAssessment
   ): void {
     this.setNeedsAssessmentId(needsAssessment.id);
-    this.setInsurance(evacuatedFromAddress, needsAssessment.insurance);
+    this.setInsurance(evacuatedAddress, needsAssessment.insurance);
     this.setFamilyMedicationDiet(
       needsAssessment.haveMedication,
       needsAssessment.haveSpecialDiet,
@@ -48,20 +49,19 @@ export class NeedsAssessmentMappingService {
     this.needsAssessmentService.id = needsAssessmentID;
   }
 
-  setInsurance(
-    evacuatedFromAddress: Address,
-    insurance: InsuranceOption
-  ): void {
-    this.evacuationFileDataService.evacuatedFromAddress = evacuatedFromAddress;
+  setInsurance(evacuatedAddress: RegAddress, insurance: InsuranceOption): void {
+    console.log(evacuatedAddress);
+    this.evacuationFileDataService.evacuatedAddress = evacuatedAddress;
     this.needsAssessmentService.insurance = insurance;
 
     this.formCreationService
       .getEvacuatedForm()
       .pipe(first())
       .subscribe((details) => {
+        console.log(details);
         details.setValue({
-          evacuatedFromPrimary: this.isSameAddress(evacuatedFromAddress),
-          evacuatedFromAddress,
+          evacuatedFromPrimary: this.isSameAddress(evacuatedAddress),
+          evacuatedFromAddress: evacuatedAddress,
           insurance
         });
       });
@@ -230,7 +230,7 @@ export class NeedsAssessmentMappingService {
     return userLastname === lastname;
   }
 
-  private isSameAddress(evacAddress: Address): string {
+  private isSameAddress(evacAddress: RegAddress): string {
     const userPersonalAddress = this.profileDataService.primaryAddressDetails;
 
     if (evacAddress === userPersonalAddress) {

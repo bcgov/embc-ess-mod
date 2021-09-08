@@ -11,6 +11,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { EssFileDialogComponent } from './components/dialog-components/ess-file-dialog/ess-file-dialog.component';
+import { InformationDialogComponent } from './components/dialog-components/information-dialog/information-dialog.component';
 
 @NgModule({
   imports: [
@@ -27,7 +29,9 @@ import { MatMenuModule } from '@angular/material/menu';
     AlertComponent,
     HeaderComponent,
     FooterComponent,
-    DialogComponent
+    DialogComponent,
+    EssFileDialogComponent,
+    InformationDialogComponent
   ],
   exports: [
     CaptchaComponent,

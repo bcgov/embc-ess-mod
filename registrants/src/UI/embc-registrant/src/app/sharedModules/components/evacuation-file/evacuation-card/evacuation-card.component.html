@@ -2,7 +2,7 @@
   <mat-card-content>
     <span class="evacuatedSecondary">Evacuated From</span>
     <mat-card-title class="evacuatedTitle"
-      >{{ evacuationFileCard?.evacuatedFromAddress.community.name }}
+      >{{ evacuationFileCard?.evacuatedAddress?.community?.name }}
     </mat-card-title>
     <div class="row">
       <div class="col-md-9">
@@ -22,11 +22,10 @@
                   evacuationFileCard?.evacuationFileDate | date: 'dd-MMM-yyyy'
                 }}
               </td>
-              <td class="dataSpan">{{ evacuationFileCard?.essFileNumber }}</td>
+              <td class="dataSpan">{{ evacuationFileCard?.fileId }}</td>
               <td class="dataSpan">
                 {{
-                  evacuationFileCard?.needsAssessments[0]?.type ===
-                  'Preliminary'
+                  evacuationFileCard?.needsAssessment?.type === 'Preliminary'
                     ? 'No'
                     : 'Yes'
                 }}

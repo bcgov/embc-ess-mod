@@ -1,9 +1,11 @@
 export interface RegAddress {
   addressLine1: string;
   addressLine2?: null | string;
-  community: Partial<Community> | string;
+  // community: Partial<Community> | string;
+  community: Community | string;
   postalCode: null | string;
-  stateProvince: Partial<StateProvince> | string;
+  // stateProvince: Partial<StateProvince> | string;
+  stateProvince: StateProvince;
   country: Country;
 }
 

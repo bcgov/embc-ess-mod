@@ -7,7 +7,8 @@ import {
   Pet,
   RegistrationResult,
   NeedsAssessmentType,
-  HouseholdMember
+  HouseholdMember,
+  EvacuationFile
 } from 'src/app/core/api/models';
 import { ProfileDataService } from '../profile/profile-data.service';
 
@@ -29,7 +30,7 @@ export class NeedsAssessmentService {
   private mainHouseholdMembers: HouseholdMember;
   private registrationResult: RegistrationResult;
   private verifiedRegistrationResult: string;
-  private secretPhrase: string;
+  // private secretPhrase: string;
 
   constructor(private profileDataService: ProfileDataService) {}
 
@@ -142,12 +143,12 @@ export class NeedsAssessmentService {
     this.mainHouseholdMembers = value;
   }
 
-  public get secretWordPhrase(): string {
-    return this.secretPhrase;
-  }
-  public set secretWordPhrase(value: string) {
-    this.secretPhrase = value;
-  }
+  // public get secretWordPhrase(): string {
+  //   return this.secretPhrase;
+  // }
+  // public set secretWordPhrase(value: string) {
+  //   this.secretPhrase = value;
+  // }
 
   public setHouseHoldMembers(members: PersonDetails[]): void {
     const householdMembersArray: Array<HouseholdMember> = [];
