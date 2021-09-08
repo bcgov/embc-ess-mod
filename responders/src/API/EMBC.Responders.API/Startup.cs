@@ -48,6 +48,8 @@ namespace EMBC.Responders.API
     public class Startup
     {
         private const string HealthCheckReadyTag = "ready";
+        private const string HealthCheckAliveTag = "alive";
+
         private readonly IHostEnvironment env;
         private readonly IConfiguration configuration;
 
@@ -72,7 +74,9 @@ namespace EMBC.Responders.API
             AddDataProtection(services);
             AddOpenApi(services);
             AddCors(services);
-            services.AddHealthChecks().AddCheck("Responders API", () => HealthCheckResult.Healthy("API OK"), new[] { HealthCheckReadyTag });
+            services.AddHealthChecks()
+                .AddCheck("Responders API ready hc", () => HealthCheckResult.Healthy("API ready"), new[] { HealthCheckReadyTag })
+                .AddCheck("Responders API live hc", () => HealthCheckResult.Healthy("API alive"), new[] { HealthCheckAliveTag });
 
             services.AddAuthentication(options =>
              {
@@ -178,15 +182,9 @@ namespace EMBC.Responders.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions()
-                {
-                    Predicate = (check) => check.Tags.Contains(HealthCheckReadyTag)
-                });
-
-                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions()
-                {
-                    Predicate = (_) => false
-                });
+                endpoints.MapHealthChecks("/hc/ready", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckReadyTag) });
+                endpoints.MapHealthChecks("/hc/live", new HealthCheckOptions() { Predicate = check => check.Tags.Contains(HealthCheckAliveTag) });
+                endpoints.MapHealthChecks("/hc/startup", new HealthCheckOptions() { Predicate = _ => false });
             });
         }
 
