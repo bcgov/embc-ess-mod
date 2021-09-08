@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { EvacuationFile } from 'src/app/core/api/models';
+import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
 import { NeedsAssessmentMappingService } from '../../../../feature-components/needs-assessment/needs-assessment-mapping.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileMappingService } from '../evacuation-file-mapping.service';
@@ -11,7 +11,7 @@ import { EvacuationFileMappingService } from '../evacuation-file-mapping.service
   styleUrls: ['./evacuation-card.component.scss']
 })
 export class EvacuationCardComponent implements OnInit {
-  @Input() evacuationFileCard: EvacuationFile;
+  @Input() evacuationFileCard: EvacuationFileModel;
   @Input() evacuationFileStatus: string;
 
   imageIcon: string;
@@ -19,8 +19,6 @@ export class EvacuationCardComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private evacuationFileDataService: EvacuationFileDataService,
-    private needsAssessmentMappingService: NeedsAssessmentMappingService,
     private evacuationFileMapping: EvacuationFileMappingService
   ) {
     this.pathName = window.location.pathname;
@@ -45,12 +43,12 @@ export class EvacuationCardComponent implements OnInit {
     if (this.pathName === '/verified-registration/dashboard/current') {
       this.router.navigate([
         '/verified-registration/dashboard/current/' +
-          this.evacuationFileCard.essFileNumber
+          this.evacuationFileCard.fileId
       ]);
     } else {
       this.router.navigate([
         '/verified-registration/dashboard/past/' +
-          this.evacuationFileCard.essFileNumber
+          this.evacuationFileCard.fileId
       ]);
     }
   }
