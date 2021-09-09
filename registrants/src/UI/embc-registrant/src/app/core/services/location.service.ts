@@ -73,6 +73,7 @@ export class LocationService {
    * @returns AddressModel object usable by the UI
    */
   public getAddressRegFromAddress(addressObject: Address): RegAddress {
+    console.log(addressObject);
     const communities = this.getCommunityList();
     const countries = this.getCountriesList();
     const stateProvinces = this.getStateProvinceList();
@@ -80,12 +81,20 @@ export class LocationService {
     const addressCommunity = communities.find(
       (comm) => comm.code === addressObject.community
     );
-    const addressCountry = countries.find(
+    let addressCountry = countries.find(
       (coun) => coun.code === addressObject.country
     );
-    const addressStateProvince = stateProvinces.find(
+    let addressStateProvince = stateProvinces.find(
       (sp) => sp.code === addressObject.stateProvince
     );
+
+    if (addressStateProvince === undefined) {
+      addressStateProvince = stateProvinces.find((sp) => sp.code === 'BC');
+    }
+
+    if (addressCountry === undefined) {
+      addressCountry = stateProvinces.find((sp) => sp.code === 'CA');
+    }
 
     return {
       addressLine1: addressObject.addressLine1,
@@ -103,30 +112,30 @@ export class LocationService {
    * @param addressObject An Address as defined by the site's address forms
    * @returns Address object as defined by the API
    */
-  // public setAddressObjectForDTO(addressObject: AddressModel): Address {
-  //   const address: Address = {
-  //     addressLine1: addressObject.addressLine1,
-  //     addressLine2: addressObject.addressLine2,
-  //     countryCode: addressObject.country.code,
-  //     communityCode:
-  //       (addressObject.community as Community).code === undefined
-  //         ? null
-  //         : (addressObject.community as Community).code,
-  //     city:
-  //       (addressObject.community as Community).code === undefined &&
-  //         typeof addressObject.community === 'string'
-  //         ? addressObject.community
-  //         : null,
-  //     postalCode: addressObject.postalCode,
-  //     stateProvinceCode:
-  //       addressObject.stateProvince === null ||
-  //         addressObject.stateProvince === undefined
-  //         ? null
-  //         : addressObject.stateProvince?.code
-  //   };
+  public setAddressObjectForDTO(addressObject: RegAddress): Address {
+    const address: Address = {
+      addressLine1: addressObject.addressLine1,
+      addressLine2: addressObject.addressLine2,
+      country: addressObject.country.code,
+      community:
+        (addressObject.community as Community).code === undefined
+          ? null
+          : (addressObject.community as Community).code,
+      city:
+        (addressObject.community as Community).code === undefined &&
+        typeof addressObject.community === 'string'
+          ? addressObject.community
+          : null,
+      postalCode: addressObject.postalCode,
+      stateProvince:
+        addressObject.stateProvince === null ||
+        addressObject.stateProvince === undefined
+          ? null
+          : addressObject.stateProvince?.code
+    };
 
-  //   return address;
-  // }
+    return address;
+  }
 
   private setCommunityList(communityList: Community[]): void {
     this.communityList = communityList;

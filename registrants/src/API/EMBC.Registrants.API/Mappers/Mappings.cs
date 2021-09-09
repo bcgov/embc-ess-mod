@@ -98,6 +98,7 @@ namespace EMBC.Registrants.API.Mappers
                 .ForPath(d => d.Details.LastName, opts => opts.MapFrom(s => s.LastName))
                 .ForPath(d => d.Details.Gender, opts => opts.MapFrom(s => s.Gender))
                 .ForPath(d => d.Details.Initials, opts => opts.MapFrom(s => s.Initials))
+                .ForPath(d => d.Details.DateOfBirth, opts => opts.MapFrom(s => s.DateOfBirth))
                 ;
 
             CreateMap<Pet, ESS.Shared.Contracts.Submissions.Pet>()

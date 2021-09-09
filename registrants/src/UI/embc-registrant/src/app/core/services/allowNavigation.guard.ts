@@ -56,14 +56,14 @@ export class AllowNavigationGuard implements CanActivate {
               this.profileService.getProfile();
               if (
                 state.url.match('/dashboard/current/') &&
-                this.evacuationFileDataService.essFileNumber === undefined
+                this.evacuationFileDataService.essFileId === undefined
               ) {
                 this.router.navigate([
                   '/verified-registration/dashboard/current'
                 ]);
               } else if (
                 state.url.match('/dashboard/past/') &&
-                this.evacuationFileDataService.essFileNumber === undefined
+                this.evacuationFileDataService.essFileId === undefined
               ) {
                 this.router.navigate(['/verified-registration/dashboard/past']);
               }

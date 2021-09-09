@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { EvacuationFile } from 'src/app/core/api/models';
-import { DialogService } from 'src/app/core/services/dialog.service';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { EssFileDialogComponent } from 'src/app/core/components/dialog-components/ess-file-dialog/ess-file-dialog.component';
+import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
+import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
+import * as globalConst from '../../../../core/services/globalConstants';
 
 @Component({
   selector: 'app-evacuation-file-list',
@@ -13,18 +16,18 @@ import { EvacuationFileService } from '../evacuation-file.service';
 })
 export class EvacuationFileListComponent implements OnInit {
   currentPath: string;
-  evacuatedFrom: string;
+  primaryEssFile: EvacuationFileModel;
   showActiveList = true;
   showInactiveList = true;
-  currentChild: EvacuationFile;
-  dataSourceActive: Array<EvacuationFile>;
-  dataSourceInactive: Array<EvacuationFile>;
+  currentChild: EvacuationFileModel;
+  dataSourceActive: Array<EvacuationFileModel>;
+  dataSourceInactive: Array<EvacuationFileModel>;
   showLoading = false;
 
   constructor(
-    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private router: Router,
     public formCreationService: FormCreationService,
-    private dialogService: DialogService,
     private evacuationFileService: EvacuationFileService,
     private evacuationFileDataService: EvacuationFileDataService
   ) {}
@@ -37,19 +40,16 @@ export class EvacuationFileListComponent implements OnInit {
       this.evacuationFileService
         .getCurrentEvacuationFiles()
         .subscribe((files) => {
-          console.log(files);
           this.dataSourceActive = files;
           this.dataSourceActive.sort(
             (a, b) =>
               new Date(b.evacuationFileDate).valueOf() -
               new Date(a.evacuationFileDate).valueOf()
           );
-          console.log(this.dataSourceActive);
           this.evacuationFileDataService.setCurrentEvacuationFileCount(
             files.length
           );
-          this.evacuatedFrom =
-            this.dataSourceActive[0]?.evacuatedFromAddress?.community;
+          this.primaryEssFile = this.dataSourceActive[0];
           this.showLoading = false;
         });
     } else if (this.currentPath === '/verified-registration/dashboard/past') {
@@ -68,6 +68,22 @@ export class EvacuationFileListComponent implements OnInit {
   }
 
   startAdditionalAssessment(): void {
-    this.dialogService.addEvacuationFile(this.evacuatedFrom);
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: EssFileDialogComponent,
+          essFileData: this.primaryEssFile,
+          content: globalConst.addEssFile
+        },
+        height: '270px',
+        width: '700px'
+      })
+      .afterClosed()
+      .subscribe((value) => {
+        if (value === 'confirm') {
+          this.formCreationService.clearNeedsAssessmentData();
+          this.router.navigate(['/verified-registration/confirm-restriction']);
+        }
+      });
   }
 }
