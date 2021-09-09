@@ -14,6 +14,7 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Wkhtmltopdf.NetCore;
@@ -22,9 +23,13 @@ namespace EMBC.ESS.Utilities.PdfGenerator
 {
     public static class Configuration
     {
-        public static IServiceCollection AddPdfGenerator(this IServiceCollection services)
+        public static IServiceCollection AddPdfGenerator(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddWkhtmltopdf(@"C:\Program Files\wkhtmltopdf");
+            var libPath = configuration.GetValue<string>("wkHtmlToPdfLibPath", null);
+            if (libPath != null)
+                services.AddWkhtmltopdf(libPath);
+            else
+                services.AddWkhtmltopdf();
             services.TryAddTransient<IPdfGenerator, PdfGenerator>();
             return services;
         }

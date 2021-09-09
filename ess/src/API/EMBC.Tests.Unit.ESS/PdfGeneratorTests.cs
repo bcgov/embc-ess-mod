@@ -16,7 +16,7 @@ namespace EMBC.Tests.Unit.ESS
         {
         }
 
-        [Fact(Skip = "No container support yet")]
+        [Fact]
         public async Task CanGeneratePdf()
         {
             var template = @"<!DOCTYPE html>
