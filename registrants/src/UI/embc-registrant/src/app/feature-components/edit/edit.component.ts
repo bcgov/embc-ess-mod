@@ -92,7 +92,7 @@ export class EditComponent implements OnInit, OnDestroy {
             }
           );
       } else if (this.parentPageName === 'needs-assessment') {
-        if (this.evacuationFileDataService.essFileNumber === undefined) {
+        if (this.evacuationFileDataService.essFileId === undefined) {
           this.router.navigate(
             [this.verifiedNeedsAssessments],
             this.navigationExtras
@@ -100,10 +100,10 @@ export class EditComponent implements OnInit, OnDestroy {
         } else {
           this.showLoader = !this.showLoader;
           this.evacuationFileService.updateEvacuationFile().subscribe(
-            (essFileNumber) => {
+            (essFileId) => {
               this.showLoader = !this.showLoader;
               this.router.navigate([
-                '/verified-registration/dashboard/current/' + essFileNumber
+                '/verified-registration/dashboard/current/' + essFileId
               ]);
             },
             (error) => {
@@ -136,7 +136,7 @@ export class EditComponent implements OnInit, OnDestroy {
       } else if (this.parentPageName === 'needs-assessment') {
         this.router.navigate([
           '/verified-registration/dashboard/current/' +
-            this.evacuationFileDataService.essFileNumber
+            this.evacuationFileDataService.essFileId
         ]);
       }
     }

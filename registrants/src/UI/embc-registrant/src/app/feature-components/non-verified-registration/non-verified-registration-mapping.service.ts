@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   Address,
   AnonymousRegistration,
+  EvacuationFile,
   NeedsAssessment,
   Profile
 } from '../../core/api/models';
@@ -19,26 +20,39 @@ export class NonVerifiedRegistrationMappingService {
 
   mapAnonymousRegistration(): AnonymousRegistration {
     return {
-      evacuatedFromAddress: this.setAddressObject(
-        this.evacuationFileDataService.evacuatedFromAddress
-      ),
+      // evacuatedFromAddress: this.setAddressObject(
+      //   this.evacuationFileDataService.evacuatedFromAddress
+      // ),
       informationCollectionConsent: true,
-      preliminaryNeedsAssessment: this.mergeData(
-        this.createNeedsAssessment(),
-        this.needsService.createNeedsAssessmentDTO()
-      ),
+      preliminaryNeedsAssessment:
+        this.evacuationFileDataService.createEvacuationFileDTO(),
+      // preliminaryNeedsAssessment: this.mergeData(
+      //   this.createNeedsAssessment(),
+      //   this.needsService.createNeedsAssessmentDTO()
+      // ),
       registrationDetails: this.mergeData(
         this.createRegistration(),
         this.profileDataService.createProfileDTO()
       ),
-      captcha: 'abc',
-      secretPhrase: this.needsService.secretWordPhrase,
-      needsAssessments: []
+      captcha: 'abc'
+      // secretPhrase: this.needsService.secretWordPhrase,
+      // needsAssessments: []
     };
   }
 
   private mergeData<T>(finalValue: T, incomingValue: Partial<T>): T {
     return { ...finalValue, ...incomingValue };
+  }
+
+  private createEvacuationFile(): EvacuationFile {
+    return {
+      evacuatedFromAddress: null,
+      isRestricted: null,
+      needsAssessment: null,
+      secretPhrase: null,
+      secretPhraseEdited: null,
+      status: null
+    };
   }
 
   private createNeedsAssessment(): NeedsAssessment {

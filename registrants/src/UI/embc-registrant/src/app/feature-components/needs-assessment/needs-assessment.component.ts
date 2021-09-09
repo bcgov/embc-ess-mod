@@ -171,7 +171,7 @@ export class NeedsAssessmentComponent
   setFormData(component: string): void {
     switch (component) {
       case 'evac-address':
-        this.evacuationFileDataService.evacuatedFromAddress = this.form.get(
+        this.evacuationFileDataService.evacuatedAddress = this.form.get(
           'evacuatedFromAddress'
         ).value;
         this.needsAssessmentService.insurance =
@@ -197,7 +197,7 @@ export class NeedsAssessmentComponent
         this.needsAssessmentService.setNeedsDetails(this.form);
         break;
       case 'secret':
-        this.needsAssessmentService.secretWordPhrase =
+        this.evacuationFileDataService.secretPhrase =
           this.form.get('secretPhrase').value;
         break;
       default:

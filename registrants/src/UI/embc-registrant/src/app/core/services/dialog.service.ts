@@ -16,40 +16,6 @@ export class DialogService {
     private formCreationService: FormCreationService
   ) {}
 
-  addEvacuationFile(city: string): void {
-    this.dialog
-      .open(DialogComponent, {
-        data: {
-          title: 'Add Another Evacuation File',
-          body:
-            '<p>We have you as currently evacuated from <span class="highlight">' +
-            city +
-            '</span>, has your situation changed?</p>',
-          buttons: [
-            {
-              name: 'No, Cancel',
-              class: 'button-s',
-              function: 'close'
-            },
-            {
-              name: 'Yes, Continue',
-              class: 'button-p',
-              function: 'add'
-            }
-          ]
-        },
-        height: '260px',
-        width: '800px'
-      })
-      .afterClosed()
-      .subscribe((result) => {
-        if (result === 'add') {
-          this.formCreationService.clearNeedsAssessmentData();
-          this.router.navigate(['/verified-registration/confirm-restriction']);
-        }
-      });
-  }
-
   submissionCompleteDialog(referenceNumber: string): void {
     this.dialog
       .open(DialogComponent, {

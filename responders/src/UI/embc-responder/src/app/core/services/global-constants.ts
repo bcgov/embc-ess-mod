@@ -11,6 +11,8 @@ export const groceriesRate = {
   rate: 22.5
 };
 
+export const noOfRooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
 export const supportNoOfDays = [
   1,
   2,

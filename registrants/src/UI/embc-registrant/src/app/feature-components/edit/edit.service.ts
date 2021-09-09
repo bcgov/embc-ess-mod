@@ -64,7 +64,7 @@ export class EditService {
         this.saveSecurityQuestions(form.get('questions') as FormGroup);
         break;
       case 'evac-address':
-        this.evacuationFileDataService.evacuatedFromAddress = form.get(
+        this.evacuationFileDataService.evacuatedAddress = form.get(
           'evacuatedFromAddress'
         ).value;
         this.needsAssessmentDataService.insurance = form.get('insurance').value;
@@ -92,7 +92,7 @@ export class EditService {
         this.needsAssessmentDataService.setNeedsDetails(form);
         break;
       case 'secret':
-        this.needsAssessmentDataService.secretWordPhrase =
+        this.evacuationFileDataService.secretPhrase =
           form.get('secretPhrase').value;
         break;
       default:
@@ -180,12 +180,12 @@ export class EditService {
         break;
       case 'evac-address':
         if (
-          this.evacuationFileDataService.evacuatedFromAddress !== undefined &&
+          this.evacuationFileDataService.evacuatedAddress !== undefined &&
           this.needsAssessmentDataService.insurance !== undefined
         ) {
           form
             .get('evacuatedFromAddress')
-            .patchValue(this.evacuationFileDataService.evacuatedFromAddress);
+            .patchValue(this.evacuationFileDataService.evacuatedAddress);
           form
             .get('insurance')
             .patchValue(this.needsAssessmentDataService.insurance);
@@ -289,10 +289,10 @@ export class EditService {
         break;
 
       case 'secret':
-        if (this.needsAssessmentDataService.secretWordPhrase !== undefined) {
+        if (this.evacuationFileDataService.secretPhrase !== undefined) {
           form
             .get('secretPhrase')
-            .patchValue(this.needsAssessmentDataService.secretWordPhrase);
+            .patchValue(this.evacuationFileDataService.secretPhrase);
         } else {
           form.reset();
         }
