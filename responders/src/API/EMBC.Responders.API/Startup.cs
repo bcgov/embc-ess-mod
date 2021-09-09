@@ -230,6 +230,7 @@ namespace EMBC.Responders.API
                     });
 
                     document.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer token"));
+                    document.GenerateAbstractProperties = true;
                 });
             }
         }
