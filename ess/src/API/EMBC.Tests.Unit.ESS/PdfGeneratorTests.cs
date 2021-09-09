@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using EMBC.ESS;
 using EMBC.ESS.Utilities.PdfGenerator;
@@ -44,14 +45,25 @@ namespace EMBC.Tests.Unit.ESS
             var actualPdf = await File.ReadAllBytesAsync("./actual.pdf");
             actualPdf.ShouldNotBeEmpty();
 
-            var startTimestampLocation = Find(expectedPdf, 0, new byte[] { 0x44, 0x3a });
-            startTimestampLocation.ShouldBeGreaterThan(-1);
-            var endTimestampLocation = Find(expectedPdf, startTimestampLocation, new byte[] { 0x29, 0x0a });
-            endTimestampLocation.ShouldBeGreaterThan(startTimestampLocation);
+            //find creation timestamp
+            var startCreateTimestampLocation = Find(expectedPdf, 0, Encoding.Default.GetBytes("/CreationDate (D:"));
+            startCreateTimestampLocation.ShouldBeGreaterThan(-1);
+            var endCreateTimestampLocation = Find(expectedPdf, startCreateTimestampLocation, Encoding.Default.GetBytes("+00'00')"));
+            endCreateTimestampLocation.ShouldBeGreaterThan(startCreateTimestampLocation);
 
-            //remove timestamp from files' contents
-            expectedPdf = Slice(expectedPdf, startTimestampLocation, endTimestampLocation);
-            actualPdf = Slice(actualPdf, startTimestampLocation, endTimestampLocation);
+            //remove creation timestamp from files' contents
+            expectedPdf = Slice(expectedPdf, startCreateTimestampLocation, endCreateTimestampLocation);
+            actualPdf = Slice(actualPdf, startCreateTimestampLocation, endCreateTimestampLocation);
+
+            //find mod timestamp
+            var startModTimestampLocation = Find(expectedPdf, 0, Encoding.Default.GetBytes("/ModDate (D:"));
+            startModTimestampLocation.ShouldBeGreaterThan(startCreateTimestampLocation);
+            var endModTimestampLocation = Find(expectedPdf, startModTimestampLocation, Encoding.Default.GetBytes("+00'00')"));
+            endModTimestampLocation.ShouldBeGreaterThan(startModTimestampLocation);
+
+            //remove mod timestamp from files' contents
+            expectedPdf = Slice(expectedPdf, startModTimestampLocation, endModTimestampLocation);
+            actualPdf = Slice(actualPdf, startModTimestampLocation, endModTimestampLocation);
 
             actualPdf.ShouldBe(expectedPdf);
         }
@@ -66,6 +78,7 @@ namespace EMBC.Tests.Unit.ESS
                 for (int j = 0; j < innerArray.Length; j++)
                 {
                     found = innerArray[j] == array[i + j];
+                    if (!found) break;
                 }
                 if (found) return i;
             }

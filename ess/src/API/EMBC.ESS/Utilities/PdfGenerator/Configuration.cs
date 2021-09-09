@@ -14,10 +14,11 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Wkhtmltopdf.NetCore;
+using PuppeteerSharp;
 
 namespace EMBC.ESS.Utilities.PdfGenerator
 {
@@ -25,12 +26,23 @@ namespace EMBC.ESS.Utilities.PdfGenerator
     {
         public static IServiceCollection AddPdfGenerator(this IServiceCollection services, IConfiguration configuration)
         {
-            var libPath = configuration.GetValue<string>("wkHtmlToPdfLibPath", null);
-            if (libPath != null)
-                services.AddWkhtmltopdf(libPath);
-            else
-                services.AddWkhtmltopdf();
-            services.TryAddTransient<IPdfGenerator, PdfGenerator>();
+            //var libPath = configuration.GetValue<string>("wkHtmlToPdfLibPath", null);
+            //if (libPath != null)
+            //    services.AddWkhtmltopdf(libPath);
+            //else
+            //    services.AddWkhtmltopdf();
+
+            var puppeteerOptions = new BrowserFetcherOptions()
+            {
+                Product = Product.Chrome,
+                Path = Path.GetTempPath()
+            };
+
+            var revisionInfo = Puppeteer.CreateBrowserFetcher(puppeteerOptions).DownloadAsync().GetAwaiter().GetResult();
+            services.AddSingleton(revisionInfo);
+
+            services.TryAddScoped<IPdfGenerator, PdfGenerator>();
+
             return services;
         }
     }

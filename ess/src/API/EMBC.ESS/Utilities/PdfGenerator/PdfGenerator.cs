@@ -15,8 +15,7 @@
 // -------------------------------------------------------------------------
 
 using System.Threading.Tasks;
-using Wkhtmltopdf.NetCore;
-using Wkhtmltopdf.NetCore.Options;
+using PuppeteerSharp;
 
 namespace EMBC.ESS.Utilities.PdfGenerator
 {
@@ -27,21 +26,27 @@ namespace EMBC.ESS.Utilities.PdfGenerator
 
     public class PdfGenerator : IPdfGenerator
     {
-        private readonly IGeneratePdf generatePdf;
+        private readonly Browser broswer;
 
-        public PdfGenerator(IGeneratePdf generatePdf)
+        //private readonly IGeneratePdf generatePdf;
+
+        public PdfGenerator(/*IGeneratePdf generatePdf*/ RevisionInfo puppeteerInfo)
         {
-            this.generatePdf = generatePdf;
-            this.generatePdf.SetConvertOptions(new ConvertOptions
-            {
-                PageSize = Size.Letter,
-                //PageMargins = new Margins(5, 5, 5, 5)
-            });
+            //this.generatePdf = generatePdf;
+            //this.generatePdf.SetConvertOptions(new ConvertOptions
+            //{
+            //    PageSize = Size.Letter,
+            //    //PageMargins = new Margins(5, 5, 5, 5)
+            //});
+            broswer = Puppeteer.LaunchAsync(new LaunchOptions { Headless = true, ExecutablePath = puppeteerInfo.ExecutablePath }).GetAwaiter().GetResult();
         }
 
         public async Task<byte[]> Generate(string source)
         {
-            return await generatePdf.GetByteArrayViewInHtml(source);
+            //return await generatePdf.GetByteArrayViewInHtml(source);
+            var page = await broswer.NewPageAsync();
+            await page.SetContentAsync(source);
+            return await page.PdfDataAsync();
         }
     }
 }
