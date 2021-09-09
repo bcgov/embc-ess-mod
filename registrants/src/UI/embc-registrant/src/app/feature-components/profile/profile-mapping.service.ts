@@ -122,8 +122,10 @@ export class ProfileMappingService {
         });
         formGroup = address;
       });
-    this.profileDataService.primaryAddressDetails = profile.primaryAddress;
-    this.profileDataService.mailingAddressDetails = profile.mailingAddress;
+    this.profileDataService.primaryAddressDetails =
+      this.locationService.getAddressRegFromAddress(profile.primaryAddress);
+    this.profileDataService.mailingAddressDetails =
+      this.locationService.getAddressRegFromAddress(profile.mailingAddress);
   }
 
   private setContactDetails(profile: Profile): void {
