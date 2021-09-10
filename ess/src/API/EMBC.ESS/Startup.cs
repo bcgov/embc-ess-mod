@@ -93,7 +93,7 @@ namespace EMBC.ESS
                 .AddDynamics(configuration)
                 .AddCache()
                 .AddTransformator()
-                .AddPdfGenerator(configuration.GetSection("PdfGenerator"))
+                .AddPdfGenerator()
                 .AddNotificationSenders(configuration);
         }
 

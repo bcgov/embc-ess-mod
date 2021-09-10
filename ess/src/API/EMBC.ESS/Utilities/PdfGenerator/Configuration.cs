@@ -15,31 +15,46 @@
 // -------------------------------------------------------------------------
 
 using System.IO;
-using Microsoft.Extensions.Configuration;
+using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
 
 namespace EMBC.ESS.Utilities.PdfGenerator
 {
     public static class Configuration
     {
-        public static IServiceCollection AddPdfGenerator(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddPdfGenerator(this IServiceCollection services)
         {
-            //var libPath = configuration.GetValue<string>("wkHtmlToPdfLibPath", null);
-            //if (libPath != null)
-            //    services.AddWkhtmltopdf(libPath);
-            //else
-            //    services.AddWkhtmltopdf();
-
-            var puppeteerOptions = new BrowserFetcherOptions()
+            services.TryAddSingleton(sp =>
             {
-                Product = Product.Chrome,
-                Path = Path.GetTempPath()
-            };
+                var logger = sp.GetRequiredService<ILogger<PdfGenerator>>();
+                var options = new BrowserFetcherOptions()
+                {
+                    Product = Product.Chrome,
+                    Path = Path.GetTempPath(),
+                    Platform = Platform.Linux
+                };
 
-            var revisionInfo = Puppeteer.CreateBrowserFetcher(puppeteerOptions).DownloadAsync().GetAwaiter().GetResult();
-            services.AddSingleton(revisionInfo);
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) options.Platform = Platform.Linux;
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) options.Platform = Platform.Win64;
+
+                logger.LogInformation("Setting up Puppeteer to use platform {0}", options.Platform);
+
+                var fetcher = Puppeteer.CreateBrowserFetcher(options);
+
+                var currentRevisions = fetcher.LocalRevisions();
+                if (currentRevisions.Any())
+                {
+                    var info = fetcher.GetRevisionInfoAsync().GetAwaiter().GetResult();
+                    logger.LogInformation("Found Puppeteer at {0}", info.ExecutablePath);
+                    if (info.Downloaded) return info;
+                }
+                logger.LogInformation("Downloading Puppeteer");
+                return fetcher.DownloadAsync().GetAwaiter().GetResult();
+            });
 
             services.TryAddScoped<IPdfGenerator, PdfGenerator>();
 

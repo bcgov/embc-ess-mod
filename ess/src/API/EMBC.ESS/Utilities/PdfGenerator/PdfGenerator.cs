@@ -14,7 +14,9 @@
 //  limitations under the License.
 // -------------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
 
 namespace EMBC.ESS.Utilities.PdfGenerator
@@ -26,27 +28,36 @@ namespace EMBC.ESS.Utilities.PdfGenerator
 
     public class PdfGenerator : IPdfGenerator
     {
-        private readonly Browser broswer;
+        private readonly RevisionInfo puppeteerInfo;
+        private readonly ILogger<PdfGenerator> logger;
 
-        //private readonly IGeneratePdf generatePdf;
-
-        public PdfGenerator(/*IGeneratePdf generatePdf*/ RevisionInfo puppeteerInfo)
+        public PdfGenerator(RevisionInfo puppeteerInfo, ILogger<PdfGenerator> logger)
         {
-            //this.generatePdf = generatePdf;
-            //this.generatePdf.SetConvertOptions(new ConvertOptions
-            //{
-            //    PageSize = Size.Letter,
-            //    //PageMargins = new Margins(5, 5, 5, 5)
-            //});
-            broswer = Puppeteer.LaunchAsync(new LaunchOptions { Headless = true, ExecutablePath = puppeteerInfo.ExecutablePath }).GetAwaiter().GetResult();
+            this.puppeteerInfo = puppeteerInfo;
+            this.logger = logger;
         }
 
         public async Task<byte[]> Generate(string source)
         {
-            //return await generatePdf.GetByteArrayViewInHtml(source);
-            var page = await broswer.NewPageAsync();
+            logger.LogInformation("Using Puppeteer from {0}", puppeteerInfo.ExecutablePath);
+            var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            {
+                Headless = true,
+                ExecutablePath = puppeteerInfo.ExecutablePath,
+                Args = new[] { "--no-sandbox" },
+                Timeout = TimeSpan.FromSeconds(10).Milliseconds, DumpIO = true,
+            });
+            logger.LogInformation("Created Puppeteer browser version {0}", await browser.GetVersionAsync());
+            var page = await browser.NewPageAsync();
+            logger.LogInformation("Created Puppeteer page");
             await page.SetContentAsync(source);
-            return await page.PdfDataAsync();
+            var content = await page.PdfDataAsync();
+            await page.DisposeAsync();
+            await browser.CloseAsync();
+            await browser.DisposeAsync();
+
+            logger.LogInformation("Finished generating pdf with size {0}", content.Length);
+            return content;
         }
     }
 }
