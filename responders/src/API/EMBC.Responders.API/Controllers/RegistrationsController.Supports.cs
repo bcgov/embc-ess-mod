@@ -124,6 +124,7 @@ namespace EMBC.Responders.API.Controllers
     [KnownType(typeof(TransportationTaxiReferral))]
     public abstract class Referral : Support
     {
+        [Required]
         public override SupportMethod Method => SupportMethod.Referral;
 
         [Required]
@@ -140,7 +141,11 @@ namespace EMBC.Responders.API.Controllers
     public class ClothingReferral : Referral
     {
         public bool ExtremeWinterConditions { get; set; }
+
+        [Required]
         public override SupportCategory Category => SupportCategory.Clothing;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.None;
 
         [Required]
@@ -150,7 +155,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class IncidentalsReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Incidentals;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.None;
 
         [Required]
@@ -163,7 +171,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class FoodGroceriesReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Food;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Food_Groceries;
 
         [Required]
@@ -177,7 +188,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class FoodRestaurantReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Food;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Food_Restaurant;
 
         [Required]
@@ -199,7 +213,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class LodgingHotelReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Lodging;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Hotel;
 
         [Required]
@@ -213,7 +230,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class LodgingBilletingReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Lodging;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Billeting;
 
         [Required]
@@ -229,7 +249,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class LodgingGroupReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Lodging;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Group;
 
         [Required]
@@ -245,7 +268,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class TransportationTaxiReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Transportation;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Transportation_Taxi;
 
         [Required]
@@ -257,7 +283,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class TransportationOtherReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Transportation;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Transportation_Other;
 
         [Required]

@@ -158,9 +158,15 @@ namespace EMBC.ESS.Managers.Submissions
             var file = mapper.Map<Resources.Cases.EvacuationFile>(caseRecord);
             var member = file.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
 
+            var memberAlreadyLinked = file.HouseholdMembers.Where(m => m.LinkedRegistrantId == cmd.RegistantId).FirstOrDefault();
+            if (memberAlreadyLinked != null) throw new Exception($"There is already a HouseholdMember '{memberAlreadyLinked.Id}' linked to the Registrant '{cmd.RegistantId}'");
+
             if (member == null) throw new Exception($"HouseholdMember not found '{cmd.HouseholdMemberId}'");
 
             member.LinkedRegistrantId = cmd.RegistantId;
+            var needsAssessmentMember = file.NeedsAssessment.HouseholdMembers.Where(m => m.Id == cmd.HouseholdMemberId).SingleOrDefault();
+            if (needsAssessmentMember != null) needsAssessmentMember.LinkedRegistrantId = cmd.RegistantId;
+
             var caseId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = file })).Id;
 
             return caseId;
