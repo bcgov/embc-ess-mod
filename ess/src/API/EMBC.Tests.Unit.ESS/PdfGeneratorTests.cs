@@ -1,7 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EMBC.ESS;
+using EMBC.ESS.Utilities.Extensions;
 using EMBC.ESS.Utilities.PdfGenerator;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -95,6 +98,31 @@ namespace EMBC.Tests.Unit.ESS
             }
 
             return sliced;
+        }
+
+        [Fact]
+        public async Task CanHandleConcurrentPdfGenerationRequests()
+        {
+            Func<string> template = () => $@"<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <header>
+        <h1>Header</h1>
+    </header>
+    <main>
+        <p>{DateTime.Now}</p>
+    </main>
+</body>
+</html>";
+
+            var generator = services.GetRequiredService<IPdfGenerator>();
+
+            await Enumerable.Range(0, 50).ForEachAsync(10, async i =>
+            {
+                await Should.NotThrowAsync(generator.Generate(template()));
+            });
         }
     }
 }

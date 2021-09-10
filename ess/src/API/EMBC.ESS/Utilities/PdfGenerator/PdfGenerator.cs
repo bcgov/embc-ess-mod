@@ -40,23 +40,25 @@ namespace EMBC.ESS.Utilities.PdfGenerator
         public async Task<byte[]> Generate(string source)
         {
             logger.LogInformation("Using Puppeteer from {0}", puppeteerInfo.ExecutablePath);
-            var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+            using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
             {
                 Headless = true,
                 ExecutablePath = puppeteerInfo.ExecutablePath,
-                Args = new[] { "--no-sandbox" },
-                Timeout = TimeSpan.FromSeconds(10).Milliseconds, DumpIO = true,
+                Args = new[] { "--disable-dev-shm-usage", "--no-sandbox", "--no-first-run", "--disable-gpu", "--disable-setuid-sandbox", "--disable-accelerated-2d-canvas", "--no-zygote" },
+                Timeout = TimeSpan.FromSeconds(10).Milliseconds,
+                LogProcess = true,
+                DumpIO = true,
             });
             logger.LogInformation("Created Puppeteer browser version {0}", await browser.GetVersionAsync());
-            var page = await browser.NewPageAsync();
+            using var page = await browser.NewPageAsync();
             logger.LogInformation("Created Puppeteer page");
             await page.SetContentAsync(source);
             var content = await page.PdfDataAsync();
-            await page.DisposeAsync();
-            await browser.CloseAsync();
-            await browser.DisposeAsync();
+            logger.LogInformation("Generated pdf with size {0}", content.Length);
 
-            logger.LogInformation("Finished generating pdf with size {0}", content.Length);
+            await browser.CloseAsync();
+            logger.LogInformation("Browser closed");
+
             return content;
         }
     }
