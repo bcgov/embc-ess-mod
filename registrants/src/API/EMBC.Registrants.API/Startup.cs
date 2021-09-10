@@ -35,6 +35,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
+using Newtonsoft.Json.Converters;
 using NSwag;
 using NSwag.AspNetCore;
 using NSwag.Generation.Processors.Security;
@@ -98,7 +99,7 @@ namespace EMBC.Registrants.API
             services.AddControllers(options =>
             {
                 options.Filters.Add(new HttpResponseExceptionFilter());
-            }).AddNewtonsoftJson();
+            }).AddNewtonsoftJson(opts => opts.SerializerSettings.Converters.Add(new StringEnumConverter()));
             services.AddResponseCompression();
             services.AddPortalAuthentication(configuration);
             services.AddAutoMapper((sp, cfg) => { cfg.ConstructServicesUsing(t => sp.GetRequiredService(t)); }, typeof(Startup));
