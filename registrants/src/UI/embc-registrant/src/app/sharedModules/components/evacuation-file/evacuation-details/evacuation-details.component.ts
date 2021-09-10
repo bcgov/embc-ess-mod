@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { EvacuationFileDataService } from '../evacuation-file-data.service';
 import { EvacuationFileService } from '../evacuation-file.service';
+import { EvacuationFileStatus } from 'src/app/core/api/models';
 
 export interface Referral {
   referralDate: string;
@@ -90,7 +91,12 @@ export class EvacuationDetailsComponent implements OnInit {
   }
 
   changeStatusColor(): string {
-    if (this.evacuationFileDataService.evacuationFileStatus === 'Active') {
+    if (
+      this.evacuationFileDataService.evacuationFileStatus ===
+        EvacuationFileStatus.Active ||
+      this.evacuationFileDataService.evacuationFileStatus ===
+        EvacuationFileStatus.Pending
+    ) {
       return '#26B378';
     } else {
       return '#8B0000';

@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1>
+      {{ content?.text }}
+    </h1>
+  </div>
+</div>
+
+<div class="row text-row">
+  <div class="col-md-12">
+    <p class="p-margin">
+      We have you as currently evacuated from
+      <span class="community-name">{{
+        essFileData?.evacuatedAddress?.community?.name
+      }}</span
+      >, has your situation changed?
+    </p>
+  </div>
+</div>
+
+<div class="row button-row justify-content-between">
+  <button class="button-s button-width" mat-button (click)="cancel()">
+    No, Cancel
+  </button>
+
+  <button
+    class="button-p button-width confirm-button"
+    mat-button
+    (click)="confirm()"
+  >
+    Yes, Continue
+  </button>
+</div>

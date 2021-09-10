@@ -1,1 +1,32 @@
-<p>lodging-group works!</p>
+<form [formGroup]="referralForm">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Number of Nights</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field appearance="outline">
+        <mat-label>Number of Nights</mat-label>
+        <mat-select formControlName="noOfNights" required>
+          <mat-option *ngFor="let no of noOfDays | nightsArray" [value]="no">
+            {{ no }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            referralFormControl?.noOfNights.invalid &&
+            referralFormControl?.noOfNights.hasError('required')
+          "
+        >
+          Number of Nights is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p>NOTE: Please complete Billeting Invoice for host family</p>
+    </div>
+  </div>
+</form>

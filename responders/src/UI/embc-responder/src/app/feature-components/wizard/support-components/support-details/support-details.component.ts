@@ -102,6 +102,7 @@ export class SupportDetailsComponent implements OnInit {
    * Support details form
    */
   createSupportDetailsForm(): void {
+    console.log(this.stepSupportsService.supportTypeToAdd);
     this.supportDetailsForm = this.formBuilder.group({
       fromDate: [
         this.stepSupportsService?.supportDetails?.fromDate
@@ -140,7 +141,7 @@ export class SupportDetailsComponent implements OnInit {
         [this.customValidation.memberCheckboxValidator()]
       ),
       referral: this.supportDetailsService.generateDynamicForm(
-        this.stepSupportsService?.supportTypeToAdd?.description
+        this.stepSupportsService?.supportTypeToAdd?.value
       )
     });
   }
@@ -250,9 +251,10 @@ export class SupportDetailsComponent implements OnInit {
     }
   }
 
-  dynamicFormGroup(): FormGroup {
-    return this.supportDetailsService.generateDynamicForm(
-      this.stepSupportsService.supportTypeToAdd.description
-    );
-  }
+  // dynamicFormGroup(): FormGroup {
+  //   console.log(this.stepSupportsService.supportTypeToAdd);
+  //   return this.supportDetailsService.generateDynamicForm(
+  //     this.stepSupportsService.supportTypeToAdd.description
+  //   );
+  // }
 }

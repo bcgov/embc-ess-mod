@@ -7,9 +7,7 @@
       }}) &nbsp;</a
     >
     <span>
-      / &nbsp; Evacuation File #{{
-        evacuationFileDataService?.essFileNumber
-      }}</span
+      / &nbsp; Evacuation File #{{ evacuationFileDataService?.essFileId }}</span
     >
   </div>
 </div>
@@ -25,7 +23,7 @@
         <img [src]="backArrowImgSrc" height="28" width="31" />
       </button>
       <span class="evacFileSpan"
-        >Evacuation File #{{ evacuationFileDataService?.essFileNumber }}</span
+        >Evacuation File #{{ evacuationFileDataService?.essFileId }}</span
       >
     </div>
 

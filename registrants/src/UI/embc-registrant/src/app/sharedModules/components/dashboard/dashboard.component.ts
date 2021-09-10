@@ -6,6 +6,7 @@ import { CacheService } from 'src/app/core/services/cache.service';
 import { TabModel } from 'src/app/core/model/tab.model';
 import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
 import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dashboard',
@@ -44,7 +45,6 @@ export class DashboardComponent implements OnInit {
     public formCreationService: FormCreationService,
     private router: Router,
     private dialogService: DialogService,
-    private cacheService: CacheService,
     public evacuationFilesDataService: EvacuationFileDataService
   ) {}
 
@@ -57,9 +57,9 @@ export class DashboardComponent implements OnInit {
     }, 500);
   }
 
-  openDOBMismatchPopup(): void {
-    this.dialogService.dateOfBirthMismatch('02 Mar 1984', '02 Mar 1983');
-  }
+  // openDOBMismatchPopup(): void {
+  //   this.dialogService.dateOfBirthMismatch('02 Mar 1984', '02 Mar 1983');
+  // }
 
   openReferenceNumberPopup(): void {
     const registrationResult =

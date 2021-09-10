@@ -55,6 +55,31 @@ namespace EMBC.Responders.API.Controllers
 
             return Ok();
         }
+
+        [HttpPost("files/{fileId}/supports/{supportId}/void")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> VoidSupport(string fileId, string supportId, SupportVoidReason voidReason)
+        {
+            var result = await messagingClient.Send(new VoidSupportCommand
+            {
+                FileId = fileId,
+                SupportId = supportId,
+                VoidReason = Enum.Parse<ESS.Shared.Contracts.Submissions.SupportVoidReason>(voidReason.ToString(), true)
+            });
+
+            return Ok();
+        }
+
+        [HttpPost("files/{fileId}/supports/{supportId}/reprint")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ReprintSupport(string fileId, string supportId, SupportReprintReason reprintReason)
+        {
+            return await Task.FromResult(Ok());
+        }
     }
 
     [JsonConverter(typeof(SupportJsonConverter))]
@@ -99,6 +124,7 @@ namespace EMBC.Responders.API.Controllers
     [KnownType(typeof(TransportationTaxiReferral))]
     public abstract class Referral : Support
     {
+        [Required]
         public override SupportMethod Method => SupportMethod.Referral;
 
         [Required]
@@ -115,7 +141,11 @@ namespace EMBC.Responders.API.Controllers
     public class ClothingReferral : Referral
     {
         public bool ExtremeWinterConditions { get; set; }
+
+        [Required]
         public override SupportCategory Category => SupportCategory.Clothing;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.None;
 
         [Required]
@@ -125,7 +155,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class IncidentalsReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Incidentals;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.None;
 
         [Required]
@@ -138,7 +171,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class FoodGroceriesReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Food;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Food_Groceries;
 
         [Required]
@@ -152,7 +188,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class FoodRestaurantReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Food;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Food_Restaurant;
 
         [Required]
@@ -174,7 +213,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class LodgingHotelReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Lodging;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Hotel;
 
         [Required]
@@ -188,7 +230,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class LodgingBilletingReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Lodging;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Billeting;
 
         [Required]
@@ -204,7 +249,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class LodgingGroupReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Lodging;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Lodging_Group;
 
         [Required]
@@ -220,7 +268,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class TransportationTaxiReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Transportation;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Transportation_Taxi;
 
         [Required]
@@ -232,7 +283,10 @@ namespace EMBC.Responders.API.Controllers
 
     public class TransportationOtherReferral : Referral
     {
+        [Required]
         public override SupportCategory Category => SupportCategory.Transportation;
+
+        [Required]
         public override SupportSubCategory SubCategory => SupportSubCategory.Transportation_Other;
 
         [Required]
@@ -314,6 +368,32 @@ namespace EMBC.Responders.API.Controllers
 
         [Description("Other")]
         Transportation_Other
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum SupportVoidReason
+    {
+        [Description("Error On Printed Referral")]
+        ErrorOnPrintedReferral,
+
+        [Description("New Supplier Required")]
+        NewSupplierRequired,
+
+        [Description("Supplier Could Not Meet Need")]
+        SupplierCouldNotMeetNeed
+    }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum SupportReprintReason
+    {
+        [Description("Error On Printed Referral")]
+        ErrorOnPrintedReferral,
+
+        [Description("Printed Error")]
+        PrintedError,
+
+        [Description("Evacuee Lost Referral")]
+        EvacueeLostReferral
     }
 
     public class SupportJsonConverter : JsonConverter<Support>

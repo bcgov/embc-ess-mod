@@ -1,17 +1,77 @@
-.close-button {
-  width: 100%;
-}
+// .close-button {
+//   width: 100%;
+// }
 
-.title-row {
-  width: 100%;
-}
+// .title-row {
+//   width: 100%;
+// }
 
+// .close-image img:last-child {
+//   display: none;
+// }
+
+// .close-image:hover img:last-child {
+//   display: block;
+// }
+
+// .close-image:hover img:first-child {
+//   display: none;
+// }
+
+// .close-button-style {
+//   background-color: white;
+//   position: relative;
+//   left: 95%;
+// }
+
+// .mat-title {
+//   font-weight: 700 !important;
+//   font-size: 33px !important;
+//   line-height: 21px;
+//   padding: 10px 5px 10px 30px;
+//   text-align: left;
+//   position: relative;
+//   left: 25px;
+// }
+
+// .mainBody {
+//   display: block;
+//   font-weight: 400;
+//   margin: 0 5px;
+//   padding: 0 20px;
+// }
+
+// @media (max-width: 768px) {
+//   .mat-dialog-content {
+//     margin: 0;
+//     padding: 0;
+//     max-height: auto;
+//   }
+// }
+
+// @media (max-width: 715px) {
+//   .mainBody {
+//     padding: 0;
+//   }
+// }
+
+// @media (max-width: 376px) {
+//   .mat-title {
+//     left: 0;
+//   }
+// }
+
+// // @media (max-width: 320px) {
+// //   .close-button-style {
+// //     left: 200px;
+// //   }
+// // }
 .close-image img:last-child {
   display: none;
 }
 
 .close-image:hover img:last-child {
-  display: block;
+  display: inline;
 }
 
 .close-image:hover img:first-child {
@@ -20,18 +80,20 @@
 
 .close-button-style {
   background-color: white;
-  position: relative;
-  left: 95%;
+  float: right;
 }
 
-.mat-title {
-  font-weight: 700 !important;
-  font-size: 33px !important;
-  line-height: 21px;
-  padding: 10px 5px 10px 30px;
-  text-align: left;
-  position: relative;
-  left: 25px;
+.filter-margin {
+  padding: 10px;
+}
+
+.data-margin {
+  padding: 10px;
+}
+
+.mat-dialog-content {
+  margin: 0 !important;
+  max-height: none !important;
 }
 
 .mainBody {
@@ -41,28 +103,10 @@
   padding: 0 20px;
 }
 
-@media (max-width: 768px) {
-  .mat-dialog-content {
-    margin: 0;
-    padding: 0;
-    max-height: auto;
-  }
+.red-alert {
+  color: #d20000;
 }
 
-@media (max-width: 715px) {
-  .mainBody {
-    padding: 0;
-  }
+.green-info {
+  color: #25a800;
 }
-
-@media (max-width: 376px) {
-  .mat-title {
-    left: 0;
-  }
-}
-
-// @media (max-width: 320px) {
-//   .close-button-style {
-//     left: 200px;
-//   }
-// }

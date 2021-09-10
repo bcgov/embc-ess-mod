@@ -223,6 +223,10 @@ objects:
                   port: 8080
               startupProbe:
                 httpGet:
+                  path: /hc/startup
+                  port: 8080
+              readinessProbe:
+                httpGet:
                   path: /hc/ready
                   port: 8080
           dnsPolicy: ClusterFirst
@@ -289,6 +293,18 @@ objects:
               resources: {}
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
+              livenessProbe:
+                httpGet:
+                  path: /
+                  port: 2015
+              startupProbe:
+                httpGet:
+                  path: /
+                  port: 2015
+              readinessProbe:
+                httpGet:
+                  path: /
+                  port: 2015
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
