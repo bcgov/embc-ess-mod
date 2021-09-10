@@ -4,9 +4,12 @@ import { map } from 'rxjs/operators';
 import {
   Address,
   EvacuationFile,
+  EvacuationFileStatus,
   NeedsAssessment
 } from 'src/app/core/api/models';
 import { EvacuationsService } from 'src/app/core/api/services';
+import { RegAddress } from 'src/app/core/model/address';
+import { LocationService } from 'src/app/core/services/location.service';
 import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
 
 @Injectable({ providedIn: 'root' })
@@ -15,56 +18,77 @@ export class EvacuationFileDataService {
     new BehaviorSubject<number>(0);
   public currentEvacuationFileCount$: Observable<number> =
     this.currentEvacuationFileCount.asObservable();
-  private essFilenumber: string;
-  private evacuatedFromAddres: Address;
-  private evacuationFiledate: string;
-  private needAssessments: Array<NeedsAssessment> = [];
-  private evacuationFilesStatus: string;
-  private currentEvacuationFiles: Array<NeedsAssessment>;
-  private pastEvacuationFiles: Array<NeedsAssessment>;
-  private pastEvacuationFileCount: number;
+
+  pastEvacuationFileCount: BehaviorSubject<number> =
+    new BehaviorSubject<number>(0);
+  public pastEvacuationFileCount$: Observable<number> =
+    this.pastEvacuationFileCount.asObservable();
+
+  private currentEvacuationFilesVal: Array<NeedsAssessment>;
+  private pastEvacuationFilesVal: Array<NeedsAssessment>;
+
+  private evacuatedAddressVal: RegAddress;
+  private evacuationFileDateVal: string;
+  private essFileIdVal: string;
+  private isRestrictedVal: boolean;
+
+  private secretPhraseVal: string;
+  private secretPhraseEditedVal: boolean;
+  private evacuationFileStatusVal: EvacuationFileStatus;
 
   constructor(
     private evacuationService: EvacuationsService,
-    private needsAssessmentService: NeedsAssessmentService
+    private needsAssessmentService: NeedsAssessmentService,
+    private locationService: LocationService
   ) {}
 
-  public get essFileNumber(): string {
-    return this.essFilenumber;
+  public get evacuatedAddress(): RegAddress {
+    return this.evacuatedAddressVal;
   }
-  public set essFileNumber(value: string) {
-    this.essFilenumber = value;
+  public set evacuatedAddress(value: RegAddress) {
+    this.evacuatedAddressVal = value;
   }
 
   public get evacuationFileDate(): string {
-    return this.evacuationFiledate;
+    return this.evacuationFileDateVal;
   }
   public set evacuationFileDate(value: string) {
-    this.evacuationFiledate = value;
+    this.evacuationFileDateVal = value;
   }
 
-  public get evacuatedFromAddress(): Address {
-    return this.evacuatedFromAddres;
+  public get essFileId(): string {
+    return this.essFileIdVal;
   }
-  public set evacuatedFromAddress(value: Address) {
-    this.evacuatedFromAddres = value;
-  }
-
-  public get evacuationFileStatus(): string {
-    return this.evacuationFilesStatus;
-  }
-  public set evacuationFileStatus(value: string) {
-    this.evacuationFilesStatus = value;
+  public set essFileId(value: string) {
+    this.essFileIdVal = value;
   }
 
-  public getCurrentEvacuationFiles(): Array<NeedsAssessment> {
-    return this.currentEvacuationFiles;
+  public get isRestricted(): boolean {
+    return this.isRestrictedVal;
+  }
+  public set isRestricted(value: boolean) {
+    this.isRestrictedVal = value;
   }
 
-  public setCurrentEvacuationFiles(
-    evacuationFiles: Array<NeedsAssessment>
-  ): void {
-    this.currentEvacuationFiles = evacuationFiles;
+  public get secretPhrase(): string {
+    return this.secretPhraseVal;
+  }
+  public set secretPhrase(value: string) {
+    this.secretPhraseVal = value;
+  }
+
+  public get secretPhraseEdited(): boolean {
+    return this.secretPhraseEditedVal;
+  }
+  public set secretPhraseEdited(value: boolean) {
+    this.secretPhraseEditedVal = value;
+  }
+
+  public get evacuationFileStatus(): EvacuationFileStatus {
+    return this.evacuationFileStatusVal;
+  }
+  public set evacuationFileStatus(value: EvacuationFileStatus) {
+    this.evacuationFileStatusVal = value;
   }
 
   public getCurrentEvacuationFileCount(): Observable<number> {
@@ -75,29 +99,44 @@ export class EvacuationFileDataService {
     this.currentEvacuationFileCount.next(count);
   }
 
-  public getPastEvacuationFiles(): Array<NeedsAssessment> {
-    return this.pastEvacuationFiles;
+  public getCurrentEvacuationFiles(): Array<NeedsAssessment> {
+    return this.currentEvacuationFilesVal;
   }
 
-  public setPastEvacuationFiles(evacuationFiles: Array<NeedsAssessment>): void {
-    this.pastEvacuationFiles = evacuationFiles;
+  public setCurrentEvacuationFiles(
+    evacuationFiles: Array<NeedsAssessment>
+  ): void {
+    this.currentEvacuationFilesVal = evacuationFiles;
   }
 
-  public getPastEvacuationFileCount(): number {
-    return this.pastEvacuationFileCount;
+  public getPastEvacuationFileCount(): Observable<number> {
+    return this.pastEvacuationFileCount$;
   }
 
   public setPastEvacuationFileCount(count: number): void {
-    this.pastEvacuationFileCount = count;
+    this.pastEvacuationFileCount.next(count);
+  }
+
+  public getPastEvacuationFiles(): Array<NeedsAssessment> {
+    return this.pastEvacuationFilesVal;
+  }
+
+  public setPastEvacuationFiles(evacuationFiles: Array<NeedsAssessment>): void {
+    this.pastEvacuationFilesVal = evacuationFiles;
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
-    console.log(this.getNeedsAssessment());
     return {
-      essFileNumber: this.essFilenumber,
-      evacuatedFromAddress: this.setAddressObject(this.evacuatedFromAddress),
-      needsAssessments: this.getNeedsAssessment(),
-      evacuationFileDate: this.evacuationFileDate
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
+        this.evacuatedAddress
+      ),
+      evacuationFileDate: this.evacuationFileDate,
+      fileId: this.essFileId,
+      isRestricted: this.isRestricted,
+      needsAssessment: this.getNeedsAssessment(),
+      secretPhrase: this.secretPhrase,
+      secretPhraseEdited: this.secretPhraseEdited,
+      status: this.evacuationFileStatus
     };
   }
 
@@ -107,29 +146,28 @@ export class EvacuationFileDataService {
       .pipe(map((response) => response.referenceNumber));
   }
 
-  private setAddressObject(addressObject): Address {
-    const address: Address = {
-      addressLine1: addressObject.addressLine1,
-      addressLine2: addressObject.addressLine2,
-      country: addressObject.country.code,
-      community:
-        addressObject.community.code === undefined
-          ? null
-          : addressObject.community.code,
-      postalCode: addressObject.postalCode,
-      stateProvince:
-        addressObject.stateProvince === null
-          ? addressObject.stateProvince
-          : addressObject.stateProvince.code
-    };
+  // private setAddressObject(addressObject: RegAddress): Address {
+  //   const address: Address = {
+  //     addressLine1: addressObject.addressLine1,
+  //     addressLine2: addressObject.addressLine2,
+  //     country: addressObject.country.code,
+  //     community:
+  //       addressObject.community?.code === undefined
+  //         ? null
+  //         : addressObject.community?.code,
+  //     postalCode: addressObject.postalCode,
+  //     stateProvince:
+  //       addressObject.stateProvince === null
+  //         ? addressObject.stateProvince
+  //         : addressObject.stateProvince.code
+  //   };
 
-    return address;
-  }
+  //   return address;
+  // }
 
-  private getNeedsAssessment(): Array<NeedsAssessment> {
+  private getNeedsAssessment(): NeedsAssessment {
     const needsAssessment: NeedsAssessment =
       this.needsAssessmentService.createNeedsAssessmentDTO();
-    this.needAssessments.splice(0, 1, needsAssessment);
-    return this.needAssessments;
+    return needsAssessment;
   }
 }
