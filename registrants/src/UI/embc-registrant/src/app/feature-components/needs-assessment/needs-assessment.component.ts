@@ -199,6 +199,7 @@ export class NeedsAssessmentComponent
       case 'secret':
         this.evacuationFileDataService.secretPhrase =
           this.form.get('secretPhrase').value;
+        this.evacuationFileDataService.secretPhraseEdited = true;
         break;
       default:
     }

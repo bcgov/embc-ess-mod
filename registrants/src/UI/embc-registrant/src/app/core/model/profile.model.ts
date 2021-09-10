@@ -30,6 +30,7 @@ export class PersonDetails {
   gender: string;
   dateOfBirth: string;
   sameLastNameCheck?: boolean;
+  isPrimaryRegistrant?: boolean;
 
   constructor(
     firstName?: string,
@@ -38,7 +39,8 @@ export class PersonDetails {
     initials?: string,
     gender?: string,
     dateOfBirth?: string,
-    sameLastNameCheck?: boolean
+    sameLastNameCheck?: boolean,
+    isPrimaryRegistrant?: boolean
   ) {}
 }
 

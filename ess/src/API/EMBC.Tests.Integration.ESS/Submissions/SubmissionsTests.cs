@@ -163,6 +163,54 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         }
 
         [Fact(Skip = RequiresDynamics)]
+        public async Task Create_EvacuationFileNoPrimaryRegistrant_ThrowsError()
+        {
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var file = CreateNewTestEvacuationFile(registrant);
+            foreach (var member in file.NeedsAssessment.HouseholdMembers)
+            {
+                member.IsPrimaryRegistrant = false;
+            }
+
+            file.NeedsAssessment.CompletedOn = DateTime.UtcNow;
+            file.NeedsAssessment.CompletedBy = new TeamMember { Id = teamUserId };
+
+            Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe("File  must have a single primary registrant household member");
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task Update_EvacuationFileMultiplePrimaryRegistrants_ThrowsError()
+        {
+            var now = DateTime.UtcNow;
+            now = new DateTime(now.Ticks - (now.Ticks % TimeSpan.TicksPerSecond), now.Kind);
+            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+
+            var file = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantId = registrant.Id })).Items.Last();
+
+            if (file.NeedsAssessment.HouseholdMembers.Count() <= 1)
+            {
+                var member = new HouseholdMember
+                {
+                    FirstName = registrant.FirstName,
+                    LastName = registrant.LastName,
+                    Initials = registrant.Initials,
+                    Gender = registrant.Gender,
+                    DateOfBirth = registrant.DateOfBirth,
+                    IsPrimaryRegistrant = true,
+                    LinkedRegistrantId = registrant.Id
+                };
+                file.NeedsAssessment.HouseholdMembers = file.NeedsAssessment.HouseholdMembers.Concat(new[] { member });
+            }
+
+            foreach (var member in file.NeedsAssessment.HouseholdMembers)
+            {
+                member.IsPrimaryRegistrant = true;
+            }
+
+            Should.Throw<Exception>(() => manager.Handle(new SubmitEvacuationFileCommand { File = file })).Message.ShouldBe($"File {file.Id} can not have multiple primary registrant household members");
+        }
+
+        [Fact(Skip = RequiresDynamics)]
         public async Task CanUpdateEvacuation()
         {
             var now = DateTime.UtcNow;
@@ -299,10 +347,28 @@ namespace EMBC.Tests.Integration.ESS.Submissions
         [Fact(Skip = RequiresDynamics)]
         public async Task Link_RegistrantToHouseholdMember_ReturnsRegistrantId()
         {
-            var registrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+            var baseRegistrant = (await GetRegistrantByUserId("CHRIS-TEST"));
+
+            var newProfileBceId = Guid.NewGuid().ToString("N").Substring(0, 10);
+            var country = "CAN";
+            var province = "BC";
+            var community = "226adfaf-9f97-ea11-b813-005056830319";
+            string city = null;
+
+            baseRegistrant.Id = null;
+            baseRegistrant.UserId = newProfileBceId;
+            baseRegistrant.PrimaryAddress.Country = country;
+            baseRegistrant.PrimaryAddress.StateProvince = province;
+            baseRegistrant.PrimaryAddress.Community = community;
+            baseRegistrant.PrimaryAddress.City = city;
+
+            var id = await manager.Handle(new SaveRegistrantCommand { Profile = baseRegistrant });
+
+            var registrant = (await GetRegistrantByUserId(newProfileBceId)).ShouldNotBeNull();
 
             var file = (await GetEvacuationFileById("101010")).FirstOrDefault();
             var member = file.NeedsAssessment.HouseholdMembers.FirstOrDefault();
+
             var fileId = await manager.Handle(new LinkRegistrantCommand { FileId = file.Id, RegistantId = registrant.Id, HouseholdMemberId = member.Id });
             fileId.ShouldBe(file.Id);
 
@@ -389,6 +455,17 @@ namespace EMBC.Tests.Integration.ESS.Submissions
             files.ShouldNotBeEmpty();
 
             files.ShouldAllBe(f => f.HouseholdMembers.Any(h => h.LinkedRegistrantId == registrant.Id));
+        }
+
+        [Fact(Skip = RequiresDynamics)]
+        public async Task CanSearchEvacuationFilesByBCServicesCardId()
+        {
+            var bcscId = "TX2JXF2AEFJP4NHJ2EP6SMXGGONIXEDO";
+            var statuses = new[] { EvacuationFileStatus.Active, EvacuationFileStatus.Pending };
+
+            var files = (await manager.Handle(new EvacuationFilesQuery { PrimaryRegistrantUserId = bcscId, IncludeFilesInStatuses = statuses })).Items;
+
+            files.ShouldNotBeEmpty();
         }
 
         [Fact(Skip = RequiresDynamics)]

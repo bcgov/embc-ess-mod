@@ -25,6 +25,7 @@ export class EvacuationFileService {
           currentEssFiles: Array<EvacuationFile>
         ): Array<EvacuationFileModel> => {
           currentEssFiles.forEach((item) => {
+            console.log(item);
             const essFileItem: EvacuationFileModel = {
               ...item,
               evacuatedAddress: this.locationService.getAddressRegFromAddress(

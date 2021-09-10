@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
+import { RestrictionService } from 'src/app/feature-components/restriction/restriction.service';
+import { EvacuationFileModel } from '../../../core/model/evacuation-file.model';
 import { NeedsAssessmentMappingService } from '../../../feature-components/needs-assessment/needs-assessment-mapping.service';
 import { EvacuationFileDataService } from './evacuation-file-data.service';
 
@@ -7,7 +8,8 @@ import { EvacuationFileDataService } from './evacuation-file-data.service';
 export class EvacuationFileMappingService {
   constructor(
     private needsAssessmentMapService: NeedsAssessmentMappingService,
-    private evacuationFileDataService: EvacuationFileDataService
+    private evacuationFileDataService: EvacuationFileDataService,
+    private restrictionService: RestrictionService
   ) {}
 
   public mapEvacuationFile(evacuationFile: EvacuationFileModel): void {
@@ -16,9 +18,14 @@ export class EvacuationFileMappingService {
       evacuationFile.evacuatedAddress;
     this.evacuationFileDataService.evacuationFileDate =
       evacuationFile.evacuationFileDate;
+    this.evacuationFileDataService.evacuationFileStatus = evacuationFile.status;
     this.needsAssessmentMapService.setNeedsAssessment(
       evacuationFile.evacuatedAddress,
       evacuationFile.needsAssessment
     );
+    this.evacuationFileDataService.secretPhrase = evacuationFile.secretPhrase;
+    this.evacuationFileDataService.secretPhraseEdited =
+      evacuationFile.secretPhraseEdited;
+    this.restrictionService.restrictedAccess = evacuationFile.isRestricted;
   }
 }

@@ -57,10 +57,6 @@ export class DashboardComponent implements OnInit {
     }, 500);
   }
 
-  // openDOBMismatchPopup(): void {
-  //   this.dialogService.dateOfBirthMismatch('02 Mar 1984', '02 Mar 1983');
-  // }
-
   openReferenceNumberPopup(): void {
     const registrationResult =
       this.needsAssessmentService.getVerifiedEvacuationFileNo();

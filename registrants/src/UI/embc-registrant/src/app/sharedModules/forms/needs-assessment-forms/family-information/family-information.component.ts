@@ -40,7 +40,6 @@ export default class FamilyInformationComponent implements OnInit {
   data = [];
   editIndex: number;
   rowEdit = false;
-  // showTable = true;
   editFlag = false;
 
   constructor(
@@ -65,6 +64,7 @@ export default class FamilyInformationComponent implements OnInit {
       this.householdMemberForm.get('householdMembers').value
     );
     this.data = this.householdMemberForm.get('householdMembers').value;
+    console.log(this.dataSource);
   }
 
   addMembers(): void {
@@ -76,6 +76,8 @@ export default class FamilyInformationComponent implements OnInit {
 
   save(): void {
     if (this.householdMemberForm.get('householdMember').status === 'VALID') {
+      console.log(this.editIndex);
+      console.log(this.rowEdit);
       if (this.editIndex !== undefined && this.rowEdit) {
         this.data[this.editIndex] =
           this.householdMemberForm.get('householdMember').value;
