@@ -11,6 +11,18 @@ export const groceriesRate = {
   rate: 22.5
 };
 
+export const incidentals = {
+  rate: 50
+};
+
+export const extremeConditions = {
+  rate: 200
+};
+
+export const normalConditions = {
+  rate: 150
+};
+
 export const noOfRooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const supportNoOfDays = [

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
-import { Support } from 'src/app/core/api/models';
+import { Support, SupportStatus } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 import { TableFilterModel } from 'src/app/core/models/table-filter.model';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
@@ -34,6 +34,12 @@ export class ViewSupportsComponent implements OnInit {
       (value) => {
         this.showLoader = !this.showLoader;
         this.supportList = value;
+        // const index = this.supportList.findIndex(
+        //   (item) => (item.status = SupportStatus.Draft)
+        // );
+        // if (this.stepSupportsService.mealReferral && index === -1) {
+        //   this.supportList.push(this.stepSupportsService.mealReferral);
+        // }
       },
       (error) => {
         this.showLoader = !this.showLoader;
@@ -56,5 +62,11 @@ export class ViewSupportsComponent implements OnInit {
         ? ''
         : event.value.description;
     this.filterTerm = { type: filterType, value: selectedValue };
+  }
+
+  openSupportDetails($event: Support): void {
+    console.log($event);
+    this.stepSupportsService.selectedSupportDetail = $event;
+    this.router.navigate(['/ess-wizard/add-supports/view-detail']);
   }
 }
