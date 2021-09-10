@@ -84,6 +84,10 @@ export const radioButtonOptions = [
   { name: 'Yes', value: 'Yes', apiValue: true },
   { name: 'No', value: 'No', apiValue: false }
 ];
+export const voidMessage: DialogContent = {
+  text: '<p>Support successfully voided.</p>',
+  cancelButton: 'Close'
+};
 export const deleteMessage: DialogContent = {
   text: '<p>User has been successfully deleted from the ERA Tool.</p>',
   cancelButton: 'Close'

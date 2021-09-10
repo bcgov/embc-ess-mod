@@ -19,7 +19,7 @@
             <div class="col-md-4">
               <p class="box-text-color">Status:</p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 bold">
               <p>{{ selectedSupport?.status }}</p>
             </div>
           </div>
@@ -28,7 +28,7 @@
             <div class="col-md-4">
               <p class="box-text-color">Issued:</p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 bold">
               <p>
                 {{ selectedSupport?.issuedOn | date: 'dd-MMM-yyyy' }} at
                 {{ selectedSupport?.issuedOn | date: 'hh:mm a' }}
@@ -40,7 +40,7 @@
             <div class="col-md-4">
               <p class="box-text-color">Issued by:</p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 bold">
               <p>{{ selectedSupport?.issuingMemberName }}</p>
             </div>
           </div>
@@ -63,7 +63,7 @@
 
           <div class="row">
             <div class="col-md-12">
-              <a
+              <a (click)="reprint()"
                 ><img
                   src="/assets/images/reprint.svg"
                   width="18"
@@ -75,7 +75,7 @@
 
           <div class="row">
             <div class="col-md-12">
-              <a
+              <a (click)="voidReferral()"
                 ><img
                   src="/assets/images/void.svg"
                   width="18"

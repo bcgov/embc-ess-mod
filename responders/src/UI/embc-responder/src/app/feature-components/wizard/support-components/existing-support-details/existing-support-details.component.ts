@@ -21,6 +21,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { ViewAssessmentDialogComponent } from 'src/app/shared/components/dialog-components/view-assessment-dialog/view-assessment-dialog.component';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
+import { VoidReferralDialogComponent } from 'src/app/shared/components/dialog-components/void-referral-dialog/void-referral-dialog.component';
+import { ReprintReferralDialogComponent } from 'src/app/shared/components/dialog-components/reprint-referral-dialog/reprint-referral-dialog.component';
+import { ExistingSupportDetailsService } from './existing-support-details.service';
 
 @Component({
   selector: 'app-existing-support-details',
@@ -34,7 +37,8 @@ export class ExistingSupportDetailsComponent implements OnInit {
   constructor(
     private router: Router,
     public stepSupportsService: StepSupportsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private existingSupportService: ExistingSupportDetailsService
   ) {}
 
   ngOnInit(): void {
@@ -141,5 +145,56 @@ export class ExistingSupportDetailsComponent implements OnInit {
       height: '650px',
       width: '720px'
     });
+  }
+
+  voidReferral(): void {
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: VoidReferralDialogComponent,
+          profileData: this.selectedSupport.id
+        },
+        height: '550px',
+        width: '720px'
+      })
+      .afterClosed()
+      .subscribe((reason) => {
+        this.existingSupportService
+          .voidSupport(
+            this.needsAssessmentForSupport.id,
+            this.selectedSupport.id,
+            reason
+          )
+          .subscribe((value) => {
+            const stateIndicator = { action: 'void' };
+            this.router.navigate(['/ess-wizard/add-supports/view'], {
+              state: stateIndicator
+            });
+          });
+      });
+  }
+
+  reprint(): void {
+    this.dialog
+      .open(DialogComponent, {
+        data: {
+          component: ReprintReferralDialogComponent,
+          profileData: this.selectedSupport.id
+        },
+        height: '550px',
+        width: '720px'
+      })
+      .afterClosed()
+      .subscribe((reason) => {
+        this.existingSupportService
+          .reprintSupport(
+            this.needsAssessmentForSupport.id,
+            this.selectedSupport.id,
+            reason
+          )
+          .subscribe((value) => {
+            //TODO: PDF generation
+          });
+      });
   }
 }

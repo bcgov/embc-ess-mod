@@ -8,6 +8,10 @@ import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import { ViewSupportsService } from './view-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { DialogContent } from 'src/app/core/models/dialog-content.model';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-view-supports',
@@ -25,8 +29,16 @@ export class ViewSupportsComponent implements OnInit {
     private router: Router,
     public stepSupportsService: StepSupportsService,
     private viewSupportsService: ViewSupportsService,
-    private alertService: AlertService
-  ) {}
+    private alertService: AlertService,
+    private dialog: MatDialog
+  ) {
+    if (this.router.getCurrentNavigation() !== null) {
+      if (this.router.getCurrentNavigation().extras.state !== undefined) {
+        const state = this.router.getCurrentNavigation().extras.state;
+        this.enableActionNotification(state);
+      }
+    }
+  }
 
   ngOnInit(): void {
     this.showLoader = !this.showLoader;
@@ -68,5 +80,38 @@ export class ViewSupportsComponent implements OnInit {
     console.log($event);
     this.stepSupportsService.selectedSupportDetail = $event;
     this.router.navigate(['/ess-wizard/add-supports/view-detail']);
+  }
+
+  /**
+   * Populates action basec notification and open confirmation box
+   *
+   * @param state navigation state string
+   */
+  enableActionNotification(state: { [k: string]: any }): void {
+    let displayText: DialogContent;
+    if (state?.action === 'void') {
+      displayText = globalConst.voidMessage;
+      setTimeout(() => {
+        this.openConfirmation(displayText);
+      }, 500);
+    }
+    // else {
+    //   displayText = globalConst.addMessage;
+    // }
+  }
+
+  /**
+   * Open confirmation modal window
+   *
+   * @param text text to display
+   */
+  openConfirmation(content: DialogContent): void {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content
+      },
+      width: '530px'
+    });
   }
 }
