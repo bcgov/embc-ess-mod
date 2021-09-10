@@ -28,6 +28,8 @@ import { AppVersionDialogComponent } from './components/dialog-components/app-ve
 import { CustomGstFieldComponent } from './components/custom-gst-field/custom-gst-field.component';
 import { ViewAssessmentDialogComponent } from './components/dialog-components/view-assessment-dialog/view-assessment-dialog.component';
 import { CustomPipeModule } from './pipes/customPipe.module';
+import { VoidReferralDialogComponent } from './components/dialog-components/void-referral-dialog/void-referral-dialog.component';
+import { ReprintReferralDialogComponent } from './components/dialog-components/reprint-referral-dialog/reprint-referral-dialog.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,9 @@ import { CustomPipeModule } from './pipes/customPipe.module';
     RegistrantLinkDialogComponent,
     AppVersionDialogComponent,
     CustomGstFieldComponent,
-    ViewAssessmentDialogComponent
+    ViewAssessmentDialogComponent,
+    VoidReferralDialogComponent,
+    ReprintReferralDialogComponent
   ],
   imports: [
     CommonModule,
@@ -86,7 +90,9 @@ import { CustomPipeModule } from './pipes/customPipe.module';
     FileDashboardVerifyDialogComponent,
     RegistrantLinkDialogComponent,
     CustomGstFieldComponent,
-    ViewAssessmentDialogComponent
+    ViewAssessmentDialogComponent,
+    VoidReferralDialogComponent,
+    ReprintReferralDialogComponent
   ]
 })
 export class SharedModule {}
