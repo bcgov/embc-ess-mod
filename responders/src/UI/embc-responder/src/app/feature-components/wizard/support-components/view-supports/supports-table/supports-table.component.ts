@@ -2,16 +2,18 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Referral, Support } from 'src/app/core/api/models';
+import { Support } from 'src/app/core/api/models';
 import { TableFilterValueModel } from 'src/app/core/models/table-filter-value.model';
 
 @Component({
@@ -25,6 +27,7 @@ export class SupportsTableComponent
   @ViewChild(MatSort) sort: MatSort;
   @Input() supportList: Support[];
   @Input() filterTerm: TableFilterValueModel;
+  @Output() clickedRow = new EventEmitter<Support>(null);
 
   displayedColumns: string[] = [
     'id',
@@ -106,4 +109,13 @@ export class SupportsTableComponent
       }
     }
   };
+
+  /**
+   * Captures the row click event
+   *
+   * @param row team member row
+   */
+  rowClicked(row): void {
+    this.clickedRow.emit(row);
+  }
 }

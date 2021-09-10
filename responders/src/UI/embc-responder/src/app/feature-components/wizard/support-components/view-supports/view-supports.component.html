@@ -70,6 +70,7 @@
         <app-supports-table
           [supportList]="supportList"
           [filterTerm]="filterTerm"
+          (clickedRow)="openSupportDetails($event)"
         ></app-supports-table>
       </div>
     </div>
