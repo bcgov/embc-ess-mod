@@ -30,7 +30,6 @@ export class NeedsAssessmentService {
   private mainHouseholdMembers: HouseholdMember;
   private registrationResult: RegistrationResult;
   private verifiedRegistrationResult: string;
-  // private secretPhrase: string;
 
   constructor(private profileDataService: ProfileDataService) {}
 
@@ -143,13 +142,6 @@ export class NeedsAssessmentService {
     this.mainHouseholdMembers = value;
   }
 
-  // public get secretWordPhrase(): string {
-  //   return this.secretPhrase;
-  // }
-  // public set secretWordPhrase(value: string) {
-  //   this.secretPhrase = value;
-  // }
-
   public setHouseHoldMembers(members: PersonDetails[]): void {
     const householdMembersArray: Array<HouseholdMember> = [];
     for (const member of members) {
@@ -187,6 +179,7 @@ export class NeedsAssessmentService {
   }
 
   public createNeedsAssessmentDTO(): NeedsAssessment {
+    console.log(this.householdMembers);
     return {
       id: this.id,
       canEvacueeProvideClothing: this.canEvacueeProvideClothing,
