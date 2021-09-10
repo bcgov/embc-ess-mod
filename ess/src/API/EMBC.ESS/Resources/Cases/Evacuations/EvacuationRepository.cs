@@ -242,8 +242,18 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             var loadTasks = new List<Task>();
             loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid))));
             loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID))));
-            loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_TaskId))));
-            loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId))));
+            loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_TaskId))));           
+
+            loadTasks.Add(Task.Run(async () =>
+            {
+                await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+                foreach (var support in file.era_era_evacuationfile_era_evacueesupport_ESSFileId)
+                {
+                    ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
+                    await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_evacueesupport_era_householdmember));
+                    ctx.Detach(support);
+                }
+            }));
 
             loadTasks.Add(Task.Run(async () =>
             {
@@ -493,7 +503,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         {
             foreach (var member in support.era_era_evacueesupport_era_householdmember)
             {
-                var householdMember = essContext.era_householdmembers.Single(m => m.era_householdmemberid == member.era_householdmemberid);
+                var householdMember = essContext.era_householdmembers.Where(m => m.era_householdmemberid == member.era_householdmemberid).Single();
                 essContext.AddLink(support, nameof(era_evacueesupport.era_era_evacueesupport_era_householdmember), householdMember);
                 essContext.AddLink(householdMember, nameof(era_householdmember.era_era_evacueesupport_era_householdmember), support);
             }

@@ -218,8 +218,8 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
                 .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_householdmember.Select(m => m.era_householdmemberid)))
                 .ReverseMap()
-                .ForPath(s => s.era_validfrom, opts => opts.MapFrom(s => s.From))
-                .ForPath(s => s.era_validto, opts => opts.MapFrom(s => s.To))
+                .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
+                .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
                 .IncludeAllDerived()
                 .ForMember(d => d.era_era_evacueesupport_era_householdmember,
                     opts => opts.MapFrom(s => s.IncludedHouseholdMembers.Select(m => new era_householdmember { era_householdmemberid = Guid.Parse(m) })))
