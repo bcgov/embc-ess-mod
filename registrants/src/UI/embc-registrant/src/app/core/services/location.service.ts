@@ -73,7 +73,6 @@ export class LocationService {
    * @returns AddressModel object usable by the UI
    */
   public getAddressRegFromAddress(addressObject: Address): RegAddress {
-    console.log(addressObject);
     const communities = this.getCommunityList();
     const countries = this.getCountriesList();
     const stateProvinces = this.getStateProvinceList();
@@ -93,7 +92,7 @@ export class LocationService {
     }
 
     if (addressCountry === undefined) {
-      addressCountry = stateProvinces.find((sp) => sp.code === 'CA');
+      addressCountry = countries.find((ct) => ct.code === 'CAN');
     }
 
     return {

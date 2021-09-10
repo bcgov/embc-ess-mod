@@ -198,7 +198,6 @@ export class EditComponent implements OnInit, OnDestroy {
           .getEvacuatedForm()
           .subscribe((evacuatedForm) => {
             this.form = evacuatedForm;
-            console.log(this.form);
           });
         this.editHeading = 'Edit Evacuation File';
         this.profileFolderPath = 'needs-assessment-forms';
