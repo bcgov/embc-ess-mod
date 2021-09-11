@@ -7,10 +7,10 @@ import {
   Pet,
   RegistrationResult,
   NeedsAssessmentType,
-  HouseholdMember,
-  EvacuationFile
+  HouseholdMember
 } from 'src/app/core/api/models';
 import { ProfileDataService } from '../profile/profile-data.service';
+import * as globalConst from '../../core/services/globalConstants';
 
 @Injectable({ providedIn: 'root' })
 export class NeedsAssessmentService {
@@ -22,11 +22,11 @@ export class NeedsAssessmentService {
   private specialDietDetail: string;
   private pet: Array<Pet> = [];
   private hasPetFood: boolean;
-  private canEvacueesProvideClothing: boolean;
-  private canEvacueesProvideFood: boolean;
-  private canEvacueesProvideIncidentals: boolean;
-  private canEvacueesProvideLodging: boolean;
-  private canEvacueesProvideTransportation: boolean;
+  private canEvacueesProvideClothing: string;
+  private canEvacueesProvideFood: string;
+  private canEvacueesProvideIncidentals: string;
+  private canEvacueesProvideLodging: string;
+  private canEvacueesProvideTransportation: string;
   private mainHouseholdMembers: HouseholdMember;
   private registrationResult: RegistrationResult;
   private verifiedRegistrationResult: string;
@@ -47,43 +47,43 @@ export class NeedsAssessmentService {
     this.insuranceOption = value;
   }
 
-  public get canEvacueeProvideClothing(): boolean {
+  public get canEvacueeProvideClothing(): string {
     return this.canEvacueesProvideClothing;
   }
 
-  public set canEvacueeProvideClothing(value: boolean) {
+  public set canEvacueeProvideClothing(value: string) {
     this.canEvacueesProvideClothing = value;
   }
 
-  public get canEvacueeProvideFood(): boolean {
+  public get canEvacueeProvideFood(): string {
     return this.canEvacueesProvideFood;
   }
 
-  public set canEvacueeProvideFood(value: boolean) {
+  public set canEvacueeProvideFood(value: string) {
     this.canEvacueesProvideFood = value;
   }
 
-  public get canEvacueeProvideIncidentals(): boolean {
+  public get canEvacueeProvideIncidentals(): string {
     return this.canEvacueesProvideIncidentals;
   }
 
-  public set canEvacueeProvideIncidentals(value: boolean) {
+  public set canEvacueeProvideIncidentals(value: string) {
     this.canEvacueesProvideIncidentals = value;
   }
 
-  public get canEvacueeProvideLodging(): boolean {
+  public get canEvacueeProvideLodging(): string {
     return this.canEvacueesProvideLodging;
   }
 
-  public set canEvacueeProvideLodging(value: boolean) {
+  public set canEvacueeProvideLodging(value: string) {
     this.canEvacueesProvideLodging = value;
   }
 
-  public get canEvacueeProvideTransportation(): boolean {
+  public get canEvacueeProvideTransportation(): string {
     return this.canEvacueesProvideTransportation;
   }
 
-  public set canEvacueeProvideTransportation(value: boolean) {
+  public set canEvacueeProvideTransportation(value: string) {
     this.canEvacueesProvideTransportation = value;
   }
 
@@ -156,37 +156,70 @@ export class NeedsAssessmentService {
   }
 
   public setNeedsDetails(formGroup: FormGroup): void {
-    this.canEvacueeProvideClothing =
-      formGroup.get('canEvacueeProvideClothing').value === 'null'
-        ? null
-        : formGroup.get('canEvacueeProvideClothing').value;
-    this.canEvacueeProvideFood =
-      formGroup.get('canEvacueeProvideFood').value === 'null'
-        ? null
-        : formGroup.get('canEvacueeProvideFood').value;
-    this.canEvacueeProvideIncidentals =
-      formGroup.get('canEvacueeProvideIncidentals').value === 'null'
-        ? null
-        : formGroup.get('canEvacueeProvideIncidentals').value;
-    this.canEvacueeProvideLodging =
-      formGroup.get('canEvacueeProvideLodging').value === 'null'
-        ? null
-        : formGroup.get('canEvacueeProvideLodging').value;
-    this.canEvacueeProvideTransportation =
-      formGroup.get('canEvacueeProvideTransportation').value === 'null'
-        ? null
-        : formGroup.get('canEvacueeProvideTransportation').value;
+    this.canEvacueeProvideClothing = formGroup.get(
+      'canEvacueeProvideClothing'
+    ).value;
+    this.canEvacueeProvideFood = formGroup.get('canEvacueeProvideFood').value;
+    this.canEvacueeProvideIncidentals = formGroup.get(
+      'canEvacueeProvideIncidentals'
+    ).value;
+    this.canEvacueeProvideLodging = formGroup.get(
+      'canEvacueeProvideLodging'
+    ).value;
+    this.canEvacueeProvideTransportation = formGroup.get(
+      'canEvacueeProvideTransportation'
+    ).value;
+
+    // this.canEvacueeProvideClothing =
+    //   formGroup.get('canEvacueeProvideClothing').value === 'null'
+    //     ? null
+    //     : formGroup.get('canEvacueeProvideClothing').value;
+    // this.canEvacueeProvideFood =
+    //   formGroup.get('canEvacueeProvideFood').value === 'null'
+    //     ? null
+    //     : formGroup.get('canEvacueeProvideFood').value;
+    // this.canEvacueeProvideIncidentals =
+    //   formGroup.get('canEvacueeProvideIncidentals').value === 'null'
+    //     ? null
+    //     : formGroup.get('canEvacueeProvideIncidentals').value;
+    // this.canEvacueeProvideLodging =
+    //   formGroup.get('canEvacueeProvideLodging').value === 'null'
+    //     ? null
+    //     : formGroup.get('canEvacueeProvideLodging').value;
+    // this.canEvacueeProvideTransportation =
+    //   formGroup.get('canEvacueeProvideTransportation').value === 'null'
+    //     ? null
+    //     : formGroup.get('canEvacueeProvideTransportation').value;
   }
 
   public createNeedsAssessmentDTO(): NeedsAssessment {
-    console.log(this.householdMembers);
+    // Get correct API values for Needs Assessment selections
+    const needsClothingDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canEvacueeProvideClothing
+    )?.apiValue;
+
+    const needsFoodDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canEvacueeProvideFood
+    )?.apiValue;
+
+    const needsIncidentalsDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canEvacueeProvideIncidentals
+    )?.apiValue;
+
+    const needsLodgingDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canEvacueeProvideLodging
+    )?.apiValue;
+
+    const needsTransportationDTO = globalConst.needsOptions.find(
+      (ins) => ins.value === this.canEvacueeProvideTransportation
+    )?.apiValue;
     return {
       id: this.id,
-      canEvacueeProvideClothing: this.canEvacueeProvideClothing,
-      canEvacueeProvideFood: this.canEvacueeProvideFood,
-      canEvacueeProvideIncidentals: this.canEvacueeProvideIncidentals,
-      canEvacueeProvideLodging: this.canEvacueeProvideLodging,
-      canEvacueeProvideTransportation: this.canEvacueeProvideTransportation,
+      canEvacueeProvideClothing: needsClothingDTO,
+      canEvacueeProvideFood: needsFoodDTO,
+      canEvacueeProvideIncidentals: needsIncidentalsDTO,
+      canEvacueeProvideLodging: needsLodgingDTO,
+      canEvacueeProvideTransportation: needsTransportationDTO,
       householdMembers: this.addPrimaryApplicantToHousehold(),
       hasPetsFood: this.hasPetsFood,
       haveMedication: this.haveMedication,
