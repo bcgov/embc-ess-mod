@@ -1,0 +1,54 @@
+<div class="row row-padding">
+  <div class="col-md-12 heading">Void Support</div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-12">
+    <p>
+      You are requesting to void
+      <span class="bold">Support #{{ profileData }}</span
+      >, a support can only be voided if the evacuee can provide you with the
+      original referral.
+    </p>
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-12 bold">Reason for void:</div>
+</div>
+
+<form [formGroup]="voidForm">
+  <div class="row row-padding">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Reason for void</mat-label>
+        <mat-select formControlName="reason" required>
+          <mat-option *ngFor="let gen of reasons | enumToArray" [value]="gen">
+            {{ gen }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            voidFormControl.reason.invalid &&
+            voidFormControl.reason.hasError('required')
+          "
+        >
+          Reason for void is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+
+<div class="row row-padding">
+  <div class="col-md-6">
+    <button class="button-s button-width" mat-button (click)="close()">
+      Close
+    </button>
+  </div>
+  <div class="col-md-6">
+    <button class="button-p button-width" mat-button (click)="void()">
+      Proceed & Void
+    </button>
+  </div>
+</div>

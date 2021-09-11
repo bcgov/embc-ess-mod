@@ -1,0 +1,290 @@
+<div class="container container-frame">
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <a (click)="back()"
+        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span
+          class="back-link"
+          >Supports</span
+        ></a
+      >
+    </div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-12 needs-box">
+      <div class="row">
+        <div class="col-md-8">
+          <p class="question-heading">Support #{{ selectedSupport?.id }}</p>
+          <div class="row">
+            <div class="col-md-4">
+              <p class="box-text-color">Status:</p>
+            </div>
+            <div class="col-md-4 bold">
+              <p>{{ selectedSupport?.status }}</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <p class="box-text-color">Issued:</p>
+            </div>
+            <div class="col-md-4 bold">
+              <p>
+                {{ selectedSupport?.issuedOn | date: 'dd-MMM-yyyy' }} at
+                {{ selectedSupport?.issuedOn | date: 'hh:mm a' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <p class="box-text-color">Issued by:</p>
+            </div>
+            <div class="col-md-4 bold">
+              <p>{{ selectedSupport?.issuingMemberName }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 link-padding">
+          <div class="row">
+            <div class="col-md-12">
+              <a (click)="openAssessment()"
+                ><img
+                  src="/assets/images/view-assessment.svg"
+                  width="7"
+                  height="21"
+                /><span class="back-link needs-padding"
+                  >View Needs Assessment</span
+                ></a
+              >
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <a (click)="reprint()"
+                ><img
+                  src="/assets/images/reprint.svg"
+                  width="18"
+                  height="18"
+                /><span class="back-link img-padding">Reprint Referral</span></a
+              >
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <a (click)="voidReferral()"
+                ><img
+                  src="/assets/images/void.svg"
+                  width="18"
+                  height="18"
+                /><span class="back-link img-padding">Void Referral</span></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <p class="subheading">Support Details</p>
+    </div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-4 box-text-color">Support Type:</div>
+    <div class="col-md-4 bold">
+      {{ selectedSupport?.subCategory }}
+    </div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-4 box-text-color">Valid From:</div>
+    <div class="col-md-4 bold">
+      {{ selectedSupport?.from | date: 'dd-MMM-yyyy' }} at
+      {{ selectedSupport?.from | date: 'hh:mm a' }}
+    </div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-4 box-text-color">Valid To:</div>
+    <div class="col-md-4 bold">
+      {{ selectedSupport?.to | date: 'dd-MMM-yyyy' }} at
+      {{ selectedSupport?.to | date: 'hh:mm a' }}
+    </div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-4 box-text-color">Support Provided For:</div>
+    <div class="col-md-4 bold">
+      {{ selectedSupport?.includedHouseholdMembers }}
+    </div>
+  </div>
+
+  <!--Groceries-->
+  <div *ngIf="selectedSupport?.subCategory == 'Food_Groceries'">
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color"># of Days for Meals:</div>
+      <div class="col-md-4 bold">{{ groceryReferral?.numberOfDays }}</div>
+    </div>
+
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
+      <div class="col-md-2 bold">${{ groceryReferral?.totalAmount }}</div>
+      <div *ngIf="!checkGroceryMaxRate()" class="col-md-4 warning">
+        Total monetary value exceeds the recommended ESS rate
+      </div>
+    </div>
+  </div>
+  <!--Restaurant Meals-->
+  <div *ngIf="selectedSupport?.subCategory === 'Food_Restaurant'">
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color"># Breakfasts per person:</div>
+      <div class="col-md-4 bold">
+        {{ mealReferral?.numberOfBreakfastsPerPerson }}
+      </div>
+    </div>
+
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">#Lunches per person:</div>
+      <div class="col-md-4 bold">
+        {{ mealReferral?.numberOfLunchesPerPerson }}
+      </div>
+    </div>
+
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">#Dinners per person:</div>
+      <div class="col-md-4 bold">
+        {{ mealReferral?.numberOfDinnersPerPerson }}
+      </div>
+    </div>
+
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
+      <div class="col-md-4 bold">${{ mealReferral?.totalAmount }}</div>
+    </div>
+  </div>
+  <!--Lodging-->
+  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Hotel'">
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color"># of Nights</div>
+      <div class="col-md-4 bold">{{ hotelReferral?.numberOfNights }}</div>
+    </div>
+
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color"># of Rooms</div>
+      <div class="col-md-4 bold">{{ hotelReferral?.numberOfRooms }}</div>
+    </div>
+  </div>
+  <!--Billeting-->
+  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Billeting'">
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color"># of Nights</div>
+      <div class="col-md-4 bold">{{ billetingReferral?.numberOfNights }}</div>
+    </div>
+  </div>
+  <!--Group Lodging-->
+  <div *ngIf="selectedSupport?.subCategory === 'Lodging_Group'">
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color"># of Nights</div>
+      <div class="col-md-4 bold">{{ groupReferral?.numberOfNights }}</div>
+    </div>
+  </div>
+  <!--Taxi-->
+  <div *ngIf="selectedSupport?.subCategory === 'Transportation_Taxi'">
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">From Address</div>
+      <div class="col-md-4 bold">{{ taxiReferral?.fromAddress }}</div>
+    </div>
+
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">To Address</div>
+      <div class="col-md-4 bold">{{ taxiReferral?.toAddress }}</div>
+    </div>
+  </div>
+  <!--Other-->
+  <div *ngIf="selectedSupport?.subCategory === 'Transportation_Other'">
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">Mode of Transport</div>
+      <div class="col-md-4 bold">{{ otherReferral?.transportMode }}</div>
+    </div>
+
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">Up to Maximum Value of</div>
+      <div class="col-md-4 bold">{{ otherReferral?.totalAmount }}</div>
+    </div>
+  </div>
+
+  <!--Incidentals-->
+  <div *ngIf="selectedSupport?.category === 'Incidentals'">
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">List of Approved Items:</div>
+      <div class="col-md-4 bold">{{ incidentalReferral?.approvedItems }}</div>
+    </div>
+
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
+      <div class="col-md-4 bold">{{ incidentalReferral?.totalAmount }}</div>
+      <div *ngIf="!checkIncidentalMaxRate()" class="col-md-4 warning">
+        Total monetary value exceeds the recommended ESS rate
+      </div>
+    </div>
+  </div>
+
+  <!--Clothing-->
+  <div *ngIf="selectedSupport?.category === 'Clothing'">
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">Extreme Winter Conditions:</div>
+      <div class="col-md-4 bold">
+        {{ clothingReferral?.extremeWinterConditions }}
+      </div>
+    </div>
+
+    <div class="row row-padding">
+      <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
+      <div class="col-md-4 bold">{{ clothingReferral?.totalAmount }}</div>
+      <div *ngIf="!checkClothingMaxRate()" class="col-md-4 warning">
+        Total monetary value exceeds the recommended ESS rate
+      </div>
+    </div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <p class="subheading">Support Delivery</p>
+    </div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-4 box-text-color">Method:</div>
+    <div class="col-md-4 bold">{{ selectedSupport?.method }}</div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-4 box-text-color">
+      Person Responsible for Purchasing Goods:
+    </div>
+    <div class="col-md-4 bold">{{ referral?.issuedToPersonName }}</div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-4 box-text-color">Supplier:</div>
+    <div class="col-md-4 bold">{{ referral?.supplierName }}</div>
+  </div>
+
+  <div class="row row-padding">
+    <div class="col-md-4 box-text-color">Supplier Address:</div>
+    <div
+      class="col-md-4 bold"
+      [innerHTML]="supplierAddress | maskEvacuatedaddress"
+    ></div>
+  </div>
+  <div class="row row-padding">
+    <div class="col-md-4 box-text-color">Notes for Supplier:</div>
+    <div class="col-md-4 bold">{{ referral?.supplierNotes }}</div>
+  </div>
+</div>
