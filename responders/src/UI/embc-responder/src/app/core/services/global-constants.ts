@@ -11,6 +11,18 @@ export const groceriesRate = {
   rate: 22.5
 };
 
+export const incidentals = {
+  rate: 50
+};
+
+export const extremeConditions = {
+  rate: 200
+};
+
+export const normalConditions = {
+  rate: 150
+};
+
 export const noOfRooms = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const supportNoOfDays = [
@@ -72,6 +84,10 @@ export const radioButtonOptions = [
   { name: 'Yes', value: 'Yes', apiValue: true },
   { name: 'No', value: 'No', apiValue: false }
 ];
+export const voidMessage: DialogContent = {
+  text: '<p>Support successfully voided.</p>',
+  cancelButton: 'Close'
+};
 export const deleteMessage: DialogContent = {
   text: '<p>User has been successfully deleted from the ERA Tool.</p>',
   cancelButton: 'Close'

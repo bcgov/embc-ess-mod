@@ -39,6 +39,13 @@ const routes: Routes = [
           import(
             '../support-components/support-delivery/support-delivery.module'
           ).then((m) => m.SupportDeliveryModule)
+      },
+      {
+        path: 'view-detail',
+        loadChildren: () =>
+          import(
+            '../support-components/existing-support-details/existing-support-details.module'
+          ).then((m) => m.ExistingSupportDetailsModule)
       }
     ]
   }

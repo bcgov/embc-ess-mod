@@ -7,7 +7,6 @@ import {
   NeedsAssessment,
   Support,
   SupportSubCategory,
-  SupportCategory,
   FoodRestaurantReferral,
   Referral,
   SupportStatus,
@@ -19,19 +18,15 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { EvacuationFileModel } from 'src/app/core/models/evacuation-file.model';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import {
-  RestaurantMeal,
   SupportDeliveryModel,
   SupportDetailsModel
 } from 'src/app/core/models/support-details.model';
 import { CacheService } from 'src/app/core/services/cache.service';
 import { EssFileService } from 'src/app/core/services/ess-file.service';
-import { EvacueeSessionService } from 'src/app/core/services/evacuee-session.service';
 import { LocationsService } from 'src/app/core/services/locations.service';
 import { UserService } from 'src/app/core/services/user.service';
-import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
-import * as globalConst from '../../../core/services/global-constants';
 import { ReferralCreationService } from './referral-creation.service';
 
 @Injectable({ providedIn: 'root' })
@@ -51,19 +46,26 @@ export class StepSupportsService {
   private supportDetailsVal: SupportDetailsModel;
   private supportDeliveryVal: SupportDeliveryModel;
   private mealReferralVal: FoodRestaurantReferral;
+  private selectedSupportDetailVal: Support;
 
   constructor(
     private configService: ConfigurationService,
-    private evacueeSessionService: EvacueeSessionService,
     private essFileService: EssFileService,
     private cacheService: CacheService,
     private taskService: TasksService,
     private userService: UserService,
     private locationService: LocationsService,
-    private alertService: AlertService,
     private dialog: MatDialog,
     private referralService: ReferralCreationService
   ) {}
+
+  set selectedSupportDetail(selectedSupportDetailVal: Support) {
+    this.selectedSupportDetailVal = selectedSupportDetailVal;
+  }
+
+  get selectedSupportDetail(): Support {
+    return this.selectedSupportDetailVal;
+  }
 
   set mealReferral(mealReferralVal: FoodRestaurantReferral) {
     this.mealReferralVal = mealReferralVal;
@@ -177,25 +179,8 @@ export class StepSupportsService {
     return combinedList;
   }
 
-  public getEvacFile(): void {
-    this.essFileService
-      .getFileFromId(this.evacueeSessionService.essFileNumber) //'101169'
-      .subscribe(
-        (file) => {
-          this.currentNeedsAssessment = file.needsAssessment;
-          console.log(file.supports);
-          this.setExistingSupportList(
-            file.supports.sort(
-              (a, b) => new Date(b.from).valueOf() - new Date(a.from).valueOf()
-            )
-          );
-          this.evacFile = file;
-        },
-        (error) => {
-          this.alertService.clearAlert();
-          this.alertService.setAlert('danger', globalConst.genericError);
-        }
-      );
+  public getEvacFile(essFileNumber: string): Observable<EvacuationFileModel> {
+    return this.essFileService.getFileFromId(essFileNumber); //'100963'
   }
 
   public getSupplierList(): Observable<Array<SupplierListItemModel>> {
@@ -238,7 +223,10 @@ export class StepSupportsService {
       includedHouseholdMembers: members,
       needsAssessmentId: this.evacFile.id,
       status: SupportStatus.Draft,
-      to: this.supportDetails.toDate
+      to: this.supportDetails.toDate,
+      category: null,
+      method: null,
+      subCategory: null
     };
     const referral: Referral = {
       ...support,
@@ -253,20 +241,6 @@ export class StepSupportsService {
     };
     if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
       this.referralService.createMealReferral(referral, this.supportDetails);
-      // const mealReferral: FoodRestaurantReferral = {
-      //   ...referral,
-      //   category: SupportCategory.Food,
-      //   numberOfBreakfastsPerPerson: (this.supportDetails
-      //     .referral as RestaurantMeal).noOfBreakfast,
-      //   numberOfDinnersPerPerson: (this.supportDetails
-      //     .referral as RestaurantMeal).noOfDinners,
-      //   numberOfLunchesPerPerson: (this.supportDetails
-      //     .referral as RestaurantMeal).noOfLunches,
-      //   subCategory: SupportSubCategory.Food_Restaurant,
-      //   totalAmount: (this.supportDetails.referral as RestaurantMeal)
-      //     .totalAmount
-      // };
-      // this.cacheService.set('mealReferral', mealReferral);
     } else if (
       this.supportTypeToAdd.value === SupportSubCategory.Food_Groceries
     ) {

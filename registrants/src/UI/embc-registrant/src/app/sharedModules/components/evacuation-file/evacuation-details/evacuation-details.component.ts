@@ -66,6 +66,7 @@ export class EvacuationDetailsComponent implements OnInit {
   referralData = [];
   showActiveList = true;
   showInactiveList = true;
+  displayStatus: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -88,6 +89,8 @@ export class EvacuationDetailsComponent implements OnInit {
     } else {
       this.evacuationFileTab = 'Past';
     }
+
+    this.defineEssFileStatus();
   }
 
   changeStatusColor(): string {
@@ -125,6 +128,19 @@ export class EvacuationDetailsComponent implements OnInit {
       this.referralDetailsText = 'close all';
     } else {
       this.referralDetailsText = 'expand all';
+    }
+  }
+
+  private defineEssFileStatus(): void {
+    if (
+      this.evacuationFileDataService.evacuationFileStatus ===
+        EvacuationFileStatus.Active ||
+      this.evacuationFileDataService.evacuationFileStatus ===
+        EvacuationFileStatus.Pending
+    ) {
+      this.displayStatus = 'Active';
+    } else {
+      this.displayStatus = 'Inactive';
     }
   }
 }

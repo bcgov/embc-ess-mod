@@ -22,7 +22,6 @@ export class EvacuationCardComponent implements OnInit {
     private evacuationFileMapping: EvacuationFileMappingService
   ) {
     this.pathName = window.location.pathname;
-    console.log(this.pathName);
   }
 
   ngOnInit(): void {

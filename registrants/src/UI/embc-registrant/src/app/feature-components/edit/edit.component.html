@@ -43,7 +43,11 @@
             (click)="save()"
           >
             Save
-            <app-loader [showLoader]="showLoader"></app-loader>
+            <app-loader
+              [strokeWidth]="3"
+              [diameter]="25"
+              [showLoader]="showLoader"
+            ></app-loader>
           </button>
         </div>
       </div>
