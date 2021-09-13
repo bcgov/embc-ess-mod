@@ -855,10 +855,10 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideFood === 'null'
+                .canEvacueeProvideFood === 'Unsure'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideFood === true
+                    .canEvacueeProvideFood === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}
@@ -869,10 +869,10 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideLodging === 'null'
+                .canEvacueeProvideLodging === 'Unsure'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideLodging === true
+                    .canEvacueeProvideLodging === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}
@@ -883,10 +883,10 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideClothing === 'null'
+                .canEvacueeProvideClothing === 'Unsure'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideClothing === true
+                    .canEvacueeProvideClothing === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}
@@ -897,10 +897,10 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideTransportation === 'null'
+                .canEvacueeProvideTransportation === 'Unsure'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideTransportation === true
+                    .canEvacueeProvideTransportation === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}
@@ -911,10 +911,10 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideIncidentals === 'null'
+                .canEvacueeProvideIncidentals === 'Unsure'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideIncidentals === true
+                    .canEvacueeProvideIncidentals === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}

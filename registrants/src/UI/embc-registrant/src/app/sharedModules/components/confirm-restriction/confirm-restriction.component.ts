@@ -45,7 +45,6 @@ export class ConfirmRestrictionComponent implements OnInit, OnDestroy {
     if (this.restrictionForm.status === 'VALID') {
       this.restrictionService.restrictedAccess =
         this.restrictionForm.get('restrictedAccess').value;
-      console.log(this.restrictionForm.get('restrictedAccess').value);
       this.router.navigate(['/verified-registration/needs-assessment']);
     } else {
       this.restrictionForm.markAllAsTouched();
