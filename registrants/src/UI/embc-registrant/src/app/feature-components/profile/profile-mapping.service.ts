@@ -6,6 +6,7 @@ import { ProfileDataService } from './profile-data.service';
 import { FormCreationService } from '../../core/services/formCreation.service';
 import { ConflictManagementService } from '../../sharedModules/components/conflict-management/conflict-management.service';
 import { LocationService } from 'src/app/core/services/location.service';
+import { RestrictionService } from '../restriction/restriction.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileMappingService {
@@ -13,7 +14,8 @@ export class ProfileMappingService {
     private formCreationService: FormCreationService,
     private profileDataService: ProfileDataService,
     private conflictService: ConflictManagementService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private restrictionService: RestrictionService
   ) {}
 
   mapProfile(profile: Profile): void {
@@ -38,7 +40,7 @@ export class ProfileMappingService {
     this.setPersonalDetails(profile);
     this.setAddressDetails(profile);
     this.setContactDetails(profile);
-    //  this.setSecretDetails(profile);
+    this.setSecurityQuestions(profile);
   }
 
   setLoginProfile(profile: Profile): void {
@@ -81,6 +83,7 @@ export class ProfileMappingService {
       .subscribe((details) => {
         details.setValue({ restrictedAccess: profile.restrictedAccess });
       });
+    this.restrictionService.restrictedAccess = profile.restrictedAccess;
   }
 
   private setPersonalDetails(profile: Profile): void {
@@ -156,17 +159,29 @@ export class ProfileMappingService {
     }
   }
 
-  // private setSecretDetails(profile: Profile): void {
-  //   let formGroup: FormGroup;
-  //   this.formCreationService
-  //     .getSecretForm()
-  //     .pipe(first())
-  //     .subscribe((secret) => {
-  //       secret.setValue({ secretPhrase: profile.secretPhrase });
-  //       formGroup = secret;
-  //     });
-  //   this.profileDataService.secretWordPhrase = profile.secretPhrase;
-  // }
+  private setSecurityQuestions(profile: Profile): void {
+    console.log(profile.securityQuestions);
+    let formGroup: FormGroup;
+
+    this.formCreationService
+      .getSecurityQuestionsForm()
+      .pipe(first())
+      .subscribe((securityQuestions) => {
+        console.log(securityQuestions);
+        securityQuestions.setValue({
+          questions: {
+            question1: profile.securityQuestions[0].question,
+            answer1: profile.securityQuestions[0].answer,
+            question2: profile.securityQuestions[1].question,
+            answer2: profile.securityQuestions[1].answer,
+            question3: profile.securityQuestions[2].question,
+            answer3: profile.securityQuestions[2].answer
+          }
+        });
+        formGroup = securityQuestions;
+      });
+    this.profileDataService.securityQuestions = profile.securityQuestions;
+  }
 
   private isSameMailingAddress(
     isMailingAddressSameAsPrimaryAddress: boolean
