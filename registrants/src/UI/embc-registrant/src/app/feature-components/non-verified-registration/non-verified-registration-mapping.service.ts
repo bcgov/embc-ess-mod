@@ -20,23 +20,14 @@ export class NonVerifiedRegistrationMappingService {
 
   mapAnonymousRegistration(): AnonymousRegistration {
     return {
-      // evacuatedFromAddress: this.setAddressObject(
-      //   this.evacuationFileDataService.evacuatedFromAddress
-      // ),
       informationCollectionConsent: true,
       preliminaryNeedsAssessment:
         this.evacuationFileDataService.createEvacuationFileDTO(),
-      // preliminaryNeedsAssessment: this.mergeData(
-      //   this.createNeedsAssessment(),
-      //   this.needsService.createNeedsAssessmentDTO()
-      // ),
       registrationDetails: this.mergeData(
         this.createRegistration(),
         this.profileDataService.createProfileDTO()
       ),
       captcha: 'abc'
-      // secretPhrase: this.needsService.secretWordPhrase,
-      // needsAssessments: []
     };
   }
 

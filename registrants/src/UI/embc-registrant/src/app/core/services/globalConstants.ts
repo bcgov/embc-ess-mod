@@ -27,6 +27,12 @@ export const insuranceOptions = [
   { name: 'Unknown', value: "I don't know" }
 ];
 
+export const needsOptions = [
+  { name: 'Yes', value: 'Yes', apiValue: true },
+  { name: 'No', value: 'No', apiValue: false },
+  { name: "I'm not sure", value: 'Unsure', apiValue: null }
+];
+
 export const gender = [
   { name: 'Male', value: 'Male' },
   { name: 'Female', value: 'Female' },

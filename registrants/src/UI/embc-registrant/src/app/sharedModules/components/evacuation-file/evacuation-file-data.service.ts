@@ -120,6 +120,18 @@ export class EvacuationFileDataService {
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
+    console.log({
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
+        this.evacuatedAddress
+      ),
+      evacuationFileDate: this.evacuationFileDate,
+      fileId: this.essFileId,
+      isRestricted: this.restrictionService.restrictedAccess,
+      needsAssessment: this.getNeedsAssessment(),
+      secretPhrase: this.secretPhrase,
+      secretPhraseEdited: this.secretPhraseEdited,
+      status: this.evacuationFileStatus
+    });
     return {
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacuatedAddress
