@@ -23,13 +23,12 @@ export class NeedsAssessmentMappingService {
     private profileDataService: ProfileDataService,
     private needsAssessmentService: NeedsAssessmentService,
     private evacuationFileDataService: EvacuationFileDataService
-  ) {}
+  ) { }
 
   setNeedsAssessment(
     evacuatedAddress: RegAddress,
     needsAssessment: NeedsAssessment
   ): void {
-    console.log(needsAssessment);
     this.setNeedsAssessmentId(needsAssessment.id);
     this.setInsurance(evacuatedAddress, needsAssessment.insurance);
     this.setFamilyMedicationDiet(
