@@ -444,9 +444,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.AddLink(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_evacueesupport_NeedsAssessmentID), newSupport);
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_EvacuationFileId), file);
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_NeedsAssessmentID), file.era_CurrentNeedsAssessmentid);
-            AssignHouseholdMembersToSupport(newSupport);
+
             AssignSupplierToSupport(newSupport);
 
+            await essContext.SaveChangesAsync();
+
+            AssignHouseholdMembersToSupport(newSupport);
             await essContext.SaveChangesAsync();
 
             essContext.Detach(newSupport);
@@ -515,7 +518,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             {
                 var householdMember = essContext.era_householdmembers.Where(m => m.era_householdmemberid == member.era_householdmemberid).Single();
                 essContext.AddLink(support, nameof(era_evacueesupport.era_era_evacueesupport_era_householdmember), householdMember);
-                essContext.AddLink(householdMember, nameof(era_householdmember.era_era_evacueesupport_era_householdmember), support);
+                //essContext.AddLink(householdMember, nameof(era_householdmember.era_era_evacueesupport_era_householdmember), support);
             }
         }
 

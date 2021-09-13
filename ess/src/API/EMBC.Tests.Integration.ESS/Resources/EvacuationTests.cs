@@ -260,10 +260,20 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var primaryContact = await GetContactByUserId(TestUserId);
             var originalFile = CreateTestFile(primaryContact);
             var fileId = (await caseRepository.ManageCase(new SaveEvacuationFile { EvacuationFile = originalFile })).Id;
-
+            var createdFile = (EvacuationFile)(await caseRepository.QueryCase(new EvacuationFilesQuery { FileId = fileId })).Items.Single();
+            var IncludedHouseholdMembers = createdFile.HouseholdMembers.Select(s => s.Id).ToArray();
             var supports = new Support[]
             {
-               new ClothingReferral { SupplierId = "9f584892-94fb-eb11-b82b-00505683fbf4", SupplierNotes = "notes", IssuedByTeamMemberId = "ad3c5df0-608b-eb11-b827-00505683fbf4", IssuedToPersonName = "test person"  },
+               new ClothingReferral {
+                   SupplierId = "9f584892-94fb-eb11-b82b-00505683fbf4",
+                   SupplierNotes = "notes",
+                   IssuedByTeamMemberId = "ad3c5df0-608b-eb11-b827-00505683fbf4",
+                   IssuedToPersonName = "test person",
+                   IncludedHouseholdMembers = IncludedHouseholdMembers,
+                   From = now.AddDays(20),
+                   To = now.AddDays(50),
+                   IssuedOn = now
+               }
             };
 
             var supportIds = new List<string>();
@@ -280,9 +290,13 @@ namespace EMBC.Tests.Integration.ESS.Resources
             foreach (var support in file.Supports)
             {
                 var sourceSupport = (Referral)supports.Where(s => s.GetType() == support.GetType()).Single();
-                if (support is Referral referral && sourceSupport.SupplierId != null)
+
+                if (support is Referral referral)
                 {
-                    referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
+                    if (sourceSupport.SupplierId != null)
+                        referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
+                    if (sourceSupport.IncludedHouseholdMembers.Any())
+                        referral.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
                 }
             }
         }
