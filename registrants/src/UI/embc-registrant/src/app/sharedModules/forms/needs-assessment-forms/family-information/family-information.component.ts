@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import * as globalConst from '../../../../core/services/globalConstants';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
+import { InformationDialogComponent } from 'src/app/core/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-family-information',
@@ -76,8 +77,6 @@ export default class FamilyInformationComponent implements OnInit {
 
   save(): void {
     if (this.householdMemberForm.get('householdMember').status === 'VALID') {
-      console.log(this.editIndex);
-      console.log(this.rowEdit);
       if (this.editIndex !== undefined && this.rowEdit) {
         this.data[this.editIndex] =
           this.householdMemberForm.get('householdMember').value;
@@ -111,13 +110,16 @@ export default class FamilyInformationComponent implements OnInit {
   deleteRow(index: number): void {
     this.dialog
       .open(DialogComponent, {
-        data: globalConst.deleteMemberInfoBody,
-        height: '220px',
+        data: {
+          component: InformationDialogComponent,
+          content: globalConst.deleteMemberInfoBody
+        },
+        height: '260px',
         width: '500px'
       })
       .afterClosed()
       .subscribe((result) => {
-        if (result === 'remove') {
+        if (result === 'confirm') {
           this.data.splice(index, 1);
           this.dataSource.next(this.data);
           this.householdMemberForm.get('householdMembers').setValue(this.data);
