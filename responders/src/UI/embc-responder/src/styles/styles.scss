@@ -333,41 +333,6 @@ mat-form-field {
   width: 100%;
 }
 
-//  .note-box {
-//   background-color: #F2F2F2;
-//   padding: 8px;
-//   font-family: 'BC Sans', sans-serif;
-//   font-weight: 400;
-//  }
-
-//  .mat-expansion-panel {
-//    border-radius: 0 !important;
-//  }
-
-//  .mat-expansion-panel-header-title {
-//   margin-right: 0px !important;
-//   font-size: 16px;
-//   font-weight: 400;
-//   justify-content: center;
-//  }
-
-//  .mat-expansion-panel-header-description, .mat-expansion-indicator::after {
-//   color: black !important;
-//  }
-
-//  .mat-tab-label {
-//   opacity: 10 !important;
-//   background-color: #CCCCCC !important;
-//   min-width: 250px !important;
-// }
-
-// .mat-tab-label.mat-tab-label-active {
-//   background-color: white !important;
-//   min-width: 250px !important;
-//   font-weight: 700 !important;
-//   color: black !important;
-// }
-
 .mat-tab-label,
 .mat-tab-link {
   color: #333333 !important;
@@ -415,19 +380,19 @@ mat-form-field {
 }
 
 .pending-status {
-  color: #F28200;
+  color: #f28200;
   font-weight: bold;
   font-size: 16px;
 }
 
 .active-status {
-  color: #169BD5;
+  color: #169bd5;
   font-weight: bold;
   font-size: 16px;
 }
 
 .complete-status {
-  color: #3C9D0F;
+  color: #3c9d0f;
   font-weight: bold;
   font-size: 16px;
 }
@@ -472,5 +437,9 @@ mat-form-field {
 }
 
 .dialog-title {
+  color: #234075;
+}
+
+.primary {
   color: #234075;
 }
