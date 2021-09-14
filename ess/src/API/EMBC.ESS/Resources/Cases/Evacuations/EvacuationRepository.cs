@@ -445,9 +445,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_EvacuationFileId), file);
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_NeedsAssessmentID), file.era_CurrentNeedsAssessmentid);
 
+            var teamMember = essContext.era_essteamusers.ByKey(newSupport._era_issuedbyid_value).GetValue();
+            essContext.SetLink(newSupport, nameof(era_evacueesupport.era_IssuedById), teamMember);
+
             AssignSupplierToSupport(newSupport);
 
-            await essContext.SaveChangesAsync();
+            //await essContext.SaveChangesAsync();
 
             AssignHouseholdMembersToSupport(newSupport);
             await essContext.SaveChangesAsync();
@@ -516,9 +519,21 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         {
             foreach (var member in support.era_era_evacueesupport_era_householdmember)
             {
-                var householdMember = essContext.era_householdmembers.Where(m => m.era_householdmemberid == member.era_householdmemberid).Single();
-                essContext.AddLink(support, nameof(era_evacueesupport.era_era_evacueesupport_era_householdmember), householdMember);
+                //var householdMember = essContext.era_householdmembers.Where(m => m.era_householdmemberid == member.era_householdmemberid).Single();
+                //var householdMember = new era_householdmember { era_householdmemberid = member.era_householdmemberid };
+                //essContext.AttachTo(nameof(EssContext.era_householdmembers), member);
+                //essContext.AddLink(support, nameof(era_evacueesupport.era_era_evacueesupport_era_householdmember), householdMember);
                 //essContext.AddLink(householdMember, nameof(era_householdmember.era_era_evacueesupport_era_householdmember), support);
+                //essContext.AddLink(householdMember, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport), support);
+                //var rel = new era_era_evacueesupport_era_householdmember
+                //{
+                //    era_householdmemberid = member.era_householdmemberid,
+                //    era_era_evacueesupport_era_householdmemberid = Guid.NewGuid(),
+                //    era_evacueesupportid = support.era_evacueesupportid
+                //};
+                //essContext.AttachTo(nameof(EssContext.era_era_evacueesupport_era_householdmemberset), rel);
+                //essContext.AttachTo(nameof(EssContext.era_householdmembers), member);
+                essContext.AddLink(support, nameof(era_evacueesupport.era_era_evacueesupport_era_householdmember), member);
             }
         }
 

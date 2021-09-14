@@ -269,7 +269,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
                    SupplierNotes = "notes",
                    IssuedByTeamMemberId = "ad3c5df0-608b-eb11-b827-00505683fbf4",
                    IssuedToPersonName = "test person",
-                   IncludedHouseholdMembers = IncludedHouseholdMembers,
+                   //IncludedHouseholdMembers = IncludedHouseholdMembers,
                    From = now.AddDays(20),
                    To = now.AddDays(50),
                    IssuedOn = now
@@ -297,6 +297,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
                         referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
                     if (sourceSupport.IncludedHouseholdMembers.Any())
                         referral.IncludedHouseholdMembers.ShouldBe(sourceSupport.IncludedHouseholdMembers);
+                    if (sourceSupport.IssuedByTeamMemberId != null)
+                        referral.IssuedByTeamMemberId.ShouldBe(sourceSupport.IssuedByTeamMemberId);
                 }
             }
         }
