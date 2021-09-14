@@ -173,8 +173,8 @@
     </div>
 
     <mat-card *ngIf="showSupplierFlag" class="supplier-box">
-      <p span="bold">{{ selectedSupplierItem?.name }}</p>
-      <p>{{ selectedSupplierItem?.address | maskEvacuatedaddress }}</p>
+      <p class="bold">{{ selectedSupplierItem?.name }}</p>
+      <p [innerHTML]="selectedSupplierItem?.address | maskEvacuatedaddress"></p>
     </mat-card>
 
     <div class="row">
@@ -198,7 +198,6 @@
             required
           ></textarea>
           <mat-error
-            class="custom-mat-error"
             *ngIf="
               supportDeliveryFormControl?.supplierNote.touched &&
               supportDeliveryFormControl?.supplierNote.invalid &&
