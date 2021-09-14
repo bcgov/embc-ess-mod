@@ -1,33 +1,96 @@
-<div class="row">
-  <div class="col-md-12">
-    <h1>
-      {{ content?.text }}
-    </h1>
+<ng-container *ngIf="initDialog">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>
+        {{ content?.text }}
+      </h1>
+    </div>
   </div>
-</div>
 
-<div class="row text-row">
-  <div class="col-md-12">
-    <p class="p-margin">
-      We have you as currently evacuated from
-      <span class="community-name">{{
-        essFileData?.evacuatedAddress?.community?.name
-      }}</span
-      >, has your situation changed?
-    </p>
+  <div class="row text-row">
+    <div class="col-md-12">
+      <p class="p-margin">
+        We have you as currently evacuated from
+        <span class="community-name">{{
+          essFileData?.evacuatedAddress?.community?.name
+        }}</span
+        >, has your situation changed?
+      </p>
+    </div>
   </div>
-</div>
 
-<div class="row button-row justify-content-between">
-  <button class="button-s button-width" mat-button (click)="cancel()">
-    No, Cancel
-  </button>
+  <div class="row button-row justify-content-between">
+    <button class="button-s button-width" mat-button (click)="cancel()">
+      No, Cancel
+    </button>
 
-  <button
-    class="button-p button-width confirm-button"
-    mat-button
-    (click)="confirm()"
-  >
-    Yes, Continue
-  </button>
-</div>
+    <button
+      class="button-p button-width confirm-button"
+      mat-button
+      (click)="confirm()"
+    >
+      Yes, Continue
+    </button>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!initDialog">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>
+        {{ content?.text }}
+      </h1>
+    </div>
+  </div>
+
+  <div class="row text-margin">
+    <div class="col-md-12">
+      <p class="highlighted-subtitle">
+        Your Emergency Support Services (ESS) File Number is:
+        <b>{{ essFileData }}</b>
+      </p>
+      <p>Thank you for submitting your online self-registration.</p>
+
+      <p class="highlighted-paragraph">Next Steps</p>
+      <p>
+        Please keep a record of your Emergency Support Services File Number to
+        receive emergency support services that can be provided up to 72 hours
+        starting from the time connecting in with a local ESS Responder at a
+        Reception Centre. After a need's assessment interview with a local ESS
+        Responder has been completed, supports are provided to purchase goods
+        and services if eligible.
+      </p>
+      <p>
+        Any goods and services purchased prior to a need's assessment interview
+        are not eligible for retroactive reimbursement.
+      </p>
+      <p>
+        If you are under <b>EVACUATION ALERT</b> or <b>DO NOT</b> require
+        emergency serves at this time, no further action is required.
+      </p>
+      <p>
+        If you are under <b>EVACUATION ORDER</b>, and require emergency
+        supports, proceed to the area designated by your local ESS team or your
+        nearest Reception Centre. A list of open Reception Centres can be found
+        at
+        <a
+          class="embc-link"
+          href="https://www.emergencyinfobc.gov.bc.ca/"
+          target="_blank"
+          >Emergency Info BC</a
+        >.
+      </p>
+      <p>
+        If NO nearby Reception Centre is open and immediate action is required,
+        please contact your First Nation Government or Local Authority for next
+        steps.
+      </p>
+    </div>
+  </div>
+
+  <div class="row button-row justify-content-between">
+    <button class="button-p button-width" mat-button (click)="cancel()">
+      Close
+    </button>
+  </div>
+</ng-container>
