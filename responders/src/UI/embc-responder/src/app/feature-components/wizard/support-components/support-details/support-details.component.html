@@ -17,7 +17,17 @@
       <div class="col-md-8">
         <span class="wizard-tab-heading">Support Details</span>
       </div>
-      <div class="col-md-4">ESS Rate sheet</div>
+      <div
+        *ngIf="
+          stepSupportsService?.supportTypeToAdd?.description !== 'Group Lodging'
+        "
+        class="col-md-4"
+      >
+        <img src="/assets/images/rate-card.svg" width="23" height="23" />
+        <a (click)="openRateSheet()"
+          ><span class="back-link rate-link">ESS Rate sheet</span></a
+        >
+      </div>
     </div>
     <div class="row">
       <div class="col-md-12">

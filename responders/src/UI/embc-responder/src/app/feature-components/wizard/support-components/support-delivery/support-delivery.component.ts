@@ -15,6 +15,9 @@ import { CustomValidationService } from 'src/app/core/services/customValidation.
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-support-delivery',
@@ -36,7 +39,8 @@ export class SupportDeliveryComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -170,6 +174,19 @@ export class SupportDeliveryComponent implements OnInit {
         this.alertService.setAlert('danger', globalConst.supplierRefresherror);
       }
     );
+  }
+
+  /**
+   * Open support rate sheet
+   */
+  openRateSheet() {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: this.stepSupportsService.getRateSheetContent()
+      },
+      width: '720px'
+    });
   }
 
   private filter(value?: string): SupplierListItemModel[] {
