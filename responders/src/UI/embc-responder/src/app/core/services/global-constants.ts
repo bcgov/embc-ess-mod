@@ -84,6 +84,63 @@ export const radioButtonOptions = [
   { name: 'Yes', value: 'Yes', apiValue: true },
   { name: 'No', value: 'No', apiValue: false }
 ];
+
+export const mealRateSheet: DialogContent = {
+  title: 'ESS Rate Sheet - Meals',
+  text:
+    '<div class="row primary"><div class="col-md-2">Breakfast</div><div class="col-md-2 bold">$10</div></div><div class="row primary"><div class="col-md-2">Lunch</div><div class="col-md-2 bold">$13</div></div><div class="row primary"><div class="col-md-2">Dinner</div><div class="col-md-2 bold">$22</div></div><div class="row primary"><div class="col-md-2">Total</div><div class="col-md-2 bold">$45(incl. PST)</div></div><p>NOTE:</p><p>Alcohol, tobacco and gratuities are not eligible expenses</p>',
+  cancelButton: 'Close'
+};
+
+export const groceriesRateSheet: DialogContent = {
+  title: 'ESS Rate Sheet - Groceries',
+  text:
+    '<p class="primary">Daily rate per person <span class="bold">- $22.50 (incl. GST/PST)</span></p> <p>NOTE:</p><p>Alcohol, tobacco and gratuities are not eligible expenses</p>',
+  cancelButton: 'Close'
+};
+
+export const incidentalsRateSheet: DialogContent = {
+  title: 'ESS Rate Sheet - Incidentals',
+  text:
+    '<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children -<span>up to $50.00 maximum per person (incl. PST)</span></p><p>NOTE:<p><p>May include miscellaneous items such as personal hygiene products, laundry supplies, pet food and lodging, medication for a 3 day period, and other immediate needs as required. The Emergency Management BC (EMBC) Emergency Coordination Centre must be consulted when extraordinary requirements are needed to provide for immediate needs 1-800-663-3456</p>',
+  cancelButton: 'Close'
+};
+
+export const clothingRateSheet: DialogContent = {
+  title: 'ESS Rate Sheet - Clothing',
+  text:
+    '<p>To be issued when evacuees have been unable to pack necessities</p><p class="primary">Adults, youth & children -<span class="bold">up to $150.00 maximum per person (incl. PST)*</span></p><p>* Where<span class="bold">extreme winter conditions</span>apply at the time of the incident, and on a needs basis, amount maybe increased to <span class="bold">$200 per person.</span></p><p>NOTE:</p><p>Clothing is provided as needed to preserve health and modesty. This is not wardrobe replacement. Clothing may include footwear or special needs items such as baby diapers.</p>',
+  cancelButton: 'Close'
+};
+
+export const taxiRateSheet: DialogContent = {
+  title: 'ESS Rate Sheet - Transportation',
+  text:
+    '<p>Transportation necessary to meet immediate needs (e.g. taxis, 3 day bus pass, gasoline)</p>',
+  cancelButton: 'Close'
+};
+
+export const otherRateSheet: DialogContent = {
+  title: 'ESS Rate Sheet - Transportation',
+  text:
+    '<p>Transportation necessary to meet immediate needs (e.g. taxis, 3 day bus pass, gasoline)</p>',
+  cancelButton: 'Close'
+};
+
+export const hotelRateSheet: DialogContent = {
+  title: 'ESS Rate Sheet - Lodging',
+  text:
+    '<p class="primary bold">Hotel/Motel/B&B</p><p>Emergency Support Services is eligible for approved Provincial Government Rates from commercial accommodations supplier listed in the Ministry of Labour and Citizens Services Business Travel Accommodation Listing for government travel.</p><p class="bold">Only the cost of the room is covered.</p><p>The evacuee is responsible for all other charges (e.g. video rentals, damages, parking, local and long distance calls).</p>',
+  cancelButton: 'Close'
+};
+
+export const billetingRateSheet: DialogContent = {
+  title: 'ESS Rate Sheet - Lodging',
+  text:
+    '<p class="primary bold">Billeting in Private Homes</p><p>The referral form for billeting is issued to the billeting host (supplier). Billeting rate does not include meals.</p><p>$30 per night based on single occupancy (add $10 for each additional adult and youth and $5 for each additional child.</p>',
+  cancelButton: 'Close'
+};
+
 export const voidMessage: DialogContent = {
   text: '<p>Support successfully voided.</p>',
   cancelButton: 'Close'

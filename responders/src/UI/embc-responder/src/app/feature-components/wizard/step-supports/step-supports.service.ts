@@ -10,7 +10,8 @@ import {
   FoodRestaurantReferral,
   Referral,
   SupportStatus,
-  SupportMethod
+  SupportMethod,
+  SupportCategory
 } from 'src/app/core/api/models';
 import { SupplierListItem } from 'src/app/core/api/models/supplier-list-item';
 import { ConfigurationService, TasksService } from 'src/app/core/api/services';
@@ -28,6 +29,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { ReferralCreationService } from './referral-creation.service';
+import * as globalConst from '../../../core/services/global-constants';
 
 @Injectable({ providedIn: 'root' })
 export class StepSupportsService {
@@ -277,6 +279,36 @@ export class StepSupportsService {
         referral,
         this.supportDetails
       );
+    }
+  }
+
+  getRateSheetContent(): DialogContent {
+    if (this.supportTypeToAdd.value === SupportSubCategory.Food_Restaurant) {
+      return globalConst.mealRateSheet;
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Food_Groceries
+    ) {
+      return globalConst.groceriesRateSheet;
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Transportation_Taxi
+    ) {
+      return globalConst.taxiRateSheet;
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Transportation_Other
+    ) {
+      return globalConst.otherRateSheet;
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Billeting
+    ) {
+      return globalConst.billetingRateSheet;
+    } else if (
+      this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel
+    ) {
+      return globalConst.hotelRateSheet;
+    } else if (this.supportTypeToAdd.value === SupportCategory.Incidentals) {
+      return globalConst.incidentalsRateSheet;
+    } else if (this.supportTypeToAdd.value === SupportCategory.Clothing) {
+      return globalConst.clothingRateSheet;
     }
   }
 }

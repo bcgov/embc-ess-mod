@@ -8,13 +8,16 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { EvacuationFileHouseholdMember } from 'src/app/core/api/models/evacuation-file-household-member';
 import { SupportDetailsService } from './support-details.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-support-details',
@@ -37,7 +40,8 @@ export class SupportDetailsComponent implements OnInit {
     private datePipe: DatePipe,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private supportDetailsService: SupportDetailsService
+    private supportDetailsService: SupportDetailsService,
+    private dialog: MatDialog
   ) {
     this.currentDate = this.datePipe.transform(Date.now(), 'dd-MMM-yyyy');
     this.currentTime = this.datePipe.transform(Date.now(), 'HH:mm');
@@ -251,10 +255,16 @@ export class SupportDetailsComponent implements OnInit {
     }
   }
 
-  // dynamicFormGroup(): FormGroup {
-  //   console.log(this.stepSupportsService.supportTypeToAdd);
-  //   return this.supportDetailsService.generateDynamicForm(
-  //     this.stepSupportsService.supportTypeToAdd.description
-  //   );
-  // }
+  /**
+   * Open support rate sheet
+   */
+  openRateSheet() {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: this.stepSupportsService.getRateSheetContent()
+      },
+      width: '720px'
+    });
+  }
 }

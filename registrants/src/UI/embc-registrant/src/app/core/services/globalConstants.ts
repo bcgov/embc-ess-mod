@@ -39,25 +39,24 @@ export const gender = [
   { name: 'X', value: 'X' }
 ];
 
-export const deleteMemberInfoBody = {
-  body: '<p>Are you sure you want to remove this family member from your evacuation file?</p>',
-  buttons: [
-    {
-      name: 'No, Cancel',
-      class: 'button-s',
-      function: 'close'
-    },
-    {
-      name: 'Yes, remove this family member',
-      class: 'button-p',
-      function: 'remove'
-    }
-  ]
-};
-
 export const securityQuesError =
   'An error occurred while loading the security questions. Please try again later';
 
+export const deleteMemberInfoBody: DialogContent = {
+  text: '<p>Are you sure you want to remove this family member from your evacuation file?</p>',
+  cancelButton: 'No, Cancel',
+  confirmButton: 'Yes, remove this family member'
+};
+
 export const addEssFile: DialogContent = {
   text: 'Add Another Evacuation File'
+};
+
+export const newEssFile: DialogContent = {
+  text: 'Submission Complete'
+};
+
+export const invalidGoBack: DialogContent = {
+  text: '<p>The Go Back action is disabled on this page</p>',
+  cancelButton: 'Close'
 };
