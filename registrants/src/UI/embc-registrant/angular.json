@@ -83,7 +83,12 @@
           },
           "configurations": {
             "local": {
-              "browserTarget": "embc-registrant:build:local"
+              "browserTarget": "embc-registrant:build:local",
+              "proxyConfig": "proxy.conf.json"
+            },
+            "dev": {
+              "browserTarget": "embc-registrant:build:local",
+              "proxyConfig": "proxy.dev.conf.json"
             },
             "production": {
               "browserTarget": "embc-registrant:build:production"
