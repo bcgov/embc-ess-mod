@@ -54,7 +54,7 @@ export class ClothingComponent implements OnInit, OnChanges, AfterViewInit {
    * Calculates the total restaurant meals amount
    */
   updateTotalAmount() {
-    let condition = this.referralForm.get('extremeWinterConditions').value;
+    const condition = this.referralForm.get('extremeWinterConditions').value;
     if (condition) {
       this.totalAmount =
         globalConst.extremeConditions.rate * this.noOfHouseholdMembers;

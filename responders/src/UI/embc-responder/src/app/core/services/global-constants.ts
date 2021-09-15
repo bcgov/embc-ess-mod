@@ -1,5 +1,20 @@
 import { DialogContent } from '../models/dialog-content.model';
 
+export const phoneMask = [
+  /\d/,
+  /\d/,
+  /\d/,
+  '-',
+  /\d/,
+  /\d/,
+  /\d/,
+  '-',
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/
+];
+
 export const mealRate = {
   total: 45,
   breakfast: 10,

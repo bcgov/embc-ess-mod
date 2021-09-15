@@ -1,0 +1,151 @@
+<div [formGroup]="detailsForm">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="question-heading">Supplier Details</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="bold">Full Name of Billeting Host</p>
+      <p class="requiredField">
+        This is the full name of the person identified as submitting the
+        invoice.
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Full Name</mat-label>
+        <input
+          formControlName="hostName"
+          maxlength="255"
+          matInput
+          placeholder="Enter Name"
+        />
+        <mat-error
+          class="custom-mat-error"
+          *ngIf="
+            supportDeliveryFormControl?.hostName.invalid &&
+            supportDeliveryFormControl?.hostName.hasError('whitespaceError')
+          "
+        >
+          Host Name is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="bold">Address of Billeting Host</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Address</mat-label>
+        <input
+          formControlName="hostAddress"
+          maxlength="255"
+          matInput
+          placeholder="Enter Address"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>City</mat-label>
+        <input
+          formControlName="hostCity"
+          maxlength="100"
+          matInput
+          placeholder="Enter City"
+        />
+        <mat-error
+          class="custom-mat-error"
+          *ngIf="
+            supportDeliveryFormControl?.hostCity.invalid &&
+            supportDeliveryFormControl?.hostCity.hasError('whitespaceError')
+          "
+        >
+          City is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="bold">Contact Information of Billeting Host</p>
+      <p class="requiredField">
+        Please provide at least 1 point of conatct for the Billeting Host.
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Telephone</mat-label>
+        <input
+          formControlName="hostPhone"
+          matInput
+          placeholder="Telephone"
+          [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+        />
+        <mat-error
+          *ngIf="
+            supportDeliveryFormControl.hostPhone.invalid &&
+            supportDeliveryFormControl.hostPhone.hasError('whitespaceError')
+          "
+        >
+          Telephone is required</mat-error
+        >
+        <mat-error
+          *ngIf="
+            supportDeliveryFormControl.hostPhone.invalid &&
+            supportDeliveryFormControl.hostPhone.hasError('incorrectLength')
+          "
+        >
+          Telephone must have 10 digits</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Email Address</mat-label>
+        <input
+          formControlName="emailAddress"
+          maxlength="100"
+          matInput
+          placeholder="Email Address"
+        />
+        <mat-error
+          *ngIf="
+            supportDeliveryFormControl.emailAddress.invalid &&
+            supportDeliveryFormControl.emailAddress.hasError('whitespaceError')
+          "
+        >
+          Email is required</mat-error
+        >
+        <mat-error
+          *ngIf="
+            supportDeliveryFormControl.emailAddress.invalid &&
+            supportDeliveryFormControl.emailAddress.hasError('email')
+          "
+          >Invalid email</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+</div>
