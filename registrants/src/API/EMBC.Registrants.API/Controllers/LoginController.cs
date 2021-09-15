@@ -16,6 +16,7 @@
 
 using System;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 using EMBC.Registrants.API.SecurityModule;
 using Microsoft.AspNetCore.Authentication;
@@ -64,7 +65,7 @@ namespace EMBC.Registrants.API.Controllers
                 var identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, loginAs),
-                    new Claim("bcsc-profile", string.Empty)
+                    new Claim(TokenClaimTypes.UserData, JsonSerializer.Serialize(Mappings.GetDummyProfile(loginAs)))
                 }, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
                 {
