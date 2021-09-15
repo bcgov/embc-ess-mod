@@ -352,6 +352,26 @@
                         [supportDetailsForm]="supportDetailsForm"
                       ></app-lodging-group>
                     </div>
+
+                    <!--Incidentals-->
+                    <div *ngSwitchCase="'Incidentals'">
+                      <app-incidentals
+                        [noOfHouseholdMembers]="
+                          supportDetailsForm.get('members').value.length
+                        "
+                        [supportDetailsForm]="supportDetailsForm"
+                      ></app-incidentals>
+                    </div>
+
+                    <!--Clothing-->
+                    <div *ngSwitchCase="'Clothing'">
+                      <app-clothing
+                        [noOfHouseholdMembers]="
+                          supportDetailsForm.get('members').value.length
+                        "
+                        [supportDetailsForm]="supportDetailsForm"
+                      ></app-clothing>
+                    </div>
                   </div>
                 </form>
               </div>
