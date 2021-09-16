@@ -1,0 +1,39 @@
+node('master') {
+	def sourcetag = 'train'
+    def desttag = 'prod'
+	def backuptag = 'prod-backup'
+
+	stage('Confirm') {
+		input ("Confirm promote TRAIN to PROD")
+	}
+	
+	stage("Backup") {
+		openshift.withCluster() {
+			openshift.withProject() {						
+				openshift.tag("ess-backend:${desttag}", "ess-backend:${backuptag}")
+				openshift.tag("registrants-portal-api:${desttag}", "registrants-portal-api:${backuptag}")
+				openshift.tag("registrants-portal-ui:${desttag}", "registrants-portal-ui:${backuptag}")
+				openshift.tag("responders-portal-api:${desttag}", "responders-portal-api:${backuptag}")
+				openshift.tag("responders-portal-ui:${desttag}", "responders-portal-ui:${backuptag}")
+				openshift.tag("suppliers-portal-api:${desttag}", "suppliers-portal-api:${backuptag}")
+				openshift.tag("suppliers-portal-ui:${desttag}", "suppliers-portal-ui:${backuptag}")
+				openshift.tag("cas-interface-service:${desttag}", "cas-interface-service:${backuptag}")
+			}
+		}
+	}
+
+	stage("Deploy") {
+		openshift.withCluster() {
+			openshift.withProject() {						
+				openshift.tag("ess-backend:${sourcetag}", "ess-backend:${desttag}")
+				openshift.tag("registrants-portal-api:${sourcetag}", "registrants-portal-api:${desttag}")
+				openshift.tag("registrants-portal-ui:${sourcetag}", "registrants-portal-ui:${desttag}")
+				openshift.tag("responders-portal-api:${sourcetag}", "responders-portal-api:${desttag}")
+				openshift.tag("responders-portal-ui:${sourcetag}", "responders-portal-ui:${desttag}")
+				openshift.tag("suppliers-portal-api:${sourcetag}", "suppliers-portal-api:${desttag}")
+				openshift.tag("suppliers-portal-ui:${sourcetag}", "suppliers-portal-ui:${desttag}")
+				openshift.tag("cas-interface-service:${sourcetag}", "cas-interface-service:${desttag}")
+			}
+		}
+	}		
+}

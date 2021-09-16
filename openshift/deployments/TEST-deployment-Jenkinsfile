@@ -1,0 +1,44 @@
+node('master') {
+    def sourcetag = 'latest'
+    def desttag = 'test'
+	def envname = 'test'
+	def images = ['ess-backend', 
+		'registrants-portal-api', 'registrants-portal-ui', 
+		'responders-portal-api', 'responders-portal-ui', 
+		'suppliers-portal-api', 'suppliers-portal-ui',
+		'cas-interface-service']
+		
+	stage("Deploy") {
+		openshift.withCluster() {
+			openshift.withProject() {						
+				// openshift.tag("ess-backend:${sourcetag}", "ess-backend:${desttag}")
+				// openshift.tag("registrants-portal-api:${sourcetag}", "registrants-portal-api:${desttag}")
+				// openshift.tag("registrants-portal-ui:${sourcetag}", "registrants-portal-ui:${desttag}")
+				// openshift.tag("responders-portal-api:${sourcetag}", "responders-portal-api:${desttag}")
+				// openshift.tag("responders-portal-ui:${sourcetag}", "responders-portal-ui:${desttag}")
+				// openshift.tag("suppliers-portal-api:${sourcetag}", "suppliers-portal-api:${desttag}")
+				// openshift.tag("suppliers-portal-ui:${sourcetag}", "suppliers-portal-ui:${desttag}")
+				// openshift.tag("cas-interface-service:${sourcetag}", "cas-interface-service:${desttag}")
+				//tag the image
+				for (image in images) {
+					openshift.tag("${image}:${sourcetag}", "${image}:${desttag}")
+				}
+				//check if deployed
+				for (image in images) {
+					checkStatus("${envname}-${image}")
+				}
+			}
+		}
+	}		
+}
+
+def checkStatus(appName) {
+	def uiAppName = 'test-registrants-portal-ui'
+	def apiAppName = 'test-registrants-portal-api'
+	def lastVersion = openshift.selector('dc', appName).object().status.latestVersion
+	def rc = openshift.selector('rc', appName + '-' + + lastVersion)
+	rc.untilEach(1) {
+		def rcMap = it.object()
+		return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+	}
+}
