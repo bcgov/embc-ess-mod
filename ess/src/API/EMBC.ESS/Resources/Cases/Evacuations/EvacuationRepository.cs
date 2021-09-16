@@ -259,9 +259,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
                 foreach (var support in file.era_era_evacuationfile_era_evacueesupport_ESSFileId)
                 {
-                    support.statuscode = (int?)(support.era_validto < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
                     ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
-                    ctx.UpdateObject(support);
                     await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
                 }
             }));
@@ -480,7 +478,6 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             RemoveAllHouseholdMembersFromSupport(existingSupport);
             await essContext.SaveChangesAsync();
             essContext.DetachAll();
-            support.Status = support.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active;
 
             var updatedSupport = mapper.Map<era_evacueesupport>(support);
             updatedSupport.era_evacueesupportid = existingSupport.era_evacueesupportid;

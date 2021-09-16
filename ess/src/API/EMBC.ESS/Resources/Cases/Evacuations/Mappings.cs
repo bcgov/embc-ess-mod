@@ -220,6 +220,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ReverseMap()
                 .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
                 .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
+                .ForMember(d => d.statuscode, opts => opts.MapFrom(s => s.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active))
                 .IncludeAllDerived()
                 .ForMember(d => d.era_era_householdmember_era_evacueesupport,
                     opts => opts.MapFrom(s => s.IncludedHouseholdMembers.Select(m => new era_householdmember { era_householdmemberid = Guid.Parse(m) })))

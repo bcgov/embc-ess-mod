@@ -340,8 +340,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             var randomIndex = new Random().Next(0, fileToUpdateItsSupport.HouseholdMembers.Count());
             var includedHouseholdMembers = fileToUpdateItsSupport.HouseholdMembers.Where((m, i) => i == randomIndex).Select(s => s.Id).ToArray();
 
-            supportToUpdate.From = supportToUpdate.From.AddDays(10);
-            supportToUpdate.To = supportToUpdate.To.AddDays(10);
+            supportToUpdate.From = supportToUpdate.From.AddDays(-30);
+            supportToUpdate.To = supportToUpdate.To.AddDays(-51);
             supportToUpdate.IssuedToPersonName = "New Test Person";
             supportToUpdate.TotalAmount = 100;
             supportToUpdate.SupplierNotes = "New note to supplier is: " + newUniqueSignature;
