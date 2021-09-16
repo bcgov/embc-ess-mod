@@ -5,20 +5,23 @@ metadata:
   annotations:
     description: "Pipelines to promote images to higher environments"
 
+parameters:
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+
 objects:
   - kind: "BuildConfig"
     apiVersion: "v1"
     metadata:
       name: "era-promote-test"
+      namespace: ${NAMESPACE_PREFIX}-tools
     spec:
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
       strategy:
         jenkinsPipelineStrategy:
-          successfulBuildsHistoryLimit: 5
-          failedBuildsHistoryLimit: 5
-          strategy:
-            type: JenkinsPipeline
-            jenkinsPipelineStrategy:
-              jenkinsfilePath: openshift/deployments/TEST-deployment-Jenkinsfile
+          jenkinsfilePath: openshift/deployments/TEST-deployment-Jenkinsfile
       source:
         type: Git
         git:
@@ -30,15 +33,13 @@ objects:
     apiVersion: "v1"
     metadata:
       name: "era-promote-train"
+      namespace: ${NAMESPACE_PREFIX}-tools
     spec:
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
       strategy:
         jenkinsPipelineStrategy:
-          successfulBuildsHistoryLimit: 5
-          failedBuildsHistoryLimit: 5
-          strategy:
-            type: JenkinsPipeline
-            jenkinsPipelineStrategy:
-              jenkinsfilePath: openshift/deployments/TRAIN-deployment-Jenkinsfile
+          jenkinsfilePath: openshift/deployments/TRAIN-deployment-Jenkinsfile
       source:
         type: Git
         git:
@@ -50,15 +51,13 @@ objects:
     apiVersion: "v1"
     metadata:
       name: "era-promote-prod"
+      namespace: ${NAMESPACE_PREFIX}-tools
     spec:
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
       strategy:
         jenkinsPipelineStrategy:
-          successfulBuildsHistoryLimit: 100
-          failedBuildsHistoryLimit: 10
-          strategy:
-            type: JenkinsPipeline
-            jenkinsPipelineStrategy:
-              jenkinsfilePath: openshift/deployments/PROD-deployment-Jenkinsfile
+          jenkinsfilePath: openshift/deployments/PROD-deployment-Jenkinsfile
       source:
         type: Git
         git:
