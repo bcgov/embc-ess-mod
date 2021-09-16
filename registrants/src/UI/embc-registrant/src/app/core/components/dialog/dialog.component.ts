@@ -34,7 +34,10 @@ export class DialogComponent implements OnInit, OnDestroy {
 
     if (this.data.essFileData !== null) {
       this.componentRef.instance.essFileData = this.data.essFileData;
-      console.log(this.data.essFileData);
+    }
+
+    if (this.data.initDialog !== null) {
+      this.componentRef.instance.initDialog = this.data.initDialog;
     }
 
     this.componentRef.instance.outputEvent.subscribe((value) => {

@@ -8,8 +8,9 @@ import { EvacuationFileModel } from 'src/app/core/model/evacuation-file.model';
   styleUrls: ['./ess-file-dialog.component.scss']
 })
 export class EssFileDialogComponent implements OnInit {
-  @Input() essFileData: EvacuationFileModel;
+  @Input() essFileData: EvacuationFileModel | string;
   @Input() content: DialogContent;
+  @Input() initDialog: boolean;
   @Output() outputEvent = new EventEmitter<string>();
 
   constructor() {}
