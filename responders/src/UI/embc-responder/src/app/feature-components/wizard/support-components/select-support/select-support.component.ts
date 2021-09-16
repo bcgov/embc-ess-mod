@@ -26,6 +26,8 @@ export class SelectSupportComponent implements OnInit {
 
   ngOnInit(): void {
     this.supportList = this.stepSupportsService.getSupportTypeList();
+    this.stepSupportsService.supportDetails = null;
+    this.stepSupportsService.supportDelivery = null;
     this.createVerificationForm();
   }
 

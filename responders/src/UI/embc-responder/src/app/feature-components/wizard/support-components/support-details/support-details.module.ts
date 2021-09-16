@@ -14,6 +14,8 @@ import { OtherTransportationComponent } from './details-type/other-transportatio
 import { LodgingHotelMotelComponent } from './details-type/lodging-hotel-motel/lodging-hotel-motel.component';
 import { LodgingBilletingComponent } from './details-type/lodging-billeting/lodging-billeting.component';
 import { LodgingGroupComponent } from './details-type/lodging-group/lodging-group.component';
+import { ClothingComponent } from './details-type/clothing/clothing.component';
+import { IncidentalsComponent } from './details-type/incidentals/incidentals.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { LodgingGroupComponent } from './details-type/lodging-group/lodging-grou
     OtherTransportationComponent,
     LodgingHotelMotelComponent,
     LodgingBilletingComponent,
-    LodgingGroupComponent
+    LodgingGroupComponent,
+    ClothingComponent,
+    IncidentalsComponent
   ],
   imports: [
     CommonModule,

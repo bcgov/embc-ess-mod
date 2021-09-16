@@ -1,1 +1,440 @@
-<p>review-support works!</p>
+<div class="container container-frame">
+  <div class="row row-padding">
+    <div class="col-md-12">
+      <a (click)="back()"
+        ><img src="/assets/images/back-arrow.svg" width="20" height="18" /><span
+          class="back-link"
+          >Supports</span
+        ></a
+      >
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 bottom-padding">
+      <p class="review-heading">Review & Process Supports</p>
+      <p>
+        Please confirm that all details you entered are correct by reading
+        through the summary below and having your supervisor sign off on your
+        work.
+      </p>
+    </div>
+    <div class="row">
+      <div
+        class="col-md-12 bottom-padding"
+        *ngFor="let support of draftSupports"
+      >
+        <!-- Groceries Label -->
+        <label
+          class="supports-title"
+          *ngIf="support.subCategory === 'Food_Groceries'"
+        >
+          <img
+            src="../../../../../assets/images/wizard/needs-food.svg"
+            width="40px"
+            height="42px"
+          />
+          Food - Groceries
+        </label>
+
+        <!-- Restaurant Label -->
+        <label
+          class="supports-title"
+          *ngIf="support.subCategory === 'Food_Restaurant'"
+        >
+          <img
+            src="../../../../../assets/images/wizard/needs-food.svg"
+            width="40px"
+            height="42px"
+          />
+          Food - Restaurant Meals
+        </label>
+
+        <!-- LodgingHotel Label -->
+        <label
+          class="supports-title"
+          *ngIf="support.subCategory === 'Lodging_Hotel'"
+        >
+          <img
+            src="../../../../../assets/images/wizard/needs-lodging.svg"
+            width="40px"
+            height="42px"
+          />
+          Lodging - Hotel Motel
+        </label>
+
+        <!-- Lodging Billeting Label -->
+        <label
+          class="supports-title"
+          *ngIf="support.subCategory === 'Lodging_Billeting'"
+        >
+          <img
+            src="../../../../../assets/images/wizard/needs-lodging.svg"
+            width="40px"
+            height="42px"
+          />
+          Lodging - Billeting
+        </label>
+
+        <!-- Lodging Group Label -->
+        <label
+          class="supports-title"
+          *ngIf="support.subCategory === 'Lodging_Group'"
+        >
+          <img
+            src="../../../../../assets/images/wizard/needs-lodging.svg"
+            width="40px"
+            height="42px"
+          />
+          Lodging - Group Lodging
+        </label>
+
+        <!-- Transportation Taxi Label -->
+        <label
+          class="supports-title"
+          *ngIf="support.subCategory === 'Transportation_Taxi'"
+        >
+          <img
+            src="../../../../../assets/images/wizard/needs-transport.svg"
+            width="40px"
+            height="42px"
+          />
+          Transport - Taxi
+        </label>
+
+        <!-- Transportation Other Label -->
+        <label
+          class="supports-title"
+          *ngIf="support.subCategory === 'Transportation_Other'"
+        >
+          <img
+            src="../../../../../assets/images/wizard/needs-transport.svg"
+            width="40px"
+            height="42px"
+          />
+          Transport - Other
+        </label>
+
+        <!-- Clothing Label -->
+        <label class="supports-title" *ngIf="support.category === 'Clothing'">
+          <img
+            src="../../../../../assets/images/wizard/needs-clothing.svg"
+            width="40px"
+            height="42px"
+          />
+          Clothing
+        </label>
+
+        <!-- Incidental Label -->
+        <label
+          class="supports-title"
+          *ngIf="support.category === 'Incidentals'"
+        >
+          <img
+            src="../../../../../assets/images/wizard/needs-incidentals.svg"
+            width="40px"
+            height="42px"
+          />
+          Incidentals
+        </label>
+
+        <div class="row">
+          <!-- Groceries -->
+          <div class="col-md-8 support-padding">
+            <div>
+              <p class="support-subtitle">Support Details</p>
+              <div class="row row-padding">
+                <div class="col-md-4 box-text-color">Valid From:</div>
+                <div class="col-md-4 bold">
+                  {{ support?.from | date: 'dd-MMM-yyyy' }} at
+                  {{ support?.from | date: 'hh:mm a' }}
+                </div>
+              </div>
+
+              <div class="row row-padding">
+                <div class="col-md-4 box-text-color">Valid To:</div>
+                <div class="col-md-4 bold">
+                  {{ support?.to | date: 'dd-MMM-yyyy' }} at
+                  {{ support?.to | date: 'hh:mm a' }}
+                </div>
+              </div>
+
+              <div class="row row-padding">
+                <div class="col-md-4 box-text-color">Support Provided For:</div>
+                <div class="col-md-4 bold">
+                  <p *ngFor="let member of support?.includedHouseholdMembers">
+                    {{ getMemberFullName(member) }}
+                  </p>
+                </div>
+              </div>
+              <!-- Groceries -->
+              <ng-container *ngIf="support.subCategory === 'Food_Groceries'">
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">
+                    # of Days for Meals:
+                  </div>
+                  <div class="col-md-4 bold">
+                    {{ getGroceryReferral(support)?.numberOfDays }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-4 total-amount-label">Total Amount:</div>
+                  <div class="col-md-2 bold total-amount-number">
+                    ${{ getGroceryReferral(support)?.totalAmount }}
+                  </div>
+                  <div
+                    *ngIf="!checkGroceryMaxRate(support)"
+                    class="col-md-4 warning"
+                  >
+                    <img
+                      src="../../../../../assets/images/warning-red.svg"
+                      width="25px"
+                      height="27px"
+                    />
+                    Total monetary value exceeds the recommended ESS rate
+                  </div>
+                </div>
+              </ng-container>
+              <!-- Restaurants -->
+              <ng-container *ngIf="support.subCategory === 'Food_Restaurant'">
+                <div class="row row-padding">
+                  <div class="col-md-4">Breakfasts per person:</div>
+                  <div class="col-md-4 bold">
+                    {{ getMealReferral(support)?.numberOfBreakfastsPerPerson }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-4">Lunches per person:</div>
+                  <div class="col-md-4 bold">
+                    {{ getMealReferral(support)?.numberOfLunchesPerPerson }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-4">Dinners per person:</div>
+                  <div class="col-md-4 bold">
+                    {{ getMealReferral(support)?.numberOfDinnersPerPerson }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-4 total-amount-label">Total Amount:</div>
+                  <div class="col-md-2 bold total-amount-number">
+                    ${{ getMealReferral(support)?.totalAmount }}
+                  </div>
+                </div>
+              </ng-container>
+              <!-- Logding - Hotel -->
+              <ng-container *ngIf="support.subCategory === 'Lodging_Hotel'">
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color"># Nights:</div>
+                  <div class="col-md-4 bold">
+                    {{ getHotelReferral(support)?.numberOfNights }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color"># Rooms:</div>
+                  <div class="col-md-4 bold">
+                    {{ getHotelReferral(support)?.numberOfRooms }}
+                  </div>
+                </div>
+              </ng-container>
+              <!-- Lodging - Billeting -->
+              <ng-container *ngIf="support.subCategory === 'Lodging_Billeting'">
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color"># Nights:</div>
+                  <div class="col-md-4 bold">
+                    {{ getBilletingReferral(support)?.numberOfNights }}
+                  </div>
+                </div>
+              </ng-container>
+              <!-- Lodging - Group -->
+              <ng-container *ngIf="support.subCategory === 'Lodging_Group'">
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color"># Nights:</div>
+                  <div class="col-md-4 bold">
+                    {{ getGroupReferral(support)?.numberOfNights }}
+                  </div>
+                </div>
+              </ng-container>
+              <!-- Transport Taxi -->
+              <ng-container
+                *ngIf="support.subCategory === 'Transportation_Taxi'"
+              >
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">From (Address):</div>
+                  <div class="col-md-4 bold">
+                    {{ getTaxiReferral(support)?.fromAddress }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">To (Address):</div>
+                  <div class="col-md-4 bold">
+                    {{ getTaxiReferral(support)?.toAddress }}
+                  </div>
+                </div>
+              </ng-container>
+              <!-- Transport Other -->
+              <ng-container
+                *ngIf="support.subCategory === 'Transportation_Other'"
+              >
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">Mode of Transport:</div>
+                  <div class="col-md-4 bold">
+                    {{ getOtherReferral(support)?.transportMode }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-4 total-amount-label">Total Amount:</div>
+                  <div class="col-md-2 bold total-amount-number">
+                    ${{ getOtherReferral(support)?.totalAmount }}
+                  </div>
+                </div>
+              </ng-container>
+              <!-- Clothing -->
+              <ng-container *ngIf="support.category === 'Clothing'">
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">
+                    Extreme Winter Conditions:
+                  </div>
+                  <div class="col-md-4 bold">
+                    {{ getClothingReferral(support)?.extremeWinterConditions }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-4 total-amount-label">Total Amount:</div>
+                  <div class="col-md-4 bold total-amount-number">
+                    ${{ getClothingReferral(support)?.totalAmount }}
+                  </div>
+                  <div
+                    *ngIf="!checkClothingMaxRate(support)"
+                    class="col-md-4 warning"
+                  >
+                    <img
+                      src="../../../../../assets/images/warning-red.svg"
+                      width="25px"
+                      height="27px"
+                    />
+                    Total monetary value exceeds the recommended ESS rate
+                  </div>
+                </div>
+              </ng-container>
+              <!-- Incidentals -->
+              <ng-container *ngIf="support.category === 'Incidentals'">
+                <div class="row row-padding">
+                  <div class="col-md-4 box-text-color">
+                    List of Approved Items:
+                  </div>
+                  <div class="col-md-4 bold">
+                    {{ getIncidentalReferral(support)?.approvedItems }}
+                  </div>
+                </div>
+
+                <div class="row row-padding">
+                  <div class="col-md-4 total-amount-label">Total Amount:</div>
+                  <div class="col-md-4 bold total-amount-number">
+                    ${{ getIncidentalReferral(support)?.totalAmount }}
+                  </div>
+                  <div
+                    *ngIf="!checkIncidentalMaxRate(support)"
+                    class="col-md-4 warning"
+                  >
+                    <img
+                      src="../../../../../assets/images/warning-red.svg"
+                      width="25px"
+                      height="27px"
+                    />
+                    <img />
+                    Total monetary value exceeds the recommended ESS rate
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+          <div
+            class="col-md-4"
+            *ngIf="
+              support.subCategory !== 'Lodging_Group' &&
+              support.subCategory !== 'Lodging_Billeting'
+            "
+          >
+            <mat-card class="support-card">
+              <span class="support-subtitle">Support Delivery</span>
+              <p class="no-margin">
+                <b>{{ getReferral(support)?.supplierName }}</b>
+              </p>
+              <p
+                [innerHTML]="getSupplierAddress(support) | maskFullAddress"
+              ></p>
+
+              <p class="no-margin"><b>Supplier Notes</b></p>
+              <p>{{ getReferral(support)?.supplierNotes }}</p>
+            </mat-card>
+          </div>
+          <!-- Lodging-Billeting Support Delivery -->
+          <div
+            class="col-md-4"
+            *ngIf="support.subCategory === 'Lodging_Billeting'"
+          >
+            <mat-card class="support-card">
+              <span class="support-subtitle">Support Delivery</span>
+              <p class="no-margin">
+                <b>{{ getBilletingReferral(support)?.hostName }}</b>
+              </p>
+              <p class="no-margin">
+                {{ getBilletingReferral(support)?.hostAddress }}
+              </p>
+              <p>{{ getBilletingReferral(support)?.hostCity }}</p>
+              <p class="no-margin"><b>Supplier Notes</b></p>
+              <p>{{ getReferral(support)?.supplierNotes }}</p>
+            </mat-card>
+          </div>
+          <!-- Lodging-Group Support Delivery -->
+          <div class="col-md-4" *ngIf="support.subCategory === 'Lodging_Group'">
+            <mat-card class="support-card">
+              <span class="support-subtitle">Support Delivery</span>
+              <p class="no-margin">
+                <b>{{ getGroupReferral(support)?.facilityName }}</b>
+              </p>
+              <p class="no-margin">
+                {{ getGroupReferral(support)?.facilityAddress }}
+              </p>
+              <p>
+                {{ getGroupReferral(support)?.facilityCity }}
+              </p>
+              <p class="no-margin"><b>Supplier Notes</b></p>
+              <p>{{ getReferral(support)?.supplierNotes }}</p>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8 accept-box">
+      <mat-checkbox (change)="certificationChangeEvent($event)"
+        >I certify that a supervisor or ESSD has checked my work and approved
+        the above supports for distribution to the evacuee.
+      </mat-checkbox>
+    </div>
+  </div>
+
+  <div class="row buttons-section">
+    <div class="col-md-12">
+      <button class="button-s button-width button-margin" (click)="back()">
+        Cancel
+      </button>
+      <button class="button-p button-width" [disabled]="!certificationAccepted">
+        Process Support/s
+      </button>
+    </div>
+  </div>
+</div>

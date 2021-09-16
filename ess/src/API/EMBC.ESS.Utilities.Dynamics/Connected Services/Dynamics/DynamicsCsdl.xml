@@ -7709,6 +7709,15 @@
         <Property Name="era_evacueesupportid" Type="Edm.Guid" />
         <Property Name="era_era_evacueesupport_era_householdmemberid" Type="Edm.Guid" />
       </EntityType>
+      <EntityType Name="era_era_householdmember_era_evacueesupport" BaseType="mscrm.crmbaseentity">
+        <Key>
+          <PropertyRef Name="era_era_householdmember_era_evacueesupportid" />
+        </Key>
+        <Property Name="era_evacueesupportid" Type="Edm.Guid" />
+        <Property Name="era_householdmemberid" Type="Edm.Guid" />
+        <Property Name="era_era_householdmember_era_evacueesupportid" Type="Edm.Guid" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+      </EntityType>
       <EntityType Name="era_era_householdmember_era_needassessment" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="era_era_householdmember_era_needassessmentid" />
@@ -8106,41 +8115,49 @@
         <Key>
           <PropertyRef Name="era_evacuationfileid" />
         </Key>
-        <Property Name="_owninguser_value" Type="Edm.Guid" />
-        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
-        <Property Name="era_petcareplans" Type="Edm.String" Unicode="false" />
-        <Property Name="versionnumber" Type="Edm.Int64" />
-        <Property Name="era_numberofassessments" Type="Edm.Int32" />
-        <Property Name="era_numberofassessments_state" Type="Edm.Int32" />
-        <Property Name="era_securityphrase" Type="Edm.String" Unicode="false" />
-        <Property Name="statecode" Type="Edm.Int32" />
-        <Property Name="era_totalhouseholdanimals_state" Type="Edm.Int32" />
-        <Property Name="_era_currentneedsassessmentid_value" Type="Edm.Guid" />
-        <Property Name="_modifiedby_value" Type="Edm.Guid" />
+        <Property Name="era_supportprovided" Type="Edm.Int32" />
         <Property Name="statuscode" Type="Edm.Int32" />
-        <Property Name="era_name" Type="Edm.String" Unicode="false" />
-        <Property Name="era_essfilestatus" Type="Edm.Int32" />
-        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
-        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
-        <Property Name="importsequencenumber" Type="Edm.Int32" />
-        <Property Name="era_evacuationfiledate" Type="Edm.DateTimeOffset" />
-        <Property Name="era_paperbasedessfile" Type="Edm.String" Unicode="false" />
-        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
-        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
-        <Property Name="_createdby_value" Type="Edm.Guid" />
-        <Property Name="era_dayssincecreated" Type="Edm.Int32" />
         <Property Name="era_haspetfood" Type="Edm.Int32" />
-        <Property Name="createdon" Type="Edm.DateTimeOffset" />
-        <Property Name="_owningteam_value" Type="Edm.Guid" />
+        <Property Name="era_numberofassessments" Type="Edm.Int32" />
+        <Property Name="_era_currentneedsassessmentid_value" Type="Edm.Guid" />
+        <Property Name="_transactioncurrencyid_value" Type="Edm.Guid" />
+        <Property Name="modifiedon" Type="Edm.DateTimeOffset" />
         <Property Name="_createdonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_name" Type="Edm.String" Unicode="false" />
+        <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
+        <Property Name="era_dayssincecreated" Type="Edm.Int32" />
+        <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
         <Property Name="era_totalhouseholdanimals_date" Type="Edm.DateTimeOffset" />
-        <Property Name="_era_taskid_value" Type="Edm.Guid" />
-        <Property Name="_ownerid_value" Type="Edm.Guid" />
-        <Property Name="era_evacuationfileid" Type="Edm.Guid" />
+        <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="_owninguser_value" Type="Edm.Guid" />
         <Property Name="_era_registrant_value" Type="Edm.Guid" />
+        <Property Name="era_supportstotalamountsummary" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="era_evacuationfileid" Type="Edm.Guid" />
+        <Property Name="era_petcareplans" Type="Edm.String" Unicode="false" />
+        <Property Name="era_registrationcomplete" Type="Edm.Boolean" />
+        <Property Name="createdon" Type="Edm.DateTimeOffset" />
+        <Property Name="exchangerate" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="statecode" Type="Edm.Int32" />
+        <Property Name="era_paperbasedessfile" Type="Edm.String" Unicode="false" />
+        <Property Name="overriddencreatedon" Type="Edm.DateTimeOffset" />
+        <Property Name="importsequencenumber" Type="Edm.Int32" />
+        <Property Name="era_numberofassessments_state" Type="Edm.Int32" />
         <Property Name="era_numberofassessments_date" Type="Edm.DateTimeOffset" />
+        <Property Name="era_evacuationfiledate" Type="Edm.DateTimeOffset" />
+        <Property Name="era_totalhouseholdanimals_state" Type="Edm.Int32" />
+        <Property Name="era_securityphrase" Type="Edm.String" Unicode="false" />
+        <Property Name="_ownerid_value" Type="Edm.Guid" />
+        <Property Name="_modifiedby_value" Type="Edm.Guid" />
         <Property Name="era_totalhouseholdanimals" Type="Edm.Int32" />
+        <Property Name="era_selfregistrationdate" Type="Edm.DateTimeOffset" />
+        <Property Name="_modifiedonbehalfby_value" Type="Edm.Guid" />
+        <Property Name="era_registrationcompleteddate" Type="Edm.DateTimeOffset" />
+        <Property Name="era_supportstotalamountsummary_base" Type="Edm.Decimal" Scale="Variable" />
+        <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="era_essfilestatus" Type="Edm.Int32" />
+        <Property Name="versionnumber" Type="Edm.Int64" />
+        <Property Name="_era_taskid_value" Type="Edm.Guid" />
         <NavigationProperty Name="createdby" Type="mscrm.systemuser" Nullable="false" Partner="lk_era_evacuationfile_createdby">
           <ReferentialConstraint Property="_createdby_value" ReferencedProperty="systemuserid" />
         </NavigationProperty>
@@ -8188,12 +8205,16 @@
         <NavigationProperty Name="era_era_evacuationfile_era_needsassessmentanimal_ESSFileid" Type="Collection(mscrm.era_needsassessmentanimal)" Partner="era_ESSFileid" />
         <NavigationProperty Name="era_era_evacuationfile_era_animal_ESSFileid" Type="Collection(mscrm.era_animal)" Partner="era_ESSFileid" />
         <NavigationProperty Name="era_era_evacuationfile_era_evacueesupport_ESSFileId" Type="Collection(mscrm.era_evacueesupport)" Partner="era_EvacuationFileId" />
+        <NavigationProperty Name="transactioncurrencyid" Type="mscrm.transactioncurrency" Nullable="false" Partner="TransactionCurrency_era_evacuationfile">
+          <ReferentialConstraint Property="_transactioncurrencyid_value" ReferencedProperty="transactioncurrencyid" />
+        </NavigationProperty>
       </EntityType>
       <EntityType Name="era_evacueesupport" BaseType="mscrm.crmbaseentity">
         <Key>
           <PropertyRef Name="era_evacueesupportid" />
         </Key>
         <Property Name="timezoneruleversionnumber" Type="Edm.Int32" />
+        <Property Name="era_numberofevacueesforsupport" Type="Edm.Int32" />
         <Property Name="_transactioncurrencyid_value" Type="Edm.Guid" />
         <Property Name="era_fromaddress" Type="Edm.String" Unicode="false" />
         <Property Name="_owningbusinessunit_value" Type="Edm.Guid" />
@@ -8228,6 +8249,7 @@
         <Property Name="era_approveditems" Type="Edm.String" Unicode="false" />
         <Property Name="_owningteam_value" Type="Edm.Guid" />
         <Property Name="_createdby_value" Type="Edm.Guid" />
+        <Property Name="era_numberofdays" Type="Edm.Int32" />
         <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
         <Property Name="exchangerate" Type="Edm.Decimal" Scale="Variable" />
         <Property Name="era_numberofrooms" Type="Edm.Int32" />
@@ -8300,6 +8322,7 @@
         <NavigationProperty Name="era_IssuedById" Type="mscrm.era_essteamuser" Nullable="false" Partner="era_era_essteamuser_era_evacueesupport_IssuedBy">
           <ReferentialConstraint Property="_era_issuedbyid_value" ReferencedProperty="era_essteamuserid" />
         </NavigationProperty>
+        <NavigationProperty Name="era_era_householdmember_era_evacueesupport" Type="Collection(mscrm.era_householdmember)" Partner="era_era_householdmember_era_evacueesupport" />
       </EntityType>
       <EntityType Name="era_householdmember" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -8373,6 +8396,7 @@
           <ReferentialConstraint Property="_era_evacuationfileid_value" ReferencedProperty="era_evacuationfileid" />
         </NavigationProperty>
         <NavigationProperty Name="era_era_evacueesupport_era_householdmember" Type="Collection(mscrm.era_evacueesupport)" Partner="era_era_evacueesupport_era_householdmember" />
+        <NavigationProperty Name="era_era_householdmember_era_evacueesupport" Type="Collection(mscrm.era_evacueesupport)" Partner="era_era_householdmember_era_evacueesupport" />
       </EntityType>
       <EntityType Name="era_jurisdiction" BaseType="mscrm.crmbaseentity">
         <Key>
@@ -9068,6 +9092,7 @@
         <Property Name="_createdby_value" Type="Edm.Guid" />
         <Property Name="era_paymentadvicecomments" Type="Edm.String" Unicode="false" />
         <Property Name="era_documentnumber" Type="Edm.String" Unicode="false" />
+        <Property Name="era_caspayload" Type="Edm.String" Unicode="false" />
         <Property Name="utcconversiontimezonecode" Type="Edm.Int32" />
         <Property Name="era_resp" Type="Edm.String" Unicode="false" />
         <Property Name="exchangerate" Type="Edm.Decimal" Scale="Variable" />
@@ -23472,6 +23497,7 @@
         <NavigationProperty Name="TransactionCurrency_era_supplierpayments" Type="Collection(mscrm.era_supplierpayments)" Partner="transactioncurrencyid" />
         <NavigationProperty Name="TransactionCurrency_era_evacueesupport" Type="Collection(mscrm.era_evacueesupport)" Partner="transactioncurrencyid" />
         <NavigationProperty Name="TransactionCurrency_era_esssupportrate" Type="Collection(mscrm.era_esssupportrate)" Partner="transactioncurrencyid" />
+        <NavigationProperty Name="TransactionCurrency_era_evacuationfile" Type="Collection(mscrm.era_evacuationfile)" Partner="transactioncurrencyid" />
         <NavigationProperty Name="TransactionCurrency_Email" Type="Collection(mscrm.email)" Partner="transactioncurrencyid_email" />
         <NavigationProperty Name="TransactionCurrency_DuplicateBaseRecord" Type="Collection(mscrm.duplicaterecord)" Partner="baserecordid_transactioncurrency" />
         <NavigationProperty Name="TransactionCurrency_BusinessUnit" Type="Collection(mscrm.businessunit)" Partner="transactioncurrencyid" />
@@ -25948,25 +25974,11 @@
         <Parameter Name="PostWorkflowEvent" Type="Edm.Boolean" Nullable="false" />
         <ReturnType Type="mscrm.bulkoperation" Nullable="false" />
       </Action>
-      <ComplexType Name="era_EvacueeSearchResponse">
-        <Property Name="JSONResults" Type="Edm.String" Unicode="false" />
-      </ComplexType>
-      <Action Name="era_EvacueeSearch">
-        <Parameter Name="FirstName" Type="Edm.String" Unicode="false" />
-        <Parameter Name="LastName" Type="Edm.String" Unicode="false" />
-        <Parameter Name="DateOfBirth" Type="Edm.DateTimeOffset" />
-        <Parameter Name="SearchType" Type="Edm.String" Unicode="false" />
-        <ReturnType Type="mscrm.era_EvacueeSearchResponse" Nullable="false" />
-      </Action>
-      <ComplexType Name="era_EvacueeSearchByIDResponse">
-        <Property Name="JSONResults" Type="Edm.String" Unicode="false" />
+      <ComplexType Name="era_GetCASTransactionProgressResponse">
         <Property Name="Message" Type="Edm.String" Unicode="false" />
       </ComplexType>
-      <Action Name="era_EvacueeSearchByID">
-        <Parameter Name="ESSFileGUIDs" Type="Edm.String" Unicode="false" />
-        <Parameter Name="ESSFileNumbers" Type="Edm.String" Unicode="false" />
-        <Parameter Name="RegistrantGUIDs" Type="Edm.String" Unicode="false" />
-        <ReturnType Type="mscrm.era_EvacueeSearchByIDResponse" Nullable="false" />
+      <Action Name="era_GetCASTransactionProgress">
+        <ReturnType Type="mscrm.era_GetCASTransactionProgressResponse" Nullable="false" />
       </Action>
       <ComplexType Name="era_SubmitUnauthInvoicesResponse">
         <Property Name="submissionFlag" Type="Edm.Boolean" />
@@ -31670,6 +31682,7 @@
           <NavigationPropertyBinding Path="era_era_embcregion_era_supplierinvoice_EMBCRegion" Target="era_supplierinvoices" />
         </EntitySet>
         <EntitySet Name="era_era_evacueesupport_era_householdmemberset" EntityType="Microsoft.Dynamics.CRM.era_era_evacueesupport_era_householdmember" />
+        <EntitySet Name="era_era_householdmember_era_evacueesupportset" EntityType="Microsoft.Dynamics.CRM.era_era_householdmember_era_evacueesupport" />
         <EntitySet Name="era_era_householdmember_era_needassessmentset" EntityType="Microsoft.Dynamics.CRM.era_era_householdmember_era_needassessment" />
         <EntitySet Name="era_essfilenotes" EntityType="Microsoft.Dynamics.CRM.era_essfilenote">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31817,6 +31830,7 @@
           <NavigationPropertyBinding Path="era_era_evacuationfile_era_needsassessmentanimal_ESSFileid" Target="era_needsassessmentanimals" />
           <NavigationPropertyBinding Path="era_era_evacuationfile_era_animal_ESSFileid" Target="era_animals" />
           <NavigationPropertyBinding Path="era_era_evacuationfile_era_evacueesupport_ESSFileId" Target="era_evacueesupports" />
+          <NavigationPropertyBinding Path="transactioncurrencyid" Target="transactioncurrencies" />
         </EntitySet>
         <EntitySet Name="era_evacueesupports" EntityType="Microsoft.Dynamics.CRM.era_evacueesupport">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31843,6 +31857,7 @@
           <NavigationPropertyBinding Path="era_EvacuationFileId" Target="era_evacuationfiles" />
           <NavigationPropertyBinding Path="era_GroupLodgingCityID" Target="era_jurisdictions" />
           <NavigationPropertyBinding Path="era_IssuedById" Target="era_essteamusers" />
+          <NavigationPropertyBinding Path="era_era_householdmember_era_evacueesupport" Target="era_householdmembers" />
         </EntitySet>
         <EntitySet Name="era_householdmembers" EntityType="Microsoft.Dynamics.CRM.era_householdmember">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -31865,6 +31880,7 @@
           <NavigationPropertyBinding Path="era_era_householdmember_era_needassessment" Target="era_needassessments" />
           <NavigationPropertyBinding Path="era_EvacuationFileid" Target="era_evacuationfiles" />
           <NavigationPropertyBinding Path="era_era_evacueesupport_era_householdmember" Target="era_evacueesupports" />
+          <NavigationPropertyBinding Path="era_era_householdmember_era_evacueesupport" Target="era_evacueesupports" />
         </EntitySet>
         <EntitySet Name="era_jurisdictions" EntityType="Microsoft.Dynamics.CRM.era_jurisdiction">
           <NavigationPropertyBinding Path="createdby" Target="systemusers" />
@@ -37210,6 +37226,7 @@
           <NavigationPropertyBinding Path="TransactionCurrency_era_supplierpayments" Target="era_supplierpaymentses" />
           <NavigationPropertyBinding Path="TransactionCurrency_era_evacueesupport" Target="era_evacueesupports" />
           <NavigationPropertyBinding Path="TransactionCurrency_era_esssupportrate" Target="era_esssupportrates" />
+          <NavigationPropertyBinding Path="TransactionCurrency_era_evacuationfile" Target="era_evacuationfiles" />
           <NavigationPropertyBinding Path="TransactionCurrency_Email" Target="emails" />
           <NavigationPropertyBinding Path="TransactionCurrency_DuplicateBaseRecord" Target="duplicaterecords" />
           <NavigationPropertyBinding Path="TransactionCurrency_BusinessUnit" Target="businessunits" />
@@ -37598,8 +37615,7 @@
         <ActionImport Name="ConvertQuoteToSalesOrder" Action="Microsoft.Dynamics.CRM.ConvertQuoteToSalesOrder" />
         <ActionImport Name="ConvertSalesOrderToInvoice" Action="Microsoft.Dynamics.CRM.ConvertSalesOrderToInvoice" />
         <ActionImport Name="CreateActivitiesList" Action="Microsoft.Dynamics.CRM.CreateActivitiesList" />
-        <ActionImport Name="era_EvacueeSearch" Action="Microsoft.Dynamics.CRM.era_EvacueeSearch" />
-        <ActionImport Name="era_EvacueeSearchByID" Action="Microsoft.Dynamics.CRM.era_EvacueeSearchByID" />
+        <ActionImport Name="era_GetCASTransactionProgress" Action="Microsoft.Dynamics.CRM.era_GetCASTransactionProgress" />
         <ActionImport Name="era_SubmitUnauthInvoices" Action="Microsoft.Dynamics.CRM.era_SubmitUnauthInvoices" />
         <ActionImport Name="GenerateInvoiceFromOpportunity" Action="Microsoft.Dynamics.CRM.GenerateInvoiceFromOpportunity" />
         <ActionImport Name="GenerateQuoteFromOpportunity" Action="Microsoft.Dynamics.CRM.GenerateQuoteFromOpportunity" />

@@ -12,6 +12,7 @@ import { DialogContent } from 'src/app/core/models/dialog-content.model';
 import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
 import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ReferralCreationService } from '../../step-supports/referral-creation.service';
 
 @Component({
   selector: 'app-view-supports',
@@ -30,7 +31,8 @@ export class ViewSupportsComponent implements OnInit {
     public stepSupportsService: StepSupportsService,
     private viewSupportsService: ViewSupportsService,
     private alertService: AlertService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private referralService: ReferralCreationService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
@@ -46,12 +48,7 @@ export class ViewSupportsComponent implements OnInit {
       (value) => {
         this.showLoader = !this.showLoader;
         this.supportList = value;
-        // const index = this.supportList.findIndex(
-        //   (item) => (item.status = SupportStatus.Draft)
-        // );
-        // if (this.stepSupportsService.mealReferral && index === -1) {
-        //   this.supportList.push(this.stepSupportsService.mealReferral);
-        // }
+        this.addDraftSupports();
       },
       (error) => {
         this.showLoader = !this.showLoader;
@@ -66,7 +63,9 @@ export class ViewSupportsComponent implements OnInit {
     this.router.navigate(['/ess-wizard/add-supports/select-support']);
   }
 
-  process() {}
+  process() {
+    this.router.navigate(['/ess-wizard/add-supports/review']);
+  }
 
   selected(event: MatSelectChange, filterType: string): void {
     const selectedValue =
@@ -82,6 +81,25 @@ export class ViewSupportsComponent implements OnInit {
     this.router.navigate(['/ess-wizard/add-supports/view-detail']);
   }
 
+  addDraftSupports() {
+    // const index = this.supportList.map(
+    //   (item) => {
+    //     if(item.status === SupportStatus.Draft) {
+
+    //     }
+    //   }
+    // );
+    // if (this.stepSupportsService.mealReferral && index === -1) {
+    //   this.supportList.push(this.stepSupportsService.mealReferral);
+    // }
+    if (this.referralService.getDraftSupport().length !== 0) {
+      this.supportList = [
+        ...this.supportList,
+        ...this.referralService.getDraftSupport()
+      ];
+    }
+  }
+
   /**
    * Populates action basec notification and open confirmation box
    *
@@ -94,10 +112,12 @@ export class ViewSupportsComponent implements OnInit {
       setTimeout(() => {
         this.openConfirmation(displayText);
       }, 500);
+    } else if (state?.action === 'save') {
+      displayText = globalConst.saveMessage;
+      setTimeout(() => {
+        this.openConfirmation(displayText);
+      }, 500);
     }
-    // else {
-    //   displayText = globalConst.addMessage;
-    // }
   }
 
   /**
