@@ -1,0 +1,116 @@
+<div [formGroup]="detailsForm">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="question-heading">Supplier Details</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="bold">Name of Group Lodging Facility</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input
+          formControlName="hostName"
+          maxlength="255"
+          matInput
+          placeholder="Enter Name"
+        />
+        <mat-error
+          class="custom-mat-error"
+          *ngIf="
+            supportDeliveryFormControl?.hostName.invalid &&
+            supportDeliveryFormControl?.hostName.hasError('whitespaceError')
+          "
+        >
+          Lodging Facility Name is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="bold">Address of Group Lodging Facility</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Address</mat-label>
+        <input
+          formControlName="hostAddress"
+          maxlength="255"
+          matInput
+          placeholder="Enter Address"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>City</mat-label>
+        <input
+          formControlName="hostCity"
+          maxlength="100"
+          matInput
+          placeholder="Enter City"
+        />
+        <mat-error
+          class="custom-mat-error"
+          *ngIf="
+            supportDeliveryFormControl?.hostCity.invalid &&
+            supportDeliveryFormControl?.hostCity.hasError('whitespaceError')
+          "
+        >
+          City is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="bold">Point of Contact for Group Lodging Facility</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Telephone</mat-label>
+        <input
+          formControlName="hostPhone"
+          maxlength="100"
+          matInput
+          placeholder="Telephone"
+          [textMask]="{ mask: phoneMask, keepCharPositions: true }"
+        />
+        <mat-error
+          *ngIf="
+            supportDeliveryFormControl.hostPhone.invalid &&
+            supportDeliveryFormControl.hostPhone.hasError('whitespaceError')
+          "
+        >
+          Telephone is required</mat-error
+        >
+        <mat-error
+          *ngIf="
+            supportDeliveryFormControl.hostPhone.invalid &&
+            supportDeliveryFormControl.hostPhone.hasError('incorrectLength')
+          "
+        >
+          Telephone must have 10 digits</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+</div>

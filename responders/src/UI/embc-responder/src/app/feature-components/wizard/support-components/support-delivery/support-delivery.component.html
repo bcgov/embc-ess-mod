@@ -107,75 +107,104 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <p class="question-heading requiredField">Select Supplier</p>
+    <div
+      *ngIf="
+        stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Billeting' &&
+        stepSupportsService?.supportTypeToAdd?.value !== 'Lodging_Group'
+      "
+    >
+      <div class="row">
+        <div class="col-md-12">
+          <p class="question-heading requiredField">Select Supplier</p>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-        <mat-form-field appearance="outline">
-          <mat-label>Supplier</mat-label>
-          <input
-            maxlength="100"
-            type="text"
-            formControlName="supplier"
-            matInput
-            placeholder="Supplier"
-            [matAutocomplete]="auto"
-            required
-          />
-          <mat-autocomplete
-            (optionSelected)="showDetails($event)"
-            #auto="matAutocomplete"
-            [displayWith]="displaySupplier"
-          >
-            <mat-option
-              *ngFor="let option of filteredOptions | async"
-              [value]="option"
+      <div class="row">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Supplier</mat-label>
+            <input
+              maxlength="100"
+              type="text"
+              formControlName="supplier"
+              matInput
+              placeholder="Supplier"
+              [matAutocomplete]="auto"
+              required
+            />
+            <mat-autocomplete
+              (optionSelected)="showDetails($event)"
+              #auto="matAutocomplete"
+              [displayWith]="displaySupplier"
             >
-              {{ option.name }}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error
-            *ngIf="
-              supportDeliveryFormControl?.supplier.invalid &&
-              supportDeliveryFormControl?.supplier.hasError('required')
-            "
+              <mat-option
+                *ngFor="let option of filteredOptions | async"
+                [value]="option"
+              >
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error
+              *ngIf="
+                supportDeliveryFormControl?.supplier.invalid &&
+                supportDeliveryFormControl?.supplier.hasError('required')
+              "
+            >
+              Supplier is required</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <button
+            class="search-button button-transparent"
+            mat-button
+            (click)="refreshList()"
           >
-            Supplier is required</mat-error
+            <img src="/assets/images/reset.svg" height="20" width="20" /><span
+              class="reset-img"
+              >Refresh Supplier List</span
+            >
+          </button>
+        </div>
+        <div class="col-md-4">
+          <app-loader
+            [strokeWidth]="3"
+            [diameter]="25"
+            [showLoader]="showLoader"
+            [color]="color"
           >
-          <!-- <mat-error *ngIf="validateCity()"> City is invalid</mat-error> -->
-        </mat-form-field>
+          </app-loader>
+        </div>
       </div>
 
-      <div class="col-md-4">
-        <button
-          class="search-button button-transparent"
-          mat-button
-          (click)="refreshList()"
-        >
-          <img src="/assets/images/reset.svg" height="20" width="20" /><span
-            class="reset-img"
-            >Refresh Supplier List</span
-          >
-        </button>
-      </div>
-      <div class="col-md-4">
-        <app-loader
-          [strokeWidth]="3"
-          [diameter]="25"
-          [showLoader]="showLoader"
-          [color]="color"
-        >
-        </app-loader>
-      </div>
+      <mat-card *ngIf="showSupplierFlag" class="supplier-box">
+        <p class="bold">{{ selectedSupplierItem?.name }}</p>
+        <p
+          [innerHTML]="selectedSupplierItem?.address | maskEvacuatedaddress"
+        ></p>
+      </mat-card>
     </div>
 
-    <mat-card *ngIf="showSupplierFlag" class="supplier-box">
-      <p span="bold">{{ selectedSupplierItem?.name }}</p>
-      <p>{{ selectedSupplierItem?.address | maskEvacuatedaddress }}</p>
-    </mat-card>
+    <!--Lodging Billeting-->
+
+    <div
+      *ngIf="
+        stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Billeting'
+      "
+    >
+      <app-billeting-delivery
+        [supportDeliveryForm]="supportDeliveryForm"
+      ></app-billeting-delivery>
+    </div>
+
+    <!--Group Lodging-->
+    <div
+      *ngIf="stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Group'"
+    >
+      <app-group-lodging-delivery
+        [supportDeliveryForm]="supportDeliveryForm"
+      ></app-group-lodging-delivery>
+    </div>
 
     <div class="row">
       <div class="col-md-12">
@@ -198,7 +227,6 @@
             required
           ></textarea>
           <mat-error
-            class="custom-mat-error"
             *ngIf="
               supportDeliveryFormControl?.supplierNote.touched &&
               supportDeliveryFormControl?.supplierNote.invalid &&

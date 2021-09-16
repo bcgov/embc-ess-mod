@@ -1,5 +1,4 @@
-import { TestBed } from '@angular/core/testing';
-import { EvacuationFileHouseholdMember, Referral } from '../api/models';
+import { EvacuationFileHouseholdMember } from '../api/models';
 import { SupplierListItemModel } from './supplier-list-item.model';
 
 export class SupportDetailsModel {
@@ -16,7 +15,9 @@ export class SupportDetailsModel {
     | OtherTransport
     | Billeting
     | GroupLodging
-    | HotelMotel;
+    | HotelMotel
+    | Incidentals
+    | Clothing;
 }
 
 export class SupportDeliveryModel {
@@ -60,4 +61,14 @@ export class Billeting {
 
 export class GroupLodging {
   noOfNights: number;
+}
+
+export class Incidentals {
+  approvedItems: string;
+  totalAmount: number;
+}
+
+export class Clothing {
+  extremeWinterConditions: boolean;
+  totalAmount: number;
 }

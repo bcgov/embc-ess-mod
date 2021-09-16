@@ -1,0 +1,40 @@
+.time-heading {
+  color: #234075;
+  font-size: 21px;
+}
+
+.amount {
+  color: #234075;
+  font-weight: bold;
+}
+
+.amount-right-align {
+  text-align: right;
+}
+
+input.amount-right-align::-webkit-outer-spin-button,
+input.amount-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.amount-right-align {
+  -moz-appearance: textfield;
+}
+
+::ng-deep .mat-form-field-suffix {
+  top: 0 !important;
+}
+
+::ng-deep .mat-form-field-prefix {
+  top: 0 !important;
+}
+
+.primary-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.primary-radio-button {
+  margin: 5px;
+}

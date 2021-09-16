@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SupportSubCategory } from 'src/app/core/api/models';
+import { SupportCategory, SupportSubCategory } from 'src/app/core/api/models';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 
 @Injectable({ providedIn: 'root' })
@@ -26,6 +26,10 @@ export class SupportDetailsService {
       return this.billetingForm();
     } else if (supportType === SupportSubCategory.Lodging_Group) {
       return this.groupLodgingForm();
+    } else if (supportType === SupportCategory.Incidentals) {
+      return this.incidentalsForm();
+    } else if (supportType === SupportCategory.Clothing) {
+      return this.clothingForm();
     }
   }
 
@@ -76,6 +80,22 @@ export class SupportDetailsService {
   groupLodgingForm(): FormGroup {
     return this.formBuilder.group({
       noOfNights: ['', [Validators.required]]
+    });
+  }
+
+  incidentalsForm(): FormGroup {
+    return this.formBuilder.group({
+      approvedItems: ['', [this.customValidation.whitespaceValidator()]],
+      totalAmount: ['', [Validators.required]],
+      userTotalAmount: ['']
+    });
+  }
+
+  clothingForm(): FormGroup {
+    return this.formBuilder.group({
+      extremeWinterConditions: [null, [Validators.required]],
+      totalAmount: ['', [Validators.required]],
+      userTotalAmount: ['']
     });
   }
 }
