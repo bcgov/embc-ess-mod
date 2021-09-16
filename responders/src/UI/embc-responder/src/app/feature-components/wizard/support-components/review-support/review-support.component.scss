@@ -1,0 +1,85 @@
+.bottom-padding {
+  padding-bottom: 50px;
+}
+
+.row-padding {
+  padding-bottom: 20px;
+}
+
+.back-link {
+  color: rgb(55, 171, 221);
+}
+
+.back-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.review-heading {
+  font-weight: 700;
+  font-size: 28px;
+  color: #234075;
+}
+
+.supports-title {
+  font-weight: 700;
+  font-size: 21px;
+  color: #234075;
+}
+
+.support-subtitle {
+  font-weight: 400;
+  font-size: 21px;
+  line-height: 30px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  
+}
+
+.no-margin {
+  margin-bottom: 0px;
+}
+
+.box-text-color {
+  color: #717171;
+}
+
+.total-amount-label {
+  color: #717171;
+  font-size: 21px;
+}
+
+.total-amount-number {
+  color: rgb(55, 171, 221);
+  font-size: 21px;
+}
+
+.support-padding {
+  padding-left: 50px;
+}
+
+.support-card {
+  display: grid;
+  background-color: rgba(242, 242, 242, 1);
+  padding-bottom: 50px;
+}
+
+.accept-box {
+  padding-left: 35px;
+}
+
+.warning {
+  color: red;
+}
+
+.buttons-section {
+  margin-top: 60px;
+}
+
+.button-margin {
+  margin-right: 20px;
+}
+
+.button-width {
+  width: 30%;
+}

@@ -63,7 +63,9 @@ export class ViewSupportsComponent implements OnInit {
     this.router.navigate(['/ess-wizard/add-supports/select-support']);
   }
 
-  process() {}
+  process() {
+    this.router.navigate(['/ess-wizard/add-supports/review']);
+  }
 
   selected(event: MatSelectChange, filterType: string): void {
     const selectedValue =

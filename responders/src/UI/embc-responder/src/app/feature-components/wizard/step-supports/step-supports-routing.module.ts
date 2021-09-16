@@ -46,6 +46,13 @@ const routes: Routes = [
           import(
             '../support-components/existing-support-details/existing-support-details.module'
           ).then((m) => m.ExistingSupportDetailsModule)
+      },
+      {
+        path: 'review',
+        loadChildren: () =>
+          import(
+            '../support-components/review-support/review-support.module'
+          ).then((m) => m.ReviewSupportModule)
       }
     ]
   }
