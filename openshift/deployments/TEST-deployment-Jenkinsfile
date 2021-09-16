@@ -1,0 +1,38 @@
+node('master') {
+    def sourcetag = 'latest'
+    def desttag = 'test'
+	def envname = 'test'
+	def images = ['ess-backend', 
+		'registrants-portal-api', 'registrants-portal-ui', 
+		'responders-portal-api', 'responders-portal-ui', 
+		'suppliers-portal-api', 'suppliers-portal-ui',
+		'cas-interface-service']
+
+	stage("Deploy") {
+		openshift.withCluster() {
+			openshift.withProject() {									
+				//tag the image
+				for (image in images) {
+					echo("Tagging ${image}")
+					openshift.tag("${image}:${sourcetag}", "${image}:${desttag}")
+				}
+			openshift.withProject('b5e079-test') {
+				//check if deployed
+				for (image in images) {
+					def appName = "${envname}-${image}"
+					echo("Checking status of ${appName}")
+					checkStatus(appName)
+				}
+			}}		
+		}
+	}		
+}
+
+def checkStatus(appName) {
+	def lastVersion = openshift.selector('dc', appName).object().status.latestVersion
+	def rc = openshift.selector('rc', appName + '-' + + lastVersion)
+	rc.untilEach(1) {
+		def rcMap = it.object()
+		return (rcMap.status.replicas.equals(rcMap.status.readyReplicas))
+	}
+}
