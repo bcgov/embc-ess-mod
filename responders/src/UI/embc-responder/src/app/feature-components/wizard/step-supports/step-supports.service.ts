@@ -47,7 +47,6 @@ export class StepSupportsService {
   private supplierListVal: SupplierListItemModel[];
   private supportDetailsVal: SupportDetailsModel;
   private supportDeliveryVal: SupportDeliveryModel;
-  private mealReferralVal: FoodRestaurantReferral;
   private selectedSupportDetailVal: Support;
 
   constructor(
@@ -67,16 +66,6 @@ export class StepSupportsService {
 
   get selectedSupportDetail(): Support {
     return this.selectedSupportDetailVal;
-  }
-
-  set mealReferral(mealReferralVal: FoodRestaurantReferral) {
-    this.mealReferralVal = mealReferralVal;
-  }
-
-  get mealReferral(): FoodRestaurantReferral {
-    return this.mealReferralVal
-      ? this.mealReferralVal
-      : JSON.parse(this.cacheService.get('mealReferral'));
   }
 
   set supportDetails(supportDetailsVal: SupportDetailsModel) {
@@ -276,6 +265,16 @@ export class StepSupportsService {
       this.supportTypeToAdd.value === SupportSubCategory.Lodging_Hotel
     ) {
       this.referralService.createHotelMotelReferral(
+        referral,
+        this.supportDetails
+      );
+    } else if (this.supportTypeToAdd.value === SupportCategory.Incidentals) {
+      this.referralService.createIncidentalsReferral(
+        referral,
+        this.supportDetails
+      );
+    } else if (this.supportTypeToAdd.value === SupportCategory.Clothing) {
+      this.referralService.createClothingReferral(
         referral,
         this.supportDetails
       );
