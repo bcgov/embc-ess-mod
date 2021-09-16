@@ -63,15 +63,6 @@ export class ReviewSupportComponent implements OnInit {
       : true;
   }
 
-  // checkMealsMaxRate(support: Support): boolean {
-  //   const maxRate =
-  //     globalConst.mealRate.rate *
-  //     (support as FoodGroceriesReferral).numberOfDays;
-  //   return maxRate < (support as FoodGroceriesReferral).totalAmount
-  //     ? false
-  //     : true;
-  // }
-
   checkIncidentalMaxRate(support: Support): boolean {
     const maxRate =
       globalConst.incidentals.rate *
