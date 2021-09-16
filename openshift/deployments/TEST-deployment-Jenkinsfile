@@ -16,17 +16,19 @@ node('master') {
 					echo("Tagging ${image}")
 					openshift.tag("${image}:${sourcetag}", "${image}:${desttag}")
 				}
+			openshift.withProject('b5e079-test') {
 				//check if deployed
 				for (image in images) {
-					checkStatus("${envname}-${image}")
+					def appName = "${envname}-${image}"
+					echo("Checking status of ${appName}")
+					checkStatus(appName)
 				}
-			}
+			}}		
 		}
 	}		
 }
 
 def checkStatus(appName) {
-	echo("Checking status of ${appName}")
 	def lastVersion = openshift.selector('dc', appName).object().status.latestVersion
 	def rc = openshift.selector('rc', appName + '-' + + lastVersion)
 	rc.untilEach(1) {
