@@ -293,6 +293,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
 
                 if (support is Referral referral)
                 {
+                    referral.Status.ShouldBe(sourceSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
+
                     if (sourceSupport.SupplierId != null)
                         referral.SupplierId.ShouldBe(sourceSupport.SupplierId);
                     if (sourceSupport.IncludedHouseholdMembers.Any())
@@ -344,6 +346,7 @@ namespace EMBC.Tests.Integration.ESS.Resources
             supportToUpdate.TotalAmount = 100;
             supportToUpdate.SupplierNotes = "New note to supplier is: " + newUniqueSignature;
             supportToUpdate.SupplierId = "5b1b6fb9-855a-ea11-b817-00505683fbf4";
+            supportToUpdate.IssuedByTeamMemberId = "988c03c5-94c8-42f6-bf83-ffc57326e216";
             supportToUpdate.IncludedHouseholdMembers = includedHouseholdMembers;
 
             var updatedSupportId = (await caseRepository.ManageCase(new SaveEvacuationFileSupportCommand { FileId = TestEssFileNumber, Support = supportToUpdate })).Id;
@@ -358,6 +361,8 @@ namespace EMBC.Tests.Integration.ESS.Resources
             updatedSupport.IssuedToPersonName.ShouldBe(supportToUpdate.IssuedToPersonName);
             updatedSupport.TotalAmount.ShouldBe(supportToUpdate.TotalAmount);
             updatedSupport.SupplierNotes.ShouldBe(supportToUpdate.SupplierNotes);
+            updatedSupport.IssuedByTeamMemberId.ShouldBe(supportToUpdate.IssuedByTeamMemberId);
+            updatedSupport.Status.ShouldBe(updatedSupport.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active);
 
             if (supportToUpdate.IncludedHouseholdMembers.Any())
                 updatedSupport.IncludedHouseholdMembers.ShouldBe(supportToUpdate.IncludedHouseholdMembers);
