@@ -158,7 +158,10 @@ export class SupportDeliveryComponent implements OnInit {
     } else {
       this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
       this.stepSupportsService.saveAsDraft();
-      this.router.navigate(['/ess-wizard/add-supports/view']);
+      const stateIndicator = { action: 'save' };
+      this.router.navigate(['/ess-wizard/add-supports/view'], {
+        state: stateIndicator
+      });
     }
   }
 

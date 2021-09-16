@@ -160,6 +160,12 @@ export const voidMessage: DialogContent = {
   text: '<p>Support successfully voided.</p>',
   cancelButton: 'Close'
 };
+
+export const saveMessage: DialogContent = {
+  text: '<p>Support successfully saved.</p>',
+  cancelButton: 'Close'
+};
+
 export const deleteMessage: DialogContent = {
   text: '<p>User has been successfully deleted from the ERA Tool.</p>',
   cancelButton: 'Close'
