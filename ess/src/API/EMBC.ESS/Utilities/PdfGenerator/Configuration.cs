@@ -34,12 +34,11 @@ namespace EMBC.ESS.Utilities.PdfGenerator
                 var options = new BrowserFetcherOptions()
                 {
                     Product = Product.Chrome,
-                    Path = Path.GetTempPath(),
+                    Path = Path.Combine(Path.GetTempPath(), "chrome/"),
                     Platform = Platform.Linux
                 };
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) options.Platform = Platform.Linux;
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) options.Platform = Platform.Win64;
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) options.Platform = Platform.Win64;
 
                 logger.LogInformation("Setting up Puppeteer to use platform {0}", options.Platform);
 

@@ -37,7 +37,7 @@ namespace EMBC.Tests.Unit.ESS
 </body>
 </html>";
 
-            var generator = services.GetRequiredService<IPdfGenerator>();
+            using var generator = services.GetRequiredService<IPdfGenerator>();
 
             var result = await generator.Generate(template);
 
@@ -117,7 +117,7 @@ namespace EMBC.Tests.Unit.ESS
 </body>
 </html>";
 
-            var generator = services.GetRequiredService<IPdfGenerator>();
+            using var generator = services.GetRequiredService<IPdfGenerator>();
 
             await Enumerable.Range(0, 50).ForEachAsync(10, async i =>
             {

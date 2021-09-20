@@ -21,7 +21,7 @@ using PuppeteerSharp;
 
 namespace EMBC.ESS.Utilities.PdfGenerator
 {
-    public interface IPdfGenerator
+    public interface IPdfGenerator : IDisposable
     {
         public Task<byte[]> Generate(string source);
     }
