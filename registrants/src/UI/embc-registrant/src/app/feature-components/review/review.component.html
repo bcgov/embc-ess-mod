@@ -689,28 +689,30 @@
               ?.value.householdMembers
           "
         >
-          <div class="row info-detail">
-            <div class="col-md-3">First Name:</div>
-            <div class="col-md-3">{{ member.firstName }}</div>
-          </div>
-          <div class="row info-detail">
-            <div class="col-md-3">Last Name:</div>
-            <div class="col-md-3">{{ member.lastName }}</div>
-          </div>
+          <ng-container *ngIf="member.isPrimaryRegistrant == false">
+            <div class="row info-detail">
+              <div class="col-md-3">First Name:</div>
+              <div class="col-md-3">{{ member.firstName }}</div>
+            </div>
+            <div class="row info-detail">
+              <div class="col-md-3">Last Name:</div>
+              <div class="col-md-3">{{ member.lastName }}</div>
+            </div>
 
-          <div class="row info-detail">
-            <div class="col-md-3">Initials:</div>
-            <div class="col-md-3">{{ member.initials }}</div>
-          </div>
-          <div class="row info-detail">
-            <div class="col-md-3">Gender:</div>
-            <div class="col-md-3">{{ member.gender }}</div>
-          </div>
-          <div class="row info-detail">
-            <div class="col-md-3">Date of Birth:</div>
-            <div class="col-md-3">{{ member.dateOfBirth | customDate }}</div>
-          </div>
-          <br />
+            <div class="row info-detail">
+              <div class="col-md-3">Initials:</div>
+              <div class="col-md-3">{{ member.initials }}</div>
+            </div>
+            <div class="row info-detail">
+              <div class="col-md-3">Gender:</div>
+              <div class="col-md-3">{{ member.gender }}</div>
+            </div>
+            <div class="row info-detail">
+              <div class="col-md-3">Date of Birth:</div>
+              <div class="col-md-3">{{ member.dateOfBirth | customDate }}</div>
+            </div>
+            <br />
+          </ng-container>
         </div>
       </mat-card-content>
 
@@ -853,10 +855,10 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideFood === 'null'
+                .canEvacueeProvideFood === 'Unsure'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideFood === true
+                    .canEvacueeProvideFood === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}
@@ -867,10 +869,10 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideLodging === 'null'
+                .canEvacueeProvideLodging === 'Unsure'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideLodging === true
+                    .canEvacueeProvideLodging === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}
@@ -881,10 +883,10 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideClothing === 'null'
+                .canEvacueeProvideClothing === 'Unsure'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideClothing === true
+                    .canEvacueeProvideClothing === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}
@@ -895,10 +897,10 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideTransportation === 'null'
+                .canEvacueeProvideTransportation === 'Unsure'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideTransportation === true
+                    .canEvacueeProvideTransportation === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}
@@ -909,10 +911,10 @@
           <div class="col-md-3">
             {{
               (formCreationService.identifyNeedsForm$ | async)?.value
-                .canEvacueeProvideIncidentals === 'null'
+                .canEvacueeProvideIncidentals === 'Unsure'
                 ? "I'm not sure"
                 : (formCreationService.identifyNeedsForm$ | async)?.value
-                    .canEvacueeProvideIncidentals === true
+                    .canEvacueeProvideIncidentals === 'Yes'
                 ? 'Yes'
                 : 'No'
             }}

@@ -116,7 +116,8 @@ export class HouseholdMembersForm {
             )
             .bind(customValidator)
         ]
-      ]
+      ],
+      isPrimaryRegistrant: ['']
     });
 
     this.specialDietDetails.setValidators([

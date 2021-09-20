@@ -26,6 +26,10 @@ import { FileDashboardVerifyDialogComponent } from './components/dialog-componen
 import { RegistrantLinkDialogComponent } from './components/dialog-components/registrant-link-dialog/registrant-link-dialog.component';
 import { AppVersionDialogComponent } from './components/dialog-components/app-version-dialog/app-version-dialog.component';
 import { CustomGstFieldComponent } from './components/custom-gst-field/custom-gst-field.component';
+import { ViewAssessmentDialogComponent } from './components/dialog-components/view-assessment-dialog/view-assessment-dialog.component';
+import { CustomPipeModule } from './pipes/customPipe.module';
+import { VoidReferralDialogComponent } from './components/dialog-components/void-referral-dialog/void-referral-dialog.component';
+import { ReprintReferralDialogComponent } from './components/dialog-components/reprint-referral-dialog/reprint-referral-dialog.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +54,10 @@ import { CustomGstFieldComponent } from './components/custom-gst-field/custom-gs
     FileDashboardVerifyDialogComponent,
     RegistrantLinkDialogComponent,
     AppVersionDialogComponent,
-    CustomGstFieldComponent
+    CustomGstFieldComponent,
+    ViewAssessmentDialogComponent,
+    VoidReferralDialogComponent,
+    ReprintReferralDialogComponent
   ],
   imports: [
     CommonModule,
@@ -58,7 +65,8 @@ import { CustomGstFieldComponent } from './components/custom-gst-field/custom-gs
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    TextMaskModule
+    TextMaskModule,
+    CustomPipeModule
   ],
   exports: [
     TopNavMenuComponent,
@@ -81,7 +89,10 @@ import { CustomGstFieldComponent } from './components/custom-gst-field/custom-gs
     FileStatusDefinitionComponent,
     FileDashboardVerifyDialogComponent,
     RegistrantLinkDialogComponent,
-    CustomGstFieldComponent
+    CustomGstFieldComponent,
+    ViewAssessmentDialogComponent,
+    VoidReferralDialogComponent,
+    ReprintReferralDialogComponent
   ]
 })
 export class SharedModule {}

@@ -19,9 +19,13 @@
           >
           <br />
           <mat-radio-group formControlName="canEvacueeProvideFood" required>
-            <mat-radio-button [value]="true">Yes</mat-radio-button>
-            <mat-radio-button [value]="false">No</mat-radio-button>
-            <mat-radio-button value="null">I'm not sure</mat-radio-button>
+            <mat-radio-button
+              class="primary-radio-button"
+              *ngFor="let option of radioOption"
+              [value]="option.value"
+            >
+              {{ option.name }}
+            </mat-radio-button>
             <mat-error
               class="custom-mat-error"
               *ngIf="
@@ -44,9 +48,13 @@
           >
           <br />
           <mat-radio-group formControlName="canEvacueeProvideLodging" required>
-            <mat-radio-button [value]="true">Yes</mat-radio-button>
-            <mat-radio-button [value]="false">No</mat-radio-button>
-            <mat-radio-button value="null">I'm not sure</mat-radio-button>
+            <mat-radio-button
+              class="primary-radio-button"
+              *ngFor="let option of radioOption"
+              [value]="option.value"
+            >
+              {{ option.name }}
+            </mat-radio-button>
             <mat-error
               class="custom-mat-error"
               *ngIf="
@@ -70,9 +78,12 @@
           >
           <br />
           <mat-radio-group formControlName="canEvacueeProvideClothing" required>
-            <mat-radio-button [value]="true">Yes</mat-radio-button>
-            <mat-radio-button [value]="false">No</mat-radio-button>
-            <mat-radio-button value="null">I'm not sure</mat-radio-button>
+            <mat-radio-button
+              *ngFor="let option of radioOption"
+              [value]="option.value"
+            >
+              {{ option.name }}
+            </mat-radio-button>
             <mat-error
               class="custom-mat-error"
               *ngIf="
@@ -99,9 +110,13 @@
             formControlName="canEvacueeProvideTransportation"
             required
           >
-            <mat-radio-button [value]="true">Yes</mat-radio-button>
-            <mat-radio-button [value]="false">No</mat-radio-button>
-            <mat-radio-button value="null">I'm not sure</mat-radio-button>
+            <mat-radio-button
+              class="primary-radio-button"
+              *ngFor="let option of radioOption"
+              [value]="option.value"
+            >
+              {{ option.name }}
+            </mat-radio-button>
             <mat-error
               class="custom-mat-error"
               *ngIf="
@@ -130,9 +145,13 @@
             formControlName="canEvacueeProvideIncidentals"
             required
           >
-            <mat-radio-button [value]="true">Yes</mat-radio-button>
-            <mat-radio-button [value]="false">No</mat-radio-button>
-            <mat-radio-button value="null">I'm not sure</mat-radio-button>
+            <mat-radio-button
+              class="primary-radio-button"
+              *ngFor="let option of radioOption"
+              [value]="option.value"
+            >
+              {{ option.name }}
+            </mat-radio-button>
             <mat-error
               class="custom-mat-error"
               *ngIf="

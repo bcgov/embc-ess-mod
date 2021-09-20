@@ -7,13 +7,14 @@ import {
 } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
-import { Profile, ProfileDataConflict } from 'src/app/core/api/models';
+import { Address, Profile, ProfileDataConflict } from 'src/app/core/api/models';
 import { ProfileDataService } from '../../../feature-components/profile/profile-data.service';
 import { ProfileService } from '../../../feature-components/profile/profile.service';
 import { AlertService } from 'src/app/core/services/alert.service';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { FormGroup } from '@angular/forms';
 import { ConflictManagementService } from './conflict-management.service';
+import { LocationService } from 'src/app/core/services/location.service';
 
 @Component({
   selector: 'app-conflict-management',
@@ -40,7 +41,8 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
     private profileService: ProfileService,
     private alertService: AlertService,
     private formCreationService: FormCreationService,
-    private conflictService: ConflictManagementService
+    private conflictService: ConflictManagementService,
+    private locationService: LocationService
   ) {}
 
   ngDoCheck(): void {
@@ -134,10 +136,10 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
 
   resolveAddressConflict(): void {
     if (this.addressConflict) {
-      this.profile.primaryAddress = this.profileDataService.setAddressObject(
+      this.profile.primaryAddress = this.locationService.setAddressObjectForDTO(
         this.form.get('address').value
       );
-      this.profile.mailingAddress = this.profileDataService.setAddressObject(
+      this.profile.mailingAddress = this.locationService.setAddressObjectForDTO(
         this.form.get('mailingAddress').value
       );
     }
@@ -159,4 +161,23 @@ export class ConflictManagementComponent implements OnInit, DoCheck {
       }
     );
   }
+
+  // private setAddressObject(addressObject): Address {
+  //   const address: Address = {
+  //     addressLine1: addressObject.addressLine1,
+  //     addressLine2: addressObject.addressLine2,
+  //     country: addressObject.country,
+  //     community:
+  //       addressObject.community.code === undefined
+  //         ? null
+  //         : addressObject.community.code,
+  //     postalCode: addressObject.postalCode,
+  //     stateProvince:
+  //       addressObject.stateProvince === null
+  //         ? addressObject.stateProvince
+  //         : addressObject.stateProvince.code
+  //   };
+
+  //   return address;
+  // }
 }

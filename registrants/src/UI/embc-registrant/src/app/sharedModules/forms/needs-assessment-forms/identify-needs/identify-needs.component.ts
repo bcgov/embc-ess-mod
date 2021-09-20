@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormCreationService } from '../../../../core/services/formCreation.service';
 import { Subscription } from 'rxjs';
 import { MatRadioModule } from '@angular/material/radio';
+import * as globalConst from '../../../../core/services/globalConstants';
 
 @Component({
   selector: 'app-identify-needs',
@@ -20,6 +21,7 @@ export default class IdentifyNeedsComponent implements OnInit {
   formBuilder: FormBuilder;
   identifyNeedsForm$: Subscription;
   formCreationService: FormCreationService;
+  radioOption = globalConst.needsOptions;
 
   constructor(
     @Inject('formBuilder') formBuilder: FormBuilder,

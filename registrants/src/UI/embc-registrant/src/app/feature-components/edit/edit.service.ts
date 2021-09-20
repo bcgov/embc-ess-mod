@@ -29,7 +29,6 @@ export class EditService {
       case 'restriction':
         this.restrictionService.restrictedAccess =
           form.get('restrictedAccess').value;
-        console.log(this.restrictionService.restrictedAccess);
         break;
       case 'personal-details':
         this.profileDataService.personalDetails = form.value;
@@ -79,9 +78,6 @@ export class EditService {
         this.needsAssessmentDataService.setHouseHoldMembers(
           form.get('householdMembers').value
         );
-        if (path === 'verified-registration') {
-          this.needsAssessmentMapping.addMainHouseholdMembers();
-        }
         break;
       case 'pets':
         this.needsAssessmentDataService.pets = form.get('pets').value;

@@ -10,6 +10,7 @@ import {
 import { EvacuationsService } from 'src/app/core/api/services';
 import { RegAddress } from 'src/app/core/model/address';
 import { LocationService } from 'src/app/core/services/location.service';
+import { RestrictionService } from 'src/app/feature-components/restriction/restriction.service';
 import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
 
 @Injectable({ providedIn: 'root' })
@@ -30,7 +31,6 @@ export class EvacuationFileDataService {
   private evacuatedAddressVal: RegAddress;
   private evacuationFileDateVal: string;
   private essFileIdVal: string;
-  private isRestrictedVal: boolean;
 
   private secretPhraseVal: string;
   private secretPhraseEditedVal: boolean;
@@ -39,7 +39,8 @@ export class EvacuationFileDataService {
   constructor(
     private evacuationService: EvacuationsService,
     private needsAssessmentService: NeedsAssessmentService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private restrictionService: RestrictionService
   ) {}
 
   public get evacuatedAddress(): RegAddress {
@@ -61,13 +62,6 @@ export class EvacuationFileDataService {
   }
   public set essFileId(value: string) {
     this.essFileIdVal = value;
-  }
-
-  public get isRestricted(): boolean {
-    return this.isRestrictedVal;
-  }
-  public set isRestricted(value: boolean) {
-    this.isRestrictedVal = value;
   }
 
   public get secretPhrase(): string {
@@ -126,13 +120,25 @@ export class EvacuationFileDataService {
   }
 
   public createEvacuationFileDTO(): EvacuationFile {
+    console.log({
+      evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
+        this.evacuatedAddress
+      ),
+      evacuationFileDate: this.evacuationFileDate,
+      fileId: this.essFileId,
+      isRestricted: this.restrictionService.restrictedAccess,
+      needsAssessment: this.getNeedsAssessment(),
+      secretPhrase: this.secretPhrase,
+      secretPhraseEdited: this.secretPhraseEdited,
+      status: this.evacuationFileStatus
+    });
     return {
       evacuatedFromAddress: this.locationService.setAddressObjectForDTO(
         this.evacuatedAddress
       ),
       evacuationFileDate: this.evacuationFileDate,
       fileId: this.essFileId,
-      isRestricted: this.isRestricted,
+      isRestricted: this.restrictionService.restrictedAccess,
       needsAssessment: this.getNeedsAssessment(),
       secretPhrase: this.secretPhrase,
       secretPhraseEdited: this.secretPhraseEdited,

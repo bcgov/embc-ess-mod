@@ -9,12 +9,15 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { SupplierListItemModel } from 'src/app/core/models/supplier-list-item.model';
 import { CustomValidationService } from 'src/app/core/services/customValidation.service';
 import { AlertService } from 'src/app/shared/components/alert/alert.service';
 import { StepSupportsService } from '../../step-supports/step-supports.service';
 import * as globalConst from '../../../../core/services/global-constants';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/shared/components/dialog/dialog.component';
+import { InformationDialogComponent } from 'src/app/shared/components/dialog-components/information-dialog/information-dialog.component';
 
 @Component({
   selector: 'app-support-delivery',
@@ -36,7 +39,8 @@ export class SupportDeliveryComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private customValidation: CustomValidationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -99,9 +103,36 @@ export class SupportDeliveryComponent implements OnInit {
             .bind(this.customValidation)
         ]
       ],
-      supplier: ['', [Validators.required]],
-      supplierNote: ['', [this.customValidation.whitespaceValidator()]]
+      supplier: [
+        '',
+        [
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                this.stepSupportsService.supportTypeToAdd.value !==
+                  'Lodging_Billeting' &&
+                this.stepSupportsService.supportTypeToAdd.value !==
+                  'Lodging_Group',
+              Validators.required
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      supplierNote: ['', [this.customValidation.whitespaceValidator()]],
+      details: this.createSupplierDetailsForm()
     });
+  }
+
+  createSupplierDetailsForm() {
+    if (
+      this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Billeting'
+    ) {
+      return this.billetingSupplierForm();
+    } else if (
+      this.stepSupportsService?.supportTypeToAdd?.value === 'Lodging_Group'
+    ) {
+      return this.groupLodgingSupplierForm();
+    }
   }
 
   /**
@@ -127,7 +158,10 @@ export class SupportDeliveryComponent implements OnInit {
     } else {
       this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
       this.stepSupportsService.saveAsDraft();
-      this.router.navigate(['/ess-wizard/add-supports/view']);
+      const stateIndicator = { action: 'save' };
+      this.router.navigate(['/ess-wizard/add-supports/view'], {
+        state: stateIndicator
+      });
     }
   }
 
@@ -172,6 +206,19 @@ export class SupportDeliveryComponent implements OnInit {
     );
   }
 
+  /**
+   * Open support rate sheet
+   */
+  openRateSheet() {
+    this.dialog.open(DialogComponent, {
+      data: {
+        component: InformationDialogComponent,
+        content: this.stepSupportsService.getRateSheetContent()
+      },
+      width: '720px'
+    });
+  }
+
   private filter(value?: string): SupplierListItemModel[] {
     if (value !== null && value !== undefined && typeof value === 'string') {
       const filterValue = value.toLowerCase();
@@ -179,5 +226,67 @@ export class SupportDeliveryComponent implements OnInit {
         option.name.toLowerCase().includes(filterValue)
       );
     }
+  }
+
+  private billetingSupplierForm(): FormGroup {
+    return this.formBuilder.group({
+      hostName: ['', [this.customValidation.whitespaceValidator()]],
+      hostAddress: [''],
+      hostCity: ['', [this.customValidation.whitespaceValidator()]],
+      hostPhone: [
+        '',
+        [
+          this.customValidation
+            .maskedNumberLengthValidator()
+            .bind(this.customValidation),
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                this.supportDeliveryForm.get('details.emailAddress') === null ||
+                this.supportDeliveryForm.get('details.emailAddress').value ===
+                  '' ||
+                this.supportDeliveryForm.get('details.emailAddress').value ===
+                  undefined,
+              this.customValidation.whitespaceValidator()
+            )
+            .bind(this.customValidation)
+        ]
+      ],
+      emailAddress: [
+        '',
+        [
+          Validators.email,
+          this.customValidation
+            .conditionalValidation(
+              () =>
+                this.supportDeliveryForm.get('details.hostPhone') === null ||
+                this.supportDeliveryForm.get('details.hostPhone').value ===
+                  '' ||
+                this.supportDeliveryForm.get('details.hostPhone').value ===
+                  undefined,
+              this.customValidation.whitespaceValidator()
+            )
+            .bind(this.customValidation)
+        ]
+      ]
+    });
+  }
+
+  private groupLodgingSupplierForm(): FormGroup {
+    return this.formBuilder.group({
+      hostName: ['', [this.customValidation.whitespaceValidator()]],
+      hostAddress: [''],
+      hostCity: ['', [this.customValidation.whitespaceValidator()]],
+      hostPhone: [
+        '',
+        [
+          this.customValidation
+            .maskedNumberLengthValidator()
+            .bind(this.customValidation),
+
+          this.customValidation.whitespaceValidator()
+        ]
+      ]
+    });
   }
 }

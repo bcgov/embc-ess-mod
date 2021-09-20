@@ -6,7 +6,9 @@ import {
   ContactDetails,
   SecurityQuestion
 } from 'src/app/core/api/models';
+import { RegAddress } from 'src/app/core/model/address';
 import { CacheService } from 'src/app/core/services/cache.service';
+import { LocationService } from 'src/app/core/services/location.service';
 import { RestrictionService } from '../restriction/restriction.service';
 
 @Injectable({ providedIn: 'root' })
@@ -15,8 +17,8 @@ export class ProfileDataService {
   private profile: Profile;
   private profileId: string;
   private personalDetail: PersonDetails;
-  private primaryAddressDetail: Address;
-  private mailingAddressDetail: Address;
+  private primaryAddressDetail: RegAddress;
+  private mailingAddressDetail: RegAddress;
   private contactDetail: ContactDetails;
   private securityQuestionsVal: Array<SecurityQuestion> =
     new Array<SecurityQuestion>();
@@ -28,17 +30,17 @@ export class ProfileDataService {
     this.personalDetail = value;
   }
 
-  public get primaryAddressDetails(): Address {
+  public get primaryAddressDetails(): RegAddress {
     return this.primaryAddressDetail;
   }
-  public set primaryAddressDetails(value: Address) {
+  public set primaryAddressDetails(value: RegAddress) {
     this.primaryAddressDetail = value;
   }
 
-  public get mailingAddressDetails(): Address {
+  public get mailingAddressDetails(): RegAddress {
     return this.mailingAddressDetail;
   }
-  public set mailingAddressDetails(value: Address) {
+  public set mailingAddressDetails(value: RegAddress) {
     this.mailingAddressDetail = value;
   }
 
@@ -58,7 +60,8 @@ export class ProfileDataService {
 
   constructor(
     private cacheService: CacheService,
-    private restrictionService: RestrictionService
+    private restrictionService: RestrictionService,
+    private locationService: LocationService
   ) {}
 
   public getProfile(): Profile {
@@ -95,31 +98,15 @@ export class ProfileDataService {
   public createProfileDTO(): Profile {
     return {
       contactDetails: this.contactDetails,
-      mailingAddress: this.setAddressObject(this.mailingAddressDetails),
+      mailingAddress: this.locationService.setAddressObjectForDTO(
+        this.mailingAddressDetails
+      ),
       personalDetails: this.personalDetails,
-      primaryAddress: this.setAddressObject(this.primaryAddressDetails),
+      primaryAddress: this.locationService.setAddressObjectForDTO(
+        this.primaryAddressDetails
+      ),
       restrictedAccess: this.restrictionService.restrictedAccess,
       securityQuestions: this.securityQuestions
     };
-  }
-
-  public setAddressObject(addressObject): Address {
-    console.log(addressObject);
-    const address: Address = {
-      addressLine1: addressObject.addressLine1,
-      addressLine2: addressObject.addressLine2,
-      country: addressObject.country.code,
-      community:
-        addressObject.community.code === undefined
-          ? null
-          : addressObject.community.code,
-      postalCode: addressObject.postalCode,
-      stateProvince:
-        addressObject.stateProvince === null
-          ? addressObject.stateProvince
-          : addressObject.stateProvince.code
-    };
-
-    return address;
   }
 }

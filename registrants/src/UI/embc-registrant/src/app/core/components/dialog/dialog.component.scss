@@ -94,6 +94,7 @@
 .mat-dialog-content {
   margin: 0 !important;
   max-height: none !important;
+  display: inherit;
 }
 
 .mainBody {
@@ -109,4 +110,23 @@
 
 .green-info {
   color: #25a800;
+}
+
+.highlighted-subtitle {
+  font-size: 21px;
+  color: #169bd5;
+  line-height: 28px;
+}
+
+.highlighted-paragraph {
+  color: #169bd5;
+  font-weight: 700;
+}
+
+.embc-link {
+  color: #169bd5;
+}
+
+.embc-link:hover {
+  text-decoration: underline;
 }

@@ -50,10 +50,10 @@ objects:
   - kind: ConfigMap
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-cas-interface-config
+      name: ${APP_NAME}-cas-interface-service-config
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
-        app: ${APP_NAME}-cas-interface
+        app: ${APP_NAME}-cas-interface-service
         app.kubernetes.io/part-of: ${APP_NAME}
     data:
       ASPNETCORE_ENVIRONMENT: ${RUNTIME_ENVIRONMENT}
@@ -65,10 +65,10 @@ objects:
     apiVersion: v1
     type: Opaque
     metadata:
-      name: ${APP_NAME}-cas-interface-secrets
+      name: ${APP_NAME}-cas-interface-service-secrets
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
-        app: ${APP_NAME}-cas-interface
+        app: ${APP_NAME}-cas-interface-service
         app.kubernetes.io/part-of: ${APP_NAME}
     stringData:
       DYNAMICS_APP_GROUP_RESOURCE: ${DYNAMICS_OAUTH_RESOURCE}
@@ -80,10 +80,10 @@ objects:
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
-      name: ${APP_NAME}-cas-interface
+      name: ${APP_NAME}-cas-interface-service
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
-        app: ${APP_NAME}-cas-interface
+        app: ${APP_NAME}-cas-interface-service
         app.kubernetes.io/part-of: ${APP_NAME}
     spec:
       strategy:
@@ -110,14 +110,14 @@ objects:
       revisionHistoryLimit: 10
       test: false
       selector:
-        deploymentconfig: ${APP_NAME}-cas-interface
+        deploymentconfig: ${APP_NAME}-cas-interface-service
       template:
         metadata:
           creationTimestamp: null
           labels:
-            app: ${APP_NAME}-cas-interface
+            app: ${APP_NAME}-cas-interface-service
             app.kubernetes.io/part-of: ${APP_NAME}
-            deploymentconfig: ${APP_NAME}-cas-interface
+            deploymentconfig: ${APP_NAME}-cas-interface-service
         spec:
           containers:
             - name: cas-interface-service
@@ -127,19 +127,19 @@ objects:
                   protocol: TCP
               envFrom:
                 - configMapRef:
-                    name: ${APP_NAME}-cas-interface-config
+                    name: ${APP_NAME}-cas-interface-service-config
                 - secretRef:
-                    name: ${APP_NAME}-cas-interface-secrets
+                    name: ${APP_NAME}-cas-interface-service-secrets
               imagePullPolicy: Always
           restartPolicy: Always
 
   - kind: Service
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-cas-interface
+      name: ${APP_NAME}-cas-interface-service
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
-        app: ${APP_NAME}-cas-interface
+        app: ${APP_NAME}-cas-interface-service
         app.kubernetes.io/part-of: ${APP_NAME}
     spec:
       ports:
@@ -148,21 +148,21 @@ objects:
           port: 8080
           targetPort: 8080
       selector:
-        deploymentconfig: ${APP_NAME}-cas-interface
+        deploymentconfig: ${APP_NAME}-cas-interface-service
 
   - kind: Route
     apiVersion: route.openshift.io/v1
     metadata:
-      name: ${APP_NAME}-cas-interface
+      name: ${APP_NAME}-cas-interface-service-route
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
-        app: ${APP_NAME}-cas-interface
+        app: ${APP_NAME}-cas-interface-service
         app.kubernetes.io/part-of: ${APP_NAME}
     spec:
       host: ${APP_NAME}-cas-interface.silver.devops.bcgov
       to:
         kind: Service
-        name: ${APP_NAME}-cas-interface
+        name: ${APP_NAME}-cas-interface-service
       port:
         targetPort: 8080-tcp
       tls:
@@ -171,15 +171,15 @@ objects:
   - kind: NetworkPolicy
     apiVersion: networking.k8s.io/v1
     metadata:
-      name: ${APP_NAME}-cas-interface
+      name: ${APP_NAME}-cas-interface-service-networkpolicy
       labels:
-        app: ${APP_NAME}-cas-interface
+        app: ${APP_NAME}-cas-interface-service
         app.kubernetes.io/part-of: ${APP_NAME}
       namespace: ${NAMESPACE_PREFIX}-${ENV}
     spec:
       podSelector:
         matchLabels:
-          app: ${APP_NAME}-cas-interface
+          app: ${APP_NAME}-cas-interface-service
       ingress:
         - ports:
             - protocol: TCP

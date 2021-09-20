@@ -1,0 +1,54 @@
+<div class="row row-padding">
+  <div class="col-md-12 heading">Reprint Support</div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-12">
+    <p>Supports should ONLY be printed once.</p>
+    <p>
+      You are requesting to reprint
+      <span class="bold">Support #{{ profileData }}</span
+      >.
+    </p>
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-12 bold">Please select a reason for the reprint:</div>
+</div>
+
+<form [formGroup]="reprintForm">
+  <div class="row row-padding">
+    <div class="col-md-5">
+      <mat-form-field appearance="outline">
+        <mat-label>Reason for reprint</mat-label>
+        <mat-select formControlName="reason" required>
+          <mat-option *ngFor="let gen of reasons | enumToArray" [value]="gen">
+            {{ gen }}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            reprintFormControl.reason.invalid &&
+            reprintFormControl.reason.hasError('required')
+          "
+        >
+          Reason for reprint is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+
+<div class="row row-padding">
+  <div class="col-md-6">
+    <button class="button-s button-width" mat-button (click)="close()">
+      Close
+    </button>
+  </div>
+  <div class="col-md-6">
+    <button class="button-p button-width" mat-button (click)="void()">
+      Reprint Support
+    </button>
+  </div>
+</div>

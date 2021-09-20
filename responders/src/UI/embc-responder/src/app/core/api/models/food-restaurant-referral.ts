@@ -4,10 +4,10 @@ import { Referral } from './referral';
 import { SupportCategory } from './support-category';
 import { SupportSubCategory } from './support-sub-category';
 export interface FoodRestaurantReferral extends Referral {
-  category?: SupportCategory;
+  category: SupportCategory;
   numberOfBreakfastsPerPerson: number;
   numberOfDinnersPerPerson: number;
   numberOfLunchesPerPerson: number;
-  subCategory?: SupportSubCategory;
+  subCategory: SupportSubCategory;
   totalAmount: number;
 }

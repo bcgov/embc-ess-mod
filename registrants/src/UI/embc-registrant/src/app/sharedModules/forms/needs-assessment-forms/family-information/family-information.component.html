@@ -99,7 +99,11 @@
             <mat-header-row
               *matHeaderRowDef="displayedColumns"
             ></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            <mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              [hidden]="row.isPrimaryRegistrant === true"
+            >
+            </mat-row>
           </mat-table>
 
           <br />

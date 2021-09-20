@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormCreationService } from 'src/app/core/services/formCreation.service';
 import { DialogService } from 'src/app/core/services/dialog.service';
-import { CacheService } from 'src/app/core/services/cache.service';
 import { TabModel } from 'src/app/core/model/tab.model';
 import { NeedsAssessmentService } from '../../../feature-components/needs-assessment/needs-assessment.service';
 import { EvacuationFileDataService } from '../evacuation-file/evacuation-file-data.service';
 import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/core/components/dialog/dialog.component';
+import { EssFileDialogComponent } from 'src/app/core/components/dialog-components/ess-file-dialog/ess-file-dialog.component';
+import * as globalConst from '../../../core/services/globalConstants';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +19,7 @@ export class DashboardComponent implements OnInit {
   currentFlow: string;
   activeFiles: number;
   evacuationFileWithTask: boolean;
+  emptyRegistrationResult: string = null;
 
   tabs: TabModel[] = [
     {
@@ -44,8 +47,8 @@ export class DashboardComponent implements OnInit {
     private needsAssessmentService: NeedsAssessmentService,
     public formCreationService: FormCreationService,
     private router: Router,
-    private dialogService: DialogService,
-    public evacuationFilesDataService: EvacuationFileDataService
+    public evacuationFilesDataService: EvacuationFileDataService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -57,16 +60,28 @@ export class DashboardComponent implements OnInit {
     }, 500);
   }
 
-  // openDOBMismatchPopup(): void {
-  //   this.dialogService.dateOfBirthMismatch('02 Mar 1984', '02 Mar 1983');
-  // }
-
   openReferenceNumberPopup(): void {
     const registrationResult =
       this.needsAssessmentService.getVerifiedEvacuationFileNo();
 
     if (registrationResult !== null) {
-      this.dialogService.submissionCompleteDialog(registrationResult);
+      this.dialog
+        .open(DialogComponent, {
+          data: {
+            component: EssFileDialogComponent,
+            content: globalConst.newEssFile,
+            essFileData: registrationResult,
+            initDialog: false
+          },
+          height: '750px',
+          width: '800px'
+        })
+        .afterClosed()
+        .subscribe(() => {
+          this.needsAssessmentService.setVerifiedEvacuationFileNo(
+            this.emptyRegistrationResult
+          );
+        });
     }
   }
 

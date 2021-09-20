@@ -216,10 +216,13 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
                 .ForMember(d => d.From, opts => opts.MapFrom(s => s.era_validfrom.HasValue ? s.era_validfrom.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.To, opts => opts.MapFrom(s => s.era_validto.HasValue ? s.era_validto.Value.UtcDateTime : DateTime.MinValue))
                 .ForMember(d => d.Status, opts => opts.MapFrom(s => s.statuscode))
-                .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_evacueesupport_era_householdmember.Select(m => m.era_householdmemberid)))
+                .ForMember(d => d.IncludedHouseholdMembers, opts => opts.MapFrom(s => s.era_era_householdmember_era_evacueesupport.Select(m => m.era_householdmemberid)))
                 .ReverseMap()
+                .ForMember(d => d.era_validfrom, opts => opts.MapFrom(s => s.From))
+                .ForMember(d => d.era_validto, opts => opts.MapFrom(s => s.To))
+                .ForMember(d => d.statuscode, opts => opts.MapFrom(s => s.To < DateTime.UtcNow ? SupportStatus.Expired : SupportStatus.Active))
                 .IncludeAllDerived()
-                .ForMember(d => d.era_era_evacueesupport_era_householdmember,
+                .ForMember(d => d.era_era_householdmember_era_evacueesupport,
                     opts => opts.MapFrom(s => s.IncludedHouseholdMembers.Select(m => new era_householdmember { era_householdmemberid = Guid.Parse(m) })))
                 ;
 

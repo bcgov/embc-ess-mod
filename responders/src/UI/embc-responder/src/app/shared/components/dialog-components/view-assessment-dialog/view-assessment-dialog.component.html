@@ -1,0 +1,251 @@
+<div class="row row-padding">
+  <div class="col-md-12">
+    <p class="heading">ESS File</p>
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-5">Created on</div>
+  <div class="col-md-7 bold">
+    {{ profileData?.evacuationFileDate | date: 'dd-MMM-yyyy' }} at
+    {{ profileData?.evacuationFileDate | date: 'hh:mm a' }}
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-5">Created by</div>
+  <div class="col-md-7 bold">
+    {{ profileData?.needsAssessment?.reviewingTeamMemberDisplayName }}
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-12">
+    <p class="subsection-heading">Evacuation Details</p>
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-5">Paper Based ESS File Number</div>
+  <div class="col-md-7 bold">n/a</div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-5">Evacuated From</div>
+  <div class="col-md-7">
+    <p
+      class="bold"
+      [innerHTML]="profileData?.evacuatedFromAddress | maskEvacuatedaddress"
+    ></p>
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-5">Facility/ Registration Location</div>
+  <div class="col-md-7 bold">
+    {{
+      profileData?.registrationLocation
+        ? profileData?.registrationLocation
+        : 'n/a'
+    }}
+  </div>
+</div>
+<div class="row row-padding">
+  <div class="col-md-5">Task #</div>
+  <div class="col-md-7 bold">
+    {{ profileData?.task?.taskNumber ? profileData?.task?.taskNumber : 'n/a' }}
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-5">Insurance</div>
+  <div class="col-md-7 bold">
+    {{ profileData?.needsAssessment?.insurance }}
+  </div>
+</div>
+<div class="row row-padding">
+  <div class="col-md-5">How Affected by the Evacuation</div>
+  <div class="col-md-7 bold">
+    {{
+      profileData?.needsAssessment?.evacuationImpact
+        ? profileData?.needsAssessment?.evacuationImpact
+        : 'n/a'
+    }}
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-md-5">Post Evacuation Recovery Plans</div>
+  <div class="col-md-7 bold">
+    {{
+      profileData?.needsAssessment?.houseHoldRecoveryPlan
+        ? profileData?.needsAssessment?.houseHoldRecoveryPlan
+        : 'n/a'
+    }}
+  </div>
+</div>
+<div class="row row-padding">
+  <div class="col-md-5">
+    Service Recommendations within the Reception Centre
+  </div>
+  <div class="col-md-7 bold">
+    {{
+      profileData?.needsAssessment?.recommendedReferralServices.length === 0
+        ? 'No'
+        : 'Yes - ' +
+          profileData?.needsAssessment?.recommendedReferralServices.join(',')
+    }}
+  </div>
+</div>
+<div class="row row-padding">
+  <div class="col-md-5">
+    Service Recommendations external of Reception Centre
+  </div>
+  <div class="col-md-7 bold">
+    {{
+      profileData?.needsAssessment?.evacuationExternalReferrals
+        ? profileData?.needsAssessment?.evacuationExternalReferrals
+        : 'n/a'
+    }}
+  </div>
+</div>
+
+<hr class="dotted-hr hr-padding" />
+<div class="row row-padding">
+  <div class="col-md-12">
+    <p class="subsection-heading">Household Members</p>
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-12">
+    <mat-table
+      class="table-outline"
+      [dataSource]="profileData?.needsAssessment?.householdMembers"
+    >
+      <ng-container matColumnDef="firstName">
+        <mat-header-cell class="header-cell" *matHeaderCellDef
+          >First Name</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
+          {{ element.firstName }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="lastName">
+        <mat-header-cell class="header-cell" *matHeaderCellDef
+          >Last Name</mat-header-cell
+        >
+        <mat-cell *matCellDef="let element">
+          {{ element.lastName }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="dateOfBirth">
+        <mat-header-cell class="header-cell" *matHeaderCellDef>
+          Date of Birth
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.dateOfBirth }}
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row
+        class="table-header"
+        *matHeaderRowDef="memberColumns"
+      ></mat-header-row>
+      <mat-row
+        class="bold"
+        *matRowDef="let row; columns: memberColumns"
+      ></mat-row>
+    </mat-table>
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-5">Household Medication Requirements</div>
+  <div class="col-7 bold">
+    {{ profileData?.needsAssessment?.takeMedication ? 'Yes' : 'No' }}
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-5">Household Dietary Requirements</div>
+  <div class="col-7 bold">
+    {{
+      profileData?.needsAssessment?.haveSpecialDiet
+        ? 'Yes - ' + profileData?.needsAssessment?.specialDietDetails
+        : 'No'
+    }}
+  </div>
+</div>
+
+<div
+  class="row row-padding"
+  *ngIf="profileData?.needsAssessment?.pets?.length > 0"
+>
+  <div class="col-5">Sufficient pet food?</div>
+  <div class="col-7 bold">
+    {{ profileData?.needsAssessment?.havePetsFood ? 'Yes' : 'No' }}
+  </div>
+</div>
+
+<div
+  class="row row-padding"
+  *ngIf="profileData?.needsAssessment?.pets?.length > 0"
+>
+  <div class="col-5">Pet Care Plan</div>
+  <div class="col-7 bold">
+    {{ profileData?.needsAssessment?.petCarePlans }}
+  </div>
+</div>
+
+<hr class="dotted-hr hr-padding" />
+<div class="row row-padding">
+  <div class="col-md-12">
+    <p class="subsection-heading">Needs Assessment</p>
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-5">Food</div>
+  <div class="col-7 bold">
+    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideFood) }}
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-5">Lodging</div>
+  <div class="col-7 bold">
+    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideLodging) }}
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-5">Clothing</div>
+  <div class="col-7 bold">
+    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideClothing) }}
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-5">Transportation</div>
+  <div class="col-7 bold">
+    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideTransportation) }}
+  </div>
+</div>
+
+<div class="row row-padding">
+  <div class="col-5">Incidentals</div>
+  <div class="col-7 bold">
+    {{ mapNeedsValues(profileData?.needsAssessment?.canProvideIncidentals) }}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <button class="button-s cancel-button" mat-button (click)="cancel()">
+      Cancel
+    </button>
+  </div>
+</div>

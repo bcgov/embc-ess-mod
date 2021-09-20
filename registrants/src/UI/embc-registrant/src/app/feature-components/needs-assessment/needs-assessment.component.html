@@ -112,7 +112,11 @@
         (click)="goForward(needsStepper, true, '')"
       >
         Save & Submit
-        <app-loader [showLoader]="showLoader"></app-loader>
+        <app-loader
+          [strokeWidth]="3"
+          [diameter]="25"
+          [showLoader]="showLoader"
+        ></app-loader>
       </button>
     </mat-step>
     <ng-template matStepperIcon="edit" let-index="index">

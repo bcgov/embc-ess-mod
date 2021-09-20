@@ -20,6 +20,8 @@ import { RegistrantProfile } from '../models/registrant-profile';
 import { RegistrationResult } from '../models/registration-result';
 import { SearchResults } from '../models/search-results';
 import { Support } from '../models/support';
+import { SupportReprintReason } from '../models/support-reprint-reason';
+import { SupportVoidReason } from '../models/support-void-reason';
 import { VerifySecurityPhraseRequest } from '../models/verify-security-phrase-request';
 import { VerifySecurityPhraseResponse } from '../models/verify-security-phrase-response';
 import { VerifySecurityQuestionsRequest } from '../models/verify-security-questions-request';
@@ -1345,6 +1347,110 @@ export class RegistrationsService extends BaseService {
   }): Observable<void> {
 
     return this.registrationsProcessSupports$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsVoidSupport
+   */
+  static readonly RegistrationsVoidSupportPath = '/api/Registrations/files/{fileId}/supports/{supportId}/void';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsVoidSupport()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsVoidSupport$Response(params: {
+    fileId: string;
+    supportId: string;
+    voidReason?: SupportVoidReason;
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsVoidSupportPath, 'post');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+      rb.path('supportId', params.supportId, {});
+      rb.query('voidReason', params.voidReason, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsVoidSupport$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsVoidSupport(params: {
+    fileId: string;
+    supportId: string;
+    voidReason?: SupportVoidReason;
+  }): Observable<void> {
+
+    return this.registrationsVoidSupport$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation registrationsReprintSupport
+   */
+  static readonly RegistrationsReprintSupportPath = '/api/Registrations/files/{fileId}/supports/{supportId}/reprint';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `registrationsReprintSupport()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsReprintSupport$Response(params: {
+    fileId: string;
+    supportId: string;
+    reprintReason?: SupportReprintReason;
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, RegistrationsService.RegistrationsReprintSupportPath, 'post');
+    if (params) {
+      rb.path('fileId', params.fileId, {});
+      rb.path('supportId', params.supportId, {});
+      rb.query('reprintReason', params.reprintReason, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `registrationsReprintSupport$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  registrationsReprintSupport(params: {
+    fileId: string;
+    supportId: string;
+    reprintReason?: SupportReprintReason;
+  }): Observable<void> {
+
+    return this.registrationsReprintSupport$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }

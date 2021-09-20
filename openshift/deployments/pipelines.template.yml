@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: promotions template
+  annotations:
+    description: "Pipelines to promote images to higher environments"
+
+parameters:
+  - description: openshift namespace prefix
+    name: NAMESPACE_PREFIX
+    required: true
+
+objects:
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "era-promote-test"
+      namespace: ${NAMESPACE_PREFIX}-tools
+    spec:
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
+      strategy:
+        jenkinsPipelineStrategy:
+          jenkinsfilePath: openshift/deployments/TEST-deployment-Jenkinsfile
+      source:
+        type: Git
+        git:
+          uri: "https://github.com/ytqsl/embc-ess-mod.git"
+          ref: master
+      runPolicy: Serial
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "era-promote-train"
+      namespace: ${NAMESPACE_PREFIX}-tools
+    spec:
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
+      strategy:
+        jenkinsPipelineStrategy:
+          jenkinsfilePath: openshift/deployments/TRAIN-deployment-Jenkinsfile
+      source:
+        type: Git
+        git:
+          uri: "https://github.com/bcgov/embc-ess-mod.git"
+          ref: master
+      runPolicy: Serial
+
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+      name: "era-promote-prod"
+      namespace: ${NAMESPACE_PREFIX}-tools
+    spec:
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
+      strategy:
+        jenkinsPipelineStrategy:
+          jenkinsfilePath: openshift/deployments/PROD-deployment-Jenkinsfile
+      source:
+        type: Git
+        git:
+          uri: "https://github.com/bcgov/embc-ess-mod.git"
+          ref: master
+      runPolicy: Serial
