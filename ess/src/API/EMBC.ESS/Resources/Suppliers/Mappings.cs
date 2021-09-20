@@ -41,7 +41,7 @@ namespace EMBC.ESS.Resources.Suppliers
                 .ForPath(d => d.Contact.Id, opts => opts.MapFrom(s => s._era_primarycontact_value))
                 .ForPath(d => d.Contact.FirstName, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.era_firstname : null))
                 .ForPath(d => d.Contact.LastName, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.era_lastname : null))
-                .ForPath(d => d.Contact.Phone, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.era_homephone : null))
+                .ForPath(d => d.Contact.Phone, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.era_contactnumber : null))
                 .ForPath(d => d.Contact.Email, opts => opts.MapFrom(s => s.era_PrimaryContact != null ? s.era_PrimaryContact.emailaddress : null))
                 .ForMember(d => d.Team, opts => opts.MapFrom(s => s.era_era_supplier_era_essteamsupplier_SupplierId.SingleOrDefault(ts => ts.era_isprimarysupplier == true)))
                 .ForMember(d => d.SharedWithTeams, opts => opts.MapFrom(s => s.era_era_supplier_era_essteamsupplier_SupplierId.Where(ts => ts.era_isprimarysupplier != true)))
