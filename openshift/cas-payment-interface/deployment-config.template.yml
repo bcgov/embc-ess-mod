@@ -136,7 +136,7 @@ objects:
   - kind: Service
     apiVersion: v1
     metadata:
-      name: ${APP_NAME}-cas-interface-service-service
+      name: ${APP_NAME}-cas-interface-service
       namespace: ${NAMESPACE_PREFIX}-${ENV}
       labels:
         app: ${APP_NAME}-cas-interface-service
