@@ -89,9 +89,12 @@ export class SupportDeliveryComponent implements OnInit {
    */
   createSupportDeliveryForm(): void {
     this.supportDeliveryForm = this.formBuilder.group({
-      issuedTo: ['', [Validators.required]],
+      issuedTo: [
+        this.stepSupportsService?.supportDelivery?.issuedTo ?? '',
+        [Validators.required]
+      ],
       name: [
-        '',
+        this.stepSupportsService?.supportDelivery?.name ?? '',
         [
           this.customValidation
             .conditionalValidation(
@@ -104,7 +107,7 @@ export class SupportDeliveryComponent implements OnInit {
         ]
       ],
       supplier: [
-        '',
+        this.stepSupportsService?.supportDelivery?.supplier ?? '',
         [
           this.customValidation
             .conditionalValidation(
@@ -118,7 +121,10 @@ export class SupportDeliveryComponent implements OnInit {
             .bind(this.customValidation)
         ]
       ],
-      supplierNote: ['', [this.customValidation.whitespaceValidator()]],
+      supplierNote: [
+        this.stepSupportsService?.supportDelivery?.supplierNote ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       details: this.createSupplierDetailsForm()
     });
   }
@@ -146,6 +152,8 @@ export class SupportDeliveryComponent implements OnInit {
    * Navigates to details page
    */
   backToDetails() {
+    console.log(this.supportDeliveryForm.getRawValue());
+    this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
     this.router.navigate(['/ess-wizard/add-supports/details']);
   }
 
@@ -156,8 +164,10 @@ export class SupportDeliveryComponent implements OnInit {
     if (!this.supportDeliveryForm.valid) {
       this.supportDeliveryForm.markAllAsTouched();
     } else {
+      console.log(this.supportDeliveryForm.getRawValue());
       this.stepSupportsService.supportDelivery = this.supportDeliveryForm.getRawValue();
       this.stepSupportsService.saveAsDraft();
+      console.log(this.stepSupportsService.supportDelivery);
       const stateIndicator = { action: 'save' };
       this.router.navigate(['/ess-wizard/add-supports/view'], {
         state: stateIndicator
@@ -230,11 +240,19 @@ export class SupportDeliveryComponent implements OnInit {
 
   private billetingSupplierForm(): FormGroup {
     return this.formBuilder.group({
-      hostName: ['', [this.customValidation.whitespaceValidator()]],
-      hostAddress: [''],
-      hostCity: ['', [this.customValidation.whitespaceValidator()]],
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      hostAddress: [
+        this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? ''
+      ],
+      hostCity: [
+        this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostPhone: [
-        '',
+        this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
         [
           this.customValidation
             .maskedNumberLengthValidator()
@@ -253,7 +271,7 @@ export class SupportDeliveryComponent implements OnInit {
         ]
       ],
       emailAddress: [
-        '',
+        this.stepSupportsService?.supportDelivery?.details?.emailAddress ?? '',
         [
           Validators.email,
           this.customValidation
@@ -274,11 +292,19 @@ export class SupportDeliveryComponent implements OnInit {
 
   private groupLodgingSupplierForm(): FormGroup {
     return this.formBuilder.group({
-      hostName: ['', [this.customValidation.whitespaceValidator()]],
-      hostAddress: [''],
-      hostCity: ['', [this.customValidation.whitespaceValidator()]],
+      hostName: [
+        this.stepSupportsService?.supportDelivery?.details?.hostName ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
+      hostAddress: [
+        this.stepSupportsService?.supportDelivery?.details?.hostAddress ?? ''
+      ],
+      hostCity: [
+        this.stepSupportsService?.supportDelivery?.details?.hostCity ?? '',
+        [this.customValidation.whitespaceValidator()]
+      ],
       hostPhone: [
-        '',
+        this.stepSupportsService?.supportDelivery?.details?.hostPhone ?? '',
         [
           this.customValidation
             .maskedNumberLengthValidator()

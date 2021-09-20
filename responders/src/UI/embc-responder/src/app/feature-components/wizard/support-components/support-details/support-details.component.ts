@@ -106,7 +106,6 @@ export class SupportDetailsComponent implements OnInit {
    * Support details form
    */
   createSupportDetailsForm(): void {
-    console.log(this.stepSupportsService.supportTypeToAdd);
     this.supportDetailsForm = this.formBuilder.group({
       fromDate: [
         this.stepSupportsService?.supportDetails?.fromDate

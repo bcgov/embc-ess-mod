@@ -14,7 +14,18 @@
     <div class="col-md-12 needs-box">
       <div class="row">
         <div class="col-md-8">
-          <p class="question-heading">Support #{{ selectedSupport?.id }}</p>
+          <p
+            *ngIf="selectedSupport?.status !== 'Draft'"
+            class="question-heading"
+          >
+            Support #{{ selectedSupport?.id }}
+          </p>
+          <p
+            *ngIf="selectedSupport?.status === 'Draft'"
+            class="question-heading"
+          >
+            Support
+          </p>
           <div class="row">
             <div class="col-md-4">
               <p class="box-text-color">Status:</p>
@@ -24,7 +35,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <div *ngIf="selectedSupport?.status !== 'Draft'" class="row">
             <div class="col-md-4">
               <p class="box-text-color">Issued:</p>
             </div>
@@ -36,7 +47,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <div *ngIf="selectedSupport?.status !== 'Draft'" class="row">
             <div class="col-md-4">
               <p class="box-text-color">Issued by:</p>
             </div>
@@ -46,7 +57,10 @@
           </div>
         </div>
 
-        <div class="col-md-4 link-padding">
+        <div
+          *ngIf="selectedSupport?.status !== 'Draft'"
+          class="col-md-4 link-padding"
+        >
           <div class="row">
             <div class="col-md-12">
               <a (click)="openAssessment()"
@@ -85,6 +99,35 @@
             </div>
           </div>
         </div>
+
+        <div
+          *ngIf="selectedSupport?.status === 'Draft'"
+          class="col-md-4 link-padding"
+        >
+          <div class="row">
+            <div class="col-md-12">
+              <a (click)="editDraft()"
+                ><img
+                  src="/assets/images/blue-edit.svg"
+                  width="19"
+                  height="19"
+                /><span class="back-link img-padding">Edit</span></a
+              >
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <a (click)="deleteDraft()"
+                ><img
+                  src="/assets/images/blue-delete.svg"
+                  width="14"
+                  height="15"
+                /><span class="back-link img-padding">Delete Support</span></a
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -98,7 +141,11 @@
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Support Type:</div>
     <div class="col-md-4 bold">
-      {{ selectedSupport?.subCategory }}
+      {{
+        selectedSupport?.subCategory
+          ? selectedSupport?.subCategory
+          : selectedSupport?.category
+      }}
     </div>
   </div>
 
@@ -121,7 +168,10 @@
   <div class="row row-padding">
     <div class="col-md-4 box-text-color">Support Provided For:</div>
     <div class="col-md-4 bold">
-      {{ selectedSupport?.includedHouseholdMembers }}
+      <span *ngFor="let id of selectedSupport?.includedHouseholdMembers">
+        <p>{{ mapMemberName(id) | uppercase }}</p>
+      </span>
+      <!-- {{ selectedSupport?.includedHouseholdMembers }} -->
     </div>
   </div>
 
@@ -215,7 +265,7 @@
 
     <div class="row row-padding">
       <div class="col-md-4 box-text-color">Up to Maximum Value of</div>
-      <div class="col-md-4 bold">{{ otherReferral?.totalAmount }}</div>
+      <div class="col-md-4 bold">${{ otherReferral?.totalAmount }}</div>
     </div>
   </div>
 
@@ -228,7 +278,7 @@
 
     <div class="row row-padding">
       <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
-      <div class="col-md-4 bold">{{ incidentalReferral?.totalAmount }}</div>
+      <div class="col-md-4 bold">${{ incidentalReferral?.totalAmount }}</div>
       <div *ngIf="!checkIncidentalMaxRate()" class="col-md-4 warning">
         Total monetary value exceeds the recommended ESS rate
       </div>
@@ -246,7 +296,7 @@
 
     <div class="row row-padding">
       <div class="col-md-4 box-text-color">Up to a Maximum Value of:</div>
-      <div class="col-md-4 bold">{{ clothingReferral?.totalAmount }}</div>
+      <div class="col-md-4 bold">${{ clothingReferral?.totalAmount }}</div>
       <div *ngIf="!checkClothingMaxRate()" class="col-md-4 warning">
         Total monetary value exceeds the recommended ESS rate
       </div>
@@ -268,7 +318,9 @@
     <div class="col-md-4 box-text-color">
       Person Responsible for Purchasing Goods:
     </div>
-    <div class="col-md-4 bold">{{ referral?.issuedToPersonName }}</div>
+    <div class="col-md-4 bold">
+      {{ referral?.issuedToPersonName | uppercase }}
+    </div>
   </div>
 
   <div class="row row-padding">
