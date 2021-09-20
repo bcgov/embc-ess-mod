@@ -253,7 +253,16 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_animal_ESSFileid))));
             loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_essfilenote_ESSFileID))));
             loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_TaskId))));
-            loadTasks.Add(Task.Run(async () => await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId))));
+
+            loadTasks.Add(Task.Run(async () =>
+            {
+                await ctx.LoadPropertyAsync(file, nameof(era_evacuationfile.era_era_evacuationfile_era_evacueesupport_ESSFileId));
+                foreach (var support in file.era_era_evacuationfile_era_evacueesupport_ESSFileId)
+                {
+                    ctx.AttachTo(nameof(EssContext.era_evacueesupports), support);
+                    await ctx.LoadPropertyAsync(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
+                }
+            }));
 
             loadTasks.Add(Task.Run(async () =>
             {
@@ -434,8 +443,12 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             essContext.AddLink(file.era_CurrentNeedsAssessmentid, nameof(era_needassessment.era_era_needassessment_era_evacueesupport_NeedsAssessmentID), newSupport);
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_EvacuationFileId), file);
             essContext.SetLink(newSupport, nameof(era_evacueesupport.era_NeedsAssessmentID), file.era_CurrentNeedsAssessmentid);
-            AssignHouseholdMembersToSupport(newSupport);
+
+            var teamMember = essContext.era_essteamusers.ByKey(newSupport._era_issuedbyid_value).GetValue();
+            essContext.SetLink(newSupport, nameof(era_evacueesupport.era_IssuedById), teamMember);
+
             AssignSupplierToSupport(newSupport);
+            AssignHouseholdMembersToSupport(newSupport);
 
             await essContext.SaveChangesAsync();
 
@@ -463,12 +476,17 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
             if (existingSupport == null) throw new Exception($"Support {support.Id} not found in file {fileId}");
 
             RemoveAllHouseholdMembersFromSupport(existingSupport);
-            essContext.Detach(existingSupport);
+            await essContext.SaveChangesAsync();
+            essContext.DetachAll();
 
             var updatedSupport = mapper.Map<era_evacueesupport>(support);
             updatedSupport.era_evacueesupportid = existingSupport.era_evacueesupportid;
 
             essContext.AttachTo(nameof(EssContext.era_evacueesupports), updatedSupport);
+
+            var teamMember = essContext.era_essteamusers.ByKey(updatedSupport._era_issuedbyid_value).GetValue();
+            essContext.SetLink(updatedSupport, nameof(era_evacueesupport.era_IssuedById), teamMember);
+
             essContext.UpdateObject(updatedSupport);
             AssignHouseholdMembersToSupport(updatedSupport);
             AssignSupplierToSupport(updatedSupport);
@@ -501,20 +519,19 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
 
         private void AssignHouseholdMembersToSupport(era_evacueesupport support)
         {
-            foreach (var member in support.era_era_evacueesupport_era_householdmember)
+            foreach (var member in support.era_era_householdmember_era_evacueesupport)
             {
-                var householdMember = essContext.era_householdmembers.Single(m => m.era_householdmemberid == member.era_householdmemberid);
-                essContext.AddLink(support, nameof(era_evacueesupport.era_era_evacueesupport_era_householdmember), householdMember);
-                essContext.AddLink(householdMember, nameof(era_householdmember.era_era_evacueesupport_era_householdmember), support);
+                essContext.AttachTo(nameof(EssContext.era_householdmembers), member);
+                essContext.AddLink(member, nameof(era_householdmember.era_era_householdmember_era_evacueesupport), support);
             }
         }
 
         private void RemoveAllHouseholdMembersFromSupport(era_evacueesupport support)
         {
-            var householdMembers = essContext.LoadProperty(support, nameof(era_evacueesupport.era_era_evacueesupport_era_householdmember));
+            var householdMembers = essContext.LoadProperty(support, nameof(era_evacueesupport.era_era_householdmember_era_evacueesupport));
             foreach (var member in householdMembers)
             {
-                essContext.DeleteLink(member, nameof(era_householdmember.era_era_evacueesupport_era_householdmember), support);
+                essContext.DeleteLink(member, nameof(era_householdmember.era_era_householdmember_era_evacueesupport), support);
             }
         }
 

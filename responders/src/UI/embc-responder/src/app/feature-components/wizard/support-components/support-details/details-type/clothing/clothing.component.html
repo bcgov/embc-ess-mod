@@ -1,0 +1,58 @@
+<form [formGroup]="referralForm">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Extreme Winter Conditions</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mat-radio-group
+        formControlName="extremeWinterConditions"
+        aria-labelledby="extremeWinterConditions-radio-group-label"
+        class="primary-radio-group"
+        required
+      >
+        <mat-radio-button [value]="true">Yes</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+        <mat-error
+          class="custom-mat-error field-error"
+          *ngIf="
+            referralFormControl?.extremeWinterConditions.invalid &&
+            referralFormControl?.extremeWinterConditions.hasError('required')
+          "
+        >
+          Required</mat-error
+        >
+      </mat-radio-group>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p class="time-heading requiredField">Total Amount</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        Up to a maximum value of: <span class="amount">${{ totalAmount }}</span>
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-form-field appearance="outline">
+        <input
+          formControlName="userTotalAmount"
+          matInput
+          type="number"
+          class="amount-right-align"
+          placeholder="0"
+        />
+        <span matPrefix>$&nbsp;</span>
+        <span matSuffix>.00</span>
+      </mat-form-field>
+    </div>
+  </div>
+</form>
