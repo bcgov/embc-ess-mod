@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1>Process Supports</h1>
+    <p>
+      By clicking "Proceed", the supports will be processed & no longer
+      editable. A PDF will be created for all referrals, which can then be
+      printed or emailed. Please select if you would like to include an evacuee
+      summary with the referrals.
+    </p>
+  </div>
+</div>
+<div class="row checkbox-section">
+  <div class="col-md-12">
+    <mat-checkbox (change)="addEvacueeSummaryChangeEvent($event)"
+      >Include evacuee summary.
+    </mat-checkbox>
+  </div>
+</div>
+
+<div class="row buttons-section">
+  <div class="col-md-12">
+    <button class="button-s button-width button-margin" (click)="cancel()">
+      Cancel
+    </button>
+    <button class="button-p button-width" (click)="confirm()">Proceed</button>
+  </div>
+</div>

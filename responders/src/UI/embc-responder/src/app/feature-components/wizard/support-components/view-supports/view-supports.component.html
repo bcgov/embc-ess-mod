@@ -37,7 +37,12 @@
         </button>
       </div>
       <div class="col-md-3">
-        <button class="button-p button-width" mat-button (click)="process()">
+        <button
+          class="button-p button-width"
+          mat-button
+          (click)="process()"
+          [disabled]="referralService.getDraftSupport().length === 0"
+        >
           Process Draft Support/s
         </button>
       </div>

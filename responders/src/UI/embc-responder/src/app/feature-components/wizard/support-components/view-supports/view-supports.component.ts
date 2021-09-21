@@ -32,7 +32,7 @@ export class ViewSupportsComponent implements OnInit {
     private viewSupportsService: ViewSupportsService,
     private alertService: AlertService,
     private dialog: MatDialog,
-    private referralService: ReferralCreationService
+    public referralService: ReferralCreationService
   ) {
     if (this.router.getCurrentNavigation() !== null) {
       if (this.router.getCurrentNavigation().extras.state !== undefined) {
